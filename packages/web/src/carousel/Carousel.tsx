@@ -361,7 +361,37 @@ const getNearestPageIndexFromOffset = (scrollOffset: number, pageOffsets: number
 };
 
 /**
+ * Finds the shortest path to a target offset when looping is enabled.
+ * Checks whether going through the previous or next loop cycle would be shorter
+ * than traveling within the current cycle.
+ * @param currentOffset - The current scroll offset.
+ * @param targetOffset - The target offset within a single loop.
+ * @param loopLength - The total length of one loop cycle.
+ * @returns The shortest path offset.
+ */
+const getShortestLoopOffset = (
+  currentOffset: number,
+  targetOffset: number,
+  loopLength: number,
+): number => {
+  const currentCycle = Math.floor(currentOffset / loopLength);
+  const targetInCurrentCycle = currentCycle * loopLength + targetOffset;
+
+  const candidates = [
+    targetInCurrentCycle,
+    targetInCurrentCycle - loopLength,
+    targetInCurrentCycle + loopLength,
+  ];
+
+  return candidates.reduce((a, b) =>
+    Math.abs(currentOffset - a) < Math.abs(currentOffset - b) ? a : b,
+  );
+};
+
+/**
  * Calculates the offsets for a given set of items grouped by item.
+ * @note when looping, all items have a page offset, otherwise we find
+ * the last item that can start a page and still show all remaining items.
  * @param items - The items to get the page offsets for.
  * @param containerWidth - The width of the container.
  * @param maxScrollOffset - The maximum scroll offset.
@@ -375,7 +405,6 @@ const getSnapItemPageOffsets = (
   loop?: boolean,
 ): { totalPages: number; pageOffsets: number[] } => {
   if (loop) {
-    // When looping, all items become snap targets
     const offsets: number[] = [];
     for (let i = 0; i < items.length; i++) {
       offsets.push(items[i].x);
@@ -383,7 +412,6 @@ const getSnapItemPageOffsets = (
     return { totalPages: offsets.length, pageOffsets: offsets };
   }
 
-  // Non-looping behavior (original logic)
   let lastPageStartIndex = items.length - 1;
   const lastItem = items[lastPageStartIndex];
   const lastItemsEndPosition = lastItem.x + lastItem.width;
@@ -616,9 +644,10 @@ export const Carousel = memo(
         return Math.max(0, secondItemStart - firstItemEnd);
       }, [carouselItemRects]);
 
-      // Determine if looping should actually be enabled
-      // Looping requires: loop prop enabled, content measured, and more content than fits in viewport
-      const shouldLoop = loop && hasDimensions && maxScrollOffset > 0;
+      const shouldLoop = useMemo(
+        () => loop && hasDimensions && maxScrollOffset > 0,
+        [loop, hasDimensions, maxScrollOffset],
+      );
 
       // Total width of one "cycle" of content for looping
       const loopLength = useMemo(() => {
@@ -776,26 +805,26 @@ export const Carousel = memo(
           return { totalPages: 0, pageOffsets: [] };
         }
 
-        let pageOffsetsResult: { totalPages: number; pageOffsets: number[] };
+        let pageOffsets: { totalPages: number; pageOffsets: number[] };
 
         if (snapMode === 'item') {
-          pageOffsetsResult = getSnapItemPageOffsets(
+          pageOffsets = getSnapItemPageOffsets(
             getItemOffsets(carouselItemRects),
             containerWidth,
             maxScrollOffset,
             shouldLoop,
           );
         } else {
-          pageOffsetsResult = getSnapPageOffsets(
+          pageOffsets = getSnapPageOffsets(
             getItemOffsets(carouselItemRects),
             containerWidth,
             maxScrollOffset,
           );
         }
 
-        updateActivePageIndex((pageIndex) => Math.min(pageIndex, pageOffsetsResult.totalPages - 1));
+        updateActivePageIndex((pageIndex) => Math.min(pageIndex, pageOffsets.totalPages - 1));
 
-        return pageOffsetsResult;
+        return pageOffsets;
       }, [
         hasDimensions,
         carouselItemRects,
@@ -808,33 +837,16 @@ export const Carousel = memo(
 
       const goToPage = useCallback(
         (page: number) => {
-          const safePage = Math.max(0, Math.min(totalPages - 1, page));
+          const newPage = Math.max(0, Math.min(totalPages - 1, page));
+          updateActivePageIndex(newPage);
+          updateVisibleCarouselItems(pageOffsets[newPage]);
 
-          updateActivePageIndex(safePage);
-          updateVisibleCarouselItems(pageOffsets[safePage]);
+          const targetOffset =
+            shouldLoop && loopLength
+              ? getShortestLoopOffset(-carouselScrollX.get(), pageOffsets[newPage], loopLength)
+              : pageOffsets[newPage];
 
-          if (shouldLoop && loopLength) {
-            // Find shortest path across current, previous, and next cycles
-            const currentOffset = -carouselScrollX.get();
-            const currentCycle = Math.floor(currentOffset / loopLength);
-            const targetInCurrentCycle = currentCycle * loopLength + pageOffsets[safePage];
-
-            const candidates = [
-              targetInCurrentCycle,
-              targetInCurrentCycle - loopLength,
-              targetInCurrentCycle + loopLength,
-            ];
-            const shortest = candidates.reduce((a, b) =>
-              Math.abs(currentOffset - a) < Math.abs(currentOffset - b) ? a : b,
-            );
-
-            animate(carouselScrollX, -shortest, { type: 'tween', duration: 0.25 });
-          } else {
-            animationApi.start({
-              x: -pageOffsets[safePage],
-              transition: { type: 'tween', duration: 0.25 },
-            });
-          }
+          animate(carouselScrollX, -targetOffset, { type: 'tween', duration: 0.25 });
         },
         [
           shouldLoop,
@@ -842,7 +854,6 @@ export const Carousel = memo(
           totalPages,
           pageOffsets,
           carouselScrollX,
-          animationApi,
           updateVisibleCarouselItems,
           updateActivePageIndex,
         ],
