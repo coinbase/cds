@@ -57,7 +57,7 @@ describe('Select', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityLabel).toBe('Custom accessibility label');
+      expect(button.props.accessibilityLabel).toBe('Custom accessibility label, Select an option');
       expect(button.props.accessibilityHint).toBe('Custom accessibility hint');
     });
 

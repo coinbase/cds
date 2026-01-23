@@ -133,6 +133,7 @@ export const FocusTrap = memo(function FocusTrap({
   // trap focus for accessibility
   const handleKeyboardNavigation = useCallback(
     (event: KeyboardEvent, element: RefObject<HTMLElement>['current']) => {
+      if (event.defaultPrevented) return;
       const document = getBrowserGlobals()?.document;
       const activeElement = document?.activeElement as HTMLElement;
 

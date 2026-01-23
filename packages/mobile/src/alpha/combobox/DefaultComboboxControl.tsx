@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { NativeInput } from '../../controls/NativeInput';
@@ -29,14 +30,24 @@ export const DefaultComboboxControl = <
   onSearch,
   searchInputRef,
   hideSearchInput,
+  accessibilityLabel,
   ...props
 }: ComboboxControlProps<Type, SelectOptionValue>) => {
   const theme = useTheme();
   const hasValue = hasSelectedValue(value);
   const shouldRenderSearchInput = !hideSearchInput && (!hasValue || open);
 
+  const computedAccessibilityLabel = useMemo(() => {
+    let label = accessibilityLabel;
+    if (!hasValue && typeof placeholder === 'string') {
+      label = `${label}, ${placeholder}`;
+    }
+    return label;
+  }, [hasValue, accessibilityLabel, placeholder]);
+
   return (
     <SelectControlComponent
+      accessibilityLabel={computedAccessibilityLabel}
       disabled={disabled}
       open={open}
       options={options}
@@ -79,7 +90,6 @@ export const DefaultComboboxControl = <
           </>
         )
       }
-      placeholder={null}
       styles={{
         ...props.styles,
         controlEndNode: {

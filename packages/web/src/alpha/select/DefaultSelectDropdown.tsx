@@ -251,6 +251,15 @@ const DefaultSelectDropdownComponent = memo(
       );
 
       const handleEscPress = useCallback(() => setOpen(false), [setOpen]);
+      const handleKeyDown = useCallback(
+        (event: React.KeyboardEvent<HTMLDivElement>) => {
+          if (event.key === 'Tab') {
+            event.preventDefault();
+            setOpen(false);
+          }
+        },
+        [setOpen],
+      );
 
       useEffect(() => {
         if (!controlRef.current) return;
@@ -274,6 +283,7 @@ const DefaultSelectDropdownComponent = memo(
               aria-multiselectable={isMultiSelect}
               className={cx(classNames?.root, className)}
               display="block"
+              onKeyDown={handleKeyDown}
               role={accessibilityRoles?.dropdown}
               style={dropdownStyles}
               {...props}
