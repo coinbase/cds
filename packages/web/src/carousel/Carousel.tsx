@@ -480,12 +480,12 @@ const clampWithElasticResistance = (
  * @param gap - The gap between items.
  * @returns The number of items to clone for each direction.
  */
-const getCloneCount = (items: Rect[], containerWidth: number, gap: number): number => {
+const getCloneCount = (items: Rect[], containerWidth: number): number => {
   let widthSum = 0;
   let count = 0;
 
   for (const item of items) {
-    widthSum += item.width + gap;
+    widthSum += item.width;
     count++;
     if (widthSum >= containerWidth) break;
   }
@@ -689,8 +689,8 @@ export const Carousel = memo(
         if (!shouldLoop || Object.keys(carouselItemRects).length === 0 || containerWidth === 0) {
           return 0;
         }
-        return getCloneCount(getItemOffsets(carouselItemRects), containerWidth, gap);
-      }, [shouldLoop, carouselItemRects, containerWidth, gap]);
+        return getCloneCount(getItemOffsets(carouselItemRects), containerWidth);
+      }, [shouldLoop, carouselItemRects, containerWidth]);
 
       // Clone children for looping to create visual continuity
       // Clones are rendered as plain divs (not CarouselItem) to avoid registering with ref map

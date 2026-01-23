@@ -427,12 +427,12 @@ const clampWithElasticResistance = (
  * @param gap - The gap between items.
  * @returns The number of items to clone for each direction.
  */
-const getCloneCount = (items: Rect[], containerWidth: number, gap: number): number => {
+const getCloneCount = (items: Rect[], containerWidth: number): number => {
   let widthSum = 0;
   let count = 0;
 
   for (const item of items) {
-    widthSum += item.width + gap;
+    widthSum += item.width;
     count++;
     if (widthSum >= containerWidth) break;
   }
@@ -591,8 +591,8 @@ export const Carousel = memo(
         ) {
           return 0;
         }
-        return getCloneCount(getItemOffsets(carouselItemRects), containerSize.width, gap);
-      }, [shouldLoop, carouselItemRects, containerSize.width, gap]);
+        return getCloneCount(getItemOffsets(carouselItemRects), containerSize.width);
+      }, [shouldLoop, carouselItemRects, containerSize.width]);
 
       // Calculate pages and their offsets based on snapMode
       const { totalPages, pageOffsets } = useMemo(() => {
