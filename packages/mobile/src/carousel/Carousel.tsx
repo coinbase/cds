@@ -681,6 +681,20 @@ export const Carousel = memo(
         [activePageIndex, totalPages, goToPage],
       );
 
+      const handleGoNext = useCallback(() => {
+        const nextPage = shouldLoop
+          ? wrap(0, totalPages, activePageIndex + 1)
+          : activePageIndex + 1;
+        goToPage(nextPage);
+      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+
+      const handleGoPrevious = useCallback(() => {
+        const prevPage = shouldLoop
+          ? wrap(0, totalPages, activePageIndex - 1)
+          : activePageIndex - 1;
+        goToPage(prevPage);
+      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+
       const handleDragStart = useCallback(() => {
         onDragStart?.();
       }, [onDragStart]);
@@ -998,20 +1012,8 @@ export const Carousel = memo(
                     }
                     disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
                     nextPageAccessibilityLabel={nextPageAccessibilityLabel}
-                    onGoNext={() => {
-                      if (shouldLoop) {
-                        goToPage(wrap(0, totalPages, activePageIndex + 1));
-                      } else {
-                        goToPage(activePageIndex + 1);
-                      }
-                    }}
-                    onGoPrevious={() => {
-                      if (shouldLoop) {
-                        goToPage(wrap(0, totalPages, activePageIndex - 1));
-                      } else {
-                        goToPage(activePageIndex - 1);
-                      }
-                    }}
+                    onGoNext={handleGoNext}
+                    onGoPrevious={handleGoPrevious}
                     previousPageAccessibilityLabel={previousPageAccessibilityLabel}
                     style={styles?.navigation}
                   />
