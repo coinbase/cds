@@ -21,7 +21,6 @@ import {
   useAnimation,
   useDragControls,
   useMotionValue,
-  useMotionValueEvent,
   useTransform,
 } from 'framer-motion';
 
@@ -938,8 +937,6 @@ export const Carousel = memo(
               duration: 0.25,
               onComplete: () => {
                 isAnimatingRef.current = false;
-                // No normalization needed here - wrappedX handles visual looping
-                // Optional long-session cleanup happens in useMotionValueEvent when at rest
               },
             });
           } else {
@@ -1108,35 +1105,6 @@ export const Carousel = memo(
           updateActivePageIndex,
         ],
       );
-
-      // Normalize carouselScrollX when majority of viewport shows clones
-      // This keeps values bounded so snap targets stay near origin
-      // With Derived Transform pattern, wrappedX handles visual - jump is seamless
-      useMotionValueEvent(carouselScrollX, 'change', (latest) => {
-        if (!shouldLoop || !loopLength || isAnimatingRef.current) return;
-
-        // Calculate thresholds for when majority (>50%) of viewport shows clones
-        const forwardThreshold = -loopLength + containerWidth / 2;
-        const backwardThreshold = containerWidth / 2;
-
-        // Normalize when crossed into majority-clone territory
-        if (latest < forwardThreshold || latest > backwardThreshold) {
-          const wrapped = latest % loopLength;
-          const normalizedValue = wrapped > 0 ? wrapped - loopLength : wrapped;
-
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[Carousel] Normalizing (majority clone visible)', {
-              latest,
-              normalizedValue,
-              loopLength,
-              forwardThreshold,
-              backwardThreshold,
-            });
-          }
-
-          carouselScrollX.jump(normalizedValue);
-        }
-      });
 
       const handleDragStart = useCallback(() => {
         onDragStart?.();
