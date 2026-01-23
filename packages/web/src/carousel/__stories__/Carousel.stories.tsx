@@ -72,6 +72,26 @@ const sampleItems = [
   <SampleCard key="8" text="Slide 8" />,
   <SampleCard key="9" text="Slide 9" />,
   <SampleCard key="10" text="Slide 10" />,
+  /*<SampleCard key="11" text="Slide 11" />,
+  <SampleCard key="12" text="Slide 12" />,
+  <SampleCard key="13" text="Slide 13" />,
+  <SampleCard key="14" text="Slide 14" />,
+  <SampleCard key="15" text="Slide 15" />,
+  <SampleCard key="16" text="Slide 16" />,
+  <SampleCard key="17" text="Slide 17" />,
+  <SampleCard key="18" text="Slide 18" />,
+  <SampleCard key="19" text="Slide 19" />,
+  <SampleCard key="20" text="Slide 20" />,
+  <SampleCard key="21" text="Slide 21" />,
+  <SampleCard key="22" text="Slide 22" />,
+  <SampleCard key="23" text="Slide 23" />,
+  <SampleCard key="24" text="Slide 24" />,
+  <SampleCard key="25" text="Slide 25" />,
+  <SampleCard key="26" text="Slide 26" />,
+  <SampleCard key="27" text="Slide 27" />,
+  <SampleCard key="28" text="Slide 28" />,
+  <SampleCard key="29" text="Slide 29" />,
+  <SampleCard key="30" text="Slide 30" />,*/
 ];
 
 const gapOnlyStyles = {
@@ -553,7 +573,7 @@ export const LoopingSnapPageMinContent = () => (
 
 export const LoopingSnapItem = () => (
   <NegativeMargin>
-    <Carousel drag="snap" loop snapMode="item" styles={overflowStyles} title="Looping - Snap Item">
+    <Carousel loop drag="snap" snapMode="item" styles={overflowStyles} title="Looping - Snap Item">
       {sampleItems.map((item, index) => (
         <CarouselItem
           key={`loop-item-${index}`}
@@ -569,7 +589,7 @@ export const LoopingSnapItem = () => (
 
 export const LoopingFreeDrag = () => (
   <NegativeMargin>
-    <Carousel drag="free" loop snapMode="item" styles={overflowStyles} title="Looping - Free Drag">
+    <Carousel loop drag="free" snapMode="item" styles={overflowStyles} title="Looping - Free Drag">
       {sampleItems.map((item, index) => (
         <CarouselItem
           key={`loop-free-${index}`}

@@ -14,6 +14,16 @@ import { CarouselItem } from '../CarouselItem';
 // Mock framer-motion
 jest.mock('framer-motion', () => {
   const realFramerMotion = jest.requireActual('framer-motion');
+
+  // Helper to create a mock MotionValue with all required methods
+  const createMockMotionValue = (initialValue: number) => ({
+    get: jest.fn(() => initialValue),
+    set: jest.fn(),
+    on: jest.fn(() => () => {}), // Returns unsubscribe function
+    onChange: jest.fn(() => () => {}),
+    clearListeners: jest.fn(),
+  });
+
   return {
     ...realFramerMotion,
     LazyMotion: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -40,17 +50,29 @@ jest.mock('framer-motion', () => {
         );
       }),
     },
+    // Mock the animate function for animating MotionValues directly
+    animate: jest.fn((motionValue, target, options) => {
+      // Simulate the animation by setting the value immediately
+      if (motionValue && typeof motionValue.set === 'function') {
+        motionValue.set(target);
+      }
+      return { stop: jest.fn() };
+    }),
     useAnimation: () => ({
       start: jest.fn(),
       stop: jest.fn(),
-    }),
-    useMotionValue: (initialValue: number) => ({
-      get: jest.fn(() => initialValue),
       set: jest.fn(),
     }),
+    useMotionValue: (initialValue: number) => createMockMotionValue(initialValue),
+    useTransform: (value: { get: () => number }, transformer: (v: number) => number) => {
+      // Return a mock MotionValue that applies the transformer
+      const transformedValue = transformer(value.get());
+      return createMockMotionValue(transformedValue);
+    },
     useDragControls: () => ({
       start: jest.fn(),
     }),
+    useMotionValueEvent: jest.fn(),
   };
 });
 
