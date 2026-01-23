@@ -1,8 +1,9 @@
 {
   "import": "import { InputChip } from '@coinbase/cds-web/chips/InputChip'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/chips/InputChip.tsx",
-  "description": "A Chip used for removable selections.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chips-inputchip--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=10177-4850&t=YbvYrnHXUU8AZpH5-4",
+  "description": "A Chip used for removable selections.",
   "relatedComponents": [
     {
       "label": "Chip",

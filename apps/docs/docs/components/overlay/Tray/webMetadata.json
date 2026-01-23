@@ -1,8 +1,9 @@
 {
   "import": "import { Tray } from '@coinbase/cds-web/overlays/tray/Tray'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/tray/Tray.tsx",
-  "description": "An elevated container pinned to the bottom of the screen.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tray--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=14729-33579&t=ZdDGI8TzY5w2aTDX-0",
+  "description": "An elevated container pinned to the bottom of the screen.",
   "relatedComponents": [
     {
       "label": "Modal",

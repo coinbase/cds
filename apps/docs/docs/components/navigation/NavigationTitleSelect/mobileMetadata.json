@@ -1,15 +1,23 @@
 {
   "import": "import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation/NavigationTitleSelect'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/navigation/NavigationTitleSelect.tsx",
-  "description": "A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It opens a Tray on mobile.",
+  "description": "A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It opens a Tray to display options.",
   "relatedComponents": [
     {
       "label": "NavigationTitle",
-      "url": "/components/navigation/NavigationTitle/"
+      "url": "/components/navigation/NavigationTitle"
     },
     {
       "label": "TopNavBar",
-      "url": "/components/navigation/TopNavBar/"
+      "url": "/components/navigation/TopNavBar"
+    },
+    {
+      "label": "Tray",
+      "url": "/components/overlay/Tray"
+    },
+    {
+      "label": "SelectOption",
+      "url": "/components/inputs/SelectOption"
     }
   ]
 }

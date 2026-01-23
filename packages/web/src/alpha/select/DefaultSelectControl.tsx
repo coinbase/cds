@@ -140,6 +140,37 @@ const DefaultSelectControlComponent = memo(
         return map;
       }, [options]);
 
+      const singleValueContent = useMemo(() => {
+        const option = !isMultiSelect ? optionsMap.get(value as SelectOptionValue) : undefined;
+        const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
+        return hasValue ? label : placeholder;
+      }, [hasValue, isMultiSelect, optionsMap, placeholder, value]);
+
+      const computedControlAccessibilityLabel = useMemo(() => {
+        // For multi-select, set the label to the content of each selected value and the hidden selected options label
+        if (isMultiSelect) {
+          const selectedValues = (value as SelectOptionValue[])
+            .map((v) => {
+              const option = optionsMap.get(v);
+              return option?.label ?? option?.description ?? option?.value ?? v;
+            })
+            .slice(0, maxSelectedOptionsToShow)
+            .join(', ');
+          return `${accessibilityLabel}, ${(value as SelectOptionValue[]).length > 0 ? selectedValues : (placeholder ?? '')}${(value as SelectOptionValue[]).length > maxSelectedOptionsToShow ? ', ' + hiddenSelectedOptionsLabel : ''}`;
+        }
+        // If value is React node, fallback to only using passed in accessibility label
+        return `${accessibilityLabel ?? ''}${typeof singleValueContent === 'string' ? ', ' + singleValueContent : ''}`;
+      }, [
+        accessibilityLabel,
+        hiddenSelectedOptionsLabel,
+        isMultiSelect,
+        maxSelectedOptionsToShow,
+        optionsMap,
+        placeholder,
+        singleValueContent,
+        value,
+      ]);
+
       const controlPressableRef = useRef<HTMLButtonElement>(null);
       const valueNodeContainerRef = useRef<HTMLDivElement>(null);
       const handleUnselectValue = useCallback(
@@ -266,10 +297,7 @@ const DefaultSelectControlComponent = memo(
           );
         }
 
-        const option = !isMultiSelect ? optionsMap.get(value as SelectOptionValue) : undefined;
-        const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
-        const content = hasValue ? label : placeholder;
-        return typeof content === 'string' ? (
+        return typeof singleValueContent === 'string' ? (
           <Text
             as="p"
             color={hasValue ? 'fg' : 'fgMuted'}
@@ -278,19 +306,19 @@ const DefaultSelectControlComponent = memo(
             overflow="truncate"
             width="100%"
           >
-            {content}
+            {singleValueContent}
           </Text>
         ) : (
-          content
+          singleValueContent
         );
       }, [
         hasValue,
         isMultiSelect,
-        optionsMap,
-        placeholder,
+        singleValueContent,
         value,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
+        optionsMap,
         removeSelectedOptionAccessibilityLabel,
         handleUnselectValue,
       ]);
@@ -301,7 +329,7 @@ const DefaultSelectControlComponent = memo(
           <Pressable
             ref={controlPressableRef}
             noScaleOnPress
-            accessibilityLabel={accessibilityLabel}
+            accessibilityLabel={computedControlAccessibilityLabel}
             aria-haspopup={ariaHaspopup}
             background="transparent"
             blendStyles={interactableBlendStyles}
@@ -373,7 +401,7 @@ const DefaultSelectControlComponent = memo(
           </Pressable>
         ),
         [
-          accessibilityLabel,
+          computedControlAccessibilityLabel,
           ariaHaspopup,
           interactableBlendStyles,
           classNames?.controlInputNode,

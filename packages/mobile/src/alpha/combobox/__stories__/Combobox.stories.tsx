@@ -169,6 +169,22 @@ const ControlledSearchExample = () => {
   );
 };
 
+const AccessibilityLabelExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      accessibilityLabel="Custom accessibility label"
+      label="Accessible combobox"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Has accessibility label..."
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const WithDescriptionsExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -786,6 +802,9 @@ const Default = () => {
       </Example>
       <Example title="Controlled search">
         <ControlledSearchExample />
+      </Example>
+      <Example title="Custom accessibility label">
+        <AccessibilityLabelExample />
       </Example>
       <Example title="Options with descriptions">
         <WithDescriptionsExample />

@@ -17,12 +17,11 @@ import { Text } from '../typography/Text';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
+const DEFAULT_MIN_WIDTH = 100;
+
 export const spinnerHeight = 2.5;
 
 const baseCss = css`
-  min-width: 100px;
-  padding-inline-start: var(--space-4);
-  padding-inline-end: var(--space-4);
   text-decoration: none;
   display: inline-flex;
   text-align: center;
@@ -30,7 +29,6 @@ const baseCss = css`
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  margin: 0;
   position: relative;
   white-space: nowrap;
   appearance: none;
@@ -44,12 +42,6 @@ const blockCss = css`
   width: 100%;
   max-width: 100%;
   white-space: normal;
-`;
-
-const compactCss = css`
-  min-width: auto;
-  padding-inline-start: var(--space-2);
-  padding-inline-end: var(--space-2);
 `;
 
 const spinnerContainerCss = css`
@@ -214,6 +206,10 @@ export const Button: ButtonComponent = memo(
         borderWidth = 100,
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
+        padding,
+        paddingX = padding ?? (compact ? 2 : 4),
+        margin = 0,
+        minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
         ...props
       }: ButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -241,7 +237,6 @@ export const Button: ButtonComponent = memo(
           className={cx(
             COMPONENT_STATIC_CLASSNAME,
             baseCss,
-            compact && compactCss,
             numberOfLines && unsetNoWrapCss,
             hasIcon && iconCss,
             block && blockCss,
@@ -258,7 +253,11 @@ export const Button: ButtonComponent = memo(
           data-variant={variant}
           height={height}
           loading={loading}
+          margin={margin}
+          minWidth={minWidth}
           noScaleOnPress={noScaleOnPress}
+          padding={padding}
+          paddingX={paddingX}
           transparentWhileInactive={transparent}
           {...props}
         >

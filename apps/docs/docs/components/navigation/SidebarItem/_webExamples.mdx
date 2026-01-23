@@ -1,1 +1,215 @@
-Check [Sidebar](/components/navigation/Sidebar) for usage examples
+## Basics
+
+SidebarItem requires an `icon` and `title`. Place it inside a Sidebar component which provides context for collapsed state and variant styling.
+
+```jsx live
+function BasicSidebarItem() {
+  const [active, setActive] = useState(false);
+
+  return (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        <SidebarItem
+          active={active}
+          icon="home"
+          onClick={() => setActive(!active)}
+          title="Home"
+          tooltipContent="Home"
+        />
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Active State
+
+Use the `active` prop to indicate the currently selected navigation item. The active state changes the text and icon color to provide visual feedback.
+
+```jsx live
+function ActiveState() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Collapsed State
+
+When the parent Sidebar is collapsed, SidebarItem automatically hides the title text and shows only the icon. Use `tooltipContent` to display a tooltip on hover, which is essential for usability since the title is hidden.
+
+```jsx live
+function CollapsedState() {
+  const [collapsed, setCollapsed] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar
+        collapsed={collapsed}
+        logo={<LogoMark />}
+        renderEnd={() => (
+          <IconButton
+            name={collapsed ? 'caretRight' : 'caretLeft'}
+            onClick={() => setCollapsed(!collapsed)}
+          />
+        )}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Styling
+
+### Border Radius
+
+The default border radius is `1000` (pill shape) for the default sidebar variant. You can customize it with the `borderRadius` prop.
+
+```jsx live
+function CustomBorderRadius() {
+  return (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        <SidebarItem icon="home" title="Default (1000)" tooltipContent="Default" />
+        <SidebarItem
+          borderRadius={200}
+          icon="chartPie"
+          title="borderRadius={200}"
+          tooltipContent="200"
+        />
+        <SidebarItem borderRadius={0} icon="trading" title="borderRadius={0}" tooltipContent="0" />
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Custom Component
+
+Use the `Component` prop to render a completely custom layout while still benefiting from SidebarItem's state management. Your custom component receives `icon`, `title`, `color`, `active`, and `isCollapsed` props.
+
+```jsx live
+function CustomComponent() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Dashboard', icon: 'home', badge: 3 },
+    { title: 'Messages', icon: 'speechBubble', badge: 12 },
+    { title: 'Analytics', icon: 'chartBar', badge: 0 },
+  ];
+
+  const CustomSidebarContent = ({ icon, title, color, active, isCollapsed }) => (
+    <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+      <Icon active={active} color={color} name={icon} size="m" />
+      {!isCollapsed && (
+        <HStack alignItems="center" flexGrow={1} justifyContent="space-between">
+          <Text color={color} font="headline">
+            {title}
+          </Text>
+          {items.find((i) => i.title === title)?.badge > 0 && (
+            <Box
+              background={active ? 'primaryWash' : 'bgAlternate'}
+              borderRadius={1000}
+              paddingX={1}
+            >
+              <Text color={active ? 'primary' : 'fgMuted'} font="label2">
+                {items.find((i) => i.title === title)?.badge}
+              </Text>
+            </Box>
+          )}
+        </HStack>
+      )}
+    </HStack>
+  );
+
+  return (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            Component={CustomSidebarContent}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Accessibility
+
+SidebarItem automatically sets `accessibilityLabel` to the `title` value and uses `aria-current="page"` when active. When collapsed, the accessibility label is applied to the Pressable to ensure screen readers announce the item correctly.
+
+Provide a custom `accessibilityLabel` for more descriptive screen reader announcements.
+
+```jsx live
+function Accessibility() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home', label: 'Navigate to home page' },
+    { title: 'Assets', icon: 'chartPie', label: 'View your asset portfolio' },
+    { title: 'Trade', icon: 'trading', label: 'Open trading interface' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            accessibilityLabel={item.label}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```

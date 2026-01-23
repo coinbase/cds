@@ -133,6 +133,7 @@ export const FocusTrap = memo(function FocusTrap({
   // trap focus for accessibility
   const handleKeyboardNavigation = useCallback(
     (event: KeyboardEvent, element: RefObject<HTMLElement>['current']) => {
+      if (event.defaultPrevented) return;
       const document = getBrowserGlobals()?.document;
       const activeElement = document?.activeElement as HTMLElement;
 
@@ -170,7 +171,7 @@ export const FocusTrap = memo(function FocusTrap({
         : undefined;
 
       const secondElementIsMenuItemOrOption =
-        secondElement.role === 'menuitem' || secondElement.role === 'option';
+        secondElement?.role === 'menuitem' || secondElement?.role === 'option';
 
       // bring focus inside modal
       if (
@@ -239,7 +240,7 @@ export const FocusTrap = memo(function FocusTrap({
           (event.key === 'ArrowDown' &&
             (activeElementIsMenuItemOrOption || secondElementIsMenuItemOrOption))
         ) {
-          secondElement.focus();
+          secondElement?.focus();
         }
       };
 

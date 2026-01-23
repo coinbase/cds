@@ -64,8 +64,16 @@ export type ScrubberBeaconProps = SharedProps & {
   isIdle?: boolean;
   /**
    * Pulse the beacon while it is at rest.
+   *
+   * @note Only has an effect when `isIdle` is `true`. Pulse animations work
+   * regardless of the chart's `animate` prop.
    */
   idlePulse?: boolean;
+  /**
+   * Whether position animations are enabled.
+   * @default to ChartContext's animate value
+   */
+  animate?: boolean;
   /**
    * Transition configuration for beacon animations.
    */
@@ -92,6 +100,11 @@ export type ScrubberBeaconProps = SharedProps & {
    * @default 1
    */
   opacity?: number;
+  /**
+   * Stroke color of the beacon circle.
+   * @default 'var(--color-bg)'
+   */
+  stroke?: string;
   /**
    * Custom className for styling.
    */
@@ -188,6 +201,11 @@ export type ScrubberBaseProps = SharedProps &
      * Transition configuration for the scrubber beacon.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
+    /**
+     * Stroke color of the scrubber beacon circle.
+     * @default 'var(--color-bg)'
+     */
+    beaconStroke?: string;
   };
 
 export type ScrubberProps = ScrubberBaseProps & {
@@ -245,6 +263,7 @@ export const Scrubber = memo(
         testID,
         idlePulse,
         beaconTransitions,
+        beaconStroke,
         styles,
         classNames,
       },
@@ -379,6 +398,7 @@ export const Scrubber = memo(
             className={classNames?.beacon}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
+            stroke={beaconStroke}
             style={styles?.beacon}
             testID={testID}
             transitions={beaconTransitions}

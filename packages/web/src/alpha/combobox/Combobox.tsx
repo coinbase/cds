@@ -162,8 +162,9 @@ const ComboboxBase = memo(
         options,
         open: openProp,
         setOpen: setOpenProp,
-        placeholder,
-        accessibilityLabel = 'Combobox control',
+        label,
+        accessibilityLabel = typeof label === 'string' ? label : 'Combobox dropdown',
+        controlAccessibilityLabel = typeof label === 'string' ? label : 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
         onSearch: onSearchProp,
@@ -252,11 +253,12 @@ const ComboboxBase = memo(
             ref={controlRef}
             SelectControlComponent={ComboboxControl}
             accessibilityLabel={accessibilityLabel}
+            controlAccessibilityLabel={controlAccessibilityLabel}
             defaultOpen={defaultOpen}
+            label={label}
             onChange={handleChange}
             open={open}
             options={filteredOptions}
-            placeholder={placeholder}
             setOpen={setOpen}
             type={type}
             value={value}
