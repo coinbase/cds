@@ -308,31 +308,32 @@ const getNearestPageIndexFromOffset = (scrollOffset: number, pageOffsets: number
 };
 
 /**
- * Finds the shortest path to a target offset when looping is enabled.
- * Checks whether going through the previous or next loop cycle would be shorter
- * than traveling within the current cycle.
+ * Finds the nearest offset from a set of candidate offsets, considering loop cycles.
+ * Checks current, previous, and next cycles to find the shortest path.
  * @param currentOffset - The current scroll offset.
- * @param targetOffset - The target offset within a single loop.
+ * @param candidateOffsets - Array of candidate offsets within a single loop cycle.
  * @param loopLength - The total length of one loop cycle.
- * @returns The shortest path offset.
+ * @returns The nearest offset and its index in the candidates array.
  */
-const getShortestLoopOffset = (
+const findNearestLoopOffset = (
   currentOffset: number,
-  targetOffset: number,
+  candidateOffsets: number[],
   loopLength: number,
-): number => {
+): { offset: number; index: number } => {
   const currentCycle = Math.floor(currentOffset / loopLength);
-  const targetInCurrentCycle = currentCycle * loopLength + targetOffset;
+  let nearest = { offset: 0, index: 0, distance: Infinity };
 
-  const candidates = [
-    targetInCurrentCycle,
-    targetInCurrentCycle - loopLength,
-    targetInCurrentCycle + loopLength,
-  ];
+  for (const [index, candidateOffset] of candidateOffsets.entries()) {
+    for (const cycle of [currentCycle - 1, currentCycle, currentCycle + 1]) {
+      const cycleOffset = cycle * loopLength + candidateOffset;
+      const distance = Math.abs(currentOffset - cycleOffset);
+      if (distance < nearest.distance) {
+        nearest = { offset: cycleOffset, index, distance };
+      }
+    }
+  }
 
-  return candidates.reduce((a, b) =>
-    Math.abs(currentOffset - a) < Math.abs(currentOffset - b) ? a : b,
-  );
+  return { offset: nearest.offset, index: nearest.index };
 };
 
 /**
@@ -450,10 +451,10 @@ const clampWithElasticResistance = (
 
 /**
  * Calculates how many items need to be cloned for looping to fill the viewport.
- * @param items - The item rects sorted by position.
+ * For backward clones, pass the items array reversed.
+ * @param items - The item rects sorted by position (or reversed for backward clones).
  * @param containerWidth - The width of the container viewport.
- * @param gap - The gap between items.
- * @returns The number of items to clone for each direction.
+ * @returns The number of items to clone.
  */
 const getCloneCount = (items: Rect[], containerWidth: number): number => {
   let widthSum = 0;
@@ -466,6 +467,40 @@ const getCloneCount = (items: Rect[], containerWidth: number): number => {
   }
 
   return Math.max(1, count);
+};
+
+/**
+ * Creates a clone element for the carousel loop.
+ * @param id - Unique identifier for the clone element.
+ * @param children - The children to render inside the clone.
+ * @param width - The width of the clone element.
+ * @param height - The height of the clone element.
+ * @param left - The left position (only for backward/absolute positioned clones).
+ * @returns A React element representing the clone.
+ */
+const createCloneElement = (
+  id: string,
+  children: CarouselItemRenderChildren | React.ReactNode,
+  width: number | undefined,
+  height: number | undefined,
+  left: number | undefined,
+): React.ReactElement => {
+  const isAbsolute = left !== undefined;
+
+  return (
+    <View
+      key={id}
+      aria-hidden
+      style={{
+        ...(isAbsolute && { position: 'absolute' as const, left }),
+        flexShrink: 0,
+        width,
+        height,
+      }}
+    >
+      {typeof children === 'function' ? children({ isVisible: false }) : children}
+    </View>
+  );
 };
 
 /**
@@ -612,15 +647,19 @@ export const Carousel = memo(
       );
 
       // Calculate how many items to clone for each direction (enough to fill viewport)
-      const cloneCount = useMemo(() => {
+      const cloneCounts = useMemo(() => {
         if (
           !shouldLoop ||
           Object.keys(carouselItemRects).length === 0 ||
           containerSize.width === 0
         ) {
-          return 0;
+          return { forward: 0, backward: 0 };
         }
-        return getCloneCount(getItemOffsets(carouselItemRects), containerSize.width);
+        const items = getItemOffsets(carouselItemRects);
+        return {
+          forward: getCloneCount(items, containerSize.width),
+          backward: getCloneCount([...items].reverse(), containerSize.width),
+        };
       }, [shouldLoop, carouselItemRects, containerSize.width]);
 
       // Calculate pages and their offsets based on snapMode
@@ -667,7 +706,8 @@ export const Carousel = memo(
 
           const targetOffset =
             shouldLoop && loopLength
-              ? getShortestLoopOffset(carouselScrollX.current, pageOffsets[newPage], loopLength)
+              ? findNearestLoopOffset(carouselScrollX.current, [pageOffsets[newPage]], loopLength)
+                  .offset
               : pageOffsets[newPage];
 
           carouselScrollX.current = targetOffset;
@@ -721,28 +761,21 @@ export const Carousel = memo(
           if (drag === 'none') return targetOffsetScroll;
 
           if (shouldLoop && loopLength) {
-            const currentCycle = Math.floor(targetOffsetScroll / loopLength);
-            const localOffset = targetOffsetScroll - currentCycle * loopLength;
+            const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
+              targetOffsetScroll,
+              pageOffsets,
+              loopLength,
+            );
 
-            // Find nearest snap target across current, previous, and next cycles
-            let nearest = { pageIndex: 0, offset: 0, distance: Infinity };
-            for (const [pageIndex, pageOffset] of pageOffsets.entries()) {
-              for (const cycle of [currentCycle - 1, currentCycle, currentCycle + 1]) {
-                const cycleOffset = cycle * loopLength + pageOffset;
-                const distance = Math.abs(targetOffsetScroll - cycleOffset);
-                if (distance < nearest.distance) {
-                  nearest = { pageIndex, offset: cycleOffset, distance };
-                }
-              }
-            }
-
-            updateActivePageIndex(nearest.pageIndex);
+            updateActivePageIndex(pageIndex);
 
             if (drag === 'snap') {
-              updateVisibleCarouselItems(pageOffsets[nearest.pageIndex]);
-              return nearest.offset;
+              updateVisibleCarouselItems(pageOffsets[pageIndex]);
+              return nearestOffset;
             }
 
+            const currentCycle = Math.floor(targetOffsetScroll / loopLength);
+            const localOffset = targetOffsetScroll - currentCycle * loopLength;
             updateVisibleCarouselItems(localOffset);
             return targetOffsetScroll;
           } else {
@@ -868,30 +901,21 @@ export const Carousel = memo(
         const result: React.ReactNode[] = [];
 
         // Add backward clones (only when we have enough data to position them)
-        if (shouldLoop && loopLength && cloneCount > 0) {
+        if (shouldLoop && loopLength && cloneCounts.backward > 0) {
           const items = getItemOffsets(carouselItemRects);
-          const itemsToCloneBackward = childrenArray.slice(-cloneCount);
+          const itemsToCloneBackward = childrenArray.slice(-cloneCounts.backward);
 
           itemsToCloneBackward.forEach((child, cloneIndex) => {
-            const originalIndex = childrenArray.length - cloneCount + cloneIndex;
+            const originalIndex = childrenArray.length - cloneCounts.backward + cloneIndex;
             const itemData = items[originalIndex];
-            const itemPosition = itemData?.x ?? 0;
-
             result.push(
-              <View
-                key={`clone-backward-${child.props.id}`}
-                aria-hidden
-                style={{
-                  position: 'absolute',
-                  left: itemPosition - loopLength,
-                  width: itemData?.width,
-                  height: itemData?.height,
-                }}
-              >
-                {typeof child.props.children === 'function'
-                  ? child.props.children({ isVisible: false })
-                  : child.props.children}
-              </View>,
+              createCloneElement(
+                `clone-backward-${child.props.id}`,
+                child.props.children,
+                itemData?.width,
+                itemData?.height,
+                (itemData?.x ?? 0) - loopLength,
+              ),
             );
           });
         }
@@ -900,33 +924,26 @@ export const Carousel = memo(
         result.push(...childrenArray);
 
         // Add forward clones (only when we have enough data)
-        if (shouldLoop && loopLength && cloneCount > 0) {
+        if (shouldLoop && loopLength && cloneCounts.forward > 0) {
           const items = getItemOffsets(carouselItemRects);
-          const itemsToCloneForward = childrenArray.slice(0, cloneCount);
+          const itemsToCloneForward = childrenArray.slice(0, cloneCounts.forward);
 
           itemsToCloneForward.forEach((child, cloneIndex) => {
             const itemData = items[cloneIndex];
-
             result.push(
-              <View
-                key={`clone-forward-${child.props.id}`}
-                aria-hidden
-                style={{
-                  flexShrink: 0,
-                  width: itemData?.width,
-                  height: itemData?.height,
-                }}
-              >
-                {typeof child.props.children === 'function'
-                  ? child.props.children({ isVisible: false })
-                  : child.props.children}
-              </View>,
+              createCloneElement(
+                `clone-forward-${child.props.id}`,
+                child.props.children,
+                itemData?.width,
+                itemData?.height,
+                undefined,
+              ),
             );
           });
         }
 
         return result;
-      }, [loop, children, shouldLoop, loopLength, cloneCount, carouselItemRects]);
+      }, [loop, children, shouldLoop, loopLength, cloneCounts, carouselItemRects]);
 
       const containerStyle = useMemo(
         () => [{ flex: 1, overflow: 'hidden' } as const, style, styles?.root],
