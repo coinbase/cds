@@ -873,7 +873,6 @@ export const Carousel = memo(
             updateActivePageIndex(nearest.pageIndex);
 
             if (drag === 'snap') {
-              animate(carouselScrollX, -nearest.offset, { type: 'tween', duration: 0.3 });
               updateVisibleCarouselItems(pageOffsets[nearest.pageIndex]);
               return -nearest.offset;
             }
@@ -909,7 +908,6 @@ export const Carousel = memo(
           loopLength,
           maxScrollOffset,
           pageOffsets,
-          carouselScrollX,
           updateVisibleCarouselItems,
           updateActivePageIndex,
         ],
