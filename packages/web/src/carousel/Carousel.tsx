@@ -537,8 +537,6 @@ export const Carousel = memo(
       const [activePageIndex, setActivePageIndex] = useState(0);
       const containerRef = useRef<HTMLDivElement>(null);
       const rootRef = useRef<HTMLDivElement>(null);
-      // Track when a programmatic animation is in progress to skip normalization
-      const isAnimatingRef = useRef(false);
       const [containerWidth, setContainerWidth] = useState(0);
       const carouselItemRefMap = useRefMap<HTMLElement>();
       const [carouselItemRects, setCarouselItemRects] = useState<{
@@ -601,39 +599,17 @@ export const Carousel = memo(
       // Looping requires: loop prop enabled, content measured, and more content than fits in viewport
       const shouldLoop = loop && hasDimensions && maxScrollOffset > 0;
 
-      // Calculate loop length (the total width of one "cycle" of content)
+      // Total width of one "cycle" of content for looping
       const loopLength = useMemo(() => {
         if (!shouldLoop) return 0;
-        const length = contentWidth + gap;
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[Carousel] loopLength calculated', {
-            contentWidth,
-            gap,
-            loopLength: length,
-          });
-        }
-        return length;
+        return contentWidth + gap;
       }, [shouldLoop, contentWidth, gap]);
 
-      // Wrapped x value for rendering - allows physics to go infinite while visuals stay bounded
-      // This is the key to preserving momentum: carouselScrollX can go to ±∞,
-      // but wrappedX stays within [-loopLength, 0)
+      // Derived transform: physics (carouselScrollX) can go to ±∞, visuals (wrappedX) stay bounded
       const wrappedX = useTransform(carouselScrollX, (value) => {
         if (!shouldLoop || !loopLength) return value;
-        // Wrap value to stay within [-loopLength, 0)
         const wrapped = value % loopLength;
-        const result = wrapped > 0 ? wrapped - loopLength : wrapped;
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[Carousel] wrappedX transform', {
-            rawValue: value,
-            loopLength,
-            wrapped,
-            result,
-            // Show what scroll position this represents (positive = scrolled right)
-            scrollPosition: -result,
-          });
-        }
-        return result;
+        return wrapped > 0 ? wrapped - loopLength : wrapped;
       });
 
       const updateVisibleCarouselItems = useCallback(
@@ -643,29 +619,15 @@ export const Carousel = memo(
             return;
           }
 
-          // localScrollOffset should always be within [0, loopLength) - the "local" position
-          // When looping, we wrap the offset to get the local position within one cycle
-          let adjustedOffset = localScrollOffset;
-          if (shouldLoop && loopLength) {
-            // Ensure offset is within [0, loopLength)
-            adjustedOffset = ((localScrollOffset % loopLength) + loopLength) % loopLength;
-          }
+          // When looping, wrap the offset to get the local position within one cycle
+          const adjustedOffset =
+            shouldLoop && loopLength
+              ? ((localScrollOffset % loopLength) + loopLength) % loopLength
+              : localScrollOffset;
 
-          // Get visible items based on the local offset
-          const visibleItems = getVisibleItems(carouselItemRects, containerWidth, adjustedOffset);
-
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[Carousel] updateVisibleCarouselItems', {
-              localScrollOffset,
-              adjustedOffset,
-              loopLength,
-              containerWidth,
-              visibleItems: Array.from(visibleItems),
-              totalItems: Object.keys(carouselItemRects).length,
-            });
-          }
-
-          setVisibleCarouselItems(visibleItems);
+          setVisibleCarouselItems(
+            getVisibleItems(carouselItemRects, containerWidth, adjustedOffset),
+          );
         },
         [carouselItemRects, containerWidth, shouldLoop, loopLength],
       );
@@ -701,8 +663,7 @@ export const Carousel = memo(
         [onChangePage],
       );
 
-      // Calculate how many items to clone for each direction
-      // We only need enough clones to fill the viewport on each side
+      // Calculate how many items to clone for each direction (enough to fill viewport)
       const cloneCount = useMemo(() => {
         if (!shouldLoop || Object.keys(carouselItemRects).length === 0 || containerWidth === 0) {
           return 0;
@@ -712,27 +673,13 @@ export const Carousel = memo(
         let widthSum = 0;
         let count = 0;
 
-        // Count items until we exceed containerWidth (plus gap for safety margin)
         for (const item of items) {
           widthSum += item.width + gap;
           count++;
           if (widthSum >= containerWidth) break;
         }
 
-        // Ensure at least 1 clone if looping is enabled
-        const result = Math.max(1, count);
-
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[Carousel] cloneCount calculated', {
-            cloneCount: result,
-            totalItems: items.length,
-            containerWidth,
-            widthSumAtBreak: widthSum,
-            gap,
-          });
-        }
-
-        return result;
+        return Math.max(1, count);
       }, [shouldLoop, carouselItemRects, containerWidth, gap]);
 
       // Clone children for looping to create visual continuity
@@ -836,26 +783,6 @@ export const Carousel = memo(
           );
         }
 
-        if (process.env.NODE_ENV === 'development') {
-          const items = getItemOffsets(carouselItemRects);
-          console.log('[Carousel] pageOffsets calculated', {
-            snapMode,
-            shouldLoop,
-            totalPages: pageOffsetsResult.totalPages,
-            pageOffsets: pageOffsetsResult.pageOffsets,
-            containerWidth,
-            maxScrollOffset,
-            contentWidth,
-            totalItems: items.length,
-            itemPositions: items.map((item, i) => ({
-              index: i,
-              x: item.x,
-              width: item.width,
-              end: item.x + item.width,
-            })),
-          });
-        }
-
         updateActivePageIndex((pageIndex) => Math.min(pageIndex, pageOffsetsResult.totalPages - 1));
 
         return pageOffsetsResult;
@@ -864,7 +791,6 @@ export const Carousel = memo(
         carouselItemRects,
         snapMode,
         containerWidth,
-        contentWidth,
         maxScrollOffset,
         shouldLoop,
         updateActivePageIndex,
@@ -874,78 +800,28 @@ export const Carousel = memo(
         (page: number) => {
           const safePage = Math.max(0, Math.min(totalPages - 1, page));
 
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[Carousel] goToPage called', {
-              requestedPage: page,
-              safePage,
-              totalPages,
-              shouldLoop,
-              loopLength,
-            });
-          }
+          updateActivePageIndex(safePage);
+          updateVisibleCarouselItems(pageOffsets[safePage]);
 
           if (shouldLoop && loopLength) {
-            // Get current position on infinite timeline
-            const currentX = carouselScrollX.get();
-            const currentOffset = -currentX;
-
-            // Determine current cycle
+            // Find shortest path across current, previous, and next cycles
+            const currentOffset = -carouselScrollX.get();
             const currentCycle = Math.floor(currentOffset / loopLength);
-
-            // Calculate target in current cycle
             const targetInCurrentCycle = currentCycle * loopLength + pageOffsets[safePage];
 
-            // Calculate target in adjacent cycles for "shortest path"
-            const targetInPrevCycle = targetInCurrentCycle - loopLength;
-            const targetInNextCycle = targetInCurrentCycle + loopLength;
-
-            // Find shortest distance
-            const distances = [
-              {
-                target: targetInCurrentCycle,
-                dist: Math.abs(currentOffset - targetInCurrentCycle),
-              },
-              { target: targetInPrevCycle, dist: Math.abs(currentOffset - targetInPrevCycle) },
-              { target: targetInNextCycle, dist: Math.abs(currentOffset - targetInNextCycle) },
+            const candidates = [
+              targetInCurrentCycle,
+              targetInCurrentCycle - loopLength,
+              targetInCurrentCycle + loopLength,
             ];
-            const shortest = distances.reduce((a, b) => (a.dist < b.dist ? a : b));
+            const shortest = candidates.reduce((a, b) =>
+              Math.abs(currentOffset - a) < Math.abs(currentOffset - b) ? a : b,
+            );
 
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[Carousel] goToPage (looping)', {
-                currentX,
-                currentOffset,
-                currentCycle,
-                targetPageOffset: pageOffsets[safePage],
-                targetInCurrentCycle,
-                targetInPrevCycle,
-                targetInNextCycle,
-                shortestTarget: shortest.target,
-                shortestDistance: shortest.dist,
-                animatingTo: -shortest.target,
-              });
-            }
-
-            updateActivePageIndex(safePage);
-            updateVisibleCarouselItems(pageOffsets[safePage]);
-
-            // Mark animation as in progress to skip normalization during animation
-            isAnimatingRef.current = true;
-
-            // Animate carouselScrollX directly - wrappedX handles visual looping via useTransform
-            animate(carouselScrollX, -shortest.target, {
-              type: 'tween',
-              duration: 0.25,
-              onComplete: () => {
-                isAnimatingRef.current = false;
-              },
-            });
+            animate(carouselScrollX, -shortest, { type: 'tween', duration: 0.25 });
           } else {
-            // Non-looping logic
-            updateActivePageIndex(safePage);
-            const targetOffset = pageOffsets[safePage];
-            updateVisibleCarouselItems(targetOffset);
             animationApi.start({
-              x: -targetOffset,
+              x: -pageOffsets[safePage],
               transition: { type: 'tween', duration: 0.25 },
             });
           }
@@ -976,97 +852,30 @@ export const Carousel = memo(
         (targetOffsetScroll: number) => {
           if (drag === 'none') return targetOffsetScroll;
 
-          // targetOffsetScroll is negative (Framer Motion convention: left = negative)
           const targetOffset = -targetOffsetScroll;
 
           if (shouldLoop && loopLength) {
-            // Determine which "cycle" we're in on the infinite timeline
             const currentCycle = Math.floor(targetOffset / loopLength);
-
-            // Map to local position within one cycle [0, loopLength)
             const localOffset = targetOffset - currentCycle * loopLength;
 
-            // Find nearest page considering BOTH current and adjacent cycles
-            // This allows snapping forward to page 0 when dragging past the last page
-            const snapCandidates: { pageIndex: number; offset: number; distance: number }[] = [];
-
+            // Find nearest snap target across current, previous, and next cycles
+            let nearest = { pageIndex: 0, offset: 0, distance: Infinity };
             for (const [pageIndex, pageOffset] of pageOffsets.entries()) {
-              // Candidate in current cycle
-              const currentCycleOffset = currentCycle * loopLength + pageOffset;
-              snapCandidates.push({
-                pageIndex,
-                offset: currentCycleOffset,
-                distance: Math.abs(targetOffset - currentCycleOffset),
-              });
-
-              // Candidate in previous cycle
-              const prevCycleOffset = (currentCycle - 1) * loopLength + pageOffset;
-              snapCandidates.push({
-                pageIndex,
-                offset: prevCycleOffset,
-                distance: Math.abs(targetOffset - prevCycleOffset),
-              });
-
-              // Candidate in next cycle
-              const nextCycleOffset = (currentCycle + 1) * loopLength + pageOffset;
-              snapCandidates.push({
-                pageIndex,
-                offset: nextCycleOffset,
-                distance: Math.abs(targetOffset - nextCycleOffset),
-              });
+              for (const cycle of [currentCycle - 1, currentCycle, currentCycle + 1]) {
+                const cycleOffset = cycle * loopLength + pageOffset;
+                const distance = Math.abs(targetOffset - cycleOffset);
+                if (distance < nearest.distance) {
+                  nearest = { pageIndex, offset: cycleOffset, distance };
+                }
+              }
             }
 
-            // Find the nearest snap target across all cycles
-            const nearest = snapCandidates.reduce((a, b) => (a.distance < b.distance ? a : b));
-            const closestPageIndex = nearest.pageIndex;
-
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[Carousel] handleDragTransition (looping)', {
-                targetOffsetScroll,
-                targetOffset,
-                loopLength,
-                currentCycle,
-                localOffset,
-                closestPageIndex,
-                nearestSnapOffset: nearest.offset,
-                nearestDistance: nearest.distance,
-                totalPages: pageOffsets.length,
-                dragMode: drag,
-              });
-            }
-
-            // Update pagination state
-            updateActivePageIndex(closestPageIndex);
+            updateActivePageIndex(nearest.pageIndex);
 
             if (drag === 'snap') {
-              // Use the nearest snap target (may be in a different cycle)
-              const snapOffset = nearest.offset;
-
-              if (process.env.NODE_ENV === 'development') {
-                console.log('[Carousel] handleDragTransition snap result', {
-                  snapOffset,
-                  returning: -snapOffset,
-                  animatingCarouselScrollXTo: -snapOffset,
-                });
-              }
-
-              // Animate carouselScrollX directly
-              animate(carouselScrollX, -snapOffset, {
-                type: 'tween',
-                duration: 0.3,
-              });
-
-              updateVisibleCarouselItems(pageOffsets[closestPageIndex]);
-              return -snapOffset;
-            }
-
-            // For 'free' mode, just update visibility and let physics run naturally
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[Carousel] handleDragTransition free mode', {
-                localOffset,
-                targetOffsetScroll,
-                message: 'Letting framer-motion physics handle it',
-              });
+              animate(carouselScrollX, -nearest.offset, { type: 'tween', duration: 0.3 });
+              updateVisibleCarouselItems(pageOffsets[nearest.pageIndex]);
+              return -nearest.offset;
             }
 
             updateVisibleCarouselItems(localOffset);
