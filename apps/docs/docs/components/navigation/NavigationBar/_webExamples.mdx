@@ -1,44 +1,200 @@
-### Web: Logged in Navigation Bar
+NavigationBar is a horizontal navigation component that provides a consistent header for application navigation and wayfinding. It supports flexible content areas, theming, and custom styling.
+
+## Basics
+
+NavigationBar is composed of the following content areas:
+
+- `start` - Leading content like back buttons
+- `children` - Center content like page titles or search
+- `end` - Trailing content like action buttons or avatars
+- `bottom` - Bottom content like tab navigation
 
 ```jsx live
-function NavigationWithPress() {
+<NavigationBar
+  start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+  end={
+    <HStack gap={1} alignItems="center">
+      <IconButton name="bell" accessibilityLabel="Notifications" />
+      <Avatar size="xl" />
+    </HStack>
+  }
+>
+  <NavigationTitle>Dashboard</NavigationTitle>
+</NavigationBar>
+```
+
+### With Tab Navigation
+
+Use the `bottom` prop to add tab navigation below the main content.
+
+```jsx live
+function NavigationWithTabs() {
   const tabs = [
-    {
-      id: 'all',
-      label: 'All',
+    { id: 'all', label: 'All' },
+    { id: 'watchlist', label: 'Watchlist' },
+    { id: 'tradable', label: 'Tradable' },
+    { id: 'gainers', label: 'Gainers' },
+  ];
+  const [value, setValue] = useState(tabs[0].id);
+
+  return (
+    <NavigationBar
+      end={
+        <HStack gap={1} alignItems="center">
+          <IconButton name="bell" accessibilityLabel="Notifications" />
+          <Avatar size="xl" />
+        </HStack>
+      }
+      bottom={<TabNavigation tabs={tabs} value={value} onChange={setValue} />}
+    >
+      <NavigationTitle>Portfolio</NavigationTitle>
+    </NavigationBar>
+  );
+}
+```
+
+### With Search
+
+```jsx live
+function NavigationWithSearch() {
+  const [search, setSearch] = useState('');
+
+  return (
+    <NavigationBar
+      start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+      end={<IconButton name="settings" accessibilityLabel="Settings" />}
+    >
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        onChangeText={setSearch}
+        placeholder="Search assets..."
+        value={search}
+      />
+    </NavigationBar>
+  );
+}
+```
+
+## Styling
+
+NavigationBar extends `BoxBaseProps`, giving you access to all standard style props like `background`, `padding`, and `position`.
+
+### Background
+
+Use the `background` prop to customize the navigation bar's background color. This is useful for theming or creating visual hierarchy.
+
+```jsx live
+<VStack gap={2}>
+  <NavigationBar background="bg">
+    <NavigationTitle>Default (bg)</NavigationTitle>
+  </NavigationBar>
+  <NavigationBar background="bgAlternate">
+    <NavigationTitle>Alternate Background</NavigationTitle>
+  </NavigationBar>
+  <NavigationBar background="bgSecondary">
+    <NavigationTitle>Secondary Background</NavigationTitle>
+  </NavigationBar>
+</VStack>
+```
+
+### Custom Styles
+
+Use the `styles` prop to apply custom inline styles to specific parts of the navigation bar.
+
+```jsx live
+<NavigationBar
+  styles={{
+    root: {
+      background: 'linear-gradient(90deg, var(--color-bg) 0%, var(--color-bgAlternate) 100%)',
     },
-    {
-      id: 'watchlist',
-      label: 'Watchlist',
-    },
-    {
-      id: 'tradable',
-      label: 'Tradable',
-    },
-    {
-      id: 'gainers',
-      label: 'Gainers',
-      count: 2,
-    },
-    {
-      id: 'losers',
-      label: 'Losers',
-    },
-    {
-      id: 'trending',
-      label: 'Trending',
-    },
-    {
-      id: 'other',
-      label: 'Other',
-    },
+  }}
+  end={<Avatar size="xl" />}
+>
+  <NavigationTitle>Custom Gradient</NavigationTitle>
+</NavigationBar>
+```
+
+### Custom Class Names
+
+Use the `classNames` prop to apply custom CSS classes to specific parts of the navigation bar. The available keys are `root`, `start`, and `content`.
+
+```jsx
+// Apply custom classes for styling
+<NavigationBar
+  classNames={{
+    root: 'my-custom-nav',
+    content: 'my-custom-content',
+  }}
+>
+  <NavigationTitle>Dashboard</NavigationTitle>
+</NavigationBar>
+```
+
+You can also import the static class names for CSS targeting:
+
+```jsx
+import { navigationBarClassNames } from '@coinbase/cds-web/navigation/NavigationBar';
+
+// navigationBarClassNames.root = 'cds-NavigationBar'
+// navigationBarClassNames.start = 'cds-NavigationBar-start'
+// navigationBarClassNames.content = 'cds-NavigationBar-content'
+```
+
+### Position
+
+By default, NavigationBar uses `position="sticky"` to stay fixed at the top of the viewport. Override this for different layouts.
+
+```jsx live
+<VStack gap={2}>
+  <Text font="label1" color="fgMuted">
+    Default sticky positioning keeps the nav fixed while scrolling.
+  </Text>
+  <NavigationBar position="relative">
+    <NavigationTitle>Relative Position</NavigationTitle>
+  </NavigationBar>
+</VStack>
+```
+
+## Accessibility
+
+Use `accessibilityLabel` to provide context for screen readers. The default label is "main navigation".
+
+```jsx live
+<NavigationBar
+  accessibilityLabel="Primary site navigation"
+  start={<IconButton name="backArrow" accessibilityLabel="Go back to previous page" />}
+  end={<IconButton name="bell" accessibilityLabel="View notifications, 3 unread" />}
+>
+  <NavigationTitle>Account Settings</NavigationTitle>
+</NavigationBar>
+```
+
+When using interactive elements in the navigation bar, ensure each has appropriate accessibility labels describing their action.
+
+## Composed Examples
+
+### Full Navigation with Back Button
+
+A complete navigation example with dynamic back button visibility and tab navigation.
+
+```jsx live
+function FullNavigation() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'watchlist', label: 'Watchlist' },
+    { id: 'tradable', label: 'Tradable' },
+    { id: 'gainers', label: 'Gainers' },
+    { id: 'losers', label: 'Losers' },
   ];
   const [search, setSearch] = useState('');
   const [value, setValue] = useState(tabs[1].id);
   const showBackButton = useMemo(() => value !== tabs[0].id, [value]);
+
   const handleBackPress = useCallback(() => {
     setValue(tabs[0].id);
   }, []);
+
   return (
     <NavigationBar
       start={
@@ -48,23 +204,80 @@ function NavigationWithPress() {
       }
       end={
         <HStack gap={1} alignItems="center">
-          <IconButton accessibilityLabel="Language" active={false} name="globe" />
+          <IconButton accessibilityLabel="Language" name="globe" />
           <IconButton accessibilityLabel="Notifications" active name="bell" />
         </HStack>
       }
       bottom={<TabNavigation tabs={tabs} value={value} onChange={setValue} />}
     >
-      <HStack alignItems="center" flexGrow={1} gap={1}>
-        <VStack width="100%">
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        onChangeText={setSearch}
+        placeholder="Search"
+        value={search}
+      />
+    </NavigationBar>
+  );
+}
+```
+
+### Responsive Navigation
+
+A responsive navigation bar that adapts to screen size. On mobile, the search input collapses to an icon button.
+
+```jsx live
+function ResponsiveNavigation() {
+  const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { isMobile } = useBreakpoints();
+
+  const handleSearchToggle = useCallback(() => {
+    setSearchOpen((prev) => !prev);
+    if (searchOpen) {
+      setSearch('');
+    }
+  }, [searchOpen]);
+
+  return (
+    <NavigationBar
+      background="bgSecondary"
+      start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+      end={
+        <HStack gap={1} alignItems="center">
+          {isMobile && (
+            <IconButton
+              name="search"
+              accessibilityLabel="Search"
+              onClick={handleSearchToggle}
+              active={searchOpen}
+            />
+          )}
+          <IconButton name="bell" accessibilityLabel="Notifications" />
+          <Avatar size="xl" />
+        </HStack>
+      }
+    >
+      {isMobile ? (
+        searchOpen && (
           <SearchInput
             compact
             accessibilityLabel="Search"
             onChangeText={setSearch}
-            placeholder="Search"
+            placeholder="Search..."
             value={search}
           />
-        </VStack>
-      </HStack>
+        )
+      ) : (
+        <SearchInput
+          compact
+          accessibilityLabel="Search"
+          onChangeText={setSearch}
+          placeholder="Search assets..."
+          value={search}
+        />
+      )}
+      {!isMobile && !searchOpen && <NavigationTitle>Trading</NavigationTitle>}
     </NavigationBar>
   );
 }

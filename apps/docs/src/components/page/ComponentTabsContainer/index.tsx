@@ -129,7 +129,7 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
         gap={3}
         id="tabpanel--examples-tab"
         paddingBottom={2}
-        paddingTop={{ base: 5, phone: 2 }}
+        paddingTop={2}
         paddingX={{ base: 4, phone: 2 }}
         role="tabpanel"
       >
