@@ -16,10 +16,6 @@
     {
       "label": "Sidebar",
       "url": "/components/navigation/Sidebar/"
-    },
-    {
-      "label": "IconButton",
-      "url": "/components/buttons/IconButton/"
     }
   ],
   "dependencies": []

@@ -94,11 +94,36 @@ export default function plugin(
         );
       }
 
+      // Styles API aliases - only create for docs that have styles data
+      const stylesDataAliases = content
+        ? Object.fromEntries(
+            content.parsedDocs
+              .filter((item) => item.styles && item.styles.selectors.length > 0)
+              .map((item) => [
+                path.join(':docgen', path.relative(pluginDir, item.cacheDirectory), 'styles-data'),
+                path.join(item.cacheDirectory, 'styles-data.js'),
+              ]),
+          )
+        : {};
+
+      const tocStylesAliases = content
+        ? Object.fromEntries(
+            content.parsedDocs
+              .filter((item) => item.styles && item.styles.selectors.length > 0)
+              .map((item) => [
+                path.join(':docgen', path.relative(pluginDir, item.cacheDirectory), 'toc-styles'),
+                path.join(item.cacheDirectory, 'toc-styles.js'),
+              ]),
+          )
+        : {};
+
       const aliases = {
         ...apiAliases,
         ...metadataAliases,
         ...dataAliases,
         ...tocPropsAliases,
+        ...stylesDataAliases,
+        ...tocStylesAliases,
         [`:docgen/_types/sharedTypeAliases`]: path.join(pluginDir, '_types/sharedTypeAliases'),
         [`:docgen/_types/sharedParentTypes`]: path.join(pluginDir, '_types/sharedParentTypes'),
       };

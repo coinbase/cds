@@ -13,9 +13,17 @@ export const navigationBarDefaultElement = 'nav';
 
 export type NavigationBarDefaultElement = typeof navigationBarDefaultElement;
 
+/**
+ * Static class names for NavigationBar component parts.
+ * Use these selectors to target specific elements with CSS.
+ * @styles
+ */
 export const navigationBarClassNames = {
+  /** Root nav element containing the entire navigation bar */
   root: 'cds-NavigationBar',
+  /** Container for the start slot (e.g., back button) */
   start: 'cds-NavigationBar-start',
+  /** Container for the main children content (e.g., title) */
   content: 'cds-NavigationBar-content',
 } as const;
 

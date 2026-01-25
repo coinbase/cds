@@ -14,6 +14,8 @@ import type {
   ProcessedDoc,
   ProcessedPropItem,
   PropItem,
+  StyleSelector,
+  StylesData,
 } from '../types';
 
 export const sharedParentTypesCache = new Set<ProcessedPropItem>();
@@ -112,6 +114,80 @@ function getDefaultIntrinsicElementName(
     return lit ? (lit.value as string) : undefined;
   }
   return undefined;
+}
+
+/**
+ * Extract style selectors from a component's *ClassNames export.
+ *
+ * Looks for exports matching the pattern `${componentName}ClassNames` (case-insensitive first char)
+ * and extracts each property as a style selector with its JSDoc description.
+ *
+ * @example
+ * ```ts
+ * export const navigationBarClassNames = {
+ *   /** Root element *\/
+ *   root: 'cds-NavigationBar',
+ *   /** Start slot *\/
+ *   start: 'cds-NavigationBar-start',
+ * } as const;
+ * ```
+ *
+ * Would produce:
+ * ```ts
+ * [
+ *   { selector: 'root', className: 'cds-NavigationBar', description: 'Root element' },
+ *   { selector: 'start', className: 'cds-NavigationBar-start', description: 'Start slot' },
+ * ]
+ * ```
+ */
+function extractStyleSelectors(
+  checker: ts.TypeChecker,
+  sourceFile: ts.SourceFile,
+  componentName: string,
+): StylesData | undefined {
+  const moduleSymbol = checker.getSymbolAtLocation(sourceFile);
+  if (!moduleSymbol) return undefined;
+
+  // Look for export matching pattern: componentNameClassNames (case-insensitive first char)
+  // e.g., NavigationBar -> navigationBarClassNames or NavigationBarClassNames
+  const lowerFirstChar = componentName.charAt(0).toLowerCase() + componentName.slice(1);
+  const classNamesExportName = `${lowerFirstChar}ClassNames`;
+
+  const exports = checker.getExportsOfModule(moduleSymbol);
+  const classNamesSymbol = exports.find(
+    (s) => s.name.toLowerCase() === classNamesExportName.toLowerCase(),
+  );
+
+  if (!classNamesSymbol) return undefined;
+
+  // Get the type of the classNames object
+  const classNamesType = checker.getTypeOfSymbolAtLocation(classNamesSymbol, sourceFile);
+  const properties = checker.getPropertiesOfType(classNamesType);
+
+  if (properties.length === 0) return undefined;
+
+  const selectors: StyleSelector[] = properties.map((prop) => {
+    const propName = prop.getName();
+
+    // Get the value (class name string)
+    const propType = checker.getTypeOfSymbolAtLocation(prop, sourceFile);
+    let className = '';
+    if (propType.flags & ts.TypeFlags.StringLiteral) {
+      className = (propType as ts.LiteralType).value as string;
+    }
+
+    // Get JSDoc comment for description
+    const jsDocComment = ts.displayPartsToString(prop.getDocumentationComment(checker));
+    const description = formatString(jsDocComment);
+
+    return {
+      selector: propName,
+      className,
+      description,
+    };
+  });
+
+  return { selectors };
 }
 
 /**
@@ -376,6 +452,17 @@ export function docgenParser({
         addToSharedTypeAliases,
         formatString,
       });
-      return processDoc({ ...consumerProcessedDoc, parentTypes });
+      const processedDoc = processDoc({ ...consumerProcessedDoc, parentTypes });
+
+      // Extract style selectors from *ClassNames exports
+      const sourceFile = tsCtx.program.getSourceFile(doc.filePath);
+      if (sourceFile) {
+        const styles = extractStyleSelectors(tsCtx.checker, sourceFile, doc.displayName);
+        if (styles && styles.selectors.length > 0) {
+          return { ...processedDoc, styles };
+        }
+      }
+
+      return processedDoc;
     });
 }
