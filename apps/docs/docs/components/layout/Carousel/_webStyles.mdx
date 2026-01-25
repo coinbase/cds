@@ -1,0 +1,36 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { Card } from '@coinbase/cds-web/cards';
+import { Text } from '@coinbase/cds-web/typography';
+
+import webStylesData from ':docgen/web/carousel/Carousel/styles-data';
+
+<VStack
+  paddingBottom={{ base: 4, phone: 2 }}
+  paddingTop={2}
+  paddingX={{ base: 4, phone: 2 }}
+>
+
+## Selectors
+
+<ComponentStylesTable componentName="Carousel" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <Carousel title="Featured Items" classNames={classNames}>
+      {[1, 2, 3, 4].map((i) => (
+        <CarouselItem key={i} itemId={`item-${i}`}>
+          <Card padding={3} minWidth={200}>
+            <Text font="title3">Item {i}</Text>
+          </Card>
+        </CarouselItem>
+      ))}
+    </Carousel>
+  )}
+</StylesExplorer>
+
+</VStack>

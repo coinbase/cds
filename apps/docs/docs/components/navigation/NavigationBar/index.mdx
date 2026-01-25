@@ -11,10 +11,9 @@ import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
 
 import webPropsToc from ':docgen/web/navigation/NavigationBar/toc-props';
-import webStylesToc from ':docgen/web/navigation/NavigationBar/toc-styles';
 
 import WebPropsTable from './_webPropsTable.mdx';
-import WebStylesTable from './_webStylesTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import webMetadata from './webMetadata.json';
 
@@ -22,7 +21,7 @@ import webMetadata from './webMetadata.json';
   <ComponentHeader title="NavigationBar" webMetadata={webMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
-    webStylesTable={<WebStylesTable />}
+    webStylesTable={<WebStyles />}
     webExamples={<WebExamples />}
     webExamplesToc={webExamplesToc}
     webPropsToc={webPropsToc}
