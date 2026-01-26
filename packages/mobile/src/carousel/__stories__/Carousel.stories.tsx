@@ -775,14 +775,13 @@ const AnimatedPaginationExample = () => {
 export default function CarouselScreen() {
   return (
     <ExampleScreen paddingX={0}>
-      <LoopingExamples />
-
       <BasicExamples />
       <CustomComponentsExample />
       <DynamicContentExample />
       <AnimatedExample />
       <ImperativeApiExample />
       <AnimatedPaginationExample />
+      <LoopingExamples />
     </ExampleScreen>
   );
 }

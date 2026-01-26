@@ -123,10 +123,12 @@ const SquareAssetCard = ({
   imageUrl,
   name,
   isVisible,
+  colorVisibility,
 }: {
   imageUrl: string;
   name: string;
   isVisible?: boolean;
+  colorVisibility?: boolean;
 }) => (
   <ContainedAssetCard
     description={
@@ -136,6 +138,11 @@ const SquareAssetCard = ({
     }
     header={<RemoteImage draggable={false} height="32px" source={imageUrl} width="32px" />}
     onClick={isVisible ? () => console.log('clicked') : undefined}
+    style={
+      colorVisibility
+        ? { backgroundColor: isVisible ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)' }
+        : undefined
+    }
     subtitle={name}
     tabIndex={isVisible ? undefined : -1}
     title="$0.87"
@@ -594,15 +601,37 @@ const LoopingExamples = () => (
         ))}
       </Carousel>
     </NegativeMargin>
+    <NegativeMargin>
+      <Carousel
+        loop
+        drag="free"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Looping - Free Drag is visible"
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                colorVisibility
+                imageUrl={asset.imageUrl}
+                isVisible={isVisible}
+                name={asset.symbol}
+              />
+            )}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
   </VStack>
 );
 
 export const All = () => (
   <VStack gap={2}>
     <BasicExamples />
-    <LoopingExamples />
     <CustomComponentsExample />
     <CustomStylesExample />
     <AnimatedPaginationExample />
+    <LoopingExamples />
   </VStack>
 );
