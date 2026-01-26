@@ -832,6 +832,42 @@ function StylingScrubber() {
   );
 }
 
+function HideBeaconLabels() {
+  const theme = useTheme();
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  return (
+    <LineChart
+      enableScrubbing
+      legend
+      showArea
+      height={200}
+      inset={{ top: 60 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: theme.color.accentBoldGreen,
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: theme.color.accentBoldPurple,
+          label: 'Unique Visitors',
+        },
+      ]}
+    >
+      <Scrubber
+        hideBeaconLabels
+        labelElevated
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 function Compact() {
   const theme = useTheme();
   const dimensions = { width: 62, height: 18 };
@@ -1128,7 +1164,7 @@ const LegendDot = memo((props: BoxBaseProps) => {
   return <Box borderRadius={1000} height={10} width={10} {...props} />;
 });
 
-const LegendItem = memo(
+const LegendEntry = memo(
   ({
     color = assets.btc.color,
     label,
@@ -1176,17 +1212,17 @@ const PerformanceHeader = memo(
 
     return (
       <HStack gap={1} paddingX={1}>
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgPositive}
           label="High Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
         />
-        <LegendItem
+        <LegendEntry
           color={assets.btc.color}
           label="Actual Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
         />
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgNegative}
           label="Low Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
@@ -2668,6 +2704,10 @@ function ExampleNavigator() {
       {
         title: 'Two-Line Scrubber Label',
         component: <TwoLineScrubberLabel />,
+      },
+      {
+        title: 'Hide Beacon Labels',
+        component: <HideBeaconLabels />,
       },
       {
         title: 'Custom Beacon Stroke',

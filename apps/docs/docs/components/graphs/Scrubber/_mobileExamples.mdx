@@ -351,6 +351,38 @@ function CustomBeaconLabel() {
 }
 ```
 
+You can use `hideBeaconLabels` to hide beacon labels, while still being able to provide a label for a series.
+
+```jsx
+<LineChart
+  enableScrubbing
+  legend
+  height={200}
+  series={[
+    {
+      id: 'pageViews',
+      data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+      color: theme.color.accentBoldGreen,
+      label: 'Page Views',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+      color: theme.color.accentBoldPurple,
+      label: 'Unique Visitors',
+    },
+  ]}
+  showArea
+  inset={{ top: 60 }}
+>
+  <Scrubber
+    hideBeaconLabels
+    label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+    labelElevated
+  />
+</LineChart>
+```
+
 Using `labelElevated` will elevate the Scrubber's reference line label with a shadow.
 
 ```jsx
