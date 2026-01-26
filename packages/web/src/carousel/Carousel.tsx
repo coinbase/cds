@@ -2,7 +2,6 @@ import React, {
   forwardRef,
   memo,
   useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -30,6 +29,8 @@ import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography';
 
+import { CarouselContext, type CarouselContextValue, useCarouselContext } from './CarouselContext';
+import { CarouselItem } from './CarouselItem';
 import { DefaultCarouselNavigation } from './DefaultCarouselNavigation';
 import { DefaultCarouselPagination } from './DefaultCarouselPagination';
 
@@ -59,22 +60,8 @@ export type CarouselItemProps = Omit<BoxProps<BoxDefaultElement>, 'children'> &
 export type CarouselItemComponent = React.FC<CarouselItemProps>;
 export type CarouselItemElement = React.ReactElement<CarouselItemProps, CarouselItemComponent>;
 
-export type CarouselContextValue = {
-  /**
-   * Set of item IDs that are currently visible in the carousel viewport.
-   */
-  visibleCarouselItems: Set<string>;
-};
-
-export const CarouselContext = React.createContext<CarouselContextValue | undefined>(undefined);
-
-export const useCarouselContext = (): CarouselContextValue => {
-  const context = useContext(CarouselContext);
-  if (!context) {
-    throw new Error('useCarouselContext must be used within a Carousel component');
-  }
-  return context;
-};
+export { CarouselContext, useCarouselContext };
+export type { CarouselContextValue };
 
 export type CarouselNavigationComponentBaseProps = {
   /**
@@ -333,7 +320,14 @@ const wrap = (min: number, max: number, value: number): number => {
  * @returns The item offsets.
  */
 const getItemOffsets = (itemRects: { [itemId: string]: Rect }) => {
-  const sortedItems = Object.values(itemRects).sort((a, b) => a.x - b.x);
+  // Filter out clone items (they have IDs starting with "clone-")
+  const originalItems = Object.entries(itemRects)
+    .filter(([id]) => !id.startsWith('clone-'))
+    .map(([, rect]) => rect);
+
+  const sortedItems = originalItems.sort((a, b) => a.x - b.x);
+  if (sortedItems.length === 0) return [];
+
   const initialItemOffset = sortedItems[0].x;
   return sortedItems.map((item) => ({
     ...item,
@@ -523,43 +517,6 @@ const getCloneCount = (items: Rect[], containerWidth: number): number => {
 };
 
 /**
- * Creates a clone element for the carousel loop.
- * @param id - Unique identifier for the clone element.
- * @param children - The children to render inside the clone.
- * @param width - The width of the clone element.
- * @param height - The height of the clone element.
- * @param left - The left position (only for backward/absolute positioned clones).
- * @param style - Additional styles to apply.
- * @returns A React element representing the clone.
- */
-const createCloneElement = (
-  id: string,
-  children: CarouselItemRenderChildren | React.ReactNode,
-  width: number | undefined,
-  height: number | undefined,
-  left: number | undefined,
-  style?: React.CSSProperties,
-): React.ReactElement => {
-  const isAbsolute = left !== undefined;
-
-  return (
-    <div
-      key={id}
-      aria-hidden="true"
-      style={{
-        ...(isAbsolute && { position: 'absolute' as const, left }),
-        flexShrink: 0,
-        width,
-        height,
-        ...style,
-      }}
-    >
-      {typeof children === 'function' ? children({ isVisible: false }) : children}
-    </div>
-  );
-};
-
-/**
  * Calculates which items are visible in the carousel based on scroll offset and viewport.
  * @param itemRects - The items to get the visibility for.
  * @param containerWidth - The width of the container viewport.
@@ -673,7 +630,7 @@ export const Carousel = memo(
       const maxScrollOffset = Math.max(0, contentWidth - containerWidth);
       const hasDimensions = contentWidth > 0 && containerWidth > 0;
 
-      // Calculate gap from item spacing
+      // Calculate gap between items (needed for loopLength to maintain consistent spacing at wrap seam)
       const gap = useMemo(() => {
         if (Object.keys(carouselItemRects).length < 2) return 0;
         const items = getItemOffsets(carouselItemRects);
@@ -699,39 +656,6 @@ export const Carousel = memo(
         const wrapped = value % loopLength;
         return wrapped > 0 ? wrapped - loopLength : wrapped;
       });
-
-      const updateVisibleCarouselItems = useCallback(
-        (localScrollOffset: number) => {
-          if (containerWidth === 0) {
-            setVisibleCarouselItems(new Set());
-            return;
-          }
-
-          // When looping, wrap the offset to get the local position within one cycle
-          const adjustedOffset =
-            shouldLoop && loopLength
-              ? ((localScrollOffset % loopLength) + loopLength) % loopLength
-              : localScrollOffset;
-
-          setVisibleCarouselItems(
-            getVisibleItems(carouselItemRects, containerWidth, adjustedOffset),
-          );
-        },
-        [carouselItemRects, containerWidth, shouldLoop, loopLength],
-      );
-
-      useEffect(() => {
-        const element = containerRef.current;
-        if (!element) return;
-        const observer = new window.ResizeObserver((entries) => {
-          for (const entry of entries) {
-            setContainerWidth(entry.contentRect.width);
-            updateVisibleCarouselItems(Math.abs(carouselScrollX.get()));
-          }
-        });
-        observer.observe(element);
-        return () => observer.unobserve(element);
-      }, [carouselItemRects, carouselScrollX, updateVisibleCarouselItems]);
 
       const updateActivePageIndex = useCallback(
         (newPageIndexOrUpdater: number | ((prevIndex: number) => number)) => {
@@ -763,8 +687,73 @@ export const Carousel = memo(
         };
       }, [shouldLoop, carouselItemRects, containerWidth]);
 
-      // Clone children for looping to create visual continuity
-      // Clones are rendered as plain divs (not CarouselItem) to avoid registering with ref map
+      const updateVisibleCarouselItems = useCallback(
+        (localScrollOffset: number) => {
+          if (containerWidth === 0) {
+            setVisibleCarouselItems(new Set());
+            return;
+          }
+
+          // For original items: wrap the offset to check visibility within one cycle
+          const adjustedOffset =
+            shouldLoop && loopLength
+              ? ((localScrollOffset % loopLength) + loopLength) % loopLength
+              : localScrollOffset;
+
+          const visibleItems = getVisibleItems(carouselItemRects, containerWidth, adjustedOffset);
+
+          // For clones: check visibility against actual (unwrapped) scroll position
+          if (shouldLoop && loopLength && children) {
+            const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
+            const items = getItemOffsets(carouselItemRects);
+            const viewportLeft = localScrollOffset;
+            const viewportRight = localScrollOffset + containerWidth;
+
+            // Check backward clones visibility
+            const backwardStartIndex = childrenArray.length - cloneCounts.backward;
+            for (let i = 0; i < cloneCounts.backward; i++) {
+              const originalIndex = backwardStartIndex + i;
+              const itemData = items[originalIndex];
+              if (itemData) {
+                const cloneX = itemData.x - loopLength;
+                const cloneRight = cloneX + itemData.width;
+                if (cloneX < viewportRight && cloneRight > viewportLeft) {
+                  visibleItems.add(`clone-backward-${childrenArray[originalIndex].props.id}`);
+                }
+              }
+            }
+
+            // Check forward clones visibility
+            for (let i = 0; i < cloneCounts.forward; i++) {
+              const itemData = items[i];
+              if (itemData) {
+                const cloneX = itemData.x + loopLength;
+                const cloneRight = cloneX + itemData.width;
+                if (cloneX < viewportRight && cloneRight > viewportLeft) {
+                  visibleItems.add(`clone-forward-${childrenArray[i].props.id}`);
+                }
+              }
+            }
+          }
+
+          setVisibleCarouselItems(visibleItems);
+        },
+        [carouselItemRects, containerWidth, shouldLoop, loopLength, children, cloneCounts],
+      );
+
+      useEffect(() => {
+        const element = containerRef.current;
+        if (!element) return;
+        const observer = new window.ResizeObserver((entries) => {
+          for (const entry of entries) {
+            setContainerWidth(entry.contentRect.width);
+            updateVisibleCarouselItems(Math.abs(carouselScrollX.get()));
+          }
+        });
+        observer.observe(element);
+        return () => observer.unobserve(element);
+      }, [carouselItemRects, carouselScrollX, updateVisibleCarouselItems]);
+
       const childrenWithClones = useMemo(() => {
         if (!shouldLoop || !loopLength || !children) return children;
         if (cloneCounts.forward === 0 && cloneCounts.backward === 0) return children;
@@ -780,15 +769,22 @@ export const Carousel = memo(
         itemsToCloneBackward.forEach((child, cloneIndex) => {
           const originalIndex = childrenArray.length - cloneCounts.backward + cloneIndex;
           const itemData = items[originalIndex];
+          const cloneId = `clone-backward-${child.props.id}`;
           result.push(
-            createCloneElement(
-              `clone-backward-${child.props.id}`,
-              child.props.children,
-              itemData?.width,
-              itemData?.height,
-              (itemData?.x ?? 0) - loopLength,
-              child.props.style as React.CSSProperties,
-            ),
+            <CarouselItem
+              key={cloneId}
+              aria-hidden
+              id={cloneId}
+              style={{
+                position: 'absolute',
+                left: (itemData?.x ?? 0) - loopLength,
+                width: itemData?.width,
+                height: itemData?.height,
+                ...(child.props.style as React.CSSProperties),
+              }}
+            >
+              {child.props.children}
+            </CarouselItem>,
           );
         });
 
@@ -799,15 +795,20 @@ export const Carousel = memo(
         const itemsToCloneForward = childrenArray.slice(0, cloneCounts.forward);
         itemsToCloneForward.forEach((child, cloneIndex) => {
           const itemData = items[cloneIndex];
+          const cloneId = `clone-forward-${child.props.id}`;
           result.push(
-            createCloneElement(
-              `clone-forward-${child.props.id}`,
-              child.props.children,
-              itemData?.width,
-              itemData?.height,
-              undefined,
-              child.props.style as React.CSSProperties,
-            ),
+            <CarouselItem
+              key={cloneId}
+              aria-hidden
+              id={cloneId}
+              style={{
+                width: itemData?.width,
+                height: itemData?.height,
+                ...(child.props.style as React.CSSProperties),
+              }}
+            >
+              {child.props.children}
+            </CarouselItem>,
           );
         });
 

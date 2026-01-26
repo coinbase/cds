@@ -2,7 +2,6 @@ import React, {
   forwardRef,
   memo,
   useCallback,
-  useContext,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -19,6 +18,8 @@ import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
+import { CarouselContext, type CarouselContextValue, useCarouselContext } from './CarouselContext';
+import { CarouselItem } from './CarouselItem';
 import { DefaultCarouselNavigation } from './DefaultCarouselNavigation';
 import { DefaultCarouselPagination } from './DefaultCarouselPagination';
 
@@ -54,24 +55,8 @@ export type CarouselItemProps = Omit<BoxProps, 'children'> & CarouselItemBasePro
 export type CarouselItemComponent = React.FC<CarouselItemProps>;
 export type CarouselItemElement = React.ReactElement<CarouselItemProps, CarouselItemComponent>;
 
-export type CarouselContextValue = {
-  registerItem: (id: string, state: Rect) => void;
-  unregisterItem: (id: string) => void;
-  /**
-   * Set of item IDs that are currently visible in the carousel viewport.
-   */
-  visibleCarouselItems: Set<string>;
-};
-
-export const CarouselContext = React.createContext<CarouselContextValue | undefined>(undefined);
-
-export const useCarouselContext = (): CarouselContextValue => {
-  const context = useContext(CarouselContext);
-  if (!context) {
-    throw new Error('useCarouselContext must be used within a Carousel component');
-  }
-  return context;
-};
+export { CarouselContext, useCarouselContext };
+export type { CarouselContextValue };
 
 export type CarouselNavigationComponentBaseProps = {
   /**
@@ -280,7 +265,14 @@ export type CarouselProps = CarouselBaseProps & {
  * @returns The item offsets.
  */
 const getItemOffsets = (itemRects: { [itemId: string]: Rect }) => {
-  const sortedItems = Object.values(itemRects).sort((a, b) => a.x - b.x);
+  // Filter out clone items (they have IDs starting with "clone-")
+  const originalItems = Object.entries(itemRects)
+    .filter(([id]) => !id.startsWith('clone-'))
+    .map(([, rect]) => rect);
+
+  const sortedItems = originalItems.sort((a, b) => a.x - b.x);
+  if (sortedItems.length === 0) return [];
+
   const initialItemOffset = sortedItems[0].x;
   return sortedItems.map((item) => ({
     ...item,
@@ -470,40 +462,6 @@ const getCloneCount = (items: Rect[], containerWidth: number): number => {
 };
 
 /**
- * Creates a clone element for the carousel loop.
- * @param id - Unique identifier for the clone element.
- * @param children - The children to render inside the clone.
- * @param width - The width of the clone element.
- * @param height - The height of the clone element.
- * @param left - The left position (only for backward/absolute positioned clones).
- * @returns A React element representing the clone.
- */
-const createCloneElement = (
-  id: string,
-  children: CarouselItemRenderChildren | React.ReactNode,
-  width: number | undefined,
-  height: number | undefined,
-  left: number | undefined,
-): React.ReactElement => {
-  const isAbsolute = left !== undefined;
-
-  return (
-    <View
-      key={id}
-      aria-hidden
-      style={{
-        ...(isAbsolute && { position: 'absolute' as const, left }),
-        flexShrink: 0,
-        width,
-        height,
-      }}
-    >
-      {typeof children === 'function' ? children({ isVisible: false }) : children}
-    </View>
-  );
-};
-
-/**
  * Calculates which items are visible in the carousel based on scroll offset and viewport.
  * @param itemRects - The items to get the visibility for.
  * @param containerWidth - The width of the container viewport.
@@ -606,7 +564,7 @@ export const Carousel = memo(
       const maxScrollOffset = Math.max(0, contentWidth - containerSize.width);
       const hasCalculatedDimensions = contentWidth > 0 && containerSize.width > 0;
 
-      // Calculate gap from item spacing
+      // Calculate gap between items (needed for loopLength to maintain consistent spacing at wrap seam)
       const gap = useMemo(() => {
         if (Object.keys(carouselItemRects).length < 2) return 0;
         const items = getItemOffsets(carouselItemRects);
@@ -626,26 +584,6 @@ export const Carousel = memo(
         return contentWidth + gap;
       }, [shouldLoop, contentWidth, gap]);
 
-      const updateVisibleCarouselItems = useCallback(
-        (scrollOffset: number) => {
-          if (containerSize.width === 0) {
-            setVisibleCarouselItems(new Set());
-            return;
-          }
-
-          // When looping, wrap the offset to get the local position within one cycle
-          const adjustedOffset =
-            shouldLoop && loopLength
-              ? ((scrollOffset % loopLength) + loopLength) % loopLength
-              : scrollOffset;
-
-          setVisibleCarouselItems(
-            getVisibleItems(carouselItemRects, containerSize.width, adjustedOffset),
-          );
-        },
-        [carouselItemRects, containerSize.width, shouldLoop, loopLength],
-      );
-
       // Calculate how many items to clone for each direction (enough to fill viewport)
       const cloneCounts = useMemo(() => {
         if (
@@ -661,6 +599,64 @@ export const Carousel = memo(
           backward: getCloneCount([...items].reverse(), containerSize.width),
         };
       }, [shouldLoop, carouselItemRects, containerSize.width]);
+
+      const updateVisibleCarouselItems = useCallback(
+        (scrollOffset: number) => {
+          if (containerSize.width === 0) {
+            setVisibleCarouselItems(new Set());
+            return;
+          }
+
+          // For original items: wrap the offset to check visibility within one cycle
+          const adjustedOffset =
+            shouldLoop && loopLength
+              ? ((scrollOffset % loopLength) + loopLength) % loopLength
+              : scrollOffset;
+
+          const visibleItems = getVisibleItems(
+            carouselItemRects,
+            containerSize.width,
+            adjustedOffset,
+          );
+
+          // For clones: check visibility against actual (unwrapped) scroll position
+          if (shouldLoop && loopLength && children) {
+            const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
+            const items = getItemOffsets(carouselItemRects);
+            const viewportLeft = scrollOffset;
+            const viewportRight = scrollOffset + containerSize.width;
+
+            // Check backward clones visibility
+            const backwardStartIndex = childrenArray.length - cloneCounts.backward;
+            for (let i = 0; i < cloneCounts.backward; i++) {
+              const originalIndex = backwardStartIndex + i;
+              const itemData = items[originalIndex];
+              if (itemData) {
+                const cloneX = itemData.x - loopLength;
+                const cloneRight = cloneX + itemData.width;
+                if (cloneX < viewportRight && cloneRight > viewportLeft) {
+                  visibleItems.add(`clone-backward-${childrenArray[originalIndex].props.id}`);
+                }
+              }
+            }
+
+            // Check forward clones visibility
+            for (let i = 0; i < cloneCounts.forward; i++) {
+              const itemData = items[i];
+              if (itemData) {
+                const cloneX = itemData.x + loopLength;
+                const cloneRight = cloneX + itemData.width;
+                if (cloneX < viewportRight && cloneRight > viewportLeft) {
+                  visibleItems.add(`clone-forward-${childrenArray[i].props.id}`);
+                }
+              }
+            }
+          }
+
+          setVisibleCarouselItems(visibleItems);
+        },
+        [carouselItemRects, containerSize.width, shouldLoop, loopLength, children, cloneCounts],
+      );
 
       // Calculate pages and their offsets based on snapMode
       const { totalPages, pageOffsets } = useMemo(() => {
@@ -887,12 +883,7 @@ export const Carousel = memo(
         ],
       );
 
-      // Clone children for looping to create visual continuity
-      // Key insight: we always return a consistent structure when loop=true
-      // to prevent children from remounting when shouldLoop changes
-      // Clones are rendered as plain Views (not CarouselItem) to avoid registering
       const childrenWithClones = useMemo(() => {
-        // When loop prop is false, just return children as-is
         if (!loop) return children;
 
         const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
@@ -908,14 +899,21 @@ export const Carousel = memo(
           itemsToCloneBackward.forEach((child, cloneIndex) => {
             const originalIndex = childrenArray.length - cloneCounts.backward + cloneIndex;
             const itemData = items[originalIndex];
+            const cloneId = `clone-backward-${child.props.id}`;
             result.push(
-              createCloneElement(
-                `clone-backward-${child.props.id}`,
-                child.props.children,
-                itemData?.width,
-                itemData?.height,
-                (itemData?.x ?? 0) - loopLength,
-              ),
+              <CarouselItem
+                key={cloneId}
+                aria-hidden
+                id={cloneId}
+                style={{
+                  position: 'absolute',
+                  left: (itemData?.x ?? 0) - loopLength,
+                  width: itemData?.width,
+                  height: itemData?.height,
+                }}
+              >
+                {child.props.children}
+              </CarouselItem>,
             );
           });
         }
@@ -930,14 +928,19 @@ export const Carousel = memo(
 
           itemsToCloneForward.forEach((child, cloneIndex) => {
             const itemData = items[cloneIndex];
+            const cloneId = `clone-forward-${child.props.id}`;
             result.push(
-              createCloneElement(
-                `clone-forward-${child.props.id}`,
-                child.props.children,
-                itemData?.width,
-                itemData?.height,
-                undefined,
-              ),
+              <CarouselItem
+                key={cloneId}
+                aria-hidden
+                id={cloneId}
+                style={{
+                  width: itemData?.width,
+                  height: itemData?.height,
+                }}
+              >
+                {child.props.children}
+              </CarouselItem>,
             );
           });
         }
