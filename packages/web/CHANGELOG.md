@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Make elevation a prop for Switch. [[#325](https://github.com/coinbase/cds/pull/325)]
+- Fix a bug where Switch had a drop shadow by default. Remove default shadow and expose "elevation" as an optional prop for Switch. [[#325](https://github.com/coinbase/cds/pull/325)]
 
 ## 8.38.6 (1/23/2026 PST)
 

@@ -1,6 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, type View } from 'react-native';
-import type { ElevationLevels } from '@coinbase/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
@@ -10,16 +9,7 @@ import { Control, type ControlBaseProps, type ControlIconProps } from './Control
 
 export type SwitchBaseProps<T extends string> = Omit<ControlBaseProps<T>, 'style'>;
 
-export type SwitchProps<T extends string> = SwitchBaseProps<T> & {
-  /** Sets the elevation/drop shadow of the thumb.
-   * @default 0
-   */
-  elevation?: ElevationLevels;
-};
-
-type SwitchIconProps = ControlIconProps & {
-  elevation: ElevationLevels;
-};
+export type SwitchProps<T extends string> = SwitchBaseProps<T>;
 
 const SwitchIcon = ({
   pressed,
@@ -33,7 +23,7 @@ const SwitchIcon = ({
   animatedScaleValue,
   testID,
   elevation,
-}: SwitchIconProps) => {
+}: ControlIconProps) => {
   const theme = useTheme();
 
   const borderSize = theme.borderWidth[borderWidth];
@@ -102,15 +92,11 @@ const SwitchIcon = ({
 };
 
 const SwitchWithRef = forwardRef(function SwitchWithRef<T extends string>(
-  { children, elevation = 0, ...props }: SwitchProps<T>,
+  { children, ...props }: SwitchProps<T>,
   ref: React.ForwardedRef<View>,
 ) {
   const theme = useTheme();
   const { switchHeight } = theme.controlSize;
-
-  const renderSwitchIcon = (iconProps: ControlIconProps) => (
-    <SwitchIcon {...iconProps} elevation={elevation} />
-  );
 
   const switchNode = (
     <Control
@@ -121,7 +107,7 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<T extends string>(
       accessibilityRole="switch"
       label={children}
     >
-      {renderSwitchIcon}
+      {SwitchIcon}
     </Control>
   );
 

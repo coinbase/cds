@@ -42,9 +42,7 @@ export type SwitchProps = ControlBaseProps<string> & {
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
-  /** Sets the elevation/drop shadow of the control.
-   * @default 0
-   */
+  /** Sets the elevation/drop shadow of the control. */
   elevation?: ThemeVars.Elevation;
 };
 
@@ -64,7 +62,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
     children,
     checked,
     disabled,
-    elevation = 0,
+    elevation,
     controlColor,
     background = checked ? 'bgPrimary' : 'bgTertiary',
     borderColor,
