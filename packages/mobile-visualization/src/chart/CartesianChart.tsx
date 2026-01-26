@@ -10,6 +10,7 @@ import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/Scrubbe
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
+import { Legend, type LegendProps } from './legend';
 import {
   type AxisConfig,
   type AxisConfigProps,
@@ -24,6 +25,7 @@ import {
   getAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
+  type LegendPosition,
   type Series,
   useTotalAxisPadding,
 } from './utils';
@@ -64,6 +66,23 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * Inset around the entire chart (outside the axes).
      */
     inset?: number | Partial<ChartInset>;
+    /**
+     * Whether to show the legend or a custom legend element.
+     * - `true` renders the default Legend component
+     * - A React element renders that element as the legend
+     * - `false` or omitted hides the legend
+     */
+    legend?: boolean | React.ReactNode;
+    /**
+     * Position of the legend relative to the chart.
+     * @default 'bottom'
+     */
+    legendPosition?: LegendPosition;
+    /**
+     * Accessibility label for the legend group.
+     * @default 'Legend'
+     */
+    legendAccessibilityLabel?: string;
   };
 
 export type CartesianChartProps = CartesianChartBaseProps &
@@ -112,6 +131,9 @@ export const CartesianChart = memo(
         yAxis: yAxisConfigProp,
         inset,
         onScrubberPositionChange,
+        legend,
+        legendPosition = 'bottom',
+        legendAccessibilityLabel,
         width = '100%',
         height = '100%',
         style,
@@ -429,6 +451,34 @@ export const CartesianChart = memo(
         return [style, styles?.root];
       }, [style, styles?.root]);
 
+      const legendElement = useMemo(() => {
+        if (!legend) return;
+
+        if (legend === true) {
+          const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
+          const flexDirection = isHorizontal ? 'row' : 'column';
+
+          return (
+            <Legend accessibilityLabel={legendAccessibilityLabel} flexDirection={flexDirection} />
+          );
+        }
+
+        return legend;
+      }, [legend, legendAccessibilityLabel, legendPosition]);
+
+      const rootBoxProps: BoxProps = useMemo(
+        () => ({
+          ref,
+          accessibilityLiveRegion: 'polite',
+          accessibilityRole: 'image',
+          height,
+          style: rootStyles,
+          width,
+          ...props,
+        }),
+        [ref, height, rootStyles, width, props],
+      );
+
       return (
         <CartesianChartProvider value={contextValue}>
           <ScrubberProvider
@@ -436,19 +486,24 @@ export const CartesianChart = memo(
             enableScrubbing={enableScrubbing}
             onScrubberPositionChange={onScrubberPositionChange}
           >
-            <Box
-              ref={ref}
-              accessibilityLiveRegion="polite"
-              accessibilityRole="image"
-              collapsable={collapsable}
-              height={height}
-              onLayout={onContainerLayout}
-              style={rootStyles}
-              width={width}
-              {...props}
-            >
-              <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
-            </Box>
+            {legend ? (
+              <Box
+                {...rootBoxProps}
+                flexDirection={
+                  legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
+                }
+              >
+                {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
+                <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
+                  <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+                </Box>
+                {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
+              </Box>
+            ) : (
+              <Box {...rootBoxProps} collapsable={collapsable} onLayout={onContainerLayout}>
+                <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+              </Box>
+            )}
           </ScrubberProvider>
         </CartesianChartProvider>
       );

@@ -149,6 +149,10 @@ export type ScrubberBaseProps = SharedProps &
      */
     seriesIds?: string[];
     /**
+     * Hides the beacon labels while keeping the line label visible (if provided).
+     */
+    hideBeaconLabels?: boolean;
+    /**
      * Hides the scrubber line.
      * @note This hides Scrubber's ReferenceLine including the label.
      */
@@ -244,6 +248,7 @@ export const Scrubber = memo(
     (
       {
         seriesIds,
+        hideBeaconLabels,
         hideLine,
         label,
         accessibilityLabel,
@@ -403,7 +408,7 @@ export const Scrubber = memo(
             testID={testID}
             transitions={beaconTransitions}
           />
-          {beaconLabels.length > 0 && (
+          {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               labelFont={beaconLabelFont}

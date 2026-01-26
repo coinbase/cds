@@ -4,6 +4,21 @@ import type { GradientDefinition } from './gradient';
 
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
+/**
+ * Shape variants available for legend items.
+ */
+export type LegendShapeVariant = 'circle' | 'square' | 'squircle' | 'pill';
+
+/**
+ * Shape for legend items. Can be a preset variant or a custom ReactNode.
+ */
+export type LegendShape = LegendShapeVariant | React.ReactNode;
+
+/**
+ * Position of the legend relative to the chart.
+ */
+export type LegendPosition = 'top' | 'bottom' | 'left' | 'right';
+
 export type AxisBounds = {
   min: number;
   max: number;
@@ -57,6 +72,12 @@ export type Series = {
    * If not specified, the series will not be stacked.
    */
   stackId?: string;
+  /**
+   * Shape of the legend item for this series.
+   * Can be a preset shape variant or a custom ReactNode.
+   * @default 'circle'
+   */
+  legendShape?: LegendShape;
 };
 
 /**

@@ -611,6 +611,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/graphs/Legend/legend',
+              label: 'Legend',
+            },
+            {
+              type: 'doc',
               id: 'components/graphs/LineChart/lineChart',
               label: 'LineChart',
             },

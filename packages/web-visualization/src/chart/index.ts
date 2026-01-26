@@ -5,6 +5,7 @@ export * from './bar/index';
 export * from './CartesianChart';
 export * from './ChartProvider';
 export * from './gradient/index';
+export * from './legend/index';
 export * from './line/index';
 export * from './Path';
 export * from './PeriodSelector';

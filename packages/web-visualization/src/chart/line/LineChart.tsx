@@ -121,6 +121,7 @@ export const LineChart = memo(
             yAxisId: s.yAxisId,
             stackId: s.stackId,
             gradient: s.gradient,
+            legendShape: s.legendShape,
           }),
         );
       }, [series]);
@@ -177,26 +178,28 @@ export const LineChart = memo(
           {/* Render axes first for grid lines to appear behind everything else */}
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
-          {series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
-            <Line
-              key={id}
-              AreaComponent={AreaComponent}
-              LineComponent={LineComponent}
-              areaType={areaType}
-              connectNulls={connectNulls}
-              curve={curve}
-              onPointClick={onPointClick}
-              opacity={opacity}
-              points={points}
-              seriesId={id}
-              showArea={showArea}
-              strokeOpacity={strokeOpacity}
-              strokeWidth={strokeWidth}
-              transition={linePropsFromSeries.transition ?? transition}
-              type={type}
-              {...linePropsFromSeries}
-            />
-          ))}
+          {series?.map(
+            ({ id, data, label, color, yAxisId, legendShape, ...linePropsFromSeries }) => (
+              <Line
+                key={id}
+                AreaComponent={AreaComponent}
+                LineComponent={LineComponent}
+                areaType={areaType}
+                connectNulls={connectNulls}
+                curve={curve}
+                onPointClick={onPointClick}
+                opacity={opacity}
+                points={points}
+                seriesId={id}
+                showArea={showArea}
+                strokeOpacity={strokeOpacity}
+                strokeWidth={strokeWidth}
+                transition={linePropsFromSeries.transition ?? transition}
+                type={type}
+                {...linePropsFromSeries}
+              />
+            ),
+          )}
           {children}
         </CartesianChart>
       );

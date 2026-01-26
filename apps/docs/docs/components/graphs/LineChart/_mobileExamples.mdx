@@ -415,17 +415,17 @@ const PerformanceHeader = memo(
 
     return (
       <HStack gap={1} paddingX={1}>
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgPositive}
           label="High Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
         />
-        <LegendItem
+        <LegendEntry
           color={assets.btc.color}
           label="Actual Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
         />
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgNegative}
           label="Low Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
@@ -985,6 +985,47 @@ function GainLossChart() {
     </CartesianChart>
   );
 }
+```
+
+### Legend
+
+Using `legend` will add a default [Legend](/components/graphs/Legend) to your chart.
+
+You can use `legendPosition` to place the legend at different positions around the chart.
+
+```jsx
+<LineChart
+  legend
+  showArea
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  legendPosition="right"
+  legendAccessibilityLabel="Page Views and Unique Visitors chart, legend"
+  series={[
+    {
+      id: 'pageViews',
+      data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+      color: theme.color.accentBoldGreen,
+      label: 'Page Views',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+      color: theme.color.accentBoldPurple,
+      label: 'Unique Visitors',
+      areaType: 'dotted',
+    },
+  ]}
+  xAxis={{
+    // Used on the x-axis to provide context for each index from the series data array
+    data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+  }}
+  yAxis={{
+    showGrid: true,
+    tickLabelFormatter: (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+  }}
+/>
 ```
 
 ### Lines

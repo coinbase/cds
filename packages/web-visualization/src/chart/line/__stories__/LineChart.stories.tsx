@@ -715,6 +715,41 @@ function StylingScrubber() {
   );
 }
 
+function HideBeaconLabels() {
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  return (
+    <LineChart
+      enableScrubbing
+      legend
+      showArea
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      inset={{ top: 60 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: 'var(--color-accentBoldGreen)',
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: 'var(--color-accentBoldPurple)',
+          label: 'Unique Visitors',
+        },
+      ]}
+    >
+      <Scrubber
+        hideBeaconLabels
+        labelElevated
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 function DynamicChartSizing() {
   const candles = [...btcCandles].reverse();
   const prices = candles.map((candle) => parseFloat(candle.close));
@@ -1920,6 +1955,9 @@ export const All = () => {
       </Example>
       <Example title="Custom Label Component">
         <CustomLabelComponent />
+      </Example>
+      <Example title="Hide Beacon Labels">
+        <HideBeaconLabels />
       </Example>
       <Example title="Custom Beacon Stroke">
         <CustomBeaconStroke />
