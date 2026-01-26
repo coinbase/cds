@@ -141,7 +141,7 @@ You can also use the `useRef` hook to reference the scrubber and pulse it on eac
 
 ```jsx live
 function LiveUpdates() {
-  const scrubberRef = useRef<ScrubberRef>(null);
+  const scrubberRef = useRef();
 
   const initialData = useMemo(() => {
     return sparklineInteractiveData.hour.map((d) => d.value);
@@ -194,23 +194,10 @@ function LiveUpdates() {
     return () => clearInterval(priceUpdateInterval);
   }, [intervalSeconds, maxPercentChange]);
 
-  const chartAccessibilityLabel = useMemo(() => {
-    return `Live Bitcoin price chart. Current price: $${priceData[priceData.length - 1].toFixed(2)}`;
-  }, [priceData]);
-
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      const price = priceData[index];
-      return `Bitcoin price at position ${index + 1}: $${price.toFixed(2)}`;
-    },
-    [priceData],
-  );
-
   return (
     <LineChart
       enableScrubbing
       showArea
-      accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ right: 64 }}
       series={[
@@ -221,10 +208,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber
-        ref={scrubberRef}
-        accessibilityLabel={scrubberAccessibilityLabel}
-      />
+      <Scrubber ref={scrubberRef} />
     </LineChart>
   );
 }
@@ -522,6 +506,7 @@ function Transitions() {
           },
         ]}
         yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+        aria-hidden="true"
       >
         <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
         <Line
@@ -849,6 +834,47 @@ function GainLossChart() {
     </CartesianChart>
   );
 }
+```
+
+### Legend
+
+Using `legend` will add a default [Legend](/components/graphs/Legend) to your chart.
+
+You can use `legendPosition` to place the legend at different positions around the chart.
+
+```jsx live
+<LineChart
+  legend
+  showArea
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  legendPosition="right"
+  legendAccessibilityLabel="Page Views and Unique Visitors chart, legend"
+  series={[
+    {
+      id: 'pageViews',
+      data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+      color: 'var(--color-accentBoldGreen)',
+      label: 'Page Views',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+      color: 'var(--color-accentBoldPurple)',
+      label: 'Unique Visitors',
+      areaType: 'dotted',
+    },
+  ]}
+  xAxis={{
+    // Used on the x-axis to provide context for each index from the series data array
+    data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+  }}
+  yAxis={{
+    showGrid: true,
+    tickLabelFormatter: (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+  }}
+/>
 ```
 
 ### Lines

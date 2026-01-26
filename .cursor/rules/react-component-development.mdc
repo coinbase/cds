@@ -59,7 +59,7 @@ Organize components into category folders:
 
 - **Memoize**: Always memoize components with React's memo HOC
 - **refs**: All components should accept a ref via React's forwardRef pattern
-- **Props documentation**: Every prop must have JSDoc comments with `@default` tags where applicable
+- **Props documentation**: Every prop that does not have a falsy default must have JSDoc comments with `@default` tags
 - **Type exports**: Export both a `*BaseProps` and `*Props` type (e.g., `ButtonBaseProps`, `ButtonProps`)
 - **Style overrides**: All components MUST support a way to override styles (varries by web/mobile platform)
 - **testID**: Support `testID` prop on root element for every component
@@ -172,4 +172,14 @@ space: {
       propA: string;
       propB: number;
     };
+  ```
+- When accepting components as props, define the contract types (`*Props`, `*Component`) in the main component file. These child component contracts do not use the `*BaseProps` pattern—only the main component needs BaseProps/Props separation. Default implementations can extend the contract with additional props in their own file:
+
+  ```ts
+  // In MyComponent.tsx - defines the contract
+  type ChildProps = { id: string; label: ReactNode };
+  type ChildComponent = React.FC<ChildProps>;
+
+  // In DefaultChild.tsx - extends for default implementation
+  type DefaultChildProps = SharedProps & Omit<HStackProps, 'children'> & ChildProps;
   ```

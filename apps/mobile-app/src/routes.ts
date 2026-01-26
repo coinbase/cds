@@ -309,6 +309,11 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/InputStack.stories').default,
   },
   {
+    key: 'Legend',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/legend/__stories__/Legend.stories').default,
+  },
+  {
     key: 'LinearGradient',
     getComponent: () =>
       require('@coinbase/cds-mobile/gradients/__stories__/LinearGradient.stories').default,

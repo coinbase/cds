@@ -1,0 +1,33 @@
+{
+  "import": "import { Legend } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/legend/Legend.tsx",
+  "description": "A legend component for displaying series information in charts. Supports customizable shapes, layouts, and custom item components.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
+}

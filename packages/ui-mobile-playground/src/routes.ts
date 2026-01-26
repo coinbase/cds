@@ -171,6 +171,11 @@ export const routes = [
       require('@coinbase/cds-mobile/collapsible/__stories__/Collapsible.stories').default,
   },
   {
+    key: 'Combobox',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
+  },
+  {
     key: 'ContainedAssetCard',
     getComponent: () =>
       require('@coinbase/cds-mobile/cards/__stories__/ContainedAssetCard.stories').default,
@@ -302,6 +307,11 @@ export const routes = [
     key: 'InputStack',
     getComponent: () =>
       require('@coinbase/cds-mobile/controls/__stories__/InputStack.stories').default,
+  },
+  {
+    key: 'Legend',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/legend/__stories__/Legend.stories').default,
   },
   {
     key: 'LinearGradient',

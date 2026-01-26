@@ -14,6 +14,12 @@ All notable changes to this project will be documented in this file.
 
 - Support Carousel looping. [[#327](https://github.com/coinbase/cds/pull/327)]
 
+## 8.38.6 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix(RadioCell): Adjusted Pressable to have a tabindex="-1" instead of 0. [CDS-1170]
+
 ## 8.38.5 (1/23/2026 PST)
 
 #### 🐞 Fixes
