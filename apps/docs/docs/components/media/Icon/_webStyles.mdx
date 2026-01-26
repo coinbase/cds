@@ -1,0 +1,24 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Icon } from '@coinbase/cds-web/icons';
+
+import webStylesData from ':docgen/web/icons/Icon/styles-data';
+
+<VStack
+  paddingBottom={{ base: 4, phone: 2 }}
+  paddingTop={2}
+  paddingX={{ base: 4, phone: 2 }}
+>
+
+## Selectors
+
+<ComponentStylesTable componentName="Icon" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <Icon classNames={classNames} name="star" size="l" />}
+</StylesExplorer>
+
+</VStack>

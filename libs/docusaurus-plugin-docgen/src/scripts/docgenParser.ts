@@ -193,27 +193,26 @@ function extractStyleSelectorsFromClassNamesExport(
 /**
  * Extract style selectors from a component's `styles` prop type definition.
  *
- * This is a fallback for components that don't export a *ClassNames object but
- * define inline `styles` prop with typed properties and JSDoc comments.
+ * Uses the TypeScript type checker to resolve the full type, which handles:
+ * - Inline styles prop definitions
+ * - Inherited styles from base types (e.g., SidebarBaseProps -> SidebarProps)
+ * - Intersection types (A & B & { styles: {...} })
  *
  * @example
  * ```ts
+ * // Works with inline definitions:
  * export type StepperProps = {
  *   styles?: {
  *     /** Inline styles for the root element *\/
  *     root?: React.CSSProperties;
- *     /** Inline styles for the step *\/
- *     step?: React.CSSProperties;
  *   };
  * };
- * ```
  *
- * Would produce:
- * ```ts
- * [
- *   { selector: 'root', className: '', description: 'Inline styles for the root element' },
- *   { selector: 'step', className: '', description: 'Inline styles for the step' },
- * ]
+ * // Also works with inherited types:
+ * export type SidebarBaseProps = {
+ *   styles?: { root?: React.CSSProperties; };
+ * };
+ * export type SidebarProps = SidebarBaseProps & { ... };
  * ```
  */
 function extractStyleSelectorsFromStylesProp(
@@ -229,109 +228,76 @@ function extractStyleSelectorsFromStylesProp(
   const propsTypeName = `${componentName}Props`;
 
   const exports = checker.getExportsOfModule(moduleSymbol);
-  const propsSymbol = exports.find((s) => s.name === propsTypeName);
+  let propsSymbol = exports.find((s) => s.name === propsTypeName);
 
   if (!propsSymbol) return undefined;
 
-  // For generic type aliases, we need to find the 'styles' property by walking the AST
-  // getDeclaredTypeOfSymbol doesn't work well with generic type aliases
-  const declarations = propsSymbol.getDeclarations();
-  if (!declarations || declarations.length === 0) return undefined;
-
-  // Find the styles property by walking the type alias declaration
-  let stylesTypeLiteral: ts.TypeLiteralNode | undefined;
-
-  for (const decl of declarations) {
-    if (!ts.isTypeAliasDeclaration(decl)) continue;
-
-    // Walk the type to find a 'styles' property with a type literal
-    // This needs to handle intersection types (A & B & { styles: {...} })
-    const findStylesProperty = (node: ts.Node): ts.TypeLiteralNode | undefined => {
-      // Handle intersection types (A & B & C) - search each part
-      if (ts.isIntersectionTypeNode(node)) {
-        for (const typeNode of node.types) {
-          const result = findStylesProperty(typeNode);
-          if (result) return result;
-        }
-        return undefined;
-      }
-
-      // Handle type literals ({ styles: {...} })
-      if (ts.isTypeLiteralNode(node)) {
-        for (const member of node.members) {
-          const result = findStylesProperty(member);
-          if (result) return result;
-        }
-        return undefined;
-      }
-
-      // Handle property signature (styles?: {...})
-      if (ts.isPropertySignature(node) && node.name) {
-        const propName = ts.isIdentifier(node.name) ? node.name.text : '';
-        if (propName === 'styles' && node.type) {
-          const typeNode = node.type;
-          // Handle optional type that creates a union with undefined (styles?: {...})
-          if (ts.isUnionTypeNode(typeNode)) {
-            // Find the non-undefined type in the union
-            for (const t of typeNode.types) {
-              if (ts.isTypeLiteralNode(t)) {
-                return t;
-              }
-            }
-          }
-          if (ts.isTypeLiteralNode(typeNode)) {
-            return typeNode;
-          }
-        }
-      }
-
-      return ts.forEachChild(node, findStylesProperty);
-    };
-
-    stylesTypeLiteral = findStylesProperty(decl.type);
-    if (stylesTypeLiteral) break;
+  // Handle re-exported types: follow the alias to the actual declaration
+  // e.g., `export type { SelectProps } from './types'` -> resolve to actual SelectProps
+  if (propsSymbol.flags & ts.SymbolFlags.Alias) {
+    propsSymbol = checker.getAliasedSymbol(propsSymbol);
   }
 
-  if (!stylesTypeLiteral) return undefined;
+  // Check if the symbol has type parameters (generic type)
+  const declarations = propsSymbol.getDeclarations();
+  const isGenericType = declarations?.some(
+    (d) => ts.isTypeAliasDeclaration(d) && d.typeParameters && d.typeParameters.length > 0,
+  );
 
-  // Extract selectors from the type literal members
-  const selectors: StyleSelector[] = [];
+  let propsType: ts.Type;
 
-  for (const member of stylesTypeLiteral.members) {
-    if (!ts.isPropertySignature(member) || !member.name) continue;
-
-    const propName = ts.isIdentifier(member.name) ? member.name.text : '';
-    if (!propName) continue;
-
-    // Get JSDoc comment from the AST node
-    const jsDocComments = ts.getJSDocCommentsAndTags(member);
-    let description = '';
-
-    for (const jsDoc of jsDocComments) {
-      if (ts.isJSDoc(jsDoc) && jsDoc.comment) {
-        const commentText =
-          typeof jsDoc.comment === 'string'
-            ? jsDoc.comment
-            : jsDoc.comment.map((part) => part.text).join('');
-        description = formatString(commentText);
-        break;
-      }
+  if (isGenericType) {
+    // For generic types like SelectProps<T, V> or RollingNumberProps<AsComponent>,
+    // getDeclaredTypeOfSymbol returns the uninstantiated type which may not resolve
+    // nested properties correctly. Instead, get the type from the RHS of the type alias.
+    const typeAliasDecl = declarations?.find(ts.isTypeAliasDeclaration);
+    if (typeAliasDecl) {
+      propsType = checker.getTypeAtLocation(typeAliasDecl.type);
+    } else {
+      propsType = checker.getDeclaredTypeOfSymbol(propsSymbol);
     }
+  } else {
+    // For non-generic types, use getDeclaredTypeOfSymbol (handles inheritance and intersections)
+    propsType = checker.getDeclaredTypeOfSymbol(propsSymbol);
+  }
+
+  const propsProperties = checker.getPropertiesOfType(propsType);
+
+  // Find the 'styles' property in the resolved type
+  const stylesSymbol = propsProperties.find((p) => p.getName() === 'styles');
+  if (!stylesSymbol) return undefined;
+
+  // Get the type of the styles property
+  const stylesType = checker.getTypeOfSymbolAtLocation(stylesSymbol, sourceFile);
+
+  // Handle optional types (styles?: {...}) - get the non-undefined type
+  const nonNullableStylesType = checker.getNonNullableType(stylesType);
+  const stylesProperties = checker.getPropertiesOfType(nonNullableStylesType);
+
+  if (stylesProperties.length === 0) return undefined;
+
+  // Extract selectors from the styles type properties
+  const selectors: StyleSelector[] = stylesProperties.map((prop) => {
+    const propName = prop.getName();
+
+    // Get JSDoc comment for description using the type checker
+    let description = ts.displayPartsToString(prop.getDocumentationComment(checker));
+    description = formatString(description);
 
     // Clean up the description - remove common prefixes to make descriptions more concise
     description = description
       .replace(/^Inline styles for\s+(the\s+)?/i, '')
       .replace(/^Custom styles for\s+(the\s+)?/i, '')
+      .replace(/^Custom style for\s+(the\s+)?/i, '')
+      .replace(/^Styles for\s+(the\s+)?/i, '')
       .replace(/^A CSS class name applied to\s+(the\s+)?/i, '');
 
-    selectors.push({
+    return {
       selector: propName,
       className: '', // No static class name for inline styles-based components
       description,
-    });
-  }
-
-  if (selectors.length === 0) return undefined;
+    };
+  });
 
   return { selectors };
 }

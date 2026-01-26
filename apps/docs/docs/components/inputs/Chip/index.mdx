@@ -23,13 +23,13 @@ import mobileMetadata from './mobileMetadata.json';
 <VStack gap={5}>
   <ComponentHeader title="Chip" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
-    webExamples={<WebExamples />}
-    mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
-    webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
-    webPropsToc={webPropsToc}
+    mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
+    webPropsToc={webPropsToc}
   />
 </VStack>

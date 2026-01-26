@@ -1,0 +1,38 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox';
+
+import webStylesData from ':docgen/web/alpha/combobox/Combobox/styles-data';
+
+export const options = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' },
+];
+
+<VStack
+  paddingBottom={{ base: 4, phone: 2 }}
+  paddingTop={2}
+  paddingX={{ base: 4, phone: 2 }}
+>
+
+## Selectors
+
+<ComponentStylesTable componentName="Combobox" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <Combobox
+      classNames={classNames}
+      label="Search options"
+      options={options}
+      placeholder="Type to search..."
+      width={280}
+    />
+  )}
+</StylesExplorer>
+
+</VStack>

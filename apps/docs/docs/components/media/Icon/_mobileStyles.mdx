@@ -1,0 +1,16 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { VStack } from '@coinbase/cds-web/layout';
+
+import mobileStylesData from ':docgen/mobile/icons/Icon/styles-data';
+
+<VStack
+  paddingBottom={{ base: 4, phone: 2 }}
+  paddingTop={2}
+  paddingX={{ base: 4, phone: 2 }}
+>
+
+## Selectors
+
+<ComponentStylesTable componentName="Icon" styles={mobileStylesData} />
+
+</VStack>

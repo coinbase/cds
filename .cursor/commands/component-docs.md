@@ -79,14 +79,14 @@ Also check visualization packages if applicable:
 
 Also check for Storybook stories (`packages/*/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
 
-### Check for Styles API
+### Check for Styles
 
-Check if the component supports the `styles` and/or `classNames` props by looking at its type definitions. Components with these props should have a styles table in the documentation. Look for:
+Check if the component supports the `styles` and/or `classNames` props by looking at its type definitions. Components with these props should have a styles tab in the documentation. Look for:
 
 - `styles?: { ... }` prop with named style selectors
 - `classNames?: { ... }` prop with named class selectors
 
-If the component has these props, the docgen will generate styles data that can be used for the styles table.
+If the component has these props, the docgen will generate styles data that can be used for the styles doc.
 
 ## Step 4: Required Setup Steps (for new docs only)
 
@@ -258,13 +258,13 @@ import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
 />
 ```
 
-### Styles Tables
+### Styles Doc
 
-Styles tables document the `styles` and `classNames` API for components that support custom styling of internal elements. Only create these files if the component has a styles/classNames API.
+Styles doc showcases the `styles` and `classNames` API for components that support custom styling of internal elements. Only create these files if the component has a styles/classNames API.
 
 #### \_webStyles.mdx (with Explorer)
 
-For web components, include the interactive StylesExplorer that lets users click on selectors to highlight the corresponding elements:
+For web components, always include both the selectors table AND the interactive StylesExplorer. The StylesExplorer lets users hover or click on selectors to highlight the corresponding elements in a live example:
 
 ```mdx
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
@@ -646,9 +646,8 @@ Before completing, verify:
 - [ ] Metadata files have correct package imports
 - [ ] Added `dependencies` field if component has peer dependencies
 - [ ] Props tables import from correct package with correct variable names
-- [ ] Styles tables created if component has styles/classNames API
-- [ ] Styles tables import toc from the MDX file (not from docgen)
-- [ ] StylesExplorer includes working example with appropriate props
+- [ ] Styles files created if component has styles/classNames API
+- [ ] StylesExplorer is used in web styles (if present) and includes working example with appropriate props
 - [ ] Examples start with introductory prose
 - [ ] Examples include accessibility guidance
 - [ ] Examples progress from basic to advanced

@@ -1,0 +1,38 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Select } from '@coinbase/cds-web/alpha/select';
+
+import webStylesData from ':docgen/web/alpha/select/Select/styles-data';
+
+export const options = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' },
+];
+
+<VStack
+  paddingBottom={{ base: 4, phone: 2 }}
+  paddingTop={2}
+  paddingX={{ base: 4, phone: 2 }}
+>
+
+## Selectors
+
+<ComponentStylesTable componentName="Select" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <Select
+      classNames={classNames}
+      label="Select an option"
+      options={options}
+      placeholder="Choose..."
+      width={280}
+    />
+  )}
+</StylesExplorer>
+
+</VStack>

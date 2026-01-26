@@ -5,9 +5,10 @@ import styles from './styles.module.css';
 
 export type StylesTableRowProps = {
   selector: StyleSelector;
+  showClassName: boolean;
 };
 
-function StylesTableRow({ selector }: StylesTableRowProps) {
+function StylesTableRow({ selector, showClassName }: StylesTableRowProps) {
   const { selector: selectorName, className, description } = selector;
 
   return (
@@ -17,14 +18,16 @@ function StylesTableRow({ selector }: StylesTableRowProps) {
           {selectorName}
         </Text>
       </td>
-      <td className={styles.stylesTableCell}>
-        <Text mono font="body">
-          {className}
-        </Text>
-      </td>
+      {showClassName && (
+        <td className={styles.stylesTableCell}>
+          <Text mono font="body">
+            {className || '--'}
+          </Text>
+        </td>
+      )}
       <td className={styles.stylesTableCell}>
         <Text color="fgMuted" font="body">
-          {description || '–'}
+          {description || '--'}
         </Text>
       </td>
     </tr>

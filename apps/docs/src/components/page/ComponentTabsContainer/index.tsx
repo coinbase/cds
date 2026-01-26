@@ -26,8 +26,8 @@ type ComponentMetaContainerProps = {
   mobilePropsToc?: TOCItem[];
   webExamplesToc?: TOCItem[];
   mobileExamplesToc?: TOCItem[];
-  webStylesTable?: React.ReactNode;
-  mobileStylesTable?: React.ReactNode;
+  webStyles?: React.ReactNode;
+  mobileStyles?: React.ReactNode;
   webStylesToc?: TOCItem[];
   mobileStylesToc?: TOCItem[];
 };
@@ -61,8 +61,8 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
   mobileExamplesToc,
   webPropsToc,
   mobilePropsToc,
-  webStylesTable,
-  mobileStylesTable,
+  webStyles,
+  mobileStyles,
   webStylesToc,
   mobileStylesToc,
 }) => {
@@ -73,7 +73,7 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
   const { search } = useLocation();
 
   // Determine if Styles tab should be shown based on whether styles data exists for current platform
-  const hasStylesData = isWeb ? !!webStylesTable : !!mobileStylesTable;
+  const hasStylesData = isWeb ? !!webStyles : !!mobileStyles;
   const tabs = useMemo(() => {
     const baseTabs = [examplesTab, propsTab];
     if (hasStylesData) {
@@ -183,8 +183,8 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
           role="tabpanel"
         >
           {shouldRenderStyles && <TOCUpdater toc={isWeb ? webStylesToc : mobileStylesToc} />}
-          {shouldRenderStyles && isWeb && webStylesTable}
-          {shouldRenderStyles && isMobile && mobileStylesTable}
+          {shouldRenderStyles && isWeb && webStyles}
+          {shouldRenderStyles && isMobile && mobileStyles}
         </VStack>
       )}
     </VStack>
