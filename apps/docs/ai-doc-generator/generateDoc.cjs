@@ -113,7 +113,7 @@ const getPropsTable = (dirPath, platform, docgenPath) => {
  * @returns {string|null} - Styles table markdown or null
  */
 const getStylesTable = (dirPath, platform, docgenPath) => {
-  const stylesFile = path.join(dirPath, `_${platform}StylesTable.mdx`);
+  const stylesFile = path.join(dirPath, `_${platform}Styles.mdx`);
   if (!fs.existsSync(stylesFile)) {
     return null;
   }
