@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.7 (1/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Make elevation a prop for Switch. [[#325](https://github.com/coinbase/cds/pull/325)]
+
 ## 8.38.6 (1/23/2026 PST)
 
 #### 🐞 Fixes
