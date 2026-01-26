@@ -2,13 +2,6 @@ NavigationBar is a horizontal navigation component that provides a consistent he
 
 ## Basics
 
-NavigationBar is composed of the following content areas:
-
-- `start` - Leading content like back buttons
-- `children` - Center content like page titles or search
-- `end` - Trailing content like action buttons or avatars
-- `bottom` - Bottom content like tab navigation
-
 ```jsx live
 <NavigationBar
   start={<IconButton name="backArrow" accessibilityLabel="Back" />}
@@ -74,86 +67,6 @@ function NavigationWithSearch() {
     </NavigationBar>
   );
 }
-```
-
-## Styling
-
-NavigationBar extends `BoxBaseProps`, giving you access to all standard style props like `background`, `padding`, and `position`.
-
-### Background
-
-Use the `background` prop to customize the navigation bar's background color. This is useful for theming or creating visual hierarchy.
-
-```jsx live
-<VStack gap={2}>
-  <NavigationBar background="bg">
-    <NavigationTitle>Default (bg)</NavigationTitle>
-  </NavigationBar>
-  <NavigationBar background="bgAlternate">
-    <NavigationTitle>Alternate Background</NavigationTitle>
-  </NavigationBar>
-  <NavigationBar background="bgSecondary">
-    <NavigationTitle>Secondary Background</NavigationTitle>
-  </NavigationBar>
-</VStack>
-```
-
-### Custom Styles
-
-Use the `styles` prop to apply custom inline styles to specific parts of the navigation bar.
-
-```jsx live
-<NavigationBar
-  styles={{
-    root: {
-      background: 'linear-gradient(90deg, var(--color-bg) 0%, var(--color-bgAlternate) 100%)',
-    },
-  }}
-  end={<Avatar size="xl" />}
->
-  <NavigationTitle>Custom Gradient</NavigationTitle>
-</NavigationBar>
-```
-
-### Custom Class Names
-
-Use the `classNames` prop to apply custom CSS classes to specific parts of the navigation bar. The available keys are `root`, `start`, and `content`.
-
-```jsx
-// Apply custom classes for styling
-<NavigationBar
-  classNames={{
-    root: 'my-custom-nav',
-    content: 'my-custom-content',
-  }}
->
-  <NavigationTitle>Dashboard</NavigationTitle>
-</NavigationBar>
-```
-
-You can also import the static class names for CSS targeting:
-
-```jsx
-import { navigationBarClassNames } from '@coinbase/cds-web/navigation/NavigationBar';
-
-// navigationBarClassNames.root = 'cds-NavigationBar'
-// navigationBarClassNames.start = 'cds-NavigationBar-start'
-// navigationBarClassNames.content = 'cds-NavigationBar-content'
-```
-
-### Position
-
-By default, NavigationBar uses `position="sticky"` to stay fixed at the top of the viewport. Override this for different layouts.
-
-```jsx live
-<VStack gap={2}>
-  <Text font="label1" color="fgMuted">
-    Default sticky positioning keeps the nav fixed while scrolling.
-  </Text>
-  <NavigationBar position="relative">
-    <NavigationTitle>Relative Position</NavigationTitle>
-  </NavigationBar>
-</VStack>
 ```
 
 ## Accessibility
