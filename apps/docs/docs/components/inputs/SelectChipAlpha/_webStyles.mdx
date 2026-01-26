@@ -4,11 +4,14 @@ import { SelectChip } from '@coinbase/cds-web/alpha/select-chip';
 
 import webStylesData from ':docgen/web/alpha/select-chip/SelectChip/styles-data';
 
-export const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' },
-];
+export const SelectChipExample = ({ classNames }) => {
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+  ];
+  return <SelectChip classNames={classNames} label="Select an option" options={options} />;
+};
 
 ## Selectors
 
@@ -17,7 +20,5 @@ export const options = [
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
-    <SelectChip classNames={classNames} label="Select an option" options={options} />
-  )}
+  {(classNames) => <SelectChipExample classNames={classNames} />}
 </StylesExplorer>

@@ -9,15 +9,14 @@ import { Pressable } from '@coinbase/cds-web/system';
 
 import webStylesData from ':docgen/web/navigation/Sidebar/styles-data';
 
-export const sidebarItems = [
-  { title: 'Home', icon: 'home' },
-  { title: 'Assets', icon: 'chartPie' },
-  { title: 'Trade', icon: 'trading' },
-  { title: 'Settings', icon: 'cog' },
-];
-
-export const renderEnd = () => {
-  return (
+export const SidebarExample = ({ classNames }) => {
+  const sidebarItems = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+  const renderEnd = () => (
     <Pressable
       as="button"
       background="bgPrimaryWash"
@@ -33,16 +32,7 @@ export const renderEnd = () => {
       </HStack>
     </Pressable>
   );
-};
-
-## Selectors
-
-<ComponentStylesTable componentName="Sidebar" styles={webStylesData} />
-
-## Explorer
-
-<StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
+  return (
     <Sidebar
       classNames={classNames}
       logo={<LogoMark />}
@@ -59,5 +49,15 @@ export const renderEnd = () => {
         />
       ))}
     </Sidebar>
-  )}
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Sidebar" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <SidebarExample classNames={classNames} />}
 </StylesExplorer>

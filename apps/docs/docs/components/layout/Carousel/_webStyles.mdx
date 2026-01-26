@@ -9,8 +9,8 @@ import { assets } from '@coinbase/cds-common/internal/data/assets';
 
 import webStylesData from ':docgen/web/carousel/Carousel/styles-data';
 
-export function SquareAssetCard({ imageUrl, name }) {
-  return (
+export const CarouselExample = ({ classNames }) => {
+  const SquareAssetCard = ({ imageUrl, name }) => (
     <ContainedAssetCard
       description={
         <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
@@ -22,16 +22,7 @@ export function SquareAssetCard({ imageUrl, name }) {
       title="$0.87"
     />
   );
-}
-
-## Selectors
-
-<ComponentStylesTable componentName="Carousel" styles={webStylesData} />
-
-## Explorer
-
-<StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
+  return (
     <VStack marginX={-3} style={{ maxWidth: 'calc(100% + var(--space-6))' }}>
       <Carousel
         title="Explore Assets"
@@ -48,5 +39,15 @@ export function SquareAssetCard({ imageUrl, name }) {
         ))}
       </Carousel>
     </VStack>
-  )}
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Carousel" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <CarouselExample classNames={classNames} />}
 </StylesExplorer>

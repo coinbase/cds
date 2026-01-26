@@ -4,12 +4,15 @@ import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
 
 import webStylesData from ':docgen/web/alpha/tabbed-chips/TabbedChips/styles-data';
 
-export const tabs = [
-  { id: 'all', label: 'All' },
-  { id: 'recent', label: 'Recent' },
-  { id: 'favorites', label: 'Favorites' },
-  { id: 'archived', label: 'Archived' },
-];
+export const TabbedChipsExample = ({ classNames }) => {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'recent', label: 'Recent' },
+    { id: 'favorites', label: 'Favorites' },
+    { id: 'archived', label: 'Archived' },
+  ];
+  return <TabbedChips classNames={classNames} defaultValue="all" tabs={tabs} width="100%" />;
+};
 
 ## Selectors
 
@@ -18,7 +21,5 @@ export const tabs = [
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
-    <TabbedChips classNames={classNames} defaultValue="all" tabs={tabs} width="100%" />
-  )}
+  {(classNames) => <TabbedChipsExample classNames={classNames} />}
 </StylesExplorer>

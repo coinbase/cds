@@ -286,9 +286,49 @@ import webStylesData from ':docgen/web/[source-category]/[ComponentName]/styles-
 </StylesExplorer>
 ```
 
+If the component requires state management, bundle everything into a single exported example component.
+
+```mdx
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Select } from '@coinbase/cds-web/alpha/select';
+
+import webStylesData from ':docgen/web/alpha/select/Select/styles-data';
+
+export const SelectExample = ({ classNames }) => {
+  const [value, setValue] = useState('1');
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  return (
+    <Select
+      classNames={classNames}
+      label="Choose an option"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      style={{ width: '100%' }}
+    />
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Select" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <SelectExample classNames={classNames} />}
+</StylesExplorer>
+```
+
 **Notes:**
 
-- Add any necessary example props or state for the component to render properly in the explorer
 - For components with multiple variants (e.g., horizontal/vertical), add multiple explorer sections with h3 headings
 - The `StylesExplorer` passes `classNames` to highlight selected elements
 

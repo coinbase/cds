@@ -4,19 +4,22 @@ import { Stepper } from '@coinbase/cds-web/stepper';
 
 import webStylesData from ':docgen/web/stepper/Stepper/styles-data';
 
-export const steps = [
-  { id: '1', label: 'Account Details' },
-  {
-    id: '2',
-    label: 'Personal Information',
-    subSteps: [
-      { id: '2a', label: 'Contact Info' },
-      { id: '2b', label: 'Address' },
-    ],
-  },
-  { id: '3', label: 'Payment Method' },
-  { id: '4', label: 'Review & Submit' },
-];
+export const StepperExample = ({ classNames, direction }) => {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    {
+      id: '2',
+      label: 'Personal Information',
+      subSteps: [
+        { id: '2a', label: 'Contact Info' },
+        { id: '2b', label: 'Address' },
+      ],
+    },
+    { id: '3', label: 'Payment Method' },
+    { id: '4', label: 'Review & Submit' },
+  ];
+  return <Stepper direction={direction} activeStepId="2" steps={steps} classNames={classNames} />;
+};
 
 ## Selectors
 
@@ -27,15 +30,11 @@ export const steps = [
 ### Horizontal
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
-    <Stepper direction="horizontal" activeStepId="2" steps={steps} classNames={classNames} />
-  )}
+  {(classNames) => <StepperExample classNames={classNames} direction="horizontal" />}
 </StylesExplorer>
 
 ### Vertical
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
-    <Stepper direction="vertical" activeStepId="2" steps={steps} classNames={classNames} />
-  )}
+  {(classNames) => <StepperExample classNames={classNames} direction="vertical" />}
 </StylesExplorer>

@@ -1,14 +1,30 @@
+import { useState } from 'react';
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
 import { Select } from '@coinbase/cds-web/alpha/select';
 
 import webStylesData from ':docgen/web/alpha/select/Select/styles-data';
 
-export const options = [
-  { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
-  { value: 'option3', label: 'Option 3' },
-];
+export const SelectExample = ({ classNames }) => {
+  const [value, setValue] = useState('1');
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  return (
+    <Select
+      classNames={classNames}
+      label="Choose an option"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      style={{ width: '100%' }}
+    />
+  );
+};
 
 ## Selectors
 
@@ -17,12 +33,5 @@ export const options = [
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
-    <Select
-      classNames={classNames}
-      label="Select an option"
-      options={options}
-      placeholder="Choose an option"
-    />
-  )}
+  {(classNames) => <SelectExample classNames={classNames} />}
 </StylesExplorer>
