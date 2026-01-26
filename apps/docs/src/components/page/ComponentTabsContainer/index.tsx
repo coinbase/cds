@@ -180,6 +180,9 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
           display={shouldRenderStyles ? 'block' : 'none'}
           gap={3}
           id="tabpanel--styles-tab"
+          paddingBottom={{ base: 4, phone: 2 }}
+          paddingTop={2}
+          paddingX={{ base: 4, phone: 2 }}
           role="tabpanel"
         >
           {shouldRenderStyles && <TOCUpdater toc={isWeb ? webStylesToc : mobileStylesToc} />}

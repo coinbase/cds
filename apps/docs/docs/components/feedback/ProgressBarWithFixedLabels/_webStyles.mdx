@@ -1,15 +1,8 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { VStack } from '@coinbase/cds-web/layout';
 import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
 
 import webStylesData from ':docgen/web/visualizations/ProgressBarWithFixedLabels/styles-data';
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -24,5 +17,3 @@ import webStylesData from ':docgen/web/visualizations/ProgressBarWithFixedLabels
     </ProgressBarWithFixedLabels>
   )}
 </StylesExplorer>
-
-</VStack>

@@ -1,6 +1,5 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { VStack } from '@coinbase/cds-web/layout';
 import { Combobox } from '@coinbase/cds-web/alpha/combobox';
 
 import webStylesData from ':docgen/web/alpha/combobox/Combobox/styles-data';
@@ -10,12 +9,6 @@ export const options = [
   { value: 'option2', label: 'Option 2' },
   { value: 'option3', label: 'Option 3' },
 ];
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -34,5 +27,3 @@ export const options = [
     />
   )}
 </StylesExplorer>
-
-</VStack>

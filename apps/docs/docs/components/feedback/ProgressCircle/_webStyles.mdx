@@ -1,15 +1,9 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Box } from '@coinbase/cds-web/layout';
 import { ProgressCircle } from '@coinbase/cds-web/visualizations';
 
 import webStylesData from ':docgen/web/visualizations/ProgressCircle/styles-data';
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -24,5 +18,3 @@ import webStylesData from ':docgen/web/visualizations/ProgressCircle/styles-data
     </Box>
   )}
 </StylesExplorer>
-
-</VStack>

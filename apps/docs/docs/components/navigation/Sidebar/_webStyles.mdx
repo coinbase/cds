@@ -1,8 +1,7 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { HStack, VStack, Box } from '@coinbase/cds-web/layout';
+import { HStack } from '@coinbase/cds-web/layout';
 import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
-import { IconButton } from '@coinbase/cds-web/buttons';
 import { LogoMark } from '@coinbase/cds-web/icons';
 import { Icon } from '@coinbase/cds-web/icons';
 import { Text } from '@coinbase/cds-web/typography';
@@ -36,12 +35,6 @@ export const renderEnd = () => {
   );
 };
 
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
-
 ## Selectors
 
 <ComponentStylesTable componentName="Sidebar" styles={webStylesData} />
@@ -70,5 +63,3 @@ export const renderEnd = () => {
     </HStack>
   )}
 </StylesExplorer>
-
-</VStack>

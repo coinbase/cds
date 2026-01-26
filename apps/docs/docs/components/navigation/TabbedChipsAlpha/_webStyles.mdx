@@ -1,6 +1,5 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { VStack } from '@coinbase/cds-web/layout';
 import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
 
 import webStylesData from ':docgen/web/alpha/tabbed-chips/TabbedChips/styles-data';
@@ -11,12 +10,6 @@ export const tabs = [
   { id: 'favorites', label: 'Favorites' },
   { id: 'archived', label: 'Archived' },
 ];
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -29,5 +22,3 @@ export const tabs = [
     <TabbedChips classNames={classNames} defaultValue="all" tabs={tabs} width={400} />
   )}
 </StylesExplorer>
-
-</VStack>

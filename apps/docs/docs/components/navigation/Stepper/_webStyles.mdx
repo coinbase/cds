@@ -1,6 +1,5 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { VStack } from '@coinbase/cds-web/layout';
 import { Stepper } from '@coinbase/cds-web/stepper';
 
 import webStylesData from ':docgen/web/stepper/Stepper/styles-data';
@@ -18,12 +17,6 @@ export const steps = [
   { id: '3', label: 'Payment Method' },
   { id: '4', label: 'Review & Submit' },
 ];
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -46,5 +39,3 @@ export const steps = [
     <Stepper direction="vertical" activeStepId="2" steps={steps} classNames={classNames} />
   )}
 </StylesExplorer>
-
-</VStack>

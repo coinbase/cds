@@ -1,6 +1,6 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { Box, VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@coinbase/cds-web/layout';
 import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
 import { ContainedAssetCard } from '@coinbase/cds-web/cards/ContainedAssetCard';
 import { RemoteImage } from '@coinbase/cds-web/media';
@@ -23,12 +23,6 @@ export function SquareAssetCard({ imageUrl, name }) {
     />
   );
 }
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -56,5 +50,3 @@ export function SquareAssetCard({ imageUrl, name }) {
     </VStack>
   )}
 </StylesExplorer>
-
-</VStack>

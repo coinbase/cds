@@ -1,18 +1,11 @@
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { VStack } from '@coinbase/cds-web/layout';
 import { ListCell } from '@coinbase/cds-web/cells';
 import { Avatar } from '@coinbase/cds-web/media';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { CellHelperText } from '@coinbase/cds-web/cells/CellHelperText';
 
 import webStylesData from ':docgen/web/cells/ListCell/styles-data';
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -41,5 +34,3 @@ import webStylesData from ':docgen/web/cells/ListCell/styles-data';
     />
   )}
 </StylesExplorer>
-
-</VStack>

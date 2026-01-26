@@ -269,16 +269,9 @@ For web components, always include both the selectors table AND the interactive 
 ```mdx
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { VStack } from '@coinbase/cds-web/layout';
 import { [ComponentName] } from '@coinbase/cds-web/[source-category]/[ComponentName]';
 
 import webStylesData from ':docgen/web/[source-category]/[ComponentName]/styles-data';
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
@@ -291,8 +284,6 @@ import webStylesData from ':docgen/web/[source-category]/[ComponentName]/styles-
     <[ComponentName] {...exampleProps} classNames={classNames} />
   )}
 </StylesExplorer>
-
-</VStack>
 ```
 
 **Notes:**
@@ -334,21 +325,12 @@ For mobile components, only include the selectors table (no interactive explorer
 
 ```mdx
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
-import { VStack } from '@coinbase/cds-web/layout';
 
 import mobileStylesData from ':docgen/mobile/[source-category]/[ComponentName]/styles-data';
-
-<VStack
-  paddingBottom={{ base: 4, phone: 2 }}
-  paddingTop={2}
-  paddingX={{ base: 4, phone: 2 }}
->
 
 ## Selectors
 
 <ComponentStylesTable componentName="[ComponentName]" styles={mobileStylesData} />
-
-</VStack>
 ```
 
 ### Main Documentation (index.mdx)
