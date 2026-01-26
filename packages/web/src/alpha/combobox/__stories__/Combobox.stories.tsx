@@ -666,7 +666,7 @@ export const RemoveOptionLabel = () => {
         label="Custom remove label"
         onChange={onChange}
         options={fruitOptions}
-        placeholder="Custom accessibility..."
+        placeholder="Custom remove label"
         removeSelectedOptionAccessibilityLabel="Delete"
         type="multi"
         value={value}
@@ -681,8 +681,9 @@ export const AccessibilityLabel = () => {
   return (
     <VStack gap={4}>
       <Combobox
-        accessibilityLabel="Fruit selection combobox"
-        label="Accessible combobox"
+        accessibilityLabel="Custom dropdown accessibility label"
+        controlAccessibilityLabel="Custom control accessibility label"
+        label="Custom accessibility label"
         onChange={onChange}
         options={fruitOptions}
         placeholder="Has accessibility label..."
