@@ -9,9 +9,7 @@ import type { StyleSelector } from '@coinbase/docusaurus-plugin-docgen/types';
 import styles from './styles.module.css';
 
 export type StylesExplorerProps = {
-  /** Array of style selectors for the component */
   selectors: StyleSelector[];
-  /** Render function that receives the classNames object to apply */
   children: (classNames: Record<string, string>) => ReactNode;
 };
 
@@ -27,7 +25,6 @@ export const StylesExplorer = memo(({ selectors, children }: StylesExplorerProps
     setHoveredSelector(selector);
   }, []);
 
-  // Hover temporarily overrides the active selection
   const displayedSelector = hoveredSelector ?? activeSelector;
 
   const appliedClassNames = useMemo(() => {
@@ -64,7 +61,12 @@ export const StylesExplorer = memo(({ selectors, children }: StylesExplorerProps
           direction="vertical"
           display={{ phone: 'none', tablet: 'flex', desktop: 'flex' }}
         />
-        <VStack width={{ tablet: 280, desktop: 280 }}>
+        <VStack
+          flexShrink={0}
+          maxHeight={384}
+          overflow="hidden"
+          width={{ tablet: 280, desktop: 280 }}
+        >
           <VStack borderedBottom padding={2}>
             <Text as="p" font="title4">
               Component Styles
@@ -73,8 +75,7 @@ export const StylesExplorer = memo(({ selectors, children }: StylesExplorerProps
               Choose a selector to highlight the corresponding element
             </Text>
           </VStack>
-
-          <VStack maxHeight={{ phone: 300 }} overflow="auto">
+          <VStack flexGrow={1} minHeight={0} overflow="auto">
             {selectors.map((selector) => (
               <ListCell
                 key={selector.selector}

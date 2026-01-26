@@ -1,30 +1,30 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
+import styles from './styles.module.css';
 import StylesTableRow from './StylesTableRow';
 import type { StylesTableProps } from './types';
 
-const tableStyle = { marginBottom: 0 };
-const theadStyle = { backgroundColor: 'transparent' };
-const th30Style = { width: '30%' };
-const th70Style = { width: '70%' };
-
-function StylesTable({ styles }: StylesTableProps) {
+export const StylesTable = memo(({ styles: stylesData }: StylesTableProps) => {
   const hasAnyClassName = useMemo(
-    () => styles.selectors.some((selector) => selector.className),
-    [styles.selectors],
+    () => stylesData.selectors.some((selector) => selector.className),
+    [stylesData.selectors],
   );
 
   return (
-    <table style={tableStyle}>
-      <thead style={theadStyle}>
+    <table className={styles.stylesTable}>
+      <thead className={styles.stylesTableHead}>
         <tr>
-          <th style={th30Style}>Selector</th>
-          {hasAnyClassName && <th style={th30Style}>Static class name</th>}
-          <th style={hasAnyClassName ? th30Style : th70Style}>Description</th>
+          <th className={hasAnyClassName ? styles.thThreeColSmall : styles.thTwoColSelector}>
+            Selector
+          </th>
+          {hasAnyClassName && <th className={styles.thThreeColSmall}>Static class name</th>}
+          <th className={hasAnyClassName ? styles.thThreeColLarge : styles.thTwoColDescription}>
+            Description
+          </th>
         </tr>
       </thead>
       <tbody>
-        {styles.selectors.map((selector) => (
+        {stylesData.selectors.map((selector) => (
           <StylesTableRow
             key={selector.selector}
             selector={selector}
@@ -34,6 +34,4 @@ function StylesTable({ styles }: StylesTableProps) {
       </tbody>
     </table>
   );
-}
-
-export default StylesTable;
+});

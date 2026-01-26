@@ -43,23 +43,21 @@ export const renderEnd = () => {
 
 <StylesExplorer selectors={webStylesData.selectors}>
   {(classNames) => (
-    <HStack alignItems="flex-start" overflow="hidden" height={400}>
-      <Sidebar
-        classNames={classNames}
-        logo={<LogoMark />}
-        renderEnd={renderEnd}
-        styles={{ end: { width: '100%' } }}
-      >
-        {sidebarItems.map((item, index) => (
-          <SidebarItem
-            key={item.title}
-            active={index === 0}
-            icon={item.icon}
-            title={item.title}
-            tooltipContent={item.title}
-          />
-        ))}
-      </Sidebar>
-    </HStack>
+    <Sidebar
+      classNames={classNames}
+      logo={<LogoMark />}
+      renderEnd={renderEnd}
+      styles={{ end: { width: '100%' } }}
+    >
+      {sidebarItems.map((item, index) => (
+        <SidebarItem
+          key={item.title}
+          active={index === 0}
+          icon={item.icon}
+          title={item.title}
+          tooltipContent={item.title}
+        />
+      ))}
+    </Sidebar>
   )}
 </StylesExplorer>

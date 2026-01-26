@@ -5,7 +5,7 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 import type { StylesData } from '@coinbase/docusaurus-plugin-docgen/types';
 import DocusaurusLink from '@docusaurus/Link';
 
-import StylesTable from './StylesTable';
+import { StylesTable } from './StylesTable';
 
 type ComponentStylesTableProps = {
   styles: StylesData;
