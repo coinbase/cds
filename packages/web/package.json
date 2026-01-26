@@ -199,8 +199,8 @@
   ],
   "peerDependencies": {
     "framer-motion": "^10.18.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "dependencies": {
     "@coinbase/cds-common": "workspace:^",
@@ -231,8 +231,8 @@
     "@storybook/jest": "^0.2.3",
     "@storybook/react": "^6.5.17-alpha.0",
     "@storybook/testing-library": "^0.2.2",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "csstype": "^3.1.3",
     "framer-motion": "^10.18.0",
     "glob": "^10.3.10",
