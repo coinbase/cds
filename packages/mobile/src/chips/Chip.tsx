@@ -6,7 +6,8 @@ import { Box, HStack } from '../layout';
 import { InvertedThemeProvider, Pressable } from '../system';
 import { Text } from '../typography/Text';
 
-export type { ChipProps } from './ChipProps';
+import type { ChipProps } from './ChipProps';
+export type { ChipProps };
 
 /**
  * This is a basic Chip component used to create all Chip components.

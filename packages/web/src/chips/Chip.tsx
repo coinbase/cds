@@ -10,7 +10,8 @@ import type { PressableProps } from '../system';
 import { InvertedThemeProvider, Pressable } from '../system';
 import { Text } from '../typography/Text';
 
-export type { ChipProps } from './ChipProps';
+import type { ChipProps } from './ChipProps';
+export type { ChipProps };
 
 const transitionCss = css`
   transition: background ${durations.fast3}ms cubic-bezier(${curves.global.join(',')});

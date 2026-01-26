@@ -169,6 +169,64 @@ import { cx } from '../cx';
 </VStack>
 ```
 
+### 4.4 Add Tests for Static Class Names
+
+Add tests to verify that static class names are applied correctly to the component. This ensures the class names remain stable for consumers who depend on them for CSS targeting.
+
+**Test pattern:**
+
+```tsx
+import { [componentName]ClassNames } from '../[ComponentName]';
+
+describe('[ComponentName] static classNames', () => {
+  it('applies static class names to component elements', () => {
+    render(
+      <[ComponentName]WithTheme
+        start={<div>Start</div>}  // Include props that render conditional elements
+      >
+        <div>Children</div>
+      </[ComponentName]WithTheme>,
+    );
+
+    // Test root element
+    const root = screen.getByRole('[role]'); // or use testID/other selector
+    expect(root).toHaveClass([componentName]ClassNames.root);
+
+    // Test sub-elements using querySelector with the static class name
+    expect(root.querySelector(`.${[componentName]ClassNames.start}`)).toBeInTheDocument();
+    expect(root.querySelector(`.${[componentName]ClassNames.content}`)).toBeInTheDocument();
+  });
+});
+```
+
+**Key testing principles:**
+
+- Import the static classNames object from the component
+- Use `toHaveClass()` for elements accessible via roles/queries
+- Use `querySelector()` with the static class name for internal elements
+- Test all selectors, including those on conditionally rendered elements (pass appropriate props)
+
+**Example from NavigationBar:**
+
+```tsx
+import { navigationBarClassNames } from '../NavigationBar';
+
+describe('NavigationBar static classNames', () => {
+  it('applies static class names to component elements', () => {
+    render(
+      <NavigationBarWithTheme start={<div>Start</div>}>
+        <div>Children</div>
+      </NavigationBarWithTheme>,
+    );
+
+    const nav = screen.getByRole('navigation');
+    expect(nav).toHaveClass(navigationBarClassNames.root);
+    expect(nav.querySelector(`.${navigationBarClassNames.start}`)).toBeInTheDocument();
+    expect(nav.querySelector(`.${navigationBarClassNames.content}`)).toBeInTheDocument();
+  });
+});
+```
+
 ## Step 5: Add Styles API (Mobile Components)
 
 For mobile components, the pattern is simpler (no static classNames):
@@ -250,6 +308,10 @@ See `packages/web/src/navigation/NavigationBar.tsx` for a complete example of th
 - Lines 118, 141, 150: Applying classNames with `cx()`
 - Lines 126, 143, 153: Applying styles
 
+See `packages/web/src/navigation/__tests__/NavigationBar.test.tsx` for static classNames test example:
+
+- `NavigationBar static classNames` describe block: Tests all static class names are applied
+
 ## Step 7: Update Documentation
 
 After adding the styles API to the component, update the documentation:
@@ -279,6 +341,7 @@ Before completing, verify:
 - [ ] Static classNames applied with `cx()` in component JSX (web only)
 - [ ] Dynamic classNames and styles props applied correctly
 - [ ] Special rendering conditions documented in JSDoc
+- [ ] Tests added for static classNames (web only) - see Step 4.4
 - [ ] Ran `yarn nx run docs:docgen` to regenerate styles data
 - [ ] Documentation updated (see `/component-docs` command)
 - [ ] Updated this file's "Approved Selector Names" table if new selectors were added
