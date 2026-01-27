@@ -33,6 +33,7 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   checked,
   background = 'bg',
   borderRadius = 1000,
+  elevation,
   animatedScaleValue,
   animatedOpacityValue,
   controlColor = 'bgPrimary',
@@ -49,6 +50,7 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
       borderRadius={borderRadius}
       borderWidth={100}
       disabled={disabled}
+      elevation={elevation}
       pressed={pressed}
       style={[
         styles.circle,
