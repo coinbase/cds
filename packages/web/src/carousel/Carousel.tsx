@@ -325,8 +325,9 @@ const getItemOffsets = (itemRects: { [itemId: string]: Rect }) => {
     .filter(([id]) => !id.startsWith('clone-'))
     .map(([, rect]) => rect);
 
+  if (originalItems.length === 0) return [];
+
   const sortedItems = originalItems.sort((a, b) => a.x - b.x);
-  if (sortedItems.length === 0) return [];
 
   const initialItemOffset = sortedItems[0].x;
   return sortedItems.map((item) => ({
@@ -644,11 +645,12 @@ export const Carousel = memo(
         [loop, hasDimensions, maxScrollOffset],
       );
 
-      // Total width of one "cycle" of content for looping
       const loopLength = useMemo(() => {
         if (!shouldLoop) return 0;
         return contentWidth + gap;
       }, [shouldLoop, contentWidth, gap]);
+
+      const isLoopingActive = shouldLoop && loopLength > 0;
 
       // Derived transform: physics (carouselScrollX) can go to ±∞, visuals (wrappedX) stay bounded
       const wrappedX = useTransform(carouselScrollX, (value) => {
@@ -695,15 +697,14 @@ export const Carousel = memo(
           }
 
           // For original items: wrap the offset to check visibility within one cycle
-          const adjustedOffset =
-            shouldLoop && loopLength
-              ? ((localScrollOffset % loopLength) + loopLength) % loopLength
-              : localScrollOffset;
+          const adjustedOffset = isLoopingActive
+            ? ((localScrollOffset % loopLength) + loopLength) % loopLength
+            : localScrollOffset;
 
           const visibleItems = getVisibleItems(carouselItemRects, containerWidth, adjustedOffset);
 
           // For clones: check visibility against actual (unwrapped) scroll position
-          if (shouldLoop && loopLength && children) {
+          if (isLoopingActive && children) {
             const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
             const items = getItemOffsets(carouselItemRects);
             const viewportLeft = localScrollOffset;
@@ -738,7 +739,15 @@ export const Carousel = memo(
 
           setVisibleCarouselItems(visibleItems);
         },
-        [carouselItemRects, containerWidth, shouldLoop, loopLength, children, cloneCounts],
+        [
+          containerWidth,
+          isLoopingActive,
+          loopLength,
+          carouselItemRects,
+          children,
+          cloneCounts.backward,
+          cloneCounts.forward,
+        ],
       );
 
       useEffect(() => {
@@ -857,22 +866,21 @@ export const Carousel = memo(
           updateActivePageIndex(newPage);
           updateVisibleCarouselItems(pageOffsets[newPage]);
 
-          const targetOffset =
-            shouldLoop && loopLength
-              ? findNearestLoopOffset(-carouselScrollX.get(), [pageOffsets[newPage]], loopLength)
-                  .offset
-              : pageOffsets[newPage];
+          const targetOffset = isLoopingActive
+            ? findNearestLoopOffset(-carouselScrollX.get(), [pageOffsets[newPage]], loopLength)
+                .offset
+            : pageOffsets[newPage];
 
           animate(carouselScrollX, -targetOffset, { type: 'tween', duration: 0.25 });
         },
         [
-          shouldLoop,
-          loopLength,
           totalPages,
-          pageOffsets,
-          carouselScrollX,
-          updateVisibleCarouselItems,
           updateActivePageIndex,
+          updateVisibleCarouselItems,
+          pageOffsets,
+          isLoopingActive,
+          carouselScrollX,
+          loopLength,
         ],
       );
 
@@ -906,7 +914,7 @@ export const Carousel = memo(
 
           const targetOffset = -targetOffsetScroll;
 
-          if (shouldLoop && loopLength) {
+          if (isLoopingActive) {
             const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
               targetOffset,
               pageOffsets,
@@ -949,12 +957,12 @@ export const Carousel = memo(
         },
         [
           drag,
-          shouldLoop,
-          loopLength,
-          maxScrollOffset,
+          isLoopingActive,
           pageOffsets,
-          updateVisibleCarouselItems,
+          loopLength,
           updateActivePageIndex,
+          updateVisibleCarouselItems,
+          maxScrollOffset,
         ],
       );
 

@@ -270,8 +270,9 @@ const getItemOffsets = (itemRects: { [itemId: string]: Rect }) => {
     .filter(([id]) => !id.startsWith('clone-'))
     .map(([, rect]) => rect);
 
+  if (originalItems.length === 0) return [];
+
   const sortedItems = originalItems.sort((a, b) => a.x - b.x);
-  if (sortedItems.length === 0) return [];
 
   const initialItemOffset = sortedItems[0].x;
   return sortedItems.map((item) => ({
@@ -578,11 +579,12 @@ export const Carousel = memo(
         [loop, hasCalculatedDimensions, maxScrollOffset],
       );
 
-      // Total width of one "cycle" of content for looping
       const loopLength = useMemo(() => {
         if (!shouldLoop) return 0;
         return contentWidth + gap;
       }, [shouldLoop, contentWidth, gap]);
+
+      const isLoopingActive = shouldLoop && loopLength > 0;
 
       // Calculate how many items to clone for each direction (enough to fill viewport)
       const cloneCounts = useMemo(() => {
@@ -608,10 +610,9 @@ export const Carousel = memo(
           }
 
           // For original items: wrap the offset to check visibility within one cycle
-          const adjustedOffset =
-            shouldLoop && loopLength
-              ? ((scrollOffset % loopLength) + loopLength) % loopLength
-              : scrollOffset;
+          const adjustedOffset = isLoopingActive
+            ? ((scrollOffset % loopLength) + loopLength) % loopLength
+            : scrollOffset;
 
           const visibleItems = getVisibleItems(
             carouselItemRects,
@@ -620,7 +621,7 @@ export const Carousel = memo(
           );
 
           // For clones: check visibility against actual (unwrapped) scroll position
-          if (shouldLoop && loopLength && children) {
+          if (isLoopingActive && children) {
             const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
             const items = getItemOffsets(carouselItemRects);
             const viewportLeft = scrollOffset;
@@ -655,7 +656,14 @@ export const Carousel = memo(
 
           setVisibleCarouselItems(visibleItems);
         },
-        [carouselItemRects, containerSize.width, shouldLoop, loopLength, children, cloneCounts],
+        [
+          carouselItemRects,
+          containerSize.width,
+          isLoopingActive,
+          loopLength,
+          children,
+          cloneCounts,
+        ],
       );
 
       // Calculate pages and their offsets based on snapMode
@@ -700,17 +708,16 @@ export const Carousel = memo(
           updateActivePageIndex(newPage);
           updateVisibleCarouselItems(pageOffsets[newPage]);
 
-          const targetOffset =
-            shouldLoop && loopLength
-              ? findNearestLoopOffset(carouselScrollX.current, [pageOffsets[newPage]], loopLength)
-                  .offset
-              : pageOffsets[newPage];
+          const targetOffset = isLoopingActive
+            ? findNearestLoopOffset(carouselScrollX.current, [pageOffsets[newPage]], loopLength)
+                .offset
+            : pageOffsets[newPage];
 
           carouselScrollX.current = targetOffset;
           animationApi.x.start({ to: targetOffset, config: animationConfig });
         },
         [
-          shouldLoop,
+          isLoopingActive,
           loopLength,
           totalPages,
           pageOffsets,
@@ -756,7 +763,7 @@ export const Carousel = memo(
         (targetOffsetScroll: number) => {
           if (drag === 'none') return targetOffsetScroll;
 
-          if (shouldLoop && loopLength) {
+          if (isLoopingActive) {
             const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
               targetOffsetScroll,
               pageOffsets,
@@ -799,7 +806,7 @@ export const Carousel = memo(
         },
         [
           drag,
-          shouldLoop,
+          isLoopingActive,
           loopLength,
           maxScrollOffset,
           pageOffsets,
@@ -892,7 +899,7 @@ export const Carousel = memo(
         const result: React.ReactNode[] = [];
 
         // Add backward clones (only when we have enough data to position them)
-        if (shouldLoop && loopLength && cloneCounts.backward > 0) {
+        if (isLoopingActive && cloneCounts.backward > 0) {
           const items = getItemOffsets(carouselItemRects);
           const itemsToCloneBackward = childrenArray.slice(-cloneCounts.backward);
 
@@ -922,7 +929,7 @@ export const Carousel = memo(
         result.push(...childrenArray);
 
         // Add forward clones (only when we have enough data)
-        if (shouldLoop && loopLength && cloneCounts.forward > 0) {
+        if (isLoopingActive && cloneCounts.forward > 0) {
           const items = getItemOffsets(carouselItemRects);
           const itemsToCloneForward = childrenArray.slice(0, cloneCounts.forward);
 
@@ -946,7 +953,7 @@ export const Carousel = memo(
         }
 
         return result;
-      }, [loop, children, shouldLoop, loopLength, cloneCounts, carouselItemRects]);
+      }, [loop, children, isLoopingActive, loopLength, cloneCounts, carouselItemRects]);
 
       const containerStyle = useMemo(
         () => [{ flex: 1, overflow: 'hidden' } as const, style, styles?.root],
