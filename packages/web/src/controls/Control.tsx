@@ -62,7 +62,7 @@ export type ControlBaseProps<T extends string> = FilteredHTMLAttributes<
   Partial<
     Pick<
       InteractableBaseProps,
-      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color'
+      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color' | 'elevation'
     >
   > & {
     /** Label for the control option. */

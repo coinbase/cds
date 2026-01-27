@@ -66,6 +66,7 @@ const RadioWithRef = forwardRef(function RadioWithRef<T extends string>(
     checked = false,
     background = 'bg',
     borderColor = checked ? controlColor : 'bgLineHeavy',
+    elevation,
     ...props
   }: RadioProps<T>,
   ref: React.ForwardedRef<HTMLInputElement>,
@@ -87,6 +88,7 @@ const RadioWithRef = forwardRef(function RadioWithRef<T extends string>(
         borderColor={borderColor}
         className={baseCss}
         data-filled={checked}
+        elevation={elevation}
         flexShrink={0}
         justifyContent="center"
         role="presentation"

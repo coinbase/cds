@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Add elevation as an optional prop for Switch. [[#325](https://github.com/coinbase/cds/pull/325)]
+- Add optional elevation support to all Control components. [[#325](https://github.com/coinbase/cds/pull/325)]
 
 ## 8.38.6 (1/23/2026 PST)
 

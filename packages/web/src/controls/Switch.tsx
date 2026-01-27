@@ -42,8 +42,6 @@ export type SwitchProps = ControlBaseProps<string> & {
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
-  /** Sets the elevation/drop shadow of the control. */
-  elevation?: ThemeVars.Elevation;
 };
 
 const MotionBox = motion(Box);
