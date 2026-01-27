@@ -81,14 +81,13 @@ const RadioWithRef = forwardRef(function RadioWithRef<T extends string>(
   });
 
   return (
-    <Control ref={ref} checked={checked} label={children} type="radio" {...props}>
+    <Control ref={ref} checked={checked} elevation={elevation} label={children} type="radio" {...props}>
       <Box
         alignItems="center"
         background={background}
         borderColor={borderColor}
         className={baseCss}
         data-filled={checked}
-        elevation={elevation}
         flexShrink={0}
         justifyContent="center"
         role="presentation"

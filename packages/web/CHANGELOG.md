@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Fix a bug where Switch had a drop shadow by default. Remove default shadow and add optional elevation support for all Control components. [[#325](https://github.com/coinbase/cds/pull/325)]
+- Fix Switch rendering with an unintended drop shadow. Add optional `elevation` prop to Control components (Switch, Checkbox, Radio). [[#325](https://github.com/coinbase/cds/pull/325)]
 
 ## 8.38.6 (1/23/2026 PST)
 

@@ -97,6 +97,7 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
       borderRadius={borderRadius}
       borderWidth={borderWidth}
       checked={checked}
+      elevation={elevation}
       label={children}
       type="checkbox"
       {...props}
@@ -110,7 +111,6 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
         borderWidth={borderWidth}
         className={checkboxCss}
         data-filled={filled}
-        elevation={elevation}
         flexShrink={0}
         justifyContent="center"
         role="presentation"
