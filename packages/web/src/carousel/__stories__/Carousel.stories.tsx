@@ -72,6 +72,26 @@ const sampleItems = [
   <SampleCard key="8" text="Slide 8" />,
   <SampleCard key="9" text="Slide 9" />,
   <SampleCard key="10" text="Slide 10" />,
+  /*<SampleCard key="11" text="Slide 11" />,
+  <SampleCard key="12" text="Slide 12" />,
+  <SampleCard key="13" text="Slide 13" />,
+  <SampleCard key="14" text="Slide 14" />,
+  <SampleCard key="15" text="Slide 15" />,
+  <SampleCard key="16" text="Slide 16" />,
+  <SampleCard key="17" text="Slide 17" />,
+  <SampleCard key="18" text="Slide 18" />,
+  <SampleCard key="19" text="Slide 19" />,
+  <SampleCard key="20" text="Slide 20" />,
+  <SampleCard key="21" text="Slide 21" />,
+  <SampleCard key="22" text="Slide 22" />,
+  <SampleCard key="23" text="Slide 23" />,
+  <SampleCard key="24" text="Slide 24" />,
+  <SampleCard key="25" text="Slide 25" />,
+  <SampleCard key="26" text="Slide 26" />,
+  <SampleCard key="27" text="Slide 27" />,
+  <SampleCard key="28" text="Slide 28" />,
+  <SampleCard key="29" text="Slide 29" />,
+  <SampleCard key="30" text="Slide 30" />,*/
 ];
 
 const gapOnlyStyles = {
@@ -103,10 +123,12 @@ const SquareAssetCard = ({
   imageUrl,
   name,
   isVisible,
+  colorVisibility,
 }: {
   imageUrl: string;
   name: string;
   isVisible?: boolean;
+  colorVisibility?: boolean;
 }) => (
   <ContainedAssetCard
     description={
@@ -116,6 +138,11 @@ const SquareAssetCard = ({
     }
     header={<RemoteImage draggable={false} height="32px" source={imageUrl} width="32px" />}
     onClick={isVisible ? () => console.log('clicked') : undefined}
+    style={
+      colorVisibility
+        ? { backgroundColor: isVisible ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)' }
+        : undefined
+    }
     subtitle={name}
     tabIndex={isVisible ? undefined : -1}
     title="$0.87"
@@ -519,11 +546,92 @@ const AnimatedPaginationExample = () => {
   );
 };
 
+const LoopingExamples = () => (
+  <VStack gap={4}>
+    <NegativeMargin>
+      <Carousel loop snapMode="page" styles={overflowStyles} title="Looping - Snap Page">
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`loop-page-${index}`}
+            id={`loop-page-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel
+        loop
+        drag="snap"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Looping - Snap Item"
+      >
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`loop-item-${index}`}
+            id={`loop-item-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel
+        loop
+        drag="free"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Looping - Free Drag"
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                isVisible={isVisible}
+                name={asset.symbol}
+              />
+            )}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel
+        loop
+        drag="free"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Looping - Free Drag is visible"
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                colorVisibility
+                imageUrl={asset.imageUrl}
+                isVisible={isVisible}
+                name={asset.symbol}
+              />
+            )}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+  </VStack>
+);
+
 export const All = () => (
   <VStack gap={2}>
     <BasicExamples />
     <CustomComponentsExample />
     <CustomStylesExample />
     <AnimatedPaginationExample />
+    <LoopingExamples />
   </VStack>
 );

@@ -1083,6 +1083,147 @@ describe('Carousel', () => {
     });
   });
 
+  describe('Looping', () => {
+    beforeEach(() => {
+      // Reset gesture handlers before each test
+      mockGestureHandlers.onStart = undefined;
+      mockGestureHandlers.onUpdate = undefined;
+      mockGestureHandlers.onEnd = undefined;
+      jest.clearAllMocks();
+    });
+
+    it('enables looping when loop prop is true', () => {
+      render(<TestCarouselWithItems loop itemCount={5} />);
+
+      // Navigation buttons should both be enabled when looping
+      const previousButton = screen.getByTestId('carousel-previous-button');
+      const nextButton = screen.getByTestId('carousel-next-button');
+
+      // With looping, both buttons should be enabled (unless only 1 page)
+      expect(nextButton).toBeEnabled();
+      // Previous button should also be enabled when looping
+      expect(previousButton).toBeEnabled();
+    });
+
+    it('disables both navigation buttons when totalPages <= 1 with loop enabled', () => {
+      // With only 1-2 items that fit in the container, there's only 1 page
+      render(<TestCarouselWithItems loop itemCount={2} itemWidth={defaultItemWidth} />);
+
+      const previousButton = screen.getByTestId('carousel-previous-button');
+      const nextButton = screen.getByTestId('carousel-next-button');
+
+      // Both should be disabled because there's only 1 page
+      expect(nextButton).toBeDisabled();
+      expect(previousButton).toBeDisabled();
+    });
+
+    it('allows navigating from first to last page when looping', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems loop itemCount={5} onChangePage={onChangePage} />);
+
+      // Click previous button (should wrap to last page)
+      const previousButton = screen.getByTestId('carousel-previous-button');
+      fireEvent.press(previousButton);
+
+      // Should have called onChangePage with the last page index
+      expect(onChangePage).toHaveBeenCalled();
+    });
+
+    it('allows navigating from last to first page when looping', async () => {
+      const onChangePage = jest.fn();
+      render(
+        <TestCarouselWithItems loop itemCount={5} onChangePage={onChangePage} snapMode="item" />,
+      );
+
+      // Navigate to last page first
+      const nextButton = screen.getByTestId('carousel-next-button');
+
+      // Press next button multiple times to get to the end
+      for (let i = 0; i < 4; i++) {
+        fireEvent.press(nextButton);
+      }
+
+      // Clear the mock to track the next call
+      onChangePage.mockClear();
+
+      // Press next again - should wrap to first page
+      fireEvent.press(nextButton);
+
+      // Should have called onChangePage with page 0 (wrapped)
+      expect(onChangePage).toHaveBeenCalledWith(0);
+    });
+
+    it('renders correctly with loop and different snap modes', () => {
+      // Test with item snap mode
+      const itemModeComponent = render(
+        <TestCarouselWithItems loop itemCount={5} snapMode="item" />,
+      );
+      // With looping, items may be cloned, so use getAllByText and check at least one exists
+      expect(screen.getAllByText('Item 1').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('Item 5').length).toBeGreaterThanOrEqual(1);
+      itemModeComponent.unmount();
+
+      // Test with page snap mode
+      const pageModeComponent = render(
+        <TestCarouselWithItems loop itemCount={5} snapMode="page" />,
+      );
+      expect(screen.getAllByText('Item 1').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('Item 5').length).toBeGreaterThanOrEqual(1);
+      pageModeComponent.unmount();
+    });
+
+    it('handles drag callbacks when looping', () => {
+      const onDragStart = jest.fn();
+      const onDragEnd = jest.fn();
+
+      render(
+        <TestCarouselWithItems
+          loop
+          itemCount={5}
+          onDragEnd={onDragEnd}
+          onDragStart={onDragStart}
+        />,
+      );
+
+      // Simulate drag gesture
+      simulateDragGesture();
+
+      // Callbacks should be called
+      expect(onDragStart).toHaveBeenCalledTimes(1);
+      expect(onDragEnd).toHaveBeenCalledTimes(1);
+    });
+
+    it('works with different drag modes when looping', () => {
+      const testCases = ['free', 'snap'] as const;
+
+      testCases.forEach((dragMode) => {
+        const onChangePage = jest.fn();
+        const component = render(
+          <TestCarouselWithItems loop drag={dragMode} itemCount={5} onChangePage={onChangePage} />,
+        );
+
+        // Navigation should work
+        const nextButton = screen.getByTestId('carousel-next-button');
+        fireEvent.press(nextButton);
+
+        expect(onChangePage).toHaveBeenCalled();
+        component.unmount();
+      });
+    });
+
+    it('does not enable looping when content fits in viewport', () => {
+      // With only 1 item that fits in the container, looping should not activate
+      render(<TestCarouselWithItems loop itemCount={1} />);
+
+      const previousButton = screen.getByTestId('carousel-previous-button');
+      const nextButton = screen.getByTestId('carousel-next-button');
+
+      // Both buttons should be disabled because there's no need to scroll
+      expect(nextButton).toBeDisabled();
+      expect(previousButton).toBeDisabled();
+    });
+  });
+
   describe('Imperative Handle', () => {
     it('exposes activePageIndex, totalPages, and goToPage through ref', async () => {
       const TestCarouselWithRef = () => {
