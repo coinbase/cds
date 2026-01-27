@@ -61,8 +61,6 @@ export const PeriodSelectorActiveIndicator = ({
       style={[
         {
           position: position as ViewStyle['position'],
-          left: 0,
-          top: 0,
           height,
           borderRadius,
         },

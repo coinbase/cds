@@ -187,12 +187,10 @@ export const TabsActiveIndicator = ({
     <AnimatedBox
       animated
       height={activeTabRect.height}
-      left={0}
       position={position}
       role="none"
       style={animatedBoxStyle}
       testID="tabs-active-indicator"
-      top={0}
       {...props}
     />
   );
