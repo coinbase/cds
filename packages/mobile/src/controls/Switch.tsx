@@ -22,6 +22,7 @@ const SwitchIcon = ({
   borderWidth = 0,
   animatedScaleValue,
   testID,
+  elevation,
 }: ControlIconProps) => {
   const theme = useTheme();
 
@@ -81,6 +82,7 @@ const SwitchIcon = ({
         borderRadius={borderRadius}
         borderWidth={100}
         disabled={disabled}
+        elevation={elevation}
         pressed={pressed}
         style={thumbStyle}
         testID="switch-thumb"

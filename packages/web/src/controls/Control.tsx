@@ -62,7 +62,7 @@ export type ControlBaseProps<T extends string> = FilteredHTMLAttributes<
   Partial<
     Pick<
       InteractableBaseProps,
-      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color'
+      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color' | 'elevation'
     >
   > & {
     /** Label for the control option. */
@@ -107,6 +107,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     borderRadius,
     borderWidth,
     color = checked || indeterminate ? 'fg' : 'fgMuted',
+    elevation,
     testID,
     iconStyle,
     labelStyle,
@@ -138,6 +139,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
         borderWidth={borderWidth}
         className={interactableCss}
         disabled={disabled || readOnly}
+        elevation={elevation}
         style={iconStyle}
         testID={testID ? `${testID}-parent` : undefined}
       >
@@ -169,6 +171,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
       checked,
       children,
       disabled,
+      elevation,
       htmlProps,
       iconStyle,
       inputId,
