@@ -61,6 +61,7 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
     borderColor = checked || indeterminate ? 'bgPrimary' : 'bgLineHeavy',
     borderRadius,
     borderWidth = 100,
+    elevation,
     ...props
   }: CheckboxProps<T>,
   ref: React.ForwardedRef<HTMLInputElement>,
@@ -96,6 +97,7 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<T extends string>(
       borderRadius={borderRadius}
       borderWidth={borderWidth}
       checked={checked}
+      elevation={elevation}
       label={children}
       type="checkbox"
       {...props}

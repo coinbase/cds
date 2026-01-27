@@ -117,6 +117,12 @@ export const MultiLineLabel = () => (
   </Box>
 );
 
+export const Elevation = () => (
+  <Box>
+    <Switch elevation={1}>Elevation</Switch>
+  </Box>
+);
+
 export default {
   title: 'Components/Switch',
   component: Switch,

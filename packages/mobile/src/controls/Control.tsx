@@ -7,7 +7,7 @@ import type {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { ElevationLevels, SharedProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   accessibleOpacityDisabled,
@@ -33,6 +33,7 @@ export type ControlIconProps = SharedProps & {
   borderColor?: ThemeVars.Color;
   borderRadius?: ThemeVars.BorderRadius;
   borderWidth?: ThemeVars.BorderWidth;
+  elevation?: ElevationLevels;
   animatedScaleValue: Animated.Value;
   animatedOpacityValue: Animated.Value;
   accessible?: boolean;
@@ -68,6 +69,8 @@ export type ControlBaseProps<T extends string> = Omit<
      * @default bgPrimary
      */
     controlColor?: ThemeVars.Color;
+    /** Sets the elevation/drop shadow of the control. */
+    elevation?: ElevationLevels;
     style?: ViewStyle;
   };
 
@@ -92,6 +95,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     hitSlop = 4,
     value,
     controlColor,
+    elevation,
     accessibilityRole,
     accessibilityLabel,
     accessibilityHint,
@@ -224,6 +228,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
           checked={checked}
           controlColor={controlColor}
           disabled={pressDisabled}
+          elevation={elevation}
           indeterminate={indeterminate}
           pressed={pressed}
           testID={testID}
@@ -257,6 +262,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
       checked,
       controlColor,
       disabled,
+      elevation,
       getLabelStyle,
       iconWrapperStyles,
       indeterminate,
