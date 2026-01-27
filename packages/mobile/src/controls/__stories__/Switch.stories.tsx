@@ -7,6 +7,7 @@ import { Switch } from '../Switch';
 const SwitchScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [isChecked2, setIsChecked2] = useState(true);
+  const [isChecked3, setIsChecked3] = useState(false);
 
   return (
     <ExampleScreen>
@@ -54,6 +55,16 @@ const SwitchScreen = () => {
                 Style props
               </Switch>
             </VStack>
+          );
+        }}
+      </Example>
+      <Example inline title="Elevation">
+        {() => {
+          const toggleChecked = () => setIsChecked3((prevChecked) => !prevChecked);
+          return (
+            <Switch checked={isChecked3} elevation={1} onChange={toggleChecked}>
+              Elevation
+            </Switch>
           );
         }}
       </Example>

@@ -369,6 +369,78 @@ function OverflowCarousel() {
 }
 ```
 
+## Looping
+
+Enable infinite looping with the `loop` prop. You must have at least two pages of content to enable looping.
+
+Looping works with both `snap` and `free` drag modes, and with both `page` and `item` snap modes.
+
+### Looping with Snap
+
+When looping is enabled with snap drag mode, the carousel will snap to the nearest item or page (depending on `snapMode`) after releasing, allowing infinite scrolling in either direction.
+
+```jsx
+function LoopingSnapCarousel() {
+  const theme = useTheme();
+  const windowWidth = Dimensions.get('window').width;
+
+  const horizontalPadding = theme.space[2];
+  const carouselWidth = windowWidth - horizontalPadding * 2;
+  const horizontalGap = theme.space[1];
+
+  return (
+    <Carousel
+      loop
+      title="Infinite Scroll"
+      styles={{
+        root: { paddingHorizontal: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+### Looping with Free Drag
+
+When looping with free drag, the carousel scrolls continuously without snapping, creating a smooth endless scrolling experience.
+
+```jsx
+function LoopingFreeDragCarousel() {
+  const theme = useTheme();
+  const windowWidth = Dimensions.get('window').width;
+
+  const horizontalPadding = theme.space[2];
+  const carouselWidth = windowWidth - horizontalPadding * 2;
+  const horizontalGap = theme.space[1];
+
+  return (
+    <Carousel
+      loop
+      drag="free"
+      snapMode="item"
+      title="Free Scroll Loop"
+      styles={{
+        root: { paddingHorizontal: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
 ## Accessibility
 
 The carousel is accessible by default.
