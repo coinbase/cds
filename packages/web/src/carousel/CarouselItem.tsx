@@ -3,7 +3,8 @@ import { useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
 
 import { Box } from '../layout/Box';
 
-import { type CarouselItemProps, useCarouselContext } from './Carousel';
+import type { CarouselItemProps } from './Carousel';
+import { useCarouselContext } from './CarouselContext';
 
 /**
  * Individual carousel item component that registers itself with the carousel via RefMapContext.

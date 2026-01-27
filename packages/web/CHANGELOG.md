@@ -8,11 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.38.8 (1/27/2026 PST)
+## 8.39.1 (1/27/2026 PST)
 
 #### 🐞 Fixes
 
 - Fix padding on Tab components. [[#330](https://github.com/coinbase/cds/pull/330)]
+
+## 8.39.0 (1/27/2026 PST)
+
+#### 🚀 Updates
+
+- Support Carousel looping. [[#327](https://github.com/coinbase/cds/pull/327)]
 
 ## 8.38.7 (1/26/2026 PST)
 
