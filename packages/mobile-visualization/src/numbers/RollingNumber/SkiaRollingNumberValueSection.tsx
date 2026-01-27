@@ -21,6 +21,9 @@ import {
   TextAlign,
 } from '@shopify/react-native-skia';
 
+import { toHexColor } from '../../chart/utils/color';
+import { extractFontFamilies, extractFontWeight } from '../../chart/utils/font';
+
 // ============================================================================
 // Color Pulse State Hook (Skia-specific, performance-optimized)
 // ============================================================================
@@ -40,7 +43,7 @@ function useColorPulseState({
   formatted,
   direction,
   colorPulseOnUpdate,
-  pulseDuration = 400,
+  pulseDuration = 500,
 }: {
   value?: number;
   formatted: string;
@@ -91,119 +94,6 @@ function useColorPulseState({
 // ============================================================================
 // Helpers
 // ============================================================================
-
-/**
- * Extract base font family name from CDS font family strings.
- * CDS uses names like "Inter_400Regular" or "CoinbaseDisplay-Medium"
- * but Skia expects just "Inter" or "CoinbaseDisplay".
- */
-function extractBaseFontFamily(fontFamily: string): string {
-  // Handle underscore format: "Inter_400Regular" -> "Inter"
-  if (fontFamily.includes('_')) {
-    return fontFamily.split('_')[0];
-  }
-  // Handle dash format: "CoinbaseDisplay-Medium" -> "CoinbaseDisplay"
-  // But be careful - some fonts use dashes in base name like "Source-Code-Pro"
-  // CDS fonts use pattern: BaseName-Weight (e.g., CoinbaseSans-Medium)
-  const dashMatch = fontFamily.match(/^(.+?)-(?:Regular|Medium|SemiBold|Bold|Light|Thin)$/i);
-  if (dashMatch) {
-    return dashMatch[1];
-  }
-  // Return as-is if no pattern matches
-  return fontFamily;
-}
-
-/**
- * Extract font weight from CDS font family strings.
- * CDS uses names like "Inter_600SemiBold" or "CoinbaseDisplay-Medium".
- * Returns Skia FontWeight value (100-900).
- */
-function extractFontWeight(fontFamily: string): number {
-  const lowerFamily = fontFamily.toLowerCase();
-
-  // Check for explicit numeric weight in underscore format (e.g., "Inter_600SemiBold")
-  const numericMatch = fontFamily.match(/_(\d{3})/);
-  if (numericMatch) {
-    return parseInt(numericMatch[1], 10);
-  }
-
-  // Check for weight keywords (order matters - check more specific first)
-  if (lowerFamily.includes('thin') || lowerFamily.includes('hairline')) {
-    return 100;
-  }
-  if (lowerFamily.includes('extralight') || lowerFamily.includes('ultralight')) {
-    return 200;
-  }
-  if (lowerFamily.includes('light')) {
-    return 300;
-  }
-  if (lowerFamily.includes('medium')) {
-    return 500;
-  }
-  if (lowerFamily.includes('semibold') || lowerFamily.includes('demibold')) {
-    return 600;
-  }
-  if (lowerFamily.includes('extrabold') || lowerFamily.includes('ultrabold')) {
-    return 800;
-  }
-  if (lowerFamily.includes('bold')) {
-    return 700;
-  }
-  if (lowerFamily.includes('black') || lowerFamily.includes('heavy')) {
-    return 900;
-  }
-  if (lowerFamily.includes('regular') || lowerFamily.includes('normal')) {
-    return 400;
-  }
-
-  // Default to normal weight
-  return 400;
-}
-
-/**
- * Convert a CDS font family name to an array of possible Skia font names.
- * Skia's fontFamilies array uses the first one it can resolve.
- *
- * CDS uses: "CoinbaseDisplay-Regular"
- * Skia sees: "Coinbase Display" (with space)
- *
- * Returns both formats so Skia can match whichever is available.
- */
-function getFontFamiliesForSkia(rawFontFamily: string): string[] {
-  const baseName = extractBaseFontFamily(rawFontFamily);
-
-  // Add spaces before capital letters: "CoinbaseDisplay" -> "Coinbase Display"
-  const spacedName = baseName.replace(/([a-z])([A-Z])/g, '$1 $2');
-
-  // Return both formats - Skia will use the first one it finds
-  if (spacedName !== baseName) {
-    return [spacedName, baseName, rawFontFamily];
-  }
-  return [baseName, rawFontFamily];
-}
-
-/**
- * Convert any CSS color format to hex for Skia compatibility.
- * Skia.Color() works best with hex format.
- */
-function toHexColor(color: string): string {
-  // Already hex
-  if (color.startsWith('#')) {
-    return color;
-  }
-
-  // Parse rgb(r, g, b) or rgba(r, g, b, a)
-  const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (rgbMatch) {
-    const r = parseInt(rgbMatch[1], 10);
-    const g = parseInt(rgbMatch[2], 10);
-    const b = parseInt(rgbMatch[3], 10);
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-  }
-
-  // Return as-is and let Skia try to parse it
-  return color;
-}
 
 function isDigitChar(char: string): boolean {
   const n = parseInt(char, 10);
@@ -402,7 +292,7 @@ export const SkiaRollingNumberValueSection: RollingNumberValueSectionComponent =
     const fontKey = textProps?.font === 'inherit' ? 'body' : (textProps?.font ?? 'body');
     const fontSize = theme.fontSize[fontKey];
     const rawFontFamily = theme.fontFamily[fontKey];
-    const fontFamilies = useMemo(() => getFontFamiliesForSkia(rawFontFamily), [rawFontFamily]);
+    const fontFamilies = useMemo(() => extractFontFamilies(rawFontFamily), [rawFontFamily]);
     const fontWeight = useMemo(() => extractFontWeight(rawFontFamily), [rawFontFamily]);
 
     // Resolve text colors from theme - infer from textProps.color token or use defaults

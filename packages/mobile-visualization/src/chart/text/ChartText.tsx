@@ -2,13 +2,12 @@ import { memo, useMemo } from 'react';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect } from '@coinbase/cds-common/types';
-import type { Theme } from '@coinbase/cds-mobile/core/theme';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   type AnimatedProp,
   type Color,
   FontSlant,
-  FontWeight,
+  type FontWeight,
   Group,
   Paint,
   Paragraph,
@@ -22,29 +21,13 @@ import {
 } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartInset, getChartInset, getColorWithOpacity, unwrapAnimatedValue } from '../utils';
-
-/**
- * Converts a fontWeight from Theme to a Skia FontWeight
- * @note this only works when the fontWeight is a valid number (ie not 'bold')
- * @param theme - The theme to use
- * @param font - The font to use
- * @returns The FontWeight or undefined if the fontWeight is not a valid number
- */
-const getFontWeight = (theme: Theme, font: ThemeVars.Font): FontWeight | undefined => {
-  const themeFontWeight = theme.fontWeight[font];
-
-  const numericWeight =
-    typeof themeFontWeight === 'string' ? Number(themeFontWeight) : themeFontWeight;
-
-  const validFontWeights = Object.values(FontWeight).filter(
-    (value): value is number => typeof value === 'number',
-  );
-
-  return numericWeight !== undefined && validFontWeights.includes(numericWeight)
-    ? numericWeight
-    : undefined;
-};
+import {
+  type ChartInset,
+  getChartInset,
+  getColorWithOpacity,
+  getThemeFontWeight,
+  unwrapAnimatedValue,
+} from '../utils';
 
 /**
  * The supported content types for ChartText.
@@ -244,7 +227,7 @@ export const ChartText = memo<ChartTextProps>(
       () => ({
         fontFamilies: fontFamilies ?? contextFontFamilies ?? [],
         fontSize: fontSize ?? theme.fontSize[font],
-        fontStyle: { weight: fontWeight ?? getFontWeight(theme, font), slant: fontStyleProp },
+        fontStyle: { weight: fontWeight ?? getThemeFontWeight(theme, font), slant: fontStyleProp },
         color: Skia.Color(color ?? theme.color.fgMuted),
       }),
       [fontFamilies, contextFontFamilies, fontSize, theme, font, fontWeight, fontStyleProp, color],
