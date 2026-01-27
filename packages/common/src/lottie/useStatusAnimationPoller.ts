@@ -48,7 +48,7 @@ export const useStatusAnimationPoller = ({
     }
   }, [playMarkers]);
 
-  const previousStatusRef = useRef<typeof status>();
+  const previousStatusRef = useRef<typeof status>(undefined);
 
   // onAnimationFinish will get triggered after our first useEffect
   // play completes and then after each play within onAnimationFinish completes.

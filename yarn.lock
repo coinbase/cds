@@ -2365,6 +2365,7 @@ __metadata:
     "@modelcontextprotocol/sdk": "npm:^1.13.1"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
+    "@types/react-is": "npm:^19.2.0"
     d3-array: "npm:^3.2.4"
     d3-color: "npm:^3.1.0"
     d3-interpolate: "npm:^3.0.1"
@@ -2372,7 +2373,7 @@ __metadata:
     d3-shape: "npm:^3.2.0"
     jest-date-mock: "npm:^1.0.8"
     lodash: "npm:^4.17.21"
-    react-is: "npm:^17.0.2"
+    react-is: "npm:^19.2.4"
     type-fest: "npm:^2.19.0"
     zod: "npm:^3.23.8"
   peerDependencies:
@@ -10312,12 +10313,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-is@npm:^17.0.2":
-  version: 17.0.3
-  resolution: "@types/react-is@npm:17.0.3"
+"@types/react-is@npm:^19.2.0":
+  version: 19.2.0
+  resolution: "@types/react-is@npm:19.2.0"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10c0/839382b66b2b2e3023647f5ba0c382ddc6aa01c1bc9f64608f82bbc871a905ba9b988838619914d8348c2a511717c6bd3701cb866bb9e4abfabdbe544efb695b
+  checksum: 10c0/ff49ac8b8d439c3377e11d2f9f491ed4f8c8ee800225a40093c7941715ca8ccbde1b3833c5435354a8e39305fd0a163019d97f033c9402bc4b46f515851d2290
   languageName: node
   linkType: hard
 
@@ -15700,7 +15701,6 @@ __metadata:
     "@types/lodash": "npm:^4.14.178"
     "@types/mini-css-extract-plugin": "npm:^2.2.0"
     "@types/node": "npm:^22"
-    "@types/react-is": "npm:^17.0.2"
     "@types/react-router-dom": "npm:^5.2.0"
     "@types/react-test-renderer": "npm:^18.3.0"
     "@types/react-virtualized": "npm:^9.21.13"
@@ -28665,10 +28665,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.1, react-is@npm:^17.0.2":
+"react-is@npm:^17.0.1":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 10c0/2bdb6b93fbb1820b024b496042cce405c57e2f85e777c9aabd55f9b26d145408f9f74f5934676ffdc46f3dcff656d78413a6e43968e7b3f92eea35b3052e9053
+  languageName: node
+  linkType: hard
+
+"react-is@npm:^19.2.4":
+  version: 19.2.4
+  resolution: "react-is@npm:19.2.4"
+  checksum: 10c0/477a7cfc900f24194606e315fa353856a3a13487ea8eca841678817cad4daef64339ea0d1e84e58459fc75dbe0d9ba00bb0cc626db3d07e0cf31edc64cb4fa37
   languageName: node
   linkType: hard
 
