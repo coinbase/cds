@@ -49,6 +49,8 @@ import {
   type SolidLineProps,
 } from '..';
 
+const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
 export default {
   component: LineChart,
   title: 'Components/Chart/LineChart',
@@ -326,7 +328,7 @@ function Interaction() {
         series={[
           {
             id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            data: sampleData,
           },
         ]}
       >
@@ -338,7 +340,6 @@ function Interaction() {
 
 function Points() {
   const keyMarketShiftIndices = [4, 6, 7, 9, 10];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   return (
     <CartesianChart
@@ -346,7 +347,7 @@ function Points() {
       series={[
         {
           id: 'prices',
-          data: data,
+          data: sampleData,
         },
       ]}
     >
@@ -374,21 +375,16 @@ function Points() {
 }
 
 function BasicAccessible() {
-  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
-
   // Chart-level accessibility label provides overview
   const chartAccessibilityLabel = useMemo(() => {
-    const currentPrice = data[data.length - 1];
-    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
-  }, [data]);
+    const currentPrice = sampleData[sampleData.length - 1];
+    return `Price chart showing trend over ${sampleData.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
+  }, []);
 
   // Scrubber-level accessibility label provides specific position info
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
-    },
-    [data],
-  );
+  const scrubberAccessibilityLabel = useCallback((index: number) => {
+    return `Price at position ${index + 1} of ${sampleData.length}: ${sampleData[index]}`;
+  }, []);
 
   return (
     <LineChart
@@ -400,7 +396,7 @@ function BasicAccessible() {
       series={[
         {
           id: 'prices',
-          data: data,
+          data: sampleData,
         },
       ]}
       yAxis={{
@@ -414,21 +410,17 @@ function BasicAccessible() {
 
 function AccessibleWithHeader() {
   const headerId = useId();
-  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   // Display label provides overview
   const displayLabel = useMemo(
-    () => `Revenue chart showing trend. Current value: ${data[data.length - 1]}`,
-    [data],
+    () => `Revenue chart showing trend. Current value: ${sampleData[sampleData.length - 1]}`,
+    [],
   );
 
   // Scrubber-specific accessibility label
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Viewing position ${index + 1} of ${data.length}, value: ${data[index]}`;
-    },
-    [data],
-  );
+  const scrubberAccessibilityLabel = useCallback((index: number) => {
+    return `Viewing position ${index + 1} of ${sampleData.length}, value: ${sampleData[index]}`;
+  }, []);
 
   return (
     <VStack gap={2}>
@@ -444,7 +436,7 @@ function AccessibleWithHeader() {
         series={[
           {
             id: 'revenue',
-            data: data,
+            data: sampleData,
           },
         ]}
         yAxis={{
@@ -471,7 +463,6 @@ function Gradients() {
     'teal',
     'chartreuse',
   ];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
 
@@ -503,17 +494,17 @@ function Gradients() {
         series={[
           {
             id: 'continuousGradient',
-            data: data,
+            data: sampleData,
             gradient: {
               stops: [
                 { offset: 0, color: `rgb(var(--${currentSpectrumColor}80))` },
-                { offset: Math.max(...data), color: `rgb(var(--${currentSpectrumColor}20))` },
+                { offset: Math.max(...sampleData), color: `rgb(var(--${currentSpectrumColor}20))` },
               ],
             },
           },
           {
             id: 'discreteGradient',
-            data: data.map((d) => d + 50),
+            data: sampleData.map((d) => d + 50),
             // You can create a "discrete" gradient by having multiple stops at the same offset
             gradient: {
               stops: ({ min, max }) => [
@@ -535,7 +526,7 @@ function Gradients() {
           },
           {
             id: 'xAxisGradient',
-            data: data.map((d) => d + 100),
+            data: sampleData.map((d) => d + 100),
             gradient: {
               // You can also configure by the x-axis.
               axis: 'x',
@@ -624,12 +615,11 @@ function GainLossChart() {
 }
 
 function HighLowPrice() {
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-  const minPrice = Math.min(...data);
-  const maxPrice = Math.max(...data);
+  const minPrice = Math.min(...sampleData);
+  const maxPrice = Math.max(...sampleData);
 
-  const minPriceIndex = data.indexOf(minPrice);
-  const maxPriceIndex = data.indexOf(maxPrice);
+  const minPriceIndex = sampleData.indexOf(minPrice);
+  const maxPriceIndex = sampleData.indexOf(maxPrice);
 
   const formatPrice = useCallback((price: number) => {
     return `$${price.toLocaleString('en-US', {
@@ -645,7 +635,7 @@ function HighLowPrice() {
       series={[
         {
           id: 'prices',
-          data: data,
+          data: sampleData,
         },
       ]}
     >
@@ -1622,7 +1612,7 @@ function CustomLabelComponent() {
       series={[
         {
           id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          data: sampleData,
         },
       ]}
     >
@@ -1647,7 +1637,7 @@ function CustomBeaconStroke() {
         series={[
           {
             id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            data: sampleData,
             color: foregroundColor,
           },
         ]}
@@ -1664,43 +1654,6 @@ function CustomBeaconStroke() {
 }
 
 function CustomBeaconSize() {
-  const dataCount = 14;
-  const minDataValue = 0;
-  const maxDataValue = 100;
-  const minStepOffset = 5;
-  const maxStepOffset = 20;
-  const updateInterval = 2000;
-
-  function generateNextValue(previousValue: number) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataValue) {
-      direction = -1;
-    } else if (previousValue <= minDataValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    const newValue = previousValue + offset * direction;
-    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
-  }
-
-  function generateInitialData() {
-    const data = [];
-    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-    return data;
-  }
-
   const InvertedBeacon = useMemo(
     () => (props: ScrubberBeaconProps) => (
       <DefaultScrubberBeacon
@@ -1714,48 +1667,26 @@ function CustomBeaconSize() {
     [],
   );
 
-  const CustomBeaconSizeChart = memo(() => {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 50;
-          const newValue = generateNextValue(lastValue);
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    return (
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data,
-            color: 'var(--color-fg)',
-          },
-        ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 16 }),
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 0, max: 100 },
-        }}
-      >
-        <Scrubber BeaconComponent={InvertedBeacon} />
-      </LineChart>
-    );
-  });
-
-  return <CustomBeaconSizeChart />;
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: sampleData,
+          color: 'var(--color-fg)',
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber BeaconComponent={InvertedBeacon} />
+    </LineChart>
+  );
 }
 
 export const All = () => {
@@ -1768,7 +1699,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
         />
@@ -1807,7 +1738,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
           yAxis={{
@@ -1838,7 +1769,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
           xAxis={{
@@ -1907,7 +1838,7 @@ export const All = () => {
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
               color: 'var(--color-fgPositive)',
             },
           ]}
