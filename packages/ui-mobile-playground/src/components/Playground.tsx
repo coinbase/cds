@@ -7,6 +7,7 @@ import { ExamplesListScreen } from './ExamplesListScreen';
 import { ExamplesSearchProvider } from './ExamplesSearchProvider';
 import { IconSheetScreen } from './IconSheetScreen';
 import type { PlaygroundRoute } from './PlaygroundRoute';
+import { RecentItemsProvider } from './RecentItemsProvider';
 import { createStaticRoute, initialRouteKey, searchRouteKey } from './staticRoutes';
 import { transformRouteToNavComponent } from './transformRouteToNavComponent';
 import { useExampleNavigatorProps } from './useExampleNavigatorProps';
@@ -85,8 +86,10 @@ const PlaygroundContent = memo(
 
 export const Playground = memo((props: PlaygroundProps) => {
   return (
-    <ExamplesSearchProvider>
-      <PlaygroundContent {...props} />
-    </ExamplesSearchProvider>
+    <RecentItemsProvider>
+      <ExamplesSearchProvider>
+        <PlaygroundContent {...props} />
+      </ExamplesSearchProvider>
+    </RecentItemsProvider>
   );
 });
