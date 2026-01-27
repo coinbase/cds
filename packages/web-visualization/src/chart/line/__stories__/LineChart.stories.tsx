@@ -1664,43 +1664,6 @@ function CustomBeaconStroke() {
 }
 
 function CustomBeaconSize() {
-  const dataCount = 14;
-  const minDataValue = 0;
-  const maxDataValue = 100;
-  const minStepOffset = 5;
-  const maxStepOffset = 20;
-  const updateInterval = 2000;
-
-  function generateNextValue(previousValue: number) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataValue) {
-      direction = -1;
-    } else if (previousValue <= minDataValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    const newValue = previousValue + offset * direction;
-    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
-  }
-
-  function generateInitialData() {
-    const data = [];
-    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-    return data;
-  }
-
   const InvertedBeacon = useMemo(
     () => (props: ScrubberBeaconProps) => (
       <DefaultScrubberBeacon
@@ -1714,48 +1677,26 @@ function CustomBeaconSize() {
     [],
   );
 
-  const CustomBeaconSizeChart = memo(() => {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 50;
-          const newValue = generateNextValue(lastValue);
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    return (
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data,
-            color: 'var(--color-fg)',
-          },
-        ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 16 }),
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 0, max: 100 },
-        }}
-      >
-        <Scrubber BeaconComponent={InvertedBeacon} />
-      </LineChart>
-    );
-  });
-
-  return <CustomBeaconSizeChart />;
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          color: 'var(--color-fg)',
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber BeaconComponent={InvertedBeacon} />
+    </LineChart>
+  );
 }
 
 export const All = () => {
