@@ -92,7 +92,7 @@ describe('SegmentedTabs', () => {
     expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
       width: 68,
       height: 40,
-      transform: [{ translateX: 0 }],
+      transform: [{ translateX: 0 }, { translateY: 0 }],
     });
   });
 
@@ -132,7 +132,7 @@ describe('SegmentedTabs', () => {
     expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
       width: 68,
       height: 40,
-      transform: [{ translateX: 68 }],
+      transform: [{ translateX: 68 }, { translateY: 0 }],
     });
   });
 
@@ -179,5 +179,107 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
     expect(ref.current).toBeInstanceOf(View);
+  });
+
+  it('positions indicator correctly with horizontal padding', () => {
+    const mockPaddedData: ReturnType<typeof useRefMap> = {
+      refs: { current: {} },
+      registerRef: NoopFn,
+      getRef: jest.fn(() => ({
+        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
+          callback(20, 0, 68, 40, 0, 0);
+        }),
+      })),
+    };
+    mockUseRefMap(mockPaddedData);
+
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} paddingX={5} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    const tabsContainer = screen.getByTestId(TEST_ID);
+    fireEvent(tabsContainer, 'layout', {
+      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 40 } },
+    });
+
+    jest.advanceTimersByTime(300);
+
+    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+      width: 68,
+      height: 40,
+      transform: [{ translateX: 20 }, { translateY: 0 }],
+    });
+  });
+
+  it('positions indicator correctly with vertical padding', () => {
+    const mockVerticalPaddedData: ReturnType<typeof useRefMap> = {
+      refs: { current: {} },
+      registerRef: NoopFn,
+      getRef: jest.fn(() => ({
+        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
+          callback(0, 8, 68, 40, 0, 0);
+        }),
+      })),
+    };
+    mockUseRefMap(mockVerticalPaddedData);
+
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} paddingY={2} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    const tabsContainer = screen.getByTestId(TEST_ID);
+    fireEvent(tabsContainer, 'layout', {
+      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 56 } },
+    });
+
+    jest.advanceTimersByTime(300);
+
+    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+      width: 68,
+      height: 40,
+      transform: [{ translateX: 0 }, { translateY: 8 }],
+    });
+  });
+
+  it('positions indicator correctly with both horizontal and vertical padding', () => {
+    const mockBothPaddedData: ReturnType<typeof useRefMap> = {
+      refs: { current: {} },
+      registerRef: NoopFn,
+      getRef: jest.fn(() => ({
+        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
+          callback(20, 8, 68, 40, 0, 0);
+        }),
+      })),
+    };
+    mockUseRefMap(mockBothPaddedData);
+
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} paddingX={5} paddingY={2} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    const tabsContainer = screen.getByTestId(TEST_ID);
+    fireEvent(tabsContainer, 'layout', {
+      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 56 } },
+    });
+
+    jest.advanceTimersByTime(300);
+
+    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+      width: 68,
+      height: 40,
+      transform: [{ translateX: 20 }, { translateY: 8 }],
+    });
   });
 });
