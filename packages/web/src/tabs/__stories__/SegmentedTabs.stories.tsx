@@ -188,6 +188,15 @@ export const All = () => {
         tabs={typedSegments}
         title="Typed Tabs"
       />
+      <SegmentedTabsExample
+        defaultActiveTab={basicSegments[0]}
+        gap={2}
+        paddingX={3}
+        paddingY={1}
+        tabs={basicSegments}
+        title="With Padding"
+        width="fit-content"
+      />
     </VStack>
   );
 };
