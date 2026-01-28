@@ -10,7 +10,7 @@ const BUMP_REGEX =
 const IGNORE_CHANGED_FILES_REGEX =
   /^((CHANGELOG|README|MIGRATION|CONTRIBUTING)(\.md)?|[^/]+\.yml|OWNERS|project\.json|[^/]+\.[dD]ockerfile|tsconfig\.json|jest\.config\.js|\.?eslint.*)$/;
 
-const TEST_REGEX = /(\.(spec|test)\.[jt]sx?(\.snap)?$|__stories__)/;
+const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$|__stories__)/;
 
 export type PackageVersionCheckOptions = {
   projectsWithNoSrcFolder: string[];
@@ -41,8 +41,8 @@ export async function getAffectedPackages(options: Partial<PackageVersionCheckOp
       }
 
       return changedFiles.some((file) => {
-        // Ignore unrelated code changes and test files
-        if (!file.startsWith(`${projectConfig.data.root}/`) || TEST_REGEX.test(file)) {
+        // Ignore unrelated code changes and dev files (tests, stories, figma bindings)
+        if (!file.startsWith(`${projectConfig.data.root}/`) || DEV_FILES_REGEX.test(file)) {
           return false;
         }
 

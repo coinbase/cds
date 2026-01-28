@@ -34,6 +34,7 @@ const CheckboxIcon = memo(
     borderColor = checked || indeterminate ? 'bgPrimary' : 'bgLineHeavy',
     borderRadius,
     borderWidth = 100,
+    elevation,
     animatedScaleValue,
     animatedOpacityValue,
     testID,
@@ -70,6 +71,7 @@ const CheckboxIcon = memo(
         borderRadius={borderRadius}
         borderWidth={borderWidth}
         disabled={disabled}
+        elevation={elevation}
         height={checkboxSize}
         justifyContent="center"
         pressed={pressed}

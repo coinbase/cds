@@ -8,6 +8,36 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.39.0 ((1/27/2026, 11:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.7 ((1/26/2026, 10:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.6 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: align version with web package.
+
+## 8.38.5 ((1/23/2026, 06:35 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.4 ((1/22/2026, 01:55 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.3 ((1/22/2026, 01:42 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.2 ((1/22/2026, 09:16 AM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.38.1 ((1/15/2026, 10:22 AM PST))
 
 This is an artificial version bump with no new change.

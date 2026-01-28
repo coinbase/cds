@@ -33,6 +33,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     fillOpacity = 1,
     dataX,
     dataY,
+    seriesId,
     transition,
     ...props
   }) => {

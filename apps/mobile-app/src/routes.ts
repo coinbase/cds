@@ -309,6 +309,11 @@ export const routes = [
       require('@cbhq/cds-mobile/controls/__stories__/InputStack.stories').default,
   },
   {
+    key: 'Legend',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/legend/__stories__/Legend.stories').default,
+  },
+  {
     key: 'LinearGradient',
     getComponent: () =>
       require('@cbhq/cds-mobile/gradients/__stories__/LinearGradient.stories').default,

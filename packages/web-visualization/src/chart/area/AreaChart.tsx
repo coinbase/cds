@@ -210,6 +210,7 @@ export const AreaChart = memo(
               opacity,
               LineComponent,
               stackId,
+              legendShape,
               transition: seriesTransition,
               ...areaPropsFromSeries
             }) => (
@@ -237,6 +238,7 @@ export const AreaChart = memo(
                 fill,
                 fillOpacity,
                 stackId,
+                legendShape,
                 type, // Area type (don't pass to Line)
                 lineType: seriesLineType,
                 transition: seriesTransition,

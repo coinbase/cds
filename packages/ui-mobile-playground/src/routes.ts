@@ -171,6 +171,11 @@ export const routes = [
       require('@cbhq/cds-mobile/collapsible/__stories__/Collapsible.stories').default,
   },
   {
+    key: 'Combobox',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
+  },
+  {
     key: 'ContainedAssetCard',
     getComponent: () =>
       require('@cbhq/cds-mobile/cards/__stories__/ContainedAssetCard.stories').default,
@@ -302,6 +307,11 @@ export const routes = [
     key: 'InputStack',
     getComponent: () =>
       require('@cbhq/cds-mobile/controls/__stories__/InputStack.stories').default,
+  },
+  {
+    key: 'Legend',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/legend/__stories__/Legend.stories').default,
   },
   {
     key: 'LinearGradient',

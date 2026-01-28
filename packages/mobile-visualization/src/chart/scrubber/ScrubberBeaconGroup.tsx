@@ -11,18 +11,19 @@ import { convertToSerializableScale } from '../utils/scale';
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import type { ScrubberBeaconComponent, ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
-// Helper component to calculate beacon data for a specific series
-const BeaconWithData = memo<{
-  seriesId: string;
+type BeaconWithDataProps = Pick<
+  ScrubberBeaconProps,
+  'seriesId' | 'idlePulse' | 'animate' | 'transitions' | 'stroke'
+> & {
   dataIndex: SharedValue<number>;
   dataX: SharedValue<number>;
   isIdle: SharedValue<boolean>;
   BeaconComponent: ScrubberBeaconComponent;
-  idlePulse?: boolean;
-  animate?: boolean;
-  transitions?: ScrubberBeaconProps['transitions'];
   beaconRef: (ref: ScrubberBeaconRef | null) => void;
-}>(
+};
+
+// Helper component to calculate beacon data for a specific series
+const BeaconWithData = memo<BeaconWithDataProps>(
   ({
     seriesId,
     dataIndex,
@@ -33,6 +34,7 @@ const BeaconWithData = memo<{
     animate,
     transitions,
     beaconRef,
+    stroke,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
     const theme = useTheme();
@@ -115,6 +117,7 @@ const BeaconWithData = memo<{
         idlePulse={idlePulse}
         isIdle={isIdle}
         seriesId={seriesId}
+        stroke={stroke}
         transitions={transitions}
       />
     );
@@ -149,11 +152,19 @@ export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
    * @default DefaultScrubberBeacon
    */
   BeaconComponent?: ScrubberBeaconComponent;
+  /**
+   * Stroke color of the beacon circle.
+   * @default theme.color.bg
+   */
+  stroke?: string;
 };
 
 export const ScrubberBeaconGroup = memo(
   forwardRef<ScrubberBeaconGroupRef, ScrubberBeaconGroupProps>(
-    ({ seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon }, ref) => {
+    (
+      { seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon, stroke },
+      ref,
+    ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
       const { getXAxis, series, dataLength, animate } = useCartesianChartContext();
@@ -212,6 +223,7 @@ export const ScrubberBeaconGroup = memo(
           idlePulse={idlePulse}
           isIdle={isIdle}
           seriesId={s.id}
+          stroke={stroke}
           transitions={transitions}
         />
       ));

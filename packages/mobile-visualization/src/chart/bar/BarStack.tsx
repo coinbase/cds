@@ -7,10 +7,20 @@ import type { ChartScaleFunction, Series, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
-import { Bar, type BarProps } from './Bar';
+import { Bar, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
+
+/**
+ * Extended series type that includes bar-specific properties.
+ */
+export type BarSeries = Series & {
+  /**
+   * Custom component to render bars for this series.
+   */
+  BarComponent?: BarComponent;
+};
 
 export type BarStackBaseProps = Pick<
   BarProps,
@@ -19,7 +29,7 @@ export type BarStackBaseProps = Pick<
   /**
    * Array of series configurations that belong to this stack.
    */
-  series: Series[];
+  series: BarSeries[];
   /**
    * The category index for this stack.
    */
@@ -176,6 +186,7 @@ export const BarStack = memo<BarStackProps>(
         width: number;
         height: number;
         dataY?: number | [number, number] | null;
+        BarComponent?: BarComponent;
         fill?: string;
         roundTop?: boolean;
         roundBottom?: boolean;
@@ -266,6 +277,7 @@ export const BarStack = memo<BarStackProps>(
           // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
           roundTop: roundBaseline || Math.abs(barTop - baseline) >= EPSILON,
           roundBottom: roundBaseline || Math.abs(barBottom - baseline) >= EPSILON,
+          BarComponent: s.BarComponent,
           shouldApplyGap,
         });
       });
@@ -666,7 +678,7 @@ export const BarStack = memo<BarStackProps>(
     const barElements = bars.map((bar, index) => (
       <Bar
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
-        BarComponent={defaultBarComponent}
+        BarComponent={bar.BarComponent || defaultBarComponent}
         borderRadius={borderRadius}
         dataX={dataX}
         dataY={bar.dataY}
@@ -676,6 +688,7 @@ export const BarStack = memo<BarStackProps>(
         originY={baseline}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
+        seriesId={bar.seriesId}
         stroke={defaultStroke}
         strokeWidth={defaultStrokeWidth}
         transition={transition}

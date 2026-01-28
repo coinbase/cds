@@ -1,1 +1,99 @@
-Check [Modal](/components/overlay/Modal) for usage examples
+ModalBody provides a scrollable content area for [Modal](/components/overlay/Modal).
+
+## Basics
+
+ModalBody renders children with default padding and enables scrolling when content overflows.
+
+```jsx live
+function BasicExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Welcome" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>
+            This is the modal body content. It provides consistent padding and scrolling behavior.
+          </Text>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Scrollable Content
+
+When content exceeds the modal height, ModalBody automatically scrolls. The default `overflow="auto"` handles this.
+
+```jsx live
+function ScrollableExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Terms of Service" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <VStack gap={3}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <Text key={i}>
+                Section {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </Text>
+            ))}
+          </VStack>
+        </ModalBody>
+        <ModalFooter primaryAction={<Button onClick={() => setVisible(false)}>Accept</Button>} />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Accessibility
+
+ModalBody has `tabIndex={0}` by default, making it focusable for keyboard navigation. Users can Tab to focus the body, then use arrow keys to scroll. Content within ModalBody, such as form controls, remains accessible.
+
+```jsx live
+function AccessibilityExample() {
+  const [visible, setVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [amount, setAmount] = useState('');
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Send Money</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Send Payment" closeAccessibilityLabel="Close" />
+        <ModalBody accessibilityLabel="Payment form">
+          <VStack gap={3}>
+            <TextInput
+              label="Recipient Email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextInput
+              label="Amount"
+              placeholder="0.00"
+              leadingText="$"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </VStack>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Send</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```

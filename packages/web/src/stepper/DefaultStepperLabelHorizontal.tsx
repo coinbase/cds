@@ -30,6 +30,7 @@ export const DefaultStepperLabelHorizontal: StepperLabelComponent = memo(
     className,
     style,
     completedStepAccessibilityLabel,
+    setActiveStepLabelElement,
     defaultColor = 'fgMuted',
     activeColor = 'fg',
     descendentActiveColor = 'fg',

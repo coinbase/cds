@@ -60,7 +60,7 @@ describe('DefaultSelectControl', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityLabel).toBe('Custom accessibility label');
+      expect(button.props.accessibilityLabel).toBe('Custom accessibility label, Option 1');
       expect(button.props.accessibilityHint).toBe('Custom accessibility hint');
     });
 
