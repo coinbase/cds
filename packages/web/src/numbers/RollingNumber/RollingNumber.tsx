@@ -815,12 +815,15 @@ export const RollingNumber: RollingNumberComponent = memo(
         >
           {/* render screen reader only section for accessibility */}
           {screenReaderOnlySection}
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
           <m.span
-            aria-hidden
-            animate={colorControls}
-            className={cx(tickerCss, classNames?.visibleContent)}
-            style={styles?.visibleContent}
-            transition={transitionConfig}
+            {...({
+              'aria-hidden': true,
+              animate: colorControls,
+              className: cx(tickerCss, classNames?.visibleContent),
+              style: styles?.visibleContent,
+              transition: transitionConfig,
+            } as React.ComponentProps<typeof m.span>)}
           >
             {prefixSection}
             {formattedValue ? formattedValueValueSection : intlPartsValueSection}

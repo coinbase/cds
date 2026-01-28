@@ -314,7 +314,10 @@ const TourComponent = <T extends string = string>({
               role="dialog"
             >
               {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
-                <animated.div style={animation}>
+                // TODO: Remove type assertion after replacing @react-spring/web with framer-motion v11+ for React 19 compatibility
+                <animated.div
+                  {...({ style: animation } as React.ComponentProps<typeof animated.div>)}
+                >
                   <TourMaskComponent
                     activeTourStepTargetRect={(
                       activeTourStepTarget as HTMLElement
@@ -326,7 +329,10 @@ const TourComponent = <T extends string = string>({
               )}
               <div ref={refs.setFloating} style={floatingStyles}>
                 <FocusTrap>
-                  <animated.div style={animation}>
+                  {/* TODO: Remove type assertion after replacing @react-spring/web with framer-motion v11+ for React 19 compatibility */}
+                  <animated.div
+                    {...({ style: animation } as React.ComponentProps<typeof animated.div>)}
+                  >
                     <RenderedTourStepArrow
                       ref={tourStepArrowRef}
                       arrow={arrow}

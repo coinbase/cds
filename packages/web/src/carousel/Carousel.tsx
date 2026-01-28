@@ -752,28 +752,31 @@ export const Carousel = memo(
                 }}
               >
                 <CarouselContext.Provider value={carouselContextValue}>
+                  {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
                   <m.div
-                    animate={animationApi}
-                    className={cx(classNames?.carousel, defaultCarouselCss)}
-                    drag={isDragEnabled ? 'x' : false}
-                    dragConstraints={{ left: -maxScrollOffset, right: 0 }}
-                    dragControls={dragControls}
-                    dragTransition={{
-                      // How much inertia affects the target
-                      power: drag === 'free' ? 0.5 : 0.125,
-                      timeConstant: drag !== 'free' ? 125 : undefined,
-                      modifyTarget: handleDragTransition,
-                    }}
-                    initial={false}
-                    onDragEnd={handleDragEnd}
-                    style={{
-                      display: 'flex',
-                      x: carouselScrollX,
-                      ...styles?.carousel,
-                    }}
-                    whileDrag={{
-                      pointerEvents: 'none',
-                    }}
+                    {...({
+                      animate: animationApi,
+                      className: cx(classNames?.carousel, defaultCarouselCss),
+                      drag: isDragEnabled ? 'x' : false,
+                      dragConstraints: { left: -maxScrollOffset, right: 0 },
+                      dragControls: dragControls,
+                      dragTransition: {
+                        // How much inertia affects the target
+                        power: drag === 'free' ? 0.5 : 0.125,
+                        timeConstant: drag !== 'free' ? 125 : undefined,
+                        modifyTarget: handleDragTransition,
+                      },
+                      initial: false,
+                      onDragEnd: handleDragEnd,
+                      style: {
+                        display: 'flex',
+                        x: carouselScrollX,
+                        ...styles?.carousel,
+                      },
+                      whileDrag: {
+                        pointerEvents: 'none',
+                      },
+                    } as React.ComponentProps<typeof m.div>)}
                   >
                     {children}
                   </m.div>

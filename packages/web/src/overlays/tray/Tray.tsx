@@ -24,7 +24,7 @@ import { Overlay } from '../overlay/Overlay';
 import { Portal } from '../Portal';
 import { trayContainerId } from '../PortalProvider';
 
-export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
+export type TrayRenderChildren = (args: { handleClose: () => void }) => React.ReactElement;
 
 export type TrayBaseProps = {
   children: React.ReactNode | TrayRenderChildren;
@@ -216,20 +216,23 @@ export const Tray = memo(
               onEscPress={preventDismiss ? undefined : handleClose}
               restoreFocusOnUnmount={restoreFocusOnUnmount}
             >
+              {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
               <m.div
-                animate={controls}
-                initial={{ y: '100%' }}
-                style={{
-                  width: '100%',
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 1,
-                  maxHeight: verticalDrawerPercentageOfView,
-                  overflowY: 'auto',
-                }}
-                tabIndex={0}
+                {...({
+                  animate: controls,
+                  initial: { y: '100%' },
+                  style: {
+                    width: '100%',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 1,
+                    maxHeight: verticalDrawerPercentageOfView,
+                    overflowY: 'auto',
+                  },
+                  tabIndex: 0,
+                } as React.ComponentProps<typeof m.div>)}
               >
                 <VStack
                   ref={trayRef}

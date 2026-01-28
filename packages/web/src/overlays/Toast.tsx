@@ -122,7 +122,14 @@ export const Toast = memo(
 
       return (
         <Portal containerId={toastContainerId} disablePortal={disablePortal}>
-          <motion.div {...motionProps} className={baseCss} data-testid={`${testID}-motion`}>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
+          <motion.div
+            {...({
+              ...motionProps,
+              className: baseCss,
+              'data-testid': `${testID}-motion`,
+            } as React.ComponentProps<typeof motion.div>)}
+          >
             <Box
               justifyContent="center"
               onMouseEnter={pauseTimer} // persist toast when hovering

@@ -176,11 +176,14 @@ export const DotCount = memo(
         {children}
         <NewAnimatePresence>
           {count > 0 && (
+            // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
             <motion.div
-              {...motionProps}
-              className={cx(dotCountContentCss, classNames?.container)}
-              data-testid="dotcount-container"
-              style={containerStyles}
+              {...({
+                ...motionProps,
+                className: cx(dotCountContentCss, classNames?.container),
+                'data-testid': 'dotcount-container',
+                style: containerStyles,
+              } as React.ComponentProps<typeof motion.div>)}
             >
               <Text
                 as="p"
