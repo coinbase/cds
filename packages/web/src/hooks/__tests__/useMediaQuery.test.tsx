@@ -1,7 +1,7 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import { isDevelopment } from '@coinbase/cds-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { MediaQueryProvider } from '../../system/MediaQueryProvider';
 import { useMediaQuery } from '../useMediaQuery';

@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { DateInputValidationError } from '../DateInputValidationError';
 import { IntlDateFormat } from '../IntlDateFormat';

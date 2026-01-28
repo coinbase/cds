@@ -5,7 +5,7 @@ import type {
   ScrollView,
   View,
 } from 'react-native';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-native';
 import throttle from 'lodash/throttle';
 
 import { useHorizontalScrollToTarget } from '../useHorizontalScrollToTarget';

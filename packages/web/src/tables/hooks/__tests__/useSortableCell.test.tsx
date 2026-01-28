@@ -1,5 +1,5 @@
 import { noop } from '@coinbase/cds-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { TableCellSortIcon } from '../../TableCellSortIcon';
 import { useSortableCell } from '../useSortableCell';

@@ -1,6 +1,6 @@
 import React from 'react';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { defaultTheme } from '../../themes/defaultTheme';
 import { useAndroidNavigationBarUpdater } from '../AndroidNavigationBar';

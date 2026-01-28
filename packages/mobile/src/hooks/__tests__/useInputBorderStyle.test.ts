@@ -1,5 +1,5 @@
 import { focusedInputBorderWidth, inputBorderWidth } from '@coinbase/cds-common/tokens/input';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { useInputBorderAnimation } from '../useInputBorderAnimation';

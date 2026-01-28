@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Button } from '../../../buttons';

@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { useEventHandler } from '../../hooks/useEventHandler';
 import type { EventHandlerConfig, EventHandlerCustomConfig } from '../EventHandlerProvider';

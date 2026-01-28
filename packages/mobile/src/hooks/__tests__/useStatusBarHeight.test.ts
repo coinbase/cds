@@ -1,5 +1,5 @@
 import { StatusBar } from 'react-native';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { useStatusBarHeight } from '../useStatusBarHeight';
 

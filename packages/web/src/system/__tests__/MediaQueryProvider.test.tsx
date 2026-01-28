@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 // Mock the listener utilities
 import * as MediaQueryListenerUtils from '../../utils/mediaQueryListener';
