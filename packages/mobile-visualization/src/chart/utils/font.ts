@@ -87,9 +87,9 @@ export function extractFontFamilies(fontFamily: string): string[] {
 
   // Return both formats - Skia will use the first one it finds
   if (spacedName !== baseName) {
-    return [spacedName, baseName];
+    return [spacedName, baseName, fontFamily];
   }
-  return [baseName];
+  return [baseName, fontFamily];
 }
 
 /**

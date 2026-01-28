@@ -225,7 +225,7 @@ type ColumnLayout = {
  *
  * 2. **Discrete color pulse**: The default renderer smoothly interpolates colors during
  *    pulse using `transitionConfig.color`. This Skia renderer uses discrete color states
- *    (instant switch to pulse color, then back to base after 400ms) because continuous
+ *    (instant switch to pulse color, then back to base after 500ms) because continuous
  *    color animation would require rebuilding Skia paragraphs on every frame, dropping
  *    JS thread to 0 FPS.
  *
