@@ -317,6 +317,7 @@ const DefaultSelectControlComponent = memo(
         hasValue,
         isMultiSelect,
         singleValueContent,
+        align,
         value,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
@@ -383,7 +384,7 @@ const DefaultSelectControlComponent = memo(
             >
               <VStack
                 ref={valueNodeContainerRef}
-                alignItems="flex-start"
+                alignItems={align}
                 className={classNames?.controlValueNode}
                 flexGrow={1}
                 flexShrink={1}
@@ -419,6 +420,7 @@ const DefaultSelectControlComponent = memo(
           startNode,
           shouldShowCompactLabel,
           labelNode,
+          align,
           isMultiSelect,
           valueNode,
           contentNode,

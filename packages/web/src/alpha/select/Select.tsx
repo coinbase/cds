@@ -91,7 +91,7 @@ const SelectBase = memo(
         accessory,
         media,
         end,
-        align = 'start',
+        align,
         bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
