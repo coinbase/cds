@@ -533,6 +533,12 @@ export const routes = [
       require('@coinbase/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
   },
   {
+    key: 'RollingNumberSkia',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/numbers/__stories__/RollingNumberSkia.stories')
+        .default,
+  },
+  {
     key: 'SearchInput',
     getComponent: () =>
       require('@coinbase/cds-mobile/controls/__stories__/SearchInput.stories').default,
