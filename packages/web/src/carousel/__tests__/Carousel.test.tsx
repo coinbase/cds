@@ -317,7 +317,7 @@ describe('Carousel', () => {
           disableGoNext: expect.any(Boolean),
           disableGoPrevious: expect.any(Boolean),
         }),
-        {},
+        undefined,
       );
     });
   });

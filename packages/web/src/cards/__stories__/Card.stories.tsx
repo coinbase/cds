@@ -130,7 +130,7 @@ const feedCards = [
   } as const,
 ];
 
-type Story = StoryObj<FeedCardProps>;
+type Story = StoryObj<FeedCardProps & typeof baseConfig.args>;
 
 const FeedCardRender = ({ ...props }: FeedCardProps) => {
   return (

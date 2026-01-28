@@ -80,7 +80,7 @@ export type ModalBaseProps = SharedProps &
   Pick<PositionStyles, 'zIndex'> &
   Omit<ModalWrapperProps, 'onOverlayPress'> & {
     /** Component to render as the Modal content */
-    children?: React.ReactNode | React.FC<ModalChildrenRenderProps>;
+    children?: React.ReactNode | ((props: ModalChildrenRenderProps) => React.ReactElement);
     /**
      * Callback fired after the component is closed.
      */

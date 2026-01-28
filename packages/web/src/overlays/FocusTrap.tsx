@@ -367,5 +367,7 @@ export const FocusTrap = memo(function FocusTrap({
     return <>{children}</>;
   }
 
-  return React.cloneElement(children, { ref: childrenRef });
+  return React.cloneElement(children as React.ReactElement<React.RefAttributes<HTMLElement>>, {
+    ref: childrenRef,
+  });
 });

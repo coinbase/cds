@@ -10,7 +10,7 @@
  * 3. Refs, contexts, and other React features work correctly
  */
 
-import { useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common';
 import { ThemeProvider } from '@coinbase/cds-web';
 import { SearchInput } from '@coinbase/cds-web/controls';

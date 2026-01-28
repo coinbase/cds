@@ -8,13 +8,15 @@ import { Children, cloneElement, isValidElement } from 'react';
 import type { FragmentProps } from 'react';
 import { isFragment } from 'react-is';
 
+type FlattenedNode = React.ReactElement | string | number;
+
 // eslint-disable-next-line no-restricted-exports
 export default function flattenNodes(
   children: React.ReactNode,
   depth = 0,
   keys: (string | number)[] = [],
-): React.ReactNode[] {
-  return Children.toArray(children).reduce((acc: React.ReactNode[], node, nodeIndex) => {
+): FlattenedNode[] {
+  return Children.toArray(children).reduce((acc: FlattenedNode[], node, nodeIndex) => {
     if (isFragment(node)) {
       // react-is only narrows type down to ReactElement, not FragmentElement
       const fragmentNode = node as React.ReactElement<FragmentProps>;

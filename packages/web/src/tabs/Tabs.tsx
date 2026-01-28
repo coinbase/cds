@@ -27,7 +27,9 @@ type TabContainerProps = {
 
 const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
-    (ref: HTMLElement | null) => ref && registerRef(id, ref),
+    (ref: HTMLElement | null) => {
+      if (ref) registerRef(id, ref);
+    },
     [id, registerRef],
   );
   return <div ref={refCallback} {...props} />;

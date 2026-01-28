@@ -38,8 +38,9 @@ describe('useMediaQuery', () => {
   });
 
   it('throws error when used outside MediaQueryProvider', () => {
-    const { result } = renderHook(() => useMediaQuery('(min-width: 768px)'));
-    expect(() => result.current).toThrow('useMediaQuery must be used within a MediaQueryProvider');
+    expect(() => renderHook(() => useMediaQuery('(min-width: 768px)'))).toThrow(
+      'useMediaQuery must be used within a MediaQueryProvider',
+    );
   });
   it('warns about complex queries in development', () => {
     mockMatchMedia(true);
@@ -67,12 +68,8 @@ describe('useMediaQuery', () => {
     const initialQuery = '(min-width: 768px)';
     const updatedQuery = '(max-width: 500px)';
 
-    const DynamicWrapper: React.FunctionComponent<{ children?: ReactNode; query: string }> = ({
-      children,
-    }) => <MediaQueryProvider>{children}</MediaQueryProvider>;
-
     const { result, rerender } = renderHook(({ query }) => useMediaQuery(query), {
-      wrapper: DynamicWrapper,
+      wrapper: ({ children }) => <MediaQueryProvider>{children}</MediaQueryProvider>,
       initialProps: { query: initialQuery },
     });
 

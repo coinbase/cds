@@ -145,7 +145,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         (digit: number) => (
           <span
             key={digit}
-            ref={r => {
+            ref={(r) => {
               void (numberRefs.current[digit] = r);
             }}
             className={digitSpanCss}

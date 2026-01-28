@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button, IconButton, IconCounterButton } from '../../../buttons';

@@ -237,15 +237,21 @@ export const TextInput = memo(
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
       if (inputNode) {
-        const clonedElm = cloneElement(inputNode, {
-          onFocus: handleOnFocus,
-          onBlur: handleOnBlur,
-          ref: refs,
-          'aria-describedby': shouldSetHelperTextId && helperTextId,
-          'aria-invalid': variant === 'negative',
-          id: shouldSetLabelId ? labelId : undefined,
-          disabled,
-        });
+        const clonedElm = cloneElement(
+          inputNode as React.ReactElement<
+            React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>
+          >,
+           
+          {
+            onFocus: handleOnFocus,
+            onBlur: handleOnBlur,
+            ref: refs,
+            'aria-describedby': shouldSetHelperTextId ? helperTextId : undefined,
+            'aria-invalid': variant === 'negative',
+            id: shouldSetLabelId ? labelId : undefined,
+            disabled,
+          },
+        );
 
         return clonedElm;
       }

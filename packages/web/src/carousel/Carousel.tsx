@@ -37,7 +37,7 @@ const defaultCarouselCss = css`
   }
 `;
 
-export type CarouselItemRenderChildren = React.FC<{ isVisible: boolean }>;
+export type CarouselItemRenderChildren = (args: { isVisible: boolean }) => React.ReactNode;
 
 export type CarouselItemBaseProps = Omit<BoxBaseProps, 'children'> & {
   /**

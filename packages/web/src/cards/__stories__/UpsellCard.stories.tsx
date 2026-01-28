@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { coinbaseOneLogo } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons';

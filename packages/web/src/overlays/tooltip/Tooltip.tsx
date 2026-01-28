@@ -47,7 +47,7 @@ export const Tooltip = ({
   );
 
   const clonedChild = useMemo(() => {
-    return cloneElement(children, {
+    return cloneElement(children as React.ReactElement<React.HTMLAttributes<HTMLElement>>, {
       'aria-describedby': tooltipId,
     });
   }, [children, tooltipId]);
