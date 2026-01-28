@@ -199,7 +199,7 @@ const sharedExtends = [
   eslintJs.configs.recommended,
   eslintImport.flatConfigs.recommended,
   eslintReact.configs.flat.recommended,
-  eslintReactHooks.configs['recommended-latest'],
+  eslintReactHooks.configs.flat['recommended-latest'],
   eslintReactPerf.configs.flat.recommended,
   eslintJsxA11y.flatConfigs.recommended,
 ];
