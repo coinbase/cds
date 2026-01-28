@@ -354,6 +354,32 @@ export const Alignments = () => {
         placeholder="Empty value"
         value={value}
       />
+      <Select
+        compact
+        label="Compact align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
     </VStack>
   );
 };
