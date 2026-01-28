@@ -192,6 +192,14 @@ const SegmentedTabsScreen = () => (
       tabs={basicSegments}
       title="Scaled"
     />
+    <SegmentedTabsExample
+      defaultActiveTab={basicSegments[0]}
+      gap={2}
+      padding={3}
+      tabs={basicSegments}
+      title="With Padding"
+      width="fit-content"
+    />
   </ExampleScreen>
 );
 

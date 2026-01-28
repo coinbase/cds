@@ -245,6 +245,7 @@ export const TabsActiveIndicator = ({
       data-testid="tabs-active-indicator"
       height={height}
       initial={false}
+      left={0}
       position={position}
       role="none"
       transition={tabsTransitionConfig}
