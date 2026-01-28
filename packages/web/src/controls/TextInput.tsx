@@ -191,7 +191,7 @@ export const TextInput = memo(
   ) {
     const [focused, setFocused] = useState(false);
     const focusedVariant = useInputVariant(focused, variant);
-    const internalRef = useRef<HTMLInputElement>();
+    const internalRef = useRef<HTMLInputElement>(undefined);
     const refs = useMergeRefs(ref, internalRef);
 
     // Only generate a helperTextId if helperText is defined, otherwise

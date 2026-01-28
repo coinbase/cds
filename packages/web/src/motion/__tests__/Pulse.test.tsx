@@ -68,7 +68,7 @@ describe('Pulse', () => {
     const ref = { current: null } as React.RefObject<{
       play: () => Promise<void>;
       stop: () => Promise<void>;
-    }>;
+    } | null>;
     render(
       <Pulse ref={ref}>
         <div>Children</div>

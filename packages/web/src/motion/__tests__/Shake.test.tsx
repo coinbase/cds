@@ -67,7 +67,7 @@ describe('Shake', () => {
   it('exposes imperative handlers that start the animation', () => {
     const ref = { current: null } as React.RefObject<{
       play: () => Promise<void>;
-    }>;
+    } | null>;
     render(
       <Shake ref={ref}>
         <div>Children</div>

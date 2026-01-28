@@ -112,12 +112,15 @@ const ProgressBarFloatLabel = memo(
         testID="cds-progress-label-container"
         width="100%"
       >
+        {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
         <motion.div
-          ref={textContainerRef}
-          animate={animationControls}
-          className={floatingTextContainerCss}
-          data-testid="cds-progress-bar-float-label"
-          style={{ ...motionStyle, opacity: hasAnimationMounted ? 1 : 0 }}
+          {...({
+            ref: textContainerRef,
+            animate: animationControls,
+            className: floatingTextContainerCss,
+            'data-testid': 'cds-progress-bar-float-label',
+            style: { ...motionStyle, opacity: hasAnimationMounted ? 1 : 0 },
+          } as React.ComponentProps<typeof motion.div>)}
         >
           <ProgressTextLabel
             className={classNames?.label}

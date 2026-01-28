@@ -19,7 +19,7 @@ export const useLottieLoader = <Marker extends string, Source extends LottieSour
   const sourceHeight = source.h;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef: LottieAnimationRef = useRef();
+  const animationRef: LottieAnimationRef = useRef(undefined);
   const [, setAnimationLoaded] = useState(false);
 
   const preserveAspectRatio = useMemo(() => {

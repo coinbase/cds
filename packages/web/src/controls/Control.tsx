@@ -124,7 +124,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
   const labelId = ariaLabelledby ?? id1;
   const inputId = htmlProps.id ?? id2;
 
-  const internalInputRef = useRef<HTMLInputElement>();
+  const internalInputRef = useRef<HTMLInputElement>(undefined);
   const inputRef = useMergeRefs(ref, internalInputRef);
 
   const iconElement = useMemo(

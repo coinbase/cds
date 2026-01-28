@@ -8,7 +8,7 @@ import { ModalFooter } from '../modal/ModalFooter';
 import { ModalHeader } from '../modal/ModalHeader';
 
 type ModalA11yProps = {
-  triggerRef?: React.RefObject<HTMLButtonElement>;
+  triggerRef?: React.RefObject<HTMLButtonElement | null>;
   focusTrigger?: () => void;
   accessibilityLabelledBy?: string;
   accessibilityLabel?: string;

@@ -245,7 +245,7 @@ const SelectBase = memo(
 
       return (
         <Box
-          ref={containerRef as React.RefObject<HTMLDivElement>}
+          ref={containerRef as React.RefObject<HTMLDivElement | null>}
           className={cx(classNames?.root, className)}
           data-testid={testID}
           style={rootStyles}

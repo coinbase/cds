@@ -77,7 +77,7 @@ const LoremIpsum = ({ title, concise, repeat }: LoremIpsumProps) => {
 };
 
 type MockModalProps = {
-  triggerRef?: React.RefObject<HTMLButtonElement>;
+  triggerRef?: React.RefObject<HTMLButtonElement | null>;
   focusTrigger?: () => void;
   onBackButtonClick?: () => void;
 };

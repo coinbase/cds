@@ -149,7 +149,7 @@ export type TabNavigationBaseProps<T extends string | undefined = string> = Shar
 export type TabNavigationProps<T extends string | undefined = string> = TabNavigationBaseProps<T>;
 
 type LayoutProps = { width: number; x: number };
-type TabRefs = Ref<{ id: string; ref: React.RefObject<HTMLButtonElement> }[]>;
+type TabRefs = Ref<{ id: string; ref: React.RefObject<HTMLButtonElement | null> }[]>;
 const fallbackLayout: LayoutProps = { width: 0, x: 0 };
 
 type TabNavigationFC = <T extends string | undefined = string>(
@@ -279,7 +279,7 @@ const TabNavigationComponent = memo(
         };
       }, []);
 
-      const getScrollIntoViewHandler = useCallback((ref: React.RefObject<HTMLElement>) => {
+      const getScrollIntoViewHandler = useCallback((ref: React.RefObject<HTMLElement | null>) => {
         return function handleFocus() {
           // Container
           const container = scrollRef.current;
