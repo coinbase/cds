@@ -3,14 +3,18 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/react18-compat-test",
   "projectType": "application",
-  "tags": ["react18-compat"],
+  "tags": [
+    "react18-compat"
+  ],
   "targets": {
     "dev": {
       "command": "vite dev"
     },
     "start": {
       "command": "vite preview",
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     },
     "build": {
       "command": "vite build"

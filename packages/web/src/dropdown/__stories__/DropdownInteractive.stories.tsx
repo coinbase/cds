@@ -1,15 +1,18 @@
 import { expect } from '@storybook/jest';
-import type { ComponentStoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 
 import { pauseStory } from '../../utils/storybook';
 
 import { Default } from './Dropdown.stories';
 
-export default {
+const meta = {
   title: 'Interactive/Dropdown',
   component: Default,
-};
+} satisfies Meta<typeof Default>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const defaultOptions = [
   'Option 1',
@@ -25,7 +28,7 @@ const defaultOptions = [
   'Option 11',
 ];
 
-export const SimpleDropdown: ComponentStoryObj<typeof Default> = {
+export const SimpleDropdown: Story = {
   args: {
     disablePortal: true,
     customAriaControlsID: 'dropdown',
@@ -57,7 +60,7 @@ export const SimpleDropdown: ComponentStoryObj<typeof Default> = {
 };
 
 // Make sure opening dropdown doesn't scroll the page. This will be captured in percy.
-export const ScrollContainer: ComponentStoryObj<typeof Default> = {
+export const ScrollContainer: Story = {
   args: {
     containerHeight: '200vh',
     customAriaControlsID: 'dropdown',

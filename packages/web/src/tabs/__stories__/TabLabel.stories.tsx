@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import sample from 'lodash/sample';
 
 import { Button } from '../../buttons/Button';
@@ -9,10 +9,13 @@ import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { TabLabel, type TabLabelBaseProps } from '../TabLabel';
 
-export default {
+const meta: Meta = {
   title: 'Components/Tabs/TabLabel',
   component: TabLabel,
-} as Meta;
+};
+
+export default meta;
+type Story = StoryObj;
 
 type ExampleProps = {
   variant: TabLabelBaseProps['variant'];
@@ -45,7 +48,7 @@ const Example = ({ variant, colorScheme }: ExampleProps) => {
   );
 };
 
-export const Default: Story = () => {
+const DefaultRender = () => {
   return (
     <>
       <Example colorScheme="light" variant="primary" />
@@ -54,4 +57,8 @@ export const Default: Story = () => {
       <Example colorScheme="dark" variant="secondary" />
     </>
   );
+};
+
+export const Default: Story = {
+  render: () => <DefaultRender />,
 };

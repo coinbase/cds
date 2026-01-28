@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { expect } from '@storybook/jest';
-import type { ComponentStoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { fireEvent, userEvent, within } from '@storybook/testing-library';
 
 import { VStack } from '../../layout/VStack';
@@ -84,12 +84,15 @@ const MockTabNavigation = () => {
   );
 };
 
-export default {
+const meta = {
   title: 'Interactive/TabNavigation',
   component: MockTabNavigation,
-};
+} satisfies Meta<typeof MockTabNavigation>;
 
-export const Story: ComponentStoryObj<typeof MockTabNavigation> = {
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
   args: {},
   parameters: {
     percy: { waitForTimeout: tabs.length * WAIT, enableJavaScript: true },

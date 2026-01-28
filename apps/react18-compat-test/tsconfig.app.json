@@ -7,7 +7,9 @@
     "noEmit": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "references": [
     {
       "path": "../../packages/web"

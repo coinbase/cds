@@ -1,11 +1,12 @@
-import type { ComponentStory } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Box } from '../Box';
+import type { DividerProps } from '../Divider';
 import { Divider } from '../Divider';
 import { HStack } from '../HStack';
 import { VStack } from '../VStack';
 
-export default {
+const meta = {
   title: 'Components/Divider',
   component: Divider,
   argTypes: {
@@ -14,46 +15,52 @@ export default {
       control: { type: 'radio' },
     },
   },
-};
+  render: ({ direction, ...rest }: DividerProps) => {
+    if (direction === 'horizontal') {
+      return (
+        <VStack width={500}>
+          <Box background="bg" height={100} width={500} />
+          <Divider direction={direction} {...rest} />
+          <Box background="bg" height={100} width={500} />
+        </VStack>
+      );
+    }
 
-const Template: ComponentStory<typeof Divider> = ({ direction, ...rest }) => {
-  if (direction === 'horizontal') {
     return (
-      <VStack width={500}>
-        <Box background="bg" height={100} width={500} />
+      <HStack>
+        <Box background="bg" height={200} width={250} />
         <Divider direction={direction} {...rest} />
-        <Box background="bg" height={100} width={500} />
-      </VStack>
+        <Box background="bg" height={200} width={250} />
+      </HStack>
     );
-  }
+  },
+} satisfies Meta<typeof Divider>;
 
-  return (
-    <HStack>
-      <Box background="bg" height={200} width={250} />
-      <Divider direction={direction} {...rest} />
-      <Box background="bg" height={200} width={250} />
-    </HStack>
-  );
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const HorizontalDirection: Story = {
+  args: {
+    direction: 'horizontal',
+  },
 };
 
-export const HorizontalDirection = Template.bind({});
-HorizontalDirection.args = {
-  direction: 'horizontal',
+export const VerticalDirection: Story = {
+  args: {
+    direction: 'vertical',
+  },
 };
 
-export const VerticalDirection = Template.bind({});
-VerticalDirection.args = {
-  direction: 'vertical',
+export const LightColor: Story = {
+  args: {
+    direction: 'horizontal',
+    color: 'bgLine',
+  },
 };
 
-export const LightColor = Template.bind({});
-LightColor.args = {
-  direction: 'horizontal',
-  color: 'bgLine',
-};
-
-export const HeavyColor = Template.bind({});
-HeavyColor.args = {
-  direction: 'horizontal',
-  color: 'bgLineHeavy',
+export const HeavyColor: Story = {
+  args: {
+    direction: 'horizontal',
+    color: 'bgLineHeavy',
+  },
 };

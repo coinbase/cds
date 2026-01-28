@@ -38,11 +38,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
-  addons: [
-    // '@chromatic-com/storybook',
-    '@storybook/addon-storysource',
-    '@storybook-community/storybook-dark-mode',
-  ],
+  addons: ['@storybook-community/storybook-dark-mode', '@storybook/addon-docs'],
   stories: [
     path.resolve(MONOREPO_ROOT, 'packages/web/**/*.stories.@(tsx|mdx)'),
     path.resolve(MONOREPO_ROOT, 'packages/web-visualization/**/*.stories.@(tsx|mdx)'),

@@ -1,15 +1,18 @@
 import { expect } from '@storybook/jest';
-import type { ComponentStoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { userEvent, within } from '@storybook/testing-library';
 
 import { StickyHeaderSortingExample } from './Table.stories';
 
-export default {
+const meta = {
   title: 'Interactive/Table',
   component: StickyHeaderSortingExample,
-};
+} satisfies Meta<typeof StickyHeaderSortingExample>;
 
-export const SortingFocus: ComponentStoryObj<typeof StickyHeaderSortingExample> = {
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const SortingFocus: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 

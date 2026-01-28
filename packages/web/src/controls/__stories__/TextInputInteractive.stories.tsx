@@ -1,6 +1,6 @@
 import type React from 'react';
 import { expect } from '@storybook/jest';
-import type { ComponentStoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 
 import { pauseStory } from '../../utils/storybook';
@@ -12,7 +12,7 @@ export default {
   component: AddressForm,
 };
 
-export const FormFilled: ComponentStoryObj<typeof AddressForm> = {
+export const FormFilled: StoryObj<typeof AddressForm> = {
   args: {
     onSubmit: (e: React.FormEvent) => {
       e.preventDefault();

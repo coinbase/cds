@@ -229,7 +229,7 @@
     "@linaria/core": "^3.0.0-beta.22",
     "@linaria/shaker": "^3.0.0-beta.22",
     "@storybook/jest": "^0.2.3",
-    "@storybook/react": "^6.5.17-alpha.0",
+    "@storybook/react": "^9.1.2",
     "@storybook/testing-library": "^0.2.2",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

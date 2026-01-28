@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { expect } from '@storybook/jest';
-import type { ComponentStoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 
 import { pauseStory } from '../../utils/storybook';
@@ -22,12 +22,15 @@ const SelectForm = (props: SelectProps) => {
   );
 };
 
-export default {
+const meta = {
   title: 'Interactive/Select',
   component: SelectForm,
-};
+} satisfies Meta<typeof SelectForm>;
 
-export const SimpleSelect: ComponentStoryObj<typeof SelectForm> = {
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const SimpleSelect: Story = {
   args: {
     placeholder,
     label: 'Label',
@@ -64,7 +67,7 @@ export const SimpleSelect: ComponentStoryObj<typeof SelectForm> = {
   },
 };
 
-export const SmallSelect: ComponentStoryObj<typeof SelectForm> = {
+export const SmallSelect: Story = {
   args: {
     placeholder,
     width: 80,

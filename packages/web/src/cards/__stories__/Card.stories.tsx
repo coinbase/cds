@@ -6,6 +6,7 @@ import { featureEntryCards } from '@coinbase/cds-common/internal/data/featureEnt
 import { feedImages } from '@coinbase/cds-common/internal/data/feedImages';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { baseConfig, storyBuilder } from '@coinbase/cds-common/internal/utils/storyBuilder';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from '../../buttons';
 import { Box, VStack } from '../../layout';
@@ -129,7 +130,9 @@ const feedCards = [
   } as const,
 ];
 
-export const FeedCard = ({ ...props }: FeedCardProps) => {
+type Story = StoryObj<FeedCardProps>;
+
+const FeedCardRender = ({ ...props }: FeedCardProps) => {
   return (
     <FeedCardComponent
       background="bg"
@@ -141,15 +144,17 @@ export const FeedCard = ({ ...props }: FeedCardProps) => {
   );
 };
 
-FeedCard.bind({});
-FeedCard.args = baseConfig.args;
-FeedCard.argTypes = baseConfig.argTypes;
-FeedCard.parameters = {
-  ...baseConfig.parameters,
-  ...cardParameters,
+export const FeedCard: Story = {
+  render: (args) => <FeedCardRender {...args} />,
+  args: baseConfig.args,
+  argTypes: baseConfig.argTypes,
+  parameters: {
+    ...baseConfig.parameters,
+    ...cardParameters,
+  },
 };
 
-export const FeedCards = () => {
+const FeedCardsRender = () => {
   return (
     <CardGroup>
       {feedCards.map(({ like: getLikeProps, ...item }) => (
@@ -159,10 +164,15 @@ export const FeedCards = () => {
   );
 };
 
-FeedCards.bind({});
-FeedCards.args = FeedCard.args;
-FeedCards.parameters = FeedCard.parameters;
-FeedCards.argTypes = FeedCard.argTypes;
+export const FeedCards: Story = {
+  render: () => <FeedCardsRender />,
+  args: baseConfig.args,
+  parameters: {
+    ...baseConfig.parameters,
+    ...cardParameters,
+  },
+  argTypes: baseConfig.argTypes,
+};
 
 // below is copied from cardBuilder.tsx
 const sharedWrapperProps = {
@@ -290,7 +300,9 @@ export {
   PressableColoredCards,
 };
 
-export default {
+const meta: Meta = {
   title: 'Components/Cards',
-  component: FeedCard,
+  component: FeedCardComponent,
 };
+
+export default meta;

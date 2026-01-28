@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import sample from 'lodash/sample';
 
 import { Button } from '../../buttons/Button';
@@ -35,12 +35,15 @@ const a11ySkipConfig = {
 
 const tabs = sampleTabs.slice(0, 5);
 
-export default {
+const meta: Meta = {
   title: 'Components/Tabs/TabNavigation',
   component: TabNavigation,
-} as Meta;
+};
 
-export const Default: Story = () => {
+export default meta;
+type Story = StoryObj;
+
+const DefaultRender = () => {
   const [value, setValue] = useState<TabProps['id']>(tabs[0].id);
 
   return (
@@ -70,9 +73,13 @@ export const Default: Story = () => {
     </>
   );
 };
-Default.parameters = {
-  percy: { enableJavaScript: true },
-  a11y: a11ySkipConfig,
+
+export const Default: Story = {
+  render: () => <DefaultRender />,
+  parameters: {
+    percy: { enableJavaScript: true },
+    a11y: a11ySkipConfig,
+  },
 };
 
 const renderCustomTab = ({ label, ...props }: CustomTabProps) => (
@@ -97,7 +104,7 @@ const someCustomTabs = [
   },
 ];
 
-export const CustomTab: Story = () => {
+const CustomTabRender = () => {
   const [value, setValue] = useState<TabProps['id']>(tabs[0].id);
 
   return (
@@ -140,16 +147,23 @@ export const CustomTab: Story = () => {
   );
 };
 
-CustomTab.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
+export const CustomTab: Story = {
+  render: () => <CustomTabRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};
 
-export const WithPaddles: Story = () => {
+const WithPaddlesRender = () => {
   const [value, setValue] = useState<TabProps['id']>(tabs[0].id);
 
   return <TabNavigation onChange={setValue} tabs={sampleTabs} value={value} />;
 };
-WithPaddles.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
 
-export const WithCustomPaddles: Story = () => {
+export const WithPaddles: Story = {
+  render: () => <WithPaddlesRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};
+
+const WithCustomPaddlesRender = () => {
   const [value, setValue] = useState<TabProps['id']>(tabs[0].id);
 
   return (
@@ -161,7 +175,11 @@ export const WithCustomPaddles: Story = () => {
     />
   );
 };
-WithCustomPaddles.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
+
+export const WithCustomPaddles: Story = {
+  render: () => <WithCustomPaddlesRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};
 
 type TradingActivity = 'buy' | 'sell' | 'convert' | 'send' | 'receive';
 
@@ -173,7 +191,7 @@ const enumTabs: TabProps<TradingActivity>[] = [
   { id: 'receive', label: 'Receive' },
 ];
 
-export const WithEnum: Story = () => {
+const WithEnumRender = () => {
   const [value, setValue] = useState<TradingActivity>('buy');
 
   return (
@@ -187,9 +205,13 @@ export const WithEnum: Story = () => {
     </ThemeProvider>
   );
 };
-WithEnum.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
 
-export const WithDotCountChange: Story = () => {
+export const WithEnum: Story = {
+  render: () => <WithEnumRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};
+
+const WithDotCountChangeRender = () => {
   const [value, setValue] = useState<TabProps['id']>(tabs[0].id);
   const [count, setCount] = useState(0);
   // This is just a helper to make a random tab show a count
@@ -239,9 +261,13 @@ export const WithDotCountChange: Story = () => {
     </>
   );
 };
-WithDotCountChange.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
 
-export const Secondary: Story = () => {
+export const WithDotCountChange: Story = {
+  render: () => <WithDotCountChangeRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};
+
+const SecondaryRender = () => {
   const [currentTab, setCurrentTab] = useState<TabProps['id']>();
 
   return (
@@ -269,9 +295,13 @@ export const Secondary: Story = () => {
     </>
   );
 };
-Secondary.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
 
-export const AccessibilityTest: Story = () => {
+export const Secondary: Story = {
+  render: () => <SecondaryRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};
+
+const AccessibilityTestRender = () => {
   const [currentTab, setCurrentTab] = useState<TabProps['id']>(tabs[0].id);
 
   return (
@@ -321,7 +351,11 @@ export const AccessibilityTest: Story = () => {
   );
 };
 
-export const Disabled: Story = () => {
+export const AccessibilityTest: Story = {
+  render: () => <AccessibilityTestRender />,
+};
+
+const DisabledRender = () => {
   const [currentTab, setCurrentTab] = useState<TabProps['id']>();
 
   return (
@@ -335,4 +369,8 @@ export const Disabled: Story = () => {
     </VStack>
   );
 };
-Disabled.parameters = { percy: { enableJavaScript: true }, a11y: a11ySkipConfig };
+
+export const Disabled: Story = {
+  render: () => <DisabledRender />,
+  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+};

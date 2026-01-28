@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 import { css } from '@linaria/core';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Icon } from '../../icons/Icon';
 import { Box } from '../../layout/Box';
@@ -17,10 +18,13 @@ import { InputLabel } from '../InputLabel';
 import { NativeTextArea } from '../NativeTextArea';
 import { TextInput } from '../TextInput';
 
-export default {
+const meta: Meta = {
   title: 'Components/Inputs/TextInput',
   component: TextInput,
 };
+
+export default meta;
+type Story = StoryObj;
 
 const nativeInputCustomCss = css`
   &:focus {
@@ -215,7 +219,7 @@ export const Borderless = function Borderless() {
   );
 };
 
-export const Disabled = function Disabled() {
+const DisabledRender = () => {
   return (
     <>
       <TextInput disabled label="Disabled label" />
@@ -228,15 +232,17 @@ export const Disabled = function Disabled() {
   );
 };
 
-Disabled.bind({});
-Disabled.parameters = {
-  a11y: {
-    config: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
+export const Disabled: Story = {
+  render: () => <DisabledRender />,
+  parameters: {
+    a11y: {
+      config: {
+        /**
+         * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
+         * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
+         */
+        rules: [{ id: 'color-contrast', enabled: false }],
+      },
     },
   },
 };
@@ -471,7 +477,7 @@ export const RenderInputDefault = () => {
   );
 };
 
-export const RenderInputDisabled = () => {
+const RenderInputDisabledRender = () => {
   const [inputText, setInputText] = useState('Test');
   const ref = useRef<HTMLInputElement>(null);
 
@@ -495,15 +501,17 @@ export const RenderInputDisabled = () => {
   );
 };
 
-RenderInputDisabled.bind({});
-RenderInputDisabled.parameters = {
-  a11y: {
-    config: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
+export const RenderInputDisabled: Story = {
+  render: () => <RenderInputDisabledRender />,
+  parameters: {
+    a11y: {
+      config: {
+        /**
+         * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
+         * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
+         */
+        rules: [{ id: 'color-contrast', enabled: false }],
+      },
     },
   },
 };

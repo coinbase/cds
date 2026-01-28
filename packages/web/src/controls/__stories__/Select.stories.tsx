@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import type { AssetKey } from '@coinbase/cds-common/internal/data/assets';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { DotSymbol } from '../../dots';
 import { Box } from '../../layout/Box';
@@ -11,14 +12,17 @@ import { InputIcon } from '../InputIcon';
 import { Select, type SelectProps } from '../Select';
 import { SelectOption } from '../SelectOption';
 
-const exampleOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
-
-const assetKeys = Object.keys(assets) as AssetKey[];
-
-export default {
+const meta: Meta = {
   title: 'Components/Select/Select',
   component: Select,
 };
+
+export default meta;
+type Story = StoryObj;
+
+const exampleOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+
+const assetKeys = Object.keys(assets) as AssetKey[];
 
 const Default = ({
   variant,
@@ -166,7 +170,7 @@ const InputStackOptions = () => {
   );
 };
 
-const Disabled = () => {
+const DisabledRender = () => {
   const [value, setValue] = useState<string | undefined>('');
 
   return (
@@ -191,6 +195,21 @@ const Disabled = () => {
       </Select>
     </VStack>
   );
+};
+
+const Disabled: Story = {
+  render: () => <DisabledRender />,
+  parameters: {
+    a11y: {
+      config: {
+        /**
+         * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
+         * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
+         */
+        rules: [{ id: 'color-contrast', enabled: false }],
+      },
+    },
+  },
 };
 
 const Compact = () => {
@@ -318,18 +337,4 @@ export {
   LongText,
   LongTextSelect,
   Variants,
-};
-
-Disabled.bind({});
-/** TODO: convert to CSF (Component Story Format v3) */
-Disabled.parameters = {
-  a11y: {
-    config: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
 };

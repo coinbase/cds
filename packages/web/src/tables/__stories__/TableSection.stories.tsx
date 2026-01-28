@@ -1,18 +1,21 @@
 import React from 'react';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { VStack } from '../../layout/VStack';
 import { Spinner } from '../../loaders/Spinner';
 import { Text } from '../../typography/Text';
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '..';
 
-export default {
+const meta: Meta = {
   title: 'Components/Table/TableSection',
   component: TableBody,
-} as Meta;
+};
 
-export const SampleTableSection: Story = () => {
-  return (
+export default meta;
+type Story = StoryObj;
+
+export const SampleTableSection: Story = {
+  render: () => (
     <Table bordered variant="ruled">
       <TableHeader>
         <TableRow>
@@ -30,11 +33,11 @@ export const SampleTableSection: Story = () => {
         </TableRow>
       </TableFooter>
     </Table>
-  );
+  ),
 };
 
-export const SectionFlowControl: Story = () => {
-  return (
+export const SectionFlowControl: Story = {
+  render: () => (
     <Table bordered variant="ruled">
       <TableBody>
         <TableRow>
@@ -52,11 +55,11 @@ export const SectionFlowControl: Story = () => {
         </TableRow>
       </TableHeader>
     </Table>
-  );
+  ),
 };
 
-export const LoadingStateExample: Story = () => {
-  return (
+export const LoadingStateExample: Story = {
+  render: () => (
     <Table bordered variant="ruled">
       <TableHeader>
         <TableRow>
@@ -72,5 +75,5 @@ export const LoadingStateExample: Story = () => {
         </VStack>
       </TableBody>
     </Table>
-  );
+  ),
 };
