@@ -79,11 +79,14 @@ export type ScrubberBeaconProps = {
   isIdle: AnimatedProp<boolean>;
   /**
    * Pulse the beacon while it is at rest.
+   *
+   * @note Only has an effect when `isIdle` is `true`. Pulse animations work
+   * regardless of the chart's `animate` prop.
    */
   idlePulse?: boolean;
   /**
-   * Whether animations are enabled.
-   * @default true
+   * Whether position animations are enabled.
+   * @default to ChartContext's animate value
    */
   animate?: boolean;
   /**
@@ -112,6 +115,11 @@ export type ScrubberBeaconProps = {
    * @default 1
    */
   opacity?: AnimatedProp<number>;
+  /**
+   * Stroke color of the beacon circle.
+   * @default theme.color.bg
+   */
+  stroke?: string;
 };
 
 export type ScrubberBeaconComponent = React.FC<
@@ -146,6 +154,10 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      * By default, all series will be highlighted.
      */
     seriesIds?: string[];
+    /**
+     * Hides the beacon labels while keeping the line label visible (if provided).
+     */
+    hideBeaconLabels?: boolean;
     /**
      * Hides the scrubber line.
      * @note This hides Scrubber's ReferenceLine including the label.
@@ -197,6 +209,11 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      * Transition configuration for the scrubber beacon.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
+    /**
+     * Stroke color of the scrubber beacon circle.
+     * @default theme.color.bg
+     */
+    beaconStroke?: string;
   };
 
 export type ScrubberProps = ScrubberBaseProps;
@@ -211,6 +228,7 @@ export const Scrubber = memo(
     (
       {
         seriesIds,
+        hideBeaconLabels,
         hideLine,
         label,
         lineStroke,
@@ -228,6 +246,7 @@ export const Scrubber = memo(
         beaconLabelFont,
         idlePulse,
         beaconTransitions,
+        beaconStroke,
       },
       ref,
     ) => {
@@ -378,9 +397,10 @@ export const Scrubber = memo(
             BeaconComponent={BeaconComponent}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
+            stroke={beaconStroke}
             transitions={beaconTransitions}
           />
-          {beaconLabels.length > 0 && (
+          {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               labelFont={beaconLabelFont}

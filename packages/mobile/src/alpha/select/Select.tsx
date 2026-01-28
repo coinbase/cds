@@ -62,7 +62,7 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel = type === 'multi' ? 'Multi select control' : undefined,
+        accessibilityLabel = typeof label === 'string' ? label : 'Select control',
         accessibilityHint,
         accessibilityRoles = defaultAccessibilityRoles,
         selectAllLabel,

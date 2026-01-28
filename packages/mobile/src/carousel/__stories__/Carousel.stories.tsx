@@ -556,6 +556,95 @@ const ImperativeApiExample = () => {
   );
 };
 
+const LoopingExamples = () => {
+  const theme = useTheme();
+
+  const horizontalPadding = theme.space[2];
+
+  const windowWidth = Dimensions.get('window').width;
+  const carouselSizing = windowWidth - horizontalPadding * 2;
+
+  const horizontalGap = theme.space[1];
+
+  const threeItemsWidth = (carouselSizing - horizontalGap * 2) / 3;
+
+  return (
+    <>
+      {/* Looping - Snap Page */}
+      <Example paddingX={0}>
+        <Carousel
+          loop
+          drag="snap"
+          snapMode="page"
+          styles={{
+            root: { paddingHorizontal: horizontalPadding },
+            carousel: { gap: horizontalGap },
+          }}
+          title="Looping - Snap Page"
+        >
+          {sampleItems.map((item, index) => (
+            <CarouselItem
+              key={`loop-page-${index}`}
+              id={`loop-page-${index}`}
+              width={threeItemsWidth}
+            >
+              {item}
+            </CarouselItem>
+          ))}
+        </Carousel>
+      </Example>
+
+      {/* Looping - Snap Item */}
+      <Example paddingX={0}>
+        <Carousel
+          loop
+          drag="snap"
+          snapMode="item"
+          styles={{
+            root: { paddingHorizontal: horizontalPadding },
+            carousel: { gap: horizontalGap },
+          }}
+          title="Looping - Snap Item"
+        >
+          {sampleItems.map((item, index) => (
+            <CarouselItem
+              key={`loop-item-${index}`}
+              id={`loop-item-${index}`}
+              width={threeItemsWidth}
+            >
+              {item}
+            </CarouselItem>
+          ))}
+        </Carousel>
+      </Example>
+
+      {/* Looping - Free Drag */}
+      <Example paddingX={0}>
+        <Carousel
+          loop
+          drag="free"
+          snapMode="item"
+          styles={{
+            root: { paddingHorizontal: horizontalPadding },
+            carousel: { gap: horizontalGap },
+          }}
+          title="Looping - Free Drag"
+        >
+          {sampleItems.map((item, index) => (
+            <CarouselItem
+              key={`loop-free-${index}`}
+              id={`loop-free-${index}`}
+              width={threeItemsWidth}
+            >
+              {item}
+            </CarouselItem>
+          ))}
+        </Carousel>
+      </Example>
+    </>
+  );
+};
+
 const AnimatedPaginationExample = () => {
   const theme = useTheme();
 
@@ -685,13 +774,14 @@ const AnimatedPaginationExample = () => {
 
 export default function CarouselScreen() {
   return (
-    <ExampleScreen>
+    <ExampleScreen paddingX={0}>
       <BasicExamples />
       <CustomComponentsExample />
       <DynamicContentExample />
       <AnimatedExample />
       <ImperativeApiExample />
       <AnimatedPaginationExample />
+      <LoopingExamples />
     </ExampleScreen>
   );
 }

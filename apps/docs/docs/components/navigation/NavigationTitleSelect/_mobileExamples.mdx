@@ -1,8 +1,25 @@
-### Basic usage
+NavigationTitleSelect opens a [Tray](/components/overlay/Tray) to create a context-switching control styled as a navigation title. Use it within a [TopNavBar](/components/navigation/TopNavBar) to let users switch between accounts, portfolios, or other contexts.
 
-Use `NavigationTitleSelect` within a `TopNavBar` to allow users to switch between contexts.
+## Basics
 
-```tsx
+Provide an array of `options` with `label` and `id` fields, a `value` matching the selected option's `id`, and an `onChange` handler.
+
+```jsx
+const options = [
+  { label: 'My Portfolio', id: 'portfolio' },
+  { label: 'Family Account', id: 'family' },
+  { label: 'Business Account', id: 'business' },
+];
+const [value, setValue] = useState('portfolio');
+
+<NavigationTitleSelect options={options} value={value} onChange={setValue} />;
+```
+
+### With TopNavBar
+
+NavigationTitleSelect is typically used as the center content of a TopNavBar.
+
+```jsx
 <TopNavBar start={<IconButton icon="arrow-left" accessibilityLabel="Back" />}>
   <NavigationTitleSelect
     options={[
@@ -13,4 +30,64 @@ Use `NavigationTitleSelect` within a `TopNavBar` to allow users to switch betwee
     onChange={(value) => console.log(value)}
   />
 </TopNavBar>
+```
+
+## Custom Labels
+
+Option labels can be React nodes for richer content, such as displaying an icon alongside text.
+
+```jsx
+const options = [
+  {
+    label: (
+      <HStack alignItems="center" gap={1}>
+        <Icon name="wallet" size="s" />
+        <Text font="headline">Personal Wallet</Text>
+      </HStack>
+    ),
+    id: 'personal',
+  },
+  {
+    label: (
+      <HStack alignItems="center" gap={1}>
+        <Icon name="users" size="s" />
+        <Text font="headline">Shared Vault</Text>
+      </HStack>
+    ),
+    id: 'shared',
+  },
+];
+
+<NavigationTitleSelect options={options} value="personal" onChange={setValue} />;
+```
+
+## Styling
+
+### Color
+
+Use `color` to customize the text and caret icon color. Any valid CDS design token color works.
+
+```jsx
+<NavigationTitleSelect options={options} value={value} onChange={setValue} color="fgMuted" />
+```
+
+### Font
+
+Use `font` to adjust the typography. The default is `headline`.
+
+```jsx
+<NavigationTitleSelect options={options} value={value} onChange={setValue} font="title2" />
+```
+
+## Accessibility
+
+The component sets `accessibilityRole="header"` by default. Screen readers will announce the selected label as a header element. When the Tray opens, focus moves to the options list for navigation.
+
+```jsx
+<NavigationTitleSelect
+  options={accounts}
+  value={selectedAccount}
+  onChange={setSelectedAccount}
+  accessibilityRole="header"
+/>
 ```

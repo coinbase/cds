@@ -47,3 +47,19 @@ function AdvancedCustomColors() {
   );
 }
 ```
+
+### Elevation
+
+You can add a drop shadow to the Switch thumb using the `elevation` prop. By default, the Switch has no elevation.
+
+```jsx
+function ElevationSwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch elevation={1} onChange={() => setChecked((s) => !s)} checked={checked}>
+      With drop shadow
+    </Switch>
+  );
+}
+```

@@ -117,6 +117,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
       noScaleOnPress={noScaleOnPress}
       padding={padding}
       style={pressableStyle}
+      tabIndex={-1}
       testID={testID}
       {...props}
     >

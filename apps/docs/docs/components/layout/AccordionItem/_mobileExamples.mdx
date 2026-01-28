@@ -1,1 +1,207 @@
-Check [Accordion](/components/layout/Accordion) for usage examples.
+AccordionItem represents a single expandable section within an [Accordion](/components/layout/Accordion). It composes an `AccordionHeader` (pressable trigger) and `AccordionPanel` (collapsible content) into a single component.
+
+## Basics
+
+Each `AccordionItem` requires a unique `itemKey` to identify it within the parent Accordion, and a `title` for the header text. The `children` become the collapsible content.
+
+```jsx
+<Accordion>
+  <AccordionItem itemKey="1" title="What is Coinbase?">
+    <Text font="body" color="fgMuted">
+      Coinbase is a secure online platform for buying, selling, transferring, and storing digital
+      currency.
+    </Text>
+  </AccordionItem>
+</Accordion>
+```
+
+## Header Content
+
+### Title and Subtitle
+
+Use the `title` prop for the main header text and `subtitle` for secondary information.
+
+```jsx
+<Accordion>
+  <AccordionItem
+    itemKey="1"
+    title="Account Settings"
+    subtitle="Manage your profile, security, and preferences"
+  >
+    <VStack gap={2}>
+      <Text font="body" color="fgMuted">
+        Configure your account settings here.
+      </Text>
+      <Button variant="secondary" compact>
+        Edit profile
+      </Button>
+    </VStack>
+  </AccordionItem>
+</Accordion>
+```
+
+### Media
+
+Add icons, avatars, or other media to the header using the `media` prop. This commonly uses `CellMedia` for consistent styling.
+
+```jsx
+<Accordion>
+  <AccordionItem
+    itemKey="1"
+    title="Bitcoin"
+    subtitle="BTC"
+    media={<CellMedia active type="icon" name="wallet" title="BTC" />}
+  >
+    <VStack gap={2}>
+      <HStack justifyContent="space-between">
+        <Text font="body" color="fgMuted">
+          Balance
+        </Text>
+        <Text font="body">0.5 BTC</Text>
+      </HStack>
+      <HStack justifyContent="space-between">
+        <Text font="body" color="fgMuted">
+          Value
+        </Text>
+        <Text font="body">$21,500.00</Text>
+      </HStack>
+    </VStack>
+  </AccordionItem>
+</Accordion>
+```
+
+## Press Handling
+
+Use the `onPress` callback to respond when an item is pressed. It receives the `itemKey` as an argument.
+
+```jsx
+function PressExample() {
+  const [lastPressed, setLastPressed] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      {lastPressed && (
+        <Text font="label2" color="fgMuted">
+          Last pressed: {lastPressed}
+        </Text>
+      )}
+      <Accordion>
+        <AccordionItem itemKey="first" title="First Item" onPress={(key) => setLastPressed(key)}>
+          <Text font="body" color="fgMuted">
+            Content for the first item.
+          </Text>
+        </AccordionItem>
+        <AccordionItem itemKey="second" title="Second Item" onPress={(key) => setLastPressed(key)}>
+          <Text font="body" color="fgMuted">
+            Content for the second item.
+          </Text>
+        </AccordionItem>
+      </Accordion>
+    </VStack>
+  );
+}
+```
+
+## Panel Content
+
+### Rich Content
+
+AccordionItem children can contain any React Native content—forms, lists, buttons, or other components.
+
+```jsx
+<Accordion>
+  <AccordionItem itemKey="1" title="Payment Details" subtitle="Enter your payment information">
+    <VStack gap={3}>
+      <TextInput compact label="Card Number" placeholder="1234 5678 9012 3456" />
+      <HStack gap={2}>
+        <Box flex={1}>
+          <TextInput compact label="Expiry" placeholder="MM/YY" />
+        </Box>
+        <Box flex={1}>
+          <TextInput compact label="CVV" placeholder="123" />
+        </Box>
+      </HStack>
+      <HStack gap={2} justifyContent="flex-end">
+        <Button variant="secondary">Cancel</Button>
+        <Button>Save Card</Button>
+      </HStack>
+    </VStack>
+  </AccordionItem>
+</Accordion>
+```
+
+## Multiple Items
+
+When using multiple AccordionItems, only one can be expanded at a time (controlled by the parent Accordion). Use `defaultActiveKey` on the Accordion to specify which item starts expanded.
+
+```jsx
+<Accordion defaultActiveKey="faq-2">
+  <AccordionItem itemKey="faq-1" title="How do I get started?">
+    <Text font="body" color="fgMuted">
+      Download the app, create an account, and verify your identity to start trading.
+    </Text>
+  </AccordionItem>
+  <AccordionItem itemKey="faq-2" title="Is my crypto secure?">
+    <Text font="body" color="fgMuted">
+      Yes, we use industry-leading security measures including cold storage and two-factor
+      authentication to protect your assets.
+    </Text>
+  </AccordionItem>
+  <AccordionItem itemKey="faq-3" title="What are the fees?">
+    <Text font="body" color="fgMuted">
+      Fees vary based on your payment method and transaction size. See our pricing page for details.
+    </Text>
+  </AccordionItem>
+</Accordion>
+```
+
+## Accessibility
+
+AccordionItem automatically provides accessible behavior on mobile:
+
+- The header uses `accessibilityRole="togglebutton"` with `accessibilityState` to indicate expanded/collapsed state
+- The title and subtitle are combined into an `accessibilityLabel`
+- Supports VoiceOver and TalkBack screen readers
+
+For items with complex content, ensure any interactive elements inside the panel have appropriate accessibility labels.
+
+```jsx
+<Accordion>
+  <AccordionItem
+    itemKey="1"
+    title="Accessibility Settings"
+    subtitle="Customize your experience"
+    testID="accessibility-accordion"
+  >
+    <VStack gap={2}>
+      <Text font="body" color="fgMuted">
+        Adjust settings to make the app more accessible.
+      </Text>
+      <Button variant="secondary" compact accessibilityLabel="Open accessibility preferences">
+        Open Preferences
+      </Button>
+    </VStack>
+  </AccordionItem>
+</Accordion>
+```
+
+## Refs
+
+Use `headerRef` and `panelRef` to get references to the header and panel views for programmatic focus management or measurements.
+
+```jsx
+function RefExample() {
+  const headerRef = useRef(null);
+  const panelRef = useRef(null);
+
+  return (
+    <Accordion>
+      <AccordionItem itemKey="1" title="Measurable Item" headerRef={headerRef} panelRef={panelRef}>
+        <Text font="body" color="fgMuted">
+          Panel content
+        </Text>
+      </AccordionItem>
+    </Accordion>
+  );
+}
+```

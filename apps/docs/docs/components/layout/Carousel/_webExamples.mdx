@@ -623,6 +623,96 @@ function OverflowCarousel() {
 }
 ```
 
+## Looping
+
+Enable infinite looping with the `loop` prop. You must have at least two pages of content to enable looping.
+
+Looping works with both `snap` and `free` drag modes, and with both `page` and `item` snap modes.
+
+### Looping with Snap
+
+When looping is enabled with snap drag mode, the carousel will snap to the nearest item or page (depending on `snapMode`) after releasing, allowing infinite scrolling in either direction.
+
+```jsx live
+function LoopingSnapCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        loop
+        title="Infinite Scroll"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+### Looping with Free Drag
+
+When looping with free drag, the carousel scrolls continuously without snapping, creating a smooth endless scrolling experience.
+
+```jsx live
+function LoopingFreeDragCarousel() {
+  function SquareAssetCard({ imageUrl, name }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        loop
+        drag="free"
+        snapMode="item"
+        title="Free Scroll Loop"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
 ## Accessibility
 
 The carousel is accessible by default.

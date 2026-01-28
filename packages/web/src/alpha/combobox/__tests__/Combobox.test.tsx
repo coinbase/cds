@@ -96,7 +96,7 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByLabelText('Custom combobox')).toBeTruthy();
+      expect(screen.getByLabelText('Custom combobox, Search and select...')).toBeTruthy();
       const button = screen.getByRole('button');
       fireEvent.click(button);
       expect(screen.getByLabelText('Combobox menu')).toBeTruthy();

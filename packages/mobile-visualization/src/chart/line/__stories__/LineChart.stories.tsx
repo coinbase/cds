@@ -832,6 +832,42 @@ function StylingScrubber() {
   );
 }
 
+function HideBeaconLabels() {
+  const theme = useTheme();
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  return (
+    <LineChart
+      enableScrubbing
+      legend
+      showArea
+      height={200}
+      inset={{ top: 60 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: theme.color.accentBoldGreen,
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: theme.color.accentBoldPurple,
+          label: 'Unique Visitors',
+        },
+      ]}
+    >
+      <Scrubber
+        hideBeaconLabels
+        labelElevated
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 function Compact() {
   const theme = useTheme();
   const dimensions = { width: 62, height: 18 };
@@ -1128,7 +1164,7 @@ const LegendDot = memo((props: BoxBaseProps) => {
   return <Box borderRadius={1000} height={10} width={10} {...props} />;
 });
 
-const LegendItem = memo(
+const LegendEntry = memo(
   ({
     color = assets.btc.color,
     label,
@@ -1176,17 +1212,17 @@ const PerformanceHeader = memo(
 
     return (
       <HStack gap={1} paddingX={1}>
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgPositive}
           label="High Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
         />
-        <LegendItem
+        <LegendEntry
           color={assets.btc.color}
           label="Actual Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
         />
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgNegative}
           label="Low Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
@@ -2164,6 +2200,133 @@ function HiddenScrubberWhenIdle() {
   );
 }
 
+function CustomBeaconStroke() {
+  const theme = useTheme();
+  const backgroundColor = `rgb(${theme.spectrum.red40})`;
+  const foregroundColor = `rgb(${theme.spectrum.gray0})`;
+
+  return (
+    <Box borderRadius={300} padding={2} style={{ backgroundColor }}>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: foregroundColor,
+          },
+        ]}
+      >
+        <Scrubber
+          hideOverlay
+          idlePulse
+          beaconStroke={backgroundColor}
+          lineStroke={foregroundColor}
+        />
+      </LineChart>
+    </Box>
+  );
+}
+
+function CustomBeaconSize() {
+  const theme = useTheme();
+
+  const dataCount = 14;
+  const minDataValue = 0;
+  const maxDataValue = 100;
+  const minStepOffset = 5;
+  const maxStepOffset = 20;
+  const updateInterval = 2000;
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataValue) {
+      direction = -1;
+    } else if (previousValue <= minDataValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    const newValue = previousValue + offset * direction;
+    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
+  }
+
+  function generateInitialData() {
+    const data = [];
+    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+    return data;
+  }
+
+  const InvertedBeacon = useMemo(
+    () => (props: ScrubberBeaconProps) => (
+      <DefaultScrubberBeacon
+        {...props}
+        color={theme.color.bg}
+        radius={5}
+        stroke={theme.color.fg}
+        strokeWidth={3}
+      />
+    ),
+    [theme.color.fg, theme.color.bg],
+  );
+
+  const CustomBeaconSizeChart = memo(() => {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 50;
+          const newValue = generateNextValue(lastValue);
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: theme.color.fg,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 0, max: 100 },
+        }}
+      >
+        <Scrubber BeaconComponent={InvertedBeacon} />
+      </LineChart>
+    );
+  });
+
+  return <CustomBeaconSizeChart />;
+}
+
 function TwoLineScrubberLabel() {
   const theme = useTheme();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
@@ -2541,6 +2704,18 @@ function ExampleNavigator() {
       {
         title: 'Two-Line Scrubber Label',
         component: <TwoLineScrubberLabel />,
+      },
+      {
+        title: 'Hide Beacon Labels',
+        component: <HideBeaconLabels />,
+      },
+      {
+        title: 'Custom Beacon Stroke',
+        component: <CustomBeaconStroke />,
+      },
+      {
+        title: 'Custom Beacon Size',
+        component: <CustomBeaconSize />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

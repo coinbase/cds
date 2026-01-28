@@ -60,6 +60,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
     children,
     checked,
     disabled,
+    elevation,
     controlColor,
     background = checked ? 'bgPrimary' : 'bgTertiary',
     borderColor,
@@ -101,7 +102,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
           borderRadius={1000}
           className={thumbCss}
           data-testid="switch-thumb"
-          elevation={1}
+          elevation={elevation}
           initial={false}
           testID="switch-thumb"
           transition={convertTransition(switchTransitionConfig)}

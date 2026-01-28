@@ -594,88 +594,70 @@ You can also set the `barMinSize` prop to control the minimum size for individua
 
 ### Multiple Y Axes
 
-You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stack.
+You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stacked.
 
 ```jsx
 function MultipleYAxes() {
   const theme = useTheme();
 
   return (
-    <VStack gap={2}>
-      <CartesianChart
-        height={150}
-        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        series={[
-          {
-            id: 'revenue',
-            data: [455, 520, 380, 455, 285, 235],
-            yAxisId: 'revenue',
-            color: theme.color.accentBoldYellow,
-          },
-          {
-            id: 'profitMargin',
-            data: [23, 20, 16, 38, 12, 9],
-            yAxisId: 'profitMargin',
-            color: theme.color.fgPositive,
-          },
-        ]}
-        xAxis={{
-          data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          scaleType: 'band',
-        }}
-        yAxis={[
-          {
-            id: 'revenue',
-            domain: { min: 0 },
-          },
-          {
-            id: 'profitMargin',
-            domain: { min: 0, max: 100 },
-          },
-        ]}
-      >
-        <XAxis showLine showTickMarks />
-        <YAxis
-          showGrid
-          showLine
-          showTickMarks
-          axisId="revenue"
-          position="left"
-          requestedTickCount={5}
-          width={60}
-          tickLabelFormatter={(value) => `$${value}k`}
-        />
-        <YAxis
-          showLine
-          showTickMarks
-          axisId="profitMargin"
-          position="right"
-          requestedTickCount={5}
-          tickLabelFormatter={(value) => `${value}%`}
-        />
-        <BarPlot />
-      </CartesianChart>
-      <HStack justifyContent="center" gap={2}>
-        <Box alignItems="center" gap={0.5}>
-          <Box
-            borderRadius={1000}
-            width={10}
-            height={10}
-            style={{ background: theme.color.accentBoldYellow }}
-          />
-          <Text font="label2">Revenue ($)</Text>
-        </Box>
-        <Box alignItems="center" gap={0.5}>
-          <Box
-            borderRadius={1000}
-            width={10}
-            height={10}
-            style={{ background: theme.color.fgPositive }}
-          />
-          <Text font="label2">Profit Margin (%)</Text>
-        </Box>
-      </HStack>
-    </VStack>
+    <CartesianChart
+      legend
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue ($)',
+          data: [455, 520, 380, 455, 285, 235],
+          yAxisId: 'revenue',
+          color: theme.color.accentBoldYellow,
+        },
+        {
+          id: 'profitMargin',
+          label: 'Profit Margin (%)',
+          data: [23, 20, 16, 38, 12, 9],
+          yAxisId: 'profitMargin',
+          color: theme.color.fgPositive,
+        },
+      ]}
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        scaleType: 'band',
+      }}
+      yAxis={[
+        {
+          id: 'revenue',
+          domain: { min: 0 },
+        },
+        {
+          id: 'profitMargin',
+          domain: { min: 0, max: 100 },
+        },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        axisId="revenue"
+        position="left"
+        requestedTickCount={5}
+        width={60}
+        tickLabelFormatter={(value) => `$${value}k`}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        axisId="profitMargin"
+        position="right"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <BarPlot />
+    </CartesianChart>
   );
 }
 ```
