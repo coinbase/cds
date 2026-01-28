@@ -163,7 +163,7 @@ export const TabsActiveIndicator = ({
   ...props
 }: TabsActiveIndicatorProps) => {
   const previousActiveTabRect = useRef(activeTabRect);
-  const newActiveTabRect = { x: activeTabRect.x, width: activeTabRect.width };
+  const newActiveTabRect = { x: activeTabRect.x, y: activeTabRect.y, width: activeTabRect.width };
   const animatedTabRect = useSharedValue(newActiveTabRect);
   const isFirstRenderWithWidth =
     previousActiveTabRect.current.width === 0 && activeTabRect.width > 0;
@@ -177,7 +177,7 @@ export const TabsActiveIndicator = ({
 
   const animatedBoxStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateX: animatedTabRect.value.x }],
+      transform: [{ translateX: animatedTabRect.value.x }, { translateY: animatedTabRect.value.y }],
       width: animatedTabRect.value.width,
     }),
     [animatedTabRect],
