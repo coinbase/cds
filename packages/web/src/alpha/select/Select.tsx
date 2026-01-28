@@ -91,6 +91,7 @@ const SelectBase = memo(
         accessory,
         media,
         end,
+        align = 'start',
         bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
@@ -253,6 +254,7 @@ const SelectBase = memo(
           <SelectControlComponent
             ref={refs.setReference}
             accessibilityLabel={controlAccessibilityLabel}
+            align={align}
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}

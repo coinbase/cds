@@ -72,6 +72,7 @@ const DefaultSelectControlComponent = memo(
         endNode: customEndNode,
         compact,
         blendStyles,
+        align = 'start',
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
@@ -304,6 +305,7 @@ const DefaultSelectControlComponent = memo(
             display="block"
             font="body"
             overflow="truncate"
+            textAlign={align}
             width="100%"
           >
             {singleValueContent}
