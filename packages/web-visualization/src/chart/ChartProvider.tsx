@@ -2,7 +2,9 @@ import { createContext, useContext } from 'react';
 
 import type { CartesianChartContextValue } from './utils/context';
 
-const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(undefined);
+export const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(
+  undefined,
+);
 
 export const useCartesianChartContext = (): CartesianChartContextValue => {
   const context = useContext(CartesianChartContext);
