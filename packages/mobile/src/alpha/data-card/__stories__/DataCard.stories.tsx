@@ -50,7 +50,7 @@ const DataCardScreen = () => {
               </Text>
             }
           >
-            <Box paddingTop={5}>
+            <Box paddingTop={6}>
               <ProgressBarWithFixedLabels
                 labelPlacement="below"
                 startLabel={{ value: 45, render: renderProgressLabel }}
@@ -116,7 +116,7 @@ const DataCardScreen = () => {
               </Text>
             }
           >
-            <Box paddingTop={5}>
+            <Box paddingTop={6}>
               <ProgressBarWithFixedLabels
                 labelPlacement="below"
                 startLabel={{ value: 90, render: renderProgressLabel }}
@@ -187,7 +187,7 @@ const DataCardScreen = () => {
               </Text>
             }
           >
-            <Box paddingTop={5}>
+            <Box paddingTop={6}>
               <ProgressBarWithFixedLabels
                 labelPlacement="below"
                 startLabel={{ value: 75, render: renderProgressLabel }}
@@ -235,7 +235,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Custom Root Styles"
           >
-            <Box paddingTop={5}>
+            <Box paddingTop={6}>
               <ProgressBarWithFixedLabels
                 labelPlacement="below"
                 startLabel={{ value: 50, render: renderProgressLabel }}
@@ -274,7 +274,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Multiple Style Overrides"
           >
-            <Box paddingTop={5}>
+            <Box paddingTop={6}>
               <ProgressBarWithFixedLabels
                 labelPlacement="below"
                 startLabel={{ value: 80, render: renderProgressLabel }}
@@ -295,7 +295,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Card 1"
           >
-            <Box paddingTop={5}>
+            <Box paddingTop={6}>
               <ProgressBarWithFixedLabels
                 labelPlacement="below"
                 startLabel={{ value: 30, render: renderProgressLabel }}

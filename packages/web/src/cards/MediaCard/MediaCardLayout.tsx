@@ -53,7 +53,7 @@ export const MediaCardLayout = memo(
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <Text font="headline" numberOfLines={2}>
+          <Text as="div" font="headline" numberOfLines={2}>
             {title}
           </Text>
         );
@@ -64,7 +64,7 @@ export const MediaCardLayout = memo(
     const subtitleNode = useMemo(
       () =>
         typeof subtitle === 'string' ? (
-          <Text color="fgMuted" font="legal" numberOfLines={1}>
+          <Text as="div" color="fgMuted" font="legal" numberOfLines={1}>
             {subtitle}
           </Text>
         ) : (
@@ -86,7 +86,7 @@ export const MediaCardLayout = memo(
     const descriptionNode = useMemo(
       () =>
         typeof description === 'string' ? (
-          <Text color="fgMuted" font="label2" numberOfLines={2}>
+          <Text as="p" color="fgMuted" font="label2" numberOfLines={2}>
             {description}
           </Text>
         ) : (

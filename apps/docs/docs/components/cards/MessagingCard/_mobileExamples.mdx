@@ -701,66 +701,6 @@ Use React nodes for custom styled content.
 </VStack>
 ```
 
-## Accessibility
-
-### Interactive Cards with Dismiss Button
-
-When you need both `onDismissButtonPress` and want the entire card to be pressable, you should handle accessibility carefully to avoid nested interactive elements.
-
-**The Problem**: If you use `renderAsPressable` with `onPress` and also have `onDismissButtonPress`, the card becomes a pressable containing another pressable (the dismiss button). This creates accessibility issues for screen reader users.
-
-**The Solution**: Mark the card as non-accessible and add a separate action button inside the card with the same action. This allows:
-
-- Regular users to tap anywhere on the card
-- Screen reader users to focus on individual interactive elements (action button + dismiss button)
-
-```jsx
-<MessagingCard
-  renderAsPressable
-  accessible={false}
-  onPress={() => console.log('Card pressed - navigating...')}
-  type="upsell"
-  title="Accessible Interactive Card"
-  description="Card with both dismiss and card-level action"
-  action={
-    <Button
-      compact
-      variant="secondary"
-      onPress={() => console.log('Button pressed - navigating...')}
-    >
-      Learn More
-    </Button>
-  }
-  onDismissButtonPress={() => console.log('Dismissed')}
-  dismissButtonAccessibilityLabel="Dismiss promotion"
-  media={
-    <RemoteImage
-      accessibilityLabel="Feature illustration"
-      height={160}
-      resizeMode="cover"
-      shape="rectangle"
-      source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
-      width={100}
-    />
-  }
-  mediaPlacement="end"
-/>
-```
-
-**Key points:**
-
-- Set `accessible={false}` to remove the card from the accessibility tree
-- Add a `Button` in `actionButton` with the same `onPress` handler for screen reader users
-- Use `actionButtonAccessibilityLabel` and `dismissButtonAccessibilityLabel` to add or override the accessibility label for the action and dismiss buttons
-
-### Color Contrast
-
-MessagingCard supports custom backgrounds via `background` and `dangerouslySetBackground` props. When using custom background colors, ensure sufficient color contrast between text and background:
-
-- Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
-- Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)
-- Verify your color combinations meet WCAG AA guidelines (4.5:1 for normal text)
-
 ## Multiple Cards
 
 Display multiple cards in a carousel.
@@ -825,6 +765,66 @@ function MultipleCards() {
   );
 }
 ```
+
+## Accessibility
+
+### Interactive Cards with Dismiss Button
+
+When you need both `onDismissButtonPress` and want the entire card to be pressable, you should handle accessibility carefully to avoid nested interactive elements.
+
+**The Problem**: If you use `renderAsPressable` with `onPress` and also have `onDismissButtonPress`, the card becomes a pressable containing another pressable (the dismiss button). This creates accessibility issues for screen reader users.
+
+**The Solution**: Mark the card as non-accessible and add a separate action button inside the card with the same action. This allows:
+
+- Regular users to tap anywhere on the card
+- Screen reader users to focus on individual interactive elements (action button + dismiss button)
+
+```jsx
+<MessagingCard
+  renderAsPressable
+  accessible={false}
+  onPress={() => console.log('Card pressed - navigating...')}
+  type="upsell"
+  title="Accessible Interactive Card"
+  description="Card with both dismiss and card-level action"
+  action={
+    <Button
+      compact
+      variant="secondary"
+      onPress={() => console.log('Button pressed - navigating...')}
+    >
+      Learn More
+    </Button>
+  }
+  onDismissButtonPress={() => console.log('Dismissed')}
+  dismissButtonAccessibilityLabel="Dismiss promotion"
+  media={
+    <RemoteImage
+      accessibilityLabel="Feature illustration"
+      height={160}
+      resizeMode="cover"
+      shape="rectangle"
+      source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      width={100}
+    />
+  }
+  mediaPlacement="end"
+/>
+```
+
+**Key points:**
+
+- Set `accessible={false}` to remove the card from the accessibility tree
+- Add a `Button` in `actionButton` with the same `onPress` handler for screen reader users
+- Use `actionButtonAccessibilityLabel` and `dismissButtonAccessibilityLabel` to add or override the accessibility label for the action and dismiss buttons
+
+### Color Contrast
+
+MessagingCard supports custom backgrounds via `background` and `dangerouslySetBackground` props. When using custom background colors, ensure sufficient color contrast between text and background:
+
+- Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
+- Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)
+- Verify your color combinations meet WCAG AA guidelines (4.5:1 for normal text)
 
 ## Migration from Deprecated Components
 

@@ -726,71 +726,6 @@ Use React nodes for custom styled content.
 </VStack>
 ```
 
-## Accessibility
-
-### Interactive Cards with Dismiss Button
-
-When you need both `onDismissButtonClick` and want the entire card to be clickable, you should handle accessibility carefully to avoid nested interactive elements.
-
-**The Problem**: If you use `renderAsPressable` with `onClick` and also have `onDismissButtonClick`, the card becomes a button containing another button (the dismiss button). This creates accessibility issues for screen reader users.
-
-**The Solution**: Mark the card as non-accessible and add a separate action button inside the card with the same action. This allows:
-
-- Regular users to click anywhere on the card
-- Screen reader users to focus on individual interactive elements (action button + dismiss button)
-
-```jsx live
-<MessagingCard
-  renderAsPressable
-  as="div"
-  onClick={() => alert('Card clicked - navigating...')}
-  type="upsell"
-  title="Accessible Interactive Card"
-  description="Card with both dismiss and card-level action"
-  width={360}
-  action={
-    <Button
-      compact
-      variant="secondary"
-      onClick={(event) => {
-        event.stopPropagation();
-        alert('Button clicked - navigating...');
-      }}
-    >
-      Learn More
-    </Button>
-  }
-  background="accentBoldPurple"
-  onDismissButtonClick={() => alert('Dismissed')}
-  dismissButtonAccessibilityLabel="Dismiss promotion"
-  media={
-    <RemoteImage
-      alt="Feature illustration"
-      height={160}
-      resizeMode="cover"
-      shape="rectangle"
-      source="/img/feature.png"
-    />
-  }
-  mediaPlacement="end"
-/>
-```
-
-**Key points:**
-
-- Use `as="div"` to avoid rendering as a semantic button
-- When using `as="div"` with `renderAsPressable`, the card remains keyboard focusable. Set `tabIndex={-1}` to remove it from the tab order if needed
-- Call `event.stopPropagation()` at the beginning of the event handler method passed into the `onClick` prop for action buttons. This will prevent two click events from firing if the user directly clicks the action button.
-- Use `actionButtonAccessibilityLabel` and `dismissButtonAccessibilityLabel` to add or override the `aria-label` for the action and dismiss buttons
-
-### Color Contrast
-
-MessagingCard supports custom backgrounds via `background` and `dangerouslySetBackground` props. When using custom background colors, ensure sufficient color contrast between text and background:
-
-- Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
-- Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)
-- Use the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to verify your color combinations meet WCAG AA guidelines (4.5:1 for normal text)
-
 ## Multiple Cards
 
 Display multiple cards in a carousel.
@@ -854,6 +789,72 @@ Display multiple cards in a carousel.
   </CarouselItem>
 </Carousel>
 ```
+
+## Accessibility
+
+### Interactive Cards with Dismiss Button
+
+When you need both `onDismissButtonClick` and want the entire card to be clickable, you should handle accessibility carefully to avoid nested interactive elements.
+
+**The Problem**: If you use `renderAsPressable` with `onClick` and also have `onDismissButtonClick`, the card becomes a button containing another button (the dismiss button). This creates accessibility issues for screen reader users.
+
+**The Solution**: Mark the card as non-accessible and add a separate action button inside the card with the same action. This allows:
+
+- Regular users to click anywhere on the card
+- Screen reader users to focus on individual interactive elements (action button + dismiss button)
+
+```jsx live
+<MessagingCard
+  renderAsPressable
+  tabIndex={-1}
+  as="div"
+  onClick={() => alert('Card clicked - navigating...')}
+  type="upsell"
+  title="Accessible Interactive Card"
+  description="Card with both dismiss and card-level action"
+  width={360}
+  action={
+    <Button
+      compact
+      variant="secondary"
+      onClick={(event) => {
+        event.stopPropagation();
+        alert('Button clicked - navigating...');
+      }}
+    >
+      Learn More
+    </Button>
+  }
+  background="accentBoldPurple"
+  onDismissButtonClick={() => alert('Dismissed')}
+  dismissButtonAccessibilityLabel="Dismiss promotion"
+  media={
+    <RemoteImage
+      alt="Feature illustration"
+      height={160}
+      resizeMode="cover"
+      shape="rectangle"
+      source="/img/feature.png"
+    />
+  }
+  mediaPlacement="end"
+/>
+```
+
+**Key points:**
+
+- Use `as="div"` to avoid rendering as a semantic button
+- When using `as="div"` with `renderAsPressable`, the card remains keyboard focusable. Set `tabIndex={-1}` to remove it from the tab order if needed
+- Call `event.stopPropagation()` at the beginning of the event handler method passed into the `onClick` prop for action buttons. This will prevent two click events from firing if the user directly clicks the action button.
+- Use `actionButtonAccessibilityLabel` and `dismissButtonAccessibilityLabel` to add or override the `aria-label` for the action and dismiss buttons
+
+### Color Contrast
+
+MessagingCard supports custom backgrounds via `background` and `dangerouslySetBackground` props. When using custom background colors, ensure sufficient color contrast between text and background:
+
+- Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
+- Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)
+- Use the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to verify your color combinations meet WCAG AA guidelines (4.5:1 for normal text)
 
 ## Migration from Deprecated Components
 

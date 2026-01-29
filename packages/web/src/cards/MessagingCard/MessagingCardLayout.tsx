@@ -78,7 +78,12 @@ export const MessagingCardLayout = memo(
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <Text color={type === 'upsell' ? 'fgInverse' : 'fg'} font="headline" numberOfLines={2}>
+          <Text
+            as="div"
+            color={type === 'upsell' ? 'fgInverse' : 'fg'}
+            font="headline"
+            numberOfLines={2}
+          >
             {title}
           </Text>
         );
@@ -89,7 +94,12 @@ export const MessagingCardLayout = memo(
     const descriptionNode = useMemo(() => {
       if (typeof description === 'string') {
         return (
-          <Text color={type === 'upsell' ? 'fgInverse' : 'fg'} font="label2" numberOfLines={3}>
+          <Text
+            as="p"
+            color={type === 'upsell' ? 'fgInverse' : 'fg'}
+            font="label2"
+            numberOfLines={3}
+          >
             {description}
           </Text>
         );

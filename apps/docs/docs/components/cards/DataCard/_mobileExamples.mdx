@@ -33,7 +33,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -97,7 +97,7 @@ function Example() {
         thumbnail={exampleThumbnail}
         title="Vertical Layout"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -162,7 +162,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -305,7 +305,7 @@ function Example() {
         thumbnail={exampleThumbnail}
         title="Custom Root Styles"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -374,7 +374,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -423,7 +423,33 @@ Ensure all visualization components have appropriate `accessibilityLabel` props 
 
 When making DataCard interactive with `renderAsPressable`:
 
-- Add an `accessibilityLabel` to summarize the card's action for VoiceOver users (e.g., `accessibilityLabel="View ETH Holdings progress details"`)
+- Add an `accessibilityLabel` to summarize the card's content for VoiceOver users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
+
+```jsx
+<DataCard
+  renderAsPressable
+  accessibilityLabel="ETH Holdings, 45% progress, View details"
+  onPress={() => handlePress()}
+  title="ETH Holdings"
+  subtitle="45% progress"
+>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      labelPlacement="below"
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
+</DataCard>
+```
 
 :::warning Avoid Nested Interactive Elements
 Don't place buttons or pressables inside an interactive card, as this creates accessibility issues for VoiceOver users and can cause unexpected behavior when tapping.
@@ -492,7 +518,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{

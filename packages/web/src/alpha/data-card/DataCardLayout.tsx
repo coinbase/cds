@@ -50,7 +50,7 @@ export const DataCardLayout = memo(
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <Text font="headline" numberOfLines={2}>
+          <Text as="div" font="headline" numberOfLines={2}>
             {title}
           </Text>
         );
@@ -61,7 +61,7 @@ export const DataCardLayout = memo(
     const subtitleNode = useMemo(() => {
       if (typeof subtitle === 'string') {
         return (
-          <Text color="fgMuted" font="label2" numberOfLines={1}>
+          <Text as="div" color="fgMuted" font="label2" numberOfLines={1}>
             {subtitle}
           </Text>
         );

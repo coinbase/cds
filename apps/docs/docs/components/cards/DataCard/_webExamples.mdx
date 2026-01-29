@@ -27,7 +27,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -180,7 +180,7 @@ function Example() {
         thumbnail={exampleThumbnail}
         title="Vertical Layout"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -239,7 +239,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -310,7 +310,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -378,7 +378,7 @@ function Example() {
         thumbnail={exampleThumbnail}
         title="Custom Root Styles"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -441,7 +441,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -490,12 +490,54 @@ Ensure all visualization components have appropriate `accessibilityLabel` props 
 
 When making DataCard interactive with `renderAsPressable`:
 
-- Add an `aria-label` to summarize the card's action for screen reader users (e.g., `aria-label="View ETH Holdings progress details"`)
-- When using `as="div"` with `renderAsPressable`, the card remains keyboard focusable. Set `tabIndex={-1}` to remove it from the tab order if needed
+- If `as` is set to `"button"` or `"a"`, `renderAsPressable` defaults to `true` automatically. Add an `accessibilityLabel` to summarize the card's content for screen reader users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
+
+```jsx live
+<DataCard
+  renderAsPressable
+  accessibilityLabel="ETH Holdings, 45% progress, View details"
+  as="button"
+  onClick={() => handleClick()}
+  title="ETH Holdings"
+  subtitle="45% progress"
+  width={480}
+>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      labelPlacement="below"
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
+</DataCard>
+```
 
 :::warning Avoid Nested Interactive Elements
 Don't place buttons or links inside an interactive card, as this creates accessibility issues for screen reader users and can cause unexpected behavior when clicking.
 :::
+
+### Heading Semantics
+
+By default, the `title` prop renders as a `<div>`. If you need the title to be a proper heading element for document structure, pass a custom `Text` node with the `as` prop:
+
+```jsx
+<DataCard
+  title={
+    <Text as="h3" font="headline">
+      Card Title
+    </Text>
+  }
+  // ...other props
+/>
+```
 
 ### Color Contrast for Gain/Loss Text
 
@@ -552,7 +594,7 @@ function Example() {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{
@@ -606,18 +648,20 @@ import { DataCard } from '@coinbase/cds-web/alpha/data-card';
   layout="vertical"
   thumbnail={<RemoteImage src={assetUrl} shape="circle" size="l" />}
 >
-  <ProgressBarWithFixedLabels
-    startLabel={{
-      value: 45,
-      render: (num) => (
-        <Text color="fgMuted" font="legal">
-          {num}%
-        </Text>
-      ),
-    }}
-    labelPlacement="below"
-  >
-    <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
-  </ProgressBarWithFixedLabels>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+      labelPlacement="below"
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
 </DataCard>;
 ```

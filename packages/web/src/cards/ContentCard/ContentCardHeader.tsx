@@ -95,7 +95,7 @@ export const ContentCardHeader: ContentCardHeaderComponent = memo(
       const titleNode = useMemo(() => {
         if (typeof title === 'string') {
           return (
-            <Text font="label1" numberOfLines={1}>
+            <Text as="div" font="label1" numberOfLines={1}>
               {title}
             </Text>
           );
@@ -106,7 +106,7 @@ export const ContentCardHeader: ContentCardHeaderComponent = memo(
       const subtitleNode = useMemo(() => {
         if (typeof subtitle === 'string') {
           return (
-            <Text color="fgMuted" font="legal" numberOfLines={1}>
+            <Text as="div" color="fgMuted" font="legal" numberOfLines={1}>
               {subtitle}
             </Text>
           );

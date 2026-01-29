@@ -135,7 +135,7 @@ export const ContentCardBody: ContentCardBodyComponent = memo(
       const titleNode = useMemo(() => {
         if (typeof title === 'string') {
           return (
-            <Text font="headline" numberOfLines={2}>
+            <Text as="div" font="headline" numberOfLines={2}>
               {title}
             </Text>
           );
@@ -146,7 +146,7 @@ export const ContentCardBody: ContentCardBodyComponent = memo(
       const descriptionNode = useMemo(() => {
         if (typeof description === 'string') {
           return (
-            <Text color="fgMuted" font="label2" numberOfLines={3}>
+            <Text as="p" color="fgMuted" font="label2" numberOfLines={3}>
               {description}
             </Text>
           );
@@ -156,7 +156,11 @@ export const ContentCardBody: ContentCardBodyComponent = memo(
 
       const labelNode = useMemo(() => {
         if (typeof label === 'string') {
-          return <Text font="label2">{label}</Text>;
+          return (
+            <Text as="div" font="label2">
+              {label}
+            </Text>
+          );
         }
         return label;
       }, [label]);

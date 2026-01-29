@@ -43,7 +43,7 @@ export const BasicExamples = (): JSX.Element => {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{ value: 45, render: renderProgressLabel }}
@@ -111,7 +111,7 @@ export const Features = (): JSX.Element => {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{ value: 90, render: renderProgressLabel }}
@@ -186,7 +186,7 @@ export const Interactive = (): JSX.Element => {
           </Text>
         }
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{ value: 75, render: renderProgressLabel }}
@@ -238,7 +238,7 @@ export const StyleOverrides = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Custom Root Styles"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{ value: 50, render: renderProgressLabel }}
@@ -277,7 +277,7 @@ export const StyleOverrides = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Multiple Style Overrides"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{ value: 80, render: renderProgressLabel }}
@@ -300,7 +300,7 @@ export const MultipleCards = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Card 1"
       >
-        <Box paddingTop={5}>
+        <Box paddingTop={6}>
           <ProgressBarWithFixedLabels
             labelPlacement="below"
             startLabel={{ value: 30, render: renderProgressLabel }}
