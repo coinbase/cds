@@ -12,12 +12,12 @@ import { Checkbox } from './Checkbox';
 import type { ControlBaseProps } from './Control';
 import { useSelectionCellControlHeight } from './useSelectionCellControlHeight';
 
-export type CheckboxCellBaseProps<T extends string> = Omit<
+export type CheckboxCellBaseProps<CheckboxValue extends string> = Omit<
   PressableProps<'label'>,
   'title' | 'onChange'
 > &
   Omit<
-    ControlBaseProps<T>,
+    ControlBaseProps<CheckboxValue>,
     'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
   > & {
     checked?: boolean;
@@ -32,22 +32,23 @@ export type CheckboxCellBaseProps<T extends string> = Omit<
     descriptionId?: string;
   };
 
-export type CheckboxCellProps<T extends string> = CheckboxCellBaseProps<T> & {
-  classNames?: {
-    root?: string;
-    checkboxContainer?: string;
-    title?: string;
-    description?: string;
-    contentContainer?: string;
+export type CheckboxCellProps<CheckboxValue extends string> =
+  CheckboxCellBaseProps<CheckboxValue> & {
+    classNames?: {
+      root?: string;
+      checkboxContainer?: string;
+      title?: string;
+      description?: string;
+      contentContainer?: string;
+    };
+    styles?: {
+      root?: CSSProperties;
+      checkboxContainer?: CSSProperties;
+      title?: CSSProperties;
+      description?: CSSProperties;
+      contentContainer?: CSSProperties;
+    };
   };
-  styles?: {
-    root?: CSSProperties;
-    checkboxContainer?: CSSProperties;
-    title?: CSSProperties;
-    description?: CSSProperties;
-    contentContainer?: CSSProperties;
-  };
-};
 
 const baseCss = css`
   &:focus-within {
@@ -56,7 +57,7 @@ const baseCss = css`
   }
 `;
 
-const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
+const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
   {
     title,
     description,
@@ -80,7 +81,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
     classNames,
     styles,
     ...props
-  }: CheckboxCellProps<T>,
+  }: CheckboxCellProps<CheckboxValue>,
   ref: React.ForwardedRef<HTMLLabelElement>,
 ) {
   const generatedTitleId = useId();
@@ -171,8 +172,8 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
       </VStack>
     </Pressable>
   );
-}) as <T extends string>(
-  props: CheckboxCellProps<T> & { ref?: React.Ref<HTMLLabelElement> },
+}) as <CheckboxValue extends string>(
+  props: CheckboxCellProps<CheckboxValue> & { ref?: React.Ref<HTMLLabelElement> },
 ) => React.ReactElement;
 
 export const CheckboxCell = memo(CheckboxCellWithRef) as typeof CheckboxCellWithRef &
