@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.16 (1/29/2026 PST)
+
+#### 🚀 Updates
+
+- Export `CartesianChartContext`. [[#340](https://github.com/coinbase/cds/pull/340)]
+
 ## 3.4.0-beta.15 (1/27/2026 PST)
 
 #### 🐞 Fixes
