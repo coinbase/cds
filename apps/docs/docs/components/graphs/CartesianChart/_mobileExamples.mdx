@@ -60,7 +60,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
 
 ## Setup
 
-All charts uses Skia Canvas for rendering, which requires a context bridge to share React contexts with the Skia renderer. You need to wrap your app with `ChartBridgeProvider` at the root of your app to enable charts to access theme and other React contexts.
+All charts use Skia Canvas for rendering, which requires a context bridge to share React contexts with the Skia renderer. You need to wrap your app with `ChartBridgeProvider` at the root of your app to enable charts to access theme and chart contexts.
 
 ```jsx
 import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization/chart';
