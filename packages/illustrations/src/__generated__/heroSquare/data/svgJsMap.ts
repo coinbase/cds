@@ -206,6 +206,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/borrowCoins-2.js').content,
     dark: () => require('../svgJs/dark/borrowCoins-2.js').content,
   },
+  borrowCoinsBtc: {
+    light: () => require('../svgJs/light/borrowCoinsBtc-0.js').content,
+    dark: () => require('../svgJs/dark/borrowCoinsBtc-0.js').content,
+  },
   borrowWallet: {
     light: () => require('../svgJs/light/borrowWallet-5.js').content,
     dark: () => require('../svgJs/dark/borrowWallet-5.js').content,
@@ -1453,6 +1457,10 @@ const svgJsMap = {
   taxesDetails: {
     light: () => require('../svgJs/light/taxesDetails-3.js').content,
     dark: () => require('../svgJs/dark/taxesDetails-3.js').content,
+  },
+  test: {
+    light: () => require('../svgJs/light/test-0.js').content,
+    dark: () => require('../svgJs/dark/test-0.js').content,
   },
   tools: {
     light: () => require('../svgJs/light/tools-1.js').content,
