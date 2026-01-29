@@ -15,10 +15,10 @@ import { Pressable } from '../system/Pressable';
 import { TabIndicator } from './TabIndicator';
 import { TabLabel } from './TabLabel';
 
-export type TabProps<T extends string | undefined = string> = SharedProps &
+export type TabProps<TabId extends string | undefined = string> = SharedProps &
   Partial<Pick<DotCountBaseProps, 'max' | 'count'>> & {
     /** The id should be a meaningful and useful identifier like "watchlist" or "forSale" */
-    id: T;
+    id: TabId;
     /** Define a label for this Tab */
     label: React.ReactNode;
     /** See the Tabs TDD to understand which variant should be used.
@@ -30,7 +30,7 @@ export type TabProps<T extends string | undefined = string> = SharedProps &
     /** Full length accessibility label when the child text is not descriptive enough. */
     accessibilityLabel?: string;
     /** Callback to fire when pressed */
-    onPress?: (id: T) => void;
+    onPress?: (id: TabId) => void;
     /** Render a custom Component for the Tab */
     Component?: (props: CustomTabProps) => React.ReactNode;
   };
@@ -45,17 +45,17 @@ export type CustomTabProps = Pick<TabProps, 'id'> & {
   label?: React.ReactNode;
 };
 
-export type TabNavigationBaseProps<T extends string | undefined = string> = BoxBaseProps &
+export type TabNavigationBaseProps<TabId extends string | undefined = string> = BoxBaseProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'> &
   Pick<TabProps, 'variant' | 'Component'> & {
     /** The active tabId
      *  @default tabs[0].id
      */
-    value?: T;
+    value?: TabId;
     /** Children should be TabLabels. If you only have one child, don't use tabs 🤪 */
-    tabs: TabProps<T>[];
+    tabs: TabProps<TabId>[];
     /** Use the onChange handler to deal with any side effects, ie event tracking or showing a tooltip */
-    onChange: ((tabId: T) => void) | React.Dispatch<React.SetStateAction<T>>;
+    onChange: ((tabId: TabId) => void) | React.Dispatch<React.SetStateAction<TabId>>;
     /** This should always match the background color of the parent container
      * @default: 'bg'
      */
@@ -88,10 +88,11 @@ export type TabNavigationBaseProps<T extends string | undefined = string> = BoxB
     id?: string;
   };
 
-export type TabNavigationProps<T extends string | undefined = string> = TabNavigationBaseProps<T>;
+export type TabNavigationProps<TabId extends string | undefined = string> =
+  TabNavigationBaseProps<TabId>;
 
-type TabNavigationFC = <T extends string | undefined = string>(
-  props: TabNavigationProps<T> & { ref?: React.ForwardedRef<View> },
+type TabNavigationFC = <TabId extends string | undefined = string>(
+  props: TabNavigationProps<TabId> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 const TabNavigationComponent = memo(

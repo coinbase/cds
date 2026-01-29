@@ -112,6 +112,9 @@ const LogoScreen = () => {
           <Box height={50} padding={1}>
             <SubBrandLogoMark foreground type="base" />
           </Box>
+          <Box height={50} padding={1}>
+            <SubBrandLogoMark foreground type="tokenManager" />
+          </Box>
         </VStack>
       </Example>
 
@@ -176,6 +179,9 @@ const LogoScreen = () => {
           </Box>
           <Box height={50} padding={1}>
             <SubBrandLogoWordmark foreground type="prime" />
+          </Box>
+          <Box height={50} padding={1}>
+            <SubBrandLogoWordmark foreground type="tokenManager" />
           </Box>
         </VStack>
       </Example>

@@ -17,19 +17,19 @@ const containerCss = css`
 
 export type ControlGroupOption<P> = Omit<P, 'onChange' | 'checked' | 'value'>;
 
-export type ControlGroupProps<T extends string, P extends { value?: T }> = Omit<
-  BoxProps<'div'>,
-  'children' | 'onChange' | 'as'
-> &
+export type ControlGroupProps<
+  ControlValue extends string,
+  ControlComponentProps extends { value?: ControlValue },
+> = Omit<BoxProps<'div'>, 'children' | 'onChange' | 'as'> &
   SharedProps & {
     /** The control component to render for each option. */
-    ControlComponent: React.ComponentType<P>;
+    ControlComponent: React.ComponentType<ControlComponentProps>;
     /** Control options for the group. */
-    options: (ControlGroupOption<P> & { value: T })[];
+    options: (ControlGroupOption<ControlComponentProps> & { value: ControlValue })[];
     /** Set a label for the group. */
     label?: React.ReactNode;
     /** Current selected value(s). Use a string for single-select (e.g., RadioGroup) and an array of strings for multi-select (e.g., CheckboxGroup). */
-    value: T | T[];
+    value: ControlValue | ControlValue[];
     /** Handle change events. */
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     /** The role for the group. Use 'radiogroup' for radio buttons, 'group' for other controls. */
@@ -41,8 +41,8 @@ export type ControlGroupProps<T extends string, P extends { value?: T }> = Omit<
   };
 
 const ControlGroupWithRef = forwardRef(function ControlGroup<
-  T extends string,
-  P extends { value?: T },
+  ControlValue extends string,
+  ControlComponentProps extends { value?: ControlValue },
 >(
   {
     ControlComponent: ControlComponent,
@@ -57,7 +57,7 @@ const ControlGroupWithRef = forwardRef(function ControlGroup<
     name,
     role = 'group',
     ...restProps
-  }: ControlGroupProps<T, P>,
+  }: ControlGroupProps<ControlValue, ControlComponentProps>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const generatedId = useId();
@@ -107,14 +107,14 @@ const ControlGroupWithRef = forwardRef(function ControlGroup<
             onChange={onChange}
             testID={testID ? `${testID}-${optionValue}` : undefined}
             value={optionValue}
-            {...(optionProps as P)}
+            {...(optionProps as ControlComponentProps)}
           />
         );
       })}
     </Box>
   );
-}) as <T extends string, P extends { value?: T }>(
-  props: ControlGroupProps<T, P> & {
+}) as <ControlValue extends string, ControlComponentProps extends { value?: ControlValue }>(
+  props: ControlGroupProps<ControlValue, ControlComponentProps> & {
     ref?: React.Ref<HTMLDivElement>;
   },
 ) => React.ReactElement;

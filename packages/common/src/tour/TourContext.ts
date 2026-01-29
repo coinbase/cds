@@ -3,12 +3,14 @@ import type { View } from 'react-native';
 
 import type { TourApi } from './useTour';
 
-export type TourContextValue<T extends string = string> = TourApi<T>;
+export type TourContextValue<TourStepId extends string = string> = TourApi<TourStepId>;
 
 export const TourContext = createContext<TourContextValue | undefined>(undefined);
 
-export const useTourContext = <T extends string = string>(): TourContextValue<T> => {
-  const context = useContext(TourContext as unknown as Context<TourContextValue<T>>);
+export const useTourContext = <
+  TourStepId extends string = string,
+>(): TourContextValue<TourStepId> => {
+  const context = useContext(TourContext as unknown as Context<TourContextValue<TourStepId>>);
   if (!context) throw Error('useTourContext must be called inside a Tour');
   return context;
 };
