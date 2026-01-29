@@ -883,6 +883,176 @@ const WithHelperText = () => (
   </VStack>
 );
 
+const BorderCustomization = () => {
+  const [isCondensed, setIsCondensed] = useState(true);
+  const spacingVariant = isCondensed ? 'condensed' : 'normal';
+
+  return (
+    <VStack gap={2} padding={2} width="360px">
+      <Switch
+        checked={isCondensed}
+        onChange={(event) => setIsCondensed(event.currentTarget.checked)}
+      >
+        Spacing variant: {spacingVariant}
+      </Switch>
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        description="Bordered on all sides"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="bordered"
+      />
+      <ListCell
+        borderedTop
+        borderColor="bgLine"
+        description="Border on top side only"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedTop"
+      />
+      <ListCell
+        borderedBottom
+        borderColor="bgLine"
+        description="Border on bottom side only"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedBottom"
+      />
+      <ListCell
+        borderedStart
+        borderColor="bgLine"
+        description="Border on leading side only"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedStart"
+      />
+      <ListCell
+        borderedEnd
+        borderColor="bgLine"
+        description="Border on trailing side only"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedEnd"
+      />
+      <ListCell
+        borderedHorizontal
+        borderColor="bgLine"
+        description="Borders on leading and trailing sides"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedHorizontal"
+      />
+      <ListCell
+        borderedVertical
+        borderColor="bgLine"
+        description="Borders on top and bottom sides"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedVertical"
+      />
+      <ListCell
+        bordered
+        borderColor="accentBoldPurple"
+        description="Custom border color"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderColor"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderWidth={200}
+        description="Uniform border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderWidth"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderTopWidth={300}
+        description="Top border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopWidth"
+      />
+      <ListCell
+        bordered
+        borderBottomWidth={300}
+        borderColor="bgLine"
+        description="Bottom border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderBottomWidth"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderStartWidth={300}
+        description="Leading border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderStartWidth"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderEndWidth={300}
+        description="Trailing border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderEndWidth"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderRadius={300}
+        description="Uniform corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderRadius"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderTopLeftRadius={400}
+        description="Top-left corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopLeftRadius"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderTopRightRadius={400}
+        description="Top-right corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopRightRadius"
+      />
+      <ListCell
+        bordered
+        borderBottomLeftRadius={400}
+        borderColor="bgLine"
+        description="Bottom-left corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderBottomLeftRadius"
+      />
+      <ListCell
+        bordered
+        borderBottomRightRadius={400}
+        borderColor="bgLine"
+        description="Bottom-right corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderBottomRightRadius"
+      />
+    </VStack>
+  );
+};
+
 const SpacingVariant = () => (
   <VStack>
     {/* Preferred (new design) */}
@@ -1233,6 +1403,7 @@ const UseCaseShowcase = () => {
 };
 
 export {
+  BorderCustomization,
   CompactContentDeprecated,
   CompactPressableContentDeprecated,
   CondensedListCell,

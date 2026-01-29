@@ -794,6 +794,146 @@ const WithHelperText = () => (
   </>
 );
 
+const BorderCustomization = () => {
+  const [isCondensed, setIsCondensed] = useState(true);
+  const spacingVariant = isCondensed ? 'condensed' : 'normal';
+
+  return (
+    <VStack gap={2} padding={2}>
+      <Switch
+        checked={isCondensed}
+        onChange={(_, nextChecked) => setIsCondensed(Boolean(nextChecked))}
+      >
+        Spacing variant: {spacingVariant}
+      </Switch>
+      <ListCell
+        bordered
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="bordered"
+      />
+      <ListCell
+        borderedTop
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedTop"
+      />
+      <ListCell
+        borderedBottom
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedBottom"
+      />
+      <ListCell
+        borderedStart
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedStart"
+      />
+      <ListCell
+        borderedEnd
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedEnd"
+      />
+      <ListCell
+        borderedHorizontal
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedHorizontal"
+      />
+      <ListCell
+        borderedVertical
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedVertical"
+      />
+      <ListCell
+        bordered
+        borderColor="accentBoldPurple"
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderColor"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopWidth"
+      />
+      <ListCell
+        borderBottomWidth={200}
+        borderColor="bgLine"
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderBottomWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderStartWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderStartWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderEndWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderEndWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderRadius={200}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderRadius"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopLeftRadius={300}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopLeftRadius"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopRightRadius={300}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopRightRadius"
+      />
+      <ListCell
+        borderBottomLeftRadius={300}
+        borderColor="bgLine"
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderBottomLeftRadius"
+      />
+      <ListCell
+        borderBottomRightRadius={300}
+        borderColor="bgLine"
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderBottomRightRadius"
+      />
+    </VStack>
+  );
+};
+
 const CustomSpacing = () => (
   <>
     <ListCell
@@ -1212,6 +1352,9 @@ const ListCellScreen = () => {
       </Example>
       <Example inline title="WithHelperText" titlePadding={titlePadding}>
         <WithHelperText />
+      </Example>
+      <Example inline title="BorderCustomization" titlePadding={titlePadding}>
+        <BorderCustomization />
       </Example>
       <Example inline title="CustomSpacing" titlePadding={titlePadding}>
         <CustomSpacing />

@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo } from 'react';
+import React, { forwardRef, useContext, useMemo } from 'react';
 import { getBlendedColor } from '@coinbase/cds-common/color/getBlendedColor';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
@@ -14,6 +14,8 @@ import type { Theme } from '../core/theme';
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
+import { media } from '../styles/media';
+import type { ResponsiveProp, ResponsiveValue } from '../styles/styleProps';
 
 import {
   interactableBackground,
@@ -27,6 +29,7 @@ import {
   interactablePressedBorderColor,
   interactablePressedOpacity,
 } from './interactableCSSProperties';
+import { MediaQueryContext } from './MediaQueryProvider';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
 
@@ -106,6 +109,24 @@ const transparentWhileInactiveCss = css`
   }
 `;
 
+const isResponsiveValue = <T,>(value: ResponsiveProp<T>): value is ResponsiveValue<T> =>
+  typeof value === 'object' &&
+  value !== null &&
+  ('base' in value || 'phone' in value || 'tablet' in value || 'desktop' in value);
+
+const resolveResponsiveProp = <T,>(
+  value: ResponsiveProp<T> | undefined,
+  getSnapshot?: (query: string) => boolean,
+): T | undefined => {
+  if (!value || !isResponsiveValue(value)) return value;
+  const fallback = value.base ?? value.phone ?? value.tablet ?? value.desktop;
+  if (!getSnapshot) return fallback;
+  if (typeof value.phone !== 'undefined' && getSnapshot(media.phone)) return value.phone;
+  if (typeof value.tablet !== 'undefined' && getSnapshot(media.tablet)) return value.tablet;
+  if (typeof value.desktop !== 'undefined' && getSnapshot(media.desktop)) return value.desktop;
+  return fallback;
+};
+
 export const interactableDefaultElement = 'button';
 
 export type InteractableDefaultElement = typeof interactableDefaultElement;
@@ -163,8 +184,6 @@ export type InteractableBaseProps = Polymorphic.ExtendableProps<
     background?: ThemeVars.Color;
     /** Set element to block and expand to 100% width. */
     block?: boolean;
-    /** Border color of the element. */
-    borderColor?: ThemeVars.Color;
     /** Is the element currently disabled. */
     disabled?: boolean;
     /**
@@ -223,6 +242,11 @@ export const Interactable: InteractableComponent = forwardRef<
   ) => {
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
+    const mediaQueryContext = useContext(MediaQueryContext);
+    const resolvedBorderColor = useMemo(
+      () => resolveResponsiveProp(borderColor, mediaQueryContext?.getSnapshot),
+      [borderColor, mediaQueryContext?.getSnapshot],
+    );
 
     const interactableStyle = useMemo(
       () => ({
@@ -230,11 +254,11 @@ export const Interactable: InteractableComponent = forwardRef<
           theme,
           background,
           blendStyles,
-          borderColor,
+          borderColor: resolvedBorderColor,
         }),
         ...style,
       }),
-      [style, background, theme, blendStyles, borderColor],
+      [style, background, theme, blendStyles, resolvedBorderColor],
     );
 
     return (

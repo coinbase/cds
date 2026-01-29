@@ -150,7 +150,9 @@ export const dynamicPixelProps = {
   flexBasis: 1,
 } as const satisfies Partial<Record<keyof DynamicStyleProps, 1>>;
 
-export type ResponsiveProp<T> = T | { base?: T; phone?: T; tablet?: T; desktop?: T };
+export type ResponsiveValue<T> = { base?: T; phone?: T; tablet?: T; desktop?: T };
+
+export type ResponsiveProp<T> = T | ResponsiveValue<T>;
 
 export type ResponsiveProps<T> = {
   [key in keyof T]?: ResponsiveProp<T[key]>;

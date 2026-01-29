@@ -104,7 +104,24 @@ export const Cell = memo(function Cell({
   accessory,
   accessoryNode,
   alignItems = 'center',
+  bordered,
+  borderedBottom,
+  borderedEnd,
+  borderedHorizontal,
+  borderedStart,
+  borderedTop,
+  borderedVertical,
+  borderBottomLeftRadius,
+  borderBottomRightRadius,
+  borderBottomWidth,
+  borderColor,
+  borderEndWidth,
   borderRadius = 200,
+  borderStartWidth,
+  borderTopLeftRadius,
+  borderTopRightRadius,
+  borderTopWidth,
+  borderWidth,
   children,
   styles,
   end,
@@ -143,9 +160,52 @@ export const Cell = memo(function Cell({
 
   const { marginX: innerSpacingMarginX, ...innerSpacingWithoutMarginX } = innerSpacing;
 
+  const borderProps = useMemo(
+    () => ({
+      bordered,
+      borderedBottom,
+      borderedEnd,
+      borderedHorizontal,
+      borderedStart,
+      borderedTop,
+      borderedVertical,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderBottomWidth,
+      borderColor,
+      borderEndWidth,
+      borderRadius,
+      borderStartWidth,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderTopWidth,
+      borderWidth,
+    }),
+    [
+      bordered,
+      borderedBottom,
+      borderedEnd,
+      borderedHorizontal,
+      borderedStart,
+      borderedTop,
+      borderedVertical,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderBottomWidth,
+      borderColor,
+      borderEndWidth,
+      borderRadius,
+      borderStartWidth,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderTopWidth,
+      borderWidth,
+    ],
+  );
+
   const content = useMemo(() => {
     const contentContainerProps = {
-      borderRadius,
+      ...borderProps,
       testID,
       renderToHardwareTextureAndroid: disabled,
       ...(selected ? { background } : {}),
@@ -233,7 +293,7 @@ export const Cell = memo(function Cell({
       </VStack>
     );
   }, [
-    borderRadius,
+    borderProps,
     testID,
     disabled,
     selected,
@@ -281,7 +341,7 @@ export const Cell = memo(function Cell({
           accessibilityState={{ disabled, ...accessibilityState }}
           background="bg"
           blendStyles={blendStyles}
-          borderRadius={borderRadius}
+          {...borderProps}
           contentStyle={pressStyles}
           disabled={disabled}
           onPress={onPress}
@@ -304,7 +364,7 @@ export const Cell = memo(function Cell({
     styles?.pressable,
     accessibilityState,
     blendStyles,
-    borderRadius,
+    borderProps,
   ]);
 
   return (
