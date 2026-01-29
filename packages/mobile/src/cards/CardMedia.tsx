@@ -53,7 +53,6 @@ export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }
           alt={props.alt ?? ''}
           resizeMode="cover"
           source={getSource(props.src)}
-          src={props.src}
           testID={props.testID}
           {...imageProps[placement]}
         />
