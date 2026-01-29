@@ -9,9 +9,9 @@ import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
 
-export type CheckboxBaseProps<T extends string> = ControlBaseProps<T>;
+export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue>;
 
-export type CheckboxProps<T extends string> = ControlBaseProps<T> & {
+export type CheckboxProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */
@@ -92,14 +92,14 @@ const CheckboxIcon = memo(
   },
 );
 
-const CheckboxWithRef = forwardRef(function Checkbox<T extends string>(
+const CheckboxWithRef = forwardRef(function Checkbox<CheckboxValue extends string>(
   {
     children,
     accessibilityLabel,
     accessibilityHint,
     accessible = true,
     ...props
-  }: CheckboxProps<T>,
+  }: CheckboxProps<CheckboxValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const accessibilityLabelValue =
@@ -111,7 +111,7 @@ const CheckboxWithRef = forwardRef(function Checkbox<T extends string>(
     typeof children === 'string' && accessibilityHint === undefined ? children : accessibilityHint;
 
   return (
-    <Control<T>
+    <Control<CheckboxValue>
       ref={ref}
       accessibilityHint={accessibilityHintValue}
       accessibilityLabel={accessibilityLabelValue}
@@ -125,7 +125,9 @@ const CheckboxWithRef = forwardRef(function Checkbox<T extends string>(
     </Control>
   );
   // Make forwardRef result function stay generic function type
-}) as <T extends string>(props: CheckboxProps<T> & { ref?: React.Ref<View> }) => React.ReactElement;
+}) as <CheckboxValue extends string>(
+  props: CheckboxProps<CheckboxValue> & { ref?: React.Ref<View> },
+) => React.ReactElement;
 
 // Make memoized function stay generic function type
 export const Checkbox = memo(CheckboxWithRef) as typeof CheckboxWithRef &

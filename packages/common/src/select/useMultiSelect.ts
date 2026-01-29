@@ -3,17 +3,17 @@ import { useCallback, useMemo, useState } from 'react';
 /**
  * Options for configuring the useMultiSelect hook
  */
-export type MultiSelectOptions = {
+export type MultiSelectOptions<SelectValue extends string = string> = {
   /** Initial array of selected values */
-  initialValue: string[] | null;
+  initialValue: SelectValue[] | null;
 };
 
 /**
  * API returned by the useMultiSelect hook for managing multi-select state
  */
-export type MultiSelectApi<T extends string> = {
+export type MultiSelectApi<SelectValue extends string = string> = {
   /** Current array of selected values */
-  value: T[];
+  value: SelectValue[];
   /** Handler for toggling selection of one or more values.
    * When a single value is passed, it will be added to the selection if it is not already selected.
    * If the value is already selected, it will be removed from the selection.
@@ -34,9 +34,9 @@ export type MultiSelectApi<T extends string> = {
  * @param options - Configuration options including initial value
  * @returns API object for managing multi-select state
  */
-export const useMultiSelect = <T extends string>({
+export const useMultiSelect = <SelectValue extends string = string>({
   initialValue,
-}: MultiSelectOptions): MultiSelectApi<T> => {
+}: MultiSelectOptions<SelectValue>): MultiSelectApi<SelectValue> => {
   const [value, setValue] = useState<string[]>(initialValue ?? []);
 
   const onChange = useCallback((value: string | string[] | null) => {
@@ -86,5 +86,5 @@ export const useMultiSelect = <T extends string>({
     [value, onChange, addSelection, removeSelection, resetSelection],
   );
 
-  return api as MultiSelectApi<T>;
+  return api as MultiSelectApi<SelectValue>;
 };

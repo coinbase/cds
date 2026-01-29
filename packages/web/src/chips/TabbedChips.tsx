@@ -16,7 +16,11 @@ const scrollContainerCss = css`
   scrollbar-width: none;
 `;
 
-const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }: TabValue<T>) => {
+const TabComponent = <TabId extends string = string>({
+  label = '',
+  id,
+  ...tabProps
+}: TabValue<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const chipRef = useRef<HTMLButtonElement>(null);
@@ -48,17 +52,17 @@ const TabsActiveIndicatorComponent = () => {
   return null;
 };
 
-export type TabbedChipsBaseProps<T extends string = string> = BoxBaseProps &
-  Omit<TabNavigationBaseProps<T>, 'variant'>;
+export type TabbedChipsBaseProps<TabId extends string = string> = BoxBaseProps &
+  Omit<TabNavigationBaseProps<TabId>, 'variant'>;
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T>;
+export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBaseProps<TabId>;
 
-type TabbedChipsFC = <T extends string = string>(
-  props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<HTMLElement> },
+type TabbedChipsFC = <TabId extends string = string>(
+  props: TabbedChipsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
 ) => React.ReactElement;
 
 const TabbedChipsComponent = memo(
-  forwardRef(function TabbedChips<T extends string = string>(
+  forwardRef(function TabbedChips<TabId extends string = string>(
     {
       tabs,
       value,
@@ -73,7 +77,7 @@ const TabbedChipsComponent = memo(
       nextArrowAccessibilityLabel = 'Next',
       width = '100%',
       ...props
-    }: TabbedChipsProps<T>,
+    }: TabbedChipsProps<TabId>,
     ref: React.ForwardedRef<HTMLElement | null>,
   ) {
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
@@ -82,7 +86,7 @@ const TabbedChipsComponent = memo(
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
 
     const handleChange = useCallback(
-      (tabValue: TabValue<T> | null) => {
+      (tabValue: TabValue<TabId> | null) => {
         if (tabValue) onChange?.(tabValue.id);
       },
       [onChange],

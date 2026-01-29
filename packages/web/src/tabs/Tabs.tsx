@@ -46,7 +46,7 @@ export type TabsActiveIndicatorProps = {
 } & BoxProps<BoxDefaultElement> &
   MotionProps;
 
-export type TabComponentProps<T extends string = string> = TabValue<T> & {
+export type TabComponentProps<TabId extends string = string> = TabValue<TabId> & {
   /** The tab index for the tab. Automatically set to manage focus behavior. */
   tabIndex?: number;
   /**
@@ -56,33 +56,33 @@ export type TabComponentProps<T extends string = string> = TabValue<T> & {
   role?: string;
 };
 
-export type TabComponent<T extends string = string> = React.FC<TabComponentProps<T>>;
+export type TabComponent<TabId extends string = string> = React.FC<TabComponentProps<TabId>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-export type TabsBaseProps<T extends string = string> = {
+export type TabsBaseProps<TabId extends string = string> = {
   /** The array of tabs data. Each tab may optionally define a custom Component to render. */
-  tabs: (TabValue<T> & { Component?: TabComponent<T> })[];
+  tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
   /** The default Component to render each tab. */
-  TabComponent: TabComponent<T>;
+  TabComponent: TabComponent<TabId>;
   /** The default Component to render the tabs active indicator. */
   TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
   /** Background color passed to the TabsActiveIndicatorComponent. */
   activeBackground?: ThemeVars.Color;
   /** Optional callback to receive the active tab element. */
   onActiveTabElementChange?: (element: HTMLElement | null) => void;
-} & Omit<TabsOptions<T>, 'tabs'>;
+} & Omit<TabsOptions<TabId>, 'tabs'>;
 
-export type TabsProps<T extends string = string> = TabsBaseProps<T> &
+export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
   Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'>;
 
-type TabsFC = <T extends string = string>(
-  props: TabsProps<T> & { ref?: React.ForwardedRef<HTMLElement> },
+type TabsFC = <TabId extends string = string>(
+  props: TabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
 ) => React.ReactElement;
 
 const TabsComponent = memo(
   forwardRef(
-    <T extends string>(
+    <TabId extends string>(
       {
         tabs,
         TabComponent,
@@ -97,10 +97,10 @@ const TabsComponent = memo(
         width = 'fit-content',
         style,
         ...props
-      }: TabsProps<T>,
+      }: TabsProps<TabId>,
       ref: React.ForwardedRef<HTMLElement>,
     ) => {
-      const api = useTabs<T>({ tabs, activeTab, disabled, onChange });
+      const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
 
       const [tabsContainerRef, tabsContainerRect] = useMeasure({
         debounce: 20,
@@ -131,7 +131,7 @@ const TabsComponent = memo(
           if (!focusedElement) return;
 
           // Find the focused tab's index
-          let focusedTabId: T | null = null;
+          let focusedTabId: TabId | null = null;
           for (const tab of tabs) {
             const tabRef = refMap.getRef(tab.id);
             if (tabRef && tabRef.contains(focusedElement)) {
