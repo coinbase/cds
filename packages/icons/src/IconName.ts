@@ -64,6 +64,7 @@ export type IconName =
  | 'bell'
  | 'bellCheck'
  | 'bellPlus'
+ | 'birthcertificate'
  | 'block'
  | 'blockchain'
  | 'blog'
