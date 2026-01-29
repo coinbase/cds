@@ -284,10 +284,14 @@ const ContentCardScreen = () => {
           <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
           <ContentCardFooter>
             <HStack gap={4} justifyContent="space-between" paddingTop={0.5}>
-              <IconCounterButton accessibilityLabel="Like" count={99} icon="heart" />
-              <IconCounterButton accessibilityLabel="Comment" count={4200} icon="comment" />
+              <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
               <IconCounterButton
-                accessibilityLabel="Share"
+                accessibilityLabel="comment, 4200 comments"
+                count={4200}
+                icon="comment"
+              />
+              <IconCounterButton
+                accessibilityLabel="share, 9900000 shares"
                 count={9900000}
                 icon="arrowsHorizontal"
               />
@@ -372,9 +376,17 @@ const ContentCardScreen = () => {
           <ContentCardHeader {...exampleProps.contentHeaderProps} />
           <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
           <ContentCardFooter gap={4} justifyContent="space-between">
-            <IconCounterButton accessibilityLabel="Like" count={99} icon="heart" />
-            <IconCounterButton accessibilityLabel="Comment" count={4200} icon="comment" />
-            <IconCounterButton accessibilityLabel="Share" count={9900000} icon="arrowsHorizontal" />
+            <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+            <IconCounterButton
+              accessibilityLabel="comment, 4200 comments"
+              count={4200}
+              icon="comment"
+            />
+            <IconCounterButton
+              accessibilityLabel="share, 9900000 shares"
+              count={9900000}
+              icon="arrowsHorizontal"
+            />
           </ContentCardFooter>
         </ContentCard>
       </Example>

@@ -34,7 +34,7 @@ export type MessagingCardLayoutProps = {
   /** Callback fired when the dismiss button is pressed. When provided, a default dismiss button will be rendered in the top-right corner. */
   onDismissButtonPress?: (event: GestureResponderEvent) => void;
   /** Accessibility label for the dismiss button.
-   * @default 'Dismiss card'
+   * @default 'Dismiss {title}' when title is a string, otherwise 'Dismiss card'
    */
   dismissButtonAccessibilityLabel?: string;
   /** Placement of the media content relative to the text content.
@@ -62,7 +62,7 @@ export const MessagingCardLayout = memo(
     onActionButtonPress,
     actionButtonAccessibilityLabel,
     onDismissButtonPress,
-    dismissButtonAccessibilityLabel = 'Dismiss card',
+    dismissButtonAccessibilityLabel,
     mediaPlacement = 'end',
     media,
     styles = {},
@@ -132,6 +132,12 @@ export const MessagingCardLayout = memo(
       return action;
     }, [action, actionButtonAccessibilityLabel, onActionButtonPress, type]);
 
+    const computedDismissButtonAccessibilityLabel = useMemo(() => {
+      if (dismissButtonAccessibilityLabel) return dismissButtonAccessibilityLabel;
+      if (typeof title === 'string') return `Dismiss ${title}`;
+      return 'Dismiss card';
+    }, [dismissButtonAccessibilityLabel, title]);
+
     const dismissButtonNode = useMemo(() => {
       if (dismissButton) {
         return dismissButton;
@@ -148,7 +154,7 @@ export const MessagingCardLayout = memo(
           >
             <IconButton
               compact
-              accessibilityLabel={dismissButtonAccessibilityLabel}
+              accessibilityLabel={computedDismissButtonAccessibilityLabel}
               name="close"
               onPress={onDismissButtonPress}
               variant="secondary"
@@ -158,8 +164,8 @@ export const MessagingCardLayout = memo(
       }
       return null;
     }, [
+      computedDismissButtonAccessibilityLabel,
       dismissButton,
-      dismissButtonAccessibilityLabel,
       onDismissButtonPress,
       styles?.dismissButtonContainer,
     ]);

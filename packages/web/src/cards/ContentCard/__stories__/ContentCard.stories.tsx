@@ -207,9 +207,17 @@ export const WithBackground = (): JSX.Element => {
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
         <ContentCardFooter>
           <HStack gap={4} justifyContent="space-between" paddingTop={0.5}>
-            <IconCounterButton accessibilityLabel="Like" count={99} icon="heart" />
-            <IconCounterButton accessibilityLabel="Comment" count={4200} icon="comment" />
-            <IconCounterButton accessibilityLabel="Share" count={9900000} icon="arrowsHorizontal" />
+            <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+            <IconCounterButton
+              accessibilityLabel="comment, 4200 comments"
+              count={4200}
+              icon="comment"
+            />
+            <IconCounterButton
+              accessibilityLabel="share, 9900000 shares"
+              count={9900000}
+              icon="arrowsHorizontal"
+            />
           </HStack>
         </ContentCardFooter>
       </ContentCard>
@@ -417,9 +425,17 @@ export const CustomContent = (): JSX.Element => {
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
         <ContentCardFooter justifyContent="space-between">
-          <IconCounterButton accessibilityLabel="Like" count={99} icon="heart" />
-          <IconCounterButton accessibilityLabel="Comment" count={4200} icon="comment" />
-          <IconCounterButton accessibilityLabel="Share" count={9900000} icon="arrowsHorizontal" />
+          <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+          <IconCounterButton
+            accessibilityLabel="comment, 4200 comments"
+            count={4200}
+            icon="comment"
+          />
+          <IconCounterButton
+            accessibilityLabel="share, 9900000 shares"
+            count={9900000}
+            icon="arrowsHorizontal"
+          />
         </ContentCardFooter>
       </ContentCard>
     </VStack>

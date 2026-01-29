@@ -203,9 +203,17 @@ function Example() {
           description="This card has no media element."
         />
         <ContentCardFooter gap={4} justifyContent="space-between" paddingTop={0.5}>
-          <IconCounterButton count={99} icon="heart" />
-          <IconCounterButton count={4200} icon="comment" />
-          <IconCounterButton count={32} icon="arrowsHorizontal" />
+          <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+          <IconCounterButton
+            accessibilityLabel="comment, 4200 comments"
+            count={4200}
+            icon="comment"
+          />
+          <IconCounterButton
+            accessibilityLabel="share, 32 shares"
+            count={32}
+            icon="arrowsHorizontal"
+          />
         </ContentCardFooter>
       </ContentCard>
     </VStack>

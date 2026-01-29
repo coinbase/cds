@@ -33,7 +33,7 @@ export type MessagingCardLayoutProps = {
   /** Callback fired when the dismiss button is clicked. When provided, a default dismiss button will be rendered in the top-right corner. */
   onDismissButtonClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** Accessibility label for the dismiss button.
-   * @default 'Dismiss card'
+   * @default 'Dismiss {title}' when title is a string, otherwise 'Dismiss card'
    */
   dismissButtonAccessibilityLabel?: string;
   /** Placement of the media content relative to the text content.
@@ -68,7 +68,7 @@ export const MessagingCardLayout = memo(
     onActionButtonClick,
     actionButtonAccessibilityLabel,
     onDismissButtonClick,
-    dismissButtonAccessibilityLabel = 'Dismiss card',
+    dismissButtonAccessibilityLabel,
     mediaPlacement = 'end',
     media,
     styles = {},
@@ -146,6 +146,12 @@ export const MessagingCardLayout = memo(
       return action;
     }, [action, actionButtonAccessibilityLabel, onActionButtonClick, type]);
 
+    const computedDismissButtonAccessibilityLabel = useMemo(() => {
+      if (dismissButtonAccessibilityLabel) return dismissButtonAccessibilityLabel;
+      if (typeof title === 'string') return `Dismiss ${title}`;
+      return 'Dismiss card';
+    }, [dismissButtonAccessibilityLabel, title]);
+
     const dismissButtonNode = useMemo(() => {
       if (dismissButton) {
         return dismissButton;
@@ -169,7 +175,7 @@ export const MessagingCardLayout = memo(
           >
             <IconButton
               compact
-              accessibilityLabel={dismissButtonAccessibilityLabel}
+              accessibilityLabel={computedDismissButtonAccessibilityLabel}
               name="close"
               onClick={handleDismiss}
               variant="secondary"
@@ -180,8 +186,8 @@ export const MessagingCardLayout = memo(
       return null;
     }, [
       classNames?.dismissButtonContainer,
+      computedDismissButtonAccessibilityLabel,
       dismissButton,
-      dismissButtonAccessibilityLabel,
       onDismissButtonClick,
       styles?.dismissButtonContainer,
     ]);
