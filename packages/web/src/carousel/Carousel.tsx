@@ -63,7 +63,14 @@ export type CarouselItemElement = React.ReactElement<CarouselItemProps, Carousel
 export { CarouselContext, useCarouselContext };
 export type { CarouselContextValue };
 
-export type CarouselNavigationComponentBaseProps = {
+export type CarouselNavigationComponentBaseProps = Pick<
+  CarouselBaseProps,
+  | 'autoplay'
+  | 'nextPageAccessibilityLabel'
+  | 'previousPageAccessibilityLabel'
+  | 'startAutoplayAccessibilityLabel'
+  | 'stopAutoplayAccessibilityLabel'
+> & {
   /**
    * Callback for when the previous button is pressed.
    */
@@ -81,13 +88,13 @@ export type CarouselNavigationComponentBaseProps = {
    */
   disableGoNext?: boolean;
   /**
-   * Accessibility label for the next page button.
+   * Whether autoplay is currently stopped.
    */
-  nextPageAccessibilityLabel?: string;
+  isAutoplayStopped?: boolean;
   /**
-   * Accessibility label for the previous page button.
+   * Callback fired when the autoplay button is clicked.
    */
-  previousPageAccessibilityLabel?: string;
+  onToggleAutoplay?: () => void;
 };
 
 export type CarouselNavigationComponentProps = CarouselNavigationComponentBaseProps & {
@@ -213,6 +220,14 @@ export type CarouselBaseProps = SharedProps &
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**
+     * Accessibility label for the start autoplay button.
+     */
+    startAutoplayAccessibilityLabel?: string;
+    /**
+     * Accessibility label for the stop autoplay button.
+     */
+    stopAutoplayAccessibilityLabel?: string;
+    /**
      * Callback fired when the carousel page changes.
      */
     onChangePage?: (activePageIndex: number) => void;
@@ -230,6 +245,15 @@ export type CarouselBaseProps = SharedProps &
      * @note Requires at least 2 pages worth of content to function.
      */
     loop?: boolean;
+    /**
+     * Whether autoplay is enabled for the carousel.
+     */
+    autoplay?: boolean;
+    /**
+     * The interval in milliseconds for autoplay.
+     * @default 3000 (3 seconds)
+     */
+    autoplayInterval?: number;
   };
 
 export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
@@ -567,10 +591,13 @@ export const Carousel = memo(
         nextPageAccessibilityLabel,
         previousPageAccessibilityLabel,
         paginationAccessibilityLabel,
+        startAutoplayAccessibilityLabel,
+        stopAutoplayAccessibilityLabel,
         onChangePage,
         onDragStart,
         onDragEnd,
         loop,
+        autoplay,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -580,6 +607,7 @@ export const Carousel = memo(
       const dragControls = useDragControls();
 
       const [activePageIndex, setActivePageIndex] = useState(0);
+      const [isAutoplayStopped, setIsAutoplayStopped] = useState(false);
       const containerRef = useRef<HTMLDivElement>(null);
       const rootRef = useRef<HTMLDivElement>(null);
       const [containerWidth, setContainerWidth] = useState(0);
@@ -974,6 +1002,10 @@ export const Carousel = memo(
         onDragEnd?.();
       }, [onDragEnd]);
 
+      const handleToggleAutoplay = useCallback(() => {
+        setIsAutoplayStopped((prev) => !prev);
+      }, []);
+
       const carouselContextValue = useMemo(
         () => ({
           visibleCarouselItems,
@@ -1006,15 +1038,20 @@ export const Carousel = memo(
                   )}
                   {!hideNavigation && (
                     <NavigationComponent
+                      autoplay={autoplay}
                       className={classNames?.navigation}
                       disableGoNext={
                         totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
                       }
                       disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
+                      isAutoplayStopped={isAutoplayStopped}
                       nextPageAccessibilityLabel={nextPageAccessibilityLabel}
                       onGoNext={handleGoNext}
                       onGoPrevious={handleGoPrevious}
+                      onToggleAutoplay={handleToggleAutoplay}
                       previousPageAccessibilityLabel={previousPageAccessibilityLabel}
+                      startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
+                      stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
                       style={styles?.navigation}
                     />
                   )}

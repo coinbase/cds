@@ -58,7 +58,14 @@ export type CarouselItemElement = React.ReactElement<CarouselItemProps, Carousel
 export { CarouselContext, useCarouselContext };
 export type { CarouselContextValue };
 
-export type CarouselNavigationComponentBaseProps = {
+export type CarouselNavigationComponentBaseProps = Pick<
+  CarouselBaseProps,
+  | 'autoplay'
+  | 'nextPageAccessibilityLabel'
+  | 'previousPageAccessibilityLabel'
+  | 'startAutoplayAccessibilityLabel'
+  | 'stopAutoplayAccessibilityLabel'
+> & {
   /**
    * Callback for when the previous button is pressed.
    */
@@ -76,13 +83,13 @@ export type CarouselNavigationComponentBaseProps = {
    */
   disableGoNext: boolean;
   /**
-   * Accessibility label for the next page button.
+   * Whether autoplay is currently stopped.
    */
-  nextPageAccessibilityLabel?: string;
+  isAutoplayStopped?: boolean;
   /**
-   * Accessibility label for the previous page button.
+   * Callback fired when the autoplay button is pressed.
    */
-  previousPageAccessibilityLabel?: string;
+  onToggleAutoplay?: () => void;
 };
 
 export type CarouselNavigationComponentProps = CarouselNavigationComponentBaseProps & {
@@ -204,6 +211,14 @@ export type CarouselBaseProps = SharedProps &
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**
+     * Accessibility label for the start autoplay button.
+     */
+    startAutoplayAccessibilityLabel?: string;
+    /**
+     * Accessibility label for the stop autoplay button.
+     */
+    stopAutoplayAccessibilityLabel?: string;
+    /**
      * Callback fired when the page changes.
      */
     onChangePage?: (activePageIndex: number) => void;
@@ -221,6 +236,15 @@ export type CarouselBaseProps = SharedProps &
      * @note Requires at least 2 pages worth of content to function.
      */
     loop?: boolean;
+    /**
+     * Whether autoplay is enabled for the carousel.
+     */
+    autoplay?: boolean;
+    /**
+     * The interval in milliseconds for autoplay.
+     * @default 3000 (3 seconds)
+     */
+    autoplayInterval?: number;
   };
 
 export type CarouselProps = CarouselBaseProps & {
