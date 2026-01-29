@@ -296,6 +296,130 @@ const CustomAccessibilityRoleExample = () => {
   );
 };
 
+const SingleAlignExample = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={1}>
+      <Select
+        label="Default align - left"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        align="center"
+        label="Center align"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        align="end"
+        label="Right align"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        compact
+        label="Compact align - left"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - right"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+    </VStack>
+  );
+};
+
+const MultiAlignExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <VStack gap={1}>
+      <Select
+        label="Default align - left"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        align="center"
+        label="Center align"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        align="end"
+        label="Right align"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        label="Compact align - left"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - right"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const NoLabelExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -1196,6 +1320,12 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Custom Accessibility Role">
         <CustomAccessibilityRoleExample />
+      </Example>
+      <Example title="Single-select Alignments">
+        <SingleAlignExample />
+      </Example>
+      <Example title="Multi-select Alignments">
+        <MultiAlignExample />
       </Example>
       <Example title="No Label">
         <NoLabelExample />
