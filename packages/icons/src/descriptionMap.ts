@@ -307,7 +307,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'smartContract',
     'paperclip',
     'list',
-    'document'
+    'document',
+    'birthcertificate'
   ],
   '📄': [
     'taxes',
@@ -6501,5 +6502,17 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'candidate': [
     'politicsCandidate'
+  ],
+  'birthcertificate': [
+    'birthcertificate'
+  ],
+  'birth': [
+    'birthcertificate'
+  ],
+  'certificate': [
+    'birthcertificate'
+  ],
+  'doc': [
+    'birthcertificate'
   ]
 };
