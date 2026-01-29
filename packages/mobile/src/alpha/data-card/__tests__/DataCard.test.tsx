@@ -2,9 +2,9 @@ import { Text } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
 import { Avatar } from '../../../media/Avatar';
-import { ProgressBar } from '../../../visualizations/ProgressBar';
 import { Tag } from '../../../tag/Tag';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
+import { ProgressBar } from '../../../visualizations/ProgressBar';
 import { DataCard } from '../DataCard';
 
 const exampleProps = {

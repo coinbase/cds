@@ -1953,16 +1953,19 @@ function DataCardWithLineChart() {
     />
   );
 
-  const getLineChartSeries = () => [
-    {
-      id: 'price',
-      data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
-      color: `rgb(${spectrum.green70})`,
-    },
-  ];
+  const getLineChartSeries = useCallback(
+    () => [
+      {
+        id: 'price',
+        data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
+        color: `rgb(${spectrum.green70})`,
+      },
+    ],
+    [spectrum.green70],
+  );
 
-  const lineChartSeries = useMemo(() => getLineChartSeries(), []);
-  const lineChartSeries2 = useMemo(() => getLineChartSeries(), []);
+  const lineChartSeries = useMemo(() => getLineChartSeries(), [getLineChartSeries]);
+  const lineChartSeries2 = useMemo(() => getLineChartSeries(), [getLineChartSeries]);
   const ref = useRef<View>(null);
 
   return (

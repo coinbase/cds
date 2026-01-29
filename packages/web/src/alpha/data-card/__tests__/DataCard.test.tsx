@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 
 import { Avatar } from '../../../media/Avatar';
 import { Tag } from '../../../tag/Tag';
-import { ProgressBar } from '../../../visualizations/ProgressBar';
 import { DefaultThemeProvider } from '../../../utils/test';
+import { ProgressBar } from '../../../visualizations/ProgressBar';
 import { DataCard } from '../DataCard';
 
 const exampleProps = {
