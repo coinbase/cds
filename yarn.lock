@@ -1648,7 +1648,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-display-name@npm:^7.0.0, @babel/plugin-transform-react-display-name@npm:^7.27.1":
+"@babel/plugin-transform-react-display-name@npm:^7.0.0, @babel/plugin-transform-react-display-name@npm:^7.27.1, @babel/plugin-transform-react-display-name@npm:^7.28.0":
   version: 7.28.0
   resolution: "@babel/plugin-transform-react-display-name@npm:7.28.0"
   dependencies:
@@ -1993,7 +1993,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.14.5, @babel/preset-react@npm:^7.18.6, @babel/preset-react@npm:^7.22.15, @babel/preset-react@npm:^7.25.9, @babel/preset-react@npm:^7.27.1":
+"@babel/preset-react@npm:^7.14.5, @babel/preset-react@npm:^7.18.6, @babel/preset-react@npm:^7.22.15, @babel/preset-react@npm:^7.25.9":
   version: 7.27.1
   resolution: "@babel/preset-react@npm:7.27.1"
   dependencies:
@@ -2006,6 +2006,22 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 10c0/a80b02ef08b026cb9830d6512d08c7cd378eef4c0631dacba4aa1106240d9bb76af6373463f0255f4bbdbfcce40375a61e92735375906ba5871629b0c314bc45
+  languageName: node
+  linkType: hard
+
+"@babel/preset-react@npm:^7.28.5":
+  version: 7.28.5
+  resolution: "@babel/preset-react@npm:7.28.5"
+  dependencies:
+    "@babel/helper-plugin-utils": "npm:^7.27.1"
+    "@babel/helper-validator-option": "npm:^7.27.1"
+    "@babel/plugin-transform-react-display-name": "npm:^7.28.0"
+    "@babel/plugin-transform-react-jsx": "npm:^7.27.1"
+    "@babel/plugin-transform-react-jsx-development": "npm:^7.27.1"
+    "@babel/plugin-transform-react-pure-annotations": "npm:^7.27.1"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 10c0/0d785e708ff301f4102bd4738b77e550e32f981e54dfd3de1191b4d68306bbb934d2d465fc78a6bc22fff0a6b3ce3195a53984f52755c4349e7264c7e01e8c7c
   languageName: node
   linkType: hard
 
@@ -2335,7 +2351,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-utils": "workspace:^"
     "@k-vyn/coloralgorithm": "npm:^1.0.0"
@@ -2356,7 +2372,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-icons": "workspace:^"
     "@coinbase/cds-illustrations": "workspace:^"
@@ -2388,7 +2404,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     chalk: "npm:^4.1.2"
     prettier: "npm:^3.6.2"
@@ -2401,7 +2417,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     chalk: "npm:^4.1.2"
     prettier: "npm:^3.6.2"
@@ -2414,7 +2430,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
   languageName: unknown
   linkType: soft
@@ -2442,7 +2458,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-common": "workspace:^"
     "@coinbase/cds-lottie-files": "workspace:^"
@@ -2456,7 +2472,7 @@ __metadata:
     react-native-reanimated: "npm:3.14.0"
     react-native-safe-area-context: "npm:4.10.5"
     react-native-svg: "npm:14.1.0"
-    react-test-renderer: "npm:^18.3.1"
+    react-test-renderer: "npm:^19.2.4"
   peerDependencies:
     "@coinbase/cds-common": "workspace:^"
     "@coinbase/cds-lottie-files": "workspace:^"
@@ -2478,7 +2494,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-common": "workspace:^"
     "@coinbase/cds-icons": "workspace:^"
@@ -2489,10 +2505,10 @@ __metadata:
     "@react-native-community/netinfo": "npm:^7.1.7"
     "@react-navigation/native-stack": "npm:^6.9.26"
     "@react-spring/native": "npm:^9.7.4"
-    "@testing-library/react-native": "npm:^11.3.0"
+    "@testing-library/react-native": "npm:^13.3.3"
     "@types/d3-color": "npm:^3.1.3"
     "@types/react": "npm:^19.0.0"
-    "@types/react-test-renderer": "npm:^18.3.0"
+    "@types/react-test-renderer": "npm:^19.1.0"
     eslint-plugin-reanimated: "npm:^2.0.1"
     fuse.js: "npm:^7.1.0"
     lodash: "npm:^4.17.21"
@@ -2507,7 +2523,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.10.5"
     react-native-screens: "npm:3.32.0"
     react-native-svg: "npm:14.1.0"
-    react-test-renderer: "npm:^18.3.1"
+    react-test-renderer: "npm:^19.2.4"
     type-fest: "npm:^2.19.0"
   peerDependencies:
     "@react-navigation/native": ^6.1.6
@@ -2568,7 +2584,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     humps: "npm:^2.0.1"
     type-fest: "npm:^2.19.0"
@@ -2603,7 +2619,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@babel/types": "npm:^7.20.7"
     "@linaria/babel-preset": "npm:^3.0.0-beta.22"
@@ -2622,7 +2638,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-common": "workspace:^"
     "@coinbase/cds-lottie-files": "workspace:^"
@@ -2653,7 +2669,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-common": "workspace:^"
     "@coinbase/cds-icons": "workspace:^"
@@ -2681,7 +2697,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     lottie-web: "npm:^5.13.0"
     react-popper: "npm:^2.2.4"
-    react-use-measure: "npm:^2"
+    react-use-measure: "npm:^2.1.7"
     storybook-addon-performance: "npm:^0.16.1"
     typescript: "npm:~5.9.2"
     vite: "npm:^7.1.2"
@@ -2699,7 +2715,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@docusaurus/logger": "npm:^3.7.0"
     "@docusaurus/types": "npm:^3.7.0"
@@ -2722,7 +2738,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-common": "workspace:^"
     "@docusaurus/logger": "npm:^3.7.0"
@@ -2740,7 +2756,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@docusaurus/types": "npm:^3.7.0"
     "@types/express": "npm:^4.17.21"
@@ -2798,7 +2814,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@react-navigation/elements": "npm:^1.3.17"
     "@react-navigation/native": "npm:^6.1.6"
@@ -2826,7 +2842,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-mobile-visualization": "workspace:^"
@@ -5784,6 +5800,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/diff-sequences@npm:30.0.1":
+  version: 30.0.1
+  resolution: "@jest/diff-sequences@npm:30.0.1"
+  checksum: 10c0/3a840404e6021725ef7f86b11f7b2d13dd02846481264db0e447ee33b7ee992134e402cdc8b8b0ac969d37c6c0183044e382dedee72001cdf50cfb3c8088de74
+  languageName: node
+  linkType: hard
+
 "@jest/environment@npm:^29.5.0, @jest/environment@npm:^29.7.0":
   version: 29.7.0
   resolution: "@jest/environment@npm:29.7.0"
@@ -5838,6 +5861,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/get-type@npm:30.1.0":
+  version: 30.1.0
+  resolution: "@jest/get-type@npm:30.1.0"
+  checksum: 10c0/3e65fd5015f551c51ec68fca31bbd25b466be0e8ee8075d9610fa1c686ea1e70a942a0effc7b10f4ea9a338c24337e1ad97ff69d3ebacc4681b7e3e80d1b24ac
+  languageName: node
+  linkType: hard
+
 "@jest/globals@npm:^29.7.0":
   version: 29.7.0
   resolution: "@jest/globals@npm:29.7.0"
@@ -5884,6 +5914,15 @@ __metadata:
     node-notifier:
       optional: true
   checksum: 10c0/a754402a799541c6e5aff2c8160562525e2a47e7d568f01ebfc4da66522de39cbb809bbb0a841c7052e4270d79214e70aec3c169e4eae42a03bc1a8a20cb9fa2
+  languageName: node
+  linkType: hard
+
+"@jest/schemas@npm:30.0.5":
+  version: 30.0.5
+  resolution: "@jest/schemas@npm:30.0.5"
+  dependencies:
+    "@sinclair/typebox": "npm:^0.34.0"
+  checksum: 10c0/449dcd7ec5c6505e9ac3169d1143937e67044ae3e66a729ce4baf31812dfd30535f2b3b2934393c97cfdf5984ff581120e6b38f62b8560c8b5b7cc07f4175f65
   languageName: node
   linkType: hard
 
@@ -8409,6 +8448,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinclair/typebox@npm:^0.34.0":
+  version: 0.34.48
+  resolution: "@sinclair/typebox@npm:0.34.48"
+  checksum: 10c0/e09f26d8ad471a07ee64004eea7c4ec185349a1f61c03e87e71ea33cbe98e97959940076c2e52968a955ffd4c215bf5ba7035e77079511aac7935f25e989e29d
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^4.6.0":
   version: 4.6.0
   resolution: "@sindresorhus/is@npm:4.6.0"
@@ -9426,20 +9472,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^11.3.0":
-  version: 11.3.0
-  resolution: "@testing-library/react-native@npm:11.3.0"
+"@testing-library/react-native@npm:^13.3.3":
+  version: 13.3.3
+  resolution: "@testing-library/react-native@npm:13.3.3"
   dependencies:
-    pretty-format: "npm:^29.0.3"
+    jest-matcher-utils: "npm:^30.0.5"
+    picocolors: "npm:^1.1.1"
+    pretty-format: "npm:^30.0.5"
+    redent: "npm:^3.0.0"
   peerDependencies:
-    jest: ">=28.0.0"
-    react: ">=16.0.0"
-    react-native: ">=0.59"
-    react-test-renderer: ">=16.0.0"
+    jest: ">=29.0.0"
+    react: ">=18.2.0"
+    react-native: ">=0.71"
+    react-test-renderer: ">=18.2.0"
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: 10c0/8629d866c36d806e0efcc371e398329824fa9e687fdb6b5065856e7149dbadfc85da1814247c6278f35e2f38de0559a1c6fe471549aaaaea57ff9efed323d258
+  checksum: 10c0/ba13066536d5b2c0b625220d4320c6ad1e390c3df4f4b614d859ef467c4974ad52aa79269ae98efdba8f5a074644e3d11583a5485312df5a64387976ecf4225a
   languageName: node
   linkType: hard
 
@@ -10350,12 +10399,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:^18.3.0":
-  version: 18.3.0
-  resolution: "@types/react-test-renderer@npm:18.3.0"
+"@types/react-test-renderer@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "@types/react-test-renderer@npm:19.1.0"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10c0/3c9748be52e8e659e7adf91dea6939486463264e6f633bf21c4cb116de18af7bef0595568a1e588160420b2f65289473075dda1cb417c2875df8cf7a09f5d913
+  checksum: 10c0/799654e430df10aeaf267d71507fb64ec151359ead7e3774111bfd4abce7e0911dba461811195c06c22a6d17496ea92537d3185320ff4112fe29954cad1b9152
   languageName: node
   linkType: hard
 
@@ -11954,7 +12003,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-styles@npm:^5.0.0":
+"ansi-styles@npm:^5.0.0, ansi-styles@npm:^5.2.0":
   version: 5.2.0
   resolution: "ansi-styles@npm:5.2.0"
   checksum: 10c0/9c4ca80eb3c2fb7b33841c210d2f20807f40865d27008d7c3f707b7f95cab7d67462a565e2388ac3285b71cb3d9bb2173de8da37c57692a362885ec34d6e27df
@@ -15641,7 +15690,7 @@ __metadata:
     "@babel/plugin-proposal-object-rest-spread": "npm:^7.20.7"
     "@babel/plugin-syntax-import-meta": "npm:^7.10.4"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@babel/register": "npm:^7.18.9"
     "@babel/runtime": "npm:^7.28.2"
@@ -15679,7 +15728,6 @@ __metadata:
     "@types/mini-css-extract-plugin": "npm:^2.2.0"
     "@types/node": "npm:^22"
     "@types/react-router-dom": "npm:^5.2.0"
-    "@types/react-test-renderer": "npm:^18.3.0"
     "@types/react-virtualized": "npm:^9.21.13"
     "@types/semver": "npm:^7"
     "@types/url-parse": "npm:^1.4.3"
@@ -15728,7 +15776,6 @@ __metadata:
     postcss-sort-media-queries: "npm:^4.2.1"
     postcss-styled-syntax: "npm:^0.7.1"
     prettier: "npm:^3.6.2"
-    react-test-renderer: "npm:^18.3.1"
     reassure: "npm:^0.7.1"
     shelljs: "npm:^0.8.5"
     simple-git: "npm:^3.19.1"
@@ -15937,7 +15984,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@babel/runtime": "npm:^7.28.2"
     "@coinbase/cds-common": "workspace:^"
@@ -21682,6 +21729,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-diff@npm:30.2.0":
+  version: 30.2.0
+  resolution: "jest-diff@npm:30.2.0"
+  dependencies:
+    "@jest/diff-sequences": "npm:30.0.1"
+    "@jest/get-type": "npm:30.1.0"
+    chalk: "npm:^4.1.2"
+    pretty-format: "npm:30.2.0"
+  checksum: 10c0/5fac2cd89a10b282c5a68fc6206a95dfff9955ed0b758d24ffb0edcb20fb2f98e1fa5045c5c4205d952712ea864c6a086654f80cdd500cce054a2f5daf5b4419
+  languageName: node
+  linkType: hard
+
 "jest-diff@npm:^28.1.3":
   version: 28.1.3
   resolution: "jest-diff@npm:28.1.3"
@@ -21891,6 +21950,18 @@ __metadata:
     jest-get-type: "npm:^29.6.3"
     pretty-format: "npm:^29.7.0"
   checksum: 10c0/0d0e70b28fa5c7d4dce701dc1f46ae0922102aadc24ed45d594dd9b7ae0a8a6ef8b216718d1ab79e451291217e05d4d49a82666e1a3cc2b428b75cd9c933244e
+  languageName: node
+  linkType: hard
+
+"jest-matcher-utils@npm:^30.0.5":
+  version: 30.2.0
+  resolution: "jest-matcher-utils@npm:30.2.0"
+  dependencies:
+    "@jest/get-type": "npm:30.1.0"
+    chalk: "npm:^4.1.2"
+    jest-diff: "npm:30.2.0"
+    pretty-format: "npm:30.2.0"
+  checksum: 10c0/f221c8afa04cee693a2be735482c5db4ec6f845f8ca3a04cb419be34c6257f4531dab89c836251f31d1859318c38997e8e9f34bf7b4cdcc8c7be8ae6e2ecb9f2
   languageName: node
   linkType: hard
 
@@ -28009,6 +28080,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pretty-format@npm:30.2.0, pretty-format@npm:^30.0.5":
+  version: 30.2.0
+  resolution: "pretty-format@npm:30.2.0"
+  dependencies:
+    "@jest/schemas": "npm:30.0.5"
+    ansi-styles: "npm:^5.2.0"
+    react-is: "npm:^18.3.1"
+  checksum: 10c0/8fdacfd281aa98124e5df80b2c17223fdcb84433876422b54863a6849381b3059eb42b9806d92d2853826bcb966bcb98d499bea5b1e912d869a3c3107fd38d35
+  languageName: node
+  linkType: hard
+
 "pretty-format@npm:^24":
   version: 24.9.0
   resolution: "pretty-format@npm:24.9.0"
@@ -29066,20 +29148,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react-test-renderer@npm:18.3.1"
+"react-test-renderer@npm:^19.2.4":
+  version: 19.2.4
+  resolution: "react-test-renderer@npm:19.2.4"
   dependencies:
-    react-is: "npm:^18.3.1"
-    react-shallow-renderer: "npm:^16.15.0"
-    scheduler: "npm:^0.23.2"
+    react-is: "npm:^19.2.4"
+    scheduler: "npm:^0.27.0"
   peerDependencies:
-    react: ^18.3.1
-  checksum: 10c0/c633558ef9af33bc68f0c4dbb5163a004c4fb9eade7bd0a7cfc0355fb367f36bd9d96533c90b7e85a146be6c525113a15f58683d269e0177ad77e2b04d4fe51c
+    react: ^19.2.4
+  checksum: 10c0/76f0a419a8ca7776ac6fae7c25056b9326a92a3d79971817e8ffd262d9121d1e87fde058b4fd6d33c365b1001cd6236d9053816dabed20afa62fbfe2a1a59f1a
   languageName: node
   linkType: hard
 
-"react-use-measure@npm:^2, react-use-measure@npm:^2.1.7":
+"react-use-measure@npm:^2.1.7":
   version: 2.1.7
   resolution: "react-use-measure@npm:2.1.7"
   peerDependencies:

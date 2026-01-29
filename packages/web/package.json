@@ -218,12 +218,12 @@
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
     "react-popper": "^2.2.4",
-    "react-use-measure": "^2"
+    "react-use-measure": "^2.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.27.1",
     "@coinbase/cds-web-utils": "workspace:^",
     "@linaria/core": "^3.0.0-beta.22",

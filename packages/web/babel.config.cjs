@@ -25,6 +25,7 @@ module.exports = {
       },
     ],
   ],
+  // NOTE: To enable the React Compiler, install babel-plugin-react-compiler and react-compiler-runtime
   // plugins: [
   //   [
   //     'babel-plugin-react-compiler',
