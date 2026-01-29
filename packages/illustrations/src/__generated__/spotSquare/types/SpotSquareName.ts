@@ -152,6 +152,7 @@ export type SpotSquareName =
   | 'giftBoxCrypto'
   | 'gifting'
   | 'globalTransactions'
+  | 'goldSilverFutures'
   | 'guideBullCase'
   | 'guideCryptoBeginner'
   | 'guideFiveThings'
