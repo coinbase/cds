@@ -2,6 +2,8 @@ import React from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button, IconButton, IconCounterButton } from '../../../buttons';
+import { Carousel } from '../../../carousel/Carousel';
+import { CarouselItem } from '../../../carousel/CarouselItem';
 import { NativeTextArea, TextInput } from '../../../controls';
 import { Box, HStack, VStack } from '../../../layout';
 import { RemoteImage, RemoteImageGroup } from '../../../media';
@@ -85,12 +87,12 @@ const exampleProps: {
 export const Basic = (): JSX.Element => {
   return (
     <VStack gap={2}>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
       </ContentCard>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
@@ -106,7 +108,7 @@ export const MediaPlacement = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         mediaPlacement: top (default)
       </Text>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="top" />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
@@ -114,7 +116,7 @@ export const MediaPlacement = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         mediaPlacement: bottom
       </Text>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="bottom" />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
@@ -122,7 +124,7 @@ export const MediaPlacement = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         mediaPlacement: end
       </Text>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="end" />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
@@ -130,7 +132,7 @@ export const MediaPlacement = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         mediaPlacement: start
       </Text>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="start" />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
@@ -146,7 +148,7 @@ export const WithBackground = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         Full example with background
       </Text>
-      <ContentCard background="bgAlternate">
+      <ContentCard background="bgAlternate" width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} />
         <ContentCardFooter>
@@ -164,7 +166,7 @@ export const WithBackground = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         mediaPlacement: end with background
       </Text>
-      <ContentCard background="bgAlternate">
+      <ContentCard background="bgAlternate" width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="end" />
         <ContentCardFooter>
@@ -182,7 +184,7 @@ export const WithBackground = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         No media with background
       </Text>
-      <ContentCard background="bgAlternate">
+      <ContentCard background="bgAlternate" width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
         <ContentCardFooter>
@@ -200,7 +202,7 @@ export const WithBackground = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         IconCounterButtons with background
       </Text>
-      <ContentCard background="bgAlternate">
+      <ContentCard background="bgAlternate" width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
         <ContentCardFooter>
@@ -250,7 +252,7 @@ export const PressableCards = (): JSX.Element => {
         onClick={handleCardClick}
         width="fit-content"
       >
-        <ContentCard>
+        <ContentCard width={500}>
           <ContentCardHeader
             subtitle="News"
             thumbnail={
@@ -283,7 +285,7 @@ export const PressableCards = (): JSX.Element => {
         onClick={handleCardClick}
         width="fit-content"
       >
-        <ContentCard>
+        <ContentCard width={500}>
           <ContentCardHeader
             subtitle="News"
             thumbnail={
@@ -316,7 +318,7 @@ export const PressableCards = (): JSX.Element => {
         onClick={handleCardClick}
         width="fit-content"
       >
-        <ContentCard>
+        <ContentCard width={500}>
           <ContentCardHeader
             subtitle="News"
             thumbnail={
@@ -350,7 +352,7 @@ export const PressableCards = (): JSX.Element => {
         onClick={handleCardClick}
         width="fit-content"
       >
-        <ContentCard>
+        <ContentCard width={500}>
           <ContentCardHeader {...exampleProps.contentHeaderProps} />
           <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
           <ContentCardFooter>
@@ -377,7 +379,7 @@ export const CustomContent = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         With TextInput
       </Text>
-      <ContentCard>
+      <ContentCard bordered width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null}>
           <TextInput
@@ -411,15 +413,13 @@ export const CustomContent = (): JSX.Element => {
       <Text as="h3" display="block" font="headline">
         With IconCounterButtons
       </Text>
-      <ContentCard>
+      <ContentCard bordered width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
-        <ContentCardFooter>
-          <HStack gap={4} justifyContent="space-between" paddingTop={0.5}>
-            <IconCounterButton accessibilityLabel="Like" count={99} icon="heart" />
-            <IconCounterButton accessibilityLabel="Comment" count={4200} icon="comment" />
-            <IconCounterButton accessibilityLabel="Share" count={9900000} icon="arrowsHorizontal" />
-          </HStack>
+        <ContentCardFooter justifyContent="space-between">
+          <IconCounterButton accessibilityLabel="Like" count={99} icon="heart" />
+          <IconCounterButton accessibilityLabel="Comment" count={4200} icon="comment" />
+          <IconCounterButton accessibilityLabel="Share" count={9900000} icon="arrowsHorizontal" />
         </ContentCardFooter>
       </ContentCard>
     </VStack>
@@ -433,42 +433,37 @@ export const ProductCarousel = () => {
       <Text as="h3" display="block" font="headline">
         Full Example with product component - Carousel
       </Text>
-      <ContentCard maxWidth="100%">
-        <ContentCardHeader
-          {...exampleProps.contentHeaderProps}
-          actions={null}
-          subtitle={null}
-          thumbnail={null}
-          title={
-            <Text as="h3" display="block" font="title3">
-              Crypto moves money forward
-            </Text>
-          }
-        />
-        <ContentCardBody>
-          <HStack gap={2} overflow="auto">
+      <ContentCard bordered width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} media={null}>
+          <Carousel styles={{ carousel: { gap: 16 } }}>
             {[1, 2, 3, 4, 5].map((id) => (
-              <VStack key={id} position="relative">
-                <RemoteImage
-                  alt="Ethereum promotional content"
-                  height={381}
-                  resizeMode="cover"
-                  shape="rectangle"
-                  source={ethBackground}
-                  width={259}
-                />
-                <VStack bottom={16} gap={1} left={16} position="absolute">
-                  <Text as="h3" display="block" font="headline">
-                    Break the cycle
-                  </Text>
-                  <Text as="p" display="block" font="legal">
-                    24M views
-                  </Text>
+              <CarouselItem key={id} id={`carousel-item-${id}`}>
+                <VStack position="relative">
+                  <Box borderRadius={400} overflow="hidden">
+                    <RemoteImage
+                      alt="Ethereum promotional content"
+                      height={381}
+                      resizeMode="cover"
+                      shape="rectangle"
+                      source={ethBackground}
+                      width={259}
+                    />
+                  </Box>
+                  <VStack bottom={16} gap={1} left={16} position="absolute">
+                    <Text as="h3" display="block" font="headline">
+                      Break the cycle
+                    </Text>
+                    <Text as="p" display="block" font="legal">
+                      24M views
+                    </Text>
+                  </VStack>
                 </VStack>
-              </VStack>
+              </CarouselItem>
             ))}
-          </HStack>
+          </Carousel>
         </ContentCardBody>
+        <ContentCardFooter {...exampleProps.contentFooterProps} />
       </ContentCard>
     </VStack>
   );

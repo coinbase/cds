@@ -503,12 +503,7 @@ const ContentCardScreen = () => {
       </Example>
       <Example paddingX={0}>
         <Text font="title3">Accessible pressable card (disabled)</Text>
-        <Pressable
-          accessible={false}
-          background="bgAlternate"
-          borderRadius={500}
-          onPress={() => {}}
-        >
+        <Pressable disabled accessible={false} background="bgAlternate" borderRadius={500}>
           <ContentCard>
             <ContentCardHeader
               subtitle="News"

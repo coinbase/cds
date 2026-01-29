@@ -26,7 +26,7 @@ export type ContentCardBodyBaseProps = Polymorphic.ExtendableProps<
      * Use for supplemental data.
      */
     label?: React.ReactNode;
-    /** Media, image or video to show */
+    /** React node to display as media content (e.g., Image or RemoteImage). */
     media?: React.ReactNode;
     /**
      * @deprecated Use mediaPlacement instead
@@ -34,6 +34,9 @@ export type ContentCardBodyBaseProps = Polymorphic.ExtendableProps<
      * Can be one of: 'top', 'bottom', 'right' or 'left'.
      */
     mediaPosition?: 'top' | 'bottom' | 'right' | 'left';
+    /** Placement of the media content relative to the text content.
+     * @default 'top'
+     */
     mediaPlacement?: 'top' | 'bottom' | 'start' | 'end';
     /**
      * Custom content to display below the main content box (title/description/media).

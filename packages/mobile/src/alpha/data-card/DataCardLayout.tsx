@@ -12,13 +12,15 @@ export type DataCardLayoutBaseProps = {
   title: React.ReactNode;
   /** Text or React node to display as the card subtitle. Use a Text component to override default color and font. */
   subtitle?: React.ReactNode;
-  /** React node to display as a title accessary. */
+  /** React node to display as a title accessory. */
   titleAccessory?: React.ReactNode;
   /** React node to display as a thumbnail in the header area. */
   thumbnail?: React.ReactNode;
-  /** Layout orientation of the card. Horizontal places header and visualization side by side, vertical stacks them. */
+  /** Layout orientation of the card. Horizontal places header and visualization side by side, vertical stacks them.
+   * @default 'vertical'
+   */
   layout: 'horizontal' | 'vertical';
-  /** child node to display as the visualization (e.g., ProgressBar or ProgressCircle). */
+  /** Child node to display as the visualization (e.g., ProgressBar or ProgressCircle). */
   children?: React.ReactNode;
 };
 

@@ -16,7 +16,9 @@ export type MediaCardLayoutBaseProps = {
   thumbnail: React.ReactNode;
   /** React node to display as the main media content. When provided, it will be rendered in an HStack container taking up 50% of the card width. */
   media?: React.ReactNode;
-  /** The position of the media within the card. */
+  /** The position of the media within the card.
+   * @default 'end'
+   */
   mediaPlacement?: 'start' | 'end';
 };
 

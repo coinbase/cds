@@ -36,7 +36,9 @@ export type MessagingCardLayoutProps = {
    * @default 'Dismiss card'
    */
   dismissButtonAccessibilityLabel?: string;
-  /** Placement of the media content relative to the text content. */
+  /** Placement of the media content relative to the text content.
+   * @default 'end'
+   */
   mediaPlacement: 'start' | 'end';
   /** React node to display as the main media content. When provided, it will be rendered in a Box container. */
   media?: React.ReactNode;
