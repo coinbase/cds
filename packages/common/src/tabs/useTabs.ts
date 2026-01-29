@@ -1,28 +1,28 @@
 import { useCallback, useMemo } from 'react';
 
-export type TabValue<T extends string = string> = {
+export type TabValue<TabId extends string = string> = {
   /** The tab id. */
-  id: T;
+  id: TabId;
   /** The tab label. */
   label?: React.ReactNode;
   /** Disable interactions on the tab. */
   disabled?: boolean;
 };
 
-export type TabsOptions<T extends string = string> = {
+export type TabsOptions<TabId extends string = string> = {
   /** The array of tabs data. */
-  tabs: TabValue<T>[];
+  tabs: TabValue<TabId>[];
   /** React state for the currently active tab. Setting it to `null` results in no active tab. */
-  activeTab: TabValue<T> | null;
+  activeTab: TabValue<TabId> | null;
   /** Callback that is fired when the active tab changes. Use this callback to update the `activeTab` state. */
-  onChange: (activeTab: TabValue<T> | null) => void;
+  onChange: (activeTab: TabValue<TabId> | null) => void;
   /** Disable interactions on all the tabs. */
   disabled?: boolean;
 };
 
-export type TabsApi<T extends string = string> = Omit<TabsOptions<T>, 'onChange'> & {
+export type TabsApi<TabId extends string = string> = Omit<TabsOptions<TabId>, 'onChange'> & {
   /** Update the currently active tab to the tab with `tabId`. */
-  updateActiveTab: (tabId: T | null) => void;
+  updateActiveTab: (tabId: TabId | null) => void;
   /** Update the currently active tab to the next enabled tab in the tabs array. Does nothing if the last tab is already active. */
   goNextTab: () => void;
   /** Update the currently active tab to the previous enabled tab in the tabs array. Does nothing if the first tab is already active. */
@@ -30,16 +30,16 @@ export type TabsApi<T extends string = string> = Omit<TabsOptions<T>, 'onChange'
 };
 
 /** A controlled hook for managing tabs state, such as the currently active tab. */
-export const useTabs = <T extends string>({
+export const useTabs = <TabId extends string>({
   tabs,
   activeTab,
   disabled,
   onChange,
-}: TabsOptions<T>): TabsApi<T> => {
+}: TabsOptions<TabId>): TabsApi<TabId> => {
   const updateActiveTab = useCallback(
-    (tabId: T | null) => {
-      let newActiveTab: TabValue<T> | null = null;
-      if (typeof tabId === 'string') {
+    (tabId: TabId | null) => {
+      let newActiveTab: TabValue<TabId> | null = null;
+      if (typeof tabId === 'string' && tabId !== '') {
         newActiveTab = tabs.find((tab) => tab.id === tabId) ?? tabs[0];
       }
       if (newActiveTab !== activeTab) onChange(newActiveTab);

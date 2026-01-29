@@ -4,18 +4,18 @@ import { SegmentedTab } from './SegmentedTab';
 import { SegmentedTabsActiveIndicator } from './SegmentedTabsActiveIndicator';
 import { Tabs, type TabsProps } from './Tabs';
 
-export type SegmentedTabsProps<T extends string = string> = Partial<
-  Pick<TabsProps<T>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
+export type SegmentedTabsProps<TabId extends string = string> = Partial<
+  Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
 > &
-  Omit<TabsProps<T>, 'TabComponent' | 'TabsActiveIndicatorComponent'>;
+  Omit<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>;
 
-type SegmentedTabsFC = <T extends string>(
-  props: SegmentedTabsProps<T> & { ref?: React.ForwardedRef<HTMLElement> },
+type SegmentedTabsFC = <TabId extends string>(
+  props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
 ) => React.ReactElement;
 
 const SegmentedTabsComponent = memo(
   forwardRef(
-    <T extends string>(
+    <TabId extends string>(
       {
         TabComponent = SegmentedTab,
         TabsActiveIndicatorComponent = SegmentedTabsActiveIndicator,
@@ -23,7 +23,7 @@ const SegmentedTabsComponent = memo(
         background = 'bgSecondary',
         borderRadius = 1000,
         ...props
-      }: SegmentedTabsProps<T>,
+      }: SegmentedTabsProps<TabId>,
       ref: React.ForwardedRef<HTMLElement>,
     ) => (
       <Tabs

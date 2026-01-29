@@ -48,32 +48,33 @@ export type TabsActiveIndicatorProps = {
   activeTabRect: Rect;
 } & BoxProps;
 
-export type TabComponent<T extends string = string> = React.FC<TabValue<T>>;
+export type TabComponent<TabId extends string = string> = React.FC<TabValue<TabId>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-export type TabsBaseProps<T extends string = string> = {
+export type TabsBaseProps<TabId extends string = string> = {
   /** The array of tabs data. Each tab may optionally define a custom Component to render. */
-  tabs: (TabValue<T> & { Component?: TabComponent<T> })[];
+  tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
   /** The default Component to render each tab. */
-  TabComponent: TabComponent<T>;
+  TabComponent: TabComponent<TabId>;
   /** The default Component to render the tabs active indicator. */
   TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
   /** Background color passed to the TabsActiveIndicatorComponent. */
   activeBackground?: ThemeVars.Color;
   /** Optional callback to receive the active tab element. */
   onActiveTabElementChange?: (element: View | null) => void;
-} & Omit<TabsOptions<T>, 'tabs'>;
+} & Omit<TabsOptions<TabId>, 'tabs'>;
 
-export type TabsProps<T extends string = string> = TabsBaseProps<T> & Omit<HStackProps, 'onChange'>;
+export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
+  Omit<HStackProps, 'onChange'>;
 
-type TabsFC = <T extends string = string>(
-  props: TabsProps<T> & { ref?: React.ForwardedRef<View> },
+type TabsFC = <TabId extends string = string>(
+  props: TabsProps<TabId> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 const TabsComponent = memo(
   forwardRef(
-    <T extends string>(
+    <TabId extends string>(
       {
         tabs,
         TabComponent,
@@ -88,14 +89,14 @@ const TabsComponent = memo(
         opacity,
         onActiveTabElementChange,
         ...props
-      }: TabsProps<T>,
+      }: TabsProps<TabId>,
       ref: React.ForwardedRef<View>,
     ) => {
       const tabsContainerRef = useRef<View>(null);
       useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
 
       const refMap = useRefMap<View>();
-      const api = useTabs({ tabs, activeTab, disabled, onChange });
+      const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
 
       const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
       const previousActiveRef = useRef(activeTab);

@@ -15,7 +15,7 @@ import { ProgressBar } from '../../visualizations';
 import { Tour } from '../Tour';
 import { TourStep } from '../TourStep';
 
-const TourExamples = <T extends string>({
+const TourExamples = <TourStepId extends string>({
   step2Ref,
   step3Ref,
   step4Ref,
@@ -24,7 +24,7 @@ const TourExamples = <T extends string>({
   step2Ref: React.RefObject<View>;
   step3Ref: React.RefObject<View>;
   step4Ref: React.RefObject<View>;
-  ids: T[];
+  ids: TourStepId[];
 }) => {
   const { startTour } = useTourContext();
   const handleClick = useCallback(() => startTour(), [startTour]);

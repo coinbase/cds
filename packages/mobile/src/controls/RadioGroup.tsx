@@ -28,7 +28,7 @@ export { Radio, type RadioBaseProps, type RadioProps };
  *   onChange={(value) => onChange(value)}
  * />
  */
-export type RadioGroupBaseProps<T extends string> = Omit<
+export type RadioGroupBaseProps<RadioValue extends string> = Omit<
   AccessibilityProps,
   'accessibilityLabelledBy'
 > &
@@ -38,17 +38,17 @@ export type RadioGroupBaseProps<T extends string> = Omit<
      * Multiple choice options for the radio group. The object key represents
      * the radio input value and the object value represents the radio option label.
      */
-    options: Record<T, string | React.ReactNode>;
+    options: Record<RadioValue, string | React.ReactNode>;
     /** Set a label summary for the group of radios. */
     label?: React.ReactNode;
     /** Currently selected value. */
-    value?: T;
+    value?: RadioValue;
     /** Handle change event when pressing on a radio option. */
-    onChange?: RadioProps<T>['onChange'];
+    onChange?: RadioProps<RadioValue>['onChange'];
     /** Sets the checked/active color of each control in the group.
      * @default bgPrimary
      */
-    controlColor?: RadioProps<T>['controlColor'];
+    controlColor?: RadioProps<RadioValue>['controlColor'];
     /** A11Y label to indicate order of radio buttons when focused on one button */
     radioAccessibilityLabel?: string;
   };
@@ -56,9 +56,9 @@ export type RadioGroupBaseProps<T extends string> = Omit<
 /**
  * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.
  */
-export type RadioGroupProps<T extends string> = RadioGroupBaseProps<T>;
+export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
-const RadioGroupWithRef = forwardRef(function RadioGroup<T extends string>(
+const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
   {
     label,
     value,
@@ -70,7 +70,7 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<T extends string>(
     accessibilityHint,
     radioAccessibilityLabel,
     ...props
-  }: RadioGroupProps<T>,
+  }: RadioGroupProps<RadioValue>,
   ref: React.ForwardedRef<View>,
 ) {
   if (isDevelopment()) {
@@ -94,7 +94,7 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<T extends string>(
   }
 
   // Convert Record<T, string | React.ReactNode> to ControlGroup options format
-  const controlGroupOptions = entries<Record<T, string | React.ReactNode>>(options).map(
+  const controlGroupOptions = entries<Record<RadioValue, string | React.ReactNode>>(options).map(
     ([optionValue, option], index) => {
       // Handle mobile-specific accessibility label for radio groups
       let accessibilityLabel: string | undefined;
@@ -105,7 +105,7 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<T extends string>(
       }
 
       return {
-        value: optionValue as T,
+        value: optionValue as RadioValue,
         children: option,
         accessibilityLabel,
         controlColor,
@@ -114,7 +114,7 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<T extends string>(
   );
 
   // Handle onChange signature conversion
-  const handleChange = (newValue: T | undefined) => {
+  const handleChange = (newValue: RadioValue | undefined) => {
     if (onChange) {
       onChange(newValue);
     }
@@ -131,13 +131,13 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<T extends string>(
       onChange={handleChange}
       options={controlGroupOptions}
       testID={testID}
-      value={value ?? ('' as T)}
+      value={value ?? ('' as RadioValue)}
       {...props}
     />
   );
   // Make forwardRef result function stay generic function type
-}) as <T extends string>(
-  props: RadioGroupProps<T> & { ref?: React.Ref<View> },
+}) as <RadioValue extends string>(
+  props: RadioGroupProps<RadioValue> & { ref?: React.Ref<View> },
 ) => React.ReactElement;
 
 // Make memoized function stay generic function type
