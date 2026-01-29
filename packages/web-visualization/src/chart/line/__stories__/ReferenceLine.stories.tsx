@@ -147,7 +147,7 @@ const DraggableReferenceLine = memo(
   }: {
     baselineAmount: number;
     startAmount: number;
-    chartRef: React.RefObject<SVGSVGElement>;
+    chartRef: React.RefObject<SVGSVGElement | null>;
   }) => {
     const theme = useTheme();
 

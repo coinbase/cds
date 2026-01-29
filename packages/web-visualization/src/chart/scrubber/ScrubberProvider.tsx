@@ -10,7 +10,7 @@ export type ScrubberProviderProps = Partial<
   /**
    * A reference to the root SVG element, where interaction event handlers will be attached.
    */
-  svgRef: React.RefObject<SVGSVGElement> | null;
+  svgRef: React.RefObject<SVGSVGElement | null> | null;
 };
 
 /**
