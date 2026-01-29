@@ -42,8 +42,8 @@ const buttonDisabledCss = css`
   touch-action: none;
 `;
 
-export type SegmentedTabProps<T extends string = string> = PressableBaseProps &
-  TabValue<T> & {
+export type SegmentedTabProps<TabId extends string = string> = PressableBaseProps &
+  TabValue<TabId> & {
     /**
      * Text color when the SegmentedTab is active.
      * @default negativeForeground
@@ -55,20 +55,20 @@ export type SegmentedTabProps<T extends string = string> = PressableBaseProps &
      */
     color?: ThemeVars.Color;
     /** Callback that is fired when the SegmentedTab is clicked. */
-    onClick?: (id: T, event: React.MouseEvent) => void;
+    onClick?: (id: TabId, event: React.MouseEvent) => void;
   };
 
 const disabledCss = css`
   opacity: 0.5;
 `;
 
-type SegmentedTabComponent = <T extends string = string>(
-  props: SegmentedTabProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> },
+type SegmentedTabComponent = <TabId extends string = string>(
+  props: SegmentedTabProps<TabId> & { ref?: React.ForwardedRef<HTMLButtonElement> },
 ) => React.ReactElement;
 
 const SegmentedTabComponent = memo(
   forwardRef(
-    <T extends string>(
+    <TabId extends string>(
       {
         id,
         label,
@@ -86,10 +86,10 @@ const SegmentedTabComponent = memo(
         textAlign,
         textTransform,
         ...props
-      }: SegmentedTabProps<T>,
+      }: SegmentedTabProps<TabId>,
       ref: React.ForwardedRef<HTMLButtonElement>,
     ) => {
-      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<T>();
+      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
       const isActive = activeTab?.id === id;
       const isDisabled = disabledProp || allTabsDisabled;
 

@@ -32,11 +32,11 @@ export type TourScrollOptions = {
   marginY?: number;
 };
 
-export type TourStepValue<T extends string = string> = {
+export type TourStepValue<TourStepId extends string = string> = {
   /**
    * The tour step id.
    */
-  id: T;
+  id: TourStepId;
   /**
    * The Component to render for this tour step.
    */
@@ -91,24 +91,27 @@ export type TourStepValue<T extends string = string> = {
   scrollOptions?: TourScrollOptions;
 };
 
-export type TourOptions<T extends string = string> = {
+export type TourOptions<TourStepId extends string = string> = {
   /* The array of tour steps data.  */
-  steps: TourStepValue<T>[];
+  steps: TourStepValue<TourStepId>[];
   /* The value of the currently active tour step. */
-  activeTourStep: TourStepValue<T> | null;
+  activeTourStep: TourStepValue<TourStepId> | null;
   /* Set the value of the currently active tour step. */
-  onChange: (tourStep: TourStepValue<T> | null) => void;
+  onChange: (tourStep: TourStepValue<TourStepId> | null) => void;
 };
 
-export type TourApi<T extends string = string> = Omit<TourOptions<T>, 'onChange'> & {
+export type TourApi<TourStepId extends string = string> = Omit<
+  TourOptions<TourStepId>,
+  'onChange'
+> & {
   /* The target element of the currently active tour step. */
   activeTourStepTarget: HTMLElement | View | null;
   /* Set the target element of the currently active tour step. */
   setActiveTourStepTarget: (target: HTMLElement | View | null) => void;
   /* Jumps to a specified step of the tour. */
-  setActiveTourStep: (tourStepId: T | null) => void;
+  setActiveTourStep: (tourStepId: TourStepId | null) => void;
   /* Starts the tour; can optionally start at a specified step ID. */
-  startTour: (tourStepId?: T) => void;
+  startTour: (tourStepId?: TourStepId) => void;
   /* Stops the tour. */
   stopTour: () => void;
   /* Moves to the next step in the tour. */
@@ -118,14 +121,14 @@ export type TourApi<T extends string = string> = Omit<TourOptions<T>, 'onChange'
 };
 
 /** A controlled hook for managing tour state, such as the currently active tour step. */
-export const useTour = <T extends string = string>({
+export const useTour = <TourStepId extends string = string>({
   steps,
   activeTourStep,
   onChange,
-}: TourOptions<T>): TourApi<T> => {
+}: TourOptions<TourStepId>): TourApi<TourStepId> => {
   const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | View | null>(null);
   const startTour = useCallback(
-    async (tourStepId?: T | null) => {
+    async (tourStepId?: TourStepId | null) => {
       if (typeof tourStepId === 'undefined') return onChange(steps[0]);
       let newActiveTourStep = null;
       if (typeof tourStepId === 'string') {
@@ -145,7 +148,7 @@ export const useTour = <T extends string = string>({
   );
 
   const setActiveTourStep = useCallback(
-    async (tourStepId: T | null) => startTour(tourStepId),
+    async (tourStepId: TourStepId | null) => startTour(tourStepId),
     [startTour],
   );
 
