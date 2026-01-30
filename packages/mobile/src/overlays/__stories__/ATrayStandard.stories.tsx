@@ -1,8 +1,11 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ScrollView } from 'react-native';
+import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
 import { Button } from '../../buttons/Button';
 import { ListCell } from '../../cells/ListCell';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 import { useTheme } from '../../hooks/useTheme';
 import { VStack } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
@@ -106,8 +109,10 @@ const MyTrayWithStickyFooter = () => {
 
 const MyTrayWithListCells = () => {
   const theme = useTheme();
+  const safeBottomPadding = useSafeBottomPadding();
 
   const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
   const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
   const trayRef = useRef<DrawerRefBaseProps>(null);
@@ -116,48 +121,26 @@ const MyTrayWithListCells = () => {
     console.log('Tray visibility changed:', e);
   }, []);
 
-  return (
-    <>
-      <Button onPress={setIsTrayVisibleOn}>Open</Button>
-      {isTrayVisible && (
-        <Tray
-          ref={trayRef}
-          handleBarVariant="inside"
-          onCloseComplete={setIsTrayVisibleOff}
-          onVisibilityChange={handleTrayVisibilityChange}
-          styles={{
-            header: {
-              paddingBottom: theme.space[1],
-            },
-          }}
-          title="Header"
-        >
-          {Array.from({ length: 20 }, (_, i) => (
-            <ListCell
-              key={i}
-              accessory="arrow"
-              description="Description"
-              onPress={() => alert('Cell clicked!')}
-              spacingVariant="condensed"
-              title="Title"
-            />
-          ))}
-        </Tray>
-      )}
-    </>
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollY = e.nativeEvent.contentOffset.y;
+    setIsScrolled(scrollY > 0);
+  }, []);
+
+  const headerStyles = useMemo(
+    () => ({
+      paddingBottom: theme.space[1],
+      borderBottomWidth: isScrolled ? 1 : 0,
+      borderBottomColor: theme.color.bgLine,
+    }),
+    [theme, isScrolled],
   );
-};
 
-const MyTrayWithListCellsStickyFooter = () => {
-  const theme = useTheme();
-  const [isTrayVisible, setIsTrayVisible] = useState(false);
-  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
-  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
-  const trayRef = useRef<DrawerRefBaseProps>(null);
-
-  const handleTrayVisibilityChange = useCallback((e: 'visible' | 'hidden') => {
-    console.log('Tray visibility changed:', e);
-  }, []);
+  const scrollContentStyle = useMemo(
+    () => ({
+      paddingBottom: safeBottomPadding,
+    }),
+    [safeBottomPadding],
+  );
 
   return (
     <>
@@ -169,14 +152,16 @@ const MyTrayWithListCellsStickyFooter = () => {
           onCloseComplete={setIsTrayVisibleOff}
           onVisibilityChange={handleTrayVisibilityChange}
           styles={{
-            header: {
-              paddingBottom: theme.space[1],
-            },
+            header: headerStyles,
           }}
           title="Header"
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
+          <TrayStickyFooter>
+            <ScrollView
+              contentContainerStyle={scrollContentStyle}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+            >
               {Array.from({ length: 20 }, (_, i) => (
                 <ListCell
                   key={i}
@@ -187,7 +172,69 @@ const MyTrayWithListCellsStickyFooter = () => {
                   title="Title"
                 />
               ))}
-              <StickyFooter background="bg" elevation={2} paddingX={3}>
+            </ScrollView>
+          </TrayStickyFooter>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+const MyTrayWithListCellsStickyFooter = () => {
+  const theme = useTheme();
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
+  const trayRef = useRef<DrawerRefBaseProps>(null);
+
+  const handleTrayVisibilityChange = useCallback((e: 'visible' | 'hidden') => {
+    console.log('Tray visibility changed:', e);
+  }, []);
+
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollY = e.nativeEvent.contentOffset.y;
+    setIsScrolled(scrollY > 0);
+  }, []);
+
+  const headerStyles = useMemo(
+    () => ({
+      paddingBottom: theme.space[1],
+      borderBottomWidth: isScrolled ? 1 : 0,
+      borderBottomColor: theme.color.bgLine,
+    }),
+    [theme, isScrolled],
+  );
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open</Button>
+      {isTrayVisible && (
+        <Tray
+          ref={trayRef}
+          handleBarVariant="inside"
+          onCloseComplete={setIsTrayVisibleOff}
+          onVisibilityChange={handleTrayVisibilityChange}
+          styles={{
+            header: headerStyles,
+          }}
+          title="Header"
+        >
+          {({ handleClose }) => (
+            <TrayStickyFooter>
+              <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+                {Array.from({ length: 20 }, (_, i) => (
+                  <ListCell
+                    key={i}
+                    accessory="arrow"
+                    description="Description"
+                    onPress={() => alert('Cell clicked!')}
+                    spacingVariant="condensed"
+                    title="Title"
+                  />
+                ))}
+              </ScrollView>
+              <StickyFooter background="bg" elevation={isScrolled ? 2 : 0} paddingX={3}>
                 <Button block onPress={handleClose}>
                   Close
                 </Button>
