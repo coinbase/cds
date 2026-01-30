@@ -66,6 +66,21 @@ export const routes = [
         .default,
   },
   {
+    key: 'ATrayFullBleedImage',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/ATrayFullBleedImage.stories').default,
+  },
+  {
+    key: 'ATrayIllustration',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/ATrayIllustration.stories').default,
+  },
+  {
+    key: 'ATrayStandard',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/ATrayStandard.stories').default,
+  },
+  {
     key: 'Avatar',
     getComponent: () => require('@coinbase/cds-mobile/media/__stories__/Avatar.stories').default,
   },

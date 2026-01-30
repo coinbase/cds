@@ -27,11 +27,12 @@ import { trayContainerId } from '../PortalProvider';
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = {
-  children: React.ReactNode | TrayRenderChildren;
-  /** ReactNode to render as the Drawer header */
-  header?: React.ReactNode;
-  /** ReactNode to render as the Drawer footer */
-  footer?: React.ReactNode;
+  /** Component to render as the Tray content */
+  children?: React.ReactNode | TrayRenderChildren;
+  /** Component to render as the Tray content */
+  header?: React.ReactNode | TrayRenderChildren;
+  /** Component to render as the Tray content */
+  footer?: React.ReactNode | TrayRenderChildren;
   /** HTML ID for the tray */
   id?: string;
   /** Callback fired when the overlay is pressed, or swipe to close */
@@ -248,7 +249,7 @@ export const Tray = memo(
                   role={role}
                 >
                   <VStack maxWidth="70em" paddingX={6} width="100%">
-                    {header}
+                    {typeof header === 'function' ? header({ handleClose }) : header}
                     <HStack
                       alignItems="center"
                       justifyContent={title ? 'space-between' : 'flex-end'}
@@ -280,7 +281,7 @@ export const Tray = memo(
                     >
                       {typeof children === 'function' ? children({ handleClose }) : children}
                     </VStack>
-                    {footer}
+                    {typeof footer === 'function' ? footer({ handleClose }) : footer}
                   </VStack>
                 </VStack>
               </m.div>

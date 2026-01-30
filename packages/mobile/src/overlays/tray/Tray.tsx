@@ -10,22 +10,28 @@ import React, {
 } from 'react';
 import { useWindowDimensions } from 'react-native';
 import type { ReactNode } from 'react';
-import type { LayoutChangeEvent } from 'react-native';
+import type { LayoutChangeEvent, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
 import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@coinbase/cds-common/tokens/drawer';
 
 import { Box, HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
-import { Drawer, type DrawerBaseProps, type DrawerRefBaseProps } from '../drawer/Drawer';
+import {
+  Drawer,
+  type DrawerBaseProps,
+  type DrawerProps,
+  type DrawerRefBaseProps,
+} from '../drawer/Drawer';
 
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
-  children: React.ReactNode | TrayRenderChildren;
-  /** ReactNode to render as the Tray header */
-  header?: React.ReactNode;
-  /** ReactNode to render as the Tray footer */
-  footer?: React.ReactNode;
+  /** Component to render as the Tray content */
+  children?: React.ReactNode | TrayRenderChildren;
+  /** Component to render as the Tray header */
+  header?: React.ReactNode | TrayRenderChildren;
+  /** Component to render as the Tray footer */
+  footer?: React.ReactNode | TrayRenderChildren;
   /**
    * Optional callback that, if provided, will be triggered when the Tray is toggled open/ closed
    * If used for analytics, context ('visible' | 'hidden') can be bundled with the event info to track whether the
@@ -36,7 +42,15 @@ export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
   title?: React.ReactNode;
 };
 
-export type TrayProps = TrayBaseProps;
+export type TrayProps = TrayBaseProps &
+  Omit<DrawerProps, 'pin' | 'children'> & {
+    pin?: DrawerProps['pin'];
+    styles?: DrawerProps['styles'] & {
+      content?: StyleProp<ViewStyle>;
+      header?: StyleProp<ViewStyle>;
+      title?: StyleProp<TextStyle>;
+    };
+  };
 
 export const TrayContext = createContext<{
   verticalDrawerPercentageOfView: number;
@@ -50,16 +64,27 @@ export const Tray = memo(
   forwardRef<DrawerRefBaseProps, TrayProps>(function Tray(
     {
       children,
-      header,
-      footer,
       title,
       onVisibilityChange,
+      handleBarVariant = 'outside',
       verticalDrawerPercentageOfView = defaultVerticalDrawerPercentageOfView,
+      styles,
       ...props
     },
     ref,
   ) {
     const [titleHeight, setTitleHeight] = useState(0);
+    const isInsideHandleBar = handleBarVariant === 'inside';
+
+    const { contentStyle, headerStyle, titleStyle, drawerStyles } = useMemo(() => {
+      const {
+        content: contentStyle,
+        header: headerStyle,
+        title: titleStyle,
+        ...drawerStyles
+      } = styles ?? {};
+      return { contentStyle, headerStyle, titleStyle, drawerStyles };
+    }, [styles]);
 
     const onTitleLayout = useCallback(
       (event: LayoutChangeEvent) => {
@@ -70,34 +95,30 @@ export const Tray = memo(
     );
 
     const renderChildren: TrayRenderChildren = useCallback(
-      ({ handleClose }) => {
-        const content = typeof children === 'function' ? children({ handleClose }) : children;
-
-        return (
-          <VStack flexGrow={1} flexShrink={1} minHeight={0} paddingTop={title ? 0 : 2}>
-            {title &&
-              (typeof title === 'string' ? (
-                <HStack
-                  alignItems="center"
-                  onLayout={onTitleLayout}
-                  paddingBottom={2}
-                  paddingTop={3}
-                  paddingX={3}
-                >
-                  <Text font="title3">{title}</Text>
-                </HStack>
+      ({ handleClose }) => (
+        <VStack paddingTop={title ? 0 : 2} style={contentStyle}>
+          {title && (
+            <Box
+              justifyContent="center"
+              onLayout={onTitleLayout}
+              paddingBottom={isInsideHandleBar ? 0.75 : 2}
+              paddingTop={isInsideHandleBar ? 0 : 3}
+              paddingX={3}
+              style={headerStyle}
+            >
+              {typeof title === 'string' ? (
+                <Text font="title3" style={titleStyle}>
+                  {title}
+                </Text>
               ) : (
-                <Box onLayout={onTitleLayout}>{title}</Box>
-              ))}
-            {header}
-            <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
-              {content}
+                title
+              )}
             </Box>
-            {footer}
-          </VStack>
-        );
-      },
-      [children, footer, header, onTitleLayout, title],
+          )}
+          {typeof children === 'function' ? children({ handleClose }) : children}
+        </VStack>
+      ),
+      [title, contentStyle, onTitleLayout, headerStyle, isInsideHandleBar, titleStyle, children],
     );
 
     useEffect(() => {
@@ -115,10 +136,11 @@ export const Tray = memo(
     return (
       <TrayContext.Provider value={trayContextValue}>
         <Drawer
-          pin="bottom"
+          ref={ref}
+          handleBarVariant={handleBarVariant}
+          styles={drawerStyles}
           verticalDrawerPercentageOfView={trayContextValue.verticalDrawerPercentageOfView}
           {...props}
-          ref={ref}
         >
           {renderChildren}
         </Drawer>
