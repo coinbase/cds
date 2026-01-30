@@ -273,7 +273,7 @@ const ComboboxBase = memo(
             label={label}
             minHeight={500}
             {...props}
-            footer={
+            footer={({ handleClose }) => (
               <KeyboardAvoidingView
                 behavior="padding"
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 86 : 0}
@@ -288,13 +288,13 @@ const ComboboxBase = memo(
                     elevation={2}
                     style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
                   >
-                    <Button compact onPress={() => setOpen(false)}>
+                    <Button compact onPress={handleClose}>
                       {closeButtonLabel}
                     </Button>
                   </StickyFooter>
                 </View>
               </KeyboardAvoidingView>
-            }
+            )}
             header={
               <Box paddingX={3}>
                 <ComboboxControl
@@ -321,7 +321,6 @@ const ComboboxBase = memo(
           handleTrayVisibilityChange,
           label,
           placeholder,
-          setOpen,
           startNode,
           variant,
         ],
