@@ -81,26 +81,24 @@ const MyTrayWithStickyFooter = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          footer={({ handleClose }) => (
+            <StickyFooter paddingX={3}>
+              <Button block onPress={handleClose}>
+                Close
+              </Button>
+            </StickyFooter>
+          )}
           handleBarVariant="inside"
           onCloseComplete={setIsTrayVisibleOff}
           onVisibilityChange={handleTrayVisibilityChange}
           title="Header"
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
-              <VStack paddingX={3}>
-                <Text font="body">
-                  Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-                  interdum lorem id, viverra.
-                </Text>
-              </VStack>
-              <StickyFooter background="bg" elevation={2} paddingX={3}>
-                <Button block onPress={handleClose}>
-                  Close
-                </Button>
-              </StickyFooter>
-            </TrayStickyFooter>
-          )}
+          <VStack paddingBottom={2} paddingX={3}>
+            <Text font="body">
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
         </Tray>
       )}
     </>
@@ -212,6 +210,13 @@ const MyTrayWithListCellsStickyFooter = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          footer={({ handleClose }) => (
+            <StickyFooter background="bg" elevation={isScrolled ? 2 : 0} paddingX={3}>
+              <Button block onPress={handleClose}>
+                Close
+              </Button>
+            </StickyFooter>
+          )}
           handleBarVariant="inside"
           onCloseComplete={setIsTrayVisibleOff}
           onVisibilityChange={handleTrayVisibilityChange}
@@ -220,27 +225,18 @@ const MyTrayWithListCellsStickyFooter = () => {
           }}
           title="Header"
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
-              <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-                {Array.from({ length: 20 }, (_, i) => (
-                  <ListCell
-                    key={i}
-                    accessory="arrow"
-                    description="Description"
-                    onPress={() => alert('Cell clicked!')}
-                    spacingVariant="condensed"
-                    title="Title"
-                  />
-                ))}
-              </ScrollView>
-              <StickyFooter background="bg" elevation={isScrolled ? 2 : 0} paddingX={3}>
-                <Button block onPress={handleClose}>
-                  Close
-                </Button>
-              </StickyFooter>
-            </TrayStickyFooter>
-          )}
+          <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                onPress={() => alert('Cell clicked!')}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </ScrollView>
         </Tray>
       )}
     </>

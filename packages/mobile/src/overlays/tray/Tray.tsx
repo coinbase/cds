@@ -65,6 +65,8 @@ export const Tray = memo(
     {
       children,
       title,
+      header,
+      footer,
       onVisibilityChange,
       handleBarVariant = 'outside',
       verticalDrawerPercentageOfView = defaultVerticalDrawerPercentageOfView,
@@ -96,7 +98,13 @@ export const Tray = memo(
 
     const renderChildren: TrayRenderChildren = useCallback(
       ({ handleClose }) => (
-        <VStack paddingTop={title ? 0 : 2} style={contentStyle}>
+        <VStack
+          flexGrow={1}
+          flexShrink={1}
+          minHeight={0}
+          paddingTop={title ? 0 : 2}
+          style={contentStyle}
+        >
           {title && (
             <Box
               justifyContent="center"
@@ -115,10 +123,24 @@ export const Tray = memo(
               )}
             </Box>
           )}
-          {typeof children === 'function' ? children({ handleClose }) : children}
+          {typeof header === 'function' ? header({ handleClose }) : header}
+          <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
+            {typeof children === 'function' ? children({ handleClose }) : children}
+          </Box>
+          {typeof footer === 'function' ? footer({ handleClose }) : footer}
         </VStack>
       ),
-      [title, contentStyle, onTitleLayout, headerStyle, isInsideHandleBar, titleStyle, children],
+      [
+        title,
+        contentStyle,
+        onTitleLayout,
+        isInsideHandleBar,
+        headerStyle,
+        titleStyle,
+        header,
+        children,
+        footer,
+      ],
     );
 
     useEffect(() => {
