@@ -366,7 +366,6 @@ describe('Tray', () => {
 
       const tray = screen.getByTestId('tray');
       expect(tray).toHaveAttribute('aria-labelledby', LABELLED_BY);
-      expect(tray).not.toHaveAttribute('aria-label');
     });
 
     it('uses accessibilityLabel when accessibilityLabelledBy is not provided', () => {
@@ -384,7 +383,7 @@ describe('Tray', () => {
       expect(tray).not.toHaveAttribute('aria-labelledby');
     });
 
-    it('prefers accessibilityLabelledBy over accessibilityLabel when both are provided', () => {
+    it('supports both accessibilityLabelledBy and accessibilityLabel when both are provided', () => {
       const onCloseCompleteSpy = jest.fn();
       render(
         <DefaultThemeProvider>
@@ -401,7 +400,7 @@ describe('Tray', () => {
 
       const tray = screen.getByTestId('tray');
       expect(tray).toHaveAttribute('aria-labelledby', LABELLED_BY);
-      expect(tray).not.toHaveAttribute('aria-label');
+      expect(tray).toHaveAttribute('aria-label', LABEL);
     });
   });
 });
