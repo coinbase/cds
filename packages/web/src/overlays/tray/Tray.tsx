@@ -113,7 +113,7 @@ export type TrayBaseProps = {
   /**
    * Show a handle bar indicator at the top of the tray.
    * The handle bar is positioned inside the tray content area.
-   * Only appears when `pin="bottom"`.
+   * @note only appears when `pin="bottom"`.
    *
    * When enabled, the handle bar provides swipe-to-dismiss functionality (drag down to close)
    * and is keyboard accessible (Tab to focus, Enter/Space to close).
@@ -126,7 +126,7 @@ export type TrayBaseProps = {
    * Set explicitly to `false` to show both the handle bar and close button.
    */
   hideCloseButton?: boolean;
-} & Pick<SharedAccessibilityProps, 'accessibilityLabel'>;
+} & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'>;
 
 export type TrayProps = TrayBaseProps & {
   /** Inline styles for the tray elements */
@@ -208,6 +208,7 @@ export const Tray = memo(
       id,
       role = 'dialog',
       accessibilityLabel = 'Tray',
+      accessibilityLabelledBy,
       focusTabIndexElements,
       restoreFocusOnUnmount = true,
       closeAccessibilityLabel = 'Close',
@@ -522,6 +523,7 @@ export const Tray = memo(
                 <VStack
                   ref={trayRef}
                   accessibilityLabel={accessibilityLabel}
+                  accessibilityLabelledBy={accessibilityLabelledBy}
                   alignItems="center"
                   aria-modal="true"
                   data-testid="tray"

@@ -181,4 +181,60 @@ describe('Tray', () => {
 
     expect(onVisibilityChangeSpy).toHaveBeenCalledWith('hidden');
   });
+
+  describe('accessibility', () => {
+    const LABEL = 'Test Label';
+    const LABELLED_BY = 'title-id';
+
+    it('sets aria-labelledby when accessibilityLabelledBy is provided', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <span id={LABELLED_BY}>{LABEL}</span>
+          <Tray accessibilityLabelledBy={LABELLED_BY} onCloseComplete={onCloseCompleteSpy}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      const tray = screen.getByTestId('tray');
+      expect(tray).toHaveAttribute('aria-labelledby', LABELLED_BY);
+      expect(tray).not.toHaveAttribute('aria-label');
+    });
+
+    it('uses accessibilityLabel when accessibilityLabelledBy is not provided', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray accessibilityLabel={LABEL} onCloseComplete={onCloseCompleteSpy}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      const tray = screen.getByTestId('tray');
+      expect(tray).toHaveAttribute('aria-label', LABEL);
+      expect(tray).not.toHaveAttribute('aria-labelledby');
+    });
+
+    it('prefers accessibilityLabelledBy over accessibilityLabel when both are provided', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <span id={LABELLED_BY}>{LABEL}</span>
+          <Tray
+            accessibilityLabel={LABEL}
+            accessibilityLabelledBy={LABELLED_BY}
+            onCloseComplete={onCloseCompleteSpy}
+          >
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      const tray = screen.getByTestId('tray');
+      expect(tray).toHaveAttribute('aria-labelledby', LABELLED_BY);
+      expect(tray).not.toHaveAttribute('aria-label');
+    });
+  });
 });
