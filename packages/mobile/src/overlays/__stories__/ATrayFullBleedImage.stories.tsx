@@ -197,7 +197,7 @@ const MyTrayWithStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter paddingX={3}>
+            <StickyFooter background="bgElevation2" paddingX={3}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -231,7 +231,7 @@ const MyTrayWithStickyFooter = () => {
             </Box>
           }
         >
-          <VStack paddingBottom={2} paddingX={3}>
+          <VStack paddingBottom={1} paddingX={3}>
             <Text font="title3" paddingBottom={0.75} paddingTop={2}>
               Header
             </Text>
@@ -281,7 +281,7 @@ const MyTrayWithListCellsStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bg" elevation={isScrolled ? 2 : 0} paddingX={3}>
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
               <Button block onPress={handleClose}>
                 Close
               </Button>

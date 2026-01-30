@@ -82,7 +82,7 @@ const MyTrayWithStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter paddingX={3}>
+            <StickyFooter background="bgElevation2" paddingX={3}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -93,7 +93,7 @@ const MyTrayWithStickyFooter = () => {
           onVisibilityChange={handleTrayVisibilityChange}
           title="Header"
         >
-          <VStack paddingBottom={2} paddingX={3}>
+          <VStack paddingBottom={1} paddingX={3}>
             <Text font="body">
               Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
               interdum lorem id, viverra.
@@ -151,7 +151,6 @@ const MyTrayWithListCells = () => {
           onVisibilityChange={handleTrayVisibilityChange}
           styles={{
             header: headerStyles,
-            drawer: scrollContentStyle,
           }}
           title="Header"
           verticalDrawerPercentageOfView={0.9}
@@ -213,7 +212,7 @@ const MyTrayWithListCellsStickyFooter = () => {
           ref={trayRef}
           footer={({ handleClose }) => (
             <StickyFooter
-              background="bg"
+              background="bgElevation2"
               elevation={isScrolled ? 2 : 0}
               paddingX={3}
               style={{ paddingBottom: safeBottomPadding }}
