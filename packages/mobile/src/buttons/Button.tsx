@@ -152,7 +152,8 @@ export const Button = memo(
 
     const childrenNode = useMemo(
       () =>
-        isValidElement(children) && Boolean(children.props.children) ? (
+        isValidElement(children) &&
+        Boolean((children.props as Record<string, unknown>).children) ? (
           children
         ) : (
           <Text

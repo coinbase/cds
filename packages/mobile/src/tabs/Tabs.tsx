@@ -31,7 +31,9 @@ type TabContainerProps = {
 
 const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
-    (ref: View | null) => ref && registerRef(id, ref),
+    (ref: View | null) => {
+      if (ref) registerRef(id, ref);
+    },
     [id, registerRef],
   );
   return <View ref={refCallback} {...props} />;

@@ -57,7 +57,7 @@ describe('TabIndicator', () => {
 
   it('renders with ref', () => {
     const TEST_ID = 'tabIndicator';
-    const ref = { current: undefined } as unknown as React.RefObject<View>;
+    const ref = { current: undefined } as unknown as React.RefObject<View | null>;
     render(
       <DefaultThemeProvider>
         <TabIndicator ref={ref} testID={TEST_ID} width={100} x={0} />

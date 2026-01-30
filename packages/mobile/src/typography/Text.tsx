@@ -371,7 +371,8 @@ export const Text = memo(
           ref={ref}
           ellipsizeMode={ellipsize}
           numberOfLines={computedNumberOfLines}
-          style={memoizedStyles}
+          // https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+          style={memoizedStyles as StyleProp<TextStyle>}
           testID={testID}
           {...props}
         >

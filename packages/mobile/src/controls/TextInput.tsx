@@ -165,13 +165,13 @@ export const TextInput = memo(
         bordered,
       );
 
-      const editableInputAddonProps = {
+      const editableInputAddonProps: TextInputProps = {
         ...editableInputProps,
-        onFocus: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        onFocus: (e) => {
           editableInputProps?.onFocus?.(e);
           setFocused(true);
         },
-        onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        onBlur: (e) => {
           editableInputProps?.onBlur?.(e);
           setFocused(false);
         },
@@ -212,7 +212,8 @@ export const TextInput = memo(
       const inaccessibleStart = useMemo(() => {
         if (isValidElement(start) && start.type === InputIconButton) {
           return cloneElement(start, {
-            ...start.props,
+            // ReactElement default props is unknown, so we need to cast to the correct type
+            ...(start.props as InputIconButtonProps),
             accessibilityLabel: undefined,
             accessibilityHint: undefined,
             accessibilityElementsHidden: true,

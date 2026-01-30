@@ -43,7 +43,7 @@ import { useDrawerAnimation } from './useDrawerAnimation';
 import { useDrawerPanResponder } from './useDrawerPanResponder';
 import { useDrawerSpacing } from './useDrawerSpacing';
 
-export type DrawerRenderChildren = React.FC<{ handleClose: () => void }>;
+export type DrawerRenderChildren = (args: { handleClose: () => void }) => React.ReactNode;
 
 export type DrawerRefBaseProps = {
   /** ref callback that animates out the drawer */

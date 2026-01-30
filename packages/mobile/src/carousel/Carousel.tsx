@@ -22,7 +22,7 @@ import { Text } from '../typography/Text';
 import { DefaultCarouselNavigation } from './DefaultCarouselNavigation';
 import { DefaultCarouselPagination } from './DefaultCarouselPagination';
 
-export type CarouselItemRenderChildren = React.FC<{ isVisible: boolean }>;
+export type CarouselItemRenderChildren = (args: { isVisible: boolean }) => React.ReactNode;
 
 export type CarouselItemBaseProps = Omit<BoxBaseProps, 'children'> &
   SharedAccessibilityProps & {

@@ -69,8 +69,9 @@ describe('CheckboxCell', () => {
       </DefaultThemeProvider>,
     );
 
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
     // CheckboxCell has proper accessibility state (only the main cell should have checked state)
-    expect(screen.queryAllByA11yState({ checked: true })).toHaveLength(1);
+    expect(screen.queryAllByRole('checkbox', { checked: true })).toHaveLength(1);
   });
 
   it('shows unchecked state correctly', () => {
@@ -85,8 +86,9 @@ describe('CheckboxCell', () => {
       </DefaultThemeProvider>,
     );
 
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
     // CheckboxCell has proper accessibility state (only the main cell should have checked state)
-    expect(screen.queryAllByA11yState({ checked: false })).toHaveLength(1);
+    expect(screen.queryAllByRole('checkbox', { checked: false })).toHaveLength(1);
   });
 
   it('triggers onChange when pressed with correct parameters', () => {
@@ -161,8 +163,9 @@ describe('CheckboxCell', () => {
       </DefaultThemeProvider>,
     );
 
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
     // CheckboxCell has proper accessibility state (both main cell and internal control have disabled state)
-    expect(screen.queryAllByA11yState({ disabled: true })).toHaveLength(2);
+    expect(screen.queryAllByRole('checkbox', { disabled: true })).toHaveLength(2);
   });
 
   it('attaches testID', () => {

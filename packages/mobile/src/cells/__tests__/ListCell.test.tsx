@@ -298,7 +298,7 @@ describe('ListCell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.container).not.toBeNull();
+    expect(screen.root).not.toBeNull();
   });
 
   it('can set an accessibilityLabel and accessibilityHint when a pressable', () => {

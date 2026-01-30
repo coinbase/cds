@@ -35,7 +35,8 @@ export type CellSpacing = Pick<
 export type CellBaseProps = SharedProps &
   LinkableProps &
   Pick<PressableProps, 'blendStyles'> & {
-    accessory?: React.ReactElement<CellAccessoryProps>;
+    /** Accessory element rendered at the end of the cell (e.g., chevron). */
+    accessory?: React.ReactElement;
     /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
     accessoryNode?: React.ReactNode;
     /** Main content of the cell; typically title/description content. */

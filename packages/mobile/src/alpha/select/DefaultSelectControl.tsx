@@ -35,7 +35,9 @@ type DefaultSelectControlComponent = <
   Type extends SelectType,
   SelectOptionValue extends string = string,
 >(
-  props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<TouchableOpacity> },
+  props: SelectControlProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<React.ElementRef<typeof TouchableOpacity>>;
+  },
 ) => React.ReactElement;
 
 export const DefaultSelectControlComponent = memo(
@@ -68,9 +70,11 @@ export const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel = 'Remove',
         style,
         styles,
+        onBlur,
+        onFocus,
         ...props
       }: SelectControlProps<Type, SelectOptionValue>,
-      ref: React.Ref<TouchableOpacity>,
+      ref: React.ForwardedRef<React.ElementRef<typeof TouchableOpacity>>,
     ) => {
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
@@ -243,6 +247,8 @@ export const DefaultSelectControlComponent = memo(
         onChange,
       ]);
 
+      // onBlur/onFocus on ViewProps allow null returns but TouchableOpacity's onBlur/onFocus props do not.
+      // This appears like a type inconsistency in react-native's type definitions.
       const inputNode = useMemo(
         () => (
           <TouchableOpacity
@@ -251,6 +257,8 @@ export const DefaultSelectControlComponent = memo(
             accessibilityLabel={accessibilityLabel}
             accessibilityRole="button"
             disabled={disabled}
+            onBlur={onBlur ?? undefined}
+            onFocus={onFocus ?? undefined}
             onPress={() => setOpen((s) => !s)}
             style={[{ flexGrow: 1 }, styles?.controlInputNode]}
             {...props}
@@ -296,6 +304,8 @@ export const DefaultSelectControlComponent = memo(
           accessibilityHint,
           accessibilityLabel,
           disabled,
+          onBlur,
+          onFocus,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
@@ -348,6 +358,8 @@ export const DefaultSelectControlComponent = memo(
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
           labelVariant={labelVariant}
+          onBlur={onBlur}
+          onFocus={onFocus}
           variant={variant}
           {...props}
         />

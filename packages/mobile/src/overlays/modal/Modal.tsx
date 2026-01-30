@@ -28,7 +28,7 @@ export type ModalBaseProps = SharedProps &
   Pick<PositionStyles, 'zIndex'> &
   Omit<RNModalProps, 'children' | 'visible' | 'onRequestClose' | 'animationType'> & {
     /** Component to render as the Modal content */
-    children?: React.ReactNode | React.FC<ModalChildrenRenderProps>;
+    children?: React.ReactNode | ((props: ModalChildrenRenderProps) => React.ReactNode);
     /**
      * Callback fired after the component is closed.
      */

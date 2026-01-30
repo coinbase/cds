@@ -21,9 +21,9 @@ const TourExamples = <T extends string>({
   step4Ref,
   ids,
 }: {
-  step2Ref: React.RefObject<View>;
-  step3Ref: React.RefObject<View>;
-  step4Ref: React.RefObject<View>;
+  step2Ref: React.RefObject<View | null>;
+  step3Ref: React.RefObject<View | null>;
+  step4Ref: React.RefObject<View | null>;
   ids: T[];
 }) => {
   const { startTour } = useTourContext();
@@ -85,8 +85,8 @@ const StepOne = () => {
 };
 
 const scrollIntoView = async (
-  scrollViewRef: React.RefObject<ScrollView>,
-  elementRef: React.RefObject<View>,
+  scrollViewRef: React.RefObject<ScrollView | null>,
+  elementRef: React.RefObject<View | null>,
 ) => {
   const scrollView = scrollViewRef.current;
   if (!scrollView) return;

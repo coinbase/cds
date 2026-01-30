@@ -69,8 +69,9 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
     // The RadioCell should have selected accessibility state
-    expect(screen.queryAllByA11yState({ selected: true })).toHaveLength(1); // Only the cell
+    expect(screen.queryAllByRole('radio', { selected: true })).toHaveLength(1); // Only the cell
   });
 
   it('shows unselected state correctly', () => {
@@ -85,8 +86,9 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
     // The RadioCell should have unselected accessibility state
-    expect(screen.queryAllByA11yState({ selected: false })).toHaveLength(1); // Only the cell
+    expect(screen.queryAllByRole('radio', { selected: false })).toHaveLength(1); // Only the cell
   });
 
   it('triggers onChange when pressed', () => {
@@ -140,8 +142,9 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
     // The RadioCell should have disabled accessibility state (both main cell and internal control have disabled state)
-    expect(screen.queryAllByA11yState({ disabled: true })).toHaveLength(2);
+    expect(screen.queryAllByRole('radio', { disabled: true })).toHaveLength(2);
   });
 
   it('attaches testID', () => {

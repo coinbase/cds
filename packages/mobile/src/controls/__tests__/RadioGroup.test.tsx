@@ -64,7 +64,8 @@ describe('Radio', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryAllByA11yState({ checked: true })).toHaveLength(1);
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
+    expect(screen.queryAllByRole('radio', { checked: true })).toHaveLength(1);
   });
 
   it('has accessibility state disabled when disabled', () => {
@@ -74,7 +75,8 @@ describe('Radio', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryAllByA11yState({ disabled: true })).toHaveLength(1);
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
+    expect(screen.queryAllByRole('radio', { disabled: true })).toHaveLength(1);
   });
 
   it('Can set custom accessibility label and hints', () => {

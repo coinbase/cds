@@ -301,7 +301,7 @@ export type SelectControlComponent<
   SelectOptionValue extends string = string,
 > = React.FC<
   SelectControlProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<TouchableOpacity>;
+    ref?: React.Ref<React.ElementRef<typeof TouchableOpacity>>;
   }
 >;
 
@@ -508,8 +508,8 @@ export type SelectProps<
 export type SelectRef = View &
   Pick<SelectProps, 'open' | 'setOpen'> & {
     refs: {
-      reference: React.RefObject<View>;
-      floating: React.RefObject<View> | null;
+      reference: React.RefObject<View | null>;
+      floating: React.RefObject<View | null> | null;
     };
   };
 

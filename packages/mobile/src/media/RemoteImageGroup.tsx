@@ -87,15 +87,20 @@ export const RemoteImageGroup = ({
         if (!isValidElement(child)) {
           return null;
         }
-        const childShape: RemoteImageProps['shape'] = child.props.shape;
+        const childShape: RemoteImageProps['shape'] = (
+          child as React.ReactElement<RemoteImageProps>
+        ).props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
-        const clonedChild = React.cloneElement<RemoteImageProps>(child as React.ReactElement, {
-          testID: `${testID ? `${testID}-` : ''}image-${index}`,
-          width: sizeAsNumber,
-          height: sizeAsNumber,
-          ...(childShape ? undefined : { shape }),
-        });
+        const clonedChild = React.cloneElement<RemoteImageProps>(
+          child as React.ReactElement<RemoteImageProps>,
+          {
+            testID: `${testID ? `${testID}-` : ''}image-${index}`,
+            width: sizeAsNumber,
+            height: sizeAsNumber,
+            ...(childShape ? undefined : { shape }),
+          },
+        );
 
         // zIndex is progressively lower so that each child is stacked below the previous one
         const zIndex = -index;

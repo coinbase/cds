@@ -15,7 +15,7 @@ import { Icon } from '../icons';
 import type { HStackProps } from '../layout';
 import { Box, HStack, VStack } from '../layout';
 import { Pressable } from '../system/Pressable';
-import { Link } from '../typography';
+import { Link, type LinkProps } from '../typography';
 import { Text } from '../typography/Text';
 
 export type BannerBaseProps = SharedProps & {
@@ -129,12 +129,12 @@ export const Banner = memo(
           font: 'label1',
           color: primaryActionColor,
           testID: `${testID}-action--primary`,
-          ...primaryAction.props,
+          ...(primaryAction.props as LinkProps),
         });
       } else {
         return React.cloneElement(primaryAction, {
           testID: `${testID}-action--primary`,
-          ...primaryAction.props,
+          ...(primaryAction.props as any), // we don't know the type of element this ReactNode is
         });
       }
     }, [primaryAction, primaryActionColor, testID]);
@@ -147,12 +147,12 @@ export const Banner = memo(
           font: 'label1',
           color: secondaryActionColor,
           testID: `${testID}-action--secondary`,
-          ...secondaryAction.props,
+          ...(secondaryAction.props as LinkProps),
         });
       } else {
         return React.cloneElement(secondaryAction, {
           testID: `${testID}-action--secondary`,
-          ...secondaryAction.props,
+          ...(secondaryAction.props as any), // we don't know the type of element this ReactNode is
         });
       }
     }, [secondaryAction, secondaryActionColor, testID]);

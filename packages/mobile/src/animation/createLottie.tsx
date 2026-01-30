@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createRef, type JSX } from 'react';
 import { Animated } from 'react-native';
 import type { LottiePlayer, LottieSource } from '@coinbase/cds-common';
 import { getLottieDuration, getLottieMarkers } from '@coinbase/cds-common';

@@ -98,7 +98,8 @@ describe('Checkbox', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryAllByA11yState({ checked: true })).toHaveLength(1);
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
+    expect(screen.queryAllByRole('checkbox', { checked: true })).toHaveLength(1);
   });
 
   it('has accessibility state disabled when disabled', () => {
@@ -108,7 +109,8 @@ describe('Checkbox', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryAllByA11yState({ disabled: true })).toHaveLength(1);
+    // TODO: Consider strengthening with toHaveAccessibilityState matcher
+    expect(screen.queryAllByRole('checkbox', { disabled: true })).toHaveLength(1);
   });
 
   it('disabled checkbox passes a11y', () => {

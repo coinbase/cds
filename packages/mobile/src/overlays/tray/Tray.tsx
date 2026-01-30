@@ -18,7 +18,7 @@ import { Box, HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { Drawer, type DrawerBaseProps, type DrawerRefBaseProps } from '../drawer/Drawer';
 
-export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
+export type TrayRenderChildren = (args: { handleClose: () => void }) => React.ReactNode;
 
 export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
   children: React.ReactNode | TrayRenderChildren;

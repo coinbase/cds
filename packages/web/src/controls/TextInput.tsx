@@ -241,7 +241,7 @@ export const TextInput = memo(
           inputNode as React.ReactElement<
             React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>
           >,
-           
+
           {
             onFocus: handleOnFocus,
             onBlur: handleOnBlur,

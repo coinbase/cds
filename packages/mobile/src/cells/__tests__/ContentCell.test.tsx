@@ -231,7 +231,7 @@ describe('ContentCell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.container).not.toBeNull();
+    expect(screen.root).not.toBeNull();
   });
 
   it('renders override nodes when provided', () => {

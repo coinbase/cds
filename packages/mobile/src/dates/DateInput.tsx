@@ -1,11 +1,11 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import {
+  type BlurEvent,
   type NativeSyntheticEvent,
   type StyleProp,
   type TextInput as NativeTextInput,
   type TextInputChangeEventData,
   type TextInputEndEditingEventData,
-  type TextInputFocusEventData,
   type ViewStyle,
 } from 'react-native';
 import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
@@ -84,7 +84,7 @@ export const DateInput = memo(
        */
 
       const handleBlur = useCallback(
-        (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        (event: BlurEvent) => {
           onBlur?.(event);
           if (!required || !hasTyped.current) return;
           const error = validateDateInput(inputValue);

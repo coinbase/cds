@@ -155,7 +155,8 @@ export const Icon = memo(function Icon({
         accessibilityRole="image"
         accessible={!!accessibilityLabel}
         allowFontScaling={false}
-        style={iconStyle}
+        // https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+        style={iconStyle as StyleProp<TextStyle>}
       >
         {glyph}
       </TextComponent>

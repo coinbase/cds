@@ -72,7 +72,7 @@ export type ComboboxControlProps<
     /** Search text change handler */
     onSearch: (searchText: string) => void;
     /** Reference to the search input */
-    searchInputRef: React.RefObject<TextInput>;
+    searchInputRef: React.RefObject<TextInput | null>;
     /** Reference to the combobox control for positioning */
     controlRef: React.RefObject<ComboboxRef | null>;
     /** Custom SelectControlComponent to wrap */

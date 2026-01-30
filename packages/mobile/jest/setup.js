@@ -5,14 +5,16 @@
 import 'react-native-gesture-handler/jestSetup';
 import 'react-native-accessibility-engine';
 
-import { setUpTests } from 'react-native-reanimated/src/jestUtils';
+// https://docs.swmansion.com/react-native-reanimated/docs/guides/testing/
+const { setUpTests } = require('react-native-reanimated');
 
 import { mockStatusBarHeight } from '../src/hooks/__tests__/constants';
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 // Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+// Path changed in React Native 0.81+
+jest.mock('react-native/src/private/animated/NativeAnimatedHelper');
 
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');

@@ -18,7 +18,7 @@ export type ScrollToFns = {
 };
 
 export const useScrollTo = (ref?: AnyRef<ScrollView>): [ScrollRef, ScrollToFns] => {
-  const internalRef = useRef<ScrollView>();
+  const internalRef = useRef<ScrollView>(undefined);
   const scrollRef = useMergeRefs(ref, internalRef);
   const scrollTo = useCallback(({ x = 0, y = 0, animated = true }: ScrollToParams) => {
     internalRef.current?.scrollTo({ x, y, animated });

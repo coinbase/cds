@@ -39,8 +39,10 @@ const config = {
   ],
   coverageReporters: ['json', 'text-summary', 'text', 'json-summary'],
   // https://docs.swmansion.com/react-native-gesture-handler/docs/guides/testing
+  // https://docs.swmansion.com/react-native-worklets/docs/guides/testing/
   setupFiles: [
     '<rootDir>/../../node_modules/react-native-gesture-handler/jestSetup.js',
+    '<rootDir>/jest/setupWorkletsMock.js',
     '<rootDir>/jest/jestThrowOnErrorAndWarning.js',
   ],
   setupFilesAfterEnv: ['<rootDir>/jest/setup.js'],

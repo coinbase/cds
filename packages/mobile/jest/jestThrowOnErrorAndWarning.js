@@ -11,9 +11,7 @@ const IGNORED_MESSAGES = ['react-test-renderer is deprecated'];
 // by overriding the functions
 CONSOLE_FAIL_TYPES.forEach((type) => {
   console[type] = (message) => {
-    const shouldIgnore = IGNORED_MESSAGES.some((ignored) =>
-      String(message).includes(ignored)
-    );
+    const shouldIgnore = IGNORED_MESSAGES.some((ignored) => String(message).includes(ignored));
     if (shouldIgnore) {
       return;
     }
