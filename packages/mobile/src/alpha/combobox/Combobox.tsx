@@ -284,7 +284,7 @@ const ComboboxBase = memo(
                   }
                 >
                   <StickyFooter
-                    background="bg"
+                    background="bgElevation2"
                     elevation={2}
                     style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
                   >
