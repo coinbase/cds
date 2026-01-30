@@ -293,7 +293,7 @@ describe('Tray', () => {
       const onCloseCompleteSpy = jest.fn();
       render(
         <DefaultThemeProvider>
-          <Tray onCloseComplete={onCloseCompleteSpy} showHandleBar>
+          <Tray showHandleBar onCloseComplete={onCloseCompleteSpy}>
             {loremIpsum}
           </Tray>
         </DefaultThemeProvider>,
@@ -306,7 +306,7 @@ describe('Tray', () => {
       const onCloseCompleteSpy = jest.fn();
       render(
         <DefaultThemeProvider>
-          <Tray onCloseComplete={onCloseCompleteSpy} showHandleBar title={titleText}>
+          <Tray showHandleBar onCloseComplete={onCloseCompleteSpy} title={titleText}>
             {loremIpsum}
           </Tray>
         </DefaultThemeProvider>,
@@ -321,9 +321,9 @@ describe('Tray', () => {
       render(
         <DefaultThemeProvider>
           <Tray
+            showHandleBar
             hideCloseButton={false}
             onCloseComplete={onCloseCompleteSpy}
-            showHandleBar
             title={titleText}
           >
             {loremIpsum}
@@ -339,7 +339,7 @@ describe('Tray', () => {
       const onCloseCompleteSpy = jest.fn();
       render(
         <DefaultThemeProvider>
-          <Tray onCloseComplete={onCloseCompleteSpy} pin="right" showHandleBar title={titleText}>
+          <Tray showHandleBar onCloseComplete={onCloseCompleteSpy} pin="right" title={titleText}>
             {loremIpsum}
           </Tray>
         </DefaultThemeProvider>,
