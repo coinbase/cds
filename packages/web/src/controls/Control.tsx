@@ -54,7 +54,7 @@ const interactableCss = css`
   }
 `;
 
-export type ControlBaseProps<T extends string> = FilteredHTMLAttributes<
+export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttributes<
   React.InputHTMLAttributes<HTMLInputElement>,
   'value' | 'color'
 > &
@@ -74,7 +74,7 @@ export type ControlBaseProps<T extends string> = FilteredHTMLAttributes<
     /** Set the control to ready-only. Similar effect as disabled. */
     readOnly?: boolean;
     /** Value of the option. Useful for multiple choice. */
-    value?: T;
+    value?: ControlValue;
     /** Accessibility label describing the element. */
     accessibilityLabel?: string;
     /** Enable indeterminate state. Useful when you want to indicate that sub-items of a control are partially filled. */
@@ -85,12 +85,12 @@ export type ControlBaseProps<T extends string> = FilteredHTMLAttributes<
     labelStyle?: React.CSSProperties;
   };
 
-export type ControlProps<T extends string> = ControlBaseProps<T> & {
+export type ControlProps<ControlValue extends string> = ControlBaseProps<ControlValue> & {
   label?: React.ReactNode;
   children: React.ReactNode;
 };
 
-const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
+const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
   {
     type,
     checked,
@@ -112,7 +112,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     iconStyle,
     labelStyle,
     ...htmlProps
-  }: ControlProps<T>,
+  }: ControlProps<ControlValue>,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   if (isDevelopment() && !children && !ariaLabelledby) {
@@ -213,8 +213,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.
   return controlElement;
-}) as <T extends string>(
-  props: ControlProps<T> & { ref?: React.Ref<HTMLInputElement> },
+}) as <ControlValue extends string>(
+  props: ControlProps<ControlValue> & { ref?: React.Ref<HTMLInputElement> },
 ) => React.ReactElement;
 
 export const Control = memo(ControlWithRef) as typeof ControlWithRef &

@@ -3176,5 +3176,11 @@ export const glyphMap = {
   'airdropParachute-16-active': '󰨵',
   'airdropParachute-16-inactive': '󰨶',
   'airdropParachute-24-active': '󰨷',
-  'airdropParachute-24-inactive': '󰨸'
+  'airdropParachute-24-inactive': '󰨸',
+  'birthcertificate-12-active': '󰱧',
+  'birthcertificate-12-inactive': '󰱨',
+  'birthcertificate-16-active': '󰱩',
+  'birthcertificate-16-inactive': '󰱪',
+  'birthcertificate-24-active': '󰱫',
+  'birthcertificate-24-inactive': '󰱬'
 };

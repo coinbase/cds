@@ -158,6 +158,7 @@ const names: SpotSquareName[] = [
   'giftBoxCrypto',
   'gifting',
   'globalTransactions',
+  'goldSilverFutures',
   'guideBullCase',
   'guideCryptoBeginner',
   'guideFiveThings',

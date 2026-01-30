@@ -115,6 +115,15 @@ const TabNavigationScreen = () => {
         />
         <Button onPress={randomizeCurrentTabOne}>Select random item</Button>
       </Example>
+      <Example overflow="visible" padding={gutter} title="With Padding">
+        <TabNavigation
+          onChange={setCurrentTabOne}
+          paddingX={3}
+          paddingY={1}
+          tabs={sampleTabs.slice(0, 3)}
+          value={currentTabOne}
+        />
+      </Example>
     </ExampleScreen>
   );
 };

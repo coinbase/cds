@@ -15,9 +15,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export type RadioBaseProps<T extends string> = ControlBaseProps<T>;
+export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioValue>;
 
-export type RadioProps<T extends string> = RadioBaseProps<T>;
+export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
 const DotSvg = ({ color = 'black', width = 20 }: { color?: ColorValue; width?: number }) => {
   return (
@@ -72,8 +72,8 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   );
 };
 
-const RadioWithRef = forwardRef(function Radio<T extends string>(
-  { children, accessibilityHint, accessibilityLabel, ...props }: RadioProps<T>,
+const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
+  { children, accessibilityHint, accessibilityLabel, ...props }: RadioProps<RadioValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const accessibilityLabelValue =
@@ -82,7 +82,7 @@ const RadioWithRef = forwardRef(function Radio<T extends string>(
       : accessibilityLabel;
 
   return (
-    <Control<T>
+    <Control<RadioValue>
       {...props}
       ref={ref}
       accessibilityHint={accessibilityHint}
@@ -95,7 +95,9 @@ const RadioWithRef = forwardRef(function Radio<T extends string>(
     </Control>
   );
   // Make forwardRef result function stay generic function type
-}) as <T extends string>(props: RadioProps<T> & { ref?: React.Ref<View> }) => React.ReactElement;
+}) as <RadioValue extends string>(
+  props: RadioProps<RadioValue> & { ref?: React.Ref<View> },
+) => React.ReactElement;
 
 // Make memoized function stay generic function type
 export const Radio = memo(RadioWithRef) as typeof RadioWithRef &

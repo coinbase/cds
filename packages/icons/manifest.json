@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-12-22T20:44:30.548Z",
-  "lastUnicode": 986214,
+  "lastUpdated": "2026-01-29T18:49:47.855Z",
+  "lastUnicode": 986220,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -2216,16 +2216,10 @@
       "name": "pencil",
       "description": "navigation, specialty, pencil, pen, edit, correct, check, copyedit, improve, ✏️, 📝, ✍️, 🖊, 🖋, ✒️",
       "assetsHash": "33x4KS/CbHB1G9/nh9WCsjS9eiDx6XikagJfGd08Fkg=",
-      "nameHash": "cZWJTLy+wvgZcFzpEu4vQKzCopOGXLrk9GZzEEjrk3g=",
+      "nameHash": "h5300mFrD63IQI560kgN/K3ArwbutOv0WZXF4KP1EBg=",
       "createdAt": "2022-08-24T18:51:39.775Z",
-      "lastUpdated": "2025-03-27T17:57:32.300Z",
+      "lastUpdated": "2026-01-08T15:01:50.673Z",
       "svgs": [
-        {
-          "name": "pencil-24-active",
-          "active": true,
-          "size": 24,
-          "unicode": 984677
-        },
         {
           "name": "pencil-24-inactive",
           "active": false,
@@ -2233,10 +2227,10 @@
           "unicode": 984678
         },
         {
-          "name": "pencil-16-active",
+          "name": "pencil-24-active",
           "active": true,
-          "size": 16,
-          "unicode": 984675
+          "size": 24,
+          "unicode": 984677
         },
         {
           "name": "pencil-16-inactive",
@@ -2245,16 +2239,22 @@
           "unicode": 984676
         },
         {
-          "name": "pencil-12-active",
+          "name": "pencil-16-active",
           "active": true,
-          "size": 12,
-          "unicode": 984673
+          "size": 16,
+          "unicode": 984675
         },
         {
           "name": "pencil-12-inactive",
           "active": false,
           "size": 12,
           "unicode": 984674
+        },
+        {
+          "name": "pencil-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 984673
         }
       ]
     },
@@ -5223,10 +5223,10 @@
       "nodeId": "2:3416",
       "name": "smartContract",
       "description": "smart, contract, rules, policy, list, document, agreement, commitment, arrangement, settlement, 📄, 📃, 📜, 📑",
-      "assetsHash": "jMypW2xEkVpePL5CmFCv19dg3qV4wdJ5bI4GGi083tM=",
+      "assetsHash": "RbNA2z+isVBAJ06GjHE/+bYNR7bG5DJ9LM3+ISg1Aew=",
       "nameHash": "P7jrllgJaoAiUZc5ndGehVd8Znkn8amnUgeIXO1Ykiw=",
       "createdAt": "2023-02-01T23:25:12.874Z",
-      "lastUpdated": "2025-03-27T17:57:57.641Z",
+      "lastUpdated": "2026-01-08T14:56:51.147Z",
       "svgs": [
         {
           "name": "smartContract-24-inactive",
@@ -24862,6 +24862,53 @@
           "active": true,
           "size": 12,
           "unicode": 985651
+        }
+      ]
+    },
+    {
+      "nodeId": "6557:39",
+      "name": "birthcertificate",
+      "description": "birthcertificate, birth, certificate, doc, document",
+      "assetsHash": "pSSAYL6SMRBoZRG/apZhIGV2E2NLe2sMH/p7NRC1jIk=",
+      "nameHash": "0k8lRyDUS6pbSp+cGFHOCg+5FH49CM1wGWEcxUoH8vg=",
+      "createdAt": "2026-01-29T17:18:54.491Z",
+      "lastUpdated": "2026-01-29T17:18:54.491Z",
+      "svgs": [
+        {
+          "name": "birthcertificate-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986220
+        },
+        {
+          "name": "birthcertificate-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986219
+        },
+        {
+          "name": "birthcertificate-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986218
+        },
+        {
+          "name": "birthcertificate-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986217
+        },
+        {
+          "name": "birthcertificate-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986216
+        },
+        {
+          "name": "birthcertificate-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986215
         }
       ]
     }

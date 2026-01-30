@@ -54,7 +54,7 @@ export type TourMaskComponentProps = {
 
 export type TourMaskComponent = React.FC<TourMaskComponentProps>;
 
-export type TourProps<T extends string = string> = TourOptions<T> & {
+export type TourProps<TourStepId extends string = string> = TourOptions<TourStepId> & {
   children?: React.ReactNode;
   /**
    * The Component to render as a tour overlay and mask.
@@ -96,9 +96,9 @@ export type TourProps<T extends string = string> = TourOptions<T> & {
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy' | 'id'> &
   SharedProps;
 
-type TourFC = <T extends string = string>(props: TourProps<T>) => React.ReactNode;
+type TourFC = <TourStepId extends string = string>(props: TourProps<TourStepId>) => React.ReactNode;
 
-const TourComponent = <T extends string = string>({
+const TourComponent = <TourStepId extends string = string>({
   steps,
   activeTourStep,
   tourStepOffset = 24,
@@ -114,7 +114,7 @@ const TourComponent = <T extends string = string>({
   accessibilityLabelledBy,
   id,
   testID,
-}: TourProps<T>) => {
+}: TourProps<TourStepId>) => {
   const theme = useTheme();
   const defaultTourStepOffset = theme.space[3];
   const defaultTourStepShiftPadding = theme.space[4];
@@ -143,7 +143,7 @@ const TourComponent = <T extends string = string>({
   });
 
   const handleChange = useCallback(
-    (tourStep: TourStepValue<T> | null) => {
+    (tourStep: TourStepValue<TourStepId> | null) => {
       void animationApi.start({
         to: { opacity: 0 },
         config: springConfig.stiff,
@@ -155,7 +155,7 @@ const TourComponent = <T extends string = string>({
     [animationApi, onChange],
   );
 
-  const api = useTour<T>({ steps, activeTourStep, onChange: handleChange });
+  const api = useTour<TourStepId>({ steps, activeTourStep, onChange: handleChange });
   const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects

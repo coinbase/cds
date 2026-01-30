@@ -41,7 +41,7 @@ const checkboxCss = css`
  *   onChange={onChange}xw
  * />
  */
-export type CheckboxGroupBaseProps<T extends string | number> = FilteredHTMLAttributes<
+export type CheckboxGroupBaseProps<CheckboxValue extends string | number> = FilteredHTMLAttributes<
   FieldsetHTMLAttributes<HTMLFieldSetElement>,
   'onChange'
 > &
@@ -51,7 +51,7 @@ export type CheckboxGroupBaseProps<T extends string | number> = FilteredHTMLAttr
     /** Set a label summary for the group of checkboxes. */
     label?: React.ReactNode;
     /** Checkbox options that are checked. */
-    selectedValues: Set<T>;
+    selectedValues: Set<CheckboxValue>;
     className?: string;
     /** Handle change event when pressing on a checkbox option. */
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -61,10 +61,11 @@ export type CheckboxGroupBaseProps<T extends string | number> = FilteredHTMLAttr
 /**
  * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead.
  */
-export type CheckboxGroupProps<T extends string> = CheckboxGroupBaseProps<T>;
+export type CheckboxGroupProps<CheckboxValue extends string> =
+  CheckboxGroupBaseProps<CheckboxValue>;
 
 // Follows behavior describe in https://www.w3.org/TR/wai-aria-practices/examples/checkbox/checkbox-2/checkbox-2.html
-const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<T extends string>(
+const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxValue extends string>(
   {
     children,
     className,
@@ -78,7 +79,7 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<T extends 
     role = 'group',
     id,
     ...props
-  }: CheckboxGroupProps<T>,
+  }: CheckboxGroupProps<CheckboxValue>,
   ref: React.ForwardedRef<HTMLFieldSetElement>,
 ) {
   if (isDevelopment()) {
@@ -92,7 +93,7 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<T extends 
   // Convert children to ControlGroup options format
   const controlGroupOptions = useMemo(() => {
     return Children.map(children, (child) => {
-      if (!isValidElement<CheckboxProps<T>>(child) || child.type !== Checkbox) {
+      if (!isValidElement<CheckboxProps<CheckboxValue>>(child) || child.type !== Checkbox) {
         return null;
       }
 
@@ -105,7 +106,7 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<T extends 
       const checkboxId = id ?? ['checkbox-group', name, value].join('-');
 
       return {
-        value: value as T,
+        value: value as CheckboxValue,
         children: checkboxChildren,
         id: checkboxId,
         ...childProps,
@@ -136,7 +137,9 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<T extends 
       value={selectedValuesArray}
     />
   );
-});
+}) as <CheckboxValue extends string>(
+  props: CheckboxGroupProps<CheckboxValue> & { ref?: React.Ref<HTMLFieldSetElement> },
+) => React.ReactElement;
 
 export const CheckboxGroup = memo(CheckboxGroupWithRef) as typeof CheckboxGroupWithRef &
   React.MemoExoticComponent<typeof CheckboxGroupWithRef>;
