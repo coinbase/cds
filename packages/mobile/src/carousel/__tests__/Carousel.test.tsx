@@ -1352,4 +1352,318 @@ describe('Carousel', () => {
       expect(screen.getByTestId('visibility-status')).toBeOnTheScreen();
     });
   });
+
+  describe('Autoplay', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      // Reset gesture handlers
+      mockGestureHandlers.onStart = undefined;
+      mockGestureHandlers.onUpdate = undefined;
+      mockGestureHandlers.onEnd = undefined;
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('does not autoplay by default', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems itemCount={5} onChangePage={onChangePage} />);
+
+      // Advance time by default interval
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+
+      // Should not have changed page
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('enables autoplay when autoplay prop is true', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Advance time by default interval (3000ms)
+      act(() => {
+        jest.advanceTimersByTime(3000);
+      });
+
+      // Should have advanced to next page
+      expect(onChangePage).toHaveBeenCalledWith(1);
+    });
+
+    it('respects custom autoplayInterval', () => {
+      const onChangePage = jest.fn();
+      render(
+        <TestCarouselWithItems
+          autoplay
+          autoplayInterval={5000}
+          itemCount={5}
+          onChangePage={onChangePage}
+        />,
+      );
+
+      // Advance time by less than custom interval
+      act(() => {
+        jest.advanceTimersByTime(4000);
+      });
+
+      // Should not have changed page yet
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      // Advance time to complete the interval
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      // Should have advanced now
+      expect(onChangePage).toHaveBeenCalledWith(1);
+    });
+
+    it('shows autoplay toggle button when autoplay is enabled', () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      // Should have the autoplay toggle button
+      expect(screen.getByTestId('carousel-autoplay-button')).toBeOnTheScreen();
+    });
+
+    it('applies custom startAutoplayAccessibilityLabel', () => {
+      render(
+        <TestCarouselWithItems
+          autoplay
+          itemCount={5}
+          startAutoplayAccessibilityLabel="Resume slideshow"
+        />,
+      );
+
+      // First stop autoplay to see the start label
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      fireEvent.press(autoplayButton);
+
+      // Should have the custom start label
+      expect(screen.getByLabelText('Resume slideshow')).toBeOnTheScreen();
+    });
+
+    it('applies custom stopAutoplayAccessibilityLabel', () => {
+      render(
+        <TestCarouselWithItems
+          autoplay
+          itemCount={5}
+          stopAutoplayAccessibilityLabel="Pause slideshow"
+        />,
+      );
+
+      // Should have the custom stop label when autoplay is playing
+      expect(screen.getByLabelText('Pause slideshow')).toBeOnTheScreen();
+    });
+
+    it('applies default autoplay accessibility labels', () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      // Should have the default stop label when autoplay is playing
+      expect(screen.getByLabelText('Stop autoplay')).toBeOnTheScreen();
+    });
+
+    it('toggles autoplay when toggle button is pressed', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Stop autoplay
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      fireEvent.press(autoplayButton);
+
+      // Clear any calls from before
+      onChangePage.mockClear();
+
+      // Advance time - should NOT advance because autoplay is stopped
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      // Start autoplay again
+      fireEvent.press(autoplayButton);
+
+      // Advance time - should advance now
+      act(() => {
+        jest.advanceTimersByTime(3000);
+      });
+
+      expect(onChangePage).toHaveBeenCalled();
+    });
+
+    it('resets autoplay progress when manually navigating via next button', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Advance time partially
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      // Manually navigate
+      const nextButton = screen.getByTestId('carousel-next-button');
+      fireEvent.press(nextButton);
+
+      // Clear the call from manual navigation
+      onChangePage.mockClear();
+
+      // Advance by less than full interval (timer was reset)
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      // Should not have auto-advanced yet (timer reset to 3000ms)
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      // Advance to complete the interval
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      // Should have auto-advanced now
+      expect(onChangePage).toHaveBeenCalled();
+    });
+
+    it('resets autoplay progress when manually navigating via previous button', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay loop itemCount={5} onChangePage={onChangePage} />);
+
+      // Advance time partially
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      // Manually navigate backwards (with loop enabled)
+      const prevButton = screen.getByTestId('carousel-previous-button');
+      fireEvent.press(prevButton);
+
+      // Clear the call from manual navigation
+      onChangePage.mockClear();
+
+      // Advance by less than full interval (timer was reset)
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      // Should not have auto-advanced yet (timer reset to 3000ms)
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('resets autoplay progress when clicking pagination dots', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={8} onChangePage={onChangePage} />);
+
+      // Wait for pagination dots
+      await waitFor(() => {
+        const paginationDots = screen.queryAllByTestId(/carousel-page-\d+/);
+        expect(paginationDots.length).toBeGreaterThan(1);
+      });
+
+      // Advance time partially
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      // Click on a pagination dot
+      const paginationDots = screen.queryAllByTestId(/carousel-page-\d+/);
+      fireEvent.press(paginationDots[1]);
+
+      // Clear the call from manual navigation
+      onChangePage.mockClear();
+
+      // Advance by less than full interval (timer was reset)
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      // Should not have auto-advanced yet (timer reset to 3000ms)
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('continues autoplay after manual navigation (does not stop)', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Manually navigate
+      const nextButton = screen.getByTestId('carousel-next-button');
+      fireEvent.press(nextButton);
+
+      // Clear previous calls
+      onChangePage.mockClear();
+
+      // Advance time for a full interval - autoplay should still work
+      act(() => {
+        jest.advanceTimersByTime(3000);
+      });
+
+      // Should have auto-advanced (autoplay continues after manual nav)
+      expect(onChangePage).toHaveBeenCalled();
+    });
+
+    it('loops to first page when autoplay reaches the last page', () => {
+      const onChangePage = jest.fn();
+      // Use snapMode="item" with 3 items for predictable pagination (3 pages)
+      render(
+        <TestCarouselWithItems
+          autoplay
+          autoplayInterval={1000}
+          itemCount={3}
+          onChangePage={onChangePage}
+          snapMode="item"
+        />,
+      );
+
+      // Advance through all pages
+      // Page 0 -> 1
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+      // Page 1 -> 2 (last page with 3 items in item mode)
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      // Page 2 -> 0 (should loop)
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      // Should have looped back to page 0
+      expect(onChangePage).toHaveBeenCalledWith(0);
+    });
+
+    it('resets autoplay progress after drag gesture', () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      // Advance time partially
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      // Simulate a drag gesture
+      simulateDragGesture();
+
+      // Clear calls from drag
+      onChangePage.mockClear();
+
+      // Advance by less than full interval (timer was reset)
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      // Should not have auto-advanced yet (timer reset to 3000ms)
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      // Advance to complete the interval
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      // Should have auto-advanced now
+      expect(onChangePage).toHaveBeenCalled();
+    });
+  });
 });

@@ -1,14 +1,16 @@
-import React, { type KeyboardEvent, memo, useCallback } from 'react';
+import React, { type KeyboardEvent, memo, useCallback, useMemo } from 'react';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import { RefMapContext, useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
+import { m, useTransform } from 'framer-motion';
 
 import { cx } from '../cx';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 
 import type { CarouselPaginationComponentProps } from './Carousel';
+import { useCarouselAutoplayContext } from './CarouselContext';
 
 const defaultPaginationCss = css`
   padding: var(--space-0_5) 0;
@@ -18,6 +20,8 @@ const dotCss = css`
   width: var(--space-3);
   height: var(--space-0_5);
   border-radius: var(--borderRadius-100);
+  border-width: 0;
+  overflow: hidden;
 `;
 
 export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps &
@@ -61,19 +65,41 @@ const PaginationDot = memo(function PressableWithRef({
   ...props
 }: PaginationDotProps) {
   const { registerRef } = useRefMapContext();
+  const autoplayContext = useCarouselAutoplayContext();
   const refCallback = useCallback(
     (ref: HTMLButtonElement) => registerRef(id, ref),
     [registerRef, id],
   );
+
+  // Transform progress (0-1) to width percentage
+  const progressWidth = useTransform(
+    autoplayContext.progress,
+    (value: number) => `${value * 100}%`,
+  );
+
+  // Show progress bar when autoplay is enabled on the active dot
+  // Progress is shown even when paused/stopped to indicate current position
+  const showProgress = isActive && autoplayContext.isEnabled;
+
   return (
     <Pressable
       ref={refCallback}
-      background={isActive ? 'bgPrimary' : 'bgLine'}
+      background={isActive && !showProgress ? 'bgPrimary' : 'bgLine'}
       borderColor="transparent"
       data-active={isActive}
       tabIndex={isActive ? undefined : -1}
       {...props}
-    />
+    >
+      {showProgress && (
+        <m.div
+          style={{
+            width: progressWidth,
+            height: '100%',
+            background: 'var(--color-bgPrimary)',
+          }}
+        />
+      )}
+    </Pressable>
   );
 });
 

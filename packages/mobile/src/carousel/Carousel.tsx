@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useCarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
 import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 import { animated, useSpring } from '@react-spring/native';
 
@@ -18,7 +19,14 @@ import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
-import { CarouselContext, type CarouselContextValue, useCarouselContext } from './CarouselContext';
+import {
+  CarouselAutoplayContext,
+  type CarouselAutoplayContextValue,
+  CarouselContext,
+  type CarouselContextValue,
+  useCarouselAutoplayContext,
+  useCarouselContext,
+} from './CarouselContext';
 import { CarouselItem } from './CarouselItem';
 import { DefaultCarouselNavigation } from './DefaultCarouselNavigation';
 import { DefaultCarouselPagination } from './DefaultCarouselPagination';
@@ -55,8 +63,8 @@ export type CarouselItemProps = Omit<BoxProps, 'children'> & CarouselItemBasePro
 export type CarouselItemComponent = React.FC<CarouselItemProps>;
 export type CarouselItemElement = React.ReactElement<CarouselItemProps, CarouselItemComponent>;
 
-export { CarouselContext, useCarouselContext };
-export type { CarouselContextValue };
+export { CarouselAutoplayContext, CarouselContext, useCarouselAutoplayContext, useCarouselContext };
+export type { CarouselAutoplayContextValue, CarouselContextValue };
 
 export type CarouselNavigationComponentBaseProps = Pick<
   CarouselBaseProps,
@@ -535,11 +543,15 @@ export const Carousel = memo(
         styles,
         nextPageAccessibilityLabel,
         previousPageAccessibilityLabel,
+        startAutoplayAccessibilityLabel,
+        stopAutoplayAccessibilityLabel,
         goToPageAccessibilityLabel,
         onChangePage,
         onDragStart,
         onDragEnd,
         loop,
+        autoplay,
+        autoplayInterval = 3000,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -550,6 +562,10 @@ export const Carousel = memo(
         x: carouselScrollX.current,
         config: animationConfig,
       });
+
+      const [autoplayProgressSpring, autoplayProgressApi] = useSpring(() => ({
+        progress: 0,
+      }));
 
       const [activePageIndex, setActivePageIndex] = useState(0);
       const [containerSize, onLayout] = useLayout();
@@ -569,8 +585,8 @@ export const Carousel = memo(
                 ? newPageIndexOrUpdater(prevIndex)
                 : newPageIndexOrUpdater;
 
-            if (prevIndex !== newPageIndex && onChangePage) {
-              onChangePage(newPageIndex);
+            if (prevIndex !== newPageIndex) {
+              onChangePage?.(newPageIndex);
             }
 
             return newPageIndex;
@@ -761,27 +777,61 @@ export const Carousel = memo(
         [activePageIndex, totalPages, goToPage],
       );
 
+      const handleAutoplayAdvance = useCallback(() => {
+        const nextPage = wrap(0, totalPages, activePageIndex + 1);
+        goToPage(nextPage);
+      }, [totalPages, activePageIndex, goToPage]);
+
+      const [autoplayState, autoplayApi] = useCarouselAutoplay({
+        enabled: autoplay ?? false,
+        interval: autoplayInterval,
+        onAdvance: handleAutoplayAdvance,
+        onProgressUpdate: (progress) => autoplayProgressApi.set({ progress }),
+      });
+      const autoplayControls = useMemo(
+        () => ({ ...autoplayState, ...autoplayApi }),
+        [autoplayState, autoplayApi],
+      );
+
       const handleGoNext = useCallback(() => {
+        autoplayControls.pause();
         const nextPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex + 1)
           : activePageIndex + 1;
         goToPage(nextPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        autoplayControls.reset();
+        autoplayControls.resume();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, autoplayControls]);
 
       const handleGoPrevious = useCallback(() => {
+        autoplayControls.pause();
         const prevPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex - 1)
           : activePageIndex - 1;
         goToPage(prevPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        autoplayControls.reset();
+        autoplayControls.resume();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, autoplayControls]);
+
+      const handleClickPage = useCallback(
+        (pageIndex: number) => {
+          autoplayControls.pause();
+          goToPage(pageIndex);
+          autoplayControls.reset();
+          autoplayControls.resume();
+        },
+        [goToPage, autoplayControls],
+      );
 
       const handleDragStart = useCallback(() => {
         onDragStart?.();
-      }, [onDragStart]);
+        autoplayControls.pause();
+      }, [onDragStart, autoplayControls]);
 
       const handleDragEnd = useCallback(() => {
         onDragEnd?.();
-      }, [onDragEnd]);
+        autoplayControls.resume();
+      }, [onDragEnd, autoplayControls]);
 
       const handleDragTransition = useCallback(
         (targetOffsetScroll: number) => {
@@ -794,6 +844,9 @@ export const Carousel = memo(
               loopLength,
             );
 
+            if (pageIndex !== activePageIndex) {
+              autoplayControls.reset();
+            }
             updateActivePageIndex(pageIndex);
 
             if (drag === 'snap') {
@@ -816,6 +869,9 @@ export const Carousel = memo(
               clampedScrollOffset,
               pageOffsets,
             );
+            if (closestPageIndex !== activePageIndex) {
+              autoplayControls.reset();
+            }
             updateActivePageIndex(closestPageIndex);
 
             if (drag === 'snap') {
@@ -834,8 +890,10 @@ export const Carousel = memo(
           loopLength,
           maxScrollOffset,
           pageOffsets,
+          activePageIndex,
           updateVisibleCarouselItems,
           updateActivePageIndex,
+          autoplayControls,
         ],
       );
 
@@ -1047,58 +1105,82 @@ export const Carousel = memo(
         [registerItem, unregisterItem, visibleCarouselItems],
       );
 
+      const autoplayContextValue = useMemo<CarouselAutoplayContextValue>(
+        () => ({
+          isEnabled: autoplay ?? false,
+          isStopped: autoplayControls.isStopped,
+          isPaused: autoplayControls.isPaused,
+          isPlaying: autoplayControls.isPlaying,
+          progress: autoplayProgressSpring.progress,
+          start: autoplayControls.start,
+          stop: autoplayControls.stop,
+          toggle: autoplayControls.toggle,
+          reset: autoplayControls.reset,
+          pause: autoplayControls.pause,
+          resume: autoplayControls.resume,
+        }),
+        [autoplay, autoplayControls, autoplayProgressSpring.progress],
+      );
+
       return (
         <CarouselContext.Provider value={carouselContextValue}>
-          <VStack
-            ref={rootRef}
-            aria-live="polite"
-            aria-roledescription="carousel"
-            gap={2}
-            role="group"
-            style={containerStyle}
-            {...props}
-          >
-            {(title || !hideNavigation) && (
-              <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
-                {typeof title === 'string' ? (
-                  <Text font="title3" style={styles?.title}>
-                    {title}
-                  </Text>
-                ) : (
-                  title
-                )}
-                {!hideNavigation && (
-                  <NavigationComponent
-                    disableGoNext={
-                      totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
-                    }
-                    disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
-                    nextPageAccessibilityLabel={nextPageAccessibilityLabel}
-                    onGoNext={handleGoNext}
-                    onGoPrevious={handleGoPrevious}
-                    previousPageAccessibilityLabel={previousPageAccessibilityLabel}
-                    style={styles?.navigation}
-                  />
-                )}
-              </HStack>
-            )}
-            <GestureDetector gesture={panGesture}>
-              <View onLayout={onLayout} style={scrollViewStyle}>
-                <animated.View style={[animatedStyle, animatedTransform]}>
-                  {childrenWithClones}
-                </animated.View>
-              </View>
-            </GestureDetector>
-            {!hidePagination && (
-              <PaginationComponent
-                activePageIndex={activePageIndex}
-                onPressPage={goToPage}
-                paginationAccessibilityLabel={goToPageAccessibilityLabel}
-                style={styles?.pagination}
-                totalPages={totalPages}
-              />
-            )}
-          </VStack>
+          <CarouselAutoplayContext.Provider value={autoplayContextValue}>
+            <VStack
+              ref={rootRef}
+              aria-live="polite"
+              aria-roledescription="carousel"
+              gap={2}
+              role="group"
+              style={containerStyle}
+              {...props}
+            >
+              {(title || !hideNavigation) && (
+                <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
+                  {typeof title === 'string' ? (
+                    <Text font="title3" style={styles?.title}>
+                      {title}
+                    </Text>
+                  ) : (
+                    title
+                  )}
+                  {!hideNavigation && (
+                    <NavigationComponent
+                      autoplay={autoplay}
+                      disableGoNext={
+                        totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
+                      }
+                      disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
+                      isAutoplayStopped={autoplayControls.isStopped}
+                      nextPageAccessibilityLabel={nextPageAccessibilityLabel}
+                      onGoNext={handleGoNext}
+                      onGoPrevious={handleGoPrevious}
+                      onToggleAutoplay={autoplayControls.toggle}
+                      previousPageAccessibilityLabel={previousPageAccessibilityLabel}
+                      startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
+                      stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
+                      style={styles?.navigation}
+                    />
+                  )}
+                </HStack>
+              )}
+              <GestureDetector gesture={panGesture}>
+                <View onLayout={onLayout} style={scrollViewStyle}>
+                  <animated.View style={[animatedStyle, animatedTransform]}>
+                    {childrenWithClones}
+                  </animated.View>
+                </View>
+              </GestureDetector>
+              {!hidePagination && (
+                <PaginationComponent
+                  activePageIndex={activePageIndex}
+                  onPressPage={handleClickPage}
+                  paginationAccessibilityLabel={goToPageAccessibilityLabel}
+                  style={styles?.pagination}
+                  totalPages={totalPages}
+                />
+              )}
+            </VStack>
+          </CarouselAutoplayContext.Provider>
         </CarouselContext.Provider>
       );
     },

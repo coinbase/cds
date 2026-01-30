@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useCarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import { RefMapContext } from '@coinbase/cds-common/system/RefMapContext';
 import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
@@ -29,7 +30,14 @@ import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography';
 
-import { CarouselContext, type CarouselContextValue, useCarouselContext } from './CarouselContext';
+import {
+  CarouselAutoplayContext,
+  type CarouselAutoplayContextValue,
+  CarouselContext,
+  type CarouselContextValue,
+  useCarouselAutoplayContext,
+  useCarouselContext,
+} from './CarouselContext';
 import { CarouselItem } from './CarouselItem';
 import { DefaultCarouselNavigation } from './DefaultCarouselNavigation';
 import { DefaultCarouselPagination } from './DefaultCarouselPagination';
@@ -60,8 +68,8 @@ export type CarouselItemProps = Omit<BoxProps<BoxDefaultElement>, 'children'> &
 export type CarouselItemComponent = React.FC<CarouselItemProps>;
 export type CarouselItemElement = React.ReactElement<CarouselItemProps, CarouselItemComponent>;
 
-export { CarouselContext, useCarouselContext };
-export type { CarouselContextValue };
+export { CarouselAutoplayContext, CarouselContext, useCarouselAutoplayContext, useCarouselContext };
+export type { CarouselAutoplayContextValue, CarouselContextValue };
 
 export type CarouselNavigationComponentBaseProps = Pick<
   CarouselBaseProps,
@@ -598,6 +606,7 @@ export const Carousel = memo(
         onDragEnd,
         loop,
         autoplay,
+        autoplayInterval = 3000,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -605,9 +614,9 @@ export const Carousel = memo(
       const animationApi = useAnimation();
       const carouselScrollX = useMotionValue(0);
       const dragControls = useDragControls();
+      const autoplayProgress = useMotionValue(0);
 
       const [activePageIndex, setActivePageIndex] = useState(0);
-      const [isAutoplayStopped, setIsAutoplayStopped] = useState(false);
       const containerRef = useRef<HTMLDivElement>(null);
       const rootRef = useRef<HTMLDivElement>(null);
       const [containerWidth, setContainerWidth] = useState(0);
@@ -695,8 +704,8 @@ export const Carousel = memo(
                 ? newPageIndexOrUpdater(prevIndex)
                 : newPageIndexOrUpdater;
 
-            if (prevIndex !== newPageIndex && onChangePage) {
-              onChangePage(newPageIndex);
+            if (prevIndex !== newPageIndex) {
+              onChangePage?.(newPageIndex);
             }
 
             return newPageIndex;
@@ -922,19 +931,51 @@ export const Carousel = memo(
         [activePageIndex, totalPages, goToPage],
       );
 
+      const handleAutoplayAdvance = useCallback(() => {
+        const nextPage = wrap(0, totalPages, activePageIndex + 1);
+        goToPage(nextPage);
+      }, [totalPages, activePageIndex, goToPage]);
+
+      const [autoplayState, autoplayApi] = useCarouselAutoplay({
+        enabled: autoplay ?? false,
+        interval: autoplayInterval,
+        onAdvance: handleAutoplayAdvance,
+        onProgressUpdate: (progress) => autoplayProgress.set(progress),
+      });
+      const autoplayControls = useMemo(
+        () => ({ ...autoplayState, ...autoplayApi }),
+        [autoplayState, autoplayApi],
+      );
+
       const handleGoNext = useCallback(() => {
+        autoplayControls.pause();
         const nextPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex + 1)
           : activePageIndex + 1;
         goToPage(nextPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        autoplayControls.reset();
+        autoplayControls.resume();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, autoplayControls]);
 
       const handleGoPrevious = useCallback(() => {
+        autoplayControls.pause();
         const prevPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex - 1)
           : activePageIndex - 1;
         goToPage(prevPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+        autoplayControls.reset();
+        autoplayControls.resume();
+      }, [shouldLoop, totalPages, activePageIndex, goToPage, autoplayControls]);
+
+      const handleClickPage = useCallback(
+        (pageIndex: number) => {
+          autoplayControls.pause();
+          goToPage(pageIndex);
+          autoplayControls.reset();
+          autoplayControls.resume();
+        },
+        [goToPage, autoplayControls],
+      );
 
       const handleDragTransition = useCallback(
         (targetOffsetScroll: number) => {
@@ -949,6 +990,9 @@ export const Carousel = memo(
               loopLength,
             );
 
+            if (pageIndex !== activePageIndex) {
+              autoplayControls.reset();
+            }
             updateActivePageIndex(pageIndex);
 
             if (drag === 'snap') {
@@ -971,6 +1015,9 @@ export const Carousel = memo(
               clampedScrollOffset,
               pageOffsets,
             );
+            if (closestPageIndex !== activePageIndex) {
+              autoplayControls.reset();
+            }
             updateActivePageIndex(closestPageIndex);
 
             if (drag === 'snap') {
@@ -988,9 +1035,11 @@ export const Carousel = memo(
           isLoopingActive,
           pageOffsets,
           loopLength,
+          activePageIndex,
           updateActivePageIndex,
           updateVisibleCarouselItems,
           maxScrollOffset,
+          autoplayControls,
         ],
       );
 
@@ -1002,15 +1051,36 @@ export const Carousel = memo(
         onDragEnd?.();
       }, [onDragEnd]);
 
-      const handleToggleAutoplay = useCallback(() => {
-        setIsAutoplayStopped((prev) => !prev);
-      }, []);
+      const handlePointerEnter = useCallback(() => {
+        autoplayControls.pause();
+      }, [autoplayControls]);
+
+      const handlePointerLeave = useCallback(() => {
+        autoplayControls.resume();
+      }, [autoplayControls]);
 
       const carouselContextValue = useMemo(
         () => ({
           visibleCarouselItems,
         }),
         [visibleCarouselItems],
+      );
+
+      const autoplayContextValue = useMemo<CarouselAutoplayContextValue>(
+        () => ({
+          isEnabled: autoplay ?? false,
+          isStopped: autoplayControls.isStopped,
+          isPaused: autoplayControls.isPaused,
+          isPlaying: autoplayControls.isPlaying,
+          progress: autoplayProgress,
+          start: autoplayControls.start,
+          stop: autoplayControls.stop,
+          toggle: autoplayControls.toggle,
+          reset: autoplayControls.reset,
+          pause: autoplayControls.pause,
+          resume: autoplayControls.resume,
+        }),
+        [autoplay, autoplayControls, autoplayProgress],
       );
 
       return (
@@ -1027,92 +1097,98 @@ export const Carousel = memo(
               width="100%"
               {...props}
             >
-              {(title || !hideNavigation) && (
-                <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
-                  {typeof title === 'string' ? (
-                    <Text className={classNames?.title} font="title3" style={styles?.title}>
-                      {title}
-                    </Text>
-                  ) : (
-                    title
-                  )}
-                  {!hideNavigation && (
-                    <NavigationComponent
-                      autoplay={autoplay}
-                      className={classNames?.navigation}
-                      disableGoNext={
-                        totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
+              <CarouselAutoplayContext.Provider value={autoplayContextValue}>
+                {(title || !hideNavigation) && (
+                  <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
+                    {typeof title === 'string' ? (
+                      <Text className={classNames?.title} font="title3" style={styles?.title}>
+                        {title}
+                      </Text>
+                    ) : (
+                      title
+                    )}
+                    {!hideNavigation && (
+                      <NavigationComponent
+                        autoplay={autoplay}
+                        className={classNames?.navigation}
+                        disableGoNext={
+                          totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
+                        }
+                        disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
+                        isAutoplayStopped={autoplayControls.isStopped}
+                        nextPageAccessibilityLabel={nextPageAccessibilityLabel}
+                        onGoNext={handleGoNext}
+                        onGoPrevious={handleGoPrevious}
+                        onToggleAutoplay={autoplayControls.toggle}
+                        previousPageAccessibilityLabel={previousPageAccessibilityLabel}
+                        startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
+                        stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
+                        style={styles?.navigation}
+                      />
+                    )}
+                  </HStack>
+                )}
+                <div
+                  ref={containerRef}
+                  className={classNames?.carouselContainer}
+                  onPointerDown={(e) => {
+                    if (isDragEnabled) {
+                      // Allows us to grab between items where child wouldn't be selected
+                      dragControls.start(e);
+                      handleDragStart();
+                    }
+                  }}
+                  onPointerEnter={handlePointerEnter}
+                  onPointerLeave={handlePointerLeave}
+                  style={{
+                    width: '100%',
+                    position: 'relative',
+                    ...styles?.carouselContainer,
+                  }}
+                >
+                  <CarouselContext.Provider value={carouselContextValue}>
+                    <m.div
+                      _dragX={carouselScrollX}
+                      animate={animationApi}
+                      className={cx(classNames?.carousel, defaultCarouselCss)}
+                      drag={isDragEnabled ? 'x' : false}
+                      dragConstraints={
+                        shouldLoop ? undefined : { left: -maxScrollOffset, right: 0 }
                       }
-                      disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
-                      isAutoplayStopped={isAutoplayStopped}
-                      nextPageAccessibilityLabel={nextPageAccessibilityLabel}
-                      onGoNext={handleGoNext}
-                      onGoPrevious={handleGoPrevious}
-                      onToggleAutoplay={handleToggleAutoplay}
-                      previousPageAccessibilityLabel={previousPageAccessibilityLabel}
-                      startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
-                      stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
-                      style={styles?.navigation}
-                    />
-                  )}
-                </HStack>
-              )}
-              <div
-                ref={containerRef}
-                className={classNames?.carouselContainer}
-                onPointerDown={(e) => {
-                  if (isDragEnabled) {
-                    // Allows us to grab between items where child wouldn't be selected
-                    dragControls.start(e);
-                    handleDragStart();
-                  }
-                }}
-                style={{
-                  width: '100%',
-                  position: 'relative',
-                  ...styles?.carouselContainer,
-                }}
-              >
-                <CarouselContext.Provider value={carouselContextValue}>
-                  <m.div
-                    _dragX={carouselScrollX}
-                    animate={animationApi}
-                    className={cx(classNames?.carousel, defaultCarouselCss)}
-                    drag={isDragEnabled ? 'x' : false}
-                    dragConstraints={shouldLoop ? undefined : { left: -maxScrollOffset, right: 0 }}
-                    dragControls={dragControls}
-                    dragTransition={{
-                      // How much inertia affects the target
-                      power: drag === 'free' ? 0.5 : 0.125,
-                      timeConstant: drag !== 'free' ? 125 : undefined,
-                      modifyTarget: handleDragTransition,
-                    }}
-                    initial={false}
-                    onDragEnd={handleDragEnd}
-                    style={{
-                      display: 'flex',
-                      position: 'relative',
-                      x: shouldLoop ? wrappedX : carouselScrollX,
-                      ...styles?.carousel,
-                    }}
-                    whileDrag={{
-                      pointerEvents: 'none',
-                    }}
-                  >
-                    {childrenWithClones}
-                  </m.div>
-                </CarouselContext.Provider>
-              </div>
-              {!hidePagination && (
-                <PaginationComponent
-                  activePageIndex={activePageIndex}
-                  className={classNames?.pagination}
-                  onClickPage={goToPage}
-                  paginationAccessibilityLabel={paginationAccessibilityLabel}
-                  style={styles?.pagination}
-                  totalPages={totalPages}
-                />
-              )}
+                      dragControls={dragControls}
+                      dragTransition={{
+                        // How much inertia affects the target
+                        power: drag === 'free' ? 0.5 : 0.125,
+                        timeConstant: drag !== 'free' ? 125 : undefined,
+                        modifyTarget: handleDragTransition,
+                      }}
+                      initial={false}
+                      onDragEnd={handleDragEnd}
+                      style={{
+                        display: 'flex',
+                        position: 'relative',
+                        x: shouldLoop ? wrappedX : carouselScrollX,
+                        ...styles?.carousel,
+                      }}
+                      whileDrag={{
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      {childrenWithClones}
+                    </m.div>
+                  </CarouselContext.Provider>
+                </div>
+                {!hidePagination && (
+                  <PaginationComponent
+                    activePageIndex={activePageIndex}
+                    className={classNames?.pagination}
+                    onClickPage={handleClickPage}
+                    paginationAccessibilityLabel={paginationAccessibilityLabel}
+                    style={styles?.pagination}
+                    totalPages={totalPages}
+                  />
+                )}
+              </CarouselAutoplayContext.Provider>
             </VStack>
           </RefMapContext.Provider>
         </LazyMotion>
