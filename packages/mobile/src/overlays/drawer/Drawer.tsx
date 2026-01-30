@@ -22,7 +22,11 @@ import {
   horizontalDrawerPercentageOfView,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
 } from '@coinbase/cds-common/tokens/drawer';
-import type { PinningDirection, SharedProps } from '@coinbase/cds-common/types';
+import type {
+  PinningDirection,
+  SharedAccessibilityProps,
+  SharedProps,
+} from '@coinbase/cds-common/types';
 
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
@@ -43,6 +47,7 @@ export type DrawerRefBaseProps = {
 };
 
 export type DrawerBaseProps = SharedProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'> &
   Omit<ModalProps, 'onRequestClose' | 'children'> & {
     /** Component to render as the Modal content */
     children?: DrawerRenderChildren | React.ReactNode;
@@ -127,6 +132,8 @@ export const Drawer = memo(
       onBlur,
       verticalDrawerPercentageOfView = defaultVerticalDrawerPercentageOfView,
       handleBarAccessibilityLabel = 'Dismiss',
+      accessibilityLabel,
+      accessibilityLabelledBy,
       style,
       styles,
       ...props
@@ -314,6 +321,8 @@ export const Drawer = memo(
           >
             {showHandleBarOutside && handleBar}
             <Box
+              accessibilityLabel={accessibilityLabel}
+              accessibilityLabelledBy={accessibilityLabelledBy}
               borderRadius={isSideDrawer ? 0 : 600}
               bordered={theme.activeColorScheme === 'dark'}
               elevation={2}
