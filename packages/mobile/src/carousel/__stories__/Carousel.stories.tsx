@@ -125,6 +125,7 @@ const BasicExamples = () => {
     <>
       <Example paddingX={0}>
         <Carousel
+          autoplay
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -204,6 +205,7 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="none"
+          paginationVariant="dot"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -597,8 +599,10 @@ const LoopingExamples = () => {
       {/* Looping - Snap Item */}
       <Example paddingX={0}>
         <Carousel
+          autoplay
           loop
           drag="snap"
+          paginationVariant="dot"
           snapMode="item"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
