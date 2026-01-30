@@ -250,3 +250,176 @@ Note: The Tray component is an elevated container that is pinned to the bottom o
 - Children can be either a React node or a render function that receives a `handleClose` function
 - The `ref` provides `open()` and `close()` methods for controlling the tray
 - When transitioning between overlays, ensure proper dismounting using lifecycle methods
+
+## Responsive
+
+You can make a tray responsive by using breakpoints to dynamically adjust `pin` and `showHandleBar`.
+
+```jsx live
+function ResponsiveIllustrationTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Illustration Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          hideCloseButton={isPhone}
+          styles={
+            isPhone
+              ? {
+                  container: {
+                    maxHeight: 650,
+                  },
+                }
+              : undefined
+          }
+          title="Section header"
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+            />
+          )}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Responsive with Illustration
+
+A responsive tray with an illustration header that adapts between mobile and desktop layouts.
+
+```jsx live
+function ResponsiveIllustrationTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Illustration Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          hideCloseButton={isPhone}
+          styles={
+            isPhone
+              ? {
+                  container: {
+                    maxHeight: 650,
+                  },
+                }
+              : undefined
+          }
+          title={
+            <VStack gap={isPhone ? 1.5 : 2}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Welcome aboard</Text>
+            </VStack>
+          }
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+            />
+          )}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Illustration with Section Header
+
+For informational trays with an illustration and descriptive text without a footer action, this pattern is useful for onboarding, explanatory content, or simple informational overlays. On mobile, use a custom `header` for the pictogram and section title. On desktop, the pictogram and text go in the content area below the standard close button.
+
+```jsx live
+function IllustrationSectionHeaderTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Illustration Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          hideHeader={isPhone}
+          onCloseComplete={handleClose}
+          styles={
+            isPhone
+              ? {
+                  container: {
+                    maxHeight: 650,
+                  },
+                }
+              : undefined
+          }
+          header={
+            isPhone ? (
+              <VStack gap={1.5} paddingX={3}>
+                <Pictogram name="addWallet" />
+                <Text font="title3">Section header</Text>
+              </VStack>
+            ) : undefined
+          }
+        >
+          {isPhone ? (
+            <VStack paddingY={2}>
+              <Text color="fgMuted" font="body">
+                Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+                interdum lorem id, viverra.
+              </Text>
+            </VStack>
+          ) : (
+            <VStack gap={1.5} paddingBottom={3}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Section header</Text>
+              <Text color="fgMuted" font="body">
+                Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+                interdum lorem id, viverra.
+              </Text>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
