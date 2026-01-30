@@ -353,8 +353,6 @@ export const Tray = memo(
           lastY: event.clientY,
           lastTime: Date.now(),
         };
-
-        console.log('[Tray] Pointer down at Y:', event.clientY);
       },
       [preventDismiss],
     );
@@ -368,8 +366,6 @@ export const Tray = memo(
         // Update last position for velocity calculation
         dragStateRef.current.lastY = event.clientY;
         dragStateRef.current.lastTime = Date.now();
-
-        console.log('[Tray] Pointer move, offset.y:', dragY);
 
         // Dragging down (positive Y) - allow full movement
         // Dragging up (negative Y) - apply rubber-band effect capped at MAX_OVER_DRAG
@@ -398,22 +394,11 @@ export const Tray = memo(
 
         dragStateRef.current = null;
 
-        console.log('[Tray] Pointer up, offset.y:', dragY, 'velocity.y:', velocityY);
-
-        console.log(
-          '[Tray] Thresholds - drag:',
-          DISMISSAL_DRAG_THRESHOLD,
-          'velocity:',
-          DISMISSAL_VELOCITY_THRESHOLD,
-        );
-
         // Check if drag distance or velocity exceeds threshold for dismissal
-        const shouldDismissVal =
+        const shouldDismiss =
           dragY >= DISMISSAL_DRAG_THRESHOLD || velocityY >= DISMISSAL_VELOCITY_THRESHOLD;
 
-        console.log('[Tray] Should dismiss:', shouldDismissVal);
-
-        if (shouldDismissVal) {
+        if (shouldDismiss) {
           handleSwipeClose();
         } else {
           // Snap back to open position
