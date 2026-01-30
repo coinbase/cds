@@ -20,7 +20,7 @@ export const PeriodSelectorActiveIndicator = ({
   borderRadius = 1000,
 }: TabsActiveIndicatorProps) => {
   const theme = useTheme();
-  const { width, height, x } = activeTabRect;
+  const { width, height, x, y } = activeTabRect;
 
   // Get the target background color
   const backgroundColorKey = background as keyof typeof theme.color;
@@ -31,7 +31,7 @@ export const PeriodSelectorActiveIndicator = ({
   const previousColor = React.useRef(targetColor);
 
   // Combined animated value for position, size, and color
-  const newAnimatedValues = { x, width, backgroundColor: targetColor };
+  const newAnimatedValues = { x, y, width, backgroundColor: targetColor };
   const animatedValues = useSharedValue(newAnimatedValues);
 
   const isFirstRenderWithWidth =
@@ -47,7 +47,7 @@ export const PeriodSelectorActiveIndicator = ({
 
   const animatedStyles = useAnimatedStyle(
     () => ({
-      transform: [{ translateX: animatedValues.value.x }],
+      transform: [{ translateX: animatedValues.value.x }, { translateY: animatedValues.value.y }],
       width: animatedValues.value.width,
       backgroundColor: animatedValues.value.backgroundColor,
     }),

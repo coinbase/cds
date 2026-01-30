@@ -19,7 +19,7 @@ import { Text, type TextBaseProps } from '../typography/Text';
 
 import { tabsSpringConfig } from './Tabs';
 
-export type SegmentedTabProps<T extends string = string> = TabValue<T> &
+export type SegmentedTabProps<TabId extends string = string> = TabValue<TabId> &
   Pick<TextBaseProps, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'> &
   Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
     /**
@@ -33,19 +33,19 @@ export type SegmentedTabProps<T extends string = string> = TabValue<T> &
      */
     color?: ThemeVars.Color;
     /** Callback that is fired when the SegmentedTab is pressed. */
-    onPress?: (id: string, event: GestureResponderEvent) => void;
+    onPress?: (id: TabId, event: GestureResponderEvent) => void;
     style?: StyleProp<ViewStyle>;
   };
 
 const AnimatedTextHeadline = Animated.createAnimatedComponent(Text);
 
-type SegmentedTabFC = <T extends string = string>(
-  props: SegmentedTabProps<T> & { ref?: React.ForwardedRef<View> },
+type SegmentedTabFC = <TabId extends string = string>(
+  props: SegmentedTabProps<TabId> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 const SegmentedTabComponent = memo(
   forwardRef(
-    <T extends string = string>(
+    <TabId extends string = string>(
       {
         id,
         label,
@@ -63,10 +63,10 @@ const SegmentedTabComponent = memo(
         fontWeight,
         lineHeight,
         ...props
-      }: SegmentedTabProps<T>,
+      }: SegmentedTabProps<TabId>,
       ref: React.ForwardedRef<View>,
     ) => {
-      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext();
+      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
       const isActive = activeTab?.id === id;
       const isDisabled = disabledProp || allTabsDisabled;
 

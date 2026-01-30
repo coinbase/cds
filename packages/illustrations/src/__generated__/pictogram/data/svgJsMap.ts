@@ -982,6 +982,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/commerceNavigation-6.js').content,
     dark: () => require('../svgJs/dark/commerceNavigation-6.js').content,
   },
+  commodities: {
+    light: () => require('../svgJs/light/commodities-0.js').content,
+    dark: () => require('../svgJs/dark/commodities-0.js').content,
+  },
   completeQuiz: {
     light: () => require('../svgJs/light/completeQuiz-5.js').content,
     dark: () => require('../svgJs/dark/completeQuiz-5.js').content,

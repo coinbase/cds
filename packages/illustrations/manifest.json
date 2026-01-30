@@ -1,6 +1,372 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2025-12-05T21:01:02.785Z",
+  "lastUpdated": "2026-01-29T21:21:37.181Z",
+  "colors": {
+    "light": [
+      {
+        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
+        "name": "gray-3",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#CED2DC"
+        },
+        "cssVarSetter": "--illustration-gray-3",
+        "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#5DE2F8"
+        },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
+      },
+      {
+        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
+        "name": "invert",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0E"
+        },
+        "cssVarSetter": "--illustration-invert",
+        "cssVarGetter": "var(--illustration-invert)"
+      },
+      {
+        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
+        "name": "gray",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#CED2DB"
+        },
+        "cssVarSetter": "--illustration-gray",
+        "cssVarGetter": "var(--illustration-gray)"
+      },
+      {
+        "key": "4becda743977862f9f06956487546d564ff3fc45",
+        "name": "white",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-white",
+        "cssVarGetter": "var(--illustration-white)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFE"
+        },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "8271abef0dea9d201283c417e6b6752edd928481",
+        "name": "base-gray",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#B1B7C3"
+        },
+        "cssVarSetter": "--illustration-base-gray",
+        "cssVarGetter": "var(--illustration-base-gray)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#3CC28A"
+        },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
+      },
+      {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#E13947"
+        },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
+      },
+      {
+        "key": "932552c58e590ee79409364aad163a6ae566f46f",
+        "name": "accent-4",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#73A2FF"
+        },
+        "cssVarSetter": "--illustration-accent-4",
+        "cssVarGetter": "var(--illustration-accent-4)"
+      },
+      {
+        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
+        "name": "accent-1",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFD200"
+        },
+        "cssVarSetter": "--illustration-accent-1",
+        "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0052FF"
+        },
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
+      },
+      {
+        "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
+        "name": "accent-3",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#ED702F"
+        },
+        "cssVarSetter": "--illustration-accent-3",
+        "cssVarGetter": "var(--illustration-accent-3)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0F"
+        },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
+      }
+    ],
+    "dark": [
+      {
+        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
+        "name": "gray-3",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-gray-3",
+        "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#45D9F5"
+        },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
+      },
+      {
+        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
+        "name": "invert",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-invert",
+        "cssVarGetter": "var(--illustration-invert)"
+      },
+      {
+        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
+        "name": "gray",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#464B55"
+        },
+        "cssVarSetter": "--illustration-gray",
+        "cssVarGetter": "var(--illustration-gray)"
+      },
+      {
+        "key": "4becda743977862f9f06956487546d564ff3fc45",
+        "name": "white",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-white",
+        "cssVarGetter": "var(--illustration-white)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "8271abef0dea9d201283c417e6b6752edd928481",
+        "name": "base-gray",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#727886"
+        },
+        "cssVarSetter": "--illustration-base-gray",
+        "cssVarGetter": "var(--illustration-base-gray)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#44C28D"
+        },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
+      },
+      {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#F0616D"
+        },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
+      },
+      {
+        "key": "932552c58e590ee79409364aad163a6ae566f46f",
+        "name": "accent-4",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#84AAFD"
+        },
+        "cssVarSetter": "--illustration-accent-4",
+        "cssVarGetter": "var(--illustration-accent-4)"
+      },
+      {
+        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
+        "name": "accent-1",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#ECD069"
+        },
+        "cssVarSetter": "--illustration-accent-1",
+        "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#578BFA"
+        },
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
+      },
+      {
+        "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
+        "name": "accent-3",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#F07836"
+        },
+        "cssVarSetter": "--illustration-accent-3",
+        "cssVarGetter": "var(--illustration-accent-3)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#464B55"
+        },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
+      }
+    ]
+  },
   "items": {
     "2:33979": {
       "type": "heroSquare",
@@ -210,7 +576,7 @@
       "height": 240,
       "description": "restricted, country, warning, map, pin, point, location, warning state",
       "createdAt": "2022-08-05T05:36:48.405Z",
-      "lastUpdated": "2025-12-01T18:17:47.000Z",
+      "lastUpdated": "2025-12-24T16:31:49.441Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/restrictedCountry-7.svg",
         "svgDark": "./heroSquare/svg/dark/restrictedCountry-7.svg",
@@ -10030,7 +10396,7 @@
       "height": 48,
       "description": "calendar, percentage, taxes, money, schedule, organize, funds, %, 📆, 📅, 🗓",
       "createdAt": "2022-08-05T05:36:58.128Z",
-      "lastUpdated": "2025-12-01T18:13:24.337Z",
+      "lastUpdated": "2025-12-24T16:31:49.434Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/taxSeason-3.svg",
         "svgDark": "./pictogram/svg/dark/taxSeason-3.svg",
@@ -24730,7 +25096,7 @@
       "height": 240,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.504Z",
-      "lastUpdated": "2025-08-07T22:11:25.420Z",
+      "lastUpdated": "2025-12-09T23:08:10.526Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/baseCheck-1.svg",
         "svgDark": "./heroSquare/svg/dark/baseCheck-1.svg",
@@ -27725,22 +28091,22 @@
     "22761:60": {
       "type": "spotSquare",
       "name": "cryptoEconomyArrows",
-      "hash": "8NDrAp0bdIanQPmW0e56fCvfi9CZQmXy9xDvFoy3vp4=",
+      "hash": "r0edyUBAoWyp1GbifhqAEXYZhbrN8N8xjjNkZzH6YbE=",
       "width": 96,
       "height": 96,
       "description": "globe, international, economy, freedom, growth, crypto, economic, money, coins",
       "createdAt": "2025-10-24T18:53:50.479Z",
-      "lastUpdated": "2025-12-01T18:14:06.056Z",
+      "lastUpdated": "2026-01-28T22:56:40.771Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/cryptoEconomyArrows-1.svg",
-        "svgDark": "./spotSquare/svg/dark/cryptoEconomyArrows-1.svg",
-        "svgThemed": "./spotSquare/svg/themeable/cryptoEconomyArrows-1.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/cryptoEconomyArrows-1.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/cryptoEconomyArrows-1.js",
-        "pngLight": "./spotSquare/png/light/cryptoEconomyArrows-1.png",
-        "pngDark": "./spotSquare/png/dark/cryptoEconomyArrows-1.png"
+        "svgLight": "./spotSquare/svg/light/cryptoEconomyArrows-2.svg",
+        "svgDark": "./spotSquare/svg/dark/cryptoEconomyArrows-2.svg",
+        "svgThemed": "./spotSquare/svg/themeable/cryptoEconomyArrows-2.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/cryptoEconomyArrows-2.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/cryptoEconomyArrows-2.js",
+        "pngLight": "./spotSquare/png/light/cryptoEconomyArrows-2.png",
+        "pngDark": "./spotSquare/png/dark/cryptoEconomyArrows-2.png"
       },
-      "version": 1
+      "version": 2
     },
     "23235:456": {
       "type": "pictogram",
@@ -28670,7 +29036,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2025-12-05T17:03:40.067Z",
-      "lastUpdated": "2025-12-05T17:03:40.067Z",
+      "lastUpdated": "2025-12-24T16:31:49.427Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/robot-0.svg",
         "svgDark": "./pictogram/svg/dark/robot-0.svg",
@@ -28679,6 +29045,86 @@
         "svgJsDark": "./pictogram/svgJs/dark/robot-0.js",
         "pngLight": "./pictogram/png/light/robot-0.png",
         "pngDark": "./pictogram/png/dark/robot-0.png"
+      },
+      "version": 0
+    },
+    "24785:58": {
+      "type": "heroSquare",
+      "name": "test",
+      "hash": "l28eqcD75twYfnHO/GUElQbRXe4eAiknPy2nQXLb1HQ=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-12-10T22:56:27.793Z",
+      "lastUpdated": "2025-12-10T22:56:27.793Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/test-0.svg",
+        "svgDark": "./heroSquare/svg/dark/test-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/test-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/test-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/test-0.js",
+        "pngLight": "./heroSquare/png/light/test-0.png",
+        "pngDark": "./heroSquare/png/dark/test-0.png"
+      },
+      "version": 0
+    },
+    "25214:79": {
+      "type": "heroSquare",
+      "name": "borrowCoinsBtc",
+      "hash": "G+kBUhUcuSPmEP/QVVJKfh+q25FjL44+MVg64yr+YG8=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-12-24T16:31:49.400Z",
+      "lastUpdated": "2026-01-15T15:34:18.584Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/borrowCoinsBtc-0.svg",
+        "svgDark": "./heroSquare/svg/dark/borrowCoinsBtc-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/borrowCoinsBtc-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/borrowCoinsBtc-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/borrowCoinsBtc-0.js",
+        "pngLight": "./heroSquare/png/light/borrowCoinsBtc-0.png",
+        "pngDark": "./heroSquare/png/dark/borrowCoinsBtc-0.png"
+      },
+      "version": 0
+    },
+    "25928:225": {
+      "type": "spotSquare",
+      "name": "goldSilverFutures",
+      "hash": "x4PU3BC/HM/X4MSb0H8MGSYBLPe7l0D5s6lM+7AZJfY=",
+      "width": 96,
+      "height": 96,
+      "description": "coin, coins, moon, more, empty state",
+      "createdAt": "2026-01-15T15:34:18.568Z",
+      "lastUpdated": "2026-01-15T15:34:18.568Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/goldSilverFutures-0.svg",
+        "svgDark": "./spotSquare/svg/dark/goldSilverFutures-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/goldSilverFutures-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/goldSilverFutures-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/goldSilverFutures-0.js",
+        "pngLight": "./spotSquare/png/light/goldSilverFutures-0.png",
+        "pngDark": "./spotSquare/png/dark/goldSilverFutures-0.png"
+      },
+      "version": 0
+    },
+    "27184:33": {
+      "type": "pictogram",
+      "name": "commodities",
+      "hash": "j+3vV51Gr//kKcGYAlxNt9h11ravkL8I4VoEiCzPLnA=",
+      "width": 40,
+      "height": 40,
+      "description": "commodities",
+      "createdAt": "2026-01-28T22:56:40.760Z",
+      "lastUpdated": "2026-01-28T22:56:40.760Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/commodities-0.svg",
+        "svgDark": "./pictogram/svg/dark/commodities-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/commodities-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/commodities-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/commodities-0.js",
+        "pngLight": "./pictogram/png/light/commodities-0.png",
+        "pngDark": "./pictogram/png/dark/commodities-0.png"
       },
       "version": 0
     }

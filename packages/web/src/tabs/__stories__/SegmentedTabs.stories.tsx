@@ -89,19 +89,19 @@ const mixedCustomSegments = [
   { id: 'convert', label: 'Convert', Component: CustomSegmentedTabColor },
 ];
 
-type SegmentedTabsExampleProps<T extends string> = {
+type SegmentedTabsExampleProps<TabId extends string> = {
   title: string;
-  defaultActiveTab: TabValue<T> | null;
-} & Omit<SegmentedTabsProps<T>, 'activeTab' | 'onChange'>;
+  defaultActiveTab: TabValue<TabId> | null;
+} & Omit<SegmentedTabsProps<TabId>, 'activeTab' | 'onChange'>;
 
-const SegmentedTabsExample = <T extends string>({
+const SegmentedTabsExample = <TabId extends string>({
   title,
   defaultActiveTab,
   ...props
-}: SegmentedTabsExampleProps<T>) => {
-  const [activeTab, updateActiveTab] = useState<TabValue<T> | null>(defaultActiveTab);
+}: SegmentedTabsExampleProps<TabId>) => {
+  const [activeTab, updateActiveTab] = useState<TabValue<TabId> | null>(defaultActiveTab);
   const handleChange = useCallback(
-    (activeTab: TabValue<T> | null) => updateActiveTab(activeTab),
+    (activeTab: TabValue<TabId> | null) => updateActiveTab(activeTab),
     [],
   );
 
@@ -187,6 +187,15 @@ export const All = () => {
         defaultActiveTab={typedSegments[0]}
         tabs={typedSegments}
         title="Typed Tabs"
+      />
+      <SegmentedTabsExample
+        defaultActiveTab={basicSegments[0]}
+        gap={2}
+        paddingX={3}
+        paddingY={1}
+        tabs={basicSegments}
+        title="With Padding"
+        width="fit-content"
       />
     </VStack>
   );

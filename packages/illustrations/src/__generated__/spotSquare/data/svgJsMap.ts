@@ -427,8 +427,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/cryptoEconomy-4.js').content,
   },
   cryptoEconomyArrows: {
-    light: () => require('../svgJs/light/cryptoEconomyArrows-1.js').content,
-    dark: () => require('../svgJs/dark/cryptoEconomyArrows-1.js').content,
+    light: () => require('../svgJs/light/cryptoEconomyArrows-2.js').content,
+    dark: () => require('../svgJs/dark/cryptoEconomyArrows-2.js').content,
   },
   cryptoForBeginners: {
     light: () => require('../svgJs/light/cryptoForBeginners-5.js').content,
@@ -597,6 +597,10 @@ const svgJsMap = {
   globalTransactions: {
     light: () => require('../svgJs/light/globalTransactions-6.js').content,
     dark: () => require('../svgJs/dark/globalTransactions-6.js').content,
+  },
+  goldSilverFutures: {
+    light: () => require('../svgJs/light/goldSilverFutures-0.js').content,
+    dark: () => require('../svgJs/dark/goldSilverFutures-0.js').content,
   },
   guideBullCase: {
     light: () => require('../svgJs/light/guideBullCase-4.js').content,

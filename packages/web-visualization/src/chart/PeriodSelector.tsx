@@ -36,6 +36,7 @@ export const PeriodSelectorActiveIndicator = memo(
         data-testid="period-selector-active-indicator"
         height={height}
         initial={false}
+        left={0}
         position={position}
         role="none"
         style={{

@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Add descriptive names for generic types. [[#341](https://github.com/coinbase/cds/pull/341)] [DX-5037]
+
+## 8.40.0 ((1/28/2026, 11:12 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.1 (1/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix padding on Tab components. [[#330](https://github.com/coinbase/cds/pull/330)]
+
 ## 8.39.0 (1/27/2026 PST)
 
 #### 🚀 Updates

@@ -243,4 +243,38 @@ describe('SegmentedTabs', () => {
 
     expect(screen.queryByTestId('tabs-active-indicator')).not.toBeInTheDocument();
   });
+
+  it('positions indicator correctly with horizontal padding', () => {
+    const mockPaddedData: ReturnType<typeof useRefMap> = {
+      refs: { current: {} },
+      registerRef: NoopFn,
+      getRef: jest.fn(() => ({
+        getBoundingClientRect: jest.fn(() => ({
+          x: 44,
+          y: 64,
+          width: 68,
+          height: 40,
+        })),
+        offsetLeft: 24,
+        offsetTop: 0,
+        offsetWidth: 68,
+        offsetHeight: 40,
+        offsetParent: {},
+      })),
+    };
+    mockUseRefMap(mockPaddedData);
+
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} paddingX={5} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    const indicator = screen.getByTestId('tabs-active-indicator');
+    const style = indicator.getAttribute('style');
+    expect(style).toContain('transform: translateX(24px) translateZ(0)');
+    expect(style).toContain('left: 0');
+  });
 });

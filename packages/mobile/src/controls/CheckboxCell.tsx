@@ -20,27 +20,28 @@ import { Text } from '../typography/Text';
 import { Checkbox } from './Checkbox';
 import type { ControlBaseProps } from './Control';
 
-export type CheckboxCellBaseProps<T extends string> = {
+export type CheckboxCellBaseProps<CheckboxValue extends string> = {
   title: React.ReactNode;
   description?: React.ReactNode;
   columnGap?: ThemeVars.Space;
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<T>, 'style' | 'children' | 'title'> &
+} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title'> &
   Omit<PressableBaseProps, 'children' | 'noScaleOnPress'>;
 
-export type CheckboxCellProps<T extends string> = CheckboxCellBaseProps<T> & {
-  styles?: {
-    root?: StyleProp<ViewStyle>;
-    checkboxContainer?: StyleProp<ViewStyle>;
-    contentContainer?: StyleProp<ViewStyle>;
-    title?: StyleProp<TextStyle>;
-    description?: StyleProp<TextStyle>;
+export type CheckboxCellProps<CheckboxValue extends string> =
+  CheckboxCellBaseProps<CheckboxValue> & {
+    styles?: {
+      root?: StyleProp<ViewStyle>;
+      checkboxContainer?: StyleProp<ViewStyle>;
+      contentContainer?: StyleProp<ViewStyle>;
+      title?: StyleProp<TextStyle>;
+      description?: StyleProp<TextStyle>;
+    };
   };
-};
 
-const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
+const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
   {
     title,
     description,
@@ -70,7 +71,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
     readOnly,
     styles,
     ...props
-  }: CheckboxCellProps<T>,
+  }: CheckboxCellProps<CheckboxValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const theme = useTheme();
@@ -239,8 +240,8 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
       {pressed && <Animated.View style={mergedFocusRingStyle} />}
     </Box>
   );
-}) as <T extends string>(
-  props: CheckboxCellProps<T> & { ref?: React.ForwardedRef<View> },
+}) as <CheckboxValue extends string>(
+  props: CheckboxCellProps<CheckboxValue> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 export const CheckboxCell = memo(CheckboxCellWithRef) as typeof CheckboxCellWithRef &

@@ -415,6 +415,8 @@ const versionMap: Record<HeroSquareName, number> = {
   tradingWithLeverage: 0,
   futuresExpire: 0,
   moreGains: 0,
+  test: 0,
+  borrowCoinsBtc: 0,
 };
 
 export default versionMap;

@@ -10,7 +10,11 @@ import { type TabNavigationBaseProps, Tabs } from '../tabs';
 
 import { MediaChip } from './MediaChip';
 
-const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }: TabValue<T>) => {
+const TabComponent = <TabId extends string = string>({
+  label = '',
+  id,
+  ...tabProps
+}: TabValue<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
@@ -30,19 +34,19 @@ const TabsActiveIndicatorComponent = () => {
   return null;
 };
 
-export type TabbedChipsBaseProps<T extends string = string> = Omit<
-  TabNavigationBaseProps<T>,
+export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
+  TabNavigationBaseProps<TabId>,
   'variant'
 >;
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T>;
+export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBaseProps<TabId>;
 
-type TabbedChipsFC = <T extends string = string>(
-  props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<View> },
+type TabbedChipsFC = <TabId extends string = string>(
+  props: TabbedChipsProps<TabId> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 const TabbedChipsComponent = memo(
-  forwardRef(function TabbedChips<T extends string = string>(
+  forwardRef(function TabbedChips<TabId extends string = string>(
     {
       tabs,
       value = tabs[0].id,
@@ -50,13 +54,13 @@ const TabbedChipsComponent = memo(
       onChange,
       Component = TabComponent,
       ...props
-    }: TabbedChipsProps<T>,
+    }: TabbedChipsProps<TabId>,
     ref: React.ForwardedRef<View>,
   ) {
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
     const [scrollTarget, setScrollTarget] = useState<View | null>(null);
     const handleChange = useCallback(
-      (tabValue: TabValue<T> | null) => {
+      (tabValue: TabValue<TabId> | null) => {
         if (tabValue) onChange?.(tabValue.id);
       },
       [onChange],

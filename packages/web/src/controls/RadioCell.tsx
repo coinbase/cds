@@ -12,12 +12,12 @@ import type { ControlBaseProps } from './Control';
 import { Radio } from './Radio';
 import { useSelectionCellControlHeight } from './useSelectionCellControlHeight';
 
-export type RadioCellBaseProps<T extends string> = Omit<
+export type RadioCellBaseProps<RadioValue extends string> = Omit<
   PressableProps<'label'>,
   'title' | 'onChange'
 > &
   Omit<
-    ControlBaseProps<T>,
+    ControlBaseProps<RadioValue>,
     'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
   > & {
     checked?: boolean;
@@ -32,7 +32,7 @@ export type RadioCellBaseProps<T extends string> = Omit<
     descriptionId?: string;
   };
 
-export type RadioCellProps<T extends string> = RadioCellBaseProps<T> & {
+export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {
   classNames?: {
     root?: string;
     radioContainer?: string;
@@ -56,7 +56,7 @@ const baseCss = css`
   }
 `;
 
-const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
+const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string>(
   {
     title,
     description,
@@ -79,7 +79,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
     classNames,
     styles,
     ...props
-  }: RadioCellProps<T>,
+  }: RadioCellProps<RadioValue>,
   ref: React.ForwardedRef<HTMLLabelElement>,
 ) {
   const generatedTitleId = useId();
@@ -170,8 +170,8 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
       </VStack>
     </Pressable>
   );
-}) as <T extends string>(
-  props: RadioCellProps<T> & { ref?: React.Ref<HTMLLabelElement> },
+}) as <RadioValue extends string>(
+  props: RadioCellProps<RadioValue> & { ref?: React.Ref<HTMLLabelElement> },
 ) => React.ReactElement;
 
 export const RadioCell = memo(RadioCellWithRef) as typeof RadioCellWithRef &

@@ -254,6 +254,7 @@ const names: PictogramName[] = [
   'commerceCheckout',
   'commerceInvoice',
   'commerceNavigation',
+  'commodities',
   'completeQuiz',
   'complianceNavigation',
   'congratulations',
