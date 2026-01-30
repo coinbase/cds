@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.30.0 (1/29/2026 PST)
+
 ##### ⭐️ Added (4)
 
 ###### Pictogram (1)
