@@ -1,4 +1,4 @@
-## Basic Example
+## Basics
 
 Carousels are a great way to showcase a list of items in a compact and engaging way.
 By default, Carousels have navigation and pagination enabled.
@@ -317,6 +317,7 @@ function SquareItemsCarousel() {
   return (
     <Carousel
       title="Explore Assets"
+      paginationVariant="dot"
       styles={{
         root: { paddingInline: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -353,6 +354,7 @@ function OverflowCarousel() {
   return (
     <Carousel
       title="Explore Assets"
+      paginationVariant="dot"
       snapMode="item"
       styles={{
         root: { paddingInline: horizontalPadding },
@@ -369,29 +371,24 @@ function OverflowCarousel() {
 }
 ```
 
-## Looping
+## Autoplay
 
-Enable infinite looping with the `loop` prop. You must have at least two pages of content to enable looping.
+Use `autoplay` to allow for automatic page advancement. The default interval is 3 seconds but can be changed with `autoplayInterval`.
 
-Looping works with both `snap` and `free` drag modes, and with both `page` and `item` snap modes.
-
-### Looping with Snap
-
-When looping is enabled with snap drag mode, the carousel will snap to the nearest item or page (depending on `snapMode`) after releasing, allowing infinite scrolling in either direction.
+It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
 
 ```jsx
-function LoopingSnapCarousel() {
+function AutoplayCarousel() {
   const theme = useTheme();
-  const windowWidth = Dimensions.get('window').width;
-
   const horizontalPadding = theme.space[2];
-  const carouselWidth = windowWidth - horizontalPadding * 2;
   const horizontalGap = theme.space[1];
 
   return (
     <Carousel
+      autoplay
       loop
-      title="Infinite Scroll"
+      paginationVariant="dot"
+      title="Trending Assets"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -407,25 +404,49 @@ function LoopingSnapCarousel() {
 }
 ```
 
-### Looping with Free Drag
+```jsx
+function CustomIntervalCarousel() {
+  const theme = useTheme();
+  const horizontalPadding = theme.space[2];
+  const horizontalGap = theme.space[1];
 
-When looping with free drag, the carousel scrolls continuously without snapping, creating a smooth endless scrolling experience.
+  return (
+    <Carousel
+      autoplay
+      autoplayInterval={5000}
+      loop
+      paginationVariant="dot"
+      title="5 Second Interval"
+      styles={{
+        root: { paddingHorizontal: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Looping
+
+Use `loop` to allow for infinite scrolling.
 
 ```jsx
-function LoopingFreeDragCarousel() {
+function LoopingCarousel() {
   const theme = useTheme();
-  const windowWidth = Dimensions.get('window').width;
-
   const horizontalPadding = theme.space[2];
-  const carouselWidth = windowWidth - horizontalPadding * 2;
   const horizontalGap = theme.space[1];
 
   return (
     <Carousel
       loop
-      drag="free"
-      snapMode="item"
-      title="Free Scroll Loop"
+      paginationVariant="dot"
+      title="Infinite Scroll"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -450,7 +471,7 @@ You need to use `accessibilityLabel` or `accessibilityLabelledBy` props to provi
 Similar to web, you are provided the `isVisible` render prop, however it is not necessary to use since mobile users do not have a keyboard.
 
 ```jsx
-<Carousel>
+<Carousel paginationVariant="dot">
   <CarouselItem id="btc" accessibilityLabel="Bitcoin">
     <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
   </CarouselItem>
@@ -686,6 +707,7 @@ You can use the `styles` props to customize different parts of the carousel.
 function CustomStylesCarousel() {
   return (
     <Carousel
+      paginationVariant="dot"
       styles={{
         root: { paddingInline: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -766,6 +788,185 @@ function CustomStylesCarousel() {
 }
 ```
 
+### Composed Example
+
+You can use `useCarouselAutoplayContext` inside a custom `PaginationComponent` to build your own controls. This example shows a composed layout with pagination and play/pause on the left, and navigation arrows on the right.
+
+```jsx
+function ComposedAutoplayCarousel() {
+  const carouselRef = useRef(null);
+  const theme = useTheme();
+
+  function CustomPaginationDots({ totalPages, activePageIndex, onPressPage }) {
+    const autoplay = useCarouselAutoplayContext();
+
+    return (
+      <HStack
+        alignItems="center"
+        background="bgSecondary"
+        borderRadius={1000}
+        gap={0.5}
+        paddingX={1.5}
+        style={{ height: theme.space[5] }}
+      >
+        {Array.from({ length: totalPages }, (_, index) => {
+          const isActive = index === activePageIndex;
+          const showProgress = isActive && autoplay.isEnabled;
+
+          const springProps = useSpring({
+            width: isActive ? theme.space[3] : theme.space[1],
+            backgroundColor:
+              isActive && !showProgress ? theme.color.fgPrimary : theme.color.fgMuted,
+            config: { tension: 300, friction: 25 },
+          });
+
+          const progressWidth = autoplay.progress.to((value) => value * theme.space[3]);
+
+          return (
+            <Pressable
+              key={index}
+              accessibilityLabel={`Go to page ${index + 1}`}
+              borderRadius={1000}
+              borderWidth={0}
+              onPress={() => onPressPage?.(index)}
+              overflow="hidden"
+            >
+              <animated.View
+                style={{
+                  width: springProps.width,
+                  height: theme.space[1],
+                  backgroundColor: springProps.backgroundColor,
+                  borderRadius: theme.borderRadius[1000],
+                  overflow: 'hidden',
+                }}
+              >
+                {showProgress && (
+                  <animated.View
+                    style={{
+                      width: progressWidth,
+                      height: '100%',
+                      backgroundColor: theme.color.fgPrimary,
+                      borderRadius: theme.borderRadius[1000],
+                    }}
+                  />
+                )}
+              </animated.View>
+            </Pressable>
+          );
+        })}
+      </HStack>
+    );
+  }
+
+  function CustomControls({ totalPages, activePageIndex, onPressPage }) {
+    const autoplay = useCarouselAutoplayContext();
+
+    return (
+      <HStack justifyContent="space-between" paddingY={1}>
+        <HStack gap={1} alignItems="center">
+          <CustomPaginationDots
+            totalPages={totalPages}
+            activePageIndex={activePageIndex}
+            onPressPage={onPressPage}
+          />
+          <IconButton
+            accessibilityLabel={autoplay.isStopped ? 'Play' : 'Pause'}
+            name={autoplay.isStopped ? 'play' : 'pause'}
+            onPress={autoplay.toggle}
+            variant="secondary"
+          />
+        </HStack>
+        <HStack gap={1}>
+          <IconButton
+            accessibilityLabel="Previous"
+            disabled={activePageIndex <= 0}
+            name="caretLeft"
+            onPress={() => carouselRef.current?.goToPage(activePageIndex - 1)}
+            variant="secondary"
+          />
+          <IconButton
+            accessibilityLabel="Next"
+            disabled={activePageIndex >= totalPages - 1}
+            name="caretRight"
+            onPress={() => carouselRef.current?.goToPage(activePageIndex + 1)}
+            variant="secondary"
+          />
+        </HStack>
+      </HStack>
+    );
+  }
+
+  return (
+    <Carousel
+      ref={carouselRef}
+      autoplay
+      loop
+      hideNavigation
+      PaginationComponent={CustomControls}
+      styles={{
+        root: { paddingHorizontal: theme.space[3] },
+        carousel: { gap: theme.space[2] },
+      }}
+    >
+      <CarouselItem id="innovation-1" width={`${(100 - 2 * 2) / 3}%`}>
+        <NudgeCard
+          title="Innovation"
+          description="Cards are a great way to showcase content."
+          pictogram="shield"
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="innovation-2" width={`${(100 - 2 * 2) / 3}%`}>
+        <NudgeCard
+          title="Innovation"
+          description="Cards are a great way to showcase content."
+          pictogram="security"
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="innovation-3" width={`${(100 - 2 * 2) / 3}%`}>
+        <NudgeCard
+          title="Innovation"
+          description="Cards are a great way to showcase content."
+          pictogram="institutions"
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="innovation-4" width={`${(100 - 2 * 2) / 3}%`}>
+        <NudgeCard
+          title="Innovation"
+          description="Cards are a great way to showcase content."
+          pictogram="key"
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="innovation-5" width={`${(100 - 2 * 2) / 3}%`}>
+        <NudgeCard
+          title="Innovation"
+          description="Cards are a great way to showcase content."
+          pictogram="receipt"
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="innovation-6" width={`${(100 - 2 * 2) / 3}%`}>
+        <NudgeCard
+          title="Innovation"
+          description="Cards are a great way to showcase content."
+          pictogram="worldwide"
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
 ### Dynamic Content
 
 You can dynamically add and remove items from the carousel.
@@ -792,6 +993,7 @@ function DynamicContentCarousel() {
       </HStack>
       <Carousel
         title="Explore Assets"
+        paginationVariant="dot"
         styles={{
           root: { paddingInline: horizontalPadding },
           carousel: { gap: horizontalGap, height: 156 },

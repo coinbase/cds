@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { animated } from '@react-spring/native';
+import { animated, useSpring } from '@react-spring/native';
 
 import { useTheme } from '../hooks/useTheme';
 import { HStack } from '../layout/HStack';
@@ -25,7 +25,10 @@ export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps & 
   };
 };
 
-type PaginationDotProps = {
+const DOT_WIDTH = 24;
+const DOT_HEIGHT = 4;
+
+type PaginationIndicatorProps = {
   index: number;
   isActive: boolean;
   onPress: () => void;
@@ -33,8 +36,27 @@ type PaginationDotProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-const DOT_WIDTH = 24;
-const DOT_HEIGHT = 4;
+const PaginationPill = memo(function PaginationPill({
+  index,
+  isActive,
+  onPress,
+  accessibilityLabel,
+  style,
+}: PaginationIndicatorProps) {
+  return (
+    <Pressable
+      accessibilityLabel={accessibilityLabel}
+      background={isActive ? 'bgPrimary' : 'bgLine'}
+      borderColor="transparent"
+      borderRadius={100}
+      height={DOT_HEIGHT}
+      onPress={onPress}
+      style={style}
+      testID={`carousel-page-${index}`}
+      width={DOT_WIDTH}
+    />
+  );
+});
 
 const PaginationDot = memo(function PaginationDot({
   index,
@@ -42,40 +64,51 @@ const PaginationDot = memo(function PaginationDot({
   onPress,
   accessibilityLabel,
   style,
-}: PaginationDotProps) {
+}: PaginationIndicatorProps) {
   const theme = useTheme();
   const autoplayContext = useCarouselAutoplayContext();
 
-  // Show progress bar when autoplay is enabled on the active dot
   const showProgress = isActive && autoplayContext.isEnabled;
 
-  // Transform progress (0-1) to width
+  const springProps = useSpring({
+    width: isActive ? DOT_WIDTH : DOT_HEIGHT,
+    backgroundColor: isActive && !showProgress ? theme.color.bgPrimary : theme.color.bgLine,
+    config: { tension: 300, friction: 25 },
+  });
+
   const progressWidth = autoplayContext.progress.to((value: number) => value * DOT_WIDTH);
 
   return (
     <Pressable
       accessibilityLabel={accessibilityLabel}
-      background={isActive && !showProgress ? 'bgPrimary' : 'bgLine'}
       borderColor="transparent"
       borderRadius={100}
       borderWidth={0}
-      height={DOT_HEIGHT}
       onPress={onPress}
       overflow="hidden"
       style={style}
       testID={`carousel-page-${index}`}
-      width={DOT_WIDTH}
     >
-      {showProgress && (
-        <animated.View
-          style={{
-            width: progressWidth,
-            height: '100%',
-            backgroundColor: theme.color.bgPrimary,
-            borderRadius: theme.borderRadius[100],
-          }}
-        />
-      )}
+      <animated.View
+        style={{
+          width: springProps.width,
+          height: DOT_HEIGHT,
+          backgroundColor: springProps.backgroundColor,
+          borderRadius: theme.borderRadius[100],
+          overflow: 'hidden',
+        }}
+      >
+        {showProgress && (
+          <animated.View
+            style={{
+              width: progressWidth,
+              height: '100%',
+              backgroundColor: theme.color.bgPrimary,
+              borderRadius: theme.borderRadius[100],
+            }}
+          />
+        )}
+      </animated.View>
     </Pressable>
   );
 });
@@ -87,8 +120,10 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   style,
   styles,
   paginationAccessibilityLabel = 'Go to page',
+  variant = 'pill',
 }: DefaultCarouselPaginationProps) {
   const theme = useTheme();
+  const isDot = variant === 'dot';
 
   // Using paddingVertical here instead of HStack prop so it can be overridden by custom styles
   const rootStyles = useMemo(
@@ -96,23 +131,35 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
     [style, styles?.root, theme.space],
   );
 
+  const getAccessibilityLabel = (index: number) =>
+    typeof paginationAccessibilityLabel === 'function'
+      ? paginationAccessibilityLabel(index)
+      : `${paginationAccessibilityLabel} ${index + 1}`;
+
   return (
     <HStack gap={0.5} justifyContent="center" style={rootStyles}>
       {totalPages > 0 ? (
-        Array.from({ length: totalPages }, (_, index) => (
-          <PaginationDot
-            key={index}
-            accessibilityLabel={
-              typeof paginationAccessibilityLabel === 'function'
-                ? paginationAccessibilityLabel(index)
-                : `${paginationAccessibilityLabel} ${index + 1}`
-            }
-            index={index}
-            isActive={index === activePageIndex}
-            onPress={() => onPressPage(index)}
-            style={styles?.dot}
-          />
-        ))
+        Array.from({ length: totalPages }, (_, index) =>
+          isDot ? (
+            <PaginationDot
+              key={index}
+              accessibilityLabel={getAccessibilityLabel(index)}
+              index={index}
+              isActive={index === activePageIndex}
+              onPress={() => onPressPage(index)}
+              style={styles?.dot}
+            />
+          ) : (
+            <PaginationPill
+              key={index}
+              accessibilityLabel={getAccessibilityLabel(index)}
+              index={index}
+              isActive={index === activePageIndex}
+              onPress={() => onPressPage(index)}
+              style={styles?.dot}
+            />
+          ),
+        )
       ) : (
         <Pressable
           disabled
@@ -121,7 +168,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
           borderRadius={100}
           height={DOT_HEIGHT}
           style={[{ opacity: 0 }, styles?.dot]}
-          width={DOT_WIDTH}
+          width={isDot ? DOT_HEIGHT : DOT_WIDTH}
         />
       )}
     </HStack>

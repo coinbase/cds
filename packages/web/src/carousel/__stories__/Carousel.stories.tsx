@@ -218,7 +218,12 @@ const BasicExamples = () => (
         {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
       </CarouselItem>
     </Carousel>
-    <Carousel drag="none" styles={gapOnlyStyles} title="Navigation Only (No Drag)">
+    <Carousel
+      drag="none"
+      paginationVariant="dot"
+      styles={gapOnlyStyles}
+      title="Navigation Only (No Drag)"
+    >
       {sampleItems.slice(0, 4).map((item, index) => (
         <CarouselItem key={`nav-only-${index}`} id={`nav-only-${index}`} width="100%">
           {item}
@@ -563,8 +568,10 @@ const LoopingExamples = () => (
     </NegativeMargin>
     <NegativeMargin>
       <Carousel
+        autoplay
         loop
         drag="snap"
+        paginationVariant="dot"
         snapMode="item"
         styles={overflowStyles}
         title="Looping - Snap Item"
