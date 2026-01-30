@@ -97,39 +97,45 @@ export const Tray = memo(
     );
 
     const renderChildren: TrayRenderChildren = useCallback(
-      ({ handleClose }) => (
-        <VStack
-          flexGrow={1}
-          flexShrink={1}
-          minHeight={0}
-          paddingTop={title ? 0 : 2}
-          style={contentStyle}
-        >
-          {title && (
-            <Box
-              justifyContent="center"
-              onLayout={onTitleLayout}
-              paddingBottom={isInsideHandleBar ? 0.75 : 2}
-              paddingTop={isInsideHandleBar ? 0 : 3}
-              paddingX={3}
-              style={headerStyle}
-            >
-              {typeof title === 'string' ? (
-                <Text font="title3" style={titleStyle}>
-                  {title}
-                </Text>
-              ) : (
-                title
-              )}
+      ({ handleClose }) => {
+        const content = typeof children === 'function' ? children({ handleClose }) : children;
+        const headerContent = typeof header === 'function' ? header({ handleClose }) : header;
+        const footerContent = typeof footer === 'function' ? footer({ handleClose }) : footer;
+
+        return (
+          <VStack
+            flexGrow={1}
+            flexShrink={1}
+            minHeight={0}
+            paddingTop={title ? 0 : 2}
+            style={contentStyle}
+          >
+            {title && (
+              <Box
+                justifyContent="center"
+                onLayout={onTitleLayout}
+                paddingBottom={isInsideHandleBar ? 0.75 : 2}
+                paddingTop={isInsideHandleBar ? 0 : 3}
+                paddingX={3}
+                style={headerStyle}
+              >
+                {typeof title === 'string' ? (
+                  <Text font="title3" style={titleStyle}>
+                    {title}
+                  </Text>
+                ) : (
+                  title
+                )}
+              </Box>
+            )}
+            {headerContent}
+            <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
+              {content}
             </Box>
-          )}
-          {typeof header === 'function' ? header({ handleClose }) : header}
-          <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
-            {typeof children === 'function' ? children({ handleClose }) : children}
-          </Box>
-          {typeof footer === 'function' ? footer({ handleClose }) : footer}
-        </VStack>
-      ),
+            {footerContent}
+          </VStack>
+        );
+      },
       [
         title,
         contentStyle,
