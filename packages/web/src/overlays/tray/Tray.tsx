@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import type { PinningDirection, SharedAccessibilityProps, ThemeVars } from '@coinbase/cds-common';
 import {
+  DISMISSAL_DRAG_PERCENTAGE,
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
 } from '@coinbase/cds-common/animation/drawer';
@@ -20,6 +21,7 @@ import {
 import { m as motion, useAnimation } from 'framer-motion';
 
 import { IconButton } from '../../buttons';
+import { useDimensions } from '../../hooks/useDimensions';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
 import { useTheme } from '../../hooks/useTheme';
 import { Box, HStack } from '../../layout';
@@ -226,7 +228,7 @@ export const Tray = memo(
     const theme = useTheme();
     const [isOpen, setIsOpen] = useState(true);
     const [hasScrolledDown, setHasScrolledDown] = useState(false);
-    const trayRef = useRef<HTMLDivElement>(null);
+    const { observe: observeTraySize, height: trayHeight } = useDimensions<HTMLDivElement>();
     const contentRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
     const isSideTray = pin === 'right' || pin === 'left';
@@ -391,9 +393,12 @@ export const Tray = memo(
 
         dragStateRef.current = null;
 
-        // Check if drag distance or velocity exceeds threshold for dismissal
-        const shouldDismiss =
-          dragY >= DISMISSAL_DRAG_THRESHOLD || velocityY >= DISMISSAL_VELOCITY_THRESHOLD;
+        const closeThreshold =
+          trayHeight > 0
+            ? Math.min(DISMISSAL_DRAG_THRESHOLD, trayHeight * DISMISSAL_DRAG_PERCENTAGE)
+            : DISMISSAL_DRAG_THRESHOLD;
+
+        const shouldDismiss = dragY >= closeThreshold || velocityY >= DISMISSAL_VELOCITY_THRESHOLD;
 
         if (shouldDismiss) {
           handleSwipeClose();
@@ -405,7 +410,7 @@ export const Tray = memo(
           });
         }
       },
-      [controls, preventDismiss, handleSwipeClose],
+      [controls, preventDismiss, handleSwipeClose, trayHeight],
     );
 
     const handlePointerCancel = useCallback(() => {
@@ -503,7 +508,7 @@ export const Tray = memo(
                 tabIndex={0}
               >
                 <VStack
-                  ref={trayRef}
+                  ref={observeTraySize}
                   accessibilityLabel={accessibilityLabel}
                   accessibilityLabelledBy={accessibilityLabelledBy}
                   alignItems="center"

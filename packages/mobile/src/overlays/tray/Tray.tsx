@@ -14,7 +14,7 @@ import type { LayoutChangeEvent, StyleProp, TextStyle, ViewStyle } from 'react-n
 import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
 import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@coinbase/cds-common/tokens/drawer';
 
-import { Box, HStack, VStack } from '../../layout';
+import { Box, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import {
   Drawer,

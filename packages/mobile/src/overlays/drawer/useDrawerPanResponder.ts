@@ -159,7 +159,7 @@ export const useDrawerPanResponder = ({
   const isSwipeToDismiss = useCallback(
     (distance: number) => {
       const drawerSize = isHorizontalDrawer ? drawerWidth : drawerHeight;
-      const proportionalThreshold = Math.min(
+      const closeThreshold = Math.min(
         DISMISSAL_DRAG_THRESHOLD,
         drawerSize * DISMISSAL_DRAG_PERCENTAGE,
       );
@@ -167,11 +167,11 @@ export const useDrawerPanResponder = ({
       switch (pin) {
         case 'top':
         case 'left':
-          return distance <= -proportionalThreshold;
+          return distance <= -closeThreshold;
         case 'bottom':
         case 'right':
         default:
-          return distance >= proportionalThreshold;
+          return distance >= closeThreshold;
       }
     },
     [pin, isHorizontalDrawer, drawerWidth, drawerHeight],
