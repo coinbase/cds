@@ -308,9 +308,7 @@ describe('CheckboxCell', () => {
 
     // Should have proper accessibility role and state
     expect(screen.queryAllByRole('checkbox')).toHaveLength(1);
-    expect(screen.getByTestId('checked-accessible-checkbox')).toHaveAccessibilityState({
-      checked: true,
-    });
+    expect(screen.getByTestId('checked-accessible-checkbox')).toBeChecked();
   });
 
   it('renders with proper accessibility when disabled', () => {
@@ -329,9 +327,7 @@ describe('CheckboxCell', () => {
 
     // Should have proper accessibility role and state
     expect(screen.queryAllByRole('checkbox')).toHaveLength(1);
-    expect(screen.getByTestId('disabled-accessible-checkbox')).toHaveAccessibilityState({
-      disabled: true,
-    });
+    expect(screen.getByTestId('disabled-accessible-checkbox')).toBeDisabled();
   });
 
   it('works without description', () => {

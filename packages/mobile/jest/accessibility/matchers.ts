@@ -1,9 +1,9 @@
 /**
  * Custom Jest matchers for accessibility testing.
  */
-import { getLabelPrinter,matcherHint, printExpected, printReceived } from 'jest-matcher-utils';
+import { getLabelPrinter, matcherHint, printExpected, printReceived } from 'jest-matcher-utils';
 
-import { checkAccessibility, type EngineOptions,type Violation } from './engine';
+import { checkAccessibility, type EngineOptions, type Violation } from './engine';
 import type { TestInstance } from './types';
 
 const LABEL_PROBLEM = 'Problem';

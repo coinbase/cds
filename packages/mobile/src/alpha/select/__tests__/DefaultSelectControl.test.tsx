@@ -199,7 +199,7 @@ describe('DefaultSelectControl', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button).toHaveAccessibilityState({ disabled: true });
+      expect(button).toBeDisabled();
     });
 
     it('renders with helper text', () => {

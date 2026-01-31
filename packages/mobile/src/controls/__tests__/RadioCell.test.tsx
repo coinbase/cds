@@ -327,9 +327,7 @@ describe('RadioCell', () => {
 
     // Should have proper accessibility role and state
     expect(screen.queryAllByRole('radio')).toHaveLength(1);
-    expect(screen.getByTestId('selected-accessible-radio')).toHaveAccessibilityState({
-      selected: true,
-    });
+    expect(screen.getByTestId('selected-accessible-radio')).toBeSelected();
   });
 
   it('renders with proper accessibility when disabled', () => {
@@ -348,9 +346,7 @@ describe('RadioCell', () => {
 
     // Should have proper accessibility role and state
     expect(screen.queryAllByRole('radio')).toHaveLength(1);
-    expect(screen.getByTestId('disabled-accessible-radio')).toHaveAccessibilityState({
-      disabled: true,
-    });
+    expect(screen.getByTestId('disabled-accessible-radio')).toBeDisabled();
   });
 
   it('works without description', () => {

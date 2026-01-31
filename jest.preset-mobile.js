@@ -18,7 +18,7 @@ const config = {
     '\\.(jpg|jpeg|png|gif)$': 'identity-obj-proxy',
   },
   setupFiles: [...reactNativePreset.setupFiles],
-  setupFilesAfterEnv: ['jest-extended', '@testing-library/jest-native/extend-expect'],
+  setupFilesAfterEnv: ['jest-extended'],
   testMatch: ['**/*.test.[jt]s?(x)'],
   testPathIgnorePatterns: [
     '/node_modules/',

@@ -1,5 +1,4 @@
 /// <reference types='react-native-gesture-handler/jestSetup' />
-/// <reference types='@testing-library/jest-native/extend-expect' />
 
 /**
  * Custom accessibility matcher type declaration.

@@ -323,7 +323,7 @@ export default tseslint.config(
     extends: [internalPlugin.configs.figmaConnectRules],
   },
   {
-    files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/setup.js'],
+    files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/jest/**/*.js'],
     settings: sharedSettings,
     languageOptions: {
       globals: {

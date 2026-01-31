@@ -113,7 +113,6 @@
     "@nx/jest": "20.8.2",
     "@nx/workspace": "20.8.2",
     "@parcel/css-cli": "^1.9.0",
-    "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.0.4",
     "@types/d3-array": "^3.2.1",

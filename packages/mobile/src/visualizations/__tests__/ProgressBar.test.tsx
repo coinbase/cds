@@ -1,5 +1,4 @@
 import React, { act } from 'react';
-import type { ReactTestInstance } from 'react-test-renderer';
 import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -16,7 +15,7 @@ jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
   useCounter: ({ endNum }: UseCounterParams) => endNum,
 }));
 
-function fireTextEvent(floatLabel: ReactTestInstance) {
+function fireTextEvent(floatLabel: Parameters<typeof fireEvent>[0]) {
   fireEvent(floatLabel, 'layout', {
     nativeEvent: {
       layout: {
@@ -31,7 +30,7 @@ function fireTextEvent(floatLabel: ReactTestInstance) {
   });
 }
 
-function fireTextContainerEvent(floatLabelContainer: ReactTestInstance) {
+function fireTextContainerEvent(floatLabelContainer: Parameters<typeof fireEvent>[0]) {
   fireEvent(floatLabelContainer, 'layout', {
     nativeEvent: {
       layout: {

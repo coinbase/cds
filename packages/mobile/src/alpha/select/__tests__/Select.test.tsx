@@ -502,7 +502,7 @@ describe('Select', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button).toHaveAccessibilityState({ disabled: true });
+      expect(button).toBeDisabled();
     });
 
     it('does not open when disabled', () => {

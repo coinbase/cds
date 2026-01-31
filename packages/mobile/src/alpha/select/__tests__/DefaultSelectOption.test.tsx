@@ -28,7 +28,7 @@ describe('DefaultSelectOption', () => {
         </DefaultThemeProvider>,
       );
       const option = screen.getByRole('menuitem');
-      expect(option).toHaveAccessibilityState({ disabled: true });
+      expect(option).toBeDisabled();
     });
 
     it('has correct accessibility attributes for single select', () => {
@@ -39,7 +39,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('menuitem');
-      expect(option).toHaveAccessibilityState({ selected: true });
+      expect(option).toBeSelected();
     });
 
     it('has correct accessibility attributes for multi select', () => {
@@ -50,7 +50,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('checkbox');
-      expect(option).toHaveAccessibilityState({ checked: true });
+      expect(option).toBeChecked();
     });
 
     it('has correct accessibility attributes for indeterminate state', () => {
@@ -61,7 +61,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('checkbox');
-      expect(option).toHaveAccessibilityState({ checked: 'mixed' });
+      expect(option).toBePartiallyChecked();
     });
 
     it('sets custom accessibility role', () => {
@@ -166,7 +166,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('menuitem');
-      expect(option).toHaveAccessibilityState({ selected: true });
+      expect(option).toBeSelected();
     });
 
     it('renders unselected state', () => {
@@ -177,7 +177,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('menuitem');
-      expect(option).toHaveAccessibilityState({ selected: false });
+      expect(option).not.toBeSelected();
     });
 
     it('renders disabled state', () => {
@@ -188,7 +188,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('menuitem');
-      expect(option).toHaveAccessibilityState({ disabled: true });
+      expect(option).toBeDisabled();
     });
 
     it('renders enabled state', () => {
@@ -199,7 +199,7 @@ describe('DefaultSelectOption', () => {
       );
 
       const option = screen.getByRole('menuitem');
-      expect(option).not.toHaveAccessibilityState({ disabled: true });
+      expect(option).toBeEnabled();
     });
   });
 

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo, type ReactElement } from 'react';
+import React, { forwardRef, memo, type ReactElement, useMemo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
