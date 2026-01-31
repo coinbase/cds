@@ -233,15 +233,6 @@ export const Responsive = () => {
             onCloseComplete={() => setShowBasic(false)}
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
-            styles={
-              isPhone
-                ? {
-                    container: {
-                      maxHeight: 650,
-                    },
-                  }
-                : undefined
-            }
             title="Section header"
           >
             <Text color="fgMuted" font="body" paddingBottom={2}>
@@ -272,15 +263,6 @@ export const Responsive = () => {
             onCloseComplete={() => setShowIllustration(false)}
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
-            styles={
-              isPhone
-                ? {
-                    container: {
-                      maxHeight: 650,
-                    },
-                  }
-                : undefined
-            }
             title={
               <VStack gap={isPhone ? 1.5 : 2}>
                 <Pictogram name="addWallet" />
@@ -317,11 +299,6 @@ export const Responsive = () => {
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
             styles={{
-              container: isPhone
-                ? {
-                    maxHeight: 650,
-                  }
-                : undefined,
               header: {
                 backgroundImage:
                   'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
@@ -362,11 +339,6 @@ export const Responsive = () => {
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
             styles={{
-              container: isPhone
-                ? {
-                    maxHeight: 650,
-                  }
-                : undefined,
               header: { paddingBottom: 'var(--space-1)' },
               content: { paddingBottom: 'var(--space-3)' },
             }}
@@ -413,11 +385,6 @@ export const Responsive = () => {
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
             styles={{
-              container: isPhone
-                ? {
-                    maxHeight: 650,
-                  }
-                : undefined,
               header: { paddingBottom: 'var(--space-1)' },
               content: { paddingBottom: 'var(--space-3)' },
             }}
@@ -458,11 +425,6 @@ export const Responsive = () => {
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
             styles={{
-              container: isPhone
-                ? {
-                    maxHeight: 650,
-                  }
-                : undefined,
               header: {
                 backgroundImage:
                   'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
@@ -524,11 +486,6 @@ export const HandleBar = () => {
             )}
             onCloseComplete={() => setShowBasic(false)}
             pin="bottom"
-            styles={{
-              container: {
-                maxHeight: 650,
-              },
-            }}
             title="Section header"
           >
             <Text color="fgMuted" font="body" paddingBottom={2}>
@@ -559,11 +516,6 @@ export const HandleBar = () => {
             )}
             onCloseComplete={() => setShowIllustration(false)}
             pin="bottom"
-            styles={{
-              container: {
-                maxHeight: 650,
-              },
-            }}
             title={
               <VStack gap={1.5}>
                 <Pictogram name="addWallet" />
@@ -600,9 +552,6 @@ export const HandleBar = () => {
             onCloseComplete={() => setShowFullBleedImage(false)}
             pin="bottom"
             styles={{
-              container: {
-                maxHeight: 650,
-              },
               header: {
                 backgroundImage:
                   'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
@@ -643,9 +592,6 @@ export const HandleBar = () => {
             onCloseComplete={() => setShowBasicListCells(false)}
             pin="bottom"
             styles={{
-              container: {
-                maxHeight: 650,
-              },
               header: { paddingBottom: 'var(--space-1)' },
               content: { paddingBottom: 'var(--space-3)' },
             }}
@@ -692,9 +638,6 @@ export const HandleBar = () => {
             onCloseComplete={() => setShowIllustrationListCells(false)}
             pin="bottom"
             styles={{
-              container: {
-                maxHeight: 650,
-              },
               header: { paddingBottom: 'var(--space-1)' },
               content: { paddingBottom: 'var(--space-3)' },
             }}
@@ -735,9 +678,6 @@ export const HandleBar = () => {
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
             pin="bottom"
             styles={{
-              container: {
-                maxHeight: 650,
-              },
               header: {
                 backgroundImage:
                   'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
