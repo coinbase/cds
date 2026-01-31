@@ -12,7 +12,6 @@ import type { PinningDirection, SharedAccessibilityProps, ThemeVars } from '@coi
 import {
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
-  MAX_OVER_DRAG,
 } from '@coinbase/cds-common/animation/drawer';
 import {
   OverlayContentContext,
@@ -74,7 +73,8 @@ export type TrayBaseProps = {
   /** Text or ReactNode for optional Tray title */
   title?: React.ReactNode;
   /**
-   * Allow user of component to define maximum percentage of screen that can be taken up by the Drawer when pinned to the bottom or top
+   * Allow user of component to define maximum percentage of screen that can be taken up by the Drawer when pinned to the bottom or top.
+   * Not used when `pin` is `"left"` or `"right"`.
    * @example if you want a Drawer to take up 50% of the screen, you would pass a value of `"50%"`
    * @default "85%"
    */
@@ -368,14 +368,11 @@ export const Tray = memo(
         dragStateRef.current.lastTime = Date.now();
 
         // Dragging down (positive Y) - allow full movement
-        // Dragging up (negative Y) - apply rubber-band effect capped at MAX_OVER_DRAG
-        if (dragY < 0) {
-          // Rubber-band effect using tanh for smooth resistance
-          const rubberBandY = -MAX_OVER_DRAG * Math.tanh(Math.abs(dragY) / 100);
-          controls.set({ y: rubberBandY });
-        } else {
+        // Dragging up (negative Y) - prevent completely to avoid showing transparent area
+        if (dragY >= 0) {
           controls.set({ y: dragY });
         }
+        // When dragY < 0 (dragging up), do nothing - keep tray at y: 0
       },
       [controls, preventDismiss],
     );
