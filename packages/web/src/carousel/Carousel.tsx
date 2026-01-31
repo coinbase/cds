@@ -199,7 +199,10 @@ export type CarouselBaseProps = SharedProps &
      */
     snapMode?: 'item' | 'page';
     /**
-     * Hides the navigation arrows (previous/next buttons).
+     * Hides the navigation arrows (previous/next buttons and autoplay control).
+     *
+     * @note If you hide navigation with autoplay, you must provide
+     * an alternative mechanism for users to pause the carousel.
      */
     hideNavigation?: boolean;
     /**
