@@ -330,7 +330,7 @@ export const Drawer = memo(
               style={drawerStyle}
             >
               {showHandleBarInside && handleBar}
-              {content}
+              <View style={overflowStyle}>{content}</View>
             </Box>
           </Box>
         </OverlayContentContext.Provider>
