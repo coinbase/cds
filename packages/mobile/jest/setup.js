@@ -2,8 +2,7 @@
  * NOTE: If you add imports here that extend Jest, such as extending `expect` with new
  * functions like `.toBeAccessible()`, you must also update `packages/mobile/src/jest.d.ts`
  */
-import 'react-native-gesture-handler/jestSetup';
-import 'react-native-accessibility-engine';
+import './accessibility';
 
 // https://docs.swmansion.com/react-native-reanimated/docs/guides/testing/
 const { setUpTests } = require('react-native-reanimated');

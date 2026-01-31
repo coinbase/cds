@@ -2850,11 +2850,10 @@ __metadata:
     "@testing-library/react-native": "npm:^13.3.3"
     "@types/d3-color": "npm:^3.1.3"
     "@types/react": "npm:^19.0.0"
-    "@types/react-test-renderer": "npm:^19.1.0"
+    "@types/react-test-renderer": "npm:^19.0.0"
     fuse.js: "npm:^7.1.0"
     lodash: "npm:^4.17.21"
     lottie-react-native: "npm:7.3.5"
-    react-native-accessibility-engine: "npm:^3.2.0"
     react-native-date-picker: "npm:5.0.13"
     react-native-gesture-handler: "npm:2.30.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
@@ -2865,7 +2864,6 @@ __metadata:
     react-native-screens: "npm:4.20.0"
     react-native-svg: "npm:15.15.1"
     react-native-worklets: "npm:0.7.2"
-    react-test-renderer: "npm:^19.2.4"
     type-fest: "npm:^2.19.0"
   peerDependencies:
     "@react-navigation/native": ^6.1.6
@@ -10738,7 +10736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:^19.1.0":
+"@types/react-test-renderer@npm:^19.0.0":
   version: 19.1.0
   resolution: "@types/react-test-renderer@npm:19.1.0"
   dependencies:
@@ -23503,13 +23501,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.groupby@npm:^4.6.0":
-  version: 4.6.0
-  resolution: "lodash.groupby@npm:4.6.0"
-  checksum: 10c0/3d136cad438ad6c3a078984ef60e057a3498b1312aa3621b00246ecb99e8f2c4d447e2815460db7a0b661a4fe4e2eeee96c84cb661a824bad04b6cf1f7bc6e9b
-  languageName: node
-  linkType: hard
-
 "lodash.memoize@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
@@ -29025,19 +29016,6 @@ __metadata:
   peerDependencies:
     react: "*"
   checksum: 10c0/6b145d1a8d2e7342ceef58dd154aa990322f72a6cb98955ab8ce8e3f0dc7f0c5d00f9c2e4efa8d356c5effed72a130b5588857332b11faba0398f5429b484b04
-  languageName: node
-  linkType: hard
-
-"react-native-accessibility-engine@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "react-native-accessibility-engine@npm:3.2.0"
-  dependencies:
-    lodash.groupby: "npm:^4.6.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-    react-test-renderer: "*"
-  checksum: 10c0/289a404a6ef7cfeb70fd71baefa063b4d1ad0c23dd8a1be59aaeab7e8e1f90b1f6a90bf5bb2f16111123830e8990f6161bfd67f33b9907cf3bfef5787962a712
   languageName: node
   linkType: hard
 

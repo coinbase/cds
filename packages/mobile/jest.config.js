@@ -19,18 +19,6 @@ const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
 const config = {
   preset: '../../jest.preset-mobile.js',
   displayName: 'cds-mobile',
-  // Mock react-test-renderer to work around React 19 incompatibility.
-  //
-  // We upgraded react-test-renderer from v18 to v19 to stay in sync with our React version.
-  // However, react-native-accessibility-engine depends on an older react-test-renderer API.
-  //
-  // react-native-accessibility-engine hasn't released an update to address this, so we
-  // provide a mock that satisfies its react-test-renderer initialization requirements.
-  // See: https://github.com/aryella-lacerda/react-native-accessibility-engine
-  // See: https://react.dev/warnings/react-test-renderer
-  moduleNameMapper: {
-    '^react-test-renderer$': '<rootDir>/jest/__mocks__/react-test-renderer.js',
-  },
   coveragePathIgnorePatterns: [
     '<rootDir>/src/illustrations/images',
     '.stories.tsx',
