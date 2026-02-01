@@ -12,8 +12,8 @@
     "@coinbase/cds-illustrations": "workspace:^",
     "@coinbase/cds-web": "workspace:^",
     "@coinbase/cds-web-visualization": "workspace:^",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "~19.1.2",
+    "react-dom": "~19.1.2"
   },
   "devDependencies": {
     "@linaria/babel-preset": "^3.0.0-beta.22",
@@ -28,8 +28,8 @@
     "@storybook/react-vite": "9.1.17",
     "@storybook/testing-library": "^0.2.2",
     "@types/diff": "^5.0.9",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "~19.1.2",
+    "@types/react-dom": "~19.1.2",
     "@vitejs/plugin-react": "^5.0.0",
     "diff": "^5.1.0",
     "rollup-plugin-visualizer": "^6.0.3",

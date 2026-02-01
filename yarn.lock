@@ -2721,9 +2721,9 @@ __metadata:
     "@coinbase/cds-mcp-server": "workspace:^"
     "@coinbase/cds-utils": "workspace:^"
     "@modelcontextprotocol/sdk": "npm:^1.13.1"
-    "@types/react": "npm:^19.0.0"
-    "@types/react-dom": "npm:^19.0.0"
-    "@types/react-is": "npm:^19.2.0"
+    "@types/react": "npm:~19.1.2"
+    "@types/react-dom": "npm:~19.1.2"
+    "@types/react-is": "npm:^19.0.0"
     d3-array: "npm:^3.2.4"
     d3-color: "npm:^3.1.0"
     d3-interpolate: "npm:^3.0.1"
@@ -2731,12 +2731,12 @@ __metadata:
     d3-shape: "npm:^3.2.0"
     jest-date-mock: "npm:^1.0.8"
     lodash: "npm:^4.17.21"
-    react-is: "npm:^19.2.4"
+    react-is: "npm:~19.1.2"
     type-fest: "npm:^2.19.0"
     zod: "npm:^3.23.8"
   peerDependencies:
-    react: ^19.0.0
-    react-dom: ^19.0.0
+    react: ~19.1.2
+    react-dom: ~19.1.2
   languageName: unknown
   linkType: soft
 
@@ -2807,21 +2807,20 @@ __metadata:
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-utils": "workspace:^"
     "@shopify/react-native-skia": "npm:1.12.4"
-    "@types/react": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
     d3-interpolate-path: "npm:^2.3.0"
     lodash: "npm:^4.17.21"
     react-native-gesture-handler: "npm:2.16.2"
     react-native-reanimated: "npm:3.14.0"
     react-native-safe-area-context: "npm:4.10.5"
     react-native-svg: "npm:14.1.0"
-    react-test-renderer: "npm:^19.2.4"
   peerDependencies:
     "@coinbase/cds-common": "workspace:^"
     "@coinbase/cds-lottie-files": "workspace:^"
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-utils": "workspace:^"
     "@shopify/react-native-skia": ^1.12.4 || ^2.0.0
-    react: ^19.0.0
+    react: ~19.1.2
     react-native: ^0.74.5
     react-native-gesture-handler: ^2.16.2
     react-native-reanimated: ^3.14.0
@@ -2849,7 +2848,7 @@ __metadata:
     "@react-spring/native": "npm:^9.7.4"
     "@testing-library/react-native": "npm:^13.3.3"
     "@types/d3-color": "npm:^3.1.3"
-    "@types/react": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
     fuse.js: "npm:^7.1.0"
     lodash: "npm:^4.17.21"
     lottie-react-native: "npm:7.3.5"
@@ -2863,14 +2862,15 @@ __metadata:
     react-native-screens: "npm:4.20.0"
     react-native-svg: "npm:15.15.1"
     react-native-worklets: "npm:0.7.2"
+    react-test-renderer: "npm:~19.1.2"
     type-fest: "npm:^2.19.0"
   peerDependencies:
     "@react-navigation/native": ^6.1.6
     "@react-navigation/native-stack": ^6.9.26
     "@react-navigation/stack": ^6.3.16
     lottie-react-native: ^7.0.0
-    react: ^19.0.0
-    react-native: ^0.81.0
+    react: ~19.1.2
+    react-native: ~0.81.5
     react-native-date-picker: ^5.0.0
     react-native-gesture-handler: ^2.28.0
     react-native-inappbrowser-reborn: ^3.7.0
@@ -2905,12 +2905,12 @@ __metadata:
     "@storybook/react-vite": "npm:9.1.17"
     "@storybook/testing-library": "npm:^0.2.2"
     "@types/diff": "npm:^5.0.9"
-    "@types/react": "npm:^19.0.0"
-    "@types/react-dom": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
+    "@types/react-dom": "npm:~19.1.2"
     "@vitejs/plugin-react": "npm:^5.0.0"
     diff: "npm:^5.1.0"
-    react: "npm:^19.0.0"
-    react-dom: "npm:^19.0.0"
+    react: "npm:~19.1.2"
+    react-dom: "npm:~19.1.2"
     rollup-plugin-visualizer: "npm:^6.0.3"
     storybook: "npm:9.1.17"
     typescript: "npm:~5.9.2"
@@ -2985,8 +2985,8 @@ __metadata:
     "@coinbase/cds-utils": "workspace:^"
     "@coinbase/cds-web": "workspace:^"
     "@linaria/core": "npm:^3.0.0-beta.22"
-    "@types/react": "npm:^19.0.0"
-    "@types/react-dom": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
+    "@types/react-dom": "npm:~19.1.2"
     d3-color: "npm:^3.1.0"
     d3-interpolate: "npm:^3.0.1"
     d3-interpolate-path: "npm:^2.3.0"
@@ -2998,8 +2998,8 @@ __metadata:
     "@coinbase/cds-lottie-files": "workspace:^"
     "@coinbase/cds-utils": "workspace:^"
     "@coinbase/cds-web": "workspace:^"
-    react: ^19.0.0
-    react-dom: ^19.0.0
+    react: ~19.1.2
+    react-dom: ~19.1.2
   languageName: unknown
   linkType: soft
 
@@ -3025,8 +3025,8 @@ __metadata:
     "@storybook/jest": "npm:^0.2.3"
     "@storybook/react": "npm:^9.1.2"
     "@storybook/testing-library": "npm:^0.2.2"
-    "@types/react": "npm:^19.0.0"
-    "@types/react-dom": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
+    "@types/react-dom": "npm:~19.1.2"
     csstype: "npm:^3.1.3"
     d3-interpolate: "npm:^3.0.1"
     d3-interpolate-path: "npm:^2.3.0"
@@ -3044,8 +3044,8 @@ __metadata:
     zx: "npm:^8.1.9"
   peerDependencies:
     framer-motion: ^10.18.0
-    react: ^19.0.0
-    react-dom: ^19.0.0
+    react: ~19.1.2
+    react-dom: ~19.1.2
   languageName: unknown
   linkType: soft
 
@@ -3159,7 +3159,7 @@ __metadata:
     "@react-navigation/elements": "npm:^1.3.17"
     "@react-navigation/native": "npm:^6.1.6"
     "@react-navigation/stack": "npm:^6.3.16"
-    "@types/react": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
     detox: "npm:^20.14.8"
     lodash: "npm:^4.17.21"
     react-native-safe-area-context: "npm:4.10.5"
@@ -3170,7 +3170,7 @@ __metadata:
     "@react-navigation/elements": ^1.3.17
     "@react-navigation/native": ^6.1.6
     "@react-navigation/stack": ^6.3.16
-    react: ^19.0.0
+    react: ~19.1.2
     react-native: ^0.74.5
     react-native-safe-area-context: ^4.10.5
   languageName: unknown
@@ -10650,16 +10650,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19.0.0":
-  version: 19.2.3
-  resolution: "@types/react-dom@npm:19.2.3"
+"@types/react-dom@npm:~19.1.2":
+  version: 19.1.11
+  resolution: "@types/react-dom@npm:19.1.11"
   peerDependencies:
-    "@types/react": ^19.2.0
-  checksum: 10c0/b486ebe0f4e2fb35e2e108df1d8fc0927ca5d6002d5771e8a739de11239fe62d0e207c50886185253c99eb9dedfeeb956ea7429e5ba17f6693c7acb4c02f8cd1
+    "@types/react": ^19.0.0
+  checksum: 10c0/417da6414f43ea2e416ab19666f78f8a29b349f4273ee6d8d468516606c65ee0e6f31939cd3255dfaf466a50a5cdf16b6fd988cf7e9aaf678c61d1fff81e5c20
   languageName: node
   linkType: hard
 
-"@types/react-is@npm:^19.2.0":
+"@types/react-is@npm:^19.0.0":
   version: 19.2.0
   resolution: "@types/react-is@npm:19.2.0"
   dependencies:
@@ -10728,12 +10728,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^19.0.0":
+"@types/react@npm:*":
   version: 19.2.9
   resolution: "@types/react@npm:19.2.9"
   dependencies:
     csstype: "npm:^3.2.2"
   checksum: 10c0/91c6839edd10ebdab4cd686d2a744e6ae078ed5831a36d48284ae92df0463c89bda1084ffdd2e6445f0716236c2c6ae0828b82f70720727632331695f4581d2a
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:~19.1.2":
+  version: 19.1.17
+  resolution: "@types/react@npm:19.1.17"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/8a8369ea00fc961f0884be4d1da4a039b2b6445de9c8b690ed0ebe15acfb0b1f27005278fef1fe39a1722a30f4415778b790d0089e2b30019371c61355ea316f
   languageName: node
   linkType: hard
 
@@ -15246,7 +15255,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.1.3, csstype@npm:^3.2.2":
+"csstype@npm:^3.0.2, csstype@npm:^3.1.3, csstype@npm:^3.2.2":
   version: 3.2.3
   resolution: "csstype@npm:3.2.3"
   checksum: 10c0/cd29c51e70fa822f1cecd8641a1445bed7063697469d35633b516e60fe8c1bde04b08f6c5b6022136bb669b64c63d4173af54864510fbb4ee23281801841a3ce
@@ -16232,8 +16241,8 @@ __metadata:
     "@react-three/drei": "npm:^9.122.0"
     "@react-three/fiber": "npm:^8.18.0"
     "@types/lz-string": "npm:^1.5.0"
-    "@types/react": "npm:^19.0.0"
-    "@types/react-dom": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
+    "@types/react-dom": "npm:~19.1.2"
     "@types/three": "npm:0.177.0"
     babel-loader: "npm:^10.0.0"
     css-loader: "npm:^7.1.2"
@@ -16245,9 +16254,9 @@ __metadata:
     mini-css-extract-plugin: "npm:^2.9.3"
     prettier: "npm:^3.6.2"
     prism-react-renderer: "npm:^2.4.1"
-    react: "npm:^19.0.0"
+    react: "npm:~19.1.2"
     react-colorful: "npm:^5.6.1"
-    react-dom: "npm:^19.0.0"
+    react-dom: "npm:~19.1.2"
     react-live: "npm:^4.1.8"
     three: "npm:0.177.0"
     typescript: "npm:~5.9.2"
@@ -25745,7 +25754,7 @@ __metadata:
     "@react-navigation/native-stack": "npm:^6.9.26"
     "@react-navigation/stack": "npm:^6.3.16"
     "@shopify/react-native-skia": "npm:2.4.16"
-    "@types/react": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
     babel-plugin-transform-inline-environment-variables: "npm:^0.4.4"
     detox: "npm:^20.14.8"
     expo: "npm:~54.0.32"
@@ -25764,7 +25773,7 @@ __metadata:
     intl: "npm:^1.2.5"
     jest: "npm:^29.7.0"
     lottie-react-native: "npm:7.3.5"
-    react: "npm:^19.0.0"
+    react: "npm:~19.1.2"
     react-native: "npm:0.81.5"
     react-native-bundle-visualizer: "npm:^3.1.3"
     react-native-date-picker: "npm:5.0.13"
@@ -28870,7 +28879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0, react-dom@npm:^19.0.0":
+"react-dom@npm:^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0":
   version: 19.2.4
   resolution: "react-dom@npm:19.2.4"
   dependencies:
@@ -28878,6 +28887,17 @@ __metadata:
   peerDependencies:
     react: ^19.2.4
   checksum: 10c0/f0c63f1794dedb154136d4d0f59af00b41907f4859571c155940296808f4b94bf9c0c20633db75b5b2112ec13d8d7dd4f9bf57362ed48782f317b11d05a44f35
+  languageName: node
+  linkType: hard
+
+"react-dom@npm:~19.1.2":
+  version: 19.1.5
+  resolution: "react-dom@npm:19.1.5"
+  dependencies:
+    scheduler: "npm:^0.26.0"
+  peerDependencies:
+    react: ^19.1.5
+  checksum: 10c0/be5f1d6f6d865839c72ee0e45671221e6f6de9f13f0969c796b40c41b09dc580c9259ce3a95f22a20d45a6e10fcfb23cae06c6bd078ee299de5c086a4abf23b5
   languageName: node
   linkType: hard
 
@@ -28938,10 +28958,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^19.2.4":
+"react-is@npm:^19.1.5":
   version: 19.2.4
   resolution: "react-is@npm:19.2.4"
   checksum: 10c0/477a7cfc900f24194606e315fa353856a3a13487ea8eca841678817cad4daef64339ea0d1e84e58459fc75dbe0d9ba00bb0cc626db3d07e0cf31edc64cb4fa37
+  languageName: node
+  linkType: hard
+
+"react-is@npm:~19.1.2":
+  version: 19.1.5
+  resolution: "react-is@npm:19.1.5"
+  checksum: 10c0/33cf7e2e75481c43f062f8ad48fd98c5121456b64322f3895fb38ec969fcd1fe40a76b538ba29ce1b3b5e533a750554b677f94c390550050a609bc83cd7b9c38
   languageName: node
   linkType: hard
 
@@ -29260,6 +29287,56 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native@patch:react-native@npm%3A0.81.5#~/.yarn/patches/react-native-npm-0.81.5-d8232ef145.patch":
+  version: 0.81.5
+  resolution: "react-native@patch:react-native@npm%3A0.81.5#~/.yarn/patches/react-native-npm-0.81.5-d8232ef145.patch::version=0.81.5&hash=3d8c16"
+  dependencies:
+    "@jest/create-cache-key-function": "npm:^29.7.0"
+    "@react-native/assets-registry": "npm:0.81.5"
+    "@react-native/codegen": "npm:0.81.5"
+    "@react-native/community-cli-plugin": "npm:0.81.5"
+    "@react-native/gradle-plugin": "npm:0.81.5"
+    "@react-native/js-polyfills": "npm:0.81.5"
+    "@react-native/normalize-colors": "npm:0.81.5"
+    "@react-native/virtualized-lists": "npm:0.81.5"
+    abort-controller: "npm:^3.0.0"
+    anser: "npm:^1.4.9"
+    ansi-regex: "npm:^5.0.0"
+    babel-jest: "npm:^29.7.0"
+    babel-plugin-syntax-hermes-parser: "npm:0.29.1"
+    base64-js: "npm:^1.5.1"
+    commander: "npm:^12.0.0"
+    flow-enums-runtime: "npm:^0.0.6"
+    glob: "npm:^7.1.1"
+    invariant: "npm:^2.2.4"
+    jest-environment-node: "npm:^29.7.0"
+    memoize-one: "npm:^5.0.0"
+    metro-runtime: "npm:^0.83.1"
+    metro-source-map: "npm:^0.83.1"
+    nullthrows: "npm:^1.1.1"
+    pretty-format: "npm:^29.7.0"
+    promise: "npm:^8.3.0"
+    react-devtools-core: "npm:^6.1.5"
+    react-refresh: "npm:^0.14.0"
+    regenerator-runtime: "npm:^0.13.2"
+    scheduler: "npm:0.26.0"
+    semver: "npm:^7.1.3"
+    stacktrace-parser: "npm:^0.1.10"
+    whatwg-fetch: "npm:^3.0.0"
+    ws: "npm:^6.2.3"
+    yargs: "npm:^17.6.2"
+  peerDependencies:
+    "@types/react": ^19.1.0
+    react: ^19.1.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  bin:
+    react-native: cli.js
+  checksum: 10c0/7f1c7227a34543601c477587fd884fe0316cc0cac77dc8ce9ffbaeb7839747fba7127458e862f0ba1900d38df6f4ed58b5accbe248bed982ca5550620b235ac3
+  languageName: node
+  linkType: hard
+
 "react-popper@npm:^2.2.4":
   version: 2.2.5
   resolution: "react-popper@npm:2.2.5"
@@ -29365,15 +29442,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:^19.2.4":
-  version: 19.2.4
-  resolution: "react-test-renderer@npm:19.2.4"
+"react-test-renderer@npm:~19.1.2":
+  version: 19.1.5
+  resolution: "react-test-renderer@npm:19.1.5"
   dependencies:
-    react-is: "npm:^19.2.4"
-    scheduler: "npm:^0.27.0"
+    react-is: "npm:^19.1.5"
+    scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^19.2.4
-  checksum: 10c0/76f0a419a8ca7776ac6fae7c25056b9326a92a3d79971817e8ffd262d9121d1e87fde058b4fd6d33c365b1001cd6236d9053816dabed20afa62fbfe2a1a59f1a
+    react: ^19.1.5
+  checksum: 10c0/ea95520581b9f42908685148f585241616bca845d2f7b9961d1e9e22a55103a841854571d7a2d7851094a48b86cbd66b73a288ecc614b6280b4dbe340d17acbd
   languageName: node
   linkType: hard
 
@@ -29401,10 +29478,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0, react@npm:^19.0.0":
+"react@npm:^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0":
   version: 19.2.4
   resolution: "react@npm:19.2.4"
   checksum: 10c0/cd2c9ff67a720799cc3b38a516009986f7fc4cb8d3e15716c6211cf098d1357ee3e348ab05ad0600042bbb0fd888530ba92e329198c92eafa0994f5213396596
+  languageName: node
+  linkType: hard
+
+"react@npm:~19.1.2":
+  version: 19.1.5
+  resolution: "react@npm:19.1.5"
+  checksum: 10c0/0c2351cc449294d20e120857515234c017288d0b15957550ed40ca8eb0aba19edda7682ebd3a1ce4e63eb53f5d2502d02e6be6fefe401574465e1f761bb56deb
   languageName: node
   linkType: hard
 
@@ -30528,7 +30612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.26.0":
+"scheduler@npm:0.26.0, scheduler@npm:^0.26.0":
   version: 0.26.0
   resolution: "scheduler@npm:0.26.0"
   checksum: 10c0/5b8d5bfddaae3513410eda54f2268e98a376a429931921a81b5c3a2873aab7ca4d775a8caac5498f8cbc7d0daeab947cf923dbd8e215d61671f9f4e392d34356
@@ -34022,12 +34106,12 @@ __metadata:
     "@coinbase/cds-illustrations": "workspace:^"
     "@coinbase/cds-web": "workspace:^"
     "@coinbase/cds-web-visualization": "workspace:^"
-    "@types/react": "npm:^19.0.0"
-    "@types/react-dom": "npm:^19.0.0"
+    "@types/react": "npm:~19.1.2"
+    "@types/react-dom": "npm:~19.1.2"
     "@vitejs/plugin-react": "npm:^5.0.0"
     framer-motion: "npm:^10.18.0"
-    react: "npm:^19.0.0"
-    react-dom: "npm:^19.0.0"
+    react: "npm:~19.1.2"
+    react-dom: "npm:~19.1.2"
     typescript: "npm:~5.9.2"
     vite: "npm:^7.1.2"
   languageName: unknown
