@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
 import * as openWebBrowser from '../../utils/openWebBrowser';

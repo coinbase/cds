@@ -1,6 +1,6 @@
 import { act } from 'react';
 import { Animated } from 'react-native';
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-native';
 
 import { usePressAnimation } from '../usePressAnimation';
 

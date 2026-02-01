@@ -1,5 +1,5 @@
 import { AccessibilityInfo } from 'react-native';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { useScreenReaderStatus } from '../useScreenReaderStatus';
 

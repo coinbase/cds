@@ -1,5 +1,5 @@
 import type { AppStateStatus } from 'react-native';
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-native';
 
 import { useAppState } from '../useAppState';
 
