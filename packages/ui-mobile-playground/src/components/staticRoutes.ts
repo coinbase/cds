@@ -1,5 +1,7 @@
 import { keyToRouteName } from './keyToRouteName';
 
+import type { JSX } from 'react';
+
 export const initialRouteKey = 'Examples';
 export const searchRouteKey = 'Search';
 
