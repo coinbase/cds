@@ -435,6 +435,9 @@ export const Responsive = () => {
               content: { paddingBottom: 'var(--space-3)' },
             }}
           >
+            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
+              Header
+            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
@@ -688,6 +691,9 @@ export const HandleBar = () => {
               content: { paddingBottom: 'var(--space-3)' },
             }}
           >
+            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
+              Header
+            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
@@ -909,6 +915,9 @@ export const PinRight = () => {
               content: { paddingBottom: 'var(--space-3)' },
             }}
           >
+            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
+              Header
+            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
