@@ -171,7 +171,7 @@ describe('SelectChip', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityState?.disabled).toBe(true);
+      expect(button).toBeDisabled();
     });
 
     it('uses displayValue when provided', () => {
