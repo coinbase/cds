@@ -18,9 +18,11 @@ import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
+import { css } from '@linaria/core';
 import { m as motion, useAnimation } from 'framer-motion';
 
 import { IconButton } from '../../buttons';
+import { cx } from '../../cx';
 import { useDimensions } from '../../hooks/useDimensions';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
 import { useTheme } from '../../hooks/useTheme';
@@ -35,6 +37,16 @@ import { Portal } from '../Portal';
 import { trayContainerId } from '../PortalProvider';
 
 const MotionBox = motion(Box);
+
+const trayHeaderBorderBaseCss = css`
+  border-bottom-width: var(--borderWidth-100);
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+`;
+
+const trayHeaderBorderVisibleCss = css`
+  border-bottom-color: var(--color-bgLine);
+`;
 
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
@@ -124,8 +136,7 @@ export type TrayBaseProps = {
   showHandleBar?: boolean;
   /**
    * Hide the close icon on the top right.
-   * Defaults to `true` when `showHandleBar` is enabled (since the handle bar provides close functionality).
-   * Set explicitly to `false` to show both the handle bar and close button.
+   * @default `true` when `showHandleBar` is enabled, false otherwise.
    */
   hideCloseButton?: boolean;
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'>;
@@ -533,8 +544,11 @@ export const Tray = memo(
                         background="bgElevation2"
                         borderTopLeftRadius={pin === 'left' || pin === 'top' ? 0 : 600}
                         borderTopRightRadius={pin === 'right' || pin === 'top' ? 0 : 600}
-                        borderedBottom={hasScrolledDown && shouldShrinkPadding}
-                        className={classNames?.header}
+                        className={cx(
+                          shouldShrinkPadding && trayHeaderBorderBaseCss,
+                          shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
+                          classNames?.header,
+                        )}
                         flexShrink={0}
                         overflow="hidden"
                         paddingBottom={shouldShrinkPadding ? 0.75 : 1}
