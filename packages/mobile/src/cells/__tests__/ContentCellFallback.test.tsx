@@ -47,7 +47,7 @@ describe('ContentCellFallback', () => {
         rectWidthVariant: getRectWidthVariant(1, 3),
         width: 110,
       }),
-      {},
+      undefined,
     );
   });
 
@@ -82,7 +82,7 @@ describe('ContentCellFallback', () => {
         rectWidthVariant: getRectWidthVariant(1, 1),
         width: 90,
       }),
-      {},
+      undefined,
     );
   });
 
@@ -100,7 +100,7 @@ describe('ContentCellFallback', () => {
         rectWidthVariant: getRectWidthVariant(1, 2),
         width: 90,
       }),
-      {},
+      undefined,
     );
   });
 

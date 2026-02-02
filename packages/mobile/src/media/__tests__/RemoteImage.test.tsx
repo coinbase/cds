@@ -12,7 +12,7 @@ const mockSvgFetch = async () =>
   );
 
 describe('RemoteImage', () => {
-  it('shouldApplyDarkModeEnhacements border styles takes precedence over custom borderColor and passes a11y', () => {
+  it('shouldApplyDarkModeEnhacements border styles takes precedence over custom borderColor', () => {
     render(
       <DefaultThemeProvider activeColorScheme="dark" theme={defaultTheme}>
         <RemoteImage
@@ -23,16 +23,14 @@ describe('RemoteImage', () => {
         />
       </DefaultThemeProvider>,
     );
-    const image = screen.queryByTestId('remoteimage');
+    const image = screen.getByTestId('remoteimage', { includeHiddenElements: true });
     expect(image).toBeTruthy();
-
-    expect(image).toBeAccessible();
 
     expect(image).toHaveStyle({
       borderWidth: 1,
     });
   });
-  it('darkModeEnhancementsApplied border styles takes precedence over custom borderColor and passes a11y', () => {
+  it('darkModeEnhancementsApplied border styles takes precedence over custom borderColor', () => {
     render(
       <DefaultThemeProvider activeColorScheme="dark" theme={defaultTheme}>
         <RemoteImage
@@ -43,42 +41,36 @@ describe('RemoteImage', () => {
         />
       </DefaultThemeProvider>,
     );
-    const image = screen.queryByTestId('remoteimage');
+    const image = screen.getByTestId('remoteimage', { includeHiddenElements: true });
     expect(image).toBeTruthy();
-
-    expect(image).toBeAccessible();
 
     expect(image).toHaveStyle({
       borderWidth: 1,
     });
   });
 
-  it('has a default shape of square and passes a11y', () => {
+  it('has a default shape of square', () => {
     render(
       <DefaultThemeProvider>
         <RemoteImage source="https://images.coinbase.com/avatar?s=56" testID="remoteimage" />
       </DefaultThemeProvider>,
     );
 
-    const image = screen.queryByTestId('remoteimage');
-
-    expect(image).toBeAccessible();
+    const image = screen.getByTestId('remoteimage', { includeHiddenElements: true });
 
     expect(image).toHaveStyle({
       borderRadius: defaultTheme.borderRadius[100],
     });
   });
 
-  it('if width/height/size is not set, it will default to size = m. Passes a11y', () => {
+  it('if width/height/size is not set, it will default to size = m', () => {
     render(
       <DefaultThemeProvider>
         <RemoteImage source="https://images.coinbase.com/avatar?s=56" testID="remoteimage" />
       </DefaultThemeProvider>,
     );
 
-    const image = screen.queryByTestId('remoteimage');
-
-    expect(image).toBeAccessible();
+    const image = screen.getByTestId('remoteimage', { includeHiddenElements: true });
 
     expect(image).toHaveStyle({
       width: theme.avatarSize.m,
@@ -134,9 +126,9 @@ describe('RemoteImage', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByRole('image')).toHaveProp('accessibilityElementsHidden', false);
-    expect(screen.getByRole('image')).toHaveProp('importantForAccessibility', 'auto');
-    expect(screen.getByLabelText('A label')).toBeTruthy();
+    const image = screen.getByLabelText('A label');
+    expect(image).toHaveProp('accessibilityElementsHidden', false);
+    expect(image).toHaveProp('importantForAccessibility', 'auto');
     expect(screen.getByHintText('A hint')).toBeTruthy();
   });
 

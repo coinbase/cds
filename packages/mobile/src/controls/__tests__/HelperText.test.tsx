@@ -23,8 +23,8 @@ describe('HelperText.test', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByText('Test text')).toHaveStyle({ color: 'yellow' });
-    expect(screen.getByRole('image')).toHaveStyle({ color: 'yellow' });
+    expect(screen.getByText(/Test text/)).toHaveStyle({ color: 'yellow' });
+    expect(screen.getByTestId('error-icon')).toHaveStyle({ color: 'yellow' });
   });
 
   it('renders custom spacing', () => {

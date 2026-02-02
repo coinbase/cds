@@ -1,6 +1,5 @@
-import { Pressable } from 'react-native';
 import { glyphMap } from '@coinbase/cds-icons/glyphMap';
-import { fireEvent, render, screen, within } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
@@ -16,15 +15,19 @@ describe('Checkbox', () => {
     expect(screen.getByTestId('mock-checkbox')).toBeAccessible();
   });
 
-  it('renders a Pressable', () => {
+  it('renders and responds to press', () => {
+    const onChange = jest.fn();
     render(
       <DefaultThemeProvider>
-        <Checkbox>Checkbox</Checkbox>
+        <Checkbox onChange={onChange}>Checkbox</Checkbox>
       </DefaultThemeProvider>,
     );
 
-    expect(screen.UNSAFE_queryAllByType(Pressable)).toHaveLength(1);
-    expect(screen.getByText('Checkbox')).toBeTruthy();
+    const checkboxText = screen.getByText('Checkbox');
+    expect(checkboxText).toBeTruthy();
+
+    fireEvent.press(checkboxText);
+    expect(onChange).toHaveBeenCalled();
   });
 
   it('renders a check icon when checked', () => {
@@ -214,9 +217,8 @@ describe('Checkbox', () => {
       </DefaultThemeProvider>,
     );
 
-    const iconBox = screen.getByTestId('checkbox-icon');
-    // The icon glyph is inside the Box, find the Text element by role
-    const iconText = within(iconBox).getByRole('image');
+    // Find the check icon glyph text
+    const iconText = screen.getByText(glyphMap['checkmark-24-inactive']);
     expect(iconText).toHaveStyle({
       color: defaultTheme.lightColor.bgPositive,
     });
@@ -231,9 +233,8 @@ describe('Checkbox', () => {
       </DefaultThemeProvider>,
     );
 
-    const iconBox = screen.getByTestId('checkbox-icon');
-    // The icon glyph is inside the Box, find the Text element by role
-    const iconText = within(iconBox).getByRole('image');
+    // Find the minus icon glyph text
+    const iconText = screen.getByText(glyphMap['minus-24-inactive']);
     expect(iconText).toHaveStyle({
       color: defaultTheme.lightColor.bgWarning,
     });

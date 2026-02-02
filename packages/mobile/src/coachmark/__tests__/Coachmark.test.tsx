@@ -83,7 +83,7 @@ describe('Coachmark', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId('remoteimage')).toBeTruthy();
+    expect(screen.getByTestId('remoteimage', { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('renders with custom width', () => {

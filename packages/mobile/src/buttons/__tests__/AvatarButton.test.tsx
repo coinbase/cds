@@ -1,4 +1,4 @@
-import { Animated, Pressable } from 'react-native';
+import { Animated } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { debounce } from '../../utils/debounce';
@@ -28,14 +28,16 @@ describe('AvatarButton', () => {
     expect(screen.UNSAFE_queryAllByType(Animated.View)).toHaveLength(1);
   });
 
-  it('renders a pressable', () => {
+  it('renders and responds to press', () => {
+    const onPress = jest.fn();
     render(
       <DefaultThemeProvider>
-        <AvatarButton accessibilityLabel="Sneezy" />
+        <AvatarButton accessibilityLabel="Sneezy" onPress={onPress} testID="avatar-button" />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.UNSAFE_queryAllByType(Pressable)).toHaveLength(1);
+    fireEvent.press(screen.getByTestId('avatar-button'));
+    expect(onPress).toHaveBeenCalled();
   });
 
   it('renders children Avatar', () => {

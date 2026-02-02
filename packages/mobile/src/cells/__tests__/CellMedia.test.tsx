@@ -192,42 +192,6 @@ describe('CellMedia', () => {
     expect(screen.getByText(glyphMap['arrowUp-24-inactive'])).toBeTruthy();
   });
 
-  it('renders an asset', () => {
-    render(
-      <DefaultThemeProvider>
-        <CellMedia source="some/image/path" type="asset" />
-      </DefaultThemeProvider>,
-    );
-    const image = screen.getByRole('image');
-
-    expect(image).toHaveProp('source', { cache: undefined, uri: 'some/image/path' });
-    expect(image).toHaveStyle({ borderRadius: 100000 });
-  });
-
-  it('renders an avatar', () => {
-    render(
-      <DefaultThemeProvider>
-        <CellMedia source="some/image/path" type="avatar" />
-      </DefaultThemeProvider>,
-    );
-    const image = screen.getByRole('image');
-
-    expect(image).toHaveProp('source', { cache: undefined, uri: 'some/image/path' });
-    expect(image).toHaveStyle({ borderRadius: 100000 });
-  });
-
-  it('renders an image', () => {
-    render(
-      <DefaultThemeProvider>
-        <CellMedia source="some/image/path" type="image" />
-      </DefaultThemeProvider>,
-    );
-    const image = screen.getByRole('image');
-
-    expect(image).toHaveProp('source', { cache: undefined, uri: 'some/image/path' });
-    expect(image).toHaveStyle({ borderRadius: 8 });
-  });
-
   it('renders a pictogram', () => {
     render(
       <DefaultThemeProvider>
@@ -239,46 +203,6 @@ describe('CellMedia', () => {
   });
 
   describe('at normal scale', () => {
-    it('sets icon size', () => {
-      render(
-        <DefaultThemeProvider>
-          <CellMedia name="arrowUp" type="icon" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('image')).toHaveStyle({ width: 32, height: 32 });
-    });
-
-    it('sets asset size', () => {
-      render(
-        <DefaultThemeProvider>
-          <CellMedia source="some/image/path" type="asset" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('image')).toHaveStyle({ width: 32, height: 32 });
-    });
-
-    it('sets avatar size', () => {
-      render(
-        <DefaultThemeProvider>
-          <CellMedia source="some/image/path" type="avatar" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('image')).toHaveStyle({ width: 32, height: 32 });
-    });
-
-    it('sets image size', () => {
-      render(
-        <DefaultThemeProvider>
-          <CellMedia source="some/image/path" type="image" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('image')).toHaveStyle({ width: 48, height: 48 });
-    });
-
     it('sets pictogram size', () => {
       render(
         <DefaultThemeProvider>

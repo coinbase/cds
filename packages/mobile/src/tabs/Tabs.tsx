@@ -172,6 +172,7 @@ export const TabsActiveIndicator = ({
 
   if (previousActiveTabRect.current !== activeTabRect) {
     previousActiveTabRect.current = activeTabRect;
+    // TODO: writing to shared value during render causes a reanimated warning which we have to suppress in jest setup
     animatedTabRect.value = isFirstRenderWithWidth
       ? newActiveTabRect
       : withSpring(newActiveTabRect, tabsSpringConfig);

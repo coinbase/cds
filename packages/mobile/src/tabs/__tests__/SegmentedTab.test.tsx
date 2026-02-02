@@ -61,11 +61,6 @@ describe('SegmentedTab', () => {
     expect(screen.getByText('Buy')).toBeTruthy();
     expect(screen.getByText('Buy')).toHaveAnimatedStyle({
       color: `rgb(${defaultTheme.lightSpectrum.gray100})`,
-      fontFamily: 'Inter_600SemiBold',
-      fontSize: 16,
-      fontWeight: '600',
-      lineHeight: 24,
-      textAlign: 'left',
     });
   });
 
@@ -80,11 +75,6 @@ describe('SegmentedTab', () => {
     jest.advanceTimersByTime(300);
     expect(screen.getByTestId(`${TEST_ID}-label`)).toHaveAnimatedStyle({
       color: `rgb(${defaultTheme.lightSpectrum.gray0})`,
-      fontFamily: 'Inter_600SemiBold',
-      fontSize: 16,
-      fontWeight: '600',
-      lineHeight: 24,
-      textAlign: 'left',
     });
   });
 

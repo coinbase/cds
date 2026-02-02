@@ -271,7 +271,7 @@ describe('Carousel', () => {
           disableGoNext: expect.any(Boolean),
           disableGoPrevious: expect.any(Boolean),
         }),
-        {},
+        undefined,
       );
     });
   });
@@ -1138,7 +1138,7 @@ describe('Carousel', () => {
       fireEvent.press(screen.getByTestId('get-current-page'));
 
       // Should start at page 1
-      expect(screen.getByTestId('current-page-display')).toHaveTextContent('Page 1 of');
+      expect(screen.getByTestId('current-page-display')).toHaveTextContent(/Page 1 of/);
 
       // Navigate to page 2
       fireEvent.press(screen.getByTestId('go-to-page-2'));
@@ -1157,7 +1157,7 @@ describe('Carousel', () => {
       fireEvent.press(screen.getByTestId('get-current-page'));
 
       // Should show we're back to page 1
-      expect(screen.getByTestId('current-page-display')).toHaveTextContent('Page 1 of');
+      expect(screen.getByTestId('current-page-display')).toHaveTextContent(/Page 1 of/);
     });
   });
 
@@ -1178,9 +1178,13 @@ describe('Carousel', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByTestId('render-props-content')).toBeOnTheScreen();
-      expect(screen.getByTestId('visibility-indicator')).toBeOnTheScreen();
-      expect(screen.getByText('Content')).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('render-props-content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('visibility-indicator', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(screen.getByText('Content', { includeHiddenElements: true })).toBeOnTheScreen();
     });
 
     it('supports both regular children and render props', () => {
@@ -1204,11 +1208,21 @@ describe('Carousel', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByTestId('regular-content')).toBeOnTheScreen();
-      expect(screen.getByTestId('render-props-content')).toBeOnTheScreen();
-      expect(screen.getByText('Regular Content')).toBeOnTheScreen();
-      expect(screen.getByText('Render Props Content')).toBeOnTheScreen();
-      expect(screen.getByTestId('visibility-status')).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('regular-content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('render-props-content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByText('Regular Content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByText('Render Props Content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('visibility-status', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
     });
   });
 });

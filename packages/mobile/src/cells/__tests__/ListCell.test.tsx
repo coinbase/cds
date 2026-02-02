@@ -288,7 +288,7 @@ describe('ListCell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByText('Helper Text')).toBeTruthy();
+    expect(screen.getByText(/Helper Text/, { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('renders empty strings without crashing', () => {

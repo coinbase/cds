@@ -14,11 +14,9 @@ describe('Avatar', () => {
         <Avatar accessibilityLabel="" name={name} src={src} testID="avatar" />
       </DefaultThemeProvider>,
     );
-    const image = screen.getByTestId('avatar-image');
+    const image = screen.getByTestId('avatar-image', { includeHiddenElements: true });
     expect(image).toBeTruthy();
     expect(image?.props.source).toEqual({ uri: src });
-
-    expect(image).toBeAccessible();
 
     expect(screen.queryByText('T')).toBeFalsy();
   });

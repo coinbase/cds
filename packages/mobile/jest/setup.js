@@ -5,12 +5,27 @@
 import './accessibility';
 
 // https://docs.swmansion.com/react-native-reanimated/docs/guides/testing/
-const { setUpTests } = require('react-native-reanimated');
+const {
+  setUpTests,
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} = require('react-native-reanimated');
 
 import { mockStatusBarHeight } from '../src/hooks/__tests__/constants';
 
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+// Must mock NativeEventEmitter at the internal module path not in main RN mock below
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  const MockNativeEventEmitter = class MockNativeEventEmitter {
+    addListener = jest.fn(() => ({ remove: jest.fn() }));
+    removeListener = jest.fn();
+    removeAllListeners = jest.fn();
+  };
+  // Export as both default and the class itself for different import styles
+  MockNativeEventEmitter.default = MockNativeEventEmitter;
+  return MockNativeEventEmitter;
+});
 
+// TODO (upgrade): still needed?
 // Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
 // Path changed in React Native 0.81+
 jest.mock('react-native/src/private/animated/NativeAnimatedHelper');
@@ -29,6 +44,7 @@ jest.mock('react-native', () => {
 
   RN.NativeModules.StatusBarManager = {
     getHeight: jest.fn((cb) => cb({ height: mockStatusBarHeight })),
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
   };
 
   RN.Animated.loop = jest.fn(() => {
@@ -64,6 +80,18 @@ jest.mock('react-native', () => {
   RN.AccessibilityInfo.addEventListener = jest.fn();
 
   return RN;
+});
+
+/*
+  React Reanimated 4.x setup: 
+*/
+
+// Disable strict mode to prevent warnings about writing to shared values during render
+// This is needed because some components (e.g., TabsActiveIndicator) use patterns that
+// trigger warnings in reanimated 4.x strict mode but still work correctly
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
 });
 
 setUpTests();

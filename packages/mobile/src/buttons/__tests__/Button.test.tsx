@@ -1,4 +1,4 @@
-import { Animated, Pressable } from 'react-native';
+import { Animated } from 'react-native';
 import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -29,16 +29,6 @@ describe('Button', () => {
     );
 
     expect(screen.UNSAFE_queryAllByType(Animated.View)).toHaveLength(1);
-  });
-
-  it('renders a pressable', () => {
-    render(
-      <DefaultThemeProvider>
-        <Button>Child</Button>
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.UNSAFE_queryAllByType(Pressable)).toHaveLength(1);
   });
 
   it('renders children text', () => {

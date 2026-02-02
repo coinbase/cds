@@ -70,6 +70,7 @@ export const Chip = memo(
         paddingX={paddingX}
         paddingY={paddingY}
         style={[contentStyle, styles?.content]}
+        testID={testID ? `${testID}-content` : undefined}
       >
         {start}
         {typeof children === 'string' ? (

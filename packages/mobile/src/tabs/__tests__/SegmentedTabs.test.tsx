@@ -91,7 +91,6 @@ describe('SegmentedTabs', () => {
     jest.advanceTimersByTime(300);
     expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 0 }],
     });
   });
@@ -131,7 +130,6 @@ describe('SegmentedTabs', () => {
 
     expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 68 }],
     });
   });

@@ -148,7 +148,7 @@ describe('Search', () => {
     render(SearchComponent);
 
     // This will throw if we find duplicates
-    expect(screen.getByLabelText(`search`)).toBeAccessible();
+    expect(screen.getByLabelText('search', { includeHiddenElements: true })).toBeAccessible();
   });
 
   it('announces the Back arrow icon button', () => {
@@ -173,13 +173,17 @@ describe('Search', () => {
   it('renders a close icon button at the end node', () => {
     render(SearchComponent);
 
-    expect(screen.getByTestId(`${TEST_ID}-close-iconbtn`)).toBeDefined();
+    expect(
+      screen.getByTestId(`${TEST_ID}-close-iconbtn`, { includeHiddenElements: true }),
+    ).toBeDefined();
   });
 
   it('fires `onSearch` when search btn is pressed', () => {
     render(SearchComponent);
 
-    fireEvent.press(screen.getByTestId(`${TEST_ID}-searchinput-iconbtn`));
+    fireEvent.press(
+      screen.getByTestId(`${TEST_ID}-searchinput-iconbtn`, { includeHiddenElements: true }),
+    );
 
     expect(onSearchSpy).toHaveBeenCalled();
   });
@@ -187,7 +191,9 @@ describe('Search', () => {
   it('fires `onClear` when clear btn is pressed', () => {
     render(SearchComponent);
 
-    fireEvent.press(screen.getByTestId(`${TEST_ID}-close-iconbtn`));
+    fireEvent.press(
+      screen.getByTestId(`${TEST_ID}-close-iconbtn`, { includeHiddenElements: true }),
+    );
 
     expect(onClearSpy).toHaveBeenCalled();
   });

@@ -52,7 +52,7 @@ describe('SlideButton', () => {
 
   it('renders correctly', () => {
     render(<SlideButtonExample />);
-    expect(screen.getByText(uncheckedLabel)).toBeTruthy();
+    expect(screen.getByText(uncheckedLabel, { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('is accessible', () => {
@@ -177,7 +177,7 @@ describe('SlideButton', () => {
   describe('compact variant', () => {
     it('renders correctly with compact prop', () => {
       render(<SlideButtonExample compact />);
-      expect(screen.getByText(uncheckedLabel)).toBeTruthy();
+      expect(screen.getByText(uncheckedLabel, { includeHiddenElements: true })).toBeTruthy();
     });
 
     it('applies compact height of 40px', () => {

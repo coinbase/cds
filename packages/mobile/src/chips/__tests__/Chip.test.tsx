@@ -61,7 +61,7 @@ describe('Chip', () => {
   it('renders correctly when passing custom styles to contentStyle prop', () => {
     render(<TestChip contentStyle={customContentStyle} />);
 
-    expect(screen.getByTestId(chipTestID).children[0]).toHaveStyle(customContentStyle);
+    expect(screen.getByTestId(`${chipTestID}-content`)).toHaveStyle(customContentStyle);
   });
 
   it('applies custom styles to root and content', () => {
@@ -72,8 +72,7 @@ describe('Chip', () => {
 
     render(<TestChip styles={styles} />);
 
-    const chip = screen.getByTestId(chipTestID);
-    expect(chip).toHaveStyle({ borderWidth: 2 });
-    expect(chip.children[0]).toHaveStyle({ paddingVertical: 10 });
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({ borderWidth: 2 });
+    expect(screen.getByTestId(`${chipTestID}-content`)).toHaveStyle({ paddingVertical: 10 });
   });
 });

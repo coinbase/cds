@@ -8,7 +8,7 @@ import { Button } from '../Button';
 describe('Button performance tests', () => {
   it('fires `onPress` when clicked', async () => {
     const scenario = async () => {
-      fireEvent.click(screen.getByRole('button'));
+      fireEvent.press(screen.getByRole('button'));
     };
     await measurePerformance(<Button onPress={NoopFn}>Child</Button>, { scenario });
   });
