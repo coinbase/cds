@@ -1,0 +1,92 @@
+diff --git a/Libraries/Renderer/implementations/ReactNativeRenderer-dev.js b/Libraries/Renderer/implementations/ReactNativeRenderer-dev.js
+index 9d663610a0546d4f801196217966ad9d184818af..1586d116b9fc4e86a39976de543489c6a23a1154 100644
+--- a/Libraries/Renderer/implementations/ReactNativeRenderer-dev.js
++++ b/Libraries/Renderer/implementations/ReactNativeRenderer-dev.js
+@@ -16868,7 +16868,7 @@ __DEV__ &&
+       shouldSuspendImpl = newShouldSuspendImpl;
+     };
+     var isomorphicReactPackageVersion = React.version;
+-    if ("19.1.0" !== isomorphicReactPackageVersion)
++    if ("19.1.2" !== isomorphicReactPackageVersion)
+       throw Error(
+         'Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:\n  - react:                  ' +
+           (isomorphicReactPackageVersion +
+diff --git a/Libraries/Renderer/implementations/ReactNativeRenderer-prod.js b/Libraries/Renderer/implementations/ReactNativeRenderer-prod.js
+index b3d1cfa09d76b50617b9032b15c82351a699638e..c17f99912028e52b9acfb01b9b9560bba8c03c16 100644
+--- a/Libraries/Renderer/implementations/ReactNativeRenderer-prod.js
++++ b/Libraries/Renderer/implementations/ReactNativeRenderer-prod.js
+@@ -10603,7 +10603,7 @@ function updateContainer(element, container, parentComponent, callback) {
+   return lane;
+ }
+ var isomorphicReactPackageVersion = React.version;
+-if ("19.1.0" !== isomorphicReactPackageVersion)
++if ("19.1.2" !== isomorphicReactPackageVersion)
+   throw Error(
+     'Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:\n  - react:                  ' +
+       (isomorphicReactPackageVersion +
+diff --git a/Libraries/Renderer/implementations/ReactNativeRenderer-profiling.js b/Libraries/Renderer/implementations/ReactNativeRenderer-profiling.js
+index b317ca102b0b7d25c15819c61352019fef05561b..e5c3854d0d6de8c9181d6a50124fdc7e8ddc72ab 100644
+--- a/Libraries/Renderer/implementations/ReactNativeRenderer-profiling.js
++++ b/Libraries/Renderer/implementations/ReactNativeRenderer-profiling.js
+@@ -11245,7 +11245,7 @@ function updateContainer(element, container, parentComponent, callback) {
+   return lane;
+ }
+ var isomorphicReactPackageVersion = React.version;
+-if ("19.1.0" !== isomorphicReactPackageVersion)
++if ("19.1.2" !== isomorphicReactPackageVersion)
+   throw Error(
+     'Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:\n  - react:                  ' +
+       (isomorphicReactPackageVersion +
+diff --git a/React/Views/RCTModalHostViewManager.m b/React/Views/RCTModalHostViewManager.m
+index 203d0b441342487bfd8765b93044b291029614b2..1f2abc9651d3a4c809be6a03e8d9f7d6f7bd12bc 100644
+--- a/React/Views/RCTModalHostViewManager.m
++++ b/React/Views/RCTModalHostViewManager.m
+@@ -60,7 +60,7 @@ - (void)presentModalHostView:(RCTModalHostView *)modalHostView
+       modalHostView.onShow(nil);
+     }
+   };
+-  dispatch_async(dispatch_get_main_queue(), ^{
++
+     if (self->_presentationBlock) {
+       self->_presentationBlock([modalHostView reactViewController], viewController, animated, completionBlock);
+     } else {
+@@ -68,7 +68,7 @@ - (void)presentModalHostView:(RCTModalHostView *)modalHostView
+                                                         animated:animated
+                                                       completion:completionBlock];
+     }
+-  });
++
+ }
+ 
+ - (void)dismissModalHostView:(RCTModalHostView *)modalHostView
+@@ -80,7 +80,7 @@ - (void)dismissModalHostView:(RCTModalHostView *)modalHostView
+       [[self.bridge moduleForClass:[RCTModalManager class]] modalDismissed:modalHostView.identifier];
+     }
+   };
+-  dispatch_async(dispatch_get_main_queue(), ^{
++
+     if (self->_dismissalBlock) {
+       self->_dismissalBlock([modalHostView reactViewController], viewController, animated, completionBlock);
+     } else if (viewController.presentingViewController) {
+@@ -91,7 +91,7 @@ - (void)dismissModalHostView:(RCTModalHostView *)modalHostView
+       // This, somehow, invalidate the presenting view controller and the modal remains always visible.
+       completionBlock();
+     }
+-  });
++
+ }
+ 
+ - (RCTShadowView *)shadowView
+diff --git a/sdks/hermes-engine/hermes-engine.podspec b/sdks/hermes-engine/hermes-engine.podspec
+index 326c6fa9089cf794c2dcf37084085bf3bef3f6a5..4aa7b70780af967ff607aada3419959a8be49670 100644
+--- a/sdks/hermes-engine/hermes-engine.podspec
++++ b/sdks/hermes-engine/hermes-engine.podspec
+@@ -77,7 +77,7 @@ Pod::Spec.new do |spec|
+         . "$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh"
+ 
+         CONFIG="Release"
+-        if echo $GCC_PREPROCESSOR_DEFINITIONS | grep -q "DEBUG=1"; then
++        if echo $GCC_PREPROCESSOR_DEFINITIONS | grep -q "HERMES_ENABLE_DEBUGGER=1"; then
+           CONFIG="Debug"
+         fi
+ 
