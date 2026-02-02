@@ -199,8 +199,8 @@
   ],
   "peerDependencies": {
     "framer-motion": "^10.18.0",
-    "react": "~19.1.2",
-    "react-dom": "~19.1.2"
+    "react": "^18.0.0 || ~19.1.2",
+    "react-dom": "^18.0.0 || ~19.1.2"
   },
   "dependencies": {
     "@coinbase/cds-common": "workspace:^",
