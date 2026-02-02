@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { Button, type ButtonProps } from '@coinbase/cds-web/buttons';
 import isInternalUrl from '@docusaurus/isInternalUrl';

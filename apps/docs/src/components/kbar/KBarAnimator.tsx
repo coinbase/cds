@@ -30,7 +30,7 @@ const KBarAnimator = memo(function KBarAnimator({ children }: { children: React.
   const exitMs = options?.animations?.exitMs ?? 0;
 
   // Height animation
-  const previousHeight = useRef<number>();
+  const previousHeight = useRef<number>(undefined);
   useEffect(() => {
     // Only animate if we're actually showing
     if (visualState === VisualState.showing) {

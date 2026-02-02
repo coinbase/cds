@@ -1,6 +1,6 @@
 import '@coinbase/cds-icons/fonts/web/icon-font.css';
 
-import { useCallback } from 'react';
+import { useCallback, type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import type { FallbackParams } from '@docusaurus/ErrorBoundary';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';

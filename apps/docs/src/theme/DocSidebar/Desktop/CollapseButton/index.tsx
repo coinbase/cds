@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { translate } from '@docusaurus/Translate';
 import type { Props } from '@theme/DocSidebar/Desktop/CollapseButton';

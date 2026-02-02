@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { ThemeClassNames } from '@docusaurus/theme-common';

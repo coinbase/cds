@@ -9,8 +9,8 @@ export type QuickStartLinkProps = {
   title: string;
   description: string;
   link: { label: string; to: string } | { label: string; href: string };
-  BannerComponentLight: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  BannerComponentDark: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  BannerComponentLight: React.ComponentType<{ width?: string | number; height?: string | number }>;
+  BannerComponentDark: React.ComponentType<{ width?: string | number; height?: string | number }>;
 };
 
 const cardTitleFontConfig = { base: 'title4', desktop: 'title2' } as const;

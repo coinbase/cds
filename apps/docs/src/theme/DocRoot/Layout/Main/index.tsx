@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { HStack } from '@coinbase/cds-web/layout';
 import type { Props } from '@theme/DocRoot/Layout/Main';
 

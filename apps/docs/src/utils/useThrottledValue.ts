@@ -18,7 +18,7 @@ export const useThrottledValue = <T>(value: T, delay: number) => {
   const lastExecutedAt = useRef(0);
 
   // Ref to store the timeout ID that ensures the final synchronization of the throttled value after the value has not changed for the delay period
-  const throttleTimeoutIdRef = useRef<ReturnType<typeof setTimeout>>();
+  const throttleTimeoutIdRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // updates the throttled value and schedules a final update after the delay period if needed
   const updateThrottledValue = useCallback(

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import type { Props } from '@theme/DocSidebarItem';
 import DocSidebarItemCategory from '@theme/DocSidebarItem/Category';
 import DocSidebarItemHtml from '@theme/DocSidebarItem/Html';

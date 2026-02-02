@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import type { PropSidebarItem } from '@docusaurus/plugin-content-docs';
 import { useWindowSizeWithBreakpointOverride } from '@site/src/utils/useWindowSizeWithBreakpointOverride';
 import type { Props } from '@theme/DocSidebar';

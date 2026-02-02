@@ -9,7 +9,7 @@ import { Link, type LinkBaseProps } from '@coinbase/cds-web/typography/Link';
 export type ModalLinkProps = {
   children: string;
   content: React.ReactElement;
-  modalBodyRef?: React.RefObject<HTMLDivElement>;
+  modalBodyRef?: React.RefObject<HTMLDivElement | null>;
   modalBodyProps?: Omit<ModalBodyProps, 'children'>;
   title?: string;
 } & Omit<LinkBaseProps, 'content'>;

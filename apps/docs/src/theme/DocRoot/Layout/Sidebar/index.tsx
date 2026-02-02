@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useState } from 'react';
+import React, { type ReactNode, useCallback, useState, type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { useLocation } from '@docusaurus/router';

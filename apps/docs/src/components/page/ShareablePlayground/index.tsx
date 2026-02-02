@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState, type JSX } from 'react';
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
 import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import { Icon } from '@coinbase/cds-web/icons/Icon';

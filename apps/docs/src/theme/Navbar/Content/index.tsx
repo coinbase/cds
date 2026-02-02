@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, type JSX } from 'react';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { Tooltip } from '@coinbase/cds-web/overlays/tooltip/Tooltip';
