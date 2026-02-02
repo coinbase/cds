@@ -17,8 +17,8 @@
     "@coinbase/cds-web-visualization": "^3",
     "framer-motion": "^10",
     "next": "15.4.8",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "~19.1.2",
+    "react-dom": "~19.1.2"
   },
   "devDependencies": {
     "@types/node": "^22",
