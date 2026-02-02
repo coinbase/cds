@@ -46,7 +46,7 @@ type SparklineInteractiveContextInterface = {
 const SparklineInteractiveContext = createContext<SparklineInteractiveContextInterface>({
   isFallbackVisible: true,
   markerXPosition: makeMutable(0),
-  markerGestureState: makeMutable(0),
+  markerGestureState: makeMutable<0 | 1>(0),
   showFallback: noop,
   hideFallback: noop,
   chartOpacity: new Animated.Value(0),

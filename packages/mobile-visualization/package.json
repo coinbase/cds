@@ -63,6 +63,7 @@
     "@coinbase/cds-mobile": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
     "@shopify/react-native-skia": "^2.4.0",
+    "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.1.2",
     "react-native-gesture-handler": "^2.30.0",
     "react-native-reanimated": "^4.0.0",

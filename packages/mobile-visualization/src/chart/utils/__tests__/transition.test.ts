@@ -1,5 +1,5 @@
 import { Skia } from '@shopify/react-native-skia';
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-native';
 
 import {
   buildTransition,
@@ -186,12 +186,12 @@ describe('useD3PathInterpolation', () => {
     const fromPath1 = 'M0,0L10,10';
     const toPath1 = 'M0,0L20,20';
 
-    const { result, rerender } = renderHook(
-      ({ from, to }) => useD3PathInterpolation(progress as any, from, to),
-      {
-        initialProps: { from: fromPath1, to: toPath1 },
-      },
-    );
+    const { result, rerender } = renderHook<
+      ReturnType<typeof useD3PathInterpolation>,
+      { from: string; to: string }
+    >(({ from, to }) => useD3PathInterpolation(progress as any, from, to), {
+      initialProps: { from: fromPath1, to: toPath1 },
+    });
 
     const firstResult = result.current;
     expect(firstResult).toBeDefined();
@@ -281,7 +281,7 @@ describe('useInterpolator', () => {
 
     // Update value
     value.value = 0.5;
-    rerender();
+    rerender(undefined);
 
     expect(result.current).toBeDefined();
   });
@@ -332,7 +332,7 @@ describe('usePathTransition', () => {
   });
 
   it('should handle path updates', () => {
-    const { result, rerender } = renderHook(
+    const { result, rerender } = renderHook<ReturnType<typeof usePathTransition>, { path: string }>(
       ({ path }) =>
         usePathTransition({
           currentPath: path,
@@ -395,7 +395,7 @@ describe('usePathTransition', () => {
     const path1 = 'M0,0L10,10';
     const path2 = 'M0,0L20,20';
 
-    const { result, rerender } = renderHook(
+    const { result, rerender } = renderHook<ReturnType<typeof usePathTransition>, { path: string }>(
       ({ path }) =>
         usePathTransition({
           currentPath: path,

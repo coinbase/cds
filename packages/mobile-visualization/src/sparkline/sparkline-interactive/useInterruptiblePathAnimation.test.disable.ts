@@ -1,5 +1,5 @@
 import { Animated } from 'react-native';
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-native';
 
 import { useInterruptiblePathAnimation } from './useInterruptiblePathAnimation';
 

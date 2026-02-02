@@ -128,16 +128,15 @@ export function useSparklineInteractiveHeaderStyles() {
       subHead: (
         color: SparklineInteractiveSubHeadIconColor,
         useFullWidth = true,
-      ): StyleProp<TextStyle> =>
-        [
-          typography.label1,
-          styles.tabularNumbers,
-          ...(useFullWidth ? [styles.fullWidth] : [{ width: 'auto' }]),
-          styles.inputReset,
-          {
-            color: theme.color[variantColorMap[color]],
-          },
-        ] as TextStyle,
+      ): StyleProp<TextStyle> => [
+        typography.label1,
+        styles.tabularNumbers,
+        ...(useFullWidth ? [styles.fullWidth] : [{ width: 'auto' as const }]),
+        styles.inputReset,
+        {
+          color: theme.color[variantColorMap[color]],
+        },
+      ],
       subHeadAccessory: (): StyleProp<TextStyle> => [
         typography.label2,
         styles.inputReset,

@@ -465,16 +465,16 @@ export const ChartText = memo<ChartTextProps>(
       switch (paragraphAlignment) {
         case TextAlign.Center:
           // For center-aligned text, account for half the width
-          minOffset = Math.min(...rects.map((rect) => rect.x - rect.width / 2));
+          minOffset = Math.min(...rects.map((rect) => rect.left - rect.width / 2));
           break;
         case TextAlign.Right:
         case TextAlign.End:
           // For right-aligned text, account for the full width
-          minOffset = Math.min(...rects.map((rect) => rect.x - rect.width));
+          minOffset = Math.min(...rects.map((rect) => rect.left - rect.width));
           break;
         default:
           // For left-aligned text, use the x position directly
-          minOffset = Math.min(...rects.map((rect) => rect.x));
+          minOffset = Math.min(...rects.map((rect) => rect.left));
           break;
       }
 

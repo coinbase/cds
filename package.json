@@ -72,7 +72,7 @@
     "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch",
     "expo-dev-launcher": "patch:expo-dev-launcher@npm:4.0.27#.yarn/patches/expo-dev-launcher-npm-4.0.27-c2ab5dd4a5.patch",
     "react-helmet-async": "^2.0.5",
-    "react-native@0.81.5": "patch:react-native@npm%3A0.81.5#~/.yarn/patches/react-native-npm-0.81.5-d8232ef145.patch"
+    "react-native@~0.81.5": "patch:react-native@npm%3A0.81.5#./.yarn/patches/react-native-npm-0.81.5-d8232ef145.patch"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",

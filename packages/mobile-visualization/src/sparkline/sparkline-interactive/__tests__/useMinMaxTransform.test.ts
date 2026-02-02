@@ -1,6 +1,6 @@
 import { Animated } from 'react-native';
 import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-native';
 
 import { useMinMaxTransform } from '../useMinMaxTransform';
 
