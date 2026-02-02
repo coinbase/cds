@@ -34,8 +34,7 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "react": "~19.1.2",
-    "react-dom": "~19.1.2"
+    "react": "~19.1.2"
   },
   "dependencies": {
     "@coinbase/cds-icons": "workspace:^",
@@ -59,7 +58,6 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.27.1",
     "@types/react": "~19.1.2",
-    "@types/react-dom": "~19.1.2",
     "@types/react-is": "^19.0.0",
     "jest-date-mock": "^1.0.8"
   }

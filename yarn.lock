@@ -2281,7 +2281,6 @@ __metadata:
     "@coinbase/cds-utils": "workspace:^"
     "@modelcontextprotocol/sdk": "npm:^1.13.1"
     "@types/react": "npm:~19.1.2"
-    "@types/react-dom": "npm:~19.1.2"
     "@types/react-is": "npm:^19.0.0"
     d3-array: "npm:^3.2.4"
     d3-color: "npm:^3.1.0"
@@ -2295,7 +2294,6 @@ __metadata:
     zod: "npm:^3.23.8"
   peerDependencies:
     react: ~19.1.2
-    react-dom: ~19.1.2
   languageName: unknown
   linkType: soft
 
