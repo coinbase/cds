@@ -16,7 +16,9 @@ Images inside of the carousel have `pointer-events` disabled by default.
 
 ```jsx live
 function MyCarousel() {
-  function SquareAssetCard({ imageUrl, name }) {
+  const toast = useToast();
+
+  function SquareAssetCard({ imageUrl, name, onPress, isVisible }) {
     return (
       <ContainedAssetCard
         description={
@@ -24,7 +26,9 @@ function MyCarousel() {
             ↗6.37%
           </Text>
         }
+        aria-hidden={!isVisible}
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onPress}
         subtitle={name}
         title="$0.87"
       />
@@ -33,7 +37,8 @@ function MyCarousel() {
   return (
     <Box marginX={-3}>
       <Carousel
-        hidePagination
+        loop
+        paginationVariant="dot"
         title="Explore Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
@@ -42,7 +47,13 @@ function MyCarousel() {
       >
         {Object.values(assets).map((asset, index) => (
           <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onPress={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
           </CarouselItem>
         ))}
       </Carousel>
@@ -86,14 +97,7 @@ function DynamicSizingCarousel() {
   }
   function ActionButton({ isVisible, children }) {
     return (
-      <Button
-        compact
-        flush="start"
-        numberOfLines={1}
-        onClick={NoopFn}
-        tabIndex={isVisible ? undefined : -1}
-        variant="secondary"
-      >
+      <Button compact flush="start" numberOfLines={1} onClick={NoopFn} variant="secondary">
         {children}
       </Button>
     );

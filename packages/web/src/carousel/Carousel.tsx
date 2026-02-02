@@ -60,6 +60,11 @@ export type CarouselItemBaseProps = Omit<BoxBaseProps, 'children'> & {
    * Can be a React node or a function that receives the visibility state.
    */
   children?: CarouselItemRenderChildren | React.ReactNode;
+  /**
+   * @internal Used by Carousel to mark clone items for looping.
+   * Clone items are non-interactive and excluded from tab order.
+   */
+  isClone?: boolean;
 };
 
 export type CarouselItemProps = Omit<BoxProps<BoxDefaultElement>, 'children'> &
@@ -599,6 +604,105 @@ const getVisibleItems = (
   return visibleItems;
 };
 
+/**
+ * Finds the carousel item element and its rect from a focus event target.
+ * Returns null if the target is not within a carousel item or is a clone.
+ * @param target - The focused element.
+ * @param carouselItemRects - The item rects to search.
+ * @returns The item ID and rect, or null if not found.
+ */
+const getFocusedCarouselItemInfo = (
+  target: HTMLElement,
+  carouselItemRects: { [itemId: string]: Rect },
+): { itemId: string; itemRect: Rect } | null => {
+  const carouselItemElement = target.closest('[data-carousel-item-id]') as HTMLElement | null;
+  if (!carouselItemElement) return null;
+
+  const itemId = carouselItemElement.dataset.carouselItemId;
+  if (!itemId || itemId.startsWith('clone-')) return null;
+
+  const itemRect = carouselItemRects[itemId];
+  if (!itemRect) return null;
+
+  return { itemId, itemRect };
+};
+
+/**
+ * Checks if an item is fully visible within the current viewport.
+ * @param itemRect - The item rect to check.
+ * @param scrollOffset - The current scroll offset (positive value).
+ * @param containerWidth - The width of the container viewport.
+ * @param isLoopingActive - Whether looping is active.
+ * @param loopLength - The total length of one loop cycle.
+ * @returns Whether the item is fully visible.
+ */
+const isItemFullyVisible = (
+  itemRect: Rect,
+  scrollOffset: number,
+  containerWidth: number,
+  isLoopingActive: boolean,
+  loopLength: number,
+): boolean => {
+  const adjustedOffset = isLoopingActive
+    ? ((scrollOffset % loopLength) + loopLength) % loopLength
+    : scrollOffset;
+
+  const viewportLeft = adjustedOffset;
+  const viewportRight = adjustedOffset + containerWidth;
+  const itemLeft = itemRect.x;
+  const itemRight = itemRect.x + itemRect.width;
+
+  return itemLeft >= viewportLeft && itemRight <= viewportRight;
+};
+
+/**
+ * Finds the first focusable element within the first visible carousel item.
+ * @param visibleCarouselItems - Set of visible item IDs.
+ * @param carouselItemRects - The item rects for sorting by position.
+ * @param containerElement - The container element to search within.
+ * @returns The first focusable element, or null if not found.
+ */
+const findFirstVisibleItem = (
+  visibleCarouselItems: Set<string>,
+  carouselItemRects: { [itemId: string]: Rect },
+  containerElement: HTMLElement | null,
+): HTMLElement | null => {
+  const visibleItemIds = Array.from(visibleCarouselItems).filter((id) => !id.startsWith('clone-'));
+
+  if (visibleItemIds.length === 0 || !containerElement) return null;
+
+  const sortedVisibleIds = visibleItemIds.sort((a, b) => {
+    const rectA = carouselItemRects[a];
+    const rectB = carouselItemRects[b];
+    return (rectA?.x ?? 0) - (rectB?.x ?? 0);
+  });
+
+  const firstVisibleElement = containerElement.querySelector(
+    `[data-carousel-item-id="${sortedVisibleIds[0]}"]`,
+  );
+
+  if (!firstVisibleElement) return null;
+
+  return firstVisibleElement.querySelector<HTMLElement>(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+  );
+};
+
+/**
+ * Finds the page index that best displays the given item.
+ * @param itemRect - The item rect to find the page for.
+ * @param pageOffsets - The page offsets to search.
+ * @returns The page index that shows the item.
+ */
+const findPageIndexForItem = (itemRect: Rect, pageOffsets: number[]): number => {
+  for (let i = pageOffsets.length - 1; i >= 0; i--) {
+    if (pageOffsets[i] <= itemRect.x) {
+      return i;
+    }
+  }
+  return 0;
+};
+
 export const Carousel = memo(
   forwardRef<CarouselImperativeHandle, CarouselProps>(
     (
@@ -707,7 +811,7 @@ export const Carousel = memo(
         return contentWidth + gap;
       }, [shouldLoop, contentWidth, gap]);
 
-      const isLoopingActive = shouldLoop && loopLength > 0;
+      const isLoopingActive = Boolean(shouldLoop && loopLength > 0);
 
       // Derived transform: physics (carouselScrollX) can go to ±∞, visuals (wrappedX) stay bounded
       const wrappedX = useTransform(carouselScrollX, (value) => {
@@ -840,6 +944,7 @@ export const Carousel = memo(
             <CarouselItem
               key={cloneId}
               aria-hidden
+              isClone
               id={cloneId}
               style={{
                 position: 'absolute',
@@ -866,6 +971,7 @@ export const Carousel = memo(
             <CarouselItem
               key={cloneId}
               aria-hidden
+              isClone
               id={cloneId}
               style={{
                 width: itemData?.width,
@@ -1079,6 +1185,64 @@ export const Carousel = memo(
         autoplayControls.resume();
       }, [autoplayControls]);
 
+      // Handle focus moving to an element inside a carousel item
+      // This allows keyboard navigation to work without needing isVisible for tabIndex
+      const handleFocusIn = useCallback(
+        (event: React.FocusEvent) => {
+          if (pageOffsets.length === 0 || Object.keys(carouselItemRects).length === 0) return;
+
+          const target = event.target as HTMLElement;
+          const focusedItem = getFocusedCarouselItemInfo(target, carouselItemRects);
+          if (!focusedItem) return;
+
+          const { itemRect } = focusedItem;
+          const currentOffset = Math.abs(carouselScrollX.get());
+
+          // Item is already visible - no action needed
+          if (
+            isItemFullyVisible(itemRect, currentOffset, containerWidth, isLoopingActive, loopLength)
+          ) {
+            return;
+          }
+
+          // Check if focus is entering from outside the carousel items container
+          // (not just the root - nav buttons are in root but not in items container)
+          const relatedTarget = event.relatedTarget as HTMLElement | null;
+          const isEnteringFromOutside =
+            !relatedTarget || !containerRef.current?.contains(relatedTarget);
+
+          if (isEnteringFromOutside) {
+            // Redirect focus to first focusable element on current page
+            const focusable = findFirstVisibleItem(
+              visibleCarouselItems,
+              carouselItemRects,
+              containerRef.current,
+            );
+            if (focusable && focusable !== target) {
+              focusable.focus({ preventScroll: true });
+              return;
+            }
+          }
+
+          // Navigate to show the focused item
+          const targetPageIndex = findPageIndexForItem(itemRect, pageOffsets);
+          if (targetPageIndex !== activePageIndex) {
+            goToPage(targetPageIndex);
+          }
+        },
+        [
+          pageOffsets,
+          carouselItemRects,
+          carouselScrollX,
+          isLoopingActive,
+          loopLength,
+          containerWidth,
+          visibleCarouselItems,
+          activePageIndex,
+          goToPage,
+        ],
+      );
+
       const carouselContextValue = useMemo(
         () => ({
           visibleCarouselItems,
@@ -1108,14 +1272,13 @@ export const Carousel = memo(
           <RefMapContext.Provider value={carouselItemRefMap}>
             <VStack
               ref={rootRef}
-              aria-live="polite"
               aria-roledescription="carousel"
               className={cx(className, classNames?.root)}
               gap={2}
               onPointerEnter={handlePointerEnter}
               onPointerLeave={handlePointerLeave}
               role="group"
-              style={{ overflow: 'hidden', ...style, ...styles?.root }}
+              style={{ overflow: 'clip', ...style, ...styles?.root }}
               width="100%"
               {...props}
             >
@@ -1153,6 +1316,7 @@ export const Carousel = memo(
                 <div
                   ref={containerRef}
                   className={classNames?.carouselContainer}
+                  onFocus={handleFocusIn}
                   onPointerDown={(e) => {
                     if (isDragEnabled) {
                       // Allows us to grab between items where child wouldn't be selected
@@ -1170,6 +1334,8 @@ export const Carousel = memo(
                     <m.div
                       _dragX={carouselScrollX}
                       animate={animationApi}
+                      aria-atomic="true"
+                      aria-live={autoplayControls.isPlaying ? 'off' : 'polite'}
                       className={cx(classNames?.carousel, defaultCarouselCss)}
                       drag={isDragEnabled ? 'x' : false}
                       dragConstraints={

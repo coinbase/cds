@@ -354,7 +354,54 @@ describe('Carousel', () => {
 
       const carousel = screen.getByRole('group');
       expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
-      expect(carousel).toHaveAttribute('aria-live', 'polite');
+    });
+
+    it('has aria-live="polite" on slides container when autoplay is disabled', () => {
+      render(<TestCarouselWithItems itemCount={3} />);
+
+      const carousel = screen.getByRole('group');
+      const slidesContainer = carousel.querySelector('[aria-live]');
+
+      expect(slidesContainer).toHaveAttribute('aria-live', 'polite');
+      expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
+    });
+
+    it('has aria-live="off" on slides container when autoplay is playing', async () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      // Wait for carousel to initialize
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const carousel = screen.getByRole('group');
+      const slidesContainer = carousel.querySelector('[aria-live]');
+
+      // When autoplay is enabled and playing, aria-live should be "off"
+      expect(slidesContainer).toHaveAttribute('aria-live', 'off');
+      expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
+    });
+
+    it('has aria-live="polite" on slides container when autoplay is stopped', async () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      // Wait for carousel to initialize
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      // Stop autoplay
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+
+      const carousel = screen.getByRole('group');
+      const slidesContainer = carousel.querySelector('[aria-live]');
+
+      // When autoplay is stopped, aria-live should be "polite" for screen reader announcements
+      expect(slidesContainer).toHaveAttribute('aria-live', 'polite');
+      expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
     });
 
     it('applies custom accessibility labels', () => {
