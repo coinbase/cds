@@ -250,4 +250,18 @@ describe('ProgressCircle tests and passes a11y', () => {
     // Without disableAnimateOnMount, should start at full circumference (empty) and animate to target
     expect(innerCircle.props.strokeDashoffset._value).toEqual(circumference);
   });
+
+  it('handles floating-point precision for accessibilityValue', () => {
+    const size = 100;
+    // 0.07 * 100 = 7.000000000000001 in JavaScript
+    render(
+      <DefaultThemeProvider>
+        <ProgressCircle progress={0.07} size={size} testID="mock-progress-circle" />
+      </DefaultThemeProvider>,
+    );
+
+    const progressCircle = screen.getByTestId('mock-progress-circle');
+    expect(progressCircle.props.accessibilityValue.now).toBe(7);
+    expect(Number.isInteger(progressCircle.props.accessibilityValue.now)).toBe(true);
+  });
 });
