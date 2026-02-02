@@ -277,6 +277,7 @@ export const DefaultSelectControlComponent = memo(
         align,
         value,
         maxSelectedOptionsToShow,
+        valueAlignment,
         hiddenSelectedOptionsLabel,
         optionsMap,
         removeSelectedOptionAccessibilityLabel,
