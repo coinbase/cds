@@ -100,7 +100,7 @@ export const FullExample = () => {
             <HStack alignItems="center">
               <InputLabel>Birthdate</InputLabel>
               <Tooltip content="This will be visible to other users.">
-                <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
+                <Icon active color="fg" name="info" padding={0.75} size="xs" />
               </Tooltip>
             </HStack>
           }
@@ -142,7 +142,7 @@ export const CustomLabel = () => {
               <HStack alignItems="center">
                 <InputLabel>Date of birth</InputLabel>
                 <Tooltip content="This will be visible to other users.">
-                  <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
+                  <Icon active color="fg" name="info" padding={0.75} size="xs" />
                 </Tooltip>
               </HStack>
             }
