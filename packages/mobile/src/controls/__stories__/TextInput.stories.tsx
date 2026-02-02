@@ -476,7 +476,7 @@ const InputScreen = () => {
             <HStack alignItems="center" gap={1}>
               <InputLabel>Display name</InputLabel>
               <Tooltip content="This will be visible to other users.">
-                <Icon active color="fg" name="info" size="xs" />
+                <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
               </Tooltip>
             </HStack>
           }

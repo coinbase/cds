@@ -274,8 +274,9 @@ If you need to render a custom label (e.g. a label with a tooltip), you can use 
       <InputLabel htmlFor="display-name-input">
         <HStack alignItems="center" gap={1}>
           Display name
+          {/* Give padding to ensure large enough tap target for tooltip */}
           <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+            <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
           </Tooltip>
         </HStack>
       </InputLabel>

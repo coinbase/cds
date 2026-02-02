@@ -329,8 +329,9 @@ If you need to render a custom label (e.g. a label with a tooltip), you can use 
     labelNode={
       <HStack alignItems="center" gap={1}>
         <InputLabel>Display name</InputLabel>
+        {/* Give padding to ensure large enough tap target for tooltip */}
         <Tooltip content="This will be visible to other users.">
-          <Icon active color="fg" name="info" size="xs" />
+          <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
         </Tooltip>
       </HStack>
     }

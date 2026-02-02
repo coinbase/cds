@@ -77,7 +77,7 @@ export const Examples = () => {
               <HStack alignItems="center" gap={1}>
                 Date of birth
                 <Tooltip content="This will be visible to other users.">
-                  <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+                  <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
                 </Tooltip>
               </HStack>
             </InputLabel>

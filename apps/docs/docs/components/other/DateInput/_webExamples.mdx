@@ -291,8 +291,9 @@ function Example() {
         <InputLabel htmlFor="birthdate-tooltip">
           <HStack alignItems="center" gap={1}>
             Birthdate
+            {/* Give padding to ensure large enough tap target for tooltip */}
             <Tooltip content="This will be visible to other users.">
-              <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+              <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
             </Tooltip>
           </HStack>
         </InputLabel>
