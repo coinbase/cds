@@ -97,7 +97,7 @@ export const FullExample = () => {
           accessibilityLabel="Birthdate"
           calendarIconButtonAccessibilityLabel="Birthdate calendar"
           labelNode={
-            <HStack alignItems="center" gap={1}>
+            <HStack alignItems="center">
               <InputLabel>Birthdate</InputLabel>
               <Tooltip content="This will be visible to other users.">
                 <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
@@ -139,7 +139,7 @@ export const CustomLabel = () => {
             accessibilityLabel="Date of birth"
             calendarIconButtonAccessibilityLabel="Date of birth calendar"
             labelNode={
-              <HStack alignItems="center" gap={1}>
+              <HStack alignItems="center">
                 <InputLabel>Date of birth</InputLabel>
                 <Tooltip content="This will be visible to other users.">
                   <Icon color="fgMuted" name="info" padding={0.75} size="xs" />

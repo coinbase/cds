@@ -46,7 +46,7 @@ export const Examples = () => {
             {...props}
             accessibilityLabel="Date of birth"
             labelNode={
-              <HStack alignItems="center" gap={1}>
+              <HStack alignItems="center">
                 <InputLabel>Date of birth</InputLabel>
                 <Tooltip content="This will be visible to other users.">
                   <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
@@ -83,7 +83,7 @@ export const CustomLabel = () => {
             {...props}
             accessibilityLabel="Date of birth"
             labelNode={
-              <HStack alignItems="center" gap={1}>
+              <HStack alignItems="center">
                 <InputLabel>Date of birth</InputLabel>
                 <Tooltip content="This will be visible to other users.">
                   <Icon color="fgMuted" name="info" padding={0.75} size="xs" />
