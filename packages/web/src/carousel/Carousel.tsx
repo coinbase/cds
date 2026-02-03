@@ -48,6 +48,13 @@ const defaultCarouselCss = css`
   }
 `;
 
+const animationConfig: Transition = {
+  type: 'spring',
+  stiffness: 900,
+  damping: 120,
+  mass: 4,
+};
+
 export type CarouselItemRenderChildren = React.FC<{ isVisible: boolean }>;
 
 export type CarouselItemBaseProps = Omit<BoxBaseProps, 'children'> & {
@@ -1034,7 +1041,7 @@ export const Carousel = memo(
                 .offset
             : pageOffsets[newPage];
 
-          animate(carouselScrollX, -targetOffset, { type: 'tween', duration: 0.25 });
+          animate(carouselScrollX, -targetOffset, animationConfig);
         },
         [
           totalPages,

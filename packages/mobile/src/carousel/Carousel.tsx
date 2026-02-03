@@ -536,7 +536,10 @@ const getVisibleItems = (
   return visibleItems;
 };
 
-const animationConfig = { tension: 200, friction: 25 };
+const animationConfig = {
+  stiffness: 900,
+  damping: 120,
+};
 
 export const Carousel = memo(
   forwardRef<CarouselImperativeHandle, CarouselProps>(
