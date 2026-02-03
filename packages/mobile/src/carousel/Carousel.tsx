@@ -258,7 +258,7 @@ export type CarouselBaseProps = SharedProps &
     autoplay?: boolean;
     /**
      * The interval in milliseconds for autoplay.
-     * @default 3000 (3 seconds)
+     * @default 5000 (5 seconds)
      */
     autoplayInterval?: number;
     /**
@@ -567,7 +567,7 @@ export const Carousel = memo(
         onDragEnd,
         loop,
         autoplay,
-        autoplayInterval = 3000,
+        autoplayInterval = 5000,
         paginationVariant,
         ...props
       }: CarouselProps,
