@@ -59,6 +59,12 @@ const PaginationPill = memo(function PaginationPill({
   );
 });
 
+const animationConfig = {
+  stiffness: 900,
+  damping: 120,
+  clamp: true,
+};
+
 const PaginationDot = memo(function PaginationDot({
   index,
   isActive,
@@ -74,7 +80,7 @@ const PaginationDot = memo(function PaginationDot({
   const springProps = useSpring({
     width: isActive ? INDICATOR_ACTIVE_WIDTH : INDICATOR_INACTIVE_WIDTH,
     backgroundColor: isActive && !showProgress ? theme.color.bgPrimary : theme.color.bgLine,
-    config: { tension: 300, friction: 25 },
+    config: animationConfig,
   });
 
   const progressWidth = autoplayContext.progress.to(

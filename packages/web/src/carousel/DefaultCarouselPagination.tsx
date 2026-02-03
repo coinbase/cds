@@ -16,6 +16,14 @@ const INDICATOR_ACTIVE_WIDTH = 24;
 const INDICATOR_INACTIVE_WIDTH = 4;
 const INDICATOR_HEIGHT = 4;
 
+const animationConfig: Transition = {
+  type: 'spring',
+  stiffness: 900,
+  damping: 120,
+  mass: 4,
+  clamp: true,
+};
+
 const defaultPaginationCss = css`
   padding: ${INDICATOR_HEIGHT}px 0;
 `;
@@ -31,13 +39,6 @@ const dotCss = css`
   border-radius: var(--borderRadius-100);
   overflow: hidden;
 `;
-
-const springTransition: Transition = {
-  type: 'spring',
-  stiffness: 300,
-  damping: 30,
-  clamp: true,
-};
 
 export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps &
   SharedProps & {
@@ -115,7 +116,7 @@ const PaginationDot = memo(function PaginationDot({
       className={cx(dotCss, className)}
       data-active={isActive}
       initial={false}
-      transition={springTransition}
+      transition={animationConfig}
       {...props}
     >
       {showProgress && (
