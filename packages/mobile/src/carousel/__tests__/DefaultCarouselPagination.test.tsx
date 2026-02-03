@@ -36,8 +36,8 @@ const renderPagination = (props: Partial<React.ComponentProps<typeof DefaultCaro
       <CarouselAutoplayContext.Provider value={mockAutoplayContext}>
         <DefaultCarouselPagination
           activePageIndex={0}
-          totalPages={3}
           onPressPage={jest.fn()}
+          totalPages={3}
           {...props}
         />
       </CarouselAutoplayContext.Provider>
