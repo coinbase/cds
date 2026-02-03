@@ -202,9 +202,7 @@ function FullBleedHeaderTray() {
             <Box background="bgAlternate" height={180} marginX={-3}>
               <Image
                 resizeMode="cover"
-                source={{
-                  uri: 'https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png',
-                }}
+                source={require('@site/static/img/tray_header.png')}
                 style={{ width: '100%', height: '100%' }}
               />
             </Box>
@@ -277,9 +275,7 @@ function FullBleedHeaderScrollableTray() {
             <Box background="bgAlternate" height={180} marginX={-3}>
               <Image
                 resizeMode="cover"
-                source={{
-                  uri: 'https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png',
-                }}
+                source={require('@site/static/img/tray_header.png')}
                 style={{ width: '100%', height: '100%' }}
               />
             </Box>
@@ -387,6 +383,73 @@ function PreventDismissTray() {
 ## Accessibility
 
 Trays require an accessibility label. If you pass in a ReactNode to `title`, make sure to set `accessibilityLabel`.
+
+## Styling
+
+### Handlebar
+
+When using a full bleed image header, the default handlebar color may not have enough contrast against the image. You can customize the handlebar appearance using `styles.handleBarHandle` to change its color and opacity.
+
+This is useful for trays with dark or colorful header images where you want the handlebar to be more visible, such as inverting it to white.
+
+```tsx
+function FullBleedWithInvertedHandlebar() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Full Bleed Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          accessibilityLabel="Section header"
+          handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Section header
+            </Text>
+          }
+          onCloseComplete={setIsTrayVisibleOff}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            header: {
+              paddingHorizontal: 0,
+              paddingBottom: 0,
+            },
+          }}
+          title={
+            <Box background="bgAlternate" height={180} marginX={-3}>
+              <Image
+                resizeMode="cover"
+                source={require('@site/static/img/tray_header.png')}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Box>
+          }
+        >
+          <VStack paddingX={3}>
+            <Text color="fgMuted" font="body" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+}
+```
 
 ## Composed Examples
 

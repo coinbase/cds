@@ -3,7 +3,6 @@ import { PanResponder, useWindowDimensions } from 'react-native';
 import type { Animated, GestureResponderEvent, PanResponderGestureState } from 'react-native';
 import type { PinningDirection } from '@coinbase/cds-common';
 import {
-  DISMISSAL_DRAG_PERCENTAGE,
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
   MAX_OVER_DRAG,
@@ -158,23 +157,17 @@ export const useDrawerPanResponder = ({
 
   const isSwipeToDismiss = useCallback(
     (distance: number) => {
-      const drawerSize = isHorizontalDrawer ? drawerWidth : drawerHeight;
-      const closeThreshold = Math.min(
-        DISMISSAL_DRAG_THRESHOLD,
-        drawerSize * DISMISSAL_DRAG_PERCENTAGE,
-      );
-
       switch (pin) {
         case 'top':
         case 'left':
-          return distance <= -closeThreshold;
+          return distance <= -DISMISSAL_DRAG_THRESHOLD;
         case 'bottom':
         case 'right':
         default:
-          return distance >= closeThreshold;
+          return distance >= DISMISSAL_DRAG_THRESHOLD;
       }
     },
-    [pin, isHorizontalDrawer, drawerWidth, drawerHeight],
+    [pin],
   );
 
   const shouldDismiss = useCallback(

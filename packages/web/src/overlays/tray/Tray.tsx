@@ -10,10 +10,16 @@ import React, {
 } from 'react';
 import type { PinningDirection, SharedAccessibilityProps, ThemeVars } from '@coinbase/cds-common';
 import {
-  DISMISSAL_DRAG_PERCENTAGE,
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
 } from '@coinbase/cds-common/animation/drawer';
+
+/**
+ * Percentage of tray height that must be dragged to dismiss (0.4 = 40%).
+ * Uses the actual measured tray height, so small trays have proportionally smaller
+ * dismiss thresholds - ensuring they don't require dragging most of the tray to dismiss.
+ */
+const DISMISSAL_DRAG_PERCENTAGE = 0.4;
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -162,6 +168,8 @@ export type TrayProps = TrayBaseProps & {
     handleBar?: React.CSSProperties;
     /** Styles for the handle bar element */
     handleBarHandle?: React.CSSProperties;
+    /** Styles for the close button */
+    closeButton?: React.CSSProperties;
   };
   /** Class names for the tray elements */
   classNames?: {
@@ -183,6 +191,8 @@ export type TrayProps = TrayBaseProps & {
     handleBar?: string;
     /** Class name for the handle bar element */
     handleBarHandle?: string;
+    /** Class name for the close button */
+    closeButton?: string;
   };
 };
 
@@ -614,9 +624,11 @@ export const Tray = memo(
                                     transparent
                                     accessibilityHint={closeAccessibilityHint}
                                     accessibilityLabel={closeAccessibilityLabel}
+                                    className={classNames?.closeButton}
                                     margin={isSideTray ? -1.5 : undefined}
                                     name="close"
                                     onClick={handleClose}
+                                    style={styles?.closeButton}
                                     testID="tray-close-button"
                                   />
                                 )}

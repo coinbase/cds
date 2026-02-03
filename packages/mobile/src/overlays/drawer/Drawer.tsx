@@ -30,7 +30,7 @@ import type {
 
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
-import { HandleBar } from '../handlebar/HandleBar';
+import { HandleBar, type HandleBarProps } from '../handlebar/HandleBar';
 import { Overlay } from '../overlay/Overlay';
 import { useOverlayAnimation } from '../overlay/useOverlayAnimation';
 
@@ -69,7 +69,7 @@ export type DrawerBaseProps = SharedProps &
      * @default 'outside'
      * @note The 'outside' variant is deprecated. Use 'inside' for new implementations.
      */
-    handleBarVariant?: 'inside' | 'outside';
+    handleBarVariant?: HandleBarProps['variant'];
     /**
      * The HandleBar by default only is used for a bottom pinned drawer. This removes it.
      * */
