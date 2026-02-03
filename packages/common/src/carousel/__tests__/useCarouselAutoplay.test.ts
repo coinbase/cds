@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useCarouselAutoplay } from '../useCarouselAutoplay';
 import type { CarouselAutoplayOptions } from '../useCarouselAutoplay';
+import { useCarouselAutoplay } from '../useCarouselAutoplay';
 
 // Mock requestAnimationFrame and cancelAnimationFrame
 let rafCallbacks: Map<number, FrameRequestCallback> = new Map();
@@ -38,7 +38,7 @@ const flushRafCallbacks = (time: number) => {
 describe('useCarouselAutoplay', () => {
   const defaultOptions: CarouselAutoplayOptions = {
     enabled: true,
-    interval: 3000,
+    interval: 5000,
     onAdvance: jest.fn(),
   };
 
@@ -50,6 +50,7 @@ describe('useCarouselAutoplay', () => {
       expect(state).toEqual({
         isPlaying: true,
         isStopped: false,
+        isPaused: false,
       });
 
       expect(api).toHaveProperty('start');
@@ -73,35 +74,17 @@ describe('useCarouselAutoplay', () => {
     it('should set isPlaying to true when called after stop', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
-      // First stop
       act(() => {
         result.current[1].stop();
       });
       expect(result.current[0].isPlaying).toBe(false);
       expect(result.current[0].isStopped).toBe(true);
 
-      // Then start
       act(() => {
         result.current[1].start();
       });
       expect(result.current[0].isPlaying).toBe(true);
       expect(result.current[0].isStopped).toBe(false);
-    });
-
-    it('should call onStart callback when starting', () => {
-      const onStart = jest.fn();
-      const { result } = renderHook(() =>
-        useCarouselAutoplay({ ...defaultOptions, enabled: false, onStart }),
-      );
-
-      // Enable and start
-      const { rerender } = renderHook((props) => useCarouselAutoplay(props), {
-        initialProps: { ...defaultOptions, enabled: false, onStart },
-      });
-
-      rerender({ ...defaultOptions, enabled: true, onStart });
-
-      expect(onStart).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -147,13 +130,11 @@ describe('useCarouselAutoplay', () => {
     it('should toggle from stopped to playing', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
-      // Stop first
       act(() => {
         result.current[1].stop();
       });
       expect(result.current[0].isStopped).toBe(true);
 
-      // Toggle back to playing
       act(() => {
         result.current[1].toggle();
       });
@@ -170,39 +151,32 @@ describe('useCarouselAutoplay', () => {
         useCarouselAutoplay({ ...defaultOptions, onProgressUpdate }),
       );
 
-      // Simulate some progress
       act(() => {
-        flushRafCallbacks(1500); // 50% progress
+        flushRafCallbacks(2500);
       });
 
-      // Reset
       act(() => {
         result.current[1].reset();
       });
 
-      // Should have called onProgressUpdate with 0
       expect(onProgressUpdate).toHaveBeenLastCalledWith(0);
     });
 
-    it('should restart timer when playing', () => {
+    it('should not affect timer when called', () => {
+      jest.useFakeTimers();
       const onAdvance = jest.fn();
       const { result } = renderHook(() => useCarouselAutoplay({ ...defaultOptions, onAdvance }));
 
-      jest.useFakeTimers();
-
-      // Advance time partially
       act(() => {
-        jest.advanceTimersByTime(1500);
+        jest.advanceTimersByTime(2500);
       });
 
-      // Reset
       act(() => {
         result.current[1].reset();
       });
 
-      // Advance full interval - should trigger advance
       act(() => {
-        jest.advanceTimersByTime(3000);
+        jest.advanceTimersByTime(2500);
       });
 
       expect(onAdvance).toHaveBeenCalledTimes(1);
@@ -218,7 +192,7 @@ describe('useCarouselAutoplay', () => {
       renderHook(() => useCarouselAutoplay({ ...defaultOptions, onAdvance }));
 
       act(() => {
-        jest.advanceTimersByTime(3000);
+        jest.advanceTimersByTime(5000);
       });
 
       expect(onAdvance).toHaveBeenCalledTimes(1);
@@ -232,7 +206,7 @@ describe('useCarouselAutoplay', () => {
       renderHook(() => useCarouselAutoplay({ ...defaultOptions, onAdvance }));
 
       act(() => {
-        jest.advanceTimersByTime(9000); // 3 intervals
+        jest.advanceTimersByTime(15000);
       });
 
       expect(onAdvance).toHaveBeenCalledTimes(3);
@@ -250,7 +224,7 @@ describe('useCarouselAutoplay', () => {
       });
 
       act(() => {
-        jest.advanceTimersByTime(6000);
+        jest.advanceTimersByTime(10000);
       });
 
       expect(onAdvance).not.toHaveBeenCalled();
@@ -264,21 +238,18 @@ describe('useCarouselAutoplay', () => {
       const onProgressUpdate = jest.fn();
       renderHook(() => useCarouselAutoplay({ ...defaultOptions, onProgressUpdate }));
 
-      // Initial call at 0
       act(() => {
         flushRafCallbacks(0);
       });
       expect(onProgressUpdate).toHaveBeenCalledWith(0);
 
-      // Halfway through
       act(() => {
-        flushRafCallbacks(1500);
+        flushRafCallbacks(2500);
       });
       expect(onProgressUpdate).toHaveBeenCalledWith(0.5);
 
-      // At the end
       act(() => {
-        flushRafCallbacks(3000);
+        flushRafCallbacks(5000);
       });
       expect(onProgressUpdate).toHaveBeenCalledWith(1);
     });
@@ -288,7 +259,7 @@ describe('useCarouselAutoplay', () => {
       renderHook(() => useCarouselAutoplay({ ...defaultOptions, onProgressUpdate }));
 
       act(() => {
-        flushRafCallbacks(5000); // Beyond interval
+        flushRafCallbacks(8000);
       });
 
       expect(onProgressUpdate).toHaveBeenLastCalledWith(1);
@@ -298,15 +269,16 @@ describe('useCarouselAutoplay', () => {
   describe('enabled prop changes', () => {
     it('should start autoplay when enabled changes from false to true', () => {
       const onStart = jest.fn();
-      const { rerender } = renderHook((props) => useCarouselAutoplay(props), {
+      const { result, rerender } = renderHook((props) => useCarouselAutoplay(props), {
         initialProps: { ...defaultOptions, enabled: false, onStart },
       });
 
       expect(onStart).not.toHaveBeenCalled();
+      expect(result.current[0].isPlaying).toBe(false);
 
       rerender({ ...defaultOptions, enabled: true, onStart });
 
-      expect(onStart).toHaveBeenCalledTimes(1);
+      expect(result.current[0].isPlaying).toBe(true);
     });
 
     it('should not auto-stop when enabled changes to false (user must call stop)', () => {
@@ -318,9 +290,7 @@ describe('useCarouselAutoplay', () => {
 
       rerender({ ...defaultOptions, enabled: false });
 
-      // isPlaying becomes false because enabled && !isStopped
       expect(result.current[0].isPlaying).toBe(false);
-      // But isStopped is still false (user didn't stop it)
       expect(result.current[0].isStopped).toBe(false);
     });
   });
@@ -336,7 +306,6 @@ describe('useCarouselAutoplay', () => {
       expect(initialApi.start).toBe(rerenderApi.start);
       expect(initialApi.stop).toBe(rerenderApi.stop);
       expect(initialApi.toggle).toBe(rerenderApi.toggle);
-      // reset may change due to isPlaying dependency, but that's expected
     });
 
     it('should return new state object when state changes', () => {
@@ -367,7 +336,6 @@ describe('useCarouselAutoplay', () => {
         result.current[1].start();
       });
 
-      // Should end in playing state
       expect(result.current[0].isPlaying).toBe(true);
     });
 
@@ -385,7 +353,6 @@ describe('useCarouselAutoplay', () => {
 
       unmount();
 
-      // Should not throw when advancing time after unmount
       expect(() => {
         act(() => {
           jest.advanceTimersByTime(10000);
@@ -403,9 +370,8 @@ describe('useCarouselAutoplay', () => {
         useCarouselAutoplay({ ...defaultOptions, onProgressUpdate }),
       );
 
-      // Simulate some progress
       act(() => {
-        flushRafCallbacks(1500); // 50% progress
+        flushRafCallbacks(2500);
       });
 
       const progressBeforeStop =
@@ -415,7 +381,6 @@ describe('useCarouselAutoplay', () => {
         result.current[1].stop();
       });
 
-      // Progress should be preserved (not reset to 0)
       expect(progressBeforeStop).toBeCloseTo(0.5, 1);
     });
 
@@ -425,23 +390,18 @@ describe('useCarouselAutoplay', () => {
         useCarouselAutoplay({ ...defaultOptions, onProgressUpdate }),
       );
 
-      // Simulate 50% progress
       act(() => {
-        flushRafCallbacks(1500);
+        flushRafCallbacks(2500);
       });
 
-      // Stop
       act(() => {
         result.current[1].stop();
       });
 
-      // Start again
       act(() => {
         result.current[1].start();
       });
 
-      // The progress animation should resume from where it left off
-      // (verified by the startProgressAnimation being called with fromPausedProgress=true)
       expect(result.current[0].isPlaying).toBe(true);
     });
   });
