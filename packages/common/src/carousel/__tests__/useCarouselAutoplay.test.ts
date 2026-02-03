@@ -38,7 +38,7 @@ const flushRafCallbacks = (time: number) => {
 describe('useCarouselAutoplay', () => {
   const defaultOptions: CarouselAutoplayOptions = {
     enabled: true,
-    interval: 5000,
+    interval: 3000,
     onAdvance: jest.fn(),
   };
 
@@ -152,7 +152,7 @@ describe('useCarouselAutoplay', () => {
       );
 
       act(() => {
-        flushRafCallbacks(2500);
+        flushRafCallbacks(1500);
       });
 
       act(() => {
@@ -168,7 +168,7 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay({ ...defaultOptions, onAdvance }));
 
       act(() => {
-        jest.advanceTimersByTime(2500);
+        jest.advanceTimersByTime(1500);
       });
 
       act(() => {
@@ -176,7 +176,7 @@ describe('useCarouselAutoplay', () => {
       });
 
       act(() => {
-        jest.advanceTimersByTime(2500);
+        jest.advanceTimersByTime(1500);
       });
 
       expect(onAdvance).toHaveBeenCalledTimes(1);
@@ -192,7 +192,7 @@ describe('useCarouselAutoplay', () => {
       renderHook(() => useCarouselAutoplay({ ...defaultOptions, onAdvance }));
 
       act(() => {
-        jest.advanceTimersByTime(5000);
+        jest.advanceTimersByTime(3000);
       });
 
       expect(onAdvance).toHaveBeenCalledTimes(1);
@@ -206,7 +206,7 @@ describe('useCarouselAutoplay', () => {
       renderHook(() => useCarouselAutoplay({ ...defaultOptions, onAdvance }));
 
       act(() => {
-        jest.advanceTimersByTime(15000);
+        jest.advanceTimersByTime(9000);
       });
 
       expect(onAdvance).toHaveBeenCalledTimes(3);
@@ -244,12 +244,12 @@ describe('useCarouselAutoplay', () => {
       expect(onProgressUpdate).toHaveBeenCalledWith(0);
 
       act(() => {
-        flushRafCallbacks(2500);
+        flushRafCallbacks(1500);
       });
       expect(onProgressUpdate).toHaveBeenCalledWith(0.5);
 
       act(() => {
-        flushRafCallbacks(5000);
+        flushRafCallbacks(3000);
       });
       expect(onProgressUpdate).toHaveBeenCalledWith(1);
     });
@@ -371,7 +371,7 @@ describe('useCarouselAutoplay', () => {
       );
 
       act(() => {
-        flushRafCallbacks(2500);
+        flushRafCallbacks(1500);
       });
 
       const progressBeforeStop =
@@ -391,7 +391,7 @@ describe('useCarouselAutoplay', () => {
       );
 
       act(() => {
-        flushRafCallbacks(2500);
+        flushRafCallbacks(1500);
       });
 
       act(() => {
