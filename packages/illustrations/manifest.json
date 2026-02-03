@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-01-29T21:21:37.181Z",
+  "lastUpdated": "2026-02-03T21:28:59.761Z",
   "colors": {
     "light": [
       {
@@ -25431,22 +25431,22 @@
     "18659:332": {
       "type": "pictogram",
       "name": "baseCheckSmall",
-      "hash": "2cbCTxABh2HV0sqwablxHqO0FUb+Mm2pAR2Qv/0Jj8g=",
+      "hash": "1eBcdpSkIXZ1HODJdg7lZ3rx3YFXiAwY3/udaN+ccNM=",
       "width": 48,
       "height": 48,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.306Z",
-      "lastUpdated": "2025-07-03T14:26:31.306Z",
+      "lastUpdated": "2026-01-31T00:40:08.679Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/baseCheckSmall-0.svg",
-        "svgDark": "./pictogram/svg/dark/baseCheckSmall-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/baseCheckSmall-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/baseCheckSmall-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/baseCheckSmall-0.js",
-        "pngLight": "./pictogram/png/light/baseCheckSmall-0.png",
-        "pngDark": "./pictogram/png/dark/baseCheckSmall-0.png"
+        "svgLight": "./pictogram/svg/light/baseCheckSmall-1.svg",
+        "svgDark": "./pictogram/svg/dark/baseCheckSmall-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseCheckSmall-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseCheckSmall-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseCheckSmall-1.js",
+        "pngLight": "./pictogram/png/light/baseCheckSmall-1.png",
+        "pngDark": "./pictogram/png/dark/baseCheckSmall-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "18659:338": {
       "type": "pictogram",
@@ -29125,6 +29125,26 @@
         "svgJsDark": "./pictogram/svgJs/dark/commodities-0.js",
         "pngLight": "./pictogram/png/light/commodities-0.png",
         "pngDark": "./pictogram/png/dark/commodities-0.png"
+      },
+      "version": 0
+    },
+    "27602:11": {
+      "type": "pictogram",
+      "name": "arrowsUpDown",
+      "hash": "bO8qkgHq9vpn8vOOS7a6w9eVoHPN3lb2VvbYql9NaYk=",
+      "width": 40,
+      "height": 40,
+      "description": "pictogram, leverage, invest, prime, advanced, derive, arrow, triangles",
+      "createdAt": "2026-02-03T20:41:52.497Z",
+      "lastUpdated": "2026-02-03T21:27:09.620Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/arrowsUpDown-0.svg",
+        "svgDark": "./pictogram/svg/dark/arrowsUpDown-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/arrowsUpDown-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/arrowsUpDown-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/arrowsUpDown-0.js",
+        "pngLight": "./pictogram/png/light/arrowsUpDown-0.png",
+        "pngDark": "./pictogram/png/dark/arrowsUpDown-0.png"
       },
       "version": 0
     }
