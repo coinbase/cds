@@ -71,7 +71,8 @@ export type CarouselNavigationComponentBaseProps = Pick<
   | 'autoplay'
   | 'nextPageAccessibilityLabel'
   | 'previousPageAccessibilityLabel'
-  | 'autoplayAccessibilityLabel'
+  | 'startAutoplayAccessibilityLabel'
+  | 'stopAutoplayAccessibilityLabel'
 > & {
   /**
    * Callback for when the previous button is pressed.
@@ -225,10 +226,15 @@ export type CarouselBaseProps = SharedProps &
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**
-     * Accessibility label for the autoplay toggle button.
-     * @default 'Play/Pause Carousel'
+     * Accessibility label for starting autoplay.
+     * @default 'Play Carousel'
      */
-    autoplayAccessibilityLabel?: string;
+    startAutoplayAccessibilityLabel?: string;
+    /**
+     * Accessibility label for stopping autoplay.
+     * @default 'Pause Carousel'
+     */
+    stopAutoplayAccessibilityLabel?: string;
     /**
      * Callback fired when the page changes.
      */
@@ -557,7 +563,8 @@ export const Carousel = memo(
         styles,
         nextPageAccessibilityLabel,
         previousPageAccessibilityLabel,
-        autoplayAccessibilityLabel,
+        startAutoplayAccessibilityLabel,
+        stopAutoplayAccessibilityLabel,
         paginationAccessibilityLabel,
         onChangePage,
         onDragStart,
@@ -1164,7 +1171,6 @@ export const Carousel = memo(
                   {!hideNavigation && (
                     <NavigationComponent
                       autoplay={autoplay}
-                      autoplayAccessibilityLabel={autoplayAccessibilityLabel}
                       disableGoNext={
                         totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
                       }
@@ -1175,6 +1181,8 @@ export const Carousel = memo(
                       onGoPrevious={handleGoPrevious}
                       onToggleAutoplay={autoplayControls.toggle}
                       previousPageAccessibilityLabel={previousPageAccessibilityLabel}
+                      startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
+                      stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
                       style={styles?.navigation}
                     />
                   )}

@@ -123,7 +123,8 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   autoplay,
   isAutoplayStopped,
   onToggleAutoplay,
-  autoplayAccessibilityLabel = 'Play/Pause Carousel',
+  startAutoplayAccessibilityLabel = 'Play Carousel',
+  stopAutoplayAccessibilityLabel = 'Pause Carousel',
   previousIcon = 'caretLeft',
   nextIcon = 'caretRight',
   startIcon = 'play',
@@ -146,7 +147,9 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
     >
       {autoplay && (
         <IconButton
-          accessibilityLabel={autoplayAccessibilityLabel}
+          accessibilityLabel={
+            isAutoplayStopped ? startAutoplayAccessibilityLabel : stopAutoplayAccessibilityLabel
+          }
           className={classNames?.autoplayButton}
           compact={compact}
           name={isAutoplayStopped ? startIcon : stopIcon}
