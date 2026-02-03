@@ -123,7 +123,9 @@ export const useCarouselAutoplay = ({
   const timer = useTimer();
   const [isStopped, setIsStopped] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const rafRef = useRef<number>(0);
+  // Stores the requestAnimationFrame ID so we can immediately cancel the animation on pause/stop/unmount
+  // This prevents the animation from continuing
+  const animationFrameIdRef = useRef<number>(0);
   const startTimeRef = useRef<number>(0);
   const pausedProgressRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
@@ -134,9 +136,9 @@ export const useCarouselAutoplay = ({
 
   const cancelProgressAnimation = useCallback(
     (resetProgress: boolean) => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = 0;
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+        animationFrameIdRef.current = 0;
       }
       if (resetProgress) {
         pausedProgressRef.current = 0;
@@ -147,11 +149,11 @@ export const useCarouselAutoplay = ({
   );
 
   const pauseProgressAnimation = useCallback(() => {
-    if (rafRef.current) {
+    if (animationFrameIdRef.current) {
       const elapsed = performance.now() - startTimeRef.current;
       pausedProgressRef.current = Math.min(elapsed / interval, 1);
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = 0;
+      cancelAnimationFrame(animationFrameIdRef.current);
+      animationFrameIdRef.current = 0;
     }
   }, [interval]);
 
@@ -169,11 +171,11 @@ export const useCarouselAutoplay = ({
         onProgressUpdate(progress);
 
         if (progress < 1) {
-          rafRef.current = requestAnimationFrame(updateProgress);
+          animationFrameIdRef.current = requestAnimationFrame(updateProgress);
         }
       };
 
-      rafRef.current = requestAnimationFrame(updateProgress);
+      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
     },
     [interval, onProgressUpdate],
   );
@@ -268,8 +270,8 @@ export const useCarouselAutoplay = ({
   useEffect(() => {
     return () => {
       timer.clear();
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
   }, [timer]);
