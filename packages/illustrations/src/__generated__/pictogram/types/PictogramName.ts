@@ -248,6 +248,7 @@ export type PictogramName =
   | 'commerceCheckout'
   | 'commerceInvoice'
   | 'commerceNavigation'
+  | 'commodities'
   | 'completeQuiz'
   | 'complianceNavigation'
   | 'congratulations'

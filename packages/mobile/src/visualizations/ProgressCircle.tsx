@@ -207,7 +207,7 @@ export const ProgressCircle = memo(
               accessibilityValue={{
                 min: 0,
                 max: 100,
-                now: progress * 100,
+                now: Math.round(progress * 100),
               }}
               alignItems="center"
               height={height}

@@ -19,7 +19,7 @@ export default {
   component: Tour,
 };
 
-const TourExample = <T extends string = string>({
+const TourExample = <TourStepId extends string = string>({
   stagger,
   spacerWidthIncrement = 0,
   spacerHeightIncrement = 500,
@@ -28,7 +28,7 @@ const TourExample = <T extends string = string>({
   stagger?: boolean;
   spacerWidthIncrement?: number;
   spacerHeightIncrement?: number;
-  ids: T[];
+  ids: TourStepId[];
 }) => {
   const { startTour } = useTourContext();
 

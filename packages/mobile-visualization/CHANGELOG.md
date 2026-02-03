@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.16 (1/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix every context rendering a second time in CDS Chart for performance. [[#339](https://github.com/avocado-cb/cds/pull/339)] [DEX2-874]
+
 ## 3.4.0-beta.15 (1/27/2026 PST)
 
 #### 🐞 Fixes

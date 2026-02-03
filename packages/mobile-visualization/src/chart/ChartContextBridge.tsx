@@ -6,6 +6,21 @@
 
 import * as React from 'react';
 import type ReactReconciler from 'react-reconciler';
+import { ThemeContext } from '@coinbase/cds-mobile/system/ThemeProvider';
+
+import { ScrubberContext } from './utils/context';
+import { CartesianChartContext } from './ChartProvider';
+
+/**
+ * Whitelist of contexts that should be bridged to the Skia canvas.
+ * Only these contexts will be made available inside the chart's Skia tree.
+ * This improves performance by avoiding the overhead of rendering every bridged context.
+ */
+const BRIDGED_CONTEXTS: React.Context<any>[] = [
+  ThemeContext,
+  CartesianChartContext,
+  ScrubberContext,
+];
 
 /**
  * Represents a react-internal tree node.
@@ -122,7 +137,7 @@ export type ContextMap = Map<React.Context<any>, any> & {
 };
 
 /**
- * Returns a map of all contexts and their values.
+ * Returns a map of whitelisted contexts and their values.
  */
 function useContextMap(): ContextMap {
   const treeNode = useTreeNode();
@@ -137,7 +152,12 @@ function useContextMap(): ContextMap {
       const enableRenderableContext =
         (node.type as any)._context === undefined && (node.type as any).Provider === node.type;
       const context = enableRenderableContext ? node.type : (node.type as any)._context;
-      if (context && context !== TreeNodeContext && !contextMap.has(context)) {
+      if (
+        context &&
+        context !== TreeNodeContext &&
+        BRIDGED_CONTEXTS.includes(context) &&
+        !contextMap.has(context)
+      ) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         contextMap.set(context, React.useContext(wrapContext(context)));
       }

@@ -28,11 +28,11 @@ const scrollContainerCss = css`
   scrollbar-width: none;
 `;
 
-const DefaultTabComponent = <T extends string = string>({
+const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
   ...tabProps
-}: TabbedChipProps<T>) => {
+}: TabbedChipProps<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const chipRef = useRef<HTMLButtonElement>(null);
@@ -70,22 +70,25 @@ const DefaultTabsActiveIndicatorComponent: TabsActiveIndicatorComponent = () => 
   return null;
 };
 
-export type TabbedChipProps<T extends string = string> = Omit<ChipProps, 'children' | 'onClick'> &
-  TabValue<T> & {
-    Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<T>>;
+export type TabbedChipProps<TabId extends string = string> = Omit<
+  ChipProps,
+  'children' | 'onClick'
+> &
+  TabValue<TabId> & {
+    Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<TabId>>;
   };
 
-export type TabbedChipsBaseProps<T extends string = string> = Omit<
-  TabsBaseProps<T>,
+export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
+  TabsBaseProps<TabId>,
   | 'TabComponent'
   | 'TabsActiveIndicatorComponent'
   | 'tabs'
   | 'onActiveTabElementChange'
   | 'activeBackground'
 > & {
-  TabComponent?: React.FC<TabbedChipProps<T>>;
-  TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
-  tabs: TabbedChipProps<T>[];
+  TabComponent?: React.FC<TabbedChipProps<TabId>>;
+  TabsActiveIndicatorComponent?: TabsProps<TabId>['TabsActiveIndicatorComponent'];
+  tabs: TabbedChipProps<TabId>[];
   /**
    * Turn on to use a compact Chip component for each tab.
    * @default false
@@ -98,7 +101,7 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
   autoScrollOffset?: number;
 };
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
+export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBaseProps<TabId> &
   SharedProps &
   SharedAccessibilityProps & {
     background?: ThemeVars.Color;
@@ -149,12 +152,12 @@ export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T
     };
   };
 
-type TabbedChipsFC = <T extends string = string>(
-  props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<HTMLElement> },
+type TabbedChipsFC = <TabId extends string = string>(
+  props: TabbedChipsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
 ) => React.ReactElement;
 
 const TabbedChipsComponent = memo(
-  forwardRef(function TabbedChips<T extends string = string>(
+  forwardRef(function TabbedChips<TabId extends string = string>(
     {
       tabs,
       activeTab,
@@ -173,7 +176,7 @@ const TabbedChipsComponent = memo(
       classNames,
       autoScrollOffset = 50,
       ...accessibilityProps
-    }: TabbedChipsProps<T>,
+    }: TabbedChipsProps<TabId>,
     ref: React.ForwardedRef<HTMLElement | null>,
   ) {
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
@@ -191,7 +194,7 @@ const TabbedChipsComponent = memo(
     }, [scrollRef]);
 
     const TabComponentWithCompact = useCallback(
-      (props: TabValue<T>) => {
+      (props: TabValue<TabId>) => {
         return <TabComponent compact={compact} {...props} />;
       },
       [TabComponent, compact],

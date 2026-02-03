@@ -8,6 +8,29 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.30.0 (1/29/2026 PST)
+
+##### ⭐️ Added (4)
+
+###### Pictogram (1)
+
+- commodities
+
+###### HeroSquare (2)
+
+- test
+- borrowCoinsBtc
+
+###### SpotSquare (1)
+
+- goldSilverFutures
+
+##### ⭐️ Updated (1)
+
+###### SpotSquare (1)
+
+- cryptoEconomyArrows
+
 ## 4.29.0 (12/5/2025 PST)
 
 #### 🚀 Updates
