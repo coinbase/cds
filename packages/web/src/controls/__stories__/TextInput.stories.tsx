@@ -253,14 +253,12 @@ export const CustomLabel = function CustomLabel() {
         accessibilityLabel="Display name"
         id="display-name-tooltip"
         labelNode={
-          <InputLabel htmlFor="display-name-tooltip">
-            <HStack alignItems="center" gap={1}>
-              Display name
-              <Tooltip content="This will be visible to other users.">
-                <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-              </Tooltip>
-            </HStack>
-          </InputLabel>
+          <HStack alignItems="center">
+            <InputLabel htmlFor="display-name-tooltip">Display name</InputLabel>
+            <Tooltip content="This will be visible to other users.">
+              <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+            </Tooltip>
+          </HStack>
         }
         placeholder="Satoshi Nakamoto"
       />

@@ -271,7 +271,7 @@ function Example() {
 
 ### Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
 ```jsx
 function Example() {
@@ -285,10 +285,11 @@ function Example() {
       error={error}
       invalidDateError="Please enter a valid date"
       labelNode={
-        <HStack alignItems="center" gap={1}>
+        <HStack alignItems="center">
           <InputLabel>Birthdate</InputLabel>
+          {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
           <Tooltip content="This will be visible to other users.">
-            <Icon color="fgMuted" name="info" size="xs" />
+            <Icon active color="fg" name="info" padding={0.75} size="xs" />
           </Tooltip>
         </HStack>
       }
