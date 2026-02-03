@@ -53,24 +53,14 @@ const getSharedCode = () => {
 
 const defaultCodeExample = `// Create your own example components and hooks, then call render() to render them
 
-type CounterProps = {
-  label: string;
-};
-
-const Counter = ({ label }: CounterProps) => {
-  const [count, setCount] = useState<number>(0);
+const Example = () => {
   return (
-    <VStack background="bgAlternate" borderRadius={200} padding={2}>
-      <Text font="title1" paddingBottom={1.5}>
-        {label}: {count}
-      </Text>
-      <Button onClick={() => setCount((c) => ++c)}>Increment</Button>
-    </VStack>
+    <Text>Place your example code here</Text>
   );
 };
 
 // You must call render() to render your code
-render(<Counter label="My cool counter" />);
+render(<Example />);
 `;
 
 const prettierOptions = {
