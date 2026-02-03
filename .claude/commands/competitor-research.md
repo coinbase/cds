@@ -15,17 +15,18 @@ Use the AskUserQuestion tool if you need to clarify anything about the research 
 
 ## Research Coordination
 
-Invoke one `design-system-researcher` sub-agenet for each of the following design systems:
+Invoke one `design-system-researcher` sub-agent for each of the following design systems:
 
 - Material UI
 - Base UI
 - Radix UI
 - Mantine
 - Ant Design
+- React Aria
 
 ALWAYS use parallel execution to maximize efficiency.
 
-Each sub-agent will produce a report, likely in `.claude/research/`, and communicate this to you when it is finished with its research.
+Each sub-agent will produce a report in a subdirectory of `.claude/research/` named after the research goal (e.g., `.claude/research/theming-architecture/`). The sub-agent will communicate the full file path to you when it is finished with its research.
 
 ## Synthesis and Analysis
 

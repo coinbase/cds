@@ -1172,7 +1172,7 @@ function CustomClassNamesExamples() {
 
 ## Custom Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can pass a React Node to the `label` prop.
+You can pass a ReactNode to `label` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
 ```jsx live
 function CustomLabelExample() {
@@ -1187,10 +1187,11 @@ function CustomLabelExample() {
   return (
     <Select
       label={
-        <HStack alignItems="center" gap={1}>
-          Custom Label
+        <HStack alignItems="center">
+          <InputLabel>Custom Label</InputLabel>
+          {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
           <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+            <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
           </Tooltip>
         </HStack>
       }
