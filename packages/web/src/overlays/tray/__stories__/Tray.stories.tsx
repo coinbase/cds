@@ -5,6 +5,7 @@ import { Button } from '../../../buttons/Button';
 import { ListCell } from '../../../cells/ListCell';
 import { useBreakpoints } from '../../../hooks/useBreakpoints';
 import { Pictogram } from '../../../illustrations/Pictogram';
+import { Box } from '../../../layout/Box';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { PageFooter } from '../../../page/PageFooter';
@@ -420,6 +421,11 @@ export const Responsive = () => {
         </Button>
         {showFullBleedImageListCells && (
           <Tray
+            header={
+              <Box paddingBottom={0.75} paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+                <Text font="title3">Header</Text>
+              </Box>
+            }
             hideCloseButton={isPhone}
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
             pin={isPhone ? 'bottom' : 'right'}
@@ -435,9 +441,6 @@ export const Responsive = () => {
               content: { paddingBottom: 'var(--space-3)' },
             }}
           >
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Header
-            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
@@ -676,6 +679,11 @@ export const HandleBar = () => {
         </Button>
         {showFullBleedImageListCells && (
           <Tray
+            header={
+              <Box paddingBottom={0.75} paddingTop={2} paddingX={3}>
+                <Text font="title3">Header</Text>
+              </Box>
+            }
             hideCloseButton
             showHandleBar
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
@@ -691,9 +699,6 @@ export const HandleBar = () => {
               content: { paddingBottom: 'var(--space-3)' },
             }}
           >
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Header
-            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
@@ -902,6 +907,11 @@ export const PinRight = () => {
         </Button>
         {showFullBleedImageListCells && (
           <Tray
+            header={
+              <Box paddingBottom={0.75} paddingTop={2} paddingX={4}>
+                <Text font="title3">Header</Text>
+              </Box>
+            }
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
             pin="right"
             styles={{
@@ -915,9 +925,6 @@ export const PinRight = () => {
               content: { paddingBottom: 'var(--space-3)' },
             }}
           >
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Header
-            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}

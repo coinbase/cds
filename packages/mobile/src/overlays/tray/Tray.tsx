@@ -11,6 +11,7 @@ import React, {
 import { useWindowDimensions } from 'react-native';
 import type { ReactNode } from 'react';
 import type { LayoutChangeEvent, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { ElevationLevels } from '@coinbase/cds-common';
 import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
 import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@coinbase/cds-common/tokens/drawer';
 
@@ -30,6 +31,11 @@ export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
   children?: React.ReactNode | TrayRenderChildren;
   /** Component to render as the Tray header */
   header?: React.ReactNode | TrayRenderChildren;
+  /**
+   * Elevation level for the header area (includes title and header content).
+   * Use this to add a drop shadow below the header when content is scrolled.
+   */
+  headerElevation?: ElevationLevels;
   /** Component to render as the Tray footer */
   footer?: React.ReactNode | TrayRenderChildren;
   /**
@@ -66,6 +72,7 @@ export const Tray = memo(
       children,
       title,
       header,
+      headerElevation,
       footer,
       onVisibilityChange,
       handleBarVariant = 'outside',
@@ -110,25 +117,28 @@ export const Tray = memo(
             paddingTop={title ? 0 : 2}
             style={contentStyle}
           >
-            {title && (
-              <Box
-                justifyContent="center"
-                onLayout={onTitleLayout}
-                paddingBottom={isInsideHandleBar ? 0.75 : 2}
-                paddingTop={isInsideHandleBar ? 0 : 3}
-                paddingX={3}
-                style={headerStyle}
-              >
-                {typeof title === 'string' ? (
-                  <Text font="title3" style={titleStyle}>
-                    {title}
-                  </Text>
-                ) : (
-                  title
+            {(title || headerContent) && (
+              <Box elevation={headerElevation} style={headerStyle}>
+                {title && (
+                  <Box
+                    justifyContent="center"
+                    onLayout={onTitleLayout}
+                    paddingBottom={isInsideHandleBar ? 0.75 : 2}
+                    paddingTop={isInsideHandleBar ? 0 : 3}
+                    paddingX={3}
+                  >
+                    {typeof title === 'string' ? (
+                      <Text font="title3" style={titleStyle}>
+                        {title}
+                      </Text>
+                    ) : (
+                      title
+                    )}
+                  </Box>
                 )}
+                {headerContent}
               </Box>
             )}
-            {headerContent}
             <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
               {content}
             </Box>
@@ -141,6 +151,7 @@ export const Tray = memo(
         contentStyle,
         onTitleLayout,
         isInsideHandleBar,
+        headerElevation,
         headerStyle,
         titleStyle,
         header,

@@ -164,7 +164,7 @@ function IllustrationSectionHeaderTray() {
 
 #### With Full Bleed Header
 
-For trays with a full-width image header, position the handle bar absolutely over the image.
+For trays with a full-width image header, position the handle bar absolutely over the image. Use the `header` prop to add a section header that stays fixed below the image while content scrolls.
 
 ```tsx
 function FullBleedHeaderTray() {
@@ -179,6 +179,11 @@ function FullBleedHeaderTray() {
         <Tray
           accessibilityLabel="Section header"
           handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Section header
+            </Text>
+          }
           onCloseComplete={setIsTrayVisibleOff}
           styles={{
             handleBar: {
@@ -206,14 +211,93 @@ function FullBleedHeaderTray() {
           }
         >
           <VStack paddingX={3}>
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Section header
-            </Text>
             <Text color="fgMuted" font="body" paddingBottom={2}>
               Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
               interdum lorem id, viverra.
             </Text>
           </VStack>
+        </Tray>
+      )}
+    </>
+  );
+}
+```
+
+##### With Scrollable List Cells
+
+When using a full bleed header with scrollable content, use `headerElevation` to add a drop shadow below the header when the user scrolls. This provides visual separation similar to `StickyFooter`.
+
+```tsx
+function FullBleedHeaderScrollableTray() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollY = e.nativeEvent.contentOffset.y;
+    setIsScrolled(scrollY > 0);
+  }, []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Full Bleed Scrollable Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          accessibilityLabel="Section header"
+          footer={({ handleClose }) => (
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
+              <Button block onPress={handleClose}>
+                Close
+              </Button>
+            </StickyFooter>
+          )}
+          handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Section header
+            </Text>
+          }
+          headerElevation={isScrolled ? 2 : 0}
+          onCloseComplete={setIsTrayVisibleOff}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            header: {
+              paddingHorizontal: 0,
+              paddingBottom: 0,
+            },
+          }}
+          title={
+            <Box background="bgAlternate" height={180} marginX={-3}>
+              <Image
+                resizeMode="cover"
+                source={{
+                  uri: 'https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png',
+                }}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Box>
+          }
+          verticalDrawerPercentageOfView={0.9}
+        >
+          <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                onPress={() => alert('Cell clicked!')}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </ScrollView>
         </Tray>
       )}
     </>

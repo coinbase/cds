@@ -7,7 +7,6 @@ import { ListCell } from '../../cells/ListCell';
 import { Menu, SelectOption } from '../../controls';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
-import { useTheme } from '../../hooks/useTheme';
 import { Box, VStack } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { Text } from '../../typography/Text';
@@ -130,6 +129,11 @@ const MyTrayWithListCells = () => {
         <Tray
           ref={trayRef}
           handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Header
+            </Text>
+          }
           onCloseComplete={setIsTrayVisibleOff}
           onVisibilityChange={handleTrayVisibilityChange}
           styles={{
@@ -160,9 +164,6 @@ const MyTrayWithListCells = () => {
           verticalDrawerPercentageOfView={0.9}
         >
           <ScrollView contentContainerStyle={scrollContentStyle}>
-            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
-              Header
-            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
@@ -247,8 +248,6 @@ const MyTrayWithStickyFooter = () => {
 };
 
 const MyTrayWithListCellsStickyFooter = () => {
-  const theme = useTheme();
-  const safeBottomPadding = useSafeBottomPadding();
   const [isTrayVisible, setIsTrayVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
@@ -264,16 +263,6 @@ const MyTrayWithListCellsStickyFooter = () => {
     setIsScrolled(scrollY > 0);
   }, []);
 
-  const headerStyles = useMemo(
-    () => ({
-      paddingHorizontal: 0,
-      paddingBottom: 0,
-      borderBottomWidth: isScrolled ? 1 : 0,
-      borderBottomColor: theme.color.bgLine,
-    }),
-    [theme, isScrolled],
-  );
-
   return (
     <>
       <Button onPress={setIsTrayVisibleOn}>Open</Button>
@@ -288,6 +277,12 @@ const MyTrayWithListCellsStickyFooter = () => {
             </StickyFooter>
           )}
           handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Header
+            </Text>
+          }
+          headerElevation={isScrolled ? 2 : 0}
           onCloseComplete={setIsTrayVisibleOff}
           onVisibilityChange={handleTrayVisibilityChange}
           styles={{
@@ -298,7 +293,10 @@ const MyTrayWithListCellsStickyFooter = () => {
               right: 0,
               zIndex: 1,
             },
-            header: headerStyles,
+            header: {
+              paddingHorizontal: 0,
+              paddingBottom: 0,
+            },
           }}
           title={
             <Box background="bgAlternate" height={180} marginX={-3}>
@@ -314,9 +312,6 @@ const MyTrayWithListCellsStickyFooter = () => {
           verticalDrawerPercentageOfView={0.9}
         >
           <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
-              Header
-            </Text>
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
                 key={i}
