@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-01-29T21:21:37.181Z",
+  "lastUpdated": "2026-02-03T21:28:59.761Z",
   "colors": {
     "light": [
       {
@@ -8,10 +8,7 @@
         "name": "gray-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DC"
-        },
+        "paint": { "type": "solid", "value": "#CED2DC" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
       },
@@ -20,10 +17,7 @@
         "name": "accent-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
+        "paint": { "type": "solid", "value": "#5DE2F8" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -32,10 +26,7 @@
         "name": "invert",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0E"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0E" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -44,10 +35,7 @@
         "name": "gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DB"
-        },
+        "paint": { "type": "solid", "value": "#CED2DB" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -56,10 +44,7 @@
         "name": "white",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -68,10 +53,7 @@
         "name": "invert-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFE" },
         "cssVarSetter": "--illustration-invert-2",
         "cssVarGetter": "var(--illustration-invert-2)"
       },
@@ -80,10 +62,7 @@
         "name": "base-gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B1B7C3"
-        },
+        "paint": { "type": "solid", "value": "#B1B7C3" },
         "cssVarSetter": "--illustration-base-gray",
         "cssVarGetter": "var(--illustration-base-gray)"
       },
@@ -92,10 +71,7 @@
         "name": "positive",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#3CC28A"
-        },
+        "paint": { "type": "solid", "value": "#3CC28A" },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
       },
@@ -104,10 +80,7 @@
         "name": "negative",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
+        "paint": { "type": "solid", "value": "#E13947" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -116,10 +89,7 @@
         "name": "accent-4",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#73A2FF"
-        },
+        "paint": { "type": "solid", "value": "#73A2FF" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -128,10 +98,7 @@
         "name": "accent-1",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFD200"
-        },
+        "paint": { "type": "solid", "value": "#FFD200" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
       },
@@ -140,10 +107,7 @@
         "name": "primary",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FF"
-        },
+        "paint": { "type": "solid", "value": "#0052FF" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       },
@@ -152,10 +116,7 @@
         "name": "accent-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ED702F"
-        },
+        "paint": { "type": "solid", "value": "#ED702F" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -164,10 +125,7 @@
         "name": "black",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -176,10 +134,7 @@
         "name": "gray-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0F"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0F" },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
       }
@@ -190,10 +145,7 @@
         "name": "gray-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
       },
@@ -202,10 +154,7 @@
         "name": "accent-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
+        "paint": { "type": "solid", "value": "#45D9F5" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -214,10 +163,7 @@
         "name": "invert",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -226,10 +172,7 @@
         "name": "gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -238,10 +181,7 @@
         "name": "white",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -250,10 +190,7 @@
         "name": "invert-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-invert-2",
         "cssVarGetter": "var(--illustration-invert-2)"
       },
@@ -262,10 +199,7 @@
         "name": "base-gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#727886"
-        },
+        "paint": { "type": "solid", "value": "#727886" },
         "cssVarSetter": "--illustration-base-gray",
         "cssVarGetter": "var(--illustration-base-gray)"
       },
@@ -274,10 +208,7 @@
         "name": "positive",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#44C28D"
-        },
+        "paint": { "type": "solid", "value": "#44C28D" },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
       },
@@ -286,10 +217,7 @@
         "name": "negative",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
+        "paint": { "type": "solid", "value": "#F0616D" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -298,10 +226,7 @@
         "name": "accent-4",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#84AAFD"
-        },
+        "paint": { "type": "solid", "value": "#84AAFD" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -310,10 +235,7 @@
         "name": "accent-1",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ECD069"
-        },
+        "paint": { "type": "solid", "value": "#ECD069" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
       },
@@ -322,10 +244,7 @@
         "name": "primary",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#578BFA"
-        },
+        "paint": { "type": "solid", "value": "#578BFA" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       },
@@ -334,10 +253,7 @@
         "name": "accent-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F07836"
-        },
+        "paint": { "type": "solid", "value": "#F07836" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -346,10 +262,7 @@
         "name": "black",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -358,10 +271,7 @@
         "name": "gray-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
       }
@@ -25431,22 +25341,22 @@
     "18659:332": {
       "type": "pictogram",
       "name": "baseCheckSmall",
-      "hash": "2cbCTxABh2HV0sqwablxHqO0FUb+Mm2pAR2Qv/0Jj8g=",
+      "hash": "1eBcdpSkIXZ1HODJdg7lZ3rx3YFXiAwY3/udaN+ccNM=",
       "width": 48,
       "height": 48,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.306Z",
-      "lastUpdated": "2025-07-03T14:26:31.306Z",
+      "lastUpdated": "2026-01-31T00:40:08.679Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/baseCheckSmall-0.svg",
-        "svgDark": "./pictogram/svg/dark/baseCheckSmall-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/baseCheckSmall-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/baseCheckSmall-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/baseCheckSmall-0.js",
-        "pngLight": "./pictogram/png/light/baseCheckSmall-0.png",
-        "pngDark": "./pictogram/png/dark/baseCheckSmall-0.png"
+        "svgLight": "./pictogram/svg/light/baseCheckSmall-1.svg",
+        "svgDark": "./pictogram/svg/dark/baseCheckSmall-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseCheckSmall-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseCheckSmall-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseCheckSmall-1.js",
+        "pngLight": "./pictogram/png/light/baseCheckSmall-1.png",
+        "pngDark": "./pictogram/png/dark/baseCheckSmall-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "18659:338": {
       "type": "pictogram",
@@ -29125,6 +29035,26 @@
         "svgJsDark": "./pictogram/svgJs/dark/commodities-0.js",
         "pngLight": "./pictogram/png/light/commodities-0.png",
         "pngDark": "./pictogram/png/dark/commodities-0.png"
+      },
+      "version": 0
+    },
+    "27602:11": {
+      "type": "pictogram",
+      "name": "arrowsUpDown",
+      "hash": "bO8qkgHq9vpn8vOOS7a6w9eVoHPN3lb2VvbYql9NaYk=",
+      "width": 40,
+      "height": 40,
+      "description": "pictogram, leverage, invest, prime, advanced, derive, arrow, triangles",
+      "createdAt": "2026-02-03T20:41:52.497Z",
+      "lastUpdated": "2026-02-03T21:27:09.620Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/arrowsUpDown-0.svg",
+        "svgDark": "./pictogram/svg/dark/arrowsUpDown-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/arrowsUpDown-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/arrowsUpDown-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/arrowsUpDown-0.js",
+        "pngLight": "./pictogram/png/light/arrowsUpDown-0.png",
+        "pngDark": "./pictogram/png/dark/arrowsUpDown-0.png"
       },
       "version": 0
     }
