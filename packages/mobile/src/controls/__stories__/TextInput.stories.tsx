@@ -473,10 +473,10 @@ const InputScreen = () => {
         <MockTextInput
           accessibilityLabel="Display name"
           labelNode={
-            <HStack alignItems="center" gap={1}>
+            <HStack alignItems="center">
               <InputLabel>Display name</InputLabel>
               <Tooltip content="This will be visible to other users.">
-                <Icon active color="fg" name="info" size="xs" />
+                <Icon active color="fg" name="info" padding={0.75} size="xs" />
               </Tooltip>
             </HStack>
           }
