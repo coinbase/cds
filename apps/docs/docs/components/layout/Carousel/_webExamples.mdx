@@ -802,6 +802,24 @@ While not recommended, if your carousel has disabled drag, you can use `isVisibl
 
 You should note use `hideNavigation` and `autoplay` together, unless you provide an alternative pause mechanism. See [this example](#custom-autoplay-controls) with custom autoplay controls as an example.
 
+### Accessibility Labels
+
+The Carousel provides several props to customize accessibility labels for screen reader users
+
+```jsx
+<Carousel
+  nextPageAccessibilityLabel="Go to next slide"
+  previousPageAccessibilityLabel="Go to previous slide"
+  paginationAccessibilityLabel={(pageIndex) => `Go to page ${pageIndex + 1}`}
+  autoplayAccessibilityLabel="Play/pause carousel"
+  pageChangeAccessibilityLabel={(activePageIndex, totalPages) =>
+    `Showing page ${activePageIndex + 1} of ${totalPages}`
+  }
+>
+  ...
+</Carousel>
+```
+
 ## Customization
 
 ### Custom Components

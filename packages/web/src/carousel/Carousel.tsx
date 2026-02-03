@@ -49,6 +49,18 @@ const defaultCarouselCss = css`
   }
 `;
 
+const screenReaderOnlyCss = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+`;
+
 const animationConfig: Transition = {
   type: 'spring',
   stiffness: 900,
@@ -252,7 +264,7 @@ export type CarouselBaseProps = SharedProps &
      * Accessibility label for the go to page button.
      * When a string is provided, it is used as-is for all indicators.
      * When a function is provided, it receives the page index and returns a label.
-     * @default (pageIndex) => `Go to page ${pageIndex + 1}`
+     * @default `Go to page X`
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**
@@ -260,6 +272,12 @@ export type CarouselBaseProps = SharedProps &
      * @default 'Play/Pause Carousel'
      */
     autoplayAccessibilityLabel?: string;
+    /**
+     * Accessibility label announced by screen readers when the page changes.
+     * Receives the current page index (0-based) and total pages.
+     * @default `Page X of Y`
+     */
+    pageChangeAccessibilityLabel?: (activePageIndex: number, totalPages: number) => string;
     /**
      * Callback fired when the carousel page changes.
      */
@@ -712,6 +730,9 @@ const findPageIndexForItem = (itemRect: Rect, pageOffsets: number[]): number => 
   return 0;
 };
 
+const defaultPageChangeAccessibilityLabel = (activePageIndex: number, totalPages: number) =>
+  `Page ${activePageIndex + 1} of ${totalPages}`;
+
 export const Carousel = memo(
   forwardRef<CarouselImperativeHandle, CarouselProps>(
     (
@@ -732,6 +753,7 @@ export const Carousel = memo(
         previousPageAccessibilityLabel,
         paginationAccessibilityLabel,
         autoplayAccessibilityLabel,
+        pageChangeAccessibilityLabel = defaultPageChangeAccessibilityLabel,
         onChangePage,
         onDragStart,
         onDragEnd,
@@ -1363,11 +1385,19 @@ export const Carousel = memo(
                   }}
                 >
                   <CarouselContext.Provider value={carouselContextValue}>
+                    {totalPages > 0 && (
+                      <div
+                        aria-atomic="true"
+                        aria-live={autoplayControls.isPlaying ? 'off' : 'polite'}
+                        className={screenReaderOnlyCss}
+                        role="status"
+                      >
+                        {pageChangeAccessibilityLabel(activePageIndex, totalPages)}
+                      </div>
+                    )}
                     <m.div
                       _dragX={carouselScrollX}
                       animate={animationApi}
-                      aria-atomic="true"
-                      aria-live={autoplayControls.isPlaying ? 'off' : 'polite'}
                       className={cx(classNames?.carousel, defaultCarouselCss)}
                       drag={isDragEnabled ? 'x' : false}
                       dragConstraints={
