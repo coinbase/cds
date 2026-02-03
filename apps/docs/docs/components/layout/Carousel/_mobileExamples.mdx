@@ -11,18 +11,40 @@ You can also set the `styles` prop to control the styles of the carousel, such a
 ```jsx
 function MyCarousel() {
   const theme = useTheme();
+
+  function SquareAssetCard({ imageUrl, name, onPress }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height={32} source={imageUrl} width={32} />}
+        onPress={onPress}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+
   return (
     <Carousel
-      hidePagination
+      loop
+      paginationVariant="dot"
       title="Explore Assets"
       styles={{
-        root: { paddingInline: theme.space[2] },
+        root: { paddingHorizontal: theme.space[2] },
         carousel: { gap: theme.space[1] },
       }}
     >
-      {Object.values(assets).map((asset, index) => (
-        <CarouselItem key={asset.symbol} id={asset.symbol}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -68,10 +90,10 @@ function DynamicSizingCarousel() {
 
   return (
     <Carousel
-      hidePagination
+      paginationVariant="dot"
       title="Learn more"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
     >
@@ -84,8 +106,8 @@ function DynamicSizingCarousel() {
               <Pictogram dimension="64x64" name="recurringPurchases" />
             </Box>
           }
-          minWidth="0"
-          onActionPress={NoopFn}
+          minWidth={0}
+          onActionPress={() => console.log('Get started pressed')}
           title="Recurring Buy"
           width="100%"
         />
@@ -95,7 +117,7 @@ function DynamicSizingCarousel() {
           action="Start earning"
           dangerouslySetBackground="rgb(var(--purple70))"
           description={
-            <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
+            <Text font="label2" numberOfLines={3} color="fgInverse">
               Earn staking rewards on ETH by holding it on Coinbase
             </Text>
           }
@@ -104,10 +126,10 @@ function DynamicSizingCarousel() {
               <RemoteImage height={174} source="/img/feature.png" />
             </Box>
           }
-          minWidth="0"
-          onActionPress={NoopFn}
+          minWidth={0}
+          onActionPress={() => console.log('Start earning pressed')}
           title={
-            <Text color="fgInverse" as="h3" font="headline">
+            <Text color="fgInverse" font="headline">
               Up to 3.29% APR on ETHs
             </Text>
           }
@@ -149,10 +171,10 @@ function ResponsiveSizingCarousel() {
 
   return (
     <Carousel
-      hidePagination
+      paginationVariant="dot"
       title="Learn more"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
       drag="free"
@@ -224,10 +246,10 @@ function VariedSizingCarousel() {
 
   return (
     <Carousel
-      hidePagination
+      paginationVariant="dot"
       title="Varied Sizing"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
     >
@@ -242,8 +264,12 @@ function VariedSizingCarousel() {
           minWidth={0}
         />
       </CarouselItem>
-      <CarouselItem id="btc">
-        <SquareAssetCard imageUrl={assets.btc.imageUrl} name="BTC" />
+      <CarouselItem id="btc" accessibilityLabel="Bitcoin">
+        <SquareAssetCard
+          imageUrl={assets.btc.imageUrl}
+          name="BTC"
+          onPress={() => console.log('BTC clicked')}
+        />
       </CarouselItem>
       <CarouselItem id="secure-your-account" width={itemWidth}>
         <NudgeCard
@@ -256,8 +282,12 @@ function VariedSizingCarousel() {
           minWidth={0}
         />
       </CarouselItem>
-      <CarouselItem id="eth">
-        <SquareAssetCard imageUrl={assets.eth.imageUrl} name="ETH" />
+      <CarouselItem id="eth" accessibilityLabel="Ethereum">
+        <SquareAssetCard
+          imageUrl={assets.eth.imageUrl}
+          name="ETH"
+          onPress={() => console.log('ETH clicked')}
+        />
       </CarouselItem>
       <CarouselItem id="complete-your-profile" width={itemWidth}>
         <NudgeCard
@@ -270,8 +300,12 @@ function VariedSizingCarousel() {
           minWidth={0}
         />
       </CarouselItem>
-      <CarouselItem id="ltc">
-        <SquareAssetCard imageUrl={assets.ltc.imageUrl} name="LTC" />
+      <CarouselItem id="ltc" accessibilityLabel="Litecoin">
+        <SquareAssetCard
+          imageUrl={assets.ltc.imageUrl}
+          name="LTC"
+          onPress={() => console.log('LTC clicked')}
+        />
       </CarouselItem>
     </Carousel>
   );
@@ -285,20 +319,28 @@ When set to `snap`, upon release the carousel will snap to either the nearest it
 
 ```jsx
 function DragCarousel() {
+  const theme = useTheme();
+  const horizontalPadding = theme.space[2];
+  const horizontalGap = theme.space[1];
+
   return (
     <Carousel
       title="Explore Assets"
-      hidePagination
+      paginationVariant="dot"
       drag="free"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
       snapMode="item"
     >
-      {Object.values(assets).map((asset, index) => (
-        <CarouselItem key={asset.symbol} id={asset.symbol}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -314,19 +356,27 @@ When set to `item`, the carousel will snap to the nearest item.
 
 ```jsx
 function SquareItemsCarousel() {
+  const theme = useTheme();
+  const horizontalPadding = theme.space[2];
+  const horizontalGap = theme.space[1];
+
   return (
     <Carousel
       title="Explore Assets"
       paginationVariant="dot"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
       snapMode="item"
     >
-      {Object.values(assets).map((asset, index) => (
-        <CarouselItem key={asset.symbol} id={asset.symbol}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -351,19 +401,27 @@ If you want to have the next item be shown at the edge of the screen, make sure 
 
 ```jsx
 function OverflowCarousel() {
+  const theme = useTheme();
+  const horizontalPadding = theme.space[2];
+  const horizontalGap = theme.space[1];
+
   return (
     <Carousel
       title="Explore Assets"
       paginationVariant="dot"
       snapMode="item"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
     >
-      {Object.values(assets).map((asset, index) => (
-        <CarouselItem key={asset.symbol} id={asset.symbol}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -396,7 +454,11 @@ function AutoplayCarousel() {
     >
       {Object.values(assets).map((asset) => (
         <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -424,7 +486,11 @@ function CustomIntervalCarousel() {
     >
       {Object.values(assets).map((asset) => (
         <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -444,8 +510,10 @@ function LoopingCarousel() {
 
   return (
     <Carousel
+      autoplay
       loop
       paginationVariant="dot"
+      snapMode="item"
       title="Infinite Scroll"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -454,7 +522,11 @@ function LoopingCarousel() {
     >
       {Object.values(assets).map((asset) => (
         <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -973,6 +1045,9 @@ You can dynamically add and remove items from the carousel.
 
 ```jsx
 function DynamicContentCarousel() {
+  const theme = useTheme();
+  const horizontalPadding = theme.space[2];
+  const horizontalGap = theme.space[1];
   const [items, setItems] = useState(Object.values(assets).slice(0, 3));
 
   function addAsset() {
@@ -995,13 +1070,17 @@ function DynamicContentCarousel() {
         title="Explore Assets"
         paginationVariant="dot"
         styles={{
-          root: { paddingInline: horizontalPadding },
+          root: { paddingHorizontal: horizontalPadding },
           carousel: { gap: horizontalGap, height: 156 },
         }}
       >
-        {items.map((asset, index) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        {items.map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard
+              imageUrl={asset.imageUrl}
+              name={asset.symbol}
+              onPress={() => console.log(`${asset.symbol} clicked`)}
+            />
           </CarouselItem>
         ))}
       </Carousel>
@@ -1012,10 +1091,16 @@ function DynamicContentCarousel() {
 
 ### Hide Navigation and Pagination
 
-You can hide the navigation and pagination components of the carousel if desired.
+You can hide the navigation and pagination components of the carousel if desired (using `hideNavigation` and `hidePagination` props).
+
+Note that this can prevent proper accessibility for the carousel, if carousel items are not focusable. If hiding pagination, it's recommended to ensure that the carousel is navigable by other means.
 
 ```jsx
 function HideNavigationAndPaginationCarousel() {
+  const theme = useTheme();
+  const horizontalPadding = theme.space[2];
+  const horizontalGap = theme.space[1];
+
   return (
     <Carousel
       title="Explore Assets"
@@ -1024,13 +1109,17 @@ function HideNavigationAndPaginationCarousel() {
       drag="free"
       snapMode="item"
       styles={{
-        root: { paddingInline: horizontalPadding },
+        root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
       }}
     >
-      {Object.values(assets).map((asset, index) => (
-        <CarouselItem key={asset.symbol} id={asset.symbol}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
@@ -1140,7 +1229,11 @@ function ImperativeApiCarousel() {
       >
         {Object.values(assets).map((asset) => (
           <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            <SquareAssetCard
+              imageUrl={asset.imageUrl}
+              name={asset.symbol}
+              onPress={() => console.log(`${asset.symbol} clicked`)}
+            />
           </CarouselItem>
         ))}
       </Carousel>
@@ -1216,9 +1309,13 @@ function AnimatedPaginationCarousel() {
       }}
       title="Explore Assets"
     >
-      {Object.values(assets).map((asset, index) => (
+      {Object.values(assets).map((asset) => (
         <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <SquareAssetCard
+            imageUrl={asset.imageUrl}
+            name={asset.symbol}
+            onPress={() => console.log(`${asset.symbol} clicked`)}
+          />
         </CarouselItem>
       ))}
     </Carousel>
