@@ -25,8 +25,9 @@ export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps & 
   };
 };
 
-const DOT_WIDTH = 24;
-const DOT_HEIGHT = 4;
+const INDICATOR_ACTIVE_WIDTH = 24;
+const INDICATOR_INACTIVE_WIDTH = 4;
+const INDICATOR_HEIGHT = 4;
 
 type PaginationIndicatorProps = {
   index: number;
@@ -49,11 +50,11 @@ const PaginationPill = memo(function PaginationPill({
       background={isActive ? 'bgPrimary' : 'bgLine'}
       borderColor="transparent"
       borderRadius={100}
-      height={DOT_HEIGHT}
+      height={INDICATOR_HEIGHT}
       onPress={onPress}
       style={style}
       testID={`carousel-page-${index}`}
-      width={DOT_WIDTH}
+      width={INDICATOR_ACTIVE_WIDTH}
     />
   );
 });
@@ -71,12 +72,14 @@ const PaginationDot = memo(function PaginationDot({
   const showProgress = isActive && autoplayContext.isEnabled;
 
   const springProps = useSpring({
-    width: isActive ? DOT_WIDTH : DOT_HEIGHT,
+    width: isActive ? INDICATOR_ACTIVE_WIDTH : INDICATOR_INACTIVE_WIDTH,
     backgroundColor: isActive && !showProgress ? theme.color.bgPrimary : theme.color.bgLine,
     config: { tension: 300, friction: 25 },
   });
 
-  const progressWidth = autoplayContext.progress.to((value: number) => value * DOT_WIDTH);
+  const progressWidth = autoplayContext.progress.to(
+    (value: number) => value * INDICATOR_ACTIVE_WIDTH,
+  );
 
   return (
     <Pressable
@@ -92,7 +95,7 @@ const PaginationDot = memo(function PaginationDot({
       <animated.View
         style={{
           width: springProps.width,
-          height: DOT_HEIGHT,
+          height: INDICATOR_HEIGHT,
           backgroundColor: springProps.backgroundColor,
           borderRadius: theme.borderRadius[100],
           overflow: 'hidden',
@@ -168,9 +171,9 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
           background="bgLine"
           borderColor="transparent"
           borderRadius={100}
-          height={DOT_HEIGHT}
+          height={INDICATOR_HEIGHT}
           style={[{ opacity: 0 }, styles?.dot]}
-          width={isDot ? DOT_HEIGHT : DOT_WIDTH}
+          width={isDot ? INDICATOR_INACTIVE_WIDTH : INDICATOR_ACTIVE_WIDTH}
         />
       )}
     </HStack>
