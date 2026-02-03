@@ -242,6 +242,9 @@ export type CarouselBaseProps = SharedProps &
     previousPageAccessibilityLabel?: string;
     /**
      * Accessibility label for the go to page button.
+     * When a string is provided, it is used as-is for all indicators.
+     * When a function is provided, it receives the page index and returns a label.
+     * @default (pageIndex) => `Go to page ${pageIndex + 1}`
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**

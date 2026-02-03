@@ -132,11 +132,13 @@ const PaginationDot = memo(function PaginationDot({
   );
 });
 
+const defaultPaginationAccessibilityLabel = (pageIndex: number) => `Go to page ${pageIndex + 1}`;
+
 export const DefaultCarouselPagination = memo(function DefaultCarouselPagination({
   totalPages,
   activePageIndex,
   onClickPage,
-  paginationAccessibilityLabel = 'Go to page',
+  paginationAccessibilityLabel = defaultPaginationAccessibilityLabel,
   className,
   classNames,
   style,
@@ -150,7 +152,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
     (index: number) =>
       typeof paginationAccessibilityLabel === 'function'
         ? paginationAccessibilityLabel(index)
-        : `${paginationAccessibilityLabel} ${index + 1}`,
+        : paginationAccessibilityLabel,
     [paginationAccessibilityLabel],
   );
 

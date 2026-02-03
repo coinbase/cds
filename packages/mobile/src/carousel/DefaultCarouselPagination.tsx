@@ -113,13 +113,15 @@ const PaginationDot = memo(function PaginationDot({
   );
 });
 
+const defaultPaginationAccessibilityLabel = (pageIndex: number) => `Go to page ${pageIndex + 1}`;
+
 export const DefaultCarouselPagination = memo(function DefaultCarouselPagination({
   totalPages,
   activePageIndex,
   onPressPage,
   style,
   styles,
-  paginationAccessibilityLabel = 'Go to page',
+  paginationAccessibilityLabel = defaultPaginationAccessibilityLabel,
   variant = 'pill',
 }: DefaultCarouselPaginationProps) {
   const theme = useTheme();
@@ -134,7 +136,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   const getAccessibilityLabel = (index: number) =>
     typeof paginationAccessibilityLabel === 'function'
       ? paginationAccessibilityLabel(index)
-      : `${paginationAccessibilityLabel} ${index + 1}`;
+      : paginationAccessibilityLabel;
 
   return (
     <HStack gap={0.5} justifyContent="center" style={rootStyles}>

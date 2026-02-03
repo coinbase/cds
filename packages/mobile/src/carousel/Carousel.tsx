@@ -71,8 +71,7 @@ export type CarouselNavigationComponentBaseProps = Pick<
   | 'autoplay'
   | 'nextPageAccessibilityLabel'
   | 'previousPageAccessibilityLabel'
-  | 'startAutoplayAccessibilityLabel'
-  | 'stopAutoplayAccessibilityLabel'
+  | 'autoplayAccessibilityLabel'
 > & {
   /**
    * Callback for when the previous button is pressed.
@@ -220,20 +219,16 @@ export type CarouselBaseProps = SharedProps &
     previousPageAccessibilityLabel?: string;
     /**
      * Accessibility label for the go to page button.
-     */
-    goToPageAccessibilityLabel?: string;
-    /**
-     * Accessibility label for the go to page button.
+     * When a string is provided, it is used as-is for all indicators.
+     * When a function is provided, it receives the page index and returns a label.
+     * @default (pageIndex) => `Go to page ${pageIndex + 1}`
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**
-     * Accessibility label for the start autoplay button.
+     * Accessibility label for the autoplay toggle button.
+     * @default 'Play/Pause Carousel'
      */
-    startAutoplayAccessibilityLabel?: string;
-    /**
-     * Accessibility label for the stop autoplay button.
-     */
-    stopAutoplayAccessibilityLabel?: string;
+    autoplayAccessibilityLabel?: string;
     /**
      * Callback fired when the page changes.
      */
@@ -559,9 +554,8 @@ export const Carousel = memo(
         styles,
         nextPageAccessibilityLabel,
         previousPageAccessibilityLabel,
-        startAutoplayAccessibilityLabel,
-        stopAutoplayAccessibilityLabel,
-        goToPageAccessibilityLabel,
+        autoplayAccessibilityLabel,
+        paginationAccessibilityLabel,
         onChangePage,
         onDragStart,
         onDragEnd,
@@ -1163,6 +1157,7 @@ export const Carousel = memo(
                   {!hideNavigation && (
                     <NavigationComponent
                       autoplay={autoplay}
+                      autoplayAccessibilityLabel={autoplayAccessibilityLabel}
                       disableGoNext={
                         totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
                       }
@@ -1173,8 +1168,6 @@ export const Carousel = memo(
                       onGoPrevious={handleGoPrevious}
                       onToggleAutoplay={autoplayControls.toggle}
                       previousPageAccessibilityLabel={previousPageAccessibilityLabel}
-                      startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
-                      stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
                       style={styles?.navigation}
                     />
                   )}
@@ -1191,7 +1184,7 @@ export const Carousel = memo(
                 <PaginationComponent
                   activePageIndex={activePageIndex}
                   onPressPage={handleClickPage}
-                  paginationAccessibilityLabel={goToPageAccessibilityLabel}
+                  paginationAccessibilityLabel={paginationAccessibilityLabel}
                   style={styles?.pagination}
                   totalPages={totalPages}
                   variant={paginationVariant}

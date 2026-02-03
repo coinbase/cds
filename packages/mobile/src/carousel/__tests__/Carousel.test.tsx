@@ -303,6 +303,38 @@ describe('Carousel', () => {
       expect(screen.getByLabelText('Next page')).toBeOnTheScreen();
     });
 
+    describe('paginationAccessibilityLabel', () => {
+      it('uses default function that includes page number when not provided', () => {
+        render(<TestCarouselWithItems itemCount={3} />);
+
+        expect(screen.getByLabelText('Go to page 1')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Go to page 2')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Go to page 3')).toBeOnTheScreen();
+      });
+
+      it('uses string as-is for all indicators when string is provided', () => {
+        render(
+          <TestCarouselWithItems itemCount={3} paginationAccessibilityLabel="Select page" />,
+        );
+
+        const buttons = screen.getAllByLabelText('Select page');
+        expect(buttons).toHaveLength(3);
+      });
+
+      it('calls function with page index when function is provided', () => {
+        render(
+          <TestCarouselWithItems
+            itemCount={3}
+            paginationAccessibilityLabel={(index: number) => `Page ${index + 1} of 3`}
+          />,
+        );
+
+        expect(screen.getByLabelText('Page 1 of 3')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Page 2 of 3')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Page 3 of 3')).toBeOnTheScreen();
+      });
+    });
+
     it('supports touch interactions', () => {
       render(<TestCarouselWithItems itemCount={5} />);
 
