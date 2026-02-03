@@ -18,6 +18,7 @@ import {
   domMax,
   LazyMotion,
   m,
+  type Transition,
   useAnimation,
   useDragControls,
   useMotionValue,
