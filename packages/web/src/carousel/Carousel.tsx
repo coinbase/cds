@@ -81,8 +81,7 @@ export type CarouselNavigationComponentBaseProps = Pick<
   | 'autoplay'
   | 'nextPageAccessibilityLabel'
   | 'previousPageAccessibilityLabel'
-  | 'startAutoplayAccessibilityLabel'
-  | 'stopAutoplayAccessibilityLabel'
+  | 'autoplayAccessibilityLabel'
 > & {
   /**
    * Callback for when the previous button is pressed.
@@ -233,10 +232,12 @@ export type CarouselBaseProps = SharedProps &
     title?: React.ReactNode;
     /**
      * Accessibility label for the next page button.
+     * @default 'Next page'
      */
     nextPageAccessibilityLabel?: string;
     /**
      * Accessibility label for the previous page button.
+     * @default 'Previous page'
      */
     previousPageAccessibilityLabel?: string;
     /**
@@ -244,13 +245,10 @@ export type CarouselBaseProps = SharedProps &
      */
     paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
     /**
-     * Accessibility label for the start autoplay button.
+     * Accessibility label for the autoplay toggle button.
+     * @default 'Play/Pause Carousel'
      */
-    startAutoplayAccessibilityLabel?: string;
-    /**
-     * Accessibility label for the stop autoplay button.
-     */
-    stopAutoplayAccessibilityLabel?: string;
+    autoplayAccessibilityLabel?: string;
     /**
      * Callback fired when the carousel page changes.
      */
@@ -722,8 +720,7 @@ export const Carousel = memo(
         nextPageAccessibilityLabel,
         previousPageAccessibilityLabel,
         paginationAccessibilityLabel,
-        startAutoplayAccessibilityLabel,
-        stopAutoplayAccessibilityLabel,
+        autoplayAccessibilityLabel,
         onChangePage,
         onDragStart,
         onDragEnd,
@@ -1185,10 +1182,38 @@ export const Carousel = memo(
         autoplayControls.resume();
       }, [autoplayControls]);
 
-      // Handle focus moving to an element inside a carousel item
-      // This allows keyboard navigation to work without needing isVisible for tabIndex
+      // Resume autoplay when focus leaves the carousel items container
+      const handleBlur = useCallback(
+        (event: React.FocusEvent) => {
+          const relatedTarget = event.relatedTarget as HTMLElement | null;
+          // Only resume if we know focus is going outside the container.
+          // If relatedTarget is null (e.g., focus leaving window), also resume.
+          const isLeavingContainer =
+            !relatedTarget || !containerRef.current?.contains(relatedTarget);
+          if (isLeavingContainer) {
+            autoplayControls.resume();
+          }
+        },
+        [autoplayControls],
+      );
+
+      // Handle focus moving to an element inside the carousel items container.
+      // Pauses autoplay when focus enters from outside (keyboard navigation a11y).
+      // Scrolls to show focused items that are not fully visible.
       const handleFocusIn = useCallback(
         (event: React.FocusEvent) => {
+          const relatedTarget = event.relatedTarget as HTMLElement | null;
+          // Check if focus is entering from outside the carousel items container
+          const isEnteringFromOutside =
+            !relatedTarget || !containerRef.current?.contains(relatedTarget);
+
+          // Pause autoplay when focus enters the container from outside.
+          // Only pause if we positively know focus came from outside (relatedTarget exists).
+          // This avoids false pauses during render, programmatic focus, or test environments.
+          if (relatedTarget && isEnteringFromOutside) {
+            autoplayControls.pause();
+          }
+
           if (pageOffsets.length === 0 || Object.keys(carouselItemRects).length === 0) return;
 
           const target = event.target as HTMLElement;
@@ -1205,12 +1230,6 @@ export const Carousel = memo(
             return;
           }
 
-          // Check if focus is entering from outside the carousel items container
-          // (not just the root - nav buttons are in root but not in items container)
-          const relatedTarget = event.relatedTarget as HTMLElement | null;
-          const isEnteringFromOutside =
-            !relatedTarget || !containerRef.current?.contains(relatedTarget);
-
           if (isEnteringFromOutside) {
             // Redirect focus to first focusable element on current page
             const focusable = findFirstVisibleItem(
@@ -1224,13 +1243,15 @@ export const Carousel = memo(
             }
           }
 
-          // Navigate to show the focused item
+          // Navigate to show the focused item and reset autoplay progress
           const targetPageIndex = findPageIndexForItem(itemRect, pageOffsets);
           if (targetPageIndex !== activePageIndex) {
+            autoplayControls.reset();
             goToPage(targetPageIndex);
           }
         },
         [
+          autoplayControls,
           pageOffsets,
           carouselItemRects,
           carouselScrollX,
@@ -1295,6 +1316,7 @@ export const Carousel = memo(
                     {!hideNavigation && (
                       <NavigationComponent
                         autoplay={autoplay}
+                        autoplayAccessibilityLabel={autoplayAccessibilityLabel}
                         className={classNames?.navigation}
                         disableGoNext={
                           totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
@@ -1306,8 +1328,6 @@ export const Carousel = memo(
                         onGoPrevious={handleGoPrevious}
                         onToggleAutoplay={autoplayControls.toggle}
                         previousPageAccessibilityLabel={previousPageAccessibilityLabel}
-                        startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
-                        stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
                         style={styles?.navigation}
                       />
                     )}
@@ -1316,6 +1336,7 @@ export const Carousel = memo(
                 <div
                   ref={containerRef}
                   className={classNames?.carouselContainer}
+                  onBlur={handleBlur}
                   onFocus={handleFocusIn}
                   onPointerDown={(e) => {
                     if (isDragEnabled) {

@@ -637,7 +637,9 @@ It is recommended to use pagination with autoplay so users know how many pages t
 
 ```jsx live
 function AutoplayCarousel() {
-  function SquareAssetCard({ imageUrl, name }) {
+  const toast = useToast();
+
+  function SquareAssetCard({ imageUrl, name, onPress, isVisible }) {
     return (
       <ContainedAssetCard
         description={
@@ -645,7 +647,9 @@ function AutoplayCarousel() {
             ↗6.37%
           </Text>
         }
+        aria-hidden={!isVisible}
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onPress}
         subtitle={name}
         title="$0.87"
       />
@@ -665,7 +669,14 @@ function AutoplayCarousel() {
       >
         {Object.values(assets).map((asset) => (
           <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onPress={() => toast.show(`${asset.symbol} clicked`)}
+                isVisible={isVisible}
+              />
+            )}
           </CarouselItem>
         ))}
       </Carousel>
