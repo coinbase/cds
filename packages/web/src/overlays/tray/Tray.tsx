@@ -13,13 +13,6 @@ import {
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
 } from '@coinbase/cds-common/animation/drawer';
-
-/**
- * Percentage of tray height that must be dragged to dismiss (0.4 = 40%).
- * Uses the actual measured tray height, so small trays have proportionally smaller
- * dismiss thresholds - ensuring they don't require dragging most of the tray to dismiss.
- */
-const DISMISSAL_DRAG_PERCENTAGE = 0.4;
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -41,6 +34,8 @@ import { HandleBar } from '../handlebar/HandleBar';
 import { Overlay } from '../overlay/Overlay';
 import { Portal } from '../Portal';
 import { trayContainerId } from '../PortalProvider';
+
+const DISMISSAL_DRAG_PERCENTAGE = 0.4;
 
 const MotionBox = motion(Box);
 
@@ -83,8 +78,16 @@ export type TrayBaseProps = {
   onVisibilityChange?: (context: 'visible' | 'hidden') => void;
   /** Hide the header of the tray */
   hideHeader?: boolean;
-  /** Prevents a user from dismissing the tray by pressing the overlay or swiping */
+  /**
+   * Prevents a user from dismissing the tray by pressing the overlay or swiping
+   * @note hides closeButton when `true`
+   */
   preventDismiss?: boolean;
+  /**
+   * Hide the close icon on the top right.
+   * @default `true` when `showHandleBar` is enabled, false otherwise.
+   */
+  hideCloseButton?: boolean;
   /**
    * WAI-ARIA Roles
    * @link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
@@ -94,7 +97,7 @@ export type TrayBaseProps = {
   title?: React.ReactNode;
   /**
    * Allow user of component to define maximum percentage of screen that can be taken up by the Drawer when pinned to the bottom or top.
-   * Not used when `pin` is `"left"` or `"right"`.
+   * @note not used when `pin` is `"left"` or `"right"`.
    * @example if you want a Drawer to take up 50% of the screen, you would pass a value of `"50%"`
    * @default "85%"
    */
@@ -140,11 +143,6 @@ export type TrayBaseProps = {
    * The close button is hidden by default when the handle bar is shown.
    */
   showHandleBar?: boolean;
-  /**
-   * Hide the close icon on the top right.
-   * @default `true` when `showHandleBar` is enabled, false otherwise.
-   */
-  hideCloseButton?: boolean;
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'>;
 
 export type TrayProps = TrayBaseProps & {
