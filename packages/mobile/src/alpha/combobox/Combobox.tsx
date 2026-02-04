@@ -318,6 +318,7 @@ const ComboboxBase = memo(
           ComboboxControl,
           SelectDropdownComponent,
           accessibilityLabel,
+          align,
           closeButtonLabel,
           endNode,
           handleTrayVisibilityChange,
