@@ -1,17 +1,19 @@
 import { memo } from 'react';
 
-import { ChartText, type ChartTextProps } from '../text';
+import { ChartText, type ChartTextChildren, type ChartTextProps } from '../text';
 
 import type { ScrubberBeaconLabelProps } from './Scrubber';
 
 const labelVerticalInset = 3.5;
 const labelHorizontalInset = 4;
 
-export type DefaultScrubberBeaconLabelProps = ScrubberBeaconLabelProps &
-  Pick<
-    ChartTextProps,
-    'background' | 'elevated' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset' | 'opacity'
-  >;
+export type DefaultScrubberBeaconLabelProps = Pick<
+  ChartTextProps,
+  'background' | 'elevated' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset' | 'opacity'
+> &
+  Omit<ScrubberBeaconLabelProps, 'label'> & {
+    label: ChartTextChildren;
+  };
 
 /**
  * DefaultScrubberBeaconLabel is a special instance of ChartText used to label a series' scrubber beacon (i.e. a point on the series pinned to the scrubber position).

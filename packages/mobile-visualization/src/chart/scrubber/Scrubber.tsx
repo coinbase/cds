@@ -184,6 +184,12 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
     /**
+     * Preferred side for beacon labels when there's enough space.
+     * Labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
+    /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
      */
@@ -241,6 +247,7 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        beaconLabelPreferredSide,
         labelFont,
         labelBoundsInset,
         beaconLabelFont,
@@ -406,6 +413,7 @@ export const Scrubber = memo(
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
+              labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
             />
           )}
