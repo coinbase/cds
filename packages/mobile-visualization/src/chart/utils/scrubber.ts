@@ -31,14 +31,14 @@ export const getLabelPosition = (
   }
 
   const requiredSpace = maxLabelWidth + xOffset;
-  const availableRightSpace = drawingArea.x + drawingArea.width - beaconX;
-  const availableLeftSpace = beaconX - drawingArea.x;
 
   if (preferredSide === 'right') {
-    return requiredSpace <= availableRightSpace ? 'right' : 'left';
+    const availableSpace = drawingArea.x + drawingArea.width - beaconX;
+    return requiredSpace <= availableSpace ? 'right' : 'left';
   }
 
-  return requiredSpace <= availableLeftSpace ? 'left' : 'right';
+  const availableSpace = beaconX - drawingArea.x;
+  return requiredSpace <= availableSpace ? 'left' : 'right';
 };
 
 type LabelWithPosition = {
