@@ -295,23 +295,50 @@ export const Responsive = () => {
                 justifyContent={isPhone ? 'center' : 'flex-end'}
               />
             )}
+            header={
+              <Text
+                font="title3"
+                paddingBottom={0.75}
+                paddingTop={2}
+                paddingX={{ base: 4, phone: 3 }}
+              >
+                Header
+              </Text>
+            }
             hideCloseButton={isPhone}
             onCloseComplete={() => setShowFullBleedImage(false)}
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
             styles={{
+              handleBar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1,
+              },
+              closeButton: {
+                position: 'absolute',
+                top: 'var(--space-4)',
+                right: 'var(--space-4)',
+                zIndex: 1,
+              },
               header: {
-                backgroundImage:
-                  'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: 220,
+                paddingTop: 0,
               },
             }}
+            title={
+              <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+                <img
+                  alt="Full Bleed"
+                  height={180}
+                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
+                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                  width="100%"
+                />
+              </Box>
+            }
           >
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Header
-            </Text>
             <VStack gap={2} paddingBottom={2}>
               <Text font="body">This is the content of the tray.</Text>
             </VStack>
@@ -422,24 +449,49 @@ export const Responsive = () => {
         {showFullBleedImageListCells && (
           <Tray
             header={
-              <Box paddingBottom={0.75} paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
-                <Text font="title3">Header</Text>
-              </Box>
+              <Text
+                font="title3"
+                paddingBottom={0.75}
+                paddingTop={2}
+                paddingX={{ base: 4, phone: 3 }}
+              >
+                Header
+              </Text>
             }
             hideCloseButton={isPhone}
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
             pin={isPhone ? 'bottom' : 'right'}
             showHandleBar={isPhone}
             styles={{
+              handleBar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1,
+              },
+              closeButton: {
+                position: 'absolute',
+                top: 'var(--space-4)',
+                right: 'var(--space-4)',
+                zIndex: 1,
+              },
               header: {
-                backgroundImage:
-                  'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: 220,
+                paddingTop: 0,
               },
               content: { paddingBottom: 'var(--space-3)' },
             }}
+            title={
+              <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+                <img
+                  alt="Full Bleed"
+                  height={180}
+                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
+                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                  width="100%"
+                />
+              </Box>
+            }
           >
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
@@ -538,7 +590,7 @@ export const HandleBar = () => {
       </VStack>
 
       <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Bottom Pin with HandleBar - Full Bleed Image</Text>
+        <Text font="headline">New Bottom Pin with HandleBar - Full Bleed Image</Text>
         <Button onClick={() => setShowFullBleedImage(true)}>Open Full Bleed Image Tray</Button>
         {showFullBleedImage && (
           <Tray
@@ -555,21 +607,37 @@ export const HandleBar = () => {
                 justifyContent="center"
               />
             )}
+            header={
+              <Text font="title3" paddingTop={2} paddingX={3}>
+                Header
+              </Text>
+            }
             onCloseComplete={() => setShowFullBleedImage(false)}
             pin="bottom"
             styles={{
+              handleBar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1,
+              },
               header: {
-                backgroundImage:
-                  'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: 220,
+                paddingTop: 0,
               },
             }}
+            title={
+              <Box flexGrow={1} marginX={-3}>
+                <img
+                  alt="Full Bleed"
+                  height={180}
+                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
+                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                  width="100%"
+                />
+              </Box>
+            }
           >
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Header
-            </Text>
             <VStack gap={2} paddingBottom={2}>
               <Text font="body">This is the content of the tray.</Text>
             </VStack>
@@ -679,25 +747,39 @@ export const HandleBar = () => {
         </Button>
         {showFullBleedImageListCells && (
           <Tray
-            header={
-              <Box paddingBottom={0.75} paddingTop={2} paddingX={3}>
-                <Text font="title3">Header</Text>
-              </Box>
-            }
             hideCloseButton
             showHandleBar
+            header={
+              <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+                Header
+              </Text>
+            }
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
             pin="bottom"
             styles={{
+              handleBar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1,
+              },
               header: {
-                backgroundImage:
-                  'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: 220,
+                paddingTop: 0,
               },
               content: { paddingBottom: 'var(--space-3)' },
             }}
+            title={
+              <Box flexGrow={1} marginX={-3}>
+                <img
+                  alt="Full Bleed"
+                  height={180}
+                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
+                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                  width="100%"
+                />
+              </Box>
+            }
           >
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
@@ -795,21 +877,36 @@ export const PinRight = () => {
                 justifyContent="flex-end"
               />
             )}
+            header={
+              <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={4}>
+                Header
+              </Text>
+            }
             onCloseComplete={() => setShowFullBleedImage(false)}
             pin="right"
             styles={{
+              closeButton: {
+                position: 'absolute',
+                top: 'var(--space-4)',
+                right: 'var(--space-4)',
+                zIndex: 1,
+              },
               header: {
-                backgroundImage:
-                  'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: 220,
+                paddingTop: 0,
               },
             }}
+            title={
+              <Box flexGrow={1} marginX={-4}>
+                <img
+                  alt="Full Bleed"
+                  height={180}
+                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
+                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                  width="100%"
+                />
+              </Box>
+            }
           >
-            <Text font="title3" paddingBottom={0.75} paddingTop={2}>
-              Header
-            </Text>
             <VStack gap={2} paddingBottom={2}>
               <Text font="body">This is the content of the tray.</Text>
             </VStack>
@@ -908,22 +1005,35 @@ export const PinRight = () => {
         {showFullBleedImageListCells && (
           <Tray
             header={
-              <Box paddingBottom={0.75} paddingTop={2} paddingX={4}>
-                <Text font="title3">Header</Text>
-              </Box>
+              <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={4}>
+                Header
+              </Text>
             }
             onCloseComplete={() => setShowFullBleedImageListCells(false)}
             pin="right"
             styles={{
+              closeButton: {
+                position: 'absolute',
+                top: 'var(--space-4)',
+                right: 'var(--space-4)',
+                zIndex: 1,
+              },
               header: {
-                backgroundImage:
-                  'url(https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: 220,
+                paddingTop: 0,
               },
               content: { paddingBottom: 'var(--space-3)' },
             }}
+            title={
+              <Box flexGrow={1} marginX={-4}>
+                <img
+                  alt="Full Bleed"
+                  height={180}
+                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
+                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                  width="100%"
+                />
+              </Box>
+            }
           >
             {Array.from({ length: 20 }, (_, i) => (
               <ListCell
