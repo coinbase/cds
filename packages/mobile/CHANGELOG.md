@@ -8,7 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.42.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Added MediaCard, MessagingCard, and alpha DataCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+- Updated ContentCard. [[#329](https://github.com/coinbase/cds/pull/329)]
 
 #### 📘 Misc
 
