@@ -13,7 +13,7 @@ module.exports = {
     // See: https://docs.expo.dev/versions/latest/config/babel/
     ...(isTestEnv || isDetoxEnv ? ['babel-preset-expo'] : []),
   ],
-  plugins: isTestEnv || isDetoxEnv ? ['react-native-reanimated/plugin'] : [],
+  plugins: isTestEnv || isDetoxEnv ? ['react-native-worklets/plugin'] : [],
   ignore:
     isTestEnv || isDetoxEnv
       ? []

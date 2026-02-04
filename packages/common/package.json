@@ -48,7 +48,7 @@
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.2.0",
     "lodash": "^4.17.21",
-    "react-is": "~19.1.2",
+    "react-is": "19.1.2",
     "type-fest": "^2.19.0",
     "zod": "^3.23.8"
   },
@@ -57,8 +57,10 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.27.1",
-    "@types/react": "~19.1.2",
+    "@types/react": "19.1.2",
     "@types/react-is": "^19.0.0",
-    "jest-date-mock": "^1.0.8"
+    "jest-date-mock": "^1.0.8",
+    "react": "19.1.2",
+    "react-native": "0.81.5"
   }
 }
