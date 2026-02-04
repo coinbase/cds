@@ -533,6 +533,12 @@ export const routes = [
       require('@cbhq/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
   },
   {
+    key: 'Scrubber',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/scrubber/__stories__/Scrubber.stories')
+        .default,
+  },
+  {
     key: 'SearchInput',
     getComponent: () =>
       require('@cbhq/cds-mobile/controls/__stories__/SearchInput.stories').default,

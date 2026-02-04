@@ -81,7 +81,6 @@ export const ExampleScreen = React.forwardRef<ScrollView, React.PropsWithChildre
           borderedTop
           background="bg"
           borderColor="bgLineHeavy"
-          paddingTop={2}
           paddingX={gutter}
           testID="mobile-playground-screen"
           {...boxProps}
@@ -92,7 +91,11 @@ export const ExampleScreen = React.forwardRef<ScrollView, React.PropsWithChildre
             keyboardShouldPersistTaps="always"
             persistentScrollbar={false}
             showsVerticalScrollIndicator={false}
-            style={{ backgroundColor: theme.color.bg, height: '100%' }}
+            style={{
+              backgroundColor: theme.color.bg,
+              height: '100%',
+              paddingTop: theme.space[2],
+            }}
           >
             {children}
           </ScrollView>

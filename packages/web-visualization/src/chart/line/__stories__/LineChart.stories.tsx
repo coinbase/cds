@@ -23,7 +23,6 @@ import { m } from 'framer-motion';
 import {
   type AxisBounds,
   DefaultScrubberBeacon,
-  DefaultScrubberLabel,
   defaultTransition,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
@@ -31,7 +30,6 @@ import {
   projectPoint,
   Scrubber,
   type ScrubberBeaconProps,
-  type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
   useScrubberContext,
@@ -701,41 +699,6 @@ function StylingScrubber() {
       }}
     >
       <Scrubber idlePulse LineComponent={SolidLine} seriesIds={['pageViews']} />
-    </LineChart>
-  );
-}
-
-function HideBeaconLabels() {
-  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-
-  return (
-    <LineChart
-      enableScrubbing
-      legend
-      showArea
-      height={{ base: 200, tablet: 225, desktop: 250 }}
-      inset={{ top: 60 }}
-      series={[
-        {
-          id: 'pageViews',
-          data: pageViews,
-          color: 'var(--color-accentBoldGreen)',
-          label: 'Page Views',
-        },
-        {
-          id: 'uniqueVisitors',
-          data: uniqueVisitors,
-          color: 'var(--color-accentBoldPurple)',
-          label: 'Unique Visitors',
-        },
-      ]}
-    >
-      <Scrubber
-        hideBeaconLabels
-        labelElevated
-        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-      />
     </LineChart>
   );
 }
@@ -1585,110 +1548,6 @@ function MonotoneAssetPrice() {
   );
 }
 
-function CustomLabelComponent() {
-  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
-    const { drawingArea } = useCartesianChartContext();
-
-    if (!drawingArea) return;
-
-    return (
-      <DefaultScrubberLabel
-        {...props}
-        elevated
-        background="var(--color-bgPrimary)"
-        color="var(--color-bgPrimaryWash)"
-        dy={32}
-        fontWeight="label1"
-        y={drawingArea.y + drawingArea.height}
-      />
-    );
-  });
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      inset={{ top: 16, bottom: 64 }}
-      series={[
-        {
-          id: 'prices',
-          data: sampleData,
-        },
-      ]}
-    >
-      <Scrubber
-        LabelComponent={CustomLabelComponent}
-        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-      />
-    </LineChart>
-  );
-}
-
-function CustomBeaconStroke() {
-  const backgroundColor = 'rgb(var(--red40))';
-  const foregroundColor = 'rgb(var(--gray0))';
-
-  return (
-    <Box borderRadius={300} padding={2} style={{ background: backgroundColor }}>
-      <LineChart
-        enableScrubbing
-        showArea
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data: sampleData,
-            color: foregroundColor,
-          },
-        ]}
-      >
-        <Scrubber
-          hideOverlay
-          idlePulse
-          beaconStroke={backgroundColor}
-          lineStroke={foregroundColor}
-        />
-      </LineChart>
-    </Box>
-  );
-}
-
-function CustomBeaconSize() {
-  const InvertedBeacon = useMemo(
-    () => (props: ScrubberBeaconProps) => (
-      <DefaultScrubberBeacon
-        {...props}
-        color="var(--color-bg)"
-        radius={5}
-        stroke="var(--color-fg)"
-        strokeWidth={3}
-      />
-    ),
-    [],
-  );
-
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      showYAxis
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      series={[
-        {
-          id: 'prices',
-          data: sampleData,
-          color: 'var(--color-fg)',
-        },
-      ]}
-      yAxis={{
-        showGrid: true,
-      }}
-    >
-      <Scrubber BeaconComponent={InvertedBeacon} />
-    </LineChart>
-  );
-}
-
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -1883,18 +1742,6 @@ export const All = () => {
       </Example>
       <Example title="Forecast Asset Price">
         <ForecastAssetPrice />
-      </Example>
-      <Example title="Custom Label Component">
-        <CustomLabelComponent />
-      </Example>
-      <Example title="Hide Beacon Labels">
-        <HideBeaconLabels />
-      </Example>
-      <Example title="Custom Beacon Stroke">
-        <CustomBeaconStroke />
-      </Example>
-      <Example title="Custom Beacon Size">
-        <CustomBeaconSize />
       </Example>
     </VStack>
   );
