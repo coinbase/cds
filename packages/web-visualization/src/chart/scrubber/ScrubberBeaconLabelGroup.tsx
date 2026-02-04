@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import { getPointOnScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
@@ -19,7 +19,7 @@ const PositionedLabel = memo<{
   index: number;
   positions: (LabelPosition | null)[];
   position: ScrubberLabelPosition;
-  label: string;
+  label: ChartTextChildren;
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
@@ -86,6 +86,12 @@ export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
    * Font style for the beacon labels.
    */
   labelFont?: ChartTextProps['font'];
+  /**
+   * Preferred side for labels.
+   * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+   * @default 'right'
+   */
+  labelPreferredSide?: ScrubberLabelPosition;
 };
 
 export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
@@ -102,6 +108,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
+    labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea, dataLength } =
@@ -238,13 +245,19 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, drawingArea, labelMinGap]);
 
     const currentPosition = useMemo(() => {
-      if (!xScale || dataX === undefined) return 'right';
+      if (!xScale || dataX === undefined) return labelPreferredSide;
 
       const pixelX = getPointOnScale(dataX, xScale);
       const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-      return getLabelPosition(pixelX, maxWidth, drawingArea, labelHorizontalOffset);
-    }, [dataX, xScale, labelDimensions, drawingArea, labelHorizontalOffset]);
+      return getLabelPosition(
+        pixelX,
+        maxWidth,
+        drawingArea,
+        labelHorizontalOffset,
+        labelPreferredSide,
+      );
+    }, [dataX, xScale, labelDimensions, drawingArea, labelHorizontalOffset, labelPreferredSide]);
 
     return seriesInfo.map((info, index) => {
       const labelInfo = labels.find((label) => label.seriesId === info.seriesId);

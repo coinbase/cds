@@ -15,24 +15,30 @@ export type LabelDimensions = {
 
 /**
  * Determines which side (left/right) to place scrubber labels based on available space.
- * Prefers right side, switches to left when labels would overflow.
+ * Honors the preferred side when there's enough space, otherwise switches to the opposite side.
  */
 export const getLabelPosition = (
   beaconX: number,
   maxLabelWidth: number,
   drawingArea: Rect,
   xOffset: number = 16,
+  preferredSide: ScrubberLabelPosition = 'right',
 ): ScrubberLabelPosition => {
   'worklet'; // any regular functions in ui thread must be marked with 'worklet'
 
   if (drawingArea.width <= 0 || drawingArea.height <= 0) {
-    return 'right';
+    return preferredSide;
   }
 
-  const availableRightSpace = drawingArea.x + drawingArea.width - beaconX;
   const requiredSpace = maxLabelWidth + xOffset;
 
-  return requiredSpace <= availableRightSpace ? 'right' : 'left';
+  if (preferredSide === 'right') {
+    const availableSpace = drawingArea.x + drawingArea.width - beaconX;
+    return requiredSpace <= availableSpace ? 'right' : 'left';
+  }
+
+  const availableSpace = beaconX - drawingArea.x;
+  return requiredSpace <= availableSpace ? 'left' : 'right';
 };
 
 type LabelWithPosition = {
