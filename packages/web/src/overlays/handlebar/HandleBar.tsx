@@ -1,103 +1,115 @@
 import React, { memo, useMemo } from 'react';
-import type { SharedAccessibilityProps, ThemeVars } from '@coinbase/cds-common';
 import { handleBarHeight } from '@coinbase/cds-common/tokens/drawer';
+import { css } from '@linaria/core';
 
-import { useTheme } from '../../hooks/useTheme';
-import { Box } from '../../layout';
+import { cx } from '../../cx';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../layout';
 import { Pressable } from '../../system/Pressable';
 
-export type HandleBarProps = {
-  /** Background color of the handle bar */
-  background?: ThemeVars.Color;
-  /** Class name for the root container */
-  className?: string;
-  /** Class name for the handle element */
-  handleClassName?: string;
-  /** Inline styles for the root container */
-  style?: React.CSSProperties;
-  /** Inline styles for the handle element */
-  handleStyle?: React.CSSProperties;
-  /** Test ID for the component */
-  testID?: string;
+const HANDLE_WIDTH = 32;
+const HANDLE_OPACITY = 0.4;
+
+const containerBaseCss = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+`;
+
+const containerPressableCss = css`
+  width: 100%;
+  cursor: grab;
+  touch-action: none;
+`;
+
+const handleCss = css`
+  width: ${HANDLE_WIDTH}px;
+  height: ${handleBarHeight}px;
+  border-radius: var(--borderRadius-1000);
+  background-color: var(--color-bgInverse);
+  opacity: ${HANDLE_OPACITY};
+`;
+
+/**
+ * A draggable handle indicator for overlay components like Tray.
+ * @note Web only supports inside handlebar.
+ */
+export type HandleBarBaseProps = Omit<BoxBaseProps, 'children' | 'background'> & {
   /**
-   * Callback fired when the handlebar is activated via keyboard (Enter/Space) or click.
-   * When provided, the handle element becomes a focusable button.
+   * Callback fired when the handlebar is closed via keyboard (Enter/Space) or click.
+   * When provided, the handle element becomes a focusable button and drag styling is enabled.
    */
-  onActivate?: () => void;
-  /**
-   * Accessible label for the handlebar.
-   * Only used when onActivate is provided.
-   */
-  accessibilityLabel?: SharedAccessibilityProps['accessibilityLabel'];
-  /**
-   * Accessible hint/description for the handlebar.
-   * Only used when onActivate is provided.
-   */
-  accessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
+  onClose?: () => void;
 };
 
-export const HandleBar = memo(function HandleBar({
-  background = 'bgSecondary',
-  className,
-  handleClassName,
-  style,
-  handleStyle,
-  testID = 'handleBar',
-  onActivate,
-  accessibilityLabel,
-  accessibilityHint,
-}: HandleBarProps) {
-  const theme = useTheme();
+export type HandleBarProps = Omit<BoxProps<BoxDefaultElement>, 'children' | 'background'> &
+  HandleBarBaseProps & {
+    /** Class names for the handlebar elements */
+    classNames?: {
+      /** Class name for the root container */
+      root?: string;
+      /** Class name for the handle element */
+      handle?: string;
+    };
+    /** Inline styles for the handlebar elements */
+    styles?: {
+      /** Styles for the root container */
+      root?: React.CSSProperties;
+      /** Styles for the handle element */
+      handle?: React.CSSProperties;
+    };
+  };
 
-  const handleBarBackgroundColor = theme.color[background];
+export const HandleBar = memo(
+  ({
+    testID = 'handleBar',
+    onClose,
+    accessibilityLabel,
+    accessibilityHint,
+    classNames,
+    styles,
+    className,
+    style,
+    ...props
+  }: HandleBarProps) => {
+    const rootStyle = useMemo(
+      () => (style || styles?.root ? { ...style, ...styles?.root } : undefined),
+      [style, styles?.root],
+    );
 
-  const containerStyle: React.CSSProperties = useMemo(
-    () => ({
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingTop: theme.space[2],
-      paddingBottom: theme.space[2],
-      ...style,
-    }),
-    [theme.space, style],
-  );
+    const handleClassName = cx(handleCss, classNames?.handle);
 
-  const handleStyle_: React.CSSProperties = useMemo(
-    () => ({
-      width: 64,
-      height: handleBarHeight,
-      backgroundColor: handleBarBackgroundColor,
-      borderRadius: 4,
-      ...handleStyle,
-    }),
-    [handleBarBackgroundColor, handleStyle],
-  );
-
-  // When onActivate is provided, render as a Pressable button for proper focus trap support
-  if (onActivate) {
     return (
-      <Box className={className} data-testid={testID} style={containerStyle}>
-        <Pressable
-          noScaleOnPress
-          accessibilityHint={accessibilityHint}
-          accessibilityLabel={accessibilityLabel}
-          background="transparent"
-          borderColor="transparent"
-          className={handleClassName}
-          onClick={onActivate}
-          style={handleStyle_}
-        />
+      <Box
+        className={cx(
+          containerBaseCss,
+          onClose && containerPressableCss,
+          classNames?.root ?? className,
+        )}
+        data-testid={testID}
+        style={rootStyle}
+        {...props}
+      >
+        {onClose ? (
+          <Pressable
+            noScaleOnPress
+            accessibilityHint={accessibilityHint}
+            accessibilityLabel={accessibilityLabel}
+            borderColor="transparent"
+            className={handleClassName}
+            onClick={onClose}
+            style={styles?.handle}
+          />
+        ) : (
+          <Box
+            accessibilityHint={accessibilityHint}
+            accessibilityLabel={accessibilityLabel}
+            className={handleClassName}
+            style={styles?.handle}
+          />
+        )}
       </Box>
     );
-  }
-
-  // Non-interactive version (original behavior)
-  return (
-    <Box className={className} data-testid={testID} style={containerStyle}>
-      <Box className={handleClassName} style={handleStyle_} />
-    </Box>
-  );
-});
-
-HandleBar.displayName = 'HandleBar';
+  },
+);

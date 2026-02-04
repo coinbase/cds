@@ -58,8 +58,6 @@ export type TrayProps = TrayBaseProps &
       header?: StyleProp<ViewStyle>;
       /** Styles for the title text */
       title?: StyleProp<TextStyle>;
-      /** Styles for the footer section */
-      footer?: StyleProp<ViewStyle>;
     };
   };
 
@@ -90,15 +88,14 @@ export const Tray = memo(
     const [titleHeight, setTitleHeight] = useState(0);
     const isInsideHandleBar = handleBarVariant === 'inside';
 
-    const { contentStyle, headerStyle, titleStyle, footerStyle, drawerStyles } = useMemo(() => {
+    const { contentStyle, headerStyle, titleStyle, drawerStyles } = useMemo(() => {
       const {
         content: contentStyle,
         header: headerStyle,
         title: titleStyle,
-        footer: footerStyle,
         ...drawerStyles
       } = styles ?? {};
-      return { contentStyle, headerStyle, titleStyle, footerStyle, drawerStyles };
+      return { contentStyle, headerStyle, titleStyle, drawerStyles };
     }, [styles]);
 
     const onTitleLayout = useCallback(
@@ -148,7 +145,7 @@ export const Tray = memo(
             <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
               {content}
             </Box>
-            {footerContent && <Box style={footerStyle}>{footerContent}</Box>}
+            {footerContent}
           </VStack>
         );
       },
@@ -160,7 +157,6 @@ export const Tray = memo(
         headerElevation,
         headerStyle,
         titleStyle,
-        footerStyle,
         header,
         children,
         footer,

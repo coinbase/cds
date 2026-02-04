@@ -37,7 +37,7 @@ import { trayContainerId } from '../PortalProvider';
 
 const DISMISSAL_DRAG_PERCENTAGE = 0.4;
 
-const MotionBox = motion(Box);
+const MotionVStack = motion(VStack);
 
 const trayHeaderBorderBaseCss = css`
   border-bottom-width: var(--borderWidth-100);
@@ -76,8 +76,6 @@ export type TrayBaseProps = {
    * multiselect was toggled into or out of view
    */
   onVisibilityChange?: (context: 'visible' | 'hidden') => void;
-  /** Hide the header of the tray */
-  hideHeader?: boolean;
   /**
    * Prevents a user from dismissing the tray by pressing the overlay or swiping
    * @note hides closeButton when `true`
@@ -160,8 +158,6 @@ export type TrayProps = TrayBaseProps & {
     title?: React.CSSProperties;
     /** Styles for the content area */
     content?: React.CSSProperties;
-    /** Styles for the footer section */
-    footer?: React.CSSProperties;
     /** Styles for the handle bar container */
     handleBar?: React.CSSProperties;
     /** Styles for the handle bar element */
@@ -183,8 +179,6 @@ export type TrayProps = TrayBaseProps & {
     title?: string;
     /** Class name for the content area */
     content?: string;
-    /** Class name for the footer section */
-    footer?: string;
     /** Class name for the handle bar container */
     handleBar?: string;
     /** Class name for the handle bar element */
@@ -224,7 +218,6 @@ export const Tray = memo(
       onBlur,
       onClose,
       onCloseComplete,
-      hideHeader,
       preventDismiss,
       id,
       role = 'dialog',
@@ -240,16 +233,17 @@ export const Tray = memo(
       pin = 'bottom',
       showHandleBar,
       hideCloseButton,
-      ...props
     },
     ref,
   ) {
     const theme = useTheme();
     const [isOpen, setIsOpen] = useState(true);
     const [hasScrolledDown, setHasScrolledDown] = useState(false);
+
     const { observe: observeTraySize, height: trayHeight } = useDimensions<HTMLDivElement>();
     const contentRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
+
     const isSideTray = pin === 'right' || pin === 'left';
     const horizontalPadding: ResponsiveProp<ThemeVars.Space> = useMemo(
       () => (pin !== 'bottom' || showHandleBar ? { base: 4, phone: 3 } : 6),
@@ -274,39 +268,6 @@ export const Tray = memo(
       onVisibilityChange?.('visible');
       return () => onVisibilityChange?.('hidden');
     }, [onVisibilityChange]);
-
-    // Scroll-based header border using IntersectionObserver
-    // Only updates state when the value actually changes
-    useEffect(() => {
-      const content = contentRef.current;
-      if (!content || typeof IntersectionObserver === 'undefined') return;
-
-      // Create sentinel element at the top of content
-      const sentinel = document.createElement('div');
-      sentinel.style.height = '1px';
-      sentinel.style.width = '100%';
-      sentinel.style.position = 'absolute';
-      sentinel.style.top = '0';
-      sentinel.style.pointerEvents = 'none';
-      content.style.position = 'relative';
-      content.prepend(sentinel);
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          const isScrolled = !entry.isIntersecting;
-          // Only update state when value changes
-          setHasScrolledDown((prev) => (prev !== isScrolled ? isScrolled : prev));
-        },
-        { root: content, threshold: 0 },
-      );
-
-      observer.observe(sentinel);
-
-      return () => {
-        observer.disconnect();
-        sentinel.remove();
-      };
-    }, []);
 
     const handleClose = useCallback(() => {
       controls
@@ -462,6 +423,35 @@ export const Tray = memo(
     // Handle bar only shows for bottom-pinned trays (matching mobile behavior)
     const shouldShowHandleBar = showHandleBar && pin === 'bottom';
     const shouldShrinkPadding = pin !== 'bottom' || showHandleBar;
+    const shouldShowCloseButton = !preventDismiss && !(hideCloseButton ?? shouldShowHandleBar);
+    const shouldShowTitle = title || shouldShowCloseButton;
+
+    useEffect(() => {
+      const content = contentRef.current;
+      if (!content || !shouldShrinkPadding) return;
+
+      const handleScroll = () => {
+        setHasScrolledDown(content.scrollTop > 0);
+      };
+
+      content.addEventListener('scroll', handleScroll, { passive: true });
+      return () => content.removeEventListener('scroll', handleScroll);
+    }, [shouldShrinkPadding]);
+
+    const headerContent = useMemo(
+      () => (typeof header === 'function' ? header({ handleClose }) : header),
+      [header, handleClose],
+    );
+
+    const content = useMemo(
+      () => (typeof children === 'function' ? children({ handleClose }) : children),
+      [children, handleClose],
+    );
+
+    const footerContent = useMemo(
+      () => (typeof footer === 'function' ? footer({ handleClose }) : footer),
+      [footer, handleClose],
+    );
 
     const animatedContainerStyle = useMemo(
       () => ({
@@ -474,17 +464,6 @@ export const Tray = memo(
         ...styles?.container,
       }),
       [isSideTray, verticalDrawerPercentageOfView, styles?.container],
-    );
-
-    // Handle bar uses bgInverse at 40% opacity with smaller width (matching mobile)
-    const handleBarHandleStyle: React.CSSProperties = useMemo(
-      () => ({
-        width: 32,
-        backgroundColor: theme.color.bgInverse,
-        opacity: 0.4,
-        ...styles?.handleBarHandle,
-      }),
-      [theme.color.bgInverse, styles?.handleBarHandle],
     );
 
     if (!isOpen) return null;
@@ -512,160 +491,137 @@ export const Tray = memo(
               onEscPress={preventDismiss ? undefined : handleClose}
               restoreFocusOnUnmount={restoreFocusOnUnmount}
             >
-              <MotionBox
+              <MotionVStack
+                ref={observeTraySize}
+                accessibilityLabel={accessibilityLabel}
+                accessibilityLabelledBy={accessibilityLabelledBy}
+                alignItems="center"
                 animate={controls}
+                aria-modal="true"
                 borderBottomLeftRadius={pin === 'left' || pin === 'bottom' ? 0 : 600}
                 borderBottomRightRadius={pin === 'right' || pin === 'bottom' ? 0 : 600}
                 borderTopLeftRadius={pin === 'left' || pin === 'top' ? 0 : 600}
                 borderTopRightRadius={pin === 'right' || pin === 'top' ? 0 : 600}
                 bordered={theme.activeColorScheme === 'dark'}
                 className={classNames?.container}
+                data-testid="tray"
                 elevation={2}
+                flexGrow={1}
+                id={id}
                 initial={initialAnimationValue}
+                minHeight={0}
+                onClick={handleTrayClick}
+                overflow="hidden"
                 pin={pin}
+                role={role}
                 style={animatedContainerStyle}
                 tabIndex={0}
+                width={isSideTray ? 'min(400px, 100vw)' : '100%'}
               >
                 <VStack
-                  ref={observeTraySize}
-                  accessibilityLabel={accessibilityLabel}
-                  accessibilityLabelledBy={accessibilityLabelledBy}
-                  alignItems="center"
-                  aria-modal="true"
-                  data-testid="tray"
                   flexGrow={1}
-                  id={id}
+                  maxWidth={isSideTray ? undefined : '70em'}
                   minHeight={0}
-                  onClick={handleTrayClick}
-                  overflow="hidden"
-                  role={role}
-                  width={isSideTray ? 'min(400px, 100vw)' : '100%'}
+                  width="100%"
                 >
-                  <VStack
-                    flexGrow={1}
-                    maxWidth={isSideTray ? undefined : '70em'}
-                    minHeight={0}
-                    width="100%"
-                  >
-                    {(!hideHeader || header) && (
-                      <VStack
-                        className={cx(
-                          shouldShrinkPadding && trayHeaderBorderBaseCss,
-                          shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
-                        )}
-                        flexShrink={0}
-                      >
-                        {!hideHeader && (
-                          <VStack
-                            background="bgElevation2"
-                            borderTopLeftRadius={pin === 'left' || pin === 'top' ? 0 : 600}
-                            borderTopRightRadius={pin === 'right' || pin === 'top' ? 0 : 600}
-                            className={classNames?.header}
-                            flexShrink={0}
-                            overflow="hidden"
-                            paddingBottom={shouldShrinkPadding ? 0.75 : 1}
-                            paddingTop={
-                              !shouldShrinkPadding
-                                ? 3
-                                : shouldShowHandleBar
-                                  ? 0
-                                  : isSideTray
-                                    ? 4
-                                    : 2
-                            }
-                            style={styles?.header}
-                          >
-                            {shouldShowHandleBar && (
-                              <div
-                                onPointerCancel={handlePointerCancel}
-                                onPointerDown={handlePointerDown}
-                                onPointerMove={handlePointerMove}
-                                onPointerUp={handlePointerUp}
-                                style={{
-                                  width: '100%',
-                                  cursor: preventDismiss ? undefined : 'grab',
-                                  touchAction: 'none',
-                                }}
-                              >
-                                <HandleBar
-                                  accessibilityHint={closeAccessibilityHint}
-                                  accessibilityLabel={closeAccessibilityLabel}
-                                  className={classNames?.handleBar}
-                                  handleClassName={classNames?.handleBarHandle}
-                                  handleStyle={handleBarHandleStyle}
-                                  onActivate={preventDismiss ? undefined : handleHandleBarActivate}
-                                  style={styles?.handleBar}
-                                />
-                              </div>
-                            )}
-                            {(title ||
-                              (!preventDismiss && !(hideCloseButton ?? shouldShowHandleBar))) && (
-                              <HStack
-                                alignItems={isSideTray ? 'flex-start' : 'center'}
-                                justifyContent={title ? 'space-between' : 'flex-end'}
-                                paddingX={horizontalPadding}
-                              >
-                                {title &&
-                                  (typeof title === 'string' ? (
-                                    <Text
-                                      className={classNames?.title}
-                                      font="title3"
-                                      style={styles?.title}
-                                    >
-                                      {title}
-                                    </Text>
-                                  ) : (
-                                    title
-                                  ))}
-                                {!preventDismiss && !(hideCloseButton ?? shouldShowHandleBar) && (
-                                  <IconButton
-                                    transparent
-                                    accessibilityHint={closeAccessibilityHint}
-                                    accessibilityLabel={closeAccessibilityLabel}
-                                    className={classNames?.closeButton}
-                                    margin={isSideTray ? -1.5 : undefined}
-                                    name="close"
-                                    onClick={handleClose}
-                                    style={styles?.closeButton}
-                                    testID="tray-close-button"
-                                  />
-                                )}
-                              </HStack>
-                            )}
-                          </VStack>
-                        )}
-                        {header &&
-                          (typeof header === 'function' ? header({ handleClose }) : header)}
-                      </VStack>
-                    )}
+                  {(shouldShowTitle || headerContent || shouldShowHandleBar) && (
                     <VStack
-                      ref={contentRef}
-                      className={classNames?.content}
-                      flexGrow={1}
-                      minHeight={0}
+                      className={cx(
+                        shouldShrinkPadding && trayHeaderBorderBaseCss,
+                        shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
+                        classNames?.header,
+                      )}
+                      flexShrink={0}
                       overflow="hidden"
-                      paddingBottom={shouldShrinkPadding ? 0 : 2}
-                      paddingTop={shouldShrinkPadding ? 0 : 1}
-                      paddingX={horizontalPadding}
-                      style={{ overflowY: 'auto', ...styles?.content }}
+                      paddingBottom={shouldShrinkPadding ? 0.75 : 1}
+                      paddingTop={
+                        !shouldShrinkPadding ? 3 : shouldShowHandleBar ? 0 : isSideTray ? 4 : 2
+                      }
+                      style={styles?.header}
                     >
-                      {typeof children === 'function' ? children({ handleClose }) : children}
+                      {shouldShowHandleBar &&
+                        (preventDismiss ? (
+                          <HandleBar
+                            classNames={{
+                              root: classNames?.handleBar,
+                              handle: classNames?.handleBarHandle,
+                            }}
+                            styles={{
+                              root: styles?.handleBar,
+                              handle: styles?.handleBarHandle,
+                            }}
+                          />
+                        ) : (
+                          <HandleBar
+                            accessibilityHint={closeAccessibilityHint}
+                            accessibilityLabel={closeAccessibilityLabel}
+                            classNames={{
+                              root: classNames?.handleBar,
+                              handle: classNames?.handleBarHandle,
+                            }}
+                            onClose={handleHandleBarActivate}
+                            onPointerCancel={handlePointerCancel}
+                            onPointerDown={handlePointerDown}
+                            onPointerMove={handlePointerMove}
+                            onPointerUp={handlePointerUp}
+                            styles={{
+                              root: styles?.handleBar,
+                              handle: styles?.handleBarHandle,
+                            }}
+                          />
+                        ))}
+                      {shouldShowTitle && (
+                        <HStack
+                          alignItems={isSideTray ? 'flex-start' : 'center'}
+                          justifyContent={title ? 'space-between' : 'flex-end'}
+                          paddingX={horizontalPadding}
+                        >
+                          {title &&
+                            (typeof title === 'string' ? (
+                              <Text
+                                className={classNames?.title}
+                                font="title3"
+                                style={styles?.title}
+                              >
+                                {title}
+                              </Text>
+                            ) : (
+                              title
+                            ))}
+                          {shouldShowCloseButton && (
+                            <IconButton
+                              transparent
+                              accessibilityHint={closeAccessibilityHint}
+                              accessibilityLabel={closeAccessibilityLabel}
+                              className={classNames?.closeButton}
+                              margin={isSideTray ? -1.5 : undefined}
+                              name="close"
+                              onClick={handleClose}
+                              style={styles?.closeButton}
+                              testID="tray-close-button"
+                            />
+                          )}
+                        </HStack>
+                      )}
+                      {headerContent}
                     </VStack>
-                    {footer && (
-                      <VStack
-                        background="bgElevation2"
-                        borderBottomLeftRadius={pin === 'left' || pin === 'bottom' ? 0 : 600}
-                        borderBottomRightRadius={pin === 'right' || pin === 'bottom' ? 0 : 600}
-                        className={classNames?.footer}
-                        flexShrink={0}
-                        style={styles?.footer}
-                      >
-                        {typeof footer === 'function' ? footer({ handleClose }) : footer}
-                      </VStack>
-                    )}
+                  )}
+                  <VStack
+                    ref={contentRef}
+                    className={classNames?.content}
+                    flexGrow={1}
+                    minHeight={0}
+                    overflow="hidden"
+                    paddingBottom={shouldShrinkPadding ? 0 : 2}
+                    paddingTop={shouldShrinkPadding ? 0 : 1}
+                    paddingX={horizontalPadding}
+                    style={{ overflowY: 'auto', ...styles?.content }}
+                  >
+                    {content}
                   </VStack>
+                  {footerContent}
                 </VStack>
-              </MotionBox>
+              </MotionVStack>
             </FocusTrap>
           </Box>
         </Portal>
