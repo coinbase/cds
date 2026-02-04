@@ -1,10 +1,2 @@
 #~ {"path":"*","teams":{"@coinbase/ui-systems-eng-team":{"required_reviews":1}}}
 * @coinbase/ui-systems-eng-team
-
-# Illustrations owners
-#~ {"path":"packages/illustrations/manifest.json","teams":{"@coinbase/ui-systems-illustrators":{"required_reviews":1}}}
-packages/illustrations/manifest.json @coinbase/ui-systems-illustrators
-
-# Icons owners
-#~ {"path":"packages/icons/manifest.json","teams":{"@coinbase/ui-systems-illustrators":{"required_reviews":1}}}
-packages/icons/manifest.json @coinbase/ui-systems-illustrators

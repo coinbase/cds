@@ -8,7 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.40.2 (2/2/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: carousel block scrolling on y axis. [[#358](https://github.com/coinbase/cds/pull/358)] [DX-5096]
+
+## 8.40.1 (1/30/2026 PST)
+
+#### 🐞 Fixes
+
+- Add Math.round to ProgressCircle accessibilityValue to prevent precision crash. [[#354](https://github.com/eccentricdz/cds/pull/354)] [HNWI-766]
 
 #### 📘 Misc
 

@@ -20,6 +20,10 @@ type MockPanGesture = {
   onUpdate: jest.Mock;
   onEnd: jest.Mock;
   runOnJS: jest.Mock;
+  activeOffsetX: jest.Mock;
+  activeOffsetY: jest.Mock;
+  failOffsetX: jest.Mock;
+  failOffsetY: jest.Mock;
 };
 
 const mockPanGesture: MockPanGesture = {
@@ -38,6 +42,10 @@ const mockPanGesture: MockPanGesture = {
     },
   ),
   runOnJS: jest.fn().mockReturnThis(),
+  activeOffsetX: jest.fn().mockReturnThis(),
+  activeOffsetY: jest.fn().mockReturnThis(),
+  failOffsetX: jest.fn().mockReturnThis(),
+  failOffsetY: jest.fn().mockReturnThis(),
 };
 
 jest.mock('react-native-gesture-handler', () => ({

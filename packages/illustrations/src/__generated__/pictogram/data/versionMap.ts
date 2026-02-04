@@ -436,7 +436,7 @@ const versionMap: Record<PictogramName, number> = {
   baseNetworkSmall: 0,
   baseCoinCryptoSmall: 0,
   basePiechartSmall: 1,
-  baseCheckSmall: 0,
+  baseCheckSmall: 1,
   baseErrorButterflySmall: 0,
   baseMintNftSmall: 1,
   baseTargetSmall: 1,
@@ -505,6 +505,8 @@ const versionMap: Record<PictogramName, number> = {
   loop: 0,
   podium: 0,
   robot: 0,
+  commodities: 0,
+  arrowsUpDown: 0,
 };
 
 export default versionMap;
