@@ -72,6 +72,7 @@ const DefaultSelectControlComponent = memo(
         endNode: customEndNode,
         compact,
         blendStyles,
+        align = 'start',
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
@@ -304,6 +305,7 @@ const DefaultSelectControlComponent = memo(
             display="block"
             font="body"
             overflow="truncate"
+            textAlign={align}
             width="100%"
           >
             {singleValueContent}
@@ -315,6 +317,7 @@ const DefaultSelectControlComponent = memo(
         hasValue,
         isMultiSelect,
         singleValueContent,
+        align,
         value,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
@@ -381,7 +384,7 @@ const DefaultSelectControlComponent = memo(
             >
               <VStack
                 ref={valueNodeContainerRef}
-                alignItems="flex-start"
+                alignItems={align}
                 className={classNames?.controlValueNode}
                 flexGrow={1}
                 flexShrink={1}
@@ -417,6 +420,7 @@ const DefaultSelectControlComponent = memo(
           startNode,
           shouldShowCompactLabel,
           labelNode,
+          align,
           isMultiSelect,
           valueNode,
           contentNode,
