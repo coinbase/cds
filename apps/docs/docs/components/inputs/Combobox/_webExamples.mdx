@@ -109,6 +109,52 @@ const fruitOptions: SelectOption[] = [
 }
 ```
 
+## Alignment
+
+The alignment of the selected value(s) can be adjusted using the `align` prop.
+
+::::note
+Left / right alignment is preferred for styling.
+::::
+
+```jsx live
+function AlignmentExample() {
+  const fruitOptions: SelectOption[] = [
+  { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'cherry', label: 'Cherry' },
+  { value: 'date', label: 'Date' },
+  { value: 'elderberry', label: 'Elderberry' },
+  { value: 'fig', label: 'Fig' }
+];
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['apple', 'banana'],
+  });
+
+  return (
+    <VStack gap={1}>
+      <Combobox
+        label="Default align - start"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        align="end"
+        label="End align"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  )
+}
+```
+
 ## Borderless
 
 You can remove the border from the combobox control by setting `bordered` to `false`.

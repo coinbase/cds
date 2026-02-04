@@ -14,6 +14,12 @@ All notable changes to this project will be documented in this file.
 
 - Update storybook ExampleScreen. [[#366](https://github.com/coinbase/cds/pull/366)]
 
+## 8.41.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Add align prop to Select and Combobox. [[#348](https://github.com/coinbase/cds/pull/348)]
+
 ## 8.40.2 (2/2/2026 PST)
 
 #### 🐞 Fixes

@@ -161,6 +161,66 @@ function MultiSelectWithGroupsExample() {
 }
 ```
 
+## Alignment
+
+The Select component supports aligning the selected value(s) using the `align` prop.
+
+::::note
+Left / right alignment is preferred for styling.
+::::
+
+```jsx live
+function AlignmentExample() {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [value, setValue] = useState('1');
+  const { value: multiValue, onChange: onMultiChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <VStack gap={2}>
+      <Select
+        label="Default align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        align="end"
+        label="End align"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        label="Default align - start"
+        onChange={onMultiChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Select
+        align="end"
+        label="End align"
+        onChange={onMultiChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+}
+```
+
 ## Accessibility Props
 
 The Select component supports comprehensive accessibility features including custom labels and roles.
