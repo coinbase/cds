@@ -20,30 +20,38 @@ figma.connect(
       }),
       disabled: figma.boolean('disabled'),
       compact: figma.boolean('compact'),
+      label: figma.boolean('show label', {
+        true: figma.boolean('show info icon')
+          ? `<HStack alignItems="center">
+          <InputLabel>${figma.string('label string')}</InputLabel>
+          <Tooltip content="This will be visible to other users.">
+            <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+          </Tooltip>
+        </HStack>`
+          : figma.string('label string'),
+        false: undefined,
+      }),
+      start: figma.boolean('show start', {
+        true: figma.instance('start'),
+        false: undefined,
+      }),
+      helperText: figma.boolean('show helper text', {
+        true: figma.string('helper text'),
+        false: undefined,
+      }),
+      placeholder: figma.string('placeholderText'),
       variant: figma.enum('state', {
+        default: undefined,
         positive: 'positive',
         negative: 'negative',
       }),
-      defaultOpen: figma.enum('state', {
-        'active-desktop': true,
-        'active-mobile': true,
-      }),
       value: figma.enum('type', {
-        'single select': 'apple',
-        'multi-select': ['apple', 'banana'],
+        'single select': 'Item 1',
+        'multi-select': ['Item 1', 'Item 2'],
       }),
     },
     example: ({ type, value, ...props }) => (
-      <Select
-        {...props}
-        helperText="Helper text"
-        label="Label"
-        onChange={() => {}}
-        options={selectOptions}
-        placeholder="Select an option"
-        type={type}
-        value={value}
-      />
+      <Select {...props} onChange={() => {}} options={selectOptions} type={type} value={value} />
     ),
   },
 );
