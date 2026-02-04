@@ -314,7 +314,6 @@ export const Tray = memo(
         });
     }, [controls, isSideTray, pin, onClose, onCloseComplete]);
 
-    // Swipe-to-close animation (faster, no friction - matching mobile)
     const handleSwipeClose = useCallback(() => {
       controls
         .start({
@@ -338,11 +337,6 @@ export const Tray = memo(
       }
     }, [handleClose, preventDismiss, onBlur]);
 
-    const handleTrayClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-      event.stopPropagation();
-    }, []);
-
-    // Track drag state for swipe-to-dismiss using native pointer events
     const dragStateRef = useRef<{
       isDragging: boolean;
       startY: number;
@@ -434,14 +428,6 @@ export const Tray = memo(
       }
     }, [controls]);
 
-    // Handle keyboard activation on handlebar for accessibility dismiss
-    const handleHandleBarActivate = useCallback(() => {
-      if (!preventDismiss) {
-        onBlur?.();
-        handleClose();
-      }
-    }, [handleClose, preventDismiss, onBlur]);
-
     const initialAnimationValue = useMemo(
       () =>
         isSideTray
@@ -497,7 +483,7 @@ export const Tray = memo(
       }
     }, [pin]);
 
-    if (!isOpen) return null;
+    if (!isOpen) return;
 
     return (
       <OverlayContentContext.Provider value={overlayContentContextValue}>
@@ -534,7 +520,6 @@ export const Tray = memo(
                 elevation={2}
                 id={id}
                 initial={initialAnimationValue}
-                onClick={handleTrayClick}
                 pin={pin}
                 role={role}
                 style={{
@@ -585,7 +570,7 @@ export const Tray = memo(
                               root: classNames?.handleBar,
                               handle: classNames?.handleBarHandle,
                             }}
-                            onClose={handleHandleBarActivate}
+                            onClose={handleClose}
                             onPointerCancel={handlePointerCancel}
                             onPointerDown={handlePointerDown}
                             onPointerMove={handlePointerMove}
