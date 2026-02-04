@@ -486,56 +486,7 @@ function CustomContainerTray() {
 }
 ```
 
-### Header
-
-You can customize the header section to add background images, gradients, or adjust the header's appearance.
-
-```jsx live
-function GradientHeaderTray() {
-  const [visible, setVisible] = useState(false);
-  const { isPhone } = useBreakpoints();
-  const handleOpen = () => setVisible(true);
-  const handleClose = () => setVisible(false);
-
-  const titleId = useId();
-
-  return (
-    <VStack gap={2}>
-      <Button onClick={handleOpen}>Open Gradient Header Tray</Button>
-      {visible && (
-        <Tray
-          pin={isPhone ? 'bottom' : 'right'}
-          showHandleBar={isPhone}
-          onCloseComplete={handleClose}
-          header={
-            <Box paddingTop={2} paddingBottom={0.75} paddingX={{ base: 4, phone: 3 }}>
-              <Text id={titleId} font="title3" color="fgInverse">
-                Gradient header
-              </Text>
-            </Box>
-          }
-          styles={{
-            header: {
-              background:
-                'linear-gradient(135deg, var(--color-accentBoldBlue) 0%, var(--color-accentBoldPurple) 100%)',
-              minHeight: 120,
-            },
-            handleBarHandle: {
-              backgroundColor: 'white',
-              opacity: 1,
-            },
-          }}
-          accessibilityLabelledBy={titleId}
-        >
-          <Text color="fgMuted" paddingBottom={2}>
-            The header has a gradient background applied via styles.header.
-          </Text>
-        </Tray>
-      )}
-    </VStack>
-  );
-}
-```
+### Title
 
 For full bleed images, use the `title` prop with a Box containing an image.
 
@@ -557,24 +508,18 @@ function BackgroundImageHeaderTray() {
           showHandleBar={isPhone}
           onCloseComplete={handleClose}
           title={
-            <Box flexGrow={1} marginX={-3}>
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
               <img
                 alt="Full Bleed"
                 height={180}
                 src="/img/tray_header.png"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
                 width="100%"
               />
             </Box>
           }
           header={
-            <Text
-              id={titleId}
-              font="title3"
-              paddingTop={2}
-              paddingBottom={0.75}
-              paddingX={{ base: 4, phone: 3 }}
-            >
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
               Section header
             </Text>
           }
@@ -595,6 +540,7 @@ function BackgroundImageHeaderTray() {
             header: {
               paddingTop: 0,
             },
+            content: { paddingBottom: 'var(--space-3)' },
           }}
           accessibilityLabelledBy={titleId}
         >
@@ -715,24 +661,18 @@ function FullBleedWithInvertedHandlebar() {
           showHandleBar={isPhone}
           onCloseComplete={handleClose}
           title={
-            <Box flexGrow={1} marginX={-3}>
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
               <img
                 alt="Full Bleed"
                 height={180}
                 src="/img/tray_header.png"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
                 width="100%"
               />
             </Box>
           }
           header={
-            <Text
-              id={titleId}
-              font="title3"
-              paddingTop={2}
-              paddingBottom={0.75}
-              paddingX={{ base: 4, phone: 3 }}
-            >
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
               Section header
             </Text>
           }
@@ -814,13 +754,7 @@ function FullBleedWithStyledCloseButton() {
             </Box>
           }
           header={
-            <Text
-              id={titleId}
-              font="title3"
-              color="fgInverse"
-              paddingTop={2}
-              paddingX={{ base: 4, phone: 3 }}
-            >
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
               Section header
             </Text>
           }
