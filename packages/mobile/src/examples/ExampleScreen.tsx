@@ -95,7 +95,6 @@ export const ExampleScreen = React.forwardRef<ScrollView, React.PropsWithChildre
               backgroundColor: theme.color.bg,
               height: '100%',
               paddingTop: theme.space[2],
-              paddingBottom: theme.space[2],
             }}
           >
             {children}
