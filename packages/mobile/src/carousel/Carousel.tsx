@@ -818,6 +818,10 @@ export const Carousel = memo(
       const panGesture = useMemo(
         () =>
           Gesture.Pan()
+            // Only activate when horizontal movement exceeds threshold
+            .activeOffsetX([-10, 10])
+            // Fail (let parent scroll) when vertical movement exceeds threshold first
+            .failOffsetY([-10, 10])
             .onStart(() => {
               if (!isDragEnabled) return;
               handleDragStart();
