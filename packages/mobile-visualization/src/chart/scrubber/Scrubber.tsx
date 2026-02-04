@@ -184,8 +184,8 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
     /**
-     * Preferred side for beacon labels when there's enough space.
-     * Labels will switch to the opposite side if there's not enough space on the preferred side.
+     * Preferred side for beacon labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
      * @default 'right'
      */
     beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
