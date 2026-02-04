@@ -610,3 +610,108 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
   <Scrubber hideOverlay />
 </LineChart>
 ```
+
+## Composed Examples
+
+### Percentage Beacon Labels
+
+You can use `BeaconLabelComponent` to display a label with the percentage value of the data at the scrubber position.
+
+```jsx live
+function PercentageBeaconLabels() {
+ const PercentageScrubberBeaconLabel = memo(
+    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, dataLength } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const dataIndex = useMemo(() => {
+        return scrubberPosition ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
+
+      const percentageLabel: ChartTextChildren = useMemo(() => {
+        if (seriesData !== undefined) {
+          const dataAtPosition = seriesData[dataIndex];
+          return (
+            <>
+              {dataAtPosition}%
+              <tspan fontWeight="400"> {label}</tspan>
+            </>
+          );
+        }
+        return label;
+      }, [label, seriesData, dataIndex]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background={color}
+          color="rgb(var(--gray0))"
+          label={percentageLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
+  const PercentageBeaconLabelChart = ({ background, scrubberLineStroke, ...props }) => {
+    return (
+      <Box borderRadius={300} padding={2} style={{ background }}>
+        <LineChart {...props}>
+          <Scrubber
+            idlePulse
+            hideOverlay
+            lineStroke={scrubberLineStroke}
+            beaconStroke={background}
+            BeaconLabelComponent={PercentageScrubberBeaconLabel}
+          />
+        </LineChart>
+      </Box>
+    );
+  };
+
+  function Example() {
+    const theme = useTheme();
+
+    const isLightTheme = theme.activeColorScheme === 'light';
+    const background = isLightTheme ? 'rgb(var(--gray90))' : 'rgb(var(--gray0))';
+    const scrubberLineStroke = isLightTheme ? 'rgb(var(--gray0))' : 'rgb(var(--gray90))';
+
+    return (
+      <PercentageBeaconLabelChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={250}
+        series={[
+          {
+            id: 'prices2',
+            data: [90, 78, 71, 55, 2, 55, 78, 48, 79, 96, 32, 80, 79, 42],
+            color: 'rgb(var(--blue40))',
+            label: 'ATL',
+          },
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: 'rgb(var(--chartreuse40))',
+            label: 'NYC',
+          },
+        ]}
+        inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+        xAxis={{
+          // Give space for scrubber labels to be on right
+          range: ({ min, max }) => ({ min, max: max - 92 }),
+        }}
+        background={background}
+        scrubberLineStroke={scrubberLineStroke}
+      />
+    );
+  }
+
+  return <Example />;
+}
+```

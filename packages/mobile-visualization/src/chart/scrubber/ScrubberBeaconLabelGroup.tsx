@@ -4,7 +4,7 @@ import { useDerivedValue } from 'react-native-reanimated';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import { applySerializableScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
@@ -21,7 +21,7 @@ const PositionedLabel = memo<{
   index: number;
   positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
-  label: AnimatedProp<string>;
+  label: ChartTextChildren;
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
@@ -93,6 +93,12 @@ export type ScrubberBeaconLabelGroupBaseProps = {
    * Font style for the beacon labels.
    */
   labelFont?: ChartTextProps['font'];
+  /**
+   * Preferred side for labels.
+   * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+   * @default 'right'
+   */
+  labelPreferredSide?: ScrubberLabelPosition;
 };
 
 export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
@@ -109,6 +115,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
+    labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
   }) => {
     const {
@@ -255,9 +262,15 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
 
       const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-      const position = getLabelPosition(pixelX, maxWidth, drawingArea, labelHorizontalOffset);
+      const position = getLabelPosition(
+        pixelX,
+        maxWidth,
+        drawingArea,
+        labelHorizontalOffset,
+        labelPreferredSide,
+      );
       return position;
-    }, [dataX, xScale, labelDimensions, drawingArea, labelHorizontalOffset]);
+    }, [dataX, xScale, labelDimensions, drawingArea, labelHorizontalOffset, labelPreferredSide]);
 
     return seriesInfo.map((info, index) => {
       const labelInfo = labels.find((label) => label.seriesId === info.seriesId);
