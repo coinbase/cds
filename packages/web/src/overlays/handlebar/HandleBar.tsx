@@ -21,13 +21,16 @@ const containerPressableCss = css`
   width: 100%;
   cursor: grab;
   touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 const handleCss = css`
   width: ${HANDLE_WIDTH}px;
   height: ${handleBarHeight}px;
   border-radius: var(--borderRadius-1000);
-  background-color: var(--color-bgInverse);
   opacity: ${HANDLE_OPACITY};
 `;
 
@@ -79,7 +82,6 @@ export const HandleBar = memo(
     );
 
     const handleClassName = cx(handleCss, classNames?.handle);
-
     return (
       <Box
         className={cx(
@@ -96,6 +98,7 @@ export const HandleBar = memo(
             noScaleOnPress
             accessibilityHint={accessibilityHint}
             accessibilityLabel={accessibilityLabel}
+            background="bgInverse"
             borderColor="transparent"
             className={handleClassName}
             onClick={onClose}
@@ -105,6 +108,7 @@ export const HandleBar = memo(
           <Box
             accessibilityHint={accessibilityHint}
             accessibilityLabel={accessibilityLabel}
+            background="bgInverse"
             className={handleClassName}
             style={styles?.handle}
           />

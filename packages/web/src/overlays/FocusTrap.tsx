@@ -1,12 +1,13 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { ReactElement, RefObject } from 'react';
+import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { FOCUSABLE_ELEMENTS } from '@coinbase/cds-common/tokens/overlays';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 
 import { getBrowserGlobals } from '../utils/browser';
 
 export type FocusTrapProps = {
-  children: ReactElement;
+  children: ReactElement & { ref?: React.Ref<HTMLElement> };
   onEscPress?: () => void;
   /**
    * Use for editable Search Input components to ensure focus is correctly applied
@@ -364,9 +365,11 @@ export const FocusTrap = memo(function FocusTrap({
   // only works for single child
   const onlyChild = React.Children.only(children);
 
+  const mergedRef = useMergeRefs(childrenRef, children?.ref);
+
   if (!onlyChild) {
     return <>{children}</>;
   }
 
-  return React.cloneElement(children, { ref: childrenRef });
+  return React.cloneElement(children, { ref: mergedRef });
 });

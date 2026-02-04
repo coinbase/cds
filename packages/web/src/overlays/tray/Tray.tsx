@@ -18,7 +18,7 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { css } from '@linaria/core';
-import { m as motion, useAnimation } from 'framer-motion';
+import { domMax, LazyMotion, m as motion, useAnimate, useDragControls } from 'framer-motion';
 
 import { IconButton } from '../../buttons';
 import { cx } from '../../cx';
@@ -37,7 +37,23 @@ import { trayContainerId } from '../PortalProvider';
 
 const DISMISSAL_DRAG_PERCENTAGE = 0.4;
 
-const MotionVStack = motion(VStack);
+const MotionVStack = motion(Box);
+
+/**
+ * Conditionally wraps children in LazyMotion with domMax features to support dragging.
+ */
+const DragMotionProvider = ({
+  enabled,
+  children,
+}: {
+  enabled: boolean;
+  children: React.ReactNode;
+}) => {
+  if (!enabled) {
+    return children;
+  }
+  return <LazyMotion features={domMax}>{children}</LazyMotion>;
+};
 
 const trayHeaderBorderBaseCss = css`
   border-bottom-width: var(--borderWidth-100);
@@ -270,9 +286,11 @@ export const Tray = memo(
     const [isOpen, setIsOpen] = useState(true);
     const [hasScrolledDown, setHasScrolledDown] = useState(false);
 
+    const trayRef = useRef<HTMLDivElement>(null);
     const { observe: observeTraySize, height: trayHeight } = useDimensions<HTMLDivElement>();
     const contentRef = useRef<HTMLDivElement>(null);
-    const controls = useAnimation();
+    const [scope, animate] = useAnimate();
+    const dragControls = useDragControls();
 
     const isSideTray = pin === 'right' || pin === 'left';
     const horizontalPadding: ResponsiveProp<ThemeVars.Space> = useMemo(
@@ -286,47 +304,35 @@ export const Tray = memo(
       return () => blockScroll(false);
     }, [isOpen, blockScroll]);
 
-    // Initialize animation
-    useEffect(() => {
-      controls.start({
-        ...animationConfig.slideIn,
-        ...(isSideTray ? { x: 0 } : { y: 0 }),
-      });
-    }, [controls, isSideTray]);
-
     useEffect(() => {
       onVisibilityChange?.('visible');
       return () => onVisibilityChange?.('hidden');
     }, [onVisibilityChange]);
 
     const handleClose = useCallback(() => {
-      controls
-        .start({
-          ...animationConfig.slideOut,
-          ...(isSideTray
-            ? { x: pin === 'right' ? '100%' : '-100%' }
-            : { y: pin === 'bottom' ? '100%' : '-100%' }),
-        })
-        .then(() => {
-          setIsOpen(false);
-          onClose?.();
-          onCloseComplete?.();
-        });
-    }, [controls, isSideTray, pin, onClose, onCloseComplete]);
+      if (!scope.current) return;
+      animate(
+        scope.current,
+        isSideTray
+          ? { x: pin === 'right' ? '100%' : '-100%' }
+          : { y: pin === 'bottom' ? '100%' : '-100%' },
+        animationConfig.slideOut.transition,
+      ).then(() => {
+        setIsOpen(false);
+        onClose?.();
+        onCloseComplete?.();
+      });
+    }, [animate, scope, isSideTray, pin, onClose, onCloseComplete]);
 
     const handleSwipeClose = useCallback(() => {
-      controls
-        .start({
-          y: '100%',
-          transition: { duration: 0.15, ease: 'easeOut' },
-        })
-        .then(() => {
-          setIsOpen(false);
-          onBlur?.();
-          onClose?.();
-          onCloseComplete?.();
-        });
-    }, [controls, onBlur, onClose, onCloseComplete]);
+      if (!scope.current) return;
+      animate(scope.current, { y: '100%' }, { duration: 0.15, ease: 'easeOut' }).then(() => {
+        setIsOpen(false);
+        onBlur?.();
+        onClose?.();
+        onCloseComplete?.();
+      });
+    }, [animate, scope, onBlur, onClose, onCloseComplete]);
 
     useImperativeHandle(ref, () => ({ close: handleClose }), [handleClose]);
 
@@ -337,96 +343,38 @@ export const Tray = memo(
       }
     }, [handleClose, preventDismiss, onBlur]);
 
-    const dragStateRef = useRef<{
-      isDragging: boolean;
-      startY: number;
-      startTime: number;
-      lastY: number;
-      lastTime: number;
-    } | null>(null);
-
-    const handlePointerDown = useCallback(
-      (event: React.PointerEvent<HTMLDivElement>) => {
-        if (preventDismiss) return;
-
-        // Capture pointer to receive events even if pointer moves outside element
-        event.currentTarget.setPointerCapture(event.pointerId);
-
-        dragStateRef.current = {
-          isDragging: true,
-          startY: event.clientY,
-          startTime: Date.now(),
-          lastY: event.clientY,
-          lastTime: Date.now(),
-        };
+    const handleDrag = useCallback(
+      (
+        _event: MouseEvent | TouchEvent | PointerEvent,
+        _info: { offset: { y: number }; velocity: { y: number } },
+      ) => {
+        // Drag handler - can be used for visual feedback during drag
       },
-      [preventDismiss],
+      [],
     );
 
-    const handlePointerMove = useCallback(
-      (event: React.PointerEvent<HTMLDivElement>) => {
-        if (preventDismiss || !dragStateRef.current?.isDragging) return;
+    const handleDragEnd = useCallback(
+      (
+        _event: MouseEvent | TouchEvent | PointerEvent,
+        info: { offset: { y: number }; velocity: { y: number } },
+      ) => {
+        const offsetY = info.offset.y;
+        const velocityY = info.velocity.y;
 
-        const dragY = event.clientY - dragStateRef.current.startY;
+        const dragThreshold = trayHeight
+          ? trayHeight * DISMISSAL_DRAG_PERCENTAGE
+          : DISMISSAL_DRAG_THRESHOLD;
 
-        // Update last position for velocity calculation
-        dragStateRef.current.lastY = event.clientY;
-        dragStateRef.current.lastTime = Date.now();
-
-        // Dragging down (positive Y) - allow full movement
-        // Dragging up (negative Y) - prevent completely to avoid showing transparent area
-        if (dragY >= 0) {
-          controls.set({ y: dragY });
-        }
-        // When dragY < 0 (dragging up), do nothing - keep tray at y: 0
-      },
-      [controls, preventDismiss],
-    );
-
-    const handlePointerUp = useCallback(
-      (event: React.PointerEvent<HTMLDivElement>) => {
-        if (preventDismiss || !dragStateRef.current?.isDragging) return;
-
-        // Release pointer capture
-        event.currentTarget.releasePointerCapture(event.pointerId);
-
-        const dragState = dragStateRef.current;
-        const dragY = event.clientY - dragState.startY;
-        const timeDelta = (Date.now() - dragState.lastTime) / 1000; // seconds
-        const velocityY = timeDelta > 0 ? (event.clientY - dragState.lastY) / timeDelta / 1000 : 0; // pixels per ms
-
-        dragStateRef.current = null;
-
-        const closeThreshold =
-          trayHeight > 0
-            ? Math.min(DISMISSAL_DRAG_THRESHOLD, trayHeight * DISMISSAL_DRAG_PERCENTAGE)
-            : DISMISSAL_DRAG_THRESHOLD;
-
-        const shouldDismiss = dragY >= closeThreshold || velocityY >= DISMISSAL_VELOCITY_THRESHOLD;
-
-        if (shouldDismiss) {
+        // Close if dragged past threshold OR if flicked down with high velocity
+        if (offsetY >= dragThreshold || velocityY >= DISMISSAL_VELOCITY_THRESHOLD) {
           handleSwipeClose();
         } else {
-          // Snap back to open position
-          controls.start({
-            y: 0,
-            transition: { duration: 0.2, ease: 'easeOut' },
-          });
+          // Snap back to closed position
+          animate(scope.current, { y: 0 }, { duration: 0.2, ease: 'easeOut' });
         }
       },
-      [controls, preventDismiss, handleSwipeClose, trayHeight],
+      [trayHeight, handleSwipeClose, animate, scope],
     );
-
-    const handlePointerCancel = useCallback(() => {
-      if (dragStateRef.current?.isDragging) {
-        dragStateRef.current = null;
-        // Snap back to open position
-        controls.start({
-          y: 0,
-          transition: { duration: 0.2, ease: 'easeOut' },
-        });
-      }
-    }, [controls]);
 
     const initialAnimationValue = useMemo(
       () =>
@@ -435,6 +383,8 @@ export const Tray = memo(
           : { y: pin === 'bottom' ? '100%' : '-100%' },
       [isSideTray, pin],
     );
+
+    const animateValue = useMemo(() => (isSideTray ? { x: 0 } : { y: 0 }), [isSideTray]);
 
     // Handle bar only shows for bottom-pinned trays (matching mobile behavior)
     const shouldShowHandleBar = showHandleBar && pin === 'bottom';
@@ -489,6 +439,7 @@ export const Tray = memo(
       <OverlayContentContext.Provider value={overlayContentContextValue}>
         <Portal containerId={trayContainerId}>
           <Box
+            ref={trayRef}
             className={classNames?.root}
             height="100vh"
             pin="all"
@@ -503,137 +454,149 @@ export const Tray = memo(
               style={styles?.overlay}
               testID="tray-overlay"
             />
-            <FocusTrap
-              focusTabIndexElements={focusTabIndexElements}
-              onEscPress={preventDismiss ? undefined : handleClose}
-              restoreFocusOnUnmount={restoreFocusOnUnmount}
-            >
-              <MotionVStack
-                ref={observeTraySize}
-                accessibilityLabel={accessibilityLabel}
-                accessibilityLabelledBy={accessibilityLabelledBy}
-                animate={controls}
-                aria-modal="true"
-                bordered={theme.activeColorScheme === 'dark'}
-                className={cx(trayContainerBaseCss, trayContainerPinCss, classNames?.container)}
-                data-testid="tray"
-                elevation={2}
-                id={id}
-                initial={initialAnimationValue}
-                pin={pin}
-                role={role}
-                style={{
-                  maxHeight: isSideTray ? undefined : verticalDrawerPercentageOfView,
-                  ...styles?.container,
-                }}
-                tabIndex={0}
-                width={isSideTray ? 'min(400px, 100vw)' : '100%'}
+            <DragMotionProvider enabled={!preventDismiss}>
+              <FocusTrap
+                focusTabIndexElements={focusTabIndexElements}
+                onEscPress={preventDismiss ? undefined : handleClose}
+                restoreFocusOnUnmount={restoreFocusOnUnmount}
               >
-                <VStack
-                  flexGrow={1}
-                  maxWidth={isSideTray ? undefined : '70em'}
-                  minHeight={0}
-                  width="100%"
+                <MotionVStack
+                  ref={scope}
+                  accessibilityLabel={accessibilityLabel}
+                  accessibilityLabelledBy={accessibilityLabelledBy}
+                  animate={animateValue}
+                  aria-modal="true"
+                  bordered={theme.activeColorScheme === 'dark'}
+                  className={cx(trayContainerBaseCss, trayContainerPinCss, classNames?.container)}
+                  data-testid="tray"
+                  drag={!preventDismiss ? 'y' : undefined}
+                  dragConstraints={{ top: 0, bottom: 0 }}
+                  dragControls={dragControls}
+                  dragElastic={{ top: 0.5, bottom: 0.5 }}
+                  dragListener={false}
+                  elevation={2}
+                  id={id}
+                  initial={initialAnimationValue}
+                  onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+                  onDrag={!preventDismiss ? handleDrag : undefined}
+                  onDragEnd={!preventDismiss ? handleDragEnd : undefined}
+                  pin={pin}
+                  role={role}
+                  style={{
+                    maxHeight: isSideTray ? undefined : verticalDrawerPercentageOfView,
+                    touchAction: !preventDismiss && pin === 'bottom' ? 'none' : undefined,
+                    ...styles?.container,
+                  }}
+                  tabIndex={0}
+                  transition={animationConfig.slideIn.transition}
+                  width={isSideTray ? 'min(400px, 100vw)' : undefined}
                 >
-                  {(shouldShowTitle || headerContent || shouldShowHandleBar) && (
-                    <VStack
-                      className={cx(
-                        shouldShrinkPadding && trayHeaderBorderBaseCss,
-                        shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
-                        classNames?.header,
-                      )}
-                      flexShrink={0}
-                      overflow="hidden"
-                      paddingBottom={shouldShrinkPadding ? 0.75 : 1}
-                      paddingTop={
-                        !shouldShrinkPadding ? 3 : shouldShowHandleBar ? 0 : isSideTray ? 4 : 2
-                      }
-                      style={styles?.header}
-                    >
-                      {shouldShowHandleBar &&
-                        (preventDismiss ? (
-                          <HandleBar
-                            classNames={{
-                              root: classNames?.handleBar,
-                              handle: classNames?.handleBarHandle,
-                            }}
-                            styles={{
-                              root: styles?.handleBar,
-                              handle: styles?.handleBarHandle,
-                            }}
-                          />
-                        ) : (
-                          <HandleBar
-                            accessibilityHint={closeAccessibilityHint}
-                            accessibilityLabel={closeAccessibilityLabel}
-                            classNames={{
-                              root: classNames?.handleBar,
-                              handle: classNames?.handleBarHandle,
-                            }}
-                            onClose={handleClose}
-                            onPointerCancel={handlePointerCancel}
-                            onPointerDown={handlePointerDown}
-                            onPointerMove={handlePointerMove}
-                            onPointerUp={handlePointerUp}
-                            styles={{
-                              root: styles?.handleBar,
-                              handle: styles?.handleBarHandle,
-                            }}
-                          />
-                        ))}
-                      {shouldShowTitle && (
-                        <HStack
-                          alignItems={isSideTray ? 'flex-start' : 'center'}
-                          justifyContent={title ? 'space-between' : 'flex-end'}
-                          paddingX={horizontalPadding}
-                        >
-                          {title &&
-                            (typeof title === 'string' ? (
-                              <Text
-                                className={classNames?.title}
-                                font="title3"
-                                style={styles?.title}
-                              >
-                                {title}
-                              </Text>
-                            ) : (
-                              title
-                            ))}
-                          {shouldShowCloseButton && (
-                            <IconButton
-                              transparent
+                  <VStack
+                    ref={observeTraySize}
+                    flexGrow={1}
+                    maxWidth={isSideTray ? undefined : '70em'}
+                    minHeight={0}
+                    width="100%"
+                  >
+                    {(shouldShowTitle || headerContent || shouldShowHandleBar) && (
+                      <VStack
+                        className={cx(
+                          shouldShrinkPadding && trayHeaderBorderBaseCss,
+                          shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
+                          classNames?.header,
+                        )}
+                        flexShrink={0}
+                        overflow="hidden"
+                        paddingBottom={shouldShrinkPadding ? 0.75 : 1}
+                        paddingTop={
+                          !shouldShrinkPadding ? 3 : shouldShowHandleBar ? 0 : isSideTray ? 4 : 2
+                        }
+                        style={styles?.header}
+                      >
+                        {shouldShowHandleBar &&
+                          (preventDismiss ? (
+                            <HandleBar
+                              classNames={{
+                                root: classNames?.handleBar,
+                                handle: classNames?.handleBarHandle,
+                              }}
+                              styles={{
+                                root: styles?.handleBar,
+                                handle: styles?.handleBarHandle,
+                              }}
+                            />
+                          ) : (
+                            <HandleBar
                               accessibilityHint={closeAccessibilityHint}
                               accessibilityLabel={closeAccessibilityLabel}
-                              className={classNames?.closeButton}
-                              margin={isSideTray ? -1.5 : undefined}
-                              name="close"
-                              onClick={handleClose}
-                              style={styles?.closeButton}
-                              testID="tray-close-button"
+                              classNames={{
+                                root: classNames?.handleBar,
+                                handle: classNames?.handleBarHandle,
+                              }}
+                              onClose={handleClose}
+                              onPointerDown={(e: React.PointerEvent<HTMLDivElement>) => {
+                                dragControls.start(e);
+                              }}
+                              styles={{
+                                root: styles?.handleBar,
+                                handle: { ...styles?.handleBarHandle, touchAction: 'none' },
+                              }}
                             />
-                          )}
-                        </HStack>
-                      )}
-                      {headerContent}
+                          ))}
+                        {shouldShowTitle && (
+                          <HStack
+                            alignItems={isSideTray ? 'flex-start' : 'center'}
+                            justifyContent={title ? 'space-between' : 'flex-end'}
+                            paddingX={horizontalPadding}
+                          >
+                            {title &&
+                              (typeof title === 'string' ? (
+                                <Text
+                                  className={classNames?.title}
+                                  font="title3"
+                                  style={styles?.title}
+                                >
+                                  {title}
+                                </Text>
+                              ) : (
+                                title
+                              ))}
+                            {shouldShowCloseButton && (
+                              <IconButton
+                                transparent
+                                accessibilityHint={closeAccessibilityHint}
+                                accessibilityLabel={closeAccessibilityLabel}
+                                className={classNames?.closeButton}
+                                margin={isSideTray ? -1.5 : undefined}
+                                name="close"
+                                onClick={handleClose}
+                                style={styles?.closeButton}
+                                testID="tray-close-button"
+                              />
+                            )}
+                          </HStack>
+                        )}
+                        {headerContent}
+                      </VStack>
+                    )}
+                    <VStack
+                      ref={contentRef}
+                      className={classNames?.content}
+                      flexGrow={1}
+                      minHeight={0}
+                      overflow="hidden"
+                      paddingBottom={shouldShrinkPadding ? 0 : 2}
+                      paddingTop={shouldShrinkPadding ? 0 : 1}
+                      paddingX={horizontalPadding}
+                      style={{ overflowY: 'auto', ...styles?.content }}
+                    >
+                      {content}
                     </VStack>
-                  )}
-                  <VStack
-                    ref={contentRef}
-                    className={classNames?.content}
-                    flexGrow={1}
-                    minHeight={0}
-                    overflow="hidden"
-                    paddingBottom={shouldShrinkPadding ? 0 : 2}
-                    paddingTop={shouldShrinkPadding ? 0 : 1}
-                    paddingX={horizontalPadding}
-                    style={{ overflowY: 'auto', ...styles?.content }}
-                  >
-                    {content}
+                    {footerContent}
                   </VStack>
-                  {footerContent}
-                </VStack>
-              </MotionVStack>
-            </FocusTrap>
+                </MotionVStack>
+              </FocusTrap>
+            </DragMotionProvider>
           </Box>
         </Portal>
       </OverlayContentContext.Provider>
