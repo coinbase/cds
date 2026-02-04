@@ -343,16 +343,6 @@ export const Tray = memo(
       }
     }, [handleClose, preventDismiss, onBlur]);
 
-    const handleDrag = useCallback(
-      (
-        _event: MouseEvent | TouchEvent | PointerEvent,
-        _info: { offset: { y: number }; velocity: { y: number } },
-      ) => {
-        // Drag handler - can be used for visual feedback during drag
-      },
-      [],
-    );
-
     const handleDragEnd = useCallback(
       (
         _event: MouseEvent | TouchEvent | PointerEvent,
@@ -478,7 +468,6 @@ export const Tray = memo(
                   id={id}
                   initial={initialAnimationValue}
                   onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-                  onDrag={!preventDismiss ? handleDrag : undefined}
                   onDragEnd={!preventDismiss ? handleDragEnd : undefined}
                   pin={pin}
                   role={role}
