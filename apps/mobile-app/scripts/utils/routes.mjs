@@ -66,21 +66,6 @@ export const routes = [
         .default,
   },
   {
-    key: 'ATrayFullBleedImage',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/overlays/__stories__/ATrayFullBleedImage.stories').default,
-  },
-  {
-    key: 'ATrayIllustration',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/overlays/__stories__/ATrayIllustration.stories').default,
-  },
-  {
-    key: 'ATrayStandard',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/overlays/__stories__/ATrayStandard.stories').default,
-  },
-  {
     key: 'Avatar',
     getComponent: () => require('@coinbase/cds-mobile/media/__stories__/Avatar.stories').default,
   },
@@ -835,6 +820,11 @@ export const routes = [
     key: 'TrayPromotional',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayPromotional.stories').default,
+  },
+  {
+    key: 'TrayRedesign',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayRedesign.stories').default,
   },
   {
     key: 'TrayScrollable',

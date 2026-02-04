@@ -41,11 +41,10 @@ function BasicTray() {
 
 Mobile Tray requires a `ScrollView` for scrollable content. Use `useSafeBottomPadding` for proper safe area handling and `verticalDrawerPercentageOfView` to control the maximum height.
 
-When scrolling, a border is added to the header.
+When scrolling, use `headerElevation` to add a drop shadow below the header. This provides visual separation between the header and scrollable content.
 
 ```tsx
 function ScrollableTray() {
-  const theme = useTheme();
   const safeBottomPadding = useSafeBottomPadding();
 
   const [isTrayVisible, setIsTrayVisible] = useState(false);
@@ -57,15 +56,6 @@ function ScrollableTray() {
     const scrollY = e.nativeEvent.contentOffset.y;
     setIsScrolled(scrollY > 0);
   }, []);
-
-  const headerStyles = useMemo(
-    () => ({
-      paddingBottom: theme.space[1],
-      borderBottomWidth: isScrolled ? 1 : 0,
-      borderBottomColor: theme.color.bgLine,
-    }),
-    [theme, isScrolled],
-  );
 
   const scrollContentStyle = useMemo(
     () => ({
@@ -80,10 +70,8 @@ function ScrollableTray() {
       {isTrayVisible && (
         <Tray
           handleBarVariant="inside"
+          headerElevation={isScrolled ? 2 : 0}
           onCloseComplete={setIsTrayVisibleOff}
-          styles={{
-            header: headerStyles,
-          }}
           title="Header"
           verticalDrawerPercentageOfView={0.9}
         >
@@ -506,7 +494,6 @@ function FloatingTray({
 }
 
 function Example() {
-  const theme = useTheme();
   const [isTrayVisible, setIsTrayVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
@@ -517,21 +504,13 @@ function Example() {
     setIsScrolled(scrollY > 0);
   }, []);
 
-  const headerStyles = useMemo(
-    () => ({
-      borderBottomWidth: isScrolled ? 1 : 0,
-      borderBottomColor: theme.color.bgLine,
-    }),
-    [theme, isScrolled],
-  );
-
   return (
     <>
       <Button onPress={setIsTrayVisibleOn}>Open Floating Tray</Button>
       {isTrayVisible && (
         <FloatingTray
+          headerElevation={isScrolled ? 2 : 0}
           onCloseComplete={setIsTrayVisibleOff}
-          styles={{ header: headerStyles }}
           title="Example title"
         >
           <ScrollView
