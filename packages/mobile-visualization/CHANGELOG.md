@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 3.4.0-beta.17 (1/29/2026 PST)
+## 3.4.0-beta.17 (2/4/2026 PST)
 
 #### 🚀 Updates
 
