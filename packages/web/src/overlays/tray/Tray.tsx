@@ -49,6 +49,36 @@ const trayHeaderBorderVisibleCss = css`
   border-bottom-color: var(--color-bgLine);
 `;
 
+const trayContainerBaseCss = css`
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-grow: 1;
+  min-height: 0;
+  align-items: center;
+`;
+
+const trayContainerPinBottomCss = css`
+  border-top-left-radius: var(--borderRadius-600);
+  border-top-right-radius: var(--borderRadius-600);
+`;
+
+const trayContainerPinTopCss = css`
+  border-bottom-left-radius: var(--borderRadius-600);
+  border-bottom-right-radius: var(--borderRadius-600);
+`;
+
+const trayContainerPinLeftCss = css`
+  border-top-right-radius: var(--borderRadius-600);
+  border-bottom-right-radius: var(--borderRadius-600);
+`;
+
+const trayContainerPinRightCss = css`
+  border-top-left-radius: var(--borderRadius-600);
+  border-bottom-left-radius: var(--borderRadius-600);
+`;
+
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = {
@@ -453,18 +483,19 @@ export const Tray = memo(
       [footer, handleClose],
     );
 
-    const animatedContainerStyle = useMemo(
-      () => ({
-        position: 'absolute',
-        zIndex: 1,
-        maxHeight: isSideTray ? undefined : verticalDrawerPercentageOfView,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        ...styles?.container,
-      }),
-      [isSideTray, verticalDrawerPercentageOfView, styles?.container],
-    );
+    const trayContainerPinCss = useMemo(() => {
+      switch (pin) {
+        case 'top':
+          return trayContainerPinTopCss;
+        case 'left':
+          return trayContainerPinLeftCss;
+        case 'right':
+          return trayContainerPinRightCss;
+        case 'bottom':
+        default:
+          return trayContainerPinBottomCss;
+      }
+    }, [pin]);
 
     if (!isOpen) return null;
 
@@ -495,26 +526,21 @@ export const Tray = memo(
                 ref={observeTraySize}
                 accessibilityLabel={accessibilityLabel}
                 accessibilityLabelledBy={accessibilityLabelledBy}
-                alignItems="center"
                 animate={controls}
                 aria-modal="true"
-                borderBottomLeftRadius={pin === 'left' || pin === 'bottom' ? 0 : 600}
-                borderBottomRightRadius={pin === 'right' || pin === 'bottom' ? 0 : 600}
-                borderTopLeftRadius={pin === 'left' || pin === 'top' ? 0 : 600}
-                borderTopRightRadius={pin === 'right' || pin === 'top' ? 0 : 600}
                 bordered={theme.activeColorScheme === 'dark'}
-                className={classNames?.container}
+                className={cx(trayContainerBaseCss, trayContainerPinCss, classNames?.container)}
                 data-testid="tray"
                 elevation={2}
-                flexGrow={1}
                 id={id}
                 initial={initialAnimationValue}
-                minHeight={0}
                 onClick={handleTrayClick}
-                overflow="hidden"
                 pin={pin}
                 role={role}
-                style={animatedContainerStyle}
+                style={{
+                  maxHeight: isSideTray ? undefined : verticalDrawerPercentageOfView,
+                  ...styles?.container,
+                }}
                 tabIndex={0}
                 width={isSideTray ? 'min(400px, 100vw)' : '100%'}
               >
