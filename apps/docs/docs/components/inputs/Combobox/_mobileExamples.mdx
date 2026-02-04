@@ -125,6 +125,10 @@ function HelperTextExample() {
 
 The alignment of the selected value(s) can be adjusted using the `align` prop.
 
+::::note
+Left / right alignment is preferred for styling.
+::::
+
 ```jsx
 function AlignmentExample() {
   const fruitOptions = [
@@ -141,15 +145,6 @@ function AlignmentExample() {
     <VStack gap={2}>
       <Combobox
         label="Default align - start"
-        onChange={onChange}
-        options={fruitOptions}
-        placeholder="Search fruits..."
-        type="multi"
-        value={value}
-      />
-      <Combobox
-        align="center"
-        label="Center align"
         onChange={onChange}
         options={fruitOptions}
         placeholder="Search fruits..."

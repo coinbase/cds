@@ -165,6 +165,10 @@ function MultiSelectWithGroupsExample() {
 
 The Select component supports aligning the selected value(s) using the `align` prop.
 
+::::note
+Left / right alignment is preferred for styling.
+::::
+
 ```jsx live
 function AlignmentExample() {
   const exampleOptions = [
@@ -188,14 +192,6 @@ function AlignmentExample() {
         value={value}
       />
       <Select
-        align="center"
-        label="Center align"
-        onChange={setValue}
-        options={exampleOptions}
-        placeholder="Empty value"
-        value={value}
-      />
-      <Select
         align="end"
         label="End align"
         onChange={setValue}
@@ -205,15 +201,6 @@ function AlignmentExample() {
       />
       <Select
         label="Default align - start"
-        onChange={onMultiChange}
-        options={exampleOptions}
-        placeholder="Empty value"
-        type="multi"
-        value={multiValue}
-      />
-      <Select
-        align="center"
-        label="Center align"
         onChange={onMultiChange}
         options={exampleOptions}
         placeholder="Empty value"

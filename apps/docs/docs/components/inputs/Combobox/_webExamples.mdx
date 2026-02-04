@@ -113,6 +113,10 @@ const fruitOptions: SelectOption[] = [
 
 The alignment of the selected value(s) can be adjusted using the `align` prop.
 
+::::note
+Left / right alignment is preferred for styling.
+::::
+
 ```jsx live
 function AlignmentExample() {
   const fruitOptions: SelectOption[] = [
@@ -131,15 +135,6 @@ function AlignmentExample() {
     <VStack gap={1}>
       <Combobox
         label="Default align - start"
-        onChange={multiOnChange}
-        options={fruitOptions}
-        placeholder="Empty value"
-        type="multi"
-        value={multiValue}
-      />
-      <Combobox
-        align="center"
-        label="Center align"
         onChange={multiOnChange}
         options={fruitOptions}
         placeholder="Empty value"
