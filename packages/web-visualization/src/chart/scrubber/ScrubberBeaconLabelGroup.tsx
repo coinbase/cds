@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import { getPointOnScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
@@ -19,7 +19,7 @@ const PositionedLabel = memo<{
   index: number;
   positions: (LabelPosition | null)[];
   position: ScrubberLabelPosition;
-  label: string;
+  label: ChartTextChildren;
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
