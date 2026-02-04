@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Update storybook ExampleScreen. [[#366](https://github.com/coinbase/cds/pull/366)]
+
 ## 8.40.2 (2/2/2026 PST)
 
 #### 🐞 Fixes
