@@ -23,7 +23,7 @@ import {
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
 } from '../line';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -134,7 +134,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Label for the series.
      */
-    label: AnimatedProp<string>;
+    label: ChartTextChildren;
     /**
      * Id of the series.
      */

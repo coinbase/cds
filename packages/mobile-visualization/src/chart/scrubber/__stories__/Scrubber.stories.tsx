@@ -6,7 +6,7 @@ import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography';
-import { FontWeight } from '@shopify/react-native-skia';
+import { FontWeight, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart, SolidLine } from '../../line';
@@ -310,12 +310,12 @@ const CustomBeaconLabel = () => {
   );
 };
 
-const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLabelPosition }) => {
+const PercentageBeaconLabels = () => {
   const theme = useTheme();
 
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, series } = useCartesianChartContext();
+      const { getSeriesData, series, fontProvider } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const seriesData = useMemo(
@@ -336,19 +336,55 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
         return scrubberPosition.value ?? Math.max(0, dataLength - 1);
       }, [scrubberPosition, dataLength]);
 
+      const labelColor = `rgb(${theme.spectrum.gray0})`;
+
+      const regularStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: 14,
+          fontStyle: {
+            weight: FontWeight.Normal,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [labelColor],
+      );
+
+      const boldStyle: SkTextStyle = useMemo(
+        () => ({
+          ...regularStyle,
+          fontStyle: {
+            weight: FontWeight.Bold,
+          },
+        }),
+        [regularStyle],
+      );
+
       const percentageLabel = useDerivedValue(() => {
+        const labelValue = unwrapAnimatedValue(label);
+
         if (seriesData !== undefined) {
           const dataAtPosition = seriesData[dataIndex.value];
-          return `${dataAtPosition}% ${unwrapAnimatedValue(label)}`;
+
+          const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontProvider);
+
+          builder.pushStyle(boldStyle);
+          builder.addText(`${dataAtPosition}%`);
+          builder.pushStyle(regularStyle);
+          builder.addText(` ${labelValue}`);
+
+          const para = builder.build();
+          para.layout(512);
+          return para;
         }
-        return unwrapAnimatedValue(label);
-      }, [label, seriesData, dataIndex]);
+
+        return labelValue;
+      }, [label, seriesData, dataIndex, fontProvider, boldStyle, regularStyle]);
 
       return (
         <DefaultScrubberBeaconLabel
           {...props}
           background={color}
-          color={`rgb(${theme.spectrum.gray0})`}
           label={percentageLabel}
           seriesId={seriesId}
         />
@@ -364,42 +400,67 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
     ? `rgb(${theme.spectrum.gray0})`
     : `rgb(${theme.spectrum.gray90})`;
 
+  const seriesData = [
+    {
+      id: 'prices2',
+      data: [90, 78, 71, 55, 2, 55, 78, 48, 79, 96, 32, 80, 79, 42],
+      color: `rgb(${theme.spectrum.blue40})`,
+      label: 'ATL',
+    },
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      color: `rgb(${theme.spectrum.chartreuse40})`,
+      label: 'NYC',
+    },
+  ];
+
   return (
-    <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
-      <LineChart
-        enableScrubbing
-        showArea
-        areaType="dotted"
-        height={150}
-        inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-        series={[
-          {
-            id: 'prices2',
-            data: [90, 78, 71, 55, 2, 55, 78, 48, 79, 96, 32, 80, 79, 42],
-            color: `rgb(${theme.spectrum.blue40})`,
-            label: 'ATL',
-          },
-          {
-            id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-            color: `rgb(${theme.spectrum.chartreuse40})`,
-            label: 'NYC',
-          },
-        ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 92 }),
-        }}
-      >
-        <Scrubber
-          hideOverlay
-          idlePulse
-          BeaconLabelComponent={PercentageScrubberBeaconLabel}
-          beaconLabelPreferredSide={preferredSide}
-          beaconStroke={background}
-          lineStroke={scrubberLineStroke}
-        />
-      </LineChart>
-    </Box>
+    <VStack gap={4}>
+      <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
+        <LineChart
+          enableScrubbing
+          showArea
+          areaType="dotted"
+          height={150}
+          inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+          series={seriesData}
+          xAxis={{
+            range: ({ min, max }) => ({ min, max: max - 92 }),
+          }}
+        >
+          <Scrubber
+            hideOverlay
+            idlePulse
+            BeaconLabelComponent={PercentageScrubberBeaconLabel}
+            beaconStroke={background}
+            lineStroke={scrubberLineStroke}
+          />
+        </LineChart>
+      </Box>
+      <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
+        <LineChart
+          enableScrubbing
+          showArea
+          areaType="dotted"
+          height={150}
+          inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+          series={seriesData}
+          xAxis={{
+            range: ({ min, max }) => ({ min, max: max - 92 }),
+          }}
+        >
+          <Scrubber
+            hideOverlay
+            idlePulse
+            BeaconLabelComponent={PercentageScrubberBeaconLabel}
+            beaconLabelPreferredSide="left"
+            beaconStroke={background}
+            lineStroke={scrubberLineStroke}
+          />
+        </LineChart>
+      </Box>
+    </VStack>
   );
 };
 
@@ -690,10 +751,6 @@ const ExampleNavigator = () => {
       {
         title: 'Percentage Beacon Labels',
         component: <PercentageBeaconLabels />,
-      },
-      {
-        title: 'Beacon Labels - Left Side',
-        component: <PercentageBeaconLabels preferredSide="left" />,
       },
       {
         title: 'Hide Beacon Labels',

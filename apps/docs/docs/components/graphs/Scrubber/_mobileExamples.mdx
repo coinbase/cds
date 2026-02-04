@@ -706,7 +706,7 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
 
 ### Percentage Beacon Labels
 
-You can use `BeaconLabelComponent` to display a label with the percentage value of the data at the scrubber position.
+You can use `BeaconLabelComponent` to display a label with the percentage value of the data at the scrubber position. This example uses `SkParagraph` to style the percentage in bold and the label in regular weight.
 
 ```jsx
 function PercentageBeaconLabels() {
@@ -714,7 +714,7 @@ function PercentageBeaconLabels() {
 
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, series } = useCartesianChartContext();
+      const { getSeriesData, series, fontProvider } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const seriesData = useMemo(
@@ -735,19 +735,58 @@ function PercentageBeaconLabels() {
         return scrubberPosition.value ?? Math.max(0, dataLength - 1);
       }, [scrubberPosition, dataLength]);
 
+      const labelColor = `rgb(${theme.spectrum.gray0})`;
+
+      const regularStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: 14,
+          fontStyle: {
+            weight: FontWeight.Normal,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [labelColor],
+      );
+
+      const boldStyle: SkTextStyle = useMemo(
+        () => ({
+          ...regularStyle,
+          fontStyle: {
+            weight: FontWeight.Bold,
+          },
+        }),
+        [regularStyle],
+      );
+
       const percentageLabel = useDerivedValue(() => {
+        const labelValue = unwrapAnimatedValue(label);
+
         if (seriesData !== undefined) {
           const dataAtPosition = seriesData[dataIndex.value];
-          return `${dataAtPosition}% ${unwrapAnimatedValue(label)}`;
+
+          const builder = Skia.ParagraphBuilder.Make(
+            { textAlign: TextAlign.Left },
+            fontProvider,
+          );
+
+          builder.pushStyle(boldStyle);
+          builder.addText(`${dataAtPosition}%`);
+          builder.pushStyle(regularStyle);
+          builder.addText(` ${labelValue}`);
+
+          const para = builder.build();
+          para.layout(512);
+          return para;
         }
-        return unwrapAnimatedValue(label);
-      }, [label, seriesData, dataIndex]);
+
+        return labelValue;
+      }, [label, seriesData, dataIndex, fontProvider, boldStyle, regularStyle]);
 
       return (
         <DefaultScrubberBeaconLabel
           {...props}
           background={color}
-          color={`rgb(${theme.spectrum.gray0})`}
           label={percentageLabel}
           seriesId={seriesId}
         />

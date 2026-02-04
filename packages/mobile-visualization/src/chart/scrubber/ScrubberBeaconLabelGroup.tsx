@@ -4,7 +4,7 @@ import { useDerivedValue } from 'react-native-reanimated';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import { applySerializableScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
@@ -21,7 +21,7 @@ const PositionedLabel = memo<{
   index: number;
   positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
-  label: AnimatedProp<string>;
+  label: ChartTextChildren;
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
