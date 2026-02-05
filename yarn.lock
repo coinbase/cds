@@ -30884,6 +30884,7 @@ __metadata:
     "@react-navigation/native-stack": "npm:6.9.26"
     "@shopify/react-native-skia": "npm:2.2.12"
     expo: "npm:54.0.32"
+    expo-dev-client: "npm:6.0.20"
     expo-font: "npm:~14.0.1"
     expo-linking: "npm:~8.0.11"
     expo-splash-screen: "npm:31.0.13"

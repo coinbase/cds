@@ -4,7 +4,7 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       // IMPORTANT: react-native-worklets/plugin must be listed LAST
-      // 'react-native-worklets/plugin',
+      'react-native-worklets/plugin',
     ],
   };
 };

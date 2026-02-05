@@ -32,11 +32,10 @@ const CdsSafeAreaProvider: React.FC<React.PropsWithChildren<unknown>> = memo(({ 
   return <SafeAreaProvider style={style}>{children}</SafeAreaProvider>;
 });
 
-// this is breaking for new reanimated versions
-// const LocalStrictMode = ({ children }: { children: React.ReactNode }) => {
-//   const strict = process.env.CI !== 'true';
-//   return strict ? <StrictMode>{children}</StrictMode> : <>{children}</>;
-// };
+const LocalStrictMode = ({ children }: { children: React.ReactNode }) => {
+  const strict = process.env.CI !== 'true';
+  return strict ? <StrictMode>{children}</StrictMode> : <>{children}</>;
+};
 
 const App = memo(() => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -59,18 +58,20 @@ const App = memo(() => {
   }
 
   return (
-    <ChartBridgeProvider>
-      <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
-        <CdsSafeAreaProvider>
-          <PortalProvider>
-            <StatusBar hidden={!__DEV__} />
-            <NavigationContainer linking={linking} onReady={handleOnReady}>
-              <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
-            </NavigationContainer>
-          </PortalProvider>
-        </CdsSafeAreaProvider>
-      </ThemeProvider>
-    </ChartBridgeProvider>
+    <LocalStrictMode>
+      <ChartBridgeProvider>
+        <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
+          <CdsSafeAreaProvider>
+            <PortalProvider>
+              <StatusBar hidden={!__DEV__} />
+              <NavigationContainer linking={linking} onReady={handleOnReady}>
+                <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
+              </NavigationContainer>
+            </PortalProvider>
+          </CdsSafeAreaProvider>
+        </ThemeProvider>
+      </ChartBridgeProvider>
+    </LocalStrictMode>
   );
 });
 
