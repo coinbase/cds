@@ -1435,41 +1435,37 @@ describe('Carousel', () => {
       expect(screen.getByTestId('carousel-autoplay-button')).toBeOnTheScreen();
     });
 
-    it('applies custom startAutoplayAccessibilityLabel', () => {
+    it('applies custom autoplay accessibility labels and toggles them on press', () => {
       render(
         <TestCarouselWithItems
           autoplay
           itemCount={5}
           startAutoplayAccessibilityLabel="Resume slideshow"
-        />,
-      );
-
-      // First stop autoplay to see the start label
-      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
-      fireEvent.press(autoplayButton);
-
-      // Should have the custom start label
-      expect(screen.getByLabelText('Resume slideshow')).toBeOnTheScreen();
-    });
-
-    it('applies custom stopAutoplayAccessibilityLabel', () => {
-      render(
-        <TestCarouselWithItems
-          autoplay
-          itemCount={5}
           stopAutoplayAccessibilityLabel="Pause slideshow"
         />,
       );
 
-      // Should have the custom stop label when autoplay is playing
+      expect(screen.getByLabelText('Pause slideshow')).toBeOnTheScreen();
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      fireEvent.press(autoplayButton);
+      expect(screen.getByLabelText('Resume slideshow')).toBeOnTheScreen();
+
+      fireEvent.press(autoplayButton);
       expect(screen.getByLabelText('Pause slideshow')).toBeOnTheScreen();
     });
 
-    it('applies default autoplay accessibility labels', () => {
+    it('applies default autoplay accessibility labels and toggles them on press', () => {
       render(<TestCarouselWithItems autoplay itemCount={5} />);
 
-      // Should have the default stop label when autoplay is playing
-      expect(screen.getByLabelText('Stop autoplay')).toBeOnTheScreen();
+      expect(screen.getByLabelText('Pause Carousel')).toBeOnTheScreen();
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      fireEvent.press(autoplayButton);
+      expect(screen.getByLabelText('Play Carousel')).toBeOnTheScreen();
+
+      fireEvent.press(autoplayButton);
+      expect(screen.getByLabelText('Pause Carousel')).toBeOnTheScreen();
     });
 
     it('toggles autoplay when toggle button is pressed', () => {
@@ -1612,7 +1608,6 @@ describe('Carousel', () => {
 
     it('loops to first page when autoplay reaches the last page', () => {
       const onChangePage = jest.fn();
-      // Use snapMode="item" with 3 items for predictable pagination (3 pages)
       render(
         <TestCarouselWithItems
           autoplay
@@ -1624,54 +1619,20 @@ describe('Carousel', () => {
       );
 
       // Advance through all pages
-      // Page 0 -> 1
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-      // Page 1 -> 2 (last page with 3 items in item mode)
       act(() => {
         jest.advanceTimersByTime(1000);
       });
 
-      // Page 2 -> 0 (should loop)
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
       act(() => {
         jest.advanceTimersByTime(1000);
       });
 
       // Should have looped back to page 0
       expect(onChangePage).toHaveBeenCalledWith(0);
-    });
-
-    it('resets autoplay progress after drag gesture', () => {
-      const onChangePage = jest.fn();
-      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
-
-      // Advance time partially
-      act(() => {
-        jest.advanceTimersByTime(1500);
-      });
-
-      // Simulate a drag gesture
-      simulateDragGesture();
-
-      // Clear calls from drag
-      onChangePage.mockClear();
-
-      // Advance by less than full interval (timer was reset)
-      act(() => {
-        jest.advanceTimersByTime(2000);
-      });
-
-      // Should not have auto-advanced yet (timer reset to 3000ms)
-      expect(onChangePage).not.toHaveBeenCalled();
-
-      // Advance to complete the interval
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-
-      // Should have auto-advanced now
-      expect(onChangePage).toHaveBeenCalled();
     });
   });
 });

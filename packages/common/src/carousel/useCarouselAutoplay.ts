@@ -12,14 +12,6 @@ export type CarouselAutoplayOptions = {
    */
   interval: number;
   /**
-   * Callback fired when autoplay should advance to the next item.
-   */
-  onAdvance: () => void;
-  /**
-   * Callback fired on progress update.
-   */
-  onProgressUpdate?: (progress: number) => void;
-  /**
    * Callback fired when autoplay starts.
    */
   onStart?: () => void;
@@ -42,6 +34,16 @@ export type CarouselAutoplayState = {
    * Whether autoplay is temporarily paused due to user interaction (hover/touch).
    */
   isPaused: boolean;
+  /**
+   * Remaining time in milliseconds until the next advance.
+   * Use this with totalTime to calculate progress for platform-native animations.
+   */
+  remainingTime: number;
+  /**
+   * Total interval duration in milliseconds.
+   * Use this with remainingTime to calculate progress for platform-native animations.
+   */
+  totalTime: number;
 };
 
 export type CarouselAutoplayApi = {
@@ -58,7 +60,7 @@ export type CarouselAutoplayApi = {
    */
   toggle: () => void;
   /**
-   * Reset the autoplay timer and progress to 0 (e.g., after manual navigation).
+   * Reset the autoplay timer (e.g., after manual navigation).
    */
   reset: () => void;
   /**
@@ -70,19 +72,27 @@ export type CarouselAutoplayApi = {
    * Resume autoplay after interaction pause. Only resumes if not user-stopped.
    */
   resume: () => void;
+  /**
+   * Get the current remaining time. Useful for calculating progress in platform-native animations.
+   */
+  getRemainingTime: () => number;
+  /**
+   * Add a listener to be called when the autoplay timer completes.
+   * Returns an unsubscribe function.
+   */
+  addCompletionListener: (callback: () => void) => () => void;
 };
 
 /**
  * A hook for managing carousel autoplay state and timing.
  *
- * Provides controls for starting, stopping, and resetting autoplay with
- * progress tracking via requestAnimationFrame for smooth animations.
+ * Provides controls for starting, stopping, and resetting autoplay.
+ * Progress tracking is delegated to platform-native animation libraries
+ * (framer-motion for web, react-spring for mobile) via remainingTime/totalTime.
  *
  * @param options - The options for carousel autoplay.
  * @param options.enabled - Whether autoplay is enabled.
  * @param options.interval - The interval in milliseconds between auto-advances.
- * @param options.onAdvance - Callback fired when autoplay should advance to the next item.
- * @param options.onProgressUpdate - Callback fired on each animation frame with progress (0-1).
  * @param options.onStart - Callback fired when autoplay starts.
  * @param options.onStop - Callback fired when autoplay stops.
  * @returns A tuple where the first element is the autoplay state and the second element is an API for controlling autoplay.
@@ -92,20 +102,31 @@ export type CarouselAutoplayApi = {
  * const [autoplayState, autoplayApi] = useCarouselAutoplay({
  *   enabled: true,
  *   interval: 3000,
- *   onAdvance: () => goToNextPage(),
- *   onProgressUpdate: (progress) => progressValue.set(progress),
  * });
  *
+ * // Subscribe to timer completion
+ * useEffect(() => {
+ *   const unsubscribe = autoplayApi.addCompletionListener(() => {
+ *     goToNextPage();
+ *   });
+ *   return unsubscribe;
+ * }, [autoplayApi, goToNextPage]);
+ *
  * // State
- * autoplayState.isPlaying; // true when actively running
- * autoplayState.isStopped; // true when user has stopped autoplay
- * autoplayState.isPaused;  // true when temporarily paused (hover/touch)
+ * autoplayState.isPlaying;     // true when actively running
+ * autoplayState.isStopped;     // true when user has stopped autoplay
+ * autoplayState.isPaused;      // true when temporarily paused (hover/touch)
+ * autoplayState.remainingTime; // ms remaining until next advance
+ * autoplayState.totalTime;     // total interval duration in ms
+ *
+ * // Calculate progress for animations
+ * const progress = 1 - (autoplayState.remainingTime / autoplayState.totalTime);
  *
  * // User controls (toggle button)
  * autoplayApi.start();  // Resume autoplay
  * autoplayApi.stop();   // Stop autoplay (preserves progress)
  * autoplayApi.toggle(); // Toggle autoplay on/off
- * autoplayApi.reset();  // Reset timer and progress to 0
+ * autoplayApi.reset();  // Reset timer to beginning
  *
  * // Interaction controls (hover/touch)
  * autoplayApi.pause();  // Temporarily pause (on pointer enter / touch start)
@@ -115,164 +136,140 @@ export type CarouselAutoplayApi = {
 export const useCarouselAutoplay = ({
   enabled,
   interval,
-  onAdvance,
-  onProgressUpdate,
   onStart,
   onStop,
 }: CarouselAutoplayOptions): [CarouselAutoplayState, CarouselAutoplayApi] => {
   const timer = useTimer();
   const [isStopped, setIsStopped] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  // Stores the requestAnimationFrame ID so we can immediately cancel the animation on pause/stop/unmount
-  // This prevents the animation from continuing
-  const animationFrameIdRef = useRef<number>(0);
-  const startTimeRef = useRef<number>(0);
-  const pausedProgressRef = useRef<number>(0);
+
+  // Use refs for synchronous checks to avoid stale closure issues
   const isPlayingRef = useRef(false);
+  const isPausedRef = useRef(false);
+  const isStoppedRef = useRef(false);
+
+  // Listeners for timer completion
+  const listenersRef = useRef<Set<() => void>>(new Set());
+
+  const notifyListeners = useCallback(() => {
+    listenersRef.current.forEach((listener) => listener());
+  }, []);
+
+  const addCompletionListener = useCallback((callback: () => void) => {
+    listenersRef.current.add(callback);
+    return () => {
+      listenersRef.current.delete(callback);
+    };
+  }, []);
 
   const isPlaying = enabled && !isStopped && !isPaused;
 
-  isPlayingRef.current = isPlaying;
-
-  const cancelProgressAnimation = useCallback(
-    (resetProgress: boolean) => {
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-        animationFrameIdRef.current = 0;
-      }
-      if (resetProgress) {
-        pausedProgressRef.current = 0;
-        onProgressUpdate?.(0);
-      }
-    },
-    [onProgressUpdate],
-  );
-
-  const pauseProgressAnimation = useCallback(() => {
-    if (animationFrameIdRef.current) {
-      const elapsed = performance.now() - startTimeRef.current;
-      pausedProgressRef.current = Math.min(elapsed / interval, 1);
-      cancelAnimationFrame(animationFrameIdRef.current);
-      animationFrameIdRef.current = 0;
-    }
-  }, [interval]);
-
-  const startProgressAnimation = useCallback(
-    (fromPausedProgress: boolean) => {
-      if (!onProgressUpdate) return;
-
-      const initialProgress = fromPausedProgress ? pausedProgressRef.current : 0;
-
-      startTimeRef.current = performance.now() - initialProgress * interval;
-
-      const updateProgress = () => {
-        const elapsed = performance.now() - startTimeRef.current;
-        const progress = Math.min(elapsed / interval, 1);
-        onProgressUpdate(progress);
-
-        if (progress < 1) {
-          animationFrameIdRef.current = requestAnimationFrame(updateProgress);
-        }
-      };
-
-      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
-    },
-    [interval, onProgressUpdate],
-  );
+  const getRemainingTime = useCallback(() => {
+    return timer.getRemainingTime();
+  }, [timer]);
 
   const startAutoplay = useCallback(
     (fromPausedProgress: boolean) => {
-      if (!enabled || isStopped || isPaused) return;
+      if (!enabled || isStoppedRef.current || isPausedRef.current) return;
 
       const advance = () => {
         if (!isPlayingRef.current) return;
-        pausedProgressRef.current = 0;
-        cancelProgressAnimation(true);
-        onAdvance();
-        startProgressAnimation(false);
-        timer.start(advance, interval);
+        notifyListeners();
       };
 
-      const remainingTime = fromPausedProgress
-        ? interval * (1 - pausedProgressRef.current)
-        : interval;
-
-      cancelProgressAnimation(false);
-      startProgressAnimation(fromPausedProgress);
-      timer.start(advance, remainingTime);
+      if (fromPausedProgress) {
+        timer.resume();
+      } else {
+        timer.start(advance, interval);
+      }
 
       if (!isPlayingRef.current) {
         isPlayingRef.current = true;
         onStart?.();
       }
     },
-    [
-      enabled,
-      isStopped,
-      isPaused,
-      onAdvance,
-      interval,
-      timer,
-      cancelProgressAnimation,
-      startProgressAnimation,
-      onStart,
-    ],
+    [enabled, interval, timer, onStart, notifyListeners],
   );
 
   const start = useCallback(() => {
+    isStoppedRef.current = false;
     setIsStopped(false);
-  }, []);
+    // Start timer synchronously if not paused
+    if (!isPausedRef.current && enabled) {
+      startAutoplay(false);
+    }
+  }, [enabled, startAutoplay]);
 
   const stop = useCallback(() => {
-    pauseProgressAnimation();
     timer.pause();
+    isStoppedRef.current = true;
     setIsStopped(true);
     if (isPlayingRef.current) {
       isPlayingRef.current = false;
       onStop?.();
     }
-  }, [pauseProgressAnimation, timer, onStop]);
+  }, [timer, onStop]);
 
   const toggle = useCallback(() => {
-    if (isStopped) {
+    if (isStoppedRef.current) {
       start();
     } else {
       stop();
     }
-  }, [isStopped, start, stop]);
+  }, [start, stop]);
 
   const reset = useCallback(() => {
-    pausedProgressRef.current = 0;
-    onProgressUpdate?.(0);
-  }, [onProgressUpdate]);
+    timer.reset();
+
+    // Start a fresh timer with the full interval
+    const advance = () => {
+      if (!isPlayingRef.current) return;
+      notifyListeners();
+    };
+    timer.start(advance, interval);
+
+    // If paused, immediately pause the timer so getRemainingTime() returns the full interval
+    if (isPausedRef.current) {
+      timer.pause();
+    }
+  }, [timer, interval, notifyListeners]);
 
   const pause = useCallback(() => {
-    if (!isPlaying) return;
-    pauseProgressAnimation();
+    if (!isPlayingRef.current) return;
     timer.pause();
+    isPausedRef.current = true;
     setIsPaused(true);
-  }, [isPlaying, pauseProgressAnimation, timer]);
+  }, [timer]);
 
   const resume = useCallback(() => {
-    if (isStopped) return;
+    if (isStoppedRef.current) return;
+    // Update ref synchronously BEFORE starting timer
+    isPausedRef.current = false;
     setIsPaused(false);
-  }, [isStopped]);
-
-  // Start autoplay when isPlaying is true
-  useEffect(() => {
-    if (isPlaying) {
-      const shouldResumeFromProgress = pausedProgressRef.current > 0;
-      startAutoplay(shouldResumeFromProgress);
+    // Start timer synchronously so getRemainingTime() returns correct value
+    if (enabled) {
+      const hasRemainingTime = timer.getRemainingTime() > 0;
+      startAutoplay(hasRemainingTime);
     }
-  }, [isPlaying, startAutoplay]);
+  }, [enabled, timer, startAutoplay]);
 
-  // Cleanup timer and animation frame on unmount
+  // Handle initial mount and enabled changes
+  // This runs on mount when enabled=true to start autoplay initially
+  useEffect(() => {
+    if (enabled && !isStoppedRef.current && !isPausedRef.current) {
+      // Only start if not already playing (avoid double-start)
+      if (!isPlayingRef.current) {
+        startAutoplay(false);
+      }
+    }
+    // Keep isPlayingRef in sync with derived state
+    isPlayingRef.current = isPlaying;
+  }, [enabled, isPlaying, startAutoplay]);
+
+  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       timer.clear();
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
     };
   }, [timer]);
 
@@ -281,8 +278,10 @@ export const useCarouselAutoplay = ({
       isPlaying,
       isStopped,
       isPaused,
+      remainingTime: timer.getRemainingTime(),
+      totalTime: interval,
     }),
-    [isPlaying, isStopped, isPaused],
+    [isPlaying, isStopped, isPaused, timer, interval],
   );
 
   const api = useMemo<CarouselAutoplayApi>(
@@ -293,8 +292,10 @@ export const useCarouselAutoplay = ({
       reset,
       pause,
       resume,
+      getRemainingTime,
+      addCompletionListener,
     }),
-    [start, stop, toggle, reset, pause, resume],
+    [start, stop, toggle, reset, pause, resume, getRemainingTime, addCompletionListener],
   );
 
   return [state, api];

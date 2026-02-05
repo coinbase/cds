@@ -1145,7 +1145,6 @@ function ComposedAutoplayCarousel() {
 
   function CustomPaginationDots({ totalPages, activePageIndex, onClickPage }) {
     const autoplay = useCarouselAutoplayContext();
-    const progressWidth = useTransform(autoplay.progress, (value) => `${value * 100}%`);
 
     return (
       <HStack
@@ -1159,6 +1158,12 @@ function ComposedAutoplayCarousel() {
         {Array.from({ length: totalPages }, (_, index) => {
           const isActive = index === activePageIndex;
           const showProgress = isActive && autoplay.isEnabled;
+
+          // Calculate progress from timing info
+          const remainingTime = autoplay.getRemainingTime();
+          const progress = 1 - remainingTime / autoplay.totalTime;
+          const progressDuration = autoplay.isPlaying ? remainingTime / 1000 : 0;
+
           return (
             <Pressable
               key={index}
@@ -1176,8 +1181,10 @@ function ComposedAutoplayCarousel() {
             >
               {showProgress && (
                 <m.div
+                  animate={{ width: autoplay.isPlaying ? '100%' : `${progress * 100}%` }}
+                  initial={false}
+                  transition={{ duration: progressDuration, ease: 'linear' }}
                   style={{
-                    width: progressWidth,
                     height: '100%',
                     background: 'var(--color-fgPrimary)',
                     borderRadius: 'var(--borderRadius-1000)',

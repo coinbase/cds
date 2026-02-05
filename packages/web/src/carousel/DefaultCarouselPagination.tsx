@@ -1,7 +1,7 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
-import { motion, type Transition, useTransform } from 'framer-motion';
+import { motion, type Transition } from 'framer-motion';
 
 import { cx } from '../cx';
 import { HStack } from '../layout/HStack';
@@ -95,13 +95,43 @@ const PaginationDot = memo(function PaginationDot({
   ...props
 }: PaginationIndicatorProps) {
   const autoplayContext = useCarouselAutoplayContext();
+  const { isPlaying, isEnabled, totalTime, getRemainingTime } = autoplayContext;
 
-  const progressWidth = useTransform(
-    autoplayContext.progress,
-    (value: number) => `${value * 100}%`,
-  );
+  const showProgress = isActive && isEnabled;
 
-  const showProgress = isActive && autoplayContext.isEnabled;
+  // Track the progress width as a percentage string for animation
+  const [progressState, setProgressState] = useState<{
+    width: string;
+    duration: number;
+  }>({ width: '0%', duration: 0 });
+
+  // Use a ref to track the last paused progress so we can resume from it
+  const lastProgressRef = useRef(0);
+
+  useEffect(() => {
+    if (!showProgress) {
+      setProgressState({ width: '0%', duration: 0 });
+      lastProgressRef.current = 0;
+      return;
+    }
+
+    const remainingTime = getRemainingTime();
+    const currentProgress = 1 - remainingTime / totalTime;
+
+    if (isPlaying) {
+      lastProgressRef.current = currentProgress;
+      setProgressState({
+        width: '100%',
+        duration: remainingTime / 1000,
+      });
+    } else {
+      setProgressState({
+        width: `${currentProgress * 100}%`,
+        duration: 0,
+      });
+      lastProgressRef.current = currentProgress;
+    }
+  }, [isPlaying, showProgress, totalTime, getRemainingTime]);
 
   return (
     <MotionPressable
@@ -121,11 +151,16 @@ const PaginationDot = memo(function PaginationDot({
     >
       {showProgress && (
         <motion.div
+          animate={{ width: progressState.width }}
+          initial={false}
           style={{
-            width: progressWidth,
             height: '100%',
             background: 'var(--color-bgPrimary)',
             borderRadius: 'var(--borderRadius-100)',
+          }}
+          transition={{
+            duration: progressState.duration,
+            ease: 'linear',
           }}
         />
       )}

@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { animated, useSpring } from '@react-spring/native';
 
@@ -74,8 +74,9 @@ const PaginationDot = memo(function PaginationDot({
 }: PaginationIndicatorProps) {
   const theme = useTheme();
   const autoplayContext = useCarouselAutoplayContext();
+  const { isPlaying, isEnabled, totalTime, getRemainingTime } = autoplayContext;
 
-  const showProgress = isActive && autoplayContext.isEnabled;
+  const showProgress = isActive && isEnabled;
 
   const springProps = useSpring({
     width: isActive ? INDICATOR_ACTIVE_WIDTH : INDICATOR_INACTIVE_WIDTH,
@@ -83,9 +84,45 @@ const PaginationDot = memo(function PaginationDot({
     config: animationConfig,
   });
 
-  const progressWidth = autoplayContext.progress.to(
-    (value: number) => value * INDICATOR_ACTIVE_WIDTH,
-  );
+  // Track progress animation state
+  const [progressState, setProgressState] = useState<{
+    width: number;
+    duration: number;
+  }>({ width: 0, duration: 0 });
+
+  // Use a ref to track the last paused progress so we can resume from it
+  const lastProgressRef = useRef(0);
+
+  useEffect(() => {
+    if (!showProgress) {
+      setProgressState({ width: 0, duration: 0 });
+      lastProgressRef.current = 0;
+      return;
+    }
+
+    const remainingTime = getRemainingTime();
+    const currentProgress = 1 - remainingTime / totalTime;
+
+    if (isPlaying) {
+      lastProgressRef.current = currentProgress;
+      setProgressState({
+        width: INDICATOR_ACTIVE_WIDTH,
+        duration: remainingTime,
+      });
+    } else {
+      setProgressState({
+        width: currentProgress * INDICATOR_ACTIVE_WIDTH,
+        duration: 0,
+      });
+      lastProgressRef.current = currentProgress;
+    }
+  }, [isPlaying, showProgress, totalTime, getRemainingTime]);
+
+  // Use spring with duration config for linear timed animation
+  const progressSpring = useSpring({
+    width: progressState.width,
+    config: progressState.duration > 0 ? { duration: progressState.duration } : { duration: 0 },
+  });
 
   return (
     <Pressable
@@ -110,7 +147,7 @@ const PaginationDot = memo(function PaginationDot({
         {showProgress && (
           <animated.View
             style={{
-              width: progressWidth,
+              width: progressSpring.width,
               height: '100%',
               backgroundColor: theme.color.bgPrimary,
               borderRadius: theme.borderRadius[100],

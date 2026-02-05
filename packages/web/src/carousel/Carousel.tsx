@@ -775,7 +775,6 @@ export const Carousel = memo(
       const animationApi = useAnimation();
       const carouselScrollX = useMotionValue(0);
       const dragControls = useDragControls();
-      const autoplayProgress = useMotionValue(0);
 
       const [activePageIndex, setActivePageIndex] = useState(0);
       const containerRef = useRef<HTMLDivElement>(null);
@@ -1060,6 +1059,15 @@ export const Carousel = memo(
         updateActivePageIndex,
       ]);
 
+      const [autoplayState, autoplayApi] = useCarouselAutoplay({
+        enabled: autoplay ?? false,
+        interval: autoplayInterval,
+      });
+      const autoplayControls = useMemo(
+        () => ({ ...autoplayState, ...autoplayApi }),
+        [autoplayState, autoplayApi],
+      );
+
       const goToPage = useCallback(
         (page: number) => {
           const newPage = Math.max(0, Math.min(totalPages - 1, page));
@@ -1072,6 +1080,7 @@ export const Carousel = memo(
             : pageOffsets[newPage];
 
           animate(carouselScrollX, -targetOffset, animationConfig);
+          autoplayControls.reset();
         },
         [
           totalPages,
@@ -1081,6 +1090,7 @@ export const Carousel = memo(
           isLoopingActive,
           carouselScrollX,
           loopLength,
+          autoplayControls,
         ],
       );
 
@@ -1094,50 +1104,35 @@ export const Carousel = memo(
         [activePageIndex, totalPages, goToPage],
       );
 
-      const handleAutoplayAdvance = useCallback(() => {
-        const nextPage = wrap(0, totalPages, activePageIndex + 1);
-        goToPage(nextPage);
-      }, [totalPages, activePageIndex, goToPage]);
+      useEffect(() => {
+        if (!autoplay || totalPages === 0) return;
 
-      const [autoplayState, autoplayApi] = useCarouselAutoplay({
-        enabled: autoplay ?? false,
-        interval: autoplayInterval,
-        onAdvance: handleAutoplayAdvance,
-        onProgressUpdate: (progress) => autoplayProgress.set(progress),
-      });
-      const autoplayControls = useMemo(
-        () => ({ ...autoplayState, ...autoplayApi }),
-        [autoplayState, autoplayApi],
-      );
+        const unsubscribe = autoplayApi.addCompletionListener(() => {
+          const nextPage = wrap(0, totalPages, activePageIndex + 1);
+          goToPage(nextPage);
+        });
+        return unsubscribe;
+      }, [autoplay, autoplayApi, activePageIndex, totalPages, goToPage]);
 
       const handleGoNext = useCallback(() => {
-        autoplayControls.pause();
         const nextPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex + 1)
           : activePageIndex + 1;
         goToPage(nextPage);
-        autoplayControls.reset();
-        autoplayControls.resume();
-      }, [shouldLoop, totalPages, activePageIndex, goToPage, autoplayControls]);
+      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
 
       const handleGoPrevious = useCallback(() => {
-        autoplayControls.pause();
         const prevPage = shouldLoop
           ? wrap(0, totalPages, activePageIndex - 1)
           : activePageIndex - 1;
         goToPage(prevPage);
-        autoplayControls.reset();
-        autoplayControls.resume();
-      }, [shouldLoop, totalPages, activePageIndex, goToPage, autoplayControls]);
+      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
 
       const handleClickPage = useCallback(
         (pageIndex: number) => {
-          autoplayControls.pause();
           goToPage(pageIndex);
-          autoplayControls.reset();
-          autoplayControls.resume();
         },
-        [goToPage, autoplayControls],
+        [goToPage],
       );
 
       const handleDragTransition = useCallback(
@@ -1317,7 +1312,8 @@ export const Carousel = memo(
           isStopped: autoplayControls.isStopped,
           isPaused: autoplayControls.isPaused,
           isPlaying: autoplayControls.isPlaying,
-          progress: autoplayProgress,
+          totalTime: autoplayInterval,
+          getRemainingTime: autoplayControls.getRemainingTime,
           start: autoplayControls.start,
           stop: autoplayControls.stop,
           toggle: autoplayControls.toggle,
@@ -1325,7 +1321,7 @@ export const Carousel = memo(
           pause: autoplayControls.pause,
           resume: autoplayControls.resume,
         }),
-        [autoplay, autoplayControls, autoplayProgress],
+        [autoplay, autoplayControls, autoplayInterval],
       );
 
       return (

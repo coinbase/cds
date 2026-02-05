@@ -892,7 +892,13 @@ function ComposedAutoplayCarousel() {
             config: { tension: 300, friction: 25 },
           });
 
-          const progressWidth = autoplay.progress.to((value) => value * theme.space[3]);
+          // Calculate progress from timing info
+          const remainingTime = autoplay.getRemainingTime();
+          const progress = 1 - remainingTime / autoplay.totalTime;
+          const progressSpring = useSpring({
+            width: autoplay.isPlaying ? theme.space[3] : progress * theme.space[3],
+            config: autoplay.isPlaying ? { duration: remainingTime } : { duration: 0 },
+          });
 
           return (
             <Pressable
@@ -915,7 +921,7 @@ function ComposedAutoplayCarousel() {
                 {showProgress && (
                   <animated.View
                     style={{
-                      width: progressWidth,
+                      width: progressSpring.width,
                       height: '100%',
                       backgroundColor: theme.color.fgPrimary,
                       borderRadius: theme.borderRadius[1000],

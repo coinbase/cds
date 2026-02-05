@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import type { MotionValue } from 'framer-motion';
 
 export type CarouselContextValue = {
   /**
@@ -36,10 +35,14 @@ export type CarouselAutoplayContextValue = {
    */
   isPlaying: boolean;
   /**
-   * Progress through the current interval (0-1).
-   * Updates via MotionValue to avoid re-renders.
+   * Total interval duration in milliseconds.
    */
-  progress: MotionValue<number>;
+  totalTime: number;
+  /**
+   * Get the current remaining time until next advance.
+   * Use with totalTime to calculate progress for platform-native animations.
+   */
+  getRemainingTime: () => number;
   /**
    * Start autoplay (user action via toggle button).
    */

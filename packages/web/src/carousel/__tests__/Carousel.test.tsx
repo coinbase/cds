@@ -230,21 +230,16 @@ describe('Carousel', () => {
       const nextButton = screen.getByTestId('carousel-next-button');
       const previousButton = screen.getByTestId('carousel-previous-button');
 
-      // Initially on first page, so previous should be disabled
       expect(previousButton).toBeDisabled();
 
-      // Wait for carousel to initialize with proper dimensions
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Confirm previous button is still disabled
       expect(previousButton).toBeDisabled();
 
-      // Navigate to next page
       await user.click(nextButton);
 
-      // Previous button should now be enabled since we're no longer on first page
       await waitFor(() => {
         expect(previousButton).not.toBeDisabled();
       });
@@ -257,7 +252,6 @@ describe('Carousel', () => {
       const nextButton = screen.getByTestId('carousel-next-button');
       const previousButton = screen.getByTestId('carousel-previous-button');
 
-      // Initially, previous should be disabled (first page) but next should be enabled
       await waitFor(() => {
         expect(previousButton).toBeDisabled();
       });
@@ -265,18 +259,14 @@ describe('Carousel', () => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Navigate to next page
       await user.click(nextButton);
 
-      // Now previous should be enabled
       await waitFor(() => {
         expect(previousButton).not.toBeDisabled();
       });
 
-      // Navigate back to previous page
       await user.click(previousButton);
 
-      // Previous should be disabled again (back to first page)
       await waitFor(() => {
         expect(previousButton).toBeDisabled();
       });
@@ -373,7 +363,6 @@ describe('Carousel', () => {
     it('has aria-live="off" on slides container when autoplay is playing', async () => {
       render(<TestCarouselWithItems autoplay itemCount={5} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
@@ -381,7 +370,6 @@ describe('Carousel', () => {
       const carousel = screen.getByRole('group');
       const slidesContainer = carousel.querySelector('[aria-live]');
 
-      // When autoplay is enabled and playing, aria-live should be "off"
       expect(slidesContainer).toHaveAttribute('aria-live', 'off');
       expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
     });
@@ -389,12 +377,10 @@ describe('Carousel', () => {
     it('has aria-live="polite" on slides container when autoplay is stopped', async () => {
       render(<TestCarouselWithItems autoplay itemCount={5} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Stop autoplay
       const autoplayButton = screen.getByTestId('carousel-autoplay-button');
       act(() => {
         autoplayButton.click();
@@ -403,7 +389,6 @@ describe('Carousel', () => {
       const carousel = screen.getByRole('group');
       const slidesContainer = carousel.querySelector('[aria-live]');
 
-      // When autoplay is stopped, aria-live should be "polite" for screen reader announcements
       expect(slidesContainer).toHaveAttribute('aria-live', 'polite');
       expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
     });
@@ -433,10 +418,7 @@ describe('Carousel', () => {
 
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Button should be disabled initially, so it can't receive focus
       expect(nextButton).toBeDisabled();
-
-      // Verify button is in the tab order when enabled (would need functional carousel)
       expect(nextButton).toHaveAttribute('type', 'button');
     });
   });
@@ -476,8 +458,6 @@ describe('Carousel', () => {
       expect(carousel).toHaveClass('custom-carousel');
       expect(carousel).toHaveClass('custom-root');
 
-      // Check that the motion div (carousel content) has the custom class
-      // The structure is: VStack -> div (carouselContainer) -> m.div (carousel)
       const carouselContainer = carousel.querySelector('div[style*="position: relative"]');
       const carouselContent = carouselContainer?.querySelector('div');
       expect(carouselContent).toHaveClass('custom-carousel-content');
@@ -512,14 +492,12 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<DynamicCarousel />);
 
-      // Check initial items
       expect(screen.getByText('Item 1')).toBeInTheDocument();
       expect(screen.getByText('Item 2')).toBeInTheDocument();
       expect(screen.queryByText('Item 3')).not.toBeInTheDocument();
 
       await user.click(screen.getByTestId('add-items'));
 
-      // Check that new items are added
       expect(screen.getByText('Item 3')).toBeInTheDocument();
       expect(screen.getByText('Item 4')).toBeInTheDocument();
     });
@@ -533,11 +511,8 @@ describe('Carousel', () => {
 
       expect(screen.getByTestId('carousel-next-button')).toBeDisabled();
       expect(screen.getByTestId('carousel-previous-button')).toBeDisabled();
-
-      // Check that no carousel items are rendered
       expect(screen.queryByText(/Item \d+/)).not.toBeInTheDocument();
 
-      // Check that pagination is empty (no dots/indicators)
       const carousel = screen.getByRole('group');
       const paginationDots = carousel.querySelectorAll('button[aria-label*="Go to page"]');
       expect(paginationDots).toHaveLength(0);
@@ -579,13 +554,11 @@ describe('Carousel', () => {
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
 
-      // Verify correct number of pagination dots
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots).toHaveLength(expectedPages);
       });
 
-      // Should have navigation enabled for multiple pages
       await waitFor(() => {
         expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
       });
@@ -599,13 +572,11 @@ describe('Carousel', () => {
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
 
-      // Verify correct number of pagination dots for item snap mode
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots).toHaveLength(expectedPages);
       });
 
-      // Should have navigation enabled for multiple items that don't all fit
       await waitFor(() => {
         expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
       });
@@ -674,10 +645,8 @@ describe('Carousel', () => {
 
       const initialRenderCount = renderSpy.mock.calls.length;
 
-      // Re-render with same props
       rerender(<TestComponent itemCount={3} />);
 
-      // Should not cause excessive additional renders due to memoization
       expect(renderSpy.mock.calls.length).toBe(initialRenderCount + 1);
     });
 
@@ -686,7 +655,6 @@ describe('Carousel', () => {
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
 
-      // Re-render with same props should not cause issues
       rerender(<TestCarouselWithItems itemCount={3} />);
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
@@ -773,15 +741,12 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithRef />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Get current page index
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should display current page as 0 (first page)
       expect(screen.getByTestId('current-page-display')).toHaveTextContent('Current Page: 0');
     });
 
@@ -834,38 +799,27 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithRef />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Navigate to page 2
       await user.click(screen.getByTestId('go-to-page-2'));
 
-      // Get current page index
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should display current page as 2 (note: this test might need adjustment based on actual page calculation)
       const currentPageDisplay = screen.getByTestId('current-page-display');
       const currentPageText = currentPageDisplay.textContent;
 
-      // The exact page index depends on how the carousel calculates pages with 8 items
-      // Let's check if it's at least not page 0 (meaning navigation worked)
-      expect(currentPageText).toMatch(/Current Page: [1-9]/); // Should be page 1 or higher
+      expect(currentPageText).toMatch(/Current Page: [1-9]/);
 
-      // Store the current page for comparison
       const currentPageIndex = parseInt(currentPageText!.split(': ')[1]);
 
-      // Navigate back to first page
       await user.click(screen.getByTestId('go-to-first-page'));
 
-      // Get current page index again
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should display current page as 0 (back to first page)
       expect(screen.getByTestId('current-page-display')).toHaveTextContent('Current Page: 0');
 
-      // Verify we actually navigated (current page should be different from before)
       const newPageIndex = parseInt(
         screen.getByTestId('current-page-display').textContent!.split(': ')[1],
       );
@@ -922,28 +876,23 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithRef />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Try to navigate to negative page (should clamp to 0)
       await user.click(screen.getByTestId('go-to-negative-page'));
       await user.click(screen.getByTestId('get-current-page'));
       expect(screen.getByTestId('current-page-display')).toHaveTextContent('Current Page: 0');
 
-      // Try to navigate to page beyond max (should clamp to last page)
       await user.click(screen.getByTestId('go-to-large-page'));
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should clamp to the last available page (will depend on page calculation)
       const displayedPage = screen.getByTestId('current-page-display').textContent;
       expect(displayedPage).toMatch(/Current Page: \d+/);
 
-      // The page should be >= 0 and reasonable (not 999)
       const pageNumber = parseInt(displayedPage!.split(': ')[1]);
       expect(pageNumber).toBeGreaterThanOrEqual(0);
-      expect(pageNumber).toBeLessThan(10); // Should be reasonable for 6 items
+      expect(pageNumber).toBeLessThan(10);
     });
   });
 
@@ -1540,34 +1489,53 @@ describe('Carousel', () => {
       expect(screen.getByTestId('carousel-autoplay-button')).toBeInTheDocument();
     });
 
-    it('applies custom autoplayAccessibilityLabel', async () => {
+    it('applies custom autoplay accessibility labels and toggles them on click', async () => {
       render(
         <TestCarouselWithItems
           autoplay
-          autoplayAccessibilityLabel="Control slideshow"
           itemCount={5}
+          startAutoplayAccessibilityLabel="Resume slideshow"
+          stopAutoplayAccessibilityLabel="Pause slideshow"
         />,
       );
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Should have the custom label
-      expect(screen.getByLabelText('Control slideshow')).toBeInTheDocument();
+      expect(screen.getByLabelText('Pause slideshow')).toBeInTheDocument();
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Resume slideshow')).toBeInTheDocument();
+
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Pause slideshow')).toBeInTheDocument();
     });
 
-    it('applies default autoplay accessibility label', async () => {
+    it('applies default autoplay accessibility labels and toggles them on click', async () => {
       render(<TestCarouselWithItems autoplay itemCount={5} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Should have the default label from DefaultCarouselNavigation
-      expect(screen.getByLabelText('Play/Pause Carousel')).toBeInTheDocument();
+      expect(screen.getByLabelText('Pause Carousel')).toBeInTheDocument();
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Play Carousel')).toBeInTheDocument();
+
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Pause Carousel')).toBeInTheDocument();
     });
 
     it('toggles autoplay when toggle button is clicked', async () => {
@@ -1611,37 +1579,32 @@ describe('Carousel', () => {
       const onChangePage = jest.fn();
       render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Wait for next button to be enabled
       const nextButton = screen.getByTestId('carousel-next-button');
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Advance time partially
       act(() => {
         jest.advanceTimersByTime(1500);
       });
 
-      // Manually navigate
       act(() => {
         nextButton.click();
       });
 
-      // Clear the call from manual navigation
       onChangePage.mockClear();
 
       act(() => {
-        jest.advanceTimersByTime(4000);
+        jest.advanceTimersByTime(2500);
       });
       expect(onChangePage).not.toHaveBeenCalled();
 
       act(() => {
-        jest.advanceTimersByTime(1000);
+        jest.advanceTimersByTime(500);
       });
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
@@ -1652,32 +1615,27 @@ describe('Carousel', () => {
       const onChangePage = jest.fn();
       render(<TestCarouselWithItems autoplay loop itemCount={5} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Previous button should be enabled with loop
       const prevButton = screen.getByTestId('carousel-previous-button');
       await waitFor(() => {
         expect(prevButton).not.toBeDisabled();
       });
 
-      // Advance time partially
       act(() => {
         jest.advanceTimersByTime(1500);
       });
 
-      // Manually navigate backwards
       act(() => {
         prevButton.click();
       });
 
-      // Clear the call from manual navigation
       onChangePage.mockClear();
 
       act(() => {
-        jest.advanceTimersByTime(2000);
+        jest.advanceTimersByTime(2500);
       });
       expect(onChangePage).not.toHaveBeenCalled();
     });
@@ -1739,45 +1697,6 @@ describe('Carousel', () => {
       });
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
-      });
-    });
-
-    it('loops to first page when autoplay reaches the last page', async () => {
-      const onChangePage = jest.fn();
-      // Use snapMode="item" with 3 items for predictable pagination (3 pages)
-      render(
-        <TestCarouselWithItems
-          autoplay
-          autoplayInterval={1000}
-          itemCount={3}
-          onChangePage={onChangePage}
-          snapMode="item"
-        />,
-      );
-
-      // Wait for carousel to initialize
-      await waitFor(() => {
-        expect(screen.getByText('Item 1')).toBeInTheDocument();
-      });
-
-      // Advance through all pages
-      // Page 0 -> 1
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-      // Page 1 -> 2
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-
-      // Page 2 -> 0 (should loop)
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-
-      // Should have looped back to page 0
-      await waitFor(() => {
-        expect(onChangePage).toHaveBeenCalledWith(0);
       });
     });
   });

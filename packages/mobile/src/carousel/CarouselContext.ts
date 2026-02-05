@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import type { SpringValue } from '@react-spring/native';
 
 export type CarouselContextValue = {
   registerItem: (id: string, state: Rect) => void;
@@ -39,10 +38,14 @@ export type CarouselAutoplayContextValue = {
    */
   isPlaying: boolean;
   /**
-   * Progress through the current interval (0-1).
-   * Updates via SpringValue to enable smooth animations.
+   * Total interval duration in milliseconds.
    */
-  progress: SpringValue<number>;
+  totalTime: number;
+  /**
+   * Get the current remaining time until next advance.
+   * Use with totalTime to calculate progress for platform-native animations.
+   */
+  getRemainingTime: () => number;
   /**
    * Start autoplay (user action via toggle button).
    */
