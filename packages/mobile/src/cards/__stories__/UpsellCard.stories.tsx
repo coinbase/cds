@@ -26,7 +26,7 @@ const exampleProps = {
   media: (
     <Image
       accessibilityIgnoresInvertColors
-      alt="Send a crypto gift illustration"
+      accessibilityLabel="Send a crypto gift illustration"
       source={{ uri: coinbaseOneLogo }}
       style={styles.image}
     />
@@ -42,7 +42,7 @@ const compactProps = {
   media: (
     <Image
       accessibilityIgnoresInvertColors
-      alt="Send a crypto gift illustration"
+      accessibilityLabel="Send a crypto gift illustration"
       source={{ uri: coinbaseOneLogo }}
       style={styles.image}
     />

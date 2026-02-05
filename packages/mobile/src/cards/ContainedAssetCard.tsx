@@ -38,6 +38,33 @@ export type ContainedAssetCardProps = ContainedAssetCardBaseProps &
   Pick<PressableProps, 'onPress'> &
   Pick<HStackProps, 'minWidth' | 'maxWidth'>;
 
+/**
+ * @deprecated Use `MediaCard` instead. ContainedAssetCard will be removed in a future major release.
+ *
+ * Migration guide:
+ * ```tsx
+ * // Before
+ * <ContainedAssetCard
+ *   header={<Avatar ... />}
+ *   title="Asset Title"
+ *   subtitle="Subtitle"
+ *   description="Description"
+ *   size="l"
+ * >
+ *   <RemoteImage ... />
+ * </ContainedAssetCard>
+ *
+ * // After
+ * <MediaCard
+ *   thumbnail={<Avatar ... />}
+ *   title="Asset Title"
+ *   subtitle="Subtitle"
+ *   description="Description"
+ *   media={<RemoteImage ... />}
+ *   mediaPlacement="end"
+ * />
+ * ```
+ */
 export const ContainedAssetCard = memo(
   ({
     title,

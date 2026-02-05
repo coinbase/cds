@@ -50,7 +50,7 @@ const exampleMediaProps: NudgeCardProps = {
   media: (
     <Image
       accessibilityIgnoresInvertColors
-      alt="placeholder"
+      accessibilityLabel="placeholder"
       source={{ uri: squareAssets.human2 }}
       style={styles.customMediaStyles}
     />
@@ -65,7 +65,7 @@ const compactMediaProps: NudgeCardProps = {
   media: (
     <Image
       accessibilityIgnoresInvertColors
-      alt="placeholder"
+      accessibilityLabel="placeholder"
       source={{ uri: squareAssets.human3 }}
       style={styles.customMediaStyles}
     />

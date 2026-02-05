@@ -3,17 +3,88 @@
 ```jsx live
 <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
   <ContentCardBody
-    body="Bitcoin Network Shatters Records With Hashrate Climbing to 464 EH/s"
-    label={
-      <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
-        <Text as="p" font="label2" color="fgMuted" numberOfLines={1}>
-          BTC
-        </Text>
-        <Text font="label2" accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
-          ↗ 5.12%
-        </Text>
-      </HStack>
+    title="Bitcoin Network Shatters Records"
+    description={
+      <VStack gap={0.5}>
+        <Text font="body2">Hashrate Climbing to 464 EH/s</Text>
+        <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
+          <Text as="p" font="label2" color="fgMuted" numberOfLines={1}>
+            BTC
+          </Text>
+          <Text
+            font="label2"
+            accessibilityLabel="Up 5.12%"
+            as="p"
+            dangerouslySetColor="rgb(var(--green70))"
+          >
+            ↗ 5.12%
+          </Text>
+        </HStack>
+      </VStack>
     }
   />
+</VStack>
+```
+
+### With Media (Top Placement)
+
+```jsx live
+<VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+  <ContentCardBody
+    title="Ethereum Update"
+    description="The latest developments in the Ethereum ecosystem and network upgrades."
+    media={
+      <RemoteImage alt="Ethereum background" resizeMode="cover" src={ethBackground} width="100%" />
+    }
+    mediaPlacement="top"
+  />
+</VStack>
+```
+
+### With Media (End Placement)
+
+```jsx live
+<VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+  <ContentCardBody
+    title="Bitcoin Holdings"
+    description="Your current portfolio performance and asset allocation details."
+    media={
+      <RemoteImage alt="Ethereum background" resizeMode="cover" src={ethBackground} width="100%" />
+    }
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### With Custom Children
+
+Use the `children` prop to render custom content below the title and description. This is useful when you need to display additional data, charts, or interactive elements that don't fit the standard media/title/description layout.
+
+```jsx live
+<VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+  <ContentCardBody title="Weekly Summary" description="Your trading activity this week." gap={2}>
+    <HStack gap={2} justifyContent="space-between">
+      <VStack gap={0.5}>
+        <Text font="legal" color="fgMuted">
+          Trades
+        </Text>
+        <Text font="title3">24</Text>
+      </VStack>
+      <VStack gap={0.5}>
+        <Text font="legal" color="fgMuted">
+          Volume
+        </Text>
+        <Text font="title3">$12,450</Text>
+      </VStack>
+      <VStack gap={0.5}>
+        <Text font="legal" color="fgMuted">
+          P&L
+        </Text>
+        <Text font="title3" dangerouslySetColor="rgb(var(--green70))">
+          +$890
+        </Text>
+      </VStack>
+    </HStack>
+  </ContentCardBody>
 </VStack>
 ```

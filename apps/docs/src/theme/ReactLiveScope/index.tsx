@@ -8,6 +8,7 @@ import { useSort } from '@cbhq/cds-common/hooks/useSort';
 import { accounts } from '@cbhq/cds-common/internal/data/accounts';
 import * as CDSDataAccounts from '@cbhq/cds-common/internal/data/accounts';
 import * as CDSDataAssets from '@cbhq/cds-common/internal/data/assets';
+import { coinbaseOneLogo, svgs } from '@cbhq/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@cbhq/cds-common/internal/data/candles';
 import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 import { prices } from '@cbhq/cds-common/internal/data/prices';
@@ -35,17 +36,22 @@ import * as CDSLottie from '@cbhq/cds-lottie-files';
 import { Accordion } from '@cbhq/cds-web/accordion/Accordion';
 import { AccordionItem } from '@cbhq/cds-web/accordion/AccordionItem';
 import { Combobox } from '@cbhq/cds-web/alpha/combobox/Combobox';
+import { DataCard } from '@cbhq/cds-web/alpha/data-card';
 import { Select } from '@cbhq/cds-web/alpha/select/Select';
 import { SelectChip } from '@cbhq/cds-web/alpha/select-chip/SelectChip';
 import { TabbedChips } from '@cbhq/cds-web/alpha/tabbed-chips/TabbedChips';
 import { Lottie, LottieStatusAnimation } from '@cbhq/cds-web/animation';
 import { Banner } from '@cbhq/cds-web/banner/Banner';
 import * as CDSButtons from '@cbhq/cds-web/buttons';
-import { ContainedAssetCard } from '@cbhq/cds-web/cards/ContainedAssetCard';
+import {
+  ContainedAssetCard,
+  FloatingAssetCard,
+  MediaCard,
+  MessagingCard,
+  NudgeCard,
+  UpsellCard,
+} from '@cbhq/cds-web/cards';
 import * as ContentCardComponents from '@cbhq/cds-web/cards/ContentCard';
-import { FloatingAssetCard } from '@cbhq/cds-web/cards/FloatingAssetCard';
-import { NudgeCard } from '@cbhq/cds-web/cards/NudgeCard';
-import { UpsellCard } from '@cbhq/cds-web/cards/UpsellCard';
 import {
   Carousel,
   CarouselItem,
@@ -197,7 +203,10 @@ const ReactLiveScope: Record<string, unknown> = {
   ...CDSIllustrations,
   // cards
   ContainedAssetCard,
+  DataCard,
   FloatingAssetCard,
+  MediaCard,
+  MessagingCard,
   NudgeCard,
   UpsellCard,
   ...ContentCardComponents,
@@ -220,6 +229,8 @@ const ReactLiveScope: Record<string, unknown> = {
   Banner,
   // utils
   ...CDSDataAssets,
+  coinbaseOneLogo,
+  svgs,
   ...CDSDataAccounts,
   loremIpsum,
   prices,

@@ -125,6 +125,33 @@ export type NudgeCardBaseProps = {
 
 export type NudgeCardProps = NudgeCardBaseProps & Omit<BoxProps<BoxDefaultElement>, 'title'>;
 
+/**
+ * @deprecated Use `MessagingCard` with `type="nudge"` instead. NudgeCard will be removed in a future major release.
+ *
+ * Migration guide:
+ * ```tsx
+ * // Before
+ * <NudgeCard
+ *   title="Title"
+ *   description="Description"
+ *   pictogram="addToWatchlist"
+ *   action="Learn more"
+ *   onActionPress={handleAction}
+ *   onDismissPress={handleDismiss}
+ * />
+ *
+ * // After
+ * <MessagingCard
+ *   type="nudge"
+ *   title="Title"
+ *   description="Description"
+ *   media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+ *   actions={<Button compact variant="secondary">Learn more</Button>}
+ *   onDismiss={handleDismiss}
+ *   mediaPlacement="end"
+ * />
+ * ```
+ */
 export const NudgeCard = ({
   title,
   description,

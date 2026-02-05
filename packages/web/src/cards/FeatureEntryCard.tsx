@@ -5,10 +5,10 @@ import { CardBody, type CardBodyBaseProps } from './CardBody';
 
 export type FeatureEntryCardBaseProps = CardBaseProps & CardBodyBaseProps;
 
-/** @deprecated will be removed in v7.0.0 use NudgeCard or UpsellCard instead */
+/** @deprecated Use MessagingCard instead. FeatureEntryCard will be removed in a future major release. */
 export type FeatureEntryCardProps = FeatureEntryCardBaseProps;
 
-/** @deprecated This component will be removed in a future version. Use NudgeCard or UpsellCard instead. */
+/** @deprecated Use MessagingCard instead. FeatureEntryCard will be removed in a future major release. */
 export const FeatureEntryCard = memo(function FeatureEntryCard({
   onClick,
   testID = 'feature-entry-card',

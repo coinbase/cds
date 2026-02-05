@@ -1,13 +1,79 @@
-### Basic Example
+:::note Semantic HTML
+ContentCardFooter renders as a `<footer>` element by default. You can override this using the `as` prop.
+:::
+
+### With Icon Counter Buttons
 
 ```jsx live
 function Example() {
   return (
     <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
       <ContentCardFooter>
-        <IconCounterButton count={20} icon="heart" />
-        <IconCounterButton count={40} icon="comment" />
-        <IconCounterButton count={32} icon="wireTransfer" />
+        <IconCounterButton accessibilityLabel="Like" count={20} icon="heart" />
+        <IconCounterButton accessibilityLabel="Comment" count={40} icon="comment" />
+        <IconCounterButton accessibilityLabel="Share" count={32} icon="wireTransfer" />
+      </ContentCardFooter>
+    </VStack>
+  );
+}
+```
+
+### With Image Group and Button
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardFooter>
+        <RemoteImageGroup shape="circle" size={32}>
+          <RemoteImage alt="Ethereum" src={assets.eth.imageUrl} />
+          <RemoteImage alt="Bitcoin" src={assets.btc.imageUrl} />
+          <RemoteImage alt="Polygon" src={assets.polygon.imageUrl} />
+        </RemoteImageGroup>
+        <Button compact variant="secondary">
+          Share
+        </Button>
+      </ContentCardFooter>
+    </VStack>
+  );
+}
+```
+
+### With Text and Actions
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardFooter alignItems="center">
+        <Text font="label2" color="fgMuted">
+          Updated 2 hours ago
+        </Text>
+        <HStack gap={1}>
+          <IconButton
+            transparent
+            accessibilityLabel="Bookmark"
+            name="bookmark"
+            variant="secondary"
+          />
+          <IconButton transparent accessibilityLabel="Share" name="share" variant="secondary" />
+        </HStack>
+      </ContentCardFooter>
+    </VStack>
+  );
+}
+```
+
+### Centered Content
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardFooter justifyContent="center">
+        <Button compact variant="secondary">
+          View All Assets
+        </Button>
       </ContentCardFooter>
     </VStack>
   );
