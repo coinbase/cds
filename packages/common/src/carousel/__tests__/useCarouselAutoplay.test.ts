@@ -12,30 +12,28 @@ describe('useCarouselAutoplay', () => {
   describe('initial state', () => {
     it('should return initial state with isPlaying true when enabled', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
-      const [state, api] = result.current;
+      const autoplay = result.current;
 
-      expect(state.isPlaying).toBe(true);
-      expect(state.isStopped).toBe(false);
-      expect(state.isPaused).toBe(false);
-      expect(state.totalTime).toBe(3000);
-      expect(typeof state.remainingTime).toBe('number');
+      expect(autoplay.isPlaying).toBe(true);
+      expect(autoplay.isStopped).toBe(false);
+      expect(autoplay.isPaused).toBe(false);
 
-      expect(api).toHaveProperty('start');
-      expect(api).toHaveProperty('stop');
-      expect(api).toHaveProperty('toggle');
-      expect(api).toHaveProperty('reset');
-      expect(api).toHaveProperty('getRemainingTime');
-      expect(api).toHaveProperty('addCompletionListener');
+      expect(autoplay).toHaveProperty('start');
+      expect(autoplay).toHaveProperty('stop');
+      expect(autoplay).toHaveProperty('toggle');
+      expect(autoplay).toHaveProperty('reset');
+      expect(autoplay).toHaveProperty('getRemainingTime');
+      expect(autoplay).toHaveProperty('addCompletionListener');
     });
 
     it('should return initial state with isPlaying false when not enabled', () => {
       const { result } = renderHook(() =>
         useCarouselAutoplay({ ...defaultOptions, enabled: false }),
       );
-      const [state] = result.current;
+      const autoplay = result.current;
 
-      expect(state.isPlaying).toBe(false);
-      expect(state.isStopped).toBe(false);
+      expect(autoplay.isPlaying).toBe(false);
+      expect(autoplay.isStopped).toBe(false);
     });
   });
 
@@ -44,16 +42,16 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
-      expect(result.current[0].isPlaying).toBe(false);
-      expect(result.current[0].isStopped).toBe(true);
+      expect(result.current.isPlaying).toBe(false);
+      expect(result.current.isStopped).toBe(true);
 
       act(() => {
-        result.current[1].start();
+        result.current.start();
       });
-      expect(result.current[0].isPlaying).toBe(true);
-      expect(result.current[0].isStopped).toBe(false);
+      expect(result.current.isPlaying).toBe(true);
+      expect(result.current.isStopped).toBe(false);
     });
   });
 
@@ -62,12 +60,11 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
 
-      const [state] = result.current;
-      expect(state.isPlaying).toBe(false);
-      expect(state.isStopped).toBe(true);
+      expect(result.current.isPlaying).toBe(false);
+      expect(result.current.isStopped).toBe(true);
     });
 
     it('should call onStop callback when stopping', () => {
@@ -75,7 +72,7 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay({ ...defaultOptions, onStop }));
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
 
       expect(onStop).toHaveBeenCalledTimes(1);
@@ -86,30 +83,30 @@ describe('useCarouselAutoplay', () => {
     it('should toggle from playing to stopped', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
-      expect(result.current[0].isPlaying).toBe(true);
+      expect(result.current.isPlaying).toBe(true);
 
       act(() => {
-        result.current[1].toggle();
+        result.current.toggle();
       });
 
-      expect(result.current[0].isPlaying).toBe(false);
-      expect(result.current[0].isStopped).toBe(true);
+      expect(result.current.isPlaying).toBe(false);
+      expect(result.current.isStopped).toBe(true);
     });
 
     it('should toggle from stopped to playing', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
-      expect(result.current[0].isStopped).toBe(true);
+      expect(result.current.isStopped).toBe(true);
 
       act(() => {
-        result.current[1].toggle();
+        result.current.toggle();
       });
 
-      expect(result.current[0].isPlaying).toBe(true);
-      expect(result.current[0].isStopped).toBe(false);
+      expect(result.current.isPlaying).toBe(true);
+      expect(result.current.isStopped).toBe(false);
     });
   });
 
@@ -121,7 +118,7 @@ describe('useCarouselAutoplay', () => {
 
       // Subscribe to completion
       act(() => {
-        result.current[1].addCompletionListener(listener);
+        result.current.addCompletionListener(listener);
       });
 
       // Advance halfway
@@ -131,7 +128,7 @@ describe('useCarouselAutoplay', () => {
 
       // Reset should restart the timer
       act(() => {
-        result.current[1].reset();
+        result.current.reset();
       });
 
       // After another 1500ms, listener should NOT have been called yet
@@ -160,7 +157,7 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].addCompletionListener(listener);
+        result.current.addCompletionListener(listener);
       });
 
       act(() => {
@@ -178,7 +175,7 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].addCompletionListener(listener);
+        result.current.addCompletionListener(listener);
       });
 
       // First advance
@@ -189,7 +186,7 @@ describe('useCarouselAutoplay', () => {
 
       // Reset to restart timer (simulates what goToPage does)
       act(() => {
-        result.current[1].reset();
+        result.current.reset();
       });
 
       // Second advance
@@ -200,7 +197,7 @@ describe('useCarouselAutoplay', () => {
 
       // Reset again
       act(() => {
-        result.current[1].reset();
+        result.current.reset();
       });
 
       // Third advance
@@ -218,11 +215,11 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].addCompletionListener(listener);
+        result.current.addCompletionListener(listener);
       });
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
 
       act(() => {
@@ -241,8 +238,8 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].addCompletionListener(listener1);
-        result.current[1].addCompletionListener(listener2);
+        result.current.addCompletionListener(listener1);
+        result.current.addCompletionListener(listener2);
       });
 
       act(() => {
@@ -262,7 +259,7 @@ describe('useCarouselAutoplay', () => {
 
       let unsubscribe: () => void;
       act(() => {
-        unsubscribe = result.current[1].addCompletionListener(listener);
+        unsubscribe = result.current.addCompletionListener(listener);
       });
 
       // Unsubscribe before timer fires
@@ -281,28 +278,23 @@ describe('useCarouselAutoplay', () => {
   });
 
   describe('timing info', () => {
-    it('should expose totalTime matching the interval', () => {
-      const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
-      expect(result.current[0].totalTime).toBe(3000);
-    });
-
     it('should provide getRemainingTime function', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
-      expect(typeof result.current[1].getRemainingTime).toBe('function');
+      expect(typeof result.current.getRemainingTime).toBe('function');
     });
 
     it('should return decreasing remaining time as timer progresses', () => {
       jest.useFakeTimers();
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
-      const initialRemaining = result.current[1].getRemainingTime();
+      const initialRemaining = result.current.getRemainingTime();
       expect(initialRemaining).toBeLessThanOrEqual(3000);
 
       act(() => {
         jest.advanceTimersByTime(1000);
       });
 
-      const remainingAfter1s = result.current[1].getRemainingTime();
+      const remainingAfter1s = result.current.getRemainingTime();
       expect(remainingAfter1s).toBeLessThan(initialRemaining);
 
       jest.useRealTimers();
@@ -317,11 +309,11 @@ describe('useCarouselAutoplay', () => {
       });
 
       expect(onStart).not.toHaveBeenCalled();
-      expect(result.current[0].isPlaying).toBe(false);
+      expect(result.current.isPlaying).toBe(false);
 
       rerender({ ...defaultOptions, enabled: true, onStart });
 
-      expect(result.current[0].isPlaying).toBe(true);
+      expect(result.current.isPlaying).toBe(true);
     });
 
     it('should not auto-stop when enabled changes to false (user must call stop)', () => {
@@ -329,38 +321,38 @@ describe('useCarouselAutoplay', () => {
         initialProps: defaultOptions,
       });
 
-      expect(result.current[0].isPlaying).toBe(true);
+      expect(result.current.isPlaying).toBe(true);
 
       rerender({ ...defaultOptions, enabled: false });
 
-      expect(result.current[0].isPlaying).toBe(false);
-      expect(result.current[0].isStopped).toBe(false);
+      expect(result.current.isPlaying).toBe(false);
+      expect(result.current.isStopped).toBe(false);
     });
   });
 
   describe('state consistency', () => {
     it('should maintain referential stability for API methods', () => {
       const { result, rerender } = renderHook(() => useCarouselAutoplay(defaultOptions));
-      const [, initialApi] = result.current;
+      const initialAutoplay = result.current;
 
       rerender();
-      const [, rerenderApi] = result.current;
+      const rerenderAutoplay = result.current;
 
-      expect(initialApi.start).toBe(rerenderApi.start);
-      expect(initialApi.stop).toBe(rerenderApi.stop);
-      expect(initialApi.toggle).toBe(rerenderApi.toggle);
+      expect(initialAutoplay.start).toBe(rerenderAutoplay.start);
+      expect(initialAutoplay.stop).toBe(rerenderAutoplay.stop);
+      expect(initialAutoplay.toggle).toBe(rerenderAutoplay.toggle);
     });
 
-    it('should return new state object when state changes', () => {
+    it('should return new object when state changes', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
-      const [initialState] = result.current;
+      const initialAutoplay = result.current;
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
 
-      const [newState] = result.current;
-      expect(initialState).not.toBe(newState);
+      const newAutoplay = result.current;
+      expect(initialAutoplay).not.toBe(newAutoplay);
     });
   });
 
@@ -373,13 +365,13 @@ describe('useCarouselAutoplay', () => {
       );
 
       act(() => {
-        result.current[1].stop();
-        result.current[1].start();
-        result.current[1].stop();
-        result.current[1].start();
+        result.current.stop();
+        result.current.start();
+        result.current.stop();
+        result.current.start();
       });
 
-      expect(result.current[0].isPlaying).toBe(true);
+      expect(result.current.isPlaying).toBe(true);
     });
 
     it('should handle zero interval gracefully', () => {
@@ -412,7 +404,7 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].addCompletionListener(listener);
+        result.current.addCompletionListener(listener);
       });
 
       // Advance halfway
@@ -422,10 +414,10 @@ describe('useCarouselAutoplay', () => {
 
       // Pause
       act(() => {
-        result.current[1].pause();
+        result.current.pause();
       });
-      expect(result.current[0].isPaused).toBe(true);
-      expect(result.current[0].isPlaying).toBe(false);
+      expect(result.current.isPaused).toBe(true);
+      expect(result.current.isPlaying).toBe(false);
 
       // Time passes while paused - listener should not be called
       act(() => {
@@ -435,10 +427,10 @@ describe('useCarouselAutoplay', () => {
 
       // Resume
       act(() => {
-        result.current[1].resume();
+        result.current.resume();
       });
-      expect(result.current[0].isPaused).toBe(false);
-      expect(result.current[0].isPlaying).toBe(true);
+      expect(result.current.isPaused).toBe(false);
+      expect(result.current.isPlaying).toBe(true);
 
       // After remaining time, listener should be called
       act(() => {
@@ -453,15 +445,15 @@ describe('useCarouselAutoplay', () => {
       const { result } = renderHook(() => useCarouselAutoplay(defaultOptions));
 
       act(() => {
-        result.current[1].stop();
+        result.current.stop();
       });
 
       act(() => {
-        result.current[1].resume();
+        result.current.resume();
       });
 
-      expect(result.current[0].isPlaying).toBe(false);
-      expect(result.current[0].isStopped).toBe(true);
+      expect(result.current.isPlaying).toBe(false);
+      expect(result.current.isStopped).toBe(true);
     });
   });
 });

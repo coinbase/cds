@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-// timer for single execution
+// Timer for single execution
 export const useTimer = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
   const startTimeRef = useRef<number>(0);
@@ -18,7 +18,7 @@ export const useTimer = () => {
 
   const start = useCallback(
     (callback: () => void, duration: number) => {
-      // clear existing timer
+      // Clear existing timer
       clear();
 
       timerRef.current = setTimeout(callback, duration);

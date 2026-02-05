@@ -33,7 +33,7 @@ const mockAutoplayContext = {
   isPaused: false,
   isPlaying: false,
   progress: { get: () => 0 } as any,
-  totalTime: 5000,
+  interval: 5000,
   start: jest.fn(),
   stop: jest.fn(),
   toggle: jest.fn(),

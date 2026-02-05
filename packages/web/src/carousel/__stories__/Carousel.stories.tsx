@@ -688,10 +688,10 @@ const LoopingExamples = () => (
 export const All = () => (
   <VStack gap={2}>
     <BasicExamples />
-    <AutoplayExample />
     <CustomComponentsExample />
     <CustomStylesExample />
     <AnimatedPaginationExample />
     <LoopingExamples />
+    <AutoplayExample />
   </VStack>
 );

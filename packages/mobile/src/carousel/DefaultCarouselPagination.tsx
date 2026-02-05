@@ -74,7 +74,7 @@ const PaginationDot = memo(function PaginationDot({
 }: PaginationIndicatorProps) {
   const theme = useTheme();
   const autoplayContext = useCarouselAutoplayContext();
-  const { isPlaying, isEnabled, totalTime, getRemainingTime } = autoplayContext;
+  const { isPlaying, isEnabled, interval, getRemainingTime } = autoplayContext;
 
   const showProgress = isActive && isEnabled;
 
@@ -101,7 +101,10 @@ const PaginationDot = memo(function PaginationDot({
     }
 
     const remainingTime = getRemainingTime();
-    const currentProgress = 1 - remainingTime / totalTime;
+    if (!interval || interval <= 0) {
+      return;
+    }
+    const currentProgress = 1 - remainingTime / interval;
 
     if (isPlaying) {
       lastProgressRef.current = currentProgress;
@@ -116,12 +119,14 @@ const PaginationDot = memo(function PaginationDot({
       });
       lastProgressRef.current = currentProgress;
     }
-  }, [isPlaying, showProgress, totalTime, getRemainingTime]);
+  }, [isPlaying, showProgress, interval, getRemainingTime]);
 
   // Use spring with duration config for linear timed animation
+  // immediate: true when duration is 0 to force instant snap (not animated)
   const progressSpring = useSpring({
     width: progressState.width,
     config: progressState.duration > 0 ? { duration: progressState.duration } : { duration: 0 },
+    immediate: progressState.duration === 0,
   });
 
   return (

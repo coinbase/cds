@@ -95,7 +95,7 @@ const PaginationDot = memo(function PaginationDot({
   ...props
 }: PaginationIndicatorProps) {
   const autoplayContext = useCarouselAutoplayContext();
-  const { isPlaying, isEnabled, totalTime, getRemainingTime } = autoplayContext;
+  const { isPlaying, isEnabled, interval, getRemainingTime } = autoplayContext;
 
   const showProgress = isActive && isEnabled;
 
@@ -116,7 +116,7 @@ const PaginationDot = memo(function PaginationDot({
     }
 
     const remainingTime = getRemainingTime();
-    const currentProgress = 1 - remainingTime / totalTime;
+    const currentProgress = 1 - remainingTime / interval;
 
     if (isPlaying) {
       lastProgressRef.current = currentProgress;
@@ -131,7 +131,7 @@ const PaginationDot = memo(function PaginationDot({
       });
       lastProgressRef.current = currentProgress;
     }
-  }, [isPlaying, showProgress, totalTime, getRemainingTime]);
+  }, [isPlaying, showProgress, interval, getRemainingTime]);
 
   return (
     <MotionPressable

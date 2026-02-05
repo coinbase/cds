@@ -134,6 +134,7 @@ const BasicExamples = () => {
     <>
       <Example paddingX={0}>
         <Carousel
+          autoplay
           paginationVariant="dot"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -837,13 +838,13 @@ export default function CarouselScreen() {
   return (
     <ExampleScreen paddingX={0}>
       <BasicExamples />
-      <AutoplayExample />
       <CustomComponentsExample />
       <DynamicContentExample />
       <AnimatedExample />
       <ImperativeApiExample />
       <AnimatedPaginationExample />
       <LoopingExamples />
+      <AutoplayExample />
     </ExampleScreen>
   );
 }

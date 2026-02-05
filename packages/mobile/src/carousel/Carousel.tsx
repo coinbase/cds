@@ -270,7 +270,7 @@ export type CarouselBaseProps = SharedProps &
      * @default 'pill'
      * @note 'pill' variant is deprecated, use 'dot' instead
      */
-    paginationVariant?: 'pill' | 'dot';
+    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
   };
 
 export type CarouselProps = CarouselBaseProps & {
@@ -757,14 +757,22 @@ export const Carousel = memo(
         updateActivePageIndex,
       ]);
 
-      const [autoplayState, autoplayApi] = useCarouselAutoplay({
+      const {
+        isPlaying,
+        isStopped,
+        isPaused,
+        start,
+        stop,
+        toggle,
+        reset,
+        pause,
+        resume,
+        getRemainingTime,
+        addCompletionListener,
+      } = useCarouselAutoplay({
         enabled: autoplay ?? false,
         interval: autoplayInterval,
       });
-      const autoplayControls = useMemo(
-        () => ({ ...autoplayState, ...autoplayApi }),
-        [autoplayState, autoplayApi],
-      );
 
       const goToPage = useCallback(
         (page: number) => {
@@ -779,7 +787,7 @@ export const Carousel = memo(
 
           carouselScrollX.current = targetOffset;
           animationApi.x.start({ to: targetOffset, config: animationConfig });
-          autoplayControls.reset();
+          reset();
         },
         [
           totalPages,
@@ -789,7 +797,7 @@ export const Carousel = memo(
           isLoopingActive,
           loopLength,
           animationApi.x,
-          autoplayControls,
+          reset,
         ],
       );
 
@@ -806,12 +814,13 @@ export const Carousel = memo(
       useEffect(() => {
         if (!autoplay || totalPages === 0) return;
 
-        const unsubscribe = autoplayApi.addCompletionListener(() => {
+        const unsubscribe = addCompletionListener(() => {
           const nextPage = wrap(0, totalPages, activePageIndex + 1);
+          reset();
           goToPage(nextPage);
         });
         return unsubscribe;
-      }, [autoplay, autoplayApi, activePageIndex, totalPages, goToPage]);
+      }, [autoplay, addCompletionListener, activePageIndex, totalPages, goToPage, reset]);
 
       const handleGoNext = useCallback(() => {
         const nextPage = shouldLoop
@@ -829,13 +838,13 @@ export const Carousel = memo(
 
       const handleDragStart = useCallback(() => {
         onDragStart?.();
-        autoplayControls.pause();
-      }, [onDragStart, autoplayControls]);
+        pause();
+      }, [onDragStart, pause]);
 
       const handleDragEnd = useCallback(() => {
         onDragEnd?.();
-        autoplayControls.resume();
-      }, [onDragEnd, autoplayControls]);
+        resume();
+      }, [onDragEnd, resume]);
 
       const handleDragTransition = useCallback(
         (targetOffsetScroll: number) => {
@@ -848,7 +857,7 @@ export const Carousel = memo(
               loopLength,
             );
 
-            if (pageIndex !== activePageIndex) autoplayControls.reset();
+            if (pageIndex !== activePageIndex) reset();
 
             updateActivePageIndex(pageIndex);
 
@@ -873,7 +882,7 @@ export const Carousel = memo(
               pageOffsets,
             );
 
-            if (closestPageIndex !== activePageIndex) autoplayControls.reset();
+            if (closestPageIndex !== activePageIndex) reset();
 
             updateActivePageIndex(closestPageIndex);
 
@@ -896,7 +905,7 @@ export const Carousel = memo(
           activePageIndex,
           updateVisibleCarouselItems,
           updateActivePageIndex,
-          autoplayControls,
+          reset,
         ],
       );
 
@@ -1112,23 +1121,35 @@ export const Carousel = memo(
         [registerItem, unregisterItem, visibleCarouselItems],
       );
 
-      const autoplayContextValue = useMemo<CarouselAutoplayContextValue>(
-        () => ({
-          isEnabled: autoplay ?? false,
-          isStopped: autoplayControls.isStopped,
-          isPaused: autoplayControls.isPaused,
-          isPlaying: autoplayControls.isPlaying,
-          totalTime: autoplayInterval,
-          getRemainingTime: autoplayControls.getRemainingTime,
-          start: autoplayControls.start,
-          stop: autoplayControls.stop,
-          toggle: autoplayControls.toggle,
-          reset: autoplayControls.reset,
-          pause: autoplayControls.pause,
-          resume: autoplayControls.resume,
-        }),
-        [autoplay, autoplayControls, autoplayInterval],
-      );
+      const autoplayContextValue = useMemo<CarouselAutoplayContextValue>(() => {
+        return {
+          isEnabled: !!autoplay,
+          isStopped,
+          isPaused,
+          isPlaying,
+          interval: autoplayInterval,
+          getRemainingTime,
+          start,
+          stop,
+          toggle,
+          reset,
+          pause,
+          resume,
+        };
+      }, [
+        autoplay,
+        isStopped,
+        isPaused,
+        isPlaying,
+        autoplayInterval,
+        getRemainingTime,
+        start,
+        stop,
+        toggle,
+        reset,
+        pause,
+        resume,
+      ]);
 
       return (
         <CarouselContext.Provider value={carouselContextValue}>
@@ -1157,11 +1178,11 @@ export const Carousel = memo(
                         totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
                       }
                       disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
-                      isAutoplayStopped={autoplayControls.isStopped}
+                      isAutoplayStopped={isStopped}
                       nextPageAccessibilityLabel={nextPageAccessibilityLabel}
                       onGoNext={handleGoNext}
                       onGoPrevious={handleGoPrevious}
-                      onToggleAutoplay={autoplayControls.toggle}
+                      onToggleAutoplay={toggle}
                       previousPageAccessibilityLabel={previousPageAccessibilityLabel}
                       startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
                       stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}

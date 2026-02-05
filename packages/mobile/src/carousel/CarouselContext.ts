@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import type { CarouselAutoplay } from '@coinbase/cds-common';
 import type { Rect } from '@coinbase/cds-common/types';
 
 export type CarouselContextValue = {
@@ -20,56 +21,18 @@ export const useCarouselContext = (): CarouselContextValue => {
   return context;
 };
 
-export type CarouselAutoplayContextValue = {
+export type CarouselAutoplayContextValue = Omit<
+  CarouselAutoplay,
+  'remainingTime' | 'addCompletionListener'
+> & {
   /**
    * Whether autoplay is enabled via props.
    */
   isEnabled: boolean;
   /**
-   * Whether autoplay has been stopped by the user.
+   * The autoplay interval duration in milliseconds.
    */
-  isStopped: boolean;
-  /**
-   * Whether autoplay is temporarily paused due to user interaction (hover/touch).
-   */
-  isPaused: boolean;
-  /**
-   * Whether autoplay is actively running (enabled AND not stopped AND not paused).
-   */
-  isPlaying: boolean;
-  /**
-   * Total interval duration in milliseconds.
-   */
-  totalTime: number;
-  /**
-   * Get the current remaining time until next advance.
-   * Use with totalTime to calculate progress for platform-native animations.
-   */
-  getRemainingTime: () => number;
-  /**
-   * Start autoplay (user action via toggle button).
-   */
-  start: () => void;
-  /**
-   * Stop autoplay (user action via toggle button).
-   */
-  stop: () => void;
-  /**
-   * Toggle autoplay on/off.
-   */
-  toggle: () => void;
-  /**
-   * Reset the autoplay timer.
-   */
-  reset: () => void;
-  /**
-   * Temporarily pause autoplay (for hover/touch interactions).
-   */
-  pause: () => void;
-  /**
-   * Resume autoplay after interaction pause.
-   */
-  resume: () => void;
+  interval: number;
 };
 
 export const CarouselAutoplayContext = React.createContext<

@@ -34,16 +34,6 @@ export type CarouselAutoplayState = {
    * Whether autoplay is temporarily paused due to user interaction (hover/touch).
    */
   isPaused: boolean;
-  /**
-   * Remaining time in milliseconds until the next advance.
-   * Use this with totalTime to calculate progress for platform-native animations.
-   */
-  remainingTime: number;
-  /**
-   * Total interval duration in milliseconds.
-   * Use this with remainingTime to calculate progress for platform-native animations.
-   */
-  totalTime: number;
 };
 
 export type CarouselAutoplayApi = {
@@ -84,61 +74,20 @@ export type CarouselAutoplayApi = {
 };
 
 /**
+ * Combined state and API returned by useCarouselAutoplay.
+ */
+export type CarouselAutoplay = CarouselAutoplayState & CarouselAutoplayApi;
+
+/**
  * A hook for managing carousel autoplay state and timing.
- *
  * Provides controls for starting, stopping, and resetting autoplay.
- * Progress tracking is delegated to platform-native animation libraries
- * (framer-motion for web, react-spring for mobile) via remainingTime/totalTime.
- *
- * @param options - The options for carousel autoplay.
- * @param options.enabled - Whether autoplay is enabled.
- * @param options.interval - The interval in milliseconds between auto-advances.
- * @param options.onStart - Callback fired when autoplay starts.
- * @param options.onStop - Callback fired when autoplay stops.
- * @returns A tuple where the first element is the autoplay state and the second element is an API for controlling autoplay.
- *
- * @example
- * ```tsx
- * const [autoplayState, autoplayApi] = useCarouselAutoplay({
- *   enabled: true,
- *   interval: 3000,
- * });
- *
- * // Subscribe to timer completion
- * useEffect(() => {
- *   const unsubscribe = autoplayApi.addCompletionListener(() => {
- *     goToNextPage();
- *   });
- *   return unsubscribe;
- * }, [autoplayApi, goToNextPage]);
- *
- * // State
- * autoplayState.isPlaying;     // true when actively running
- * autoplayState.isStopped;     // true when user has stopped autoplay
- * autoplayState.isPaused;      // true when temporarily paused (hover/touch)
- * autoplayState.remainingTime; // ms remaining until next advance
- * autoplayState.totalTime;     // total interval duration in ms
- *
- * // Calculate progress for animations
- * const progress = 1 - (autoplayState.remainingTime / autoplayState.totalTime);
- *
- * // User controls (toggle button)
- * autoplayApi.start();  // Resume autoplay
- * autoplayApi.stop();   // Stop autoplay (preserves progress)
- * autoplayApi.toggle(); // Toggle autoplay on/off
- * autoplayApi.reset();  // Reset timer to beginning
- *
- * // Interaction controls (hover/touch)
- * autoplayApi.pause();  // Temporarily pause (on pointer enter / touch start)
- * autoplayApi.resume(); // Resume after pause (on pointer leave / touch end)
- * ```
  */
 export const useCarouselAutoplay = ({
   enabled,
   interval,
   onStart,
   onStop,
-}: CarouselAutoplayOptions): [CarouselAutoplayState, CarouselAutoplayApi] => {
+}: CarouselAutoplayOptions): CarouselAutoplay => {
   const timer = useTimer();
   const [isStopped, setIsStopped] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -152,7 +101,9 @@ export const useCarouselAutoplay = ({
   const listenersRef = useRef<Set<() => void>>(new Set());
 
   const notifyListeners = useCallback(() => {
-    listenersRef.current.forEach((listener) => listener());
+    // Snapshot listeners to avoid issues when Set is modified during iteration
+    const listeners = [...listenersRef.current];
+    listeners.forEach((listener) => listener());
   }, []);
 
   const addCompletionListener = useCallback((callback: () => void) => {
@@ -273,19 +224,11 @@ export const useCarouselAutoplay = ({
     };
   }, [timer]);
 
-  const state = useMemo<CarouselAutoplayState>(
+  return useMemo<CarouselAutoplay>(
     () => ({
       isPlaying,
       isStopped,
       isPaused,
-      remainingTime: timer.getRemainingTime(),
-      totalTime: interval,
-    }),
-    [isPlaying, isStopped, isPaused, timer, interval],
-  );
-
-  const api = useMemo<CarouselAutoplayApi>(
-    () => ({
       start,
       stop,
       toggle,
@@ -295,8 +238,18 @@ export const useCarouselAutoplay = ({
       getRemainingTime,
       addCompletionListener,
     }),
-    [start, stop, toggle, reset, pause, resume, getRemainingTime, addCompletionListener],
+    [
+      isPlaying,
+      isStopped,
+      isPaused,
+      start,
+      stop,
+      toggle,
+      reset,
+      pause,
+      resume,
+      getRemainingTime,
+      addCompletionListener,
+    ],
   );
-
-  return [state, api];
 };
