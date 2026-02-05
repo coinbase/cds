@@ -23,6 +23,7 @@ Invoke one `design-system-researcher` sub-agent for each of the following design
 - Mantine
 - Ant Design
 - React Aria
+- Tamagui
 
 ALWAYS use parallel execution to maximize efficiency.
 
