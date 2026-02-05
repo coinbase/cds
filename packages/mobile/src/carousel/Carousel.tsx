@@ -591,7 +591,6 @@ export const Carousel = memo(
         [itemId: string]: Rect;
       }>({});
       const [visibleCarouselItems, setVisibleCarouselItems] = useState<Set<string>>(new Set());
-      const rootRef = useRef<View>(null);
 
       const isDragEnabled = drag !== 'none';
 
@@ -603,9 +602,7 @@ export const Carousel = memo(
                 ? newPageIndexOrUpdater(prevIndex)
                 : newPageIndexOrUpdater;
 
-            if (prevIndex !== newPageIndex) {
-              onChangePage?.(newPageIndex);
-            }
+            if (prevIndex !== newPageIndex) onChangePage?.(newPageIndex);
 
             return newPageIndex;
           });
@@ -830,13 +827,6 @@ export const Carousel = memo(
         goToPage(prevPage);
       }, [shouldLoop, totalPages, activePageIndex, goToPage]);
 
-      const handleClickPage = useCallback(
-        (pageIndex: number) => {
-          goToPage(pageIndex);
-        },
-        [goToPage],
-      );
-
       const handleDragStart = useCallback(() => {
         onDragStart?.();
         autoplayControls.pause();
@@ -858,9 +848,8 @@ export const Carousel = memo(
               loopLength,
             );
 
-            if (pageIndex !== activePageIndex) {
-              autoplayControls.reset();
-            }
+            if (pageIndex !== activePageIndex) autoplayControls.reset();
+
             updateActivePageIndex(pageIndex);
 
             if (drag === 'snap') {
@@ -883,9 +872,9 @@ export const Carousel = memo(
               clampedScrollOffset,
               pageOffsets,
             );
-            if (closestPageIndex !== activePageIndex) {
-              autoplayControls.reset();
-            }
+
+            if (closestPageIndex !== activePageIndex) autoplayControls.reset();
+
             updateActivePageIndex(closestPageIndex);
 
             if (drag === 'snap') {
@@ -1145,7 +1134,6 @@ export const Carousel = memo(
         <CarouselContext.Provider value={carouselContextValue}>
           <CarouselAutoplayContext.Provider value={autoplayContextValue}>
             <VStack
-              ref={rootRef}
               aria-live="polite"
               aria-roledescription="carousel"
               gap={2}
@@ -1192,7 +1180,7 @@ export const Carousel = memo(
               {!hidePagination && (
                 <PaginationComponent
                   activePageIndex={activePageIndex}
-                  onPressPage={handleClickPage}
+                  onPressPage={goToPage}
                   paginationAccessibilityLabel={paginationAccessibilityLabel}
                   style={styles?.pagination}
                   totalPages={totalPages}

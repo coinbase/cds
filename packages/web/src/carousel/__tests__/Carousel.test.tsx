@@ -1079,20 +1079,16 @@ describe('Carousel', () => {
 
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Navigate to next page
       await user.click(nextButton);
 
-      // Should call onChangePage with new page index
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalledWith(expect.any(Number));
       });
 
-      // Verify it was called at least once
       expect(onChangePage).toHaveBeenCalled();
     });
 
@@ -1102,19 +1098,16 @@ describe('Carousel', () => {
 
       render(<TestCarouselWithItems itemCount={8} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize and pagination dots to appear
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots.length).toBeGreaterThan(1);
       });
 
-      // Click on a pagination dot (page 2)
       const paginationDots = screen.getAllByRole('button', { name: /go to page/i });
       expect(paginationDots.length).toBeGreaterThan(1);
 
       await user.click(paginationDots[1]);
 
-      // Should call onChangePage
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
       });
@@ -1128,7 +1121,6 @@ describe('Carousel', () => {
 
         const handleGoToSamePage = () => {
           if (carouselRef.current) {
-            // Go to page 0 multiple times
             carouselRef.current.goToPage(0);
             carouselRef.current.goToPage(0);
             carouselRef.current.goToPage(0);
@@ -1158,15 +1150,12 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithProgrammaticNavigation />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Click button to go to same page multiple times
       await user.click(screen.getByTestId('go-to-same-page'));
 
-      // Should not call onChangePage since we're already on page 0
       expect(onChangePage).not.toHaveBeenCalled();
     });
 
@@ -1183,16 +1172,10 @@ describe('Carousel', () => {
         />,
       );
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Note: Testing drag events with framer-motion in JSDOM is complex
-      // since we're mocking framer-motion. In a real implementation,
-      // these callbacks would be triggered by actual drag interactions
-      // and would receive (event, info) parameters from framer-motion.
-      // For now, we verify the callbacks are passed correctly to the component.
       expect(onDragStart).toBeDefined();
       expect(onDragEnd).toBeDefined();
     });
@@ -1210,13 +1193,10 @@ describe('Carousel', () => {
         />,
       );
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // With drag="none", the callbacks should be defined but not called
-      // since drag interactions are disabled
       expect(onDragStart).toBeDefined();
       expect(onDragEnd).toBeDefined();
     });
@@ -1261,24 +1241,20 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithFunctionUpdater />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Click button to trigger the function updater behavior
       await user.click(screen.getByTestId('clamp-to-max'));
 
-      // Should call onChangePage with the clamped page value
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
       });
 
-      // The page should be clamped to a reasonable value, not 999
       const lastCall = onChangePage.mock.calls[onChangePage.mock.calls.length - 1];
       const [newPageIndex] = lastCall;
       expect(newPageIndex).toBeGreaterThanOrEqual(0);
-      expect(newPageIndex).toBeLessThan(10); // Should be reasonable for 8 items
+      expect(newPageIndex).toBeLessThan(10);
     });
 
     it('does not cause excessive rerenders when onChangePage is an inline function', async () => {
@@ -1289,9 +1265,7 @@ describe('Carousel', () => {
 
         return (
           <DefaultThemeProvider>
-            <Carousel
-              onChangePage={(pageIndex) => console.log('Page changed:', pageIndex)} // Inline function
-            >
+            <Carousel onChangePage={(pageIndex) => console.log('Page changed:', pageIndex)}>
               {Array.from({ length: 5 }, (_, index) => (
                 <CarouselItem key={`item-${index}`} id={`item-${index}`} width={200}>
                   <Box height={100} width={200}>
@@ -1306,18 +1280,14 @@ describe('Carousel', () => {
 
       const { rerender } = render(<TestCarouselWithInlineCallback />);
 
-      // Wait for initial render to complete
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
       const initialRenderCount = renderCount;
 
-      // Force a rerender with the same props (simulating parent rerender)
       rerender(<TestCarouselWithInlineCallback />);
 
-      // Should not cause excessive additional renders
-      // Allow for some rerenders due to ResizeObserver, but not excessive
       expect(renderCount - initialRenderCount).toBeLessThan(5);
     });
 
@@ -1333,7 +1303,6 @@ describe('Carousel', () => {
       }) => {
         const carouselRef = useRef<CarouselImperativeHandle>(null);
 
-        // Capture the internal updateActivePageIndex reference (for testing purposes)
         useEffect(() => {
           if (carouselRef.current) {
             if (!updateActivePageIndexRef1) {
@@ -1361,20 +1330,16 @@ describe('Carousel', () => {
 
       const { rerender } = render(<TestCarouselWithStableCallback callback={onChangePage} />);
 
-      // Wait for initial render
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Rerender with the same stable callback
       rerender(<TestCarouselWithStableCallback callback={onChangePage} />);
 
-      // Wait a bit for any async updates
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // The carousel refs should be stable when callback is stable
       expect(updateActivePageIndexRef1).toBeDefined();
       expect(updateActivePageIndexRef2).toBeDefined();
     });
@@ -1393,17 +1358,14 @@ describe('Carousel', () => {
       const onChangePage = jest.fn();
       render(<TestCarouselWithItems itemCount={5} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Advance time by default interval
       act(() => {
         jest.advanceTimersByTime(5000);
       });
 
-      // Should not have changed page
       expect(onChangePage).not.toHaveBeenCalled();
     });
 
@@ -1434,25 +1396,20 @@ describe('Carousel', () => {
         />,
       );
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Advance time by less than custom interval
       act(() => {
         jest.advanceTimersByTime(4000);
       });
 
-      // Should not have changed page yet
       expect(onChangePage).not.toHaveBeenCalled();
 
-      // Advance time to complete the interval
       act(() => {
         jest.advanceTimersByTime(1000);
       });
 
-      // Should have advanced now
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalledWith(1);
       });
@@ -1461,12 +1418,10 @@ describe('Carousel', () => {
     it('shows autoplay toggle button when autoplay is enabled', async () => {
       render(<TestCarouselWithItems autoplay itemCount={5} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Should have the autoplay toggle button
       expect(screen.getByTestId('carousel-autoplay-button')).toBeInTheDocument();
     });
 
@@ -1523,21 +1478,17 @@ describe('Carousel', () => {
       const onChangePage = jest.fn();
       render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Stop autoplay
       const autoplayButton = screen.getByTestId('carousel-autoplay-button');
       act(() => {
         autoplayButton.click();
       });
 
-      // Clear any calls from before
       onChangePage.mockClear();
 
-      // Advance time - should NOT advance because autoplay is stopped
       act(() => {
         jest.advanceTimersByTime(5000);
       });
@@ -1625,24 +1576,20 @@ describe('Carousel', () => {
       const onChangePage = jest.fn();
       render(<TestCarouselWithItems autoplay itemCount={8} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize and pagination dots
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots.length).toBeGreaterThan(1);
       });
 
-      // Advance time partially
       act(() => {
         jest.advanceTimersByTime(1500);
       });
 
-      // Click on a pagination dot
       const paginationDots = screen.getAllByRole('button', { name: /go to page/i });
       act(() => {
         paginationDots[1].click();
       });
 
-      // Clear the call from manual navigation
       onChangePage.mockClear();
 
       act(() => {
@@ -1655,18 +1602,15 @@ describe('Carousel', () => {
       const onChangePage = jest.fn();
       render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Wait for next button to be enabled
       const nextButton = screen.getByTestId('carousel-next-button');
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Manually navigate
       act(() => {
         nextButton.click();
       });

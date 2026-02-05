@@ -778,7 +778,6 @@ export const Carousel = memo(
 
       const [activePageIndex, setActivePageIndex] = useState(0);
       const containerRef = useRef<HTMLDivElement>(null);
-      const rootRef = useRef<HTMLDivElement>(null);
       const [containerWidth, setContainerWidth] = useState(0);
       const carouselItemRefMap = useRefMap<HTMLElement>();
       const [carouselItemRects, setCarouselItemRects] = useState<{
@@ -864,9 +863,7 @@ export const Carousel = memo(
                 ? newPageIndexOrUpdater(prevIndex)
                 : newPageIndexOrUpdater;
 
-            if (prevIndex !== newPageIndex) {
-              onChangePage?.(newPageIndex);
-            }
+            if (prevIndex !== newPageIndex) onChangePage?.(newPageIndex);
 
             return newPageIndex;
           });
@@ -1128,13 +1125,6 @@ export const Carousel = memo(
         goToPage(prevPage);
       }, [shouldLoop, totalPages, activePageIndex, goToPage]);
 
-      const handleClickPage = useCallback(
-        (pageIndex: number) => {
-          goToPage(pageIndex);
-        },
-        [goToPage],
-      );
-
       const handleDragTransition = useCallback(
         (targetOffsetScroll: number) => {
           if (drag === 'none') return targetOffsetScroll;
@@ -1148,9 +1138,8 @@ export const Carousel = memo(
               loopLength,
             );
 
-            if (pageIndex !== activePageIndex) {
-              autoplayControls.reset();
-            }
+            if (pageIndex !== activePageIndex) autoplayControls.reset();
+
             updateActivePageIndex(pageIndex);
 
             if (drag === 'snap') {
@@ -1173,9 +1162,9 @@ export const Carousel = memo(
               clampedScrollOffset,
               pageOffsets,
             );
-            if (closestPageIndex !== activePageIndex) {
-              autoplayControls.reset();
-            }
+
+            if (closestPageIndex !== activePageIndex) autoplayControls.reset();
+
             updateActivePageIndex(closestPageIndex);
 
             if (drag === 'snap') {
@@ -1328,7 +1317,6 @@ export const Carousel = memo(
         <LazyMotion features={domMax}>
           <RefMapContext.Provider value={carouselItemRefMap}>
             <VStack
-              ref={rootRef}
               aria-roledescription="carousel"
               className={cx(className, classNames?.root)}
               gap={2}
@@ -1434,7 +1422,7 @@ export const Carousel = memo(
                   <PaginationComponent
                     activePageIndex={activePageIndex}
                     className={classNames?.pagination}
-                    onClickPage={handleClickPage}
+                    onClickPage={goToPage}
                     paginationAccessibilityLabel={paginationAccessibilityLabel}
                     style={styles?.pagination}
                     totalPages={totalPages}
