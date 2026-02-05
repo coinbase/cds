@@ -30871,7 +30871,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "test-expo@workspace:apps/test-expo"
   dependencies:
+    "@coinbase/cds-icons": "workspace:^"
     "@coinbase/cds-mobile": "workspace:^"
+    "@coinbase/cds-mobile-visualization": "workspace:^"
     "@expo-google-fonts/inter": "npm:^0.2.3"
     "@expo-google-fonts/source-code-pro": "npm:^0.2.3"
     "@formatjs/intl-getcanonicallocales": "npm:^2.5.5"
@@ -30880,9 +30882,13 @@ __metadata:
     "@formatjs/intl-pluralrules": "npm:^5.4.4"
     "@react-navigation/native": "npm:6.1.17"
     "@react-navigation/native-stack": "npm:6.9.26"
+    "@shopify/react-native-skia": "npm:2.2.12"
     expo: "npm:54.0.32"
     expo-font: "npm:~14.0.1"
+    expo-linking: "npm:~8.0.11"
+    expo-splash-screen: "npm:31.0.13"
     expo-status-bar: "npm:3.0.9"
+    intl: "npm:^1.2.5"
     lottie-react-native: "npm:7.3.1"
     react: "npm:19.1.2"
     react-native: "npm:0.81.5"

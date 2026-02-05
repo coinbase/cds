@@ -1,67 +1,62 @@
-import { useFonts } from 'expo-font';
-import { Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter';
-import {
-  SourceCodePro_400Regular,
-  SourceCodePro_600SemiBold,
-} from '@expo-google-fonts/source-code-pro';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, { memo, useState } from 'react';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider';
+import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization';
+import { StatusBar } from '@coinbase/cds-mobile/system/StatusBar';
 import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import { NavigationContainer } from '@react-navigation/native';
+import * as Linking from 'expo-linking';
+import * as SplashScreen from 'expo-splash-screen';
 
-import { HomeScreen } from './screens/HomeScreen';
-import { RandomNumberDemoScreen } from './screens/RandomNumberDemoScreen';
-import { ModalDemoScreen } from './screens/ModalDemoScreen';
+import { useFonts } from './src/hooks/useFonts';
+import { Playground } from './src/playground';
+import { routes as codegenRoutes } from './src/routes';
 
-export type RootStackParamList = {
-  Home: undefined;
-  RandomNumberDemo: undefined;
-  ModalDemo: undefined;
+const linking = {
+  prefixes: [Linking.createURL('/')],
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+if (Platform.OS === 'android') {
+  require('intl');
+  require('intl/locale-data/jsonp/en-US');
+}
 
-export default function App() {
-  const [fontsLoaded] = useFonts({
-    Inter_400Regular,
-    Inter_600SemiBold,
-    SourceCodePro_400Regular,
-    SourceCodePro_600SemiBold,
-  });
+const gestureHandlerStyle = { flex: 1 };
+
+const App = memo(() => {
+  const [fontsLoaded] = useFonts();
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
+
+  React.useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{ title: 'CDS Demo' }}
-              />
-              <Stack.Screen
-                name="RandomNumberDemo"
-                component={RandomNumberDemoScreen}
-                options={{ title: 'Rolling Number' }}
-              />
-              <Stack.Screen
-                name="ModalDemo"
-                component={ModalDemoScreen}
-                options={{ title: 'Modal' }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-          <StatusBar style="auto" />
-        </SafeAreaProvider>
-      </ThemeProvider>
+    <GestureHandlerRootView style={gestureHandlerStyle}>
+      <ChartBridgeProvider>
+        <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
+          <SafeAreaProvider>
+            <PortalProvider>
+              <StatusBar hidden={!__DEV__} />
+              <NavigationContainer linking={linking}>
+                <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
+              </NavigationContainer>
+            </PortalProvider>
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </ChartBridgeProvider>
     </GestureHandlerRootView>
   );
-}
+});
+
+export default App;
