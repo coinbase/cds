@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (2)
+
+- autoCar
+- webhooks
+
 ## 5.10.0 (1/29/2026 PST)
 
 #### 🚀 Updates
