@@ -3182,5 +3182,17 @@ export const glyphMap = {
   'birthcertificate-16-active': '󰱩',
   'birthcertificate-16-inactive': '󰱪',
   'birthcertificate-24-active': '󰱫',
-  'birthcertificate-24-inactive': '󰱬'
+  'birthcertificate-24-inactive': '󰱬',
+  'autoCar-12-active': '󰱭',
+  'autoCar-12-inactive': '󰱮',
+  'autoCar-16-active': '󰱯',
+  'autoCar-16-inactive': '󰱰',
+  'autoCar-24-active': '󰱱',
+  'autoCar-24-inactive': '󰱲',
+  'webhooks-12-active': '󰱳',
+  'webhooks-12-inactive': '󰱴',
+  'webhooks-16-active': '󰱵',
+  'webhooks-16-inactive': '󰱶',
+  'webhooks-24-active': '󰱷',
+  'webhooks-24-inactive': '󰱸'
 };
