@@ -2,16 +2,17 @@
   "import": "import { FloatingAssetCard } from '@coinbase/cds-web/cards/FloatingAssetCard'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/cards/FloatingAssetCard.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-cards-floatingassetcard--default",
-  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=10085-2951&t=DIcYU9WAXkBUimkN-0",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=59121-6710&t=EIOPhI0X8y2FmZOa-4",
   "description": "A card component for displaying and managing asset holdings.",
+  "warning": "This component is deprecated. Please use MediaCard instead. Note: The floating variation (media outside the card container) is no longer supported.",
   "relatedComponents": [
+    {
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
+    },
     {
       "label": "ContentCard",
       "url": "/components/cards/ContentCard/"
-    },
-    {
-      "label": "ContainedAssetCard",
-      "url": "/components/cards/ContainedAssetCard/"
     }
   ],
   "dependencies": []

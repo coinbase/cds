@@ -11,6 +11,7 @@ import { CardFooter } from './CardFooter';
 import { CardHeader } from './CardHeader';
 import { LikeButton, type LikeButtonBaseProps } from './LikeButton';
 
+/** @deprecated Use the ContentCard component instead. */
 export type FeedCardBaseProps = CardBaseProps &
   SharedProps &
   Pick<CardBodyBaseProps, 'image' | 'pictogram' | 'spotSquare'> & {
@@ -36,8 +37,10 @@ export type FeedCardBaseProps = CardBaseProps &
     cta?: ButtonBaseProps;
   };
 
+/** @deprecated Use the ContentCard component instead. */
 export type FeedCardProps = FeedCardBaseProps;
 
+/** @deprecated Use the ContentCard component instead. */
 export const FeedCard = memo(function FeedCard({
   testID = 'feed-card',
   avatar,

@@ -1,8 +1,8 @@
 {
   "import": "import { ContentCard } from '@coinbase/cds-mobile/cards/ContentCard'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/ContentCard/ContentCard.tsx",
-  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=99-1230&t=K73gadcWiDv2aYlS-1",
-  "description": "A flexible card component for displaying content with header, body, and footer sections.",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=72941-17343&t=gV06AckLZnxpAsOk-4",
+  "description": "A flexible, composable card component for displaying rich content with customizable header, body, and footer sections. Use with ContentCardHeader, ContentCardBody, and ContentCardFooter sub-components.",
   "relatedComponents": [
     {
       "label": "ContentCardHeader",
@@ -15,6 +15,14 @@
     {
       "label": "ContentCardFooter",
       "url": "/components/cards/ContentCardFooter/"
+    },
+    {
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
+    },
+    {
+      "label": "MessagingCard",
+      "url": "/components/cards/MessagingCard/"
     }
   ],
   "dependencies": []

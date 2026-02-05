@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-web",
-  "version": "8.41.0",
+  "version": "8.42.0",
   "description": "Coinbase Design System - Web",
   "repository": {
     "type": "git",
@@ -31,6 +31,10 @@
     "./alpha/combobox": {
       "types": "./dts/alpha/combobox/index.d.ts",
       "default": "./esm/alpha/combobox/index.js"
+    },
+    "./alpha/data-card": {
+      "types": "./dts/alpha/data-card/index.d.ts",
+      "default": "./esm/alpha/data-card/index.js"
     },
     "./alpha/select": {
       "types": "./dts/alpha/select/index.d.ts",

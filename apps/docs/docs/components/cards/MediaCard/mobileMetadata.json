@@ -1,0 +1,17 @@
+{
+  "import": "import { MediaCard } from '@coinbase/cds-mobile/cards/MediaCard'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/MediaCard/index.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=72941-18221&t=amrBLVMCPqwVCwLt-4",
+  "description": "MediaCard displays content with optional media in a contained card layout. Use it to showcase assets, products, or content with a thumbnail, title, subtitle, description, and optional media placement. MediaCard replaces the deprecated FloatingAssetCard and ContainedAssetCard components.",
+  "relatedComponents": [
+    {
+      "label": "ContentCard",
+      "url": "/components/cards/ContentCard/"
+    },
+    {
+      "label": "MessagingCard",
+      "url": "/components/cards/MessagingCard/"
+    }
+  ],
+  "dependencies": []
+}

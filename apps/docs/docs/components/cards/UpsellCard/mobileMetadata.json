@@ -1,16 +1,17 @@
 {
   "import": "import { UpsellCard } from '@coinbase/cds-mobile/cards/UpsellCard'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/UpsellCard.tsx",
-  "figma": "https://www.figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-Normal-Components?type=design&node-id=10085%3A6246&mode=design&t=CXWB883JGKycJnlr-1",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=46131-64332&t=XhGq61uqmdGiv0jp-4",
   "description": "Upsell Cards are used to promote new features, products, or actions within the app. They are part of the upsell framework and aim to drive user engagement and revenue.",
+  "warning": "This component is deprecated. Please use MessagingCard with type=\"upsell\" instead.",
   "relatedComponents": [
+    {
+      "label": "MessagingCard",
+      "url": "/components/cards/MessagingCard/"
+    },
     {
       "label": "Banner",
       "url": "/components/feedback/Banner/"
-    },
-    {
-      "label": "NudgeCard",
-      "url": "/components/cards/NudgeCard/"
     },
     {
       "label": "ContentCard",

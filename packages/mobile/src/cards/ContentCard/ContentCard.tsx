@@ -1,7 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
-import type { ValidateProps } from '@coinbase/cds-common/types';
 
 import { VStack, type VStackProps } from '../../layout';
 
@@ -16,8 +15,9 @@ export const ContentCard = memo(
       children,
       maxWidth = contentCardMaxWidth,
       minWidth = contentCardMinWidth,
-      paddingX = 3,
-      paddingY = 2,
+      borderRadius = 500,
+      padding = 2,
+      gap = 2,
       ...props
     }: ContentCardProps,
     ref: React.ForwardedRef<View>,
@@ -25,16 +25,13 @@ export const ContentCard = memo(
     return (
       <VStack
         ref={ref}
-        gap={1}
+        borderRadius={borderRadius}
+        gap={gap}
         maxWidth={maxWidth}
         minWidth={minWidth}
-        paddingX={paddingX}
-        paddingY={paddingY}
+        padding={padding}
         testID={testID}
-        {...(props satisfies ValidateProps<
-          typeof props,
-          Omit<ContentCardProps, keyof VStackProps>
-        >)}
+        {...props}
       >
         {children}
       </VStack>

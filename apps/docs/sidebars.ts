@@ -306,7 +306,7 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/cards/ContainedAssetCard/containedAssetCard',
-              label: 'ContainedAssetCard',
+              label: 'ContainedAssetCard (Deprecated)',
             },
             {
               type: 'doc',
@@ -330,18 +330,33 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/cards/DataCard/dataCard',
+              label: 'DataCard',
+            },
+            {
+              type: 'doc',
               id: 'components/cards/FloatingAssetCard/floatingAssetCard',
-              label: 'FloatingAssetCard',
+              label: 'FloatingAssetCard (Deprecated)',
+            },
+            {
+              type: 'doc',
+              id: 'components/cards/MediaCard/mediaCard',
+              label: 'MediaCard',
+            },
+            {
+              type: 'doc',
+              id: 'components/cards/MessagingCard/messagingCard',
+              label: 'MessagingCard',
             },
             {
               type: 'doc',
               id: 'components/cards/NudgeCard/nudgeCard',
-              label: 'NudgeCard',
+              label: 'NudgeCard (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/cards/UpsellCard/upsellCard',
-              label: 'UpsellCard',
+              label: 'UpsellCard (Deprecated)',
             },
           ],
         },
