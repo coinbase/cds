@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.31.0 (2/3/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026/02/03. [[#364](https://github.com/coinbase/cds/pull/364)]
+
+##### ⭐️ Added (1)
+
+###### Pictogram (1)
+
+- arrowsUpDown
+
+##### ⭐️ Updated (1)
+
+###### Pictogram (1)
+
+- baseCheckSmall
+
 ## 4.30.1 (2/3/2026 PST)
 
 This is an artificial version bump with no new change.

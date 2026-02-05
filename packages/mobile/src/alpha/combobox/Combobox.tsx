@@ -179,6 +179,7 @@ const ComboboxBase = memo(
         variant,
         startNode,
         endNode,
+        align,
         accessibilityLabel = typeof label === 'string' ? label : 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
@@ -299,6 +300,7 @@ const ComboboxBase = memo(
               <Box paddingX={3}>
                 <ComboboxControl
                   accessibilityLabel={accessibilityLabel}
+                  align={align}
                   endNode={endNode}
                   placeholder={placeholder}
                   startNode={startNode}
@@ -316,6 +318,7 @@ const ComboboxBase = memo(
           ComboboxControl,
           SelectDropdownComponent,
           accessibilityLabel,
+          align,
           closeButtonLabel,
           endNode,
           handleTrayVisibilityChange,
@@ -341,6 +344,7 @@ const ComboboxBase = memo(
             SelectControlComponent={ComboboxControl}
             SelectDropdownComponent={ComboboxDropdown}
             accessibilityLabel={accessibilityLabel}
+            align={align}
             defaultOpen={defaultOpen}
             disabled={disabled}
             endNode={endNode}

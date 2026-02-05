@@ -91,7 +91,11 @@ export const ExampleScreen = React.forwardRef<ScrollView, React.PropsWithChildre
             keyboardShouldPersistTaps="always"
             persistentScrollbar={false}
             showsVerticalScrollIndicator={false}
-            style={{ backgroundColor: theme.color.bg, height: '100%', paddingTop: theme.space[2] }}
+            style={{
+              backgroundColor: theme.color.bg,
+              height: '100%',
+              paddingTop: theme.space[2],
+            }}
           >
             {children}
           </ScrollView>

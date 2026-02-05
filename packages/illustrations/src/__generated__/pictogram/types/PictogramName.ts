@@ -24,6 +24,7 @@ export type PictogramName =
   | 'apartOfDropsNft'
   | 'applyForHigherLimits'
   | 'apyInterest'
+  | 'arrowsUpDown'
   | 'assetEncryption'
   | 'assetHubNavigation'
   | 'assetManagement'

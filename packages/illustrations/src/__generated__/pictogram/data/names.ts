@@ -30,6 +30,7 @@ const names: PictogramName[] = [
   'apartOfDropsNft',
   'applyForHigherLimits',
   'apyInterest',
+  'arrowsUpDown',
   'assetEncryption',
   'assetHubNavigation',
   'assetManagement',

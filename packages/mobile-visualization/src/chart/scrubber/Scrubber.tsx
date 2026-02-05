@@ -23,7 +23,7 @@ import {
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
 } from '../line';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -134,7 +134,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Label for the series.
      */
-    label: AnimatedProp<string>;
+    label: ChartTextChildren;
     /**
      * Id of the series.
      */
@@ -183,6 +183,12 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      * Measured in pixels.
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
+    /**
+     * Preferred side for beacon labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
@@ -241,6 +247,7 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        beaconLabelPreferredSide,
         labelFont,
         labelBoundsInset,
         beaconLabelFont,
@@ -406,6 +413,7 @@ export const Scrubber = memo(
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
+              labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
             />
           )}
