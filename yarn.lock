@@ -30878,6 +30878,8 @@ __metadata:
     "@formatjs/intl-locale": "npm:^4.2.11"
     "@formatjs/intl-numberformat": "npm:^8.15.4"
     "@formatjs/intl-pluralrules": "npm:^5.4.4"
+    "@react-navigation/native": "npm:6.1.17"
+    "@react-navigation/native-stack": "npm:6.9.26"
     expo: "npm:54.0.32"
     expo-font: "npm:~14.0.1"
     expo-status-bar: "npm:3.0.9"
@@ -30890,6 +30892,7 @@ __metadata:
     react-native-navigation-bar-color: "npm:^2.0.2"
     react-native-reanimated: "npm:4.1.1"
     react-native-safe-area-context: "npm:5.6.0"
+    react-native-screens: "npm:4.16.0"
     react-native-svg: "npm:15.12.1"
     react-native-worklets: "npm:0.5.2"
   languageName: unknown
