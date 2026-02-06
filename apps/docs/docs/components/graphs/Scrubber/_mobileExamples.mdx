@@ -701,3 +701,142 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
   <Scrubber hideOverlay />
 </LineChart>
 ```
+
+## Composed Examples
+
+### Percentage Beacon Labels
+
+You can use `BeaconLabelComponent` to display a label with the percentage value of the data at the scrubber position.
+
+```jsx
+function PercentageBeaconLabels() {
+  const theme = useTheme();
+
+  const PercentageScrubberBeaconLabel = memo(
+    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series, fontProvider } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const dataLength = useMemo(
+        () =>
+          series?.reduce((max, s) => {
+            const data = getSeriesData(s.id);
+            return Math.max(max, data?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
+
+      const labelColor = `rgb(${theme.spectrum.gray0})`;
+
+      const regularStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: 14,
+          fontStyle: {
+            weight: FontWeight.Normal,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [labelColor],
+      );
+
+      const boldStyle: SkTextStyle = useMemo(
+        () => ({
+          ...regularStyle,
+          fontStyle: {
+            weight: FontWeight.Bold,
+          },
+        }),
+        [regularStyle],
+      );
+
+      const percentageLabel = useDerivedValue(() => {
+        const labelValue = unwrapAnimatedValue(label);
+
+        if (seriesData !== undefined) {
+          const dataAtPosition = seriesData[dataIndex.value];
+
+          const builder = Skia.ParagraphBuilder.Make(
+            { textAlign: TextAlign.Left },
+            fontProvider,
+          );
+
+          builder.pushStyle(boldStyle);
+          builder.addText(`${dataAtPosition}%`);
+          builder.pushStyle(regularStyle);
+          builder.addText(` ${labelValue}`);
+
+          const para = builder.build();
+          para.layout(512);
+          return para;
+        }
+
+        return labelValue;
+      }, [label, seriesData, dataIndex, fontProvider, boldStyle, regularStyle]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background={color}
+          label={percentageLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
+  const isLightTheme = theme.activeColorScheme === 'light';
+  const background = isLightTheme
+    ? `rgb(${theme.spectrum.gray90})`
+    : `rgb(${theme.spectrum.gray0})`;
+  const scrubberLineStroke = isLightTheme
+    ? `rgb(${theme.spectrum.gray0})`
+    : `rgb(${theme.spectrum.gray90})`;
+
+  return (
+    <Box borderRadius={300} padding={2} style={{ backgroundColor: background }}>
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={200}
+        inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+        series={[
+          {
+            id: 'prices2',
+            data: [90, 78, 71, 55, 2, 55, 78, 48, 79, 96, 32, 80, 79, 42],
+            color: `rgb(${theme.spectrum.blue40})`,
+            label: 'ATL',
+          },
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: `rgb(${theme.spectrum.chartreuse40})`,
+            label: 'NYC',
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 92 }),
+        }}
+      >
+        <Scrubber
+          hideOverlay
+          idlePulse
+          BeaconLabelComponent={PercentageScrubberBeaconLabel}
+          beaconStroke={background}
+          lineStroke={scrubberLineStroke}
+        />
+      </LineChart>
+    </Box>
+  );
+}
+```

@@ -1,0 +1,885 @@
+MessagingCard provides two card types for promotional and informational content.
+
+:::info Migrating from NudgeCard or UpsellCard?
+See the [Migration Guide](#migration-from-deprecated-components) at the end of this page.
+:::
+
+## Basic Types
+
+Use `type` to set the card variant:
+
+- `upsell`: Primary background, used for promoting features or products. Use `variant="secondary"` buttons.
+- `nudge`: Alternate background, used for encouraging user actions. Use `variant="tertiary"` (transparent) buttons for a less intrusive appearance.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Upsell Card"
+    description="This is an upsell card with primary background"
+    width={320}
+    action="Get started"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={
+      <RemoteImage
+        accessibilityLabel="Feature promotional image"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Nudge Card"
+    description="This is a nudge card with alternate background"
+    width={320}
+    action="Learn more"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+:::tip Nudge Button Style
+Use transparent buttons (`variant="tertiary"` or `transparent` prop) for nudge cards. They provide a gentle reminder without being intrusive, blending more seamlessly with the card's alternate background.
+:::
+
+## Media Placement
+
+Use `mediaPlacement` to control the position of media content.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="nudge"
+    title="Media End"
+    description="Media placed at the end (right)"
+    width={320}
+    media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Media Start"
+    description="Media placed at the start (left)"
+    width={320}
+    media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+    mediaPlacement="start"
+  />
+</VStack>
+```
+
+## Upsell Card Styles
+
+MessagingCard with `type="upsell"` supports various background colors to match different promotional purposes. Use the `background` prop for semantic tokens, or `dangerouslySetBackground` for custom spectrum colors.
+
+### General Upsell
+
+Utilize the default background for general information and non-urgent promotions. Its versatile design is perfect for a broad range of content, providing a subtle yet effective approach to engage users. It's also the most suitable style for Pictogram illustrations.
+
+```jsx
+<MessagingCard
+  type="upsell"
+  background="bgPrimaryWash"
+  title={
+    <Text color="fg" font="headline">
+      Recurring Buy
+    </Text>
+  }
+  description={
+    <Text color="fg" font="label2">
+      Want to add funds to your card every week or month?
+    </Text>
+  }
+  width={360}
+  action={
+    <Button compact variant="secondary">
+      Get started
+    </Button>
+  }
+  media={
+    <Box paddingEnd={3}>
+      <Pictogram name="recurringPurchases" dimension="64x64" />
+    </Box>
+  }
+  mediaPlacement="end"
+  onDismissButtonPress={() => {}}
+  dismissButtonAccessibilityLabel="Dismiss"
+/>
+```
+
+### Feature Upsell
+
+Ideal for highlighting Coinbase tools, innovative features, and unique functionalities. Choose from our palette of distinct colors to make your Feature Upsell stand out. Each color is carefully selected to grab attention while aligning with the specific nature of the feature being promoted.
+
+```jsx
+function FeatureUpsell() {
+  const { spectrum } = useTheme();
+  const image = (
+    <RemoteImage
+      accessibilityLabel="Feature illustration"
+      height={160}
+      resizeMode="cover"
+      shape="rectangle"
+      source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+    />
+  );
+  const cards = [
+    { bg: `rgb(${spectrum.purple70})` },
+    { bg: `rgb(${spectrum.teal50})` },
+    { bg: `rgb(${spectrum.blue80})` },
+    { bg: `rgb(${spectrum.indigo70})` },
+  ];
+  return (
+    <VStack gap={2}>
+      {cards.map((card, i) => (
+        <MessagingCard
+          key={i}
+          type="upsell"
+          dangerouslySetBackground={card.bg}
+          title={
+            <Text color="fgInverse" font="headline">
+              Up to 3.29% APR on ETH
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              Earn staking rewards on ETH by holding it on Coinbase
+            </Text>
+          }
+          width={360}
+          action="Start earning"
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={image}
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Community Upsell
+
+Designed for community-focused messaging. Vibrant colors spark enthusiasm and encourage active participation, fostering a sense of community engagement.
+
+```jsx
+function CommunityUpsell() {
+  const { spectrum } = useTheme();
+  const cards = [
+    { bg: `rgb(${spectrum.teal70})`, image: 'https://cds.coinbase.com/img/community.png' },
+    { bg: `rgb(${spectrum.purple70})`, image: 'https://cds.coinbase.com/img/radial.png' },
+  ];
+  return (
+    <VStack gap={2}>
+      {cards.map((card, i) => (
+        <MessagingCard
+          key={i}
+          type="upsell"
+          dangerouslySetBackground={card.bg}
+          title={
+            <Text color="fgInverse" font="headline">
+              Join the community
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              Chat with other devs in our Discord community
+            </Text>
+          }
+          width={360}
+          action="Join now"
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={
+            <RemoteImage
+              accessibilityLabel="Community illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: card.image }}
+            />
+          }
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Product Upsell
+
+Optimal for business products, security features, and functionalities that emphasize trust and reliability, such as Coinbase One and Coinbase Card. Blue and dark backgrounds symbolize stability, trustworthiness, and professionalism.
+
+```jsx
+function ProductUpsell() {
+  const { spectrum } = useTheme();
+  const cards = [
+    {
+      title: 'Coinbase One offer',
+      description: 'Use code NOV60 when you sign up for Coinbase One',
+      action: 'Get 60 days free',
+      bg: `rgb(${spectrum.blue80})`,
+      image: 'https://cds.coinbase.com/img/marketing.png',
+    },
+    {
+      title: 'Coinbase Card',
+      description: 'Spend USDC to get rewards with our Visa® debit card',
+      action: 'Get started',
+      bg: `rgb(${spectrum.gray100})`,
+      image: 'https://cds.coinbase.com/img/object.png',
+    },
+  ];
+  return (
+    <VStack gap={2}>
+      {cards.map((card) => (
+        <MessagingCard
+          key={card.title}
+          type="upsell"
+          dangerouslySetBackground={card.bg}
+          title={
+            <Text color="fgInverse" font="headline">
+              {card.title}
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              {card.description}
+            </Text>
+          }
+          width={360}
+          action={card.action}
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={
+            <RemoteImage
+              accessibilityLabel="Product illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: card.image }}
+            />
+          }
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### News Upsell
+
+Specifically tailored for company announcements and policy updates. Its design ensures that important information is conveyed clearly and prominently, ensuring users stay well-informed about the latest developments.
+
+```jsx
+function NewsUpsell() {
+  const { spectrum } = useTheme();
+  const cards = [{ bg: `rgb(${spectrum.gray100})` }, { bg: `rgb(${spectrum.indigo70})` }];
+  return (
+    <VStack gap={2}>
+      {cards.map((card, i) => (
+        <MessagingCard
+          key={i}
+          type="upsell"
+          dangerouslySetBackground={card.bg}
+          title={
+            <Text color="fgInverse" font="headline">
+              Help defend crypto in America
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              Help us keep crypto in America with a single click
+            </Text>
+          }
+          width={360}
+          action="Join the fight"
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={
+            <RemoteImage
+              accessibilityLabel="Place illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: 'https://cds.coinbase.com/img/place.png' }}
+            />
+          }
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+## Nudge Card Style
+
+Use `type="nudge"` for gentle reminders or secondary options. Nudge cards use the alternate background and blend more seamlessly with the page. Pair them with Pictogram illustrations and transparent buttons.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="nudge"
+    title="Earn more crypto"
+    description="You've got unstaked crypto. Stake it now to earn more."
+    width={360}
+    action="Start earning"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={<Pictogram dimension="64x64" name="key" />}
+    mediaPlacement="end"
+    onDismissButtonPress={() => {}}
+    dismissButtonAccessibilityLabel="Dismiss"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Derivatives Trading"
+    description="Derivative Exchange is available for all users"
+    width={360}
+    media={<Pictogram dimension="48x48" name="derivativesNavigation" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+## Features
+
+### Dismissible Cards
+
+Use `onDismissButtonPress` to add a dismiss button.
+
+```jsx
+function DismissibleCards() {
+  const { spectrum } = useTheme();
+  return (
+    <VStack gap={2}>
+      <MessagingCard
+        type="upsell"
+        dangerouslySetBackground={`rgb(${spectrum.teal70})`}
+        title="Dismissible Upsell"
+        description="Upsell card with dismiss button"
+        width={320}
+        media={
+          <RemoteImage
+            accessibilityLabel="Community illustration"
+            height={160}
+            resizeMode="cover"
+            shape="rectangle"
+            source={{ uri: 'https://cds.coinbase.com/img/community.png' }}
+          />
+        }
+        mediaPlacement="end"
+        onDismissButtonPress={() => console.log('Card dismissed!')}
+        dismissButtonAccessibilityLabel="Close card"
+      />
+      <MessagingCard
+        type="nudge"
+        title="Dismissible Nudge"
+        description="Nudge card with dismiss button"
+        width={320}
+        media={<Pictogram dimension="48x48" name="baseStar" />}
+        mediaPlacement="end"
+        onDismissButtonPress={() => console.log('Card dismissed!')}
+        dismissButtonAccessibilityLabel="Close card"
+      />
+    </VStack>
+  );
+}
+```
+
+### Tags
+
+Use `tag` to add a label badge.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Tagged Upsell"
+    description="Upsell card with a tag"
+    width={320}
+    tag="New"
+    media={
+      <RemoteImage
+        accessibilityLabel="Place illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/place.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Tagged Nudge"
+    description="Nudge card with a tag"
+    width={320}
+    tag="New"
+    media={<Pictogram dimension="48x48" name="key" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Actions
+
+Use the `action` prop to add an action button. Pass a string to render a default button with `onActionButtonPress`, or pass a custom React element.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Upsell with Action"
+    description="Upsell card with action button"
+    width={320}
+    action="Action"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={
+      <RemoteImage
+        accessibilityLabel="Feature illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Nudge with Action"
+    description="Nudge card with action button"
+    width={320}
+    action="Learn More"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={<Pictogram dimension="64x64" name="wallet" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Complete Example
+
+Combine all features in a complete card.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Complete Upsell Card"
+    description="Complete upsell card with all features"
+    width={360}
+    tag="New"
+    action="Get Started"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    onDismissButtonPress={() => console.log('Dismissed')}
+    dismissButtonAccessibilityLabel="Dismiss"
+    media={
+      <RemoteImage
+        accessibilityLabel="Marketing illustration"
+        height={184}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/marketing.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Complete Nudge Card"
+    description="Complete nudge card with all features"
+    width={360}
+    tag="New"
+    action="Learn More"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    onDismissButtonPress={() => console.log('Dismissed')}
+    dismissButtonAccessibilityLabel="Dismiss"
+    media={<Pictogram dimension="64x64" name="giftbox" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+## Interactive Dismissible List
+
+This example shows a list of cards that can be dismissed interactively. Press the dismiss button to remove cards from the list.
+
+```jsx
+function DismissibleCardsList() {
+  const { spectrum } = useTheme();
+  const cards = [
+    {
+      id: '1',
+      title: 'Welcome to Coinbase',
+      description: 'Get started with your crypto journey',
+      type: 'upsell',
+    },
+    {
+      id: '2',
+      title: 'Complete your profile',
+      description: 'Add your details to unlock more features',
+      type: 'nudge',
+    },
+    {
+      id: '3',
+      title: 'Enable notifications',
+      description: 'Stay updated on market movements',
+      type: 'upsell',
+    },
+    {
+      id: '4',
+      title: 'Invite friends',
+      description: 'Earn rewards when friends join',
+      type: 'nudge',
+    },
+  ];
+
+  const [dismissedIds, setDismissedIds] = useState(new Set());
+
+  const handleDismiss = (id) => {
+    setDismissedIds((prev) => new Set(prev).add(id));
+  };
+
+  const handleReset = () => {
+    setDismissedIds(new Set());
+  };
+
+  const visibleCards = cards.filter((card) => !dismissedIds.has(card.id));
+
+  return (
+    <VStack gap={2}>
+      <VStack gap={2}>
+        {visibleCards.map((card) => (
+          <MessagingCard
+            key={card.id}
+            type={card.type}
+            dangerouslySetBackground={
+              card.type === 'upsell' ? `rgb(${spectrum.gray100})` : undefined
+            }
+            title={card.title}
+            description={card.description}
+            media={
+              card.type === 'upsell' ? (
+                <RemoteImage
+                  accessibilityLabel="Promotional illustration"
+                  height={160}
+                  resizeMode="cover"
+                  shape="rectangle"
+                  source={{ uri: 'https://cds.coinbase.com/img/object.png' }}
+                  width={80}
+                />
+              ) : (
+                <Pictogram dimension="48x48" name="addToWatchlist" />
+              )
+            }
+            mediaPlacement="end"
+            onDismissButtonPress={() => handleDismiss(card.id)}
+            dismissButtonAccessibilityLabel={`Dismiss ${card.title}`}
+          />
+        ))}
+        {visibleCards.length === 0 && (
+          <Text color="fgNegative" font="label1">
+            All cards dismissed!
+          </Text>
+        )}
+      </VStack>
+      <Button onPress={handleReset} variant="tertiary">
+        Reset Cards
+      </Button>
+    </VStack>
+  );
+}
+```
+
+## Interactive Cards
+
+Use `renderAsPressable` with `onPress` for interactive cards.
+
+```jsx
+function InteractiveCards() {
+  const { spectrum } = useTheme();
+  return (
+    <VStack gap={2}>
+      <MessagingCard
+        renderAsPressable
+        onPress={() => console.log('Card pressed!')}
+        type="upsell"
+        dangerouslySetBackground={`rgb(${spectrum.teal70})`}
+        title="Interactive Upsell"
+        description="Tap to interact"
+        width={320}
+        media={
+          <RemoteImage
+            accessibilityLabel="Community illustration"
+            height={160}
+            resizeMode="cover"
+            shape="rectangle"
+            source={{ uri: 'https://cds.coinbase.com/img/community.png' }}
+          />
+        }
+        mediaPlacement="end"
+      />
+      <MessagingCard
+        renderAsPressable
+        onPress={() => console.log('Card pressed!')}
+        type="nudge"
+        title="Interactive Nudge"
+        description="Tap to interact"
+        width={320}
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+      />
+    </VStack>
+  );
+}
+```
+
+## Custom Content
+
+Use React nodes for custom styled content.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="This is a very long title text that demonstrates text wrapping"
+    description="This is a very long description text that demonstrates how the card handles longer content and wraps appropriately within the card layout"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Place illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/place.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="upsell"
+    width={320}
+    title={
+      <Text color="fgInverse" font="title3">
+        Custom Title
+      </Text>
+    }
+    tag={
+      <Text color="fgInverse" font="label2">
+        Custom Tag
+      </Text>
+    }
+    description={
+      <Text color="fgInverse" font="label2">
+        Custom description with styled text
+      </Text>
+    }
+    media={
+      <RemoteImage
+        accessibilityLabel="Collection illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/collection.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+## Multiple Cards
+
+Display multiple cards in a carousel.
+
+```jsx
+function MultipleCards() {
+  const { spectrum } = useTheme();
+  return (
+    <Carousel styles={{ carousel: { gap: 16 } }}>
+      <CarouselItem id="card1">
+        <MessagingCard
+          type="upsell"
+          title="Card 1"
+          description="Non-interactive card"
+          width={320}
+          media={
+            <RemoteImage
+              accessibilityLabel="Marketing illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: 'https://cds.coinbase.com/img/marketing.png' }}
+            />
+          }
+          mediaPlacement="end"
+        />
+      </CarouselItem>
+      <CarouselItem id="card2">
+        <MessagingCard
+          renderAsPressable
+          onPress={() => {}}
+          type="nudge"
+          title="Card 2"
+          description="Interactive card"
+          tag="Tap"
+          media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+          mediaPlacement="end"
+        />
+      </CarouselItem>
+      <CarouselItem id="card3">
+        <MessagingCard
+          renderAsPressable
+          onPress={() => console.log('clicked')}
+          type="upsell"
+          dangerouslySetBackground={`rgb(${spectrum.purple70})`}
+          title="Card 3"
+          description="Card with onPress handler"
+          tag="Action"
+          media={
+            <RemoteImage
+              accessibilityLabel="Radial design"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: 'https://cds.coinbase.com/img/radial.png' }}
+            />
+          }
+          mediaPlacement="end"
+        />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
+## Accessibility
+
+### Interactive Cards with Dismiss Button
+
+When you need both `onDismissButtonPress` and want the entire card to be pressable, you should handle accessibility carefully to avoid nested interactive elements.
+
+**The Problem**: If you use `renderAsPressable` with `onPress` and also have `onDismissButtonPress`, the card becomes a pressable containing another pressable (the dismiss button). This creates accessibility issues for screen reader users.
+
+**The Solution**: Mark the card as non-accessible and add a separate action button inside the card with the same action. This allows:
+
+- Regular users to tap anywhere on the card
+- Screen reader users to focus on individual interactive elements (action button + dismiss button)
+
+```jsx
+<MessagingCard
+  renderAsPressable
+  accessible={false}
+  onPress={() => console.log('Card pressed - navigating...')}
+  type="upsell"
+  title="Accessible Interactive Card"
+  description="Card with both dismiss and card-level action"
+  action={
+    <Button
+      compact
+      variant="secondary"
+      onPress={() => console.log('Button pressed - navigating...')}
+    >
+      Learn More
+    </Button>
+  }
+  onDismissButtonPress={() => console.log('Dismissed')}
+  dismissButtonAccessibilityLabel="Dismiss promotion"
+  media={
+    <RemoteImage
+      accessibilityLabel="Feature illustration"
+      height={160}
+      resizeMode="cover"
+      shape="rectangle"
+      source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      width={100}
+    />
+  }
+  mediaPlacement="end"
+/>
+```
+
+**Key points:**
+
+- Set `accessible={false}` to remove the card from the accessibility tree
+- Add a `Button` in `actionButton` with the same `onPress` handler for screen reader users
+- Use `actionButtonAccessibilityLabel` and `dismissButtonAccessibilityLabel` to add or override the accessibility label for the action and dismiss buttons
+
+### Color Contrast
+
+MessagingCard supports custom backgrounds via `background` and `dangerouslySetBackground` props. When using custom background colors, ensure sufficient color contrast between text and background:
+
+- Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
+- Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)
+- Verify your color combinations meet WCAG AA guidelines (4.5:1 for normal text)
+
+## Migration from Deprecated Components
+
+### Migrating from NudgeCard
+
+Replace `NudgeCard` with `MessagingCard` using `type="nudge"`.
+
+```jsx
+// Before
+<NudgeCard
+  title="Title"
+  description="Description"
+  pictogram="addToWatchlist"
+  action="Learn more"
+  onActionPress={handleAction}
+  onDismissPress={handleDismiss}
+/>
+
+// After
+<MessagingCard
+  type="nudge"
+  title="Title"
+  description="Description"
+  media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+  action="Learn more"
+  onActionButtonPress={handleAction}
+  onDismissButtonPress={handleDismiss}
+  mediaPlacement="end"
+/>
+```
+
+### Migrating from UpsellCard
+
+Replace `UpsellCard` with `MessagingCard` using `type="upsell"`.
+
+```jsx
+// Before
+<UpsellCard
+  title="Title"
+  description="Description"
+  media={<RemoteImage ... />}
+  action="Get Started"
+  onActionPress={handleAction}
+  onDismissPress={handleDismiss}
+/>
+
+// After
+<MessagingCard
+  type="upsell"
+  title="Title"
+  description="Description"
+  media={<RemoteImage ... />}
+  action="Get Started"
+  onActionButtonPress={handleAction}
+  onDismissButtonPress={handleDismiss}
+  mediaPlacement="end"
+/>
+```

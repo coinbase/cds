@@ -1,0 +1,589 @@
+DataCard is a flexible card component for displaying data with visualizations. It provides a structured layout for thumbnails, titles, subtitles, and visualization content. Pass any visualization component as children, such as `ProgressBar`, `ProgressCircle`, or custom content.
+
+:::info Migrating from Legacy DataCard?
+See the [Migration Guide](#migration-from-legacy-datacard) at the end of this page.
+:::
+
+## Basic Examples
+
+DataCard supports two layouts: `vertical` (stacked) and `horizontal` (side-by-side). Pass visualization components as children.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Progress indicator"
+        thumbnail={exampleThumbnail}
+        title="Progress Bar Card"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 45,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Circular progress"
+        thumbnail={exampleThumbnail}
+        title="Progress Circle Card"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 3.12%
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="60% complete"
+            progress={0.6}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Layout Variations
+
+Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
+
+```jsx
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Vertical layout stacks content"
+        thumbnail={exampleThumbnail}
+        title="Vertical Layout"
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 75,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Horizontal layout places content side by side"
+        thumbnail={exampleThumbnail}
+        title="Horizontal Layout"
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="75% complete"
+            progress={0.75}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Title Accessory
+
+Use `titleAccessory` to display supplementary information inline with the title, such as trends, percentages, or status indicators.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="With positive trend"
+        thumbnail={exampleThumbnail}
+        title="Positive Trend"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 90,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="90% complete" progress={0.9} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="With negative trend"
+        thumbnail={exampleThumbnail}
+        title="Negative Trend"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 4.2%
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="70% complete"
+            progress={0.7}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Interactive Cards
+
+Use `renderAsPressable` to make the card interactive with `onPress` handler.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        renderAsPressable
+        accessibilityLabel="View progress details"
+        layout="vertical"
+        onPress={() => Alert.alert('Progress bar card pressed!')}
+        subtitle="Clickable progress card"
+        thumbnail={exampleThumbnail}
+        title="Tap to View Details"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 75,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        renderAsPressable
+        accessibilityLabel="View circle progress details"
+        layout="horizontal"
+        onPress={() => Alert.alert('Circle card pressed!')}
+        subtitle="Tap for more info"
+        thumbnail={exampleThumbnail}
+        title="Interactive Circle"
+        titleAccessory={
+          <Text color="fgMuted" font="label1">
+            Details
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="85% complete"
+            progress={0.85}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Style Customization
+
+Use `styles` prop to customize specific parts of the card layout.
+
+```jsx
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        styles={{
+          root: { borderWidth: 2, borderColor: '#0066FF' },
+        }}
+        subtitle="Custom border"
+        thumbnail={exampleThumbnail}
+        title="Custom Root Styles"
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 50,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="50% complete" progress={0.5} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        styles={{
+          root: { backgroundColor: '#F5F5F5' },
+          headerContainer: { paddingLeft: 16 },
+        }}
+        subtitle="Custom background and padding"
+        thumbnail={exampleThumbnail}
+        title="Custom Layout Styles"
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="70% complete"
+            progress={0.7}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Multiple Cards
+
+DataCards work well in lists or dashboards to display multiple data points.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Daily goal progress"
+        thumbnail={exampleThumbnail}
+        title="Steps Today"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            6,500 / 10,000
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 65,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="65% complete" progress={0.65} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Below target this week"
+        thumbnail={exampleThumbnail}
+        title="Workout Goal"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            2 / 7 days
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="29% complete"
+            progress={0.29}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Accessibility
+
+Ensure all visualization components have appropriate `accessibilityLabel` props to convey the progress information to screen readers.
+
+### Interactive Cards
+
+When making DataCard interactive with `renderAsPressable`:
+
+- Add an `accessibilityLabel` to summarize the card's content for VoiceOver users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
+
+```jsx
+<DataCard
+  renderAsPressable
+  accessibilityLabel="ETH Holdings, 45% progress, View details"
+  onPress={() => handlePress()}
+  title="ETH Holdings"
+  subtitle="45% progress"
+>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      labelPlacement="below"
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
+</DataCard>
+```
+
+:::warning Avoid Nested Interactive Elements
+Don't place buttons or pressables inside an interactive card, as this creates accessibility issues for VoiceOver users and can cause unexpected behavior when tapping.
+:::
+
+### Color Contrast for Gain/Loss Text
+
+When displaying gain or loss percentages in DataCard, be aware of color contrast differences between light and dark modes.
+
+**Why this matters:** DataCard uses `bgAlternate` as its background color. In **light mode**, the semantic `fgPositive` token does not meet WCAG AA contrast requirements:
+
+| Mode  | Color                    | Background               | Contrast Ratio | WCAG AA (4.5:1) |
+| ----- | ------------------------ | ------------------------ | -------------- | --------------- |
+| Light | `fgPositive` (`green60`) | `bgAlternate` (`gray10`) | ~3.6:1         | ❌ Fails        |
+| Light | `green70`                | `bgAlternate` (`gray10`) | ~4.8:1         | ✅ Passes       |
+| Dark  | `fgPositive` (`green60`) | `bgAlternate` (`gray5`)  | ~6.2:1         | ✅ Passes       |
+
+**Recommendation:**
+
+- **Light mode**: Use `green70` for positive values instead of `fgPositive`
+- **Dark mode**: `fgPositive` meets WCAG AA requirements and can be used as-is
+- **Both modes**: `fgNegative` meets WCAG AA requirements
+
+**On mobile**, access the theme spectrum via `useTheme()` hook for light mode compatibility:
+
+```jsx
+const { spectrum } = useTheme();
+
+{
+  /* Gain text */
+}
+<Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+  ↗ 12.5%
+</Text>;
+
+{
+  /* Loss text */
+}
+<Text color="fgNegative" font="label1">
+  ↘ 3.2%
+</Text>;
+```
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum logo"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Portfolio allocation"
+        thumbnail={exampleThumbnail}
+        title="ETH Holdings"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 12.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 80,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar
+              accessibilityLabel="ETH holdings at 80% of target, currently $4,000 of $5,000 goal"
+              progress={0.8}
+              weight="semiheavy"
+            />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Migration from Legacy DataCard
+
+The new `DataCard` from `@coinbase/cds-mobile/alpha/data-card` replaces the legacy `DataCard`. The new version provides more flexibility with custom layouts and visualization components.
+
+**Before:**
+
+```jsx
+import { DataCard } from '@coinbase/cds-mobile/cards/DataCard';
+
+<DataCard
+  title="Progress"
+  description="45% complete"
+  progress={0.45}
+  progressVariant="bar"
+  startLabel={45}
+/>;
+```
+
+**After:**
+
+```jsx
+import { DataCard } from '@coinbase/cds-mobile/alpha/data-card';
+
+<DataCard
+  title="Progress"
+  subtitle="45% complete"
+  layout="vertical"
+  thumbnail={<RemoteImage source={{ uri: assetUrl }} shape="circle" size="l" />}
+>
+  <ProgressBarWithFixedLabels
+    startLabel={{
+      value: 45,
+      render: (num) => (
+        <Text color="fgMuted" font="legal">
+          {num}%
+        </Text>
+      ),
+    }}
+    labelPlacement="below"
+  >
+    <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+  </ProgressBarWithFixedLabels>
+</DataCard>;
+```

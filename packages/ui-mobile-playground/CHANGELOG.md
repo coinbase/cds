@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.7.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Added routes for MediaCard, MessagingCard, and alpha DataCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+
+## 4.6.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Add new screen. [[#366](https://github.com/coinbase/cds/pull/366)]
+
 ## 4.5.12 (1/13/2026 PST)
 
 #### 🐞 Fixes

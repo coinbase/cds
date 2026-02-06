@@ -2,12 +2,12 @@ import React, { forwardRef, memo } from 'react';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
 
 import type { Polymorphic } from '../../core/polymorphism';
-import { type BoxBaseProps, VStack } from '../../layout';
+import { VStack, type VStackBaseProps } from '../../layout';
 
-export const contentCardDefaultElement = 'div';
+export const contentCardDefaultElement = 'article';
 export type ContentCardDefaultElement = typeof contentCardDefaultElement;
 
-export type ContentCardBaseProps = BoxBaseProps;
+export type ContentCardBaseProps = Polymorphic.ExtendableProps<VStackBaseProps, object>;
 
 export type ContentCardProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
@@ -28,8 +28,9 @@ export const ContentCard: ContentCardComponent = memo(
         children,
         maxWidth = contentCardMaxWidth,
         minWidth = contentCardMinWidth,
-        paddingX = 3,
-        paddingY = 2,
+        borderRadius = 500,
+        padding = 2,
+        gap = 2,
         ...props
       }: ContentCardProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -39,11 +40,11 @@ export const ContentCard: ContentCardComponent = memo(
         <VStack
           ref={ref}
           as={Component}
-          gap={1}
+          borderRadius={borderRadius}
+          gap={gap}
           maxWidth={maxWidth}
           minWidth={minWidth}
-          paddingX={paddingX}
-          paddingY={paddingY}
+          padding={padding}
           testID={testID}
           {...props}
         >
