@@ -136,6 +136,8 @@ export const Drawer = memo(
       accessibilityLabelledBy,
       style,
       styles,
+      accessibilityRole = 'alert',
+      animationType = 'none',
       ...props
     },
     ref,
@@ -295,8 +297,8 @@ export const Drawer = memo(
         hardwareAccelerated
         transparent
         visible
-        accessibilityRole="alert"
-        animationType="none"
+        accessibilityRole={accessibilityRole}
+        animationType={animationType}
         onRequestClose={handleRequestClose}
         style={rootStyle}
         {...props}
