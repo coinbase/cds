@@ -124,11 +124,13 @@ const SquareAssetCard = ({
   name,
   isVisible,
   colorVisibility,
+  onClick,
 }: {
   imageUrl: string;
   name: string;
   isVisible?: boolean;
   colorVisibility?: boolean;
+  onClick?: () => void;
 }) => (
   <ContainedAssetCard
     description={
@@ -137,7 +139,7 @@ const SquareAssetCard = ({
       </Text>
     }
     header={<RemoteImage draggable={false} height="32px" source={imageUrl} width="32px" />}
-    onClick={isVisible ? () => console.log('clicked') : undefined}
+    onClick={onClick}
     style={
       colorVisibility
         ? { backgroundColor: isVisible ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)' }
@@ -152,7 +154,7 @@ const SquareAssetCard = ({
 const BasicExamples = () => (
   <VStack gap={4}>
     <NegativeMargin>
-      <Carousel styles={overflowStyles} title="Snap Page">
+      <Carousel paginationVariant="dot" styles={overflowStyles} title="Snap Page">
         {sampleItems.map((item, index) => (
           <CarouselItem
             key={`spaced-${index}`}
@@ -165,7 +167,13 @@ const BasicExamples = () => (
       </Carousel>
     </NegativeMargin>
     <NegativeMargin>
-      <Carousel drag="snap" snapMode="item" styles={overflowStyles} title="Snap Item">
+      <Carousel
+        drag="snap"
+        paginationVariant="dot"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Snap Item"
+      >
         {sampleItems.map((item, index) => (
           <CarouselItem
             key={`snap-${index}`}
@@ -177,23 +185,33 @@ const BasicExamples = () => (
         ))}
       </Carousel>
     </NegativeMargin>
-    <Carousel
-      NavigationComponent={SeeAllComponent}
-      drag="free"
-      snapMode="item"
-      styles={gapOnlyStyles}
-      title="Square Items Carousel"
-    >
-      {Object.values(assets).map((asset) => (
-        <CarouselItem key={asset.symbol} id={asset.symbol}>
-          {({ isVisible }) => (
-            <SquareAssetCard imageUrl={asset.imageUrl} isVisible={isVisible} name={asset.symbol} />
-          )}
-        </CarouselItem>
-      ))}
-    </Carousel>
+    <NegativeMargin>
+      <Carousel
+        loop
+        NavigationComponent={SeeAllComponent}
+        drag="free"
+        paginationVariant="dot"
+        snapMode="item"
+        styles={overflowStyles}
+        title="Square Items Carousel"
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                isVisible={isVisible}
+                name={asset.symbol}
+                onClick={() => console.log(`${asset.symbol} clicked`)}
+              />
+            )}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
     <Carousel
       drag="snap"
+      paginationVariant="dot"
       snapMode="page"
       styles={gapOnlyStyles}
       title={
@@ -218,7 +236,12 @@ const BasicExamples = () => (
         {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
       </CarouselItem>
     </Carousel>
-    <Carousel drag="none" styles={gapOnlyStyles} title="Navigation Only (No Drag)">
+    <Carousel
+      drag="none"
+      paginationVariant="dot"
+      styles={gapOnlyStyles}
+      title="Navigation Only (No Drag)"
+    >
       {sampleItems.slice(0, 4).map((item, index) => (
         <CarouselItem key={`nav-only-${index}`} id={`nav-only-${index}`} width="100%">
           {item}
@@ -546,10 +569,41 @@ const AnimatedPaginationExample = () => {
   );
 };
 
+const AutoplayExample = () => (
+  <NegativeMargin>
+    <Carousel
+      autoplay
+      loop
+      paginationVariant="dot"
+      styles={overflowStyles}
+      title="Autoplay Carousel"
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+          {({ isVisible }) => (
+            <SquareAssetCard
+              imageUrl={asset.imageUrl}
+              isVisible={isVisible}
+              name={asset.symbol}
+              onClick={() => console.log(`${asset.symbol} clicked`)}
+            />
+          )}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
 const LoopingExamples = () => (
   <VStack gap={4}>
     <NegativeMargin>
-      <Carousel loop snapMode="page" styles={overflowStyles} title="Looping - Snap Page">
+      <Carousel
+        loop
+        paginationVariant="dot"
+        snapMode="page"
+        styles={overflowStyles}
+        title="Looping - Snap Page"
+      >
         {sampleItems.map((item, index) => (
           <CarouselItem
             key={`loop-page-${index}`}
@@ -563,11 +617,13 @@ const LoopingExamples = () => (
     </NegativeMargin>
     <NegativeMargin>
       <Carousel
+        autoplay
         loop
         drag="snap"
+        paginationVariant="dot"
         snapMode="item"
         styles={overflowStyles}
-        title="Looping - Snap Item"
+        title="Looping with Autoplay - Snap Item"
       >
         {sampleItems.map((item, index) => (
           <CarouselItem
@@ -584,17 +640,19 @@ const LoopingExamples = () => (
       <Carousel
         loop
         drag="free"
+        paginationVariant="dot"
         snapMode="item"
         styles={overflowStyles}
         title="Looping - Free Drag"
       >
         {Object.values(assets).map((asset) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
             {({ isVisible }) => (
               <SquareAssetCard
                 imageUrl={asset.imageUrl}
                 isVisible={isVisible}
                 name={asset.symbol}
+                onClick={() => console.log(`${asset.symbol} clicked`)}
               />
             )}
           </CarouselItem>
@@ -607,16 +665,17 @@ const LoopingExamples = () => (
         drag="free"
         snapMode="item"
         styles={overflowStyles}
-        title="Looping - Free Drag is visible"
+        title="Looping - Free Drag is visible (visreg)"
       >
         {Object.values(assets).map((asset) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
             {({ isVisible }) => (
               <SquareAssetCard
                 colorVisibility
                 imageUrl={asset.imageUrl}
                 isVisible={isVisible}
                 name={asset.symbol}
+                onClick={() => console.log(`${asset.symbol} clicked`)}
               />
             )}
           </CarouselItem>
@@ -633,5 +692,6 @@ export const All = () => (
     <CustomStylesExample />
     <AnimatedPaginationExample />
     <LoopingExamples />
+    <AutoplayExample />
   </VStack>
 );

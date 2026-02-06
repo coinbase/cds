@@ -57,6 +57,7 @@ import {
   CarouselItem,
   DefaultCarouselNavigation,
   DefaultCarouselPagination,
+  useCarouselAutoplayContext,
 } from '@cbhq/cds-web/carousel';
 import * as CDSCells from '@cbhq/cds-web/cells';
 import { Chip } from '@cbhq/cds-web/chips/Chip';
@@ -143,6 +144,7 @@ const ReactLiveScope: Record<string, unknown> = {
   CarouselItem,
   DefaultCarouselNavigation,
   DefaultCarouselPagination,
+  useCarouselAutoplayContext,
   Dropdown,
   ...CDSLottie,
   Lottie,

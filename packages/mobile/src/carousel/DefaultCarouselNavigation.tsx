@@ -21,6 +21,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Test ID for the next button.
      */
     nextButton?: string;
+    /**
+     * Test ID for the autoplay button.
+     */
+    autoplayButton?: string;
   };
   /**
    * Icon to use for the previous button.
@@ -30,6 +34,14 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
    * Icon to use for the next button.
    */
   nextIcon?: IconName;
+  /**
+   * Icon to use for the start autoplay button.
+   */
+  startIcon?: IconName;
+  /**
+   * Icon to use for the stop autoplay button.
+   */
+  stopIcon?: IconName;
   /**
    * Variant of the icon button.
    */
@@ -54,6 +66,10 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
      * Custom styles for the next button.
      */
     nextButton?: StyleProp<ViewStyle>;
+    /**
+     * Custom styles for the autoplay button.
+     */
+    autoplayButton?: StyleProp<ViewStyle>;
   };
 };
 
@@ -64,10 +80,17 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   disableGoNext,
   previousPageAccessibilityLabel = 'Previous page',
   nextPageAccessibilityLabel = 'Next page',
+  autoplay,
+  isAutoplayStopped,
+  onToggleAutoplay,
+  startAutoplayAccessibilityLabel = 'Play Carousel',
+  stopAutoplayAccessibilityLabel = 'Pause Carousel',
   variant = 'secondary',
   compact,
   previousIcon = 'caretLeft',
   nextIcon = 'caretRight',
+  startIcon = 'play',
+  stopIcon = 'pause',
   style,
   styles,
   testIDMap,
@@ -82,6 +105,19 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
 
   return (
     <HStack gap={1} style={rootStyles}>
+      {autoplay && (
+        <IconButton
+          accessibilityLabel={
+            isAutoplayStopped ? startAutoplayAccessibilityLabel : stopAutoplayAccessibilityLabel
+          }
+          compact={compact}
+          name={isAutoplayStopped ? startIcon : stopIcon}
+          onPress={onToggleAutoplay}
+          style={styles?.autoplayButton}
+          testID={testIDMap?.autoplayButton ?? 'carousel-autoplay-button'}
+          variant={variant}
+        />
+      )}
       <IconButton
         accessibilityLabel={previousPageAccessibilityLabel}
         compact={compact}
