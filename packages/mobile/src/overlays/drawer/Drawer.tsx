@@ -154,7 +154,7 @@ export const Drawer = memo(
     const [opacityAnimation, animateOverlayIn, animateOverlayOut] = useOverlayAnimation(
       drawerAnimationDefaultDuration,
     );
-    const spacingStyle = useDrawerSpacing(pin);
+    const paddingStyles = useDrawerSpacing(pin);
     const isMounted = useRef(false);
 
     const handleClose = useCallback(() => {
@@ -262,11 +262,11 @@ export const Drawer = memo(
 
     const drawerStyle: StyleProp<ViewStyle> = useMemo(
       () => [
-        spacingStyle,
+        paddingStyles,
         { overflow: showHandleBarOutside ? 'visible' : 'hidden' },
         styles?.drawer,
       ],
-      [spacingStyle, showHandleBarOutside, styles?.drawer],
+      [paddingStyles, showHandleBarOutside, styles?.drawer],
     );
 
     const handleBar = useMemo(
