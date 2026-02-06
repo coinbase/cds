@@ -1,0 +1,89 @@
+{
+  "name": "test-expo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/test-expo",
+  "tags": [],
+  "targets": {
+    "start": {
+      "command": "npx expo start",
+      "options": {
+        "cwd": "apps/test-expo"
+      }
+    },
+    "ios": {
+      "command": "node ./scripts/run.mjs --platform ios",
+      "options": {
+        "cwd": "apps/test-expo"
+      }
+    },
+    "android": {
+      "command": "node ./scripts/run.mjs --platform android",
+      "options": {
+        "cwd": "apps/test-expo"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    },
+    "validate": {
+      "command": "npx expo install --check",
+      "options": {
+        "cwd": "apps/test-expo"
+      }
+    },
+    "launch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/test-expo",
+        "command": "node ./scripts/launch.mjs --platform {args.platform} --profile {args.profile}"
+      },
+      "defaultConfiguration": "ios-debug",
+      "configurations": {
+        "ios-debug": {
+          "args": "--platform ios --profile debug"
+        },
+        "ios-release": {
+          "args": "--platform ios --profile release"
+        },
+        "android-debug": {
+          "args": "--platform android --profile debug"
+        },
+        "android-release": {
+          "args": "--platform android --profile release"
+        }
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/test-expo",
+        "command": "node ./scripts/build.mjs --platform {args.platform} --profile {args.profile} --target {args.target}"
+      },
+      "defaultConfiguration": "ios-debug",
+      "configurations": {
+        "ios-debug": {
+          "args": "--platform ios --profile debug --target simulator"
+        },
+        "ios-release": {
+          "args": "--platform ios --profile release --target simulator"
+        },
+        "ios-debug-device": {
+          "args": "--platform ios --profile debug --target device"
+        },
+        "ios-release-device": {
+          "args": "--platform ios --profile release --target device"
+        },
+        "android-debug": {
+          "args": "--platform android --profile debug --target simulator"
+        },
+        "android-release": {
+          "args": "--platform android --profile release --target simulator"
+        }
+      }
+    }
+  }
+}

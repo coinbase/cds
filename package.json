@@ -67,22 +67,22 @@
   "resolutions": {
     "@testing-library/user-event@^14.0.4": "patch:@testing-library/user-event@npm:14.0.4#.yarn/patches/@testing-library-user-event-npm-14.0.4-109d618170",
     "framer-motion@^10.18.0": "patch:framer-motion@npm:10.18.0#.yarn/patches/framer-motion-npm-10.18.0-ae9ea02138",
-    "@expo/cli": "patch:@expo/cli@npm:0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch",
-    "expo-splash-screen": "patch:expo-splash-screen@npm:0.27.5#.yarn/patches/expo-splash-screen-npm-0.27.5-f91e0b41df.patch",
     "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch",
-    "expo-dev-launcher": "patch:expo-dev-launcher@npm:4.0.27#.yarn/patches/expo-dev-launcher-npm-4.0.27-c2ab5dd4a5.patch",
     "react-helmet-async": "^2.0.5",
-    "react-native@~0.81.5": "patch:react-native@npm%3A0.81.5#./.yarn/patches/react-native-npm-0.81.5-d8232ef145.patch"
+    "@expo/cli": "patch:@expo/cli@npm:54.0.22#.yarn/patches/@expo-cli-npm-54.0.22-eb5155f2b5.patch",
+    "@expo/metro-config": "patch:@expo/metro-config@npm:54.0.14#.yarn/patches/@expo-metro-config-npm-54.0.14-88915da766.patch",
+    "react-native": "patch:react-native@npm:0.81.5#.yarn/patches/react-native-npm-0.81.5-0a0008b930.patch",
+    "expo-modules-core": "patch:expo-modules-core@npm:3.0.29#.yarn/patches/expo-modules-core-npm-3.0.29-7b93dc0961.patch"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
     "framer-motion@^10.18.0": "Export missing types",
-    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`",
-    "expo-splash-screen": "[Managed by CMR] Adds support for transitions and bottom images in the splash screen. We aim to upstream some of those improvements to Expo.",
     "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
-    "expo-dev-launcher": "[Managed by CMR] Necessary to install the Expo network inspector for the Android `development` build type. Issue tracked internally by Expo.",
     "react-helmet-async": "Working around Nx graph resolution issue",
-    "react-native@0.81.5": "Relax React version check to allow any 19.1.x patch version instead of exactly 19.1.0. React security vulnerability was patched starting at 19.1.2."
+    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`",
+    "@expo/metro-config": "[Managed by CMR] Fixes Expo serializer to pick up custom defined env variables to be used in the app",
+    "react-native": "[Managed by CMR] Fixes bug presenting a modal on iOS (See https://github.cbhq.net/consumer/react-native/pull/30568). Allows to use React 19.1.2 due to a high severity security vulnerability.",
+    "expo-modules-core": "[Managed by CMR] Avoid initializing EXJavaScriptRuntimeManager runtimeFromBridge from the main thread on iOS to avoid JSI crash"
   },
   "workspaces": [
     "actions/*",

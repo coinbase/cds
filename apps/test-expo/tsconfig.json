@@ -1,0 +1,39 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "declarationDir": "dts",
+    "jsx": "react-native",
+    "resolveJsonModule": true,
+    "moduleSuffixes": [
+      ".ios",
+      ".android",
+      ".native",
+      ""
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "*.tsx",
+    "*.config.js",
+    "*.config.ts",
+    "*.json"
+  ],
+  "exclude": [],
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/mobile"
+    },
+    {
+      "path": "../../packages/icons"
+    },
+    {
+      "path": "../../packages/illustrations"
+    },
+    {
+      "path": "../../packages/mobile-visualization"
+    }
+  ]
+}

@@ -13,6 +13,9 @@
       "path": "apps/storybook"
     },
     {
+      "path": "apps/test-expo"
+    },
+    {
       "path": "apps/vite-app"
     },
     {

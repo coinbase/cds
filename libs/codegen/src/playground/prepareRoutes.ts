@@ -119,6 +119,13 @@ export async function prepare() {
       template: 'mobileRoutes.ejs',
       dest: `apps/mobile-app/scripts/utils/routes.mjs`,
     });
+
+    // Write to test-expo for Expo demo app
+    await writeFile({
+      data: { routes: consumerRoutes },
+      template: 'mobileRoutes.ejs',
+      dest: `apps/test-expo/src/routes.ts`,
+    });
   } catch (err) {
     if (err instanceof Error) {
       console.log(err.message);
