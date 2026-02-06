@@ -35,26 +35,14 @@ Ensures every Storybook file default-exports a component whose rendered output i
 
 Validates that any `ExampleScreen` Storybook story ultimately renders at least one `<Example>` component. The rule looks through components defined in the same file to make sure examples exist even when they are encapsulated in helper components.
 
-### figma-connect-no-semicolon
+### figma-connect-imports-required
 
-Ensures that import strings in `figma.connect()` imports arrays do not contain trailing semicolons. Code Connect parses semicolons incorrectly when they appear inside the import string, which can lead to parsing errors.
+Ensures that `figma.connect()` calls have a non-empty `imports` array. This rule validates that:
 
-**Why this rule exists**: Figma Code Connect expects import strings in the `imports` array to be valid import statements without semicolons. Since these are string literals, any semicolon should be outside the quotes, not inside them.
+- The `imports` property exists in the config object
+- The `imports` property is an array
+- The `imports` array contains at least one import statement
 
-**Bad**:
+### figma-connect-imports-package-match
 
-```typescript
-figma.connect(Component, 'url', {
-  imports: ["import { Button } from '@coinbase/cds-web/buttons/Button';"],
-});
-```
-
-**Good**:
-
-```typescript
-figma.connect(Component, 'url', {
-  imports: ["import { Button } from '@coinbase/cds-web/buttons/Button'"],
-});
-```
-
-This rule includes an automatic fix that removes the trailing semicolon from import strings.
+Ensures that import paths in `figma.connect()` calls match the package context of the file. This rule validates that imports come from the same package as the file containing the `figma.connect()` call. Shared packages like `@coinbase/cds-common` are allowed from any context.

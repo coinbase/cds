@@ -1,7 +1,8 @@
 import React from 'react';
+import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { figma } from '@figma/code-connect';
 
-import { Avatar } from '../../../media';
+import { Avatar, RemoteImage } from '../../../media';
 import { MediaCard } from '../';
 
 figma.connect(
@@ -22,21 +23,21 @@ figma.connect(
         true: figma.instance('↳ subdetail'),
         false: undefined,
       }),
-      media: figma.boolean('show media', {
+      thumbnail: figma.boolean('show media', {
         true: figma.instance('↳ media'),
         false: undefined,
       }),
-      mediaPlacement: figma.enum('media placement', {
+      mediaPlacement: figma.enum('image placement', {
         left: 'start',
         right: 'end',
         none: undefined,
       }),
+      media: figma.enum('image placement', {
+        left: <RemoteImage alt="Media" shape="rectangle" source={ethBackground} width="100%" />,
+        right: <RemoteImage alt="Media" shape="rectangle" source={ethBackground} width="100%" />,
+        none: undefined,
+      }),
     },
-    example: ({ ...props }) => (
-      <MediaCard
-        thumbnail={<Avatar accessibilityLabel="" shape="circle" size="l" src="" />}
-        {...props}
-      />
-    ),
+    example: (props) => <MediaCard {...props} />,
   },
 );

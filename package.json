@@ -111,7 +111,7 @@
     "@babel/template": "^7.20.7",
     "@babel/types": "^7.20.7",
     "@coinbase/eslint-plugin-internal": "workspace:^",
-    "@figma/code-connect": "^1.3.12",
+    "@figma/code-connect": "^1.3.13",
     "@graphql-tools/jest-transform": "^2.0.0",
     "@inquirer/prompts": "^7.5.3",
     "@joshcena/docusaurus-plugin-utils": "^0.1.3",
