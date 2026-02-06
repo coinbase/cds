@@ -53,7 +53,13 @@ export class IOSBuilder extends PlatformBuilder {
 
     // Find the built .app and create tarball
     const configFolder = `${configuration}-iphonesimulator`;
-    const appPath = path.join(buildDir, 'Build', 'Products', configFolder, `${this.ios.scheme}.app`);
+    const appPath = path.join(
+      buildDir,
+      'Build',
+      'Products',
+      configFolder,
+      `${this.ios.scheme}.app`,
+    );
     const appDir = path.dirname(appPath);
     const appName = path.basename(appPath);
 

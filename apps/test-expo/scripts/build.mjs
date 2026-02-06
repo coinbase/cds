@@ -16,7 +16,7 @@ const { platform, profile, target } = values;
 
 if (!platform) {
   console.error(
-    'Usage: node build.mjs --platform <ios|android> [--profile <debug|release>] [--target <simulator|device>]'
+    'Usage: node build.mjs --platform <ios|android> [--profile <debug|release>] [--target <simulator|device>]',
   );
   process.exit(1);
 }

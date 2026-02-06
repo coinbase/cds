@@ -5,10 +5,10 @@ import { MDXArticle } from '@site/src/components/page/MDXArticle';
 
 The `useMergeRefs` hook accepts a spread of refs as its parameter:
 
-- `...refs: (React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null)[]` - An array of refs to merge. Can include:
-  - `MutableRefObject` - Object-based refs created with `useRef`
-  - `LegacyRef` - Function-based refs or string refs (legacy)
-  - `undefined` or `null` - Optional refs that might not be provided
+- `...refs: (React.Ref<T> | undefined)[]` - An array of refs to merge. Can include:
+  - `RefObject` - Object-based refs created with `useRef` / `createRef`
+  - `RefCallback` - Function refs
+  - `undefined` - Optional refs that might not be provided
 
 </MDXArticle>
 

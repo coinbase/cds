@@ -1,13 +1,4 @@
-export const useMergeRefs = <T = any>(
-  ...refs: (React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null)[]
-): React.RefCallback<T> => {
-  return (value) => {
-    refs.forEach((ref) => {
-      if (typeof ref === 'function') {
-        ref(value);
-      } else if (ref != null) {
-        (ref as React.MutableRefObject<T | null>).current = value;
-      }
-    });
-  };
-};
+/**
+ * @deprecated Import from `@coinbase/cds-common/utils/mergeRefs` instead.
+ */
+export { useMergeRefs } from '../utils/mergeRefs';

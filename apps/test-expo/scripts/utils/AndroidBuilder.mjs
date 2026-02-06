@@ -45,7 +45,7 @@ export class AndroidBuilder extends PlatformBuilder {
       'build',
       'outputs',
       'apk',
-      buildTypeLC
+      buildTypeLC,
     );
     const builtApkPath = path.join(builtApkDir, `app-${buildTypeLC}.apk`);
 
