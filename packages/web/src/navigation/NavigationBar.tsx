@@ -26,58 +26,58 @@ export const navigationBarClassNames = {
   content: 'cds-NavigationBar-content',
 } as const;
 
-export type NavigationBarBaseProps = BoxBaseProps &
-  StylesAndClassNames<typeof navigationBarClassNames> & {
-    /**
-     * Node (ie Back button) to display at the start of the nav bar
-     */
-    start?: React.ReactNode;
-    /**
-     * Node (icons, avatar, etc) to display at the end of the nav bar
-     */
-    end?: React.ReactNode;
-    /**
-     * The  bottom content. Use to render tabs
-     */
-    bottom?: React.ReactNode;
-    /**
-     * The middle content. Use the children to render the page title
-     */
-    children?: React.ReactNode;
-    /**
-     * Accessibility label for the nav bar
-     * @default 'main navigation'
-     */
-    accessibilityLabel?: string;
-    /**
-     * @default 2
-     */
-    paddingX?: ThemeVars.Space;
-    /**
-     * @default 2
-     */
-    paddingTop?: ThemeVars.Space;
-    /**
-     * @default 2 if bottom is not provided
-     */
-    paddingBottom?: ThemeVars.Space;
-    /**
-     * Space between bottom of the nav bar and the rest of its content
-     * @default 2
-     */
-    rowGap?: ResponsiveProp<ThemeVars.Space>;
-    /**
-     * Space between the start, children, and end of the nav bar
-     * @default 2
-     */
-    columnGap?: ResponsiveProp<ThemeVars.Space>;
-    /**
-     * Disable the `overflow: hidden` style from being injected to the child Col
-     */
-    dangerouslyDisableOverflowHidden?: boolean;
-  };
+export type NavigationBarBaseProps = BoxBaseProps & {
+  /**
+   * Node (ie Back button) to display at the start of the nav bar
+   */
+  start?: React.ReactNode;
+  /**
+   * Node (icons, avatar, etc) to display at the end of the nav bar
+   */
+  end?: React.ReactNode;
+  /**
+   * The  bottom content. Use to render tabs
+   */
+  bottom?: React.ReactNode;
+  /**
+   * The middle content. Use the children to render the page title
+   */
+  children?: React.ReactNode;
+  /**
+   * Accessibility label for the nav bar
+   * @default 'main navigation'
+   */
+  accessibilityLabel?: string;
+  /**
+   * @default 2
+   */
+  paddingX?: ThemeVars.Space;
+  /**
+   * @default 2
+   */
+  paddingTop?: ThemeVars.Space;
+  /**
+   * @default 2 if bottom is not provided
+   */
+  paddingBottom?: ThemeVars.Space;
+  /**
+   * Space between bottom of the nav bar and the rest of its content
+   * @default 2
+   */
+  rowGap?: ResponsiveProp<ThemeVars.Space>;
+  /**
+   * Space between the start, children, and end of the nav bar
+   * @default 2
+   */
+  columnGap?: ResponsiveProp<ThemeVars.Space>;
+  /**
+   * Disable the `overflow: hidden` style from being injected to the child Col
+   */
+  dangerouslyDisableOverflowHidden?: boolean;
+};
 
 export type NavigationBarProps = NavigationBarBaseProps &
+  StylesAndClassNames<typeof navigationBarClassNames> &
   Omit<BoxProps<NavigationBarDefaultElement>, 'children'>;
 
 export const NavigationBar = memo(

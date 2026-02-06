@@ -139,10 +139,11 @@ Import and use the `StylesAndClassNames` utility type:
 ```tsx
 import type { StylesAndClassNames } from '../types';
 
-export type [ComponentName]BaseProps = BoxBaseProps &
-  StylesAndClassNames<typeof [componentName]ClassNames> & {
-    // ... other props
-  };
+export type [ComponentName]BaseProps = BoxBaseProps & {
+  // ... other props (without styles/classNames)
+};
+
+export type [ComponentName]Props = [ComponentName]BaseProps & StylesAndClassNames<typeof [componentName]ClassNames> & Omit<BoxProps<[ComponentName]DefaultElement>, 'children'>;
 ```
 
 This automatically generates the `styles` and `classNames` props based on your static classNames object.
@@ -304,9 +305,9 @@ const fooClassNames = {
 See `packages/web/src/navigation/NavigationBar.tsx` for a complete example of the styles API pattern:
 
 - Lines 16-28: Static classNames with JSDoc
-- Line 31: Using `StylesAndClassNames` type
-- Lines 118, 141, 150: Applying classNames with `cx()`
-- Lines 126, 143, 153: Applying styles
+- Line 80: Using `StylesAndClassNames` type on regular Props (not BaseProps)
+- Lines 117, 140, 149: Applying classNames with `cx()`
+- Lines 125, 142, 152: Applying styles
 
 See `packages/web/src/navigation/__tests__/NavigationBar.test.tsx` for static classNames test example:
 
@@ -337,7 +338,7 @@ Before completing, verify:
 - [ ] Selector names are from the approved list (or got user confirmation for new ones)
 - [ ] Each selector has a descriptive JSDoc comment
 - [ ] Class names follow `cds-ComponentName-selectorName` convention (camelCase)
-- [ ] Using `StylesAndClassNames` utility type (web) or manual styles type (mobile)
+- [ ] Using `StylesAndClassNames` utility type on regular Props (not BaseProps) (web) or manual styles type (mobile)
 - [ ] Static classNames applied with `cx()` in component JSX (web only)
 - [ ] Dynamic classNames and styles props applied correctly
 - [ ] Special rendering conditions documented in JSDoc
