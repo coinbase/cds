@@ -1,4 +1,4 @@
-### Basic Example
+### With Icon Counter Buttons
 
 ```jsx
 function Example() {
@@ -8,6 +8,68 @@ function Example() {
         <IconCounterButton count={20} icon="heart" />
         <IconCounterButton count={40} icon="comment" />
         <IconCounterButton count={32} icon="wireTransfer" />
+      </ContentCardFooter>
+    </VStack>
+  );
+}
+```
+
+### With Image Group and Button
+
+```jsx
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardFooter>
+        <RemoteImageGroup shape="circle" size={32}>
+          <RemoteImage source={{ uri: assets.eth.imageUrl }} />
+          <RemoteImage source={{ uri: assets.btc.imageUrl }} />
+          <RemoteImage source={{ uri: assets.polygon.imageUrl }} />
+        </RemoteImageGroup>
+        <Button compact variant="secondary">
+          Share
+        </Button>
+      </ContentCardFooter>
+    </VStack>
+  );
+}
+```
+
+### With Text and Actions
+
+```jsx
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardFooter alignItems="center">
+        <Text font="label2" color="fgMuted">
+          Updated 2 hours ago
+        </Text>
+        <HStack gap={1}>
+          <IconButton
+            transparent
+            accessibilityLabel="Bookmark"
+            name="bookmark"
+            variant="secondary"
+          />
+          <IconButton transparent accessibilityLabel="Share" name="share" variant="secondary" />
+        </HStack>
+      </ContentCardFooter>
+    </VStack>
+  );
+}
+```
+
+### Centered Content
+
+```jsx
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardFooter justifyContent="center">
+        <Button compact variant="secondary">
+          View All Assets
+        </Button>
       </ContentCardFooter>
     </VStack>
   );

@@ -2,9 +2,12 @@ import React from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button, IconButton, IconCounterButton } from '../../../buttons';
+import { Carousel } from '../../../carousel/Carousel';
+import { CarouselItem } from '../../../carousel/CarouselItem';
 import { NativeTextArea, TextInput } from '../../../controls';
-import { Divider, HStack, VStack } from '../../../layout';
+import { Box, HStack, VStack } from '../../../layout';
 import { RemoteImage, RemoteImageGroup } from '../../../media';
+import { Pressable } from '../../../system/Pressable';
 import { Text } from '../../../typography/Text';
 import { LikeButton } from '../../LikeButton';
 import {
@@ -26,10 +29,12 @@ const exampleProps: {
   contentFooterProps: ContentCardFooterProps<ContentCardFooterDefaultElement>;
 } = {
   contentHeaderProps: {
-    avatar: assets.eth.imageUrl,
+    thumbnail: (
+      <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" source={ethBackground} />
+    ),
     title: 'CoinDesk',
-    meta: 'News',
-    end: (
+    subtitle: 'News',
+    actions: (
       <HStack gap={0}>
         <IconButton
           transparent
@@ -47,36 +52,28 @@ const exampleProps: {
     ),
   },
   contentBodyProps: {
-    body: 'Ethereum Network Shatters Records With Hashrate Climbing to 464 EH/s',
-    label: (
-      <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
-        <Text as="p" color="fgMuted" display="block" font="label2" numberOfLines={1}>
-          $9,9081.01
-        </Text>
-        <Text as="p" color="fgPositive" display="block" font="label2">
-          ↗ 6.37%
-        </Text>
-      </HStack>
-    ),
+    title: 'Ethereum Network Shatters Records With Hashrate Climbing to 464 EH/s',
+    description:
+      'This is a description of the Ethereum Network Shatters Records With Hashrate Climbing to 464 EH/s, marking a significant milestone for the blockchain.',
     media: (
-      <img
-        alt=""
-        aria-hidden="true"
+      <RemoteImage
+        alt="Ethereum background"
+        resizeMode="cover"
+        shape="rectangle"
         src={ethBackground}
-        style={{ objectFit: 'cover', cursor: 'pointer', borderRadius: '24px' }}
         width="100%"
       />
     ),
-    mediaPosition: 'top',
+    mediaPlacement: 'top',
   },
   contentFooterProps: {
     children: (
       <>
         <RemoteImageGroup shape="circle" size={32}>
-          <RemoteImage source={assets.eth.imageUrl} />
-          <RemoteImage source={assets.polygon.imageUrl} />
-          <RemoteImage source={assets.uni.imageUrl} />
-          <RemoteImage source={assets.sushi.imageUrl} />
+          <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+          <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+          <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+          <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
         </RemoteImageGroup>
         <Button compact variant="secondary">
           Share
@@ -86,60 +83,313 @@ const exampleProps: {
   },
 };
 
-export const Default = (): JSX.Element => {
+// Basic Example
+export const Basic = (): JSX.Element => {
   return (
-    <VStack gap={1} left={0} padding={1} paddingTop={3} position="absolute" top={0}>
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example
-      </Text>
-      <ContentCard>
+    <VStack gap={2}>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
       </ContentCard>
-      <Divider paddingBottom={2} />
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with mediaPosition bottom
-      </Text>
-      <ContentCard>
-        <ContentCardHeader {...exampleProps.contentHeaderProps} />
-        <ContentCardBody {...exampleProps.contentBodyProps} mediaPosition="bottom" />
-        <ContentCardFooter {...exampleProps.contentFooterProps} />
-      </ContentCard>
-      <Divider paddingBottom={2} paddingStart={3} />
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with mediaPosition right
-      </Text>
-      <ContentCard>
-        <ContentCardHeader {...exampleProps.contentHeaderProps} />
-        <ContentCardBody {...exampleProps.contentBodyProps} mediaPosition="right" />
-        <ContentCardFooter {...exampleProps.contentFooterProps} />
-      </ContentCard>
-      <Divider paddingBottom={2} paddingStart={3} />
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with mediaPosition left
-      </Text>
-      <ContentCard>
-        <ContentCardHeader {...exampleProps.contentHeaderProps} />
-        <ContentCardBody {...exampleProps.contentBodyProps} mediaPosition="left" />
-        <ContentCardFooter {...exampleProps.contentFooterProps} />
-      </ContentCard>
-      <Divider paddingBottom={2} paddingStart={3} />
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with no media
-      </Text>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
         <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
         <ContentCardFooter {...exampleProps.contentFooterProps} />
       </ContentCard>
-      <Divider paddingBottom={2} paddingStart={3} />
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with product component - TextInput
+    </VStack>
+  );
+};
+
+// Media Placement
+export const MediaPlacement = (): JSX.Element => {
+  return (
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        mediaPlacement: top (default)
       </Text>
-      <ContentCard>
+      <ContentCard width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
-        <ContentCardBody {...exampleProps.contentBodyProps} label={null} media={null}>
+        <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="top" />
+        <ContentCardFooter {...exampleProps.contentFooterProps} />
+      </ContentCard>
+      <Text as="h3" display="block" font="headline">
+        mediaPlacement: bottom
+      </Text>
+      <ContentCard width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="bottom" />
+        <ContentCardFooter {...exampleProps.contentFooterProps} />
+      </ContentCard>
+      <Text as="h3" display="block" font="headline">
+        mediaPlacement: end
+      </Text>
+      <ContentCard width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="end" />
+        <ContentCardFooter {...exampleProps.contentFooterProps} />
+      </ContentCard>
+      <Text as="h3" display="block" font="headline">
+        mediaPlacement: start
+      </Text>
+      <ContentCard width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="start" />
+        <ContentCardFooter {...exampleProps.contentFooterProps} />
+      </ContentCard>
+    </VStack>
+  );
+};
+
+// With Background
+export const WithBackground = (): JSX.Element => {
+  return (
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Full example with background
+      </Text>
+      <ContentCard background="bgAlternate" width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} />
+        <ContentCardFooter>
+          <RemoteImageGroup shape="circle" size={32}>
+            <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+            <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+            <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+            <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+          </RemoteImageGroup>
+          <Button compact variant="tertiary">
+            Share
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+      <Text as="h3" display="block" font="headline">
+        mediaPlacement: end with background
+      </Text>
+      <ContentCard background="bgAlternate" width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} mediaPlacement="end" />
+        <ContentCardFooter>
+          <RemoteImageGroup shape="circle" size={32}>
+            <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+            <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+            <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+            <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+          </RemoteImageGroup>
+          <Button compact variant="tertiary">
+            Share
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+      <Text as="h3" display="block" font="headline">
+        No media with background
+      </Text>
+      <ContentCard background="bgAlternate" width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
+        <ContentCardFooter>
+          <RemoteImageGroup shape="circle" size={32}>
+            <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+            <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+            <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+            <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+          </RemoteImageGroup>
+          <Button compact variant="tertiary">
+            Share
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+      <Text as="h3" display="block" font="headline">
+        IconCounterButtons with background
+      </Text>
+      <ContentCard background="bgAlternate" width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
+        <ContentCardFooter>
+          <HStack gap={4} justifyContent="space-between" paddingTop={0.5}>
+            <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+            <IconCounterButton
+              accessibilityLabel="comment, 4200 comments"
+              count={4200}
+              icon="comment"
+            />
+            <IconCounterButton
+              accessibilityLabel="share, 9900000 shares"
+              count={9900000}
+              icon="arrowsHorizontal"
+            />
+          </HStack>
+        </ContentCardFooter>
+      </ContentCard>
+    </VStack>
+  );
+};
+
+/**
+ * Pressable Cards
+ *
+ * To make a ContentCard interactive, wrap it in a Pressable component.
+ * For proper accessibility, use `as="div"` on the Pressable to render it as a
+ * non-interactive container, then include an internal button for keyboard and
+ * screen reader users.
+ *
+ * This allows:
+ * - Mouse/touch users: Click anywhere on the card
+ * - Screen reader users: Navigate through card content and focus on the action button
+ * - Keyboard users: Tab to the action button
+ */
+export const PressableCards = (): JSX.Element => {
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent double-triggering when clicking the button
+    if ((e.target as HTMLElement).closest('button, a')) return;
+    alert('Card pressed!');
+  };
+
+  return (
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Accessible pressable card
+      </Text>
+      <Text as="p" color="fgMuted" display="block" font="body">
+        Uses as=&quot;div&quot; with an internal button for keyboard/screen reader access.
+      </Text>
+      <Pressable
+        as="div"
+        background="bg"
+        borderRadius={500}
+        onClick={handleCardClick}
+        width="fit-content"
+      >
+        <ContentCard width={500}>
+          <ContentCardHeader
+            subtitle="News"
+            thumbnail={
+              <RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />
+            }
+            title="CoinDesk"
+          />
+          <ContentCardBody {...exampleProps.contentBodyProps} />
+          <ContentCardFooter>
+            <RemoteImageGroup shape="circle" size={32}>
+              <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+              <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+              <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+              <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+            </RemoteImageGroup>
+            <Button compact onClick={() => alert('Card pressed!')} variant="secondary">
+              View Details
+            </Button>
+          </ContentCardFooter>
+        </ContentCard>
+      </Pressable>
+
+      <Text as="h3" display="block" font="headline">
+        Accessible pressable card with background
+      </Text>
+      <Pressable
+        as="div"
+        background="bgAlternate"
+        borderRadius={500}
+        onClick={handleCardClick}
+        width="fit-content"
+      >
+        <ContentCard width={500}>
+          <ContentCardHeader
+            subtitle="News"
+            thumbnail={
+              <RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />
+            }
+            title="CoinDesk"
+          />
+          <ContentCardBody {...exampleProps.contentBodyProps} />
+          <ContentCardFooter>
+            <RemoteImageGroup shape="circle" size={32}>
+              <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+              <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+              <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+              <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+            </RemoteImageGroup>
+            <Button compact onClick={() => alert('Card pressed!')} variant="tertiary">
+              View Details
+            </Button>
+          </ContentCardFooter>
+        </ContentCard>
+      </Pressable>
+
+      <Text as="h3" display="block" font="headline">
+        Accessible pressable card (no media)
+      </Text>
+      <Pressable
+        as="div"
+        background="bgAlternate"
+        borderRadius={500}
+        onClick={handleCardClick}
+        width="fit-content"
+      >
+        <ContentCard width={500}>
+          <ContentCardHeader
+            subtitle="News"
+            thumbnail={
+              <RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />
+            }
+            title="CoinDesk"
+          />
+          <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
+          <ContentCardFooter>
+            <RemoteImageGroup shape="circle" size={32}>
+              <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+              <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+              <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+              <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+            </RemoteImageGroup>
+            <Button compact onClick={() => alert('Card pressed!')} variant="tertiary">
+              View Details
+            </Button>
+          </ContentCardFooter>
+        </ContentCard>
+      </Pressable>
+
+      <Text as="h3" display="block" font="headline">
+        Accessible pressable card (disabled)
+      </Text>
+      <Pressable
+        disabled
+        as="div"
+        background="bgAlternate"
+        borderRadius={500}
+        onClick={handleCardClick}
+        width="fit-content"
+      >
+        <ContentCard width={500}>
+          <ContentCardHeader {...exampleProps.contentHeaderProps} />
+          <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
+          <ContentCardFooter>
+            <RemoteImageGroup shape="circle" size={32}>
+              <RemoteImage alt="Ethereum" source={assets.eth.imageUrl} />
+              <RemoteImage alt="Polygon" source={assets.polygon.imageUrl} />
+              <RemoteImage alt="Uniswap" source={assets.uni.imageUrl} />
+              <RemoteImage alt="Sushi" source={assets.sushi.imageUrl} />
+            </RemoteImageGroup>
+            <Button compact disabled variant="tertiary">
+              View Details
+            </Button>
+          </ContentCardFooter>
+        </ContentCard>
+      </Pressable>
+    </VStack>
+  );
+};
+
+// Custom Content
+export const CustomContent = (): JSX.Element => {
+  return (
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        With TextInput
+      </Text>
+      <ContentCard bordered width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} media={null}>
           <TextInput
             inputNode={
               <NativeTextArea
@@ -167,121 +417,69 @@ export const Default = (): JSX.Element => {
           </Button>
         </ContentCardFooter>
       </ContentCard>
-      <Divider paddingBottom={2} paddingStart={3} />
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with product component - Custom Media
+
+      <Text as="h3" display="block" font="headline">
+        With IconCounterButtons
       </Text>
-      <ContentCard>
-        <ContentCardHeader
-          {...exampleProps.contentHeaderProps}
-          avatar={null}
-          end={
-            <Text color="fgMuted" font="legal">
-              Updated 1hr ago
-            </Text>
-          }
-          meta={null}
-          title={
-            <Text as="h2" display="block" font="title3">
-              Today&apos;s briefing
-            </Text>
-          }
-        />
-        <ContentCardBody
-          {...exampleProps.contentBodyProps}
-          label={null}
-          media={
-            <HStack position="relative">
-              <HStack
-                bordered
-                alignItems="center"
-                background="bg"
-                borderRadius={300}
-                gap={0.5}
-                justifyContent="center"
-                left={16}
-                padding={1}
-                position="absolute"
-                top={16}
-              >
-                <Text as="p" display="block" font="caption">
-                  ETH
-                </Text>
-                <Text as="p" color="fgPositive" display="block" font="label2">
-                  ↗ 6.37%
-                </Text>
-              </HStack>
-              <img
-                alt=""
-                aria-hidden="true"
-                src={ethBackground}
-                style={{ objectFit: 'cover', cursor: 'pointer', borderRadius: '24px' }}
-                width="100%"
-              />
-            </HStack>
-          }
-        />
-      </ContentCard>
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
-        Full Example with IconCounterButtons
-      </Text>
-      <ContentCard>
+      <ContentCard bordered width={500}>
         <ContentCardHeader {...exampleProps.contentHeaderProps} />
-        <ContentCardBody {...exampleProps.contentBodyProps} label={null} media={null} />
-        <ContentCardFooter>
-          <HStack gap={4} justifyContent="space-between" paddingTop={0.5}>
-            <IconCounterButton count={99} icon="heart" />
-            <IconCounterButton count={4200} icon="comment" />
-            <IconCounterButton count={9900000} icon="arrowsHorizontal" />
-          </HStack>
+        <ContentCardBody {...exampleProps.contentBodyProps} media={null} />
+        <ContentCardFooter justifyContent="space-between">
+          <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+          <IconCounterButton
+            accessibilityLabel="comment, 4200 comments"
+            count={4200}
+            icon="comment"
+          />
+          <IconCounterButton
+            accessibilityLabel="share, 9900000 shares"
+            count={9900000}
+            icon="arrowsHorizontal"
+          />
         </ContentCardFooter>
       </ContentCard>
     </VStack>
   );
 };
 
+// Product Carousel
 export const ProductCarousel = () => {
   return (
     <VStack>
-      <Text as="h3" display="block" font="headline" paddingStart={3}>
+      <Text as="h3" display="block" font="headline">
         Full Example with product component - Carousel
       </Text>
-      <ContentCard maxWidth="100%">
-        <ContentCardHeader
-          {...exampleProps.contentHeaderProps}
-          avatar={null}
-          end={null}
-          meta={null}
-          title={
-            <Text as="h3" display="block" font="title3">
-              Crypto moves money forward
-            </Text>
-          }
-        />
-        <ContentCardBody {...exampleProps.contentBodyProps} label={null} media={null}>
-          <HStack gap={2} overflow="auto">
+      <ContentCard bordered width={500}>
+        <ContentCardHeader {...exampleProps.contentHeaderProps} />
+        <ContentCardBody {...exampleProps.contentBodyProps} media={null}>
+          <Carousel styles={{ carousel: { gap: 16 } }}>
             {[1, 2, 3, 4, 5].map((id) => (
-              <VStack key={id} position="relative">
-                <img
-                  alt=""
-                  aria-hidden="true"
-                  height={381}
-                  src={ethBackground}
-                  style={{ objectFit: 'cover', cursor: 'pointer', borderRadius: '24px' }}
-                  width={259}
-                />
-                <VStack bottom={16} gap={1} left={16} position="absolute">
-                  <Text as="h3" display="block" font="headline">
-                    Break the cycle
-                  </Text>
-                  <Text as="p" display="block" font="legal">
-                    24M views
-                  </Text>
+              <CarouselItem key={id} id={`carousel-item-${id}`}>
+                <VStack position="relative">
+                  <Box borderRadius={400} overflow="hidden">
+                    <RemoteImage
+                      alt="Ethereum promotional content"
+                      height={381}
+                      resizeMode="cover"
+                      shape="rectangle"
+                      source={ethBackground}
+                      width={259}
+                    />
+                  </Box>
+                  <VStack bottom={16} gap={1} left={16} position="absolute">
+                    <Text as="h3" display="block" font="headline">
+                      Break the cycle
+                    </Text>
+                    <Text as="p" display="block" font="legal">
+                      24M views
+                    </Text>
+                  </VStack>
                 </VStack>
-              </VStack>
+              </CarouselItem>
             ))}
-          </HStack>
+          </Carousel>
         </ContentCardBody>
+        <ContentCardFooter {...exampleProps.contentFooterProps} />
       </ContentCard>
     </VStack>
   );

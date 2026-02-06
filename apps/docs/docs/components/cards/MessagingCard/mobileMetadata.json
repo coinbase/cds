@@ -1,0 +1,21 @@
+{
+  "import": "import { MessagingCard } from '@coinbase/cds-mobile/cards/MessagingCard'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/MessagingCard/index.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=72941-21922&t=amrBLVMCPqwVCwLt-4",
+  "description": "MessagingCard displays promotional or informational content with two variants: 'upsell' for promoting features with a primary background, and 'nudge' for encouraging actions with an alternate background. It replaces the deprecated NudgeCard and UpsellCard components.",
+  "relatedComponents": [
+    {
+      "label": "ContentCard",
+      "url": "/components/cards/ContentCard/"
+    },
+    {
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
+    },
+    {
+      "label": "Banner",
+      "url": "/components/feedback/Banner/"
+    }
+  ],
+  "dependencies": []
+}

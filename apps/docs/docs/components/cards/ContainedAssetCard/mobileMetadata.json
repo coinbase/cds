@@ -1,12 +1,13 @@
 {
   "import": "import { ContainedAssetCard } from '@coinbase/cds-mobile/cards/ContainedAssetCard'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/ContainedAssetCard.tsx",
-  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=10084-2760&t=DIcYU9WAXkBUimkN-0",
-  "description": "Asset Cards display current and potential future assets, offering a straightforward method to view and manage a customer's holdings. They provide a clear visual and informative overview, simplifying asset management and investment considerations.",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=59121-6814&t=EIOPhI0X8y2FmZOa-4",
+  "description": "Asset Cards display current and potential future assets, offering a straightforward method to view and manage a customer's holdings.",
+  "warning": "This component is deprecated. Please use MediaCard instead.",
   "relatedComponents": [
     {
-      "label": "FloatingAssetCard",
-      "url": "/components/cards/FloatingAssetCard/"
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
     }
   ],
   "dependencies": []

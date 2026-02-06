@@ -1,0 +1,667 @@
+DataCard is a flexible card component for displaying data with visualizations. It provides a structured layout for thumbnails, titles, subtitles, and visualization content. Pass any visualization component as children, such as `ProgressBar`, `ProgressCircle`, `LineChart`, or custom content.
+
+:::info Migrating from Legacy DataCard?
+See the [Migration Guide](#migration-from-legacy-datacard) at the end of this page.
+:::
+
+## Basic Examples
+
+DataCard supports two layouts: `vertical` (stacked) and `horizontal` (side-by-side). Pass visualization components as children.
+
+```jsx live
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        subtitle="Progress indicator"
+        thumbnail={exampleThumbnail}
+        title="Progress Bar Card"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 45,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Circular progress"
+        thumbnail={exampleThumbnail}
+        title="Progress Circle Card"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 3.12%
+          </Text>
+        }
+      >
+        <Box alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="60% complete"
+            progress={0.6}
+            size={100}
+            weight="heavy"
+          />
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## With LineChart
+
+DataCard can also display chart visualizations like LineChart for showing price trends or time-series data.
+
+```jsx live
+function Example() {
+  const lineChartData = useMemo(
+    () => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58, 42, 65, 78, 55, 40, 62],
+    [],
+  );
+
+  const lineChartSeries = useMemo(
+    () => [
+      {
+        id: 'price',
+        data: lineChartData,
+        color: 'var(--color-accentBoldBlue)',
+      },
+    ],
+    [lineChartData],
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={
+          <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+        }
+        title="Line Chart Card"
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={
+          <RemoteImage alt="Bitcoin thumbnail" shape="circle" size="l" src={assets.btc.imageUrl} />
+        }
+        title="Chart with Trend"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 5.8%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Bitcoin price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        renderAsPressable
+        as="a"
+        href="https://www.coinbase.com"
+        layout="vertical"
+        subtitle="Clickable line chart card"
+        target="_blank"
+        thumbnail={
+          <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+        }
+        title="Actionable Chart Card"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Layout Variations
+
+Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
+
+```jsx live
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        subtitle="Vertical layout stacks content"
+        thumbnail={exampleThumbnail}
+        title="Vertical Layout"
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 75,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Horizontal layout places content side by side"
+        thumbnail={exampleThumbnail}
+        title="Horizontal Layout"
+      >
+        <Box alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="75% complete"
+            progress={0.75}
+            size={100}
+            weight="heavy"
+          />
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Title Accessory
+
+Use `titleAccessory` to display supplementary information inline with the title, such as trends, percentages, or status indicators.
+
+```jsx live
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        subtitle="With positive trend"
+        thumbnail={exampleThumbnail}
+        title="Positive Trend"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 90,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="90% complete" progress={0.9} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="With negative trend"
+        thumbnail={exampleThumbnail}
+        title="Negative Trend"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 4.2%
+          </Text>
+        }
+      >
+        <Box alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="70% complete"
+            progress={0.7}
+            size={100}
+            weight="heavy"
+          />
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Interactive Cards
+
+Use `renderAsPressable` to make the card interactive. You can render as a button with `onClick` or as a link with `as="a"` and `href`.
+
+```jsx live
+function Example() {
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        ref={ref1}
+        renderAsPressable
+        aria-label="View progress details"
+        layout="vertical"
+        onClick={() => alert('Progress bar card clicked!')}
+        subtitle="Clickable progress card"
+        thumbnail={exampleThumbnail}
+        title="Click to View Details"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 75,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        ref={ref2}
+        renderAsPressable
+        aria-label="Open Coinbase in new tab"
+        as="a"
+        href="https://www.coinbase.com"
+        layout="horizontal"
+        subtitle="Card with link"
+        target="_blank"
+        thumbnail={exampleThumbnail}
+        title="Open in New Tab"
+        titleAccessory={
+          <Text color="fgMuted" font="label1">
+            External
+          </Text>
+        }
+      >
+        <Box alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="85% complete"
+            progress={0.85}
+            size={100}
+            weight="heavy"
+          />
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Style Customization
+
+Use `styles` and `classNames` props to customize specific parts of the card layout.
+
+```jsx live
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        styles={{
+          root: { borderWidth: 2, borderColor: '#0066FF' },
+        }}
+        subtitle="Custom border"
+        thumbnail={exampleThumbnail}
+        title="Custom Root Styles"
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 50,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="50% complete" progress={0.5} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        styles={{
+          root: { backgroundColor: '#F5F5F5' },
+          headerContainer: { paddingInlineStart: 'var(--space-4)' },
+        }}
+        subtitle="Custom background and padding"
+        thumbnail={exampleThumbnail}
+        title="Custom Layout Styles"
+      >
+        <Box alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="70% complete"
+            progress={0.7}
+            size={100}
+            weight="heavy"
+          />
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Multiple Cards
+
+DataCards work well in lists or dashboards to display multiple data points.
+
+```jsx live
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        subtitle="Daily goal progress"
+        thumbnail={exampleThumbnail}
+        title="Steps Today"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            6,500 / 10,000
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 65,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="65% complete" progress={0.65} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Below target this week"
+        thumbnail={exampleThumbnail}
+        title="Workout Goal"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            2 / 7 days
+          </Text>
+        }
+      >
+        <Box alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="29% complete"
+            progress={0.29}
+            size={100}
+            weight="heavy"
+          />
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Accessibility
+
+Ensure all visualization components have appropriate `accessibilityLabel` props to convey the progress information to screen readers.
+
+### Interactive Cards
+
+When making DataCard interactive with `renderAsPressable`:
+
+- If `as` is set to `"button"` or `"a"`, `renderAsPressable` defaults to `true` automatically. Add an `accessibilityLabel` to summarize the card's content for screen reader users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
+
+```jsx live
+<DataCard
+  renderAsPressable
+  accessibilityLabel="ETH Holdings, 45% progress, View details"
+  as="button"
+  onClick={() => handleClick()}
+  title="ETH Holdings"
+  subtitle="45% progress"
+  width={480}
+>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      labelPlacement="below"
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
+</DataCard>
+```
+
+:::warning Avoid Nested Interactive Elements
+Don't place buttons or links inside an interactive card, as this creates accessibility issues for screen reader users and can cause unexpected behavior when clicking.
+:::
+
+### Heading Semantics
+
+By default, the `title` prop renders as a `<div>`. If you need the title to be a proper heading element for document structure, pass a custom `Text` node with the `as` prop:
+
+```jsx
+<DataCard
+  title={
+    <Text as="h3" font="headline">
+      Card Title
+    </Text>
+  }
+  // ...other props
+/>
+```
+
+### Color Contrast for Gain/Loss Text
+
+When displaying gain or loss percentages in DataCard, be aware of color contrast differences between light and dark modes.
+
+**Why this matters:** DataCard uses `bgAlternate` as its background color. In **light mode**, the semantic `fgPositive` token does not meet WCAG AA contrast requirements:
+
+| Mode  | Color                    | Background               | Contrast Ratio | WCAG AA (4.5:1) |
+| ----- | ------------------------ | ------------------------ | -------------- | --------------- |
+| Light | `fgPositive` (`green60`) | `bgAlternate` (`gray10`) | ~3.6:1         | ❌ Fails        |
+| Light | `green70`                | `bgAlternate` (`gray10`) | ~4.8:1         | ✅ Passes       |
+| Dark  | `fgPositive` (`green60`) | `bgAlternate` (`gray5`)  | ~6.2:1         | ✅ Passes       |
+
+**Recommendation:**
+
+- **Light mode**: Use `green70` for positive values instead of `fgPositive`
+- **Dark mode**: `fgPositive` meets WCAG AA requirements and can be used as-is
+- **Both modes**: `fgNegative` meets WCAG AA requirements
+
+**On web**, use CSS variables for light mode compatibility:
+
+```jsx
+{
+  /* Gain text */
+}
+<Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+  ↗ 12.5%
+</Text>;
+
+{
+  /* Loss text */
+}
+<Text color="fgNegative" font="label1">
+  ↘ 3.2%
+</Text>;
+```
+
+```jsx live
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage alt="Ethereum logo" shape="circle" size="l" src={ethBackground} />
+  );
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard
+        layout="vertical"
+        subtitle="Portfolio allocation"
+        thumbnail={exampleThumbnail}
+        title="ETH Holdings"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 12.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 80,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar
+              accessibilityLabel="ETH holdings at 80% of target, currently $4,000 of $5,000 goal"
+              progress={0.8}
+              weight="semiheavy"
+            />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+## Migration from Legacy DataCard
+
+The new `DataCard` from `@coinbase/cds-web/alpha/data-card` replaces the legacy `DataCard`. The new version provides more flexibility with custom layouts and visualization components.
+
+**Before:**
+
+```jsx
+import { DataCard } from '@coinbase/cds-web/cards/DataCard';
+
+<DataCard
+  title="Progress"
+  description="45% complete"
+  progress={0.45}
+  progressVariant="bar"
+  startLabel={45}
+/>;
+```
+
+**After:**
+
+```jsx
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+
+<DataCard
+  title="Progress"
+  subtitle="45% complete"
+  layout="vertical"
+  thumbnail={<RemoteImage src={assetUrl} shape="circle" size="l" />}
+>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+      labelPlacement="below"
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
+</DataCard>;
+```

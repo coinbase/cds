@@ -8,18 +8,21 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { useTheme } from '@coinbase/cds-mobile';
+import { DataCard } from '@coinbase/cds-mobile/alpha/data-card/DataCard';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-mobile/system';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
@@ -38,7 +41,7 @@ import {
 
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
-import { BarChart, type BarComponentProps, BarPlot } from '../../bar';
+import { type BarComponentProps, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
@@ -1938,6 +1941,129 @@ function ForecastAssetPrice() {
   );
 }
 
+function DataCardWithLineChart() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="xl"
+      source={ethBackground}
+      testID="thumbnail"
+    />
+  );
+
+  const getLineChartSeries = useCallback(
+    () => [
+      {
+        id: 'price',
+        data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
+        color: `rgb(${spectrum.green70})`,
+      },
+    ],
+    [spectrum.green70],
+  );
+
+  const lineChartSeries = useMemo(() => getLineChartSeries(), [getLineChartSeries]);
+  const lineChartSeries2 = useMemo(() => getLineChartSeries(), [getLineChartSeries]);
+  const ref = useRef<View>(null);
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart Card"
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart with Tag"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        ref={ref}
+        renderAsPressable
+        layout="vertical"
+        onPress={NoopFn}
+        subtitle="Clickable line chart card"
+        thumbnail={exampleThumbnail}
+        title="Actionable Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+          showXAxis={false}
+          showYAxis={false}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={
+          <RemoteImage
+            accessibilityLabel="Bitcoin"
+            shape="circle"
+            size="xl"
+            source={assets.btc.imageUrl}
+            testID="thumbnail"
+          />
+        }
+        title="Card with Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries2}
+          showXAxis={false}
+          showYAxis={false}
+        />
+      </DataCard>
+    </VStack>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2178,20 +2304,22 @@ function ExampleNavigator() {
         title: 'Forecast Asset Price',
         component: <ForecastAssetPrice />,
       },
+      {
+        title: 'In DataCard',
+        component: <DataCardWithLineChart />,
+      },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],
   );
 
   const currentExample = examples[currentIndex];
-  const isFirstExample = currentIndex === 0;
-  const isLastExample = currentIndex === examples.length - 1;
 
   const handlePrevious = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
-  }, []);
+    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
+  }, [examples.length]);
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(examples.length - 1, prev + 1));
+    setCurrentIndex((prev) => (prev + 1 + examples.length) % examples.length);
   }, [examples.length]);
 
   return (
@@ -2201,12 +2329,11 @@ function ExampleNavigator() {
           <IconButton
             accessibilityHint="Navigate to previous example"
             accessibilityLabel="Previous"
-            disabled={isFirstExample}
             name="arrowLeft"
             onPress={handlePrevious}
             variant="secondary"
           />
-          <VStack alignItems="center" gap={1}>
+          <VStack alignItems="center">
             <Text font="title3">{currentExample.title}</Text>
             <Text color="fgMuted" font="label1">
               {currentIndex + 1} / {examples.length}
@@ -2215,7 +2342,6 @@ function ExampleNavigator() {
           <IconButton
             accessibilityHint="Navigate to next example"
             accessibilityLabel="Next"
-            disabled={isLastExample}
             name="arrowRight"
             onPress={handleNext}
             variant="secondary"

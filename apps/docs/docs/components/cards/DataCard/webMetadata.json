@@ -1,0 +1,34 @@
+{
+  "import": "import { DataCard } from '@coinbase/cds-web/alpha/data-card'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/alpha/data-card/DataCard.tsx",
+  "description": "A flexible card component for displaying data with visualizations like progress bars and circles. It supports horizontal and vertical layouts with customizable thumbnails and title accessories.",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=72941-17798&t=amrBLVMCPqwVCwLt-4",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-alpha-datacard--basic-examples",
+  "relatedComponents": [
+    {
+      "label": "ContentCard",
+      "url": "/components/cards/ContentCard/"
+    },
+    {
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
+    },
+    {
+      "label": "MessagingCard",
+      "url": "/components/cards/MessagingCard/"
+    },
+    {
+      "label": "ProgressBar",
+      "url": "/components/feedback/ProgressBar/"
+    },
+    {
+      "label": "ProgressCircle",
+      "url": "/components/feedback/ProgressCircle/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    }
+  ],
+  "dependencies": []
+}

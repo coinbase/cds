@@ -1,10 +1,11 @@
 import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { DataCard } from '@coinbase/cds-web/alpha/data-card/DataCard';
 import { ListCell } from '@coinbase/cds-web/cells';
 import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
@@ -1743,6 +1744,9 @@ export const All = () => {
       <Example title="Forecast Asset Price">
         <ForecastAssetPrice />
       </Example>
+      <Example title="In DataCard">
+        <DataCardWithLineChart />
+      </Example>
     </VStack>
   );
 };
@@ -1880,3 +1884,120 @@ export const Transitions = () => {
 
   return <CustomTransitionsChart />;
 };
+function DataCardWithLineChart() {
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={ethBackground}
+      testID="thumbnail"
+    />
+  );
+
+  const getLineChartSeries = () => [
+    {
+      id: 'price',
+      data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
+      color: 'var(--color-accentBoldBlue)',
+    },
+  ];
+
+  const lineChartSeries = useMemo(() => getLineChartSeries(), []);
+  const lineChartSeries2 = useMemo(() => getLineChartSeries(), []);
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart Card"
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart with Tag"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        ref={ref}
+        renderAsPressable
+        as="a"
+        href="https://www.coinbase.com"
+        layout="vertical"
+        subtitle="Clickable line chart card"
+        target="_blank"
+        thumbnail={exampleThumbnail}
+        title="Actionable Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={
+          <RemoteImage
+            accessibilityLabel="Bitcoin"
+            shape="circle"
+            size="l"
+            source={assets.btc.imageUrl}
+            testID="thumbnail"
+          />
+        }
+        title="Card with Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries2}
+        />
+      </DataCard>
+    </VStack>
+  );
+}
