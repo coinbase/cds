@@ -191,6 +191,52 @@ function extractStyleSelectorsFromClassNamesExport(
 }
 
 /**
+ * Recursively walk a type alias's AST to find a `styles` property symbol.
+ *
+ * This handles cases where the top-level type resolution fails to expose `styles`,
+ * such as when `styles` is defined in an inline intersection inside a complex generic
+ * wrapper like `Polymorphic.Props<T, BaseProps & { styles?: {...} }>`.
+ *
+ * The function walks:
+ * - Type reference arguments (e.g., the `B` in `SomeType<A, B>`)
+ * - Intersection type members (e.g., each part of `A & B & { styles?: {...} }`)
+ */
+function findStylesPropertyInTypeNode(
+  checker: ts.TypeChecker,
+  typeNode: ts.TypeNode,
+): ts.Symbol | undefined {
+  // For type references with type arguments (e.g., Polymorphic.Props<A, B>),
+  // check each type argument for a `styles` property.
+  if (ts.isTypeReferenceNode(typeNode) && typeNode.typeArguments) {
+    for (const arg of typeNode.typeArguments) {
+      const argType = checker.getTypeAtLocation(arg);
+      const found = checker.getPropertiesOfType(argType).find((p) => p.getName() === 'styles');
+      if (found) return found;
+
+      // Recurse into nested type references and intersections
+      const nested = findStylesPropertyInTypeNode(checker, arg);
+      if (nested) return nested;
+    }
+  }
+
+  // For intersection types (A & B & { styles?: {...} }),
+  // check each member individually.
+  if (ts.isIntersectionTypeNode(typeNode)) {
+    for (const member of typeNode.types) {
+      const memberType = checker.getTypeAtLocation(member);
+      const found = checker.getPropertiesOfType(memberType).find((p) => p.getName() === 'styles');
+      if (found) return found;
+
+      // Recurse into nested type references
+      const nested = findStylesPropertyInTypeNode(checker, member);
+      if (nested) return nested;
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * Extract style selectors from a component's `styles` prop type definition.
  *
  * Uses the TypeScript type checker to resolve the full type, which handles:
@@ -264,7 +310,17 @@ function extractStyleSelectorsFromStylesProp(
   const propsProperties = checker.getPropertiesOfType(propsType);
 
   // Find the 'styles' property in the resolved type
-  const stylesSymbol = propsProperties.find((p) => p.getName() === 'styles');
+  let stylesSymbol = propsProperties.find((p) => p.getName() === 'styles');
+
+  // If styles not found in the resolved type (e.g. complex generic wrappers like Polymorphic.Props),
+  // walk the type alias's AST to find styles in type arguments or intersection members.
+  if (!stylesSymbol && isGenericType) {
+    const typeAliasDecl = declarations?.find(ts.isTypeAliasDeclaration);
+    if (typeAliasDecl) {
+      stylesSymbol = findStylesPropertyInTypeNode(checker, typeAliasDecl.type);
+    }
+  }
+
   if (!stylesSymbol) return undefined;
 
   // Get the type of the styles property

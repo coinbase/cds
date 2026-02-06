@@ -1,0 +1,87 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { DataCard } from '@coinbase/cds-web/alpha/data-card';
+import { ProgressBar } from '@coinbase/cds-web/visualizations';
+import { ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+import { Box } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
+
+import webStylesData from ':docgen/web/alpha/data-card/DataCard/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="DataCard" styles={webStylesData} />
+
+## Explorer
+
+### Vertical Layout
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <DataCard
+      classNames={classNames}
+      layout="vertical"
+      subtitle="Progress indicator"
+      thumbnail={
+        <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+      }
+      title="Progress Bar Card"
+      titleAccessory={
+        <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+          ↗ 25.25%
+        </Text>
+      }
+      width={480}
+    >
+      <Box paddingTop={6}>
+        <ProgressBarWithFixedLabels
+          labelPlacement="below"
+          startLabel={{
+            value: 45,
+            render: (num) => (
+              <Text color="fgMuted" font="legal">
+                {num}%
+              </Text>
+            ),
+          }}
+        >
+          <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+        </ProgressBarWithFixedLabels>
+      </Box>
+    </DataCard>
+  )}
+</StylesExplorer>
+
+### Horizontal Layout
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <DataCard
+      classNames={classNames}
+      layout="horizontal"
+      subtitle="Circular progress"
+      thumbnail={
+        <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" src={ethBackground} />
+      }
+      title="Progress Circle Card"
+      titleAccessory={
+        <Text color="fgNegative" font="label1">
+          ↘ 3.12%
+        </Text>
+      }
+      width={480}
+    >
+      <Box alignItems="center" height="100%">
+        <ProgressCircle
+          accessibilityLabel="60% complete"
+          progress={0.6}
+          size={100}
+          weight="heavy"
+        />
+      </Box>
+    </DataCard>
+  )}
+</StylesExplorer>

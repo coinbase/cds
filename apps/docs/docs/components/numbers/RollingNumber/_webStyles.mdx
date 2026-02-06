@@ -1,0 +1,29 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { RollingNumber } from '@coinbase/cds-web/numbers/RollingNumber';
+
+import webStylesData from ':docgen/web/numbers/RollingNumber/RollingNumber/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="RollingNumber" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <RollingNumber
+      classNames={classNames}
+      font="display3"
+      format={{
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }}
+      prefix="+"
+      suffix=" USD"
+      value={1234.56}
+    />
+  )}
+</StylesExplorer>
