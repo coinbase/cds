@@ -6,6 +6,7 @@ import { cx } from '../../cx';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../layout';
 import { Pressable } from '../../system/Pressable';
 
+// Fixed pixel values used intentionally — handle size should not scale with theme density.
 const HANDLE_WIDTH = 32;
 const HANDLE_OPACITY = 0.4;
 

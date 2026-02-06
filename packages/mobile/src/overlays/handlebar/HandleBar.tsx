@@ -29,6 +29,7 @@ export type HandleBarProps = ViewProps & {
   };
 };
 
+// Fixed pixel values used intentionally — handle size should not scale with theme density.
 const HANDLE_WIDTH_OUTSIDE = 64;
 const HANDLE_WIDTH_INSIDE = 32;
 const HANDLE_OPACITY_INSIDE = 0.4;

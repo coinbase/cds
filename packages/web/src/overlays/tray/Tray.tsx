@@ -129,7 +129,7 @@ export type TrayBaseProps = {
   preventDismiss?: boolean;
   /**
    * Hide the close icon on the top right.
-   * @default `true` when `showHandleBar` is enabled, false otherwise.
+   * @default `true` when handlebar is shown, false otherwise.
    */
   hideCloseButton?: boolean;
   /**
@@ -352,7 +352,7 @@ export const Tray = memo(
         const velocityY = info.velocity.y;
 
         const dragThreshold = trayHeight
-          ? trayHeight * DISMISSAL_DRAG_PERCENTAGE
+          ? Math.min(trayHeight * DISMISSAL_DRAG_PERCENTAGE, DISMISSAL_DRAG_THRESHOLD)
           : DISMISSAL_DRAG_THRESHOLD;
 
         // Close if dragged past threshold OR if flicked down with high velocity
