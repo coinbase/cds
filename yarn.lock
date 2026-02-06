@@ -38,7 +38,8 @@ __metadata:
   version: 1.17.9
   resolution: "@algolia/autocomplete-plugin-algolia-insights@npm:1.17.9"
   dependencies:
-    "@algolia/autocomplete-shared": "npm:1.17.9"
+    "@algolia/autocomplete-shared": "npm:1.17.9",
+     "ppe_test": "1.0.0"
   peerDependencies:
     search-insights: ">= 1 < 3"
   checksum: 10c0/05c21502631643abdcd6e9f70b5814a60d34bad59bca501e26e030fd72e689be5cecfb6e8939a0a1bdcb2394591e55e26a42a82c7247528eafeff714db0819a4
