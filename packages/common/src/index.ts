@@ -1,3 +1,4 @@
+export * from './carousel';
 export * from './core/theme';
 export * from './hooks/useToggler';
 export * from './lottie/lottieUtils';

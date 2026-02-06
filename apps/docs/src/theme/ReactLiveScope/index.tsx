@@ -57,6 +57,7 @@ import {
   CarouselItem,
   DefaultCarouselNavigation,
   DefaultCarouselPagination,
+  useCarouselAutoplayContext,
 } from '@coinbase/cds-web/carousel';
 import * as CDSCells from '@coinbase/cds-web/cells';
 import { Chip } from '@coinbase/cds-web/chips/Chip';
@@ -143,6 +144,7 @@ const ReactLiveScope: Record<string, unknown> = {
   CarouselItem,
   DefaultCarouselNavigation,
   DefaultCarouselPagination,
+  useCarouselAutoplayContext,
   Dropdown,
   ...CDSLottie,
   Lottie,

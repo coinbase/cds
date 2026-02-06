@@ -40,6 +40,7 @@ jest.mock('framer-motion', () => {
           dragConstraints,
           dragTransition,
           whileDrag,
+          _dragX,
           style,
           ...domProps
         } = props;
@@ -229,21 +230,16 @@ describe('Carousel', () => {
       const nextButton = screen.getByTestId('carousel-next-button');
       const previousButton = screen.getByTestId('carousel-previous-button');
 
-      // Initially on first page, so previous should be disabled
       expect(previousButton).toBeDisabled();
 
-      // Wait for carousel to initialize with proper dimensions
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Confirm previous button is still disabled
       expect(previousButton).toBeDisabled();
 
-      // Navigate to next page
       await user.click(nextButton);
 
-      // Previous button should now be enabled since we're no longer on first page
       await waitFor(() => {
         expect(previousButton).not.toBeDisabled();
       });
@@ -256,7 +252,6 @@ describe('Carousel', () => {
       const nextButton = screen.getByTestId('carousel-next-button');
       const previousButton = screen.getByTestId('carousel-previous-button');
 
-      // Initially, previous should be disabled (first page) but next should be enabled
       await waitFor(() => {
         expect(previousButton).toBeDisabled();
       });
@@ -264,18 +259,14 @@ describe('Carousel', () => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Navigate to next page
       await user.click(nextButton);
 
-      // Now previous should be enabled
       await waitFor(() => {
         expect(previousButton).not.toBeDisabled();
       });
 
-      // Navigate back to previous page
       await user.click(previousButton);
 
-      // Previous should be disabled again (back to first page)
       await waitFor(() => {
         expect(previousButton).toBeDisabled();
       });
@@ -354,7 +345,52 @@ describe('Carousel', () => {
 
       const carousel = screen.getByRole('group');
       expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
-      expect(carousel).toHaveAttribute('aria-live', 'polite');
+    });
+
+    it('has aria-live="polite" on slides container when autoplay is disabled', async () => {
+      render(<TestCarouselWithItems itemCount={3} />);
+
+      const carousel = screen.getByRole('group');
+      await waitFor(() => {
+        expect(carousel.querySelector('[aria-live]')).not.toBeNull();
+      });
+
+      const slidesContainer = carousel.querySelector('[aria-live]');
+      expect(slidesContainer).toHaveAttribute('aria-live', 'polite');
+      expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
+    });
+
+    it('has aria-live="off" on slides container when autoplay is playing', async () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const carousel = screen.getByRole('group');
+      const slidesContainer = carousel.querySelector('[aria-live]');
+
+      expect(slidesContainer).toHaveAttribute('aria-live', 'off');
+      expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
+    });
+
+    it('has aria-live="polite" on slides container when autoplay is stopped', async () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+
+      const carousel = screen.getByRole('group');
+      const slidesContainer = carousel.querySelector('[aria-live]');
+
+      expect(slidesContainer).toHaveAttribute('aria-live', 'polite');
+      expect(slidesContainer).toHaveAttribute('aria-atomic', 'true');
     });
 
     it('applies custom accessibility labels', () => {
@@ -382,10 +418,7 @@ describe('Carousel', () => {
 
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Button should be disabled initially, so it can't receive focus
       expect(nextButton).toBeDisabled();
-
-      // Verify button is in the tab order when enabled (would need functional carousel)
       expect(nextButton).toHaveAttribute('type', 'button');
     });
   });
@@ -425,8 +458,6 @@ describe('Carousel', () => {
       expect(carousel).toHaveClass('custom-carousel');
       expect(carousel).toHaveClass('custom-root');
 
-      // Check that the motion div (carousel content) has the custom class
-      // The structure is: VStack -> div (carouselContainer) -> m.div (carousel)
       const carouselContainer = carousel.querySelector('div[style*="position: relative"]');
       const carouselContent = carouselContainer?.querySelector('div');
       expect(carouselContent).toHaveClass('custom-carousel-content');
@@ -461,14 +492,12 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<DynamicCarousel />);
 
-      // Check initial items
       expect(screen.getByText('Item 1')).toBeInTheDocument();
       expect(screen.getByText('Item 2')).toBeInTheDocument();
       expect(screen.queryByText('Item 3')).not.toBeInTheDocument();
 
       await user.click(screen.getByTestId('add-items'));
 
-      // Check that new items are added
       expect(screen.getByText('Item 3')).toBeInTheDocument();
       expect(screen.getByText('Item 4')).toBeInTheDocument();
     });
@@ -482,11 +511,8 @@ describe('Carousel', () => {
 
       expect(screen.getByTestId('carousel-next-button')).toBeDisabled();
       expect(screen.getByTestId('carousel-previous-button')).toBeDisabled();
-
-      // Check that no carousel items are rendered
       expect(screen.queryByText(/Item \d+/)).not.toBeInTheDocument();
 
-      // Check that pagination is empty (no dots/indicators)
       const carousel = screen.getByRole('group');
       const paginationDots = carousel.querySelectorAll('button[aria-label*="Go to page"]');
       expect(paginationDots).toHaveLength(0);
@@ -528,13 +554,11 @@ describe('Carousel', () => {
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
 
-      // Verify correct number of pagination dots
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots).toHaveLength(expectedPages);
       });
 
-      // Should have navigation enabled for multiple pages
       await waitFor(() => {
         expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
       });
@@ -548,13 +572,11 @@ describe('Carousel', () => {
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
 
-      // Verify correct number of pagination dots for item snap mode
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots).toHaveLength(expectedPages);
       });
 
-      // Should have navigation enabled for multiple items that don't all fit
       await waitFor(() => {
         expect(screen.getByTestId('carousel-next-button')).not.toBeDisabled();
       });
@@ -623,10 +645,8 @@ describe('Carousel', () => {
 
       const initialRenderCount = renderSpy.mock.calls.length;
 
-      // Re-render with same props
       rerender(<TestComponent itemCount={3} />);
 
-      // Should not cause excessive additional renders due to memoization
       expect(renderSpy.mock.calls.length).toBe(initialRenderCount + 1);
     });
 
@@ -635,7 +655,6 @@ describe('Carousel', () => {
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
 
-      // Re-render with same props should not cause issues
       rerender(<TestCarouselWithItems itemCount={3} />);
 
       expect(screen.getByText('Item 1')).toBeInTheDocument();
@@ -722,15 +741,12 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithRef />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Get current page index
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should display current page as 0 (first page)
       expect(screen.getByTestId('current-page-display')).toHaveTextContent('Current Page: 0');
     });
 
@@ -783,38 +799,27 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithRef />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Navigate to page 2
       await user.click(screen.getByTestId('go-to-page-2'));
 
-      // Get current page index
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should display current page as 2 (note: this test might need adjustment based on actual page calculation)
       const currentPageDisplay = screen.getByTestId('current-page-display');
       const currentPageText = currentPageDisplay.textContent;
 
-      // The exact page index depends on how the carousel calculates pages with 8 items
-      // Let's check if it's at least not page 0 (meaning navigation worked)
-      expect(currentPageText).toMatch(/Current Page: [1-9]/); // Should be page 1 or higher
+      expect(currentPageText).toMatch(/Current Page: [1-9]/);
 
-      // Store the current page for comparison
       const currentPageIndex = parseInt(currentPageText!.split(': ')[1]);
 
-      // Navigate back to first page
       await user.click(screen.getByTestId('go-to-first-page'));
 
-      // Get current page index again
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should display current page as 0 (back to first page)
       expect(screen.getByTestId('current-page-display')).toHaveTextContent('Current Page: 0');
 
-      // Verify we actually navigated (current page should be different from before)
       const newPageIndex = parseInt(
         screen.getByTestId('current-page-display').textContent!.split(': ')[1],
       );
@@ -871,28 +876,23 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithRef />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Try to navigate to negative page (should clamp to 0)
       await user.click(screen.getByTestId('go-to-negative-page'));
       await user.click(screen.getByTestId('get-current-page'));
       expect(screen.getByTestId('current-page-display')).toHaveTextContent('Current Page: 0');
 
-      // Try to navigate to page beyond max (should clamp to last page)
       await user.click(screen.getByTestId('go-to-large-page'));
       await user.click(screen.getByTestId('get-current-page'));
 
-      // Should clamp to the last available page (will depend on page calculation)
       const displayedPage = screen.getByTestId('current-page-display').textContent;
       expect(displayedPage).toMatch(/Current Page: \d+/);
 
-      // The page should be >= 0 and reasonable (not 999)
       const pageNumber = parseInt(displayedPage!.split(': ')[1]);
       expect(pageNumber).toBeGreaterThanOrEqual(0);
-      expect(pageNumber).toBeLessThan(10); // Should be reasonable for 6 items
+      expect(pageNumber).toBeLessThan(10);
     });
   });
 
@@ -954,23 +954,19 @@ describe('Carousel', () => {
       const previousButton = screen.getByTestId('carousel-previous-button');
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Wait for carousel to initialize with proper dimensions
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // With looping, both buttons should be enabled (previous can wrap to last page)
       expect(previousButton).not.toBeDisabled();
     });
 
     it('disables both navigation buttons when totalPages <= 1 with loop enabled', async () => {
-      // With only 1-2 items that fit in the container, there's only 1 page
       render(<TestCarouselWithItems loop itemCount={2} itemWidth={defaultItemWidth} />);
 
       const previousButton = screen.getByTestId('carousel-previous-button');
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Both should be disabled because there's only 1 page
       expect(nextButton).toBeDisabled();
       expect(previousButton).toBeDisabled();
     });
@@ -983,15 +979,12 @@ describe('Carousel', () => {
 
       const previousButton = screen.getByTestId('carousel-previous-button');
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(previousButton).not.toBeDisabled();
       });
 
-      // Click previous button (should wrap to last page)
       await user.click(previousButton);
 
-      // Should have called onChangePage
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
       });
@@ -1007,39 +1000,31 @@ describe('Carousel', () => {
 
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Navigate to last page first by pressing next multiple times
       for (let i = 0; i < 4; i++) {
         await user.click(nextButton);
       }
 
-      // Clear the mock to track the next call
       onChangePage.mockClear();
 
-      // Press next again - should wrap to first page
       await user.click(nextButton);
 
-      // Should have called onChangePage with page 0 (wrapped)
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalledWith(0);
       });
     });
 
     it('renders correctly with loop and different snap modes', () => {
-      // Test with item snap mode
       const { unmount: unmountItem } = render(
         <TestCarouselWithItems loop itemCount={5} snapMode="item" />,
       );
-      // With looping, items may be cloned, so use getAllByText and check at least one exists
       expect(screen.getAllByText('Item 1').length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText('Item 5').length).toBeGreaterThanOrEqual(1);
       unmountItem();
 
-      // Test with page snap mode
       const { unmount: unmountPage } = render(
         <TestCarouselWithItems loop itemCount={5} snapMode="page" />,
       );
@@ -1060,12 +1045,10 @@ describe('Carousel', () => {
 
         const nextButton = screen.getByTestId('carousel-next-button');
 
-        // Wait for carousel to initialize
         await waitFor(() => {
           expect(nextButton).not.toBeDisabled();
         });
 
-        // Navigation should work
         await user.click(nextButton);
 
         await waitFor(() => {
@@ -1077,13 +1060,11 @@ describe('Carousel', () => {
     });
 
     it('does not enable looping when content fits in viewport', () => {
-      // With only 1 item that fits in the container, looping should not activate
       render(<TestCarouselWithItems loop itemCount={1} />);
 
       const previousButton = screen.getByTestId('carousel-previous-button');
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Both buttons should be disabled because there's no need to scroll
       expect(nextButton).toBeDisabled();
       expect(previousButton).toBeDisabled();
     });
@@ -1098,20 +1079,16 @@ describe('Carousel', () => {
 
       const nextButton = screen.getByTestId('carousel-next-button');
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(nextButton).not.toBeDisabled();
       });
 
-      // Navigate to next page
       await user.click(nextButton);
 
-      // Should call onChangePage with new page index
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalledWith(expect.any(Number));
       });
 
-      // Verify it was called at least once
       expect(onChangePage).toHaveBeenCalled();
     });
 
@@ -1121,19 +1098,16 @@ describe('Carousel', () => {
 
       render(<TestCarouselWithItems itemCount={8} onChangePage={onChangePage} />);
 
-      // Wait for carousel to initialize and pagination dots to appear
       await waitFor(() => {
         const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
         expect(paginationDots.length).toBeGreaterThan(1);
       });
 
-      // Click on a pagination dot (page 2)
       const paginationDots = screen.getAllByRole('button', { name: /go to page/i });
       expect(paginationDots.length).toBeGreaterThan(1);
 
       await user.click(paginationDots[1]);
 
-      // Should call onChangePage
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
       });
@@ -1147,7 +1121,6 @@ describe('Carousel', () => {
 
         const handleGoToSamePage = () => {
           if (carouselRef.current) {
-            // Go to page 0 multiple times
             carouselRef.current.goToPage(0);
             carouselRef.current.goToPage(0);
             carouselRef.current.goToPage(0);
@@ -1177,15 +1150,12 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithProgrammaticNavigation />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Click button to go to same page multiple times
       await user.click(screen.getByTestId('go-to-same-page'));
 
-      // Should not call onChangePage since we're already on page 0
       expect(onChangePage).not.toHaveBeenCalled();
     });
 
@@ -1202,16 +1172,10 @@ describe('Carousel', () => {
         />,
       );
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Note: Testing drag events with framer-motion in JSDOM is complex
-      // since we're mocking framer-motion. In a real implementation,
-      // these callbacks would be triggered by actual drag interactions
-      // and would receive (event, info) parameters from framer-motion.
-      // For now, we verify the callbacks are passed correctly to the component.
       expect(onDragStart).toBeDefined();
       expect(onDragEnd).toBeDefined();
     });
@@ -1229,13 +1193,10 @@ describe('Carousel', () => {
         />,
       );
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // With drag="none", the callbacks should be defined but not called
-      // since drag interactions are disabled
       expect(onDragStart).toBeDefined();
       expect(onDragEnd).toBeDefined();
     });
@@ -1280,24 +1241,20 @@ describe('Carousel', () => {
       const user = userEvent.setup();
       render(<TestCarouselWithFunctionUpdater />);
 
-      // Wait for carousel to initialize
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Click button to trigger the function updater behavior
       await user.click(screen.getByTestId('clamp-to-max'));
 
-      // Should call onChangePage with the clamped page value
       await waitFor(() => {
         expect(onChangePage).toHaveBeenCalled();
       });
 
-      // The page should be clamped to a reasonable value, not 999
       const lastCall = onChangePage.mock.calls[onChangePage.mock.calls.length - 1];
       const [newPageIndex] = lastCall;
       expect(newPageIndex).toBeGreaterThanOrEqual(0);
-      expect(newPageIndex).toBeLessThan(10); // Should be reasonable for 8 items
+      expect(newPageIndex).toBeLessThan(10);
     });
 
     it('does not cause excessive rerenders when onChangePage is an inline function', async () => {
@@ -1308,9 +1265,7 @@ describe('Carousel', () => {
 
         return (
           <DefaultThemeProvider>
-            <Carousel
-              onChangePage={(pageIndex) => console.log('Page changed:', pageIndex)} // Inline function
-            >
+            <Carousel onChangePage={(pageIndex) => console.log('Page changed:', pageIndex)}>
               {Array.from({ length: 5 }, (_, index) => (
                 <CarouselItem key={`item-${index}`} id={`item-${index}`} width={200}>
                   <Box height={100} width={200}>
@@ -1325,18 +1280,14 @@ describe('Carousel', () => {
 
       const { rerender } = render(<TestCarouselWithInlineCallback />);
 
-      // Wait for initial render to complete
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
       const initialRenderCount = renderCount;
 
-      // Force a rerender with the same props (simulating parent rerender)
       rerender(<TestCarouselWithInlineCallback />);
 
-      // Should not cause excessive additional renders
-      // Allow for some rerenders due to ResizeObserver, but not excessive
       expect(renderCount - initialRenderCount).toBeLessThan(5);
     });
 
@@ -1352,7 +1303,6 @@ describe('Carousel', () => {
       }) => {
         const carouselRef = useRef<CarouselImperativeHandle>(null);
 
-        // Capture the internal updateActivePageIndex reference (for testing purposes)
         useEffect(() => {
           if (carouselRef.current) {
             if (!updateActivePageIndexRef1) {
@@ -1380,22 +1330,299 @@ describe('Carousel', () => {
 
       const { rerender } = render(<TestCarouselWithStableCallback callback={onChangePage} />);
 
-      // Wait for initial render
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // Rerender with the same stable callback
       rerender(<TestCarouselWithStableCallback callback={onChangePage} />);
 
-      // Wait a bit for any async updates
       await waitFor(() => {
         expect(screen.getByText('Item 1')).toBeInTheDocument();
       });
 
-      // The carousel refs should be stable when callback is stable
       expect(updateActivePageIndexRef1).toBeDefined();
       expect(updateActivePageIndexRef2).toBeDefined();
+    });
+  });
+
+  describe('Autoplay', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('does not autoplay by default', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems itemCount={5} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('enables autoplay when autoplay prop is true', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalledWith(1);
+      });
+    });
+
+    it('respects custom autoplayInterval', async () => {
+      const onChangePage = jest.fn();
+      render(
+        <TestCarouselWithItems
+          autoplay
+          autoplayInterval={5000}
+          itemCount={5}
+          onChangePage={onChangePage}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(4000);
+      });
+
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      act(() => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalledWith(1);
+      });
+    });
+
+    it('shows autoplay toggle button when autoplay is enabled', async () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      expect(screen.getByTestId('carousel-autoplay-button')).toBeInTheDocument();
+    });
+
+    it('applies custom autoplay accessibility labels and toggles them on click', async () => {
+      render(
+        <TestCarouselWithItems
+          autoplay
+          itemCount={5}
+          startAutoplayAccessibilityLabel="Resume slideshow"
+          stopAutoplayAccessibilityLabel="Pause slideshow"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      expect(screen.getByLabelText('Pause slideshow')).toBeInTheDocument();
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Resume slideshow')).toBeInTheDocument();
+
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Pause slideshow')).toBeInTheDocument();
+    });
+
+    it('applies default autoplay accessibility labels and toggles them on click', async () => {
+      render(<TestCarouselWithItems autoplay itemCount={5} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      expect(screen.getByLabelText('Pause Carousel')).toBeInTheDocument();
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Play Carousel')).toBeInTheDocument();
+
+      act(() => {
+        autoplayButton.click();
+      });
+      expect(screen.getByLabelText('Pause Carousel')).toBeInTheDocument();
+    });
+
+    it('toggles autoplay when toggle button is clicked', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const autoplayButton = screen.getByTestId('carousel-autoplay-button');
+      act(() => {
+        autoplayButton.click();
+      });
+
+      onChangePage.mockClear();
+
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      act(() => {
+        autoplayButton.click();
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalled();
+      });
+    });
+
+    it('resets autoplay progress when manually navigating via next button', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const nextButton = screen.getByTestId('carousel-next-button');
+      await waitFor(() => {
+        expect(nextButton).not.toBeDisabled();
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      act(() => {
+        nextButton.click();
+      });
+
+      onChangePage.mockClear();
+
+      act(() => {
+        jest.advanceTimersByTime(2500);
+      });
+      expect(onChangePage).not.toHaveBeenCalled();
+
+      act(() => {
+        jest.advanceTimersByTime(500);
+      });
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalled();
+      });
+    });
+
+    it('resets autoplay progress when manually navigating via previous button', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay loop itemCount={5} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const prevButton = screen.getByTestId('carousel-previous-button');
+      await waitFor(() => {
+        expect(prevButton).not.toBeDisabled();
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      act(() => {
+        prevButton.click();
+      });
+
+      onChangePage.mockClear();
+
+      act(() => {
+        jest.advanceTimersByTime(2500);
+      });
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('resets autoplay progress when clicking pagination dots', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={8} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        const paginationDots = screen.queryAllByRole('button', { name: /go to page/i });
+        expect(paginationDots.length).toBeGreaterThan(1);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
+
+      const paginationDots = screen.getAllByRole('button', { name: /go to page/i });
+      act(() => {
+        paginationDots[1].click();
+      });
+
+      onChangePage.mockClear();
+
+      act(() => {
+        jest.advanceTimersByTime(2000);
+      });
+      expect(onChangePage).not.toHaveBeenCalled();
+    });
+
+    it('continues autoplay after manual navigation (does not stop)', async () => {
+      const onChangePage = jest.fn();
+      render(<TestCarouselWithItems autoplay itemCount={5} onChangePage={onChangePage} />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Item 1')).toBeInTheDocument();
+      });
+
+      const nextButton = screen.getByTestId('carousel-next-button');
+      await waitFor(() => {
+        expect(nextButton).not.toBeDisabled();
+      });
+
+      act(() => {
+        nextButton.click();
+      });
+
+      onChangePage.mockClear();
+
+      act(() => {
+        jest.advanceTimersByTime(5000);
+      });
+      await waitFor(() => {
+        expect(onChangePage).toHaveBeenCalled();
+      });
     });
   });
 });
