@@ -205,7 +205,10 @@ export const Default = () => {
 
 export const ResponsiveBasic = () => {
   const { isPhone } = useBreakpoints();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
 
   return (
     <>
@@ -243,11 +246,12 @@ export const ResponsiveIllustration = () => {
   const { isPhone } = useBreakpoints();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Open after initial load to properly configure scroll ref in StrictMode
   useEffect(() => setIsOpen(true), []);
 
   return (
     <>
-      {!isOpen && <Button onClick={() => setIsOpen(true)}>Open Tray</Button>}
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
           footer={({ handleClose }) => (
@@ -284,7 +288,10 @@ export const ResponsiveIllustration = () => {
 
 export const ResponsiveFullBleedImage = () => {
   const { isPhone } = useBreakpoints();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
 
   return (
     <>
@@ -373,7 +380,10 @@ export const ResponsiveFullBleedImage = () => {
 
 export const ResponsiveBasicListCells = () => {
   const { isPhone } = useBreakpoints();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
 
   return (
     <>
@@ -423,11 +433,14 @@ export const ResponsiveBasicListCells = () => {
 
 export const ResponsiveIllustrationListCells = () => {
   const { isPhone } = useBreakpoints();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
 
   return (
     <>
-      {!isOpen && <Button onClick={() => setIsOpen(true)}>Open Tray</Button>}
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
           footer={({ handleClose }) => (
@@ -478,7 +491,10 @@ export const ResponsiveIllustrationListCells = () => {
 
 export const ResponsiveFullBleedImageListCells = () => {
   const { isPhone } = useBreakpoints();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
 
   return (
     <>
@@ -491,7 +507,7 @@ export const ResponsiveFullBleedImageListCells = () => {
           background-color: rgba(255, 255, 255, 0.15);
         }
       `}</style>
-      {!isOpen && <Button onClick={() => setIsOpen(true)}>Open Tray</Button>}
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
           classNames={{
