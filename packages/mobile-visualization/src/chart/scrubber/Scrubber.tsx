@@ -270,16 +270,6 @@ export const Scrubber = memo(
       // Animation state for delayed scrubber rendering (matches web timing)
       const scrubberOpacity = useSharedValue(animate ? 0 : 1);
 
-      // Delay scrubber appearance until after path enter animation completes
-      useEffect(() => {
-        if (animate) {
-          scrubberOpacity.value = withDelay(
-            accessoryFadeTransitionDelay,
-            withTiming(1, { duration: accessoryFadeTransitionDuration }),
-          );
-        }
-      }, [animate, scrubberOpacity]);
-
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
         pulse: () => {
@@ -372,7 +362,18 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      if (!xScale) return;
+      const isReady = !!xScale;
+
+      useEffect(() => {
+        if (animate && isReady) {
+          scrubberOpacity.value = withDelay(
+            accessoryFadeTransitionDelay,
+            withTiming(1, { duration: accessoryFadeTransitionDuration }),
+          );
+        }
+      }, [animate, isReady, scrubberOpacity]);
+
+      if (!isReady) return;
 
       return (
         <Group opacity={scrubberOpacity}>

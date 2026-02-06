@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.18 (2/6/2026 PST)
+
+#### 🚀 Updates
+
+- Fix line chart enter animations not properly syncing with scrubber. [[#374](https://github.com/coinbase/cds/pull/374)]
+
 ## 3.4.0-beta.17 (2/4/2026 PST)
 
 #### 🚀 Updates
