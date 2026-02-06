@@ -423,7 +423,7 @@ export const Tray = memo(
       }
     }, [pin]);
 
-    if (!isOpen) return;
+    if (!isOpen) return null;
 
     return (
       <OverlayContentContext.Provider value={overlayContentContextValue}>
