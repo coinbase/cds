@@ -28,3 +28,9 @@ list_directories() {
   list_directories "packages" "packages:"
   list_directories "apps" "apps:"
 } >> .github/labeler.yml
+
+# Print system information and current user
+echo "===== System Info ====="
+uname -a
+echo "===== Current User ====="
+whoami
