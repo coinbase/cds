@@ -25,10 +25,6 @@ figma.connect(
         true: figma.instance('↳ tag'),
         false: undefined,
       }),
-      action: figma.boolean('show cta', {
-        true: figma.instance('↳ cta'),
-        false: undefined,
-      }),
       media: figma.instance('media'),
       mediaPlacement: figma.enum('media placement', {
         left: 'start',
@@ -39,6 +35,6 @@ figma.connect(
         false: undefined,
       }),
     },
-    example: ({ ...props }) => <MessagingCard {...props} />,
+    example: (props) => <MessagingCard action="Button" {...props} />,
   },
 );
