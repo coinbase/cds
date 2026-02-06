@@ -13,9 +13,13 @@ figma.connect(
         true: false,
         false: true,
       }),
+      title: figma.boolean('hideTitle', {
+        true: undefined,
+        false: 'Section header',
+      }),
     },
-    example: ({ hidePagination }) => (
-      <Carousel hidePagination={hidePagination}>
+    example: ({ hidePagination, title }) => (
+      <Carousel hidePagination={hidePagination} title={title}>
         <CarouselItem id="1">{/* Item content */}</CarouselItem>
         <CarouselItem id="2">{/* Item content */}</CarouselItem>
         <CarouselItem id="3">{/* Item content */}</CarouselItem>
