@@ -1,9 +1,9 @@
 import React from 'react';
+import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { figma } from '@figma/code-connect';
 
 import { Avatar, RemoteImage } from '../../../media';
 import { MediaCard } from '../';
-import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 
 figma.connect(
   MediaCard,
