@@ -195,6 +195,8 @@ export const Path = memo<PathProps>((props) => {
   const rect = clipRect ?? context.drawingArea;
   const animate = animateProp ?? context.animate;
 
+  const isReady = !!context.getXScale();
+
   // The clip offset provides extra padding to prevent path from being cut off
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
@@ -202,12 +204,11 @@ export const Path = memo<PathProps>((props) => {
   // Animation progress for clip path reveal
   const clipProgress = useSharedValue(animate ? 0 : 1);
 
-  // Trigger clip path animation when component mounts and animate is true
   useEffect(() => {
-    if (animate) {
+    if (animate && isReady) {
       clipProgress.value = withTiming(1, { duration: pathEnterTransitionDuration });
     }
-  }, [animate, clipProgress]);
+  }, [animate, isReady, clipProgress]);
 
   // Create initial and target clip paths for animation
   const { initialClipPath, targetClipPath } = useMemo(() => {
