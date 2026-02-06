@@ -4586,24 +4586,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo-google-fonts/inter@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/inter@npm:0.2.3"
-  checksum: 10c0/f26f071896c18adda4e479ec31192053163b39a2c5cbf7b2d5ecb7d6eef63262ba8aaf462897f503d06151f059c1ead01573797e709afb6d0d20555238625365
-  languageName: node
-  linkType: hard
-
 "@expo-google-fonts/inter@npm:^0.3.0":
   version: 0.3.0
   resolution: "@expo-google-fonts/inter@npm:0.3.0"
   checksum: 10c0/0cf2de4dcb413010422c78cea990da88aa2a0a67f709ada11d3f6919b8799183a93d514d93e6903dd4e2a63684a456b1f7d70b05db5dfee7ef4ab72c4fde299c
-  languageName: node
-  linkType: hard
-
-"@expo-google-fonts/source-code-pro@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/source-code-pro@npm:0.2.3"
-  checksum: 10c0/a979fa409980337fa736651107f74c9632a06113bb3fa00fc999ed1fdd017920a501359152465132b2adc3dda1c43b59c20161ddebd80c8c312d7b35a56ddf35
   languageName: node
   linkType: hard
 
@@ -17267,7 +17253,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:14.0.11, expo-font@npm:~14.0.1, expo-font@npm:~14.0.11":
+"expo-font@npm:14.0.11, expo-font@npm:~14.0.11":
   version: 14.0.11
   resolution: "expo-font@npm:14.0.11"
   dependencies:
@@ -27413,7 +27399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-inappbrowser-reborn@npm:3.7.0, react-native-inappbrowser-reborn@npm:^3.7.0":
+"react-native-inappbrowser-reborn@npm:3.7.0":
   version: 3.7.0
   resolution: "react-native-inappbrowser-reborn@npm:3.7.0"
   dependencies:
@@ -30874,8 +30860,8 @@ __metadata:
     "@coinbase/cds-icons": "workspace:^"
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-mobile-visualization": "workspace:^"
-    "@expo-google-fonts/inter": "npm:^0.2.3"
-    "@expo-google-fonts/source-code-pro": "npm:^0.2.3"
+    "@expo-google-fonts/inter": "npm:^0.3.0"
+    "@expo-google-fonts/source-code-pro": "npm:^0.3.0"
     "@formatjs/intl-getcanonicallocales": "npm:^2.5.5"
     "@formatjs/intl-locale": "npm:^4.2.11"
     "@formatjs/intl-numberformat": "npm:^8.15.4"
@@ -30885,7 +30871,7 @@ __metadata:
     "@shopify/react-native-skia": "npm:2.2.12"
     expo: "npm:54.0.32"
     expo-dev-client: "npm:6.0.20"
-    expo-font: "npm:~14.0.1"
+    expo-font: "npm:14.0.11"
     expo-linking: "npm:~8.0.11"
     expo-splash-screen: "npm:31.0.13"
     expo-status-bar: "npm:3.0.9"
@@ -30895,8 +30881,8 @@ __metadata:
     react-native: "npm:0.81.5"
     react-native-date-picker: "npm:5.0.12"
     react-native-gesture-handler: "npm:2.28.0"
-    react-native-inappbrowser-reborn: "npm:^3.7.0"
-    react-native-navigation-bar-color: "npm:^2.0.2"
+    react-native-inappbrowser-reborn: "npm:3.7.0"
+    react-native-navigation-bar-color: "npm:2.0.2"
     react-native-reanimated: "npm:4.1.1"
     react-native-safe-area-context: "npm:5.6.0"
     react-native-screens: "npm:4.16.0"
