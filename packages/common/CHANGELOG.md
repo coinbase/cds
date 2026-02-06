@@ -8,11 +8,15 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.42.0 (2/4/2026 PST)
+## 8.43.0 (2/6/2026 PST)
 
 #### 🚀 Updates
 
 - Carousel autoplay. [[#361](https://github.com/coinbase/cds/pull/361)]
+
+## 8.42.0 ((2/4/2026, 01:51 PM PST))
+
+This is an artificial version bump with no new change.
 
 ## 8.41.0 ((2/4/2026, 09:22 AM PST))
 

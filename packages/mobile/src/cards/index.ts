@@ -4,9 +4,16 @@ export * from './CardFooter';
 export * from './CardGroup';
 export * from './CardHeader';
 export * from './CardMedia';
+export * from './CardRoot';
 // Card variants
 export * from './AnnouncementCard';
 export * from './FeatureEntryCard';
 export * from './FeedCard';
 // Phoenix cards
 export * from './ContentCard';
+// Media card
+export * from './MediaCard';
+// Messaging card
+export * from './MessagingCard';
+// Data card
+export * from './DataCard';

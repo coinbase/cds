@@ -13,8 +13,11 @@ export type ContentCardFooterProps = ContentCardFooterBaseProps & HStackProps;
 
 export const ContentCardFooter = memo(
   forwardRef(
-    ({ testID, children, ...props }: ContentCardFooterProps, ref: React.ForwardedRef<View>) => (
-      <HStack ref={ref} justifyContent="space-between" testID={testID} {...props}>
+    (
+      { children, justifyContent = 'space-between', ...props }: ContentCardFooterProps,
+      ref: React.ForwardedRef<View>,
+    ) => (
+      <HStack ref={ref} justifyContent={justifyContent} {...props}>
         {children}
       </HStack>
     ),

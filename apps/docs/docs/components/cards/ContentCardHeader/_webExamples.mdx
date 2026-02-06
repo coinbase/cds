@@ -1,28 +1,83 @@
+:::note Semantic HTML
+ContentCardHeader renders as a `<header>` element by default. You can override this using the `as` prop.
+:::
+
 ### Basic Example
 
 ```jsx live
 function Example() {
   return (
-    <VStack bordered borderRadius="400" maxWidth={375} padding={1}>
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
       <ContentCardHeader
-        avatar="/img/card/content_card_custom_avatar_1.png"
-        meta={
-          <Box marginLeft={-1}>
-            <Text as="span" font="label2" color="fgMuted" numberOfLines={1}>
-              ・News・5 hrs
-            </Text>
-          </Box>
-        }
-        title="Description"
-        end={
+        thumbnail={<Avatar src={assets.eth.imageUrl} size="l" />}
+        title="CoinDesk"
+        subtitle="News・5 hrs"
+        actions={
           <IconButton
             transparent
-            accessibilityLabel="More information about coinDesk card news"
+            accessibilityLabel="More options"
             name="more"
             variant="secondary"
           />
         }
       />
+    </VStack>
+  );
+}
+```
+
+### With Multiple Actions
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardHeader
+        thumbnail={<Avatar src={assets.btc.imageUrl} size="l" />}
+        title="Bitcoin News"
+        subtitle="Markets・2 hrs"
+        actions={
+          <HStack gap={0}>
+            <IconButton transparent accessibilityLabel="Bookmark" name="star" variant="secondary" />
+            <IconButton
+              transparent
+              accessibilityLabel="More options"
+              name="more"
+              variant="secondary"
+            />
+          </HStack>
+        }
+      />
+    </VStack>
+  );
+}
+```
+
+### Without Thumbnail
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardHeader
+        title="Market Update"
+        subtitle="Posted 3 hours ago"
+        actions={
+          <IconButton transparent accessibilityLabel="Share" name="share" variant="secondary" />
+        }
+      />
+    </VStack>
+  );
+}
+```
+
+### Title Only
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+      <ContentCardHeader title="Simple Header" />
     </VStack>
   );
 }

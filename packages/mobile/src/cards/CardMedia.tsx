@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import {
   defaultMediaDimension,
   defaultMediaSize,
@@ -11,8 +11,7 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { Pictogram, SpotSquare } from '../illustrations';
-
-import { CardRemoteImage } from './CardRemoteImage';
+import { getSource, RemoteImage } from '../media/RemoteImage';
 
 export type CardMediaProps = CommonCardMediaProps;
 
@@ -50,9 +49,10 @@ export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }
       );
     case 'image':
       return (
-        <CardRemoteImage
+        <RemoteImage
           alt={props.alt ?? ''}
-          src={props.src}
+          resizeMode="cover"
+          source={getSource(props.src)}
           testID={props.testID}
           {...imageProps[placement]}
         />
