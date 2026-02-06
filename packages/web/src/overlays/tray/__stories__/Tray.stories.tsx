@@ -203,855 +203,321 @@ export const Default = () => {
   );
 };
 
-export const Responsive = () => {
-  const [showBasic, setShowBasic] = useState(false);
-  const [showIllustration, setShowIllustration] = useState(false);
-  const [showFullBleedImage, setShowFullBleedImage] = useState(false);
-  const [showBasicListCells, setShowBasicListCells] = useState(false);
-  const [showIllustrationListCells, setShowIllustrationListCells] = useState(false);
-  const [showFullBleedImageListCells, setShowFullBleedImageListCells] = useState(false);
+export const ResponsiveBasic = () => {
   const { isPhone } = useBreakpoints();
 
   return (
-    <VStack gap={4} padding={1}>
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Responsive Basic Tray</Text>
-        <Button onClick={() => setShowBasic(true)}>Open Responsive Tray</Button>
-        {showBasic && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block={isPhone} onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent={isPhone ? 'center' : 'flex-end'}
-              />
-            )}
-            hideCloseButton={isPhone}
-            onCloseComplete={() => setShowBasic(false)}
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            title="Section header"
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Responsive with Illustration</Text>
-        <Button onClick={() => setShowIllustration(true)}>Open Illustration Tray</Button>
-        {showIllustration && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block={isPhone} onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent={isPhone ? 'center' : 'flex-end'}
-              />
-            )}
-            hideCloseButton={isPhone}
-            onCloseComplete={() => setShowIllustration(false)}
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            title={
-              <VStack gap={isPhone ? 1.5 : 2}>
-                <Pictogram name="addWallet" />
-                <Text font="title3">Welcome aboard</Text>
-              </VStack>
-            }
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Full Bleed Image</Text>
-        <Button onClick={() => setShowFullBleedImage(true)}>Open Full Bleed Image Tray</Button>
-        {showFullBleedImage && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block={isPhone} onClick={handleClose}>
-                    Close
-                  </Button>
-                }
-                justifyContent={isPhone ? 'center' : 'flex-end'}
-              />
-            )}
-            header={
-              <Text
-                font="title3"
-                paddingBottom={0.75}
-                paddingTop={2}
-                paddingX={{ base: 4, phone: 3 }}
-              >
-                Header
-              </Text>
-            }
-            hideCloseButton={isPhone}
-            onCloseComplete={() => setShowFullBleedImage(false)}
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            styles={{
-              handleBar: {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1,
-              },
-              closeButton: {
-                position: 'absolute',
-                top: 'var(--space-4)',
-                right: 'var(--space-4)',
-                zIndex: 1,
-              },
-              header: {
-                paddingTop: 0,
-              },
-            }}
-            title={
-              <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
-                <img
-                  alt="Full Bleed"
-                  height={180}
-                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
-                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
-                  width="100%"
-                />
-              </Box>
-            }
-          >
-            <VStack gap={2} paddingBottom={2}>
-              <Text font="body">This is the content of the tray.</Text>
-            </VStack>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Basic with List Cells</Text>
-        <Button onClick={() => setShowBasicListCells(true)}>Open Basic List Cells Tray</Button>
-        {showBasicListCells && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block={isPhone} onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent={isPhone ? 'center' : 'flex-end'}
-              />
-            )}
-            hideCloseButton={isPhone}
-            onCloseComplete={() => setShowBasicListCells(false)}
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            styles={{
-              header: { paddingBottom: 'var(--space-1)' },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title="Section header"
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Illustration with List Cells</Text>
-        <Button onClick={() => setShowIllustrationListCells(true)}>
-          Open Illustration List Cells Tray
-        </Button>
-        {showIllustrationListCells && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block={isPhone} onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent={isPhone ? 'center' : 'flex-end'}
-              />
-            )}
-            hideCloseButton={isPhone}
-            onCloseComplete={() => setShowIllustrationListCells(false)}
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            styles={{
-              header: { paddingBottom: 'var(--space-1)' },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title={
-              <VStack gap={isPhone ? 1.5 : 2}>
-                <Pictogram name="addWallet" />
-                <Text font="title3">Welcome aboard</Text>
-              </VStack>
-            }
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Full Bleed Image with List Cells</Text>
-        <Button onClick={() => setShowFullBleedImageListCells(true)}>
-          Open Full Bleed Image List Cells Tray
-        </Button>
-        {showFullBleedImageListCells && (
-          <Tray
-            header={
-              <Text
-                font="title3"
-                paddingBottom={0.75}
-                paddingTop={2}
-                paddingX={{ base: 4, phone: 3 }}
-              >
-                Header
-              </Text>
-            }
-            hideCloseButton={isPhone}
-            onCloseComplete={() => setShowFullBleedImageListCells(false)}
-            pin={isPhone ? 'bottom' : 'right'}
-            showHandleBar={isPhone}
-            styles={{
-              handleBar: {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1,
-              },
-              closeButton: {
-                position: 'absolute',
-                top: 'var(--space-4)',
-                right: 'var(--space-4)',
-                zIndex: 1,
-              },
-              header: {
-                paddingTop: 0,
-              },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title={
-              <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
-                <img
-                  alt="Full Bleed"
-                  height={180}
-                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
-                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
-                  width="100%"
-                />
-              </Box>
-            }
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-    </VStack>
+    <Tray
+      footer={({ handleClose }) => (
+        <PageFooter
+          borderedTop
+          action={
+            <Button block={isPhone} onClick={handleClose}>
+              Button
+            </Button>
+          }
+          justifyContent={isPhone ? 'center' : 'flex-end'}
+        />
+      )}
+      hideCloseButton={isPhone}
+      onCloseComplete={() => {}}
+      pin={isPhone ? 'bottom' : 'right'}
+      showHandleBar={isPhone}
+      title="Section header"
+    >
+      <Text color="fgMuted" font="body" paddingBottom={2}>
+        Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+        lorem id, viverra.
+      </Text>
+    </Tray>
   );
 };
 
-export const HandleBar = () => {
-  const [showBasic, setShowBasic] = useState(false);
-  const [showIllustration, setShowIllustration] = useState(false);
-  const [showFullBleedImage, setShowFullBleedImage] = useState(false);
-  const [showBasicListCells, setShowBasicListCells] = useState(false);
-  const [showIllustrationListCells, setShowIllustrationListCells] = useState(false);
-  const [showFullBleedImageListCells, setShowFullBleedImageListCells] = useState(false);
+export const ResponsiveIllustration = () => {
+  const { isPhone } = useBreakpoints();
 
   return (
-    <VStack gap={4} padding={1}>
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Bottom Pin with HandleBar - Basic</Text>
-        <Button onClick={() => setShowBasic(true)}>Open HandleBar Tray</Button>
-        {showBasic && (
-          <Tray
-            hideCloseButton
-            showHandleBar
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent="center"
-              />
-            )}
-            onCloseComplete={() => setShowBasic(false)}
-            pin="bottom"
-            title="Section header"
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Bottom Pin with HandleBar - Illustration</Text>
-        <Button onClick={() => setShowIllustration(true)}>Open Illustration Tray</Button>
-        {showIllustration && (
-          <Tray
-            hideCloseButton
-            showHandleBar
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent="center"
-              />
-            )}
-            onCloseComplete={() => setShowIllustration(false)}
-            pin="bottom"
-            title={
-              <VStack gap={1.5}>
-                <Pictogram name="addWallet" />
-                <Text font="title3">Welcome aboard</Text>
-              </VStack>
-            }
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">New Bottom Pin with HandleBar - Full Bleed Image</Text>
-        <Button onClick={() => setShowFullBleedImage(true)}>Open Full Bleed Image Tray</Button>
-        {showFullBleedImage && (
-          <Tray
-            hideCloseButton
-            showHandleBar
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block onClick={handleClose}>
-                    Close
-                  </Button>
-                }
-                justifyContent="center"
-              />
-            )}
-            header={
-              <Text font="title3" paddingTop={2} paddingX={3}>
-                Header
-              </Text>
-            }
-            onCloseComplete={() => setShowFullBleedImage(false)}
-            pin="bottom"
-            styles={{
-              handleBar: {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1,
-              },
-              header: {
-                paddingTop: 0,
-              },
-            }}
-            title={
-              <Box flexGrow={1} marginX={-3}>
-                <img
-                  alt="Full Bleed"
-                  height={180}
-                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
-                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
-                  width="100%"
-                />
-              </Box>
-            }
-          >
-            <VStack gap={2} paddingBottom={2}>
-              <Text font="body">This is the content of the tray.</Text>
-            </VStack>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Bottom Pin with HandleBar - Basic with List Cells</Text>
-        <Button onClick={() => setShowBasicListCells(true)}>Open Basic List Cells Tray</Button>
-        {showBasicListCells && (
-          <Tray
-            hideCloseButton
-            showHandleBar
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent="center"
-              />
-            )}
-            onCloseComplete={() => setShowBasicListCells(false)}
-            pin="bottom"
-            styles={{
-              header: { paddingBottom: 'var(--space-1)' },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title="Section header"
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Bottom Pin with HandleBar - Illustration with List Cells</Text>
-        <Button onClick={() => setShowIllustrationListCells(true)}>
-          Open Illustration List Cells Tray
-        </Button>
-        {showIllustrationListCells && (
-          <Tray
-            hideCloseButton
-            showHandleBar
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={
-                  <Button block onClick={handleClose}>
-                    Button
-                  </Button>
-                }
-                justifyContent="center"
-              />
-            )}
-            onCloseComplete={() => setShowIllustrationListCells(false)}
-            pin="bottom"
-            styles={{
-              header: { paddingBottom: 'var(--space-1)' },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title={
-              <VStack gap={1.5}>
-                <Pictogram name="addWallet" />
-                <Text font="title3">Welcome aboard</Text>
-              </VStack>
-            }
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Bottom Pin with HandleBar - Full Bleed Image with List Cells</Text>
-        <Button onClick={() => setShowFullBleedImageListCells(true)}>
-          Open Full Bleed Image List Cells Tray
-        </Button>
-        {showFullBleedImageListCells && (
-          <Tray
-            hideCloseButton
-            showHandleBar
-            header={
-              <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
-                Header
-              </Text>
-            }
-            onCloseComplete={() => setShowFullBleedImageListCells(false)}
-            pin="bottom"
-            styles={{
-              handleBar: {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1,
-              },
-              header: {
-                paddingTop: 0,
-              },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title={
-              <Box flexGrow={1} marginX={-3}>
-                <img
-                  alt="Full Bleed"
-                  height={180}
-                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
-                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
-                  width="100%"
-                />
-              </Box>
-            }
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-    </VStack>
+    <Tray
+      footer={({ handleClose }) => (
+        <PageFooter
+          borderedTop
+          action={
+            <Button block={isPhone} onClick={handleClose}>
+              Button
+            </Button>
+          }
+          justifyContent={isPhone ? 'center' : 'flex-end'}
+        />
+      )}
+      hideCloseButton={isPhone}
+      onCloseComplete={() => {}}
+      pin={isPhone ? 'bottom' : 'right'}
+      showHandleBar={isPhone}
+      title={
+        <VStack gap={isPhone ? 1.5 : 2}>
+          <Pictogram name="addWallet" />
+          <Text font="title3">Welcome aboard</Text>
+        </VStack>
+      }
+    >
+      <Text color="fgMuted" font="body" paddingBottom={2}>
+        Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+        lorem id, viverra.
+      </Text>
+    </Tray>
   );
 };
 
-export const PinRight = () => {
-  const [showBasic, setShowBasic] = useState(false);
-  const [showIllustration, setShowIllustration] = useState(false);
-  const [showFullBleedImage, setShowFullBleedImage] = useState(false);
-  const [showBasicListCells, setShowBasicListCells] = useState(false);
-  const [showIllustrationListCells, setShowIllustrationListCells] = useState(false);
-  const [showFullBleedImageListCells, setShowFullBleedImageListCells] = useState(false);
+export const ResponsiveFullBleedImage = () => {
+  const { isPhone } = useBreakpoints();
 
   return (
-    <VStack gap={4} padding={1}>
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Right Pin - Basic</Text>
-        <Button onClick={() => setShowBasic(true)}>Open Right Pin Tray</Button>
-        {showBasic && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={<Button onClick={handleClose}>Button</Button>}
-                justifyContent="flex-end"
-              />
-            )}
-            onCloseComplete={() => setShowBasic(false)}
-            pin="right"
-            title="Section header"
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Right Pin - Illustration</Text>
-        <Button onClick={() => setShowIllustration(true)}>Open Illustration Tray</Button>
-        {showIllustration && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={<Button onClick={handleClose}>Button</Button>}
-                justifyContent="flex-end"
-              />
-            )}
-            onCloseComplete={() => setShowIllustration(false)}
-            pin="right"
-            title={
-              <VStack gap={2}>
-                <Pictogram name="addWallet" />
-                <Text font="title3">Welcome aboard</Text>
-              </VStack>
+    <>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Tray
+        classNames={{
+          closeButton: 'tray-close-button-inverted',
+        }}
+        footer={({ handleClose }) => (
+          <PageFooter
+            borderedTop
+            action={
+              <Button block={isPhone} onClick={handleClose}>
+                Close
+              </Button>
             }
-          >
-            <Text color="fgMuted" font="body" paddingBottom={2}>
-              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
-              interdum lorem id, viverra.
-            </Text>
-          </Tray>
+            justifyContent={isPhone ? 'center' : 'flex-end'}
+          />
         )}
-      </VStack>
+        header={
+          <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+            Header
+          </Text>
+        }
+        hideCloseButton={isPhone}
+        onCloseComplete={() => {}}
+        pin={isPhone ? 'bottom' : 'right'}
+        showHandleBar={isPhone}
+        styles={{
+          handleBar: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1,
+          },
+          handleBarHandle: {
+            backgroundColor: 'white',
+            opacity: 1,
+          },
+          closeButton: {
+            position: 'absolute',
+            top: 'var(--space-4)',
+            right: 'var(--space-4)',
+            zIndex: 1,
+          },
+          header: {
+            paddingTop: 0,
+          },
+        }}
+        title={
+          <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+            <img
+              alt="Full Bleed"
+              height={180}
+              src="https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg"
+              style={{ objectFit: 'cover', pointerEvents: 'none' }}
+              width="100%"
+            />
+          </Box>
+        }
+      >
+        <VStack gap={2} paddingBottom={2}>
+          <Text font="body">This is the content of the tray.</Text>
+        </VStack>
+      </Tray>
+    </>
+  );
+};
 
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Right Pin - Full Bleed Image</Text>
-        <Button onClick={() => setShowFullBleedImage(true)}>Open Full Bleed Image Tray</Button>
-        {showFullBleedImage && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={<Button onClick={handleClose}>Close</Button>}
-                justifyContent="flex-end"
-              />
-            )}
-            header={
-              <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={4}>
-                Header
-              </Text>
-            }
-            onCloseComplete={() => setShowFullBleedImage(false)}
-            pin="right"
-            styles={{
-              closeButton: {
-                position: 'absolute',
-                top: 'var(--space-4)',
-                right: 'var(--space-4)',
-                zIndex: 1,
-              },
-              header: {
-                paddingTop: 0,
-              },
+export const ResponsiveBasicListCells = () => {
+  const { isPhone } = useBreakpoints();
+
+  return (
+    <Tray
+      footer={({ handleClose }) => (
+        <PageFooter
+          borderedTop
+          action={
+            <Button block={isPhone} onClick={handleClose}>
+              Button
+            </Button>
+          }
+          justifyContent={isPhone ? 'center' : 'flex-end'}
+        />
+      )}
+      hideCloseButton={isPhone}
+      onCloseComplete={() => {}}
+      pin={isPhone ? 'bottom' : 'right'}
+      showHandleBar={isPhone}
+      styles={{
+        header: { paddingBottom: 'var(--space-1)' },
+        content: { paddingBottom: 'var(--space-3)' },
+      }}
+      title="Section header"
+    >
+      {Array.from({ length: 20 }, (_, i) => (
+        <ListCell
+          key={i}
+          accessory="arrow"
+          description="Description"
+          innerSpacing={{
+            marginX: -4,
+            paddingX: 4,
+            paddingY: 1,
+          }}
+          spacingVariant="condensed"
+          title="Title"
+        />
+      ))}
+    </Tray>
+  );
+};
+
+export const ResponsiveIllustrationListCells = () => {
+  const { isPhone } = useBreakpoints();
+
+  return (
+    <Tray
+      footer={({ handleClose }) => (
+        <PageFooter
+          borderedTop
+          action={
+            <Button block={isPhone} onClick={handleClose}>
+              Button
+            </Button>
+          }
+          justifyContent={isPhone ? 'center' : 'flex-end'}
+        />
+      )}
+      hideCloseButton={isPhone}
+      onCloseComplete={() => {}}
+      pin={isPhone ? 'bottom' : 'right'}
+      showHandleBar={isPhone}
+      styles={{
+        header: { paddingBottom: 'var(--space-1)' },
+        content: { paddingBottom: 'var(--space-3)' },
+      }}
+      title={
+        <VStack gap={isPhone ? 1.5 : 2}>
+          <Pictogram name="addWallet" />
+          <Text font="title3">Welcome aboard</Text>
+        </VStack>
+      }
+    >
+      {Array.from({ length: 20 }, (_, i) => (
+        <ListCell
+          key={i}
+          accessory="arrow"
+          description="Description"
+          innerSpacing={{
+            marginX: -4,
+            paddingX: 4,
+            paddingY: 1,
+          }}
+          spacingVariant="condensed"
+          title="Title"
+        />
+      ))}
+    </Tray>
+  );
+};
+
+export const ResponsiveFullBleedImageListCells = () => {
+  const { isPhone } = useBreakpoints();
+
+  return (
+    <>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Tray
+        classNames={{
+          closeButton: 'tray-close-button-inverted',
+        }}
+        header={
+          <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+            Header
+          </Text>
+        }
+        hideCloseButton={isPhone}
+        onCloseComplete={() => {}}
+        pin={isPhone ? 'bottom' : 'right'}
+        showHandleBar={isPhone}
+        styles={{
+          handleBar: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1,
+          },
+          handleBarHandle: {
+            backgroundColor: 'white',
+            opacity: 1,
+          },
+          closeButton: {
+            position: 'absolute',
+            top: 'var(--space-4)',
+            right: 'var(--space-4)',
+            zIndex: 1,
+          },
+          header: {
+            paddingTop: 0,
+          },
+          content: { paddingBottom: 'var(--space-3)' },
+        }}
+        title={
+          <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+            <img
+              alt="Full Bleed"
+              height={180}
+              src="https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg"
+              style={{ objectFit: 'cover', pointerEvents: 'none' }}
+              width="100%"
+            />
+          </Box>
+        }
+      >
+        {Array.from({ length: 20 }, (_, i) => (
+          <ListCell
+            key={i}
+            accessory="arrow"
+            description="Description"
+            innerSpacing={{
+              marginX: -4,
+              paddingX: 4,
+              paddingY: 1,
             }}
-            title={
-              <Box flexGrow={1} marginX={-4}>
-                <img
-                  alt="Full Bleed"
-                  height={180}
-                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
-                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
-                  width="100%"
-                />
-              </Box>
-            }
-          >
-            <VStack gap={2} paddingBottom={2}>
-              <Text font="body">This is the content of the tray.</Text>
-            </VStack>
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Right Pin - Basic with List Cells</Text>
-        <Button onClick={() => setShowBasicListCells(true)}>Open Basic List Cells Tray</Button>
-        {showBasicListCells && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={<Button onClick={handleClose}>Button</Button>}
-                justifyContent="flex-end"
-              />
-            )}
-            onCloseComplete={() => setShowBasicListCells(false)}
-            pin="right"
-            styles={{
-              header: { paddingBottom: 'var(--space-1)' },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title="Section header"
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Right Pin - Illustration with List Cells</Text>
-        <Button onClick={() => setShowIllustrationListCells(true)}>
-          Open Illustration List Cells Tray
-        </Button>
-        {showIllustrationListCells && (
-          <Tray
-            footer={({ handleClose }) => (
-              <PageFooter
-                borderedTop
-                action={<Button onClick={handleClose}>Button</Button>}
-                justifyContent="flex-end"
-              />
-            )}
-            onCloseComplete={() => setShowIllustrationListCells(false)}
-            pin="right"
-            styles={{
-              header: { paddingBottom: 'var(--space-1)' },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title={
-              <VStack gap={2}>
-                <Pictogram name="addWallet" />
-                <Text font="title3">Welcome aboard</Text>
-              </VStack>
-            }
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-
-      <VStack alignItems="flex-start" gap={2}>
-        <Text font="headline">Right Pin - Full Bleed Image with List Cells</Text>
-        <Button onClick={() => setShowFullBleedImageListCells(true)}>
-          Open Full Bleed Image List Cells Tray
-        </Button>
-        {showFullBleedImageListCells && (
-          <Tray
-            header={
-              <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={4}>
-                Header
-              </Text>
-            }
-            onCloseComplete={() => setShowFullBleedImageListCells(false)}
-            pin="right"
-            styles={{
-              closeButton: {
-                position: 'absolute',
-                top: 'var(--space-4)',
-                right: 'var(--space-4)',
-                zIndex: 1,
-              },
-              header: {
-                paddingTop: 0,
-              },
-              content: { paddingBottom: 'var(--space-3)' },
-            }}
-            title={
-              <Box flexGrow={1} marginX={-4}>
-                <img
-                  alt="Full Bleed"
-                  height={180}
-                  src="https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png?fm=avif&w=641&h=426&q=65"
-                  style={{ objectFit: 'cover', pointerEvents: 'none' }}
-                  width="100%"
-                />
-              </Box>
-            }
-          >
-            {Array.from({ length: 20 }, (_, i) => (
-              <ListCell
-                key={i}
-                accessory="arrow"
-                description="Description"
-                innerSpacing={{
-                  marginX: -4,
-                  paddingX: 4,
-                  paddingY: 1,
-                }}
-                spacingVariant="condensed"
-                title="Title"
-              />
-            ))}
-          </Tray>
-        )}
-      </VStack>
-    </VStack>
+            spacingVariant="condensed"
+            title="Title"
+          />
+        ))}
+      </Tray>
+    </>
   );
 };

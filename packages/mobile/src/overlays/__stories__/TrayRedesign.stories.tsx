@@ -510,7 +510,7 @@ const IllustrationTrayWithListCellsStickyFooter = () => {
 // ============================================================================
 
 const FULL_BLEED_IMAGE_URI =
-  'https://images.ctfassets.net/o10es7wu5gm1/4BsskcYybNIDMYTeMpkFPG/216eb97727f834346649004a5d66cd3f/Coinbase_Press_Page_Product_Image.png';
+  'https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg';
 
 const FullBleedImageTray = () => {
   const [isTrayVisible, setIsTrayVisible] = useState(false);
