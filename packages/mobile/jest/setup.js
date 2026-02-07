@@ -11,8 +11,6 @@ const {
   ReanimatedLogLevel,
 } = require('react-native-reanimated');
 
-import { mockStatusBarHeight } from '../src/hooks/__tests__/constants';
-
 // Must mock NativeEventEmitter at the internal module path not in main RN mock below
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   const MockNativeEventEmitter = class MockNativeEventEmitter {
@@ -41,11 +39,6 @@ jest.mock('react-native', () => {
   RN.PixelRatio.getFontScale = jest.fn(() => 1);
   RN.PixelRatio.getPixelSizeForLayoutSize = jest.fn((layoutSize) => Math.round(layoutSize * 1));
   RN.PixelRatio.startDetecting = jest.fn();
-
-  RN.NativeModules.StatusBarManager = {
-    getHeight: jest.fn((cb) => cb({ height: mockStatusBarHeight })),
-    addListener: jest.fn(() => ({ remove: jest.fn() })),
-  };
 
   RN.Animated.loop = jest.fn(() => {
     return {
