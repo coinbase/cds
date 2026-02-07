@@ -13,9 +13,9 @@ import {
   Keyboard,
   Modal,
   Platform,
+  StatusBar,
   StyleSheet,
   useWindowDimensions,
-  View,
 } from 'react-native';
 import type { ModalProps } from 'react-native';
 import {
@@ -32,6 +32,7 @@ import {
 } from '@coinbase/cds-common/tokens/drawer';
 import type { PinningDirection, SharedProps } from '@coinbase/cds-common/types';
 
+import { useHasNotch } from '../../hooks/useHasNotch';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { HandleBar } from '../handlebar/HandleBar';
@@ -248,6 +249,12 @@ export const Drawer = memo(
       [children, handleClose],
     );
 
+    // this outdated logic needs to be removed
+    // rather than hiding on the presence of a "notch" (all modern phones based on how we determine), we should hide the status bar when any overlay is visible
+    // see: https://linear.app/coinbase/issue/CDS-1557/temporarily-hide-status-bar-in-all-overlay-components
+    const hasNotch = useHasNotch();
+    const hideStatusBar = hasNotch && ['left', 'right', 'top'].includes(pin);
+
     return (
       <Modal
         hardwareAccelerated
@@ -259,7 +266,11 @@ export const Drawer = memo(
         accessibilityRole="alert"
       >
         <OverlayContentContext.Provider value={overlayContentContextValue}>
-          <DrawerStatusBar visible pin={pin} />
+          {/* for some reason we are hiding on iOS only (see linked issue above) */}
+          {Platform.select({
+            ios: hideStatusBar ? <StatusBar animated hidden /> : null,
+            default: null,
+          })}
           <Overlay
             onTouchStart={handleOverlayPress}
             opacity={opacityAnimation}
