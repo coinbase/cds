@@ -24,7 +24,7 @@
   "dependencies": [
     {
       "name": "react-native-date-picker",
-      "version": "^4.4.2"
+      "version": "5.0.12"
     }
   ]
 }

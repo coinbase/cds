@@ -17,11 +17,11 @@
   "dependencies": [
     {
       "name": "react-native-svg",
-      "version": "^14.1.0"
+      "version": "15.12.1"
     },
     {
       "name": "react-native-reanimated",
-      "version": "^3.14.0"
+      "version": "4.1.1"
     }
   ]
 }
