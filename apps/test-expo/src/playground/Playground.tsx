@@ -71,7 +71,7 @@ const HeaderContent = memo(
     isDark,
   }: HeaderProps) => {
     const { top } = useSafeAreaInsets();
-    const style = useMemo(() => ({ marginTop: top }), [top]);
+    const style = useMemo(() => ({ paddingTop: top }), [top]);
 
     const iconButtonPlaceholder = <Box height={iconButtonHeight} />;
 

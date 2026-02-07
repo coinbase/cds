@@ -1,13 +1,14 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider';
-import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization';
 import { StatusBar } from '@coinbase/cds-mobile/system/StatusBar';
 import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,6 +28,12 @@ if (Platform.OS === 'android') {
 
 const gestureHandlerStyle = { flex: 1 };
 
+const CdsSafeAreaProvider: React.FC<React.PropsWithChildren<unknown>> = memo(({ children }) => {
+  const theme = useTheme();
+  const style = useMemo(() => ({ backgroundColor: theme.color.bg }), [theme.color.bg]);
+  return <SafeAreaProvider style={style}>{children}</SafeAreaProvider>;
+});
+
 const App = memo(() => {
   const [fontsLoaded] = useFonts();
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -45,14 +52,14 @@ const App = memo(() => {
     <GestureHandlerRootView style={gestureHandlerStyle}>
       <ChartBridgeProvider>
         <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
-          <SafeAreaProvider>
+          <CdsSafeAreaProvider>
             <PortalProvider>
               <StatusBar hidden={!__DEV__} />
               <NavigationContainer linking={linking}>
                 <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
               </NavigationContainer>
             </PortalProvider>
-          </SafeAreaProvider>
+          </CdsSafeAreaProvider>
         </ThemeProvider>
       </ChartBridgeProvider>
     </GestureHandlerRootView>
