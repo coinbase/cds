@@ -75,6 +75,7 @@ const webpackPlugin = () => {
               }
             : {
                 test: /\.(js|ts)x?$/,
+                exclude: /node_modules/,
                 loader: '@linaria/webpack-loader',
                 options: {
                   displayName: true,

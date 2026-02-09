@@ -15,8 +15,7 @@ export type PluginOptions = {
    */
   docsDir?: string;
   /**
-   * Determines if plugin should run. If plugin is too slow in development,
-   * you can either increase watchInterval or set this to false.
+   * Determines if plugin should run. Set to false to disable docgen entirely.
    * @default true
    */
   enabled?: boolean;
@@ -46,12 +45,6 @@ export type PluginOptions = {
    * An array of source files you want docgen to parse.
    */
   sourceFiles: string[];
-  /**
-   * How frequently (in minutes) should plugin run after it was last run.
-   * This is typically triggered via on save of project file.
-   * @default 5
-   */
-  watchInterval?: number;
 };
 
 /* -------------------------------------------------------------------------- */

@@ -4,7 +4,6 @@ import kebabCase from 'lodash/kebabCase';
 import startCase from 'lodash/startCase';
 import fs from 'node:fs';
 import path from 'node:path';
-import prettier from 'prettier';
 
 import type { WriteFileConfig } from '../types';
 
@@ -22,32 +21,11 @@ const helpers = {
   startCase,
 };
 
-function getParser(dest: string): prettier.BuiltInParserName {
-  const ext = path.extname(dest);
-  switch (ext) {
-    case '.mdx':
-      return 'mdx';
-    case '.js':
-      return 'babel';
-    case '.json':
-      return 'json';
-    case '.ts':
-    default:
-      return 'typescript';
-  }
-}
-
 export async function writeFile<T>({ dest, data }: WriteFileParams<T>) {
   const content = typeof data === 'string' ? data : JSON.stringify(data);
   const dirForFile = path.dirname(dest);
-  // If directory doesn't already exist, create it.
   await fs.promises.mkdir(dirForFile, { recursive: true });
-  const prettierOptions = await prettier.resolveConfig('./prettierConfig.json');
-  const prettiered = await prettier.format(content, {
-    ...prettierOptions,
-    parser: getParser(dest),
-  });
-  return fs.promises.writeFile(dest, prettiered, writeConfig);
+  return fs.promises.writeFile(dest, content, writeConfig);
 }
 
 const templatesDir = path.join(__dirname, '../templates');
