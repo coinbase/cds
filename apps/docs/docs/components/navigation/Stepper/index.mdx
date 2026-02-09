@@ -11,8 +11,10 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 
 import webPropsToc from ':docgen/web/stepper/Stepper/toc-props';
 import WebPropsTable from './_webPropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import mobilePropsToc from ':docgen/mobile/stepper/Stepper/toc-props';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import webMetadata from './webMetadata.json';
@@ -21,13 +23,17 @@ import mobileMetadata from './mobileMetadata.json';
 <VStack gap={5}>
   <ComponentHeader title="Stepper" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
-    webExamples={<WebExamples />}
     mobileExamples={<MobileExamples />}
+    mobileExamplesToc={mobileExamplesToc}
     mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
-    mobileExamplesToc={mobileExamplesToc}
+    mobileStyles={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
+    webExamples={<WebExamples />}
     webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
     webPropsToc={webPropsToc}
+    webStyles={<WebStyles />}
+    webStylesToc={webStylesToc}
   />
 </VStack>
