@@ -133,3 +133,26 @@ You can customize `borderRadius` to soften contextual and in-line banners.
 :::tip
 Avoid setting `borderRadius` for `styleVariant="global"` so the vertical status bar remains aligned.
 :::
+
+### Bleed with Margin Props
+
+When using negative `margin*` props to create a bleed effect, explicitly set `width` so the Banner expands beyond its container.
+
+```tsx live
+<VStack height={150} background="bgPositiveWash">
+  <Banner
+    marginX={-2}
+    startIcon="info"
+    startIconActive
+    styleVariant="contextual"
+    title="Bleeding banner"
+    variant="informational"
+    width="calc(100% + var(--space-4))"
+  >
+    <Text as="p" font="label2">
+      Use a calculated width that matches the negative margin so the Banner extends past the
+      container edges.
+    </Text>
+  </Banner>
+</VStack>
+```
