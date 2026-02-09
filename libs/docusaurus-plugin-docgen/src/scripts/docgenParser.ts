@@ -1,4 +1,4 @@
-import { withCustomConfig } from 'react-docgen-typescript';
+import { withCompilerOptions } from 'react-docgen-typescript';
 import mapValues from 'lodash/mapValues';
 import omit from 'lodash/omit';
 import orderBy from 'lodash/orderBy';
@@ -615,7 +615,7 @@ export function docgenParser({
   }
 
   /** React docgen integration */
-  return withCustomConfig(params.tsconfigPath, {
+  return withCompilerOptions(tsCtx.program.getCompilerOptions(), {
     savePropValueAsString: true,
     shouldExtractValuesFromUnion: true,
     shouldExtractLiteralValuesFromEnum: true,
@@ -623,7 +623,7 @@ export function docgenParser({
     shouldIncludePropTagMap: true,
     shouldIncludeExpression: true,
   })
-    .parse(filesToParse)
+    .parseWithProgramProvider(filesToParse, () => tsCtx.program)
     .map((doc) => {
       const parentTypes: Record<string, string[]> = {};
 

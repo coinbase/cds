@@ -15,6 +15,8 @@ import type {
   Projects,
   WriteFileConfig,
 } from '../types';
+import type { EntryPointCacheEntry } from '../utils/docgenCache';
+import { computeEntryPointHash, loadDocgenCache, saveDocgenCache } from '../utils/docgenCache';
 import { getPackageJsonFromTsconfig } from '../utils/getPackageJsonFromTsconfig';
 import { logger } from '../utils/logger';
 
@@ -122,6 +124,9 @@ export async function docgenRunner(params: DocgenRunnerParams): Promise<PluginCo
     }),
   );
 
+  const diskCache = loadDocgenCache(pluginDir);
+  const newCacheEntries: Record<string, EntryPointCacheEntry> = {};
+
   projects.forEach(({ tsconfigPath, projectDir, files }) => {
     const {
       name: packageNameWithScope = '',
@@ -161,89 +166,133 @@ export async function docgenRunner(params: DocgenRunnerParams): Promise<PluginCo
       template: 'shared/objectMap',
     });
 
-    selectPrimaryDocs(docgenParser({ tsconfigPath, projectDir, files, onProcessDoc })).forEach(
-      ({ example, ...doc }) => {
-        /**
-         * Turn absolute path of parsed doc into path relative to project.
-         * This should match what was provided in config.
-         * i.e. `Users/katherinemartinez/cds/packages/web/src/accordions/Accordion.tsx` into `web/accordions/Accordion.tsx`.
-         */
-        const destDir = getTempDirForDoc({ projectDir, doc });
-        const [, ...destDirWithoutProjectArray] = destDir.split('/');
-        const slug = destDirWithoutProjectArray.join('/');
+    /**
+     * Content-hash disk cache: if the source files and tsconfig for this entry point
+     * haven't changed since the last run, reuse the cached parse results instead of
+     * re-creating a TypeScript program and running react-docgen-typescript.
+     */
+    const absoluteFiles = files.map((f) => path.join(projectDir, f));
+    const entryPointHash = computeEntryPointHash(absoluteFiles, tsconfigPath);
+    const cachedEntry = diskCache?.entryPoints[tsconfigPath];
 
-        const data: OutputDoc = {
-          ...doc,
-          cacheDirectory: path.join(pluginDir, destDir),
-          repoUrl,
-          importBlock: {
-            name: doc.displayName,
-            path: path.join(packageNameWithScope, slug),
-          },
-          apiPartial: {
-            name: `${capitalize(`${projectName}`)}PropsTable`,
-            path: path.join(':docgen', destDir, 'api.mdx'),
-          },
-          changelogPartial: {
-            name: `${capitalize(`${projectName}`)}Changelog`,
-            path: path.join(':docgen', destDir, 'changelog.mdx'),
-          },
-          tab: { label: capitalize(projectName), value: projectName },
-          slug,
-        };
+    let parsedDocs: ProcessedDoc[];
 
-        docs.add(data);
+    if (cachedEntry && cachedEntry.hash === entryPointHash) {
+      // Cache hit — skip parsing, replay shared cache contributions
+      logger.cacheHit(path.basename(projectDir));
+      parsedDocs = cachedEntry.docs;
+      for (const prop of cachedEntry.parentTypeProps) {
+        sharedParentTypesCache.add(prop);
+      }
+      for (const [key, value] of cachedEntry.typeAliases) {
+        sharedTypeAliasesCache.set(key, value);
+      }
+      newCacheEntries[tsconfigPath] = cachedEntry;
+    } else {
+      // Cache miss — parse and capture shared cache contributions
+      logger.cacheMiss(path.basename(projectDir));
+      const parentTypesBefore = new Set(sharedParentTypesCache);
+      const typeAliasesBefore = new Map(sharedTypeAliasesCache);
 
-        /** TODO: Pull codegen 2.0 into separate package and pull in here.
-         * Then we can just pass in the directory and it will run codegen on all templates in directory
-         * rather than having to define each separately.
-         */
+      parsedDocs = docgenParser({ tsconfigPath, projectDir, files, onProcessDoc });
 
-        /** Data from react-docgen-typescript */
+      const newParentTypeProps = [...sharedParentTypesCache].filter(
+        (p) => !parentTypesBefore.has(p),
+      );
+      const newTypeAliases = [...sharedTypeAliasesCache.entries()].filter(
+        ([k]) => !typeAliasesBefore.has(k),
+      );
+      newCacheEntries[tsconfigPath] = {
+        hash: entryPointHash,
+        docs: parsedDocs,
+        parentTypeProps: newParentTypeProps,
+        typeAliases: newTypeAliases,
+      };
+    }
+
+    selectPrimaryDocs(parsedDocs).forEach(({ example, ...doc }) => {
+      /**
+       * Turn absolute path of parsed doc into path relative to project.
+       * This should match what was provided in config.
+       * i.e. `Users/katherinemartinez/cds/packages/web/src/accordions/Accordion.tsx` into `web/accordions/Accordion.tsx`.
+       */
+      const destDir = getTempDirForDoc({ projectDir, doc });
+      const [, ...destDirWithoutProjectArray] = destDir.split('/');
+      const slug = destDirWithoutProjectArray.join('/');
+
+      const data: OutputDoc = {
+        ...doc,
+        cacheDirectory: path.join(pluginDir, destDir),
+        repoUrl,
+        importBlock: {
+          name: doc.displayName,
+          path: path.join(packageNameWithScope, slug),
+        },
+        apiPartial: {
+          name: `${capitalize(`${projectName}`)}PropsTable`,
+          path: path.join(':docgen', destDir, 'api.mdx'),
+        },
+        changelogPartial: {
+          name: `${capitalize(`${projectName}`)}Changelog`,
+          path: path.join(':docgen', destDir, 'changelog.mdx'),
+        },
+        tab: { label: capitalize(projectName), value: projectName },
+        slug,
+      };
+
+      docs.add(data);
+
+      /** TODO: Pull codegen 2.0 into separate package and pull in here.
+       * Then we can just pass in the directory and it will run codegen on all templates in directory
+       * rather than having to define each separately.
+       */
+
+      /** Data from react-docgen-typescript */
+      filesToWriteToDisk.push({
+        data,
+        dest: path.join(pluginDir, destDir, 'data.js'),
+        template: 'shared/objectMap',
+      });
+
+      filesToWriteToDisk.push({
+        data: data.props.map((item) => ({ id: item.name, level: 3, value: item.name })),
+        dest: path.join(pluginDir, destDir, 'toc-props.js'),
+        template: 'shared/objectMap',
+      });
+
+      /** Styles API data - extracted from *ClassNames exports */
+      if (data.styles && data.styles.selectors.length > 0) {
         filesToWriteToDisk.push({
-          data,
-          dest: path.join(pluginDir, destDir, 'data.js'),
+          data: data.styles,
+          dest: path.join(pluginDir, destDir, 'styles-data.js'),
           template: 'shared/objectMap',
         });
 
         filesToWriteToDisk.push({
-          data: data.props.map((item) => ({ id: item.name, level: 3, value: item.name })),
-          dest: path.join(pluginDir, destDir, 'toc-props.js'),
+          data: [{ id: 'selectors', level: 3, value: 'Selectors' }],
+          dest: path.join(pluginDir, destDir, 'toc-styles.js'),
           template: 'shared/objectMap',
         });
+      }
 
-        /** Styles API data - extracted from *ClassNames exports */
-        if (data.styles && data.styles.selectors.length > 0) {
-          filesToWriteToDisk.push({
-            data: data.styles,
-            dest: path.join(pluginDir, destDir, 'styles-data.js'),
-            template: 'shared/objectMap',
-          });
+      /** MDX file with PropsTable react component. Passes in props from js file in .docusaurus cache */
+      filesToWriteToDisk.push({
+        data,
+        dest: path.join(pluginDir, destDir, 'api.mdx'),
+        template: 'doc-item/api',
+      });
 
-          filesToWriteToDisk.push({
-            data: [{ id: 'selectors', level: 3, value: 'Selectors' }],
-            dest: path.join(pluginDir, destDir, 'toc-styles.js'),
-            template: 'shared/objectMap',
-          });
-        }
-
-        /** MDX file with PropsTable react component. Passes in props from js file in .docusaurus cache */
+      if (example) {
         filesToWriteToDisk.push({
-          data,
-          dest: path.join(pluginDir, destDir, 'api.mdx'),
-          template: 'doc-item/api',
+          data: { example },
+          dest: path.join(pluginDir, destDir, 'example.mdx'),
+          template: 'doc-item/example',
         });
-
-        if (example) {
-          filesToWriteToDisk.push({
-            data: { example },
-            dest: path.join(pluginDir, destDir, 'example.mdx'),
-            template: 'doc-item/example',
-          });
-        }
-      },
-    );
+      }
+    });
   });
+
+  saveDocgenCache(pluginDir, newCacheEntries);
 
   logger.preppingData();
 
