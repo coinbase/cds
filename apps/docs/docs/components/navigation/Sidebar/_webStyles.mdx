@@ -1,0 +1,63 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+import { LogoMark } from '@coinbase/cds-web/icons';
+import { Icon } from '@coinbase/cds-web/icons';
+import { Text } from '@coinbase/cds-web/typography';
+import { Pressable } from '@coinbase/cds-web/system';
+
+import webStylesData from ':docgen/web/navigation/Sidebar/styles-data';
+
+export const SidebarExample = ({ classNames }) => {
+  const sidebarItems = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+  const renderEnd = () => (
+    <Pressable
+      as="button"
+      background="bgPrimaryWash"
+      borderRadius={1000}
+      transparentWhileInactive
+      width="100%"
+    >
+      <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+        <Icon name="documentation" />
+        <Text as="span" font="headline" color="foreground">
+          End item
+        </Text>
+      </HStack>
+    </Pressable>
+  );
+  return (
+    <Sidebar
+      classNames={classNames}
+      logo={<LogoMark />}
+      renderEnd={renderEnd}
+      styles={{ end: { width: '100%' } }}
+    >
+      {sidebarItems.map((item, index) => (
+        <SidebarItem
+          key={item.title}
+          active={index === 0}
+          icon={item.icon}
+          title={item.title}
+          tooltipContent={item.title}
+        />
+      ))}
+    </Sidebar>
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Sidebar" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <SidebarExample classNames={classNames} />}
+</StylesExplorer>

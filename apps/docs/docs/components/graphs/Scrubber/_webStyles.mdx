@@ -1,0 +1,33 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { LineChart, Scrubber } from '@coinbase/cds-web-visualization';
+
+import webStylesData from ':docgen/web-visualization/chart/scrubber/Scrubber/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="Scrubber" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'Prices',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 8 }),
+      }}
+    >
+      <Scrubber classNames={classNames} idlePulse />
+    </LineChart>
+  )}
+</StylesExplorer>

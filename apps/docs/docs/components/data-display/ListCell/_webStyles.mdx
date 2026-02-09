@@ -1,0 +1,36 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { ListCell } from '@coinbase/cds-web/cells';
+import { Avatar } from '@coinbase/cds-web/media';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { CellHelperText } from '@coinbase/cds-web/cells/CellHelperText';
+
+import webStylesData from ':docgen/web/cells/ListCell/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="ListCell" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <ListCell
+      classNames={classNames}
+      accessory="arrow"
+      description="Description text"
+      detail="$12,345.00"
+      spacingVariant="condensed"
+      subtitle="Subtitle"
+      media={<Avatar src={assets.eth.imageUrl} size="m" />}
+      onClick={console.log}
+      title="List item"
+      variant="positive"
+      helperText={
+        <CellHelperText font="label2" paddingStart={6}>
+          This is a default helper message.
+        </CellHelperText>
+      }
+    />
+  )}
+</StylesExplorer>

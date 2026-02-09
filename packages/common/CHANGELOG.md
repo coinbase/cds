@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.43.2 (2/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Allow contenteditable elements to be focusable in Modals. [[#371](https://github.com/coinbase/cds/pull/371)]
+
+## 8.43.1 ((2/6/2026, 02:15 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.43.0 (2/6/2026 PST)
 
 #### 🚀 Updates

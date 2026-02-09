@@ -1,0 +1,24 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { ContentCell } from '@coinbase/cds-web/cells';
+import { Avatar } from '@coinbase/cds-web/media';
+
+import webStylesData from ':docgen/web/cells/ContentCell/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="ContentCell" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <ContentCell
+      classNames={classNames}
+      title="Content Item"
+      subtitle="Subtitle"
+      description="Description text"
+      media={<Avatar size="m" />}
+    />
+  )}
+</StylesExplorer>

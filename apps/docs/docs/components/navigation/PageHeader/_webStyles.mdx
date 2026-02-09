@@ -1,0 +1,23 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { PageHeader } from '@coinbase/cds-web/page';
+import { IconButton } from '@coinbase/cds-web/buttons';
+
+import webStylesData from ':docgen/web/page/PageHeader/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="PageHeader" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <PageHeader
+      classNames={classNames}
+      start={<IconButton transparent accessibilityLabel="Back" name="backArrow" />}
+      title="Page Title"
+      end={<IconButton transparent accessibilityLabel="Close" name="close" />}
+    />
+  )}
+</StylesExplorer>

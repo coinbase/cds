@@ -1,0 +1,25 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
+
+import webStylesData from ':docgen/web/alpha/tabbed-chips/TabbedChips/styles-data';
+
+export const TabbedChipsExample = ({ classNames }) => {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'recent', label: 'Recent' },
+    { id: 'favorites', label: 'Favorites' },
+    { id: 'archived', label: 'Archived' },
+  ];
+  return <TabbedChips classNames={classNames} defaultValue="all" tabs={tabs} width="100%" />;
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="TabbedChips" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <TabbedChipsExample classNames={classNames} />}
+</StylesExplorer>
