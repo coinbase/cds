@@ -247,16 +247,12 @@ function findStylesPropertyInTypeNode(
     // Use the AST's typeName to resolve the symbol directly (more reliable than
     // aliasSymbol which is not always preserved by the checker in all contexts).
     const refSymbol =
-      checker.getSymbolAtLocation(typeNode.typeName) ??
-      refType.aliasSymbol ??
-      refType.getSymbol();
+      checker.getSymbolAtLocation(typeNode.typeName) ?? refType.aliasSymbol ?? refType.getSymbol();
 
     if (refSymbol) {
       // Follow re-exports (aliases) to the actual declaration
       const resolved =
-        refSymbol.flags & ts.SymbolFlags.Alias
-          ? checker.getAliasedSymbol(refSymbol)
-          : refSymbol;
+        refSymbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(refSymbol) : refSymbol;
       const decls = resolved.getDeclarations();
       const aliasDecl = decls?.find(ts.isTypeAliasDeclaration);
       if (aliasDecl) {
