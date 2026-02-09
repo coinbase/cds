@@ -79,6 +79,15 @@ These are the projects you may be tasked to research:
 - Component Paths:
   - packages/react-aria-components/src/
 
+### Tamagui
+
+- Name: Tamagui
+- Docs: https://tamagui.dev/docs/intro/introduction
+- Repo: https://github.com/tamagui/tamagui.git
+- Branch: master
+- Component Paths:
+  - code/ui/
+
 ## Research Methodology
 
 Follow this systematic approach:

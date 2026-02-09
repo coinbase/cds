@@ -246,6 +246,11 @@ export type SelectControlProps<
   > &
   SelectState<Type, SelectOptionValue> & {
     /**
+     * Alignment of the value node.
+     * @default 'start'
+     */
+    align?: 'start' | 'center' | 'end';
+    /**
      * Determines if the control should have a default border.
      * @note focusedBorderWidth on the control still shows a border when focused by default.
      * @default true
@@ -408,6 +413,7 @@ export type SelectBaseProps<
     | 'disabled'
     | 'labelVariant'
     | 'endNode'
+    | 'align'
     | 'bordered'
   > &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &

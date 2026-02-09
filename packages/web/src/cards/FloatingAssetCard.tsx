@@ -73,6 +73,31 @@ const focusRingCss = css`
   }
 `;
 
+/**
+ * @deprecated Use `MediaCard` instead. FloatingAssetCard will be removed in a future major release.
+ *
+ * Migration guide:
+ * ```tsx
+ * // Before
+ * <FloatingAssetCard
+ *   title="Asset Title"
+ *   subtitle="Subtitle"
+ *   description="Description"
+ *   media={<RemoteImage ... />}
+ * />
+ *
+ * // After
+ * <MediaCard
+ *   title="Asset Title"
+ *   subtitle="Subtitle"
+ *   description="Description"
+ *   thumbnail={<RemoteImage ... />}
+ * />
+ * ```
+ *
+ * Note: The floating variation (media outside the card container) is no longer supported.
+ * MediaCard provides a contained layout with media placement options (start/end).
+ */
 export const FloatingAssetCard = ({
   className,
   title,

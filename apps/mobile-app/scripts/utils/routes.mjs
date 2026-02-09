@@ -201,6 +201,11 @@ export const routes = [
       require('@cbhq/cds-mobile/controls/__stories__/ControlGroup.stories').default,
   },
   {
+    key: 'DataCard',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/alpha/data-card/__stories__/DataCard.stories').default,
+  },
+  {
     key: 'DateInput',
     getComponent: () => require('@cbhq/cds-mobile/dates/__stories__/DateInput.stories').default,
   },
@@ -352,8 +357,17 @@ export const routes = [
       require('@cbhq/cds-mobile/animation/__stories__/LottieStatusAnimation.stories').default,
   },
   {
+    key: 'MediaCard',
+    getComponent: () => require('@cbhq/cds-mobile/cards/__stories__/MediaCard.stories').default,
+  },
+  {
     key: 'MediaChip',
     getComponent: () => require('@cbhq/cds-mobile/chips/__stories__/MediaChip.stories').default,
+  },
+  {
+    key: 'MessagingCard',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/cards/__stories__/MessagingCard.stories').default,
   },
   {
     key: 'ModalBackButton',
@@ -531,6 +545,12 @@ export const routes = [
     key: 'RollingNumber',
     getComponent: () =>
       require('@cbhq/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
+  },
+  {
+    key: 'Scrubber',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/scrubber/__stories__/Scrubber.stories')
+        .default,
   },
   {
     key: 'SearchInput',

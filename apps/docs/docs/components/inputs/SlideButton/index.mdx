@@ -14,6 +14,7 @@ import { SlideButtonBanner } from '@site/src/components/page/ComponentBanner/Sli
 import mobilePropsToc from ':docgen/mobile/buttons/SlideButton/toc-props';
 
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import mobileMetadata from './mobileMetadata.json';
 
@@ -25,8 +26,10 @@ import mobileMetadata from './mobileMetadata.json';
   />
   <ComponentTabsContainer
     mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
     mobileExamples={<MobileExamples />}
     mobileExamplesToc={mobileExamplesToc}
     mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
   />
 </VStack>

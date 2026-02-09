@@ -158,18 +158,20 @@ export const Line = memo<LineProps>(
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
       useCartesianChartContext();
 
+    const isReady = !!getXScale();
+
     // Animation state for delayed point rendering (matches web timing)
     const pointsOpacity = useSharedValue(animate ? 0 : 1);
 
     // Delay point appearance until after path enter animation completes
     useEffect(() => {
-      if (animate) {
+      if (animate && isReady) {
         pointsOpacity.value = withDelay(
           accessoryFadeTransitionDelay,
           withTiming(1, { duration: accessoryFadeTransitionDuration }),
         );
       }
-    }, [animate, pointsOpacity]);
+    }, [animate, isReady, pointsOpacity]);
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const gradient = useMemo(

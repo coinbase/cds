@@ -24,6 +24,7 @@ export const DefaultComboboxControl = <
   placeholder,
   open,
   setOpen,
+  align,
   disabled,
   options,
   searchText,
@@ -45,9 +46,15 @@ export const DefaultComboboxControl = <
     return label;
   }, [hasValue, accessibilityLabel, placeholder]);
 
+  const valueAlignment = useMemo(
+    () => (align === 'end' ? 'right' : align === 'center' ? 'center' : 'left'),
+    [align],
+  );
+
   return (
     <SelectControlComponent
       accessibilityLabel={computedAccessibilityLabel}
+      align={align}
       disabled={disabled}
       open={open}
       options={options}
@@ -73,17 +80,18 @@ export const DefaultComboboxControl = <
                 marginTop: hasValue ? 0 : -24,
                 marginBottom: hasValue ? -12 : -24,
                 paddingTop: hasValue ? 8 : 0,
-                // This is constrained by the parent container's width. The width is large
+                // This is constrained by the parent container's width. The width is 100%
                 // to ensure it grows to fill the control
                 width: open ? '100%' : undefined,
               }}
+              textAlign={valueAlignment}
               value={searchText}
             />
           </HStack>
         ) : (
           <>
             {hasValue ? null : (
-              <Text color="fgMuted" font="body" paddingY={0}>
+              <Text color="fgMuted" font="body" paddingY={0} textAlign={valueAlignment}>
                 {typeof placeholder === 'string' ? placeholder : ''}
               </Text>
             )}

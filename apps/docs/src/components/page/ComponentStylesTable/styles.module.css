@@ -1,0 +1,53 @@
+.stylesTable {
+  margin-bottom: 0;
+}
+
+.stylesTableHead {
+  background-color: transparent;
+}
+
+.stylesTableCell {
+  vertical-align: top;
+}
+
+/* Two columns: Desktop 30/70, Tablet 40/60, Mobile 50/50 */
+.thTwoColSelector {
+  width: 30%;
+}
+
+.thTwoColDescription {
+  width: 70%;
+}
+
+@media (max-width: 1024px) {
+  .thTwoColSelector {
+    width: 40%;
+  }
+
+  .thTwoColDescription {
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  .thTwoColSelector,
+  .thTwoColDescription {
+    width: 50%;
+  }
+}
+
+/* Three columns: Desktop 25/25/50, Tablet and Mobile 1/3 each */
+.thThreeColSmall {
+  width: 25%;
+}
+
+.thThreeColLarge {
+  width: 50%;
+}
+
+@media (max-width: 1024px) {
+  .thThreeColSmall,
+  .thThreeColLarge {
+    width: 33.33%;
+  }
+}

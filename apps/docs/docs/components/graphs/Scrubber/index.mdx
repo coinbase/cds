@@ -15,6 +15,7 @@ import mobilePropsToc from ':docgen/mobile-visualization/chart/scrubber/Scrubber
 
 import WebPropsTable from './_webPropsTable.mdx';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import webMetadata from './webMetadata.json';
@@ -24,12 +25,14 @@ import mobileMetadata from './mobileMetadata.json';
   <ComponentHeader title="Scrubber" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
     webExamples={<WebExamples />}
     mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
     webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
     webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
     mobilePropsToc={mobilePropsToc}
   />
 </VStack>
