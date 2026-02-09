@@ -147,11 +147,10 @@ When using negative `margin*` props to create a bleed effect, explicitly set `wi
     styleVariant="contextual"
     title="Bleeding banner"
     variant="informational"
-    width="calc(100% + var(--space-4))"
+    width="auto"
   >
     <Text as="p" font="label2">
-      Use a calculated width that matches the negative margin so the Banner extends past the
-      container edges.
+      Use with prop to override the default 100% width
     </Text>
   </Banner>
 </VStack>
