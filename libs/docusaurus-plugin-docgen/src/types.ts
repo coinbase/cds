@@ -133,6 +133,8 @@ export type PreProcessedPropItem = Omit<PropItem, 'defaultValue' | 'parent' | 't
 export type ProcessedDoc = Omit<PreProcessedDoc, 'props' | 'expression'> & {
   props: ProcessedPropItem[];
   parentTypes: Record<string, string[]>;
+  /** Styles API data extracted from *ClassNames exports */
+  styles?: StylesData;
 };
 
 export type ProcessedPropItem = Omit<PreProcessedPropItem, 'type'> & {
@@ -220,6 +222,30 @@ export type OnProcessDoc = (
 export type SharedTypeAliases = Record<string, string>;
 export type SharedParentTypes = Record<string, Record<string, ProcessedPropItem>>;
 export type Projects = DocgenProjectMetadata[];
+
+/* -------------------------------------------------------------------------- */
+/*                              Styles API Types                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Represents a style selector extracted from a component's *ClassNames export.
+ */
+export type StyleSelector = {
+  /** The selector key (e.g., "root", "start", "content") */
+  selector: string;
+  /** The static CSS class name (e.g., "cds-NavigationBar", "cds-NavigationBar-start") */
+  className: string;
+  /** Description from JSDoc comment */
+  description: string;
+};
+
+/**
+ * Styles API data extracted from a component.
+ */
+export type StylesData = {
+  /** Array of style selectors for the component */
+  selectors: StyleSelector[];
+};
 
 export type DocgenProjectMetadata = {
   label: string;

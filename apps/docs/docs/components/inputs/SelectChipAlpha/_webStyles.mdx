@@ -1,0 +1,37 @@
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { SelectChip } from '@coinbase/cds-web/alpha/select-chip';
+
+import webStylesData from ':docgen/web/alpha/select-chip/SelectChip/styles-data';
+
+export const SelectChipExample = ({ classNames }) => {
+  const exampleOptions = [
+    { value: null, label: 'Clear selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      classNames={classNames}
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="SelectChip" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <SelectChipExample classNames={classNames} />}
+</StylesExplorer>

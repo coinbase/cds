@@ -1,0 +1,15 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Chip } from '@coinbase/cds-web/chips';
+
+import webStylesData from ':docgen/web/chips/Chip/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="Chip" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <Chip classNames={classNames}>Chip</Chip>}
+</StylesExplorer>

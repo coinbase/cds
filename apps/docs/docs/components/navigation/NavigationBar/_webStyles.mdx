@@ -1,0 +1,32 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Avatar } from '@coinbase/cds-web/media';
+import { HStack } from '@coinbase/cds-web/layout';
+import { NavigationBar, NavigationTitle } from '@coinbase/cds-web/navigation';
+import { IconButton } from '@coinbase/cds-web/buttons';
+
+import webStylesData from ':docgen/web/navigation/NavigationBar/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="NavigationBar" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <NavigationBar
+      position="relative"
+      classNames={classNames}
+      start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+      end={
+        <HStack gap={1} alignItems="center">
+          <IconButton name="bell" accessibilityLabel="Notifications" />
+          <Avatar size="xl" />
+        </HStack>
+      }
+    >
+      <NavigationTitle>Dashboard</NavigationTitle>
+    </NavigationBar>
+  )}
+</StylesExplorer>

@@ -1,0 +1,86 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import {
+  ContentCard,
+  ContentCardHeader,
+  ContentCardBody,
+  ContentCardFooter,
+} from '@coinbase/cds-web/cards/ContentCard';
+import { Avatar } from '@coinbase/cds-web/media';
+import { IconButton, Button } from '@coinbase/cds-web/buttons';
+import { HStack, VStack, Box } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
+import webHeaderStylesData from ':docgen/web/cards/ContentCard/ContentCardHeader/styles-data';
+import webBodyStylesData from ':docgen/web/cards/ContentCard/ContentCardBody/styles-data';
+
+## ContentCardHeader
+
+### Selectors
+
+<ComponentStylesTable componentName="ContentCardHeader" styles={webHeaderStylesData} />
+
+### Explorer
+
+<StylesExplorer selectors={webHeaderStylesData.selectors}>
+  {(classNames) => (
+    <ContentCard maxWidth={375}>
+      <ContentCardHeader
+        classNames={classNames}
+        thumbnail={<Avatar size="l" />}
+        title="CoinDesk"
+        subtitle="News"
+        actions={
+          <HStack gap={0}>
+            <IconButton transparent accessibilityLabel="Favorite" name="star" variant="secondary" />
+            <IconButton
+              transparent
+              accessibilityLabel="More options"
+              name="more"
+              variant="secondary"
+            />
+          </HStack>
+        }
+      />
+    </ContentCard>
+  )}
+</StylesExplorer>
+
+## ContentCardBody
+
+### Selectors
+
+<ComponentStylesTable componentName="ContentCardBody" styles={webBodyStylesData} />
+
+### Explorer
+
+#### Vertical Layout (default)
+
+<StylesExplorer selectors={webBodyStylesData.selectors}>
+  {(classNames) => (
+    <ContentCard maxWidth={375}>
+      <ContentCardBody
+        classNames={classNames}
+        title="Ethereum Network Shatters Records"
+        description="This is a description of the record-breaking hashrate milestone."
+        media={<Box background="bgSecondary" borderRadius={500} height={180} width="100%" />}
+      />
+    </ContentCard>
+  )}
+</StylesExplorer>
+
+#### Horizontal Layout
+
+<StylesExplorer selectors={webBodyStylesData.selectors}>
+  {(classNames) => (
+    <ContentCard maxWidth={375}>
+      <ContentCardBody
+        classNames={classNames}
+        title="Media at end"
+        description="The media appears to the right of the text content."
+        media={<Box background="bgSecondary" height="100%" width="100%" />}
+        mediaPlacement="end"
+      />
+    </ContentCard>
+  )}
+</StylesExplorer>

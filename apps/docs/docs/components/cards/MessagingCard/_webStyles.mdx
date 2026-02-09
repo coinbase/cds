@@ -1,0 +1,31 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { MessagingCard } from '@coinbase/cds-web/cards';
+import { Pictogram } from '@coinbase/cds-web/illustrations';
+
+import webStylesData from ':docgen/web/cards/MessagingCard/index/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="MessagingCard" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <MessagingCard
+      classNames={classNames}
+      type="nudge"
+      title="Earn more crypto"
+      description="You've got unstaked crypto. Stake it now to earn more."
+      tag="New"
+      action="Start earning"
+      onActionButtonClick={() => {}}
+      onDismissButtonClick={() => {}}
+      dismissButtonAccessibilityLabel="Dismiss"
+      media={<Pictogram dimension="64x64" name="key" />}
+      mediaPlacement="end"
+      width={360}
+    />
+  )}
+</StylesExplorer>

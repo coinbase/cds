@@ -1,0 +1,40 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Stepper } from '@coinbase/cds-web/stepper';
+
+import webStylesData from ':docgen/web/stepper/Stepper/styles-data';
+
+export const StepperExample = ({ classNames, direction }) => {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    {
+      id: '2',
+      label: 'Personal Information',
+      subSteps: [
+        { id: '2a', label: 'Contact Info' },
+        { id: '2b', label: 'Address' },
+      ],
+    },
+    { id: '3', label: 'Payment Method' },
+    { id: '4', label: 'Review & Submit' },
+  ];
+  return <Stepper direction={direction} activeStepId="2" steps={steps} classNames={classNames} />;
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Stepper" styles={webStylesData} />
+
+## Explorer
+
+### Horizontal
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <StepperExample classNames={classNames} direction="horizontal" />}
+</StylesExplorer>
+
+### Vertical
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <StepperExample classNames={classNames} direction="vertical" />}
+</StylesExplorer>

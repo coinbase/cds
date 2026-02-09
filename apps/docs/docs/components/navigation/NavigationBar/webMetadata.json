@@ -10,12 +10,12 @@
       "url": "/components/navigation/NavigationTitle/"
     },
     {
-      "label": "AvatarButton",
-      "url": "/components/inputs/AvatarButton/"
-    },
-    {
       "label": "TabNavigation",
       "url": "/components/navigation/TabNavigation/"
+    },
+    {
+      "label": "Sidebar",
+      "url": "/components/navigation/Sidebar/"
     }
   ],
   "dependencies": []
