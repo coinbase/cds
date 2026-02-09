@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.19 (2/9/2026 PST)
+
+#### 🚀 Updates
+
+- Enhance chart transition props on web. [[#381](https://github.com/coinbase/cds/pull/381)] [DEX2-898]
+
 ## 3.4.0-beta.18 (2/8/2026 PST)
 
 This is an artificial version bump with no new change.

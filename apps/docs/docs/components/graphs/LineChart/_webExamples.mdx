@@ -390,7 +390,11 @@ function Points() {
 
 ## Animations
 
-You can configure chart transitions using `transition` on LineChart and `beaconTransitions` on [Scrubber](/components/graphs/Scrubber). You can also disable animations by setting the `animate` on LineChart to `false`.
+You can configure chart transitions using `transition` on LineChart and `beaconTransitions` on [Scrubber](/components/graphs/Scrubber). Use `enter` for the clip enter animation and `update` for path morphing. Set either to `null` to disable that animation.
+
+:::note Deprecation
+Passing a single Transition object to `transition` or using the `animate` prop is deprecated. Prefer `transition={{ enter, update }}` and set `enter` or `update` to `null` to disable.
+:::
 
 ```jsx live
 function Transitions() {
@@ -514,7 +518,10 @@ function Transitions() {
           AreaComponent={MyGradient}
           seriesId="prices"
           strokeWidth={3}
-          transition={myTransitionConfig}
+          transition={{
+            enter: { duration: 0.6 },
+            update: myTransitionConfig,
+          }}
         />
         <Scrubber
           hideOverlay

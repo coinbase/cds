@@ -1,6 +1,14 @@
 import { renderHook } from '@testing-library/react-hooks';
+import type { Transition } from 'framer-motion';
 
-import { defaultTransition, usePathTransition } from '../transition';
+import {
+  defaultEnterTransition,
+  defaultTransition,
+  normalizePathTransitions,
+  pathEnterTransitionDuration,
+  resolvePathTransitions,
+  usePathTransition,
+} from '../transition';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => {
@@ -83,6 +91,52 @@ describe('accessory transition constants', () => {
     expect(accessoryFadeTransitionDelay).toBeDefined();
     expect(typeof accessoryFadeTransitionDelay).toBe('number');
     expect(accessoryFadeTransitionDelay).toBeGreaterThan(0);
+  });
+});
+
+describe('path transition constants', () => {
+  it('should export pathEnterTransitionDuration', () => {
+    expect(pathEnterTransitionDuration).toBeDefined();
+    expect(typeof pathEnterTransitionDuration).toBe('number');
+    expect(pathEnterTransitionDuration).toBeGreaterThan(0);
+  });
+});
+
+describe('path transition helpers', () => {
+  it('should normalize legacy transition to update', () => {
+    const legacy: Transition = { duration: 0.2, type: 'tween' };
+    expect(normalizePathTransitions(legacy)).toEqual({ update: legacy });
+  });
+
+  it('should resolve defaults when transition is undefined', () => {
+    const resolved = resolvePathTransitions();
+    expect(resolved.enter).toEqual(defaultEnterTransition);
+    expect(resolved.update).toEqual(defaultTransition);
+  });
+
+  it('should resolve legacy transition as update with default enter', () => {
+    const legacy: Transition = { duration: 0.3, type: 'tween' };
+    const resolved = resolvePathTransitions(legacy);
+    expect(resolved.enter).toEqual(defaultEnterTransition);
+    expect(resolved.update).toEqual(legacy);
+  });
+
+  it('should allow enter and update overrides', () => {
+    const enter: Transition = { duration: 0 };
+    const update: Transition = { type: 'spring', damping: 10, stiffness: 200 };
+    const resolved = resolvePathTransitions({ enter, update });
+    expect(resolved.enter).toEqual(enter);
+    expect(resolved.update).toEqual(update);
+  });
+
+  it('should allow disabling enter or update with null', () => {
+    const resolvedEnterDisabled = resolvePathTransitions({ enter: null });
+    expect(resolvedEnterDisabled.enter).toBeNull();
+    expect(resolvedEnterDisabled.update).toEqual(defaultTransition);
+
+    const resolvedUpdateDisabled = resolvePathTransitions({ update: null });
+    expect(resolvedUpdateDisabled.enter).toEqual(defaultEnterTransition);
+    expect(resolvedUpdateDisabled.update).toBeNull();
   });
 });
 

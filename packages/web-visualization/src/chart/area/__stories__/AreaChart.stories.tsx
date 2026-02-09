@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
@@ -20,6 +21,73 @@ const Example: React.FC<
       </Text>
       {description}
       {children}
+    </VStack>
+  );
+};
+
+const TransitionModes = () => {
+  const [data, setData] = useState<number[]>(() => [28, 52, 46, 68, 60, 74, 66, 82]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((currentData) => {
+        const lastValue = currentData[currentData.length - 1] ?? 0;
+        const delta = (Math.random() - 0.5) * 18;
+        const nextValue = Math.max(10, Math.min(90, Math.round(lastValue + delta)));
+        return [...currentData.slice(1), nextValue];
+      });
+    }, 900);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const series = useMemo(
+    () => [
+      {
+        id: 'traffic',
+        data,
+        color: 'var(--color-accentBoldBlue)',
+      },
+    ],
+    [data],
+  );
+
+  const enterTransition = useMemo(() => ({ duration: 0.35 }), []);
+  const updateTransition = useMemo(() => ({ type: 'spring', stiffness: 700, damping: 24 }), []);
+  const transitionModes = useMemo(
+    () => [
+      {
+        label: 'Enter + Update',
+        transition: { enter: enterTransition, update: updateTransition },
+      },
+      {
+        label: 'Enter Only',
+        transition: { enter: enterTransition, update: null },
+      },
+      {
+        label: 'Update Only',
+        transition: { enter: null, update: updateTransition },
+      },
+    ],
+    [enterTransition, updateTransition],
+  );
+
+  return (
+    <VStack gap={2}>
+      {transitionModes.map((mode) => (
+        <VStack key={mode.label} gap={1}>
+          <Text color="fgMuted" font="label2">
+            {mode.label}
+          </Text>
+          <AreaChart
+            height={140}
+            inset={0}
+            series={series}
+            transition={mode.transition}
+            yAxis={{ domain: { min: 0, max: 100 } }}
+          />
+        </VStack>
+      ))}
     </VStack>
   );
 };
@@ -77,6 +145,9 @@ export const All = () => {
         >
           <Scrubber />
         </AreaChart>
+      </Example>
+      <Example title="Transitions">
+        <TransitionModes />
       </Example>
       <Example title="Negative Values">
         <AreaChart

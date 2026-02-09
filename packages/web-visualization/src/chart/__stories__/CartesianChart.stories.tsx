@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useId, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
@@ -46,6 +46,74 @@ const MultipleChart = () => {
         <Area seriesId="bar" type="dotted" />
         <Line curve="natural" seriesId="line" />
       </CartesianChart>
+    </VStack>
+  );
+};
+
+const TransitionShowcase = () => {
+  const [data, setData] = useState<number[]>(() => [22, 48, 36, 64, 58, 74, 66, 80, 72]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((currentData) => {
+        const lastValue = currentData[currentData.length - 1] ?? 0;
+        const delta = (Math.random() - 0.5) * 16;
+        const nextValue = Math.max(10, Math.min(90, Math.round(lastValue + delta)));
+        return [...currentData.slice(1), nextValue];
+      });
+    }, 900);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const series = useMemo(
+    () => [
+      {
+        id: 'trend',
+        data,
+      },
+    ],
+    [data],
+  );
+
+  const enterTransition = useMemo(() => ({ duration: 0.35 }), []);
+  const updateTransition = useMemo(() => ({ type: 'spring', stiffness: 700, damping: 24 }), []);
+  const transitionModes = useMemo(
+    () => [
+      {
+        label: 'Enter + Update',
+        transition: { enter: enterTransition, update: updateTransition },
+      },
+      {
+        label: 'Enter Only',
+        transition: { enter: enterTransition, update: null },
+      },
+      {
+        label: 'Update Only',
+        transition: { enter: null, update: updateTransition },
+      },
+    ],
+    [enterTransition, updateTransition],
+  );
+
+  return (
+    <VStack gap={2}>
+      {transitionModes.map((mode) => (
+        <VStack key={mode.label} gap={1}>
+          <Text color="fgMuted" font="label2">
+            {mode.label}
+          </Text>
+          <CartesianChart
+            height={140}
+            inset={0}
+            series={series}
+            transition={mode.transition}
+            yAxis={{ domain: { min: 0, max: 100 } }}
+          >
+            <Line seriesId="trend" />
+          </CartesianChart>
+        </VStack>
+      ))}
     </VStack>
   );
 };
@@ -569,6 +637,9 @@ export const Miscellaneous = () => {
     <VStack gap={2}>
       <Example title="Multiple Types">
         <MultipleChart />
+      </Example>
+      <Example title="Transitions">
+        <TransitionShowcase />
       </Example>
       <Example title="Earnings History">
         <EarningsHistory />

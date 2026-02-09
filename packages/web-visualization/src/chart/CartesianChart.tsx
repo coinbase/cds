@@ -23,6 +23,7 @@ import {
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
   type LegendPosition,
+  type PathTransitionConfig,
   type Series,
   useTotalAxisPadding,
 } from './utils';
@@ -47,8 +48,13 @@ export type CartesianChartBaseProps = BoxBaseProps &
     /**
      * Whether to animate the chart.
      * @default true
+     * @deprecated Use `transition` to control enter/update animations.
      */
     animate?: boolean;
+    /**
+     * Transition configuration for enter/update animations.
+     */
+    transition?: PathTransitionConfig;
     /**
      * Configuration for x-axis.
      */
@@ -125,6 +131,7 @@ export const CartesianChart = memo(
         series,
         children,
         animate = true,
+        transition,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
@@ -372,6 +379,7 @@ export const CartesianChart = memo(
           getSeries,
           getSeriesData: getStackedSeriesData,
           animate,
+          transition,
           width: chartWidth,
           height: chartHeight,
           getXAxis,
@@ -389,6 +397,7 @@ export const CartesianChart = memo(
           getSeries,
           getStackedSeriesData,
           animate,
+          transition,
           chartWidth,
           chartHeight,
           getXAxis,

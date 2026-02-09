@@ -4,6 +4,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import type { AxisConfig } from './axis';
 import type { Series } from './chart';
 import type { ChartScaleFunction } from './scale';
+import type { PathTransitionConfig } from './transition';
 
 /**
  * Context value for Cartesian (X/Y) coordinate charts.
@@ -27,8 +28,13 @@ export type CartesianChartContextValue = {
   getSeriesData: (seriesId?: string) => Array<[number, number] | null> | undefined;
   /**
    * Whether to animate the chart.
+   * @deprecated Use `transition` to control enter/update animations.
    */
   animate: boolean;
+  /**
+   * Transition configuration for enter/update animations.
+   */
+  transition?: PathTransitionConfig;
   /**
    * Width of the chart SVG.
    */

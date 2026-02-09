@@ -132,11 +132,15 @@ You can have different area styles for each series.
 
 ## Animations
 
-You can configure chart transitions using the `transition` prop.
+You can configure chart transitions using `transition={{ enter, update }}`. Use `enter` for the clip enter animation and `update` for path morphing. Set either to `null` to disable that animation.
+
+:::note Deprecation
+Passing a single Transition object to `transition` or using the `animate` prop is deprecated. Prefer `transition={{ enter, update }}`.
+:::
 
 ### Customized Transitions
 
-You can pass in a custom spring based transition to your `AreaChart` for a custom transition.
+You can pass separate enter and update transitions to control how the area reveals and morphs over time.
 
 ```jsx live
 function AnimatedStackedAreas() {
@@ -147,7 +151,9 @@ function AnimatedStackedAreas() {
   const maxStepOffset = 10000;
   const updateInterval = 500;
   const seriesSpacing = 2000;
-  const myTransition = { type: 'spring', stiffness: 700, damping: 20 };
+  const enterTransition = { duration: 0.35 };
+  const updateTransition = { type: 'spring', stiffness: 700, damping: 20 };
+  const transitions = { enter: enterTransition, update: updateTransition };
 
   const seriesConfig = [
     { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
@@ -230,7 +236,7 @@ function AnimatedStackedAreas() {
         type="dotted"
         showLines
         AreaComponent={MemoizedDottedArea}
-        transition={myTransition}
+        transition={transitions}
         inset={0}
         showYAxis
         yAxis={{
@@ -249,7 +255,7 @@ function AnimatedStackedAreas() {
 
 ### Disable Animations
 
-You can also disable animations by setting the `animate` prop to `false`.
+You can disable animations by setting `transition={{ enter: null, update: null }}`. The `animate={false}` prop is deprecated but still supported.
 
 ```jsx live
 function AnimatedStackedAreas() {
@@ -337,7 +343,7 @@ function AnimatedStackedAreas() {
 
     return (
       <AreaChart
-        animate={false}
+        transition={{ enter: null, update: null }}
         overflow="visible"
         stacked
         height={{ base: 200, tablet: 250, desktop: 300 }}

@@ -1,19 +1,24 @@
-import { memo, useId, useMemo } from 'react';
+import { memo, useEffect, useId, useMemo, useRef } from 'react';
 import type { SVGProps } from 'react';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition } from 'framer-motion';
 
-import { usePathTransition } from './utils/transition';
+import {
+  type PathTransitionConfig,
+  resolvePathTransitions,
+  usePathTransition,
+} from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 
 /**
  * Duration in seconds for path enter transition.
  */
-export const pathEnterTransitionDuration = 0.5;
+export { pathEnterTransitionDuration } from './utils/transition';
 
 export type PathBaseProps = SharedProps & {
   /**
    * Whether to animate this path. Overrides the animate prop on the Chart component.
+   * @deprecated Use `transition` to control enter/update animations.
    */
   animate?: boolean;
 };
@@ -54,11 +59,28 @@ export type PathProps = PathBaseProps &
      * @example
      * // Spring animation
      * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+     *
+     * @deprecated Passing a single Transition is deprecated. Use { enter, update }.
+     *
+     * @example
+     * // Enter/update transitions
+     * transition={{
+     *   enter: { duration: 0.3 },
+     *   update: { type: 'spring', damping: 20, stiffness: 300 },
+     * }}
+     *
+     * @example
+     * // Disable enter animation
+     * transition={{ enter: null }}
      */
-    transition?: Transition;
+    transition?: PathTransitionConfig;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate'>>(({ d = '', transition, ...pathProps }) => {
+type AnimatedPathProps = Omit<PathProps, 'animate'> & {
+  transition?: Transition;
+};
+
+const AnimatedPath = memo<AnimatedPathProps>(({ d = '', transition, ...pathProps }) => {
   const interpolatedPath = usePathTransition({
     currentPath: d,
     transition,
@@ -73,6 +95,15 @@ export const Path = memo<PathProps>(
     const context = useCartesianChartContext();
     const rect = clipRect !== undefined ? clipRect : context.drawingArea;
     const animate = animateProp ?? context.animate;
+    const transitionConfig: PathTransitionConfig | undefined = transition ?? context.transition;
+    const resolvedTransitions = useMemo(
+      () => resolvePathTransitions(transitionConfig),
+      [transitionConfig],
+    );
+    const shouldAnimateEnter = animate && resolvedTransitions.enter !== null;
+    const shouldAnimateUpdate = animate && resolvedTransitions.update !== null;
+    const enterTransitionRef = useRef<Transition | null>(resolvedTransitions.enter);
+    const hasAnimatedEnterRef = useRef(false);
 
     // The clip offset provides extra padding to prevent path from being cut off
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
@@ -84,13 +115,19 @@ export const Path = memo<PathProps>(
         hidden: { width: 0 },
         visible: {
           width: rect.width + totalOffset,
-          transition: {
-            type: 'timing',
-            duration: pathEnterTransitionDuration,
-          },
         },
       };
     }, [rect, totalOffset]);
+
+    useEffect(() => {
+      enterTransitionRef.current = resolvedTransitions.enter;
+    }, [resolvedTransitions.enter]);
+
+    useEffect(() => {
+      if (!shouldAnimateEnter) {
+        hasAnimatedEnterRef.current = false;
+      }
+    }, [shouldAnimateEnter]);
 
     const clipPath = useMemo(
       () => (rect !== null ? `url(#${clipPathId})` : undefined),
@@ -102,7 +139,7 @@ export const Path = memo<PathProps>(
         {rect !== null && (
           <defs>
             <clipPath id={clipPathId}>
-              {!animate ? (
+              {!shouldAnimateEnter ? (
                 <rect
                   height={rect.height + totalOffset}
                   width={rect.width + totalOffset}
@@ -113,7 +150,11 @@ export const Path = memo<PathProps>(
                 <motion.rect
                   animate="visible"
                   height={rect.height + totalOffset}
-                  initial="hidden"
+                  initial={hasAnimatedEnterRef.current ? false : 'hidden'}
+                  onAnimationComplete={() => {
+                    hasAnimatedEnterRef.current = true;
+                  }}
+                  transition={enterTransitionRef.current ?? undefined}
                   variants={clipPathAnimation}
                   x={rect.x - clipOffset}
                   y={rect.y - clipOffset}
@@ -122,10 +163,15 @@ export const Path = memo<PathProps>(
             </clipPath>
           </defs>
         )}
-        {!animate ? (
+        {!shouldAnimateUpdate ? (
           <path clipPath={clipPath} d={d} {...pathProps} />
         ) : (
-          <AnimatedPath clipPath={clipPath} d={d} transition={transition} {...pathProps} />
+          <AnimatedPath
+            clipPath={clipPath}
+            d={d}
+            transition={resolvedTransitions.update ?? undefined}
+            {...pathProps}
+          />
         )}
       </>
     );

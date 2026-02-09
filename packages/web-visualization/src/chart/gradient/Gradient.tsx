@@ -1,9 +1,10 @@
 import { memo, useMemo } from 'react';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { GradientDefinition } from '../utils';
+import type { GradientDefinition, PathTransitionConfig } from '../utils';
 import { getGradientConfig } from '../utils/gradient';
+import { resolvePathTransitions } from '../utils/transition';
 
 export type GradientBaseProps = {
   /**
@@ -30,8 +31,10 @@ export type GradientProps = GradientBaseProps & {
   animate?: boolean;
   /**
    * Transition configuration for animation.
+   *
+   * @deprecated Passing a single Transition is deprecated. Use { enter, update }.
    */
-  transition?: Transition;
+  transition?: PathTransitionConfig;
 };
 
 /**
@@ -42,6 +45,12 @@ export const Gradient = memo<GradientProps>(
   ({ id, gradient, yAxisId, animate: animateProp, transition }) => {
     const context = useCartesianChartContext();
     const animate = animateProp ?? context.animate;
+    const transitionConfig = transition ?? context.transition;
+    const resolvedTransitions = useMemo(
+      () => resolvePathTransitions(transitionConfig),
+      [transitionConfig],
+    );
+    const shouldAnimateUpdate = animate && resolvedTransitions.update !== null;
 
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
@@ -105,7 +114,7 @@ export const Gradient = memo<GradientProps>(
           const offset = `${stop.offset * 100}%`;
           const opacity = stop.opacity;
 
-          if (!animate) {
+          if (!shouldAnimateUpdate) {
             return (
               <stop
                 key={`${id}-stop-${index}`}
@@ -127,7 +136,7 @@ export const Gradient = memo<GradientProps>(
               }}
               stopColor={stop.color}
               stopOpacity={opacity ?? 1}
-              transition={transition}
+              transition={resolvedTransitions.update ?? undefined}
             />
           );
         })}

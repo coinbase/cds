@@ -1871,7 +1871,10 @@ export const Transitions = () => {
           AreaComponent={MyGradient}
           seriesId="prices"
           strokeWidth={3}
-          transition={myTransitionConfig}
+          transition={{
+            enter: { duration: 0.6 },
+            update: myTransitionConfig,
+          }}
         />
         <Scrubber
           hideOverlay

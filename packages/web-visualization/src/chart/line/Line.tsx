@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
@@ -11,11 +11,14 @@ import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
   type ChartPathCurveType,
+  defaultTransition,
   evaluateGradientAtValue,
   getGradientConfig,
   getLineData,
   getLinePath,
   type GradientDefinition,
+  type PathTransitionConfig,
+  resolvePathTransitions,
 } from '../utils';
 
 import { DottedLine } from './DottedLine';
@@ -105,6 +108,7 @@ export type LineBaseProps = SharedProps & {
   /**
    * Whether to animate the line.
    * Overrides the animate value from the chart context.
+   * @deprecated Use `transition` to control enter/update animations.
    */
   animate?: boolean;
 };
@@ -112,8 +116,10 @@ export type LineBaseProps = SharedProps & {
 export type LineProps = LineBaseProps & {
   /**
    * Transition configuration for line animations.
+   *
+   * @deprecated Passing a single Transition is deprecated. Use { enter, update }.
    */
-  transition?: Transition;
+  transition?: PathTransitionConfig;
   /**
    * Handler for when a point is clicked.
    * Passed through to Point components rendered via points.
@@ -172,10 +178,28 @@ export const Line = memo<LineProps>(
     connectNulls,
     transition,
     gradient: gradientProp,
+    animate: animateProp,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
-      useCartesianChartContext();
+    const {
+      animate: contextAnimate,
+      transition: chartTransition,
+      getSeries,
+      getSeriesData,
+      getXScale,
+      getYScale,
+      getXAxis,
+      getYAxis,
+    } = useCartesianChartContext();
+
+    const animate = animateProp ?? contextAnimate;
+    const transitionConfig = transition ?? chartTransition;
+    const resolvedTransitions = useMemo(
+      () => resolvePathTransitions(transitionConfig),
+      [transitionConfig],
+    );
+    const shouldAnimateEnter = animate && resolvedTransitions.enter !== null;
+    const shouldAnimateUpdate = animate && resolvedTransitions.update !== null;
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const gradient = useMemo(
@@ -256,6 +280,7 @@ export const Line = memo<LineProps>(
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
+            animate={animate}
             baseline={areaBaseline}
             connectNulls={connectNulls}
             curve={curve}
@@ -263,23 +288,24 @@ export const Line = memo<LineProps>(
             fillOpacity={opacity}
             gradient={gradient}
             seriesId={seriesId}
-            transition={transition}
+            transition={transitionConfig}
             type={areaType}
           />
         )}
         <LineComponent
+          animate={animate}
           d={path}
           gradient={gradient}
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
-          transition={transition}
+          transition={transitionConfig}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
         {points && (
           <motion.g
             data-component="line-points-group"
-            {...(animate
+            {...(shouldAnimateEnter
               ? {
                   animate: {
                     opacity: 1,
@@ -331,8 +357,9 @@ export const Line = memo<LineProps>(
                 return (
                   <Point
                     key={`${seriesId}-${index}`}
+                    animate={shouldAnimateUpdate}
                     onClick={onPointClick}
-                    transition={transition}
+                    transition={resolvedTransitions.update ?? defaultTransition}
                     {...defaults}
                   />
                 );
@@ -348,8 +375,9 @@ export const Line = memo<LineProps>(
               return (
                 <Point
                   key={`${seriesId}-${index}`}
+                  animate={shouldAnimateUpdate}
                   onClick={pointConfig.onClick ?? onPointClick}
-                  transition={transition}
+                  transition={resolvedTransitions.update ?? defaultTransition}
                   {...defaults}
                   {...pointConfig}
                 />
