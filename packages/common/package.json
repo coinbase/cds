@@ -34,7 +34,7 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "react": "~19.1.2"
+    "react": "^18.0.0 || ~19.1.2"
   },
   "dependencies": {
     "@coinbase/cds-icons": "workspace:^",

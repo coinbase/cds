@@ -3,6 +3,7 @@ import type { AccessibilityRole, StyleProp, TouchableOpacity, View, ViewStyle } 
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import type { CellBaseProps } from '../../cells/Cell';
+import type { CellAccessoryProps } from '../../cells/CellAccessory';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { BoxProps } from '../../layout';
 import type { DrawerRefBaseProps, TrayProps } from '../../overlays';
@@ -129,7 +130,7 @@ export type SelectOptionGroupProps<
   /** Accessibility role for options */
   accessibilityRole?: AccessibilityRole;
   /** Accessory element to display with options */
-  accessory?: React.ReactElement;
+  accessory?: React.ReactElement<CellAccessoryProps>;
   /** Media element to display with options */
   media?: React.ReactElement;
   /** End element to display with options */
@@ -301,7 +302,7 @@ export type SelectControlComponent<
   SelectOptionValue extends string = string,
 > = React.FC<
   SelectControlProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<React.ElementRef<typeof TouchableOpacity>>;
+    ref?: React.Ref<React.ComponentRef<typeof TouchableOpacity>>;
   }
 >;
 

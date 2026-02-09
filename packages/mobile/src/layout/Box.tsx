@@ -396,7 +396,7 @@ export const Box = memo(
       );
 
       return (
-        // https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+        // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
         <Component ref={ref} style={styles as StyleProp<ViewStyle>} testID={testID} {...props}>
           {children}
         </Component>

@@ -87,12 +87,14 @@ export const RemoteImageGroup = ({
         if (!isValidElement(child)) {
           return null;
         }
+
         const childShape: RemoteImageProps['shape'] = (
           child as React.ReactElement<RemoteImageProps>
         ).props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement<RemoteImageProps>(
+          // the type of child (after isValidElement check) is not inferred so it must be typecast here
           child as React.ReactElement<RemoteImageProps>,
           {
             testID: `${testID ? `${testID}-` : ''}image-${index}`,

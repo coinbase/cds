@@ -11,6 +11,8 @@ import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 
+import type { CellAccessoryProps } from './CellAccessory';
+
 const COMPONENT_STATIC_CLASSNAME = 'cds-Cell';
 
 const pressCss = css`
@@ -85,7 +87,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     /** Click handler. */
     onClick?: React.MouseEventHandler;
     /** Accessory element rendered at the end of the cell (e.g., chevron). */
-    accessory?: React.ReactElement;
+    accessory?: React.ReactElement<CellAccessoryProps>;
     /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
     accessoryNode?: React.ReactNode;
     /** Main content of the cell; typically title/description content. */

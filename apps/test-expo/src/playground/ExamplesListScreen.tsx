@@ -1,6 +1,7 @@
 import React, { useCallback, useContext } from 'react';
-import type { ListRenderItem } from 'react-native';
 import { FlatList } from 'react-native';
+import type { ListRenderItem } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { CellSpacing } from '@coinbase/cds-mobile/cells/Cell';
 import { ListCell } from '@coinbase/cds-mobile/cells/ListCell';
 import { Box } from '@coinbase/cds-mobile/layout/Box';
@@ -19,6 +20,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
   const searchFilter = useContext(SearchFilterContext);
   const routeKeys = route.params?.routeKeys ?? [];
   const { navigate } = useNavigation();
+  const { bottom } = useSafeAreaInsets();
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
@@ -50,7 +52,12 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
     });
 
   return (
-    <Box background="bg" flexGrow={1} testID="mobile-playground-home-screen">
+    <Box
+      background="bg"
+      flexGrow={1}
+      style={{ paddingBottom: bottom }}
+      testID="mobile-playground-home-screen"
+    >
       <FlatList
         ItemSeparatorComponent={null}
         data={data}

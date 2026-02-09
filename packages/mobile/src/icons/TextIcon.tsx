@@ -53,7 +53,7 @@ export const TextIcon = memo(function TextIcon({
           color: iconColor,
         },
         style,
-        // https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+        // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
       ] as StyleProp<TextStyle>,
     [style, iconColor, iconSize],
   );

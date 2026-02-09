@@ -55,6 +55,11 @@ export const routes = [
         .default,
   },
   {
+    key: 'AndroidNavigationBar',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/system/__stories__/AndroidNavigationBar.stories').default,
+  },
+  {
     key: 'AnimatedCaret',
     getComponent: () =>
       require('@coinbase/cds-mobile/motion/__stories__/AnimatedCaret.stories').default,

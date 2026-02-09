@@ -1,6 +1,6 @@
 import React from 'react';
-import { renderHook } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { renderHook } from '@testing-library/react-native';
 
 import { useDimensions } from '../useDimensions';
 

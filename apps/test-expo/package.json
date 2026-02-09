@@ -35,5 +35,9 @@
     "react-native-svg": "15.12.1",
     "react-native-worklets": "0.5.2"
   },
-  "private": true
+  "private": true,
+  "scripts": {
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  }
 }

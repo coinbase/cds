@@ -58,7 +58,6 @@
     "react-native-worklets": "0.5.2"
   },
   "devDependencies": {
-    "@cbhq/mobile-runtime": "/Users/erichkuerschner/workspace/mobile-mono/packages/mobile-runtime/package.tgz",
     "@expo/config-types": "54.0.10",
     "@types/react": "19.1.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",

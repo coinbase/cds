@@ -23,9 +23,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   return MockNativeEventEmitter;
 });
 
-// TODO (upgrade): still needed?
-// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
-// Path changed in React Native 0.81+
 jest.mock('react-native/src/private/animated/NativeAnimatedHelper');
 
 jest.mock('react-native', () => {

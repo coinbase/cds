@@ -69,9 +69,7 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
-    // TODO: Consider strengthening with toHaveAccessibilityState matcher
-    // The RadioCell should have selected accessibility state
-    expect(screen.queryAllByRole('radio', { selected: true })).toHaveLength(1); // Only the cell
+    expect(screen.getByRole('radio')).toBeSelected();
   });
 
   it('shows unselected state correctly', () => {
@@ -86,9 +84,7 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
-    // TODO: Consider strengthening with toHaveAccessibilityState matcher
-    // The RadioCell should have unselected accessibility state
-    expect(screen.queryAllByRole('radio', { selected: false })).toHaveLength(1); // Only the cell
+    expect(screen.getByRole('radio')).not.toBeSelected();
   });
 
   it('triggers onChange when pressed', () => {

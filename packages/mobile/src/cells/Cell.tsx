@@ -36,7 +36,7 @@ export type CellBaseProps = SharedProps &
   LinkableProps &
   Pick<PressableProps, 'blendStyles'> & {
     /** Accessory element rendered at the end of the cell (e.g., chevron). */
-    accessory?: React.ReactElement;
+    accessory?: React.ReactElement<CellAccessoryProps>;
     /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
     accessoryNode?: React.ReactNode;
     /** Main content of the cell; typically title/description content. */

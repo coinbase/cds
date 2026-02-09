@@ -55,6 +55,11 @@ export const routes = [
         .default,
   },
   {
+    key: 'AndroidNavigationBar',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/system/__stories__/AndroidNavigationBar.stories').default,
+  },
+  {
     key: 'AnimatedCaret',
     getComponent: () =>
       require('@coinbase/cds-mobile/motion/__stories__/AnimatedCaret.stories').default,
@@ -169,6 +174,11 @@ export const routes = [
     key: 'Collapsible',
     getComponent: () =>
       require('@coinbase/cds-mobile/collapsible/__stories__/Collapsible.stories').default,
+  },
+  {
+    key: 'Combobox',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
   },
   {
     key: 'ContainedAssetCard',
