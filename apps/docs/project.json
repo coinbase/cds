@@ -35,6 +35,10 @@
     },
     "build": {
       "executor": "nx:run-commands",
+      "dependsOn": [
+        "^build",
+        "^typecheck"
+      ],
       "options": {
         "commands": [
           "docusaurus build --out-dir dist",

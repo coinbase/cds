@@ -25,6 +25,7 @@ export const DefaultComboboxControl = memo(
     open,
     setOpen,
     compact,
+    align,
     searchText,
     onSearch,
     accessibilityLabel,
@@ -67,6 +68,7 @@ export const DefaultComboboxControl = memo(
       <SelectControlComponent
         ref={controlRef.current?.refs.setReference}
         accessibilityLabel={computedAccessibilityLabel}
+        align={align}
         compact={compact}
         open={open}
         options={options}
@@ -102,6 +104,7 @@ export const DefaultComboboxControl = memo(
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
+                  textAlign: align,
                 }}
                 tabIndex={0}
                 value={searchText}
@@ -117,6 +120,7 @@ export const DefaultComboboxControl = memo(
                   font="body"
                   overflow="truncate"
                   paddingY={0}
+                  textAlign={align}
                 >
                   {placeholder}
                 </Text>

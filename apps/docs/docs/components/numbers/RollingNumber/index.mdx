@@ -13,6 +13,8 @@ import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import MobilePropsTable, { toc as mobilePropsToc } from './_mobilePropsTable.mdx';
 import WebPropsTable, { toc as webPropsToc } from './_webPropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
@@ -31,5 +33,9 @@ import mobileMetadata from './mobileMetadata.json';
     mobileExamplesToc={mobileExamplesToc}
     webPropsToc={webPropsToc}
     mobilePropsToc={mobilePropsToc}
+    webStyles={<WebStyles />}
+    webStylesToc={webStylesToc}
+    mobileStyles={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
   />
 </VStack>

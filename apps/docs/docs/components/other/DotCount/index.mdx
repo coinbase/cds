@@ -15,6 +15,8 @@ import mobilePropsToc from ':docgen/mobile/dots/DotCount/toc-props';
 
 import WebPropsTable from './_webPropsTable.mdx';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 
@@ -24,13 +26,17 @@ import mobileMetadata from './mobileMetadata.json';
 <VStack gap={5}>
   <ComponentHeader title="DotCount" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
-    webExamples={<WebExamples />}
-    mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
-    webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
-    webPropsToc={webPropsToc}
+    mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
+    mobileStyles={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
+    webPropsToc={webPropsToc}
+    webStyles={<WebStyles />}
+    webStylesToc={webStylesToc}
   />
 </VStack>

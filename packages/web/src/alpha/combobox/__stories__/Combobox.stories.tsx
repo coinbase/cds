@@ -266,6 +266,122 @@ export const LongPlaceholder = () => {
   );
 };
 
+export const Alignments = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('apple');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['apple', 'banana'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Default align - start"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        align="center"
+        label="Center align"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        align="end"
+        label="End align"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        compact
+        label="Compact align - start"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        label="Default align - start"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        align="center"
+        label="Center align"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        align="end"
+        label="End align"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        compact
+        label="Compact align - start"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+};
+
 export const ControlledSearch = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   const [searchText, setSearchText] = useState('');

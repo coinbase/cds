@@ -7,7 +7,7 @@ import { Icon } from '../../icons';
 import { HStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/test';
-import { NavigationBar } from '../NavigationBar';
+import { NavigationBar, navigationBarClassNames } from '../NavigationBar';
 
 const NavigationBarWithTheme = (props: any) => (
   <DefaultThemeProvider>
@@ -308,5 +308,20 @@ describe('NavigationBar', () => {
     const nav = screen.getByRole('navigation');
     // Should have z-index styling applied
     expect(nav).toBeInTheDocument();
+  });
+
+  describe('static classNames', () => {
+    it('applies static class names to component elements', () => {
+      render(
+        <NavigationBarWithTheme start={<div>Start</div>}>
+          <div>Children</div>
+        </NavigationBarWithTheme>,
+      );
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveClass(navigationBarClassNames.root);
+      expect(nav.querySelector(`.${navigationBarClassNames.start}`)).toBeInTheDocument();
+      expect(nav.querySelector(`.${navigationBarClassNames.content}`)).toBeInTheDocument();
+    });
   });
 });

@@ -7,6 +7,7 @@ import { InvertedThemeProvider, Pressable } from '../system';
 import { Text } from '../typography/Text';
 
 import type { ChipProps } from './ChipProps';
+export type { ChipProps };
 
 /**
  * This is a basic Chip component used to create all Chip components.

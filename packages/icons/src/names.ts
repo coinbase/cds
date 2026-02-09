@@ -534,5 +534,7 @@ export const names: IconName[] = [
   'ballot',
   'rain',
   'airdropParachute',
-  'birthcertificate'
+  'birthcertificate',
+  'autoCar',
+  'webhooks'
 ];
