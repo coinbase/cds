@@ -5,7 +5,6 @@ import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
-import type { TrayProps } from '../../overlays/tray/Tray';
 import type { PressableDefaultElement, PressableProps } from '../../system';
 import type { InteractableBlendStyles } from '../../system/Interactable';
 
@@ -272,7 +271,6 @@ export type SelectDropdownProps<
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps<BoxDefaultElement>, 'onChange'> &
-  Pick<TrayProps, 'header' | 'footer'> &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
@@ -296,6 +294,10 @@ export type SelectDropdownProps<
     hideSelectAll?: boolean;
     /** Reference to the control element for positioning */
     controlRef: React.MutableRefObject<HTMLElement | null>;
+    /** Optional header content to render at the top of the dropdown */
+    header?: React.ReactNode;
+    /** Optional footer content to render at the bottom of the dropdown */
+    footer?: React.ReactNode;
     /** Inline styles for the dropdown */
     style?: React.CSSProperties;
     /** Custom styles for dropdown elements */
