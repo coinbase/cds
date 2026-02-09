@@ -1,0 +1,20 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { DotCount } from '@coinbase/cds-web/dots';
+import { IconButton } from '@coinbase/cds-web/buttons';
+
+import webStylesData from ':docgen/web/dots/DotCount/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="DotCount" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <DotCount classNames={classNames} count={5} pin="top-end">
+      <IconButton name="bell" />
+    </DotCount>
+  )}
+</StylesExplorer>

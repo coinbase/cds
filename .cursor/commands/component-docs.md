@@ -79,6 +79,15 @@ Also check visualization packages if applicable:
 
 Also check for Storybook stories (`packages/*/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
 
+### Check for Styles
+
+Check if the component supports the `styles` and/or `classNames` props by looking at its type definitions. Components with these props should have a styles tab in the documentation. Look for:
+
+- `styles?: { ... }` prop with named style selectors
+- `classNames?: { ... }` prop with named class selectors
+
+If the component has these props, the docgen will generate styles data that can be used for the styles doc.
+
 ## Step 4: Required Setup Steps (for new docs only)
 
 Before creating the component documentation, complete these setup steps:
@@ -157,9 +166,11 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 ├── webMetadata.json         # If web version exists
 ├── _webExamples.mdx        # If web version exists
 ├── _webPropsTable.mdx      # If web version exists
+├── _webStyles.mdx          # If web version has styles/classNames API
 ├── mobileMetadata.json     # If mobile version exists
 ├── _mobileExamples.mdx    # If mobile version exists
-└── _mobilePropsTable.mdx  # If mobile version exists
+├── _mobilePropsTable.mdx  # If mobile version exists
+└── _mobileStyles.mdx      # If mobile version has styles/classNames API
 ```
 
 ## File Templates
@@ -247,6 +258,121 @@ import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
 />
 ```
 
+### Styles Doc
+
+Styles doc showcases the `styles` and `classNames` API for components that support custom styling of internal elements. Only create these files if the component has a styles/classNames API.
+
+#### \_webStyles.mdx (with Explorer)
+
+For web components, always include both the selectors table AND the interactive StylesExplorer. The StylesExplorer lets users hover or click on selectors to highlight the corresponding elements in a live example:
+
+```mdx
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { [ComponentName] } from '@coinbase/cds-web/[source-category]/[ComponentName]';
+
+import webStylesData from ':docgen/web/[source-category]/[ComponentName]/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="[ComponentName]" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <[ComponentName] {...exampleProps} classNames={classNames} />
+  )}
+</StylesExplorer>
+```
+
+If the component requires state management, bundle everything into a single exported example component.
+
+```mdx
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Select } from '@coinbase/cds-web/alpha/select';
+
+import webStylesData from ':docgen/web/alpha/select/Select/styles-data';
+
+export const SelectExample = ({ classNames }) => {
+  const [value, setValue] = useState('1');
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  return (
+    <Select
+      classNames={classNames}
+      label="Choose an option"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      style={{ width: '100%' }}
+    />
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Select" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <SelectExample classNames={classNames} />}
+</StylesExplorer>
+```
+
+**Notes:**
+
+- For components with multiple variants (e.g., horizontal/vertical), add multiple explorer sections with h3 headings
+- The `StylesExplorer` passes `classNames` to highlight selected elements
+
+**Creating Comprehensive Explorer Examples:**
+
+The explorer example should be designed to showcase **all available selectors**. Review the component's `classNames` type to identify all selectors, then configure your example to render the elements that use each selector:
+
+- **Check conditional rendering**: Some selectors only appear with certain props (e.g., Stepper's `header` only renders in horizontal mode)
+- **Include nested structures**: If the component has nested elements like `subSteps`, include them to showcase selectors like `substepContainer`
+- **Add optional content**: Include props like `title` if the component has a `title` selector
+- **Use realistic data**: Provide enough items/steps to demonstrate the full component structure
+
+Example for a component with conditional selectors:
+
+```mdx
+{/* Steps with subSteps to showcase all selectors including substepContainer */}
+export const steps = [
+{ id: '1', label: 'Step 1' },
+{
+id: '2',
+label: 'Step 2',
+subSteps: [
+{ id: '2a', label: 'Sub-step A' },
+{ id: '2b', label: 'Sub-step B' },
+],
+},
+{ id: '3', label: 'Step 3' },
+];
+```
+
+#### \_mobileStyles.mdx (Selectors Only)
+
+For mobile components, only include the selectors table (no interactive explorer):
+
+```mdx
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+
+import mobileStylesData from ':docgen/mobile/[source-category]/[ComponentName]/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="[ComponentName]" styles={mobileStylesData} />
+```
+
 ### Main Documentation (index.mdx)
 
 #### For Web-Only Components
@@ -265,16 +391,21 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 
 import webPropsToc from ':docgen/web/[source-category]/[ComponentName]/toc-props';
 import WebPropsTable from './_webPropsTable.mdx';
+// If component has styles API, add this import:
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import webMetadata from './webMetadata.json';
 
 <VStack gap={5}>
   <ComponentHeader title="[ComponentName]" webMetadata={webMetadata} />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}
     webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
     webPropsToc={webPropsToc}
+    // If component has styles API, add these props:
+    webStylesTable={<WebStyles />}
+    webStylesToc={webStylesToc}
   />
 </VStack>
 ```
@@ -295,16 +426,21 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 
 import mobilePropsToc from ':docgen/mobile/[source-category]/[ComponentName]/toc-props';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+// If component has styles API, add this import:
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
   <ComponentHeader title="[ComponentName]" mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
-    mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
     mobileExamplesToc={mobileExamplesToc}
+    mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
+    // If component has styles API, add these props:
+    mobileStylesTable={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
   />
 </VStack>
 ```
@@ -327,6 +463,9 @@ import webPropsToc from ':docgen/web/[source-category]/[ComponentName]/toc-props
 import mobilePropsToc from ':docgen/mobile/[source-category]/[ComponentName]/toc-props';
 import WebPropsTable from './_webPropsTable.mdx';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+// If component has styles API, add these imports:
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import webMetadata from './webMetadata.json';
@@ -339,14 +478,20 @@ import mobileMetadata from './mobileMetadata.json';
     mobileMetadata={mobileMetadata}
   />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
-    webExamples={<WebExamples />}
-    mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
-    webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
-    webPropsToc={webPropsToc}
+    mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
+    // If component has styles API, add these props:
+    mobileStylesTable={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
+    webPropsToc={webPropsToc}
+    // If component has styles API, add these props:
+    webStylesTable={<WebStyles />}
+    webStylesToc={webStylesToc}
   />
 </VStack>
 ```
@@ -523,6 +668,8 @@ Before completing, verify:
 - [ ] Metadata files have correct package imports
 - [ ] Added `dependencies` field if component has peer dependencies
 - [ ] Props tables import from correct package with correct variable names
+- [ ] Styles files created if component has styles/classNames API
+- [ ] StylesExplorer is used in web styles (if present) and includes working example with appropriate props
 - [ ] Examples start with introductory prose
 - [ ] Examples include accessibility guidance
 - [ ] Examples progress from basic to advanced

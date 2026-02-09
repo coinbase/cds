@@ -8,11 +8,21 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.44.0 (2/6/2026 PST)
+## 8.44.0 (2/9/2026 PST)
 
 #### 🚀 Updates
 
 - Add new tray design. [[#349](https://github.com/coinbase/cds/pull/349)]
+
+## 8.43.2 ((2/9/2026, 09:05 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.1 (2/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Update chip prop export. [[#328](https://github.com/coinbase/cds/pull/328)]
 
 ## 8.43.0 (2/6/2026 PST)
 

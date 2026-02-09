@@ -69,7 +69,18 @@ const MyCustomThing = styled.div`
 <MDXSection>
 <MDXArticle>
 
-## `style` and `styles` props
+## Selectors
+
+Some complex components have multiple internal elements that can be styled individually. CDS provides several ways to target these elements using **selectors**. The same selector keys (like `root`, `content`, etc.) are reused across `styles`, `classNames`, and static class names, giving you flexibility in how you apply custom styles.
+
+:::tip
+Components that support selectors have a **Styles** tab in their documentation listing all available selectors. Check out [NavigationBar](/components/navigation/NavigationBar/?platform=web&tab=styles) for an example.
+:::
+
+</MDXArticle>
+<MDXArticle>
+
+### `style` and `styles` props
 
 Most components support the native `style` prop for inline styles.
 
@@ -77,7 +88,7 @@ Most components support the native `style` prop for inline styles.
 <Box style={{ backgroundColor: '#0000ff' }} />
 ```
 
-Some complex components support passing inline styles to subcomponents with the `styles` prop.
+Some complex components support passing inline styles to subcomponents with the `styles` prop. The keys correspond to the component's internal selectors.
 
 ```jsx
 <ProgressCircle
@@ -103,25 +114,18 @@ Styles are merged together as objects in order of specificity.
 
 In the example above, `backgroundColor` will be blue.
 
-:::tip
-We will continue to add the `styles` prop to more components over time. Please feel free to request specific components that you think would benefit from this API.
-:::
-
 </MDXArticle>
-</MDXSection>
-
-<MDXSection>
 <MDXArticle>
 
-## `className` and `classNames` props
+### `className` and `classNames` props
 
-Most components support the native `className` prop for inline styles.
+Most components support the native `className` prop for adding custom class names.
 
 ```jsx
 <Box className="my-custom-box" />
 ```
 
-Some complex components support passing classnames to subcomponents with the `classNames` prop.
+Some complex components support passing class names to subcomponents with the `classNames` prop. The keys correspond to the component's internal selectors.
 
 ```jsx
 <ProgressCircle
@@ -135,9 +139,31 @@ Some complex components support passing classnames to subcomponents with the `cl
 />
 ```
 
-:::tip
-We will continue to add the `classNames` prop to more components over time. Please feel free to request specific components that you think would benefit from this API.
-:::
+</MDXArticle>
+<MDXArticle>
+
+### Static class names
+
+Components also expose static CSS class names for their internal elements, allowing you to target them directly with CSS selectors without using props. These class names follow the pattern `cds-{ComponentName}` for the root element and `cds-{ComponentName}-{part}` for sub-elements.
+
+```css
+/* Target the NavigationBar root */
+.cds-NavigationBar {
+  background-color: #f5f5f5;
+}
+
+/* Target a specific part */
+.cds-NavigationBar-start {
+  padding-left: 16px;
+}
+```
+
+Static class names are useful when you need to:
+
+- Apply styles from a global stylesheet or CSS file
+- Target elements in CSS-in-JS solutions like styled-components
+- Override styles in specific contexts (e.g., when a component is inside another component)
+- Apply styles that aren't available through StyleProps
 
 </MDXArticle>
 </MDXSection>

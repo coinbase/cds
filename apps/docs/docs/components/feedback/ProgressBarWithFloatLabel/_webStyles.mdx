@@ -1,0 +1,19 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { ProgressBar, ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations';
+
+import webStylesData from ':docgen/web/visualizations/ProgressBarWithFloatLabel/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="ProgressBarWithFloatLabel" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <ProgressBarWithFloatLabel classNames={classNames} label={0.65} progress={0.65}>
+      <ProgressBar progress={0.65} />
+    </ProgressBarWithFloatLabel>
+  )}
+</StylesExplorer>

@@ -1,0 +1,36 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { MediaCard } from '@coinbase/cds-web/cards';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
+
+import webStylesData from ':docgen/web/cards/MediaCard/index/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="MediaCard" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <MediaCard
+      classNames={classNames}
+      thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+      title="Title"
+      subtitle="Subtitle"
+      description="Description"
+      width={320}
+      media={
+        <RemoteImage
+          alt="Media"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          src={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  )}
+</StylesExplorer>

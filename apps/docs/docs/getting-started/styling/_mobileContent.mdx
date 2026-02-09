@@ -32,7 +32,14 @@ The StyleProps API uses the ThemeProvider Context under the hood to enable dynam
 <MDXSection>
 <MDXArticle>
 
-## `style` and `styles` props
+## Selectors
+
+Some complex components have multiple internal elements that can be styled individually. CDS provides the `styles` prop to target these elements using **selectors**. The same selector keys (like `root`, `content`, etc.) are consistent across components that support them.
+
+</MDXArticle>
+<MDXArticle>
+
+### `style` and `styles` props
 
 Most components support the native `style` prop for inline styles.
 
@@ -40,7 +47,7 @@ Most components support the native `style` prop for inline styles.
 <Box style={{ backgroundColor: '#0000ff' }} />
 ```
 
-Some complex components support passing inline styles to subcomponents with the `styles` prop.
+Some complex components support passing inline styles to subcomponents with the `styles` prop. The keys correspond to the component's internal selectors.
 
 ```jsx
 <ProgressCircle
