@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.19 (2/9/2026 PST)
+
+#### 🚀 Updates
+
+- Enhanced LineChart with enter and update transition props. [[#355](https://github.com/coinbase/cds/pull/355)] [DEX2-898]
+
 ## 3.4.0-beta.18 (2/6/2026 PST)
 
 #### 🚀 Updates
