@@ -195,70 +195,27 @@ function extractStyleSelectorsFromClassNamesExport(
  *
  * This handles cases where the top-level type resolution fails to expose `styles`,
  * such as when `styles` is defined in an inline intersection inside a complex generic
- * wrapper like `Polymorphic.Props<T, BaseProps & { styles?: {...} }>`, or when
- * `styles` lives in a referenced base type (e.g., `ContentCardBodyBaseProps & VStackProps`
- * where `ContentCardBodyBaseProps` contains `styles`).
+ * wrapper like `Polymorphic.Props<T, BaseProps & { styles?: {...} }>`.
  *
  * The function walks:
  * - Type reference arguments (e.g., the `B` in `SomeType<A, B>`)
  * - Intersection type members (e.g., each part of `A & B & { styles?: {...} }`)
- * - Plain type references (e.g., `FooBaseProps`) by resolving to their declaration
- * - Type literal nodes (e.g., inline `{ styles?: {...} }`)
  */
 function findStylesPropertyInTypeNode(
   checker: ts.TypeChecker,
   typeNode: ts.TypeNode,
-  visited: Set<ts.Node> = new Set(),
 ): ts.Symbol | undefined {
-  // Guard against infinite recursion from circular type references
-  if (visited.has(typeNode)) return undefined;
-  visited.add(typeNode);
+  // For type references with type arguments (e.g., Polymorphic.Props<A, B>),
+  // check each type argument for a `styles` property.
+  if (ts.isTypeReferenceNode(typeNode) && typeNode.typeArguments) {
+    for (const arg of typeNode.typeArguments) {
+      const argType = checker.getTypeAtLocation(arg);
+      const found = checker.getPropertiesOfType(argType).find((p) => p.getName() === 'styles');
+      if (found) return found;
 
-  // For type literal nodes (inline object types like `{ styles?: {...} }`),
-  // check their properties directly.
-  if (ts.isTypeLiteralNode(typeNode)) {
-    const litType = checker.getTypeAtLocation(typeNode);
-    const found = checker.getPropertiesOfType(litType).find((p) => p.getName() === 'styles');
-    if (found) return found;
-  }
-
-  // For type references (e.g., `SomeType` or `SomeType<A, B>`):
-  if (ts.isTypeReferenceNode(typeNode)) {
-    // First, check type arguments if present (e.g., Polymorphic.Props<A, B>)
-    if (typeNode.typeArguments) {
-      for (const arg of typeNode.typeArguments) {
-        const argType = checker.getTypeAtLocation(arg);
-        const found = checker.getPropertiesOfType(argType).find((p) => p.getName() === 'styles');
-        if (found) return found;
-
-        const nested = findStylesPropertyInTypeNode(checker, arg, visited);
-        if (nested) return nested;
-      }
-    }
-
-    // Then, resolve plain type references (e.g., `ContentCardBodyBaseProps`) to their
-    // declaration and walk into the RHS type node. This handles the case where `styles`
-    // is defined in a base type that's used in an intersection.
-    const refType = checker.getTypeAtLocation(typeNode);
-    const found = checker.getPropertiesOfType(refType).find((p) => p.getName() === 'styles');
-    if (found) return found;
-
-    // If direct property check failed, follow the type alias to its declaration.
-    // Use the AST's typeName to resolve the symbol directly (more reliable than
-    // aliasSymbol which is not always preserved by the checker in all contexts).
-    const refSymbol =
-      checker.getSymbolAtLocation(typeNode.typeName) ?? refType.aliasSymbol ?? refType.getSymbol();
-
-    if (refSymbol) {
-      // Follow re-exports (aliases) to the actual declaration
-      const resolved =
-        refSymbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(refSymbol) : refSymbol;
-      const decls = resolved.getDeclarations();
-      const aliasDecl = decls?.find(ts.isTypeAliasDeclaration);
-      if (aliasDecl) {
-        const nested = findStylesPropertyInTypeNode(checker, aliasDecl.type, visited);
-        if (nested) return nested;
-      }
+      // Recurse into nested type references and intersections
+      const nested = findStylesPropertyInTypeNode(checker, arg);
+      if (nested) return nested;
     }
   }
 
@@ -270,7 +227,8 @@ function findStylesPropertyInTypeNode(
       const found = checker.getPropertiesOfType(memberType).find((p) => p.getName() === 'styles');
       if (found) return found;
 
-      const nested = findStylesPropertyInTypeNode(checker, member, visited);
+      // Recurse into nested type references
+      const nested = findStylesPropertyInTypeNode(checker, member);
       if (nested) return nested;
     }
   }
@@ -354,9 +312,9 @@ function extractStyleSelectorsFromStylesProp(
   // Find the 'styles' property in the resolved type
   let stylesSymbol = propsProperties.find((p) => p.getName() === 'styles');
 
-  // If styles not found in the resolved type, walk the type alias's AST to find styles
-  // in type arguments, intersection members, or referenced base types.
-  if (!stylesSymbol) {
+  // If styles not found in the resolved type (e.g. complex generic wrappers like Polymorphic.Props),
+  // walk the type alias's AST to find styles in type arguments or intersection members.
+  if (!stylesSymbol && isGenericType) {
     const typeAliasDecl = declarations?.find(ts.isTypeAliasDeclaration);
     if (typeAliasDecl) {
       stylesSymbol = findStylesPropertyInTypeNode(checker, typeAliasDecl.type);
