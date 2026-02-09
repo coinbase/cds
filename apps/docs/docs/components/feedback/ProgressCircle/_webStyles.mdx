@@ -1,0 +1,20 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Box } from '@coinbase/cds-web/layout';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+
+import webStylesData from ':docgen/web/visualizations/ProgressCircle/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="ProgressCircle" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <Box width={120} height={120}>
+      <ProgressCircle progress={0.65} classNames={classNames} />
+    </Box>
+  )}
+</StylesExplorer>

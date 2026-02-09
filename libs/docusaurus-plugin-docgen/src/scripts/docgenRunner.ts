@@ -212,6 +212,21 @@ export async function docgenRunner(params: DocgenRunnerParams): Promise<PluginCo
           template: 'shared/objectMap',
         });
 
+        /** Styles API data - extracted from *ClassNames exports */
+        if (data.styles && data.styles.selectors.length > 0) {
+          filesToWriteToDisk.push({
+            data: data.styles,
+            dest: path.join(pluginDir, destDir, 'styles-data.js'),
+            template: 'shared/objectMap',
+          });
+
+          filesToWriteToDisk.push({
+            data: [{ id: 'selectors', level: 3, value: 'Selectors' }],
+            dest: path.join(pluginDir, destDir, 'toc-styles.js'),
+            template: 'shared/objectMap',
+          });
+        }
+
         /** MDX file with PropsTable react component. Passes in props from js file in .docusaurus cache */
         filesToWriteToDisk.push({
           data,

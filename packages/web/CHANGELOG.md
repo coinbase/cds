@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.43.1 (2/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Update chpi prop export. [[#328](https://github.com/coinbase/cds/pull/328)]
+- Add NavigationBar classNames. [[#328](https://github.com/coinbase/cds/pull/328)]
+
 ## 8.43.0 (2/6/2026 PST)
 
 #### 🚀 Updates

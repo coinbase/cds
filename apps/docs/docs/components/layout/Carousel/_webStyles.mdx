@@ -1,0 +1,53 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Carousel, CarouselItem } from '@coinbase/cds-web/carousel';
+import { ContainedAssetCard } from '@coinbase/cds-web/cards/ContainedAssetCard';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { Text } from '@coinbase/cds-web/typography';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
+
+import webStylesData from ':docgen/web/carousel/Carousel/styles-data';
+
+export const CarouselExample = ({ classNames }) => {
+  const SquareAssetCard = ({ imageUrl, name }) => (
+    <ContainedAssetCard
+      description={
+        <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+          ↗6.37%
+        </Text>
+      }
+      header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+      subtitle={name}
+      title="$0.87"
+    />
+  );
+  return (
+    <VStack marginX={-3} style={{ maxWidth: 'calc(100% + var(--space-6))' }}>
+      <Carousel
+        title="Explore Assets"
+        classNames={classNames}
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-1)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </VStack>
+  );
+};
+
+## Selectors
+
+<ComponentStylesTable componentName="Carousel" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <CarouselExample classNames={classNames} />}
+</StylesExplorer>

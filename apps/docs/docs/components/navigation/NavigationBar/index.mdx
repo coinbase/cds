@@ -13,6 +13,7 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 import webPropsToc from ':docgen/web/navigation/NavigationBar/toc-props';
 
 import WebPropsTable from './_webPropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import webMetadata from './webMetadata.json';
 
@@ -20,8 +21,10 @@ import webMetadata from './webMetadata.json';
   <ComponentHeader title="NavigationBar" webMetadata={webMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
     webExamples={<WebExamples />}
     webExamplesToc={webExamplesToc}
     webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
   />
 </VStack>

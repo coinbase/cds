@@ -1,0 +1,19 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { ProgressBar, ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations';
+
+import webStylesData from ':docgen/web/visualizations/ProgressBarWithFixedLabels/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="ProgressBarWithFixedLabels" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <ProgressBarWithFixedLabels classNames={classNames} startLabel={0.25} endLabel={1}>
+      <ProgressBar progress={0.25} />
+    </ProgressBarWithFixedLabels>
+  )}
+</StylesExplorer>

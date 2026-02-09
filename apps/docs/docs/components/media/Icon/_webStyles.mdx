@@ -1,0 +1,15 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Icon } from '@coinbase/cds-web/icons';
+
+import webStylesData from ':docgen/web/icons/Icon/styles-data';
+
+## Selectors
+
+<ComponentStylesTable componentName="Icon" styles={webStylesData} />
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <Icon classNames={classNames} name="star" size="l" />}
+</StylesExplorer>
