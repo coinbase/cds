@@ -30,12 +30,42 @@ export type Transition =
   | ({ type: 'spring' } & WithSpringConfig);
 
 /**
+ * @deprecated Use PathTransitions ({ enter, update }) instead.
+ */
+export type LegacyPathTransition = Transition;
+
+/**
+ * Transition configuration for enter and update animations.
+ * - enter: clip enter animation (left-to-right)
+ * - update: path morphing between states
+ */
+export type PathTransitions = {
+  enter?: Transition | null;
+  update?: Transition | null;
+};
+
+export type PathTransitionConfig = LegacyPathTransition | PathTransitions;
+
+/**
  * Default transition configuration used across all chart components.
  */
 export const defaultTransition: Transition = {
   type: 'spring',
   stiffness: 900,
   damping: 120,
+};
+
+/**
+ * Duration in milliseconds for path enter transition.
+ */
+export const pathEnterTransitionDuration = 500;
+
+/**
+ * Default transition configuration for enter animations.
+ */
+export const defaultEnterTransition: Transition = {
+  type: 'timing',
+  duration: pathEnterTransitionDuration,
 };
 
 /**
@@ -47,6 +77,24 @@ export const accessoryFadeTransitionDuration = 150;
  * Delay in milliseconds before accessory elements fade in.
  */
 export const accessoryFadeTransitionDelay = 350;
+
+export const normalizePathTransitions = (transition?: PathTransitionConfig): PathTransitions => {
+  if (!transition) return {};
+  if ('type' in transition) {
+    return { update: transition };
+  }
+  return transition;
+};
+
+export const resolvePathTransitions = (
+  transition?: PathTransitionConfig,
+): { enter: Transition | null; update: Transition | null } => {
+  const normalized = normalizePathTransitions(transition);
+  return {
+    enter: normalized.enter === undefined ? defaultEnterTransition : normalized.enter,
+    update: normalized.update === undefined ? defaultTransition : normalized.update,
+  };
+};
 
 /**
  * Custom hook that uses d3-interpolate-path for more robust path interpolation.

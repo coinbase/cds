@@ -169,6 +169,7 @@ export const LineChart = memo(
           ref={ref}
           inset={calculatedInset}
           series={chartSeries}
+          transition={transition}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >

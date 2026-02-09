@@ -397,6 +397,7 @@ function Transitions() {
   const updateInterval = 500;
 
   const myTransitionConfig: Transition = { type: 'spring', stiffness: 700, damping: 20 };
+  const lineTransition = { enter: null, update: myTransitionConfig };
   const negativeColor = `rgb(${theme.spectrum.gray15})`;
   const positiveColor = theme.color.fgPositive;
 
@@ -508,7 +509,7 @@ function Transitions() {
           AreaComponent={MyGradient}
           seriesId="prices"
           strokeWidth={3}
-          transition={myTransitionConfig}
+          transition={lineTransition}
         />
         <Scrubber
           hideOverlay
@@ -520,6 +521,122 @@ function Transitions() {
   }
 
   return <CustomTransitionsChart />;
+}
+
+function TransitionModes() {
+  const theme = useTheme();
+  const chartHeight = 140;
+  const dataCount = 16;
+  const maxDataOffset = 120;
+  const minStepOffset = 10;
+  const maxStepOffset = 30;
+  const domainPadding = 20;
+  const updateInterval = 800;
+  const domainLimit = maxDataOffset + domainPadding;
+
+  const seriesColor = theme.color.fgPositive;
+
+  const enterTransition = useMemo<Transition>(() => ({ type: 'timing', duration: 700 }), []);
+  const updateTransition = useMemo<Transition>(
+    () => ({
+      type: 'spring',
+      damping: 20,
+      stiffness: 240,
+    }),
+    [],
+  );
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+    const direction =
+      previousValue >= maxDataOffset
+        ? -1
+        : previousValue <= -maxDataOffset
+          ? 1
+          : Math.random() < 0.5
+            ? -1
+            : 1;
+    const nextValue = previousValue + offset * direction;
+
+    return Math.max(-maxDataOffset, Math.min(maxDataOffset, nextValue));
+  }
+
+  function generateInitialData() {
+    const data = [];
+    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const nextValue = generateNextValue(previousValue);
+      data.push(nextValue);
+      previousValue = nextValue;
+    }
+
+    return data;
+  }
+
+  const [data, setData] = useState(generateInitialData);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((currentData) => {
+        const lastValue = currentData[currentData.length - 1] ?? 0;
+        const nextValue = generateNextValue(lastValue);
+
+        return [...currentData.slice(1), nextValue];
+      });
+    }, updateInterval);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const series = useMemo(
+    () => [
+      {
+        id: 'prices',
+        data: data,
+        color: seriesColor,
+      },
+    ],
+    [data, seriesColor],
+  );
+
+  const transitionModes = useMemo(
+    () => [
+      {
+        label: 'Enter + Update',
+        transition: { enter: enterTransition, update: updateTransition },
+      },
+      {
+        label: 'Enter Only',
+        transition: { enter: enterTransition, update: null },
+      },
+      {
+        label: 'Update Only',
+        transition: { enter: null, update: updateTransition },
+      },
+    ],
+    [enterTransition, updateTransition],
+  );
+
+  return (
+    <VStack gap={2}>
+      {transitionModes.map((mode) => (
+        <VStack key={mode.label} gap={1}>
+          <Text color="fgMuted" font="label2">
+            {mode.label}
+          </Text>
+          <LineChart
+            height={chartHeight}
+            series={series}
+            transition={mode.transition}
+            yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+          />
+        </VStack>
+      ))}
+    </VStack>
+  );
 }
 
 function BasicAccessible() {
@@ -2155,6 +2272,10 @@ function ExampleNavigator() {
       {
         title: 'Transitions',
         component: <Transitions />,
+      },
+      {
+        title: 'Transition Modes',
+        component: <TransitionModes />,
       },
       {
         title: 'Basic Accessible',

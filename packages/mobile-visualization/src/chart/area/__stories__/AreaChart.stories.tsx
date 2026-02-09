@@ -64,6 +64,26 @@ const StackedExample = () => {
   );
 };
 
+const TransitionsExample = () => {
+  return (
+    <AreaChart
+      showLines
+      showYAxis
+      height={240}
+      series={[
+        {
+          id: 'dailyActiveUsers',
+          data: [120, 160, 140, 200, 180, 220, 210],
+        },
+      ]}
+      transition={{
+        enter: { type: 'timing', duration: 900 },
+        update: { type: 'spring', damping: 18, stiffness: 180 },
+      }}
+    />
+  );
+};
+
 const AreaChartStories = () => {
   return (
     <ExampleScreen>
@@ -72,6 +92,9 @@ const AreaChartStories = () => {
       </Example>
       <Example title="Stacked">
         <StackedExample />
+      </Example>
+      <Example title="Transitions">
+        <TransitionsExample />
       </Example>
       <Example title="Negative Values">
         <AreaChart

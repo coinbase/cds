@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, getAreaPath, type Transition } from '../utils';
+import { type ChartPathCurveType, getAreaPath, type PathTransitionConfig } from '../utils';
 import type { GradientDefinition } from '../utils/gradient';
 
 import { DottedArea } from './DottedArea';
@@ -55,7 +55,7 @@ export type AreaBaseProps = {
   gradient?: GradientDefinition;
   /**
    * Whether to animate the area.
-   * Overrides the animate value from the chart context.
+   * @deprecated Use `transition` to control enter/update animations.
    */
   animate?: boolean;
 };
@@ -63,8 +63,10 @@ export type AreaBaseProps = {
 export type AreaProps = AreaBaseProps & {
   /**
    * Transition configuration for path animations.
+   *
+   * @deprecated Passing a single Transition is deprecated. Use { enter, update }.
    */
-  transition?: Transition;
+  transition?: PathTransitionConfig;
 };
 
 export type AreaComponentProps = Pick<
@@ -98,7 +100,14 @@ export const Area = memo<AreaProps>(
     transition,
     animate,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
+    const {
+      getSeries,
+      getSeriesData,
+      getXScale,
+      getYScale,
+      getXAxis,
+      transition: chartTransition,
+    } = useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
     const gradient = useMemo(
@@ -158,7 +167,7 @@ export const Area = memo<AreaProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         gradient={gradient}
-        transition={transition}
+        transition={transition ?? chartTransition}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

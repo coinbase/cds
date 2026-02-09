@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo } from 'react';
-import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import { memo, useEffect, useMemo, useRef } from 'react';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AnimatedProp,
@@ -10,19 +10,23 @@ import {
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
-import type { Transition } from './utils/transition';
+import {
+  buildTransition,
+  defaultTransition,
+  type PathTransitionConfig,
+  resolvePathTransitions,
+  type Transition,
+} from './utils/transition';
 import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
-/**
- * Duration in milliseconds for path enter transition.
- */
-export const pathEnterTransitionDuration = 500;
+export { pathEnterTransitionDuration } from './utils/transition';
 
 export type PathBaseProps = {
   /**
-   * Whether to animate this path. Overrides the animate prop on the Chart component.
+   * Whether to animate this path.
+   * @deprecated Use `transition` to control enter/update animations.
    */
   animate?: boolean;
   /**
@@ -100,11 +104,28 @@ export type PathProps = PathBaseProps &
      * @example
      * // Spring based
      * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+     *
+     * @deprecated Passing a single Transition is deprecated. Use { enter, update }.
+     *
+     * @example
+     * // Enter/update transitions
+     * transition={{
+     *   enter: { type: 'timing', duration: 300 },
+     *   update: { type: 'spring', damping: 20, stiffness: 300 },
+     * }}
+     *
+     * @example
+     * // Disable enter animation
+     * transition={{ enter: null }}
      */
-    transition?: Transition;
+    transition?: PathTransitionConfig;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
+type AnimatedPathProps = Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'> & {
+  transition?: Transition;
+};
+
+const AnimatedPath = memo<AnimatedPathProps>(
   ({
     d = '',
     initialPath,
@@ -187,13 +208,23 @@ export const Path = memo<PathProps>((props) => {
     strokeCap,
     strokeJoin,
     children,
-    transition,
+    transition: transitionProp,
     ...pathProps
   } = props;
 
   const context = useCartesianChartContext();
   const rect = clipRect ?? context.drawingArea;
+
   const animate = animateProp ?? context.animate;
+  const transitionConfig = transitionProp ?? context.transition;
+  const resolvedTransitions = useMemo(
+    () => resolvePathTransitions(transitionConfig),
+    [transitionConfig],
+  );
+  const shouldAnimateEnter = animate && resolvedTransitions.enter !== null;
+  const shouldAnimateUpdate = animate && resolvedTransitions.update !== null;
+  const enterTransitionRef = useRef<Transition | null>(resolvedTransitions.enter);
+  const hasAnimatedEnterRef = useRef(false);
 
   const isReady = !!context.getXScale();
 
@@ -201,14 +232,41 @@ export const Path = memo<PathProps>((props) => {
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
 
-  // Animation progress for clip path reveal
-  const clipProgress = useSharedValue(animate ? 0 : 1);
+  // Animation progress for clip path enter
+  const clipProgress = useSharedValue(shouldAnimateEnter ? 0 : 1);
 
   useEffect(() => {
-    if (animate && isReady) {
-      clipProgress.value = withTiming(1, { duration: pathEnterTransitionDuration });
+    enterTransitionRef.current = resolvedTransitions.enter;
+  }, [resolvedTransitions.enter]);
+
+  // Trigger clip path animation when component mounts and enter animation is enabled
+  useEffect(() => {
+    if (!shouldAnimateEnter) {
+      hasAnimatedEnterRef.current = false;
+      clipProgress.value = 1;
+      return;
     }
-  }, [animate, isReady, clipProgress]);
+
+    if (!isReady) {
+      hasAnimatedEnterRef.current = false;
+      clipProgress.value = 0;
+      return;
+    }
+
+    if (hasAnimatedEnterRef.current) {
+      return;
+    }
+
+    const enterTransition = enterTransitionRef.current;
+    if (!enterTransition) {
+      clipProgress.value = 1;
+      return;
+    }
+
+    clipProgress.value = 0;
+    clipProgress.value = buildTransition(1, enterTransition);
+    hasAnimatedEnterRef.current = true;
+  }, [shouldAnimateEnter, isReady, clipProgress]);
 
   // Create initial and target clip paths for animation
   const { initialClipPath, targetClipPath } = useMemo(() => {
@@ -235,11 +293,11 @@ export const Path = memo<PathProps>((props) => {
     return { initialClipPath: initial, targetClipPath: target };
   }, [rect, clipOffset, totalOffset]);
 
-  // Use usePathInterpolation for animated clip path
+  // Use usePathInterpolation for animated clip path enter
   const animatedClipPath = usePathInterpolation(
     clipProgress,
     [0, 1],
-    animate && initialClipPath && targetClipPath
+    shouldAnimateEnter && initialClipPath && targetClipPath
       ? [initialClipPath, targetClipPath]
       : targetClipPath
         ? [targetClipPath, targetClipPath]
@@ -248,7 +306,7 @@ export const Path = memo<PathProps>((props) => {
 
   // Resolve the final clip path:
   // 1. If clipPath prop was explicitly provided, use it (even if null = no clipping)
-  // 2. If animating, use the interpolated clip path
+  // 2. If animating enter, use the interpolated clip path
   // 3. Otherwise, use static target clip path
   const resolvedClipPath = useMemo(() => {
     // If clipPath was explicitly provided (null or string), use it directly
@@ -256,14 +314,14 @@ export const Path = memo<PathProps>((props) => {
       return clipPathProp;
     }
 
-    // If not animating or paths are null, return target clip path
-    if (!animate || !targetClipPath) {
+    // If not animating enter or paths are null, return target clip path
+    if (!shouldAnimateEnter || !targetClipPath) {
       return targetClipPath;
     }
 
     // Return undefined here since we'll use animatedClipPath directly
     return undefined;
-  }, [clipPathProp, animate, targetClipPath]);
+  }, [clipPathProp, shouldAnimateEnter, targetClipPath]);
 
   // Convert SVG path string to SkPath for static rendering
   const staticPath = useDerivedValue(() => {
@@ -275,7 +333,8 @@ export const Path = memo<PathProps>((props) => {
   const isFilled = fill !== undefined && fill !== 'none';
   const isStroked = stroke !== undefined && stroke !== 'none';
 
-  const content = !animate ? (
+  // Use AnimatedPath when data transitions are enabled, static path otherwise
+  const content = !shouldAnimateUpdate ? (
     <>
       {isFilled && (
         <SkiaPath color={fill} opacity={fillOpacity} path={staticPath} style="fill" {...pathProps}>
@@ -308,15 +367,15 @@ export const Path = memo<PathProps>((props) => {
       strokeJoin={strokeJoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
-      transition={transition}
+      transition={resolvedTransitions.update ?? defaultTransition}
     >
       {children}
     </AnimatedPath>
   );
 
-  // Determine which clip path to use
+  // Determine which clip path to use (for enter animation)
   const finalClipPath =
-    animate && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
+    shouldAnimateEnter && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
 
   // If finalClipPath is null, render without clipping
   if (finalClipPath === null) {

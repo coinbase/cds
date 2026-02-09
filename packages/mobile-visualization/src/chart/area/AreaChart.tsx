@@ -196,6 +196,7 @@ export const AreaChart = memo(
           ref={ref}
           inset={calculatedInset}
           series={seriesToRender}
+          transition={transition}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >

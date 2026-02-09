@@ -11,10 +11,12 @@ import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
   type ChartPathCurveType,
+  defaultTransition,
   getLineData,
   getLinePath,
   type GradientDefinition,
-  type Transition,
+  type PathTransitionConfig,
+  resolvePathTransitions,
 } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
@@ -105,7 +107,7 @@ export type LineBaseProps = {
   gradient?: GradientDefinition;
   /**
    * Whether to animate the line.
-   * Overrides the animate value from the chart context.
+   * @deprecated Use `transition` to control enter/update animations.
    */
   animate?: boolean;
 };
@@ -113,8 +115,10 @@ export type LineBaseProps = {
 export type LineProps = LineBaseProps & {
   /**
    * Transition configuration for line animations.
+   *
+   * @deprecated Passing a single Transition is deprecated. Use { enter, update }.
    */
-  transition?: Transition;
+  transition?: PathTransitionConfig;
 };
 
 export type LineComponentProps = Pick<
@@ -152,26 +156,51 @@ export const Line = memo<LineProps>(
     connectNulls,
     transition,
     gradient: gradientProp,
+    animate: animateProp,
     ...props
   }) => {
     const theme = useTheme();
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
-      useCartesianChartContext();
+    const {
+      animate: contextAnimate,
+      transition: chartTransition,
+      getSeries,
+      getSeriesData,
+      getXScale,
+      getYScale,
+      getXAxis,
+    } = useCartesianChartContext();
+
+    const animate = animateProp ?? contextAnimate;
+    const transitionConfig = transition ?? chartTransition;
+    const resolvedTransitions = useMemo(
+      () => resolvePathTransitions(transitionConfig),
+      [transitionConfig],
+    );
+    const shouldAnimateEnter = animate && resolvedTransitions.enter !== null;
+    const shouldAnimateUpdate = animate && resolvedTransitions.update !== null;
 
     const isReady = !!getXScale();
 
     // Animation state for delayed point rendering (matches web timing)
-    const pointsOpacity = useSharedValue(animate ? 0 : 1);
+    const pointsOpacity = useSharedValue(shouldAnimateEnter ? 0 : 1);
 
     // Delay point appearance until after path enter animation completes
     useEffect(() => {
-      if (animate && isReady) {
-        pointsOpacity.value = withDelay(
-          accessoryFadeTransitionDelay,
-          withTiming(1, { duration: accessoryFadeTransitionDuration }),
-        );
+      if (!shouldAnimateEnter) {
+        pointsOpacity.value = 1;
+        return;
       }
-    }, [animate, isReady, pointsOpacity]);
+
+      if (!isReady) {
+        pointsOpacity.value = 0;
+        return;
+      }
+
+      pointsOpacity.value = withDelay(
+        accessoryFadeTransitionDelay,
+        withTiming(1, { duration: accessoryFadeTransitionDuration }),
+      );
+    }, [shouldAnimateEnter, isReady, pointsOpacity]);
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const gradient = useMemo(
@@ -255,6 +284,7 @@ export const Line = memo<LineProps>(
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
+            animate={animate}
             baseline={areaBaseline}
             connectNulls={connectNulls}
             curve={curve}
@@ -262,17 +292,18 @@ export const Line = memo<LineProps>(
             fillOpacity={opacity}
             gradient={gradient}
             seriesId={seriesId}
-            transition={transition}
+            transition={transitionConfig}
             type={areaType}
           />
         )}
         {/* todo: pass in series id? */}
         <LineComponent
+          animate={animate}
           d={path}
           gradient={gradient}
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
-          transition={transition}
+          transition={transitionConfig}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
@@ -313,7 +344,12 @@ export const Line = memo<LineProps>(
               // If points is true, render with defaults
               if (points === true) {
                 return (
-                  <Point key={`${seriesId}-${xValue}`} transition={transition} {...defaults} />
+                  <Point
+                    key={`${seriesId}-${xValue}`}
+                    animate={shouldAnimateUpdate}
+                    transition={resolvedTransitions.update ?? defaultTransition}
+                    {...defaults}
+                  />
                 );
               }
 
@@ -327,7 +363,8 @@ export const Line = memo<LineProps>(
               return (
                 <Point
                   key={`${seriesId}-${xValue}`}
-                  transition={transition}
+                  animate={shouldAnimateUpdate}
+                  transition={resolvedTransitions.update ?? defaultTransition}
                   {...defaults}
                   {...pointConfig}
                 />

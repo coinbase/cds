@@ -7,7 +7,7 @@ import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { createGradient, getBaseline } from '../utils';
 import { getDottedAreaPath } from '../utils/path';
-import { usePathTransition } from '../utils/transition';
+import { defaultTransition, resolvePathTransitions, usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -70,7 +70,19 @@ export const DottedArea = memo<DottedAreaProps>(
     ...pathProps
   }) => {
     const theme = useTheme();
-    const { drawingArea, animate, getYAxis } = useCartesianChartContext();
+    const {
+      drawingArea,
+      animate: contextAnimate,
+      transition: chartTransition,
+      getYAxis,
+    } = useCartesianChartContext();
+    const animate = animateProp ?? contextAnimate;
+    const transitionConfig = transition ?? chartTransition;
+    const resolvedTransitions = useMemo(
+      () => resolvePathTransitions(transitionConfig),
+      [transitionConfig],
+    );
+    const shouldAnimateUpdate = animate && resolvedTransitions.update !== null;
 
     const yAxisConfig = getYAxis(yAxisId);
 
@@ -96,7 +108,7 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const animatedClipPath = usePathTransition({
       currentPath: d,
-      transition,
+      transition: resolvedTransitions.update ?? defaultTransition,
     });
 
     const staticClipPath = useMemo(() => {
@@ -113,12 +125,12 @@ export const DottedArea = memo<DottedAreaProps>(
     }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
     return (
-      <Group clip={animate ? animatedClipPath : staticClipPath}>
+      <Group clip={shouldAnimateUpdate ? animatedClipPath : staticClipPath}>
         <Path
-          animate={animateProp ?? animate}
+          animate={animate}
           d={dottedPath}
           fill={fill}
-          transition={transition}
+          transition={transitionConfig}
           {...pathProps}
         >
           {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}

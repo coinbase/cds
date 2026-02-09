@@ -51,6 +51,7 @@ const LineStyles = () => {
           color: '#800080',
         },
       ]}
+      transition={{ enter: { type: 'timing', duration: 800 }, update: null }}
     >
       <Line seriesId="top" />
       <Line seriesId="upperMiddle" type="dotted" />
