@@ -41,7 +41,7 @@ function MyCarousel() {
         title="Explore Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
@@ -73,8 +73,8 @@ Items can be given a width proportional to the carousel width.
 :::tip Tip
 
 If you have a gap between items, you should account for that in the width.
-For example, if you have a gap of 8px, and you want to show 2 items per page,
-you should give each item a width of `calc(50% - 4px)`.
+For example, if you have a gap of 16px, and you want to show 2 items per page,
+you should give each item a width of `calc(50% - 8px)`.
 
 :::
 
@@ -88,8 +88,8 @@ function DynamicSizingCarousel() {
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(itemsPerPage[0]);
   const itemWidths = {
     one: '100%',
-    two: 'calc((100% - var(--space-1)) / 2)',
-    three: 'calc((100% - (2 * var(--space-1))) / 3)',
+    two: 'calc((100% - var(--space-2)) / 2)',
+    three: 'calc((100% - (2 * var(--space-2))) / 3)',
   };
   function NoopFn() {
     console.log('pressed');
@@ -119,7 +119,7 @@ function DynamicSizingCarousel() {
           title="Learn more"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           key={selectedItemsPerPage.id}
         >
@@ -279,8 +279,8 @@ The carousel below will show per page 1 item on mobile, 2 items on tablet, and 3
 function ResponsiveSizingCarousel() {
   const itemWidth = {
     phone: '100%',
-    tablet: 'calc((100% - var(--space-1)) / 2)',
-    desktop: 'calc((100% - (2 * var(--space-1))) / 3)',
+    tablet: 'calc((100% - var(--space-2)) / 2)',
+    desktop: 'calc((100% - (2 * var(--space-2))) / 3)',
   };
   function NoopFn() {
     console.log('pressed');
@@ -305,7 +305,7 @@ function ResponsiveSizingCarousel() {
       <Carousel
         hidePagination
         title="Learn more"
-        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-1)' } }}
+        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-2)' } }}
         drag="free"
       >
         <CarouselItem id="earn-more-crypto" width={itemWidth}>
@@ -390,15 +390,15 @@ function VariedSizingCarousel() {
   }
   const itemWidth = {
     phone: '100%',
-    tablet: 'calc((100% - var(--space-1)) / 2)',
-    desktop: 'calc((100% - var(--space-1)) / 2)',
+    tablet: 'calc((100% - var(--space-2)) / 2)',
+    desktop: 'calc((100% - var(--space-2)) / 2)',
   };
   return (
     <Box marginX={-3}>
       <Carousel
         hidePagination
         title="Varied Sizing"
-        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-1)' } }}
+        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-2)' } }}
       >
         <CarouselItem id="earn-more-crypto" width={itemWidth}>
           {({ isVisible }) => (
@@ -495,7 +495,7 @@ function DragCarousel() {
           drag={drag.id}
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           snapMode="item"
           key={drag.id}
@@ -561,7 +561,7 @@ function SnapModeCarousel() {
           paginationVariant="dot"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           snapMode={snapMode.id}
           key={snapMode.id}
@@ -625,7 +625,7 @@ function OverflowCarousel() {
         snapMode="item"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
@@ -679,7 +679,7 @@ function AutoplayCarousel() {
         title="Trending Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset) => (
@@ -731,7 +731,7 @@ function LoopingCarousel() {
         title="Infinite Scroll"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset) => (
@@ -904,8 +904,8 @@ function CustomComponentsCarousel() {
   }
   const itemWidth = {
     phone: '100%',
-    tablet: 'round(down, calc((100% - var(--space-1)) / 2), 1px)',
-    desktop: 'round(down, calc((100% - var(--space-1)) / 2), 1px)',
+    tablet: 'round(down, calc((100% - var(--space-2)) / 2), 1px)',
+    desktop: 'round(down, calc((100% - var(--space-2)) / 2), 1px)',
   };
   return (
     <Box marginX={-3}>
@@ -914,7 +914,7 @@ function CustomComponentsCarousel() {
         PaginationComponent={PaginationComponent}
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
         title={
           <Text as="h3" font="headline">
@@ -1182,7 +1182,7 @@ function ComposedAutoplayCarousel() {
               {showProgress && (
                 <m.div
                   animate={{ width: autoplay.isPlaying ? '100%' : `${progress * 100}%` }}
-                  initial={false}
+                  initial={{ width: '0%' }}
                   transition={{ duration: progressDuration, ease: 'linear' }}
                   style={{
                     height: '100%',
@@ -1354,7 +1354,7 @@ function DynamicContentCarousel() {
           paginationVariant="dot"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)', height: '156px' },
+            carousel: { gap: 'var(--space-2)', height: '156px' },
           }}
         >
           {items.map((asset, index) => (
@@ -1416,7 +1416,7 @@ function AnimatedCarousel() {
         title="Explore Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
         snapMode="item"
         hidePagination
@@ -1507,7 +1507,7 @@ function AnimatedSelectionCarousel() {
         paginationVariant="dot"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
@@ -1564,7 +1564,7 @@ function HideNavigationAndPaginationCarousel() {
         snapMode="item"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
@@ -1648,7 +1648,7 @@ function AnimatedPaginationCarousel() {
         snapMode="page"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
         title="Explore Assets"
       >
@@ -1782,7 +1782,7 @@ function ImperativeApiCarousel() {
           snapMode="item"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           title="Explore Assets"
         >
