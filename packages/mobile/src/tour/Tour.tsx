@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { Modal, View } from 'react-native';
+import { Modal, Platform, View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
@@ -27,6 +27,7 @@ import {
 } from '@floating-ui/react-native';
 import { animated, config as springConfig, useSpring } from '@react-spring/native';
 
+import { useDimensions } from '../hooks/useDimensions';
 import { useTheme } from '../hooks/useTheme';
 
 import { DefaultTourMask } from './DefaultTourMask';
@@ -116,6 +117,7 @@ const TourComponent = <T extends string = string>({
   testID,
 }: TourProps<T>) => {
   const theme = useTheme();
+  const { statusBarHeight } = useDimensions();
   const defaultTourStepOffset = theme.space[3];
   const defaultTourStepShiftPadding = theme.space[4];
 
@@ -175,9 +177,18 @@ const TourComponent = <T extends string = string>({
   const handleActiveTourStepTargetChange = useCallback(
     (target: View | null) => {
       target?.measureInWindow((x, y, width, height) => {
+        // On Android, measureInWindow returns coordinates relative to the app's visible area.
+        // The Modal's coordinate system starts from the screen top (y=0 at very top of display).
+        // In edge-to-edge mode (statusBarHeight > 0), the app extends behind the status bar,
+        // and measureInWindow returns y relative to below the status bar. We need to ADD
+        // statusBarHeight to convert to screen coordinates for the Modal.
+        // In non-edge-to-edge mode (statusBarHeight === 0), measureInWindow returns y from
+        // screen top, but the Modal still starts from screen top, so no adjustment is needed.
+        const adjustedY = Platform.OS === 'ios' ? y : y + statusBarHeight;
+
         refs.setReference({
           measure: (callback: (x: number, y: number, width: number, height: number) => void) => {
-            callback(x, y, width, height);
+            callback(x, adjustedY, width, height);
             void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
           },
         });
@@ -185,7 +196,7 @@ const TourComponent = <T extends string = string>({
 
       setActiveTourStepTarget(target);
     },
-    [animationApi, refs, setActiveTourStepTarget],
+    [animationApi, refs, setActiveTourStepTarget, statusBarHeight],
   );
 
   return (
