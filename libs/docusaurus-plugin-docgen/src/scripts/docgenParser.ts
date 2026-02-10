@@ -57,7 +57,6 @@ function createTsProgramContext(tsconfigPath: string, filesToParse: string[]): T
       ...config.options,
       noEmit: true,
     },
-    projectReferences: config.projectReferences,
   });
 
   const checker = program.getTypeChecker();
