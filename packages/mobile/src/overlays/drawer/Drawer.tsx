@@ -102,19 +102,18 @@ export type DrawerBaseProps = SharedProps &
   };
 
 export type DrawerProps = DrawerBaseProps & {
-  /** Inline styles for specific child elements of Drawer */
   styles?: {
     /** Root container element */
     root?: StyleProp<ViewStyle>;
-    /** Overlay backdrop */
+    /** Overlay backdrop element */
     overlay?: StyleProp<ViewStyle>;
-    /** Animated sliding container */
+    /** Animated sliding container element */
     container?: StyleProp<ViewStyle>;
-    /** Handle bar container */
+    /** Handle bar container element */
     handleBar?: PressableProps['style'];
-    /** Handle bar drag element */
+    /** Handle bar indicator element */
     handleBarHandle?: StyleProp<ViewStyle>;
-    /** Inner drawer content wrapper */
+    /** Drawer content wrapper element */
     drawer?: StyleProp<ViewStyle>;
   };
 };
