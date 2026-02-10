@@ -273,10 +273,6 @@ import { [ComponentName] } from '@coinbase/cds-web/[source-category]/[ComponentN
 
 import webStylesData from ':docgen/web/[source-category]/[ComponentName]/styles-data';
 
-## Selectors
-
-<ComponentStylesTable componentName="[ComponentName]" styles={webStylesData} />
-
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
@@ -284,6 +280,10 @@ import webStylesData from ':docgen/web/[source-category]/[ComponentName]/styles-
     <[ComponentName] {...exampleProps} classNames={classNames} />
   )}
 </StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="[ComponentName]" styles={webStylesData} />
 ```
 
 If the component requires state management, bundle everything into a single exported example component.
@@ -316,15 +316,15 @@ export const SelectExample = ({ classNames }) => {
   );
 };
 
-## Selectors
-
-<ComponentStylesTable componentName="Select" styles={webStylesData} />
-
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
   {(classNames) => <SelectExample classNames={classNames} />}
 </StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Select" styles={webStylesData} />
 ```
 
 **Notes:**

@@ -4,12 +4,12 @@ import { ProgressBar } from '@coinbase/cds-web/visualizations';
 
 import webStylesData from ':docgen/web/visualizations/ProgressBar/styles-data';
 
-## Selectors
-
-<ComponentStylesTable componentName="ProgressBar" styles={webStylesData} />
-
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
   {(classNames) => <ProgressBar progress={0.65} classNames={classNames} />}
 </StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="ProgressBar" styles={webStylesData} />
