@@ -49,21 +49,13 @@ export type ContentCardBodyBaseProps = SharedProps & {
    */
   children?: React.ReactNode;
   styles?: {
-    /**
-     * Root container style (wrapper around the content container + children)
-     */
+    /** Root container element (content container + children) */
     root?: StyleProp<ViewStyle>;
-    /**
-     * Container for the content (media + text content)
-     */
+    /** Content container (media + text content) */
     contentContainer?: StyleProp<ViewStyle>;
-    /**
-     * Container for the text content (title + description + label)
-     */
+    /** Text content container (title + description + label) */
     textContainer?: StyleProp<ViewStyle>;
-    /**
-     * Container for the media
-     */
+    /** Media container element */
     mediaContainer?: StyleProp<ViewStyle>;
   };
 };

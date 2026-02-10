@@ -21,10 +21,6 @@ export const StepperExample = ({ classNames, direction }) => {
   return <Stepper direction={direction} activeStepId="2" steps={steps} classNames={classNames} />;
 };
 
-## Selectors
-
-<ComponentStylesTable componentName="Stepper" styles={webStylesData} />
-
 ## Explorer
 
 ### Horizontal
@@ -38,3 +34,7 @@ export const StepperExample = ({ classNames, direction }) => {
 <StylesExplorer selectors={webStylesData.selectors}>
   {(classNames) => <StepperExample classNames={classNames} direction="vertical" />}
 </StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Stepper" styles={webStylesData} />

@@ -96,6 +96,31 @@ const trayContainerPinRightCss = css`
   border-bottom-left-radius: var(--borderRadius-600);
 `;
 
+/**
+ * Static class names for Tray component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const trayClassNames = {
+  /** Root container element */
+  root: 'cds-Tray',
+  /** Overlay backdrop element */
+  overlay: 'cds-Tray-overlay',
+  /** Animated sliding container element */
+  container: 'cds-Tray-container',
+  /** Header section element */
+  header: 'cds-Tray-header',
+  /** Title text element */
+  title: 'cds-Tray-title',
+  /** Content area element */
+  content: 'cds-Tray-content',
+  /** Handle bar container element, only rendered when showHandleBar is true and pin is "bottom" */
+  handleBar: 'cds-Tray-handleBar',
+  /** Handle bar indicator element, only rendered when showHandleBar is true and pin is "bottom" */
+  handleBarHandle: 'cds-Tray-handleBarHandle',
+  /** Close button element */
+  closeButton: 'cds-Tray-closeButton',
+} as const;
+
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 /**

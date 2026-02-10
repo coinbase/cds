@@ -89,25 +89,14 @@ export type DotCountBaseProps = SharedProps &
   };
 
 export type DotCountProps = DotCountBaseProps & {
-  /**
-   * Custom styles for the root element.
-   */
   style?: StyleProp<ViewStyle>;
-  /**
-   * Custom styles for the component.
-   */
+  /** Custom styles for individual elements of the DotCount component */
   styles?: {
-    /**
-     * Custom styles for the root element.
-     */
+    /** Root element */
     root?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the container element.
-     */
+    /** Container element */
     container?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the text element.
-     */
+    /** Text element */
     text?: StyleProp<TextStyle>;
   };
 };

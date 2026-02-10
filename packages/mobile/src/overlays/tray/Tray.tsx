@@ -53,9 +53,9 @@ export type TrayProps = TrayBaseProps &
     pin?: DrawerProps['pin'];
     /** Inline styles for specific child elements of Tray */
     styles?: DrawerProps['styles'] & {
-      /** Scrollable content area */
+      /** Content area element */
       content?: StyleProp<ViewStyle>;
-      /** Header section */
+      /** Header section element */
       header?: StyleProp<ViewStyle>;
       /** Title text element */
       title?: StyleProp<TextStyle>;

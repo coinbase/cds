@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 
 - Update styles jsdocs for tray. [[#385](https://github.com/coinbase/cds/pull/385)]
 
+#### 📘 Misc
+
+- Update jsdocs for styles props. [[#384](https://github.com/coinbase/cds/pull/384)]
+
 ## 8.44.0 (2/9/2026 PST)
 
 #### 🚀 Updates

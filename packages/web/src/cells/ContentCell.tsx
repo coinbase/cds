@@ -97,38 +97,58 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
     titleNode?: React.ReactNode;
     /** Title of content. Up to 2 lines depending on spacing variant. */
     title?: React.ReactNode;
-    /**
-     * Class names for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
-     */
+    /** Class names for subcomponents, ignored when the corresponding `xxNode` prop is used */
     classNames?: {
+      /** Root element */
       root?: string;
+      /** Media element */
       media?: string;
+      /** Accessory element */
       accessory?: string;
+      /** Content container element */
       contentContainer?: string;
+      /** Pressable wrapper element */
       pressable?: string;
+      /** Main content element */
       mainContent?: string;
+      /** Title text element */
       title?: string;
+      /** Subtitle text element */
       subtitle?: string;
+      /** End element */
       end?: string;
+      /** Meta container element */
       metaContainer?: string;
+      /** Meta text element */
       meta?: string;
+      /** Description text element */
       description?: string;
     };
-    /**
-     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
-     */
+    /** Styles for subcomponents, ignored when the corresponding `xxNode` prop is used */
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
+      /** Media element */
       media?: React.CSSProperties;
+      /** Accessory element */
       accessory?: React.CSSProperties;
+      /** Content container element */
       contentContainer?: React.CSSProperties;
+      /** Pressable wrapper element */
       pressable?: React.CSSProperties;
+      /** Main content element */
       mainContent?: React.CSSProperties;
+      /** Title text element */
       title?: React.CSSProperties;
+      /** Subtitle text element */
       subtitle?: React.CSSProperties;
+      /** End element */
       end?: React.CSSProperties;
+      /** Meta container element */
       metaContainer?: React.CSSProperties;
+      /** Meta text element */
       meta?: React.CSSProperties;
+      /** Description text element */
       description?: React.CSSProperties;
     };
   }

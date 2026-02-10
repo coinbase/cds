@@ -121,21 +121,13 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
    * If false, the user must release to complete the action.
    */
   autoCompleteSlideOnThresholdMet?: boolean;
-  /**
-   * Custom styles for the slide button.
-   */
+  /** Custom styles for individual elements of the SlideButton component */
   styles?: {
-    /**
-     * Custom style for the slide button container.
-     */
+    /** Container element */
     container?: StyleProp<ViewStyle>;
-    /**
-     * Custom style for the background area of the slide button.
-     */
+    /** Background element */
     background?: StyleProp<ViewStyle>;
-    /**
-     * Custom style for the handle area of the slide button.
-     */
+    /** Handle element */
     handle?: StyleProp<ViewStyle>;
   };
   /**
