@@ -190,46 +190,46 @@ export type TrayBaseProps = {
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'>;
 
 export type TrayProps = TrayBaseProps & {
-  /** Inline styles for the tray elements */
+  /** Inline styles for specific child elements of Tray */
   styles?: {
-    /** Styles for the root container element */
+    /** Root container element */
     root?: React.CSSProperties;
-    /** Styles for the overlay backdrop */
+    /** Overlay backdrop */
     overlay?: React.CSSProperties;
-    /** Styles for the animated sliding container */
+    /** Animated sliding container */
     container?: React.CSSProperties;
-    /** Styles for the header section */
+    /** Header section */
     header?: React.CSSProperties;
-    /** Styles for the title text */
+    /** Title text element */
     title?: React.CSSProperties;
-    /** Styles for the content area */
+    /** Scrollable content area */
     content?: React.CSSProperties;
-    /** Styles for the handle bar container */
+    /** Handle bar container */
     handleBar?: React.CSSProperties;
-    /** Styles for the handle bar element */
+    /** Handle bar drag element */
     handleBarHandle?: React.CSSProperties;
-    /** Styles for the close button */
+    /** Close button */
     closeButton?: React.CSSProperties;
   };
-  /** Class names for the tray elements */
+  /** Optional CSS class names for specific child elements of Tray */
   classNames?: {
-    /** Class name for the root container element */
+    /** Root container element */
     root?: string;
-    /** Class name for the overlay backdrop */
+    /** Overlay backdrop */
     overlay?: string;
-    /** Class name for the animated sliding container */
+    /** Animated sliding container */
     container?: string;
-    /** Class name for the header section */
+    /** Header section */
     header?: string;
-    /** Class name for the title text */
+    /** Title text element */
     title?: string;
-    /** Class name for the content area */
+    /** Scrollable content area */
     content?: string;
-    /** Class name for the handle bar container */
+    /** Handle bar container */
     handleBar?: string;
-    /** Class name for the handle bar element */
+    /** Handle bar drag element */
     handleBarHandle?: string;
-    /** Class name for the close button */
+    /** Close button */
     closeButton?: string;
   };
 };
