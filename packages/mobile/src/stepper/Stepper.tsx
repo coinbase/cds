@@ -1,19 +1,15 @@
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
+import type { WithTimingConfig } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
+import { durations } from '@coinbase/cds-common/motion/tokens';
 import { containsStep, flattenSteps, isStepVisited } from '@coinbase/cds-common/stepper/utils';
 import type { IconName } from '@coinbase/cds-common/types';
-import {
-  type SpringConfig,
-  type SpringValue as SpringValueType,
-  useSprings,
-} from '@react-spring/native';
 
 import type { IconProps } from '../icons/Icon';
 import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
+import { mobileCurves } from '../motion/convertMotionConfig';
 
 import { DefaultStepperHeaderHorizontal } from './DefaultStepperHeaderHorizontal';
 import { DefaultStepperIconVertical } from './DefaultStepperIconVertical';
@@ -73,13 +69,13 @@ export type StepperStepProps<Metadata extends Record<string, unknown> = Record<s
   StepperSubcomponentProps<Metadata> &
     BoxProps & {
       /**
-       * An animated SpringValue between 0 and 1.
-       * You can use this to animate your own custom Progress subcomponent.
+       * A value between 0 and 1 representing the step's progress.
+       * Progress bar subcomponents animate to this value internally.
        */
-      progress: SpringValueType<number>;
+      progress: number;
       activeStepLabelElement: View | null;
       setActiveStepLabelElement: (element: View) => void;
-      progressSpringConfig?: SpringConfig;
+      progressTimingConfig?: WithTimingConfig;
       animate?: boolean;
       disableAnimateOnMount?: boolean;
       completedStepAccessibilityLabel?: string;
@@ -110,6 +106,7 @@ export type StepperHeaderProps<Metadata extends Record<string, unknown> = Record
     activeStep: StepperValue<Metadata> | null;
     flatStepIds: string[];
     complete?: boolean;
+    disableAnimateOnMount?: boolean;
     style?: StyleProp<ViewStyle>;
   };
 
@@ -129,9 +126,9 @@ export type StepperProgressProps<
   Metadata extends Record<string, unknown> = Record<string, unknown>,
 > = StepperSubcomponentProps<Metadata> &
   BoxProps & {
-    progress: SpringValueType<number>;
+    progress: number;
     activeStepLabelElement: View | null;
-    progressSpringConfig?: SpringConfig;
+    progressTimingConfig?: WithTimingConfig;
     animate?: boolean;
     disableAnimateOnMount?: boolean;
     defaultFill?: ThemeVars.Color;
@@ -215,9 +212,9 @@ export type StepperBaseProps<Metadata extends Record<string, unknown> = Record<s
     StepperIconComponent?: StepperIconComponent<Metadata> | null;
     /** An optional component to render in place of the default Header subcomponent. Set to null to render nothing in this slot. */
     StepperHeaderComponent?: StepperHeaderComponent<Metadata> | null;
-    /** The spring config to use for the progress spring. */
-    progressSpringConfig?: SpringConfig;
-    /** Whether to animate the progress spring.
+    /** The timing config to use for the progress animation. */
+    progressTimingConfig?: WithTimingConfig;
+    /** Whether to animate the progress bar.
      * @default true
      */
     animate?: boolean;
@@ -248,8 +245,12 @@ export type StepperProps<Metadata extends Record<string, unknown> = Record<strin
     };
 
 export const horizontalStepGap = 0.5;
+const cascadeStaggerMs = durations.slow2;
 
-export const defaultProgressSpringConfig = { friction: 0, tension: 100, clamp: true };
+export const defaultProgressTimingConfig: WithTimingConfig = {
+  duration: durations.slow2,
+  easing: mobileCurves.global,
+};
 
 type StepperComponent = <Metadata extends Record<string, unknown> = Record<string, unknown>>(
   props: StepperProps<Metadata> & { ref?: React.Ref<View> },
@@ -287,14 +288,13 @@ const StepperBase = memo(
         StepperHeaderComponent = direction === 'vertical'
           ? null
           : (DefaultStepperHeaderHorizontal as StepperHeaderComponent<Metadata>),
-        progressSpringConfig = defaultProgressSpringConfig,
+        progressTimingConfig = defaultProgressTimingConfig,
         animate = true,
         disableAnimateOnMount,
         ...props
       }: StepperProps<Metadata>,
       ref: React.Ref<View>,
     ) => {
-      const hasMounted = useHasMounted();
       const flatStepIds = useMemo(() => flattenSteps(steps).map((step) => step.id), [steps]);
 
       // Derive activeStep from activeStepId
@@ -339,90 +339,57 @@ const StepperBase = memo(
           : -1;
       }, [activeStepId, steps]);
 
-      const previousComplete = usePreviousValue(complete) ?? false;
-      const previousActiveStepIndex = usePreviousValue(activeStepIndex) ?? -1;
+      // The effective cascade target: when complete, fill all steps up to the last one.
+      // Otherwise, fill up to activeStepIndex.
+      const cascadeTarget = complete ? steps.length - 1 : activeStepIndex;
 
-      const [progressSprings, progressSpringsApi] = useSprings(steps.length, (index) => ({
-        progress: complete ? 1 : 0,
-        config: progressSpringConfig,
-        immediate: !animate || (disableAnimateOnMount && !hasMounted),
-      }));
+      // Cascade animation state: advances one step at a time toward cascadeTarget.
+      // When disableAnimateOnMount is false (default), start unfilled (-1) so the
+      // cascade animates bars one-at-a-time up to the target on mount.
+      const [filledStepIndex, setFilledStepIndex] = useState(() =>
+        disableAnimateOnMount ? cascadeTarget : -1,
+      );
+      const targetStepIndexRef = useRef(cascadeTarget);
 
       useEffect(() => {
-        // update the previous values for next render
-        let stepsToAnimate: number[] = [];
-        let isAnimatingForward = false;
+        targetStepIndexRef.current = cascadeTarget;
 
-        // Case when going from not-complete to complete
-        if (Boolean(complete) !== previousComplete) {
-          if (complete) {
-            // Going to complete: animate from activeStepIndex+1 to end
-            stepsToAnimate = Array.from(
-              { length: steps.length - activeStepIndex - 1 },
-              (_, i) => activeStepIndex + 1 + i,
-            );
-            isAnimatingForward = true;
-          } else {
-            // Going from complete: animate from end down to activeStepIndex+1
-            stepsToAnimate = Array.from(
-              { length: steps.length - activeStepIndex - 1 },
-              (_, i) => steps.length - 1 - i,
-            );
-            isAnimatingForward = false;
-          }
+        if (!animate) {
+          setFilledStepIndex(cascadeTarget);
+          return;
         }
 
-        // Case for normal step navigation (e.g. step 1 => step 2)
-        else if (activeStepIndex !== previousActiveStepIndex) {
-          if (activeStepIndex > previousActiveStepIndex) {
-            // Forward: animate from previousActiveStepIndex+1 to activeStepIndex
-            stepsToAnimate = Array.from(
-              { length: activeStepIndex - previousActiveStepIndex },
-              (_, i) => previousActiveStepIndex + 1 + i,
-            );
-            isAnimatingForward = true;
-          } else {
-            // Backward: animate from previousActiveStepIndex down to activeStepIndex+1
-            stepsToAnimate = Array.from(
-              { length: previousActiveStepIndex - activeStepIndex },
-              (_, i) => previousActiveStepIndex - i,
-            );
-            isAnimatingForward = false;
+        // Advance one step immediately to kick off the cascade
+        setFilledStepIndex((prev) => {
+          if (prev === cascadeTarget) return prev;
+          return prev < cascadeTarget ? prev + 1 : prev - 1;
+        });
+
+        // Continue advancing on a fixed interval for fluid, overlapping springs
+        const interval = setInterval(() => {
+          setFilledStepIndex((prev) => {
+            const target = targetStepIndexRef.current;
+            if (prev === target) return prev;
+            return prev < target ? prev + 1 : prev - 1;
+          });
+        }, cascadeStaggerMs);
+
+        return () => clearInterval(interval);
+      }, [cascadeTarget, animate]);
+
+      // Compute progress for each step: 1 if filled, 0 if not
+      const getStepProgress = useCallback(
+        (index: number) => {
+          if (!animate) {
+            if (complete) return 1;
+            if (activeStepIndex < 0) return 0;
+            return index <= activeStepIndex ? 1 : 0;
           }
-        }
-
-        const animateNextStep = () => {
-          if (stepsToAnimate.length === 0) return;
-          const stepIndex = stepsToAnimate.shift();
-          if (stepIndex === undefined) return;
-
-          progressSpringsApi.start((index) =>
-            index === stepIndex
-              ? {
-                  progress: isAnimatingForward ? 1 : 0,
-                  config: progressSpringConfig,
-                  onRest: animateNextStep,
-                  immediate: !animate || (disableAnimateOnMount && !hasMounted),
-                }
-              : {},
-          );
-        };
-
-        // start the animation loop for relevant springs (stepsToAnimate)
-        animateNextStep();
-      }, [
-        progressSpringsApi,
-        complete,
-        steps.length,
-        steps,
-        activeStepIndex,
-        previousActiveStepIndex,
-        previousComplete,
-        progressSpringConfig,
-        animate,
-        disableAnimateOnMount,
-        hasMounted,
-      ]);
+          if (filledStepIndex < 0) return 0;
+          return index <= filledStepIndex ? 1 : 0;
+        },
+        [complete, animate, activeStepIndex, filledStepIndex],
+      );
 
       return (
         <VStack
@@ -436,6 +403,7 @@ const StepperBase = memo(
             <StepperHeaderComponent
               activeStep={activeStep}
               complete={complete}
+              disableAnimateOnMount={disableAnimateOnMount}
               flatStepIds={flatStepIds}
               style={styles?.header}
             />
@@ -446,42 +414,43 @@ const StepperBase = memo(
                 ? containsStep({ step, targetStepId: activeStepId })
                 : false;
               const RenderedStepComponent = step.Component ?? StepperStepComponent;
+
+              if (!RenderedStepComponent) return null;
+
               return (
-                RenderedStepComponent && (
-                  <RenderedStepComponent
-                    key={step.id}
-                    StepperIconComponent={StepperIconComponent}
-                    StepperLabelComponent={StepperLabelComponent}
-                    StepperProgressComponent={StepperProgressComponent}
-                    StepperStepComponent={StepperStepComponent}
-                    StepperSubstepContainerComponent={StepperSubstepContainerComponent}
-                    active={!complete && activeStepId ? step.id === activeStepId : false}
-                    activeStepId={activeStepId}
-                    activeStepLabelElement={activeStepLabelElement}
-                    animate={animate}
-                    complete={complete}
-                    completedStepAccessibilityLabel={completedStepAccessibilityLabel}
-                    depth={0}
-                    disableAnimateOnMount={disableAnimateOnMount}
-                    flatStepIds={flatStepIds}
-                    isDescendentActive={isDescendentActive}
-                    parentStep={null}
-                    progress={progressSprings[index].progress}
-                    progressSpringConfig={progressSpringConfig}
-                    setActiveStepLabelElement={setActiveStepLabelElement}
-                    step={step}
-                    styles={stepStyles}
-                    visited={
-                      activeStepId
-                        ? isStepVisited({
-                            step,
-                            activeStepId,
-                            flatStepIds,
-                          })
-                        : false
-                    }
-                  />
-                )
+                <RenderedStepComponent
+                  key={step.id}
+                  StepperIconComponent={StepperIconComponent}
+                  StepperLabelComponent={StepperLabelComponent}
+                  StepperProgressComponent={StepperProgressComponent}
+                  StepperStepComponent={StepperStepComponent}
+                  StepperSubstepContainerComponent={StepperSubstepContainerComponent}
+                  active={!complete && activeStepId ? step.id === activeStepId : false}
+                  activeStepId={activeStepId}
+                  activeStepLabelElement={activeStepLabelElement}
+                  animate={animate}
+                  complete={complete}
+                  completedStepAccessibilityLabel={completedStepAccessibilityLabel}
+                  depth={0}
+                  disableAnimateOnMount={disableAnimateOnMount}
+                  flatStepIds={flatStepIds}
+                  isDescendentActive={isDescendentActive}
+                  parentStep={null}
+                  progress={getStepProgress(index)}
+                  progressTimingConfig={progressTimingConfig}
+                  setActiveStepLabelElement={setActiveStepLabelElement}
+                  step={step}
+                  styles={stepStyles}
+                  visited={
+                    activeStepId
+                      ? isStepVisited({
+                          step,
+                          activeStepId,
+                          flatStepIds,
+                        })
+                      : false
+                  }
+                />
               );
             })}
           </Box>

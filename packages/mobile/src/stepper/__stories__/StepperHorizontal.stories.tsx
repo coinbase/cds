@@ -3,6 +3,7 @@ import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
 
 import { Button } from '../../buttons';
+import { Switch } from '../../controls/Switch';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons/Icon';
 import { HStack, VStack } from '../../layout';
@@ -217,6 +218,29 @@ const NoActiveStep = () => {
 };
 
 // ------------------------------------------------------------
+// Disable Animate on Mount
+// ------------------------------------------------------------
+const DisableAnimateOnMount = () => {
+  const [disableAnimateOnMount, setDisableAnimateOnMount] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Switch
+        checked={disableAnimateOnMount}
+        onChange={() => setDisableAnimateOnMount((prev) => !prev)}
+      >
+        disableAnimateOnMount
+      </Switch>
+      <StepperHorizontalExample
+        defaultActiveStepId={basicSteps[2].id}
+        disableAnimateOnMount={disableAnimateOnMount}
+        steps={basicSteps}
+      />
+    </VStack>
+  );
+};
+
+// ------------------------------------------------------------
 // Custom Progress Component
 // ------------------------------------------------------------
 type CustomProgressProps = React.ComponentProps<StepperProgressComponent> & {
@@ -262,6 +286,10 @@ const StepperHorizontalScreen = () => {
 
       <Example title="Initial Active Step">
         <Stepper activeStepId={basicSteps[1].id} direction="horizontal" steps={basicSteps} />
+      </Example>
+
+      <Example title="Disable Animate on Mount">
+        <DisableAnimateOnMount />
       </Example>
 
       <Example title="No Label Text">
