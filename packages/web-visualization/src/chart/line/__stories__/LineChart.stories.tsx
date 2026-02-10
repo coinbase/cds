@@ -1795,6 +1795,7 @@ export const Transitions = () => {
   function TransitionChart({
     data,
     transitions,
+    beaconTransitions: beaconTransitionsProp,
     animate: animateProp,
     idlePulse,
     scrubberRef,
@@ -1802,6 +1803,7 @@ export const Transitions = () => {
   }: {
     data: number[];
     transitions: ChartTransition;
+    beaconTransitions?: ChartTransition;
     animate?: boolean;
     idlePulse?: boolean;
     scrubberRef?: React.RefObject<ScrubberRef | null>;
@@ -1820,7 +1822,7 @@ export const Transitions = () => {
           <Scrubber
             ref={scrubberRef as React.RefObject<ScrubberRef>}
             hideOverlay
-            beaconTransitions={transitions}
+            beaconTransitions={beaconTransitionsProp ?? transitions}
             idlePulse={idlePulse}
           />
         )}
@@ -1972,6 +1974,17 @@ export const Transitions = () => {
 
     return (
       <VStack gap={4}>
+        <Example title="Slow Enter (5s), Delayed Beacon">
+          <TransitionChart
+            idlePulse
+            beaconTransitions={{
+              enter: { type: 'tween', duration: 1, delay: 4 },
+              update: null,
+            }}
+            data={data}
+            transitions={slowEnterNoUpdate}
+          />
+        </Example>
         <Example title="Enter Only (idlePulse)">
           <TransitionChart idlePulse data={data} transitions={enterOnly} />
         </Example>
@@ -2204,6 +2217,64 @@ export const DebugInstantUpdate = () => {
           />
         </CartesianChart>
       </VStack>*/}
+    </VStack>
+  );
+};
+
+export const DebugInstantEnter = () => {
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(previousValue: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, previousValue + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  const [data, setData] = useState(generateInitialData);
+  const [updateCount, setUpdateCount] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+      setUpdateCount((c) => c + 1);
+    }, updateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const instantEnterTransitions = useMemo<ChartTransition>(
+    () => ({
+      enter: { type: 'tween', duration: 0 },
+      update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
+    }),
+    [],
+  );
+
+  return (
+    <VStack gap={4}>
+      <Text font="title3">Instant Enter - Update #{updateCount}</Text>
+      <VStack gap={1}>
+        <Text font="label1">enter duration: 0, spring update (memoized)</Text>
+        <CartesianChart
+          enableScrubbing
+          height={250}
+          inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+          series={[{ id: 'values', data }]}
+        >
+          <Line seriesId="values" strokeWidth={3} transitions={instantEnterTransitions} />
+          <Scrubber hideOverlay idlePulse beaconTransitions={instantEnterTransitions} />
+        </CartesianChart>
+      </VStack>
     </VStack>
   );
 };

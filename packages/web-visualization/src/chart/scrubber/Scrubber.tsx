@@ -345,6 +345,27 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
+      // Resolve the enter transition for the scrubber group fade-in.
+      // Falls back to the default accessory fade when not provided.
+      const groupEnterTransition = useMemo(() => {
+        if (beaconTransitions?.enter === null) return null;
+        return (
+          beaconTransitions?.enter ?? {
+            duration: accessoryFadeTransitionDuration,
+            delay: accessoryFadeTransitionDelay,
+          }
+        );
+      }, [beaconTransitions?.enter]);
+
+      const groupExitTransition = useMemo(() => {
+        if (groupEnterTransition === null) return null;
+        const duration =
+          'duration' in groupEnterTransition
+            ? (groupEnterTransition as { duration?: number }).duration
+            : accessoryFadeTransitionDuration;
+        return { duration: duration ?? accessoryFadeTransitionDuration };
+      }, [groupEnterTransition]);
+
       // Check if we have at least the default X scale
       const defaultXScale = getXScale();
       if (!defaultXScale) return null;
@@ -360,16 +381,13 @@ export const Scrubber = memo(
           data-component="scrubber-group"
           data-testid={testID}
           role="status"
-          {...(animate
+          {...(animate && groupEnterTransition !== null
             ? {
                 animate: {
                   opacity: 1,
-                  transition: {
-                    duration: accessoryFadeTransitionDuration,
-                    delay: accessoryFadeTransitionDelay,
-                  },
+                  transition: groupEnterTransition,
                 },
-                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
+                exit: { opacity: 0, transition: groupExitTransition ?? undefined },
                 initial: { opacity: 0 },
               }
             : {})}

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from 'react';
 import {
   m as motion,
   type Transition,
@@ -81,11 +81,19 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries],
       );
 
+      // Track the previous idle state to detect idle<->scrubbing transitions.
+      // Position changes during these transitions should always be instant,
+      // while data updates within idle state should use the configured transition.
+      const prevIsIdleRef = useRef(isIdle);
+      const isIdleTransition = isIdle !== prevIsIdleRef.current;
+      prevIsIdleRef.current = isIdle;
+
       const activeUpdateTransition = useMemo(() => {
+        if (isIdleTransition) return instantTransition;
         const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
         if (isIdle && animate && resolved !== null) return resolved;
         return instantTransition;
-      }, [transitions?.update, isIdle, animate]);
+      }, [transitions?.update, isIdle, animate, isIdleTransition]);
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
