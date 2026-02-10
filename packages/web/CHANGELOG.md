@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Add static classNames for Tray and update style jsdocs. [[#385](https://github.com/coinbase/cds/pull/385)]
+- Fix Tray drag elastic. [[#385](https://github.com/coinbase/cds/pull/385)]
 
 #### 📘 Misc
 
