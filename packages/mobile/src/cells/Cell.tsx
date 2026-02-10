@@ -72,19 +72,27 @@ export type CellBaseProps = SharedProps &
     bottomContent?: React.ReactNode;
     /** Measure the dimensions of the cell. */
     onLayout?: ViewProps['onLayout'];
-    /** Styles for the components */
+    /** Custom styles for individual elements of the Cell component */
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
+      /** Content container element */
       contentContainer?: StyleProp<ViewStyle>;
+      /** Top content element */
       topContent?: StyleProp<ViewStyle>;
+      /** Bottom content element */
       bottomContent?: StyleProp<ViewStyle>;
+      /** Pressable wrapper element */
       pressable?: StyleProp<ViewStyle>;
+      /** Media element */
       media?: StyleProp<ViewStyle>;
-      /** Wrapper around `children` inside the top content row (controls flex behavior). */
+      /** Children container wrapper, controls flex behavior */
       childrenContainer?: StyleProp<ViewStyle>;
+      /** Intermediary element */
       intermediary?: StyleProp<ViewStyle>;
-      /** Applied to the container of detail or action */
+      /** End element (detail or action container) */
       end?: StyleProp<ViewStyle>;
+      /** Accessory element */
       accessory?: StyleProp<ViewStyle>;
     };
   };

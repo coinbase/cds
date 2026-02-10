@@ -327,66 +327,34 @@ export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
      * Custom class name for the root element.
      */
     className?: string;
-    /**
-     * Custom class names for the component.
-     */
+    /** Custom class names for individual elements of the Carousel component */
     classNames?: {
-      /**
-       * Custom class name for the root element.
-       */
+      /** Root element */
       root?: string;
-      /**
-       * Custom class name for the title element.
-       */
+      /** Title text element */
       title?: string;
-      /**
-       * Custom class name for the navigation element.
-       */
+      /** Navigation controls element */
       navigation?: string;
-      /**
-       * Custom class name for the pagination element.
-       */
+      /** Pagination indicators element */
       pagination?: string;
-      /**
-       * Custom class name for the main carousel element.
-       */
+      /** Main carousel track element */
       carousel?: string;
-      /**
-       * Custom class name for the outer carousel container element.
-       */
+      /** Outer carousel container element */
       carouselContainer?: string;
     };
-    /**
-     * Custom styles for the root element.
-     */
-    style?: React.CSSProperties;
-    /**
-     * Custom styles for the component.
-     */
+    /** Custom styles for individual elements of the Carousel component */
     styles?: {
-      /**
-       * Custom styles for the root element.
-       */
+      /** Root element */
       root?: React.CSSProperties;
-      /**
-       * Custom styles for the title element.
-       */
+      /** Title text element */
       title?: React.CSSProperties;
-      /**
-       * Custom styles for the navigation element.
-       */
+      /** Navigation controls element */
       navigation?: React.CSSProperties;
-      /**
-       * Custom styles for the pagination element.
-       */
+      /** Pagination indicators element */
       pagination?: React.CSSProperties;
-      /**
-       * Custom styles for the main carousel element.
-       */
+      /** Main carousel track element */
       carousel?: React.CSSProperties;
-      /**
-       * Custom styles for the outer carousel container element.
-       */
+      /** Outer carousel container element */
       carouselContainer?: React.CSSProperties;
     };
   };

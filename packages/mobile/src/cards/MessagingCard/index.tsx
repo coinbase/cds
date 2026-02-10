@@ -11,6 +11,7 @@ export type MessagingCardBaseProps = MessagingCardLayoutProps;
 export type MessagingCardProps = MessagingCardBaseProps &
   Omit<CardRootProps, 'children'> & {
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
     };
   };

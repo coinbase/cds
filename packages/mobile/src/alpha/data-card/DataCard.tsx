@@ -8,6 +8,7 @@ import { DataCardLayout, type DataCardLayoutProps } from './DataCardLayout';
 
 export type DataCardBaseProps = DataCardLayoutProps & {
   styles?: {
+    /** Root element */
     root?: StyleProp<ViewStyle>;
   };
 };

@@ -24,10 +24,15 @@ export type MediaCardLayoutBaseProps = {
 
 export type MediaCardLayoutProps = MediaCardLayoutBaseProps & {
   styles?: {
+    /** Layout container element */
     layoutContainer?: StyleProp<ViewStyle>;
+    /** Content container element */
     contentContainer?: StyleProp<ViewStyle>;
+    /** Text container element */
     textContainer?: StyleProp<ViewStyle>;
+    /** Header container element */
     headerContainer?: StyleProp<ViewStyle>;
+    /** Media container element */
     mediaContainer?: StyleProp<ViewStyle>;
   };
 };

@@ -140,25 +140,14 @@ export type ProgressBarWithFloatLabelProps = Pick<
    * @default above
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below'>;
-  /**
-   * Custom styles for the progress bar with float label root.
-   */
   style?: StyleProp<ViewStyle>;
-  /**
-   * Custom styles for the progress bar with float label.
-   */
+  /** Custom styles for individual elements of the ProgressBarWithFloatLabel component */
   styles?: {
-    /**
-     * Custom styles for the progress bar with float label root.
-     */
+    /** Root element */
     root?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the label container.
-     */
+    /** Label container element */
     labelContainer?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the label.
-     */
+    /** Label element */
     label?: StyleProp<TextStyle>;
   };
 };

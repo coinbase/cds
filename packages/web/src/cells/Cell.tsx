@@ -131,34 +131,50 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     innerSpacing?: CellSpacing;
     /** The content to display below the main cell content */
     bottomContent?: React.ReactNode;
-    /** Styles for the components */
+    /** Custom styles for individual elements of the Cell component */
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
+      /** Content container element */
       contentContainer?: React.CSSProperties;
+      /** Top content element */
       topContent?: React.CSSProperties;
+      /** Bottom content element */
       bottomContent?: React.CSSProperties;
+      /** Pressable wrapper element */
       pressable?: React.CSSProperties;
+      /** Media element */
       media?: React.CSSProperties;
-      /** Wrapper around `children` inside the top content row (controls flex behavior). */
+      /** Children container wrapper, controls flex behavior */
       childrenContainer?: React.CSSProperties;
+      /** Intermediary element */
       intermediary?: React.CSSProperties;
-      /** Applied to the container of detail or action */
+      /** End element (detail or action container) */
       end?: React.CSSProperties;
+      /** Accessory element */
       accessory?: React.CSSProperties;
     };
-    /** Class names for the components */
+    /** Custom class names for individual elements of the Cell component */
     classNames?: {
+      /** Root element */
       root?: string;
+      /** Content container element */
       contentContainer?: string;
+      /** Top content element */
       topContent?: string;
+      /** Bottom content element */
       bottomContent?: string;
+      /** Pressable wrapper element */
       pressable?: string;
+      /** Media element */
       media?: string;
-      /** Wrapper around `children` inside the top content row (controls flex behavior). */
+      /** Children container wrapper, controls flex behavior */
       childrenContainer?: string;
+      /** Intermediary element */
       intermediary?: string;
-      /** Applied to the container of detail or action */
+      /** End element (detail or action container) */
       end?: string;
+      /** Accessory element */
       accessory?: string;
     };
   }

@@ -52,11 +52,11 @@ export type TrayProps = TrayBaseProps &
   Omit<DrawerProps, 'pin' | 'children'> & {
     pin?: DrawerProps['pin'];
     styles?: DrawerProps['styles'] & {
-      /** Styles for the content area */
+      /** Content area element */
       content?: StyleProp<ViewStyle>;
-      /** Styles for the header section */
+      /** Header section element */
       header?: StyleProp<ViewStyle>;
-      /** Styles for the title text */
+      /** Title text element */
       title?: StyleProp<TextStyle>;
     };
   };

@@ -44,39 +44,23 @@ export type ContentCardBodyBaseProps = Polymorphic.ExtendableProps<
      */
     children?: React.ReactNode;
     styles?: {
-      /**
-       * Root container style (content container + children)
-       */
+      /** Root container element (content container + children) */
       root?: React.CSSProperties;
-      /**
-       * Container for the content (media + text content)
-       */
+      /** Content container (media + text content) */
       contentContainer?: React.CSSProperties;
-      /**
-       * Container for the text content (title + description + label)
-       */
+      /** Text content container (title + description + label) */
       textContainer?: React.CSSProperties;
-      /**
-       * Container for the media
-       */
+      /** Media container element */
       mediaContainer?: React.CSSProperties;
     };
     classNames?: {
-      /**
-       * Root container class name
-       */
+      /** Root container element */
       root?: string;
-      /**
-       * Container for the content (media + text content)
-       */
+      /** Content container (media + text content) */
       contentContainer?: string;
-      /**
-       * Container for the text content (title + description + label)
-       */
+      /** Text content container (title + description + label) */
       textContainer?: string;
-      /**
-       * Container for the media
-       */
+      /** Media container element */
       mediaContainer?: string;
     };
   }

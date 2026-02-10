@@ -119,35 +119,21 @@ export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBasePro
      */
     width?: HStackProps<HStackDefaultElement>['width'];
     styles?: {
-      /**
-       * Style applied to the root container.
-       */
+      /** Root container element */
       root?: React.CSSProperties;
-      /**
-       * Style applied to the scroll container.
-       */
+      /** Scroll container element */
       scrollContainer?: React.CSSProperties;
-      /**
-       * Style applied to the paddle icon buttons.
-       */
+      /** Paddle icon buttons */
       paddle?: React.CSSProperties;
-      /**
-       * Style applied to the root of the Tabs component.
-       */
+      /** Tabs root element */
       tabs?: React.CSSProperties;
     };
     classNames?: {
-      /**
-       * Class name applied to the root container.
-       */
+      /** Root container element */
       root?: string;
-      /**
-       * Class name applied to the scroll container.
-       */
+      /** Scroll container element */
       scrollContainer?: string;
-      /**
-       * Class name applied to the root of the Tabs component.
-       */
+      /** Tabs root element */
       tabs?: string;
     };
   };
