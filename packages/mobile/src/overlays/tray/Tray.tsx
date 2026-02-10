@@ -51,7 +51,6 @@ export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
 export type TrayProps = TrayBaseProps &
   Omit<DrawerProps, 'pin' | 'children'> & {
     pin?: DrawerProps['pin'];
-    /** Inline styles for specific child elements of Tray */
     styles?: DrawerProps['styles'] & {
       /** Content area element */
       content?: StyleProp<ViewStyle>;
