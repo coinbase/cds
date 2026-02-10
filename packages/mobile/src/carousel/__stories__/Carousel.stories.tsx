@@ -125,7 +125,7 @@ const BasicExamples = () => {
   const windowWidth = Dimensions.get('window').width;
   const carouselSizing = windowWidth - horizontalPadding * 2;
 
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   const twoItemsWidth = (carouselSizing - horizontalGap) / 2;
   const threeItemsWidth = (carouselSizing - horizontalGap * 2) / 3;
@@ -199,7 +199,7 @@ const BasicExamples = () => {
           snapMode="page"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
-            carousel: { gap: theme.space[1] },
+            carousel: { gap: theme.space[2] },
           }}
           title="Full Width Cards"
         >
@@ -374,7 +374,7 @@ const AutoplayExample = () => {
         paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[2] },
-          carousel: { gap: theme.space[1] },
+          carousel: { gap: theme.space[2] },
         }}
         title="Autoplay Carousel"
       >
@@ -414,7 +414,7 @@ const DynamicContentExample = () => {
         paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
-          carousel: { gap: theme.space[1], height: 156 },
+          carousel: { gap: theme.space[2], height: 156 },
         }}
         title="Explore Assets"
       >
@@ -490,7 +490,7 @@ const AnimatedExample = () => {
         paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
-          carousel: { gap: theme.space[1] },
+          carousel: { gap: theme.space[2] },
         }}
         title="Animated Selection"
       >
@@ -596,7 +596,7 @@ const ImperativeApiExample = () => {
           snapMode="item"
           styles={{
             root: { paddingHorizontal: theme.space[3] },
-            carousel: { gap: theme.space[1] },
+            carousel: { gap: theme.space[2] },
           }}
           title="Imperative API"
         >
@@ -623,7 +623,7 @@ const LoopingExamples = () => {
   const windowWidth = Dimensions.get('window').width;
   const carouselSizing = windowWidth - horizontalPadding * 2;
 
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   const threeItemsWidth = (carouselSizing - horizontalGap * 2) / 3;
 

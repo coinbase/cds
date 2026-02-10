@@ -1,18 +1,12 @@
-:::tip Accessibility tip
+## Basics
 
-**Labels**
+The recommended way to use a `Tray` is to add to dom when visible, and use onCloseComplete to remove it.
+It is also recommended to pin it to the right side of the screen on tablet and desktop, and pin to bottom with handlebar on mobile.
 
-Trays require an accessibility label, which we set to `title` by default. However, if you don't want to provide a `title` or there's other text that gives the user better context to the tray, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
-
-:::
-
-### Basic usage with Callback
-
-The recommended way to use a `Tray` is by passing a callback as children, which receives a `handleClose` function:
-
-```tsx live
+```jsx live
 function BasicTray() {
   const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
   const handleOpen = () => setVisible(true);
   const handleClose = () => setVisible(false);
 
@@ -20,13 +14,27 @@ function BasicTray() {
     <VStack gap={2}>
       <Button onClick={handleOpen}>Open Tray</Button>
       {visible && (
-        <Tray title="Example Title" onCloseComplete={handleClose}>
-          {({ handleClose }) => (
-            <VStack gap={2}>
-              <Text>This is the content of the tray.</Text>
-              <Button onClick={handleClose}>Close</Button>
-            </VStack>
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title="Example title"
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+            />
           )}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
         </Tray>
       )}
     </VStack>
@@ -34,23 +42,332 @@ function BasicTray() {
 }
 ```
 
-### Using Ref to Control the Tray
+## Pinning
+
+While you can pin the tray to any side of the screen, it is recommended to only use pin to bottom or right. Bottom is recommended for mobile, and right is recommended for tablet and desktop.
+
+Handlebar is only shown on bottom pinned trays, and adjusts the padding to match other pins. It is deprecated to use bottom pin without handlebar.
+
+```jsx live
+function PinnedTray() {
+  const [pinDirection, setPinDirection] = useState(null);
+  const { isPhone } = useBreakpoints();
+  const handleClose = () => setPinDirection(null);
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} flexWrap="wrap">
+        <Button onClick={() => setPinDirection('right')}>Open Right Tray</Button>
+        <Button onClick={() => setPinDirection('bottom')}>Open Bottom Tray</Button>
+        <Button onClick={() => setPinDirection('left')}>Open Left Tray</Button>
+        <Button onClick={() => setPinDirection('top')}>Open Top Tray</Button>
+      </HStack>
+      {pinDirection !== null && (
+        <Tray
+          pin={pinDirection}
+          showHandleBar
+          onCloseComplete={handleClose}
+          title="Example title"
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+            />
+          )}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+## Content
+
+Web Tray will automatically be scrollable when the content is too large to fit. You can adjust `verticalDrawerPercentageOfView` to control the maximum height of the tray when pinned to the bottom or top.
+
+When scrolling, a border is added to the header.
+
+```jsx live
+function ResponsiveTray() {
+  function ResponsiveTray({ styles, ...props }) {
+    const [visible, setVisible] = useState(false);
+    const { isPhone } = useBreakpoints();
+    const handleOpen = () => setVisible(true);
+    const handleClose = () => setVisible(false);
+
+    return (
+      <Tray
+        {...props}
+        pin={isPhone ? 'bottom' : 'right'}
+        showHandleBar={isPhone}
+        styles={{
+          ...styles,
+          content: {
+            paddingBottom: 'var(--space-3)',
+            ...styles?.content,
+          },
+        }}
+        verticalDrawerPercentageOfView="90%"
+      />
+    );
+  }
+
+  function Example() {
+    const [visible, setVisible] = useState(false);
+    const handleOpen = () => setVisible(true);
+    const handleClose = () => setVisible(false);
+
+    return (
+      <VStack gap={2}>
+        <Button onClick={handleOpen}>Open Scrolling Tray</Button>
+        {visible && (
+          <ResponsiveTray onCloseComplete={handleClose} title="Header">
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                spacingVariant="condensed"
+                title="Title"
+                description="Description"
+                accessory="arrow"
+                onClick={() => alert('Cell clicked!')}
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+              />
+            ))}
+          </ResponsiveTray>
+        )}
+      </VStack>
+    );
+  }
+
+  return <Example />;
+}
+```
+
+### With Illustration in Header
+
+You can pass in a custom node to `title` to render a custom header.
+
+```jsx live
+function IllustrationSectionHeaderTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  const titleId = useId();
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Illustration Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title={
+            <VStack gap={{ phone: 1.5, tablet: 2, desktop: 2 }}>
+              <Pictogram name="addWallet" />
+              <Text id={titleId} font="title3">
+                Section header
+              </Text>
+            </VStack>
+          }
+          accessibilityLabelledBy={titleId}
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+#### With Full Bleed Header
+
+You can use a full bleed header with a background image. Use `header` and `title` to add a section header that stays fixed below the image while content scrolls. When scrolling, a border appears below the header area.
+
+```jsx live
+function FullBleedHeaderTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  const titleId = useId();
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Full Bleed Header Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="/img/tray_header.png"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+          header={
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+              Section header
+            </Text>
+          }
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          accessibilityLabelledBy={titleId}
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+##### With Scrollable List Cells
+
+When using a full bleed header with scrollable content, the `header` prop keeps the section header fixed while list cells scroll beneath it.
+
+```jsx live
+function FullBleedHeaderScrollableTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  const titleId = useId();
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Full Bleed Scrollable Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="/img/tray_header.png"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+          header={
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+              Section header
+            </Text>
+          }
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          accessibilityLabelledBy={titleId}
+          verticalDrawerPercentageOfView="90%"
+        >
+          {Array.from({ length: 20 }, (_, i) => (
+            <ListCell
+              key={i}
+              spacingVariant="condensed"
+              title="Title"
+              description="Description"
+              accessory="arrow"
+              onClick={() => alert('Cell clicked!')}
+              innerSpacing={{
+                marginX: -4,
+                paddingX: 4,
+                paddingY: 1,
+              }}
+            />
+          ))}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+## Controlled
+
+You have various ways to control the state of a tray.
+
+### Via Ref
+
+You can use a ref to control the tray, which provides a `close()` method.
 
 :::tip Accessibility tip
 
-**Trigger Focus**
-
-A `ref` to the trigger that opens the tray, along with an `onClosedComplete` method to reset focus on the trigger when the tray closes, needs to be wired up for accessibility (see code example below).
+A `ref` to the trigger that opens the tray, along with an `onClosedComplete` method to reset focus on the trigger when the tray closes, needs to be wired up for accessibility.
 
 :::
 
-You can also control the Tray using a ref, which provides a `close()` method:
-
-```tsx live
+```jsx live
 function TrayWithRef() {
   const [visible, setVisible] = useState(false);
-  const trayRef = useRef<DrawerRefBaseProps>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const trayRef = useRef(null);
+  const triggerRef = useRef(null);
 
   const handleOpen = () => setVisible(true);
   const handleClose = () => {
@@ -64,7 +381,7 @@ function TrayWithRef() {
         Open Tray
       </Button>
       {visible && (
-        <Tray ref={trayRef} title="Ref Controlled Tray" onCloseComplete={handleClose}>
+        <Tray ref={trayRef} title="Ref Controlled Tray" onCloseComplete={handleClose} pin="right">
           <VStack gap={2}>
             <Text>Control this tray using the ref.</Text>
             <Button onClick={() => trayRef.current?.close()}>Close</Button>
@@ -76,90 +393,45 @@ function TrayWithRef() {
 }
 ```
 
-### Scrollable Content
+### Prevent Dismissal
 
-Trays with long content will automatically be scrollable.
+You can prevent the user from dismissing the tray with `preventDismiss`. This will remove built in dismiss functionality, including swipe to close with handlebar, close button, pressing ESC, and clicking outside.
 
-```tsx live
-function ScrollableTray() {
+You must provide an explicit action button to close the tray.
+
+```jsx live
+function PreventDismissTray() {
   const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
   const handleOpen = () => setVisible(true);
   const handleClose = () => setVisible(false);
 
   return (
     <VStack gap={2}>
-      <Button onClick={handleOpen}>Open Scrollable Tray</Button>
+      <Button onClick={handleOpen}>Open Tray</Button>
       {visible && (
-        <Tray title="Scrollable Content" onCloseComplete={handleClose}>
-          {({ handleClose }) => (
-            <VStack gap={2}>
-              <VStack gap={2}>
-                <Text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Text>
-                <Text>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-                <Text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Text>
-                <Text>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-                <Text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Text>
-                <Text>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-                <Text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Text>
-                <Text>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-                <Text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Text>
-                <Text>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-                <Text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Text>
-                <Text>
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                  culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-              </VStack>
-              <HStack justifyContent="flex-end">
-                <Button onClick={handleClose}>Close</Button>
-              </HStack>
-            </VStack>
+        <Tray
+          preventDismiss
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title="Example title"
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+            />
           )}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            You cannot dismiss this tray by clicking outside or pressing ESC. You must click the
+            close button below to close it.
+          </Text>
         </Tray>
       )}
     </VStack>
@@ -167,30 +439,46 @@ function ScrollableTray() {
 }
 ```
 
-### Non-Dismissible Tray
+## Accessibility
 
-Trays can be configured to prevent the user from dismissing the tray by clicking close, clicking outside, or pressing ESC.
+Trays require an accessibility label. If you pass in a ReactNode to `title`, make sure to set `accessibilityLabel` or `accessibilityLabelledBy`.
 
-```tsx live
-function NonDismissibleTray() {
+## Styling
+
+The Tray component exposes `styles` and `classNames` props for customizing various parts of the component. Available keys include: `root`, `overlay`, `container`, `header`, `title`, `content`, `footer`, `handleBar`, `handleBarHandle`, and `closeButton`.
+
+### Container
+
+You can customize the tray's outer container to adjust the border radius for floating trays or change the max width.
+
+```jsx live
+function CustomContainerTray() {
   const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
   const handleOpen = () => setVisible(true);
   const handleClose = () => setVisible(false);
 
   return (
     <VStack gap={2}>
-      <Button onClick={handleOpen}>Open Non-Dismissible Tray</Button>
+      <Button onClick={handleOpen}>Open Rounded Tray</Button>
       {visible && (
-        <Tray title="Non-Dismissible Tray" preventDismiss onCloseComplete={handleClose}>
-          {({ handleClose }) => (
-            <VStack gap={2}>
-              <Text>
-                This tray cannot be dismissed, user must click an explicit action button to close
-                it.
-              </Text>
-              <Button onClick={handleClose}>Close</Button>
-            </VStack>
-          )}
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title="Custom container"
+          styles={{
+            container: {
+              borderRadius: 'var(--borderRadius-600)',
+              top: 'var(--space-2)',
+              bottom: 'var(--space-2)',
+              right: 'var(--space-2)',
+            },
+          }}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            This tray has custom border radius and margin applied to the container.
+          </Text>
         </Tray>
       )}
     </VStack>
@@ -198,55 +486,639 @@ function NonDismissibleTray() {
 }
 ```
 
-### Multiple Overlay Flow
+### Title
 
-When transitioning between overlays, ensure proper dismounting using `onCloseComplete`:
+For full bleed images, use the `title` prop with a Box containing an image.
 
-```tsx live
-function TrayToModalFlow() {
-  const [isTrayVisible, setIsTrayVisible] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+```jsx live
+function BackgroundImageHeaderTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
 
-  const openTray = () => setIsTrayVisible(true);
-  const closeTray = () => setIsTrayVisible(false);
-  const openModal = () => setIsModalVisible(true);
-  const closeModal = () => setIsModalVisible(false);
-
-  const handleTrayClose = useCallback(() => {
-    closeTray();
-    openModal();
-  }, []);
+  const titleId = useId();
 
   return (
     <VStack gap={2}>
-      <Button onClick={openTray}>Start Flow</Button>
-      {isTrayVisible && (
-        <Tray title="First Step" onCloseComplete={handleTrayClose}>
-          {({ handleClose }) => (
-            <VStack gap={2}>
-              <Text>Click below to continue to the modal</Text>
-              <Button onClick={handleClose}>Continue to Modal</Button>
-            </VStack>
-          )}
+      <Button onClick={handleOpen}>Open Image Header Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="/img/tray_header.png"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+          header={
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+              Section header
+            </Text>
+          }
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          accessibilityLabelledBy={titleId}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            The header displays a full bleed background image.
+          </Text>
         </Tray>
       )}
-      <Modal visible={isModalVisible} onRequestClose={closeModal}>
-        <ModalHeader title="Second Step" />
-        <ModalBody>
-          <VStack gap={2}>
-            <Text>This is the second step in the flow.</Text>
-            <Button onClick={closeModal}>Finish</Button>
+    </VStack>
+  );
+}
+```
+
+### Content
+
+You can customize the content area to adjust padding, background, or other properties.
+
+```jsx live
+function CustomContentTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Custom Content Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title="Custom content styling"
+          styles={{
+            content: {
+              backgroundColor: 'var(--color-bgSecondary)',
+              paddingTop: 'var(--space-3)',
+              paddingBottom: 'var(--space-3)',
+            },
+          }}
+        >
+          <Text color="fgMuted">
+            The content area has a secondary background color and custom padding.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Footer
+
+You can customize the footer section's appearance, such as the background color.
+
+```jsx live
+function CustomFooterTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Custom Footer Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title="Custom footer styling"
+          styles={{
+            footer: {
+              backgroundColor: 'var(--color-bgSecondary)',
+            },
+          }}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+            />
+          )}
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            The footer has a secondary background color.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Handlebar
+
+You can customize the handlebar appearance to change its color and opacity. This is useful when the default handlebar color does not have enough contrast against an image header, such as inverting it to white for dark or colorful backgrounds.
+
+```jsx live
+function FullBleedWithInvertedHandlebar() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  const titleId = useId();
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Full Bleed Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="/img/tray_header.png"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+          header={
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+              Section header
+            </Text>
+          }
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          accessibilityLabelledBy={titleId}
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Close Button
+
+You can customize the close button to adjust the button's appearance, such as to improve visibility against header images or custom backgrounds.
+
+```jsx live
+function FullBleedWithStyledCloseButton() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  const titleId = useId();
+
+  return (
+    <VStack gap={2}>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Button onClick={handleOpen}>Open Full Bleed Tray</Button>
+      {visible && (
+        <Tray
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={false}
+          onCloseComplete={handleClose}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="/img/tray_header.png"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+          header={
+            <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+              Section header
+            </Text>
+          }
+          styles={{
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          classNames={{
+            closeButton: 'tray-close-button-inverted',
+          }}
+          accessibilityLabelledBy={titleId}
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+## Composed Examples
+
+### Floating
+
+You can create a floating tray by adjusting the inset based on pin direction.
+
+```jsx live
+function FloatingTrayExample() {
+  function FloatingTray({
+    pin = 'right',
+    offset = '2',
+    borderRadius = '600',
+    children,
+    styles,
+    ...props
+  }) {
+    const theme = useTheme();
+
+    const offsetPx = theme.space[offset];
+    const borderRadiusVar = `var(--borderRadius-${borderRadius})`;
+
+    const floatingInsets = useMemo(() => {
+      switch (pin) {
+        case 'right':
+          return { top: offsetPx, bottom: offsetPx, right: offsetPx };
+        case 'left':
+          return { top: offsetPx, bottom: offsetPx, left: offsetPx };
+        case 'top':
+          return { top: offsetPx, left: offsetPx, right: offsetPx };
+        case 'bottom':
+          return { bottom: offsetPx, left: offsetPx, right: offsetPx };
+        default:
+          return { top: offsetPx, bottom: offsetPx, right: offsetPx };
+      }
+    }, [pin, offsetPx]);
+
+    return (
+      <Tray
+        {...props}
+        pin={pin}
+        showHandleBar
+        styles={{
+          ...styles,
+          container: {
+            ...floatingInsets,
+            // All corners rounded since the tray is floating (not flush to edge)
+            borderRadius: borderRadiusVar,
+            ...styles?.container,
+          },
+        }}
+      >
+        {children}
+      </Tray>
+    );
+  }
+
+  function Example() {
+    const [pinDirection, setPinDirection] = useState(null);
+    const handleClose = () => setPinDirection(null);
+
+    return (
+      <VStack gap={2}>
+        <HStack gap={2} flexWrap="wrap">
+          <Button onClick={() => setPinDirection('right')}>Open Right Tray</Button>
+          <Button onClick={() => setPinDirection('bottom')}>Open Bottom Tray</Button>
+          <Button onClick={() => setPinDirection('left')}>Open Left Tray</Button>
+          <Button onClick={() => setPinDirection('top')}>Open Top Tray</Button>
+        </HStack>
+        {pinDirection !== null && (
+          <FloatingTray pin={pinDirection} onCloseComplete={handleClose} title="Example title">
+            <VStack paddingBottom={2}>
+              {Array.from({ length: 20 }, (_, i) => (
+                <ListCell
+                  key={i}
+                  spacingVariant="condensed"
+                  title="Title"
+                  description="Description"
+                  accessory="arrow"
+                  onClick={() => alert('Cell clicked!')}
+                  innerSpacing={{
+                    marginX: -4,
+                    paddingX: 4,
+                    paddingY: 1,
+                  }}
+                />
+              ))}
+            </VStack>
+          </FloatingTray>
+        )}
+      </VStack>
+    );
+  }
+
+  return <Example />;
+}
+```
+
+### Multiple Screen Example
+
+You can create a tray with multiple screens that have back navigation.
+
+```jsx live
+function MultiScreenTrayExample() {
+  function MultiScreenTray({ screens, initialScreen = 0, onCloseComplete, ...props }) {
+    const [currentScreen, setCurrentScreen] = useState(initialScreen);
+    const screen = screens[currentScreen];
+
+    const handleBack = () => setCurrentScreen(0);
+    const handleNavigate = (index) => setCurrentScreen(index);
+
+    return (
+      <Tray
+        {...props}
+        onCloseComplete={onCloseComplete}
+        title={
+          <VStack alignItems="flex-start" gap={{ phone: 1.5, tablet: 2, desktop: 2 }}>
+            {currentScreen > 0 && (
+              <IconButton
+                transparent
+                name="backArrow"
+                onClick={handleBack}
+                accessibilityLabel="Go back"
+                margin={-1.5}
+              />
+            )}
+            <Text font="title3">{screen.title}</Text>
           </VStack>
-        </ModalBody>
-      </Modal>
-    </VStack>
-  );
+        }
+        accessibilityLabel={screen.title}
+      >
+        {screen.render({ onNavigate: handleNavigate })}
+      </Tray>
+    );
+  }
+
+  function Example() {
+    const [visible, setVisible] = useState(false);
+    const { isPhone } = useBreakpoints();
+    const handleOpen = () => setVisible(true);
+    const handleClose = () => setVisible(false);
+
+    const screens = [
+      {
+        title: 'Settings',
+        render: ({ onNavigate }) => (
+          <VStack>
+            <ListCell
+              spacingVariant="condensed"
+              title="Account"
+              description="Manage your account settings"
+              accessory="arrow"
+              onClick={() => onNavigate(1)}
+              innerSpacing={{ marginX: -4, paddingX: 4, paddingY: 1 }}
+            />
+            <ListCell
+              spacingVariant="condensed"
+              title="Notifications"
+              description="Configure notification preferences"
+              accessory="arrow"
+              onClick={() => onNavigate(2)}
+              innerSpacing={{ marginX: -4, paddingX: 4, paddingY: 1 }}
+            />
+            <ListCell
+              spacingVariant="condensed"
+              title="Privacy"
+              description="Review privacy settings"
+              accessory="arrow"
+              onClick={() => onNavigate(3)}
+              innerSpacing={{ marginX: -4, paddingX: 4, paddingY: 1 }}
+            />
+          </VStack>
+        ),
+      },
+      {
+        title: 'Account',
+        render: () => (
+          <Text color="fgMuted" paddingBottom={2}>
+            Account settings content goes here.
+          </Text>
+        ),
+      },
+      {
+        title: 'Notifications',
+        render: () => (
+          <Text color="fgMuted" paddingBottom={2}>
+            Notification preferences content goes here.
+          </Text>
+        ),
+      },
+      {
+        title: 'Privacy',
+        render: () => (
+          <Text color="fgMuted" paddingBottom={2}>
+            Privacy settings content goes here.
+          </Text>
+        ),
+      },
+    ];
+
+    return (
+      <VStack gap={2}>
+        <Button onClick={handleOpen}>Open Multi-Screen Tray</Button>
+        {visible && (
+          <MultiScreenTray
+            screens={screens}
+            pin={isPhone ? 'bottom' : 'right'}
+            showHandleBar={isPhone}
+            onCloseComplete={handleClose}
+          />
+        )}
+      </VStack>
+    );
+  }
+
+  return <Example />;
 }
 ```
 
-Note: The Tray component is an elevated container that is pinned to the bottom of the screen and provides a standardized way to present bottom sheets in your web application. Key points:
+### Header with Illustration
 
-- Use `onCloseComplete` for cleanup when the tray is dismissed
-- Children can be either a React node or a render function that receives a `handleClose` function
-- The `ref` provides `open()` and `close()` methods for controlling the tray
-- When transitioning between overlays, ensure proper dismounting using lifecycle methods
+You can create a reusable responsive tray with a pictogram and title in the header.
+
+```jsx live
+function IllustrationTrayExample() {
+  function IllustrationTray({ pictogramName, title, children, ...props }) {
+    const titleId = useId();
+
+    return (
+      <Tray
+        {...props}
+        title={
+          <VStack gap={{ phone: 1.5, tablet: 2, desktop: 2 }}>
+            <Pictogram name={pictogramName} />
+            <Text id={titleId} font="title3">
+              {title}
+            </Text>
+          </VStack>
+        }
+        accessibilityLabelledBy={titleId}
+      >
+        {children}
+      </Tray>
+    );
+  }
+
+  function Example() {
+    const [visible, setVisible] = useState(false);
+    const { isPhone } = useBreakpoints();
+    const handleOpen = () => setVisible(true);
+    const handleClose = () => setVisible(false);
+
+    return (
+      <VStack gap={2}>
+        <Button onClick={handleOpen}>Open Illustration Tray</Button>
+        {visible && (
+          <IllustrationTray
+            pictogramName="addWallet"
+            title="Section header"
+            pin={isPhone ? 'bottom' : 'right'}
+            showHandleBar={isPhone}
+            onCloseComplete={handleClose}
+          >
+            <Text color="fgMuted" font="body" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </IllustrationTray>
+        )}
+      </VStack>
+    );
+  }
+
+  return <Example />;
+}
+```
+
+### Responsive
+
+You can create a reusable responsive tray that adapts its pin direction and handle bar visibility based on the viewport size.
+
+```jsx live
+function ResponsiveTrayExample() {
+  function ResponsiveTray({ pin, showHandleBar, footer, footerLabel, children, ...props }) {
+    const { isPhone } = useBreakpoints();
+
+    const resolvedFooter =
+      footer ??
+      (footerLabel
+        ? ({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  {footerLabel}
+                </Button>
+              }
+            />
+          )
+        : undefined);
+
+    return (
+      <Tray
+        {...props}
+        pin={pin ?? (isPhone ? 'bottom' : 'right')}
+        showHandleBar={showHandleBar ?? isPhone}
+        footer={resolvedFooter}
+      >
+        {children}
+      </Tray>
+    );
+  }
+
+  function Example() {
+    const [visible, setVisible] = useState(false);
+    const handleOpen = () => setVisible(true);
+    const handleClose = () => setVisible(false);
+
+    return (
+      <VStack gap={2}>
+        <Button onClick={handleOpen}>Open Responsive Tray</Button>
+        {visible && (
+          <ResponsiveTray onCloseComplete={handleClose} title="Example title" footerLabel="Close">
+            <Text color="fgMuted" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </ResponsiveTray>
+        )}
+      </VStack>
+    );
+  }
+
+  return <Example />;
+}
+```

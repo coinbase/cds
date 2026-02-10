@@ -34,17 +34,27 @@ export type RadioCellBaseProps<RadioValue extends string> = Omit<
 
 export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {
   classNames?: {
+    /** Root element */
     root?: string;
+    /** Radio input container element */
     radioContainer?: string;
+    /** Title text element */
     title?: string;
+    /** Description text element */
     description?: string;
+    /** Content container element */
     contentContainer?: string;
   };
   styles?: {
+    /** Root element */
     root?: CSSProperties;
+    /** Radio input container element */
     radioContainer?: CSSProperties;
+    /** Title text element */
     title?: CSSProperties;
+    /** Description text element */
     description?: CSSProperties;
+    /** Content container element */
     contentContainer?: CSSProperties;
   };
 };

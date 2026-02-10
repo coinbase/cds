@@ -1,196 +1,775 @@
-### Basic usage with Callback
+## Basics
 
-The recommended way to use a `Tray` is by passing a callback as children, which receives a `handleClose` function:
+Tray on mobile is built on top of the [Drawer](/components/overlay/Drawer) component and provides a standardized way to present bottom sheets. Use `handleBarVariant="inside"` for the drag handle, `StickyFooter` for action buttons, and `useSafeBottomPadding` for safe area handling.
 
 ```tsx
 function BasicTray() {
-  const [visible, setVisible] = useState(false);
-  const handleOpen = () => setVisible(true);
-  const handleClose = () => setVisible(false);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
 
   return (
-    <VStack gap={2}>
-      <Button onPress={handleOpen}>Open Tray</Button>
-      {visible && (
-        <Tray title="Example Title" onCloseComplete={handleClose}>
-          {({ handleClose }) => (
-            <VStack gap={2} padding={3}>
-              <Text>This is the content of the tray.</Text>
-              <Button onPress={handleClose}>Close</Button>
-            </VStack>
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          handleBarVariant="inside"
+          onCloseComplete={setIsTrayVisibleOff}
+          title="Example title"
+          footer={({ handleClose }) => (
+            <StickyFooter background="bgElevation2" paddingX={3}>
+              <Button block onPress={handleClose}>
+                Close
+              </Button>
+            </StickyFooter>
           )}
-        </Tray>
-      )}
-    </VStack>
-  );
-}
-```
-
-### Using Ref to Control the Tray
-
-You can also control the Tray using a ref, which provides `open()` and `close()` methods:
-
-```tsx
-function TrayWithRef() {
-  const [visible, setVisible] = useState(false);
-  const trayRef = useRef<DrawerRefBaseProps>(null);
-
-  const handleOpen = () => setVisible(true);
-  const handleClose = () => setVisible(false);
-
-  return (
-    <VStack gap={2}>
-      <Button onPress={handleOpen}>Open Tray</Button>
-      {visible && (
-        <Tray ref={trayRef} title="Ref Controlled Tray" onCloseComplete={handleClose}>
-          <VStack gap={2} padding={3}>
-            <Text>Control this tray using the ref.</Text>
-            <Button onPress={() => trayRef.current?.close()}>Close</Button>
+        >
+          <VStack paddingBottom={1} paddingX={3}>
+            <Text font="body">
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
           </VStack>
         </Tray>
       )}
-    </VStack>
+    </>
   );
 }
 ```
 
-### Scrollable Content
+## Content
 
-To enable scrolling in a Tray, use `ScrollView` and set `disablePanGesture`:
+Mobile Tray requires a `ScrollView` for scrollable content. Use `useSafeBottomPadding` for proper safe area handling and `verticalDrawerPercentageOfView` to control the maximum height.
+
+When scrolling, use `headerElevation` to add a drop shadow below the header. This provides visual separation between the header and scrollable content.
 
 ```tsx
 function ScrollableTray() {
-  const [visible, setVisible] = useState(false);
-  const handleOpen = () => setVisible(true);
-  const handleClose = () => setVisible(false);
+  const safeBottomPadding = useSafeBottomPadding();
+
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollY = e.nativeEvent.contentOffset.y;
+    setIsScrolled(scrollY > 0);
+  }, []);
+
+  const scrollContentStyle = useMemo(
+    () => ({
+      paddingBottom: safeBottomPadding,
+    }),
+    [safeBottomPadding],
+  );
 
   return (
-    <VStack gap={2}>
-      <Button onPress={handleOpen}>Open Scrollable Tray</Button>
-      {visible && (
-        <Tray title="Scrollable Content" onCloseComplete={handleClose} disablePanGesture>
-          {({ handleClose }) => (
-            <VStack gap={2}>
-              <ScrollView style={{ maxHeight: 200 }}>
-                <Pressable>
-                  <VStack padding={3} gap={2}>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                      nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </Text>
-                    <Text>
-                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                      eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-                      in culpa qui officia deserunt mollit anim id est laborum.
-                    </Text>
-                  </VStack>
-                </Pressable>
-              </ScrollView>
-              <HStack padding={3} justifyContent="flex-end">
-                <Button onPress={handleClose}>Close</Button>
-              </HStack>
-            </VStack>
-          )}
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Scrolling Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          handleBarVariant="inside"
+          headerElevation={isScrolled ? 2 : 0}
+          onCloseComplete={setIsTrayVisibleOff}
+          title="Header"
+          verticalDrawerPercentageOfView={0.9}
+        >
+          <ScrollView
+            contentContainerStyle={scrollContentStyle}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                onPress={() => alert('Cell clicked!')}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </ScrollView>
         </Tray>
       )}
-    </VStack>
+    </>
   );
 }
 ```
 
-### With Selection Menu
+### With Illustration in Header
 
-When using a Tray for selection, wrap the options in a `Menu` component:
+You can pass in a custom node to `title` to render a custom header.
 
 ```tsx
-function TrayWithMenu() {
-  const [visible, setVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string>();
+function IllustrationSectionHeaderTray() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [value, setValue] = useState<string>();
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
   const trayRef = useRef<DrawerRefBaseProps>(null);
 
-  const handleOpen = () => setVisible(true);
-  const handleClose = () => setVisible(false);
+  const handleOptionPress = () => {
+    trayRef.current?.handleClose();
+  };
 
   const options = ['Option 1', 'Option 2', 'Option 3'];
 
-  const handleSelect = (value: string) => {
-    setSelectedValue(value);
-    trayRef.current?.close();
-  };
-
   return (
-    <VStack gap={2}>
-      <Button onPress={handleOpen}>Open Menu Tray</Button>
-      {visible && (
-        <Tray ref={trayRef} title="Select an Option" onCloseComplete={handleClose}>
-          <Menu value={selectedValue} onChange={handleSelect}>
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Illustration Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          ref={trayRef}
+          accessibilityLabel="Header"
+          handleBarVariant="inside"
+          onCloseComplete={setIsTrayVisibleOff}
+          title={
+            <VStack gap={1.5}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Header</Text>
+            </VStack>
+          }
+        >
+          <Menu onChange={setValue} value={value}>
             {options.map((option) => (
               <SelectOption
                 key={option}
+                description="Description"
+                onPress={handleOptionPress}
                 title={option}
                 value={option}
-                onPress={() => handleSelect(option)}
               />
             ))}
           </Menu>
         </Tray>
       )}
-    </VStack>
+    </>
   );
 }
 ```
 
-### Multiple Overlay Flow
+#### With Full Bleed Header
 
-When transitioning between overlays, ensure proper dismounting using `onCloseComplete`:
+For trays with a full-width image header, position the handle bar absolutely over the image. Use the `header` prop to add a section header that stays fixed below the image while content scrolls.
 
 ```tsx
-function TrayToModalFlow() {
+function FullBleedHeaderTray() {
   const [isTrayVisible, setIsTrayVisible] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
 
-  const openTray = () => setIsTrayVisible(true);
-  const closeTray = () => setIsTrayVisible(false);
-  const openModal = () => setIsModalVisible(true);
-  const closeModal = () => setIsModalVisible(false);
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Full Bleed Header Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          accessibilityLabel="Section header"
+          handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Section header
+            </Text>
+          }
+          onCloseComplete={setIsTrayVisibleOff}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            header: {
+              paddingHorizontal: 0,
+              paddingBottom: 0,
+            },
+          }}
+          title={
+            <Box background="bgAlternate" height={180} marginX={-3}>
+              <Image
+                resizeMode="cover"
+                source={require('@site/static/img/tray_header.png')}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Box>
+          }
+        >
+          <VStack paddingX={3}>
+            <Text color="fgMuted" font="body" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+}
+```
 
-  const handleTrayClose = useCallback(() => {
-    closeTray();
-    openModal();
+##### With Scrollable List Cells
+
+When using a full bleed header with scrollable content, use `headerElevation` to add a drop shadow below the header when the user scrolls. This provides visual separation similar to `StickyFooter`.
+
+```tsx
+function FullBleedHeaderScrollableTray() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollY = e.nativeEvent.contentOffset.y;
+    setIsScrolled(scrollY > 0);
   }, []);
 
   return (
-    <VStack gap={2}>
-      <Button onPress={openTray}>Start Flow</Button>
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Full Bleed Scrollable Tray</Button>
       {isTrayVisible && (
-        <Tray title="First Step" onCloseComplete={handleTrayClose}>
-          {({ handleClose }) => (
-            <VStack gap={2} padding={3}>
-              <Text>Click below to continue to the modal</Text>
-              <Button onPress={handleClose}>Continue to Modal</Button>
-            </VStack>
+        <Tray
+          accessibilityLabel="Section header"
+          footer={({ handleClose }) => (
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
+              <Button block onPress={handleClose}>
+                Close
+              </Button>
+            </StickyFooter>
           )}
+          handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Section header
+            </Text>
+          }
+          headerElevation={isScrolled ? 2 : 0}
+          onCloseComplete={setIsTrayVisibleOff}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            header: {
+              paddingHorizontal: 0,
+              paddingBottom: 0,
+            },
+          }}
+          title={
+            <Box background="bgAlternate" height={180} marginX={-3}>
+              <Image
+                resizeMode="cover"
+                source={require('@site/static/img/tray_header.png')}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Box>
+          }
+          verticalDrawerPercentageOfView={0.9}
+        >
+          <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                onPress={() => alert('Cell clicked!')}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </ScrollView>
         </Tray>
       )}
-      <Modal visible={isModalVisible} onRequestClose={closeModal}>
-        <ModalHeader title="Second Step" />
-        <ModalBody>
-          <VStack gap={2} padding={3}>
-            <Text>This is the second step in the flow.</Text>
-            <Button onPress={closeModal}>Finish</Button>
-          </VStack>
-        </ModalBody>
-      </Modal>
-    </VStack>
+    </>
   );
 }
 ```
 
-Note: The Tray component is built on top of the Drawer component and provides a standardized way to present bottom sheets in your mobile application. Key points:
+## Controlled
 
-- Use `onCloseComplete` for cleanup when the tray is dismissed
-- Children can be either a React node or a render function that receives a `handleClose` function
-- The `ref` provides `open()` and `close()` methods for controlling the tray
-- Use `disablePanGesture` when implementing scrollable content
-- When transitioning between overlays, ensure proper dismounting using lifecycle methods
+You have various ways to control the state of a tray.
+
+### Via Ref
+
+You can use a ref to control the tray, which provides a `handleClose()` method.
+
+```tsx
+function TrayWithRef() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const trayRef = useRef<DrawerRefBaseProps>(null);
+
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          ref={trayRef}
+          handleBarVariant="inside"
+          onCloseComplete={setIsTrayVisibleOff}
+          title="Ref Controlled Tray"
+        >
+          <VStack gap={2} paddingX={3}>
+            <Text>Control this tray using the ref.</Text>
+            <Button onPress={() => trayRef.current?.handleClose()}>Close</Button>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+}
+```
+
+### Prevent Dismissal
+
+You can prevent the user from dismissing the tray with `preventDismissGestures`. This will remove built-in dismiss functionality, including swipe to close with handlebar and tapping the overlay.
+
+You must provide an explicit action button to close the tray.
+
+```tsx
+function PreventDismissTray() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          preventDismissGestures
+          handleBarVariant="inside"
+          onCloseComplete={setIsTrayVisibleOff}
+          title="Example title"
+          footer={({ handleClose }) => (
+            <StickyFooter background="bgElevation2" paddingX={3}>
+              <Button block onPress={handleClose}>
+                Close
+              </Button>
+            </StickyFooter>
+          )}
+        >
+          <VStack paddingBottom={1} paddingX={3}>
+            <Text color="fgMuted">
+              You cannot dismiss this tray by swiping or tapping outside. You must use the close
+              button below.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+}
+```
+
+## Accessibility
+
+Trays require an accessibility label. If you pass in a ReactNode to `title`, make sure to set `accessibilityLabel`.
+
+## Styling
+
+### Handlebar
+
+When using a full bleed image header, the default handlebar color may not have enough contrast against the image. You can customize the handlebar appearance using `styles.handleBarHandle` to change its color and opacity.
+
+This is useful for trays with dark or colorful header images where you want the handlebar to be more visible, such as inverting it to white.
+
+```tsx
+function FullBleedWithInvertedHandlebar() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Full Bleed Tray</Button>
+      {isTrayVisible && (
+        <Tray
+          accessibilityLabel="Section header"
+          handleBarVariant="inside"
+          header={
+            <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
+              Section header
+            </Text>
+          }
+          onCloseComplete={setIsTrayVisibleOff}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            header: {
+              paddingHorizontal: 0,
+              paddingBottom: 0,
+            },
+          }}
+          title={
+            <Box background="bgAlternate" height={180} marginX={-3}>
+              <Image
+                resizeMode="cover"
+                source={require('@site/static/img/tray_header.png')}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Box>
+          }
+        >
+          <VStack paddingX={3}>
+            <Text color="fgMuted" font="body" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+}
+```
+
+## Composed Examples
+
+### Floating
+
+A floating tray with rounded corners and offset from the screen edges.
+
+```tsx
+function FloatingTray({
+  offset = 2,
+  borderRadiusValue = 600,
+  children,
+  styles,
+  ...props
+}: TrayProps & { offset?: number; borderRadiusValue?: number }) {
+  const safeBottomPadding = useSafeBottomPadding();
+  const theme = useTheme();
+
+  const offsetPx = theme.space[offset as keyof typeof theme.space];
+  const borderRadius = theme.borderRadius[borderRadiusValue as keyof typeof theme.borderRadius];
+
+  const floatingStyles = useMemo(
+    () => ({
+      bottom: offsetPx + safeBottomPadding,
+      left: offsetPx,
+      right: offsetPx,
+      borderRadius,
+      width: 'auto',
+    }),
+    [offsetPx, safeBottomPadding, borderRadius],
+  );
+
+  const containerStyles = useMemo(
+    () => [floatingStyles, styles?.container],
+    [floatingStyles, styles?.container],
+  );
+
+  // Override drawer's internal safe area padding since we handle it via container position
+  const drawerStyles = useMemo(() => [{ paddingBottom: 0 }, styles?.drawer], [styles?.drawer]);
+
+  return (
+    <Tray
+      {...props}
+      handleBarVariant="inside"
+      styles={{
+        ...styles,
+        container: containerStyles,
+        drawer: drawerStyles,
+      }}
+    >
+      {children}
+    </Tray>
+  );
+}
+
+function Example() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  const handleScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollY = e.nativeEvent.contentOffset.y;
+    setIsScrolled(scrollY > 0);
+  }, []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Floating Tray</Button>
+      {isTrayVisible && (
+        <FloatingTray
+          headerElevation={isScrolled ? 2 : 0}
+          onCloseComplete={setIsTrayVisibleOff}
+          title="Example title"
+        >
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 0 }}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
+            <VStack paddingBottom={2}>
+              {Array.from({ length: 20 }, (_, i) => (
+                <ListCell
+                  key={i}
+                  accessory="arrow"
+                  description="Description"
+                  onPress={() => alert('Cell clicked!')}
+                  spacingVariant="condensed"
+                  title="Title"
+                />
+              ))}
+            </VStack>
+          </ScrollView>
+        </FloatingTray>
+      )}
+    </>
+  );
+}
+```
+
+### Multiple Screen Example
+
+A tray with multi-screen navigation using ListCells and a back button.
+
+```tsx
+type Screen = {
+  title: string;
+  render: (props: { onNavigate: (index: number) => void }) => React.ReactNode;
+};
+
+function MultiScreenTray({
+  screens,
+  initialScreen = 0,
+  ...props
+}: Omit<TrayProps, 'title' | 'children'> & { screens: Screen[]; initialScreen?: number }) {
+  const [currentScreen, setCurrentScreen] = useState(initialScreen);
+  const screen = screens[currentScreen];
+
+  const handleBack = useCallback(() => setCurrentScreen(0), []);
+  const handleNavigate = useCallback((index: number) => setCurrentScreen(index), []);
+
+  return (
+    <Tray
+      {...props}
+      accessibilityLabel={screen.title}
+      handleBarVariant="inside"
+      title={
+        <VStack alignItems="flex-start">
+          {currentScreen > 0 && (
+            <IconButton
+              transparent
+              accessibilityLabel="Go back"
+              flush="start"
+              name="backArrow"
+              onPress={handleBack}
+            />
+          )}
+          <Text font="title3">{screen.title}</Text>
+        </VStack>
+      }
+    >
+      {screen.render({ onNavigate: handleNavigate })}
+    </Tray>
+  );
+}
+
+function Example() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  const screens: Screen[] = useMemo(
+    () => [
+      {
+        title: 'Settings',
+        render: ({ onNavigate }) => (
+          <ScrollView scrollEventThrottle={16}>
+            <ListCell
+              accessory="arrow"
+              description="Manage your account settings"
+              onPress={() => onNavigate(1)}
+              spacingVariant="condensed"
+              title="Account"
+            />
+            <ListCell
+              accessory="arrow"
+              description="Configure notification preferences"
+              onPress={() => onNavigate(2)}
+              spacingVariant="condensed"
+              title="Notifications"
+            />
+            <ListCell
+              accessory="arrow"
+              description="Review privacy settings"
+              onPress={() => onNavigate(3)}
+              spacingVariant="condensed"
+              title="Privacy"
+            />
+          </ScrollView>
+        ),
+      },
+      {
+        title: 'Account',
+        render: () => (
+          <VStack paddingX={3}>
+            <Text color="fgMuted" paddingBottom={2}>
+              Account settings content goes here.
+            </Text>
+          </VStack>
+        ),
+      },
+      {
+        title: 'Notifications',
+        render: () => (
+          <VStack paddingX={3}>
+            <Text color="fgMuted" paddingBottom={2}>
+              Notification preferences content goes here.
+            </Text>
+          </VStack>
+        ),
+      },
+      {
+        title: 'Privacy',
+        render: () => (
+          <VStack paddingX={3}>
+            <Text color="fgMuted" paddingBottom={2}>
+              Privacy settings content goes here.
+            </Text>
+          </VStack>
+        ),
+      },
+    ],
+    [],
+  );
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Multi-Screen Tray</Button>
+      {isTrayVisible && <MultiScreenTray onCloseComplete={setIsTrayVisibleOff} screens={screens} />}
+    </>
+  );
+}
+```
+
+### Header with Illustration
+
+A reusable tray with a pictogram and title in the header, with proper accessibility.
+
+```tsx
+function IllustrationTray({
+  pictogramName,
+  title,
+  children,
+  ...props
+}: Omit<TrayProps, 'title'> & { pictogramName: PictogramName; title: string }) {
+  return (
+    <Tray
+      {...props}
+      accessibilityLabel={title}
+      handleBarVariant="inside"
+      title={
+        <VStack gap={1.5}>
+          <Pictogram name={pictogramName} />
+          <Text font="title3">{title}</Text>
+        </VStack>
+      }
+    >
+      {children}
+    </Tray>
+  );
+}
+
+function Example() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Illustration Tray</Button>
+      {isTrayVisible && (
+        <IllustrationTray
+          onCloseComplete={setIsTrayVisibleOff}
+          pictogramName="addWallet"
+          title="Section header"
+        >
+          <VStack paddingX={3}>
+            <Text color="fgMuted" font="body" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
+        </IllustrationTray>
+      )}
+    </>
+  );
+}
+```
+
+### Responsive
+
+A reusable tray with optional `footerLabel` prop that auto-generates a StickyFooter with a close button.
+
+```tsx
+function ResponsiveTray({
+  footer,
+  footerLabel,
+  children,
+  ...props
+}: TrayProps & { footerLabel?: string }) {
+  const resolvedFooter =
+    footer ??
+    (footerLabel
+      ? ({ handleClose }: { handleClose: () => void }) => (
+          <StickyFooter background="bgElevation2" paddingX={3}>
+            <Button block onPress={handleClose}>
+              {footerLabel}
+            </Button>
+          </StickyFooter>
+        )
+      : undefined);
+
+  return (
+    <Tray {...props} footer={resolvedFooter} handleBarVariant="inside">
+      {children}
+    </Tray>
+  );
+}
+
+function Example() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
+  const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
+
+  return (
+    <>
+      <Button onPress={setIsTrayVisibleOn}>Open Responsive Tray</Button>
+      {isTrayVisible && (
+        <ResponsiveTray
+          footerLabel="Close"
+          onCloseComplete={setIsTrayVisibleOff}
+          title="Example title"
+        >
+          <VStack paddingX={3}>
+            <Text color="fgMuted" paddingBottom={2}>
+              Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie,
+              interdum lorem id, viverra.
+            </Text>
+          </VStack>
+        </ResponsiveTray>
+      )}
+    </>
+  );
+}
+```

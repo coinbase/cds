@@ -836,6 +836,11 @@ export const routes = [
       require('@cbhq/cds-mobile/overlays/__stories__/TrayPromotional.stories').default,
   },
   {
+    key: 'TrayRedesign',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/TrayRedesign.stories').default,
+  },
+  {
     key: 'TrayScrollable',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/TrayScrollable.stories').default,

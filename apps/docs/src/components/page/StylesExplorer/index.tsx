@@ -33,7 +33,7 @@ export const StylesExplorer = memo(({ selectors, children }: StylesExplorerProps
   }, [displayedSelector]);
 
   return (
-    <VStack paddingBottom={3}>
+    <VStack paddingBottom={3} position="relative" zIndex={0}>
       <Box
         bordered
         background="bg"
@@ -50,6 +50,7 @@ export const StylesExplorer = memo(({ selectors, children }: StylesExplorerProps
           overflow="hidden"
           padding={3}
           position="relative"
+          zIndex={0}
         >
           {children(appliedClassNames)}
         </Box>

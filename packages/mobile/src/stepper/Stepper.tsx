@@ -65,7 +65,7 @@ type StepperSubcomponentProps<Metadata extends Record<string, unknown> = Record<
     complete?: boolean;
     /** Whether the active step is a descendent of this step */
     isDescendentActive: boolean;
-    /** Inline styles for this component */
+    /** Inline styles for the subcomponent element */
     style?: StyleProp<ViewStyle>;
   };
 
@@ -228,21 +228,21 @@ export type StepperBaseProps<Metadata extends Record<string, unknown> = Record<s
 export type StepperProps<Metadata extends Record<string, unknown> = Record<string, unknown>> =
   BoxProps &
     StepperBaseProps<Metadata> & {
-      /** Inline styles for specific child elements of Stepper */
+      /** Custom styles for individual elements of the Stepper component */
       styles?: {
-        /** Inline styles for the root Stepper container element */
+        /** Root Stepper container element */
         root?: StyleProp<ViewStyle>;
-        /** Inline styles for the Step subcomponent */
+        /** Step subcomponent element */
         step?: StyleProp<ViewStyle>;
-        /** Inline styles for the SubstepContainer subcomponent */
+        /** Substep container element */
         substepContainer?: StyleProp<ViewStyle>;
-        /** Inline styles for the Label subcomponent */
+        /** Label subcomponent element */
         label?: StyleProp<ViewStyle>;
-        /** Inline styles for the Progress subcomponent */
+        /** Progress subcomponent element */
         progress?: StyleProp<ViewStyle>;
-        /** Inline styles for the Icon subcomponent */
+        /** Icon subcomponent element */
         icon?: StyleProp<ViewStyle>;
-        /** Inline styles for the Header subcomponent */
+        /** Header subcomponent element */
         header?: StyleProp<ViewStyle>;
       };
     };

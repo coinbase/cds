@@ -26,9 +26,13 @@ export type DataCardLayoutBaseProps = {
 
 export type DataCardLayoutProps = DataCardLayoutBaseProps & {
   styles?: {
+    /** Layout container element */
     layoutContainer?: StyleProp<ViewStyle>;
+    /** Header container element */
     headerContainer?: StyleProp<ViewStyle>;
+    /** Text container element */
     textContainer?: StyleProp<ViewStyle>;
+    /** Title container element */
     titleContainer?: StyleProp<ViewStyle>;
   };
 };

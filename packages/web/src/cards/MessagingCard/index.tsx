@@ -10,9 +10,11 @@ export type MessagingCardBaseProps = Polymorphic.ExtendableProps<
   Omit<CardRootBaseProps, 'children'>,
   MessagingCardLayoutProps & {
     classNames?: {
+      /** Root element */
       root?: string;
     };
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
     };
   }

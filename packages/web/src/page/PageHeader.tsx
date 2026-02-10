@@ -62,46 +62,26 @@ export type PageHeaderBaseProps = SharedProps &
 export type PageHeaderProps = Polymorphic.ExtendableProps<
   GridProps<GridDefaultElement>,
   PageHeaderBaseProps & {
-    /**
-     * Custom styles for the page header.
-     */
+    /** Custom styles for individual elements of the PageHeader component */
     styles?: {
-      /**
-       * Custom styles for the start element.
-       */
-      start?: React.CSSProperties;
-      /**
-       * Custom styles for the end element.
-       */
-      end?: React.CSSProperties;
-      /**
-       * Custom styles for the title element.
-       */
-      title?: React.CSSProperties;
-      /**
-       * Custom styles for the root element.
-       */
+      /** Root element */
       root?: React.CSSProperties;
+      /** Start element */
+      start?: React.CSSProperties;
+      /** End element */
+      end?: React.CSSProperties;
+      /** Title element */
+      title?: React.CSSProperties;
     };
-    /**
-     * Custom class names for the page header.
-     */
+    /** Custom class names for individual elements of the PageHeader component */
     classNames?: {
-      /**
-       * Class name for the page header root.
-       */
+      /** Root element */
       root?: string;
-      /**
-       * Class name for the page header start element.
-       */
+      /** Start element */
       start?: string;
-      /**
-       * Class name for the page header end element.
-       */
+      /** End element */
       end?: string;
-      /**
-       * Class name for the page header title element.
-       */
+      /** Title element */
       title?: string;
     };
   }
