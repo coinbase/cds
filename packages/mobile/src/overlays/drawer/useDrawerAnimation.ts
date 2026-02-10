@@ -24,6 +24,7 @@ const animateDrawer = {
 export const useDrawerAnimation = (
   pin: PinningDirection | undefined = 'bottom',
   verticalDrawerPercentageOfView: number | undefined = defaultVerticalDrawerPercentageOfView,
+  reduceMotion?: boolean,
 ) => {
   const windowDimensions = useWindowDimensions();
 
@@ -89,13 +90,25 @@ export const useDrawerAnimation = (
     }
   }, [pin, drawerDimension]);
 
+  const drawerAnimationStyles = useMemo(() => {
+    if (reduceMotion) {
+      return {
+        opacity: drawerAnimation.current.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+        }),
+      };
+    }
+    return { transform: [translation] };
+  }, [reduceMotion, translation]);
+
   return useMemo(() => {
     return {
       drawerAnimation: drawerAnimation.current,
       animateDrawerOut,
       animateDrawerIn,
-      drawerAnimationStyles: { transform: [translation] },
+      drawerAnimationStyles,
       animateSwipeToClose,
     };
-  }, [animateDrawerOut, animateDrawerIn, translation, animateSwipeToClose]);
+  }, [animateDrawerOut, animateDrawerIn, drawerAnimationStyles, animateSwipeToClose]);
 };
