@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider, waitForNotToHappen } from '../../../utils/test';
-import { Tray } from '../Tray';
+import { Tray, trayClassNames } from '../Tray';
 
 const titleText = 'Test Title';
 
@@ -401,6 +401,46 @@ describe('Tray', () => {
       const tray = screen.getByTestId('tray');
       expect(tray).toHaveAttribute('aria-labelledby', LABELLED_BY);
       expect(tray).toHaveAttribute('aria-label', LABEL);
+    });
+  });
+
+  describe('static classNames', () => {
+    it('applies static class names to component elements', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      const root = document.querySelector(`.${trayClassNames.root}`);
+      expect(root).toBeInTheDocument();
+
+      const tray = screen.getByTestId('tray');
+      expect(tray).toHaveClass(trayClassNames.container);
+      expect(root?.querySelector(`.${trayClassNames.overlay}`)).toBeInTheDocument();
+      expect(root?.querySelector(`.${trayClassNames.header}`)).toBeInTheDocument();
+      expect(root?.querySelector(`.${trayClassNames.title}`)).toBeInTheDocument();
+      expect(root?.querySelector(`.${trayClassNames.content}`)).toBeInTheDocument();
+      expect(root?.querySelector(`.${trayClassNames.closeButton}`)).toBeInTheDocument();
+    });
+
+    it('applies static class names to handle bar elements', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray showHandleBar onCloseComplete={onCloseCompleteSpy}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      const root = document.querySelector(`.${trayClassNames.root}`);
+      expect(root).toBeInTheDocument();
+      expect(root?.querySelector(`.${trayClassNames.handleBar}`)).toBeInTheDocument();
+      expect(root?.querySelector(`.${trayClassNames.handleBarHandle}`)).toBeInTheDocument();
     });
   });
 });

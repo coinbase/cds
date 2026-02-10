@@ -11,23 +11,29 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 
 import mobilePropsToc from ':docgen/mobile/overlays/tray/Tray/toc-props';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import mobileMetadata from './mobileMetadata.json';
 import webMetadata from './webMetadata.json';
 import WebPropsTable from './_webPropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import webPropsToc from ':docgen/web/overlays/tray/Tray/toc-props';
 
 <VStack gap={5}>
   <ComponentHeader title="Tray" mobileMetadata={mobileMetadata} webMetadata={webMetadata} />
   <ComponentTabsContainer
-    mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
     mobileExamplesToc={mobileExamplesToc}
+    mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
-    webPropsTable={<WebPropsTable />}
+    mobileStyles={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
     webExamples={<WebExamples />}
     webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
     webPropsToc={webPropsToc}
+    webStyles={<WebStyles />}
+    webStylesToc={webStylesToc}
   />
 </VStack>

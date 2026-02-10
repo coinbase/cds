@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.44.2 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray drag elastic. [[#385](https://github.com/coinbase/cds/pull/385)]
+
 ## 8.44.1 (2/10/2026 PST)
 
 #### 🐞 Fixes
