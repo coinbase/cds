@@ -14,6 +14,7 @@ import {
   accessoryFadeTransitionDuration,
   type ChartInset,
   type ChartScaleFunction,
+  type ChartTransition,
   getPointOnScale,
   type Series,
   useScrubberContext,
@@ -77,12 +78,7 @@ export type ScrubberBeaconProps = SharedProps & {
   /**
    * Transition configuration for beacon animations.
    */
-  transitions?: {
-    /**
-     * Transition used for beacon position updates.
-     * @default defaultTransition
-     */
-    update?: Transition;
+  transitions?: ChartTransition & {
     /**
      * Transition used for the pulse animation.
      * @default { duration: 1.6, ease: 'easeInOut' }

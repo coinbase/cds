@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, Series } from '../utils';
+import type { ChartScaleFunction, ChartTransition, Series } from '../utils';
 import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
@@ -80,14 +80,19 @@ export type BarStackBaseProps = Pick<
 
 export type BarStackProps = BarStackBaseProps & {
   /**
-   * Transition configuration for animation.
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: ChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
 
 export type BarStackComponentProps = Pick<
   BarStackProps,
-  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transition'
+  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transitions' | 'transition'
 > & {
   /**
    * The y position of the stack.
@@ -139,6 +144,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transitions,
     transition,
   }) => {
     const { getSeriesData, getXAxis, getXScale, getSeries } = useCartesianChartContext();
@@ -701,6 +707,7 @@ export const BarStack = memo<BarStackProps>(
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
         transition={transition}
+        transitions={transitions}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -720,6 +727,7 @@ export const BarStack = memo<BarStackProps>(
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}
+        transitions={transitions}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

@@ -23,6 +23,7 @@ import { m } from 'framer-motion';
 
 import {
   type AxisBounds,
+  type ChartTransition,
   DefaultScrubberBeacon,
   defaultTransition,
   PeriodSelector,
@@ -1752,18 +1753,121 @@ export const All = () => {
 };
 
 export const Transitions = () => {
-  const dataCount = 20;
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(previousValue: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, previousValue + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  const enterOnly: ChartTransition = { update: null, enter: { type: 'tween', duration: 1.0 } };
+  const updateOnly: ChartTransition = {
+    enter: null,
+    update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
+  };
+  const bothDisabled: ChartTransition = { enter: null, update: null };
+  const instantEnter: ChartTransition = {
+    enter: { type: 'tween', duration: 0 },
+    update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
+  };
+  const instantUpdate: ChartTransition = {
+    enter: { type: 'tween', duration: 1.0 },
+    update: { type: 'tween', duration: 0 },
+  };
+  const customEnterUpdate: ChartTransition = {
+    enter: { type: 'tween', duration: 1.5, ease: 'easeOut' },
+    update: { type: 'spring', stiffness: 400, damping: 30 },
+  };
+  const slowEnterNoUpdate: ChartTransition = {
+    enter: { type: 'tween', duration: 5.0, ease: 'easeOut' },
+    update: null,
+  };
+
+  function TransitionChart({
+    data,
+    transitions,
+    animate: animateProp,
+    idlePulse,
+    scrubberRef,
+    enableScrubbing = true,
+  }: {
+    data: number[];
+    transitions: ChartTransition;
+    animate?: boolean;
+    idlePulse?: boolean;
+    scrubberRef?: React.RefObject<ScrubberRef | null>;
+    enableScrubbing?: boolean;
+  }) {
+    return (
+      <CartesianChart
+        animate={animateProp}
+        enableScrubbing={enableScrubbing}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[{ id: 'values', data }]}
+      >
+        <Line seriesId="values" strokeWidth={3} transitions={transitions} />
+        {enableScrubbing && (
+          <Scrubber
+            ref={scrubberRef as React.RefObject<ScrubberRef>}
+            hideOverlay
+            beaconTransitions={transitions}
+            idlePulse={idlePulse}
+          />
+        )}
+      </CartesianChart>
+    );
+  }
+
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
   const maxDataOffset = 15000;
   const minStepOffset = 2500;
   const maxStepOffset = 10000;
   const domainLimit = 20000;
-  const updateInterval = 500;
+  const fastUpdateInterval = 500;
 
-  const myTransitionConfig = { type: 'spring', stiffness: 700, damping: 20 };
-  const negativeColor = 'rgb(var(--gray15))';
-  const positiveColor = 'var(--color-fgPositive)';
+  const myTransitionConfig = useMemo(
+    () => ({ type: 'spring' as const, stiffness: 700, damping: 20 }),
+    [],
+  );
 
-  function generateNextValue(previousValue: number) {
+  const lineGradient = useMemo(
+    () => ({
+      stops: [
+        { offset: 0, color: negativeColor },
+        { offset: 0, color: positiveColor },
+      ],
+    }),
+    [],
+  );
+
+  const MyGradient = useMemo(
+    () =>
+      memo((props: DottedAreaProps) => {
+        const areaGradient = {
+          stops: ({ min, max }: AxisBounds) => [
+            { offset: min, color: negativeColor, opacity: 1 },
+            { offset: 0, color: negativeColor, opacity: 0 },
+            { offset: 0, color: positiveColor, opacity: 0 },
+            { offset: max, color: positiveColor, opacity: 1 },
+          ],
+        };
+        return <DottedArea {...props} gradient={areaGradient} />;
+      }),
+    [],
+  );
+
+  function generateLargeNextValue(previousValue: number) {
     const range = maxStepOffset - minStepOffset;
     const offset = Math.random() * range + minStepOffset;
 
@@ -1781,47 +1885,29 @@ export const Transitions = () => {
     return newValue;
   }
 
-  function generateInitialData() {
+  function generateLargeInitialData() {
     const data = [];
-
     let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
     data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
+    for (let i = 1; i < 20; i++) {
+      const newValue = generateLargeNextValue(previousValue);
       data.push(newValue);
       previousValue = newValue;
     }
-
     return data;
   }
 
-  const MyGradient = memo((props: DottedAreaProps) => {
-    const areaGradient = {
-      stops: ({ min, max }: AxisBounds) => [
-        { offset: min, color: negativeColor, opacity: 1 },
-        { offset: 0, color: negativeColor, opacity: 0 },
-        { offset: 0, color: positiveColor, opacity: 0 },
-        { offset: max, color: positiveColor, opacity: 1 },
-      ],
-    };
-
-    return <DottedArea {...props} gradient={areaGradient} />;
-  });
-
   function CustomTransitionsChart() {
-    const [data, setData] = useState(generateInitialData);
+    const [data, setData] = useState(generateLargeInitialData);
 
     useEffect(() => {
       const intervalId = setInterval(() => {
         setData((currentData) => {
           const lastValue = currentData[currentData.length - 1] ?? 0;
-          const newValue = generateNextValue(lastValue);
-
+          const newValue = generateLargeNextValue(lastValue);
           return [...currentData.slice(1), newValue];
         });
-      }, updateInterval);
-
+      }, fastUpdateInterval);
       return () => clearInterval(intervalId);
     }, []);
 
@@ -1844,25 +1930,12 @@ export const Transitions = () => {
       [data],
     );
 
-    const lineGradient = {
-      stops: [
-        { offset: 0, color: negativeColor },
-        { offset: 0, color: positiveColor },
-      ],
-    };
-
     return (
       <CartesianChart
         enableScrubbing
         height={{ base: 200, tablet: 250, desktop: 300 }}
         inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            gradient: lineGradient,
-          },
-        ]}
+        series={[{ id: 'prices', data, gradient: lineGradient }]}
         yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
       >
         <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
@@ -1882,8 +1955,63 @@ export const Transitions = () => {
     );
   }
 
-  return <CustomTransitionsChart />;
+  function TransitionsStory() {
+    const scrubberRef = useRef<ScrubberRef>(null);
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((current) => {
+          const last = current[current.length - 1];
+          return [...current.slice(1), generateNextValue(last)];
+        });
+        scrubberRef.current?.pulse();
+      }, updateInterval);
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <VStack gap={4}>
+        <Example title="Enter Only (idlePulse)">
+          <TransitionChart idlePulse data={data} transitions={enterOnly} />
+        </Example>
+        <Example title="Update Only (idlePulse)">
+          <TransitionChart idlePulse data={data} transitions={updateOnly} />
+        </Example>
+        <Example title="Both Disabled (null)">
+          <TransitionChart data={data} transitions={bothDisabled} />
+        </Example>
+        <Example title="Instant Enter (duration: 0)">
+          <TransitionChart data={data} transitions={instantEnter} />
+        </Example>
+        <Example title="Instant Update (duration: 0)">
+          <TransitionChart data={data} transitions={instantUpdate} />
+        </Example>
+        <Example title="Custom Enter + Update">
+          <TransitionChart data={data} transitions={customEnterUpdate} />
+        </Example>
+        <Example title="Imperative Pulse on Data Change">
+          <TransitionChart data={data} scrubberRef={scrubberRef} transitions={updateOnly} />
+        </Example>
+        <Example title="Custom Transition with Scrubber">
+          <CustomTransitionsChart />
+        </Example>
+        <Example title="animate={false} with update transition">
+          <TransitionChart animate={false} data={data} transitions={updateOnly} />
+        </Example>
+        <Example title="animate={false} with enter transition">
+          <TransitionChart animate={false} data={data} transitions={enterOnly} />
+        </Example>
+        <Example title="animate={false} with both disabled">
+          <TransitionChart animate={false} data={data} transitions={bothDisabled} />
+        </Example>
+      </VStack>
+    );
+  }
+
+  return <TransitionsStory />;
 };
+
 function DataCardWithLineChart() {
   const exampleThumbnail = (
     <RemoteImage
@@ -2001,3 +2129,126 @@ function DataCardWithLineChart() {
     </VStack>
   );
 }
+
+export const DebugInstantUpdate = () => {
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(previousValue: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, previousValue + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  const [data, setData] = useState(generateInitialData);
+  const [updateCount, setUpdateCount] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+      setUpdateCount((c) => c + 1);
+    }, updateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const instantUpdateTransitions = useMemo<ChartTransition>(
+    () => ({ enter: { type: 'tween', duration: 1.0 }, update: { type: 'tween', duration: 0 } }),
+    [],
+  );
+  const nullTransitions = useMemo<ChartTransition>(() => ({ enter: null, update: null }), []);
+
+  return (
+    <VStack gap={4}>
+      <Text font="title3">Update #{updateCount}</Text>
+      <VStack gap={1}>
+        <Text font="label1">duration: 0 (memoized)</Text>
+        <CartesianChart
+          height={250}
+          inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+          series={[{ id: 'values', data }]}
+        >
+          <Line seriesId="values" strokeWidth={3} transitions={instantUpdateTransitions} />
+        </CartesianChart>
+      </VStack>
+      {/*<VStack gap={1}>
+        <Text font="label1">null (memoized)</Text>
+        <CartesianChart
+          height={250}
+          inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+          series={[{ id: 'values', data }]}
+        >
+          <Line seriesId="values" strokeWidth={3} transitions={nullTransitions} />
+        </CartesianChart>
+      </VStack>
+      <VStack gap={1}>
+        <Text font="label1">duration: 0 (inline)</Text>
+        <CartesianChart
+          height={250}
+          inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+          series={[{ id: 'values', data }]}
+        >
+          <Line
+            seriesId="values"
+            strokeWidth={3}
+            transitions={{ enter: { type: 'tween', duration: 1.0 }, update: { type: 'tween', duration: 0 } }}
+          />
+        </CartesianChart>
+      </VStack>*/}
+    </VStack>
+  );
+};
+
+export const DebugDefaultUpdate = () => {
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(previousValue: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, previousValue + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  const [data, setData] = useState(generateInitialData);
+  const [updateCount, setUpdateCount] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+      setUpdateCount((c) => c + 1);
+    }, updateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text font="title3">Default Update - Update #{updateCount}</Text>
+      <CartesianChart
+        height={300}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[{ id: 'values', data }]}
+      >
+        <Line seriesId="values" strokeWidth={3} />
+      </CartesianChart>
+    </VStack>
+  );
+};

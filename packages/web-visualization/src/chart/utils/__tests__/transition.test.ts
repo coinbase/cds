@@ -25,16 +25,11 @@ jest.mock('framer-motion', () => {
 
   return {
     useMotionValue: jest.fn((initial) => mockMotionValue(initial)),
-    useTransform: jest.fn((source, transformer) => {
-      const result = mockMotionValue(transformer(source.get()));
-      source.onChange((v: any) => {
-        result.set(transformer(v));
-      });
-      return result;
-    }),
-    animate: jest.fn((value, target, config) => {
-      // Immediately set to target for testing
-      value.set(target);
+    animate: jest.fn((_from, _to, config) => {
+      // Simulate instant completion: call onUpdate with final value, then onComplete
+      if (config?.onUpdate) {
+        config.onUpdate(_to);
+      }
       if (config?.onComplete) {
         config.onComplete();
       }
@@ -348,8 +343,10 @@ describe('usePathTransition', () => {
     const { animate } = require('framer-motion');
     let onCompleteCallback: (() => void) | undefined;
 
-    animate.mockImplementation((value: any, target: any, config: any) => {
-      value.set(target);
+    animate.mockImplementation((_from: any, _to: any, config: any) => {
+      if (config?.onUpdate) {
+        config.onUpdate(_to);
+      }
       onCompleteCallback = config?.onComplete;
       return {
         cancel: jest.fn(),

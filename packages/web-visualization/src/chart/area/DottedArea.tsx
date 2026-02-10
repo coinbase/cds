@@ -61,6 +61,7 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     gradient: gradientProp,
     animate,
+    transitions,
     transition,
     ...pathProps
   }) => {
@@ -94,14 +95,20 @@ export const DottedArea = memo<DottedAreaProps>(
             <circle cx={dotCenterPosition} cy={dotCenterPosition} fill="white" r={dotSize} />
           </pattern>
           <mask id={maskId}>
-            <Path animate={animate} d={d} fill={`url(#${patternId})`} transition={transition} />
+            <Path
+              animate={animate}
+              d={d}
+              fill={`url(#${patternId})`}
+              transition={transition}
+              transitions={transitions}
+            />
           </mask>
           {gradient && (
             <Gradient
               animate={animate}
               gradient={gradient}
               id={gradientId}
-              transition={transition}
+              transition={transitions?.update ?? transition}
               yAxisId={yAxisId}
             />
           )}
@@ -112,6 +119,7 @@ export const DottedArea = memo<DottedAreaProps>(
           fill={gradient ? `url(#${gradientId})` : fill}
           mask={`url(#${maskId})`}
           transition={transition}
+          transitions={transitions}
           {...pathProps}
         />
       </g>

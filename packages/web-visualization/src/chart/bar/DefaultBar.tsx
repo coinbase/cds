@@ -1,8 +1,8 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getBarPath } from '../utils';
+import { getBarPath, instantTransition } from '../utils';
 
 import type { BarComponentProps } from './Bar';
 
@@ -34,32 +34,49 @@ export const DefaultBar = memo<DefaultBarProps>(
     dataX,
     dataY,
     seriesId,
+    transitions,
     transition,
     ...props
   }) => {
     const { animate } = useCartesianChartContext();
+    const isInitialRender = useRef(true);
+
+    const shouldAnimateEnter = animate && transitions?.enter !== null;
+
+    const resolvedEnterTransition =
+      !animate || transitions?.enter === null ? instantTransition : transitions?.enter;
+    const resolvedUpdateTransition =
+      !animate || transitions?.update === null
+        ? instantTransition
+        : (transitions?.update ?? transition);
 
     const initialPath = useMemo(() => {
-      if (!animate) return undefined;
+      if (!shouldAnimateEnter) return undefined;
       // Need a minimum height to allow for animation
       const minHeight = 1;
       const initialY = (originY ?? 0) - minHeight;
       return getBarPath(x, initialY, width, minHeight, borderRadius, !!roundTop, !!roundBottom);
-    }, [animate, x, originY, width, borderRadius, roundTop, roundBottom]);
+    }, [shouldAnimateEnter, x, originY, width, borderRadius, roundTop, roundBottom]);
 
-    if (animate && initialPath) {
-      return (
-        <motion.path
-          {...props}
-          animate={{ d }}
-          fill={fill}
-          fillOpacity={fillOpacity}
-          initial={{ d: initialPath }}
-          transition={transition}
-        />
-      );
-    }
+    // On initial render with enter enabled, use enter transition.
+    // On subsequent renders, use update transition.
+    const activeTransition =
+      isInitialRender.current && shouldAnimateEnter
+        ? (resolvedEnterTransition ?? resolvedUpdateTransition)
+        : resolvedUpdateTransition;
 
-    return <path {...props} d={d} fill={fill} fillOpacity={fillOpacity} />;
+    return (
+      <motion.path
+        {...props}
+        animate={{ d }}
+        fill={fill}
+        fillOpacity={fillOpacity}
+        initial={initialPath ? { d: initialPath } : false}
+        onAnimationComplete={() => {
+          isInitialRender.current = false;
+        }}
+        transition={activeTransition}
+      />
+    );
   },
 );

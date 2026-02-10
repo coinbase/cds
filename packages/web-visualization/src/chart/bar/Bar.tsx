@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
+import { type ChartTransition } from '../utils';
 import { getBarPath } from '../utils';
 
 import { DefaultBar } from './';
@@ -77,7 +78,12 @@ export type BarBaseProps = {
 
 export type BarProps = BarBaseProps & {
   /**
-   * Transition configuration for animation.
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: ChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
@@ -121,6 +127,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitions,
     transition,
   }) => {
     const barPath = useMemo(() => {
@@ -149,6 +156,7 @@ export const Bar = memo<BarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         width={width}
         x={x}
         y={y}

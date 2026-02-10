@@ -1,4 +1,4 @@
-import React, { memo, useId } from 'react';
+import React, { memo, useEffect, useId, useState } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
@@ -9,7 +9,7 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
-import { isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
+import { type ChartTransition, isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
@@ -779,4 +779,68 @@ export const All = () => {
       </Example>
     </VStack>
   );
+};
+
+export const Transitions = () => {
+  const categories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const updateInterval = 2500;
+
+  function generateBarData() {
+    return categories.map(() => Math.round(Math.random() * 80 + 10));
+  }
+
+  const barChartProps = {
+    showXAxis: true,
+    enableScrubbing: true,
+    height: 250,
+    xAxis: { data: categories },
+    yAxis: { domain: { min: 0, max: 100 } },
+  } as const;
+
+  const enterOnly: ChartTransition = { update: null, enter: { type: 'tween', duration: 1.0 } };
+  const updateOnly: ChartTransition = { enter: null, update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 } };
+  const bothDisabled: ChartTransition = { enter: null, update: null };
+  const instantEnter: ChartTransition = { enter: { type: 'tween', duration: 0 }, update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 } };
+  const instantUpdate: ChartTransition = { enter: { type: 'tween', duration: 1.0 }, update: { type: 'tween', duration: 0 } };
+
+  function TransitionBarChart({ data, transitions }: { data: number[]; transitions: ChartTransition }) {
+    return (
+      <BarChart {...barChartProps} series={[{ id: 'values', data }]} transitions={transitions}>
+        <Scrubber hideOverlay beaconTransitions={transitions} seriesIds={[]} />
+      </BarChart>
+    );
+  }
+
+  function TransitionsStory() {
+    const [data, setData] = useState(generateBarData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData(generateBarData());
+      }, updateInterval);
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <VStack gap={4}>
+        <Example title="Enter Only">
+          <TransitionBarChart data={data} transitions={enterOnly} />
+        </Example>
+        <Example title="Update Only">
+          <TransitionBarChart data={data} transitions={updateOnly} />
+        </Example>
+        <Example title="Both Disabled (null)">
+          <TransitionBarChart data={data} transitions={bothDisabled} />
+        </Example>
+        <Example title="Instant Enter (duration: 0)">
+          <TransitionBarChart data={data} transitions={instantEnter} />
+        </Example>
+        <Example title="Instant Update (duration: 0)">
+          <TransitionBarChart data={data} transitions={instantUpdate} />
+        </Example>
+      </VStack>
+    );
+  }
+
+  return <TransitionsStory />;
 };

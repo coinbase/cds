@@ -7,7 +7,7 @@ import {
 } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, projectPoint } from '../utils';
+import { defaultTransition, instantTransition, projectPoint } from '../utils';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
@@ -81,10 +81,11 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries],
       );
 
-      const updateTransition = useMemo(
-        () => transitions?.update ?? defaultTransition,
-        [transitions?.update],
-      );
+      const activeUpdateTransition = useMemo(() => {
+        const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
+        if (isIdle && animate && resolved !== null) return resolved;
+        return instantTransition;
+      }, [transitions?.update, isIdle, animate]);
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
@@ -169,8 +170,17 @@ export const DefaultScrubberBeacon = memo(
         />
       );
 
-      const beaconCircle =
-        isIdle && animate ? (
+      return (
+        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
+          {isIdle && (
+            <motion.g
+              animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              initial={false}
+              transition={activeUpdateTransition}
+            >
+              {pulseCircle}
+            </motion.g>
+          )}
           <motion.circle
             animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
             className={className}
@@ -182,38 +192,8 @@ export const DefaultScrubberBeacon = memo(
             stroke={stroke}
             strokeWidth={strokeWidth}
             style={style}
-            transition={updateTransition}
+            transition={activeUpdateTransition}
           />
-        ) : (
-          <circle
-            className={className}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill={color}
-            r={radius}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            style={style}
-          />
-        );
-
-      return (
-        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
-          {isIdle &&
-            (animate ? (
-              <motion.g
-                animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-                initial={false}
-                transition={updateTransition}
-              >
-                {pulseCircle}
-              </motion.g>
-            ) : (
-              <g transform={`translate(${pixelCoordinate.x}, ${pixelCoordinate.y})`}>
-                {pulseCircle}
-              </g>
-            ))}
-          {beaconCircle}
         </g>
       );
     },

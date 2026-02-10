@@ -1,8 +1,8 @@
-import { memo, useId, useMemo } from 'react';
+import { memo, useId, useMemo, useRef } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getBarPath } from '../utils';
+import { getBarPath, instantTransition } from '../utils';
 
 import type { BarStackComponentProps } from './BarStack';
 
@@ -33,33 +33,48 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     roundTop = true,
     roundBottom = true,
     yOrigin,
+    transitions,
     transition,
   }) => {
     const { animate } = useCartesianChartContext();
     const clipPathId = useId();
+    const isInitialRender = useRef(true);
+
+    const shouldAnimateEnter = animate && transitions?.enter !== null;
+
+    const resolvedEnterTransition =
+      !animate || transitions?.enter === null ? instantTransition : transitions?.enter;
+    const resolvedUpdateTransition =
+      !animate || transitions?.update === null
+        ? instantTransition
+        : (transitions?.update ?? transition);
 
     const clipPathData = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
     }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
 
     const initialClipPathData = useMemo(() => {
-      if (!animate) return undefined;
+      if (!shouldAnimateEnter) return undefined;
       return getBarPath(x, yOrigin ?? y + height, width, 1, borderRadius, roundTop, roundBottom);
-    }, [animate, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+    }, [shouldAnimateEnter, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+
+    const activeTransition =
+      isInitialRender.current && shouldAnimateEnter
+        ? (resolvedEnterTransition ?? resolvedUpdateTransition)
+        : resolvedUpdateTransition;
 
     return (
       <>
         <defs>
           <clipPath id={clipPathId}>
-            {animate ? (
-              <motion.path
-                animate={{ d: clipPathData }}
-                initial={{ d: initialClipPathData }}
-                transition={transition}
-              />
-            ) : (
-              <path d={clipPathData} />
-            )}
+            <motion.path
+              animate={{ d: clipPathData }}
+              initial={initialClipPathData ? { d: initialClipPathData } : false}
+              onAnimationComplete={() => {
+                isInitialRender.current = false;
+              }}
+              transition={activeTransition}
+            />
           </clipPath>
         </defs>
         <g className={className} clipPath={`url(#${clipPathId})`} style={style}>

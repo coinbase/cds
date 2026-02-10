@@ -6,7 +6,7 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { type PointLabelPosition, projectPoint } from '../utils';
+import { type ChartTransition, type PointLabelPosition, projectPoint } from '../utils';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
@@ -215,7 +215,12 @@ export type PointProps = PointBaseProps &
      */
     accessibilityLabel?: string;
     /**
-     * Transition configuration for animation.
+     * Transition configuration for enter and update animations.
+     */
+    transitions?: ChartTransition;
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
      * @default defaultTransition
      */
     transition?: Transition;
@@ -244,6 +249,7 @@ export const Point = memo<PointProps>(
     labelFont,
     testID,
     animate: animateProp,
+    transitions,
     transition,
     ...svgProps
   }) => {
@@ -361,7 +367,7 @@ export const Point = memo<PointProps>(
           strokeWidth={strokeWidth}
           style={mergedStyles}
           tabIndex={onClick ? 0 : -1}
-          transition={transition}
+          transition={transitions?.update ?? transition}
           variants={variants}
           whileHover={onClick ? 'hovered' : 'default'}
           whileTap={onClick ? 'pressed' : 'default'}
@@ -385,6 +391,7 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
+      transitions?.update,
       transition,
     ]);
 

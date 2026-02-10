@@ -11,6 +11,7 @@ import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
   type ChartPathCurveType,
+  type ChartTransition,
   evaluateGradientAtValue,
   getGradientConfig,
   getLineData,
@@ -111,7 +112,20 @@ export type LineBaseProps = SharedProps & {
 
 export type LineProps = LineBaseProps & {
   /**
-   * Transition configuration for line animations.
+   * Transition configuration for enter and update animations.
+   *
+   * @example
+   * // Custom enter and update transitions
+   * transitions={{ enter: { type: 'tween', duration: 0.3 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: ChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
   /**
@@ -136,6 +150,7 @@ export type LineComponentProps = Pick<
   | 'strokeWidth'
   | 'gradient'
   | 'animate'
+  | 'transitions'
   | 'transition'
   | 'style'
   | 'className'
@@ -170,6 +185,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     points,
     connectNulls,
+    transitions,
     transition,
     gradient: gradientProp,
     ...props
@@ -264,6 +280,7 @@ export const Line = memo<LineProps>(
             gradient={gradient}
             seriesId={seriesId}
             transition={transition}
+            transitions={transitions}
             type={areaType}
           />
         )}
@@ -273,6 +290,7 @@ export const Line = memo<LineProps>(
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
+          transitions={transitions}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
@@ -333,6 +351,7 @@ export const Line = memo<LineProps>(
                     key={`${seriesId}-${index}`}
                     onClick={onPointClick}
                     transition={transition}
+                    transitions={transitions}
                     {...defaults}
                   />
                 );
@@ -350,6 +369,7 @@ export const Line = memo<LineProps>(
                   key={`${seriesId}-${index}`}
                   onClick={pointConfig.onClick ?? onPointClick}
                   transition={transition}
+                  transitions={transitions}
                   {...defaults}
                   {...pointConfig}
                 />
