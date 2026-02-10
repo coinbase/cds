@@ -47,21 +47,12 @@ export type ProgressBaseProps = SharedProps &
   };
 
 export type ProgressBarProps = ProgressBaseProps & {
-  /**
-   * Custom styles for the progress bar root.
-   */
   style?: StyleProp<ViewStyle>;
-  /**
-   * Custom styles for the progress bar.
-   */
+  /** Custom styles for individual elements of the ProgressBar component */
   styles?: {
-    /**
-     * Custom styles for the progress bar root.
-     */
+    /** Root element */
     root?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the progress bar.
-     */
+    /** Progress fill element */
     progress?: StyleProp<ViewStyle>;
   };
 };

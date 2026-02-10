@@ -44,10 +44,15 @@ export type MessagingCardLayoutProps = {
   /** React node to display as the main media content. When provided, it will be rendered in an HStack container. */
   media?: React.ReactNode;
   styles?: {
+    /** Layout container element */
     layoutContainer?: StyleProp<ViewStyle>;
+    /** Content container element */
     contentContainer?: StyleProp<ViewStyle>;
+    /** Text container element */
     textContainer?: StyleProp<ViewStyle>;
+    /** Media container element */
     mediaContainer?: StyleProp<ViewStyle>;
+    /** Dismiss button container element */
     dismissButtonContainer?: StyleProp<ViewStyle>;
   };
 };

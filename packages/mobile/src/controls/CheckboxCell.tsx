@@ -33,10 +33,15 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = {
 export type CheckboxCellProps<CheckboxValue extends string> =
   CheckboxCellBaseProps<CheckboxValue> & {
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
+      /** Checkbox input container element */
       checkboxContainer?: StyleProp<ViewStyle>;
+      /** Content container element */
       contentContainer?: StyleProp<ViewStyle>;
+      /** Title text element */
       title?: StyleProp<TextStyle>;
+      /** Description text element */
       description?: StyleProp<TextStyle>;
     };
   };

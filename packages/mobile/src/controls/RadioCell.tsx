@@ -32,10 +32,15 @@ export type RadioCellBaseProps<RadioValue extends string> = {
 
 export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {
   styles?: {
+    /** Root element */
     root?: StyleProp<ViewStyle>;
+    /** Radio input container element */
     radioContainer?: StyleProp<ViewStyle>;
+    /** Content container element */
     contentContainer?: StyleProp<ViewStyle>;
+    /** Title text element */
     title?: StyleProp<TextStyle>;
+    /** Description text element */
     description?: StyleProp<TextStyle>;
   };
 };

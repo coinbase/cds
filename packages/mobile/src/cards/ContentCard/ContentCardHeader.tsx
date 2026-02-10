@@ -23,17 +23,11 @@ export type ContentCardHeaderBaseProps = SharedProps & {
   /** Slot for action buttons. */
   actions?: React.ReactNode;
   styles?: {
-    /**
-     * Root container style
-     */
+    /** Root container element */
     root?: StyleProp<ViewStyle>;
-    /**
-     * Container for the text content (title + subtitle)
-     */
+    /** Text content container (title + subtitle) */
     textContainer?: StyleProp<ViewStyle>;
-    /**
-     * Container for the content (thumbnail + text content)
-     */
+    /** Content container (thumbnail + text content) */
     contentContainer?: StyleProp<ViewStyle>;
   };
 };

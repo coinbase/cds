@@ -17,10 +17,6 @@ import webBodyStylesData from ':docgen/web/cards/ContentCard/ContentCardBody/sty
 
 ## ContentCardHeader
 
-### Selectors
-
-<ComponentStylesTable componentName="ContentCardHeader" styles={webHeaderStylesData} />
-
 ### Explorer
 
 <StylesExplorer selectors={webHeaderStylesData.selectors}>
@@ -47,11 +43,11 @@ import webBodyStylesData from ':docgen/web/cards/ContentCard/ContentCardBody/sty
   )}
 </StylesExplorer>
 
-## ContentCardBody
-
 ### Selectors
 
-<ComponentStylesTable componentName="ContentCardBody" styles={webBodyStylesData} />
+<ComponentStylesTable componentName="ContentCardHeader" styles={webHeaderStylesData} />
+
+## ContentCardBody
 
 ### Explorer
 
@@ -85,3 +81,7 @@ import webBodyStylesData from ':docgen/web/cards/ContentCard/ContentCardBody/sty
     </ContentCard>
   )}
 </StylesExplorer>
+
+### Selectors
+
+<ComponentStylesTable componentName="ContentCardBody" styles={webBodyStylesData} />

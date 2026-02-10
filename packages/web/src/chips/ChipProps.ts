@@ -59,14 +59,18 @@ export type ChipBaseProps = SharedProps &
      * Apply styles to Chip content.
      */
     contentStyle?: React.CSSProperties;
-    /** Apply styles to the container and content. */
+    /** Custom styles for individual elements of the Chip component */
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
+      /** Content element */
       content?: React.CSSProperties;
     };
-    /** Class names for the components */
+    /** Custom class names for individual elements of the Chip component */
     classNames?: {
+      /** Root element */
       root?: string;
+      /** Content element */
       content?: string;
     };
   };

@@ -28,6 +28,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { Box, HStack } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import type { ResponsiveProp } from '../../styles/styleProps';
+import type { StylesAndClassNames } from '../../types';
 import { Text } from '../../typography/Text';
 import { FocusTrap } from '../FocusTrap';
 import { HandleBar } from '../handlebar/HandleBar';
@@ -94,6 +95,31 @@ const trayContainerPinRightCss = css`
   border-top-left-radius: var(--borderRadius-600);
   border-bottom-left-radius: var(--borderRadius-600);
 `;
+
+/**
+ * Static class names for Tray component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const trayClassNames = {
+  /** Root container element */
+  root: 'cds-Tray',
+  /** Overlay backdrop element */
+  overlay: 'cds-Tray-overlay',
+  /** Animated sliding container element */
+  container: 'cds-Tray-container',
+  /** Header section element */
+  header: 'cds-Tray-header',
+  /** Title text element */
+  title: 'cds-Tray-title',
+  /** Content area element */
+  content: 'cds-Tray-content',
+  /** Handle bar container element, only rendered when showHandleBar is true and pin is "bottom" */
+  handleBar: 'cds-Tray-handleBar',
+  /** Handle bar indicator element, only rendered when showHandleBar is true and pin is "bottom" */
+  handleBarHandle: 'cds-Tray-handleBarHandle',
+  /** Close button element */
+  closeButton: 'cds-Tray-closeButton',
+} as const;
 
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
@@ -189,50 +215,7 @@ export type TrayBaseProps = {
   showHandleBar?: boolean;
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'>;
 
-export type TrayProps = TrayBaseProps & {
-  /** Inline styles for the tray elements */
-  styles?: {
-    /** Styles for the root container element */
-    root?: React.CSSProperties;
-    /** Styles for the overlay backdrop */
-    overlay?: React.CSSProperties;
-    /** Styles for the animated sliding container */
-    container?: React.CSSProperties;
-    /** Styles for the header section */
-    header?: React.CSSProperties;
-    /** Styles for the title text */
-    title?: React.CSSProperties;
-    /** Styles for the content area */
-    content?: React.CSSProperties;
-    /** Styles for the handle bar container */
-    handleBar?: React.CSSProperties;
-    /** Styles for the handle bar element */
-    handleBarHandle?: React.CSSProperties;
-    /** Styles for the close button */
-    closeButton?: React.CSSProperties;
-  };
-  /** Class names for the tray elements */
-  classNames?: {
-    /** Class name for the root container element */
-    root?: string;
-    /** Class name for the overlay backdrop */
-    overlay?: string;
-    /** Class name for the animated sliding container */
-    container?: string;
-    /** Class name for the header section */
-    header?: string;
-    /** Class name for the title text */
-    title?: string;
-    /** Class name for the content area */
-    content?: string;
-    /** Class name for the handle bar container */
-    handleBar?: string;
-    /** Class name for the handle bar element */
-    handleBarHandle?: string;
-    /** Class name for the close button */
-    closeButton?: string;
-  };
-};
+export type TrayProps = TrayBaseProps & StylesAndClassNames<typeof trayClassNames>;
 
 // Extended ref type for web implementation
 export type TrayRefProps = {
@@ -430,7 +413,7 @@ export const Tray = memo(
         <Portal containerId={trayContainerId}>
           <Box
             ref={trayRef}
-            className={classNames?.root}
+            className={cx(trayClassNames.root, classNames?.root)}
             height="100vh"
             pin="all"
             position="fixed"
@@ -439,7 +422,7 @@ export const Tray = memo(
             zIndex={zIndex}
           >
             <Overlay
-              className={classNames?.overlay}
+              className={cx(trayClassNames.overlay, classNames?.overlay)}
               onClick={handleOverlayClick}
               style={styles?.overlay}
               testID="tray-overlay"
@@ -457,7 +440,12 @@ export const Tray = memo(
                   animate={animateValue}
                   aria-modal="true"
                   bordered={theme.activeColorScheme === 'dark'}
-                  className={cx(trayContainerBaseCss, trayContainerPinCss, classNames?.container)}
+                  className={cx(
+                    trayContainerBaseCss,
+                    trayContainerPinCss,
+                    trayClassNames.container,
+                    classNames?.container,
+                  )}
                   data-testid="tray"
                   drag={!preventDismiss ? 'y' : undefined}
                   dragConstraints={{ top: 0, bottom: 0 }}
@@ -492,6 +480,7 @@ export const Tray = memo(
                         className={cx(
                           shouldShrinkPadding && trayHeaderBorderBaseCss,
                           shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
+                          trayClassNames.header,
                           classNames?.header,
                         )}
                         flexShrink={0}
@@ -506,8 +495,11 @@ export const Tray = memo(
                           (preventDismiss ? (
                             <HandleBar
                               classNames={{
-                                root: classNames?.handleBar,
-                                handle: classNames?.handleBarHandle,
+                                root: cx(trayClassNames.handleBar, classNames?.handleBar),
+                                handle: cx(
+                                  trayClassNames.handleBarHandle,
+                                  classNames?.handleBarHandle,
+                                ),
                               }}
                               styles={{
                                 root: styles?.handleBar,
@@ -519,8 +511,11 @@ export const Tray = memo(
                               accessibilityHint={closeAccessibilityHint}
                               accessibilityLabel={closeAccessibilityLabel}
                               classNames={{
-                                root: classNames?.handleBar,
-                                handle: classNames?.handleBarHandle,
+                                root: cx(trayClassNames.handleBar, classNames?.handleBar),
+                                handle: cx(
+                                  trayClassNames.handleBarHandle,
+                                  classNames?.handleBarHandle,
+                                ),
                               }}
                               onClose={handleClose}
                               onPointerDown={(e: React.PointerEvent<HTMLDivElement>) => {
@@ -541,7 +536,7 @@ export const Tray = memo(
                             {title &&
                               (typeof title === 'string' ? (
                                 <Text
-                                  className={classNames?.title}
+                                  className={cx(trayClassNames.title, classNames?.title)}
                                   font="title3"
                                   style={styles?.title}
                                 >
@@ -555,7 +550,7 @@ export const Tray = memo(
                                 transparent
                                 accessibilityHint={closeAccessibilityHint}
                                 accessibilityLabel={closeAccessibilityLabel}
-                                className={classNames?.closeButton}
+                                className={cx(trayClassNames.closeButton, classNames?.closeButton)}
                                 margin={isSideTray ? -1.5 : undefined}
                                 name="close"
                                 onClick={handleClose}
@@ -570,7 +565,7 @@ export const Tray = memo(
                     )}
                     <VStack
                       ref={contentRef}
-                      className={classNames?.content}
+                      className={cx(trayClassNames.content, classNames?.content)}
                       flexGrow={1}
                       minHeight={0}
                       overflow="hidden"

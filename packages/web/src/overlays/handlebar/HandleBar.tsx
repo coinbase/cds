@@ -49,18 +49,18 @@ export type HandleBarBaseProps = Omit<BoxBaseProps, 'children' | 'background'> &
 
 export type HandleBarProps = Omit<BoxProps<BoxDefaultElement>, 'children' | 'background'> &
   HandleBarBaseProps & {
-    /** Class names for the handlebar elements */
+    /** Custom class names for individual elements of the HandleBar component */
     classNames?: {
-      /** Class name for the root container */
+      /** Root container element */
       root?: string;
-      /** Class name for the handle element */
+      /** Handle element */
       handle?: string;
     };
-    /** Inline styles for the handlebar elements */
+    /** Custom styles for individual elements of the HandleBar component */
     styles?: {
-      /** Styles for the root container */
+      /** Root container element */
       root?: React.CSSProperties;
-      /** Styles for the handle element */
+      /** Handle element */
       handle?: React.CSSProperties;
     };
   };

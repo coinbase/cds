@@ -45,16 +45,18 @@ export type IconBaseProps = SharedProps &
 
 export type IconProps = IconBaseProps &
   BoxProps<BoxDefaultElement> & {
+    /** Custom inline styles for individual elements of the Icon component */
     styles?: {
-      /** TO DO: Document this prop */
+      /** Outer Box wrapper element */
       root?: React.CSSProperties;
-      /** TO DO: Document this prop */
+      /** Inner icon glyph element */
       icon?: React.CSSProperties;
     };
+    /** Custom class names for individual elements of the Icon component */
     classNames?: {
-      /** TO DO: Document this prop */
+      /** Outer Box wrapper element */
       root?: string;
-      /** TO DO: Document this prop */
+      /** Inner icon glyph element */
       icon?: string;
     };
   };
