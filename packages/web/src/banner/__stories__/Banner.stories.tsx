@@ -24,6 +24,7 @@ type ExampleProps = Pick<
   | 'startIconActive'
   | 'startIconAccessibilityLabel'
   | 'closeAccessibilityLabel'
+  | 'width'
 >;
 
 const exampleProps: ExampleProps = {
@@ -38,6 +39,7 @@ const examplePropsWithMargin: ExampleProps = {
   ...exampleProps,
   marginX: -2,
   children: shortMessage,
+  width: 'calc(100% + var(--space-4))',
 };
 
 const styleProps: BannerProps[] = [
@@ -282,7 +284,7 @@ export const BannerWithLink = () => {
 
 export const CustomMargin = () => {
   return (
-    <VStack gap={2} marginX={-0.5}>
+    <VStack gap={2} paddingX={2}>
       <Text as="h1" display="block" font="title1">
         Global
       </Text>
