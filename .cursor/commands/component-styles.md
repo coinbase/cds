@@ -92,6 +92,24 @@ Review the component's JSX to identify elements that should be targetable via st
 | `track`               | Track/rail element (in progress bars, sliders)        |
 | `trigger`             | Trigger element that opens a dropdown/popover         |
 
+## JSDoc Convention for Selector Descriptions
+
+Selector JSDoc comments describe **what the element is**, not what the prop does:
+
+- Sentence case, no trailing period
+- Concise noun phrase describing the element itself
+- Single-line format: `/** Description */`
+- For conditional elements, append context after a comma: `/** Header element, only rendered on phone viewport */`
+
+**Examples:**
+
+```tsx
+/** Root element */
+/** Title text element */
+/** Navigation controls element */
+/** Header element, only rendered on phone viewport in horizontal direction */
+```
+
 ## Step 4: Add Styles API (Web Components)
 
 For web components, add three things:
@@ -106,9 +124,9 @@ Add a static classNames object with JSDoc comments. Place this before the compon
  * Use these selectors to target specific elements with CSS.
  */
 export const [componentName]ClassNames = {
-  /** Root element containing the entire [component description] */
+  /** Root element */
   root: 'cds-[ComponentName]',
-  /** [Description of what this element contains/does] */
+  /** [Concise element description] */
   [selectorName]: 'cds-[ComponentName]-[selectorName]',
   // ... more selectors as needed
 } as const;
@@ -237,13 +255,11 @@ For mobile components, the pattern is simpler (no static classNames):
 ```tsx
 export type [ComponentName]Props = {
   // ... other props
-  /**
-   * Custom styles for component parts.
-   */
+  /** Custom styles for individual elements of the [ComponentName] component */
   styles?: {
-    /** Styles for the root container */
+    /** Root container element */
     root?: StyleProp<ViewStyle>;
-    /** Styles for [description] */
+    /** [Concise element description] */
     [selectorName]?: StyleProp<ViewStyle | TextStyle>;
     // ... more selectors as needed
   };
@@ -260,11 +276,11 @@ export type [ComponentName]Props = {
 
 ## Step 6: Add JSDoc Notes for Special Cases
 
-If any selectors have special rendering conditions, document them in the JSDoc:
+If any selectors have special rendering conditions, append the note after the element description with a comma:
 
 ```tsx
 styles?: {
-  /** Styles for the header. Note: Header only renders on phone viewport in horizontal direction. */
+  /** Header element, only rendered on phone viewport in horizontal direction */
   header?: React.CSSProperties;
 };
 ```
@@ -336,7 +352,7 @@ Before completing, verify:
 
 - [ ] Reviewed component structure for potential simplifications (flagged to user if found)
 - [ ] Selector names are from the approved list (or got user confirmation for new ones)
-- [ ] Each selector has a descriptive JSDoc comment
+- [ ] Each selector has a JSDoc comment following the convention (sentence case, no trailing period, concise noun phrase)
 - [ ] Class names follow `cds-ComponentName-selectorName` convention (camelCase)
 - [ ] Using `StylesAndClassNames` utility type on regular Props (not BaseProps) (web) or manual styles type (mobile)
 - [ ] Static classNames applied with `cx()` in component JSX (web only)
