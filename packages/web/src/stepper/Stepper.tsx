@@ -64,7 +64,7 @@ type StepperSubcomponentProps<Metadata extends Record<string, unknown> = Record<
     isDescendentActive: boolean;
     /** A CSS class name applied to this component */
     className?: string;
-    /** Inline styles for this component */
+    /** Inline styles for the subcomponent element */
     style?: React.CSSProperties;
   };
 
@@ -240,38 +240,38 @@ export type StepperDefaultElement = typeof stepperDefaultElement;
 export type StepperProps<Metadata extends Record<string, unknown> = Record<string, unknown>> =
   VStackProps<StepperDefaultElement> &
     StepperBaseProps<Metadata> & {
-      /** Inline styles for specific child elements of Stepper */
+      /** Custom styles for individual elements of the Stepper component */
       styles?: {
-        /** Inline styles for the root Stepper container element */
+        /** Root Stepper container element */
         root?: React.CSSProperties;
-        /** Inline styles for the Step subcomponent */
+        /** Step subcomponent element */
         step?: React.CSSProperties;
-        /** Inline styles for the SubstepContainer subcomponent */
+        /** Substep container element */
         substepContainer?: React.CSSProperties;
-        /** Inline styles for the Label subcomponent */
+        /** Label subcomponent element */
         label?: React.CSSProperties;
-        /** Inline styles for the Progress subcomponent */
+        /** Progress subcomponent element */
         progress?: React.CSSProperties;
-        /** Inline styles for the Icon subcomponent */
+        /** Icon subcomponent element */
         icon?: React.CSSProperties;
-        /** Inline styles for the Header subcomponent */
+        /** Header subcomponent element */
         header?: React.CSSProperties;
       };
-      /** Optional CSS class names for specific child elements of Stepper */
+      /** Custom class names for individual elements of the Stepper component */
       classNames?: {
-        /** A CSS class name applied to the root Stepper container element */
+        /** Root Stepper container element */
         root?: string;
-        /** A CSS class name applied to the Step subcomponent */
+        /** Step subcomponent element */
         step?: string;
-        /** A CSS class name applied to the SubstepContainer subcomponent */
+        /** Substep container element */
         substepContainer?: string;
-        /** A CSS class name applied to the Label subcomponent */
+        /** Label subcomponent element */
         label?: string;
-        /** A CSS class name applied to the Progress subcomponent */
+        /** Progress subcomponent element */
         progress?: string;
-        /** A CSS class name applied to the Icon subcomponent */
+        /** Icon subcomponent element */
         icon?: string;
-        /** A CSS class name applied to the Header subcomponent */
+        /** Header subcomponent element */
         header?: string;
       };
     };

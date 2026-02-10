@@ -11,9 +11,11 @@ export type DataCardBaseProps = Polymorphic.ExtendableProps<
   Omit<CardRootBaseProps, 'children'>,
   DataCardLayoutProps & {
     classNames?: {
+      /** Root element */
       root?: string;
     };
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
     };
   }

@@ -35,17 +35,27 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = Omit<
 export type CheckboxCellProps<CheckboxValue extends string> =
   CheckboxCellBaseProps<CheckboxValue> & {
     classNames?: {
+      /** Root element */
       root?: string;
+      /** Checkbox input container element */
       checkboxContainer?: string;
+      /** Title text element */
       title?: string;
+      /** Description text element */
       description?: string;
+      /** Content container element */
       contentContainer?: string;
     };
     styles?: {
+      /** Root element */
       root?: CSSProperties;
+      /** Checkbox input container element */
       checkboxContainer?: CSSProperties;
+      /** Title text element */
       title?: CSSProperties;
+      /** Description text element */
       description?: CSSProperties;
+      /** Content container element */
       contentContainer?: CSSProperties;
     };
   };

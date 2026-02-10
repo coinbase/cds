@@ -79,13 +79,9 @@ export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBasePro
      */
     width?: BoxProps['width'];
     styles?: {
-      /**
-       * Style applied to the root container.
-       */
+      /** Root container element */
       root?: StyleProp<ViewStyle>;
-      /**
-       * Style applied to the root of the Tabs component.
-       */
+      /** Tabs root element */
       tabs?: StyleProp<ViewStyle>;
     };
   };

@@ -50,17 +50,17 @@ export type SelectOptionProps<
     compact?: boolean;
     /** Style object for the option */
     style?: StyleProp<ViewStyle>;
-    /** Custom styles for different parts of the option */
+    /** Custom styles for individual elements of the option */
     styles?: {
-      /** Styles for the option cell element */
+      /** Option cell element */
       optionCell?: StyleProp<ViewStyle>;
-      /** Styles for the option content wrapper */
+      /** Option content wrapper */
       optionContent?: StyleProp<ViewStyle>;
-      /** Styles for the option label element */
+      /** Option label element */
       optionLabel?: StyleProp<ViewStyle>;
-      /** Styles for the option description element */
+      /** Option description element */
       optionDescription?: StyleProp<ViewStyle>;
-      /** Styles for the select all divider element */
+      /** Select all divider element */
       selectAllDivider?: StyleProp<ViewStyle>;
     };
   };
@@ -138,23 +138,23 @@ export type SelectOptionGroupProps<
   disabled?: boolean;
   /** Whether the options should be compact */
   compact?: boolean;
-  /** Custom styles for the option group and options */
+  /** Custom styles for individual elements of the option group */
   styles?: {
-    /** Styles for the option group element */
+    /** Option group element */
     optionGroup?: StyleProp<ViewStyle>;
-    /** Styles for individual options */
+    /** Option element */
     option?: StyleProp<ViewStyle>;
-    /** Blend styles for option interactivity */
+    /** Option blend styles for interactivity */
     optionBlendStyles?: InteractableBlendStyles;
-    /** Styles for the option cell element */
+    /** Option cell element */
     optionCell?: StyleProp<ViewStyle>;
-    /** Styles for the option content wrapper */
+    /** Option content wrapper */
     optionContent?: StyleProp<ViewStyle>;
-    /** Styles for the option label element */
+    /** Option label element */
     optionLabel?: StyleProp<ViewStyle>;
-    /** Styles for the option description element */
+    /** Option description element */
     optionDescription?: StyleProp<ViewStyle>;
-    /** Styles for the select all divider element */
+    /** Select all divider element */
     selectAllDivider?: StyleProp<ViewStyle>;
   };
 };
@@ -205,11 +205,11 @@ export function isSelectOptionGroup<
 
 export type SelectEmptyDropdownContentProps = {
   label: string;
-  /** Custom styles for different parts of the empty dropdown content */
+  /** Custom styles for individual elements of the empty dropdown content */
   styles?: {
-    /** Styles for the container element */
+    /** Empty contents container element */
     emptyContentsContainer?: StyleProp<ViewStyle>;
-    /** Styles for the text element */
+    /** Empty contents text element */
     emptyContentsText?: StyleProp<ViewStyle>;
   };
 };
@@ -284,19 +284,19 @@ export type SelectControlProps<
     compact?: boolean;
     /** Style object for the control */
     style?: StyleProp<ViewStyle>;
-    /** Custom styles for different parts of the control */
+    /** Custom styles for individual elements of the control */
     styles?: {
-      /** Styles for the start node element */
+      /** Start node element */
       controlStartNode?: StyleProp<ViewStyle>;
-      /** Styles for the input node element */
+      /** Input node element */
       controlInputNode?: StyleProp<ViewStyle>;
-      /** Styles for the value node element */
+      /** Value node element */
       controlValueNode?: StyleProp<ViewStyle>;
-      /** Styles for the label node element */
+      /** Label node element */
       controlLabelNode?: StyleProp<ViewStyle>;
-      /** Styles for the helper text node element */
+      /** Helper text node element */
       controlHelperTextNode?: StyleProp<ViewStyle>;
-      /** Styles for the end node element */
+      /** End node element */
       controlEndNode?: StyleProp<ViewStyle>;
     };
   };
@@ -345,29 +345,29 @@ export type SelectDropdownProps<
     controlRef: React.MutableRefObject<View | null>;
     /** Inline styles for the dropdown */
     style?: StyleProp<ViewStyle>;
-    /** Custom styles for dropdown elements */
+    /** Custom styles for individual elements of the dropdown */
     styles?: {
-      /** Styles for the dropdown root container */
+      /** Dropdown root container element */
       root?: StyleProp<ViewStyle>;
-      /** Styles for individual options */
+      /** Option element */
       option?: StyleProp<ViewStyle>;
-      /** Blend styles for option interactivity */
+      /** Option blend styles for interactivity */
       optionBlendStyles?: InteractableBlendStyles;
-      /** Styles for the option cell element */
+      /** Option cell element */
       optionCell?: StyleProp<ViewStyle>;
-      /** Styles for the option content wrapper */
+      /** Option content wrapper */
       optionContent?: StyleProp<ViewStyle>;
-      /** Styles for the option group element */
+      /** Option group element */
       optionGroup?: StyleProp<ViewStyle>;
-      /** Styles for the option label element */
+      /** Option label element */
       optionLabel?: StyleProp<ViewStyle>;
-      /** Styles for the option description element */
+      /** Option description element */
       optionDescription?: StyleProp<ViewStyle>;
-      /** Styles for the select all divider element */
+      /** Select all divider element */
       selectAllDivider?: StyleProp<ViewStyle>;
-      /** Styles for the empty contents container element */
+      /** Empty contents container element */
       emptyContentsContainer?: StyleProp<ViewStyle>;
-      /** Styles for the empty contents text element */
+      /** Empty contents text element */
       emptyContentsText?: StyleProp<ViewStyle>;
     };
     /** Whether to use compact styling for the dropdown */
@@ -466,47 +466,47 @@ export type SelectProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = SelectBaseProps<Type, SelectOptionValue> & {
-  /** Custom styles for different parts of the select */
+  /** Custom styles for individual elements of the Select component */
   styles?: {
-    /** Styles for the root element */
+    /** Root element */
     root?: StyleProp<ViewStyle>;
-    /** Styles for the control element */
+    /** Control element */
     control?: StyleProp<ViewStyle>;
-    /** Styles for the start node element */
+    /** Start node element */
     controlStartNode?: StyleProp<ViewStyle>;
-    /** Styles for the input node element */
+    /** Input node element */
     controlInputNode?: StyleProp<ViewStyle>;
-    /** Styles for the value node element */
+    /** Value node element */
     controlValueNode?: StyleProp<ViewStyle>;
-    /** Styles for the label node element */
+    /** Label node element */
     controlLabelNode?: StyleProp<ViewStyle>;
-    /** Styles for the helper text node element */
+    /** Helper text node element */
     controlHelperTextNode?: StyleProp<ViewStyle>;
-    /** Styles for the end node element */
+    /** End node element */
     controlEndNode?: StyleProp<ViewStyle>;
     /** Blend styles for control interactivity */
     controlBlendStyles?: InteractableBlendStyles;
-    /** Styles for the dropdown container */
+    /** Dropdown container element */
     dropdown?: StyleProp<ViewStyle>;
-    /** Styles for individual options */
+    /** Option element */
     option?: StyleProp<ViewStyle>;
-    /** Styles for the option cell element */
+    /** Option cell element */
     optionCell?: StyleProp<ViewStyle>;
-    /** Styles for the option content wrapper */
+    /** Option content wrapper */
     optionContent?: StyleProp<ViewStyle>;
-    /** Styles for the option label element */
+    /** Option label element */
     optionLabel?: StyleProp<ViewStyle>;
-    /** Styles for the option description element */
+    /** Option description element */
     optionDescription?: StyleProp<ViewStyle>;
-    /** Blend styles for option interactivity */
+    /** Option blend styles for interactivity */
     optionBlendStyles?: InteractableBlendStyles;
-    /** Styles for the select all divider element */
+    /** Select all divider element */
     selectAllDivider?: StyleProp<ViewStyle>;
-    /** Styles for the empty contents container element */
+    /** Empty contents container element */
     emptyContentsContainer?: StyleProp<ViewStyle>;
-    /** Styles for the empty contents text element */
+    /** Empty contents text element */
     emptyContentsText?: StyleProp<ViewStyle>;
-    /** Styles for the option group element */
+    /** Option group element */
     optionGroup?: StyleProp<ViewStyle>;
   };
 };

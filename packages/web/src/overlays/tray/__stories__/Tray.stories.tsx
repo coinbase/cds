@@ -1,9 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Meta } from '@storybook/react';
 
 import { Button } from '../../../buttons/Button';
+import { ListCell } from '../../../cells/ListCell';
+import { useBreakpoints } from '../../../hooks/useBreakpoints';
+import { Pictogram } from '../../../illustrations/Pictogram';
+import { Box } from '../../../layout/Box';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
+import { PageFooter } from '../../../page/PageFooter';
 import { Text } from '../../../typography/Text';
 import type { TrayRefProps } from '../Tray';
 import { Tray } from '../Tray';
@@ -195,5 +200,384 @@ export const Default = () => {
         )}
       </VStack>
     </VStack>
+  );
+};
+
+export const ResponsiveBasic = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          title="Section header"
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveIllustration = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          title={
+            <VStack gap={isPhone ? 1.5 : 2}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Welcome aboard</Text>
+            </VStack>
+          }
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveFullBleedImage = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          classNames={{
+            closeButton: 'tray-close-button-inverted',
+          }}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          header={
+            <Text
+              font="title3"
+              paddingBottom={0.75}
+              paddingTop={2}
+              paddingX={{ base: 4, phone: 3 }}
+            >
+              Header
+            </Text>
+          }
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+          }}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text font="body">This is the content of the tray.</Text>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveBasicListCells = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            header: { paddingBottom: 'var(--space-1)' },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          title="Section header"
+        >
+          {Array.from({ length: 20 }, (_, i) => (
+            <ListCell
+              key={i}
+              accessory="arrow"
+              description="Description"
+              innerSpacing={{
+                marginX: -4,
+                paddingX: 4,
+                paddingY: 1,
+              }}
+              spacingVariant="condensed"
+              title="Title"
+            />
+          ))}
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveIllustrationListCells = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            header: { paddingBottom: 'var(--space-1)' },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          title={
+            <VStack gap={isPhone ? 1.5 : 2}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Welcome aboard</Text>
+            </VStack>
+          }
+        >
+          {Array.from({ length: 20 }, (_, i) => (
+            <ListCell
+              key={i}
+              accessory="arrow"
+              description="Description"
+              innerSpacing={{
+                marginX: -4,
+                paddingX: 4,
+                paddingY: 1,
+              }}
+              spacingVariant="condensed"
+              title="Title"
+            />
+          ))}
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveFullBleedImageListCells = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          classNames={{
+            closeButton: 'tray-close-button-inverted',
+          }}
+          header={
+            <Text
+              font="title3"
+              paddingBottom={0.75}
+              paddingTop={2}
+              paddingX={{ base: 4, phone: 3 }}
+            >
+              Header
+            </Text>
+          }
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+        >
+          {Array.from({ length: 20 }, (_, i) => (
+            <ListCell
+              key={i}
+              accessory="arrow"
+              description="Description"
+              innerSpacing={{
+                marginX: -4,
+                paddingX: 4,
+                paddingY: 1,
+              }}
+              spacingVariant="condensed"
+              title="Title"
+            />
+          ))}
+        </Tray>
+      )}
+    </>
   );
 };

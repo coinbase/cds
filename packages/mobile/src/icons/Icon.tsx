@@ -53,8 +53,11 @@ export type IconBaseProps = SharedProps &
   };
 
 export type IconProps = IconBaseProps & {
+  /** Custom styles for individual elements of the Icon component */
   styles?: {
+    /** Outer Box wrapper element */
     root?: StyleProp<ViewStyle>;
+    /** Inner icon glyph Text element */
     icon?: StyleProp<TextStyle>;
   };
 };

@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.8.0 (2/6/2026 PST)
+
+#### 🚀 Updates
+
+- Add new tray design. [[#349](https://github.com/coinbase/cds/pull/349)]
+
 ## 4.7.0 (2/4/2026 PST)
 
 #### 🚀 Updates

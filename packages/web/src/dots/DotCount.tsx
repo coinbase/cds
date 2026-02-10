@@ -78,46 +78,24 @@ export type DotCountBaseProps = SharedProps &
   };
 
 export type DotCountProps = DotCountBaseProps & {
-  /**
-   * Custom class name for the root element.
-   */
   className?: string;
-  /**
-   * Custom styles for the root element.
-   */
   style?: React.CSSProperties;
-  /**
-   * Custom class names for the component.
-   */
+  /** Custom class names for individual elements of the DotCount component */
   classNames?: {
-    /**
-     * Custom class name for the root element.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Custom class name for the container element.
-     */
+    /** Container element */
     container?: string;
-    /**
-     * Custom class name for the text element.
-     */
+    /** Text element */
     text?: string;
   };
-  /**
-   * Custom styles for the component.
-   */
+  /** Custom styles for individual elements of the DotCount component */
   styles?: {
-    /**
-     * Custom styles for the root element.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the container element.
-     */
+    /** Container element */
     container?: React.CSSProperties;
-    /**
-     * Custom styles for the text element.
-     */
+    /** Text element */
     text?: React.CSSProperties;
   };
 };

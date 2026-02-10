@@ -35,7 +35,7 @@ function MyCarousel() {
       title="Explore Assets"
       styles={{
         root: { paddingHorizontal: theme.space[2] },
-        carousel: { gap: theme.space[1] },
+        carousel: { gap: theme.space[2] },
       }}
     >
       {Object.values(assets).map((asset) => (
@@ -64,10 +64,10 @@ Items can be given a width proportional to the carousel width.
 :::tip Tip
 
 If you have a gap between items or padding between the carousel and the edge of the screen,
-you should account for that in the width. For example, if you have a gap of 8px,
+you should account for that in the width. For example, if you have a gap of 16px,
 and want to offset 16px from edge of screen, you could do
 
-`<CarouselItem width={((screenWidth - (16 * 2)) - 8) / 2} ... />`
+`<CarouselItem width={((screenWidth - (16 * 2)) - 16) / 2} ... />`
 
 :::
 
@@ -79,7 +79,7 @@ function DynamicSizingCarousel() {
   const horizontalPadding = theme.space[2];
 
   const carouselWidth = windowWidth - horizontalPadding * 2;
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   // 1 item per page - will rely on Carousel container's width
   const oneItemWidth = '100%'; // Could alternatively use carouselWidth
@@ -154,7 +154,7 @@ function ResponsiveSizingCarousel() {
   const horizontalPadding = theme.space[2];
 
   const carouselWidth = windowWidth - horizontalPadding * 2;
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   // 1 item per page - will rely on Carousel container's width
   const oneItemWidth = '100%'; // Could alternatively use carouselWidth
@@ -229,7 +229,7 @@ function VariedSizingCarousel() {
   const horizontalPadding = theme.space[2];
 
   const carouselWidth = windowWidth - horizontalPadding * 2;
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   // 1 item per page - will rely on Carousel container's width
   const oneItemWidth = '100%'; // Could alternatively use carouselWidth
@@ -321,7 +321,7 @@ When set to `snap`, upon release the carousel will snap to either the nearest it
 function DragCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -358,7 +358,7 @@ When set to `item`, the carousel will snap to the nearest item.
 function SquareItemsCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -403,7 +403,7 @@ If you want to have the next item be shown at the edge of the screen, make sure 
 function OverflowCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -439,7 +439,7 @@ It is recommended to use pagination with autoplay so users know how many pages t
 function AutoplayCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -470,7 +470,7 @@ function AutoplayCarousel() {
 function CustomIntervalCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -506,7 +506,7 @@ Use `loop` to allow for infinite scrolling.
 function LoopingCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -896,8 +896,14 @@ function ComposedAutoplayCarousel() {
           const remainingTime = autoplay.getRemainingTime();
           const progress = 1 - remainingTime / autoplay.totalTime;
           const progressSpring = useSpring({
-            width: autoplay.isPlaying ? theme.space[3] : progress * theme.space[3],
-            config: autoplay.isPlaying ? { duration: remainingTime } : { duration: 0 },
+            width: showProgress
+              ? autoplay.isPlaying
+                ? theme.space[3]
+                : progress * theme.space[3]
+              : 0,
+            config:
+              showProgress && autoplay.isPlaying ? { duration: remainingTime } : { duration: 0 },
+            immediate: !showProgress,
           });
 
           return (
@@ -1053,7 +1059,7 @@ You can dynamically add and remove items from the carousel.
 function DynamicContentCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
   const [items, setItems] = useState(Object.values(assets).slice(0, 3));
 
   function addAsset() {
@@ -1105,7 +1111,7 @@ Note that this can prevent proper accessibility for the carousel, if carousel it
 function HideNavigationAndPaginationCarousel() {
   const theme = useTheme();
   const horizontalPadding = theme.space[2];
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   return (
     <Carousel
@@ -1229,7 +1235,7 @@ function ImperativeApiCarousel() {
         snapMode="item"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
-          carousel: { gap: theme.space[1] },
+          carousel: { gap: theme.space[2] },
         }}
         title="Explore Assets"
       >

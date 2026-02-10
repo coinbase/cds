@@ -8,6 +8,28 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.44.2 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray drag elastic. [[#385](https://github.com/coinbase/cds/pull/385)]
+
+## 8.44.1 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Enabled customer to override the width prop in Banner so they can explicitly pass in a width for any bleed effect. [[#383](https://github.com/coinbase/cds/pull/383)]
+
+#### 📘 Misc
+
+- Update jsdocs for styles props. [[#384](https://github.com/coinbase/cds/pull/384)]
+
+## 8.44.0 (2/9/2026 PST)
+
+#### 🚀 Updates
+
+- Add new tray design. [[#349](https://github.com/coinbase/cds/pull/349)]
+
 ## 8.43.2 ((2/9/2026, 09:05 AM PST))
 
 This is an artificial version bump with no new change.

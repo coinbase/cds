@@ -32,25 +32,15 @@ export type PageHeaderBaseProps = SharedProps &
 
 export type PageHeaderProps = PageHeaderBaseProps &
   BoxProps & {
-    /**
-     * Custom styles for the page header.
-     */
+    /** Custom styles for individual elements of the PageHeader component */
     styles?: {
-      /**
-       * Custom styles for the root element.
-       */
+      /** Root element */
       root?: StyleProp<ViewStyle>;
-      /**
-       * Custom styles for the start element.
-       */
+      /** Start element */
       start?: StyleProp<ViewStyle>;
-      /**
-       * Custom styles for the end element.
-       */
+      /** End element */
       end?: StyleProp<ViewStyle>;
-      /**
-       * Custom styles for the title element.
-       */
+      /** Title element */
       title?: StyleProp<ViewStyle>;
     };
   };

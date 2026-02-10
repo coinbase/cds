@@ -71,46 +71,26 @@ export type SidebarBaseProps = BoxBaseProps & {
    */
   renderEnd?: (isCollapsed: boolean) => React.ReactNode;
   variant?: 'default' | 'condensed';
-  /**
-   * Custom class names for the sidebar components.
-   */
+  /** Custom class names for individual elements of the Sidebar component */
   classNames?: {
-    /**
-     * Custom class name for the root sidebar container.
-     */
+    /** Root sidebar container element */
     root?: string;
-    /**
-     * Custom class name for the logo container.
-     */
+    /** Logo container element */
     logo?: string;
-    /**
-     * Custom class name for the content container (children list).
-     */
+    /** Content container element (children list) */
     content?: string;
-    /**
-     * Custom class name for the end container (renderEnd).
-     */
+    /** End container element (renderEnd) */
     end?: string;
   };
-  /**
-   * Custom styles for the sidebar components.
-   */
+  /** Custom styles for individual elements of the Sidebar component */
   styles?: {
-    /**
-     * Custom style for the root sidebar container.
-     */
+    /** Root sidebar container element */
     root?: React.CSSProperties;
-    /**
-     * Custom style for the logo container.
-     */
+    /** Logo container element */
     logo?: React.CSSProperties;
-    /**
-     * Custom style for the content container (children list).
-     */
+    /** Content container element (children list) */
     content?: React.CSSProperties;
-    /**
-     * Custom style for the end container (renderEnd).
-     */
+    /** End container element (renderEnd) */
     end?: React.CSSProperties;
   };
 };

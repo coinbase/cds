@@ -6,12 +6,6 @@ export const logger = {
   init: () => {
     log.info(`${PREFIX}: Checking config`);
   },
-  lastUpdate: (lastUpdate: number) => {
-    log.info(`${PREFIX}: Last update was ${lastUpdate.toFixed(2)} minutes ago...`);
-  },
-  initStatus: (shouldUpdate: boolean) => {
-    log.info(`${PREFIX}: ${shouldUpdate ? 'Starting...' : 'Skipping...'}`);
-  },
   enabledOff: () => {
     log.info(`${PREFIX}: enabled:false. Skipping...`);
   },
@@ -29,6 +23,12 @@ export const logger = {
   },
   preppingDoc: (doc: string) => {
     log.info(`${PREFIX}: ${doc} has not been generated yet. Prepping...`);
+  },
+  cacheHit: (entryPoint: string) => {
+    log.info(`${PREFIX}: Cache hit for ${entryPoint}, skipping parse`);
+  },
+  cacheMiss: (entryPoint: string) => {
+    log.info(`${PREFIX}: Cache miss for ${entryPoint}, parsing...`);
   },
   writingData: () => {
     log.info(`${PREFIX}: Writing data...`);
