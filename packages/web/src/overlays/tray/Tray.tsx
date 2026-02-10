@@ -123,31 +123,6 @@ export const trayClassNames = {
 
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
-/**
- * Static class names for Tray component parts.
- * Use these selectors to target specific elements with CSS.
- */
-export const trayClassNames = {
-  /** Root container element */
-  root: 'cds-Tray',
-  /** Overlay backdrop */
-  overlay: 'cds-Tray-overlay',
-  /** Animated sliding container */
-  container: 'cds-Tray-container',
-  /** Header section */
-  header: 'cds-Tray-header',
-  /** Title text element */
-  title: 'cds-Tray-title',
-  /** Scrollable content area */
-  content: 'cds-Tray-content',
-  /** Handle bar container */
-  handleBar: 'cds-Tray-handleBar',
-  /** Handle bar drag element */
-  handleBarHandle: 'cds-Tray-handleBarHandle',
-  /** Close button */
-  closeButton: 'cds-Tray-closeButton',
-} as const;
-
 export type TrayBaseProps = {
   children?: React.ReactNode | TrayRenderChildren;
   /** ReactNode to render as the Drawer header. Can be a ReactNode or a function that receives { handleClose }. */
