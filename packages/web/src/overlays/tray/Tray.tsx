@@ -463,12 +463,17 @@ export const Tray = memo(
                     animate={animateValue}
                     aria-modal="true"
                     bordered={theme.activeColorScheme === 'dark'}
-                    className={cx(trayContainerBaseCss, trayContainerPinCss, classNames?.container)}
+                    className={cx(
+                      trayContainerBaseCss,
+                      trayContainerPinCss,
+                      trayClassNames.container,
+                      classNames?.container,
+                    )}
                     data-testid="tray"
                     drag={!preventDismiss ? 'y' : undefined}
                     dragConstraints={{ top: 0, bottom: 0 }}
                     dragControls={dragControls}
-                    dragElastic={{ top: 0.5, bottom: 0.5 }}
+                    dragElastic={{ top: 0, bottom: 0.5 }}
                     dragListener={false}
                     elevation={2}
                     id={id}
@@ -498,6 +503,7 @@ export const Tray = memo(
                           className={cx(
                             shouldShrinkPadding && trayHeaderBorderBaseCss,
                             shouldShrinkPadding && hasScrolledDown && trayHeaderBorderVisibleCss,
+                            trayClassNames.header,
                             classNames?.header,
                           )}
                           flexShrink={0}
@@ -512,8 +518,11 @@ export const Tray = memo(
                             (preventDismiss ? (
                               <HandleBar
                                 classNames={{
-                                  root: classNames?.handleBar,
-                                  handle: classNames?.handleBarHandle,
+                                  root: cx(trayClassNames.handleBar, classNames?.handleBar),
+                                  handle: cx(
+                                    trayClassNames.handleBarHandle,
+                                    classNames?.handleBarHandle,
+                                  ),
                                 }}
                                 styles={{
                                   root: styles?.handleBar,
@@ -525,8 +534,11 @@ export const Tray = memo(
                                 accessibilityHint={closeAccessibilityHint}
                                 accessibilityLabel={closeAccessibilityLabel}
                                 classNames={{
-                                  root: classNames?.handleBar,
-                                  handle: classNames?.handleBarHandle,
+                                  root: cx(trayClassNames.handleBar, classNames?.handleBar),
+                                  handle: cx(
+                                    trayClassNames.handleBarHandle,
+                                    classNames?.handleBarHandle,
+                                  ),
                                 }}
                                 onClose={handleClose}
                                 onPointerDown={(e: React.PointerEvent<HTMLDivElement>) => {
@@ -547,7 +559,7 @@ export const Tray = memo(
                               {title &&
                                 (typeof title === 'string' ? (
                                   <Text
-                                    className={classNames?.title}
+                                    className={cx(trayClassNames.title, classNames?.title)}
                                     font="title3"
                                     style={styles?.title}
                                   >
@@ -561,7 +573,10 @@ export const Tray = memo(
                                   transparent
                                   accessibilityHint={closeAccessibilityHint}
                                   accessibilityLabel={closeAccessibilityLabel}
-                                  className={classNames?.closeButton}
+                                  className={cx(
+                                    trayClassNames.closeButton,
+                                    classNames?.closeButton,
+                                  )}
                                   margin={isSideTray ? -1.5 : undefined}
                                   name="close"
                                   onClick={handleClose}
@@ -576,7 +591,7 @@ export const Tray = memo(
                       )}
                       <VStack
                         ref={contentRef}
-                        className={classNames?.content}
+                        className={cx(trayClassNames.content, classNames?.content)}
                         flexGrow={1}
                         minHeight={0}
                         overflow="hidden"
