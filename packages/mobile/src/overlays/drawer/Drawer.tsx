@@ -100,9 +100,9 @@ export type DrawerBaseProps = SharedProps &
      */
     stickyFooter?: DrawerRenderChildren | React.ReactNode;
     /**
-     * When true, replaces the slide animation with an opacity fade and disables
-     * swipe-to-dismiss pan gestures. Use this to support reduced motion for accessibility.
-     * @default false
+     * When true, the drawer opens and closes with an opacity fade instead of
+     * a slide animation. Swipe-to-dismiss gestures remain enabled and use
+     * the slide transform so the drawer follows the user's finger naturally.
      */
     reduceMotion?: boolean;
   };
@@ -163,13 +163,14 @@ export const Drawer = memo(
       drawerAnimation,
       animateDrawerOut,
       animateDrawerIn,
+      animateSnapBack,
       drawerAnimationStyles,
       animateSwipeToClose,
     } = useDrawerAnimation(pin, verticalDrawerPercentageOfView, reduceMotion);
     const [opacityAnimation, animateOverlayIn, animateOverlayOut] = useOverlayAnimation(
       drawerAnimationDefaultDuration,
     );
-    const paddingStyles = useDrawerSpacing(pin, reduceMotion);
+    const paddingStyles = useDrawerSpacing(pin);
     const isMounted = useRef(false);
 
     const handleClose = useCallback(() => {
@@ -210,7 +211,7 @@ export const Drawer = memo(
     const panGestureHandlers = useDrawerPanResponder({
       pin,
       drawerAnimation,
-      animateDrawerIn,
+      animateSnapBack,
       disableCapturePanGestureToDismiss,
       onBlur,
       handleSwipeToClose,
@@ -224,10 +225,9 @@ export const Drawer = memo(
     const showHandleBarInside = showHandleBar && handleBarVariant === 'inside';
 
     // leave 15% of the screenwidth as open area for menu drawer
-    // MAX_OVER_DRAG is excluded when reduceMotion is true since there is no swipe gesture or transform to offset it
     const horizontalDrawerWidth = useMemo(
-      () => width * horizontalDrawerPercentageOfView + (reduceMotion ? 0 : MAX_OVER_DRAG),
-      [width, reduceMotion],
+      () => width * horizontalDrawerPercentageOfView + MAX_OVER_DRAG,
+      [width],
     );
 
     const [keyboardInset, setKeyboardInset] = useState(0);
@@ -244,19 +244,16 @@ export const Drawer = memo(
     }, []);
 
     // drawer will automatically size itself based on content, but will cap at 75% of viewport height (can override)
-    // MAX_OVER_DRAG is excluded when reduceMotion is true since there is no swipe gesture or transform to offset it
     const verticalDrawerMaxHeight = useMemo(
-      () => height * verticalDrawerPercentageOfView + (reduceMotion ? 0 : MAX_OVER_DRAG) - keyboardInset,
-      [height, verticalDrawerPercentageOfView, keyboardInset, reduceMotion],
+      () => height * verticalDrawerPercentageOfView + MAX_OVER_DRAG - keyboardInset,
+      [height, verticalDrawerPercentageOfView, keyboardInset],
     );
 
     // For inside variant, pan handlers go on handlebar, for outside variant, on container
-    // Pan gestures are disabled when reduceMotion is true since there is no slide animation to track
-    const panGesturesEnabled = !preventDismissGestures && !reduceMotion;
     const getContainerPanHandlers =
-      panGesturesEnabled && !showHandleBarInside ? panGestureHandlers.panHandlers : undefined;
+      !preventDismissGestures && !showHandleBarInside ? panGestureHandlers.panHandlers : undefined;
     const getHandleBarPanHandlers =
-      panGesturesEnabled && showHandleBarInside ? panGestureHandlers.panHandlers : undefined;
+      !preventDismissGestures && showHandleBarInside ? panGestureHandlers.panHandlers : undefined;
 
     const handleOverlayPress = useCallback(() => {
       if (!preventDismissGestures) {
