@@ -819,34 +819,10 @@ const BorderCustomization = () => {
         title="borderedTop"
       />
       <ListCell
-        borderedBottom
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderedBottom"
-      />
-      <ListCell
-        borderedStart
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderedStart"
-      />
-      <ListCell
-        borderedEnd
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderedEnd"
-      />
-      <ListCell
         borderedHorizontal
         onPress={onPressConsole}
         spacingVariant={spacingVariant}
         title="borderedHorizontal"
-      />
-      <ListCell
-        borderedVertical
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderedVertical"
       />
       <ListCell
         bordered
@@ -870,27 +846,6 @@ const BorderCustomization = () => {
         title="borderTopWidth"
       />
       <ListCell
-        borderBottomWidth={200}
-        borderColor="bgLine"
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderBottomWidth"
-      />
-      <ListCell
-        borderColor="bgLine"
-        borderStartWidth={200}
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderStartWidth"
-      />
-      <ListCell
-        borderColor="bgLine"
-        borderEndWidth={200}
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderEndWidth"
-      />
-      <ListCell
         borderColor="bgLine"
         borderRadius={200}
         borderWidth={100}
@@ -905,30 +860,6 @@ const BorderCustomization = () => {
         onPress={onPressConsole}
         spacingVariant={spacingVariant}
         title="borderTopLeftRadius"
-      />
-      <ListCell
-        borderColor="bgLine"
-        borderTopRightRadius={300}
-        borderWidth={100}
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderTopRightRadius"
-      />
-      <ListCell
-        borderBottomLeftRadius={300}
-        borderColor="bgLine"
-        borderWidth={100}
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderBottomLeftRadius"
-      />
-      <ListCell
-        borderBottomRightRadius={300}
-        borderColor="bgLine"
-        borderWidth={100}
-        onPress={onPressConsole}
-        spacingVariant={spacingVariant}
-        title="borderBottomRightRadius"
       />
     </VStack>
   );

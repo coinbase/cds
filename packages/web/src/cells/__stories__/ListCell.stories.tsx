@@ -912,44 +912,12 @@ const BorderCustomization = () => {
         title="borderedTop"
       />
       <ListCell
-        borderedBottom
-        borderColor="bgLine"
-        description="Border on bottom side only"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderedBottom"
-      />
-      <ListCell
-        borderedStart
-        borderColor="bgLine"
-        description="Border on leading side only"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderedStart"
-      />
-      <ListCell
-        borderedEnd
-        borderColor="bgLine"
-        description="Border on trailing side only"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderedEnd"
-      />
-      <ListCell
         borderedHorizontal
         borderColor="bgLine"
         description="Borders on leading and trailing sides"
         onClick={onClickConsole}
         spacingVariant={spacingVariant}
         title="borderedHorizontal"
-      />
-      <ListCell
-        borderedVertical
-        borderColor="bgLine"
-        description="Borders on top and bottom sides"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderedVertical"
       />
       <ListCell
         bordered
@@ -979,33 +947,6 @@ const BorderCustomization = () => {
       />
       <ListCell
         bordered
-        borderBottomWidth={300}
-        borderColor="bgLine"
-        description="Bottom border width"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderBottomWidth"
-      />
-      <ListCell
-        bordered
-        borderColor="bgLine"
-        borderStartWidth={300}
-        description="Leading border width"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderStartWidth"
-      />
-      <ListCell
-        bordered
-        borderColor="bgLine"
-        borderEndWidth={300}
-        description="Trailing border width"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderEndWidth"
-      />
-      <ListCell
-        bordered
         borderColor="bgLine"
         borderRadius={300}
         description="Uniform corner radius"
@@ -1021,33 +962,6 @@ const BorderCustomization = () => {
         onClick={onClickConsole}
         spacingVariant={spacingVariant}
         title="borderTopLeftRadius"
-      />
-      <ListCell
-        bordered
-        borderColor="bgLine"
-        borderTopRightRadius={400}
-        description="Top-right corner radius"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderTopRightRadius"
-      />
-      <ListCell
-        bordered
-        borderBottomLeftRadius={400}
-        borderColor="bgLine"
-        description="Bottom-left corner radius"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderBottomLeftRadius"
-      />
-      <ListCell
-        bordered
-        borderBottomRightRadius={400}
-        borderColor="bgLine"
-        description="Bottom-right corner radius"
-        onClick={onClickConsole}
-        spacingVariant={spacingVariant}
-        title="borderBottomRightRadius"
       />
     </VStack>
   );

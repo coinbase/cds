@@ -160,6 +160,9 @@ export const Cell = memo(function Cell({
 
   const { marginX: innerSpacingMarginX, ...innerSpacingWithoutMarginX } = innerSpacing;
 
+  // Border props must be applied to the internal Pressable wrapper for correct visual rendering.
+  // The outer Box was only meant to create padding outside the Pressable area; this behavior
+  // will be removed in https://linear.app/coinbase/issue/CDS-1512/remove-legacy-normal-spacing-variant-from-listcell.
   const borderProps = useMemo(
     () => ({
       bordered,

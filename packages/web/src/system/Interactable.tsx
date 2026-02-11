@@ -14,8 +14,7 @@ import type { Theme } from '../core/theme';
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
-import { media } from '../styles/media';
-import type { ResponsiveProp, ResponsiveValue } from '../styles/styleProps';
+import { resolveResponsiveProp } from '../utils/responsive';
 
 import {
   interactableBackground,
@@ -108,24 +107,6 @@ const transparentWhileInactiveCss = css`
     border-color: var(--color-transparent);
   }
 `;
-
-const isResponsiveValue = <T,>(value: ResponsiveProp<T>): value is ResponsiveValue<T> =>
-  typeof value === 'object' &&
-  value !== null &&
-  ('base' in value || 'phone' in value || 'tablet' in value || 'desktop' in value);
-
-const resolveResponsiveProp = <T,>(
-  value: ResponsiveProp<T> | undefined,
-  getSnapshot?: (query: string) => boolean,
-): T | undefined => {
-  if (!value || !isResponsiveValue(value)) return value;
-  const fallback = value.base ?? value.phone ?? value.tablet ?? value.desktop;
-  if (!getSnapshot) return fallback;
-  if (typeof value.phone !== 'undefined' && getSnapshot(media.phone)) return value.phone;
-  if (typeof value.tablet !== 'undefined' && getSnapshot(media.tablet)) return value.tablet;
-  if (typeof value.desktop !== 'undefined' && getSnapshot(media.desktop)) return value.desktop;
-  return fallback;
-};
 
 export const interactableDefaultElement = 'button';
 
