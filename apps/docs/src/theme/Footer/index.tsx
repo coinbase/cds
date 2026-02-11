@@ -1,11 +1,10 @@
+import type { JSX } from 'react';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import type { FooterLinkItem } from '@docusaurus/theme-common';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { FooterLink } from '@site/src/components/FooterLink';
 import CDSLogo from '@site/static/img/logos/cds_logo.svg';
-
-import type { JSX } from 'react';
 
 export default function Footer(): JSX.Element | null {
   const { footer } = useThemeConfig();

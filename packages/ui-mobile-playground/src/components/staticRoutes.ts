@@ -1,6 +1,6 @@
-import { keyToRouteName } from './keyToRouteName';
-
 import type { JSX } from 'react';
+
+import { keyToRouteName } from './keyToRouteName';
 
 export const initialRouteKey = 'Examples';
 export const searchRouteKey = 'Search';

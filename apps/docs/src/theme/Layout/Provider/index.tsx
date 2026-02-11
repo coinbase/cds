@@ -38,7 +38,9 @@ const Provider = composeProviders([
   ColorModeProvider,
   AnnouncementBarProvider,
   ScrollControllerProvider,
-  DocsPreferredVersionContextProvider,
+  // TODO: Docusaurus uses @types/react 18 (no bigint in ReactNode) while workspace uses React 19.
+  // Avoiding package version changes for now.
+  DocsPreferredVersionContextProvider as never,
   PluginHtmlClassNameProvider,
   NavbarProvider,
   MediaQueryProvider,

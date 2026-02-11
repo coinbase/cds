@@ -26,7 +26,7 @@ const sectionHeaderProps = {
   lineHeight: { base: 'title2', desktop: 'display3' },
 } as const;
 
-const quickStartCards: QuickStartLinkProps[] = [
+const quickStartCards = [
   {
     title: 'Introduction',
     description: 'Learn about the purpose, features, and vision behind our component library.',
@@ -67,7 +67,9 @@ const quickStartCards: QuickStartLinkProps[] = [
     BannerComponentLight: StylingBannerLight,
     BannerComponentDark: StylingBannerDark,
   },
-];
+  // TODO: SVG imports use Docusaurus's @types/react (Context type mismatch with workspace React 19).
+  // Avoiding package version changes for now.
+] as never as QuickStartLinkProps[];
 
 const componentCardLinks = {
   layout: '/components/layout/Box/',
