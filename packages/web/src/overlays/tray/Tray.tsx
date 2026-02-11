@@ -288,7 +288,6 @@ export const Tray = memo(
     const [scope, animate] = useAnimate();
     const dragControls = useDragControls();
 
-    const isDragEnabled = !preventDismiss && !reduceMotion;
     const isSideTray = pin === 'right' || pin === 'left';
     const horizontalPadding: ResponsiveProp<ThemeVars.Space> = useMemo(
       () => (pin !== 'bottom' || showHandleBar ? { base: 4, phone: 3 } : 6),
@@ -385,7 +384,7 @@ export const Tray = memo(
     // Handle bar only shows for bottom-pinned trays (matching mobile behavior)
     const shouldShowHandleBar = showHandleBar && pin === 'bottom';
     const shouldShrinkPadding = pin !== 'bottom' || showHandleBar;
-    const shouldShowCloseButton = isDragEnabled && !(hideCloseButton ?? shouldShowHandleBar);
+    const shouldShowCloseButton = !preventDismiss && !(hideCloseButton ?? shouldShowHandleBar);
     const shouldShowTitle = title || shouldShowCloseButton;
 
     useEffect(() => {
@@ -451,10 +450,10 @@ export const Tray = memo(
               testID="tray-overlay"
             />
             <MotionConfig reducedMotion={reduceMotion ? 'always' : undefined}>
-              <DragMotionProvider enabled={isDragEnabled}>
+              <DragMotionProvider enabled={!preventDismiss}>
                 <FocusTrap
                   focusTabIndexElements={focusTabIndexElements}
-                  onEscPress={isDragEnabled ? undefined : handleClose}
+                  onEscPress={preventDismiss ? undefined : handleClose}
                   restoreFocusOnUnmount={restoreFocusOnUnmount}
                 >
                   <MotionVStack
@@ -471,7 +470,7 @@ export const Tray = memo(
                       classNames?.container,
                     )}
                     data-testid="tray"
-                    drag={isDragEnabled ? 'y' : undefined}
+                    drag={!preventDismiss ? 'y' : undefined}
                     dragConstraints={{ top: 0, bottom: 0 }}
                     dragControls={dragControls}
                     dragElastic={{ top: 0, bottom: 0.5 }}
@@ -480,12 +479,12 @@ export const Tray = memo(
                     id={id}
                     initial={initialAnimationValue}
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-                    onDragEnd={isDragEnabled ? handleDragEnd : undefined}
+                    onDragEnd={!preventDismiss ? handleDragEnd : undefined}
                     pin={pin}
                     role={role}
                     style={{
                       maxHeight: isSideTray ? undefined : verticalDrawerPercentageOfView,
-                      touchAction: isDragEnabled && pin === 'bottom' ? 'none' : undefined,
+                      touchAction: !preventDismiss && pin === 'bottom' ? 'none' : undefined,
                       ...styles?.container,
                     }}
                     tabIndex={0}
@@ -516,7 +515,7 @@ export const Tray = memo(
                           style={styles?.header}
                         >
                           {shouldShowHandleBar &&
-                            (!isDragEnabled ? (
+                            (preventDismiss ? (
                               <HandleBar
                                 classNames={{
                                   root: cx(trayClassNames.handleBar, classNames?.handleBar),
