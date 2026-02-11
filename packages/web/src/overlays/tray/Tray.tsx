@@ -196,7 +196,6 @@ export type TrayBaseProps = {
   /**
    * When true, the tray will use opacity animation instead of transform animation.
    * This is useful for supporting reduced motion for accessibility.
-   * @default false
    */
   reduceMotion?: boolean;
   /**
