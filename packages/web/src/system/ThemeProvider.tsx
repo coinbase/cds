@@ -66,19 +66,23 @@ export const diffThemes = (theme: Theme, parentTheme?: Theme) => {
   return themeDiff as Partial<Theme>;
 };
 
-export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className' | 'style'> &
-  Pick<FramerMotionProviderProps, 'motionFeatures'> & {
-    theme: ThemeConfig;
-    activeColorScheme: ColorScheme;
-    children?: React.ReactNode;
-    /**
-     * Bypasses an optimization which allows the ThemeProvider to inherit CSS variables from a parent ThemeProvider.
-     * An isolated ThemeProvider will always insert all theme CSS variables into the DOM.
-     * Use this when the ThemeProvider renders outside its parent's DOM tree, such as in a portal.
-     * @default false
-     */
-    isolated?: boolean;
-  };
+export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className' | 'style'> & {
+  theme: ThemeConfig;
+  activeColorScheme: ColorScheme;
+  children?: React.ReactNode;
+  /**
+   * Use the `isolated` prop to indicate when ThemeProvider will render outside its parent's DOM tree, such as in a portal.
+   * An isolated ThemeProvider always inserts all theme CSS variables into the DOM, regardless of what overlaps with parent ThemeProvider instances.
+   * @default false
+   */
+  isolated?: boolean;
+  /**
+   * A motion "feature" bundle, used to selectively bundle specific framer-motion features. You likely won't need to use this this prop.
+   * @default domAnimation
+   * @see https://motion.dev/docs/react-reduce-bundle-size
+   */
+  motionFeatures?: FramerMotionProviderProps['motionFeatures'];
+};
 
 export const ThemeProvider = memo(
   ({

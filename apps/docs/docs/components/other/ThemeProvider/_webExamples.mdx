@@ -46,11 +46,11 @@ theme.fontSize.display3; // "2.5rem"
 For best performance, prefer to use CSS Variables instead of the `useTheme` hook whenever possible.
 :::
 
-## ThemeProvider CSS Variables
+## CSS Variables
 
 CSS Variables are created for every value in the theme.
 
-For best performance, prefer to use CSS Variables instead of the `useTheme` hook whenever possible.
+For best performance, prefer using CSS Variables instead of the `useTheme` hook whenever possible.
 
 ```jsx
 const theme = useTheme();
@@ -69,6 +69,23 @@ theme.fontSize.body; // --fontSize-body
 You can see all the CSS Variables for the `defaultTheme` below.
 
 <JSONCodeBlock json={createThemeCssVars(defaultTheme)} />
+
+### CSS Variable inheritance
+
+When ThemeProviders are nested, the nested provider only sets CSS variables that differ from its parent.
+Unchanged values are inherited through the DOM via normal CSS custom property inheritance.
+
+This optimization breaks when a ThemeProvider renders **outside** its parent's DOM tree — for example, inside a portal — because CSS inheritance requires DOM ancestry. In these cases, use the `isolated` prop to ensure the ThemeProvider writes all CSS variables:
+
+```tsx
+<ThemeProvider isolated theme={theme} activeColorScheme="light">
+  {/* All CSS variables are written, regardless of the parent theme */}
+</ThemeProvider>
+```
+
+:::tip
+CDS overlay components (Modal, Toast, Alert, etc.) handle this automatically via [PortalProvider](/components/overlay/PortalProvider). You only need the `isolated` prop when rendering a ThemeProvider inside a custom portal that is not managed by CDS.
+:::
 
 ## ThemeProvider classnames
 
@@ -94,6 +111,8 @@ ThemeProviders can be nested to create theme overrides for specific sections.
   </ThemeProvider>
 </ThemeProvider>
 ```
+
+### Overriding theme values
 
 When nesting, you may want to override specific color values from the current theme. Overrides must be conditionally applied because we don't enforce that a theme has both light and dark colors defined.
 
@@ -123,7 +142,7 @@ const customTheme = {
 } as const satisfies Theme;
 ```
 
-## Theme inheritence
+### Theme inheritance
 
 Nested ThemeProviders do not automatically inherit the theme from their parent provider. You can manually inherit the theme with the `useTheme` hook.
 
