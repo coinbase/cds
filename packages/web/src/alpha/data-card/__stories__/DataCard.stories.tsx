@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { type JSX, useRef } from 'react';
 import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import {
   ProgressBar,

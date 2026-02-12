@@ -7,8 +7,7 @@ import type { Props } from '@theme/Admonition';
 import styles from './styles.module.css';
 
 export default function Admonition(unprocessedProps: Props): React.ReactNode {
-  // TODO: React 19 ReactNode (incl. bigint) vs Docusaurus @types/react 18. Avoiding package version changes for now.
-  const props = processAdmonitionProps(unprocessedProps as never) as Props;
+  const props = processAdmonitionProps(unprocessedProps);
   const { title, children, type } = props;
   const bannerProps: Pick<BannerProps, 'variant' | 'title' | 'children' | 'startIcon'> =
     useMemo(() => {

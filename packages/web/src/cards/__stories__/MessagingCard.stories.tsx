@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { type JSX, useRef, useState } from 'react';
 import { coinbaseOneLogo, svgs } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons/Button';
