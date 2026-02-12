@@ -79,7 +79,7 @@ figma.connect(Tray, FIGMA_URL, {
             title={
               <VStack gap={2}>
                 <Pictogram name="addWallet" />
-                <Text id={titleId} font="title3">
+                <Text font="title3" id={titleId}>
                   {sectionTitle}
                 </Text>
               </VStack>
@@ -118,7 +118,7 @@ figma.connect(Tray, FIGMA_URL, {
           <Tray
             accessibilityLabelledBy={titleId}
             header={
-              <Text id={titleId} font="title3" paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
+              <Text font="title3" id={titleId} paddingTop={2} paddingX={{ base: 4, phone: 3 }}>
                 {sectionTitle}
               </Text>
             }

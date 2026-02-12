@@ -30,9 +30,6 @@ figma.connect(
           <Button onPress={() => setIsTrayVisible(true)}>Open Tray</Button>
           {isTrayVisible && (
             <Tray
-              handleBarVariant="inside"
-              onCloseComplete={() => setIsTrayVisible(false)}
-              title={title}
               footer={({ handleClose }) => (
                 <StickyFooter background="bgElevation2" paddingX={3}>
                   <Button block onPress={handleClose}>
@@ -40,6 +37,9 @@ figma.connect(
                   </Button>
                 </StickyFooter>
               )}
+              handleBarVariant="inside"
+              onCloseComplete={() => setIsTrayVisible(false)}
+              title={title}
             >
               <VStack paddingX={3}>{content}</VStack>
             </Tray>
@@ -115,8 +115,6 @@ figma.connect(
           {isTrayVisible && (
             <Tray
               accessibilityLabel={title}
-              handleBarVariant="inside"
-              onCloseComplete={() => setIsTrayVisible(false)}
               footer={({ handleClose }) => (
                 <StickyFooter background="bgElevation2" paddingX={3}>
                   <Button block onPress={handleClose}>
@@ -124,6 +122,8 @@ figma.connect(
                   </Button>
                 </StickyFooter>
               )}
+              handleBarVariant="inside"
+              onCloseComplete={() => setIsTrayVisible(false)}
             >
               <VStack paddingX={3}>
                 <Box alignItems="center" paddingBottom={3}>
@@ -196,9 +196,6 @@ figma.connect(
           <Button onPress={() => setIsTrayVisible(true)}>Open Tray</Button>
           {isTrayVisible && (
             <Tray
-              handleBarVariant="inside"
-              onCloseComplete={() => setIsTrayVisible(false)}
-              title={title}
               footer={({ handleClose }) => (
                 <StickyFooter background="bgElevation2" paddingX={3}>
                   <Button block onPress={handleClose}>
@@ -206,6 +203,9 @@ figma.connect(
                   </Button>
                 </StickyFooter>
               )}
+              handleBarVariant="inside"
+              onCloseComplete={() => setIsTrayVisible(false)}
+              title={title}
             >
               <VStack paddingX={3}>{content}</VStack>
             </Tray>
