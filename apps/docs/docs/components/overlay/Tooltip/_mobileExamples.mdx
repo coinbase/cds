@@ -40,3 +40,25 @@ function TooltipColorSchemeOptOut() {
   );
 }
 ```
+
+### Visibility delay (press)
+
+Use `openDelay` and `closeDelay` to slow down activation/dismissal when users tap through dense surfaces.
+
+```jsx
+function TooltipVisibilityDelay() {
+  return (
+    <HStack spacingHorizontal={2} gap={2} justifyContent="space-around">
+      <Tooltip content="Opens after 400ms" openDelay={400}>
+        <Button>Open delay 400ms</Button>
+      </Tooltip>
+      <Tooltip content="Closes after 150ms" closeDelay={150}>
+        <Button>Close delay 150ms</Button>
+      </Tooltip>
+      <Tooltip content="Open 400 / Close 150" openDelay={400} closeDelay={150}>
+        <Button>Open 400 / Close 150</Button>
+      </Tooltip>
+    </HStack>
+  );
+}
+```
