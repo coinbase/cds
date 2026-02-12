@@ -21,5 +21,10 @@
       "url": "/components/inputs/Pressable/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
+    }
+  ]
 }
