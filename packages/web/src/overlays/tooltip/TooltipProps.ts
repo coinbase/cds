@@ -29,6 +29,16 @@ export type TooltipBaseProps = SharedProps &
      * @default true
      */
     visible?: boolean;
+    /**
+     * Delay (in ms) before showing the tooltip on pointer hover.
+     * Keyboard focus still opens immediately for accessibility.
+     */
+    openDelay?: number;
+    /**
+     * Delay (in ms) before hiding the tooltip after pointer leave.
+     * Keyboard blur still closes immediately.
+     */
+    closeDelay?: number;
     /** Invert the theme's activeColorScheme for this component
      * @default true
      */
