@@ -172,9 +172,9 @@ export const InvertedThemeProvider = memo(
         activeColorScheme={newColorScheme}
         className={className}
         display={display}
+        isolated={isolated}
         style={style}
         theme={context}
-        isolated={isolated}
       >
         {children}
       </ThemeProvider>
