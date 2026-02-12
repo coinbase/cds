@@ -80,8 +80,7 @@ const PaginationDot = memo(function PaginationDot({
 
   const springProps = useSpring({
     width: isActive ? INDICATOR_ACTIVE_WIDTH : INDICATOR_INACTIVE_WIDTH,
-    backgroundColor:
-      isActive && !showProgress ? theme.color.bgPrimary : `rgb(${theme.spectrum.gray40})`,
+    backgroundColor: isActive && !showProgress ? theme.color.bgPrimary : theme.color.bgLine,
     config: animationConfig,
   });
 

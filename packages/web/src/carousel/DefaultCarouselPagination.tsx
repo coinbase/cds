@@ -138,7 +138,7 @@ const PaginationDot = memo(function PaginationDot({
       animate={{
         width: isActive ? INDICATOR_ACTIVE_WIDTH : INDICATOR_INACTIVE_WIDTH,
         backgroundColor:
-          isActive && !showProgress ? 'var(--color-bgPrimary)' : 'rgb(var(--gray40))',
+          isActive && !showProgress ? 'var(--color-bgPrimary)' : 'var(--color-bgLine)',
       }}
       aria-current={isActive ? 'true' : undefined}
       borderColor="transparent"
