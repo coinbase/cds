@@ -126,6 +126,8 @@ jobs:
   depcheck:
     name: Depcheck
     runs-on: ubuntu-latest
+    # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
+    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -221,6 +223,8 @@ jobs:
   bundle-stats:
     name: Bundle Stats
     runs-on: ubuntu-latest
+    # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
+    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
