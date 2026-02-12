@@ -1,19 +1,10 @@
+import { useContext } from 'react';
+
 import { media } from '../styles/media';
 import type { ResponsiveProp, ResponsiveValue } from '../styles/styleProps';
-import type { MediaQueryContextValue } from '../system/MediaQueryProvider';
+import { MediaQueryContext } from '../system/MediaQueryProvider';
 
-/**
- * Type for the media query snapshot function. Use this when you need to resolve
- * responsive values in JavaScript (e.g., passing to a child component).
- * Typically obtained from `MediaQueryContext.getSnapshot`.
- */
-export type MediaQueryGetSnapshot = MediaQueryContextValue['getSnapshot'];
-
-/**
- * Type guard to check if a value is a responsive object with breakpoint keys
- * (base, phone, tablet, desktop) rather than a scalar value.
- */
-export const isResponsiveValue = <T>(value: ResponsiveProp<T>): value is ResponsiveValue<T> =>
+const isResponsiveValue = <T>(value: ResponsiveProp<T>): value is ResponsiveValue<T> =>
   typeof value === 'object' &&
   value !== null &&
   ('base' in value || 'phone' in value || 'tablet' in value || 'desktop' in value);
@@ -26,17 +17,18 @@ export const isResponsiveValue = <T>(value: ResponsiveProp<T>): value is Respons
  * use getStyles from styleProps instead—it handles responsive objects via
  * media-query CSS variables.
  *
+ * Reads getSnapshot from MediaQueryContext when within MediaQueryProvider.
+ * Without it, returns the first defined value (base ?? phone ?? tablet ?? desktop).
+ *
  * @param value - A scalar value or responsive object with base/phone/tablet/desktop keys
- * @param getSnapshot - Function that returns whether a media query matches. Pass
- *   MediaQueryContext.getSnapshot when used within MediaQueryProvider. Without it,
- *   returns the first defined value (base ?? phone ?? tablet ?? desktop).
- * @returns The resolved value for the current breakpoint, or the fallback when
- *   getSnapshot is not provided
+ * @returns The resolved value for the current breakpoint
  */
-export const resolveResponsiveProp = <T>(
+export const useResolveResponsiveProp = <T>(
   value: ResponsiveProp<T> | undefined,
-  getSnapshot?: MediaQueryGetSnapshot,
 ): T | undefined => {
+  const context = useContext(MediaQueryContext);
+  const getSnapshot = context?.getSnapshot;
+
   if (!value || !isResponsiveValue(value)) return value;
   const fallback = value.base ?? value.phone ?? value.tablet ?? value.desktop;
   if (!getSnapshot) return fallback;

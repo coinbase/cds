@@ -921,7 +921,11 @@ const BorderCustomization = () => {
       />
       <ListCell
         bordered
-        borderColor="accentBoldPurple"
+        borderColor={{
+          phone: 'fgPositive',
+          tablet: 'fgNegative',
+          desktop: 'accentBoldPurple',
+        }}
         description="Custom border color"
         onClick={onClickConsole}
         spacingVariant={spacingVariant}

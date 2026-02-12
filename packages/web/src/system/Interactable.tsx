@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useMemo } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { getBlendedColor } from '@coinbase/cds-common/color/getBlendedColor';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
@@ -12,9 +12,9 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import type { Theme } from '../core/theme';
 import { cx } from '../cx';
+import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
-import { resolveResponsiveProp } from '../utils/responsive';
 
 import {
   interactableBackground,
@@ -28,7 +28,6 @@ import {
   interactablePressedBorderColor,
   interactablePressedOpacity,
 } from './interactableCSSProperties';
-import { MediaQueryContext } from './MediaQueryProvider';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
 
@@ -223,11 +222,7 @@ export const Interactable: InteractableComponent = forwardRef<
   ) => {
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
-    const mediaQueryContext = useContext(MediaQueryContext);
-    const resolvedBorderColor = useMemo(
-      () => resolveResponsiveProp(borderColor, mediaQueryContext?.getSnapshot),
-      [borderColor, mediaQueryContext?.getSnapshot],
-    );
+    const resolvedBorderColor = useResolveResponsiveProp(borderColor);
 
     const interactableStyle = useMemo(
       () => ({
