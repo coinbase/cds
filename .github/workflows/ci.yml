@@ -3,7 +3,9 @@ name: CI
 on:
   workflow_dispatch: # Allow manual triggering to refresh cached baseline results
   push:
-    branches: master
+    branches:
+      - master
+      - 'cds-v[0-9]*'
   pull_request:
     branches:
       - master
