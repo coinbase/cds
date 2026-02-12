@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.45.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add reduce motion support for Tray. [[#386](https://github.com/coinbase/cds/pull/386)]
+
 ## 8.44.2 (2/10/2026 PST)
 
 #### 🐞 Fixes

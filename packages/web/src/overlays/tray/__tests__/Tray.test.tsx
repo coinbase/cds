@@ -402,6 +402,23 @@ describe('Tray', () => {
       expect(tray).toHaveAttribute('aria-labelledby', LABELLED_BY);
       expect(tray).toHaveAttribute('aria-label', LABEL);
     });
+
+    it('uses opacity animation when reduceMotion is true', async () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray reduceMotion onCloseComplete={onCloseCompleteSpy}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+
+      // Test "closed" opacity style by asserting the opacity style asynchronously before the animation completes
+      expect(screen.getByTestId('tray')).toHaveStyle({ opacity: 0 });
+      await waitFor(() => {
+        expect(screen.getByTestId('tray')).toHaveStyle({ opacity: 1 });
+      });
+    });
   });
 
   describe('static classNames', () => {
