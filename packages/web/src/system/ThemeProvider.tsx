@@ -151,13 +151,14 @@ export const ThemeProvider = memo(
 export type InvertedThemeProviderProps = Pick<
   ThemeManagerProps,
   'display' | 'className' | 'style'
-> & {
-  children?: React.ReactNode;
-};
+> &
+  Pick<ThemeProviderProps, 'isolated'> & {
+    children?: React.ReactNode;
+  };
 
 /** Falls back to the currently active colorScheme if the inverse colors are not defined in the theme.  */
 export const InvertedThemeProvider = memo(
-  ({ children, display, className, style }: InvertedThemeProviderProps) => {
+  ({ children, display, className, style, isolated }: InvertedThemeProviderProps) => {
     const context = useContext(ThemeContext);
     if (!context) throw Error('InvertedThemeProvider must be used within a ThemeProvider');
     const inverseColorScheme = context.activeColorScheme === 'dark' ? 'light' : 'dark';
@@ -173,6 +174,7 @@ export const InvertedThemeProvider = memo(
         display={display}
         style={style}
         theme={context}
+        isolated={isolated}
       >
         {children}
       </ThemeProvider>
