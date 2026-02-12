@@ -12,27 +12,13 @@ figma.connect(
         true: figma.string('title'),
         false: undefined,
       }),
-      hideNavigation: figma.boolean('show navigation', {
-        true: undefined,
-        false: true,
-      }),
       hidePagination: figma.boolean('show pagination', {
         true: undefined,
         false: true,
       }),
-      autoplay: figma.boolean('show autoplay', {
-        true: true,
-        false: undefined,
-      }),
     },
-    example: ({ title, hideNavigation, hidePagination, autoplay }) => (
-      <Carousel
-        autoplay={autoplay}
-        hideNavigation={hideNavigation}
-        hidePagination={hidePagination}
-        paginationVariant="dot"
-        title={title}
-      >
+    example: ({ title, hidePagination }) => (
+      <Carousel hidePagination={hidePagination} paginationVariant="dot" title={title}>
         <CarouselItem id="1">{/* Item content */}</CarouselItem>
         <CarouselItem id="2">{/* Item content */}</CarouselItem>
         <CarouselItem id="3">{/* Item content */}</CarouselItem>
