@@ -7,6 +7,7 @@ export type ThemeContextValue = Theme;
 
 export const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+// Not used for any theme optimizations in the mobile ThemeProvider, but exported for feature-parity with cds-web
 /**
  * Diff two themes and return a new partial theme with only the differences.
  */

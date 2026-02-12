@@ -29,6 +29,11 @@ export const trayContainerId = 'trayContainer';
 
 const safeDocument = getBrowserGlobals()?.document;
 
+/**
+ * Internal component that creates the DOM container elements for overlay components.
+ * Appends a root div to `document.body` containing separate containers for each overlay
+ * type (modals, toasts, alerts, tooltips, trays), each with its own z-index layer.
+ */
 export const PortalHost: React.FC = memo(() => {
   const portalRoot = useMemo(
     // prevent duplicate portal root
@@ -94,6 +99,13 @@ export const PortalHost: React.FC = memo(() => {
   );
 });
 
+/**
+ * Required root-level provider that enables CDS overlay components (Modal, Toast, Alert,
+ * Tooltip, Tray). Creates the DOM containers these components render into via React portals
+ * and provides the context for managing overlay state and toast queuing.
+ *
+ * Must be rendered once near the root of your application, alongside ThemeProvider.
+ */
 export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProps>> = memo(
   ({ children, toastBottomOffset = 0, renderPortals = true }) => {
     const portalState = usePortalState();
@@ -117,6 +129,11 @@ export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProp
   },
 );
 
+/**
+ * Renders portal containers and overlay nodes independently from PortalProvider.
+ * Use this when `renderPortals={false}` is set on PortalProvider to control
+ * where in the component tree the portal DOM containers are created.
+ */
 export const PortalNodes = () => {
   const { nodes } = usePortal();
   return (

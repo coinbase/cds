@@ -29,18 +29,24 @@ For React Native projects, ensure you have set up your environment for React Nat
 ## Getting started
 </MDXArticle>
 <MDXArticle>
-### 1. Render a ThemeProvider
+### 1. Render providers
 
-Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
+Render the following providers at the root of your application:
+
+- **ThemeProvider** — applies the CDS theme and color scheme
+- **PortalProvider** — manages the registry of active overlay components (Modal, Toast, Alert, Tooltip, Tray). ([read more &rarr;](/components/overlay/PortalProvider))
 
 ```tsx
 import { ThemeProvider } from '@coinbase/cds-mobile/system';
+import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider';
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
 import App from './App';
 
 const Index = () => (
   <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-    <App />
+    <PortalProvider>
+      <App />
+    </PortalProvider>
   </ThemeProvider>
 );
 

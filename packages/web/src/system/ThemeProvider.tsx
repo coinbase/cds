@@ -71,8 +71,13 @@ export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className'
     theme: ThemeConfig;
     activeColorScheme: ColorScheme;
     children?: React.ReactNode;
-    /** Force inject all theme CSS Variables into the DOM, even if the theme is the same as the parent theme. */
-    forceInjectThemeCss?: boolean;
+    /**
+     * Bypasses an optimization which allows the ThemeProvider to inherit CSS variables from a parent ThemeProvider.
+     * An isolated ThemeProvider will always insert all theme CSS variables into the DOM.
+     * Use this when the ThemeProvider renders outside its parent's DOM tree, such as in a portal.
+     * @default false
+     */
+    isolated?: boolean;
   };
 
 export const ThemeProvider = memo(
@@ -84,7 +89,7 @@ export const ThemeProvider = memo(
     display,
     style,
     motionFeatures,
-    forceInjectThemeCss,
+    isolated,
   }: ThemeProviderProps) => {
     const themeApi = useMemo(() => {
       const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
@@ -123,8 +128,8 @@ export const ThemeProvider = memo(
     const parentTheme = useContext(ThemeContext);
 
     const partialTheme = useMemo(
-      () => (forceInjectThemeCss ? themeApi : diffThemes(themeApi, parentTheme)),
-      [themeApi, parentTheme, forceInjectThemeCss],
+      () => (isolated ? themeApi : diffThemes(themeApi, parentTheme)),
+      [themeApi, parentTheme, isolated],
     );
 
     return (
