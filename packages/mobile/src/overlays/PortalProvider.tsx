@@ -56,7 +56,7 @@ export const PortalHost = memo(({ nodes }: PortalHostProps) => {
  * Tooltip, Tray). Manages the registry of active overlays and provides the context for
  * overlay state management and toast queuing.
  *
- * Unlike the web version, mobile does not use DOM portals. Overlay components render
+ * Unlike the PortalProvider in cds-web, cds-mobile does not use DOM portals. Overlay components render
  * above other content using React Native's native Modal component.
  *
  * Must be rendered once near the root of your application, alongside ThemeProvider.
