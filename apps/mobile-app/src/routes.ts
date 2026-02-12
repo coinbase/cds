@@ -247,6 +247,11 @@ export const routes = [
       require('@cbhq/cds-mobile/overlays/__stories__/DrawerMisc.stories').default,
   },
   {
+    key: 'DrawerReduceMotion',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/DrawerReduceMotion.stories').default,
+  },
+  {
     key: 'DrawerRight',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/DrawerRight.stories').default,
@@ -839,6 +844,11 @@ export const routes = [
     key: 'TrayRedesign',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/TrayRedesign.stories').default,
+  },
+  {
+    key: 'TrayReduceMotion',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/TrayReduceMotion.stories').default,
   },
   {
     key: 'TrayScrollable',
