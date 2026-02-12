@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.46.1 (2/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: (DX-5052) use previous active step value for calculating remaining steps to animate to for a completed stepper. [[#397](https://github.com/coinbase/cds/pull/397)] [DX-5052]
+
 ## 8.46.0 (2/12/2026 PST)
 
 #### 🚀 Updates
