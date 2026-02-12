@@ -79,6 +79,8 @@
     "expo-modules-core": "patch:expo-modules-core@npm:3.0.29#.yarn/patches/expo-modules-core-npm-3.0.29-7b93dc0961.patch"
   },
   "resolutionComments": {
+    "@types/react": "Forces a single version across all packages to prevent dual React types. Without this, dependencies like @docusaurus/types resolve a nested @types/react@18 which conflicts with React 19 types.",
+    "@types/react-dom": "Forces a single version across all packages to prevent dual React types. Without this, dependencies like @docusaurus/types resolve a nested @types/react@18 which conflicts with React 19 types.",
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
     "framer-motion@^10.18.0": "Export missing types",
     "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
