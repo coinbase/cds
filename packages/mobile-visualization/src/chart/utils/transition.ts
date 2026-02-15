@@ -301,27 +301,16 @@ export const usePathTransition = ({
   const fromPath = previousPathRef.current;
   const toPath = currentPath;
 
-  const isInstant =
-    transition === instantTransition ||
-    (transition.type === 'timing' && 'duration' in transition && transition.duration === 0);
-
   useEffect(() => {
     const shouldAnimate = previousPathRef.current !== currentPath;
 
     if (shouldAnimate) {
       previousPathRef.current = currentPath;
 
-      if (!isInstant) {
-        // Animated transition: reset progress and animate 0→1
-        progress.value = 0;
-        progress.value = buildTransition(1, transition);
-      }
-      // For instant transitions, we skip the progress animation entirely.
-      // The useD3PathInterpolation reaction fires when toSkiaPathShared changes
-      // (from the new toPath) and evaluates at the current progress (1 from the
-      // last completed animation), which maps to the new target path.
+      progress.value = 0;
+      progress.value = buildTransition(1, transition);
     }
-  }, [currentPath, transition, progress, isInstant]);
+  }, [currentPath, transition, progress]);
 
   return useD3PathInterpolation(progress, fromPath, toPath);
 };

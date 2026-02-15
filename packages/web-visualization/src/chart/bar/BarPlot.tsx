@@ -28,7 +28,8 @@ export type BarPlotBaseProps = Pick<
   seriesIds?: string[];
 };
 
-export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transitions' | 'transition'>;
+export type BarPlotProps = BarPlotBaseProps &
+  Pick<BarStackGroupProps, 'transitions' | 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.

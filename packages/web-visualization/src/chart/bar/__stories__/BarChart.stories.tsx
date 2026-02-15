@@ -9,7 +9,12 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
-import { type ChartTransition, isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
+import {
+  type ChartTransition,
+  isCategoricalScale,
+  ScrubberContext,
+  useScrubberContext,
+} from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
@@ -798,12 +803,27 @@ export const Transitions = () => {
   } as const;
 
   const enterOnly: ChartTransition = { update: null, enter: { type: 'tween', duration: 1.0 } };
-  const updateOnly: ChartTransition = { enter: null, update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 } };
+  const updateOnly: ChartTransition = {
+    enter: null,
+    update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
+  };
   const bothDisabled: ChartTransition = { enter: null, update: null };
-  const instantEnter: ChartTransition = { enter: { type: 'tween', duration: 0 }, update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 } };
-  const instantUpdate: ChartTransition = { enter: { type: 'tween', duration: 1.0 }, update: { type: 'tween', duration: 0 } };
+  const instantEnter: ChartTransition = {
+    enter: { type: 'tween', duration: 0 },
+    update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
+  };
+  const instantUpdate: ChartTransition = {
+    enter: { type: 'tween', duration: 1.0 },
+    update: { type: 'tween', duration: 0 },
+  };
 
-  function TransitionBarChart({ data, transitions }: { data: number[]; transitions: ChartTransition }) {
+  function TransitionBarChart({
+    data,
+    transitions,
+  }: {
+    data: number[];
+    transitions: ChartTransition;
+  }) {
     return (
       <BarChart {...barChartProps} series={[{ id: 'values', data }]} transitions={transitions}>
         <Scrubber hideOverlay beaconTransitions={transitions} seriesIds={[]} />

@@ -111,7 +111,9 @@ export const Path = memo<PathProps>(
 
     // Resolve null or duration:0 to instantTransition so we always use motion elements
     const resolvedEnterTransition =
-      !animate || enterTransition === null ? instantTransition : (enterTransition ?? defaultEnterTransition);
+      !animate || enterTransition === null
+        ? instantTransition
+        : (enterTransition ?? defaultEnterTransition);
     const resolvedUpdateTransition =
       !animate || rawUpdateTransition === null ? instantTransition : rawUpdateTransition;
 

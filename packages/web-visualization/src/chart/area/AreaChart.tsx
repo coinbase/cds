@@ -21,7 +21,14 @@ export type AreaSeries = Series &
   Partial<
     Pick<
       AreaProps,
-      'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill' | 'connectNulls' | 'transitions' | 'transition'
+      | 'AreaComponent'
+      | 'curve'
+      | 'fillOpacity'
+      | 'type'
+      | 'fill'
+      | 'connectNulls'
+      | 'transitions'
+      | 'transition'
     >
   > &
   Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>> & {
@@ -36,7 +43,13 @@ export type AreaSeries = Series &
 export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     AreaProps,
-    'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'connectNulls' | 'transitions' | 'transition'
+    | 'AreaComponent'
+    | 'curve'
+    | 'fillOpacity'
+    | 'type'
+    | 'connectNulls'
+    | 'transitions'
+    | 'transition'
   > &
   Pick<LineProps, 'LineComponent' | 'strokeWidth'> & {
     /**

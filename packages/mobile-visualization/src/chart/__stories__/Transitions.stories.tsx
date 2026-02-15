@@ -323,7 +323,10 @@ function ExampleNavigator() {
         category: 'Line',
         title: 'Custom',
         component: (
-          <LineExample beaconTransitions={customEnterUpdateBeacon} transitions={customEnterUpdate} />
+          <LineExample
+            beaconTransitions={customEnterUpdateBeacon}
+            transitions={customEnterUpdate}
+          />
         ),
       },
       {
