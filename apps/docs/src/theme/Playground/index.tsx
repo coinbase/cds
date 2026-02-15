@@ -102,6 +102,7 @@ type PlaygroundControlsProps = {
   headingText: string;
   onClickCopy: () => void;
   onClickOpenInStackBlitz: () => void;
+  onClickResetPreview: () => void;
   onToggleCollapsed: () => void;
 };
 
@@ -111,10 +112,11 @@ const PlaygroundControls = memo(
     headingText,
     onClickCopy,
     onClickOpenInStackBlitz,
+    onClickResetPreview,
     onToggleCollapsed,
   }: PlaygroundControlsProps) => {
     return (
-      <HStack alignItems="center" gap={2} paddingTop={0.5}>
+      <HStack alignItems="center" columnGap={2} flexWrap="wrap" paddingTop={0.5} rowGap={0.5}>
         <Pressable
           noScaleOnPress
           accessibilityLabel={`${collapsed ? 'Show' : 'Hide'} code${
@@ -138,6 +140,18 @@ const PlaygroundControls = memo(
             <Icon name="copy" paddingEnd={0.5} size="xs" />
             <Text color="fgPrimary" font="label1">
               Copy code
+            </Text>
+          </HStack>
+        </Pressable>
+        <Pressable
+          noScaleOnPress
+          accessibilityLabel={`Reset preview${headingText ? ` for ${headingText} example` : ''}`}
+          onClick={onClickResetPreview}
+        >
+          <HStack alignItems="center">
+            <Icon name="refresh" paddingEnd={0.5} size="xs" />
+            <Text color="fgPrimary" font="label1">
+              Reset preview
             </Text>
           </HStack>
         </Pressable>
@@ -185,6 +199,7 @@ const Playground = memo(function Playground({
   const [code, setCode] = useState(() => (codeProp ?? children ?? '').replace(/\n$/, ''));
   const codeRef = useRef(code);
   const [collapsed, setIsCollapsed] = useState(!editorStartsExpanded);
+  const [previewKey, setPreviewKey] = useState(0);
   const toggleCollapsed = useCallback(() => setIsCollapsed((collapsed) => !collapsed), []);
   const toast = useToast();
   const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
@@ -207,6 +222,10 @@ const Playground = memo(function Playground({
 
   const detectedLanguage = language ?? parseLanguage(className ?? '');
   const isTypeScript = detectedLanguage !== 'jsx' && detectedLanguage !== 'javascript';
+
+  const handleResetPreview = useCallback(() => {
+    setPreviewKey((k) => k + 1);
+  }, []);
 
   const handleOpenInStackBlitz = useCallback(async () => {
     const { openInStackBlitz } = await import('./stackblitz');
@@ -236,6 +255,7 @@ const Playground = memo(function Playground({
         >
           {!hidePreview && (
             <VStack
+              key={previewKey}
               background="bg"
               borderRadius={400}
               color="fg"
@@ -261,6 +281,7 @@ const Playground = memo(function Playground({
               headingText={headingText}
               onClickCopy={handleCopyToClipboard}
               onClickOpenInStackBlitz={handleOpenInStackBlitz}
+              onClickResetPreview={handleResetPreview}
               onToggleCollapsed={toggleCollapsed}
             />
           )}
