@@ -3,7 +3,8 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { getBarPath } from '../utils';
+import { applyStaggerDelay, defaultBarEnterTransition, getBarPath } from '../utils';
+import type { ChartTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -30,10 +31,35 @@ export const DefaultBar = memo<DefaultBarProps>(
     transitions,
     transition,
   }) => {
-    const { animate } = useCartesianChartContext();
+    const { animate, drawingArea } = useCartesianChartContext();
     const theme = useTheme();
 
     const defaultFill = fill || theme.color.fgPrimary;
+
+    // Compute normalized x position for stagger delay calculation
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    // Strip staggerDelay and compute positional delay for Path.
+    // When enter is not explicitly set, apply the default stagger delay.
+    const resolvedTransitions = useMemo<ChartTransition | undefined>(() => {
+      if (!transitions) return undefined;
+      const enterTransition =
+        transitions.enter === null
+          ? null
+          : applyStaggerDelay(transitions.enter ?? defaultBarEnterTransition, normalizedX);
+      return {
+        enter: enterTransition,
+        update:
+          transitions.update === null
+            ? null
+            : transitions.update
+              ? applyStaggerDelay(transitions.update, normalizedX)
+              : undefined,
+      };
+    }, [transitions, normalizedX]);
 
     const targetPath = useMemo(() => {
       const effectiveBorderRadius = borderRadius ?? 0;
@@ -82,7 +108,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
-        transitions={transitions}
+        transitions={resolvedTransitions}
       />
     );
   },

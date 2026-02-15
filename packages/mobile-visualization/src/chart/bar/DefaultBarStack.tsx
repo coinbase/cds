@@ -4,7 +4,8 @@ import { Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
 import {
-  defaultEnterTransition,
+  applyStaggerDelay,
+  defaultBarEnterTransition,
   defaultTransition,
   instantTransition,
   usePathTransition,
@@ -31,7 +32,13 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     transitions,
     transition,
   }) => {
-    const { animate } = useCartesianChartContext();
+    const { animate, drawingArea } = useCartesianChartContext();
+
+    // Compute normalized x position for stagger delay calculation
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
 
     const rawUpdateTransition =
       transitions?.update !== undefined ? transitions.update : (transition ?? defaultTransition);
@@ -39,12 +46,15 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       () =>
         !animate || transitions?.enter === null
           ? instantTransition
-          : (transitions?.enter ?? defaultEnterTransition),
-      [animate, transitions?.enter],
+          : applyStaggerDelay(transitions?.enter ?? defaultBarEnterTransition, normalizedX),
+      [animate, transitions?.enter, normalizedX],
     );
     const resolvedUpdateTransition = useMemo(
-      () => (!animate || rawUpdateTransition === null ? instantTransition : rawUpdateTransition),
-      [animate, rawUpdateTransition],
+      () =>
+        !animate || rawUpdateTransition === null
+          ? instantTransition
+          : applyStaggerDelay(rawUpdateTransition, normalizedX),
+      [animate, rawUpdateTransition, normalizedX],
     );
 
     // Generate target clip path (full bar)

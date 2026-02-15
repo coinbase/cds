@@ -10,6 +10,7 @@ import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps 
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
 import {
+  type BarChartTransition,
   type ChartTransition,
   isCategoricalScale,
   ScrubberContext,
@@ -816,6 +817,18 @@ export const Transitions = () => {
     enter: { type: 'tween', duration: 1.0 },
     update: { type: 'tween', duration: 0 },
   };
+  const staggeredEnter: BarChartTransition = {
+    enter: { type: 'tween', duration: 0.75, staggerDelay: 0.25 },
+    update: null,
+  };
+  const staggeredUpdate: BarChartTransition = {
+    enter: null,
+    update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 0.15 },
+  };
+  const staggeredBoth: BarChartTransition = {
+    enter: { type: 'tween', duration: 0.75, staggerDelay: 0.25 },
+    update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 0.15 },
+  };
 
   function TransitionBarChart({
     data,
@@ -857,6 +870,15 @@ export const Transitions = () => {
         </Example>
         <Example title="Instant Update (duration: 0)">
           <TransitionBarChart data={data} transitions={instantUpdate} />
+        </Example>
+        <Example title="Staggered Enter">
+          <TransitionBarChart data={data} transitions={staggeredEnter} />
+        </Example>
+        <Example title="Staggered Update">
+          <TransitionBarChart data={data} transitions={staggeredUpdate} />
+        </Example>
+        <Example title="Staggered Both">
+          <TransitionBarChart data={data} transitions={staggeredBoth} />
         </Example>
       </VStack>
     );

@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { type ChartTransition } from '../utils';
+import { type BarChartTransition } from '../utils';
 import { getBarPath } from '../utils';
 
 import { DefaultBar } from './';
@@ -80,7 +80,7 @@ export type BarProps = BarBaseProps & {
   /**
    * Transition configuration for enter and update animations.
    */
-  transitions?: ChartTransition;
+  transitions?: BarChartTransition;
   /**
    * Transition for updates.
    * @deprecated Use `transitions.update` instead.

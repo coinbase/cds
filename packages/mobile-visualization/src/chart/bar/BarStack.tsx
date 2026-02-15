@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, ChartTransition, Series, Transition } from '../utils';
+import type { BarChartTransition, ChartScaleFunction, Series, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
@@ -83,7 +83,7 @@ export type BarStackProps = BarStackBaseProps & {
   /**
    * Transition configuration for enter and update animations.
    */
-  transitions?: ChartTransition;
+  transitions?: BarChartTransition;
   /**
    * Transition configurations for different animation phases.
    * @deprecated Use `transitions.update` instead.

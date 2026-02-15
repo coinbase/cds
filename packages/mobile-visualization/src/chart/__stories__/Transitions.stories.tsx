@@ -9,7 +9,7 @@ import { BarChart } from '../bar/BarChart';
 import { CartesianChart } from '../CartesianChart';
 import { Line } from '../line/Line';
 import { Scrubber, type ScrubberRef } from '../scrubber';
-import type { ChartTransition } from '../utils/transition';
+import type { BarChartTransition, ChartTransition } from '../utils/transition';
 
 const dataCount = 15;
 const updateInterval = 2500;
@@ -68,6 +68,18 @@ const slowSpringUpdate: ChartTransition = {
 const slowSpringBoth: ChartTransition = {
   enter: { type: 'spring', stiffness: 100, damping: 10 },
   update: { type: 'spring', stiffness: 100, damping: 10 },
+};
+const staggeredEnter: BarChartTransition = {
+  enter: { type: 'timing', duration: 750, staggerDelay: 250 },
+  update: null,
+};
+const staggeredUpdate: BarChartTransition = {
+  enter: null,
+  update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 150 },
+};
+const staggeredBoth: BarChartTransition = {
+  enter: { type: 'timing', duration: 750, staggerDelay: 250 },
+  update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 150 },
 };
 
 // --- Reusable Chart Components ---
@@ -505,6 +517,21 @@ function ExampleNavigator() {
         category: 'Bar',
         title: 'Slow Spring Both',
         component: <BarExample transitions={slowSpringBoth} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Staggered Enter',
+        component: <BarExample transitions={staggeredEnter} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Staggered Update',
+        component: <BarExample transitions={staggeredUpdate} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Staggered Both',
+        component: <BarExample transitions={staggeredBoth} />,
       },
     ],
     [],

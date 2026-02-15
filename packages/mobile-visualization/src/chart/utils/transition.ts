@@ -80,6 +80,73 @@ export type ChartTransition = {
 };
 
 /**
+ * A bar-specific transition that extends Transition with stagger support.
+ * When `staggerDelay` is provided, bars will animate with increasing delays
+ * based on their horizontal position (leftmost starts first, rightmost last).
+ *
+ * @example
+ * // Bars stagger in from left to right over 250ms, each animating for 750ms
+ * { type: 'timing', duration: 750, staggerDelay: 250 }
+ */
+export type BarTransition = Transition & {
+  /**
+   * Maximum stagger delay (ms) distributed across bars by x position.
+   * Leftmost bar starts immediately, rightmost starts after this delay.
+   */
+  staggerDelay?: number;
+};
+
+/**
+ * Transition configuration for bar chart animations.
+ * Extends ChartTransition with bar-specific stagger support on enter and update.
+ *
+ * @example
+ * // Staggered enter, no update animation
+ * { enter: { type: 'timing', duration: 750, staggerDelay: 250 }, update: null }
+ *
+ * @example
+ * // Staggered enter and rippling updates
+ * { enter: { type: 'timing', duration: 750, staggerDelay: 250 }, update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 100 } }
+ */
+export type BarChartTransition = {
+  /**
+   * Transition for the initial enter/reveal animation.
+   * Set to `null` to disable.
+   */
+  enter?: BarTransition | null;
+  /**
+   * Transition for subsequent data update animations.
+   * Set to `null` to disable.
+   */
+  update?: BarTransition | null;
+};
+
+/**
+ * Strips `staggerDelay` from a BarTransition and computes a positional delay.
+ *
+ * @param transition - The bar transition config (may include staggerDelay)
+ * @param normalizedX - The bar's normalized x position (0 = left edge, 1 = right edge)
+ * @returns A standard Transition with computed delay
+ */
+export const applyStaggerDelay = (transition: BarTransition, normalizedX: number): Transition => {
+  const { staggerDelay, ...baseTransition } = transition;
+  if (!staggerDelay) return baseTransition;
+  return {
+    ...baseTransition,
+    delay: (baseTransition.delay ?? 0) + normalizedX * staggerDelay,
+  };
+};
+
+/**
+ * Default bar enter transition. Uses the default spring with a stagger delay
+ * so bars spring into place from left to right.
+ */
+export const defaultBarEnterTransition: BarTransition = {
+  ...defaultTransition,
+  staggerDelay: 250,
+};
+
+/**
  * Default enter transition used for path clip-path reveal animations.
  */
 export const defaultEnterTransition: Transition = {
