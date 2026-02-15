@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { m as motion } from 'framer-motion';
 
 import { ChartText, type ChartTextProps } from '../text';
 
@@ -31,9 +32,11 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
       bottom: labelVerticalInset,
     },
     label,
+    transition: transitionProp,
+    y,
     ...chartTextProps
   }) => {
-    return (
+    const content = (
       <ChartText
         disableRepositioning
         background={background}
@@ -43,10 +46,21 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
         font={font}
         inset={inset}
         verticalAlignment={verticalAlignment}
+        y={transitionProp ? 0 : y}
         {...chartTextProps}
       >
         {label}
       </ChartText>
     );
+
+    if (transitionProp) {
+      return (
+        <motion.g animate={{ y }} initial={false} transition={transitionProp}>
+          {content}
+        </motion.g>
+      );
+    }
+
+    return content;
   },
 );

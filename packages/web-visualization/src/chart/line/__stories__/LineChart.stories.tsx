@@ -1957,13 +1957,44 @@ export const Transitions = () => {
     );
   }
 
+  function MultiLineTransitionChart({
+    data1,
+    data2,
+    transitions,
+  }: {
+    data1: number[];
+    data2: number[];
+    transitions: ChartTransition;
+  }) {
+    return (
+      <CartesianChart
+        enableScrubbing
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[
+          { id: 'series1', data: data1, label: 'Series 1' },
+          { id: 'series2', data: data2, label: 'Series 2' },
+        ]}
+      >
+        <Line seriesId="series1" strokeWidth={3} transitions={transitions} />
+        <Line seriesId="series2" strokeWidth={3} transitions={transitions} />
+        <Scrubber hideOverlay idlePulse transitions={transitions} />
+      </CartesianChart>
+    );
+  }
+
   function TransitionsStory() {
     const scrubberRef = useRef<ScrubberRef>(null);
     const [data, setData] = useState(generateInitialData);
+    const [data2, setData2] = useState(generateInitialData);
 
     useEffect(() => {
       const intervalId = setInterval(() => {
         setData((current) => {
+          const last = current[current.length - 1];
+          return [...current.slice(1), generateNextValue(last)];
+        });
+        setData2((current) => {
           const last = current[current.length - 1];
           return [...current.slice(1), generateNextValue(last)];
         });
@@ -1974,6 +2005,9 @@ export const Transitions = () => {
 
     return (
       <VStack gap={4}>
+        <Example title="Multi-Line Update (idlePulse)">
+          <MultiLineTransitionChart data1={data} data2={data2} transitions={updateOnly} />
+        </Example>
         <Example title="Slow Enter (5s), Delayed Beacon">
           <TransitionChart
             idlePulse

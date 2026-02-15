@@ -128,6 +128,11 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
      * Id of the series.
      */
     seriesId: Series['id'];
+    /**
+     * Transition configuration for position animations.
+     * When provided, the label component should animate its y position using this transition.
+     */
+    transition?: Transition;
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
@@ -204,7 +209,13 @@ export type ScrubberBaseProps = SharedProps &
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
+     * Transition configuration for the scrubber.
+     * Controls enter, update, and pulse animations for beacons and beacon labels.
+     */
+    transitions?: ScrubberBeaconProps['transitions'];
+    /**
      * Transition configuration for the scrubber beacon.
+     * @deprecated Use `transitions` instead.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
     /**
@@ -270,6 +281,7 @@ export const Scrubber = memo(
         beaconLabelFont,
         testID,
         idlePulse,
+        transitions: transitionsProp,
         beaconTransitions,
         beaconStroke,
         styles,
@@ -282,6 +294,8 @@ export const Scrubber = memo(
       const { scrubberPosition } = useScrubberContext();
       const { getXScale, getXAxis, animate, series, drawingArea, dataLength } =
         useCartesianChartContext();
+
+      const resolvedTransitions = transitionsProp ?? beaconTransitions;
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -348,14 +362,14 @@ export const Scrubber = memo(
       // Resolve the enter transition for the scrubber group fade-in.
       // Falls back to the default accessory fade when not provided.
       const groupEnterTransition = useMemo(() => {
-        if (beaconTransitions?.enter === null) return null;
+        if (resolvedTransitions?.enter === null) return null;
         return (
-          beaconTransitions?.enter ?? {
+          resolvedTransitions?.enter ?? {
             duration: accessoryFadeTransitionDuration,
             delay: accessoryFadeTransitionDelay,
           }
         );
-      }, [beaconTransitions?.enter]);
+      }, [resolvedTransitions?.enter]);
 
       const groupExitTransition = useMemo(() => {
         if (groupEnterTransition === null) return null;
@@ -427,16 +441,18 @@ export const Scrubber = memo(
             stroke={beaconStroke}
             style={styles?.beacon}
             testID={testID}
-            transitions={beaconTransitions}
+            transitions={resolvedTransitions}
           />
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              isIdle={scrubberPosition === undefined}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              transitions={resolvedTransitions}
             />
           )}
         </motion.g>

@@ -1,11 +1,17 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
-import { useDerivedValue } from 'react-native-reanimated';
+import { useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text';
-import { applySerializableScale, useScrubberContext } from '../utils';
+import { applySerializableScale, unwrapAnimatedValue, useScrubberContext } from '../utils';
+import {
+  buildTransition,
+  defaultTransition,
+  instantTransition,
+  type Transition,
+} from '../utils/transition';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -15,12 +21,18 @@ import {
 } from '../utils/scrubber';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
-import type { ScrubberBeaconLabelComponent, ScrubberBeaconLabelProps } from './Scrubber';
+import type {
+  ScrubberBeaconLabelComponent,
+  ScrubberBeaconLabelProps,
+  ScrubberBeaconProps,
+} from './Scrubber';
 
 const PositionedLabel = memo<{
   index: number;
   positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
+  isIdle: AnimatedProp<boolean>;
+  activeUpdateTransition: Transition;
   label: ChartTextChildren;
   color?: string;
   seriesId: string;
@@ -33,6 +45,8 @@ const PositionedLabel = memo<{
     index,
     positions,
     position,
+    isIdle,
+    activeUpdateTransition,
     label,
     color,
     seriesId,
@@ -46,7 +60,21 @@ const PositionedLabel = memo<{
       [positions, index],
     );
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
-    const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
+    const targetY = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
+
+    // Animate y position when idle (matching beacon behavior)
+    const animatedY = useSharedValue(0);
+    useAnimatedReaction(
+      () => ({ y: targetY.value, idle: unwrapAnimatedValue(isIdle) }),
+      (current, previous) => {
+        if (previous === null || !previous.idle || !current.idle) {
+          animatedY.value = current.y;
+          return;
+        }
+        animatedY.value = buildTransition(current.y, activeUpdateTransition);
+      },
+      [activeUpdateTransition],
+    );
 
     const dx = useDerivedValue(() => {
       return position.value === 'right' ? labelHorizontalOffset : -labelHorizontalOffset;
@@ -68,7 +96,7 @@ const PositionedLabel = memo<{
         opacity={opacity}
         seriesId={seriesId}
         x={x}
-        y={y}
+        y={animatedY}
       />
     );
   },
@@ -107,6 +135,14 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
    * @default DefaultScrubberBeaconLabel
    */
   BeaconLabelComponent?: ScrubberBeaconLabelComponent;
+  /**
+   * Transition configuration for beacon label animations.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Whether the scrubber is in idle state (not actively scrubbing).
+   */
+  isIdle?: AnimatedProp<boolean>;
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
@@ -117,6 +153,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelFont,
     labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
+    transitions,
+    isIdle,
   }) => {
     const {
       getSeries,
@@ -126,8 +164,15 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       getXAxis,
       drawingArea,
       dataLength,
+      animate,
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
+
+    const activeUpdateTransition = useMemo(() => {
+      const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
+      if (animate && resolved !== null) return resolved;
+      return instantTransition;
+    }, [transitions?.update, animate]);
 
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 
@@ -279,8 +324,10 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         <PositionedLabel
           key={info.seriesId}
           BeaconLabelComponent={BeaconLabelComponent}
+          activeUpdateTransition={activeUpdateTransition}
           color={labelInfo.color}
           index={index}
+          isIdle={isIdle ?? true}
           label={labelInfo.label}
           labelFont={labelFont}
           labelHorizontalOffset={labelHorizontalOffset}

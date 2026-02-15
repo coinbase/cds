@@ -208,7 +208,13 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
+     * Transition configuration for the scrubber.
+     * Controls enter, update, and pulse animations for beacons and beacon labels.
+     */
+    transitions?: ScrubberBeaconProps['transitions'];
+    /**
      * Transition configuration for the scrubber beacon.
+     * @deprecated Use `transitions` instead.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
     /**
@@ -248,12 +254,15 @@ export const Scrubber = memo(
         labelBoundsInset,
         beaconLabelFont,
         idlePulse,
+        transitions: transitionsProp,
         beaconTransitions,
         beaconStroke,
       },
       ref,
     ) => {
       const theme = useTheme();
+      const resolvedTransitions = transitionsProp ?? beaconTransitions;
+
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
@@ -279,6 +288,10 @@ export const Scrubber = memo(
         }
         return seriesIds;
       }, [series, seriesIds]);
+
+      const isIdle = useDerivedValue(() => {
+        return scrubberPosition.value === undefined;
+      }, [scrubberPosition]);
 
       const dataIndex = useDerivedValue(() => {
         return scrubberPosition.value ?? Math.max(0, dataLength - 1);
@@ -363,9 +376,9 @@ export const Scrubber = memo(
       // Resolve the enter transition for the scrubber group fade-in.
       // Falls back to the default accessory fade when not provided.
       const groupEnterTransition = useMemo(() => {
-        if (beaconTransitions?.enter === null) return null;
-        return beaconTransitions?.enter ?? undefined;
-      }, [beaconTransitions?.enter]);
+        if (resolvedTransitions?.enter === null) return null;
+        return resolvedTransitions?.enter ?? undefined;
+      }, [resolvedTransitions?.enter]);
 
       useEffect(() => {
         if (animate && isReady) {
@@ -418,16 +431,18 @@ export const Scrubber = memo(
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
             stroke={beaconStroke}
-            transitions={beaconTransitions}
+            transitions={resolvedTransitions}
           />
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              isIdle={isIdle}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              transitions={resolvedTransitions}
             />
           )}
         </Group>

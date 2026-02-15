@@ -75,7 +75,7 @@ const slowSpringBoth: ChartTransition = {
 const TransitionLineChart = memo<{
   data: number[];
   transitions: ChartTransition;
-  beaconTransitions?: ChartTransition;
+  scrubberTransitions?: ChartTransition;
   animate?: boolean;
   idlePulse?: boolean;
   scrubberRef?: React.RefObject<ScrubberRef | null>;
@@ -84,7 +84,7 @@ const TransitionLineChart = memo<{
   ({
     data,
     transitions,
-    beaconTransitions: beaconTransitionsProp,
+    scrubberTransitions,
     animate: animateProp,
     idlePulse,
     scrubberRef,
@@ -102,8 +102,8 @@ const TransitionLineChart = memo<{
         <Scrubber
           ref={scrubberRef as React.RefObject<ScrubberRef>}
           hideOverlay
-          beaconTransitions={beaconTransitionsProp ?? transitions}
           idlePulse={idlePulse}
+          transitions={scrubberTransitions ?? transitions}
         />
       )}
     </CartesianChart>
@@ -127,9 +127,29 @@ const TransitionAreaChart = memo<{
     <Scrubber
       ref={scrubberRef as React.RefObject<ScrubberRef>}
       hideOverlay
-      beaconTransitions={transitions}
       idlePulse={idlePulse}
+      transitions={transitions}
     />
+  </CartesianChart>
+));
+
+const MultiLineChart = memo<{
+  data1: number[];
+  data2: number[];
+  transitions: ChartTransition;
+}>(({ data1, data2, transitions }) => (
+  <CartesianChart
+    enableScrubbing
+    height={200}
+    inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+    series={[
+      { id: 'series1', data: data1, label: 'Series 1' },
+      { id: 'series2', data: data2, label: 'Series 2' },
+    ]}
+  >
+    <Line seriesId="series1" strokeWidth={3} transitions={transitions} />
+    <Line seriesId="series2" strokeWidth={3} transitions={transitions} />
+    <Scrubber hideOverlay idlePulse transitions={transitions} />
   </CartesianChart>
 ));
 
@@ -137,14 +157,14 @@ const TransitionAreaChart = memo<{
 
 function LineExample({
   transitions,
-  beaconTransitions,
+  scrubberTransitions,
   animate,
   idlePulse,
   resettable = true,
   imperative = false,
 }: {
   transitions: ChartTransition;
-  beaconTransitions?: ChartTransition;
+  scrubberTransitions?: ChartTransition;
   animate?: boolean;
   idlePulse?: boolean;
   resettable?: boolean;
@@ -171,10 +191,10 @@ function LineExample({
       <TransitionLineChart
         key={resetKey}
         animate={animate}
-        beaconTransitions={beaconTransitions}
         data={data}
         idlePulse={idlePulse}
         scrubberRef={imperative ? scrubberRef : undefined}
+        scrubberTransitions={scrubberTransitions}
         transitions={transitions}
       />
       {resettable && (
@@ -256,7 +276,7 @@ const TransitionBarChart = memo<{
   transitions: ChartTransition;
 }>(({ data, transitions }) => (
   <BarChart {...barChartProps} series={[{ id: 'values', data }]} transitions={transitions}>
-    <Scrubber hideOverlay beaconTransitions={transitions} seriesIds={[]} />
+    <Scrubber hideOverlay seriesIds={[]} transitions={transitions} />
   </BarChart>
 ));
 
@@ -288,6 +308,38 @@ function BarExample({
           </Button>
         </Box>
       )}
+    </VStack>
+  );
+}
+
+function MultiLineExample({ transitions }: { transitions: ChartTransition }) {
+  const [data1, setData1] = useState(generateInitialData);
+  const [data2, setData2] = useState(generateInitialData);
+  const [resetKey, setResetKey] = useState(0);
+  const handleReset = useCallback(() => setResetKey((k) => k + 1), []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData1((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+      setData2((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+    }, updateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <MultiLineChart key={resetKey} data1={data1} data2={data2} transitions={transitions} />
+      <Box paddingX={2}>
+        <Button compact onPress={handleReset} variant="secondary">
+          Reset
+        </Button>
+      </Box>
     </VStack>
   );
 }
@@ -336,7 +388,7 @@ function ExampleNavigator() {
         title: 'Custom',
         component: (
           <LineExample
-            beaconTransitions={customEnterUpdateBeacon}
+            scrubberTransitions={customEnterUpdateBeacon}
             transitions={customEnterUpdate}
           />
         ),
@@ -352,7 +404,7 @@ function ExampleNavigator() {
         component: (
           <LineExample
             idlePulse
-            beaconTransitions={slowEnterDelayedBeacon}
+            scrubberTransitions={slowEnterDelayedBeacon}
             transitions={slowEnterNoUpdate}
           />
         ),
@@ -366,6 +418,21 @@ function ExampleNavigator() {
         category: 'Line',
         title: 'No Animate Off',
         component: <LineExample animate={false} transitions={bothDisabled} />,
+      },
+      {
+        category: 'Multi-Line',
+        title: 'Update Only',
+        component: <MultiLineExample transitions={updateOnly} />,
+      },
+      {
+        category: 'Multi-Line',
+        title: 'Enter Only',
+        component: <MultiLineExample transitions={enterOnly} />,
+      },
+      {
+        category: 'Multi-Line',
+        title: 'Both Disabled',
+        component: <MultiLineExample transitions={bothDisabled} />,
       },
       // Area Transitions
       {
