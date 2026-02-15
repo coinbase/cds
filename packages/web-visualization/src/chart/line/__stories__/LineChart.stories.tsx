@@ -1795,7 +1795,7 @@ export const Transitions = () => {
   function TransitionChart({
     data,
     transitions,
-    beaconTransitions: beaconTransitionsProp,
+    scrubberTransitions,
     animate: animateProp,
     idlePulse,
     scrubberRef,
@@ -1803,7 +1803,7 @@ export const Transitions = () => {
   }: {
     data: number[];
     transitions: ChartTransition;
-    beaconTransitions?: ChartTransition;
+    scrubberTransitions?: ChartTransition;
     animate?: boolean;
     idlePulse?: boolean;
     scrubberRef?: React.RefObject<ScrubberRef | null>;
@@ -1822,8 +1822,8 @@ export const Transitions = () => {
           <Scrubber
             ref={scrubberRef as React.RefObject<ScrubberRef>}
             hideOverlay
-            beaconTransitions={beaconTransitionsProp ?? transitions}
             idlePulse={idlePulse}
+            transitions={scrubberTransitions ?? transitions}
           />
         )}
       </CartesianChart>
@@ -1946,12 +1946,12 @@ export const Transitions = () => {
           AreaComponent={MyGradient}
           seriesId="prices"
           strokeWidth={3}
-          transition={myTransitionConfig}
+          transitions={{ update: myTransitionConfig }}
         />
         <Scrubber
           hideOverlay
-          beaconTransitions={{ update: myTransitionConfig }}
           label={valueAtIndexFormatter}
+          transitions={{ update: myTransitionConfig }}
         />
       </CartesianChart>
     );
@@ -2011,11 +2011,11 @@ export const Transitions = () => {
         <Example title="Slow Enter (5s), Delayed Beacon">
           <TransitionChart
             idlePulse
-            beaconTransitions={{
+            data={data}
+            scrubberTransitions={{
               enter: { type: 'tween', duration: 1, delay: 4 },
               update: null,
             }}
-            data={data}
             transitions={slowEnterNoUpdate}
           />
         </Example>
@@ -2306,7 +2306,7 @@ export const DebugInstantEnter = () => {
           series={[{ id: 'values', data }]}
         >
           <Line seriesId="values" strokeWidth={3} transitions={instantEnterTransitions} />
-          <Scrubber hideOverlay idlePulse beaconTransitions={instantEnterTransitions} />
+          <Scrubber hideOverlay idlePulse transitions={instantEnterTransitions} />
         </CartesianChart>
       </VStack>
     </VStack>

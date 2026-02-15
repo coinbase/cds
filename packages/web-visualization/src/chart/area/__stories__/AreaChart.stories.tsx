@@ -189,8 +189,8 @@ export const Transitions = () => {
         <Scrubber
           ref={scrubberRef as React.RefObject<ScrubberRef>}
           hideOverlay
-          beaconTransitions={transitions}
           idlePulse={idlePulse}
+          transitions={transitions}
         />
       </CartesianChart>
     );

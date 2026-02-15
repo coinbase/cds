@@ -902,8 +902,8 @@ function MonthlyRewards() {
 
 ## Custom Transitions
 
-You can customize the transition animations for your bar chart using the `transition` prop.
-This allows you to control enter, update, and exit animations separately.
+You can customize the transition animations for your bar chart using the `transitions` prop.
+This allows you to control enter and update animations separately.
 
 ```jsx live
 function UpdatingChartValues() {
@@ -962,7 +962,7 @@ function UpdatingChartValues() {
             data: displayData,
           },
         ]}
-        transition={{ type: 'spring', stiffness: 700, damping: 20 }}
+        transitions={{ update: { type: 'spring', stiffness: 700, damping: 20 } }}
         showXAxis
         showYAxis
         xAxis={{

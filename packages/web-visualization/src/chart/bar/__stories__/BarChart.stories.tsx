@@ -839,7 +839,7 @@ export const Transitions = () => {
   }) {
     return (
       <BarChart {...barChartProps} series={[{ id: 'values', data }]} transitions={transitions}>
-        <Scrubber hideOverlay beaconTransitions={transitions} seriesIds={[]} />
+        <Scrubber hideOverlay seriesIds={[]} transitions={transitions} />
       </BarChart>
     );
   }
