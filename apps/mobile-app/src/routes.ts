@@ -791,6 +791,11 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/tour/__stories__/Tour.stories').default,
   },
   {
+    key: 'Transitions',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/Transitions.stories').default,
+  },
+  {
     key: 'TrayAction',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayAction.stories').default,

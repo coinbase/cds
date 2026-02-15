@@ -27,6 +27,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     originY,
+    transitions,
     transition,
   }) => {
     const { animate } = useCartesianChartContext();
@@ -81,6 +82,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
       />
     );
   },

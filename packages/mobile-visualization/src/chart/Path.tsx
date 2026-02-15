@@ -10,8 +10,14 @@ import {
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
-import type { Transition } from './utils/transition';
-import { usePathTransition } from './utils/transition';
+import type { ChartTransition, Transition } from './utils/transition';
+import {
+  buildTransition,
+  defaultEnterTransition,
+  defaultTransition,
+  instantTransition,
+  usePathTransition,
+} from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
@@ -91,7 +97,21 @@ export type PathProps = PathBaseProps &
      */
     clipRect?: Rect;
     /**
-     * Animation transition
+     * Transition configuration for enter and update animations.
+     *
+     * @example
+     * // Custom enter and update transitions
+     * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+     *
+     * @example
+     * // Disable enter animation
+     * transitions={{ enter: null }}
+     */
+    transitions?: ChartTransition;
+    /**
+     * Animation transition for updates.
+     *
+     * @deprecated Use `transitions.update` instead.
      *
      * @example
      * // Duration based
@@ -104,7 +124,11 @@ export type PathProps = PathBaseProps &
     transition?: Transition;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
+const AnimatedPath = memo<
+  Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'> & {
+    updateTransition: Transition;
+  }
+>(
   ({
     d = '',
     initialPath,
@@ -116,7 +140,7 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     strokeCap,
     strokeJoin,
     children,
-    transition,
+    updateTransition,
     ...pathProps
   }) => {
     const isDAnimated = typeof d !== 'string';
@@ -126,7 +150,7 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     const animatedPath = usePathTransition({
       currentPath: isDAnimated ? '' : d,
       initialPath,
-      transition,
+      transition: updateTransition,
     });
 
     const isFilled = fill !== undefined && fill !== 'none';
@@ -187,6 +211,7 @@ export const Path = memo<PathProps>((props) => {
     strokeCap,
     strokeJoin,
     children,
+    transitions,
     transition,
     ...pathProps
   } = props;
@@ -197,6 +222,23 @@ export const Path = memo<PathProps>((props) => {
 
   const isReady = !!context.getXScale();
 
+  const enterTransition = transitions?.enter;
+  const rawUpdateTransition =
+    transitions?.update !== undefined ? transitions.update : (transition ?? defaultTransition);
+
+  // Resolve null to instantTransition so animation elements are always used
+  const resolvedEnterTransition = useMemo(
+    () =>
+      !animate || enterTransition === null
+        ? instantTransition
+        : (enterTransition ?? defaultEnterTransition),
+    [animate, enterTransition],
+  );
+  const resolvedUpdateTransition = useMemo(
+    () => (!animate || rawUpdateTransition === null ? instantTransition : rawUpdateTransition),
+    [animate, rawUpdateTransition],
+  );
+
   // The clip offset provides extra padding to prevent path from being cut off
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
@@ -206,9 +248,9 @@ export const Path = memo<PathProps>((props) => {
 
   useEffect(() => {
     if (animate && isReady) {
-      clipProgress.value = withTiming(1, { duration: pathEnterTransitionDuration });
+      clipProgress.value = buildTransition(1, resolvedEnterTransition);
     }
-  }, [animate, isReady, clipProgress]);
+  }, [animate, isReady, clipProgress, resolvedEnterTransition]);
 
   // Create initial and target clip paths for animation
   const { initialClipPath, targetClipPath } = useMemo(() => {
@@ -308,7 +350,7 @@ export const Path = memo<PathProps>((props) => {
       strokeJoin={strokeJoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
-      transition={transition}
+      updateTransition={resolvedUpdateTransition}
     >
       {children}
     </AnimatedPath>

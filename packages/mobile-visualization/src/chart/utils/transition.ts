@@ -4,6 +4,7 @@ import {
   type SharedValue,
   useAnimatedReaction,
   useSharedValue,
+  withDelay,
   withSpring,
   type WithSpringConfig,
   withTiming,
@@ -25,9 +26,19 @@ import { interpolatePath } from 'd3-interpolate-path';
  * // Timing animation
  * { type: 'timing', duration: 500, easing: Easing.inOut(Easing.ease) }
  */
-export type Transition =
+export type Transition = (
   | ({ type: 'timing' } & WithTimingConfig)
-  | ({ type: 'spring' } & WithSpringConfig);
+  | ({ type: 'spring' } & WithSpringConfig)
+) & {
+  /**
+   * Delay in milliseconds (ms) before the animation starts.
+   *
+   * @example
+   * // Wait 2 seconds before animating
+   * { type: 'timing', duration: 500, delay: 2000 }
+   */
+  delay?: number;
+};
 
 /**
  * Default transition configuration used across all chart components.
@@ -36,6 +47,53 @@ export const defaultTransition: Transition = {
   type: 'spring',
   stiffness: 900,
   damping: 120,
+};
+
+/**
+ * Transition configuration for chart animations.
+ * Allows separate configuration of enter (reveal) and update (data change) animations.
+ * Set either key to `null` to disable that animation phase.
+ *
+ * @example
+ * // Custom enter and update transitions
+ * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+ *
+ * @example
+ * // Disable enter animation, keep default update
+ * transitions={{ enter: null }}
+ *
+ * @example
+ * // Disable update animation, keep default enter
+ * transitions={{ update: null }}
+ */
+export type ChartTransition = {
+  /**
+   * Transition for the initial enter/reveal animation.
+   * Set to `null` to disable.
+   */
+  enter?: Transition | null;
+  /**
+   * Transition for subsequent data update animations.
+   * Set to `null` to disable.
+   */
+  update?: Transition | null;
+};
+
+/**
+ * Default enter transition used for path clip-path reveal animations.
+ */
+export const defaultEnterTransition: Transition = {
+  type: 'timing',
+  duration: 500,
+};
+
+/**
+ * Instant transition that completes immediately with no animation.
+ * Used when a transition is set to `null`.
+ */
+export const instantTransition: Transition = {
+  type: 'timing',
+  duration: 0,
 };
 
 /**
@@ -75,16 +133,33 @@ export const useD3PathInterpolation = (
     };
   }, [fromPath, toPath]);
 
+  // Store interpolators in shared values so the worklet always has fresh data.
+  // Without this, the useAnimatedReaction dependency array re-registers the
+  // worklet asynchronously, causing instant transitions to use stale interpolators
+  // for one frame (visible as growing bars using the old smaller clip path).
+  const i0Shared = useSharedValue(i0);
+  const i1Shared = useSharedValue(i1);
+  const toSkiaPathShared = useSharedValue(toSkiaPath);
+
+  useEffect(() => {
+    i0Shared.value = i0;
+    i1Shared.value = i1;
+    toSkiaPathShared.value = toSkiaPath;
+  }, [i0, i1, toSkiaPath, i0Shared, i1Shared, toSkiaPathShared]);
+
   const result = useSharedValue(fromSkiaPath);
 
+  // Track both progress AND toSkiaPathShared so the reaction fires when either changes.
+  // This ensures instant transitions (which skip progress changes) still update the result
+  // when the target path changes.
   useAnimatedReaction(
-    () => progress.value,
-    (t) => {
+    () => ({ p: progress.value, to: toSkiaPathShared.value }),
+    ({ p }) => {
       'worklet';
-      result.value = i1.interpolate(i0, t) ?? toSkiaPath;
+      result.value = i1Shared.value.interpolate(i0Shared.value, p) ?? toSkiaPathShared.value;
       notifyChange(result);
     },
-    [fromSkiaPath, i0, i1, toSkiaPath],
+    [],
   );
 
   return result;
@@ -147,18 +222,29 @@ export const useInterpolator = <T>(
  */
 export const buildTransition = (targetValue: number, transition: Transition): number => {
   'worklet';
-  switch (transition.type) {
+  const { delay: delayMs, ...config } = transition;
+
+  let animation: number;
+  switch (config.type) {
     case 'timing': {
-      return withTiming(targetValue, transition);
+      animation = withTiming(targetValue, config);
+      break;
     }
     case 'spring': {
-      return withSpring(targetValue, transition);
+      animation = withSpring(targetValue, config);
+      break;
     }
     default: {
-      // Fallback to default transition config
-      return withSpring(targetValue, defaultTransition);
+      animation = withSpring(targetValue, defaultTransition);
+      break;
     }
   }
+
+  if (delayMs && delayMs > 0) {
+    return withDelay(delayMs, animation);
+  }
+
+  return animation;
 };
 
 /**
@@ -215,18 +301,27 @@ export const usePathTransition = ({
   const fromPath = previousPathRef.current;
   const toPath = currentPath;
 
+  const isInstant =
+    transition === instantTransition ||
+    (transition.type === 'timing' && 'duration' in transition && transition.duration === 0);
+
   useEffect(() => {
     const shouldAnimate = previousPathRef.current !== currentPath;
 
     if (shouldAnimate) {
-      // Update ref for next path change (happens after this render)
       previousPathRef.current = currentPath;
 
-      // Animate from old path to new path
-      progress.value = 0;
-      progress.value = buildTransition(1, transition);
+      if (!isInstant) {
+        // Animated transition: reset progress and animate 0→1
+        progress.value = 0;
+        progress.value = buildTransition(1, transition);
+      }
+      // For instant transitions, we skip the progress animation entirely.
+      // The useD3PathInterpolation reaction fires when toSkiaPathShared changes
+      // (from the new toPath) and evaluates at the current progress (1 from the
+      // last completed animation), which maps to the new target path.
     }
-  }, [currentPath, transition, progress]);
+  }, [currentPath, transition, progress, isInstant]);
 
   return useD3PathInterpolation(progress, fromPath, toPath);
 };

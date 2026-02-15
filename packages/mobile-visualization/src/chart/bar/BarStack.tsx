@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, Series, Transition } from '../utils';
+import type { ChartScaleFunction, ChartTransition, Series, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
@@ -81,14 +81,19 @@ export type BarStackBaseProps = Pick<
 
 export type BarStackProps = BarStackBaseProps & {
   /**
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: ChartTransition;
+  /**
    * Transition configurations for different animation phases.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
 
 export type BarStackComponentProps = Pick<
   BarStackProps,
-  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transition'
+  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transitions' | 'transition'
 > & {
   /**
    * The y position of the stack.
@@ -140,6 +145,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transitions,
     transition,
   }) => {
     const theme = useTheme();
@@ -692,6 +698,7 @@ export const BarStack = memo<BarStackProps>(
         stroke={defaultStroke}
         strokeWidth={defaultStrokeWidth}
         transition={transition}
+        transitions={transitions}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -711,6 +718,7 @@ export const BarStack = memo<BarStackProps>(
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}
+        transitions={transitions}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

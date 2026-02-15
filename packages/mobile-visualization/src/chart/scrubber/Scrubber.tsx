@@ -32,7 +32,8 @@ import {
   type Series,
   useScrubberContext,
 } from '../utils';
-import type { Transition } from '../utils/transition';
+import type { ChartTransition, Transition } from '../utils/transition';
+import { buildTransition } from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import { DefaultScrubberLabel } from './DefaultScrubberLabel';
@@ -92,12 +93,7 @@ export type ScrubberBeaconProps = {
   /**
    * Transition configuration for beacon animations.
    */
-  transitions?: {
-    /**
-     * Transition used for beacon position updates.
-     * @default defaultTransition
-     */
-    update?: Transition;
+  transitions?: ChartTransition & {
     /**
      * Transition used for the pulse animation.
      * @default { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
@@ -364,14 +360,30 @@ export const Scrubber = memo(
 
       const isReady = !!xScale;
 
+      // Resolve the enter transition for the scrubber group fade-in.
+      // Falls back to the default accessory fade when not provided.
+      const groupEnterTransition = useMemo(() => {
+        if (beaconTransitions?.enter === null) return null;
+        return beaconTransitions?.enter ?? undefined;
+      }, [beaconTransitions?.enter]);
+
       useEffect(() => {
         if (animate && isReady) {
-          scrubberOpacity.value = withDelay(
-            accessoryFadeTransitionDelay,
-            withTiming(1, { duration: accessoryFadeTransitionDuration }),
-          );
+          if (groupEnterTransition === null) {
+            // Instant — no animation
+            scrubberOpacity.value = 1;
+          } else if (groupEnterTransition) {
+            // Custom enter transition
+            scrubberOpacity.value = buildTransition(1, groupEnterTransition);
+          } else {
+            // Default accessory fade
+            scrubberOpacity.value = withDelay(
+              accessoryFadeTransitionDelay,
+              withTiming(1, { duration: accessoryFadeTransitionDuration }),
+            );
+          }
         }
-      }, [animate, isReady, scrubberOpacity]);
+      }, [animate, isReady, scrubberOpacity, groupEnterTransition]);
 
       if (!isReady) return;
 

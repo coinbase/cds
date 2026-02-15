@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { getBarPath, type Transition } from '../utils';
+import { type ChartTransition, getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
@@ -75,7 +75,12 @@ export type BarBaseProps = {
 
 export type BarProps = BarBaseProps & {
   /**
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: ChartTransition;
+  /**
    * Transition configuration for bar animations.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };

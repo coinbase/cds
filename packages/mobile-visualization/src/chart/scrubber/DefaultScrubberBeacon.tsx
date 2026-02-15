@@ -16,7 +16,12 @@ import { Circle, Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { unwrapAnimatedValue } from '../utils';
 import { projectPointWithSerializableScale } from '../utils/point';
-import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultTransition,
+  instantTransition,
+  type Transition,
+} from '../utils/transition';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
@@ -84,10 +89,11 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries?.color, theme.color.fgPrimary],
       );
 
-      const updateTransition = useMemo(
-        () => transitions?.update ?? defaultTransition,
-        [transitions?.update],
-      );
+      const activeUpdateTransition = useMemo(() => {
+        const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
+        if (animate && resolved !== null) return resolved;
+        return instantTransition;
+      }, [transitions?.update, animate]);
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
@@ -138,10 +144,10 @@ export const DefaultScrubberBeacon = memo(
             return;
           }
 
-          animatedX.value = buildTransition(current.point.x, updateTransition);
-          animatedY.value = buildTransition(current.point.y, updateTransition);
+          animatedX.value = buildTransition(current.point.x, activeUpdateTransition);
+          animatedY.value = buildTransition(current.point.y, activeUpdateTransition);
         },
-        [animate, updateTransition],
+        [animate, activeUpdateTransition],
       );
 
       // Create animated point using the animated values

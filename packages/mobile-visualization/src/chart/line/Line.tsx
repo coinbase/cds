@@ -13,6 +13,7 @@ import {
   type ChartPathCurveType,
   getLineData,
   getLinePath,
+  type ChartTransition,
   type GradientDefinition,
   type Transition,
 } from '../utils';
@@ -112,14 +113,28 @@ export type LineBaseProps = {
 
 export type LineProps = LineBaseProps & {
   /**
+   * Transition configuration for enter and update animations.
+   *
+   * @example
+   * // Custom enter and update transitions
+   * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: ChartTransition;
+  /**
    * Transition configuration for line animations.
+   *
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
 
 export type LineComponentProps = Pick<
   LineProps,
-  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
+  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transitions' | 'transition'
 > &
   Pick<PathProps, 'clipPath' | 'strokeCap'> & {
     /**
@@ -150,6 +165,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     points,
     connectNulls,
+    transitions,
     transition,
     gradient: gradientProp,
     ...props
@@ -263,6 +279,7 @@ export const Line = memo<LineProps>(
             gradient={gradient}
             seriesId={seriesId}
             transition={transition}
+            transitions={transitions}
             type={areaType}
           />
         )}
@@ -273,6 +290,7 @@ export const Line = memo<LineProps>(
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
+          transitions={transitions}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />

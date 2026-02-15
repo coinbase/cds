@@ -52,6 +52,7 @@ export const GradientArea = memo<GradientAreaProps>(
     baseline,
     yAxisId,
     animate,
+    transitions,
     transition,
     ...pathProps
   }) => {
@@ -80,6 +81,7 @@ export const GradientArea = memo<GradientAreaProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         transition={transition}
+        transitions={transitions}
         {...pathProps}
       >
         {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
