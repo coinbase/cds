@@ -276,6 +276,7 @@ export const usePathTransition = ({
   currentPath,
   initialPath,
   transition = defaultTransition,
+  enterTransition,
 }: {
   /**
    * Current target path to animate to.
@@ -288,14 +289,23 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configuration
+   * Transition configuration for subsequent data update animations.
    */
   transition?: Transition;
+  /**
+   * Transition configuration for the initial enter animation (initialPath → currentPath).
+   * Only used when `initialPath` is provided (e.g. bars animating from baseline).
+   * If not provided, falls back to `transition`.
+   */
+  enterTransition?: Transition;
 }): SharedValue<SkPath> => {
   // Track the previous path - updated in useEffect AFTER render,
   // so during render it naturally holds the "from" path value
   const previousPathRef = useRef(initialPath ?? currentPath);
   const progress = useSharedValue(0);
+  // Only true when initialPath is provided (e.g. bars), so enter transition
+  // is never accidentally used for line/area data updates.
+  const isFirstAnimation = useRef(!!initialPath);
 
   // During render: previousPathRef still has old value, currentPath is new
   const fromPath = previousPathRef.current;
@@ -307,10 +317,17 @@ export const usePathTransition = ({
     if (shouldAnimate) {
       previousPathRef.current = currentPath;
 
+      // Use enter transition for the first animation (initialPath → currentPath),
+      // then switch to update transition for subsequent data changes.
+      const activeTransition =
+        isFirstAnimation.current && enterTransition !== undefined ? enterTransition : transition;
+
+      isFirstAnimation.current = false;
+
       progress.value = 0;
-      progress.value = buildTransition(1, transition);
+      progress.value = buildTransition(1, activeTransition);
     }
-  }, [currentPath, transition, progress]);
+  }, [currentPath, transition, enterTransition, progress]);
 
   return useD3PathInterpolation(progress, fromPath, toPath);
 };

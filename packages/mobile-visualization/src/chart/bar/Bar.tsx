@@ -124,6 +124,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitions,
     transition,
   }) => {
     const theme = useTheme();
@@ -160,6 +161,7 @@ export const Bar = memo<BarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         width={width}
         x={x}
         y={y}

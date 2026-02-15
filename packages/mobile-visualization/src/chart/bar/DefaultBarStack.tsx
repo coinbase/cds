@@ -3,7 +3,12 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { defaultTransition, instantTransition, usePathTransition } from '../utils/transition';
+import {
+  defaultEnterTransition,
+  defaultTransition,
+  instantTransition,
+  usePathTransition,
+} from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
 
@@ -30,6 +35,13 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const rawUpdateTransition =
       transitions?.update !== undefined ? transitions.update : (transition ?? defaultTransition);
+    const resolvedEnterTransition = useMemo(
+      () =>
+        !animate || transitions?.enter === null
+          ? instantTransition
+          : (transitions?.enter ?? defaultEnterTransition),
+      [animate, transitions?.enter],
+    );
     const resolvedUpdateTransition = useMemo(
       () => (!animate || rawUpdateTransition === null ? instantTransition : rawUpdateTransition),
       [animate, rawUpdateTransition],
@@ -50,6 +62,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       currentPath: targetPath,
       initialPath,
       transition: resolvedUpdateTransition,
+      enterTransition: resolvedEnterTransition,
     });
 
     const clipPath = animate ? animatedClipPath : targetPath;

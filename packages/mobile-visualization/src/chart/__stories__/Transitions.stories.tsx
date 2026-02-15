@@ -57,6 +57,18 @@ const slowEnterDelayedBeacon: ChartTransition = {
   enter: { type: 'timing', duration: 1000, delay: 4000 },
   update: null,
 };
+const slowSpringEnter: ChartTransition = {
+  enter: { type: 'spring', stiffness: 100, damping: 10 },
+  update: null,
+};
+const slowSpringUpdate: ChartTransition = {
+  enter: null,
+  update: { type: 'spring', stiffness: 100, damping: 10 },
+};
+const slowSpringBoth: ChartTransition = {
+  enter: { type: 'spring', stiffness: 100, damping: 10 },
+  update: { type: 'spring', stiffness: 100, damping: 10 },
+};
 
 // --- Reusable Chart Components ---
 
@@ -411,6 +423,21 @@ function ExampleNavigator() {
         category: 'Bar',
         title: 'Instant Update',
         component: <BarExample transitions={instantUpdate} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Slow Spring Enter',
+        component: <BarExample transitions={slowSpringEnter} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Slow Spring Update',
+        component: <BarExample transitions={slowSpringUpdate} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Slow Spring Both',
+        component: <BarExample transitions={slowSpringBoth} />,
       },
     ],
     [],
