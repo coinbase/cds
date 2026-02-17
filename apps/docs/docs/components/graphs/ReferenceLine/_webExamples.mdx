@@ -242,8 +242,8 @@ You can pair a ReferenceLine with a custom drag component to create a draggable 
 
 ```jsx live
 function DraggablePriceTarget() {
-  const DragIcon = ({ x, y }: { x: number; y: number }) => {
-    const DragCircle = (props: React.SVGProps<SVGCircleElement>) => (
+  const DragIcon = ({ x, y }) => {
+    const DragCircle = (props) => (
       <circle {...props} fill="var(--color-fg)" r="1.5" />
     );
 
@@ -266,11 +266,6 @@ function DraggablePriceTarget() {
     y,
     isPositive,
     color,
-  }: {
-    x: number;
-    y: number;
-    isPositive: boolean;
-    color: string;
   }) => {
     return (
       <g transform={`translate(${x - 8}, ${y - 8})`}>
@@ -291,7 +286,7 @@ function DraggablePriceTarget() {
   };
 
   const DynamicPriceLabel = memo(
-    ({ color, ...props }: React.ComponentProps<typeof DefaultReferenceLineLabel> & { color: string }) => (
+    ({ color, ...props }) => (
       <DefaultReferenceLineLabel
         {...props}
         background={color}
@@ -310,15 +305,11 @@ function DraggablePriceTarget() {
       baselineAmount,
       startAmount,
       chartRef,
-    }: {
-      baselineAmount: number;
-      startAmount: number;
-      chartRef: RefObject<SVGSVGElement>;
     }) => {
       const theme = useTheme();
       const { isPhone } = useBreakpoints();
 
-      const formatPrice = useCallback((value: number) => {
+      const formatPrice = useCallback((value) => {
         return `$${value.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -329,12 +320,13 @@ function DraggablePriceTarget() {
       const [amount, setAmount] = useState(startAmount);
       const [isDragging, setIsDragging] = useState(false);
       const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });
-      const color = amount >= baselineAmount ? 'var(--color-bgPositive)' : 'var(--color-bgNegative)';
+      const color =
+        amount >= baselineAmount ? 'var(--color-bgPositive)' : 'var(--color-bgNegative)';
 
       const yScale = getYScale();
 
       const labelComponent = useCallback(
-        (props: React.ComponentProps<typeof DefaultReferenceLineLabel>) => (
+        (props) => (
           <DynamicPriceLabel {...props} color={color} />
         ),
         [color],
@@ -348,7 +340,7 @@ function DraggablePriceTarget() {
           return;
         }
 
-        const updatePosition = (clientX: number, clientY: number) => {
+        const updatePosition = (clientX, clientY) => {
           const point = element.createSVGPoint();
           point.x = clientX;
           point.y = clientY;
@@ -434,12 +426,12 @@ function DraggablePriceTarget() {
         : `${Math.abs(percentageChange)}% (${formatPrice(Math.abs(difference))})`;
       const dollarLabel = formatPrice(amount);
 
-      const handleMouseDown = (e: React.MouseEvent) => {
+      const handleMouseDown = (e) => {
         e.preventDefault();
         setIsDragging(true);
       };
 
-      const handleTouchStart = (e: React.TouchEvent) => {
+      const handleTouchStart = (e) => {
         e.preventDefault();
         setIsDragging(true);
       };
@@ -502,9 +494,11 @@ function DraggablePriceTarget() {
     },
   );
 
-  const BaselinePriceLabel = useMemo(() => memo((props) => (
-    <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />
-  )), []);
+  const BaselinePriceLabel = useMemo(
+    () =>
+      memo((props) => <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />),
+    [],
+  );
 
   const PriceTargetChart = () => {
     const priceData = useMemo(() => sparklineInteractiveData.year.map((d) => d.value), []);
@@ -512,7 +506,7 @@ function DraggablePriceTarget() {
 
     const chartRef = useRef<SVGSVGElement>(null);
 
-    const formatPrice = useCallback((value: number) => {
+    const formatPrice = useCallback((value) => {
       return `$${value.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -525,7 +519,11 @@ function DraggablePriceTarget() {
         showArea
         animate={false}
         height={250}
-        inset={isPhone ? { top: 16, bottom: 16, left: 0, right: 0 } : { top: 16, bottom: 16, left: 8, right: 80 }}
+        inset={
+          isPhone
+            ? { top: 16, bottom: 16, left: 0, right: 0 }
+            : { top: 16, bottom: 16, left: 8, right: 80 }
+        }
         series={[
           {
             id: 'prices',
@@ -551,6 +549,6 @@ function DraggablePriceTarget() {
       </LineChart>
     );
   };
-  return <PriceTargetChart />
+  return <PriceTargetChart />;
 }
 ```

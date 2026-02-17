@@ -1,17 +1,3 @@
-/**
- * ReactLiveScope — single source of truth for both the react-live playground
- * scope AND the StackBlitz import map.
- *
- * HOW TO ADD A NEW IDENTIFIER:
- *
- *   Barrel package (e.g. a new component in @coinbase/cds-web/buttons):
- *     → Nothing to do! The namespace registration auto-captures it.
- *
- *   Individual import (e.g. a new hook or component from a specific subpath):
- *     1. Add the import statement at the top of this file
- *     2. Add ONE entry to `explicitRegistrations` below
- */
-
 import React from 'react';
 import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';

@@ -211,7 +211,7 @@ function XAxisPositionExample() {
   );
 
   const dateFormatter = useCallback(
-    (index: number) => {
+    (index) => {
       return new Date(timeData[index]).toLocaleDateString('en-US', {
         month: '2-digit',
         day: '2-digit',
@@ -221,7 +221,7 @@ function XAxisPositionExample() {
   );
 
   const timeOfDayFormatter = useCallback(
-    (index: number) => {
+    (index) => {
       return new Date(timeData[index]).toLocaleTimeString('en-US', {
         hour: '2-digit',
       });
@@ -240,7 +240,6 @@ function XAxisPositionExample() {
   return (
     <LineChart
       enableScrubbing
-
       height={400}
       series={[
         {
@@ -275,7 +274,7 @@ function XAxisPositionExample() {
       <Scrubber />
     </LineChart>
   );
-};
+}
 ```
 
 ### Grid
@@ -318,7 +317,7 @@ You can also customize the grid lines using the `GridLineComponent` prop.
 
 ```jsx live
 function CustomGridLineExample() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   return (
     <CartesianChart
@@ -335,7 +334,7 @@ function CustomGridLineExample() {
       }}
     >
       <XAxis showLine showTickMarks showGrid GridLineComponent={ThinSolidLine} />
-      <Line seriesId="prices"  showArea />
+      <Line seriesId="prices" showArea />
       <Scrubber />
     </CartesianChart>
   );

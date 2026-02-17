@@ -32,14 +32,14 @@ function MultipleLine() {
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
     },
     [pages, pageViews, uniqueVisitors],
   );
 
   const numberFormatter = useCallback(
-    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
     [],
   );
 
@@ -95,7 +95,7 @@ function DataFormat() {
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
     },
     [xData, yData],
@@ -226,7 +226,7 @@ function MissingData() {
   const uniqueVisitors = [4000, 3000, null, 2780, 1890, 2390, 3490];
 
   const numberFormatter = useCallback(
-    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
     [],
   );
 
@@ -317,7 +317,7 @@ Charts have built in functionality enabled through scrubbing, which can be used 
 
 ```jsx live
 function Interaction() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+  const [scrubberPosition, setScrubberPosition] = useState();
 
   return (
     <VStack gap={2}>
@@ -405,7 +405,7 @@ function Transitions() {
   const negativeColor = 'rgb(var(--gray15))';
   const positiveColor = 'var(--color-fgPositive)';
 
-  function generateNextValue(previousValue: number) {
+  function generateNextValue(previousValue) {
     const range = maxStepOffset - minStepOffset;
     const offset = Math.random() * range + minStepOffset;
 
@@ -438,9 +438,9 @@ function Transitions() {
     return data;
   }
 
-  const MyGradient = memo((props: DottedAreaProps) => {
+  const MyGradient = memo((props) => {
     const areaGradient = {
-      stops: ({ min, max }: AxisBounds) => [
+      stops: ({ min, max }) => [
         { offset: min, color: negativeColor, opacity: 1 },
         { offset: 0, color: negativeColor, opacity: 0 },
         { offset: 0, color: positiveColor, opacity: 0 },
@@ -468,7 +468,7 @@ function Transitions() {
     }, []);
 
     const tickLabelFormatter = useCallback(
-      (value: number) =>
+      (value) =>
         new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
@@ -478,7 +478,7 @@ function Transitions() {
     );
 
     const valueAtIndexFormatter = useCallback(
-      (dataIndex: number) =>
+      (dataIndex) =>
         new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
@@ -545,7 +545,7 @@ function BasicAccessible() {
 
   // Scrubber-level accessibility label provides specific position info
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
     },
     [data],
@@ -589,7 +589,7 @@ function AccessibleWithHeader() {
 
   // Scrubber-specific accessibility label
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       return `Viewing position ${index + 1} of ${data.length}, value: ${data[index]}`;
     },
     [data],
@@ -645,7 +645,7 @@ Using `showXAxis` and `showYAxis` allows you to display the axes. For more infor
     showGrid: true,
     showLine: true,
     showTickMarks: true,
-    tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
+    tickLabelFormatter: (dataX) => `Day ${dataX}`,
   }}
   yAxis={{
     showGrid: true,
@@ -770,7 +770,7 @@ function GainLossChart() {
   const positiveColor = 'var(--color-fgPositive)';
 
   const tickLabelFormatter = useCallback(
-    (value: number) =>
+    (value) =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -790,7 +790,7 @@ function GainLossChart() {
   const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${tickLabelFormatter(data[data.length - 1])}`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       const value = data[index];
       const status = value >= 0 ? 'gain' : 'loss';
       return `Position ${index + 1} of ${data.length}: ${tickLabelFormatter(value)} ${status}`;
@@ -798,7 +798,7 @@ function GainLossChart() {
     [data, tickLabelFormatter],
   );
 
-  const GradientDottedArea = memo((props: DottedAreaProps) => (
+  const GradientDottedArea = memo((props) => (
     <DottedArea
       {...props}
       gradient={{
@@ -872,7 +872,8 @@ You can use `legendPosition` to place the legend at different positions around t
   }}
   yAxis={{
     showGrid: true,
-    tickLabelFormatter: (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    tickLabelFormatter: (value) =>
+      new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
   }}
 />
 ```
@@ -962,7 +963,7 @@ function HighLowPrice() {
   const minPriceIndex = data.indexOf(minPrice);
   const maxPriceIndex = data.indexOf(maxPrice);
 
-  const formatPrice = useCallback((price: number) => {
+  const formatPrice = useCallback((price) => {
     return `$${price.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -1012,7 +1013,7 @@ function StylingScrubber() {
   const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 
   const numberFormatter = useCallback(
-    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
     [],
   );
 
@@ -1070,7 +1071,7 @@ function DynamicChartSizing() {
   const previousPrice = prices[prices.length - 2];
   const change24h = ((latestPrice - previousPrice) / previousPrice) * 100;
 
-  function DetailCell({ title, description }: { title: string; description: string }) {
+  function DetailCell({ title, description }) {
     return (
       <VStack>
         <Text color="fgMuted" font="label2">
@@ -1082,8 +1083,8 @@ function DynamicChartSizing() {
   }
 
   // Calculate 7-day moving average
-  const calculateMA = (data: number[], period: number): number[] => {
-    const ma: number[] = [];
+  const calculateMA = (data, period) => {
+    const ma = [];
     for (let i = 0; i < data.length; i++) {
       if (i >= period - 1) {
         const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
@@ -1094,19 +1095,19 @@ function DynamicChartSizing() {
   };
 
   const ma7 = calculateMA(prices, 7);
-  const latestMA7: number = ma7[ma7.length - 1];
+  const latestMA7 = ma7[ma7.length - 1];
 
   const periodHigh = Math.max(...highs);
   const periodLow = Math.min(...lows);
 
-  const formatPrice = useCallback((price: number) => {
+  const formatPrice = useCallback((price) => {
     return `$${price.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   }, []);
 
-  const formatPercentage = useCallback((value: number) => {
+  const formatPercentage = useCallback((value) => {
     const sign = value >= 0 ? '+' : '';
     return `${sign}${value.toFixed(2)}%`;
   }, []);
@@ -1168,21 +1169,14 @@ function Compact() {
   const negativeData = sparklineData.map((price) => -1 * price).reverse();
   const negativeCeiling = Math.max(...negativeData) + 10;
 
-  const formatPrice = useCallback((price: number) => {
+  const formatPrice = useCallback((price) => {
     return `$${price.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   }, []);
 
-  type CompactChartProps = {
-    data: number[];
-    showArea?: boolean;
-    color?: string;
-    referenceY: number;
-  };
-
-  const CompactChart = memo(({ data, showArea, color, referenceY }: CompactChartProps) => (
+  const CompactChart = memo(({ data, showArea, color, referenceY }) => (
     <Box style={{ padding: 1 }}>
       <LineChart
         {...dimensions}
@@ -1202,33 +1196,25 @@ function Compact() {
     </Box>
   ));
 
-  const ChartCell = memo(
-    ({
-      data,
-      showArea,
-      color,
-      referenceY,
-      subdetail,
-    }: CompactChartProps & { subdetail: string }) => {
-      const { isPhone } = useBreakpoints();
+  const ChartCell = memo(({ data, showArea, color, referenceY, subdetail }) => {
+    const { isPhone } = useBreakpoints();
 
-      return (
-        <ListCell
-          description={isPhone ? undefined : assets.btc.symbol}
-          detail={formatPrice(parseFloat(prices[0]))}
-          intermediary={
-            <CompactChart color={color} data={data} referenceY={referenceY} showArea={showArea} />
-          }
-          media={<Avatar src={assets.btc.imageUrl} />}
-          onClick={() => console.log('clicked')}
-          spacingVariant="condensed"
-          style={{ padding: 0 }}
-          subdetail={subdetail}
-          title={isPhone ? undefined : assets.btc.name}
-        />
-      );
-    },
-  );
+    return (
+      <ListCell
+        description={isPhone ? undefined : assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <CompactChart color={color} data={data} referenceY={referenceY} showArea={showArea} />
+        }
+        media={<Avatar src={assets.btc.imageUrl} />}
+        onClick={() => console.log('clicked')}
+        spacingVariant="condensed"
+        style={{ padding: 0 }}
+        subdetail={subdetail}
+        title={isPhone ? undefined : assets.btc.name}
+      />
+    );
+  });
 
   return (
     <VStack>
@@ -1272,34 +1258,32 @@ You can use [PeriodSelector](/components/graphs/PeriodSelector) to have a chart 
 
 ```jsx live
 function AssetPriceWithDottedArea() {
-  const BTCTab: TabComponent = memo(
-    forwardRef(
-      ({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
-        const { activeTab } = useTabsContext();
-        const isActive = activeTab?.id === props.id;
+  const BTCTab = memo(
+    forwardRef(({ label, ...props }, ref) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
 
-        return (
-          <SegmentedTab
-            ref={ref}
-            label={
-              <Text
-                font="label1"
-                style={{
-                  transition: 'color 0.2s ease',
-                  color: isActive ? assets.btc.color : undefined,
-                }}
-              >
-                {label}
-              </Text>
-            }
-            {...props}
-          />
-        );
-      },
-    ),
+      return (
+        <SegmentedTab
+          ref={ref}
+          label={
+            <Text
+              font="label1"
+              style={{
+                transition: 'color 0.2s ease',
+                color: isActive ? assets.btc.color : undefined,
+              }}
+            >
+              {label}
+            </Text>
+          }
+          {...props}
+        />
+      );
+    }),
   );
 
-  const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
+  const BTCActiveIndicator = memo(({ style, ...props }) => (
     <PeriodSelectorActiveIndicator
       {...props}
       style={{ ...style, backgroundColor: `${assets.btc.color}1A` }}
@@ -1320,10 +1304,10 @@ function AssetPriceWithDottedArea() {
       ],
       [],
     );
-    const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+    const [timePeriod, setTimePeriod] = useState(tabs[0]);
 
     const sparklineTimePeriodData = useMemo(() => {
-      return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+      return sparklineInteractiveData[timePeriod.id];
     }, [timePeriod]);
 
     const sparklineTimePeriodDataValues = useMemo(() => {
@@ -1335,7 +1319,7 @@ function AssetPriceWithDottedArea() {
     }, [sparklineTimePeriodData]);
 
     const onPeriodChange = useCallback(
-      (period: TabValue | null) => {
+      (period) => {
         setTimePeriod(period || tabs[0]);
       },
       [tabs, setTimePeriod],
@@ -1360,13 +1344,13 @@ function AssetPriceWithDottedArea() {
     );
 
     const formatPrice = useCallback(
-      (price: number) => {
+      (price) => {
         return priceFormatter.format(price);
       },
       [priceFormatter],
     );
 
-    const formatDate = useCallback((date: Date) => {
+    const formatDate = useCallback((date) => {
       const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
 
       const monthDay = date.toLocaleDateString('en-US', {
@@ -1384,7 +1368,7 @@ function AssetPriceWithDottedArea() {
     }, []);
 
     const scrubberLabel = useCallback(
-      (index: number) => {
+      (index) => {
         const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
         const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
         return (
@@ -1404,7 +1388,7 @@ function AssetPriceWithDottedArea() {
     const chartAccessibilityLabel = `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}`;
 
     const scrubberAccessibilityLabel = useCallback(
-      (index: number) => {
+      (index) => {
         const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
         const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
         return `${price} USD ${date}`;
@@ -1494,25 +1478,18 @@ function MonotoneAssetPrice() {
   );
 
   const formatPrice = useCallback(
-    (price: number) => {
+    (price) => {
       return priceFormatter.format(price);
     },
     [priceFormatter],
   );
 
   const CustomYAxisTickLabel = useCallback(
-    (props) => (
-      <DefaultAxisTickLabel
-        {...props}
-        dx={4}
-        dy={-12}
-        horizontalAlignment="left"
-      />
-    ),
+    (props) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
     [],
   );
 
-  const formatDate = useCallback((date: Date) => {
+  const formatDate = useCallback((date) => {
     const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
 
     const monthDay = date.toLocaleDateString('en-US', {
@@ -1530,7 +1507,7 @@ function MonotoneAssetPrice() {
   }, []);
 
   const scrubberLabel = useCallback(
-    (index: number) => {
+    (index) => {
       const price = scrubberPriceFormatter.format(prices[index].value);
       const date = formatDate(prices[index].date);
       return (
@@ -1607,14 +1584,14 @@ function AssetPriceWidget() {
   const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
   const latestPrice = prices[prices.length - 1];
 
-  const formatPrice = (price: number) => {
+  const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
     }).format(price);
   };
 
-  const formatPercentChange = (price: number) => {
+  const formatPercentChange = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'percent',
       minimumFractionDigits: 2,
@@ -1627,7 +1604,7 @@ function AssetPriceWidget() {
   const chartAccessibilityLabel = `Bitcoin price chart. Current price: ${formatPrice(latestPrice)}. Change: ${formatPercentChange(percentChange)}`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       return `Bitcoin price at position ${index + 1}: ${formatPrice(prices[index])}`;
     },
     [prices],
@@ -1718,7 +1695,7 @@ function ServiceAvailability() {
   const chartAccessibilityLabel = `Availability chart showing ${availabilityEvents.length} data points over time`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       const event = availabilityEvents[index];
       const formattedDate = event.date.toLocaleDateString('en-US', {
         weekday: 'short',
@@ -1804,13 +1781,13 @@ function ForecastAssetPrice() {
   const clipOffset = strokeWidth;
 
   const axisFormatter = useCallback(
-    (dataIndex: number) => {
+    (dataIndex) => {
       return startYear + dataIndex;
     },
     [startYear],
   );
 
-  const HistoricalLineComponent = memo((props: SolidLineProps) => {
+  const HistoricalLineComponent = memo((props) => {
     const { drawingArea, getXScale } = useCartesianChartContext();
     const xScale = getXScale();
 
@@ -1843,7 +1820,7 @@ function ForecastAssetPrice() {
   // we need two separate line components. Otherwise we could
   // have one line component with SolidLine and DottedLine inside
   // of it and two clipPaths.
-  const ForecastLineComponent = memo((props: DottedLineProps) => {
+  const ForecastLineComponent = memo((props) => {
     const { drawingArea, getXScale } = useCartesianChartContext();
     const xScale = getXScale();
 
