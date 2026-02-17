@@ -191,8 +191,11 @@ const LinkScreen = function LinkScreen() {
         <Text font="headline">Nested link in text</Text>
         {/** refer to this blog about this best practice: https://www.yeti.co/blog/accessibility-first-in-react-native */}
         <Text
+          // suppressHighlighting is used to prevent the text from being highlighted when the link is pressed for non-screen reader users
+          suppressHighlighting
           accessibilityLabel="Consider a case where you have a block of text with an inline link. Like so. You may want to write your code like this. Tap to go to coinbase.com."
           accessibilityRole="link"
+          font="legal"
           onPress={async () => {
             try {
               const screenReaderEnabled = await AccessibilityInfo.isScreenReaderEnabled();
@@ -204,9 +207,6 @@ const LinkScreen = function LinkScreen() {
               console.error('Error in onPress handler:', error);
             }
           }}
-          font="legal"
-          // suppressHighlighting is used to prevent the text from being highlighted when the link is pressed for non-screen reader users
-          suppressHighlighting
         >
           Consider a case where you have a block of text with an inline link.{' '}
           <Link to="https://www.coinbase.com/">Like so.</Link> You may want to write your code like
