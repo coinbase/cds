@@ -1,7 +1,7 @@
 ---
 id: templates
 title: Templates
-platform_switcher_options: { web: true, mobile: false }
+platform_switcher_options: { web: true, mobile: true }
 hide_title: true
 ---
 
@@ -11,10 +11,17 @@ import { ContentHeader } from '@site/src/components/page/ContentHeader';
 import { ContentPageContainer } from '@site/src/components/page/ContentPageContainer';
 
 import WebContent, { toc as webContentToc } from './_webContent.mdx';
+import MobileContent, { toc as mobileContentToc } from './_mobileContent.mdx';
 
 import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ContentHeader title="Templates" webMetadata={webMetadata} />
-  <ContentPageContainer webContent={<WebContent />} webContentToc={webContentToc} />
+  <ContentHeader title="Templates" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
+  <ContentPageContainer
+    webContent={<WebContent />}
+    webContentToc={webContentToc}
+    mobileContent={<MobileContent />}
+    mobileContentToc={mobileContentToc}
+  />
 </VStack>
