@@ -41,12 +41,15 @@ When possible combining content that is contextually related benefits screen rea
   const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
 
-  const handleScrub = useCallback(({ point, period }) => {
-    headerRef.current?.update({
-      title: `$${point.value.toLocaleString('en-US')}`,
-      subHead: generateSubHead(point, period),
-    });
-  }, [generateSubHead]);
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   const handleScrubEnd = useCallback(() => {
     headerRef.current?.update({
@@ -55,15 +58,18 @@ When possible combining content that is contextually related benefits screen rea
     });
   }, [lastPoint, currentPeriod, generateSubHead]);
 
-  const handlePeriodChanged = useCallback((period) => {
-    setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period];
-    const newLastPoint = newData[newData.length - 1];
-    headerRef.current?.update({
-      title: `$${formatPrice(newLastPoint.value)}`,
-      subHead: generateSubHead(newLastPoint, period),
-    });
-  }, [generateSubHead]);
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   return (
     <Box padding={3} width="100%">
@@ -131,12 +137,15 @@ The fill will be added by default
   const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
 
-  const handleScrub = useCallback(({ point, period }) => {
-    headerRef.current?.update({
-      title: `$${point.value.toLocaleString('en-US')}`,
-      subHead: generateSubHead(point, period),
-    });
-  }, [generateSubHead]);
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   const handleScrubEnd = useCallback(() => {
     headerRef.current?.update({
@@ -145,15 +154,18 @@ The fill will be added by default
     });
   }, [lastPoint, currentPeriod, generateSubHead]);
 
-  const handlePeriodChanged = useCallback((period) => {
-    setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period];
-    const newLastPoint = newData[newData.length - 1];
-    headerRef.current?.update({
-      title: `$${formatPrice(newLastPoint.value)}`,
-      subHead: generateSubHead(newLastPoint, period),
-    });
-  }, [generateSubHead]);
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   return (
     <Box padding={3} width="100%">
@@ -220,12 +232,15 @@ The fill will be added by default
   const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
 
-  const handleScrub = useCallback(({ point, period }) => {
-    headerRef.current?.update({
-      title: `$${point.value.toLocaleString('en-US')}`,
-      subHead: generateSubHead(point, period),
-    });
-  }, [generateSubHead]);
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   const handleScrubEnd = useCallback(() => {
     headerRef.current?.update({
@@ -234,15 +249,18 @@ The fill will be added by default
     });
   }, [lastPoint, currentPeriod, generateSubHead]);
 
-  const handlePeriodChanged = useCallback((period) => {
-    setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period];
-    const newLastPoint = newData[newData.length - 1];
-    headerRef.current?.update({
-      title: `$${formatPrice(newLastPoint.value)}`,
-      subHead: generateSubHead(newLastPoint, period),
-    });
-  }, [generateSubHead]);
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   return (
     <Box padding={3} width="100%">
@@ -311,12 +329,15 @@ The fill will be added by default
   const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
 
-  const handleScrub = useCallback(({ point, period }) => {
-    headerRef.current?.update({
-      title: `$${point.value.toLocaleString('en-US')}`,
-      subHead: generateSubHead(point, period),
-    });
-  }, [generateSubHead]);
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   const handleScrubEnd = useCallback(() => {
     headerRef.current?.update({
@@ -325,15 +346,18 @@ The fill will be added by default
     });
   }, [lastPoint, currentPeriod, generateSubHead]);
 
-  const handlePeriodChanged = useCallback((period) => {
-    setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period];
-    const newLastPoint = newData[newData.length - 1];
-    headerRef.current?.update({
-      title: `$${formatPrice(newLastPoint.value)}`,
-      subHead: generateSubHead(newLastPoint, period),
-    });
-  }, [generateSubHead]);
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   return (
     <Box padding={3} width="100%">

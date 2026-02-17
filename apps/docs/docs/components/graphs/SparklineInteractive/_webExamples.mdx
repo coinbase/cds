@@ -221,12 +221,15 @@ The scaling factor is usually used when you want to show less variance in the ch
   const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
 
-  const handleScrub = useCallback(({ point, period }) => {
-    headerRef.current?.update({
-      title: `$${point.value.toLocaleString('en-US')}`,
-      subHead: generateSubHead(point, period),
-    });
-  }, [generateSubHead]);
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   const handleScrubEnd = useCallback(() => {
     headerRef.current?.update({
@@ -235,15 +238,18 @@ The scaling factor is usually used when you want to show less variance in the ch
     });
   }, [lastPoint, currentPeriod, generateSubHead]);
 
-  const handlePeriodChanged = useCallback((period) => {
-    setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period];
-    const newLastPoint = newData[newData.length - 1];
-    headerRef.current?.update({
-      title: `$${formatPrice(newLastPoint.value)}`,
-      subHead: generateSubHead(newLastPoint, period),
-    });
-  }, [generateSubHead]);
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   return (
     <Box padding={3} width="100%">
@@ -387,12 +393,15 @@ You can also provide custom styles, such as to remove any horizontal padding fro
   const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
 
-  const handleScrub = useCallback(({ point, period }) => {
-    headerRef.current?.update({
-      title: `$${point.value.toLocaleString('en-US')}`,
-      subHead: generateSubHead(point, period),
-    });
-  }, [generateSubHead]);
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   const handleScrubEnd = useCallback(() => {
     headerRef.current?.update({
@@ -401,15 +410,18 @@ You can also provide custom styles, such as to remove any horizontal padding fro
     });
   }, [lastPoint, currentPeriod, generateSubHead]);
 
-  const handlePeriodChanged = useCallback((period) => {
-    setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period];
-    const newLastPoint = newData[newData.length - 1];
-    headerRef.current?.update({
-      title: `$${formatPrice(newLastPoint.value)}`,
-      subHead: generateSubHead(newLastPoint, period),
-    });
-  }, [generateSubHead]);
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
 
   return (
     <Box padding={3} width="100%">

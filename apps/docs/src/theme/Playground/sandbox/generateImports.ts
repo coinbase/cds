@@ -43,7 +43,7 @@ function isDeclaredLocally(name: string, code: string): boolean {
  */
 function isUsedIdentifier(name: string, strippedCode: string, rawCode: string): boolean {
   const appearsInCode = new RegExp(`(?<!\\.)\\b${name}\\b`).test(strippedCode);
-  const usedAsValue = new RegExp(`(?<!\\.)\\b${name}\\b(?!\\s*=(?!=))`).test(strippedCode);
+  const usedAsValue = new RegExp(`(?<!\\.)\\b${name}\\b(?!\\s*[:=](?!=))`).test(strippedCode);
   return appearsInCode && usedAsValue && !isDeclaredLocally(name, rawCode);
 }
 
