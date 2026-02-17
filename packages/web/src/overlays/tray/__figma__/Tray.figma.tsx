@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { figma } from '@figma/code-connect';
 
 import { Button } from '../../../buttons';
+import { useBreakpoints } from '../../../hooks/useBreakpoints';
 import { Pictogram } from '../../../illustrations/Pictogram';
 import { Box } from '../../../layout';
 import { VStack } from '../../../layout/VStack';
@@ -17,29 +18,34 @@ figma.connect(Tray, FIGMA_URL, {
   imports: [
     "import { Tray } from '@coinbase/cds-web/overlays/tray/Tray'",
     "import { PageFooter } from '@coinbase/cds-web/page/PageFooter'",
+    "import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints'",
   ],
   props: {
-    pin: figma.enum('device', {
-      desktop: 'right',
-    }),
-    showHandleBar: figma.enum('device', {
-      mobile: true,
-    }),
     title: figma.textContent('SectionHeader'),
   },
-  example: function StandardExample({ title, ...props }) {
+  example: function StandardExample({ title }) {
     const [visible, setVisible] = useState(false);
+    const { isPhone } = useBreakpoints();
     return (
       <>
         <Button onClick={() => setVisible(true)}>Open Tray</Button>
         {visible && (
           <Tray
             footer={({ handleClose }) => (
-              <PageFooter borderedTop action={<Button onClick={handleClose}>Close</Button>} />
+              <PageFooter
+                borderedTop
+                action={
+                  <Button block={isPhone} onClick={handleClose}>
+                    Close
+                  </Button>
+                }
+                justifyContent={isPhone ? 'center' : 'flex-end'}
+              />
             )}
             onCloseComplete={() => setVisible(false)}
+            pin={isPhone ? 'bottom' : 'right'}
+            showHandleBar={isPhone}
             title={title}
-            {...props}
           >
             <Text color="fgMuted" paddingBottom={2}>
               Content goes here.
@@ -56,18 +62,14 @@ figma.connect(Tray, FIGMA_URL, {
   imports: [
     "import { Tray } from '@coinbase/cds-web/overlays/tray/Tray'",
     "import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram'",
+    "import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints'",
   ],
   props: {
-    pin: figma.enum('device', {
-      desktop: 'right',
-    }),
-    showHandleBar: figma.enum('device', {
-      mobile: true,
-    }),
     sectionTitle: figma.textContent('SectionHeader'),
   },
-  example: function IllustrationExample({ sectionTitle, ...props }) {
+  example: function IllustrationExample({ sectionTitle }) {
     const [visible, setVisible] = useState(false);
+    const { isPhone } = useBreakpoints();
     const titleId = useId();
     return (
       <>
@@ -76,15 +78,16 @@ figma.connect(Tray, FIGMA_URL, {
           <Tray
             accessibilityLabelledBy={titleId}
             onCloseComplete={() => setVisible(false)}
+            pin={isPhone ? 'bottom' : 'right'}
+            showHandleBar={isPhone}
             title={
-              <VStack gap={2}>
+              <VStack gap={{ phone: 1.5, tablet: 2, desktop: 2 }}>
                 <Pictogram name="addWallet" />
                 <Text font="title3" id={titleId}>
                   {sectionTitle}
                 </Text>
               </VStack>
             }
-            {...props}
           >
             <Text color="fgMuted" font="body" paddingBottom={2}>
               Content goes here.
@@ -98,18 +101,16 @@ figma.connect(Tray, FIGMA_URL, {
 
 figma.connect(Tray, FIGMA_URL, {
   variant: { type: 'full-bleed image' },
-  imports: ["import { Tray } from '@coinbase/cds-web/overlays/tray/Tray'"],
+  imports: [
+    "import { Tray } from '@coinbase/cds-web/overlays/tray/Tray'",
+    "import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints'",
+  ],
   props: {
-    pin: figma.enum('device', {
-      desktop: 'right',
-    }),
-    showHandleBar: figma.enum('device', {
-      mobile: true,
-    }),
     sectionTitle: figma.textContent('SectionHeader'),
   },
-  example: function FullBleedImageExample({ sectionTitle, ...props }) {
+  example: function FullBleedImageExample({ sectionTitle }) {
     const [visible, setVisible] = useState(false);
+    const { isPhone } = useBreakpoints();
     const titleId = useId();
     return (
       <>
@@ -123,6 +124,8 @@ figma.connect(Tray, FIGMA_URL, {
               </Text>
             }
             onCloseComplete={() => setVisible(false)}
+            pin={isPhone ? 'bottom' : 'right'}
+            showHandleBar={isPhone}
             styles={{
               handleBar: {
                 position: 'absolute',
@@ -150,7 +153,6 @@ figma.connect(Tray, FIGMA_URL, {
                 />
               </Box>
             }
-            {...props}
           >
             <Text color="fgMuted" font="body" paddingBottom={2}>
               Content goes here.
