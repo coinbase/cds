@@ -15,13 +15,7 @@ export type TabBarButtonProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-export function TabBarButton({
-  icon,
-  label,
-  active = false,
-  onPress,
-  style,
-}: TabBarButtonProps) {
+export function TabBarButton({ icon, label, active = false, onPress, style }: TabBarButtonProps) {
   const theme = useTheme();
 
   return (
@@ -40,17 +34,8 @@ export function TabBarButton({
       ]}
     >
       <VStack alignItems="center" gap={0.25}>
-        <Icon
-          name={icon}
-          size="s"
-          color={active ? 'fgPrimary' : 'fgMuted'}
-          active={active}
-        />
-        <Text
-          font="legal"
-          color={active ? 'fgPrimary' : 'fgMuted'}
-          numberOfLines={1}
-        >
+        <Icon name={icon} size="s" color={active ? 'fgPrimary' : 'fgMuted'} active={active} />
+        <Text font="legal" color={active ? 'fgPrimary' : 'fgMuted'} numberOfLines={1}>
           {label}
         </Text>
       </VStack>

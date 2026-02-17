@@ -55,12 +55,7 @@ export function AssetList() {
               </Text>
             }
             media={
-              <Avatar
-                src={cdsAsset?.imageUrl ?? ''}
-                name={asset.name}
-                size="l"
-                shape="circle"
-              />
+              <Avatar src={cdsAsset?.imageUrl ?? ''} name={asset.name} size="l" shape="circle" />
             }
             accessory="arrow"
             onPress={() => {}}

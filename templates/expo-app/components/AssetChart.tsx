@@ -8,7 +8,12 @@ import { RemoteImage } from '@coinbase/cds-mobile/media';
 import { Text } from '@coinbase/cds-mobile/typography';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header';
 import { SegmentedTab } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { ChartBridgeProvider, LineChart, PeriodSelector, PeriodSelectorActiveIndicator } from '@coinbase/cds-mobile-visualization';
+import {
+  ChartBridgeProvider,
+  LineChart,
+  PeriodSelector,
+  PeriodSelectorActiveIndicator,
+} from '@coinbase/cds-mobile-visualization';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 
@@ -66,14 +71,12 @@ export const AssetChart = memo(function AssetChart() {
     return sparklineTimePeriodData.map((d) => d.value);
   }, [sparklineTimePeriodData]);
 
-  const currentPrice = sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+  const currentPrice =
+    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
 
-  const onPeriodChange = useCallback(
-    (period: TabValue | null) => {
-      setTimePeriod(period || tabs[0]);
-    },
-    [],
-  );
+  const onPeriodChange = useCallback((period: TabValue | null) => {
+    setTimePeriod(period || tabs[0]);
+  }, []);
 
   return (
     <ChartBridgeProvider>

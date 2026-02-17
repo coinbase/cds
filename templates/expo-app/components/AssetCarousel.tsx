@@ -26,11 +26,7 @@ export function AssetCarousel() {
       }}
     >
       {assetList.map((asset) => (
-        <CarouselItem
-          key={asset.symbol}
-          id={asset.symbol}
-          accessibilityLabel={asset.name}
-        >
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
           <MediaCard
             renderAsPressable
             accessibilityLabel={`View ${asset.name} details`}
