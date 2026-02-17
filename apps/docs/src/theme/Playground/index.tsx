@@ -228,7 +228,7 @@ const Playground = memo(function Playground({
   }, []);
 
   const handleOpenInStackBlitz = useCallback(async () => {
-    const { openInStackBlitz } = await import('./stackblitz');
+    const { openInStackBlitz } = await import('./sandbox/openInStackBlitz');
     openInStackBlitz(codeRef.current, isTypeScript);
   }, [isTypeScript]);
 
