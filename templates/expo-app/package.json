@@ -8,6 +8,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.3",
     "@coinbase/cds-common": "^8",
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",

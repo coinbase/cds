@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
+import { Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter';
 
 import type { ColorScheme } from '@coinbase/cds-common';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
@@ -40,6 +41,8 @@ export default function App() {
   const [activeColorScheme, setActiveColorScheme] = useState<ColorScheme>('light');
   const [fontsLoaded] = useFonts({
     CoinbaseIcons: require('@coinbase/cds-icons/fonts/native/CoinbaseIcons.ttf'),
+    Inter_400Regular,
+    Inter_600SemiBold,
   });
 
   const toggleColorScheme = useCallback(
