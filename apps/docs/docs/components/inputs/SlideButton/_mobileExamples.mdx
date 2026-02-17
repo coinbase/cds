@@ -34,11 +34,7 @@ function Example() {
 
 ## Variants
 
-Use the `variant` prop to change the visual style. The default variant is `primary`.
-
-### Negative
-
-Use the `negative` variant for destructive or high-stakes confirmations.
+Use the `variant` prop to change the color of the button. The default variant is `primary`. Available variants are `negative` and `positive`.
 
 <ThemedImage
   sources={{
@@ -49,7 +45,7 @@ Use the `negative` variant for destructive or high-stakes confirmations.
     borderRadius: 'var(--borderRadius-400)',
     border: '1.5px solid var(--color-bgLine)',
   }}
-  alt="Negative variant slide button with red styling"
+  alt="Negative variant slide button"
 />
 
 ```jsx
@@ -63,26 +59,6 @@ function Example() {
       uncheckedLabel="Swipe to confirm"
       checkedLabel="Confirming..."
       variant="negative"
-    />
-  );
-}
-```
-
-### Positive
-
-Use the `positive` variant for affirmative confirmations.
-
-```jsx
-function Example() {
-  const [checked, setChecked] = useState(false);
-
-  return (
-    <SlideButton
-      checked={checked}
-      onChange={setChecked}
-      uncheckedLabel="Swipe to confirm"
-      checkedLabel="Confirmed!"
-      variant="positive"
     />
   );
 }
