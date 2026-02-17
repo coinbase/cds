@@ -10,7 +10,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout/Box';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { Spacer } from '@coinbase/cds-mobile/layout/Spacer';
-import { TextHeadline } from '@coinbase/cds-mobile/typography/TextHeadline';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { StackHeaderProps, StackNavigationOptions } from '@react-navigation/stack';
 
 import { SearchFilterContext, SetSearchFilterContext } from './ExamplesSearchProvider';
@@ -102,7 +102,9 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
                   value={searchFilter}
                 />
               ) : (
-                <TextHeadline align="center">{titleForScene}</TextHeadline>
+                <Text align="center" font="headline">
+                  {titleForScene}
+                </Text>
               )}
             </Box>
             <Spacer />

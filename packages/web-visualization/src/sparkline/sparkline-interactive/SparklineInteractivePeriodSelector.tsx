@@ -4,7 +4,7 @@ import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColo
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { Box, HStack } from '@coinbase/cds-web/layout';
 import { Pressable } from '@coinbase/cds-web/system/Pressable';
-import { TextLabel1 } from '@coinbase/cds-web/typography/TextLabel1';
+import { Text } from '@coinbase/cds-web/typography/Text';
 
 export type SparklineInteractivePeriodSelectorProps<Period extends string> = {
   selectedPeriod: Period;
@@ -44,16 +44,17 @@ function SparklineInteractivePeriodWithGeneric<Period extends string>({
         borderRadius={200}
         onClick={handleOnClick}
       >
-        <TextLabel1
+        <Text
           noWrap
           as="span"
           dangerouslySetColor={isSelected ? color : 'var(--color-fgMuted)'}
           display="block"
+          font="label1"
           paddingX={2}
           paddingY={1}
         >
           {period.label}
-        </TextLabel1>
+        </Text>
       </Pressable>
     </Box>
   );

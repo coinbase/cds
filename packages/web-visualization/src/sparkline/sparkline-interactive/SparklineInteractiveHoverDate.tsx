@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { cx } from '@coinbase/cds-web';
-import { TextLabel2 } from '@coinbase/cds-web/typography/TextLabel2';
+import { Text } from '@coinbase/cds-web/typography/Text';
 import { css } from '@linaria/core';
 
 import { useSparklineInteractiveScrubContext } from './SparklineInteractiveScrubProvider';
@@ -26,11 +26,11 @@ export const SparklineInteractiveHoverDate = memo(() => {
   );
 
   return (
-    <TextLabel2 tabularNumbers as="div">
+    <Text tabularNumbers as="div" font="label2">
       <span ref={setupDateRef} className={cx(resetFadeCss, textCss)}>
         {/* prevent the container vertical jump by stubbing out a date with no opacity */}
         {dateString}
       </span>
-    </TextLabel2>
+    </Text>
   );
 });

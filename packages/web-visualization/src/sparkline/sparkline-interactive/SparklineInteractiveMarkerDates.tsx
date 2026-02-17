@@ -4,7 +4,7 @@ import { fadeDuration } from '@coinbase/cds-common/tokens/sparkline';
 import { useDateLookup } from '@coinbase/cds-common/visualizations/useDateLookup';
 import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
 import { HStack } from '@coinbase/cds-web/layout';
-import { TextLabel2 } from '@coinbase/cds-web/typography/TextLabel2';
+import { Text } from '@coinbase/cds-web/typography/Text';
 import { css } from '@linaria/core';
 import times from 'lodash/times';
 
@@ -51,9 +51,9 @@ const SparklineInteractiveMarkerDate: React.FunctionComponent<
   const fallback = <span style={{ visibility: 'hidden' }}>-</span>;
   return (
     <span ref={setupRef}>
-      <TextLabel2 as="span" color="fgMuted" textAlign="center">
+      <Text as="span" color="fgMuted" font="label2" textAlign="center">
         {dateStr || fallback}
-      </TextLabel2>
+      </Text>
     </span>
   );
 });

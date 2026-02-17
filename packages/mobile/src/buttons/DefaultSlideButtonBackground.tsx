@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { animated, to } from '@react-spring/native';
 
 import { useTheme } from '../hooks/useTheme';
-import { TextHeadline } from '../typography/TextHeadline';
+import { Text } from '../typography/Text';
 
 import type { SlideButtonBackgroundProps } from './SlideButton';
 
@@ -46,13 +46,14 @@ export const DefaultSlideButtonBackground = memo(
             {typeof uncheckedLabel !== 'string' ? (
               uncheckedLabel
             ) : (
-              <TextHeadline
+              <Text
+                font="headline"
                 numberOfLines={1}
                 paddingEnd={horizontalPadding}
                 paddingStart={horizontalPadding}
               >
                 {uncheckedLabel}
-              </TextHeadline>
+              </Text>
             )}
           </animated.View>
         </View>

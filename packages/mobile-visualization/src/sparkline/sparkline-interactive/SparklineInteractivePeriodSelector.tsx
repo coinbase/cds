@@ -9,7 +9,7 @@ import { Box } from '@coinbase/cds-mobile/layout/Box';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { OverflowGradient } from '@coinbase/cds-mobile/layout/OverflowGradient';
 import { Pressable } from '@coinbase/cds-mobile/system/Pressable';
-import { TextLabel1 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
@@ -84,9 +84,9 @@ function SparklineInteractivePeriodWithGeneric<Period extends string>({
         borderRadius={1000}
         onPress={handleOnPress}
       >
-        <TextLabel1 paddingX={2} paddingY={1} style={textStyle}>
+        <Text font="label1" paddingX={2} paddingY={1} style={textStyle}>
           {period.label}
-        </TextLabel1>
+        </Text>
       </Pressable>
     </Box>
   );

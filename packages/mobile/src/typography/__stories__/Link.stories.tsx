@@ -5,7 +5,6 @@ import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useWebBrowserOpener } from '../../hooks/useWebBrowserOpener';
 import { Link } from '../Link';
 import { Text } from '../Text';
-import { TextLegal } from '../TextLegal';
 
 const typographies = [
   'display1',
@@ -191,9 +190,7 @@ const LinkScreen = function LinkScreen() {
       <Example inline>
         <Text font="headline">Nested link in text</Text>
         {/** refer to this blog about this best practice: https://www.yeti.co/blog/accessibility-first-in-react-native */}
-        <TextLegal
-          // suppressHighlighting is used to prevent the text from being highlighted when the link is pressed for non-screen reader users
-          suppressHighlighting
+        <Text
           accessibilityLabel="Consider a case where you have a block of text with an inline link. Like so. You may want to write your code like this. Tap to go to coinbase.com."
           accessibilityRole="link"
           onPress={async () => {
@@ -207,11 +204,14 @@ const LinkScreen = function LinkScreen() {
               console.error('Error in onPress handler:', error);
             }
           }}
+          font="legal"
+          // suppressHighlighting is used to prevent the text from being highlighted when the link is pressed for non-screen reader users
+          suppressHighlighting
         >
           Consider a case where you have a block of text with an inline link.{' '}
           <Link to="https://www.coinbase.com/">Like so.</Link> You may want to write your code like
           this.
-        </TextLegal>
+        </Text>
       </Example>
       <Example inline>
         <Text font="headline">Multiple nested link in text</Text>

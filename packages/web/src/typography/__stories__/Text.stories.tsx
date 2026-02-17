@@ -3,65 +3,57 @@ import React from 'react';
 import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import type { TextProps } from '../index';
-import {
-  Text,
-  TextBody,
-  TextCaption,
-  TextDisplay1,
-  TextDisplay2,
-  TextDisplay3,
-  TextHeadline,
-  TextLabel1,
-  TextLabel2,
-  TextLegal,
-  TextTitle1,
-  TextTitle2,
-  TextTitle3,
-  TextTitle4,
-} from '../index';
+import { Text } from '../index';
 
-const textComponents = [
-  TextTitle3,
-  TextTitle4,
-  TextHeadline,
-  TextBody,
-  TextLabel1,
-  TextLabel2,
-  TextCaption,
-  TextLegal,
+type FontVariant =
+  | 'title3'
+  | 'title4'
+  | 'headline'
+  | 'body'
+  | 'label1'
+  | 'label2'
+  | 'caption'
+  | 'legal';
+
+const textFontVariants: FontVariant[] = [
+  'title3',
+  'title4',
+  'headline',
+  'body',
+  'label1',
+  'label2',
+  'caption',
+  'legal',
 ];
 
 const renderHeaderComponents = (props?: TextProps<'h1' | 'h2' | 'h3' | 'h4'>) => (
   <>
-    <TextDisplay1 as="h1" {...props}>
+    <Text as="h1" font="display1" {...props}>
       Display1
-    </TextDisplay1>
-    <TextDisplay2 as="h2" {...props}>
+    </Text>
+    <Text as="h2" font="display2" {...props}>
       Display2
-    </TextDisplay2>
-    <TextDisplay3 as="h3" {...props}>
+    </Text>
+    <Text as="h3" font="display3" {...props}>
       Display3
-    </TextDisplay3>
-    <TextTitle1 as="h3" {...props}>
+    </Text>
+    <Text as="h3" font="title1" {...props}>
       Title1
-    </TextTitle1>
-    <TextTitle2 as="h4" {...props}>
+    </Text>
+    <Text as="h4" font="title2" {...props}>
       Title2
-    </TextTitle2>
+    </Text>
   </>
 );
 
 export const Normal = () => (
   <>
     {renderHeaderComponents({ display: 'block' })}
-    {textComponents.map((Component) => {
-      const name = (Component as { displayName?: string }).displayName?.slice(4);
-      return (
-        <Component key={name} as="p" display="block">
-          {name}
-        </Component>
-      );
-    })}
+    {textFontVariants.map((font) => (
+      <Text key={font} as="p" display="block" font={font}>
+        {font.charAt(0).toUpperCase() + font.slice(1)}
+      </Text>
+    ))}
   </>
 );
 
@@ -83,62 +75,59 @@ export const TextWithInherit = () => {
 export const MonoFont = () => (
   <>
     {renderHeaderComponents({ mono: true, display: 'block' })}
-    {textComponents.map((Component) => {
-      const name = (Component as { displayName?: string }).displayName?.slice(4);
-      return (
-        <Component key={name} mono as="p" display="block">
-          {name}
-        </Component>
-      );
-    })}
+    {textFontVariants.map((font) => (
+      <Text key={font} mono as="p" display="block" font={font}>
+        {font.charAt(0).toUpperCase() + font.slice(1)}
+      </Text>
+    ))}
   </>
 );
 
 export const SlashedZero = () => (
-  <TextBody slashedZero as="p">
+  <Text slashedZero as="p" font="body">
     OZY28019
-  </TextBody>
+  </Text>
 );
 
 export const TabularNumbers = () => (
   <>
-    <TextBody tabularNumbers as="p" display="block" textAlign="end">
+    <Text tabularNumbers as="p" display="block" font="body" textAlign="end">
       91.23450
-    </TextBody>
-    <TextBody tabularNumbers as="p" display="block" textAlign="end">
+    </Text>
+    <Text tabularNumbers as="p" display="block" font="body" textAlign="end">
       11.98762
-    </TextBody>
+    </Text>
   </>
 );
 
 export const SelectableNone = () => (
-  <TextBody as="p" display="block" userSelect="none">
+  <Text as="p" display="block" font="body" userSelect="none">
     BTC
-  </TextBody>
+  </Text>
 );
 
 export const SelectableText = () => (
-  <TextBody as="p" display="block" userSelect="text">
+  <Text as="p" display="block" font="body" userSelect="text">
     Balance: 1,820,29.56
-  </TextBody>
+  </Text>
 );
 
 export const SelectableAll = () => (
-  <TextBody slashedZero as="p" display="block" userSelect="all">
+  <Text slashedZero as="p" display="block" font="body" userSelect="all">
     bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
-  </TextBody>
+  </Text>
 );
 
 export const Underline = () => (
-  <TextBody underline as="p" display="block">
+  <Text underline as="p" display="block" font="body">
     Learn more
-  </TextBody>
+  </Text>
 );
 
 export const Strikethrough = () => (
-  <TextBody as="s" textDecoration="line-through">
+  <Text as="s" font="body" textDecoration="line-through">
     Manual verification
-  </TextBody>
+  </Text>
 );
 
 const MediumContainer = ({ children }: { children?: React.ReactNode }) => (
@@ -149,88 +138,88 @@ const MediumContainer = ({ children }: { children?: React.ReactNode }) => (
 
 export const NoWrap = () => (
   <MediumContainer>
-    <TextBody noWrap as="p" display="block">
+    <Text noWrap as="p" display="block" font="body">
       As with any asset, the value of Digital Currencies can
-    </TextBody>
+    </Text>
   </MediumContainer>
 );
 
 export const TextOverflowEllipsis = () => (
   <MediumContainer>
-    <TextBody as="p" display="block" overflow="truncate">
+    <Text as="p" display="block" font="body" overflow="truncate">
       As with any asset, the value of Digital Currencies can go up or down and there can be a
       substantial risk that you lose money buying, selling, holding, or investing in digital
       currencies. You should carefully consider whether trading or holding Digital Currencies is
       suitable for you in light of your financial condition. Coinbase is not registered with the
       U.S. Securities and Exchange Commission and does not offer securities services in the United
       States or to U.S. persons.
-    </TextBody>
+    </Text>
   </MediumContainer>
 );
 
 export const TextOverflowClip = () => (
   <MediumContainer>
-    <TextBody as="p" display="block" overflow="clip">
+    <Text as="p" display="block" font="body" overflow="clip">
       Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
       Digital Currencies can go up or down and there can be a substantial risk that you lose money
       buying, selling, holding, or investing in digital currencies. You should carefully consider
       whether trading or holding Digital Currencies is suitable for you in light of your financial
       condition. Coinbase is not registered with the U.S. Securities and Exchange Commission and
       does not offer securities services in the United States or to U.S. persons.
-    </TextBody>
+    </Text>
   </MediumContainer>
 );
 
 export const TextNumberOfLines = () => (
   <VStack maxWidth={300}>
-    <TextBody as="p" display="block" numberOfLines={2}>
+    <Text as="p" display="block" font="body" numberOfLines={2}>
       Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
       Digital Currencies can go up or down and there can be a substantial risk that you lose money
       buying, selling, holding, or investing in digital currencies. You should carefully consider
       whether trading or holding Digital Currencies is suitable for you in light of your financial
       condition. Coinbase is not registered with the U.S. Securities and Exchange Commission and
       does not offer securities services in the United States or to U.S. persons.
-    </TextBody>
+    </Text>
   </VStack>
 );
 
 export const TextNumberOfLinesSiblings = () => (
   <VStack gap={3} maxWidth={300}>
-    <TextBody as="p" display="block" numberOfLines={1} overflow="break">
+    <Text as="p" display="block" font="body" numberOfLines={1} overflow="break">
       Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
       Digital Currencies can go up or down and there can be a substantial risk that you lose money
       buying, selling, holding, or investing in digital currencies. You should carefully consider
       whether trading or holding Digital Currencies is suitable for you in light of your financial
       condition. Coinbase is not registered with the U.S. Securities and Exchange Commission and
       does not offer securities services in the United States or to U.S. persons.
-    </TextBody>
-    <TextBody as="p" display="block" numberOfLines={2} overflow="break">
+    </Text>
+    <Text as="p" display="block" font="body" numberOfLines={2} overflow="break">
       Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
       Digital Currencies can go up or down and there can be a substantial risk that you lose money
       buying, selling, holding, or investing in digital currencies. You should carefully consider
       whether trading or holding Digital Currencies is suitable for you in light of your financial
       condition. Coinbase is not registered with the U.S. Securities and Exchange Commission and
       does not offer securities services in the United States or to U.S. persons.
-    </TextBody>
-    <TextBody as="p" display="block" numberOfLines={3} overflow="break">
+    </Text>
+    <Text as="p" display="block" font="body" numberOfLines={3} overflow="break">
       Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
       Digital Currencies can go up or down and there can be a substantial risk that you lose money
       buying, selling, holding, or investing in digital currencies. You should carefully consider
       whether trading or holding Digital Currencies is suitable for you in light of your financial
       condition. Coinbase is not registered with the U.S. Securities and Exchange Commission and
       does not offer securities services in the United States or to U.S. persons.
-    </TextBody>
+    </Text>
   </VStack>
 );
 
 export const TextNumberOfLinesNested = () => (
   <VStack gap={3} maxWidth={300}>
-    <TextBody as="p" display="block" numberOfLines={2}>
-      <TextBody as="p" display="block" numberOfLines={3}>
+    <Text as="p" display="block" font="body" numberOfLines={2}>
+      <Text as="p" display="block" font="body" numberOfLines={3}>
         The parent Text says this should only wrap to 2 lines, but the child which actually renders
         this text says it should wrap up to 3 lines.
-      </TextBody>
-    </TextBody>
+      </Text>
+    </Text>
   </VStack>
 );
 
@@ -238,14 +227,14 @@ export const TextNumberOfLinesCustomSpacing = () => {
   return (
     <VStack gap={3} maxWidth={300}>
       <Box as="span" padding={2}>
-        <TextBody as="p" display="block" numberOfLines={2}>
+        <Text as="p" display="block" font="body" numberOfLines={2}>
           Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
           Digital Currencies can go up or down and there can be a substantial risk that you lose
           money buying, selling, holding, or investing in digital currencies. You should carefully
           consider whether trading or holding Digital Currencies is suitable for you in light of
           your financial condition. Coinbase is not registered with the U.S. Securities and Exchange
           Commission and does not offer securities services in the United States or to U.S. persons.
-        </TextBody>
+        </Text>
       </Box>
       <Box
         as="span"
@@ -255,87 +244,92 @@ export const TextNumberOfLinesCustomSpacing = () => {
           desktop: 2,
         }}
       >
-        <TextBody as="p" display="block" numberOfLines={2}>
+        <Text as="p" display="block" font="body" numberOfLines={2}>
           Crypto address 0xf847047c69726b4049a5b866c8fa37cfe4ed614f. As with any asset, the value of
           Digital Currencies can go up or down and there can be a substantial risk that you lose
           money buying, selling, holding, or investing in digital currencies. You should carefully
           consider whether trading or holding Digital Currencies is suitable for you in light of
           your financial condition. Coinbase is not registered with the U.S. Securities and Exchange
           Commission and does not offer securities services in the United States or to U.S. persons.
-        </TextBody>
+        </Text>
       </Box>
     </VStack>
   );
 };
 
 export const Uppercase = () => (
-  <TextBody as="p" display="block" textTransform="uppercase">
+  <Text as="p" display="block" font="body" textTransform="uppercase">
     uppercase
-  </TextBody>
+  </Text>
 );
 
 export const Lowercase = () => (
-  <TextBody as="p" display="block" textTransform="lowercase">
+  <Text as="p" display="block" font="body" textTransform="lowercase">
     Lowercase
-  </TextBody>
+  </Text>
 );
 
 export const Capitalize = () => (
-  <TextBody as="p" display="block" textTransform="capitalize">
+  <Text as="p" display="block" font="body" textTransform="capitalize">
     capitalize
-  </TextBody>
+  </Text>
 );
 
-export const Sub = () => <TextBody as="sub">sub</TextBody>;
+export const Sub = () => (
+  <Text as="sub" font="body">
+    sub
+  </Text>
+);
 
-export const Strong = () => <TextBody as="strong">strong</TextBody>;
+export const Strong = () => (
+  <Text as="strong" font="body">
+    strong
+  </Text>
+);
 
 export const Bold = () => (
-  <TextBody as="p" display="block">
+  <Text as="p" display="block" font="body">
     b
-  </TextBody>
+  </Text>
 );
 
 export const DescriptionDlDd = () => (
   <dl>
-    <TextBody as="dt" display="block">
+    <Text as="dt" display="block" font="body">
       Coffee
-    </TextBody>
-    <TextBody as="dd" display="block">
+    </Text>
+    <Text as="dd" display="block" font="body">
       Black hot drink
-    </TextBody>
+    </Text>
     <div>
-      <TextBody as="dt" display="block">
+      <Text as="dt" display="block" font="body">
         Milk
-      </TextBody>
-      <TextBody as="dd" display="block">
+      </Text>
+      <Text as="dd" display="block" font="body">
         White cold drink
-      </TextBody>
+      </Text>
     </div>
   </dl>
 );
 
 export const Time = () => (
-  <TextBody as="time" dateTime="2020-10-10">
+  <Text as="time" dateTime="2020-10-10" font="body">
     2020-10-10
-  </TextBody>
+  </Text>
 );
 
 export const CustomStyle = () => (
   <>
     {renderHeaderComponents({ style: { background: 'coral', display: 'block' } })}
-    {textComponents.map((Component) => {
-      const name = (Component as { displayName?: string }).displayName?.slice(4);
-      return (
-        <Component key={name} as="p" display="block" style={{ background: 'coral ' }}>
-          {name}
-        </Component>
-      );
-    })}
+    {textFontVariants.map((font) => (
+      <Text key={font} as="p" display="block" font={font} style={{ background: 'coral ' }}>
+        {font.charAt(0).toUpperCase() + font.slice(1)}
+      </Text>
+    ))}
   </>
 );
 
 export default {
   title: 'Components/Text (tsx)',
-  component: TextDisplay1,
+  component: Text,
 };

@@ -15,7 +15,7 @@ import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 import { Spinner } from '../loaders/Spinner';
 import { Pressable } from '../system/Pressable';
-import { TextHeadline } from '../typography/TextHeadline';
+import { Text } from '../typography/Text';
 
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
@@ -65,7 +65,13 @@ export const SlideButtonHandleChecked = memo(
 
     return (
       <Box alignItems="center" height="100%" justifyContent="center" width="100%">
-        {typeof label !== 'string' ? label : <TextHeadline color="fgInverse">{label}</TextHeadline>}
+        {typeof label !== 'string' ? (
+          label
+        ) : (
+          <Text color="fgInverse" font="headline">
+            {label}
+          </Text>
+        )}
         <Box
           alignItems="center"
           height="100%"

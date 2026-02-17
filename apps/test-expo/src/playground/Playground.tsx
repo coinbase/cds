@@ -9,7 +9,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout/Box';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { Spacer } from '@coinbase/cds-mobile/layout/Spacer';
-import { TextHeadline } from '@coinbase/cds-mobile/typography/TextHeadline';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -117,7 +117,9 @@ const HeaderContent = memo(
                 value={searchFilter}
               />
             ) : (
-              <TextHeadline align="center">{title}</TextHeadline>
+              <Text align="center" font="headline">
+                {title}
+              </Text>
             )}
           </Box>
           <Spacer />

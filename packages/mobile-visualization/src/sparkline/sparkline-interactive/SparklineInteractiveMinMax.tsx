@@ -4,7 +4,7 @@ import type { LayoutChangeEvent } from 'react-native';
 import type { ChartDataPoint, ChartFormatAmount, ChartXFunction } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { TextLabel2 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useMinMaxTransform } from './useMinMaxTransform';
@@ -68,9 +68,9 @@ const SparklineInteractiveMinMaxContent: React.FunctionComponent<
 
   return (
     <Animated.View pointerEvents="none" style={rootStyle}>
-      <TextLabel2 color="fgMuted" onLayout={onLayout} padding={0} style={textLabelStyle}>
+      <Text color="fgMuted" font="label2" onLayout={onLayout} padding={0} style={textLabelStyle}>
         {children}
-      </TextLabel2>
+      </Text>
     </Animated.View>
   );
 });
