@@ -8,8 +8,10 @@ export const textBodyDefaultElement = 'span';
 
 export type TextBodyDefaultElement = typeof textBodyDefaultElement;
 
+/** @deprecated Use `Text` with `font="body"` instead. This component will be removed in a future major release. */
 export type TextBodyBaseProps = TextBaseProps;
 
+/** @deprecated Use `Text` with `font="body"` instead. This component will be removed in a future major release. */
 export type TextBodyProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextBodyBaseProps
@@ -20,6 +22,7 @@ type TextBodyComponent = (<AsComponent extends React.ElementType = TextBodyDefau
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/** @deprecated Use `Text` with `font="body"` instead. This component will be removed in a future major release. */
 export const TextBody: TextBodyComponent = forwardRef<
   React.ReactElement<TextBodyBaseProps>,
   TextBodyBaseProps

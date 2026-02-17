@@ -8,8 +8,10 @@ export const textDisplay3DefaultElement = 'span';
 
 export type TextDisplay3DefaultElement = typeof textDisplay3DefaultElement;
 
+/** @deprecated Use `Text` with `font="display3"` instead. This component will be removed in a future major release. */
 export type TextDisplay3BaseProps = TextBaseProps;
 
+/** @deprecated Use `Text` with `font="display3"` instead. This component will be removed in a future major release. */
 export type TextDisplay3Props<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextDisplay3BaseProps
@@ -20,6 +22,7 @@ type TextDisplay3Component = (<AsComponent extends React.ElementType = TextDispl
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/** @deprecated Use `Text` with `font="display3"` instead. This component will be removed in a future major release. */
 export const TextDisplay3: TextDisplay3Component = forwardRef<
   React.ReactElement<TextDisplay3BaseProps>,
   TextDisplay3BaseProps
