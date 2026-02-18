@@ -6,14 +6,13 @@ import {
   type View,
 } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
   ButtonVariant,
   IconName,
+  NegativeSpace,
   SharedAccessibilityProps,
   SharedProps,
 } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
@@ -112,7 +111,7 @@ export const Button = memo(
       wrapperStyles,
       feedback = compact ? 'light' : 'normal',
       borderColor,
-      borderWidth = 100,
+      borderWidth = 0, // remove Pressable's default transparent border
       borderRadius = compact ? 700 : 900,
       accessibilityLabel,
       accessibilityHint,
@@ -135,12 +134,9 @@ export const Button = memo(
     const sizingStyle = block ? styles.block : styles.inline;
     const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
 
-    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
-
-    const { paddingX, paddingY, marginStart, marginEnd } = getButtonSpacingProps({
-      compact,
-      flush,
-    });
+    const paddingX = compact ? 2 : 4;
+    const paddingY = compact ? 1 : 2;
+    const flushMargin = flush ? (-paddingX as NegativeSpace) : undefined;
 
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => [
@@ -183,8 +179,8 @@ export const Button = memo(
         borderWidth={borderWidth}
         feedback={feedback}
         loading={loading}
-        marginEnd={marginEnd}
-        marginStart={marginStart}
+        marginEnd={flush === 'end' ? flushMargin : undefined}
+        marginStart={flush === 'start' ? flushMargin : undefined}
         noScaleOnPress={noScaleOnPress}
         style={pressableStyle}
         transparentWhileInactive={transparent}
@@ -195,7 +191,6 @@ export const Button = memo(
           alignItems="center"
           flexWrap="nowrap"
           justifyContent={justifyContent}
-          minHeight={minHeight}
           paddingX={paddingX}
           paddingY={paddingY}
           style={sizingStyle}

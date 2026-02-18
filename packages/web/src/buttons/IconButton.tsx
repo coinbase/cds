@@ -5,6 +5,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Spinner } from '../loaders/Spinner';
@@ -50,18 +51,9 @@ type IconButtonComponent = (<AsComponent extends React.ElementType = IconButtonD
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
-const flushSpaceCss = css`
-  min-width: unset;
-  padding-inline-start: var(--space-2);
-  padding-inline-end: var(--space-2);
-`;
-
-const flushStartCss = css`
-  margin-inline-start: calc(var(--space-2) * -1);
-`;
-
-const flushEndCss = css`
-  margin-inline-end: calc(var(--space-2) * -1);
+const baseCss = css`
+  width: fit-content;
+  height: fit-content;
 `;
 
 export const IconButton: IconButtonComponent = memo(
@@ -76,13 +68,12 @@ export const IconButton: IconButtonComponent = memo(
         color,
         borderColor,
         borderRadius = 1000,
-        borderWidth = 100,
+        borderWidth = 0, // remove Pressable's default transparent border
         alignItems = 'center',
         justifyContent = 'center',
-        // TO DO: fix this when removing interactableHeight
-        height = compact ? 40 : 56,
-        width = compact ? 40 : 56,
         className,
+        style,
+        padding = compact ? 1.5 : 2,
         name,
         active,
         flush,
@@ -107,6 +98,19 @@ export const IconButton: IconButtonComponent = memo(
         [iconSizeValue],
       );
 
+      const resolvedPadding = useResolveResponsiveProp(padding);
+
+      const pressableStyle = useMemo(() => {
+        if (!flush || !resolvedPadding) return undefined;
+        const negativeMargin = -theme.space[resolvedPadding];
+        return {
+          ...style,
+          ...(flush === 'start'
+            ? { marginInlineStart: negativeMargin }
+            : { marginInlineEnd: negativeMargin }),
+        };
+      }, [flush, resolvedPadding, theme.space, style]);
+
       const variantMap = transparent ? transparentVariants : variants;
       const variantStyle = variantMap[variant];
 
@@ -125,23 +129,17 @@ export const IconButton: IconButtonComponent = memo(
           borderColor={borderColorValue}
           borderRadius={borderRadius}
           borderWidth={borderWidth}
-          className={cx(
-            COMPONENT_STATIC_CLASSNAME,
-            flush && flushSpaceCss,
-            flush === 'start' && flushStartCss,
-            flush === 'end' && flushEndCss,
-            className,
-          )}
+          className={cx(COMPONENT_STATIC_CLASSNAME, baseCss, className)}
           color={colorValue}
           data-compact={compact}
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
-          height={height}
           justifyContent={justifyContent}
           loading={loading}
+          padding={padding}
+          style={pressableStyle}
           transparentWhileInactive={transparent}
-          width={width}
           {...props}
         >
           {loading ? (

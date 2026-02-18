@@ -33,6 +33,18 @@ const variants = [
     ),
     title: 'Secondary transparent',
   },
+  {
+    component: (props?: Partial<IconButtonBaseProps>) => (
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush start',
+  },
+  {
+    component: (props?: Partial<IconButtonBaseProps>) => (
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush end',
+  },
 ];
 
 export const Default = () => (

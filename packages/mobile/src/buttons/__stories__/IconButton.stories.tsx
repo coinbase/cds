@@ -50,6 +50,24 @@ const variants = [
     ),
     title: <Text font="body">Custom style</Text>,
   },
+  {
+    component: (props?: Partial<IconButtonProps>) => (
+      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
+    ),
+    title: <Text font="body">ForegroundMuted transparent</Text>,
+  },
+  {
+    component: (props?: Partial<IconButtonProps>) => (
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush start',
+  },
+  {
+    component: (props?: Partial<IconButtonProps>) => (
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush end',
+  },
 ];
 
 const IconButtonScreen = () => {

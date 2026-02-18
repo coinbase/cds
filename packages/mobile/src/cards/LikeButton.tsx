@@ -7,11 +7,11 @@ import {
   scaleInConfig,
   scaleOutConfig,
 } from '@coinbase/cds-common/animation/likeButton';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useTheme } from '../hooks/useTheme';
 import { TextIcon } from '../icons/TextIcon';
 import { HStack } from '../layout/HStack';
 import type { PressableProps } from '../system/Pressable';
@@ -25,7 +25,7 @@ export type LikeButtonBaseProps = Pick<
   SharedProps & {
     liked?: boolean;
     count?: number;
-    /** Reduce the inner padding within the button itself. */
+    /** Use the compact variant. */
     compact?: boolean;
     /** Ensure the button aligns flush on the left or right.
      * This prop will translate the entire button left/right,
@@ -52,7 +52,7 @@ export const LikeButton = memo(function LikeButton({
 }: LikeButtonProps) {
   const iconScale = useRef(new Animated.Value(1));
   const iconSize = compact ? 's' : 'm';
-  const size = interactableHeight[compact ? 'compact' : 'regular'];
+  const theme = useTheme();
 
   const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
 
@@ -79,6 +79,12 @@ export const LikeButton = memo(function LikeButton({
     [],
   );
 
+  // override default line height to match the height of the sibling icon
+  const countTextStyle = useMemo(
+    () => ({ lineHeight: theme.iconSize[iconSize] }),
+    [theme.iconSize, iconSize],
+  );
+
   return (
     <Pressable
       accessibilityHint={accessibilityHint}
@@ -97,8 +103,6 @@ export const LikeButton = memo(function LikeButton({
         flexWrap="nowrap"
         gap={1}
         justifyContent="flex-start"
-        minHeight={size}
-        minWidth={size}
       >
         <TextIcon
           animated
@@ -109,7 +113,7 @@ export const LikeButton = memo(function LikeButton({
           style={iconStyles}
         />
         {count > 0 ? (
-          <Text mono font="label1">
+          <Text mono font="label1" style={countTextStyle}>
             {count}
           </Text>
         ) : null}

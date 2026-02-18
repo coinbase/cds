@@ -1,5 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import React, { forwardRef, memo } from 'react';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -36,9 +35,19 @@ const baseCss = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--interactable-height);
-  height: var(--interactable-height);
   min-width: unset;
+`;
+
+// fixed sizes to match the child avatar size
+// without this, the button's border-box sizing would add default 1px border around the avatar's inherent size
+const compactCss = css`
+  width: var(--avatarSize-xl);
+  height: var(--avatarSize-xl);
+`;
+
+const regularCss = css`
+  width: var(--avatarSize-xxxl);
+  height: var(--avatarSize-xxxl);
 `;
 
 export const AvatarButton: AvatarButtonComponent = memo(
@@ -61,29 +70,22 @@ export const AvatarButton: AvatarButtonComponent = memo(
     ) => {
       const Component = (as ?? avatarButtonDefaultElement) satisfies React.ElementType;
 
-      const height = compact ? interactableHeight.compact : interactableHeight.regular;
-      const styles = useMemo(
-        () => ({ '--interactable-height': `${height}px` }) as React.CSSProperties,
-        [height],
-      );
-
       return (
         <Pressable
           ref={ref}
           aria-label={accessibilityLabel}
           as={Component}
           background="transparent"
-          className={cx(baseCss, className)}
-          style={styles}
+          className={cx(baseCss, className, compact ? compactCss : regularCss)}
           {...props}
         >
           <Avatar
             alt={alt}
             colorScheme={colorScheme}
-            dangerouslySetSize={height}
             name={name}
             selected={selected}
             shape={shape}
+            size={compact ? 'xl' : 'xxxl'}
             src={src}
           />
         </Pressable>

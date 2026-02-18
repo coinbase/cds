@@ -1,15 +1,36 @@
 import React, { memo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { Avatar, type AvatarBaseProps } from '../media';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
 
-export type AvatarButtonProps = PressableBaseProps &
-  SharedProps &
-  Pick<ButtonBaseProps, 'accessibilityLabel' | 'compact'> &
+// Avatar is opinioned on border styles, so Pressable's border props will have no effect
+// see CDS-1611
+type BorderProps = Pick<
+  PressableBaseProps,
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderRadius'
+  | 'borderColor'
+  | 'borderWidth'
+  | 'borderTopWidth'
+  | 'borderEndWidth'
+  | 'borderBottomWidth'
+  | 'borderStartWidth'
+  | 'bordered'
+  | 'borderedBottom'
+  | 'borderedEnd'
+  | 'borderedHorizontal'
+  | 'borderedStart'
+  | 'borderedTop'
+  | 'borderedVertical'
+>;
+
+export type AvatarButtonProps = Omit<PressableBaseProps, keyof BorderProps> &
+  Pick<ButtonBaseProps, 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
 
 export const AvatarButton = memo(function AvatarButton({
@@ -21,24 +42,23 @@ export const AvatarButton = memo(function AvatarButton({
   colorScheme,
   borderColor,
   name,
-  ...props
+  ...pressableProps
 }: AvatarButtonProps) {
-  const height = compact ? interactableHeight.compact : interactableHeight.regular;
-
   return (
     <Pressable
       accessibilityHint={accessibilityLabel}
       accessibilityLabel={accessibilityLabel}
       background="transparent"
+      borderWidth={0} // remove Pressable's default transparent border
       feedback={feedback}
-      {...props}
+      {...pressableProps}
     >
       <Avatar
         borderColor={borderColor}
         colorScheme={colorScheme}
-        dangerouslySetSize={height}
         name={name}
         shape={shape}
+        size={compact ? 'xl' : 'xxxl'}
         src={src}
       />
     </Pressable>

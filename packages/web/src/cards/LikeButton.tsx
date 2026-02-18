@@ -1,8 +1,8 @@
-import React, { memo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { memo, useMemo } from 'react';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
@@ -15,7 +15,7 @@ export type LikeButtonBaseProps = Pick<
   SharedProps & {
     liked?: boolean;
     count?: number;
-    /** Reduce the inner padding within the button itself. */
+    /** Use the compact variant. */
     compact?: boolean;
     /** Ensure the button aligns flush on the left or right.
      * This prop will translate the entire button left/right,
@@ -33,10 +33,16 @@ export const LikeButton = memo(function LikeButton({
   liked = false,
   ...props
 }: LikeButtonProps) {
+  const theme = useTheme();
   const iconSize = compact ? 's' : 'm';
-  const size = interactableHeight[compact ? 'compact' : 'regular'];
 
   const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
+
+  // override default line height to match the height of the sibling icon
+  const countTextStyle = useMemo(
+    () => ({ lineHeight: `${theme.iconSize[iconSize]}px` }),
+    [theme.iconSize, iconSize],
+  );
 
   return (
     <Pressable background="transparent" {...props}>
@@ -48,12 +54,10 @@ export const LikeButton = memo(function LikeButton({
         justifyContent="flex-start"
         marginEnd={marginEnd}
         marginStart={marginStart}
-        minHeight={size}
-        minWidth={size}
       >
         <Icon active={liked} color={liked ? 'fgNegative' : 'fg'} name="heart" size={iconSize} />
         {count > 0 ? (
-          <Text mono as="p" display="block" font="label1">
+          <Text mono as="p" display="block" font="label1" style={countTextStyle}>
             {count}
           </Text>
         ) : null}
