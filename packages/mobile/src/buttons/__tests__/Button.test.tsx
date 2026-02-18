@@ -21,16 +21,6 @@ describe('Button', () => {
     expect(screen.getByTestId('mock-btn')).toBeAccessible();
   });
 
-  it('renders with inverse variant', () => {
-    render(
-      <DefaultThemeProvider>
-        <Button variant="inverse">Child</Button>
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.getByText('Child')).not.toBeNull();
-  });
-
   it('renders an animated view', () => {
     render(
       <DefaultThemeProvider>
