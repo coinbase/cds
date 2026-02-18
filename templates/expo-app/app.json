@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "cds-expo-app",
+    "slug": "cds-expo-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "backgroundColor": "#ffffff"
+    }
+  }
+}
