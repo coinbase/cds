@@ -163,6 +163,17 @@ describe('Button', () => {
     expect(button).toHaveAttribute('data-variant', 'primary');
   });
 
+  it('sets data-variant to inverse when variant="inverse"', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button variant="inverse">Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('data-variant', 'inverse');
+  });
+
   it('omits optional data attributes for default button', () => {
     render(
       <DefaultThemeProvider>
