@@ -45,7 +45,7 @@ export type ButtonBaseProps = SharedProps &
      * Toggle design and visual variants.
      * @default primary
      */
-    variant?: ButtonVariant;
+    variant?: Exclude<ButtonVariant, 'foregroundMuted'>;
     /** Mark the button as disabled. */
     disabled?: boolean;
     /** Mark the button as loading and display a spinner. */
