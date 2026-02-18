@@ -53,6 +53,18 @@ describe('containsTypeScript', () => {
     it('detects return type with primitive before arrow', () => {
       expect(containsTypeScript('(x): string => x.toString()')).toBe(true);
     });
+
+    it('detects generic type argument on hook call', () => {
+      expect(containsTypeScript('const ref = useRef<HTMLDivElement>(null)')).toBe(true);
+    });
+
+    it('detects generic type argument with primitive', () => {
+      expect(containsTypeScript('const [val, setVal] = useState<string>("")')).toBe(true);
+    });
+
+    it('detects generic type argument with multiple params', () => {
+      expect(containsTypeScript('const map = new Map<Foo, Bar>()')).toBe(true);
+    });
   });
 
   describe('does not flag valid JSX patterns', () => {

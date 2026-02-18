@@ -40,6 +40,11 @@ const TYPESCRIPT_PATTERNS = [
 
   // Return type annotation before arrow function: ): Type =>
   /\)\s*:\s*(?:[A-Z]\w+|string|number|boolean|void)\s*=>/,
+
+  // Generic type argument: identifier<Type> (e.g. useState<string>(), Map<Foo, Bar>)
+  // Safe from JSX: self-closing JSX uses /> not >, and opening JSX tags (<Tag>)
+  // are preceded by whitespace/delimiters, never a word character
+  /\w<(?:[A-Z]\w+|string|number|boolean|void|never|any|unknown)\s*[,>]/,
 ];
 
 /**
@@ -60,11 +65,11 @@ export function findViolations(text) {
 
   // Match ```jsx or ```jsx live (with optional modifiers after jsx)
   // The 'm' flag makes ^ match line starts
-  const codeBlockRegex = /^(```)(jsx)([ \t]+\w+)*\s*\n([\s\S]*?)^```\s*$/gm;
+  const codeBlockRegex = /^```(jsx)[^\n]*\n([\s\S]*?)^```\s*$/gm;
   let match;
 
   while ((match = codeBlockRegex.exec(text)) !== null) {
-    const codeContent = match[4];
+    const codeContent = match[2];
 
     if (containsTypeScript(codeContent)) {
       const blockStartOffset = match.index;
