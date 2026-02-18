@@ -11,10 +11,10 @@ import {
   curveStepBefore,
   line as d3Line,
 } from 'd3-shape';
+import type { Transition } from 'framer-motion';
 
 import { projectPoint, projectPoints } from './point';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
-import type { Transition } from 'framer-motion';
 
 /**
  * Default enter transition for path-based components (Line, Area).
