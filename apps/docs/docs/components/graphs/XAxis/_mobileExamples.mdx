@@ -241,7 +241,6 @@ function XAxisPositionExample() {
   return (
     <LineChart
       enableScrubbing
-
       height={400}
       series={[
         {
@@ -276,7 +275,7 @@ function XAxisPositionExample() {
       <Scrubber />
     </LineChart>
   );
-};
+}
 ```
 
 ### Grid
@@ -336,7 +335,7 @@ function CustomGridLineExample() {
       }}
     >
       <XAxis showLine showTickMarks showGrid GridLineComponent={ThinSolidLine} />
-      <Line seriesId="prices"  showArea />
+      <Line seriesId="prices" showArea />
       <Scrubber />
     </CartesianChart>
   );

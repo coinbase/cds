@@ -348,7 +348,6 @@ function Points() {
 Renders are done on JS thread, other code is in UI
 
 ```tsx
-
 function Performance() {
   const tabs = useMemo(
     () => [
@@ -1023,7 +1022,8 @@ You can use `legendPosition` to place the legend at different positions around t
   }}
   yAxis={{
     showGrid: true,
-    tickLabelFormatter: (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    tickLabelFormatter: (value: number) =>
+      new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
   }}
 />
 ```

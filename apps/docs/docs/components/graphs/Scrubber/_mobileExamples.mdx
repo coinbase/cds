@@ -375,11 +375,7 @@ You can use `hideBeaconLabels` to hide beacon labels, while still being able to 
   showArea
   inset={{ top: 60 }}
 >
-  <Scrubber
-    hideBeaconLabels
-    label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-    labelElevated
-  />
+  <Scrubber hideBeaconLabels label={(dataIndex: number) => `Day ${dataIndex + 1}`} labelElevated />
 </LineChart>
 ```
 
@@ -765,10 +761,7 @@ function PercentageBeaconLabels() {
         if (seriesData !== undefined) {
           const dataAtPosition = seriesData[dataIndex.value];
 
-          const builder = Skia.ParagraphBuilder.Make(
-            { textAlign: TextAlign.Left },
-            fontProvider,
-          );
+          const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontProvider);
 
           builder.pushStyle(boldStyle);
           builder.addText(`${dataAtPosition}%`);
