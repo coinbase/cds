@@ -231,12 +231,12 @@ describe('usePathTransition', () => {
     expect(interpolatePath).toHaveBeenCalled();
   });
 
-  it('should cancel ongoing animation when path changes', () => {
+  it('should stop ongoing animation when path changes', () => {
     const { animate } = require('framer-motion');
-    const cancelMock = jest.fn();
+    const stopMock = jest.fn();
     animate.mockReturnValue({
-      cancel: cancelMock,
-      stop: jest.fn(),
+      cancel: jest.fn(),
+      stop: stopMock,
     });
 
     const { rerender } = renderHook(
@@ -252,10 +252,10 @@ describe('usePathTransition', () => {
     // Trigger first animation
     rerender({ path: 'M0,0L20,20' });
 
-    // Trigger second animation (should cancel first)
+    // Trigger second animation (should stop first)
     rerender({ path: 'M0,0L30,30' });
 
-    expect(cancelMock).toHaveBeenCalled();
+    expect(stopMock).toHaveBeenCalled();
   });
 
   it('should handle smooth interruption of ongoing animation', () => {
@@ -288,10 +288,10 @@ describe('usePathTransition', () => {
 
   it('should cleanup animation on unmount', () => {
     const { animate } = require('framer-motion');
-    const cancelMock = jest.fn();
+    const stopMock = jest.fn();
     animate.mockReturnValue({
-      cancel: cancelMock,
-      stop: jest.fn(),
+      cancel: jest.fn(),
+      stop: stopMock,
     });
 
     const { unmount, rerender } = renderHook(
@@ -307,10 +307,10 @@ describe('usePathTransition', () => {
     // Trigger animation
     rerender({ path: 'M0,0L20,20' });
 
-    // Unmount should cancel animation
+    // Unmount should stop animation
     unmount();
 
-    expect(cancelMock).toHaveBeenCalled();
+    expect(stopMock).toHaveBeenCalled();
   });
 
   it('should maintain previous path reference across renders', () => {

@@ -140,6 +140,37 @@ export const accessoryFadeTransitionDuration = 0.15;
 export const accessoryFadeTransitionDelay = 0.35;
 
 /**
+ * Default transition for accessory elements (points, scrubber beacons, etc.).
+ * Fades in with a delay on enter, then uses the default spring for updates.
+ */
+export const defaultAccessoryTransition: ChartTransition = {
+  enter: {
+    type: 'tween',
+    duration: accessoryFadeTransitionDuration,
+    delay: accessoryFadeTransitionDelay,
+  },
+  update: defaultTransition,
+};
+
+/**
+ * Default transition for path-based components (Line, Area).
+ * Uses a tween clip-path reveal on enter and a spring for data updates.
+ */
+export const defaultPathTransition: ChartTransition = {
+  enter: defaultEnterTransition,
+  update: defaultTransition,
+};
+
+/**
+ * Default transition for bar components.
+ * Staggers bars in from left to right on enter, updates immediately.
+ */
+export const defaultBarTransition: BarChartTransition = {
+  enter: defaultBarEnterTransition,
+  update: defaultTransition,
+};
+
+/**
  * Hook for path animation state and transitions.
  *
  * @param currentPath - Current target path to animate to
@@ -190,7 +221,6 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): MotionValue<string> => {
-  const isInitialRender = useRef(true);
   const previousPathRef = useRef(initialPath ?? currentPath);
   const targetPathRef = useRef(currentPath);
   const animationRef = useRef<AnimationPlaybackControls | null>(null);
@@ -201,23 +231,12 @@ export const usePathTransition = ({
   const animatedPath = useMotionValue(initialPath ?? currentPath);
 
   useEffect(() => {
-    // Only proceed if the target path has actually changed
     if (targetPathRef.current !== currentPath) {
-      // Cancel any ongoing animation before starting a new one
-      const wasAnimating = !!animationRef.current;
-      if (animationRef.current) {
-        animationRef.current.cancel();
-        animationRef.current = null;
-      }
-
       const currentVisualPath = animatedPath.get();
 
-      // If we were animating and the visual path is different from both start and end,
-      // use it as the starting point for the next animation (smooth interruption)
-      const isInterpolatedPosition =
-        currentVisualPath !== previousPathRef.current && currentVisualPath !== currentPath;
-
-      if (wasAnimating && isInterpolatedPosition) {
+      if (animationRef.current) {
+        animationRef.current.stop();
+        animationRef.current = null;
         previousPathRef.current = currentVisualPath;
       }
 
@@ -240,13 +259,11 @@ export const usePathTransition = ({
           animationRef.current = null;
         },
       });
-
-      isInitialRender.current = false;
     }
 
     return () => {
       if (animationRef.current) {
-        animationRef.current.cancel();
+        animationRef.current.stop();
       }
     };
   }, [currentPath, transition, animatedPath]);
