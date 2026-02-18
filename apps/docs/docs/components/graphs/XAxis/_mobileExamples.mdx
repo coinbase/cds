@@ -189,7 +189,7 @@ Properties related to the visual appearance of the XAxis are set on the componen
 
 You can set the position of an axis to `top` or `bottom` (default).
 
-```jsx
+```tsx
 function XAxisPositionExample() {
   const theme = useTheme();
   const lineA = [5, 5, 10, 90, 85, 70, 30, 25, 25];
@@ -317,7 +317,7 @@ function XAxisGridExample() {
 
 You can also customize the grid lines using the `GridLineComponent` prop.
 
-```jsx
+```tsx
 function CustomGridLineExample() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
