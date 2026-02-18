@@ -51,60 +51,6 @@ export type ChartTransition = {
 };
 
 /**
- * A bar-specific transition that extends Transition with stagger support.
- * When `staggerDelay` is provided, bars will animate with increasing delays
- * based on their horizontal position (leftmost starts first, rightmost last).
- *
- * @example
- * // Bars stagger in from left to right over 0.25s, each animating for 0.75s
- * { type: 'tween', duration: 0.75, staggerDelay: 0.25 }
- */
-export type BarTransition = Transition & {
-  /**
-   * Maximum stagger delay (seconds) distributed across bars by x position.
-   * Leftmost bar starts immediately, rightmost starts after this delay.
-   */
-  staggerDelay?: number;
-};
-
-/**
- * Transition configuration for bar chart animations.
- * Extends ChartTransition with bar-specific stagger support on enter and update.
- *
- * @example
- * // Staggered enter, no update animation
- * { enter: { type: 'tween', duration: 0.75, staggerDelay: 0.25 }, update: null }
- */
-export type BarChartTransition = {
-  /**
-   * Transition for the initial enter/reveal animation.
-   * Set to `null` to disable.
-   */
-  enter?: BarTransition | null;
-  /**
-   * Transition for subsequent data update animations.
-   * Set to `null` to disable.
-   */
-  update?: BarTransition | null;
-};
-
-/**
- * Strips `staggerDelay` from a transition and computes a positional delay.
- *
- * @param transition - The transition config (may include staggerDelay)
- * @param normalizedX - The bar's normalized x position (0 = left edge, 1 = right edge)
- * @returns A standard Transition with computed delay
- */
-export const applyStaggerDelay = (transition: Transition, normalizedX: number): Transition => {
-  const { staggerDelay, ...baseTransition } = transition as BarTransition;
-  if (!staggerDelay) return transition;
-  return {
-    ...baseTransition,
-    delay: ((baseTransition as { delay?: number }).delay ?? 0) + normalizedX * staggerDelay,
-  };
-};
-
-/**
  * Instant transition that completes immediately with no animation.
  * Used when a transition is set to `null`.
  */
@@ -229,9 +175,6 @@ export const usePathTransition = ({
   const targetPathRef = useRef(currentPath);
   const animationRef = useRef<AnimationPlaybackControls | null>(null);
 
-  // Standalone motion value for the animated path string.
-  // Driven by onUpdate callbacks rather than useTransform to avoid
-  // observable intermediate states when progress resets to 0.
   const animatedPath = useMotionValue(initialPath ?? currentPath);
 
   useEffect(() => {
@@ -248,10 +191,6 @@ export const usePathTransition = ({
 
       const pathInterpolator = interpolatePath(previousPathRef.current, currentPath);
 
-      // Animate a plain number from 0 to 1 and drive the path via onUpdate.
-      // This avoids the useTransform + progress.set(0) pattern which caused
-      // an observable intermediate state (showing the stale previous path)
-      // before the animation could resolve to the target.
       animationRef.current = animate(0, 1, {
         ...(transition as ValueAnimationTransition<number>),
         onUpdate: (latest) => {

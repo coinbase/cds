@@ -9,7 +9,8 @@ import { BarChart } from '../bar/BarChart';
 import { CartesianChart } from '../CartesianChart';
 import { Line } from '../line/Line';
 import { Scrubber, type ScrubberRef } from '../scrubber';
-import type { BarChartTransition, ChartTransition } from '../utils/transition';
+import type { BarChartTransition } from '../utils/bar';
+import type { ChartTransition } from '../utils/transition';
 
 const dataCount = 15;
 const updateInterval = 2500;

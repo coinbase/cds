@@ -3,7 +3,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { applyStaggerDelay, defaultBarEnterTransition, getBarPath } from '../utils';
+import { withStaggerDelayTransition, defaultBarEnterTransition, getBarPath } from '../utils';
 import type { ChartTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
@@ -51,9 +51,9 @@ export const DefaultBar = memo<DefaultBarProps>(
         enter:
           enter === null
             ? null
-            : applyStaggerDelay(enter ?? defaultBarEnterTransition, normalizedX),
+            : withStaggerDelayTransition(enter ?? defaultBarEnterTransition, normalizedX),
         update:
-          update === null ? null : update ? applyStaggerDelay(update, normalizedX) : undefined,
+          update === null ? null : update ? withStaggerDelayTransition(update, normalizedX) : undefined,
       };
     }, [transitions, normalizedX]);
 

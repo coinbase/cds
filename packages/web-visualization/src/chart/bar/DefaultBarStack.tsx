@@ -3,7 +3,7 @@ import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import {
-  applyStaggerDelay,
+  withStaggerDelayTransition,
   defaultBarEnterTransition,
   defaultTransition,
   getBarPath,
@@ -51,11 +51,11 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const shouldAnimateEnter = animate && transitions?.enter !== null;
 
-    const resolvedEnterTransition = applyStaggerDelay(
+    const resolvedEnterTransition = withStaggerDelayTransition(
       resolveTransition(transitions?.enter, animate, defaultBarEnterTransition),
       normalizedX,
     );
-    const resolvedUpdateTransition = applyStaggerDelay(
+    const resolvedUpdateTransition = withStaggerDelayTransition(
       resolveTransition(
         transitions?.update !== undefined ? transitions.update : transition,
         animate,
