@@ -45,7 +45,7 @@ const buttonStories: Omit<ButtonBaseProps, 'children'>[] = [
   { marginStart: -2 },
   { font: 'body' },
   { font: 'title3' },
-  { fontSize: 'display3', fontWeight: 'body' },
+  { fontSize: 'title3', fontWeight: 'body' },
 ];
 
 const onClickConsole = () => console.log('clicked');
