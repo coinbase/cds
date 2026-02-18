@@ -118,6 +118,7 @@ export const Banner = memo(
         marginBottom,
         marginStart,
         marginEnd,
+        width = '100%',
         ...props
       }: BannerProps,
       ref: React.ForwardedRef<HTMLDivElement>,
@@ -201,7 +202,7 @@ export const Banner = memo(
       const content = (
         <Box
           position="relative"
-          width="100%"
+          width={width}
           {...(!showDismiss && marginStyles)}
           height="fit-content"
         >
@@ -301,7 +302,7 @@ export const Banner = memo(
           display="block"
           height="fit-content"
           position="relative"
-          width="100%"
+          width={width}
           {...marginStyles}
         >
           <Collapsible

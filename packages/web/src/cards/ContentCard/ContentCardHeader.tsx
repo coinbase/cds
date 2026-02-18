@@ -28,31 +28,19 @@ export type ContentCardHeaderBaseProps = Polymorphic.ExtendableProps<
     /** Slot for action buttons. */
     actions?: React.ReactNode;
     styles?: {
-      /**
-       * Root container style
-       */
+      /** Root container element */
       root?: React.CSSProperties;
-      /**
-       * Container for the text content (title + subtitle)
-       */
+      /** Text content container (title + subtitle) */
       textContainer?: React.CSSProperties;
-      /**
-       * Container for the content (thumbnail + text content)
-       */
+      /** Content container (thumbnail + text content) */
       contentContainer?: React.CSSProperties;
     };
     classNames?: {
-      /**
-       * Root container class name
-       */
+      /** Root container element */
       root?: string;
-      /**
-       * Container for the text content (title + subtitle)
-       */
+      /** Text content container (title + subtitle) */
       textContainer?: string;
-      /**
-       * Container for the content (thumbnail + text content)
-       */
+      /** Content container (thumbnail + text content) */
       contentContainer?: string;
     };
   }

@@ -47,37 +47,20 @@ export type ProgressCircleBaseProps = ProgressBaseProps & {
 };
 
 export type ProgressCircleProps = ProgressCircleBaseProps & {
-  /**
-   * Custom styles for the progress circle root.
-   */
   style?: StyleProp<ViewStyle>;
-  /**
-   * Custom styles for the progress circle.
-   */
+  /** Custom styles for individual elements of the ProgressCircle component */
   styles?: {
-    /**
-     * Custom styles for the progress circle root.
-     */
+    /** Root element */
     root?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the progress circle svg container.
-     */
+    /** SVG container element */
     svgContainer?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the progress circle svg.
-     */
+    /** SVG element */
     svg?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the text container.
-     */
+    /** Text container element */
     textContainer?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the progress circle inner.
-     */
+    /** Foreground progress circle element */
     progress?: Partial<CircleProps>;
-    /**
-     * Custom styles for the progress circle inner.
-     */
+    /** Background circle element */
     circle?: Partial<CircleProps>;
   };
 };

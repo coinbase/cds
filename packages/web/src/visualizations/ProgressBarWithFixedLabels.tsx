@@ -23,54 +23,28 @@ export type ProgressBarWithFixedLabelsProps = Pick<
    * @default beside
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below' | 'beside'>;
-  /**
-   * Custom styles for the progress bar with fixed labels root.
-   */
   style?: React.CSSProperties;
-  /**
-   * Custom class name for the progress bar with fixed labels root.
-   */
   className?: string;
-  /**
-   * Custom styles for the progress bar with fixed labels.
-   */
+  /** Custom styles for individual elements of the ProgressBarWithFixedLabels component */
   styles?: {
-    /**
-     * Custom styles for the progress bar with fixed labels root.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the label container.
-     */
+    /** Label container element */
     labelContainer?: React.CSSProperties;
-    /**
-     * Custom styles for the start label.
-     */
+    /** Start label element */
     startLabel?: React.CSSProperties;
-    /**
-     * Custom styles for the end label.
-     */
+    /** End label element */
     endLabel?: React.CSSProperties;
   };
-  /**
-   * Custom class names for the progress bar with fixed labels.
-   */
+  /** Custom class names for individual elements of the ProgressBarWithFixedLabels component */
   classNames?: {
-    /**
-     * Class name for the progress bar with fixed labels root.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Class name for the label container.
-     */
+    /** Label container element */
     labelContainer?: string;
-    /**
-     * Class name for the start label.
-     */
+    /** Start label element */
     startLabel?: string;
-    /**
-     * Class name for the end label.
-     */
+    /** End label element */
     endLabel?: string;
   };
 };

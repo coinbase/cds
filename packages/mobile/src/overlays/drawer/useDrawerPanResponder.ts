@@ -19,7 +19,7 @@ import { modulate } from '@coinbase/cds-common/utils/modulate';
 
 type UseDrawerPanResponderParams = {
   drawerAnimation: Animated.Value;
-  animateDrawerIn: Animated.CompositeAnimation;
+  animateSnapBack: Animated.CompositeAnimation;
   pin: PinningDirection;
   disableCapturePanGestureToDismiss: boolean;
   onBlur?: () => void;
@@ -38,7 +38,7 @@ const calculateDragOffset = (x: number) => {
 export const useDrawerPanResponder = ({
   pin,
   drawerAnimation,
-  animateDrawerIn,
+  animateSnapBack,
   disableCapturePanGestureToDismiss,
   onBlur,
   handleSwipeToClose,
@@ -233,13 +233,13 @@ export const useDrawerPanResponder = ({
           onBlur?.();
           handleSwipeToClose();
         } else {
-          animateDrawerIn.start();
+          animateSnapBack.start();
         }
       },
     });
   }, [
     drawerAnimation,
-    animateDrawerIn,
+    animateSnapBack,
     parseGestureState,
     shouldCaptureGestures,
     shouldDismiss,

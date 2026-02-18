@@ -42,38 +42,20 @@ export type ProgressBaseProps = SharedProps &
   };
 
 export type ProgressBarProps = ProgressBaseProps & {
-  /**
-   * Custom styles for the progress bar root.
-   */
   style?: React.CSSProperties;
-  /**
-   * Custom class name for the progress bar root.
-   */
   className?: string;
-  /**
-   * Custom styles for the progress bar.
-   */
+  /** Custom styles for individual elements of the ProgressBar component */
   styles?: {
-    /**
-     * Custom styles for the progress bar root.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the progress.
-     */
+    /** Progress fill element */
     progress?: React.CSSProperties;
   };
-  /**
-   * Custom class names for the progress bar.
-   */
+  /** Custom class names for individual elements of the ProgressBar component */
   classNames?: {
-    /**
-     * Class name for the progress bar root.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Class name for the progress.
-     */
+    /** Progress fill element */
     progress?: string;
   };
 };

@@ -8,6 +8,40 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.46.1 (2/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: (DX-5052) use previous active step value for calculating remaining steps to animate to for a completed stepper. [[#397](https://github.com/coinbase/cds/pull/397)] [DX-5052]
+
+## 8.46.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add open/close visibility delays to Tooltip. [[#234](https://github.com/coinbase/cds/pull/234)]
+
+## 8.45.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add reduce motion support for Tray. [[#386](https://github.com/coinbase/cds/pull/386)]
+
+## 8.44.2 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray drag elastic. [[#385](https://github.com/coinbase/cds/pull/385)]
+
+## 8.44.1 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Enabled customer to override the width prop in Banner so they can explicitly pass in a width for any bleed effect. [[#383](https://github.com/coinbase/cds/pull/383)]
+
+#### 📘 Misc
+
+- Update jsdocs for styles props. [[#384](https://github.com/coinbase/cds/pull/384)]
+
 ## 8.44.0 (2/9/2026 PST)
 
 #### 🚀 Updates
