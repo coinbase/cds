@@ -147,6 +147,12 @@ export const routes = [
       require('@coinbase/cds-mobile-visualization/chart/__stories__/Chart.stories').default,
   },
   {
+    key: 'ChartTransitions',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')
+        .default,
+  },
+  {
     key: 'Checkbox',
     getComponent: () =>
       require('@coinbase/cds-mobile/controls/__stories__/Checkbox.stories').default,
@@ -245,6 +251,11 @@ export const routes = [
     key: 'DrawerMisc',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/DrawerMisc.stories').default,
+  },
+  {
+    key: 'DrawerReduceMotion',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/DrawerReduceMotion.stories').default,
   },
   {
     key: 'DrawerRight',
@@ -791,11 +802,6 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/tour/__stories__/Tour.stories').default,
   },
   {
-    key: 'Transitions',
-    getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/Transitions.stories').default,
-  },
-  {
     key: 'TrayAction',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayAction.stories').default,
@@ -844,6 +850,11 @@ export const routes = [
     key: 'TrayRedesign',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayRedesign.stories').default,
+  },
+  {
+    key: 'TrayReduceMotion',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayReduceMotion.stories').default,
   },
   {
     key: 'TrayScrollable',
