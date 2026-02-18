@@ -10,10 +10,34 @@ import type { ButtonBaseProps } from './Button';
 
 export const avatarButtonDefaultElement = 'button';
 
+// Avatar is opinioned on border styles, so Pressable's border props will have no effect
+// see CDS-1611
+type BorderProps = Pick<
+  PressableBaseProps,
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderRadius'
+  | 'borderColor'
+  | 'borderWidth'
+  | 'borderTopWidth'
+  | 'borderEndWidth'
+  | 'borderBottomWidth'
+  | 'borderStartWidth'
+  | 'bordered'
+  | 'borderedBottom'
+  | 'borderedEnd'
+  | 'borderedHorizontal'
+  | 'borderedStart'
+  | 'borderedTop'
+  | 'borderedVertical'
+>;
+
 export type AvatarButtonDefaultElement = typeof avatarButtonDefaultElement;
 
 export type AvatarButtonBaseProps = Polymorphic.ExtendableProps<
-  Omit<PressableBaseProps, 'children'>,
+  Omit<PressableBaseProps, 'children' | keyof BorderProps>,
   Pick<ButtonBaseProps, 'compact'> &
     Pick<
       AvatarBaseProps,
@@ -38,18 +62,6 @@ const baseCss = css`
   min-width: unset;
 `;
 
-// fixed sizes to match the child avatar size
-// without this, the button's border-box sizing would add default 1px border around the avatar's inherent size
-const compactCss = css`
-  width: var(--avatarSize-xl);
-  height: var(--avatarSize-xl);
-`;
-
-const regularCss = css`
-  width: var(--avatarSize-xxxl);
-  height: var(--avatarSize-xxxl);
-`;
-
 export const AvatarButton: AvatarButtonComponent = memo(
   forwardRef<React.ReactElement<AvatarButtonBaseProps>, AvatarButtonBaseProps>(
     <AsComponent extends React.ElementType>(
@@ -62,6 +74,7 @@ export const AvatarButton: AvatarButtonComponent = memo(
         compact,
         colorScheme,
         shape,
+        borderColor,
         selected,
         name,
         ...props
@@ -76,11 +89,13 @@ export const AvatarButton: AvatarButtonComponent = memo(
           aria-label={accessibilityLabel}
           as={Component}
           background="transparent"
-          className={cx(baseCss, className, compact ? compactCss : regularCss)}
+          borderWidth={0} // remove Pressable's default transparent border
+          className={cx(baseCss, className)}
           {...props}
         >
           <Avatar
             alt={alt}
+            borderColor={borderColor}
             colorScheme={colorScheme}
             name={name}
             selected={selected}
