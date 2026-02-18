@@ -1,17 +1,16 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import type { PathProps } from '../Path';
+import type { PathProps, PathTransitionProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
   type ChartPathCurveType,
-  type ChartTransition,
   evaluateGradientAtValue,
   getGradientConfig,
   getLineData,
@@ -110,38 +109,22 @@ export type LineBaseProps = SharedProps & {
   animate?: boolean;
 };
 
-export type LineProps = LineBaseProps & {
-  /**
-   * Transition configuration for enter and update animations.
-   *
-   * @example
-   * // Custom enter and update transitions
-   * transitions={{ enter: { type: 'tween', duration: 0.3 }, update: { type: 'spring', damping: 20 } }}
-   *
-   * @example
-   * // Disable enter animation
-   * transitions={{ enter: null }}
-   */
-  transitions?: ChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-  /**
-   * Handler for when a point is clicked.
-   * Passed through to Point components rendered via points.
-   */
-  onPointClick?: PointProps['onClick'];
-  /**
-   * Custom style for the line.
-   */
-  style?: React.CSSProperties;
-  /**
-   * Custom className for the line.
-   */
-  className?: string;
-};
+export type LineProps = LineBaseProps &
+  PathTransitionProps & {
+    /**
+     * Handler for when a point is clicked.
+     * Passed through to Point components rendered via points.
+     */
+    onPointClick?: PointProps['onClick'];
+    /**
+     * Custom style for the line.
+     */
+    style?: React.CSSProperties;
+    /**
+     * Custom className for the line.
+     */
+    className?: string;
+  };
 
 export type LineComponentProps = Pick<
   LineProps,

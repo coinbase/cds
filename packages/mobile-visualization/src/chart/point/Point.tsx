@@ -7,7 +7,13 @@ import { Circle, type Color, Group, interpolateColors } from '@shopify/react-nat
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type PointLabelPosition, projectPoint } from '../utils';
-import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
+import {
+  type AccessoryTransitionProps,
+  buildTransition,
+  defaultAccessoryEnterTransition,
+  defaultTransition,
+  resolveTransition,
+} from '../utils/transition';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
@@ -116,18 +122,14 @@ export type PointLabelProps = {
 
 export type PointLabelComponent = ComponentType<PointLabelProps>;
 
-export type PointProps = PointBaseProps & {
-  /**
-   * Simple text label to display at the point position.
-   * If provided, a label component will be automatically rendered.
-   */
-  label?: ChartTextChildren;
-  /**
-   * Transition configuration for point animations.
-   * Defines how the point transitions when position or color changes.
-   */
-  transition?: Transition;
-};
+export type PointProps = PointBaseProps &
+  AccessoryTransitionProps & {
+    /**
+     * Simple text label to display at the point position.
+     * If provided, a label component will be automatically rendered.
+     */
+    label?: ChartTextChildren;
+  };
 
 export const Point = memo<PointProps>(
   ({
@@ -144,7 +146,8 @@ export const Point = memo<PointProps>(
     labelPosition = 'center',
     labelOffset,
     labelFont,
-    transition = defaultTransition,
+    transitions,
+    transition,
     animate: animateProp,
   }) => {
     const theme = useTheme();
@@ -163,6 +166,21 @@ export const Point = memo<PointProps>(
     const yScale = getYScale(yAxisId);
 
     const shouldAnimate = animate ?? false;
+
+    const updateTransition = useMemo(
+      () =>
+        resolveTransition(
+          transitions?.update !== undefined ? transitions.update : transition,
+          animate,
+          defaultTransition,
+        ),
+      [animate, transitions?.update, transition],
+    );
+
+    const enterTransition = useMemo(
+      () => resolveTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      [animate, transitions?.enter],
+    );
 
     // Calculate pixel coordinates from data coordinates
     const pixelCoordinate = useMemo(() => {
@@ -185,8 +203,19 @@ export const Point = memo<PointProps>(
     const animatedX = useSharedValue(0);
     const animatedY = useSharedValue(0);
 
+    // Animated value for enter opacity (0 = hidden, 1 = visible)
+    const enterOpacity = useSharedValue(shouldAnimate ? 0 : 1);
+
     // Animated value for color interpolation (0 = old color, 1 = new color)
     const colorProgress = useSharedValue(1);
+
+    // Trigger enter fade-in on first render with valid coordinates
+    useEffect(() => {
+      if (!pixelCoordinate || !shouldAnimate) return;
+      if (enterOpacity.value === 0) {
+        enterOpacity.value = buildTransition(1, enterTransition);
+      }
+    }, [pixelCoordinate, shouldAnimate, enterTransition, enterOpacity]);
 
     // Update position when coordinates change
     useEffect(() => {
@@ -195,26 +224,33 @@ export const Point = memo<PointProps>(
       }
 
       if (shouldAnimate && previousPixelCoordinate) {
-        animatedX.value = buildTransition(pixelCoordinate.x, transition);
-        animatedY.value = buildTransition(pixelCoordinate.y, transition);
+        animatedX.value = buildTransition(pixelCoordinate.x, updateTransition);
+        animatedY.value = buildTransition(pixelCoordinate.y, updateTransition);
       } else {
         cancelAnimation(animatedX);
         cancelAnimation(animatedY);
         animatedX.value = pixelCoordinate.x;
         animatedY.value = pixelCoordinate.y;
       }
-    }, [pixelCoordinate, shouldAnimate, previousPixelCoordinate, animatedX, animatedY, transition]);
+    }, [
+      pixelCoordinate,
+      shouldAnimate,
+      previousPixelCoordinate,
+      animatedX,
+      animatedY,
+      updateTransition,
+    ]);
 
     // Update color when fill changes
     useEffect(() => {
       if (shouldAnimate && previousFill && previousFill !== fill) {
         colorProgress.value = 0;
-        colorProgress.value = buildTransition(1, transition);
+        colorProgress.value = buildTransition(1, updateTransition);
       } else {
         cancelAnimation(colorProgress);
         colorProgress.value = 1;
       }
-    }, [fill, shouldAnimate, previousFill, colorProgress, transition]);
+    }, [fill, shouldAnimate, previousFill, colorProgress, updateTransition]);
 
     // Create animated point for circles
     const animatedPoint = useDerivedValue(() => {
@@ -239,11 +275,11 @@ export const Point = memo<PointProps>(
       );
     }, [animatedX, animatedY, drawingArea]);
 
-    // Compute effective opacity based on drawing area bounds
+    // Compute effective opacity based on drawing area bounds and enter animation
     const effectiveOpacity = useDerivedValue(() => {
       const baseOpacity = opacity ?? 1;
-      return isWithinDrawingArea.value ? baseOpacity : 0;
-    }, [isWithinDrawingArea, opacity]);
+      return isWithinDrawingArea.value ? baseOpacity * enterOpacity.value : 0;
+    }, [isWithinDrawingArea, opacity, enterOpacity]);
 
     const offset = useMemo(() => labelOffset ?? radius * 2, [labelOffset, radius]);
 

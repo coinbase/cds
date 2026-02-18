@@ -10,12 +10,14 @@ import {
 } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
   type ChartInset,
   type ChartScaleFunction,
   type ChartTransition,
+  defaultAccessoryEnterTransition,
   getPointOnScale,
+  instantTransition,
+  resolveTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -359,20 +361,14 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      // Resolve the enter transition for the scrubber group fade-in.
-      // Falls back to the default accessory fade when not provided.
-      const groupEnterTransition = useMemo(() => {
-        if (resolvedTransitions?.enter === null) return null;
-        return (
-          resolvedTransitions?.enter ?? {
-            duration: accessoryFadeTransitionDuration,
-            delay: accessoryFadeTransitionDelay,
-          }
-        );
-      }, [resolvedTransitions?.enter]);
+      const groupEnterTransition = useMemo(
+        () =>
+          resolveTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
+        [resolvedTransitions?.enter, animate],
+      );
 
       const groupExitTransition = useMemo(() => {
-        if (groupEnterTransition === null) return null;
+        if (groupEnterTransition === instantTransition) return undefined;
         const duration =
           'duration' in groupEnterTransition
             ? (groupEnterTransition as { duration?: number }).duration
@@ -395,13 +391,13 @@ export const Scrubber = memo(
           data-component="scrubber-group"
           data-testid={testID}
           role="status"
-          {...(animate && groupEnterTransition !== null
+          {...(animate && groupEnterTransition !== instantTransition
             ? {
                 animate: {
                   opacity: 1,
                   transition: groupEnterTransition,
                 },
-                exit: { opacity: 0, transition: groupExitTransition ?? undefined },
+                exit: { opacity: 0, transition: groupExitTransition },
                 initial: { opacity: 0 },
               }
             : {})}

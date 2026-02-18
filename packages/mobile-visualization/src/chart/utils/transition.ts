@@ -41,7 +41,8 @@ export type Transition = (
 };
 
 /**
- * Default transition configuration used across all chart components.
+ * Default update transition used across all chart components.
+ * `{ type: 'spring', stiffness: 900, damping: 120 }`
  */
 export const defaultTransition: Transition = {
   type: 'spring',
@@ -122,15 +123,15 @@ export type BarChartTransition = {
 };
 
 /**
- * Strips `staggerDelay` from a BarTransition and computes a positional delay.
+ * Strips `staggerDelay` from a transition and computes a positional delay.
  *
- * @param transition - The bar transition config (may include staggerDelay)
+ * @param transition - The transition config (may include staggerDelay)
  * @param normalizedX - The bar's normalized x position (0 = left edge, 1 = right edge)
  * @returns A standard Transition with computed delay
  */
-export const applyStaggerDelay = (transition: BarTransition, normalizedX: number): Transition => {
-  const { staggerDelay, ...baseTransition } = transition;
-  if (!staggerDelay) return baseTransition;
+export const applyStaggerDelay = (transition: Transition, normalizedX: number): Transition => {
+  const { staggerDelay, ...baseTransition } = transition as BarTransition;
+  if (!staggerDelay) return transition;
   return {
     ...baseTransition,
     delay: (baseTransition.delay ?? 0) + normalizedX * staggerDelay,
@@ -140,6 +141,7 @@ export const applyStaggerDelay = (transition: BarTransition, normalizedX: number
 /**
  * Default bar enter transition. Uses the default spring with a stagger delay
  * so bars spring into place from left to right.
+ * `{ type: 'spring', stiffness: 900, damping: 120, staggerDelay: 250 }`
  */
 export const defaultBarEnterTransition: BarTransition = {
   ...defaultTransition,
@@ -147,9 +149,10 @@ export const defaultBarEnterTransition: BarTransition = {
 };
 
 /**
- * Default enter transition used for path clip-path reveal animations.
+ * Default enter transition for path-based components (Line, Area).
+ * `{ type: 'timing', duration: 500 }`
  */
-export const defaultEnterTransition: Transition = {
+export const defaultPathEnterTransition: Transition = {
   type: 'timing',
   duration: 500,
 };
@@ -172,6 +175,57 @@ export const accessoryFadeTransitionDuration = 150;
  * Delay in milliseconds before accessory elements fade in.
  */
 export const accessoryFadeTransitionDelay = 350;
+
+/**
+ * Default enter transition for accessory elements (Point, Scrubber beacons).
+ * `{ type: 'timing', duration: 150, delay: 350 }`
+ */
+export const defaultAccessoryEnterTransition: Transition = {
+  type: 'timing',
+  duration: accessoryFadeTransitionDuration,
+  delay: accessoryFadeTransitionDelay,
+};
+
+/**
+ * Resolves a transition value based on the animation state and a default.
+ * - `null` -> instantTransition (animation disabled for this phase)
+ * - `undefined` -> defaultValue (use the provided default)
+ * - `Transition` -> use it as-is
+ * - `!animate` -> instantTransition (animation globally disabled)
+ */
+export const resolveTransition = (
+  value: Transition | null | undefined,
+  animate: boolean,
+  defaultValue: Transition,
+): Transition => {
+  if (!animate || value === null) return instantTransition;
+  return value ?? defaultValue;
+};
+
+/**
+ * Transition props for accessory elements (Point, Scrubber beacons).
+ */
+export type AccessoryTransitionProps = {
+  /**
+   * Transition configuration for enter and update animations.
+   * - enter default: `{ type: 'timing', duration: 150, delay: 350 }` -- delayed opacity fade
+   * - update default: `{ type: 'spring', stiffness: 900, damping: 120 }` -- spring position updates
+   *
+   * @example
+   * // Custom enter and update transitions
+   * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: ChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
+   */
+  transition?: Transition;
+};
 
 /**
  * Custom hook that uses d3-interpolate-path for more robust path interpolation.

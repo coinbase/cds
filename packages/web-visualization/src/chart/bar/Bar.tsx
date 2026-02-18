@@ -2,10 +2,34 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { type BarChartTransition } from '../utils';
-import { getBarPath } from '../utils';
+import { type BarChartTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
+
+/**
+ * Transition props for bar components (Bar, BarStack).
+ */
+export type BarTransitionProps = {
+  /**
+   * Transition configuration for enter and update animations.
+   * - enter default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 }` -- staggered spring
+   * - update default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }` -- spring data updates
+   *
+   * @example
+   * // Custom staggered enter and spring update
+   * transitions={{ enter: { type: 'tween', duration: 0.5, staggerDelay: 0.3 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: BarChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
+   */
+  transition?: Transition;
+};
 
 export type BarBaseProps = {
   /**
@@ -76,17 +100,7 @@ export type BarBaseProps = {
   BarComponent?: BarComponent;
 };
 
-export type BarProps = BarBaseProps & {
-  /**
-   * Transition configuration for enter and update animations.
-   */
-  transitions?: BarChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
+export type BarProps = BarBaseProps & BarTransitionProps;
 
 export type BarComponentProps = Omit<BarProps, 'BarComponent'> & {
   /**

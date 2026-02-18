@@ -44,20 +44,16 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     // Strip staggerDelay and compute positional delay for Path.
     // When enter is not explicitly set, apply the default stagger delay.
-    const resolvedTransitions = useMemo<ChartTransition | undefined>(() => {
-      if (!transitions) return undefined;
-      const enterTransition =
-        transitions.enter === null
-          ? null
-          : applyStaggerDelay(transitions.enter ?? defaultBarEnterTransition, normalizedX);
+    const resolvedTransitions = useMemo<ChartTransition>(() => {
+      const enter = transitions?.enter;
+      const update = transitions?.update;
       return {
-        enter: enterTransition,
-        update:
-          transitions.update === null
+        enter:
+          enter === null
             ? null
-            : transitions.update
-              ? applyStaggerDelay(transitions.update, normalizedX)
-              : undefined,
+            : applyStaggerDelay(enter ?? defaultBarEnterTransition, normalizedX),
+        update:
+          update === null ? null : update ? applyStaggerDelay(update, normalizedX) : undefined,
       };
     }, [transitions, normalizedX]);
 

@@ -1,14 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { Transition } from 'framer-motion';
-
 import { useCartesianChartContext } from '../ChartProvider';
-import {
-  type ChartPathCurveType,
-  type ChartTransition,
-  getAreaPath,
-  type GradientDefinition,
-} from '../utils';
+import type { PathTransitionProps } from '../Path';
+import { type ChartPathCurveType, getAreaPath, type GradientDefinition } from '../utils';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -66,17 +60,7 @@ export type AreaBaseProps = {
   animate?: boolean;
 };
 
-export type AreaProps = AreaBaseProps & {
-  /**
-   * Transition configuration for enter and update animations.
-   */
-  transitions?: ChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
+export type AreaProps = AreaBaseProps & PathTransitionProps;
 
 export type AreaComponentProps = Pick<
   AreaProps,

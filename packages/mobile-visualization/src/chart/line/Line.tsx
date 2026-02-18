@@ -5,7 +5,7 @@ import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { type PathProps } from '../Path';
+import { type PathProps, type PathTransitionProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
@@ -13,9 +13,7 @@ import {
   type ChartPathCurveType,
   getLineData,
   getLinePath,
-  type ChartTransition,
   type GradientDefinition,
-  type Transition,
 } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
@@ -111,26 +109,7 @@ export type LineBaseProps = {
   animate?: boolean;
 };
 
-export type LineProps = LineBaseProps & {
-  /**
-   * Transition configuration for enter and update animations.
-   *
-   * @example
-   * // Custom enter and update transitions
-   * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
-   *
-   * @example
-   * // Disable enter animation
-   * transitions={{ enter: null }}
-   */
-  transitions?: ChartTransition;
-  /**
-   * Transition configuration for line animations.
-   *
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
+export type LineProps = LineBaseProps & PathTransitionProps;
 
 export type LineComponentProps = Pick<
   LineProps,

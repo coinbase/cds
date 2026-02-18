@@ -10,7 +10,8 @@ import {
 } from 'framer-motion';
 
 /**
- * Default transition configuration used across all chart components.
+ * Default update transition used across all chart components.
+ * `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }`
  */
 export const defaultTransition: Transition = {
   type: 'spring',
@@ -88,15 +89,15 @@ export type BarChartTransition = {
 };
 
 /**
- * Strips `staggerDelay` from a BarTransition and computes a positional delay.
+ * Strips `staggerDelay` from a transition and computes a positional delay.
  *
- * @param transition - The bar transition config (may include staggerDelay)
+ * @param transition - The transition config (may include staggerDelay)
  * @param normalizedX - The bar's normalized x position (0 = left edge, 1 = right edge)
  * @returns A standard Transition with computed delay
  */
-export const applyStaggerDelay = (transition: BarTransition, normalizedX: number): Transition => {
-  const { staggerDelay, ...baseTransition } = transition;
-  if (!staggerDelay) return baseTransition;
+export const applyStaggerDelay = (transition: Transition, normalizedX: number): Transition => {
+  const { staggerDelay, ...baseTransition } = transition as BarTransition;
+  if (!staggerDelay) return transition;
   return {
     ...baseTransition,
     delay: ((baseTransition as { delay?: number }).delay ?? 0) + normalizedX * staggerDelay,
@@ -106,6 +107,7 @@ export const applyStaggerDelay = (transition: BarTransition, normalizedX: number
 /**
  * Default bar enter transition. Uses the default spring with a stagger delay
  * so bars spring into place from left to right.
+ * `{ type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 }`
  */
 export const defaultBarEnterTransition: BarTransition = {
   ...defaultTransition,
@@ -113,9 +115,10 @@ export const defaultBarEnterTransition: BarTransition = {
 };
 
 /**
- * Default enter transition used for path clip-path reveal animations.
+ * Default enter transition for path-based components (Line, Area).
+ * `{ type: 'tween', duration: 0.5 }`
  */
-export const defaultEnterTransition: Transition = {
+export const defaultPathEnterTransition: Transition = {
   type: 'tween',
   duration: 0.5,
 };
@@ -140,34 +143,54 @@ export const accessoryFadeTransitionDuration = 0.15;
 export const accessoryFadeTransitionDelay = 0.35;
 
 /**
- * Default transition for accessory elements (points, scrubber beacons, etc.).
- * Fades in with a delay on enter, then uses the default spring for updates.
+ * Default enter transition for accessory elements (Point, Scrubber beacons).
+ * `{ type: 'tween', duration: 0.15, delay: 0.35 }`
  */
-export const defaultAccessoryTransition: ChartTransition = {
-  enter: {
-    type: 'tween',
-    duration: accessoryFadeTransitionDuration,
-    delay: accessoryFadeTransitionDelay,
-  },
-  update: defaultTransition,
+export const defaultAccessoryEnterTransition: Transition = {
+  type: 'tween',
+  duration: accessoryFadeTransitionDuration,
+  delay: accessoryFadeTransitionDelay,
 };
 
 /**
- * Default transition for path-based components (Line, Area).
- * Uses a tween clip-path reveal on enter and a spring for data updates.
+ * Resolves a transition value based on the animation state and a default.
+ * - `null` -> instantTransition (animation disabled for this phase)
+ * - `undefined` -> defaultValue (use the provided default)
+ * - `Transition` -> use it as-is
+ * - `!animate` -> instantTransition (animation globally disabled)
  */
-export const defaultPathTransition: ChartTransition = {
-  enter: defaultEnterTransition,
-  update: defaultTransition,
+export const resolveTransition = (
+  value: Transition | null | undefined,
+  animate: boolean,
+  defaultValue: Transition,
+): Transition => {
+  if (!animate || value === null) return instantTransition;
+  return value ?? defaultValue;
 };
 
 /**
- * Default transition for bar components.
- * Staggers bars in from left to right on enter, updates immediately.
+ * Transition props for accessory elements (Point, Scrubber beacons).
  */
-export const defaultBarTransition: BarChartTransition = {
-  enter: defaultBarEnterTransition,
-  update: defaultTransition,
+export type AccessoryTransitionProps = {
+  /**
+   * Transition configuration for enter and update animations.
+   * - enter default: `{ type: 'tween', duration: 0.15, delay: 0.35 }` -- delayed opacity fade
+   * - update default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }` -- spring position updates
+   *
+   * @example
+   * // Custom enter and update transitions
+   * transitions={{ enter: { type: 'tween', duration: 0.3 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: ChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
+   */
+  transition?: Transition;
 };
 
 /**

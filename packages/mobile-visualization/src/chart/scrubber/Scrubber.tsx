@@ -11,8 +11,6 @@ import {
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-  withDelay,
-  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
@@ -25,10 +23,11 @@ import {
 } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartInset,
+  defaultAccessoryEnterTransition,
   getPointOnSerializableScale,
+  instantTransition,
+  resolveTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -373,28 +372,15 @@ export const Scrubber = memo(
 
       const isReady = !!xScale;
 
-      // Resolve the enter transition for the scrubber group fade-in.
-      // Falls back to the default accessory fade when not provided.
-      const groupEnterTransition = useMemo(() => {
-        if (resolvedTransitions?.enter === null) return null;
-        return resolvedTransitions?.enter ?? undefined;
-      }, [resolvedTransitions?.enter]);
+      const groupEnterTransition = useMemo(
+        () =>
+          resolveTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
+        [resolvedTransitions?.enter, animate],
+      );
 
       useEffect(() => {
         if (animate && isReady) {
-          if (groupEnterTransition === null) {
-            // Instant — no animation
-            scrubberOpacity.value = 1;
-          } else if (groupEnterTransition) {
-            // Custom enter transition
-            scrubberOpacity.value = buildTransition(1, groupEnterTransition);
-          } else {
-            // Default accessory fade
-            scrubberOpacity.value = withDelay(
-              accessoryFadeTransitionDelay,
-              withTiming(1, { duration: accessoryFadeTransitionDuration }),
-            );
-          }
+          scrubberOpacity.value = buildTransition(1, groupEnterTransition);
         }
       }, [animate, isReady, scrubberOpacity, groupEnterTransition]);
 

@@ -5,8 +5,9 @@ import { useCartesianChartContext } from '../ChartProvider';
 import {
   applyStaggerDelay,
   defaultBarEnterTransition,
+  defaultTransition,
   getBarPath,
-  instantTransition,
+  resolveTransition,
 } from '../utils';
 
 import type { BarComponentProps } from './Bar';
@@ -51,14 +52,18 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const shouldAnimateEnter = animate && transitions?.enter !== null;
 
-    const resolvedEnterTransition =
-      !animate || transitions?.enter === null
-        ? instantTransition
-        : applyStaggerDelay(transitions?.enter ?? defaultBarEnterTransition, normalizedX);
-    const resolvedUpdateTransition =
-      !animate || transitions?.update === null
-        ? instantTransition
-        : applyStaggerDelay(transitions?.update ?? transition ?? {}, normalizedX);
+    const resolvedEnterTransition = applyStaggerDelay(
+      resolveTransition(transitions?.enter, animate, defaultBarEnterTransition),
+      normalizedX,
+    );
+    const resolvedUpdateTransition = applyStaggerDelay(
+      resolveTransition(
+        transitions?.update !== undefined ? transitions.update : transition,
+        animate,
+        defaultTransition,
+      ),
+      normalizedX,
+    );
 
     const initialPath = useMemo(() => {
       if (!shouldAnimateEnter) return undefined;

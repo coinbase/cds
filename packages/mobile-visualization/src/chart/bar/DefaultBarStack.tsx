@@ -7,7 +7,7 @@ import {
   applyStaggerDelay,
   defaultBarEnterTransition,
   defaultTransition,
-  instantTransition,
+  resolveTransition,
   usePathTransition,
 } from '../utils/transition';
 
@@ -40,21 +40,25 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       [x, drawingArea.x, drawingArea.width],
     );
 
-    const rawUpdateTransition =
-      transitions?.update !== undefined ? transitions.update : (transition ?? defaultTransition);
     const resolvedEnterTransition = useMemo(
       () =>
-        !animate || transitions?.enter === null
-          ? instantTransition
-          : applyStaggerDelay(transitions?.enter ?? defaultBarEnterTransition, normalizedX),
+        applyStaggerDelay(
+          resolveTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
       [animate, transitions?.enter, normalizedX],
     );
     const resolvedUpdateTransition = useMemo(
       () =>
-        !animate || rawUpdateTransition === null
-          ? instantTransition
-          : applyStaggerDelay(rawUpdateTransition, normalizedX),
-      [animate, rawUpdateTransition, normalizedX],
+        applyStaggerDelay(
+          resolveTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [animate, transitions?.update, transition, normalizedX],
     );
 
     // Generate target clip path (full bar)

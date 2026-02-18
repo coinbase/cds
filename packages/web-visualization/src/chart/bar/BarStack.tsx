@@ -1,12 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common';
-import type { Transition } from 'framer-motion';
-
 import { useCartesianChartContext } from '../ChartProvider';
-import type { BarChartTransition, ChartScaleFunction, Series } from '../utils';
+import type { ChartScaleFunction, Series } from '../utils';
+
 import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
 
-import { Bar, type BarComponent, type BarProps } from './Bar';
+import { Bar, type BarComponent, type BarProps, type BarTransitionProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
@@ -78,17 +77,7 @@ export type BarStackBaseProps = Pick<
   stackMinSize?: number;
 };
 
-export type BarStackProps = BarStackBaseProps & {
-  /**
-   * Transition configuration for enter and update animations.
-   */
-  transitions?: BarChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
+export type BarStackProps = BarStackBaseProps & BarTransitionProps;
 
 export type BarStackComponentProps = Pick<
   BarStackProps,

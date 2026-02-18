@@ -2,11 +2,18 @@ import React, { memo, type SVGProps, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { type ChartTransition, type PointLabelPosition, projectPoint } from '../utils';
+import {
+  type AccessoryTransitionProps,
+  defaultAccessoryEnterTransition,
+  defaultTransition,
+  type PointLabelPosition,
+  projectPoint,
+  resolveTransition,
+} from '../utils';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
@@ -214,17 +221,7 @@ export type PointProps = PointBaseProps &
      * If not provided, a default label will be generated using the data coordinates.
      */
     accessibilityLabel?: string;
-    /**
-     * Transition configuration for enter and update animations.
-     */
-    transitions?: ChartTransition;
-    /**
-     * Transition for updates.
-     * @deprecated Use `transitions.update` instead.
-     * @default defaultTransition
-     */
-    transition?: Transition;
-  };
+  } & AccessoryTransitionProps;
 
 export const Point = memo<PointProps>(
   ({
@@ -260,6 +257,21 @@ export const Point = memo<PointProps>(
       drawingArea,
     } = useCartesianChartContext();
     const animate = animateProp ?? animationEnabled;
+
+    const enterTransition = useMemo(
+      () => resolveTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      [animate, transitions?.enter],
+    );
+
+    const updateTransition = useMemo(
+      () =>
+        resolveTransition(
+          transitions?.update !== undefined ? transitions.update : transition,
+          animate,
+          defaultTransition,
+        ),
+      [animate, transitions?.update, transition],
+    );
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
@@ -347,13 +359,14 @@ export const Point = memo<PointProps>(
           animate={{
             cx: pixelCoordinate.x,
             cy: pixelCoordinate.y,
+            opacity: 1,
           }}
           aria-label={accessibilityLabel}
           className={cx(innerPointCss, className, classNames?.point)}
           cx={pixelCoordinate.x}
           cy={pixelCoordinate.y}
           fill={fill}
-          initial={false}
+          initial={{ opacity: 0 }}
           onClick={
             onClick
               ? (event: any) =>
@@ -367,7 +380,11 @@ export const Point = memo<PointProps>(
           strokeWidth={strokeWidth}
           style={mergedStyles}
           tabIndex={onClick ? 0 : -1}
-          transition={transitions?.update ?? transition}
+          transition={{
+            cx: updateTransition,
+            cy: updateTransition,
+            opacity: enterTransition,
+          }}
           variants={variants}
           whileHover={onClick ? 'hovered' : 'default'}
           whileTap={onClick ? 'pressed' : 'default'}
@@ -391,8 +408,8 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
-      transitions?.update,
-      transition,
+      enterTransition,
+      updateTransition,
     ]);
 
     if (!xScale || !yScale) {
