@@ -145,46 +145,24 @@ export type ProgressBarWithFloatLabelProps = Pick<
    * @default above
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below'>;
-  /**
-   * Custom styles for the progress bar with float label root.
-   */
   style?: React.CSSProperties;
-  /**
-   * Custom class name for the progress bar with float label root.
-   */
   className?: string;
-  /**
-   * Custom styles for the progress bar with float label.
-   */
+  /** Custom styles for individual elements of the ProgressBarWithFloatLabel component */
   styles?: {
-    /**
-     * Custom styles for the progress bar with float label root.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the label container.
-     */
+    /** Label container element */
     labelContainer?: React.CSSProperties;
-    /**
-     * Custom styles for the label.
-     */
+    /** Label element */
     label?: React.CSSProperties;
   };
-  /**
-   * Custom class names for the progress bar with float label.
-   */
+  /** Custom class names for individual elements of the ProgressBarWithFloatLabel component */
   classNames?: {
-    /**
-     * Class name for the progress bar with float label root.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Class name for the label container.
-     */
+    /** Label container element */
     labelContainer?: string;
-    /**
-     * Class name for the label.
-     */
+    /** Label element */
     label?: string;
   };
 };

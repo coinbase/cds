@@ -24,17 +24,27 @@ export type MediaCardLayoutBaseProps = {
 
 export type MediaCardLayoutProps = MediaCardLayoutBaseProps & {
   classNames?: {
+    /** Layout container element */
     layoutContainer?: string;
+    /** Content container element */
     contentContainer?: string;
+    /** Text container element */
     textContainer?: string;
+    /** Header container element */
     headerContainer?: string;
+    /** Media container element */
     mediaContainer?: string;
   };
   styles?: {
+    /** Layout container element */
     layoutContainer?: React.CSSProperties;
+    /** Content container element */
     contentContainer?: React.CSSProperties;
+    /** Text container element */
     textContainer?: React.CSSProperties;
+    /** Header container element */
     headerContainer?: React.CSSProperties;
+    /** Media container element */
     mediaContainer?: React.CSSProperties;
   };
 };

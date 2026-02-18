@@ -1,20 +1,23 @@
 import type { BaseTooltipPlacement } from '@coinbase/cds-common/types';
 import { renderA11y } from '@coinbase/cds-web-utils/jest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Button } from '../../../buttons/Button';
 import { DefaultThemeProvider } from '../../../utils/test';
 import { PortalProvider } from '../../PortalProvider';
 import { Tooltip } from '../Tooltip';
+import type { TooltipProps } from '../TooltipProps';
 
 const tooltipTestID = 'tooltip-test';
 
 const StoryExample = ({
   placement = 'top',
+  tooltipProps,
 }: {
   disabled?: boolean;
   placement?: BaseTooltipPlacement;
+  tooltipProps?: Partial<TooltipProps>;
 }) => {
   return (
     <DefaultThemeProvider>
@@ -23,6 +26,7 @@ const StoryExample = ({
           content="This is the content in the tooltip!"
           placement={placement}
           testID={tooltipTestID}
+          {...tooltipProps}
         >
           <Button>Button</Button>
         </Tooltip>
@@ -64,6 +68,52 @@ describe('Tooltip', () => {
     fireEvent.mouseEnter(button as Element);
 
     expect(await screen.findByTestId(tooltipTestID)).toBeInTheDocument();
+  });
+
+  it('delays showing tooltip content based on openDelay', async () => {
+    jest.useFakeTimers();
+    render(<StoryExample tooltipProps={{ openDelay: 300 }} />);
+    const button = screen.getByRole('button');
+
+    fireEvent.mouseEnter(button);
+    expect(screen.queryByTestId(tooltipTestID)).not.toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(200);
+    });
+    expect(screen.queryByTestId(tooltipTestID)).not.toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
+    expect(await screen.findByTestId(tooltipTestID)).toBeInTheDocument();
+
+    jest.useRealTimers();
+  });
+
+  it('delays hiding tooltip content based on closeDelay', async () => {
+    jest.useFakeTimers();
+    render(<StoryExample tooltipProps={{ closeDelay: 150 }} />);
+    const button = screen.getByRole('button');
+
+    fireEvent.mouseEnter(button);
+    expect(await screen.findByTestId(tooltipTestID)).toBeInTheDocument();
+
+    fireEvent.mouseLeave(button);
+    expect(screen.getByTestId(tooltipTestID)).toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
+    expect(screen.getByTestId(tooltipTestID)).toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
+
+    await waitFor(() => expect(screen.queryByTestId(tooltipTestID)).not.toBeInTheDocument());
+
+    jest.useRealTimers();
   });
 
   it('focuses after a delay when using autoFocusDelay', async () => {

@@ -23,15 +23,23 @@ export type DataCardLayoutBaseProps = {
 
 export type DataCardLayoutProps = DataCardLayoutBaseProps & {
   classNames?: {
+    /** Layout container element */
     layoutContainer?: string;
+    /** Header container element */
     headerContainer?: string;
+    /** Text container element */
     textContainer?: string;
+    /** Title container element */
     titleContainer?: string;
   };
   styles?: {
+    /** Layout container element */
     layoutContainer?: React.CSSProperties;
+    /** Header container element */
     headerContainer?: React.CSSProperties;
+    /** Text container element */
     textContainer?: React.CSSProperties;
+    /** Title container element */
     titleContainer?: React.CSSProperties;
   };
 };

@@ -441,7 +441,50 @@ function PreventDismissTray() {
 
 ## Accessibility
 
+### Accessibility labels
+
 Trays require an accessibility label. If you pass in a ReactNode to `title`, make sure to set `accessibilityLabel` or `accessibilityLabelledBy`.
+
+### Reduce Motion
+
+Use the `reduceMotion` prop to accommodate users with reduced motion settings.
+
+```jsx live
+function ReducedMotionTray() {
+  const [visible, setVisible] = useState(false);
+  const { isPhone } = useBreakpoints();
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray
+          reduceMotion
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          onCloseComplete={handleClose}
+          title="Reduced Motion"
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+            />
+          )}
+        >
+          <Text paddingBottom={2}>This tray fades in and out using opacity.</Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
 
 ## Styling
 

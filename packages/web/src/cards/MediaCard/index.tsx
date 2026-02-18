@@ -11,9 +11,11 @@ export type MediaCardBaseProps = Polymorphic.ExtendableProps<
   Omit<CardRootBaseProps, 'children'>,
   MediaCardLayoutProps & {
     classNames?: {
+      /** Root element */
       root?: string;
     };
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
     };
   }

@@ -43,17 +43,27 @@ export type MessagingCardLayoutProps = {
   /** React node to display as the main media content. When provided, it will be rendered in a Box container. */
   media?: React.ReactNode;
   styles?: {
+    /** Layout container element */
     layoutContainer?: React.CSSProperties;
+    /** Content container element */
     contentContainer?: React.CSSProperties;
+    /** Text container element */
     textContainer?: React.CSSProperties;
+    /** Media container element */
     mediaContainer?: React.CSSProperties;
+    /** Dismiss button container element */
     dismissButtonContainer?: React.CSSProperties;
   };
   classNames?: {
+    /** Layout container element */
     layoutContainer?: string;
+    /** Content container element */
     contentContainer?: string;
+    /** Text container element */
     textContainer?: string;
+    /** Media container element */
     mediaContainer?: string;
+    /** Dismiss button container element */
     dismissButtonContainer?: string;
   };
 };

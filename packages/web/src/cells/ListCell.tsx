@@ -119,46 +119,66 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      * When provided, `classNames.subtitle` and `styles.subtitle` are not applied.
      */
     subtitleNode?: React.ReactNode;
-    /**
-     * Class names for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
-     */
+    /** Class names for subcomponents, ignored when the corresponding `xxNode` prop is used */
     classNames?: {
+      /** Root element */
       root?: string;
+      /** Media element */
       media?: string;
+      /** Intermediary element */
       intermediary?: string;
+      /** End element */
       end?: string;
+      /** Accessory element */
       accessory?: string;
+      /** Content container element */
       contentContainer?: string;
+      /** Pressable wrapper element */
       pressable?: string;
-      /** Applied to the VStack of title/subtitle/description. */
+      /** Title stack element (title/subtitle/description VStack) */
       titleStack?: string;
-      /** Applied to the Box that Wrapped around `titleStack` (controls flex behavior). */
+      /** Title stack container wrapper, controls flex behavior */
       titleStackContainer?: string;
+      /** Main content element */
       mainContent?: string;
+      /** Helper text element */
       helperText?: string;
+      /** Title text element */
       title?: string;
+      /** Subtitle text element */
       subtitle?: string;
+      /** Description text element */
       description?: string;
     };
-    /**
-     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
-     */
+    /** Styles for subcomponents, ignored when the corresponding `xxNode` prop is used */
     styles?: {
+      /** Root element */
       root?: React.CSSProperties;
+      /** Media element */
       media?: React.CSSProperties;
+      /** Intermediary element */
       intermediary?: React.CSSProperties;
+      /** End element */
       end?: React.CSSProperties;
+      /** Accessory element */
       accessory?: React.CSSProperties;
+      /** Content container element */
       contentContainer?: React.CSSProperties;
+      /** Pressable wrapper element */
       pressable?: React.CSSProperties;
-      /** Applied to the VStack of title/subtitle/description. */
+      /** Title stack element (title/subtitle/description VStack) */
       titleStack?: React.CSSProperties;
-      /** Applied to the Box that Wrapped around `titleStack` (controls flex behavior). */
+      /** Title stack container wrapper, controls flex behavior */
       titleStackContainer?: React.CSSProperties;
+      /** Main content element */
       mainContent?: React.CSSProperties;
+      /** Helper text element */
       helperText?: React.CSSProperties;
+      /** Title text element */
       title?: React.CSSProperties;
+      /** Subtitle text element */
       subtitle?: React.CSSProperties;
+      /** Description text element */
       description?: React.CSSProperties;
     };
   }

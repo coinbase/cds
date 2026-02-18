@@ -581,3 +581,32 @@ export const ResponsiveFullBleedImageListCells = () => {
     </>
   );
 };
+
+export const ReduceMotion = () => {
+  const [showBasicTray, setShowBasicTray] = useState(false);
+
+  return (
+    <VStack alignItems="flex-start" gap={2}>
+      <Text font="headline">Basic Tray with String Title</Text>
+      <Button onClick={() => setShowBasicTray(true)}>Open Basic Tray</Button>
+      {showBasicTray && (
+        <Tray
+          reduceMotion
+          onCloseComplete={() => setShowBasicTray(false)}
+          title="Basic Tray Example"
+        >
+          <VStack gap={1}>
+            <Text font="body">
+              This is a basic tray with a simple string title. Clicking outside or pressing ESC will
+              close it.
+            </Text>
+            <Text font="body">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget
+              aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nunc nisl eu nunc.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+};

@@ -47,9 +47,11 @@ export type ChipBaseProps = SharedProps &
      */
     contentStyle?: StyleProp<ViewStyle>;
     style?: StyleProp<ViewStyle>;
-    /** Apply styles to the container and content. */
+    /** Custom styles for individual elements of the Chip component */
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
+      /** Content element */
       content?: StyleProp<ViewStyle>;
     };
   };

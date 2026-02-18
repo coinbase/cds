@@ -109,30 +109,16 @@ export type RollingNumberAffixSectionProps = TextProps<TextDefaultElement> & {
    * Ref forwarded to the affix section wrapper element.
    */
   ref?: React.Ref<HTMLSpanElement>;
-  /**
-   * Inline style overrides applied to the affix section.
-   */
   styles?: {
-    /**
-     * Inline style override applied to the affix section container.
-     */
+    /** Affix section container element */
     root?: React.CSSProperties;
-    /**
-     * Inline style override applied to the text within the section.
-     */
+    /** Text element within the section */
     text?: React.CSSProperties;
   };
-  /**
-   * Class name overrides applied to the affix section.
-   */
   classNames?: {
-    /**
-     * Class name override applied to the affix section container.
-     */
+    /** Affix section container element */
     root?: string;
-    /**
-     * Class name override applied to the text within the section.
-     */
+    /** Text element within the section */
     text?: string;
   };
 };
@@ -171,30 +157,16 @@ export type RollingNumberValueSectionProps = TextProps<TextDefaultElement> & {
    * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
    */
   direction?: SingleDirection;
-  /**
-   * Inline style overrides applied to the value section.
-   */
   styles?: {
-    /**
-     * Inline style override applied to the section container.
-     */
+    /** Value section container element */
     root?: React.CSSProperties;
-    /**
-     * Inline style override applied to text within the section.
-     */
+    /** Text element within the section */
     text?: React.CSSProperties;
   };
-  /**
-   * Class name overrides applied to the value section.
-   */
   classNames?: {
-    /**
-     * Class name override applied to the section container.
-     */
+    /** Value section container element */
     root?: string;
-    /**
-     * Class name override applied to text within the section.
-     */
+    /** Text element within the section */
     text?: string;
   };
   /**
@@ -229,30 +201,16 @@ export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
    * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
    */
   direction?: SingleDirection;
-  /**
-   * Inline style overrides applied to the digit component.
-   */
   styles?: {
-    /**
-     * Inline style override applied to the digit container.
-     */
+    /** Digit container element */
     root?: React.CSSProperties;
-    /**
-     * Inline style override applied to the digit text.
-     */
+    /** Digit text element */
     text?: React.CSSProperties;
   };
-  /**
-   * Class name overrides applied to the digit component.
-   */
   classNames?: {
-    /**
-     * Class name override applied to the digit container.
-     */
+    /** Digit container element */
     root?: string;
-    /**
-     * Class name override applied to the digit text.
-     */
+    /** Digit text element */
     text?: string;
   };
   /**
@@ -266,30 +224,16 @@ export type RollingNumberSymbolProps = TextProps<TextDefaultElement> & {
    * Literal symbol rendered within the number stream.
    */
   value: string;
-  /**
-   * Inline style overrides applied to the symbol component.
-   */
   styles?: {
-    /**
-     * Inline style override applied to the symbol container.
-     */
+    /** Symbol container element */
     root?: React.CSSProperties;
-    /**
-     * Inline style override applied to the symbol text.
-     */
+    /** Symbol text element */
     text?: React.CSSProperties;
   };
-  /**
-   * Class name overrides applied to the symbol component.
-   */
   classNames?: {
-    /**
-     * Class name override applied to the symbol container.
-     */
+    /** Symbol container element */
     root?: string;
-    /**
-     * Class name override applied to the symbol text.
-     */
+    /** Symbol text element */
     text?: string;
   };
   /**
@@ -413,94 +357,50 @@ export type RollingNumberBaseProps = SharedProps &
 export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   RollingNumberBaseProps & {
-    /**
-     * Class name overrides applied to RollingNumber slots.
-     */
+    /** Custom class names for individual elements of the RollingNumber component */
     classNames?: {
-      /**
-       * Class override applied to the outer container element.
-       */
+      /** Outer container element */
       root?: string;
-      /**
-       * Class override applied to the animated content wrapper that is visually rendered.
-       */
+      /** Animated visible content wrapper */
       visibleContent?: string;
-      /**
-       * Class override applied to the wrapper for the formatted numeric value.
-       */
+      /** Formatted numeric value wrapper */
       formattedValueSection?: string;
-      /**
-       * Class override applied to the prefix section rendered from props.
-       */
+      /** Prefix section (from props) */
       prefix?: string;
-      /**
-       * Class override applied to the suffix section rendered from props.
-       */
+      /** Suffix section (from props) */
       suffix?: string;
-      /**
-       * The prefix generated by Intl.NumberFormat, for example, the "$" in "$1,000".
-       */
+      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
       i18nPrefix?: string;
-      /**
-       * The suffix generated by Intl.NumberFormat, for example, the "K" in "100K".
-       */
+      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
       i18nSuffix?: string;
-      /**
-       * Class override applied to the integer portion of the formatted value.
-       */
+      /** Integer portion of formatted value */
       integer?: string;
-      /**
-       * Class override applied to the fractional portion of the formatted value.
-       */
+      /** Fractional portion of formatted value */
       fraction?: string;
-      /**
-       * Class override applied to the Text component rendering digits and symbols.
-       */
+      /** Text element for digits and symbols */
       text?: string;
     };
-    /**
-     * Inline style overrides applied to RollingNumber slots.
-     */
+    /** Custom styles for individual elements of the RollingNumber component */
     styles?: {
-      /**
-       * Inline style override applied to the outer container element.
-       */
+      /** Outer container element */
       root?: React.CSSProperties;
-      /**
-       * Inline style override applied to the animated content wrapper that is visually rendered.
-       */
+      /** Animated visible content wrapper */
       visibleContent?: React.CSSProperties;
-      /**
-       * Inline style override applied to the wrapper for the formatted numeric value.
-       */
+      /** Formatted numeric value wrapper */
       formattedValueSection?: React.CSSProperties;
-      /**
-       * Inline style override applied to the prefix section rendered from props.
-       */
+      /** Prefix section (from props) */
       prefix?: React.CSSProperties;
-      /**
-       * Inline style override applied to the suffix section rendered from props.
-       */
+      /** Suffix section (from props) */
       suffix?: React.CSSProperties;
-      /**
-       * The prefix generated by Intl.NumberFormat, for example, the "$" in "$1,000".
-       */
+      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
       i18nPrefix?: React.CSSProperties;
-      /**
-       * The suffix generated by Intl.NumberFormat, for example, the "K" in "100K".
-       */
+      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
       i18nSuffix?: React.CSSProperties;
-      /**
-       * Inline styles applied to the integer portion of the formatted value.
-       */
+      /** Integer portion of formatted value */
       integer?: React.CSSProperties;
-      /**
-       * Inline styles applied to the fractional portion of the formatted value.
-       */
+      /** Fractional portion of formatted value */
       fraction?: React.CSSProperties;
-      /**
-       * Inline styles applied to the Text component rendering digits and symbols.
-       */
+      /** Text element for digits and symbols */
       text?: React.CSSProperties;
     };
   }

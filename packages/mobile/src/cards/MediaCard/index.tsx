@@ -11,6 +11,7 @@ export type MediaCardBaseProps = MediaCardLayoutProps;
 export type MediaCardProps = MediaCardBaseProps &
   Omit<CardRootProps, 'children'> & {
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
     };
   };

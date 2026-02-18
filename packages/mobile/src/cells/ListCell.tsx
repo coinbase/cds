@@ -107,25 +107,35 @@ export type ListCellBaseProps = CellDetailProps &
      * When provided, `styles.subtitle` is not applied.
      */
     subtitleNode?: React.ReactNode;
-    /**
-     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
-     */
+    /** Styles for subcomponents, ignored when the corresponding `xxNode` prop is used */
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
+      /** Media element */
       media?: StyleProp<ViewStyle>;
+      /** Intermediary element */
       intermediary?: StyleProp<ViewStyle>;
+      /** End element */
       end?: StyleProp<ViewStyle>;
+      /** Accessory element */
       accessory?: StyleProp<ViewStyle>;
+      /** Content container element */
       contentContainer?: StyleProp<ViewStyle>;
+      /** Pressable wrapper element */
       pressable?: StyleProp<ViewStyle>;
+      /** Main content element */
       mainContent?: StyleProp<ViewStyle>;
-      /** Applied to the VStack of title/subtitle/description. */
+      /** Title stack element (title/subtitle/description VStack) */
       titleStack?: StyleProp<ViewStyle>;
-      /** Applied to the Box that wraps around `titleStack` (controls flex behavior). */
+      /** Title stack container wrapper, controls flex behavior */
       titleStackContainer?: StyleProp<ViewStyle>;
+      /** Helper text element */
       helperText?: StyleProp<ViewStyle>;
+      /** Title text element */
       title?: StyleProp<TextStyle>;
+      /** Subtitle text element */
       subtitle?: StyleProp<TextStyle>;
+      /** Description text element */
       description?: StyleProp<TextStyle>;
     };
   };
