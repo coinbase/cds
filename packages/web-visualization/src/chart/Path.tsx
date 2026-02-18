@@ -3,9 +3,9 @@ import type { SVGProps } from 'react';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition } from 'framer-motion';
 
+import { defaultPathEnterTransition } from './utils/path';
 import {
   type ChartTransition,
-  defaultPathEnterTransition,
   defaultTransition,
   resolveTransition,
   usePathTransition,

@@ -10,10 +10,10 @@ import {
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
+import { defaultPathEnterTransition } from './utils/path';
 import type { ChartTransition, Transition } from './utils/transition';
 import {
   buildTransition,
-  defaultPathEnterTransition,
   defaultTransition,
   resolveTransition,
   usePathTransition,

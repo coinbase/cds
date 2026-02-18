@@ -1,3 +1,15 @@
+import { type BarTransition, defaultTransition } from './transition';
+
+/**
+ * Default bar enter transition. Uses the default spring with a stagger delay
+ * so bars spring into place from left to right.
+ * `{ type: 'spring', stiffness: 900, damping: 120, staggerDelay: 250 }`
+ */
+export const defaultBarEnterTransition: BarTransition = {
+  ...defaultTransition,
+  staggerDelay: 250,
+};
+
 /**
  * Calculates the size adjustment needed for bars when accounting for gaps between them.
  * This function helps determine how much to reduce each bar's width to accommodate

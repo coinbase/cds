@@ -14,6 +14,16 @@ import {
 
 import { projectPoint, projectPoints } from './point';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
+import type { Transition } from 'framer-motion';
+
+/**
+ * Default enter transition for path-based components (Line, Area).
+ * `{ type: 'tween', duration: 0.5 }`
+ */
+export const defaultPathEnterTransition: Transition = {
+  type: 'tween',
+  duration: 0.5,
+};
 
 export type ChartPathCurveType =
   | 'bump'

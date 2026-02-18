@@ -3,9 +3,9 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
+import { defaultBarEnterTransition } from '../utils/bar';
 import {
   applyStaggerDelay,
-  defaultBarEnterTransition,
   defaultTransition,
   resolveTransition,
   usePathTransition,

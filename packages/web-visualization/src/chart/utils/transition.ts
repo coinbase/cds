@@ -105,25 +105,6 @@ export const applyStaggerDelay = (transition: Transition, normalizedX: number): 
 };
 
 /**
- * Default bar enter transition. Uses the default spring with a stagger delay
- * so bars spring into place from left to right.
- * `{ type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 }`
- */
-export const defaultBarEnterTransition: BarTransition = {
-  ...defaultTransition,
-  staggerDelay: 0.25,
-};
-
-/**
- * Default enter transition for path-based components (Line, Area).
- * `{ type: 'tween', duration: 0.5 }`
- */
-export const defaultPathEnterTransition: Transition = {
-  type: 'tween',
-  duration: 0.5,
-};
-
-/**
  * Instant transition that completes immediately with no animation.
  * Used when a transition is set to `null`.
  */
