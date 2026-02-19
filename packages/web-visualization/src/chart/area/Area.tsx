@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
+
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathTransitionProps } from '../Path';
 import { type ChartPathCurveType, getAreaPath, type GradientDefinition } from '../utils';

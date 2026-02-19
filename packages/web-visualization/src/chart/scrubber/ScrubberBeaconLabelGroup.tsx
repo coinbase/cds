@@ -7,6 +7,7 @@ import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
   defaultTransition,
   getPointOnScale,
+  getTransition,
   instantTransition,
   useScrubberContext,
 } from '../utils';
@@ -153,9 +154,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
 
     const activeUpdateTransition = useMemo(() => {
       if (isIdleTransition) return instantTransition;
-      const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
-      if (isIdle && animate && resolved !== null) return resolved;
-      return instantTransition;
+      if (!isIdle) return instantTransition;
+      return getTransition(transitions?.update, animate, defaultTransition);
     }, [transitions?.update, isIdle, animate, isIdleTransition]);
 
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});

@@ -19,6 +19,7 @@ import { projectPointWithSerializableScale } from '../utils/point';
 import {
   buildTransition,
   defaultTransition,
+  getTransition,
   instantTransition,
   type Transition,
 } from '../utils/transition';
@@ -89,11 +90,10 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries?.color, theme.color.fgPrimary],
       );
 
-      const activeUpdateTransition = useMemo(() => {
-        const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
-        if (animate && resolved !== null) return resolved;
-        return instantTransition;
-      }, [transitions?.update, animate]);
+      const activeUpdateTransition = useMemo(
+        () => getTransition(transitions?.update, animate, defaultTransition),
+        [transitions?.update, animate],
+      );
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],

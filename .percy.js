@@ -17,7 +17,7 @@ module.exports = {
       'Components/SparklineInteractive: Fallback Positive',
       'Components/LottieStatusAnimation: Default',
       'Components/Loaders/MaterialSpinner: Material Spinner Default',
-      'Components/Chart/LineChart: Transitions',
+      'Components/Chart/CartesianChart: Transitions',
     ],
     include: [
       // 'Core Components/SparklineInteractive:*',

@@ -116,7 +116,7 @@ export const defaultAccessoryEnterTransition: Transition = {
  * - `Transition` -> use it as-is
  * - `!animate` -> instantTransition (animation globally disabled)
  */
-export const resolveTransition = (
+export const getTransition = (
   value: Transition | null | undefined,
   animate: boolean,
   defaultValue: Transition,

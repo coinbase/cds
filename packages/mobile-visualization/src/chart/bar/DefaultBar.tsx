@@ -3,8 +3,8 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { withStaggerDelayTransition, defaultBarEnterTransition, getBarPath } from '../utils';
-import type { ChartTransition } from '../utils/transition';
+import { defaultBarEnterTransition, getBarPath,withStaggerDelayTransition } from '../utils';
+import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -42,20 +42,26 @@ export const DefaultBar = memo<DefaultBarProps>(
       [x, drawingArea.x, drawingArea.width],
     );
 
-    // Strip staggerDelay and compute positional delay for Path.
-    // When enter is not explicitly set, apply the default stagger delay.
-    const resolvedTransitions = useMemo<ChartTransition>(() => {
-      const enter = transitions?.enter;
-      const update = transitions?.update;
-      return {
-        enter:
-          enter === null
-            ? null
-            : withStaggerDelayTransition(enter ?? defaultBarEnterTransition, normalizedX),
-        update:
-          update === null ? null : update ? withStaggerDelayTransition(update, normalizedX) : undefined,
-      };
-    }, [transitions, normalizedX]);
+    const resolvedEnterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [transitions?.enter, animate, normalizedX],
+    );
+    const resolvedUpdateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [transitions?.update, transition, animate, normalizedX],
+    );
 
     const targetPath = useMemo(() => {
       const effectiveBorderRadius = borderRadius ?? 0;
@@ -103,8 +109,10 @@ export const DefaultBar = memo<DefaultBarProps>(
         initialPath={initialPath}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        transition={transition}
-        transitions={resolvedTransitions}
+        transitions={{
+          enter: resolvedEnterTransition,
+          update: resolvedUpdateTransition,
+        }}
       />
     );
   },

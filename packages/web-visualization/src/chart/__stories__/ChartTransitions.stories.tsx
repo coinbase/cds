@@ -1,9 +1,15 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button } from '@coinbase/cds-mobile/buttons/Button';
-import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
+import {
+  memo,
+  type PropsWithChildren,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
 
 import { Area } from '../area/Area';
 import { BarChart } from '../bar/BarChart';
@@ -12,6 +18,14 @@ import { Line } from '../line/Line';
 import { Scrubber, type ScrubberRef } from '../scrubber';
 import type { BarChartTransition } from '../utils/bar';
 import type { ChartTransition } from '../utils/transition';
+
+export default {
+  title: 'Components/Chart/CartesianChart',
+  component: CartesianChart,
+  parameters: {
+    percy: { skip: true },
+  },
+};
 
 const dataCount = 15;
 const updateInterval = 2500;
@@ -29,7 +43,6 @@ function generateInitialData() {
   return data;
 }
 
-// Transition presets
 const enterOnly: ChartTransition = {
   update: null,
 };
@@ -38,11 +51,11 @@ const updateOnly: ChartTransition = {
 };
 const bothDisabled: ChartTransition = { enter: null, update: null };
 const customEnterUpdate: ChartTransition = {
-  enter: { type: 'timing', duration: 1500 },
+  enter: { type: 'tween', duration: 1.5 },
   update: { type: 'spring', stiffness: 400, damping: 30 },
 };
 const customEnterUpdateBeacon: ChartTransition = {
-  enter: { type: 'timing', duration: 500, delay: 1000 },
+  enter: { type: 'tween', duration: 0.5, delay: 1.0 },
   update: { type: 'spring', stiffness: 400, damping: 30 },
 };
 const slowSpringBoth: ChartTransition = {
@@ -50,11 +63,9 @@ const slowSpringBoth: ChartTransition = {
   update: { type: 'spring', stiffness: 100, damping: 10 },
 };
 const staggeredBoth: BarChartTransition = {
-  enter: { type: 'timing', duration: 750, staggerDelay: 250 },
-  update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 150 },
+  enter: { type: 'tween', duration: 0.75, staggerDelay: 0.25 },
+  update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 0.15 },
 };
-
-// --- Reusable Chart Components ---
 
 const TransitionLineChart = memo<{
   data: number[];
@@ -62,7 +73,7 @@ const TransitionLineChart = memo<{
   scrubberTransitions?: ChartTransition;
   animate?: boolean;
   idlePulse?: boolean;
-  scrubberRef?: React.RefObject<ScrubberRef | null>;
+  scrubberRef?: RefObject<ScrubberRef | null>;
   enableScrubbing?: boolean;
 }>(
   ({
@@ -77,14 +88,14 @@ const TransitionLineChart = memo<{
     <CartesianChart
       animate={animateProp}
       enableScrubbing={enableScrubbing}
-      height={200}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
       series={[{ id: 'values', data }]}
     >
       <Line seriesId="values" strokeWidth={3} transitions={transitions} />
       {enableScrubbing && (
         <Scrubber
-          ref={scrubberRef as React.RefObject<ScrubberRef>}
+          ref={scrubberRef as RefObject<ScrubberRef>}
           hideOverlay
           idlePulse={idlePulse}
           transitions={scrubberTransitions ?? transitions}
@@ -98,18 +109,18 @@ const TransitionAreaChart = memo<{
   data: number[];
   transitions: ChartTransition;
   idlePulse?: boolean;
-  scrubberRef?: React.RefObject<ScrubberRef | null>;
+  scrubberRef?: RefObject<ScrubberRef | null>;
 }>(({ data, transitions, idlePulse, scrubberRef }) => (
   <CartesianChart
     enableScrubbing
-    height={200}
+    height={{ base: 200, tablet: 225, desktop: 250 }}
     inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
     series={[{ id: 'values', data }]}
   >
     <Area seriesId="values" transitions={transitions} />
     <Line seriesId="values" transitions={transitions} />
     <Scrubber
-      ref={scrubberRef as React.RefObject<ScrubberRef>}
+      ref={scrubberRef as RefObject<ScrubberRef>}
       hideOverlay
       idlePulse={idlePulse}
       transitions={transitions}
@@ -124,7 +135,7 @@ const MultiLineChart = memo<{
 }>(({ data1, data2, transitions }) => (
   <CartesianChart
     enableScrubbing
-    height={200}
+    height={{ base: 200, tablet: 225, desktop: 250 }}
     inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
     series={[
       { id: 'series1', data: data1, label: 'Series 1' },
@@ -136,8 +147,6 @@ const MultiLineChart = memo<{
     <Scrubber hideOverlay idlePulse transitions={transitions} />
   </CartesianChart>
 ));
-
-// --- Self-contained Example Wrappers ---
 
 function LineExample({
   transitions,
@@ -182,10 +191,8 @@ function LineExample({
         transitions={transitions}
       />
       {resettable && (
-        <Box paddingX={2}>
-          <Button compact onPress={handleReset} variant="secondary">
-            Reset
-          </Button>
+        <Box>
+          <Button onClick={handleReset}>Reset</Button>
         </Box>
       )}
     </VStack>
@@ -229,17 +236,13 @@ function AreaExample({
         transitions={transitions}
       />
       {resettable && (
-        <Box paddingX={2}>
-          <Button compact onPress={handleReset} variant="secondary">
-            Reset
-          </Button>
+        <Box>
+          <Button onClick={handleReset}>Reset</Button>
         </Box>
       )}
     </VStack>
   );
 }
-
-// --- Bar Chart Components ---
 
 const barCategories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -250,7 +253,7 @@ function generateBarData() {
 const barChartProps = {
   showXAxis: true,
   enableScrubbing: true,
-  height: 200,
+  height: 250,
   xAxis: { data: barCategories },
   yAxis: { domain: { min: 0, max: 100 } },
 } as const;
@@ -286,10 +289,8 @@ function BarExample({
     <VStack gap={2}>
       <TransitionBarChart key={resetKey} data={data} transitions={transitions} />
       {resettable && (
-        <Box paddingX={2}>
-          <Button compact onPress={handleReset} variant="secondary">
-            Reset
-          </Button>
+        <Box>
+          <Button onClick={handleReset}>Reset</Button>
         </Box>
       )}
     </VStack>
@@ -319,144 +320,74 @@ function MultiLineExample({ transitions }: { transitions: ChartTransition }) {
   return (
     <VStack gap={2}>
       <MultiLineChart key={resetKey} data1={data1} data2={data2} transitions={transitions} />
-      <Box paddingX={2}>
-        <Button compact onPress={handleReset} variant="secondary">
-          Reset
-        </Button>
+      <Box>
+        <Button onClick={handleReset}>Reset</Button>
       </Box>
     </VStack>
   );
 }
 
-// --- Main Navigator ---
+const Example = ({
+  category,
+  title,
+  children,
+}: PropsWithChildren<{ category: string; title: string }>) => (
+  <VStack gap={2}>
+    <VStack gap={0.5}>
+      <Text color="fgMuted" font="label2">
+        {category}
+      </Text>
+      <Text font="title3">{title}</Text>
+    </VStack>
+    {children}
+  </VStack>
+);
 
-type ExampleItem = {
-  category: string;
-  title: string;
-  component: React.ReactNode;
-};
-
-function ExampleNavigator() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const examples = useMemo<ExampleItem[]>(
-    () => [
-      {
-        category: 'Line',
-        title: 'Enter Only',
-        component: <LineExample idlePulse transitions={enterOnly} />,
-      },
-      {
-        category: 'Line',
-        title: 'Update Only',
-        component: <LineExample idlePulse transitions={updateOnly} />,
-      },
-      {
-        category: 'Line',
-        title: 'Both Disabled',
-        component: <LineExample transitions={bothDisabled} />,
-      },
-      {
-        category: 'Line',
-        title: 'Custom',
-        component: (
-          <LineExample
-            scrubberTransitions={customEnterUpdateBeacon}
-            transitions={customEnterUpdate}
-          />
-        ),
-      },
-      {
-        category: 'Line',
-        title: 'Imperative Pulse',
-        component: <LineExample imperative resettable={false} transitions={updateOnly} />,
-      },
-      {
-        category: 'Multi-Line',
-        title: 'Update Only',
-        component: <MultiLineExample transitions={updateOnly} />,
-      },
-      {
-        category: 'Area',
-        title: 'Both Disabled',
-        component: <AreaExample transitions={bothDisabled} />,
-      },
-      {
-        category: 'Area',
-        title: 'Imperative Pulse',
-        component: <AreaExample imperative resettable={false} transitions={updateOnly} />,
-      },
-      {
-        category: 'Bar',
-        title: 'Enter Only',
-        component: <BarExample transitions={enterOnly} />,
-      },
-      {
-        category: 'Bar',
-        title: 'Update Only',
-        component: <BarExample transitions={updateOnly} />,
-      },
-      {
-        category: 'Bar',
-        title: 'Both Disabled',
-        component: <BarExample transitions={bothDisabled} />,
-      },
-      {
-        category: 'Bar',
-        title: 'Slow Spring Both',
-        component: <BarExample transitions={slowSpringBoth} />,
-      },
-      {
-        category: 'Bar',
-        title: 'Staggered Both',
-        component: <BarExample transitions={staggeredBoth} />,
-      },
-    ],
-    [],
-  );
-
-  const currentExample = examples[currentIndex];
-
-  const handlePrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
-  }, [examples.length]);
-
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % examples.length);
-  }, [examples.length]);
-
+export const Transitions = () => {
   return (
-    <ExampleScreen paddingX={0}>
-      <VStack gap={4}>
-        <HStack alignItems="center" justifyContent="space-between" paddingX={1}>
-          <IconButton
-            accessibilityHint="Navigate to previous example"
-            accessibilityLabel="Previous"
-            name="arrowLeft"
-            onPress={handlePrevious}
-            variant="secondary"
-          />
-          <VStack alignItems="center">
-            <Text color="fgMuted" font="label2">
-              {currentExample.category}
-            </Text>
-            <Text font="title3">{currentExample.title}</Text>
-            <Text color="fgMuted" font="label1">
-              {currentIndex + 1} / {examples.length}
-            </Text>
-          </VStack>
-          <IconButton
-            accessibilityHint="Navigate to next example"
-            accessibilityLabel="Next"
-            name="arrowRight"
-            onPress={handleNext}
-            variant="secondary"
-          />
-        </HStack>
-        <Box key={currentIndex}>{currentExample.component}</Box>
-      </VStack>
-    </ExampleScreen>
+    <VStack gap={4}>
+      <Example category="Line" title="Enter Only">
+        <LineExample idlePulse transitions={enterOnly} />
+      </Example>
+      <Example category="Line" title="Update Only">
+        <LineExample idlePulse transitions={updateOnly} />
+      </Example>
+      <Example category="Line" title="Both Disabled">
+        <LineExample transitions={bothDisabled} />
+      </Example>
+      <Example category="Line" title="Custom">
+        <LineExample
+          scrubberTransitions={customEnterUpdateBeacon}
+          transitions={customEnterUpdate}
+        />
+      </Example>
+      <Example category="Line" title="Imperative Pulse">
+        <LineExample imperative resettable={false} transitions={updateOnly} />
+      </Example>
+      <Example category="Multi-Line" title="Update Only">
+        <MultiLineExample transitions={updateOnly} />
+      </Example>
+      <Example category="Area" title="Both Disabled">
+        <AreaExample transitions={bothDisabled} />
+      </Example>
+      <Example category="Area" title="Imperative Pulse">
+        <AreaExample imperative resettable={false} transitions={updateOnly} />
+      </Example>
+      <Example category="Bar" title="Enter Only">
+        <BarExample transitions={enterOnly} />
+      </Example>
+      <Example category="Bar" title="Update Only">
+        <BarExample transitions={updateOnly} />
+      </Example>
+      <Example category="Bar" title="Both Disabled">
+        <BarExample transitions={bothDisabled} />
+      </Example>
+      <Example category="Bar" title="Slow Spring Both">
+        <BarExample transitions={slowSpringBoth} />
+      </Example>
+      <Example category="Bar" title="Staggered Both">
+        <BarExample transitions={staggeredBoth} />
+      </Example>
+    </VStack>
   );
-}
-
-export default ExampleNavigator;
+};

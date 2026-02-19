@@ -3,11 +3,11 @@ import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import {
-  withStaggerDelayTransition,
   defaultBarEnterTransition,
   defaultTransition,
   getBarPath,
-  resolveTransition,
+  getTransition,
+  withStaggerDelayTransition,
 } from '../utils';
 
 import type { BarComponentProps } from './Bar';
@@ -53,11 +53,11 @@ export const DefaultBar = memo<DefaultBarProps>(
     const shouldAnimateEnter = animate && transitions?.enter !== null;
 
     const resolvedEnterTransition = withStaggerDelayTransition(
-      resolveTransition(transitions?.enter, animate, defaultBarEnterTransition),
+      getTransition(transitions?.enter, animate, defaultBarEnterTransition),
       normalizedX,
     );
     const resolvedUpdateTransition = withStaggerDelayTransition(
-      resolveTransition(
+      getTransition(
         transitions?.update !== undefined ? transitions.update : transition,
         animate,
         defaultTransition,

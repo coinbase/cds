@@ -26,8 +26,8 @@ import {
   type ChartInset,
   defaultAccessoryEnterTransition,
   getPointOnSerializableScale,
+  getTransition,
   instantTransition,
-  resolveTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -373,8 +373,7 @@ export const Scrubber = memo(
       const isReady = !!xScale;
 
       const groupEnterTransition = useMemo(
-        () =>
-          resolveTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
+        () => getTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
         [resolvedTransitions?.enter, animate],
       );
 

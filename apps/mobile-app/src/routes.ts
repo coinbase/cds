@@ -142,11 +142,6 @@ export const routes = [
         .default,
   },
   {
-    key: 'Chart',
-    getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/Chart.stories').default,
-  },
-  {
     key: 'ChartTransitions',
     getComponent: () =>
       require('@coinbase/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')

@@ -12,7 +12,7 @@ import {
   buildTransition,
   defaultAccessoryEnterTransition,
   defaultTransition,
-  resolveTransition,
+  getTransition,
 } from '../utils/transition';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
@@ -169,7 +169,7 @@ export const Point = memo<PointProps>(
 
     const updateTransition = useMemo(
       () =>
-        resolveTransition(
+        getTransition(
           transitions?.update !== undefined ? transitions.update : transition,
           animate,
           defaultTransition,
@@ -178,7 +178,7 @@ export const Point = memo<PointProps>(
     );
 
     const enterTransition = useMemo(
-      () => resolveTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
       [animate, transitions?.enter],
     );
 

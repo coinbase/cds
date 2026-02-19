@@ -15,7 +15,7 @@ import type { ChartTransition, Transition } from './utils/transition';
 import {
   buildTransition,
   defaultTransition,
-  resolveTransition,
+  getTransition,
   usePathTransition,
 } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
@@ -226,13 +226,13 @@ export const Path = memo<PathProps>((props) => {
   const isReady = !!context.getXScale();
 
   const enterTransition = useMemo(
-    () => resolveTransition(transitions?.enter, animate, defaultPathEnterTransition),
+    () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),
     [animate, transitions?.enter],
   );
 
   const updateTransition = useMemo(
     () =>
-      resolveTransition(
+      getTransition(
         transitions?.update !== undefined ? transitions.update : transition,
         animate,
         defaultTransition,

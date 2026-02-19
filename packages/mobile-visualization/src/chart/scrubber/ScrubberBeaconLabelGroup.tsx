@@ -7,18 +7,18 @@ import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import { applySerializableScale, unwrapAnimatedValue, useScrubberContext } from '../utils';
 import {
-  buildTransition,
-  defaultTransition,
-  instantTransition,
-  type Transition,
-} from '../utils/transition';
-import {
   calculateLabelYPositions,
   getLabelPosition,
   type LabelDimensions,
   type LabelPosition,
   type ScrubberLabelPosition,
 } from '../utils/scrubber';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 import type {
@@ -168,11 +168,10 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
-    const activeUpdateTransition = useMemo(() => {
-      const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
-      if (animate && resolved !== null) return resolved;
-      return instantTransition;
-    }, [transitions?.update, animate]);
+    const activeUpdateTransition = useMemo(
+      () => getTransition(transitions?.update, animate, defaultTransition),
+      [transitions?.update, animate],
+    );
 
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 

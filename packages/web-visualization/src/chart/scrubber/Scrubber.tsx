@@ -16,8 +16,7 @@ import {
   type ChartTransition,
   defaultAccessoryEnterTransition,
   getPointOnScale,
-  instantTransition,
-  resolveTransition,
+  getTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -366,13 +365,11 @@ export const Scrubber = memo(
       );
 
       const groupEnterTransition = useMemo(
-        () =>
-          resolveTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
+        () => getTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
         [resolvedTransitions?.enter, animate],
       );
 
       const groupExitTransition = useMemo(() => {
-        if (groupEnterTransition === instantTransition) return undefined;
         const duration =
           'duration' in groupEnterTransition
             ? (groupEnterTransition as { duration?: number }).duration
@@ -395,7 +392,7 @@ export const Scrubber = memo(
           data-component="scrubber-group"
           data-testid={testID}
           role="status"
-          {...(animate && groupEnterTransition !== instantTransition
+          {...(animate
             ? {
                 animate: {
                   opacity: 1,

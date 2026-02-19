@@ -47,7 +47,10 @@ export type BarChartTransition = {
  * @param normalizedX - The bar's normalized x position (0 = left edge, 1 = right edge)
  * @returns A standard Transition with computed delay
  */
-export const withStaggerDelayTransition = (transition: Transition, normalizedX: number): Transition => {
+export const withStaggerDelayTransition = (
+  transition: Transition,
+  normalizedX: number,
+): Transition => {
   const { staggerDelay, ...baseTransition } = transition as BarTransition;
   if (!staggerDelay) return transition;
   return {

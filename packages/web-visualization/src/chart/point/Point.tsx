@@ -10,9 +10,9 @@ import {
   type AccessoryTransitionProps,
   defaultAccessoryEnterTransition,
   defaultTransition,
+  getTransition,
   type PointLabelPosition,
   projectPoint,
-  resolveTransition,
 } from '../utils';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
@@ -259,13 +259,13 @@ export const Point = memo<PointProps>(
     const animate = animateProp ?? animationEnabled;
 
     const enterTransition = useMemo(
-      () => resolveTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
       [animate, transitions?.enter],
     );
 
     const updateTransition = useMemo(
       () =>
-        resolveTransition(
+        getTransition(
           transitions?.update !== undefined ? transitions.update : transition,
           animate,
           defaultTransition,

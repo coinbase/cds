@@ -1,12 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { CartesianChart } from '../../CartesianChart';
 import { DottedLine, Line } from '../../line';
 import { Scrubber } from '../../scrubber/Scrubber';
-import type { ScrubberRef } from '../../scrubber/Scrubber';
-import type { ChartTransition } from '../../utils';
 import { Area, AreaChart } from '..';
 
 export default {
@@ -132,108 +129,4 @@ export const All = () => {
       </Example>
     </VStack>
   );
-};
-
-export const Transitions = () => {
-  const dataCount = 15;
-  const updateInterval = 2500;
-
-  function generateNextValue(previousValue: number) {
-    const step = Math.random() * 30 - 15;
-    return Math.max(0, Math.min(100, previousValue + step));
-  }
-
-  function generateInitialData() {
-    const data = [50];
-    for (let i = 1; i < dataCount; i++) {
-      data.push(generateNextValue(data[i - 1]));
-    }
-    return data;
-  }
-
-  const enterOnly: ChartTransition = { update: null, enter: { type: 'tween', duration: 1.0 } };
-  const updateOnly: ChartTransition = {
-    enter: null,
-    update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
-  };
-  const bothDisabled: ChartTransition = { enter: null, update: null };
-  const instantEnter: ChartTransition = {
-    enter: { type: 'tween', duration: 0 },
-    update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
-  };
-  const instantUpdate: ChartTransition = {
-    enter: { type: 'tween', duration: 1.0 },
-    update: { type: 'tween', duration: 0 },
-  };
-
-  function TransitionChart({
-    data,
-    transitions,
-    idlePulse,
-    scrubberRef,
-  }: {
-    data: number[];
-    transitions: ChartTransition;
-    idlePulse?: boolean;
-    scrubberRef?: React.RefObject<ScrubberRef | null>;
-  }) {
-    return (
-      <CartesianChart
-        enableScrubbing
-        height={{ base: 200, tablet: 225, desktop: 250 }}
-        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
-        series={[{ id: 'values', data }]}
-      >
-        <Area seriesId="values" transitions={transitions} />
-        <Line seriesId="values" transitions={transitions} />
-        <Scrubber
-          ref={scrubberRef as React.RefObject<ScrubberRef>}
-          hideOverlay
-          idlePulse={idlePulse}
-          transitions={transitions}
-        />
-      </CartesianChart>
-    );
-  }
-
-  function TransitionsStory() {
-    const scrubberRef = useRef<ScrubberRef>(null);
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((current) => {
-          const last = current[current.length - 1];
-          return [...current.slice(1), generateNextValue(last)];
-        });
-        scrubberRef.current?.pulse();
-      }, updateInterval);
-      return () => clearInterval(intervalId);
-    }, []);
-
-    return (
-      <VStack gap={4}>
-        <Example title="Enter Only (idlePulse)">
-          <TransitionChart data={data} idlePulse transitions={enterOnly} />
-        </Example>
-        <Example title="Update Only (idlePulse)">
-          <TransitionChart data={data} idlePulse transitions={updateOnly} />
-        </Example>
-        <Example title="Both Disabled (null)">
-          <TransitionChart data={data} transitions={bothDisabled} />
-        </Example>
-        <Example title="Instant Enter (duration: 0)">
-          <TransitionChart data={data} transitions={instantEnter} />
-        </Example>
-        <Example title="Instant Update (duration: 0)">
-          <TransitionChart data={data} transitions={instantUpdate} />
-        </Example>
-        <Example title="Imperative Pulse on Data Change">
-          <TransitionChart data={data} scrubberRef={scrubberRef} transitions={updateOnly} />
-        </Example>
-      </VStack>
-    );
-  }
-
-  return <TransitionsStory />;
 };

@@ -7,7 +7,7 @@ import {
 } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, instantTransition, projectPoint } from '../utils';
+import { defaultTransition, getTransition,instantTransition, projectPoint } from '../utils';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
@@ -90,9 +90,8 @@ export const DefaultScrubberBeacon = memo(
 
       const activeUpdateTransition = useMemo(() => {
         if (isIdleTransition) return instantTransition;
-        const resolved = transitions?.update !== undefined ? transitions.update : defaultTransition;
-        if (isIdle && animate && resolved !== null) return resolved;
-        return instantTransition;
+        if (!isIdle) return instantTransition;
+        return getTransition(transitions?.update, animate, defaultTransition);
       }, [transitions?.update, isIdle, animate, isIdleTransition]);
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
