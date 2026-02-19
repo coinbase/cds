@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.47.0 (2/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: enable Button text customization via font props. [[#408](https://github.com/coinbase/cds/pull/408)]
+
 ## 8.46.1 (2/12/2026 PST)
 
 #### 🐞 Fixes
