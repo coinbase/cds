@@ -32,7 +32,7 @@ const PositionedLabel = memo<{
   positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
   isIdle: AnimatedProp<boolean>;
-  activeUpdateTransition: Transition;
+  updateTransition: Transition;
   label: ChartTextChildren;
   color?: string;
   seriesId: string;
@@ -46,7 +46,7 @@ const PositionedLabel = memo<{
     positions,
     position,
     isIdle,
-    activeUpdateTransition,
+    updateTransition,
     label,
     color,
     seriesId,
@@ -71,9 +71,9 @@ const PositionedLabel = memo<{
           animatedY.value = current.y;
           return;
         }
-        animatedY.value = buildTransition(current.y, activeUpdateTransition);
+        animatedY.value = buildTransition(current.y, updateTransition);
       },
-      [activeUpdateTransition],
+      [updateTransition],
     );
 
     const dx = useDerivedValue(() => {
@@ -168,7 +168,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
-    const activeUpdateTransition = useMemo(
+    const updateTransition = useMemo(
       () => getTransition(transitions?.update, animate, defaultTransition),
       [transitions?.update, animate],
     );
@@ -323,7 +323,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         <PositionedLabel
           key={info.seriesId}
           BeaconLabelComponent={BeaconLabelComponent}
-          activeUpdateTransition={activeUpdateTransition}
+          updateTransition={updateTransition}
           color={labelInfo.color}
           index={index}
           isIdle={isIdle ?? true}

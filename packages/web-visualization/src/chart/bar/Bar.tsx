@@ -12,8 +12,12 @@ import { DefaultBar } from './';
 export type BarTransitionProps = {
   /**
    * Transition configuration for enter and update animations.
-   * - enter default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 }` -- staggered spring
-   * - update default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }` -- spring data updates
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
+   * }}
    *
    * @example
    * // Custom staggered enter and spring update
