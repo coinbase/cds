@@ -41,10 +41,10 @@ function isDeclaredLocally(name: string, code: string): boolean {
 /**
  * Checks whether an identifier is used as a value in the code and is not declared locally
  */
-function isUsedIdentifier(name: string, strippedCode: string, rawCode: string): boolean {
+function isUsedIdentifier(name: string, strippedCode: string): boolean {
   const appearsInCode = new RegExp(`(?<!\\.)\\b${name}\\b`).test(strippedCode);
   const usedAsValue = new RegExp(`(?<!\\.)\\b${name}\\b(?!\\s*[:=](?!=))`).test(strippedCode);
-  return appearsInCode && usedAsValue && !isDeclaredLocally(name, rawCode);
+  return appearsInCode && usedAsValue && !isDeclaredLocally(name, strippedCode);
 }
 
 /**
@@ -71,7 +71,7 @@ export function generateImports(code: string): string {
   const strippedCode = stripNonCode(code);
 
   const usedBySource = groupBySource(
-    Object.entries(importMap).filter(([name]) => isUsedIdentifier(name, strippedCode, code)),
+    Object.entries(importMap).filter(([name]) => isUsedIdentifier(name, strippedCode)),
   );
 
   const lines: string[] = ["import React from 'react';"];
