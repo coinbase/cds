@@ -323,7 +323,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         <PositionedLabel
           key={info.seriesId}
           BeaconLabelComponent={BeaconLabelComponent}
-          updateTransition={updateTransition}
           color={labelInfo.color}
           index={index}
           isIdle={isIdle ?? true}
@@ -334,6 +333,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           position={currentPosition}
           positions={allLabelPositions}
           seriesId={info.seriesId}
+          updateTransition={updateTransition}
         />
       );
     });
