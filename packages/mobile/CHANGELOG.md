@@ -8,6 +8,36 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.47.1 (2/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray title spacing and overflow. [[#414](https://github.com/coinbase/cds/pull/414)]
+
+## 8.47.0 (2/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: enable Button text customization via font props. [[#408](https://github.com/coinbase/cds/pull/408)]
+
+## 8.46.1 (2/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: (DX-5052) use previous active step value for calculating remaining steps to animate to for a completed stepper. [[#397](https://github.com/coinbase/cds/pull/397)] [DX-5052]
+
+## 8.46.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add open/close visibility delays to Tooltip. [[#234](https://github.com/coinbase/cds/pull/234)]
+
+## 8.45.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add reduce motion support for Tray. [[#386](https://github.com/coinbase/cds/pull/386)]
+
 ## 8.44.2 (2/10/2026 PST)
 
 #### 🐞 Fixes

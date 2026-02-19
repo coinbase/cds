@@ -24,6 +24,7 @@ const animateDrawer = {
 export const useDrawerAnimation = (
   pin: PinningDirection | undefined = 'bottom',
   verticalDrawerPercentageOfView: number | undefined = defaultVerticalDrawerPercentageOfView,
+  reduceMotion?: boolean,
 ) => {
   const windowDimensions = useWindowDimensions();
 
@@ -33,15 +34,40 @@ export const useDrawerAnimation = (
     : windowDimensions.width * horizontalDrawerPercentageOfView;
 
   const drawerAnimation = useRef(new Animated.Value(0));
+  // Separate opacity value used when reduceMotion is true so that
+  // open/close-button fades are independent of the transform that
+  // the pan-responder drives during swipe gestures.
+  const contentOpacity = useRef(new Animated.Value(reduceMotion ? 0 : 1));
 
-  const animateDrawerIn = useMemo(
-    () => Animated.timing(drawerAnimation.current, animateDrawer.animateIn),
-    [],
-  );
-  const animateDrawerOut = useMemo(
-    () => Animated.timing(drawerAnimation.current, animateDrawer.animateOut),
-    [],
-  );
+  const animateDrawerIn = useMemo(() => {
+    if (reduceMotion) {
+      return Animated.parallel([
+        Animated.timing(drawerAnimation.current, {
+          ...animateDrawer.animateIn,
+          duration: 0,
+        }),
+        Animated.timing(contentOpacity.current, animateDrawer.animateIn),
+      ]);
+    }
+    return Animated.timing(drawerAnimation.current, animateDrawer.animateIn);
+  }, [reduceMotion]);
+
+  const animateDrawerOut = useMemo(() => {
+    if (reduceMotion) {
+      return Animated.timing(contentOpacity.current, animateDrawer.animateOut);
+    }
+    return Animated.timing(drawerAnimation.current, animateDrawer.animateOut);
+  }, [reduceMotion]);
+
+  const animateSnapBack = useMemo(() => {
+    if (reduceMotion) {
+      return Animated.parallel([
+        Animated.timing(drawerAnimation.current, animateDrawer.animateIn),
+        Animated.timing(contentOpacity.current, animateDrawer.animateIn),
+      ]);
+    }
+    return Animated.timing(drawerAnimation.current, animateDrawer.animateIn);
+  }, [reduceMotion]);
 
   /** custom animation config for swipe and fling to close that has no friction and is faster */
   const animateSwipeToClose = useMemo(
@@ -89,13 +115,30 @@ export const useDrawerAnimation = (
     }
   }, [pin, drawerDimension]);
 
+  const drawerAnimationStyles = useMemo(() => {
+    if (reduceMotion) {
+      return {
+        opacity: contentOpacity.current,
+        transform: [translation],
+      };
+    }
+    return { transform: [translation] };
+  }, [reduceMotion, translation]);
+
   return useMemo(() => {
     return {
       drawerAnimation: drawerAnimation.current,
       animateDrawerOut,
       animateDrawerIn,
-      drawerAnimationStyles: { transform: [translation] },
+      animateSnapBack,
+      drawerAnimationStyles,
       animateSwipeToClose,
     };
-  }, [animateDrawerOut, animateDrawerIn, translation, animateSwipeToClose]);
+  }, [
+    animateDrawerOut,
+    animateDrawerIn,
+    animateSnapBack,
+    drawerAnimationStyles,
+    animateSwipeToClose,
+  ]);
 };

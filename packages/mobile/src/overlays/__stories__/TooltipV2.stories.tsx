@@ -24,6 +24,31 @@ const shortText = 'This is the short text.';
 const longText =
   'This is the really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really long text.';
 
+const DelayVariations = () => {
+  return (
+    <Example title="Delay Variations">
+      <VStack background="bgAlternate" gap={4} paddingY={2}>
+        <HStack justifyContent="space-evenly">
+          <Tooltip closeDelay={0} content="Opens after 400ms" openDelay={400}>
+            <Text font="label2">Open delay 400ms</Text>
+          </Tooltip>
+          <Tooltip closeDelay={200} content="Closes after 200ms" openDelay={0}>
+            <Text font="label2">Close delay 200ms</Text>
+          </Tooltip>
+        </HStack>
+        <HStack justifyContent="space-evenly">
+          <Tooltip closeDelay={150} content="Open 300 / Close 150" openDelay={300}>
+            <Text font="label2">Open 300 / Close 150</Text>
+          </Tooltip>
+          <Tooltip closeDelay={300} content="Open 500 / Close 300" openDelay={500}>
+            <Text font="label2">Open 500 / Close 300</Text>
+          </Tooltip>
+        </HStack>
+      </VStack>
+    </Example>
+  );
+};
+
 const ToolTipWithA11y = ({ tooltipText, yShiftByStatusBarHeight }: Omit<ContentTypes, 'title'>) => {
   const triggerRef = useRef(null);
   const { setA11yFocus } = useA11y();
@@ -206,7 +231,7 @@ const RNModalTest = () => {
   );
 
   return (
-    <>
+    <Example>
       <Button onPress={setVisibleToOn}>Open RN Modal Test 2</Button>
       <RNModal statusBarTranslucent={statusBarTranslucent} visible={visible}>
         <VStack paddingTop={6} width="100%">
@@ -232,7 +257,7 @@ const RNModalTest = () => {
           yShiftByStatusBarHeight={yShiftByStatusBarHeight}
         />
       </RNModal>
-    </>
+    </Example>
   );
 };
 
@@ -249,11 +274,14 @@ const DisabledTest = () => {
 const TooltipV2Screen = () => {
   return (
     <ExampleScreen>
-      <CDSModalTest />
-      <RNModalTest />
-      <Content title="Short Text Tooltip" tooltipText={shortText} />
-      <Content title="Long Text Tooltip" tooltipText={longText} />
-      <DisabledTest />
+      <VStack gap={2}>
+        <CDSModalTest />
+        <RNModalTest />
+        <DelayVariations />
+        <Content title="Short Text Tooltip" tooltipText={shortText} />
+        <Content title="Long Text Tooltip" tooltipText={longText} />
+        <DisabledTest />
+      </VStack>
     </ExampleScreen>
   );
 };

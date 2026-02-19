@@ -42,6 +42,7 @@ const MockDrawer = ({
   onCloseComplete,
   pin = 'bottom',
   preventDismissGestures,
+  reduceMotion,
 }: Partial<DrawerBaseProps>) => {
   const [isVisible, setIsVisible] = useState(false);
   const setIsVisibleOn = useCallback(() => setIsVisible(true), [setIsVisible]);
@@ -61,6 +62,7 @@ const MockDrawer = ({
           onCloseComplete={handleRequestClose}
           pin={pin}
           preventDismissGestures={preventDismissGestures}
+          reduceMotion={reduceMotion}
           visible={isVisible}
         >
           {({ handleClose }) => (
@@ -150,5 +152,29 @@ describe('Drawer', () => {
     // Make sure the drawer is still visible after the expected animation duration
     await delay(DURATION);
     expect(onCloseComplete).not.toHaveBeenCalled();
+  });
+
+  describe('reduceMotion', () => {
+    it('closes the Drawer when the close button is pressed with reduceMotion enabled', async () => {
+      const onCloseComplete = jest.fn();
+      render(<MockDrawerWithSafeArea reduceMotion onCloseComplete={onCloseComplete} />);
+
+      fireEvent.press(screen.getByText('Open Drawer'));
+      expect(screen.getByText(loremIpsum)).toBeTruthy();
+
+      fireEvent.press(screen.getByText('Close Drawer'));
+      await waitFor(() => expect(onCloseComplete).toHaveBeenCalledTimes(1));
+    });
+
+    it('still closes the Drawer via overlay press with reduceMotion enabled', async () => {
+      const onCloseComplete = jest.fn();
+      render(<MockDrawerWithSafeArea reduceMotion onCloseComplete={onCloseComplete} />);
+
+      fireEvent.press(screen.getByText('Open Drawer'));
+      expect(screen.getByText(loremIpsum)).toBeTruthy();
+
+      fireEvent(screen.getByTestId('drawer-overlay'), 'onTouchStart');
+      await waitFor(() => expect(onCloseComplete).toHaveBeenCalledTimes(1));
+    });
   });
 });
