@@ -18,37 +18,19 @@ import { useCartesianChartContext } from './ChartProvider';
  */
 export const pathEnterTransitionDuration = 0.5;
 
-export type PathTransitionProps = {
-  /**
-   * Transition configuration for enter and update animations.
-   * @note Disable an animation by passing in null.
-   *
-   * @default transitions = {{
-   *   enter: { type: 'tween', duration: 0.5 },
-   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
-   * }}
-   *
-   * @example
-   * // Custom enter and update transitions
-   * transitions={{ enter: { type: 'tween', duration: 0.3 }, update: { type: 'spring', damping: 20 } }}
-   *
-   * @example
-   * // Disable enter animation
-   * transitions={{ enter: null }}
-   */
-  transitions?: ChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
-
 export type PathBaseProps = SharedProps & {
   /**
    * Whether to animate this path. Overrides the animate prop on the Chart component.
    */
   animate?: boolean;
+  /**
+   * Fill color for the path.
+   */
+  fill?: string;
+  /**
+   * Opacity for the path fill.
+   */
+  fillOpacity?: number;
 };
 
 export type PathProps = PathBaseProps &
@@ -66,8 +48,30 @@ export type PathProps = PathBaseProps &
     | 'onDragCapture'
     | 'onDragEndCapture'
     | 'onDragStartCapture'
-  > &
-  PathTransitionProps & {
+  > & {
+    /**
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     *
+     * @default transitions = {{
+     *   enter: { type: 'tween', duration: 0.5 },
+     *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
+     * }}
+     *
+     * @example
+     * // Custom enter and update transitions
+     * transitions={{ enter: { type: 'tween', duration: 0.3 }, update: { type: 'spring', damping: 20 } }}
+     *
+     * @example
+     * // Disable enter animation
+     * transitions={{ enter: null }}
+     */
+    transitions?: ChartTransition;
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
+     */
+    transition?: Transition;
     /**
      * Offset added to the clip rect boundaries.
      */

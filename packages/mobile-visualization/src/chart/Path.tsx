@@ -26,32 +26,6 @@ import { unwrapAnimatedValue } from './utils';
  */
 export const pathEnterTransitionDuration = 500;
 
-export type PathTransitionProps = {
-  /**
-   * Transition configuration for enter and update animations.
-   * @note Disable an animation by passing in null.
-   *
-   * @default transitions = {{
-   *   enter: { type: 'tween', duration: 0.5 },
-   *   update: { type: 'spring', stiffness: 900, damping: 120 }
-   * }}
-   *
-   * @example
-   * // Custom enter and update transitions
-   * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
-   *
-   * @example
-   * // Disable enter animation
-   * transitions={{ enter: null }}
-   */
-  transitions?: ChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
-
 export type PathBaseProps = {
   /**
    * Whether to animate this path. Overrides the animate prop on the Chart component.
@@ -101,8 +75,30 @@ export type PathProps = PathBaseProps &
     | 'strokeWidth'
     | 'style'
     | 'transform'
-  > &
-  PathTransitionProps & {
+  > & {
+    /**
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     *
+     * @default transitions = {{
+     *   enter: { type: 'timing', duration: 500 },
+     *   update: { type: 'spring', stiffness: 900, damping: 120 }
+     * }}
+     *
+     * @example
+     * // Custom enter and update transitions
+     * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+     *
+     * @example
+     * // Disable enter animation
+     * transitions={{ enter: null }}
+     */
+    transitions?: ChartTransition;
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
+     */
+    transition?: Transition;
     /**
      * The SVG path data string.
      */

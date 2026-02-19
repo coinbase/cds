@@ -5,7 +5,7 @@ import { m as motion } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import type { PathProps, PathTransitionProps } from '../Path';
+import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
@@ -110,7 +110,7 @@ export type LineBaseProps = SharedProps & {
 };
 
 export type LineProps = LineBaseProps &
-  PathTransitionProps & {
+  Pick<PathProps, 'transitions' | 'transition'> & {
     /**
      * Handler for when a point is clicked.
      * Passed through to Point components rendered via points.

@@ -5,7 +5,7 @@ import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { type PathProps, type PathTransitionProps } from '../Path';
+import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
@@ -109,7 +109,7 @@ export type LineBaseProps = {
   animate?: boolean;
 };
 
-export type LineProps = LineBaseProps & PathTransitionProps;
+export type LineProps = LineBaseProps & Pick<PathProps, 'transitions' | 'transition'>;
 
 export type LineComponentProps = Pick<
   LineProps,
