@@ -182,4 +182,27 @@ describe('Button', () => {
     expect(button).toBeDefined();
     expect(screen.getByTestId('custom-react-node')).not.toBeNull();
   });
+
+  it('passes font props to internal text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button
+          font="body"
+          fontFamily="title4"
+          fontSize="caption"
+          fontWeight="label1"
+          lineHeight="display3"
+        >
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+
+    const text = screen.UNSAFE_getByType(Text);
+    expect(text.props.font).toBe('body');
+    expect(text.props.fontFamily).toBe('title4');
+    expect(text.props.fontSize).toBe('caption');
+    expect(text.props.fontWeight).toBe('label1');
+    expect(text.props.lineHeight).toBe('display3');
+  });
 });

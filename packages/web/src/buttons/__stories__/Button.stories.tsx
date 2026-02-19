@@ -43,6 +43,9 @@ const buttonStories: Omit<ButtonBaseProps, 'children'>[] = [
   { paddingStart: 6, paddingEnd: 6 },
   { paddingTop: 6, paddingBottom: 6 },
   { marginStart: -2 },
+  { font: 'body' },
+  { font: 'title3' },
+  { fontSize: 'title3', fontWeight: 'body' },
 ];
 
 const onClickConsole = () => console.log('clicked');
