@@ -51,11 +51,11 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const shouldAnimateEnter = animate && transitions?.enter !== null;
 
-    const resolvedEnterTransition = withStaggerDelayTransition(
+    const enterTransition = withStaggerDelayTransition(
       getTransition(transitions?.enter, animate, defaultBarEnterTransition),
       normalizedX,
     );
-    const resolvedUpdateTransition = withStaggerDelayTransition(
+    const updateTransition = withStaggerDelayTransition(
       getTransition(
         transitions?.update !== undefined ? transitions.update : transition,
         animate,
@@ -75,8 +75,8 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const activeTransition =
       isInitialRender.current && shouldAnimateEnter
-        ? (resolvedEnterTransition ?? resolvedUpdateTransition)
-        : resolvedUpdateTransition;
+        ? (enterTransition ?? updateTransition)
+        : updateTransition;
 
     return (
       <>

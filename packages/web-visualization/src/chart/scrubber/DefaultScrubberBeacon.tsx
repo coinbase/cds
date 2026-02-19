@@ -88,7 +88,7 @@ export const DefaultScrubberBeacon = memo(
       const isIdleTransition = isIdle !== prevIsIdleRef.current;
       prevIsIdleRef.current = isIdle;
 
-      const activeUpdateTransition = useMemo(() => {
+      const updateTransition = useMemo(() => {
         if (isIdleTransition) return instantTransition;
         if (!isIdle) return instantTransition;
         return getTransition(transitions?.update, animate, defaultTransition);
@@ -183,7 +183,7 @@ export const DefaultScrubberBeacon = memo(
             <motion.g
               animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               initial={false}
-              transition={activeUpdateTransition}
+              transition={updateTransition}
             >
               {pulseCircle}
             </motion.g>
@@ -199,7 +199,7 @@ export const DefaultScrubberBeacon = memo(
             stroke={stroke}
             strokeWidth={strokeWidth}
             style={style}
-            transition={activeUpdateTransition}
+            transition={updateTransition}
           />
         </g>
       );

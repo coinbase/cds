@@ -35,7 +35,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       [x, drawingArea.x, drawingArea.width],
     );
 
-    const resolvedEnterTransition = useMemo(
+    const enterTransition = useMemo(
       () =>
         withStaggerDelayTransition(
           getTransition(transitions?.enter, animate, defaultBarEnterTransition),
@@ -43,7 +43,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
         ),
       [animate, transitions?.enter, normalizedX],
     );
-    const resolvedUpdateTransition = useMemo(
+    const updateTransition = useMemo(
       () =>
         withStaggerDelayTransition(
           getTransition(
@@ -70,8 +70,8 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     const animatedClipPath = usePathTransition({
       currentPath: targetPath,
       initialPath,
-      transition: resolvedUpdateTransition,
-      enterTransition: resolvedEnterTransition,
+      transition: updateTransition,
+      enterTransition: enterTransition,
     });
 
     const clipPath = animate ? animatedClipPath : targetPath;

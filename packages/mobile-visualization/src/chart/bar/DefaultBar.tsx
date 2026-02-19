@@ -42,7 +42,7 @@ export const DefaultBar = memo<DefaultBarProps>(
       [x, drawingArea.x, drawingArea.width],
     );
 
-    const resolvedEnterTransition = useMemo(
+    const enterTransition = useMemo(
       () =>
         withStaggerDelayTransition(
           getTransition(transitions?.enter, animate, defaultBarEnterTransition),
@@ -50,7 +50,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         ),
       [transitions?.enter, animate, normalizedX],
     );
-    const resolvedUpdateTransition = useMemo(
+    const updateTransition = useMemo(
       () =>
         withStaggerDelayTransition(
           getTransition(
@@ -110,8 +110,8 @@ export const DefaultBar = memo<DefaultBarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transitions={{
-          enter: resolvedEnterTransition,
-          update: resolvedUpdateTransition,
+          enter: enterTransition,
+          update: updateTransition,
         }}
       />
     );

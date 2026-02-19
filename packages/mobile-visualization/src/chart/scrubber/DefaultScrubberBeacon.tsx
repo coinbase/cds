@@ -90,7 +90,7 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries?.color, theme.color.fgPrimary],
       );
 
-      const activeUpdateTransition = useMemo(
+      const updateTransition = useMemo(
         () => getTransition(transitions?.update, animate, defaultTransition),
         [transitions?.update, animate],
       );
@@ -144,10 +144,10 @@ export const DefaultScrubberBeacon = memo(
             return;
           }
 
-          animatedX.value = buildTransition(current.point.x, activeUpdateTransition);
-          animatedY.value = buildTransition(current.point.y, activeUpdateTransition);
+          animatedX.value = buildTransition(current.point.x, updateTransition);
+          animatedY.value = buildTransition(current.point.y, updateTransition);
         },
-        [animate, activeUpdateTransition],
+        [animate, updateTransition],
       );
 
       // Create animated point using the animated values
