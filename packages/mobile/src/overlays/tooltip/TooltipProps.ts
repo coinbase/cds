@@ -27,6 +27,14 @@ export type TooltipBaseProps = SharedProps &
      * @default true
      */
     visible?: boolean;
+    /**
+     * Delay (in ms) before showing the tooltip after press.
+     */
+    openDelay?: number;
+    /**
+     * Delay (in ms) before hiding the tooltip after dismiss.
+     */
+    closeDelay?: number;
     /** Invert the theme's activeColorScheme for this component
      * @default true
      */

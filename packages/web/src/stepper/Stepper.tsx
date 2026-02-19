@@ -379,10 +379,12 @@ const StepperBase = memo(
         // Case when going from not-complete to complete
         if (Boolean(complete) !== previousComplete) {
           if (complete) {
-            // Going to complete: animate from activeStepIndex+1 to end
+            // Going to complete: animate remaining steps to filled.
+            // Use previousActiveStepIndex to determine which steps are already filled before the completion state update,
+            const lastFilledIndex = Math.max(activeStepIndex, previousActiveStepIndex);
             stepsToAnimate = Array.from(
-              { length: steps.length - activeStepIndex - 1 },
-              (_, i) => activeStepIndex + 1 + i,
+              { length: steps.length - lastFilledIndex - 1 },
+              (_, i) => lastFilledIndex + 1 + i,
             );
             isAnimatingForward = true;
           } else {

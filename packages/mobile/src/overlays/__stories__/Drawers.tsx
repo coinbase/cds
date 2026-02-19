@@ -11,7 +11,10 @@ import { Text } from '../../typography/Text';
 import type { DrawerBaseProps } from '../drawer/Drawer';
 import { Drawer } from '../drawer/Drawer';
 
-export const DefaultDrawer = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pin'>) => {
+export const DefaultDrawer = ({
+  pin = 'left',
+  reduceMotion,
+}: Pick<DrawerBaseProps, 'pin' | 'reduceMotion'>) => {
   const [isVisible, setIsVisible] = useState(true);
   const setIsVisibleOff = useCallback(() => setIsVisible(false), [setIsVisible]);
   const setIsVisibleOn = useCallback(() => setIsVisible(true), [setIsVisible]);
@@ -19,7 +22,7 @@ export const DefaultDrawer = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pin'>) =>
     <>
       <Button onPress={setIsVisibleOn}>Open</Button>
       {isVisible && (
-        <Drawer onCloseComplete={setIsVisibleOff} pin={pin}>
+        <Drawer onCloseComplete={setIsVisibleOff} pin={pin} reduceMotion={reduceMotion}>
           {({ handleClose }) => (
             <VStack padding={2}>
               <LoremIpsum />
