@@ -26,14 +26,15 @@ import { unwrapAnimatedValue } from './utils';
  */
 export const pathEnterTransitionDuration = 500;
 
-/**
- * Transition props for path-based components (Line, Area, Path).
- */
 export type PathTransitionProps = {
   /**
    * Transition configuration for enter and update animations.
-   * - enter default: `{ type: 'timing', duration: 500 }` -- timed clip-path reveal
-   * - update default: `{ type: 'spring', stiffness: 900, damping: 120 }` -- spring data updates
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'tween', duration: 0.5 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120 }
+   * }}
    *
    * @example
    * // Custom enter and update transitions

@@ -81,10 +81,8 @@ export const defaultAccessoryEnterTransition: Transition = {
 
 /**
  * Resolves a transition value based on the animation state and a default.
- * - `null` -> instantTransition (animation disabled for this phase)
- * - `undefined` -> defaultValue (use the provided default)
- * - `Transition` -> use it as-is
- * - `!animate` -> instantTransition (animation globally disabled)
+ * @note Passing in null will disable an animation.
+ * @note Passing in undefined will use the provided default.
  */
 export const getTransition = (
   value: Transition | null | undefined,
@@ -95,14 +93,15 @@ export const getTransition = (
   return value ?? defaultValue;
 };
 
-/**
- * Transition props for accessory elements (Point, Scrubber beacons).
- */
 export type AccessoryTransitionProps = {
   /**
    * Transition configuration for enter and update animations.
-   * - enter default: `{ type: 'tween', duration: 0.15, delay: 0.35 }` -- delayed opacity fade
-   * - update default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }` -- spring position updates
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'tween', duration: 0.15, delay: 0.35 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
+   * }}
    *
    * @example
    * // Custom enter and update transitions

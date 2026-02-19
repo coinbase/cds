@@ -18,14 +18,15 @@ import { useCartesianChartContext } from './ChartProvider';
  */
 export const pathEnterTransitionDuration = 0.5;
 
-/**
- * Transition props for path-based components (Line, Area, Path).
- */
 export type PathTransitionProps = {
   /**
    * Transition configuration for enter and update animations.
-   * - enter default: `{ type: 'tween', duration: 0.5 }` -- tween clip-path reveal
-   * - update default: `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }` -- spring data updates
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'tween', duration: 0.5 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
+   * }}
    *
    * @example
    * // Custom enter and update transitions
