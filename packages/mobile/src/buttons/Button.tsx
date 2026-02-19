@@ -1,10 +1,5 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo } from 'react';
-import {
-  ActivityIndicator,
-  type PressableStateCallbackType,
-  StyleSheet,
-  type View,
-} from 'react-native';
+import { type PressableStateCallbackType, StyleSheet, type View } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type {
   ButtonVariant,
@@ -17,13 +12,15 @@ import type {
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
+import { Spinner } from '../loaders';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+
+const defaultLoadingSpinnerSize = 24;
 
 export const styles = StyleSheet.create({
   inline: {
     width: 'auto',
-    minWidth: 64,
   },
   block: {
     width: '100%',
@@ -49,6 +46,10 @@ export type ButtonBaseProps = SharedProps &
     disabled?: boolean;
     /** Mark the button as loading and display a spinner. */
     loading?: boolean;
+    /** The size of the loading spinner in pixels
+     *  @default 24
+     */
+    loadingSpinnerSize?: number;
     /** Mark the background and border as transparent until interacted with. */
     transparent?: boolean;
     /** Change to block and expand to 100% of parent width. */
@@ -92,6 +93,7 @@ export const Button = memo(
     {
       variant = 'primary',
       loading,
+      loadingSpinnerSize,
       transparent,
       block,
       compact,
@@ -146,6 +148,8 @@ export const Button = memo(
       [sizingStyle, style],
     );
 
+    const spinnerSize = loadingSpinnerSize ?? defaultLoadingSpinnerSize;
+
     const childrenNode = useMemo(
       () =>
         isValidElement(children) &&
@@ -196,7 +200,7 @@ export const Button = memo(
           style={sizingStyle}
         >
           {loading ? (
-            <ActivityIndicator color={theme.color[colorValue]} size="small" />
+            <Spinner color={theme.color[colorValue]} size={spinnerSize} />
           ) : (
             <>
               {start ??

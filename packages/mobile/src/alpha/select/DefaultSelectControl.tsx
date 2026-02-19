@@ -16,12 +16,6 @@ import { Text } from '../../typography/Text';
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
 
-// The height is smaller for the inside label variant since the label takes
-// up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 24;
-const COMPACT_HEIGHT = 40;
-const DEFAULT_HEIGHT = 56;
-
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
   positive: 'fgPositive',
@@ -309,15 +303,8 @@ export const DefaultSelectControlComponent = memo(
               flexShrink={1}
               justifyContent="space-between"
               maxWidth="100%"
-              minHeight={
-                labelVariant === 'inside'
-                  ? LABEL_VARIANT_INSIDE_HEIGHT
-                  : compact
-                    ? COMPACT_HEIGHT
-                    : DEFAULT_HEIGHT
-              }
               paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
             >
               <HStack
                 alignItems="center"

@@ -11,12 +11,12 @@ import { Icon } from '../icons/Icon';
 import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
-import { type ButtonBaseProps, spinnerHeight } from './Button';
+import { type ButtonBaseProps } from './Button';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
 
 const baseSpinnerCss = css`
-  border: 2px solid;
+  border: var(--borderWidth-200) solid;
   border-top-color: var(--color-transparent);
   border-right-color: var(--color-transparent);
   border-left-color: var(--color-transparent);
@@ -89,14 +89,7 @@ export const IconButton: IconButtonComponent = memo(
 
       const iconSize = compact ? 's' : 'm';
       const iconSizeValue = theme.iconSize[iconSize];
-
-      const spinnerSizeStyles = useMemo(
-        () => ({
-          width: iconSizeValue,
-          height: iconSizeValue,
-        }),
-        [iconSizeValue],
-      );
+      const spinnerSize = iconSizeValue / 10;
 
       const resolvedPadding = useResolveResponsiveProp(padding);
 
@@ -146,8 +139,7 @@ export const IconButton: IconButtonComponent = memo(
             <Spinner
               className={baseSpinnerCss}
               color="currentColor"
-              size={spinnerHeight}
-              style={spinnerSizeStyles}
+              size={spinnerSize}
               testID={props.testID ? `${props.testID}-spinner` : undefined}
             />
           ) : (

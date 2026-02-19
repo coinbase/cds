@@ -80,6 +80,7 @@ export const DefaultComboboxControl = memo(
             <HStack flexGrow={1} flexWrap="wrap" width="100%">
               <NativeInput
                 ref={searchInputRef}
+                compact={compact || hasValue}
                 onChange={handleSearchChange}
                 onClick={handleSearchClick}
                 onKeyDown={(event) => {
@@ -97,7 +98,10 @@ export const DefaultComboboxControl = memo(
                 style={{
                   paddingLeft: 0,
                   paddingRight: 0,
-                  height: hasValue ? 24 : compact ? 40 : 48,
+                  // removes input element's padding when there are selected option
+                  // the control's layout handles spacing for this state via gap & container padding
+                  paddingTop: hasValue ? 0 : undefined,
+                  paddingBottom: hasValue ? 0 : undefined,
                   minWidth: 0,
                   flexGrow: 1,
                   width: '100%',

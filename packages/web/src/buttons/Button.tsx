@@ -19,9 +19,7 @@ import { Text } from '../typography/Text';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
-const DEFAULT_MIN_WIDTH = 100;
-
-export const spinnerHeight = 2.5;
+const defaultLoadingSpinnerSize = 24;
 
 const baseCss = css`
   text-decoration: none;
@@ -97,9 +95,7 @@ const flushCss = css`
 `;
 
 const spinnerStyle = {
-  width: '24px',
-  height: '24px',
-  border: '2px solid',
+  border: 'var(--borderWidth-200) solid',
   borderTopColor: 'var(--color-transparent)',
   borderRightColor: 'var(--color-transparent)',
   borderLeftColor: 'var(--color-transparent)',
@@ -122,6 +118,10 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       disabled?: boolean;
       /** Mark the button as loading and display a spinner. */
       loading?: boolean;
+      /** The size of the loading spinner in pixels
+       *  @default 24
+       */
+      loadingSpinnerSize?: number;
       /** Mark the background and border as transparent until interacted with. */
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
@@ -176,6 +176,7 @@ export const Button: ButtonComponent = memo(
         as,
         variant = 'primary',
         loading,
+        loadingSpinnerSize,
         transparent,
         block,
         compact,
@@ -200,7 +201,7 @@ export const Button: ButtonComponent = memo(
         paddingX = padding ?? (compact ? 2 : 4),
         paddingY = padding ?? (compact ? 1 : 2),
         margin = 0,
-        minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
+        minWidth = 'auto',
         style,
         ...props
       }: ButtonProps<AsComponent>,
@@ -230,6 +231,10 @@ export const Button: ButtonComponent = memo(
             : { marginInlineStart: paddingPx, marginInlineEnd: -paddingPx }),
         };
       }, [flush, resolvedPaddingX, theme.space, style]);
+
+      // due to an odd, legacy implementation detail, the web Spinner uses 10em units to set the width/height of the spinner
+      // the "size" prop of Spinner is set to the font size of the Spinner element so ultimately its pixel size is 10 x size
+      const spinnerHeight = (loadingSpinnerSize ?? defaultLoadingSpinnerSize) / 10;
 
       return (
         <Pressable

@@ -11,6 +11,12 @@ const accessibilityLabel = 'Horizontal arrows';
 const variants = [
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
+      <IconButton compact={false} name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Non-compact',
+  },
+  {
+    component: (props?: Partial<IconButtonBaseProps>) => (
       <IconButton name={iconName} variant="primary" {...props} />
     ),
     title: 'Primary',

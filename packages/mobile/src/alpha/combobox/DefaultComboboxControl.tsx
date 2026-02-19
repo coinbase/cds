@@ -76,10 +76,9 @@ export const DefaultComboboxControl = <
                 flexShrink: 1,
                 minWidth: 0,
                 padding: 0,
-                height: hasValue ? 24 : 48,
                 marginTop: hasValue ? 0 : -24,
                 marginBottom: hasValue ? -12 : -24,
-                paddingTop: hasValue ? 8 : 0,
+                paddingTop: hasValue ? theme.space[1] : 0,
                 // This is constrained by the parent container's width. The width is 100%
                 // to ensure it grows to fill the control
                 width: open ? '100%' : undefined,

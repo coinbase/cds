@@ -19,7 +19,7 @@ export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioVa
 
 export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
-const DotSvg = ({ color = 'black', width = 20 }: { color?: ColorValue; width?: number }) => {
+const DotSvg = ({ color = 'black', width }: { color?: ColorValue; width: number }) => {
   return (
     <Svg fill="none" height={width} viewBox={`0 0 ${width} ${width}`} width={width}>
       <Circle cx="50%" cy="50%" fill={color} r={width / 3} />
