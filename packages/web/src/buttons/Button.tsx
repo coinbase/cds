@@ -125,7 +125,7 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
        * Toggle design and visual variants.
        * @default primary
        */
-      variant?: Exclude<ButtonVariant, 'foregroundMuted'>;
+      variant?: ButtonVariant;
       /** Mark the button as disabled. */
       disabled?: boolean;
       /** Mark the button as loading and display a spinner. */

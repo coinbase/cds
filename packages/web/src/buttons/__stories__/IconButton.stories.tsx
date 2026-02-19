@@ -33,18 +33,6 @@ const variants = [
     ),
     title: 'Secondary transparent',
   },
-  {
-    component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton name={iconName} variant="foregroundMuted" {...props} />
-    ),
-    title: 'ForegroundMuted',
-  },
-  {
-    component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
-    ),
-    title: 'ForegroundMuted transparent',
-  },
 ];
 
 export const Default = () => (
@@ -111,7 +99,6 @@ const IconButtonSheet = ({ startIndex, endIndex }: { startIndex: number; endInde
           <HStack alignItems="center" gap={2}>
             <IconButton accessibilityLabel={name} name={name} variant="primary" />
             <IconButton accessibilityLabel={name} name={name} variant="secondary" />
-            <IconButton accessibilityLabel={name} name={name} variant="foregroundMuted" />
           </HStack>
         </VStack>
       ))}
