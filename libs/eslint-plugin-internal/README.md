@@ -49,11 +49,12 @@ Ensures that import paths in `figma.connect()` calls match the package context o
 
 ### no-typescript-in-jsx-codeblock
 
-An ESLint _processor_ (not a traditional rule) for MDX files that detects fenced code blocks marked as `` ```jsx `` which contain TypeScript syntax. These blocks should either use `tsx` as the language tag or have the TypeScript annotations removed.
+An ESLint _processor_ (not a traditional rule) for MDX files that detects fenced code blocks marked as ` ```jsx ` which contain TypeScript syntax. These blocks should either use `tsx` as the language tag or have the TypeScript annotations removed.
 
 Because MDX files cannot be parsed by standard JavaScript/TypeScript parsers, this is implemented as a processor that scans raw MDX text for code fence patterns and injects lint messages in postprocess. It supports autofix, replacing `jsx` with `tsx` in the language tag.
 
 TypeScript patterns detected include:
+
 - Type alias and interface declarations
 - Parameter type annotations (destructured and non-destructured)
 - Variable type annotations
