@@ -7,7 +7,7 @@ import {
 } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, getTransition,instantTransition, projectPoint } from '../utils';
+import { defaultTransition, getTransition, instantTransition, projectPoint } from '../utils';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 

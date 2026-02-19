@@ -3,7 +3,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { defaultBarEnterTransition, getBarPath,withStaggerDelayTransition } from '../utils';
+import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';
 import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
