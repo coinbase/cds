@@ -66,6 +66,16 @@ const ButtonScreen = () => {
           lines
         </Button>
       </Example>
+      <Example title="Typography props">
+        <VStack alignItems="flex-start" gap={2}>
+          <Button>I am a headline button</Button>
+          <Button font="body">I am a body button</Button>
+          <Button font="title3">I am a title3 button</Button>
+          <Button fontSize="title3" fontWeight="body">
+            I have custom fontSize & fontWeight
+          </Button>
+        </VStack>
+      </Example>
 
       <Example title="Custom endIcon on Button">
         <VStack gap={2}>

@@ -131,6 +131,25 @@ Use `block` to make the button expand to fill its container width.
 </VStack>
 ```
 
+## Typography
+
+Button forwards text-related font props to the internal `Text` label, so you can customize typography without rendering a custom child.
+
+```jsx live
+<VStack alignItems="flex-start" gap={2}>
+  <Button onClick={console.log}>Default (headline)</Button>
+  <Button font="body" onClick={console.log}>
+    Body font
+  </Button>
+  <Button font="title3" onClick={console.log}>
+    Title3 font
+  </Button>
+  <Button fontSize="title3" fontWeight="body" onClick={console.log}>
+    Custom fontSize + fontWeight
+  </Button>
+</VStack>
+```
+
 ## Icons
 
 ### End Icon
