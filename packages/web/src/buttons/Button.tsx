@@ -219,7 +219,9 @@ export const Button: ButtonComponent = memo(
       const hasIcon = Boolean(startIcon ?? endIcon);
 
       const variantMap = transparent ? transparentVariants : variants;
-      const variantStyle = variantMap[variant];
+      // Falls back to secondary for removed legacy variants (e.g. foregroundMuted)
+      // that consumers may still pass at runtime via dynamic values or type casts.
+      const variantStyle = variantMap[variant] ?? variantMap.secondary;
 
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;
