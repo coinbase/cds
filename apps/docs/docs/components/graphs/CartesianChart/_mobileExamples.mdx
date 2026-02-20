@@ -431,7 +431,7 @@ Because transitions live on the children, a single chart can mix behaviors — f
 
 Disable the update morph animation while keeping a slow enter reveal. Data changes snap instantly but the initial chart appearance animates. Useful when new data arrives frequently and morphing would be distracting.
 
-```jsx
+```tsx
 function EnterAnimationOnly() {
   const dataCount = 15;
   const updateInterval = 2500;
@@ -488,7 +488,7 @@ function EnterAnimationOnly() {
 
 Disable the enter reveal animation while keeping a slow update morph. The chart appears instantly but data changes animate smoothly. Useful when the chart is embedded in content that should not animate on load.
 
-```jsx
+```tsx
 function UpdateAnimationOnly() {
   const dataCount = 15;
   const updateInterval = 2500;
@@ -545,7 +545,7 @@ function UpdateAnimationOnly() {
 
 Each child component can define its own transitions independently. Here, the `Line` uses a spring morph while the `Area` uses a slow tween, and the bars snap with no update animation. This lets you fine-tune each visual layer within a single chart.
 
-```jsx
+```tsx
 function MixedTransitions() {
   const theme = useTheme();
   const dataCount = 10;
