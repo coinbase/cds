@@ -125,19 +125,8 @@ export const Button = memo(
     const hasIcon = Boolean(startIcon || endIcon);
 
     const variantMap = transparent ? transparentVariants : variants;
-    // Safety net for breaking change upgrades: gracefully handles removed legacy
-    // variants (e.g. foregroundMuted) that consumers may still pass at runtime
-    // via dynamic values or type casts. See #inci-25-12-03-banner-variant.
-    const variantStyle = useMemo(() => {
-      const style = variantMap[variant];
-      if (!style) {
-        console.warn(
-          `[CDS Button] Unknown variant "${variant}" — falling back to "primary". Please migrate to a supported variant.`,
-        );
-        return variantMap.primary;
-      }
-      return style;
-    }, [variant, variantMap]);
+
+    const variantStyle = variantMap[variant];
 
     const colorValue = color ?? variantStyle.color;
     const backgroundValue = background ?? variantStyle.background;
