@@ -286,14 +286,14 @@ const CustomComponentsExample = () => {
             disabled={!canGoPrevious}
             name="caretLeft"
             onPress={onPrevious}
-            variant="foregroundMuted"
+            variant="secondary"
           />
           <IconButton
             accessibilityLabel="Next"
             disabled={!canGoNext}
             name="caretRight"
             onPress={onNext}
-            variant="foregroundMuted"
+            variant="secondary"
           />
         </HStack>
         <HStack alignItems="center" gap={1}>

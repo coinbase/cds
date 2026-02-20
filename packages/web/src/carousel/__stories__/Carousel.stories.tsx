@@ -289,14 +289,14 @@ const CustomComponentsExample = () => {
             disabled={!canGoPrevious}
             name="caretLeft"
             onClick={onPrevious}
-            variant="foregroundMuted"
+            variant="secondary"
           />
           <IconButton
             accessibilityLabel="Next"
             disabled={!canGoNext}
             name="caretRight"
             onClick={onNext}
-            variant="foregroundMuted"
+            variant="secondary"
           />
         </HStack>
         <HStack alignItems="center" gap={1}>
@@ -426,7 +426,7 @@ const CustomStylesExample = () => {
                 zIndex: 1,
               },
             }}
-            variant="foregroundMuted"
+            variant="secondary"
           />
         )}
         styles={{

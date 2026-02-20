@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type {
   ButtonVariant,
@@ -219,9 +219,19 @@ export const Button: ButtonComponent = memo(
       const hasIcon = Boolean(startIcon ?? endIcon);
 
       const variantMap = transparent ? transparentVariants : variants;
-      // Falls back to secondary for removed legacy variants (e.g. foregroundMuted)
-      // that consumers may still pass at runtime via dynamic values or type casts.
-      const variantStyle = variantMap[variant] ?? variantMap.secondary;
+      // Safety net for breaking change upgrades: gracefully handles removed legacy
+      // variants (e.g. foregroundMuted) that consumers may still pass at runtime
+      // via dynamic values or type casts. See #inci-25-12-03-banner-variant.
+      const variantStyle = useMemo(() => {
+        const style = variantMap[variant];
+        if (!style) {
+          console.warn(
+            `[CDS Button] Unknown variant "${variant}" — falling back to "primary". Please migrate to a supported variant.`,
+          );
+          return variantMap.primary;
+        }
+        return style;
+      }, [variant, variantMap]);
 
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;

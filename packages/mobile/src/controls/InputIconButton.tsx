@@ -11,7 +11,7 @@ export const variantTransformMap: Record<InputVariant, IconButtonVariant> = {
   negative: 'primary',
   foreground: 'primary',
   primary: 'primary',
-  foregroundMuted: 'foregroundMuted',
+  foregroundMuted: 'secondary',
   secondary: 'secondary',
 };
 
