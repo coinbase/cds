@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.47.3 (2/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove behavior of scrolling inside TextInput updating numeric values. [[#413](https://github.com/coinbase/cds/pull/413)]
+
 ## 8.47.2 ((2/19/2026, 03:18 PM PST))
 
 This is an artificial version bump with no new change.
