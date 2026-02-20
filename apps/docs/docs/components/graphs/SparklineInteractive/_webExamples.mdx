@@ -1,9 +1,36 @@
 ### Default usage
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice data={sparklineInteractiveData} strokeColor="#F7931A" />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Fill Type
@@ -11,34 +38,110 @@
 The fill will be added by default with a gradient style. You can set `fillType="dotted"` to get a dotted gradient fill.
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice
-    fill
-    data={sparklineInteractiveData}
-    fillType="dotted"
-    strokeColor="#F7931A"
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        fillType="dotted"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Compact
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice data={sparklineInteractiveData} compact strokeColor="#F7931A" />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        compact
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Hide period selector
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice
-    data={sparklineInteractiveData}
-    hidePeriodSelector
-    strokeColor="#F7931A"
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        hidePeriodSelector
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Scaling Factor
@@ -46,34 +149,169 @@ The fill will be added by default with a gradient style. You can set `fillType="
 The scaling factor is usually used when you want to show less variance in the chart. An example of this is a stable coin that doesn't change price by more than a few cents.
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice
-    data={sparklineInteractiveData}
-    strokeColor="#F7931A"
-    yAxisScalingFactor={0.1}
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+        yAxisScalingFactor={0.1}
+      />
+    </Box>
+  );
+};
 ```
 
 ### With header
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatPrice = (num) => num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+  const generateSubHead = useCallback((point, period) => {
+    const firstPoint = sparklineInteractiveData[period][0];
+    const increase = point.value > firstPoint.value;
+    return {
+      percent: `${formatPrice(Math.abs((point.value - firstPoint.value) / firstPoint.value) * 100)}%`,
+      sign: increase ? 'upwardTrend' : 'downwardTrend',
+      variant: increase ? 'positive' : 'negative',
+      priceChange: `$${formatPrice(Math.abs(point.value - firstPoint.value))}`,
+    };
+  }, []);
+
+  const headerRef = useRef(null);
+  const [currentPeriod, setCurrentPeriod] = useState('day');
+  const data = sparklineInteractiveData[currentPeriod];
+  const lastPoint = data[data.length - 1];
+
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  const handleScrubEnd = useCallback(() => {
+    headerRef.current?.update({
+      title: `$${formatPrice(lastPoint.value)}`,
+      subHead: generateSubHead(lastPoint, currentPeriod),
+    });
+  }, [lastPoint, currentPeriod, generateSubHead]);
+
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        headerNode={
+          <SparklineInteractiveHeader
+            ref={headerRef}
+            defaultLabel="Bitcoin Price"
+            defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+            defaultTitle={`$${formatPrice(lastPoint.value)}`}
+          />
+        }
+        onPeriodChanged={handlePeriodChanged}
+        onScrub={handleScrub}
+        onScrubEnd={handleScrubEnd}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Custom hover data
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice
-    fill
-    data={sparklineInteractiveData}
-    hoverData={sparklineInteractiveHoverData}
-    strokeColor="#F7931A"
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        hoverData={sparklineInteractiveHoverData}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Period selector placement
@@ -81,13 +319,37 @@ The scaling factor is usually used when you want to show less variance in the ch
 `periodSelectorPlacement` can be used to place the period selector in different positions (`above` or `below`).
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePrice
-    data={sparklineInteractiveData}
-    strokeColor="#F7931A"
-    periodSelectorPlacement="below"
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periodSelectorPlacement="below"
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Custom styles
@@ -95,12 +357,95 @@ The scaling factor is usually used when you want to show less variance in the ch
 You can also provide custom styles, such as to remove any horizontal padding from the header.
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader
-    data={sparklineInteractiveData}
-    fill
-    strokeColor="#F7931A"
-    styles={{ header: { paddingLeft: 0, paddingRight: 0 } }}
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatPrice = (num) => num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+  const generateSubHead = useCallback((point, period) => {
+    const firstPoint = sparklineInteractiveData[period][0];
+    const increase = point.value > firstPoint.value;
+    return {
+      percent: `${formatPrice(Math.abs((point.value - firstPoint.value) / firstPoint.value) * 100)}%`,
+      sign: increase ? 'upwardTrend' : 'downwardTrend',
+      variant: increase ? 'positive' : 'negative',
+      priceChange: `$${formatPrice(Math.abs(point.value - firstPoint.value))}`,
+    };
+  }, []);
+
+  const headerRef = useRef(null);
+  const [currentPeriod, setCurrentPeriod] = useState('day');
+  const data = sparklineInteractiveData[currentPeriod];
+  const lastPoint = data[data.length - 1];
+
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  const handleScrubEnd = useCallback(() => {
+    headerRef.current?.update({
+      title: `$${formatPrice(lastPoint.value)}`,
+      subHead: generateSubHead(lastPoint, currentPeriod),
+    });
+  }, [lastPoint, currentPeriod, generateSubHead]);
+
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        headerNode={
+          <SparklineInteractiveHeader
+            ref={headerRef}
+            defaultLabel="Bitcoin Price"
+            defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+            defaultTitle={`$${formatPrice(lastPoint.value)}`}
+          />
+        }
+        onPeriodChanged={handlePeriodChanged}
+        onScrub={handleScrub}
+        onScrubEnd={handleScrubEnd}
+        periods={periods}
+        strokeColor="#F7931A"
+        styles={{ header: { paddingLeft: 0, paddingRight: 0 } }}
+      />
+    </Box>
+  );
+};
 ```

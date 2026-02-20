@@ -256,13 +256,13 @@ You can also remove the default inset, such as to have a compact line chart.
 function Insets() {
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
-const formatPrice = useCallback((dataIndex: number) => {
-  const price = data[dataIndex];
-  return `$${price.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-}, []);
+  const formatPrice = useCallback((dataIndex) => {
+    const price = data[dataIndex];
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
 
   return (
     <HStack gap={2}>
@@ -278,7 +278,6 @@ const formatPrice = useCallback((dataIndex: number) => {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-
           showArea
           style={{ border: '2px solid var(--color-fgPrimary)' }}
         />
@@ -296,7 +295,6 @@ const formatPrice = useCallback((dataIndex: number) => {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-
           showArea
           style={{ border: '2px solid var(--color-fgPrimary)' }}
         >
@@ -315,7 +313,6 @@ const formatPrice = useCallback((dataIndex: number) => {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-
           showArea
           style={{ border: '2px solid var(--color-fgPrimary)' }}
         >
@@ -335,13 +332,13 @@ CartesianChart has built-in scrubbing functionality that can be enabled with the
 function Scrubbing() {
   const [scrubIndex, setScrubIndex] = useState(undefined);
 
-  const onScrubberPositionChange = useCallback((index: number | undefined) => {
+  const onScrubberPositionChange = useCallback((index) => {
     setScrubIndex(index);
   }, []);
 
   return (
     <VStack gap={2}>
-    <Text font="label1">Scrubber index: {scrubIndex ?? 'none'}</Text>
+      <Text font="label1">Scrubber index: {scrubIndex ?? 'none'}</Text>
       <LineChart
         enableScrubbing
         onScrubberPositionChange={onScrubberPositionChange}
@@ -352,12 +349,11 @@ function Scrubbing() {
             data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
           },
         ]}
-
         showYAxis
         showArea
         yAxis={{
           showGrid: true,
-          width: 32
+          width: 32,
         }}
         inset={{ right: 0 }}
       >
@@ -377,33 +373,31 @@ You can showcase the price and volume of an asset over time within one chart.
 ```jsx live
 function PriceWithVolume() {
   const [scrubIndex, setScrubIndex] = useState(null);
-  const btcData = btcCandles
-    .slice(0, 180)
-    .reverse()
+  const btcData = btcCandles.slice(0, 180).reverse();
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
   const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
   const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
 
-  const formatPrice = useCallback((price: number) => {
+  const formatPrice = useCallback((price) => {
     return `$${price.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   }, []);
 
-  const formatPriceInThousands = useCallback((price: number) => {
+  const formatPriceInThousands = useCallback((price) => {
     return `$${(price / 1000).toLocaleString('en-US', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     })}k`;
   }, []);
 
-  const formatVolume = useCallback((volume: number) => {
+  const formatVolume = useCallback((volume) => {
     return `${(volume / 1000).toFixed(2)}K`;
   }, []);
 
-  const formatDate = useCallback((date: Date) => {
+  const formatDate = useCallback((date) => {
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -414,22 +408,24 @@ function PriceWithVolume() {
   const currentPrice = btcPrices[displayIndex];
   const currentVolume = btcVolumes[displayIndex];
   const currentDate = btcDates[displayIndex];
-  const priceChange = displayIndex > 0
-    ? ((currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1])
-    : 0;
+  const priceChange =
+    displayIndex > 0
+      ? (currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1]
+      : 0;
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+    if (scrubIndex === null)
+      return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
     return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
   }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
 
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const headerId = useId();
 
   return (
     <VStack gap={2}>
-     <SectionHeader
+      <SectionHeader
         id={headerId}
         style={{ padding: 0 }}
         title={<Text font="title1">Bitcoin</Text>}
@@ -480,9 +476,15 @@ function PriceWithVolume() {
         aria-labelledby={headerId}
         inset={{ top: 8, left: 8, right: 0, bottom: 0 }}
       >
-        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={48} GridLineComponent={ThinSolidLine} />
+        <YAxis
+          axisId="price"
+          showGrid
+          tickLabelFormatter={formatPriceInThousands}
+          width={48}
+          GridLineComponent={ThinSolidLine}
+        />
         <BarPlot seriesIds={['volume']} />
-        <Line seriesId="prices"  showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -496,8 +498,9 @@ You can also create your own type of cartesian chart by using `getSeriesData`, `
 
 ```jsx live
 function EarningsHistory() {
-  const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string, opacity?: number }) => {
-    const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
+  const CirclePlot = memo(({ seriesId, opacity = 1 }) => {
+    const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } =
+      useCartesianChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);
     const xScale = getXScale();
@@ -545,7 +548,7 @@ function EarningsHistory() {
   const estimatedEPS = useMemo(() => [1.71, 1.82, 1.93, 2.34], []);
   const actualEPS = useMemo(() => [1.68, 1.83, 2.01, 2.24], []);
 
-  const formatEarningAmount = useCallback((value: number) => {
+  const formatEarningAmount = useCallback((value) => {
     return `$${value.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -553,7 +556,7 @@ function EarningsHistory() {
   }, []);
 
   const surprisePercentage = useCallback(
-    (index: number): ChartTextChildren => {
+    (index) => {
       const percentage = (actualEPS[index] - estimatedEPS[index]) / estimatedEPS[index];
       const percentageString = percentage.toLocaleString('en-US', {
         style: 'percent',
@@ -576,7 +579,7 @@ function EarningsHistory() {
     [actualEPS, estimatedEPS],
   );
 
-  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number, label: string }) => {
+  const LegendEntry = memo(({ opacity = 1, label }) => {
     return (
       <Box alignItems="center" gap={0.5}>
         <LegendDot opacity={opacity} />
@@ -585,7 +588,7 @@ function EarningsHistory() {
     );
   });
 
-  const LegendDot = memo((props: BoxBaseProps) => {
+  const LegendDot = memo((props) => {
     return <Box borderRadius={1000} width={10} height={10} background="bgPositive" {...props} />;
   });
 
@@ -635,19 +638,35 @@ function TradingTrends() {
   const gains = profitData.map((value) => (value > 0 ? value : 0));
   const losses = profitData.map((value) => (value < 0 ? value : 0));
 
-  const renderProfit = useCallback((value: number) => {
+  const renderProfit = useCallback((value) => {
     return `$${value}M`;
   }, []);
 
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} strokeLinecap="butt" />);
-  const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={2} strokeLinecap="butt" />);
+  const ThinSolidLine = memo((props) => (
+    <SolidLine {...props} strokeWidth={1} strokeLinecap="butt" />
+  ));
+  const ThickSolidLine = memo((props) => (
+    <SolidLine {...props} strokeWidth={2} strokeLinecap="butt" />
+  ));
 
   return (
     <CartesianChart
       height={250}
       series={[
-        { id: 'gains', data: gains, yAxisId: 'profit', color: 'var(--color-bgPositive)', stackId: 'bars' },
-        { id: 'losses', data: losses, yAxisId: 'profit', color: 'var(--color-bgNegative)', stackId: 'bars' },
+        {
+          id: 'gains',
+          data: gains,
+          yAxisId: 'profit',
+          color: 'var(--color-bgPositive)',
+          stackId: 'bars',
+        },
+        {
+          id: 'losses',
+          data: losses,
+          yAxisId: 'profit',
+          color: 'var(--color-bgNegative)',
+          stackId: 'bars',
+        },
         {
           id: 'revenue',
           data: [128, 118, 122, 116, 120, 114, 118, 122, 126, 130, 134, 138],
@@ -655,17 +674,35 @@ function TradingTrends() {
           color: 'var(--color-fgMuted)',
         },
       ]}
-      xAxis={{ scaleType: 'band', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }}
+      xAxis={{
+        scaleType: 'band',
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      }}
       yAxis={[
-        { id: 'profit', range: ({ min, max }) => ({ min: min, max: max - 64 }), domain: { min: -40, max: 40 } },
+        {
+          id: 'profit',
+          range: ({ min, max }) => ({ min: min, max: max - 64 }),
+          domain: { min: -40, max: 40 },
+        },
         { id: 'revenue', range: ({ min, max }) => ({ min: max - 64, max }), domain: { min: 100 } },
       ]}
     >
-      <YAxis axisId="profit" position="left" showGrid tickLabelFormatter={renderProfit} GridLineComponent={ThinSolidLine} />
+      <YAxis
+        axisId="profit"
+        position="left"
+        showGrid
+        tickLabelFormatter={renderProfit}
+        GridLineComponent={ThinSolidLine}
+      />
       <XAxis />
-      <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" stroke="rgb(var(--gray15))" />
+      <ReferenceLine
+        LineComponent={ThickSolidLine}
+        dataY={0}
+        yAxisId="profit"
+        stroke="rgb(var(--gray15))"
+      />
       <BarPlot seriesIds={['gains', 'losses']} />
-      <Line seriesId="revenue"  showArea />
+      <Line seriesId="revenue" showArea />
     </CartesianChart>
   );
 }
