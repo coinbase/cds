@@ -2,10 +2,6 @@
 
 ReferenceLine can be used to add important details to a chart, such as a reference price or date. You can create horizontal lines using `dataY` or vertical lines using `dataX`.
 
-### Simple Reference Line
-
-A minimal reference line without labels, useful for marking key thresholds:
-
 ```jsx live
 <LineChart
   showArea
@@ -166,73 +162,159 @@ Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
 </Box>
 ```
 
-### Custom Component
+### Custom Components
 
 You can adjust the style of the label using a custom `LabelComponent`.
 
 ```jsx live
-function LabelStyleExample() {
-  const LiquidationLabel = useMemo(
-    () =>
-      memo((props) => (
-        <DefaultReferenceLineLabel
-          {...props}
-          background="var(--color-accentSubtleYellow)"
-          borderRadius={4}
-          color="rgb(var(--yellow70))"
-          dx={12}
-          font="label1"
-          horizontalAlignment="left"
-          inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
-        />
-      )),
-    [],
-  );
+function CustomLabelExample() {
+  const PriceLabel = memo((props) => (
+    <DefaultReferenceLineLabel
+      {...props}
+      background="var(--color-bgSecondary)"
+      borderRadius={12.5}
+      color="var(--color-fg)"
+      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+      font="label1"
+    />
+  ));
 
-  const PriceLabel = useMemo(
-    () =>
-      memo((props) => (
-        <DefaultReferenceLineLabel
-          {...props}
-          background="var(--color-bg)"
-          borderRadius={4}
-          color="rgb(var(--yellow70))"
-          dx={-12}
-          font="label1"
-          horizontalAlignment="right"
-          inset={{ top: 2, bottom: 2, left: 4, right: 4 }}
-        />
-      )),
-    [],
-  );
+  function Example() {
+    const hourData = useMemo(() => sparklineInteractiveData.hour, []);
+    const startPrice = hourData[0].value;
+    const endPrice = hourData[hourData.length - 1].value;
+    const isPositive = endPrice >= startPrice;
+    const seriesColor = isPositive ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
 
-  return (
-    <LineChart
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      inset={{ right: 4 }}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-    >
-      <ReferenceLine
-        LabelComponent={LiquidationLabel}
-        dataY={25}
-        label="Liquidation"
-        labelPosition="left"
-        stroke="var(--color-bgWarning)"
+    const formattedStartPrice = useMemo(
+      () =>
+        startPrice.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [startPrice],
+    );
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={[
+          {
+            id: 'hourly-prices',
+            data: hourData.map((d) => d.value),
+            color: seriesColor,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 24 }),
+        }}
+      >
+        <Scrubber />
+        <ReferenceLine
+          LabelComponent={PriceLabel}
+          LineComponent={(props) => (
+            <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+          )}
+          dataY={startPrice}
+          label={formattedStartPrice}
+          stroke="var(--color-fgMuted)"
+          labelDx={-12}
+          labelHorizontalAlignment="right"
+        />
+      </LineChart>
+    );
+  }
+
+  return <Example />;
+}
+```
+
+You can also optionally hide the label based on user scrubbing.
+
+```jsx live
+function StartPriceReferenceLine() {
+  const PriceLabel = memo((props) => {
+    const { scrubberPosition } = useScrubberContext();
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const isScrubbing = scrubberPosition !== undefined;
+
+    const fadeZone = 128;
+
+    const opacity = useMemo(() => {
+      if (!isScrubbing) return 0;
+      const xScale = getXScale();
+      if (!xScale) return 1;
+      const scrubX = xScale(scrubberPosition) ?? 0;
+      const rightEdge = drawingArea.x + drawingArea.width;
+      return rightEdge - scrubX >= fadeZone ? 1 : 0;
+    }, [isScrubbing, scrubberPosition, getXScale, drawingArea]);
+
+    return (
+      <DefaultReferenceLineLabel
+        {...props}
+        background="var(--color-bgSecondary)"
+        borderRadius={12.5}
+        color="var(--color-fg)"
+        inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+        font="label1"
+        styles={{ root: { opacity: opacity, transition: 'opacity 0.25s ease' } }}
       />
-      <ReferenceLine
-        LabelComponent={PriceLabel}
-        dataY={25}
-        label="$25"
-        labelPosition="right"
-        stroke="transparent"
-      />
-    </LineChart>
-  );
+    );
+  });
+
+  function Example() {
+    const hourData = useMemo(() => sparklineInteractiveData.hour, []);
+    const startPrice = hourData[0].value;
+    const endPrice = hourData[hourData.length - 1].value;
+    const isPositive = endPrice >= startPrice;
+    const seriesColor = isPositive ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+
+    const formattedStartPrice = useMemo(
+      () =>
+        startPrice.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [startPrice],
+    );
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={[
+          {
+            id: 'hourly-prices',
+            data: hourData.map((d) => d.value),
+            color: seriesColor,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 24 }),
+        }}
+      >
+        <Scrubber />
+        <ReferenceLine
+          LabelComponent={PriceLabel}
+          LineComponent={(props) => (
+            <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+          )}
+          dataY={startPrice}
+          label={formattedStartPrice}
+          stroke="var(--color-fgMuted)"
+          labelDx={-12}
+          labelHorizontalAlignment="right"
+        />
+      </LineChart>
+    );
+  }
+
+  return <Example />;
 }
 ```
 
