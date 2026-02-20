@@ -30,7 +30,7 @@ export const DefaultBar = memo<DefaultBarProps>(
   ({
     x,
     width,
-    borderRadius,
+    borderRadius = 4,
     roundTop,
     roundBottom,
     originY,

@@ -19,7 +19,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     y,
     width,
     height,
-    borderRadius,
+    borderRadius = 4,
     roundTop,
     roundBottom,
     d,
@@ -64,7 +64,7 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const initialPath = useMemo(() => {
       const baselineY = originY ?? y + height;
-      return getBarPath(x, baselineY, width, 1, borderRadius ?? 0, !!roundTop, !!roundBottom);
+      return getBarPath(x, baselineY, width, 1, borderRadius, !!roundTop, !!roundBottom);
     }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
 
     return (
