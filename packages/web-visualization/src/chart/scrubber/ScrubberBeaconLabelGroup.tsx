@@ -118,10 +118,6 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
    * Transition configuration for beacon label animations.
    */
   transitions?: ScrubberBeaconProps['transitions'];
-  /**
-   * Whether the scrubber is in idle state (not actively scrubbing).
-   */
-  isIdle?: boolean;
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
@@ -133,7 +129,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
     transitions,
-    isIdle = true,
   }) => {
     const {
       getSeries,
@@ -146,6 +141,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       animate,
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
+
+    const isIdle = scrubberPosition === undefined;
 
     // Track the previous idle state to detect idle<->scrubbing transitions.
     const prevIsIdleRef = useRef(isIdle);

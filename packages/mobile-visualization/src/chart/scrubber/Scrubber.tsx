@@ -27,7 +27,6 @@ import {
   defaultAccessoryEnterTransition,
   getPointOnSerializableScale,
   getTransition,
-  instantTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -263,14 +262,13 @@ export const Scrubber = memo(
         labelBoundsInset,
         beaconLabelFont,
         idlePulse,
-        transitions: transitionsProp,
         beaconTransitions,
+        transitions = beaconTransitions,
         beaconStroke,
       },
       ref,
     ) => {
       const theme = useTheme();
-      const resolvedTransitions = transitionsProp ?? beaconTransitions;
 
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
@@ -297,10 +295,6 @@ export const Scrubber = memo(
         }
         return seriesIds;
       }, [series, seriesIds]);
-
-      const isIdle = useDerivedValue(() => {
-        return scrubberPosition.value === undefined;
-      }, [scrubberPosition]);
 
       const dataIndex = useDerivedValue(() => {
         return scrubberPosition.value ?? Math.max(0, dataLength - 1);
@@ -383,8 +377,8 @@ export const Scrubber = memo(
       const isReady = !!xScale;
 
       const groupEnterTransition = useMemo(
-        () => getTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
-        [resolvedTransitions?.enter, animate],
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
       );
 
       useEffect(() => {
@@ -426,18 +420,17 @@ export const Scrubber = memo(
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
             stroke={beaconStroke}
-            transitions={resolvedTransitions}
+            transitions={transitions}
           />
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
-              isIdle={isIdle}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
-              transitions={resolvedTransitions}
+              transitions={transitions}
             />
           )}
         </Group>
