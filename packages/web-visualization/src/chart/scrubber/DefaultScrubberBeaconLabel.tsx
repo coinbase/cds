@@ -32,35 +32,27 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
       bottom: labelVerticalInset,
     },
     label,
-    transition: transitionProp,
+    transition,
     y,
     ...chartTextProps
   }) => {
-    const content = (
-      <ChartText
-        disableRepositioning
-        background={background}
-        borderRadius={borderRadius}
-        color={color}
-        elevated={elevated}
-        font={font}
-        inset={inset}
-        verticalAlignment={verticalAlignment}
-        y={transitionProp ? 0 : y}
-        {...chartTextProps}
-      >
-        {label}
-      </ChartText>
+    return (
+      <motion.g animate={{ y }} initial={false} transition={transition}>
+        <ChartText
+          disableRepositioning
+          background={background}
+          borderRadius={borderRadius}
+          color={color}
+          elevated={elevated}
+          font={font}
+          inset={inset}
+          verticalAlignment={verticalAlignment}
+          y={transition ? 0 : y}
+          {...chartTextProps}
+        >
+          {label}
+        </ChartText>
+      </motion.g>
     );
-
-    if (transitionProp) {
-      return (
-        <motion.g animate={{ y }} initial={false} transition={transitionProp}>
-          {content}
-        </motion.g>
-      );
-    }
-
-    return content;
   },
 );
