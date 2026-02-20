@@ -13,7 +13,7 @@ Primary use case for this is when a user is inputing a PIN code. Notice it does 
   alt="Pin Numpad"
 />
 
-```jsx
+```tsx
 const PinNumpadExample = () => {
   // localState
   const [visible, { toggleOn, toggleOff }] = useToggler(false);
@@ -88,7 +88,7 @@ Best when used in the context of a transactional scenario. This could range from
   alt="Transactional Numpad"
 />
 
-```jsx
+```tsx
 const VALUE_MAX = 1000000;
 const TransactionalNumpadExample = () => {
   const [visible, { toggleOn, toggleOff }] = useToggler(false);

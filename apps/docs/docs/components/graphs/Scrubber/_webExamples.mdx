@@ -89,7 +89,7 @@ setting `label` on Scrubber displays a label above the scrubber line.
   ]}
   showArea
 >
-  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} />
+  <Scrubber label={(dataIndex) => `Day ${dataIndex + 1}`} />
 </LineChart>
 ```
 
@@ -283,11 +283,14 @@ You can use `BeaconLabelComponent` to customize the labels for each scrubber bea
 ```jsx live
 function CustomBeaconLabel() {
   // This custom component label shows the percentage value of the data at the scrubber position.
-  const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props}: ScrubberBeaconLabelProps) => {
+  const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
-    const seriesData = useMemo(() => getLineData(getSeriesData(seriesId)), [getSeriesData, seriesId]);
+    const seriesData = useMemo(
+      () => getLineData(getSeriesData(seriesId)),
+      [getSeriesData, seriesId],
+    );
 
     const dataIndex = useMemo(() => {
       return scrubberPosition ?? Math.max(0, dataLength - 1);
@@ -299,7 +302,7 @@ function CustomBeaconLabel() {
         return `${label} · ${dataAtPosition}%`;
       }
       return label;
-    }, [label, seriesData, dataIndex])
+    }, [label, seriesData, dataIndex]);
 
     return (
       <DefaultScrubberBeaconLabel
@@ -379,11 +382,7 @@ You can use `hideBeaconLabels` to hide beacon labels, while still being able to 
   showArea
   inset={{ top: 60 }}
 >
-  <Scrubber
-    hideBeaconLabels
-    label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-    labelElevated
-  />
+  <Scrubber hideBeaconLabels label={(dataIndex) => `Day ${dataIndex + 1}`} labelElevated />
 </LineChart>
 ```
 
@@ -402,7 +401,7 @@ Using `labelElevated` will elevate the Scrubber's reference line label with a sh
   showArea
   inset={{ top: 60 }}
 >
-  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} labelElevated />
+  <Scrubber label={(dataIndex) => `Day ${dataIndex + 1}`} labelElevated />
 </LineChart>
 ```
 
@@ -410,7 +409,7 @@ You can use `LabelComponent` to customize this label even further.
 
 ```jsx live
 function CustomLabelComponent() {
-  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+  const CustomLabelComponent = memo((props) => {
     const { drawingArea } = useCartesianChartContext();
 
     if (!drawingArea) return;
@@ -442,7 +441,7 @@ function CustomLabelComponent() {
     >
       <Scrubber
         LabelComponent={CustomLabelComponent}
-        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+        label={(dataIndex) => `Day ${dataIndex + 1}`}
       />
     </LineChart>
   );
@@ -478,7 +477,7 @@ You can use `labelFont` to customize the font of the scrubber line label and `be
   }}
 >
   <Scrubber
-    label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+    label={(dataIndex) => `Day ${dataIndex + 1}`}
     labelFont="legal"
     beaconLabelFont="legal"
   />
@@ -557,7 +556,7 @@ You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop
 ```jsx live
 function HiddenScrubberWhenIdle() {
   const MyScrubberBeacon = memo(
-    forwardRef((props: ScrubberBeaconProps, ref) => {
+    forwardRef((props, ref) => {
       const { scrubberPosition } = useScrubberContext();
       const isScrubbing = scrubberPosition !== undefined;
 
@@ -565,7 +564,7 @@ function HiddenScrubberWhenIdle() {
     }),
   );
 
-  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
+  const MyScrubberBeaconLabel = memo((props) => {
     const { scrubberPosition } = useScrubberContext();
     const isScrubbing = scrubberPosition !== undefined;
 
@@ -619,44 +618,41 @@ You can use `BeaconLabelComponent` to display a label with the percentage value 
 
 ```jsx live
 function PercentageBeaconLabels() {
- const PercentageScrubberBeaconLabel = memo(
-    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+  const PercentageScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
+    const { getSeriesData, dataLength } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
 
-      const seriesData = useMemo(
-        () => getLineData(getSeriesData(seriesId)),
-        [getSeriesData, seriesId],
-      );
+    const seriesData = useMemo(
+      () => getLineData(getSeriesData(seriesId)),
+      [getSeriesData, seriesId],
+    );
 
-      const dataIndex = useMemo(() => {
-        return scrubberPosition ?? Math.max(0, dataLength - 1);
-      }, [scrubberPosition, dataLength]);
+    const dataIndex = useMemo(() => {
+      return scrubberPosition ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
 
-      const percentageLabel: ChartTextChildren = useMemo(() => {
-        if (seriesData !== undefined) {
-          const dataAtPosition = seriesData[dataIndex];
-          return (
-            <>
-              {dataAtPosition}%
-              <tspan fontWeight="400"> {label}</tspan>
-            </>
-          );
-        }
-        return label;
-      }, [label, seriesData, dataIndex]);
+    const percentageLabel = useMemo(() => {
+      if (seriesData !== undefined) {
+        const dataAtPosition = seriesData[dataIndex];
+        return (
+          <>
+            {dataAtPosition}%<tspan fontWeight="400"> {label}</tspan>
+          </>
+        );
+      }
+      return label;
+    }, [label, seriesData, dataIndex]);
 
-      return (
-        <DefaultScrubberBeaconLabel
-          {...props}
-          background={color}
-          color="rgb(var(--gray0))"
-          label={percentageLabel}
-          seriesId={seriesId}
-        />
-      );
-    },
-  );
+    return (
+      <DefaultScrubberBeaconLabel
+        {...props}
+        background={color}
+        color="rgb(var(--gray0))"
+        label={percentageLabel}
+        seriesId={seriesId}
+      />
+    );
+  });
 
   const PercentageBeaconLabelChart = ({ background, scrubberLineStroke, ...props }) => {
     return (

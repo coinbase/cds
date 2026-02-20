@@ -28,7 +28,7 @@ You can also provide multiple series of data to the chart. Series will have thei
 
 ```jsx live
 function MonthlyGainsByAsset() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
     (amount) =>
@@ -79,7 +79,7 @@ You can also configure stacking for your chart using the `stacked` prop.
 
 ```jsx live
 function MonthlyGainsByAsset() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
     (amount) =>
@@ -145,7 +145,7 @@ You can also configure multiple stacks by setting the `stackId` prop on each ser
 
 ```jsx live
 function MonthlyGainsMultipleStacks() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
     (amount) =>
@@ -215,7 +215,7 @@ function MonthlyGainsMultipleStacks() {
 
 ```jsx live
 function MonthlyGainsByAsset() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
     (amount) =>
@@ -272,7 +272,7 @@ function MonthlyGainsByAsset() {
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
         width: 70,
-        domainLimit: 'strict'
+        domainLimit: 'strict',
       }}
     />
   );
@@ -356,7 +356,7 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
 
 ```jsx live
 function PositiveAndNegativeCashFlow() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
   const gains = [
@@ -443,7 +443,7 @@ function MonthlyRewards() {
     { id: 'green', data: green, color: '#33c481' },
   ];
 
-  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
+  const CustomBarStackComponent = ({ children, ...props }) => {
     if (props.height === 0) {
       const diameter = props.width;
       return (
@@ -487,7 +487,7 @@ function MonthlyRewards() {
       }}
     />
   );
-};
+}
 ```
 
 ## Customization
@@ -665,13 +665,12 @@ You can set the `BarComponent` prop to render a custom component for bars.
 ```jsx live
 function Candlesticks() {
   const infoTextId = useId();
-  const infoTextRef = React.useRef<HTMLSpanElement>(null);
-  const selectedIndexRef = React.useRef<number | null>(null);
-  const stockData = btcCandles.slice(0, 90)
-    .reverse();
+  const infoTextRef = React.useRef(null);
+  const selectedIndexRef = React.useRef(null);
+  const stockData = btcCandles.slice(0, 90).reverse();
   const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
 
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
   // Custom line component that renders a rect to highlight the entire bandwidth
   const BandwidthHighlight = memo(({ d, stroke }) => {
@@ -680,11 +679,11 @@ function Candlesticks() {
     const xScale = getXScale();
     const xAxis = getXAxis();
 
-    if (!xScale || scrubberPosition === undefined) return
+    if (!xScale || scrubberPosition === undefined) return;
 
     const xPos = xScale(scrubberPosition);
 
-    if (xPos === undefined) return
+    if (xPos === undefined) return;
 
     return (
       <rect
@@ -697,49 +696,43 @@ function Candlesticks() {
     );
   });
 
-  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
-    number,
-    number,
-  ][];
+  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]);
 
-  const CandlestickBarComponent = memo<BarComponentProps>(
-    ({ x, y, width, height, originY, dataX, ...props }) => {
-      const { getYScale } = useCartesianChartContext();
-      const yScale = getYScale();
+  const CandlestickBarComponent = memo(({ x, y, width, height, originY, dataX, ...props }) => {
+    const { getYScale } = useCartesianChartContext();
+    const yScale = getYScale();
 
-      const wickX = x + width / 2;
+    const wickX = x + width / 2;
 
-      const timePeriodValue = stockData[dataX as number];
+    const timePeriodValue = stockData[dataX];
 
-      const open = parseFloat(timePeriodValue.open);
-      const close = parseFloat(timePeriodValue.close);
+    const open = parseFloat(timePeriodValue.open);
+    const close = parseFloat(timePeriodValue.close);
 
-      const bullish = open < close;
-      const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
-      const openY = yScale?.(open) ?? 0;
-      const closeY = yScale?.(close) ?? 0;
+    const bullish = open < close;
+    const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+    const openY = yScale?.(open) ?? 0;
+    const closeY = yScale?.(close) ?? 0;
 
-      const bodyHeight = Math.abs(openY - closeY);
-      const bodyY = openY < closeY ? openY : closeY;
+    const bodyHeight = Math.abs(openY - closeY);
+    const bodyY = openY < closeY ? openY : closeY;
 
-      return (
-        <g>
-          <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
-          <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-        </g>
-      );
-    },
-  );
+    return (
+      <g>
+        <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+        <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+      </g>
+    );
+  });
 
-  const formatPrice = React.useCallback((price: string) => {
+  const formatPrice = React.useCallback((price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
     }).format(parseFloat(price));
   }, []);
 
-
-  const formatThousandsPrice = React.useCallback((price: string) => {
+  const formatThousandsPrice = React.useCallback((price) => {
     const formattedPrice = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -750,8 +743,7 @@ function Candlesticks() {
     return `${formattedPrice}k`;
   }, []);
 
-
-  const formatVolume = React.useCallback((volume: string) => {
+  const formatVolume = React.useCallback((volume) => {
     const volumeInThousands = parseFloat(volume) / 1000;
     return (
       new Intl.NumberFormat('en-US', {
@@ -835,7 +827,7 @@ function Candlesticks() {
       </BarChart>
     </VStack>
   );
-};
+}
 ```
 
 #### Outlined Stacks
@@ -844,7 +836,7 @@ You can set the `BarStackComponent` prop to render a custom component for stacks
 
 ```jsx live
 function MonthlyRewards() {
-  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
+  const CustomBarStackComponent = ({ children, ...props }) => {
     return (
       <>
         <Bar

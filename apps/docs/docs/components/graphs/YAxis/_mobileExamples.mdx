@@ -181,7 +181,7 @@ function YAxisGridExample() {
 
 You can also customize the grid lines using the `GridLineComponent` prop.
 
-```jsx
+```tsx
 function CustomGridLineExample() {
   const theme = useTheme();
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
@@ -217,7 +217,7 @@ function CustomGridLineExample() {
       <ReferenceLine LineComponent={SolidLine} dataY={0} />
     </CartesianChart>
   );
-};
+}
 ```
 
 ### Line

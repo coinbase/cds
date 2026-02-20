@@ -21,7 +21,11 @@ Do not use `useMediaQuery` for responsive styles. Use CSS media queries or [the 
   const Page = () => {
     const isMobile = useMediaQuery('(max-width: 767px)');
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    return <JSONCodeBlock json={{ isMobile, prefersDarkMode }} />;
+    return (
+      <pre style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+        {JSON.stringify({ isMobile, prefersDarkMode }, null, 2)}
+      </pre>
+    );
   };
 
   const App = () => (
@@ -84,7 +88,11 @@ Complex queries cannot be solved during SSR. They are solved on the client by ca
     (width < 560px) or ((width > 768px) and (width < 900px))`,
   );
 
-  return <JSONCodeBlock json={{ isPortrait, isHighDPI, isTouch, isMediumHeight, complexQuery }} />;
+  return (
+    <pre style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+      {JSON.stringify({ isPortrait, isHighDPI, isTouch, isMediumHeight, complexQuery }, null, 2)}
+    </pre>
+  );
 };
 ```
 
