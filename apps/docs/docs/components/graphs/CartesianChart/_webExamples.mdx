@@ -528,7 +528,12 @@ function MixedTransitions() {
         series={[
           { id: 'line', data, color: 'var(--color-accentBoldBlue)' },
           { id: 'area', data: data.map((d) => d * 0.6), color: 'var(--color-accentBoldGreen)' },
-          { id: 'bars', data: data.map((d) => d * 0.3), color: 'var(--color-accentBoldPurple)', yAxisId: 'bars' },
+          {
+            id: 'bars',
+            data: data.map((d) => d * 0.3),
+            color: 'var(--color-accentBoldPurple)',
+            yAxisId: 'bars',
+          },
         ]}
         xAxis={{ scaleType: 'band' }}
         yAxis={[
