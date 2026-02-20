@@ -6,12 +6,13 @@ import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography';
 
 import { Area } from '../area/Area';
+import type { BarProps } from '../bar/Bar';
 import { BarChart } from '../bar/BarChart';
 import { CartesianChart } from '../CartesianChart';
-import { Line } from '../line/Line';
-import { Scrubber, type ScrubberRef } from '../scrubber';
-import type { BarProps } from '../bar/Bar';
+import { Line, type LineProps } from '../line/Line';
 import type { PathProps } from '../Path';
+import type { PointBaseProps, PointProps } from '../point';
+import { Scrubber, type ScrubberRef } from '../scrubber';
 
 const dataCount = 15;
 const updateInterval = 2500;
@@ -64,6 +65,7 @@ const TransitionLineChart = memo<{
   idlePulse?: boolean;
   scrubberRef?: React.RefObject<ScrubberRef | null>;
   enableScrubbing?: boolean;
+  points?: LineProps['points'];
 }>(
   ({
     data,
@@ -73,6 +75,7 @@ const TransitionLineChart = memo<{
     idlePulse,
     scrubberRef,
     enableScrubbing = true,
+    points,
   }) => (
     <CartesianChart
       animate={animateProp}
@@ -81,7 +84,7 @@ const TransitionLineChart = memo<{
       inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
       series={[{ id: 'values', data }]}
     >
-      <Line seriesId="values" strokeWidth={3} transitions={transitions} />
+      <Line points={points} seriesId="values" strokeWidth={3} transitions={transitions} />
       {enableScrubbing && (
         <Scrubber
           ref={scrubberRef as React.RefObject<ScrubberRef>}
@@ -142,17 +145,21 @@ const MultiLineChart = memo<{
 function LineExample({
   transitions,
   scrubberTransitions,
+  pointTransitions,
   animate,
   idlePulse,
   resettable = true,
   imperative = false,
+  points,
 }: {
   transitions: PathProps['transitions'];
   scrubberTransitions?: PathProps['transitions'];
+  pointTransitions?: PointProps['transitions'];
   animate?: boolean;
   idlePulse?: boolean;
   resettable?: boolean;
   imperative?: boolean;
+  points?: boolean;
 }) {
   const scrubberRef = useRef<ScrubberRef>(null);
   const [data, setData] = useState(generateInitialData);
@@ -170,6 +177,13 @@ function LineExample({
     return () => clearInterval(intervalId);
   }, [imperative]);
 
+  const pointFunction: LineProps['points'] = (props: PointBaseProps) => ({
+    ...props,
+    transitions: pointTransitions,
+  });
+
+  const pointProps: LineProps['points'] = points ? pointFunction : false;
+
   return (
     <VStack gap={2}>
       <TransitionLineChart
@@ -177,6 +191,7 @@ function LineExample({
         animate={animate}
         data={data}
         idlePulse={idlePulse}
+        points={pointProps}
         scrubberRef={imperative ? scrubberRef : undefined}
         scrubberTransitions={scrubberTransitions}
         transitions={transitions}
@@ -358,9 +373,11 @@ function ExampleNavigator() {
       },
       {
         category: 'Line',
-        title: 'Custom',
+        title: 'Custom 2',
         component: (
           <LineExample
+            points
+            pointTransitions={customEnterUpdateBeacon}
             scrubberTransitions={customEnterUpdateBeacon}
             transitions={customEnterUpdate}
           />

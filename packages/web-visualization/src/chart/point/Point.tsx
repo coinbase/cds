@@ -2,12 +2,11 @@ import React, { memo, type SVGProps, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import {
-  type AccessoryTransitionProps,
   defaultAccessoryEnterTransition,
   defaultTransition,
   getTransition,
@@ -221,7 +220,28 @@ export type PointProps = PointBaseProps &
      * If not provided, a default label will be generated using the data coordinates.
      */
     accessibilityLabel?: string;
-  } & AccessoryTransitionProps;
+    /**
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
+     */
+    transition?: Transition;
+  };
 
 export const Point = memo<PointProps>(
   ({

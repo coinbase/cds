@@ -62,16 +62,15 @@ const PositionedLabel = memo<{
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
     const targetY = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
-    // Animate y position when idle (matching beacon behavior)
     const animatedY = useSharedValue(0);
     useAnimatedReaction(
       () => ({ y: targetY.value, idle: unwrapAnimatedValue(isIdle) }),
       (current, previous) => {
         if (previous === null || !previous.idle || !current.idle) {
           animatedY.value = current.y;
-          return;
+        } else {
+          animatedY.value = buildTransition(current.y, updateTransition);
         }
-        animatedY.value = buildTransition(current.y, updateTransition);
       },
       [updateTransition],
     );

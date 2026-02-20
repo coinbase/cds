@@ -42,7 +42,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = SharedProps & {
+export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
@@ -76,32 +76,6 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   animate?: boolean;
   /**
-   * Transition configuration for beacon animations.
-   */
-  transitions?: {
-    /**
-     * Transition for the initial enter/reveal animation.
-     * Set to `null` to disable.
-     */
-    enter?: Transition | null;
-    /**
-     * Transition for subsequent data update animations.
-     * Set to `null` to disable.
-     */
-    update?: Transition | null;
-    /**
-     * Transition used for the pulse animation.
-     * @default { duration: 1.6, ease: 'easeInOut' }
-     */
-    pulse?: Transition;
-    /**
-     * Delay, in seconds between pulse transitions
-     * when `idlePulse` is enabled.
-     * @default 0.4
-     */
-    pulseRepeatDelay?: number;
-  };
-  /**
    * Opacity of the beacon.
    * @default 1
    */
@@ -111,15 +85,45 @@ export type ScrubberBeaconProps = SharedProps & {
    * @default 'var(--color-bg)'
    */
   stroke?: string;
-  /**
-   * Custom className for styling.
-   */
-  className?: string;
-  /**
-   * Custom inline styles.
-   */
-  style?: React.CSSProperties;
 };
+
+export type ScrubberBeaconProps = SharedProps &
+  ScrubberBeaconBaseProps & {
+    /**
+     * Transition configuration for beacon animations.
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+      /**
+       * Transition used for the pulse animation.
+       * @default transition { duration: 1.6, ease: 'easeInOut' }
+       */
+      pulse?: Transition;
+      /**
+       * Delay, in seconds between pulse transitions
+       * when `idlePulse` is enabled.
+       * @default 0.4
+       */
+      pulseRepeatDelay?: number;
+    };
+    /**
+     * Custom className for styling.
+     */
+    className?: string;
+    /**
+     * Custom inline styles.
+     */
+    style?: React.CSSProperties;
+  };
 
 export type ScrubberBeaconComponent = React.FC<
   ScrubberBeaconProps & { ref?: React.Ref<ScrubberBeaconRef> }
@@ -207,7 +211,7 @@ export type ScrubberBaseProps = SharedProps &
     labelFont?: ChartTextProps['font'];
     /**
      * Bounds inset for the scrubber line label to prevent cutoff at chart edges.
-     * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+     * @default inset { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
      */
     labelBoundsInset?: number | ChartInset;
     /**
@@ -219,16 +223,6 @@ export type ScrubberBaseProps = SharedProps &
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Transition configuration for the scrubber.
-     * Controls enter, update, and pulse animations for beacons and beacon labels.
-     */
-    transitions?: ScrubberBeaconProps['transitions'];
-    /**
-     * Transition configuration for the scrubber beacon.
-     * @deprecated Use `transitions` instead.
-     */
-    beaconTransitions?: ScrubberBeaconProps['transitions'];
-    /**
      * Stroke color of the scrubber beacon circle.
      * @default 'var(--color-bg)'
      */
@@ -236,6 +230,16 @@ export type ScrubberBaseProps = SharedProps &
   };
 
 export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Transition configuration for the scrubber.
+   * Controls enter, update, and pulse animations for beacons and beacon labels.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Transition configuration for the scrubber beacon.
+   * @deprecated Use `transitions` instead.
+   */
+  beaconTransitions?: ScrubberBeaconProps['transitions'];
   /**
    * Accessibility label for the scrubber. Can be a static string or a function that receives the current dataIndex.
    * If not provided, label will be used if it resolves to a string.

@@ -1,4 +1,4 @@
-import type { Transition } from './transition';
+import { defaultTransition, type Transition } from './transition';
 
 /**
  * A bar-specific transition that extends Transition with stagger support.
@@ -42,9 +42,7 @@ export const withStaggerDelayTransition = (
  * `{ type: 'spring', stiffness: 900, damping: 120, staggerDelay: 250 }`
  */
 export const defaultBarEnterTransition: BarTransition = {
-  type: 'spring',
-  stiffness: 900,
-  damping: 120,
+  ...defaultTransition,
   staggerDelay: 250,
 };
 

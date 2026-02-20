@@ -63,43 +63,6 @@ export const getTransition = (
   return value ?? defaultValue;
 };
 
-export type AccessoryTransitionProps = {
-  /**
-   * Transition configuration for enter and update animations.
-   * @note Disable an animation by passing in null.
-   *
-   * @default transitions = {{
-   *   enter: { type: 'tween', duration: 0.15, delay: 0.35 },
-   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
-   * }}
-   *
-   * @example
-   * // Custom enter and update transitions
-   * transitions={{ enter: { type: 'tween', duration: 0.3 }, update: { type: 'spring', damping: 20 } }}
-   *
-   * @example
-   * // Disable enter animation
-   * transitions={{ enter: null }}
-   */
-  transitions?: {
-    /**
-     * Transition for the initial enter/reveal animation.
-     * Set to `null` to disable.
-     */
-    enter?: Transition | null;
-    /**
-     * Transition for subsequent data update animations.
-     * Set to `null` to disable.
-     */
-    update?: Transition | null;
-  };
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
-
 /**
  * Hook for path animation state and transitions.
  *

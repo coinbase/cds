@@ -8,11 +8,11 @@ import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type PointLabelPosition, projectPoint } from '../utils';
 import {
-  type AccessoryTransitionProps,
   buildTransition,
   defaultAccessoryEnterTransition,
   defaultTransition,
   getTransition,
+  type Transition,
 } from '../utils/transition';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
@@ -122,14 +122,34 @@ export type PointLabelProps = {
 
 export type PointLabelComponent = ComponentType<PointLabelProps>;
 
-export type PointProps = PointBaseProps &
-  AccessoryTransitionProps & {
+export type PointProps = PointBaseProps & {
+  /**
+   * Simple text label to display at the point position.
+   * If provided, a label component will be automatically rendered.
+   */
+  label?: ChartTextChildren;
+  /**
+   * Transition configuration for enter and update animations.
+   * @note Disable an animation by passing in null.
+   */
+  transitions?: {
     /**
-     * Simple text label to display at the point position.
-     * If provided, a label component will be automatically rendered.
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
      */
-    label?: ChartTextChildren;
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
   };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
+   */
+  transition?: Transition;
+};
 
 export const Point = memo<PointProps>(
   ({
@@ -209,13 +229,12 @@ export const Point = memo<PointProps>(
     // Animated value for color interpolation (0 = old color, 1 = new color)
     const colorProgress = useSharedValue(1);
 
-    // Trigger enter fade-in on first render with valid coordinates
+    const isReady = !!xScale && !!yScale;
+
     useEffect(() => {
-      if (!pixelCoordinate || !shouldAnimate) return;
-      if (enterOpacity.value === 0) {
-        enterOpacity.value = buildTransition(1, enterTransition);
-      }
-    }, [pixelCoordinate, shouldAnimate, enterTransition, enterOpacity]);
+      if (!shouldAnimate || !isReady) return;
+      enterOpacity.value = buildTransition(1, enterTransition);
+    }, [shouldAnimate, isReady, enterTransition, enterOpacity]);
 
     // Update position when coordinates change
     useEffect(() => {
@@ -265,20 +284,19 @@ export const Point = memo<PointProps>(
       return interpolateColors(colorProgress.value, [0, 1], [previousFill, fill]);
     }, [colorProgress, previousFill, fill]);
 
-    // Check if point is within drawing area
-    const isWithinDrawingArea = useDerivedValue(() => {
+    const isWithinDrawingArea = useMemo(() => {
+      if (!pixelCoordinate) return false;
       return (
-        animatedX.value >= drawingArea.x &&
-        animatedX.value <= drawingArea.x + drawingArea.width &&
-        animatedY.value >= drawingArea.y &&
-        animatedY.value <= drawingArea.y + drawingArea.height
+        pixelCoordinate.x >= drawingArea.x &&
+        pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
+        pixelCoordinate.y >= drawingArea.y &&
+        pixelCoordinate.y <= drawingArea.y + drawingArea.height
       );
-    }, [animatedX, animatedY, drawingArea]);
+    }, [pixelCoordinate, drawingArea]);
 
-    // Compute effective opacity based on drawing area bounds and enter animation
     const effectiveOpacity = useDerivedValue(() => {
       const baseOpacity = opacity ?? 1;
-      return isWithinDrawingArea.value ? baseOpacity * enterOpacity.value : 0;
+      return isWithinDrawingArea ? baseOpacity * enterOpacity.value : 0;
     }, [isWithinDrawingArea, opacity, enterOpacity]);
 
     const offset = useMemo(() => labelOffset ?? radius * 2, [labelOffset, radius]);
@@ -287,8 +305,7 @@ export const Point = memo<PointProps>(
       return null;
     }
 
-    // If animation is disabled or on first render, use static rendering
-    if (!shouldAnimate || !previousPixelCoordinate) {
+    if (!shouldAnimate) {
       const isWithinBounds =
         pixelCoordinate.x >= drawingArea.x &&
         pixelCoordinate.x <= drawingArea.x + drawingArea.width &&

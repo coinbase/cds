@@ -55,7 +55,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = {
+export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
@@ -89,6 +89,19 @@ export type ScrubberBeaconProps = {
    */
   animate?: boolean;
   /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: AnimatedProp<number>;
+  /**
+   * Stroke color of the beacon circle.
+   * @default theme.color.bg
+   */
+  stroke?: string;
+};
+
+export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
+  /**
    * Transition configuration for beacon animations.
    */
   transitions?: {
@@ -104,7 +117,7 @@ export type ScrubberBeaconProps = {
     update?: Transition | null;
     /**
      * Transition used for the pulse animation.
-     * @default { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
+     * @default transition { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
      */
     pulse?: Transition;
     /**
@@ -114,16 +127,6 @@ export type ScrubberBeaconProps = {
      */
     pulseRepeatDelay?: number;
   };
-  /**
-   * Opacity of the beacon.
-   * @default 1
-   */
-  opacity?: AnimatedProp<number>;
-  /**
-   * Stroke color of the beacon circle.
-   * @default theme.color.bg
-   */
-  stroke?: string;
 };
 
 export type ScrubberBeaconComponent = React.FC<
@@ -216,23 +219,24 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Transition configuration for the scrubber.
-     * Controls enter, update, and pulse animations for beacons and beacon labels.
-     */
-    transitions?: ScrubberBeaconProps['transitions'];
-    /**
-     * Transition configuration for the scrubber beacon.
-     * @deprecated Use `transitions` instead.
-     */
-    beaconTransitions?: ScrubberBeaconProps['transitions'];
-    /**
      * Stroke color of the scrubber beacon circle.
      * @default theme.color.bg
      */
     beaconStroke?: string;
   };
 
-export type ScrubberProps = ScrubberBaseProps;
+export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Transition configuration for the scrubber.
+   * Controls enter, update, and pulse animations for beacons and beacon labels.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Transition configuration for the scrubber beacon.
+   * @deprecated Use `transitions` instead.
+   */
+  beaconTransitions?: ScrubberBeaconProps['transitions'];
+};
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
 
@@ -269,7 +273,6 @@ export const Scrubber = memo(
       ref,
     ) => {
       const theme = useTheme();
-
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
