@@ -10,7 +10,6 @@ import {
 } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDuration,
   type ChartInset,
   type ChartScaleFunction,
   defaultAccessoryEnterTransition,
@@ -380,14 +379,6 @@ export const Scrubber = memo(
         [transitions?.enter, animate],
       );
 
-      const groupExitTransition = useMemo(() => {
-        const duration =
-          'duration' in groupEnterTransition
-            ? (groupEnterTransition as { duration?: number }).duration
-            : accessoryFadeTransitionDuration;
-        return { duration: duration ?? accessoryFadeTransitionDuration };
-      }, [groupEnterTransition]);
-
       // Check if we have at least the default X scale
       const defaultXScale = getXScale();
       if (!defaultXScale) return null;
@@ -409,7 +400,6 @@ export const Scrubber = memo(
                   opacity: 1,
                   transition: groupEnterTransition,
                 },
-                exit: { opacity: 0, transition: groupExitTransition },
                 initial: { opacity: 0 },
               }
             : {})}
