@@ -96,21 +96,19 @@ export type PathProps = PathBaseProps &
     clipRect?: Rect | null;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset'>>(
-  ({ d = '', initialPath, transitions, transition, ...pathProps }) => {
-    const interpolatedPath = usePathTransition({
-      currentPath: d,
-      initialPath,
-      transitions: {
-        enter: transitions?.enter ?? undefined,
-        update: transitions?.update ?? undefined,
-      },
-      transition,
-    });
+const AnimatedPath = memo<
+  Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'transitions' | 'transition'> & {
+    transitions?: { enter?: Transition; update?: Transition };
+  }
+>(({ d = '', initialPath, transitions, ...pathProps }) => {
+  const interpolatedPath = usePathTransition({
+    currentPath: d,
+    initialPath,
+    transitions,
+  });
 
-    return <motion.path d={interpolatedPath} {...pathProps} />;
-  },
-);
+  return <motion.path d={interpolatedPath} {...pathProps} />;
+});
 
 export const Path = memo<PathProps>(
   ({

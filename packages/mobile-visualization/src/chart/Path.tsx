@@ -132,7 +132,14 @@ export type PathProps = PathBaseProps &
     clipRect?: Rect;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
+const AnimatedPath = memo<
+  Omit<
+    PathProps,
+    'animate' | 'clipRect' | 'clipOffset' | 'clipPath' | 'transitions' | 'transition'
+  > & {
+    transitions?: { enter?: Transition; update?: Transition };
+  }
+>(
   ({
     d = '',
     initialPath,
@@ -145,7 +152,6 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     strokeJoin,
     children,
     transitions,
-    transition,
     ...pathProps
   }) => {
     const isDAnimated = typeof d !== 'string';
@@ -153,11 +159,7 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     const animatedPath = usePathTransition({
       currentPath: isDAnimated ? '' : d,
       initialPath,
-      transitions: {
-        enter: transitions?.enter ?? undefined,
-        update: transitions?.update ?? undefined,
-      },
-      transition,
+      transitions,
     });
 
     const isFilled = fill !== undefined && fill !== 'none';
