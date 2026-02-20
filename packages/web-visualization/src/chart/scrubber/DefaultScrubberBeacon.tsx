@@ -1,4 +1,5 @@
-import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import {
   m as motion,
   type Transition,
@@ -81,12 +82,8 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries],
       );
 
-      // Track the previous idle state to detect idle<->scrubbing transitions.
-      // Position changes during these transitions should always be instant,
-      // while data updates within idle state should use the configured transition.
-      const prevIsIdleRef = useRef(isIdle);
-      const isIdleTransition = isIdle !== prevIsIdleRef.current;
-      prevIsIdleRef.current = isIdle;
+      const prevIsIdle = usePreviousValue(isIdle);
+      const isIdleTransition = prevIsIdle !== undefined && isIdle !== prevIsIdle;
 
       const updateTransition = useMemo(() => {
         if (isIdleTransition) return instantTransition;

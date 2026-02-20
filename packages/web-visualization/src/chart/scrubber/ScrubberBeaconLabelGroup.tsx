@@ -1,4 +1,5 @@
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { Transition } from 'framer-motion';
 
@@ -144,12 +145,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
 
     const isIdle = scrubberPosition === undefined;
 
-    // Track the previous idle state to detect idle<->scrubbing transitions.
-    // Position changes during these transitions should always be instant,
-    // while data updates within idle state should use the configured transition.
-    const prevIsIdleRef = useRef(isIdle);
-    const isIdleTransition = isIdle !== prevIsIdleRef.current;
-    prevIsIdleRef.current = isIdle;
+    const prevIsIdle = usePreviousValue(isIdle);
+    const isIdleTransition = prevIsIdle !== undefined && isIdle !== prevIsIdle;
 
     const updateTransition = useMemo(() => {
       if (isIdleTransition) return instantTransition;
