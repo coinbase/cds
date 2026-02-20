@@ -75,7 +75,15 @@ export const DefaultBar = memo<DefaultBarProps>(
     const initialPath = useMemo(() => {
       const minHeight = 1;
       const initialY = (originY ?? 0) - minHeight;
-      return getBarPath(x, initialY, width, minHeight, borderRadius ?? 0, !!roundTop, !!roundBottom);
+      return getBarPath(
+        x,
+        initialY,
+        width,
+        minHeight,
+        borderRadius ?? 0,
+        !!roundTop,
+        !!roundBottom,
+      );
     }, [x, originY, width, borderRadius, roundTop, roundBottom]);
 
     return (
