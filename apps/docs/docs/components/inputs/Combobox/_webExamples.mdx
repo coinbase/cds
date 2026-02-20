@@ -6,37 +6,37 @@ We use [fuse.js](https://www.fusejs.io/) to power the fuzzy search logic for Com
 
 Basic multi-selection combobox with search.
 
-```jsx live
+```tsx live
 function MultiSelect() {
-const fruitOptions: SelectOption[] = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { value: 'cherry', label: 'Cherry' },
-  { value: 'date', label: 'Date' },
-  { value: 'elderberry', label: 'Elderberry' },
-  { value: 'fig', label: 'Fig' },
-  { value: 'grape', label: 'Grape' },
-  { value: 'honeydew', label: 'Honeydew' },
-  { value: 'kiwi', label: 'Kiwi' },
-  { value: 'lemon', label: 'Lemon' },
-  { value: 'mango', label: 'Mango' },
-  { value: 'orange', label: 'Orange' },
-  { value: 'papaya', label: 'Papaya' },
-  { value: 'raspberry', label: 'Raspberry' },
-  { value: 'strawberry', label: 'Strawberry' },
-];
+  const fruitOptions: SelectOption[] = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+    { value: 'fig', label: 'Fig' },
+    { value: 'grape', label: 'Grape' },
+    { value: 'honeydew', label: 'Honeydew' },
+    { value: 'kiwi', label: 'Kiwi' },
+    { value: 'lemon', label: 'Lemon' },
+    { value: 'mango', label: 'Mango' },
+    { value: 'orange', label: 'Orange' },
+    { value: 'papaya', label: 'Papaya' },
+    { value: 'raspberry', label: 'Raspberry' },
+    { value: 'strawberry', label: 'Strawberry' },
+  ];
 
   const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
 
   return (
-      <Combobox
-        label="Select fruits"
-        onChange={onChange}
-        options={fruitOptions}
-        placeholder="Search and select fruits..."
-        type="multi"
-        value={value}
-      />
+    <Combobox
+      label="Select fruits"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Search and select fruits..."
+      type="multi"
+      value={value}
+    />
   );
 }
 ```
@@ -73,38 +73,38 @@ function SingleSelect() {
 
 Communicate limits or guidance by pairing helper text with multi-select usage.
 
-```jsx live
+```tsx live
 function HelperText() {
-const fruitOptions: SelectOption[] = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { value: 'cherry', label: 'Cherry' },
-  { value: 'date', label: 'Date' },
-  { value: 'elderberry', label: 'Elderberry' },
-  { value: 'fig', label: 'Fig' },
-  { value: 'grape', label: 'Grape' },
-  { value: 'honeydew', label: 'Honeydew' },
-  { value: 'kiwi', label: 'Kiwi' },
-  { value: 'lemon', label: 'Lemon' },
-  { value: 'mango', label: 'Mango' },
-  { value: 'orange', label: 'Orange' },
-  { value: 'papaya', label: 'Papaya' },
-  { value: 'raspberry', label: 'Raspberry' },
-  { value: 'strawberry', label: 'Strawberry' },
-];
+  const fruitOptions: SelectOption[] = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+    { value: 'fig', label: 'Fig' },
+    { value: 'grape', label: 'Grape' },
+    { value: 'honeydew', label: 'Honeydew' },
+    { value: 'kiwi', label: 'Kiwi' },
+    { value: 'lemon', label: 'Lemon' },
+    { value: 'mango', label: 'Mango' },
+    { value: 'orange', label: 'Orange' },
+    { value: 'papaya', label: 'Papaya' },
+    { value: 'raspberry', label: 'Raspberry' },
+    { value: 'strawberry', label: 'Strawberry' },
+  ];
 
   const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
 
   return (
-      <Combobox
+    <Combobox
       helperText="Choose more than one fruit"
-        label="Select fruits"
-        onChange={onChange}
-        options={fruitOptions}
-        placeholder="Search and select fruits..."
-        type="multi"
-        value={value}
-      />
+      label="Select fruits"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Search and select fruits..."
+      type="multi"
+      value={value}
+    />
   );
 }
 ```
@@ -117,16 +117,16 @@ The alignment of the selected value(s) can be adjusted using the `align` prop.
 Left / right alignment is preferred for styling.
 ::::
 
-```jsx live
+```tsx live
 function AlignmentExample() {
   const fruitOptions: SelectOption[] = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { value: 'cherry', label: 'Cherry' },
-  { value: 'date', label: 'Date' },
-  { value: 'elderberry', label: 'Elderberry' },
-  { value: 'fig', label: 'Fig' }
-];
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+    { value: 'fig', label: 'Fig' },
+  ];
   const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
     initialValue: ['apple', 'banana'],
   });
@@ -151,7 +151,7 @@ function AlignmentExample() {
         value={multiValue}
       />
     </VStack>
-  )
+  );
 }
 ```
 

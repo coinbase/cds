@@ -48,7 +48,7 @@ All series will be scrubbed by default. You can set `seriesIds` to show only spe
 Setting `label` on a series will display a label to the side of the scrubber beacon, and
 setting `label` on Scrubber displays a label above the scrubber line.
 
-```jsx
+```tsx
 <LineChart
   enableScrubbing
   height={150}
@@ -167,7 +167,7 @@ function CustomStrokeColor() {
 
 For more advanced customizations, you can pass a custom component to `BeaconComponent`.
 
-```jsx
+```tsx
 function OutlineBeacon() {
   const theme = useTheme();
 
@@ -270,7 +270,7 @@ function OutlineBeacon() {
 
 You can use `BeaconLabelComponent` to customize the labels for each scrubber beacon.
 
-```jsx
+```tsx
 function CustomBeaconLabel() {
   const theme = useTheme();
   // This custom component label shows the percentage value of the data at the scrubber position.
@@ -353,7 +353,7 @@ function CustomBeaconLabel() {
 
 You can use `hideBeaconLabels` to hide beacon labels, while still being able to provide a label for a series.
 
-```jsx
+```tsx
 <LineChart
   enableScrubbing
   legend
@@ -375,17 +375,13 @@ You can use `hideBeaconLabels` to hide beacon labels, while still being able to 
   showArea
   inset={{ top: 60 }}
 >
-  <Scrubber
-    hideBeaconLabels
-    label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-    labelElevated
-  />
+  <Scrubber hideBeaconLabels label={(dataIndex: number) => `Day ${dataIndex + 1}`} labelElevated />
 </LineChart>
 ```
 
 Using `labelElevated` will elevate the Scrubber's reference line label with a shadow.
 
-```jsx
+```tsx
 <LineChart
   enableScrubbing
   height={200}
@@ -404,7 +400,7 @@ Using `labelElevated` will elevate the Scrubber's reference line label with a sh
 
 You can use `LabelComponent` to customize this label even further.
 
-```jsx
+```tsx
 function CustomLabelComponent() {
   const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
     const theme = useTheme();
@@ -450,7 +446,7 @@ function CustomLabelComponent() {
 
 You can create custom multi-line centered labels using Skia's `ParagraphBuilder` with `TextAlign.Center`. Set `paragraphAlignment={TextAlign.Center}` on your custom label component to ensure proper positioning.
 
-```jsx
+```tsx
 function TwoLineCenteredLabel() {
   const theme = useTheme();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
@@ -535,7 +531,7 @@ function TwoLineCenteredLabel() {
 
 You can use `labelFont` to customize the font of the scrubber line label and `beaconLabelFont` to customize the font of the beacon labels.
 
-```jsx
+```tsx
 function CustomLabelFonts() {
   const theme = useTheme();
 
@@ -646,7 +642,7 @@ You can use `LineComponent` to customize Scrubber's line. In this case, as a use
 
 You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop to hide scrubber beacons and labels when idle.
 
-```jsx
+```tsx
 function HiddenScrubberWhenIdle() {
   const MyScrubberBeacon = memo(
     forwardRef((props: ScrubberBeaconProps, ref) => {
@@ -708,7 +704,7 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
 
 You can use `BeaconLabelComponent` to display a label with the percentage value of the data at the scrubber position.
 
-```jsx
+```tsx
 function PercentageBeaconLabels() {
   const theme = useTheme();
 
@@ -765,10 +761,7 @@ function PercentageBeaconLabels() {
         if (seriesData !== undefined) {
           const dataAtPosition = seriesData[dataIndex.value];
 
-          const builder = Skia.ParagraphBuilder.Make(
-            { textAlign: TextAlign.Left },
-            fontProvider,
-          );
+          const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontProvider);
 
           builder.pushStyle(boldStyle);
           builder.addText(`${dataAtPosition}%`);
