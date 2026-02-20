@@ -78,7 +78,7 @@ const DismissibleCardsExample = () => {
                     height={100}
                     resizeMode="cover"
                     shape="rectangle"
-                    source={{ uri: coinbaseOneLogo }}
+                    source={coinbaseOneLogo}
                     width={80}
                   />
                 ) : (
@@ -125,7 +125,7 @@ const MessagingCardScreen = () => {
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={90}
               />
             }
@@ -196,7 +196,7 @@ const MessagingCardScreen = () => {
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={90}
               />
             }
@@ -224,7 +224,7 @@ const MessagingCardScreen = () => {
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={90}
               />
             }
@@ -252,7 +252,7 @@ const MessagingCardScreen = () => {
                 height={156}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={120}
               />
             }
@@ -282,7 +282,7 @@ const MessagingCardScreen = () => {
                 height={186}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={130}
               />
             }
@@ -324,7 +324,7 @@ const MessagingCardScreen = () => {
                 height={156}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={120}
               />
             }
@@ -373,7 +373,7 @@ const MessagingCardScreen = () => {
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={90}
               />
             }
@@ -416,7 +416,7 @@ const MessagingCardScreen = () => {
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={90}
               />
             }
@@ -438,6 +438,76 @@ const MessagingCardScreen = () => {
         </VStack>
       </Example>
 
+      {/* Custom Background Color */}
+      <Example title="Custom Background Color">
+        <VStack gap={2}>
+          <MessagingCard
+            {...exampleProps}
+            renderAsPressable
+            accessibilityLabel="View card details"
+            blendStyles={{ background: '#1E5A9E' }}
+            description="Pressable card with custom background via blendStyles.background"
+            media={
+              <RemoteImage
+                accessibilityLabel="Coinbase One promotional image"
+                height={130}
+                resizeMode="cover"
+                shape="rectangle"
+                source={coinbaseOneLogo}
+                width={90}
+              />
+            }
+            mediaPlacement="end"
+            onPress={NoopFn}
+            title="Pressable with Custom Background"
+            type="upsell"
+          />
+          <MessagingCard
+            {...exampleProps}
+            renderAsPressable
+            accessibilityLabel="View nudge details"
+            blendStyles={{ background: '#FFF8E6' }}
+            description="Pressable nudge with custom background via blendStyles.background"
+            media={<Pictogram accessibilityLabel="Rocket" dimension="48x48" name="baseRocket" />}
+            mediaPlacement="end"
+            onPress={NoopFn}
+            title="Nudge with Custom Background"
+            type="nudge"
+          />
+          <MessagingCard
+            {...exampleProps}
+            accessibilityLabel="Non-pressable card"
+            description="Non-pressable card with custom background via styles.root"
+            media={
+              <RemoteImage
+                accessibilityLabel="Coinbase One promotional image"
+                height={130}
+                resizeMode="cover"
+                shape="rectangle"
+                source={coinbaseOneLogo}
+                width={90}
+              />
+            }
+            mediaPlacement="end"
+            renderAsPressable={false}
+            styles={{ root: { backgroundColor: '#1E5A9E' } }}
+            title="Non-pressable with Custom Background"
+            type="upsell"
+          />
+          <MessagingCard
+            {...exampleProps}
+            accessibilityLabel="Non-pressable nudge"
+            description="Non-pressable nudge with custom background via styles.root"
+            media={<Pictogram accessibilityLabel="Rocket" dimension="48x48" name="baseRocket" />}
+            mediaPlacement="end"
+            renderAsPressable={false}
+            styles={{ root: { backgroundColor: '#FFF8E6' } }}
+            title="Non-pressable Nudge with Custom Background"
+            type="nudge"
+          />
+        </VStack>
+      </Example>
+
       {/* Text Content */}
       <Example title="Text Content">
         <VStack gap={2}>
@@ -450,7 +520,7 @@ const MessagingCardScreen = () => {
                 height={160}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={120}
               />
             }
@@ -471,7 +541,7 @@ const MessagingCardScreen = () => {
                 height={140}
                 resizeMode="cover"
                 shape="rectangle"
-                source={{ uri: coinbaseOneLogo }}
+                source={coinbaseOneLogo}
                 width={100}
               />
             }
