@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
-import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { Path } from '../Path';
 import {
   defaultBarEnterTransition,
   defaultTransition,
@@ -9,7 +9,6 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
-import { usePathTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -31,7 +30,7 @@ export const DefaultBar = memo<DefaultBarProps>(
   ({
     x,
     width,
-    borderRadius = 4,
+    borderRadius,
     roundTop,
     roundBottom,
     originY,
@@ -47,37 +46,52 @@ export const DefaultBar = memo<DefaultBarProps>(
   }) => {
     const { animate, drawingArea } = useCartesianChartContext();
 
-    // Compute normalized x position for stagger delay calculation
-    const normalizedX = drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-
-    const shouldAnimateEnter = animate && transitions?.enter !== null;
-
-    const enterTransition = withStaggerDelayTransition(
-      getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-      normalizedX,
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
     );
-    const updateTransition = withStaggerDelayTransition(
-      getTransition(
-        transitions?.update !== undefined ? transitions.update : transition,
-        animate,
-        defaultTransition,
-      ),
-      normalizedX,
+
+    const enterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [transitions?.enter, animate, normalizedX],
+    );
+    const updateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [transitions?.update, transition, animate, normalizedX],
     );
 
     const initialPath = useMemo(() => {
-      if (!shouldAnimateEnter) return undefined;
       const minHeight = 1;
       const initialY = (originY ?? 0) - minHeight;
-      return getBarPath(x, initialY, width, minHeight, borderRadius, !!roundTop, !!roundBottom);
-    }, [shouldAnimateEnter, x, originY, width, borderRadius, roundTop, roundBottom]);
+      return getBarPath(x, initialY, width, minHeight, borderRadius ?? 0, !!roundTop, !!roundBottom);
+    }, [x, originY, width, borderRadius, roundTop, roundBottom]);
 
-    const animatedPath = usePathTransition({
-      currentPath: d ?? '',
-      initialPath,
-      transitions: { enter: enterTransition, update: updateTransition },
-    });
-
-    return <motion.path {...props} d={animatedPath} fill={fill} fillOpacity={fillOpacity} />;
+    return (
+      <Path
+        {...props}
+        animate={animate}
+        clipRect={null}
+        d={d}
+        fill={fill}
+        fillOpacity={fillOpacity}
+        initialPath={initialPath}
+        transitions={{
+          enter: enterTransition,
+          update: updateTransition,
+        }}
+      />
+    );
   },
 );

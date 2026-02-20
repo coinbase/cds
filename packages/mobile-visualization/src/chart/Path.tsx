@@ -11,11 +11,11 @@ import {
 } from '@shopify/react-native-skia';
 
 import { defaultPathEnterTransition } from './utils/path';
-import type { Transition } from './utils/transition';
 import {
   buildTransition,
   defaultTransition,
   getTransition,
+  type Transition,
   usePathTransition,
 } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
@@ -132,12 +132,7 @@ export type PathProps = PathBaseProps &
     clipRect?: Rect;
   };
 
-const AnimatedPath = memo<
-  Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'> & {
-    updateTransition: Transition;
-    enterTransition: Transition;
-  }
->(
+const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
   ({
     d = '',
     initialPath,
@@ -149,18 +144,20 @@ const AnimatedPath = memo<
     strokeCap,
     strokeJoin,
     children,
-    updateTransition,
-    enterTransition,
+    transitions,
+    transition,
     ...pathProps
   }) => {
     const isDAnimated = typeof d !== 'string';
 
-    // When d is animated, usePathTransition handles static path transitions.
-    // For animated d values, we skip usePathTransition and use useDerivedValue directly.
     const animatedPath = usePathTransition({
       currentPath: isDAnimated ? '' : d,
       initialPath,
-      transitions: { enter: enterTransition, update: updateTransition },
+      transitions: {
+        enter: transitions?.enter ?? undefined,
+        update: transitions?.update ?? undefined,
+      },
+      transition,
     });
 
     const isFilled = fill !== undefined && fill !== 'none';
@@ -350,7 +347,6 @@ export const Path = memo<PathProps>((props) => {
   ) : (
     <AnimatedPath
       d={d}
-      enterTransition={enterTransition}
       fill={fill}
       fillOpacity={fillOpacity}
       initialPath={initialPath}
@@ -359,7 +355,7 @@ export const Path = memo<PathProps>((props) => {
       strokeJoin={strokeJoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
-      updateTransition={updateTransition}
+      transitions={{ enter: enterTransition, update: updateTransition }}
     >
       {children}
     </AnimatedPath>

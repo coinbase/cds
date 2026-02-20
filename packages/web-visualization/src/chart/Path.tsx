@@ -19,6 +19,12 @@ export type PathBaseProps = SharedProps & {
    */
   animate?: boolean;
   /**
+   * Initial path for enter animation.
+   * When provided, the first animation will go from initialPath to d.
+   * If not provided, defaults to d (no path enter animation).
+   */
+  initialPath?: string;
+  /**
    * Fill color for the path.
    */
   fill?: string;
@@ -90,16 +96,21 @@ export type PathProps = PathBaseProps &
     clipRect?: Rect | null;
   };
 
-const AnimatedPath = memo<
-  Omit<PathProps, 'animate' | 'transitions' | 'transition'> & { updateTransition: Transition }
->(({ d = '', updateTransition, ...pathProps }) => {
-  const interpolatedPath = usePathTransition({
-    currentPath: d,
-    transitions: { update: updateTransition },
-  });
+const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset'>>(
+  ({ d = '', initialPath, transitions, transition, ...pathProps }) => {
+    const interpolatedPath = usePathTransition({
+      currentPath: d,
+      initialPath,
+      transitions: {
+        enter: transitions?.enter ?? undefined,
+        update: transitions?.update ?? undefined,
+      },
+      transition,
+    });
 
-  return <motion.path d={interpolatedPath} {...pathProps} />;
-});
+    return <motion.path d={interpolatedPath} {...pathProps} />;
+  },
+);
 
 export const Path = memo<PathProps>(
   ({
@@ -170,7 +181,7 @@ export const Path = memo<PathProps>(
         <AnimatedPath
           clipPath={clipPath}
           d={d}
-          updateTransition={updateTransition}
+          transitions={{ enter: enterTransition, update: updateTransition }}
           {...pathProps}
         />
       </>
