@@ -299,8 +299,8 @@ export const Scrubber = memo(
         beaconLabelFont,
         testID,
         idlePulse,
-        transitions: transitionsProp,
         beaconTransitions,
+        transitions = beaconTransitions,
         beaconStroke,
         styles,
         classNames,
@@ -312,8 +312,6 @@ export const Scrubber = memo(
       const { scrubberPosition } = useScrubberContext();
       const { getXScale, getXAxis, animate, series, drawingArea, dataLength } =
         useCartesianChartContext();
-
-      const resolvedTransitions = transitionsProp ?? beaconTransitions;
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -378,8 +376,8 @@ export const Scrubber = memo(
       );
 
       const groupEnterTransition = useMemo(
-        () => getTransition(resolvedTransitions?.enter, animate, defaultAccessoryEnterTransition),
-        [resolvedTransitions?.enter, animate],
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
       );
 
       const groupExitTransition = useMemo(() => {
@@ -451,7 +449,7 @@ export const Scrubber = memo(
             stroke={beaconStroke}
             style={styles?.beacon}
             testID={testID}
-            transitions={resolvedTransitions}
+            transitions={transitions}
           />
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
@@ -461,7 +459,7 @@ export const Scrubber = memo(
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
-              transitions={resolvedTransitions}
+              transitions={transitions}
             />
           )}
         </motion.g>

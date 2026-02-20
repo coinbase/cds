@@ -145,6 +145,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     const isIdle = scrubberPosition === undefined;
 
     // Track the previous idle state to detect idle<->scrubbing transitions.
+    // Position changes during these transitions should always be instant,
+    // while data updates within idle state should use the configured transition.
     const prevIsIdleRef = useRef(isIdle);
     const isIdleTransition = isIdle !== prevIsIdleRef.current;
     prevIsIdleRef.current = isIdle;
