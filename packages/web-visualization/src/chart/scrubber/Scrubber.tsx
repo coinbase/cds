@@ -13,7 +13,6 @@ import {
   accessoryFadeTransitionDuration,
   type ChartInset,
   type ChartScaleFunction,
-  type ChartTransition,
   defaultAccessoryEnterTransition,
   getPointOnScale,
   getTransition,
@@ -79,7 +78,17 @@ export type ScrubberBeaconProps = SharedProps & {
   /**
    * Transition configuration for beacon animations.
    */
-  transitions?: ChartTransition & {
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
     /**
      * Transition used for the pulse animation.
      * @default { duration: 1.6, ease: 'easeInOut' }

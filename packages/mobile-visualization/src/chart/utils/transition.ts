@@ -51,36 +51,6 @@ export const defaultTransition: Transition = {
 };
 
 /**
- * Transition configuration for chart animations.
- * Allows separate configuration of enter (reveal) and update (data change) animations.
- * Set either key to `null` to disable that animation phase.
- *
- * @example
- * // Custom enter and update transitions
- * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
- *
- * @example
- * // Disable enter animation, keep default update
- * transitions={{ enter: null }}
- *
- * @example
- * // Disable update animation, keep default enter
- * transitions={{ update: null }}
- */
-export type ChartTransition = {
-  /**
-   * Transition for the initial enter/reveal animation.
-   * Set to `null` to disable.
-   */
-  enter?: Transition | null;
-  /**
-   * Transition for subsequent data update animations.
-   * Set to `null` to disable.
-   */
-  update?: Transition | null;
-};
-
-/**
  * Instant transition that completes immediately with no animation.
  * Used when a transition is set to `null`.
  */
@@ -141,7 +111,18 @@ export type AccessoryTransitionProps = {
    * // Disable enter animation
    * transitions={{ enter: null }}
    */
-  transitions?: ChartTransition;
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
+  };
   /**
    * Transition for updates.
    * @deprecated Use `transitions.update` instead.

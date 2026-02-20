@@ -18,31 +18,6 @@ export type BarTransition = Transition & {
 };
 
 /**
- * Transition configuration for bar chart animations.
- * Extends ChartTransition with bar-specific stagger support on enter and update.
- *
- * @example
- * // Staggered enter, no update animation
- * { enter: { type: 'timing', duration: 750, staggerDelay: 250 }, update: null }
- *
- * @example
- * // Staggered enter and rippling updates
- * { enter: { type: 'timing', duration: 750, staggerDelay: 250 }, update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 100 } }
- */
-export type BarChartTransition = {
-  /**
-   * Transition for the initial enter/reveal animation.
-   * Set to `null` to disable.
-   */
-  enter?: BarTransition | null;
-  /**
-   * Transition for subsequent data update animations.
-   * Set to `null` to disable.
-   */
-  update?: BarTransition | null;
-};
-
-/**
  * Strips `staggerDelay` from a transition and computes a positional delay.
  *
  * @param transition - The transition config (may include staggerDelay)

@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { type BarChartTransition, getBarPath } from '../utils';
+import { type BarTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 
@@ -93,7 +93,18 @@ export type BarProps = BarBaseProps & {
    * // Disable enter animation
    * transitions={{ enter: null }}
    */
-  transitions?: BarChartTransition;
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: BarTransition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: BarTransition | null;
+  };
   /**
    * Transition for updates.
    * @deprecated Use `transitions.update` instead.

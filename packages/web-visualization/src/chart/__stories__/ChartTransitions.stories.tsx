@@ -16,8 +16,8 @@ import { BarChart } from '../bar/BarChart';
 import { CartesianChart } from '../CartesianChart';
 import { Line } from '../line/Line';
 import { Scrubber, type ScrubberRef } from '../scrubber';
-import type { BarChartTransition } from '../utils/bar';
-import type { ChartTransition } from '../utils/transition';
+import type { BarProps } from '../bar/Bar';
+import type { PathProps } from '../Path';
 
 export default {
   title: 'Components/Chart/CartesianChart',
@@ -43,34 +43,34 @@ function generateInitialData() {
   return data;
 }
 
-const enterOnly: ChartTransition = {
+const enterOnly: PathProps['transitions'] = {
   update: null,
 };
-const updateOnly: ChartTransition = {
+const updateOnly: PathProps['transitions'] = {
   enter: null,
 };
-const bothDisabled: ChartTransition = { enter: null, update: null };
-const customEnterUpdate: ChartTransition = {
+const bothDisabled: PathProps['transitions'] = { enter: null, update: null };
+const customEnterUpdate: PathProps['transitions'] = {
   enter: { type: 'tween', duration: 1.5 },
   update: { type: 'spring', stiffness: 400, damping: 30 },
 };
-const customEnterUpdateBeacon: ChartTransition = {
+const customEnterUpdateBeacon: PathProps['transitions'] = {
   enter: { type: 'tween', duration: 0.5, delay: 1.0 },
   update: { type: 'spring', stiffness: 400, damping: 30 },
 };
-const slowSpringBoth: ChartTransition = {
+const slowSpringBoth: PathProps['transitions'] = {
   enter: { type: 'spring', stiffness: 100, damping: 10 },
   update: { type: 'spring', stiffness: 100, damping: 10 },
 };
-const staggeredBoth: BarChartTransition = {
+const staggeredBoth: BarProps['transitions'] = {
   enter: { type: 'tween', duration: 0.75, staggerDelay: 0.25 },
   update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 0.15 },
 };
 
 const TransitionLineChart = memo<{
   data: number[];
-  transitions: ChartTransition;
-  scrubberTransitions?: ChartTransition;
+  transitions: PathProps['transitions'];
+  scrubberTransitions?: PathProps['transitions'];
   animate?: boolean;
   idlePulse?: boolean;
   scrubberRef?: RefObject<ScrubberRef | null>;
@@ -107,7 +107,7 @@ const TransitionLineChart = memo<{
 
 const TransitionAreaChart = memo<{
   data: number[];
-  transitions: ChartTransition;
+  transitions: PathProps['transitions'];
   idlePulse?: boolean;
   scrubberRef?: RefObject<ScrubberRef | null>;
 }>(({ data, transitions, idlePulse, scrubberRef }) => (
@@ -131,7 +131,7 @@ const TransitionAreaChart = memo<{
 const MultiLineChart = memo<{
   data1: number[];
   data2: number[];
-  transitions: ChartTransition;
+  transitions: PathProps['transitions'];
 }>(({ data1, data2, transitions }) => (
   <CartesianChart
     enableScrubbing
@@ -156,8 +156,8 @@ function LineExample({
   resettable = true,
   imperative = false,
 }: {
-  transitions: ChartTransition;
-  scrubberTransitions?: ChartTransition;
+  transitions: PathProps['transitions'];
+  scrubberTransitions?: PathProps['transitions'];
   animate?: boolean;
   idlePulse?: boolean;
   resettable?: boolean;
@@ -205,7 +205,7 @@ function AreaExample({
   resettable = true,
   imperative = false,
 }: {
-  transitions: ChartTransition;
+  transitions: PathProps['transitions'];
   idlePulse?: boolean;
   resettable?: boolean;
   imperative?: boolean;
@@ -260,7 +260,7 @@ const barChartProps = {
 
 const TransitionBarChart = memo<{
   data: number[];
-  transitions: ChartTransition;
+  transitions: PathProps['transitions'];
 }>(({ data, transitions }) => (
   <BarChart {...barChartProps} series={[{ id: 'values', data }]} transitions={transitions}>
     <Scrubber hideOverlay seriesIds={[]} transitions={transitions} />
@@ -271,7 +271,7 @@ function BarExample({
   transitions,
   resettable = true,
 }: {
-  transitions: ChartTransition;
+  transitions: PathProps['transitions'];
   resettable?: boolean;
 }) {
   const [data, setData] = useState(generateBarData);
@@ -297,7 +297,7 @@ function BarExample({
   );
 }
 
-function MultiLineExample({ transitions }: { transitions: ChartTransition }) {
+function MultiLineExample({ transitions }: { transitions: PathProps['transitions'] }) {
   const [data1, setData1] = useState(generateInitialData);
   const [data2, setData2] = useState(generateInitialData);
   const [resetKey, setResetKey] = useState(0);

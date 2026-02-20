@@ -31,7 +31,7 @@ import {
   type Series,
   useScrubberContext,
 } from '../utils';
-import type { ChartTransition, Transition } from '../utils/transition';
+import type { Transition } from '../utils/transition';
 import { buildTransition } from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
@@ -92,7 +92,17 @@ export type ScrubberBeaconProps = {
   /**
    * Transition configuration for beacon animations.
    */
-  transitions?: ChartTransition & {
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
     /**
      * Transition used for the pulse animation.
      * @default { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }

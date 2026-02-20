@@ -4,12 +4,7 @@ import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { defaultPathEnterTransition } from './utils/path';
-import {
-  type ChartTransition,
-  defaultTransition,
-  getTransition,
-  usePathTransition,
-} from './utils/transition';
+import { defaultTransition, getTransition, usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 
 /**
@@ -66,7 +61,18 @@ export type PathProps = PathBaseProps &
      * // Disable enter animation
      * transitions={{ enter: null }}
      */
-    transitions?: ChartTransition;
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
     /**
      * Transition for updates.
      * @deprecated Use `transitions.update` instead.

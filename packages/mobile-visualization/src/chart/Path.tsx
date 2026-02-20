@@ -11,7 +11,7 @@ import {
 } from '@shopify/react-native-skia';
 
 import { defaultPathEnterTransition } from './utils/path';
-import type { ChartTransition, Transition } from './utils/transition';
+import type { Transition } from './utils/transition';
 import {
   buildTransition,
   defaultTransition,
@@ -93,7 +93,18 @@ export type PathProps = PathBaseProps &
      * // Disable enter animation
      * transitions={{ enter: null }}
      */
-    transitions?: ChartTransition;
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
     /**
      * Transition for updates.
      * @deprecated Use `transitions.update` instead.

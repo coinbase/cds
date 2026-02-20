@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { type BarChartTransition, getBarPath, type Transition } from '../utils';
+import { type BarTransition, getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
@@ -91,7 +91,18 @@ export type BarProps = BarBaseProps & {
    * // Disable enter animation
    * transitions={{ enter: null }}
    */
-  transitions?: BarChartTransition;
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: BarTransition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: BarTransition | null;
+  };
   /**
    * Transition for updates.
    * @deprecated Use `transitions.update` instead.
