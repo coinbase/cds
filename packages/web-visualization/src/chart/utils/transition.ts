@@ -68,35 +68,33 @@ export const getTransition = (
  *
  * @param currentPath - Current target path to animate to
  * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath.
- * @param transition - Transition configuration
+ * @param transitions - Transition configuration for enter and update animations
  * @returns MotionValue containing the current interpolated path string
  *
  * @example
  * // Simple path transition
  * const animatedPath = usePathTransition({
  *   currentPath: d ?? '',
- *   transition: {
- *     type: 'spring',
- *     stiffness: 300,
- *     damping: 20
- *   }
+ *   transitions: {
+ *     update: { type: 'spring', stiffness: 300, damping: 20 },
+ *   },
  * });
  *
  * @example
- * // Time based animation
+ * // Enter animation with different initial config (like DefaultBar)
  * const animatedPath = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
- *   transition: {
- *     type: 'tween',
- *     duration: 0.3,
- *     ease: 'easeInOut'
- *   }
+ *   transitions: {
+ *     enter: { type: 'tween', duration: 0.5 },
+ *     update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 },
+ *   },
  * });
  */
 export const usePathTransition = ({
   currentPath,
   initialPath,
+  transitions,
   transition = defaultTransition,
 }: {
   /**
@@ -110,13 +108,34 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configuration
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter animation (initialPath → currentPath).
+     * Only used when `initialPath` is provided.
+     * If not provided, falls back to `update`.
+     */
+    enter?: Transition;
+    /**
+     * Transition for subsequent data update animations.
+     * @default defaultTransition
+     */
+    update?: Transition;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 }): MotionValue<string> => {
+  const updateTransition = transitions?.update ?? transition;
+  const enterTransition = transitions?.enter;
+
   const previousPathRef = useRef(initialPath ?? currentPath);
-  const targetPathRef = useRef(currentPath);
+  const targetPathRef = useRef(initialPath ?? currentPath);
   const animationRef = useRef<AnimationPlaybackControls | null>(null);
+  const isFirstAnimation = useRef(!!initialPath);
 
   const animatedPath = useMotionValue(initialPath ?? currentPath);
 
@@ -132,10 +151,17 @@ export const usePathTransition = ({
 
       targetPathRef.current = currentPath;
 
+      const activeTransition =
+        isFirstAnimation.current && enterTransition !== undefined
+          ? enterTransition
+          : updateTransition;
+
+      isFirstAnimation.current = false;
+
       const pathInterpolator = interpolatePath(previousPathRef.current, currentPath);
 
       animationRef.current = animate(0, 1, {
-        ...(transition as ValueAnimationTransition<number>),
+        ...(activeTransition as ValueAnimationTransition<number>),
         onUpdate: (latest) => {
           animatedPath.set(pathInterpolator(latest));
         },
@@ -152,7 +178,7 @@ export const usePathTransition = ({
         animationRef.current.stop();
       }
     };
-  }, [currentPath, transition, animatedPath]);
+  }, [currentPath, updateTransition, enterTransition, animatedPath]);
 
   return animatedPath;
 };

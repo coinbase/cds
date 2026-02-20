@@ -239,15 +239,16 @@ export const buildTransition = (targetValue: number, transition: Transition): nu
  *
  * @param currentPath - Current target path to animate to
  * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath.
- * @param transition - Transition configuration
+ * @param transitions - Transition configuration for enter and update animations
  * @returns Animated SkPath as a shared value
  *
  * @example
  * // Simple path transition
  * const path = usePathTransition({
  *   currentPath: d ?? '',
- *   animate: shouldAnimate,
- *   transition: { type: 'timing', duration: 3000 }
+ *   transitions: {
+ *     update: { type: 'timing', duration: 3000 },
+ *   },
  * });
  *
  * @example
@@ -255,15 +256,17 @@ export const buildTransition = (targetValue: number, transition: Transition): nu
  * const path = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
- *   animate: true,
- *   transition: { type: 'timing', duration: 300 }
+ *   transitions: {
+ *     enter: { type: 'tween', duration: 500 },
+ *     update: { type: 'spring', stiffness: 900, damping: 120 },
+ *   },
  * });
  */
 export const usePathTransition = ({
   currentPath,
   initialPath,
+  transitions,
   transition = defaultTransition,
-  enterTransition,
 }: {
   /**
    * Current target path to animate to.
@@ -276,25 +279,34 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configuration for subsequent data update animations.
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter animation (initialPath → currentPath).
+     * Only used when `initialPath` is provided.
+     * If not provided, falls back to `update`.
+     */
+    enter?: Transition;
+    /**
+     * Transition for subsequent data update animations.
+     * @default defaultTransition
+     */
+    update?: Transition;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
-  /**
-   * Transition configuration for the initial enter animation (initialPath → currentPath).
-   * Only used when `initialPath` is provided (e.g. bars animating from baseline).
-   * If not provided, falls back to `transition`.
-   */
-  enterTransition?: Transition;
 }): SharedValue<SkPath> => {
-  // Track the previous path - updated in useEffect AFTER render,
-  // so during render it naturally holds the "from" path value
+  const updateTransition = transitions?.update ?? transition;
+  const enterTransition = transitions?.enter;
+
   const previousPathRef = useRef(initialPath ?? currentPath);
   const progress = useSharedValue(0);
-  // Only true when initialPath is provided (e.g. bars), so enter transition
-  // is never accidentally used for line/area data updates.
   const isFirstAnimation = useRef(!!initialPath);
 
-  // During render: previousPathRef still has old value, currentPath is new
   const fromPath = previousPathRef.current;
   const toPath = currentPath;
 
@@ -304,17 +316,17 @@ export const usePathTransition = ({
     if (shouldAnimate) {
       previousPathRef.current = currentPath;
 
-      // Use enter transition for the first animation (initialPath → currentPath),
-      // then switch to update transition for subsequent data changes.
       const activeTransition =
-        isFirstAnimation.current && enterTransition !== undefined ? enterTransition : transition;
+        isFirstAnimation.current && enterTransition !== undefined
+          ? enterTransition
+          : updateTransition;
 
       isFirstAnimation.current = false;
 
       progress.value = 0;
       progress.value = buildTransition(1, activeTransition);
     }
-  }, [currentPath, transition, enterTransition, progress]);
+  }, [currentPath, updateTransition, enterTransition, progress]);
 
   return useD3PathInterpolation(progress, fromPath, toPath);
 };

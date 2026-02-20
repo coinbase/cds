@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef } from 'react';
+import React, { memo, useMemo } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -9,6 +9,7 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
+import { usePathTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -45,7 +46,6 @@ export const DefaultBar = memo<DefaultBarProps>(
     ...props
   }) => {
     const { animate, drawingArea } = useCartesianChartContext();
-    const isInitialRender = useRef(true);
 
     // Compute normalized x position for stagger delay calculation
     const normalizedX = drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
@@ -67,31 +67,17 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const initialPath = useMemo(() => {
       if (!shouldAnimateEnter) return undefined;
-      // Need a minimum height to allow for animation
       const minHeight = 1;
       const initialY = (originY ?? 0) - minHeight;
       return getBarPath(x, initialY, width, minHeight, borderRadius, !!roundTop, !!roundBottom);
     }, [shouldAnimateEnter, x, originY, width, borderRadius, roundTop, roundBottom]);
 
-    // On initial render with enter enabled, use enter transition.
-    // On subsequent renders, use update transition.
-    const activeTransition =
-      isInitialRender.current && shouldAnimateEnter
-        ? (enterTransition ?? updateTransition)
-        : updateTransition;
+    const animatedPath = usePathTransition({
+      currentPath: d ?? '',
+      initialPath,
+      transitions: { enter: enterTransition, update: updateTransition },
+    });
 
-    return (
-      <motion.path
-        {...props}
-        animate={{ d }}
-        fill={fill}
-        fillOpacity={fillOpacity}
-        initial={initialPath ? { d: initialPath } : false}
-        onAnimationComplete={() => {
-          isInitialRender.current = false;
-        }}
-        transition={activeTransition}
-      />
-    );
+    return <motion.path {...props} d={animatedPath} fill={fill} fillOpacity={fillOpacity} />;
   },
 );

@@ -162,7 +162,7 @@ describe('usePathTransition', () => {
     const { result } = renderHook(() =>
       usePathTransition({
         currentPath,
-        transition,
+        transitions: { update: transition },
       }),
     );
 
@@ -173,7 +173,7 @@ describe('usePathTransition', () => {
       ({ path }) =>
         usePathTransition({
           currentPath: path,
-          transition,
+          transitions: { update: transition },
         }),
       {
         initialProps: { path: currentPath },

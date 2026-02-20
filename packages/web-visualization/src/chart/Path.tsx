@@ -95,7 +95,7 @@ const AnimatedPath = memo<
 >(({ d = '', updateTransition, ...pathProps }) => {
   const interpolatedPath = usePathTransition({
     currentPath: d,
-    transition: updateTransition,
+    transitions: { update: updateTransition },
   });
 
   return <motion.path d={interpolatedPath} {...pathProps} />;

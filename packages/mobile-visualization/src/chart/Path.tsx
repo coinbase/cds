@@ -160,8 +160,7 @@ const AnimatedPath = memo<
     const animatedPath = usePathTransition({
       currentPath: isDAnimated ? '' : d,
       initialPath,
-      transition: updateTransition,
-      enterTransition,
+      transitions: { enter: enterTransition, update: updateTransition },
     });
 
     const isFilled = fill !== undefined && fill !== 'none';

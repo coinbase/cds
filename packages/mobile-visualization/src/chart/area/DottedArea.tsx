@@ -97,7 +97,7 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const animatedClipPath = usePathTransition({
       currentPath: d,
-      transition,
+      transitions: { update: transition },
     });
 
     const staticClipPath = useMemo(() => {

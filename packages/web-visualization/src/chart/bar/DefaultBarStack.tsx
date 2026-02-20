@@ -1,4 +1,4 @@
-import { memo, useId, useMemo, useRef } from 'react';
+import { memo, useId, useMemo } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -9,6 +9,7 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
+import { usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
 
@@ -44,7 +45,6 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
   }) => {
     const { animate, drawingArea } = useCartesianChartContext();
     const clipPathId = useId();
-    const isInitialRender = useRef(true);
 
     // Compute normalized x position for stagger delay calculation
     const normalizedX = drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
@@ -73,23 +73,17 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       return getBarPath(x, yOrigin ?? y + height, width, 1, borderRadius, roundTop, roundBottom);
     }, [shouldAnimateEnter, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
 
-    const activeTransition =
-      isInitialRender.current && shouldAnimateEnter
-        ? (enterTransition ?? updateTransition)
-        : updateTransition;
+    const animatedClipPath = usePathTransition({
+      currentPath: clipPathData,
+      initialPath: initialClipPathData,
+      transitions: { enter: enterTransition, update: updateTransition },
+    });
 
     return (
       <>
         <defs>
           <clipPath id={clipPathId}>
-            <motion.path
-              animate={{ d: clipPathData }}
-              initial={initialClipPathData ? { d: initialClipPathData } : false}
-              onAnimationComplete={() => {
-                isInitialRender.current = false;
-              }}
-              transition={activeTransition}
-            />
+            <motion.path d={animatedClipPath} />
           </clipPath>
         </defs>
         <g className={className} clipPath={`url(#${clipPathId})`} style={style}>

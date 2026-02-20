@@ -70,8 +70,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     const animatedClipPath = usePathTransition({
       currentPath: targetPath,
       initialPath,
-      transition: updateTransition,
-      enterTransition: enterTransition,
+      transitions: { enter: enterTransition, update: updateTransition },
     });
 
     const clipPath = animate ? animatedClipPath : targetPath;
