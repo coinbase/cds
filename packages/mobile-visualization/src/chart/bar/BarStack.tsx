@@ -7,7 +7,7 @@ import type { ChartScaleFunction, Series } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
-import { Bar, type BarComponent, type BarProps, type BarTransitionProps } from './Bar';
+import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
@@ -23,7 +23,7 @@ export type BarSeries = Series & {
 };
 
 export type BarStackBaseProps = Pick<
-  BarProps,
+  BarBaseProps,
   'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
 > & {
   /**
@@ -79,7 +79,7 @@ export type BarStackBaseProps = Pick<
   stackMinSize?: number;
 };
 
-export type BarStackProps = BarStackBaseProps & BarTransitionProps;
+export type BarStackProps = BarStackBaseProps & Pick<BarProps, 'transitions' | 'transition'>;
 
 export type BarStackComponentProps = Pick<
   BarStackProps,

@@ -5,35 +5,6 @@ import { type BarChartTransition, getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
-/**
- * Transition props for bar components (Bar, BarStack).
- */
-export type BarTransitionProps = {
-  /**
-   * Transition configuration for enter and update animations.
-   * @note Disable an animation by passing in null.
-   *
-   * @default transitions = {{
-   *   enter: { type: 'spring', stiffness: 900, damping: 120, staggerDelay: 250 },
-   *   update: { type: 'spring', stiffness: 900, damping: 120 }
-   * }}
-   *
-   * @example
-   * // Custom staggered enter and spring update
-   * transitions={{ enter: { type: 'timing', duration: 500, staggerDelay: 300 }, update: { type: 'spring', damping: 20 } }}
-   *
-   * @example
-   * // Disable enter animation
-   * transitions={{ enter: null }}
-   */
-  transitions?: BarChartTransition;
-  /**
-   * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
-   */
-  transition?: Transition;
-};
-
 export type BarBaseProps = {
   /**
    * X coordinate of the bar (left edge).
@@ -102,7 +73,31 @@ export type BarBaseProps = {
   BarComponent?: BarComponent;
 };
 
-export type BarProps = BarBaseProps & BarTransitionProps;
+export type BarProps = BarBaseProps & {
+  /**
+   * Transition configuration for enter and update animations.
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'spring', stiffness: 900, damping: 120, staggerDelay: 250 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120 }
+   * }}
+   *
+   * @example
+   * // Custom staggered enter and spring update
+   * transitions={{ enter: { type: 'timing', duration: 500, staggerDelay: 300 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: BarChartTransition;
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
+   */
+  transition?: Transition;
+};
 
 export type BarComponentProps = Omit<BarProps, 'BarComponent'> & {
   /**
