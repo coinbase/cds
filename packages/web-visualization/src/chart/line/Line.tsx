@@ -1,15 +1,13 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion } from 'framer-motion';
+
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -278,22 +276,7 @@ export const Line = memo<LineProps>(
           {...props}
         />
         {points && (
-          <motion.g
-            data-component="line-points-group"
-            {...(animate
-              ? {
-                  animate: {
-                    opacity: 1,
-                    transition: {
-                      duration: accessoryFadeTransitionDuration,
-                      delay: accessoryFadeTransitionDelay,
-                    },
-                  },
-                  exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
-                  initial: { opacity: 0 },
-                }
-              : {})}
-          >
+          <g data-component="line-points-group">
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
 
@@ -358,7 +341,7 @@ export const Line = memo<LineProps>(
                 />
               );
             })}
-          </motion.g>
+          </g>
         )}
       </>
     );

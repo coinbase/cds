@@ -379,14 +379,12 @@ export const Point = memo<PointProps>(
           animate={{
             cx: pixelCoordinate.x,
             cy: pixelCoordinate.y,
-            opacity: 1,
           }}
           aria-label={accessibilityLabel}
           className={cx(innerPointCss, className, classNames?.point)}
           cx={pixelCoordinate.x}
           cy={pixelCoordinate.y}
           fill={fill}
-          initial={{ opacity: 0 }}
           onClick={
             onClick
               ? (event: any) =>
@@ -403,7 +401,6 @@ export const Point = memo<PointProps>(
           transition={{
             cx: updateTransition,
             cy: updateTransition,
-            opacity: enterTransition,
           }}
           variants={variants}
           whileHover={onClick ? 'hovered' : 'default'}
@@ -428,7 +425,6 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
-      enterTransition,
       updateTransition,
     ]);
 
@@ -438,28 +434,34 @@ export const Point = memo<PointProps>(
 
     return (
       <g opacity={isWithinDrawingArea ? 1 : 0}>
-        <g
-          className={cx(containerCss, classNames?.root)}
-          data-testid={testID}
-          opacity={opacity}
-          style={styles?.root}
+        <motion.g
+          animate={{ opacity: 1 }}
+          initial={animate ? { opacity: 0 } : false}
+          transition={{ opacity: enterTransition }}
         >
-          {innerPoint}
-        </g>
-        {label && (
-          <LabelComponent
-            dataX={dataX}
-            dataY={dataY}
-            fill={fill}
-            font={labelFont}
-            offset={labelOffset}
-            position={labelPosition}
-            x={pixelCoordinate.x}
-            y={pixelCoordinate.y}
+          <g
+            className={cx(containerCss, classNames?.root)}
+            data-testid={testID}
+            opacity={opacity}
+            style={styles?.root}
           >
-            {label}
-          </LabelComponent>
-        )}
+            {innerPoint}
+          </g>
+          {label && (
+            <LabelComponent
+              dataX={dataX}
+              dataY={dataY}
+              fill={fill}
+              font={labelFont}
+              offset={labelOffset}
+              position={labelPosition}
+              x={pixelCoordinate.x}
+              y={pixelCoordinate.y}
+            >
+              {label}
+            </LabelComponent>
+          )}
+        </motion.g>
       </g>
     );
   },

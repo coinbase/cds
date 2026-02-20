@@ -364,7 +364,9 @@ function ExampleNavigator() {
       {
         category: 'Line',
         title: 'Update Only',
-        component: <LineExample idlePulse transitions={updateOnly} />,
+        component: (
+          <LineExample idlePulse points pointTransitions={updateOnly} transitions={updateOnly} />
+        ),
       },
       {
         category: 'Line',

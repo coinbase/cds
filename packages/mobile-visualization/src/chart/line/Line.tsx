@@ -1,5 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
-import { useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
@@ -8,8 +7,6 @@ import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   getLineData,
   getLinePath,
@@ -153,21 +150,6 @@ export const Line = memo<LineProps>(
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
       useCartesianChartContext();
 
-    const isReady = !!getXScale();
-
-    // Animation state for delayed point rendering (matches web timing)
-    const pointsOpacity = useSharedValue(animate ? 0 : 1);
-
-    // Delay point appearance until after path enter animation completes
-    useEffect(() => {
-      if (animate && isReady) {
-        pointsOpacity.value = withDelay(
-          accessoryFadeTransitionDelay,
-          withTiming(1, { duration: accessoryFadeTransitionDuration }),
-        );
-      }
-    }, [animate, isReady, pointsOpacity]);
-
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const gradient = useMemo(
       () => gradientProp ?? matchedSeries?.gradient,
@@ -274,7 +256,7 @@ export const Line = memo<LineProps>(
           {...props}
         />
         {points && (
-          <Group opacity={pointsOpacity}>
+          <Group>
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
 

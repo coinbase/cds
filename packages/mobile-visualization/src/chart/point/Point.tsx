@@ -223,10 +223,8 @@ export const Point = memo<PointProps>(
     const animatedX = useSharedValue(0);
     const animatedY = useSharedValue(0);
 
-    // Animated value for enter opacity (0 = hidden, 1 = visible)
     const enterOpacity = useSharedValue(shouldAnimate ? 0 : 1);
 
-    // Animated value for color interpolation (0 = old color, 1 = new color)
     const colorProgress = useSharedValue(1);
 
     const isReady = !!xScale && !!yScale;
@@ -349,17 +347,12 @@ export const Point = memo<PointProps>(
       );
     }
 
-    // Animated rendering
     return (
-      <>
-        <Group opacity={effectiveOpacity}>
-          {/* Outer stroke circle */}
-          {strokeWidth > 0 && (
-            <Circle c={animatedPoint} color={stroke as Color} r={radius + strokeWidth / 2} />
-          )}
-          {/* Inner fill circle with animated color */}
-          <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
-        </Group>
+      <Group opacity={effectiveOpacity}>
+        {strokeWidth > 0 && (
+          <Circle c={animatedPoint} color={stroke as Color} r={radius + strokeWidth / 2} />
+        )}
+        <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
         {label && (
           <LabelComponent
             dataX={dataX}
@@ -374,7 +367,7 @@ export const Point = memo<PointProps>(
             {label}
           </LabelComponent>
         )}
-      </>
+      </Group>
     );
   },
 );

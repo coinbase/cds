@@ -365,7 +365,7 @@ export const Transitions = () => {
         <LineExample idlePulse transitions={enterOnly} />
       </Example>
       <Example category="Line" title="Update Only">
-        <LineExample idlePulse transitions={updateOnly} />
+        <LineExample idlePulse points pointTransitions={updateOnly} transitions={updateOnly} />
       </Example>
       <Example category="Line" title="Both Disabled">
         <LineExample transitions={bothDisabled} />
