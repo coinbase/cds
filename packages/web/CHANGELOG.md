@@ -32,7 +32,11 @@ This is an artificial version bump with no new change.
 
 #### 🐞 Fixes
 
-- Remove behavior of scrolling inside TextInput updating numeric values. [[#413](https://github.com/coinbase/cds/pull/413)]
+<<<<<<< HEAD
+
+- # Remove behavior of scrolling inside TextInput updating numeric values. [[#413](https://github.com/coinbase/cds/pull/413)]
+- Fix: allow arrow up/down keys within focus trapped text area. [[#417](https://github.com/coinbase/cds/pull/417)]
+  > > > > > > > e0c738878 (chore: bump version + update changelog)
 
 ## 8.47.2 ((2/19/2026, 03:18 PM PST))
 
