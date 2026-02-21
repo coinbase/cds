@@ -8,6 +8,7 @@ import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { useInputBorderStyle } from '../../hooks/useInputBorderStyle';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
@@ -73,6 +74,8 @@ export const DefaultSelectControlComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
+
+      const theme = useTheme();
       const isMultiSelect = type === 'multi';
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
@@ -191,9 +194,8 @@ export const DefaultSelectControlComponent = memo(
             >
               <InputLabel
                 color="fg"
-                paddingEnd={0}
-                paddingStart={labelVariant === 'inside' ? 2 : 0}
-                paddingY={labelVariant === 'inside' || compact ? 0 : 0.5}
+                // remove default vertical padding when label is the compact/inline version
+                paddingY={shouldShowCompactLabel ? 0 : 0.5}
               >
                 {label}
               </InputLabel>
@@ -201,7 +203,7 @@ export const DefaultSelectControlComponent = memo(
           ) : (
             label
           ),
-        [compact, disabled, label, labelVariant, setOpen, styles?.controlLabelNode],
+        [disabled, label, setOpen, shouldShowCompactLabel, styles?.controlLabelNode],
       );
 
       const valueAlignment = useMemo(
@@ -303,8 +305,6 @@ export const DefaultSelectControlComponent = memo(
               flexShrink={1}
               justifyContent="space-between"
               maxWidth="100%"
-              paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
             >
               <HStack
                 alignItems="center"
@@ -315,7 +315,7 @@ export const DefaultSelectControlComponent = memo(
                 minWidth={0}
               >
                 {!!startNode && (
-                  <HStack alignItems="center" paddingX={2} style={styles?.controlStartNode}>
+                  <HStack alignItems="center" paddingEnd={2} style={styles?.controlStartNode}>
                     {startNode}
                   </HStack>
                 )}
@@ -348,8 +348,6 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlStartNode,
           styles?.controlValueNode,
           props,
-          labelVariant,
-          compact,
           startNode,
           shouldShowCompactLabel,
           labelNode,
@@ -370,8 +368,7 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               flexGrow={1}
-              paddingX={2}
-              paddingY={compact ? 1 : 1.5}
+              paddingStart={2}
               style={styles?.controlEndNode}
             >
               {customEndNode ? (
@@ -385,7 +382,19 @@ export const DefaultSelectControlComponent = memo(
             </HStack>
           </Pressable>
         ),
-        [compact, styles?.controlEndNode, disabled, customEndNode, open, variant, setOpen],
+        [styles?.controlEndNode, disabled, customEndNode, open, variant, setOpen],
+      );
+
+      const inputStackStyles: Record<string, React.CSSProperties> = useMemo(
+        () => ({
+          input: {
+            paddingTop: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
+            paddingBottom: compact ? theme.space[1] : theme.space[2],
+            paddingLeft: theme.space[2],
+            paddingRight: theme.space[2],
+          },
+        }),
+        [compact, theme, labelVariant],
       );
 
       return (
@@ -403,6 +412,7 @@ export const DefaultSelectControlComponent = memo(
           labelVariant={labelVariant}
           onBlur={onBlur}
           onFocus={onFocus}
+          styles={inputStackStyles}
           variant={variant}
           {...props}
         />
