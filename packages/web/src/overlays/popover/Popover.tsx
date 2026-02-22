@@ -136,11 +136,11 @@ export const Popover = memo(
       () => (
         <div
           ref={refs.setFloating}
+          onClick={handleCaptureEvents}
           style={{
             ...floatingStyles,
             zIndex: zIndex.dropdown,
           }}
-          onClick={handleCaptureEvents}
         >
           <FocusTrap
             autoFocusDelay={autoFocusDelay}
