@@ -1,10 +1,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
 import React, { memo, useCallback, useMemo } from 'react';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import {
+  autoPlacement,
+  autoUpdate,
+  flip,
+  limitShift,
+  offset,
+  type Placement as FloatingPlacement,
+  shift,
+  useFloating,
+} from '@floating-ui/react-dom';
 import { css } from '@linaria/core';
 
 import { NewAnimatePresence } from '../../animation/NewAnimatePresence';
 import { cx } from '../../cx';
+import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { InvertedThemeProvider } from '../../system/ThemeProvider';
 import { FocusTrap } from '../FocusTrap';
@@ -13,7 +24,6 @@ import { Portal } from '../Portal';
 import { tooltipContainerId } from '../PortalProvider';
 
 import type { PopoverContentPositionConfig, PopoverProps } from './PopoverProps';
-import { usePopper } from './usePopper';
 
 const subjectCss = css`
   background-color: transparent;
@@ -66,7 +76,47 @@ export const Popover = memo(
     restoreFocusOnUnmount,
     controlledElementAccessibilityProps,
   }: PopoverProps) => {
-    const { setSubject, setPopper, popperStyles, popperAttributes } = usePopper(contentPosition);
+    const theme = useTheme();
+    const {
+      placement: rawPlacement = 'bottom',
+      skid = 0,
+      gap = 0,
+      offsetGap,
+      strategy,
+    } = contentPosition;
+
+    const computedSkid = theme.space[skid];
+    const computedGap = theme.space[gap];
+    const getOffsetGap = offsetGap && gap - offsetGap;
+
+    const isAutoPlacement = typeof rawPlacement === 'string' && rawPlacement.startsWith('auto');
+
+    const middleware = useMemo(() => {
+      const middlewareList = [
+        offset({
+          crossAxis: computedSkid,
+          mainAxis: getOffsetGap ?? computedGap,
+        }),
+      ];
+
+      if (isAutoPlacement) {
+        const alignment =
+          rawPlacement === 'auto-start' ? 'start' : rawPlacement === 'auto-end' ? 'end' : undefined;
+        middlewareList.push(autoPlacement(alignment ? { alignment } : undefined));
+      } else {
+        middlewareList.push(flip());
+        middlewareList.push(shift({ crossAxis: true, limiter: limitShift() }));
+      }
+
+      return middlewareList;
+    }, [computedSkid, getOffsetGap, computedGap, isAutoPlacement, rawPlacement]);
+
+    const { refs, floatingStyles } = useFloating({
+      placement: isAutoPlacement ? undefined : (rawPlacement as FloatingPlacement),
+      strategy,
+      middleware,
+      whileElementsMounted: autoUpdate,
+    });
 
     // We use this to infer that hover events are triggering the mounting/dismounting of the content
     const hasHoverInteractions = !!onMouseEnter && !!onMouseLeave && !onPressSubject;
@@ -85,12 +135,11 @@ export const Popover = memo(
     const memoizedContent = useMemo(
       () => (
         <div
-          ref={setPopper}
+          ref={refs.setFloating}
           style={{
-            ...popperStyles.popper,
+            ...floatingStyles,
             zIndex: zIndex.dropdown,
           }}
-          {...popperAttributes.popper}
           onClick={handleCaptureEvents}
         >
           <FocusTrap
@@ -103,7 +152,6 @@ export const Popover = memo(
             respectNegativeTabIndex={respectNegativeTabIndex}
             restoreFocusOnUnmount={restoreFocusOnUnmount}
           >
-            {/* Box with Horizontal padding to ensure proper margins but still rely on popper for layout. */}
             <Box
               background="transparent"
               data-testid={testID}
@@ -115,9 +163,8 @@ export const Popover = memo(
         </div>
       ),
       [
-        setPopper,
-        popperStyles.popper,
-        popperAttributes.popper,
+        refs.setFloating,
+        floatingStyles,
         handleCaptureEvents,
         handleClose,
         testID,
@@ -158,7 +205,7 @@ export const Popover = memo(
         onMouseLeave={disabled ? undefined : onMouseLeave}
       >
         <div
-          ref={setSubject}
+          ref={refs.setReference}
           className={cx(subjectCss, block && blockCss)}
           onBlur={onBlur}
           onClick={disabled ? undefined : onPressSubject}

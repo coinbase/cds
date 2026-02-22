@@ -213,7 +213,6 @@
     "@coinbase/cds-lottie-files": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
     "@floating-ui/react-dom": "^2.1.1",
-    "@popperjs/core": "^2.9.0",
     "@react-spring/web": "^9.7.4",
     "d3-interpolate": "^3.0.1",
     "d3-interpolate-path": "^2.3.0",
@@ -221,7 +220,6 @@
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
-    "react-popper": "^2.2.4",
     "react-use-measure": "^2.1.7"
   },
   "devDependencies": {

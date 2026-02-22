@@ -7,7 +7,7 @@ import {
 } from '@coinbase/cds-common/animation/dropdown';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { DimensionValue } from '@coinbase/cds-common/types';
-import type { Placement } from '@popperjs/core';
+import type { Placement } from '../overlays/popover/PopoverProps';
 import { m as motion } from 'framer-motion';
 
 import { VStack } from '../layout/VStack';
