@@ -52,12 +52,6 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
-    ),
-    title: <Text font="body">ForegroundMuted transparent</Text>,
-  },
-  {
-    component: (props?: Partial<IconButtonProps>) => (
       <IconButton flush="start" name={iconName} variant="primary" {...props} />
     ),
     title: 'Primary flush start',
