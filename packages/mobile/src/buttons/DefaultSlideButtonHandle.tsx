@@ -1,7 +1,6 @@
 import React, { forwardRef, memo, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { View } from 'react-native';
-import { variants } from '@coinbase/cds-common/tokens/button';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,6 +8,7 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated';
+import { variants } from '@coinbase/cds-common/tokens/button';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';

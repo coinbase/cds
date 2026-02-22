@@ -2,13 +2,13 @@ import React, { forwardRef, memo, useCallback, useEffect, useId, useMemo } from 
 import { type AccessibilityActionEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { ForwardedRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import type { ButtonVariant } from '@coinbase/cds-common/types';
 import Animated, {
   type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import type { ButtonVariant } from '@coinbase/cds-common/types';
 
 import { useLayout } from '../hooks/useLayout';
 import type { PressableProps } from '../system/Pressable';
