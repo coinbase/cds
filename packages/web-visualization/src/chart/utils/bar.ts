@@ -27,14 +27,14 @@ export type BarTransition = Transition & {
  * @returns A standard Transition with computed delay
  */
 export const withStaggerDelayTransition = (
-  transition: Transition,
+  transition: BarTransition,
   normalizedX: number,
 ): Transition => {
-  const { staggerDelay, ...baseTransition } = transition as BarTransition;
+  const { staggerDelay, ...baseTransition } = transition;
   if (!staggerDelay) return transition;
   return {
     ...baseTransition,
-    delay: ((baseTransition as { delay?: number }).delay ?? 0) + normalizedX * staggerDelay,
+    delay: (baseTransition?.delay ?? 0) + normalizedX * staggerDelay,
   };
 };
 
