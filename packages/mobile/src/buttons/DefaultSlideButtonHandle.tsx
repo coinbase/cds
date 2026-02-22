@@ -1,14 +1,14 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { forwardRef, memo, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { View } from 'react-native';
 import { variants } from '@coinbase/cds-common/tokens/button';
-import {
-  animated,
-  type SpringConfig,
-  useChain,
-  useSpring,
-  useSpringRef,
-} from '@react-spring/native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  type WithSpringConfig,
+} from 'react-native-reanimated';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
@@ -19,7 +19,12 @@ import { Text } from '../typography/Text';
 
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
-export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
+export const slideButtonSpringConfig = {
+  stiffness: 300,
+  damping: 26,
+  mass: 1,
+  overshootClamping: true,
+} as const satisfies WithSpringConfig;
 
 export type SlideButtonHandleCheckedProps = Pick<SlideButtonBaseProps, 'variant' | 'compact'> & {
   label?: React.ReactNode;
@@ -134,32 +139,27 @@ export const DefaultSlideButtonHandle = memo(
     ) => {
       const backgroundColor = variants[variant].background;
 
-      const checkedSpringRef = useSpringRef();
-      const uncheckedSpringRef = useSpringRef();
-      const checkedSpring = useSpring({
-        opacity: checked ? 1 : 0,
-        ref: checkedSpringRef,
-        config: animationConfig,
-        immediate: !checked,
-      });
-      const uncheckedSpring = useSpring({
-        opacity: checked ? 0 : 1,
-        ref: uncheckedSpringRef,
-        config: animationConfig,
-      });
-      useChain(
-        checked ? [uncheckedSpringRef, checkedSpringRef] : [checkedSpringRef, uncheckedSpringRef],
-        [0, 0.1],
-      );
+      const checkedOpacity = useSharedValue(checked ? 1 : 0);
+      const uncheckedOpacity = useSharedValue(checked ? 0 : 1);
+
+      useEffect(() => {
+        if (checked) {
+          uncheckedOpacity.value = withSpring(0, slideButtonSpringConfig);
+          checkedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
+        } else {
+          checkedOpacity.value = 0;
+          uncheckedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
+        }
+      }, [checked, checkedOpacity, uncheckedOpacity]);
 
       const containerStyle = useMemo(() => [styles.base, style], [style]);
-      const animatedCheckedStyle = useMemo(
-        () => [styles.absoluteContainer, { opacity: checkedSpring.opacity }],
-        [checkedSpring],
+      const animatedCheckedStyle = useAnimatedStyle(
+        () => ({ opacity: checkedOpacity.value }),
+        [checkedOpacity],
       );
-      const animatedUncheckedStyle = useMemo(
-        () => [styles.absoluteContainer, { opacity: uncheckedSpring.opacity }],
-        [uncheckedSpring],
+      const animatedUncheckedStyle = useAnimatedStyle(
+        () => ({ opacity: uncheckedOpacity.value }),
+        [uncheckedOpacity],
       );
 
       return (
@@ -173,7 +173,7 @@ export const DefaultSlideButtonHandle = memo(
           loading={checked}
           {...props}
         >
-          <animated.View style={animatedCheckedStyle}>
+          <Animated.View style={[styles.absoluteContainer, animatedCheckedStyle]}>
             <SlideButtonHandleChecked
               compact={compact}
               disabled={disabled}
@@ -181,15 +181,15 @@ export const DefaultSlideButtonHandle = memo(
               label={checkedLabel}
               variant={variant}
             />
-          </animated.View>
-          <animated.View style={animatedUncheckedStyle}>
+          </Animated.View>
+          <Animated.View style={[styles.absoluteContainer, animatedUncheckedStyle]}>
             <SlideButtonHandleUnchecked
               compact={compact}
               disabled={disabled}
               start={startUncheckedNode}
               variant={variant}
             />
-          </animated.View>
+          </Animated.View>
         </Pressable>
       );
     },

@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { animated, to } from '@react-spring/native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import { useTheme } from '../hooks/useTheme';
 import { Text } from '../typography/Text';
@@ -35,14 +35,14 @@ export const DefaultSlideButtonBackground = memo(
         [theme.color.bgSecondary, style, borderRadius],
       );
 
-      const animatedStyle = useMemo(
-        () => ({ opacity: disabled ? 0.5 : to(progress, (value) => 1 - value) }),
+      const animatedStyle = useAnimatedStyle(
+        () => ({ opacity: disabled ? 0.5 : 1 - progress.value }),
         [progress, disabled],
       );
 
       return (
         <View ref={ref} aria-hidden style={containerStyle}>
-          <animated.View style={animatedStyle}>
+          <Animated.View style={animatedStyle}>
             {typeof uncheckedLabel !== 'string' ? (
               uncheckedLabel
             ) : (
@@ -55,7 +55,7 @@ export const DefaultSlideButtonBackground = memo(
                 {uncheckedLabel}
               </Text>
             )}
-          </animated.View>
+          </Animated.View>
         </View>
       );
     },
