@@ -1,12 +1,20 @@
-import { memo, useEffect, useState } from 'react';
-import { Button } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { useDerivedValue } from 'react-native-reanimated';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { VStack } from '@coinbase/cds-mobile/layout';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 
 import { XAxis, YAxis } from '../../axis';
-import { CartesianChart } from '../../CartesianChart';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
+import { useCartesianChartContext } from '../../ChartProvider';
+import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { Scrubber } from '../../scrubber';
+import { getPointOnSerializableScale, unwrapAnimatedValue, useScrubberContext } from '../../utils';
+import type { BarComponentProps } from '../Bar';
 import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
@@ -612,56 +620,442 @@ const BandGridPositionExample = ({
   </CartesianChart>
 );
 
-const BarChartStories = () => {
+// --- Composed Examples ---
+
+const candlestickStockData = btcCandles.slice(0, 90).reverse();
+
+const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
+  const formatPrice = useCallback((price: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(parseFloat(price));
+  }, []);
+
+  const formatThousandsPriceNumber = useCallback((price: number) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const currentText = useMemo(() => {
+    if (currentIndex !== undefined) {
+      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
+        parseFloat(candlestickStockData[currentIndex].close),
+      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
+    }
+    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
+  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
+
   return (
-    <ExampleScreen>
-      <Example title="Basic">
-        <UpdatingChartValues />
-      </Example>
-      <Example title="Animated Auto-Updating">
-        <AnimatedUpdatingChartValues />
-      </Example>
-      <Example title="Negative Values with Top Axis">
-        <NegativeValuesWithTopAxis />
-      </Example>
-      <Example title="Positive and Negative Cash Flow">
-        <PositiveAndNegativeCashFlow />
-      </Example>
-      <Example title="Fiat & Stablecoin Balance">
-        <FiatAndStablecoinBalance />
-      </Example>
-      <Example title="Monthly Rewards">
-        <MonthlyRewards />
-      </Example>
-      <Example title="Multiple Y Axes">
-        <MultipleYAxes />
-      </Example>
-      <Example title="Y-Axis Continuous ColorMap">
-        <YAxisContinuousColorMap />
-      </Example>
-      <Example title="Y-Axis Discrete ColorMap">
-        <YAxisDiscreteColorMap />
-      </Example>
-      <Example title="X-Axis Continuous ColorMap">
-        <XAxisContinuousColorMap />
-      </Example>
-      <Example title="X-Axis Discrete ColorMap">
-        <XAxisDiscreteColorMap />
-      </Example>
-      <Example title="X-Axis Multi-Segment ColorMap">
-        <XAxisMultiSegmentColorMap />
-      </Example>
-      <Example title="ColorMap with Opacity">
-        <ColorMapWithOpacity />
-      </Example>
-      <Example title="Band Grid Position">
-        <BandGridPositionExample position="edges" />
-        <BandGridPositionExample position="start" />
-        <BandGridPositionExample position="middle" />
-        <BandGridPositionExample position="end" />
-      </Example>
-    </ExampleScreen>
+    <Text aria-live="polite" font="headline">
+      {currentText}
+    </Text>
+  );
+});
+
+const CandlesticksChart = memo(
+  ({
+    infoTextId,
+    onScrubberPositionChange,
+  }: {
+    infoTextId: string;
+    onScrubberPositionChange: (index: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
+    const min = useMemo(
+      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
+      [],
+    );
+
+    const CandleThinSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={1} />
+    ));
+
+    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
+      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+
+      const rectWidth = useMemo(() => {
+        if (xScale !== undefined && xScale.type === 'band') {
+          return xScale.bandwidth;
+        }
+        return 0;
+      }, [xScale]);
+
+      const xPos = useDerivedValue(() => {
+        const position = unwrapAnimatedValue(scrubberPosition);
+        const xPos =
+          position !== undefined && xScale
+            ? getPointOnSerializableScale(position, xScale)
+            : undefined;
+        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
+      }, [scrubberPosition, xScale]);
+
+      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
+
+      return (
+        <Rect
+          color={stroke}
+          height={drawingArea.height}
+          opacity={opacity}
+          width={rectWidth}
+          x={xPos}
+          y={drawingArea.y}
+        />
+      );
+    });
+
+    const candlesData = useMemo(
+      () =>
+        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
+          number,
+          number,
+        ][],
+      [],
+    );
+
+    const CandlestickBarComponent = memo<BarComponentProps>(
+      ({ x, y, width, height, originY, dataX, ...props }) => {
+        const { getYScale } = useCartesianChartContext();
+        const yScale = getYScale();
+
+        const wickX = x + width / 2;
+
+        const timePeriodValue = candlestickStockData[dataX as number];
+
+        const open = parseFloat(timePeriodValue.open);
+        const close = parseFloat(timePeriodValue.close);
+
+        const bullish = open < close;
+        const theme = useTheme();
+        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
+        const openY = yScale?.(open) ?? 0;
+        const closeY = yScale?.(close) ?? 0;
+
+        const bodyHeight = Math.abs(openY - closeY);
+        const bodyY = openY < closeY ? openY : closeY;
+
+        return (
+          <>
+            <SkiaLine
+              color={color}
+              p1={{ x: wickX, y }}
+              p2={{ x: wickX, y: y + height }}
+              strokeWidth={1}
+            />
+            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+          </>
+        );
+      },
+    );
+
+    const formatThousandsPriceNumber = useCallback((price: number) => {
+      const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000);
+
+      return `${formattedPrice}k`;
+    }, []);
+
+    const formatTime = useCallback((index: number | null) => {
+      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
+      const ts = parseInt(candlestickStockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    }, []);
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        animate={false}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={onScrubberPositionChange}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+        }}
+        yAxis={{
+          domain: { min },
+        }}
+      >
+        <XAxis tickLabelFormatter={formatTime} />
+        <YAxis
+          showGrid
+          GridLineComponent={CandleThinSolidLine}
+          tickLabelFormatter={formatThousandsPriceNumber}
+          width={40}
+        />
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke={theme.color.fgMuted}
+          seriesIds={[]}
+        />
+        <BarPlot
+          BarComponent={CandlestickBarComponent}
+          BarStackComponent={({ children }) => <>{children}</>}
+        />
+      </CartesianChart>
+    );
+  },
+);
+
+const Candlesticks = () => {
+  const infoTextId = useId();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <CandlesticksHeader currentIndex={currentIndex} />
+      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
+    </VStack>
   );
 };
 
-export default BarChartStories;
+const DAY_LENGTH_MINUTES = 1440;
+
+type SunlightChartData = Array<{
+  label: string;
+  value: number;
+}>;
+
+const sunlightData: SunlightChartData = [
+  { label: 'Jan', value: 598 },
+  { label: 'Feb', value: 635 },
+  { label: 'Mar', value: 688 },
+  { label: 'Apr', value: 753 },
+  { label: 'May', value: 812 },
+  { label: 'Jun', value: 855 },
+  { label: 'Jul', value: 861 },
+  { label: 'Aug', value: 828 },
+  { label: 'Sep', value: 772 },
+  { label: 'Oct', value: 710 },
+  { label: 'Nov', value: 648 },
+  { label: 'Dec', value: 605 },
+];
+
+const SunlightChartInner = memo(
+  ({
+    data,
+    height = 300,
+    ...props
+  }: Omit<CartesianChartProps, 'series' | 'children'> & { data: SunlightChartData }) => {
+    const theme = useTheme();
+
+    const SunlightThinSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={1} />
+    ));
+
+    return (
+      <CartesianChart
+        {...props}
+        height={height}
+        series={[
+          {
+            id: 'sunlight',
+            data: data.map(({ value }) => value),
+            yAxisId: 'sunlight',
+            color: `rgb(${theme.spectrum.yellow40})`,
+          },
+          {
+            id: 'day',
+            data: data.map(() => DAY_LENGTH_MINUTES),
+            yAxisId: 'day',
+            color: `rgb(${theme.spectrum.blue100})`,
+          },
+        ]}
+        xAxis={{
+          ...props.xAxis,
+          scaleType: 'band',
+          data: data.map(({ label }) => label),
+        }}
+        yAxis={[
+          {
+            id: 'day',
+            domain: { min: 0, max: DAY_LENGTH_MINUTES },
+            domainLimit: 'strict',
+          },
+          {
+            id: 'sunlight',
+            domain: { min: 0, max: DAY_LENGTH_MINUTES },
+            domainLimit: 'strict',
+          },
+        ]}
+      >
+        <YAxis
+          showGrid
+          showLine
+          GridLineComponent={SunlightThinSolidLine}
+          axisId="day"
+          position="left"
+        />
+        <XAxis showLine />
+        <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+        <BarPlot
+          borderRadius={0}
+          seriesIds={['sunlight']}
+          transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+        />
+      </CartesianChart>
+    );
+  },
+);
+
+const SunlightChart = () => {
+  return (
+    <VStack gap={2}>
+      <SunlightChartInner data={sunlightData} />
+      <Text color="fgMuted" font="caption" textAlign="center">
+        2026 Sunlight data for the first day of each month in Atlanta, Georgia, provided by NOAA.
+      </Text>
+    </VStack>
+  );
+};
+
+type ExampleItem = {
+  title: string;
+  component: React.ReactNode;
+};
+
+function ExampleNavigator() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const examples = useMemo<ExampleItem[]>(
+    () => [
+      {
+        title: 'Basic',
+        component: <UpdatingChartValues />,
+      },
+      {
+        title: 'Animated Auto-Updating',
+        component: <AnimatedUpdatingChartValues />,
+      },
+      {
+        title: 'Negative Values with Top Axis',
+        component: <NegativeValuesWithTopAxis />,
+      },
+      {
+        title: 'Positive and Negative Cash Flow',
+        component: <PositiveAndNegativeCashFlow />,
+      },
+      {
+        title: 'Fiat & Stablecoin Balance',
+        component: <FiatAndStablecoinBalance />,
+      },
+      {
+        title: 'Monthly Rewards',
+        component: <MonthlyRewards />,
+      },
+      {
+        title: 'Multiple Y Axes',
+        component: <MultipleYAxes />,
+      },
+      {
+        title: 'Y-Axis Continuous ColorMap',
+        component: <YAxisContinuousColorMap />,
+      },
+      {
+        title: 'Y-Axis Discrete ColorMap',
+        component: <YAxisDiscreteColorMap />,
+      },
+      {
+        title: 'X-Axis Continuous ColorMap',
+        component: <XAxisContinuousColorMap />,
+      },
+      {
+        title: 'X-Axis Discrete ColorMap',
+        component: <XAxisDiscreteColorMap />,
+      },
+      {
+        title: 'X-Axis Multi-Segment ColorMap',
+        component: <XAxisMultiSegmentColorMap />,
+      },
+      {
+        title: 'ColorMap with Opacity',
+        component: <ColorMapWithOpacity />,
+      },
+      {
+        title: 'Band Grid Position',
+        component: (
+          <VStack gap={2}>
+            <BandGridPositionExample position="edges" />
+            <BandGridPositionExample position="start" />
+            <BandGridPositionExample position="middle" />
+            <BandGridPositionExample position="end" />
+          </VStack>
+        ),
+      },
+      {
+        title: 'Candlesticks',
+        component: <Candlesticks />,
+      },
+      {
+        title: 'Monthly Sunlight',
+        component: <SunlightChart />,
+      },
+    ],
+    [],
+  );
+
+  const currentExample = examples[currentIndex];
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
+  }, [examples.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1 + examples.length) % examples.length);
+  }, [examples.length]);
+
+  return (
+    <ExampleScreen paddingX={0}>
+      <VStack gap={4}>
+        <HStack alignItems="center" justifyContent="space-between" padding={2}>
+          <IconButton
+            accessibilityHint="Navigate to previous example"
+            accessibilityLabel="Previous"
+            name="arrowLeft"
+            onPress={handlePrevious}
+            variant="secondary"
+          />
+          <VStack alignItems="center">
+            <Text font="title3">{currentExample.title}</Text>
+            <Text color="fgMuted" font="label1">
+              {currentIndex + 1} / {examples.length}
+            </Text>
+          </VStack>
+          <IconButton
+            accessibilityHint="Navigate to next example"
+            accessibilityLabel="Next"
+            name="arrowRight"
+            onPress={handleNext}
+            variant="secondary"
+          />
+        </HStack>
+        <Box padding={1}>{currentExample.component}</Box>
+      </VStack>
+    </ExampleScreen>
+  );
+}
+
+export default ExampleNavigator;

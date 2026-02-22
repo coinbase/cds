@@ -866,3 +866,251 @@ function DelayedBars() {
   );
 }
 ```
+
+## Composed Examples
+
+### Candlesticks
+
+You can render a candlestick chart by setting the `BarComponent` prop to a custom candlestick component.
+
+```tsx
+function Candlesticks() {
+  const infoTextId = useId();
+  const theme = useTheme();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+  const stockData = btcCandles.slice(0, 90).reverse();
+  const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
+    const { getXSerializableScale, drawingArea } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+
+    const rectWidth = useMemo(() => {
+      if (xScale !== undefined && xScale.type === 'band') {
+        return xScale.bandwidth;
+      }
+      return 0;
+    }, [xScale]);
+
+    const xPos = useDerivedValue(() => {
+      const position = unwrapAnimatedValue(scrubberPosition);
+      const xPos =
+        position !== undefined && xScale
+          ? getPointOnSerializableScale(position, xScale)
+          : undefined;
+      return xPos !== undefined ? xPos - rectWidth / 2 : 0;
+    }, [scrubberPosition, xScale]);
+
+    const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
+
+    return (
+      <Rect
+        color={stroke}
+        height={drawingArea.height}
+        opacity={opacity}
+        width={rectWidth}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
+  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]);
+
+  const CandlestickBarComponent = memo<BarComponentProps>(
+    ({ x, y, width, height, originY, dataX }) => {
+      const { getYScale } = useCartesianChartContext();
+      const yScale = getYScale();
+
+      const wickX = x + width / 2;
+      const timePeriodValue = stockData[dataX as number];
+
+      const open = parseFloat(timePeriodValue.open);
+      const close = parseFloat(timePeriodValue.close);
+
+      const bullish = open < close;
+      const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
+      const openY = yScale?.(open) ?? 0;
+      const closeY = yScale?.(close) ?? 0;
+
+      const bodyHeight = Math.abs(openY - closeY);
+      const bodyY = openY < closeY ? openY : closeY;
+
+      return (
+        <>
+          <SkiaLine
+            color={color}
+            p1={{ x: wickX, y }}
+            p2={{ x: wickX, y: y + height }}
+            strokeWidth={1}
+          />
+          <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+        </>
+      );
+    },
+  );
+
+  const formatThousandsPrice = useCallback((price: number) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const formatTime = useCallback(
+    (index: number | null) => {
+      if (index === null || index === undefined || index >= stockData.length) return '';
+      const ts = parseInt(stockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    },
+    [stockData],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text aria-live="polite" font="headline" id={infoTextId}>
+        {currentIndex !== undefined
+          ? `Open: ${formatThousandsPrice(parseFloat(stockData[currentIndex].open))}, Close: ${formatThousandsPrice(parseFloat(stockData[currentIndex].close))}`
+          : formatThousandsPrice(parseFloat(stockData[stockData.length - 1].close))}
+      </Text>
+      <CartesianChart
+        enableScrubbing
+        animate={false}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={setCurrentIndex}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{ scaleType: 'band' }}
+        yAxis={{ domain: { min } }}
+      >
+        <XAxis tickLabelFormatter={formatTime} />
+        <YAxis
+          showGrid
+          GridLineComponent={ThinSolidLine}
+          tickLabelFormatter={formatThousandsPrice}
+          width={40}
+        />
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke={theme.color.fgMuted}
+          seriesIds={[]}
+        />
+        <BarPlot
+          BarComponent={CandlestickBarComponent}
+          BarStackComponent={({ children }) => <>{children}</>}
+        />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+### Monthly Sunlight
+
+You can combine custom BarPlot components and transitions to create a springy sunlight chart.
+
+```tsx
+function SunlightChartExample() {
+  const theme = useTheme();
+  const dayLength = 1440;
+
+  type SunlightChartData = Array<{
+    label: string;
+    value: number;
+  }>;
+
+  const sunlightData: SunlightChartData = [
+    { label: 'Jan', value: 598 },
+    { label: 'Feb', value: 635 },
+    { label: 'Mar', value: 688 },
+    { label: 'Apr', value: 753 },
+    { label: 'May', value: 812 },
+    { label: 'Jun', value: 855 },
+    { label: 'Jul', value: 861 },
+    { label: 'Aug', value: 828 },
+    { label: 'Sep', value: 772 },
+    { label: 'Oct', value: 710 },
+    { label: 'Nov', value: 648 },
+    { label: 'Dec', value: 605 },
+  ];
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  return (
+    <VStack gap={2}>
+      <CartesianChart
+        height={300}
+        series={[
+          {
+            id: 'sunlight',
+            data: sunlightData.map(({ value }) => value),
+            yAxisId: 'sunlight',
+            color: `rgb(${theme.spectrum.yellow40})`,
+          },
+          {
+            id: 'day',
+            data: sunlightData.map(() => dayLength),
+            yAxisId: 'day',
+            color: `rgb(${theme.spectrum.blue100})`,
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+          data: sunlightData.map(({ label }) => label),
+        }}
+        yAxis={[
+          {
+            id: 'day',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+          {
+            id: 'sunlight',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+        ]}
+      >
+        <YAxis
+          axisId="day"
+          showGrid
+          showLine
+          GridLineComponent={ThinSolidLine}
+          position="left"
+          label="Minutes of sunlight"
+        />
+        <XAxis showLine />
+        <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+        <BarPlot
+          borderRadius={0}
+          seriesIds={['sunlight']}
+          transitions={{
+            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 },
+          }}
+        />
+      </CartesianChart>
+      <Text color="fgMuted" font="caption" textAlign="center">
+        2026 sunlight data for the first day of each month in Atlanta, Georgia, provided by NOAA.
+      </Text>
+    </VStack>
+  );
+}
+```
