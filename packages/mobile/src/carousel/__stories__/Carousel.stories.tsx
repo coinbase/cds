@@ -134,7 +134,6 @@ const BasicExamples = () => {
     <>
       <Example paddingX={0}>
         <Carousel
-          autoplay
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -155,7 +154,6 @@ const BasicExamples = () => {
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
-            title: { color: theme.color.fgPrimary },
           }}
           title="Snap Item"
         >

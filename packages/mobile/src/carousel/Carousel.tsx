@@ -1148,7 +1148,7 @@ export const Carousel = memo(
               {(title || !hideNavigation) && (
                 <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
                   {typeof title === 'string' ? (
-                    <Text font="title3" numberOfLines={1} style={styles?.title}>
+                    <Text flexShrink={1} font="title3" numberOfLines={1} style={styles?.title}>
                       {title}
                     </Text>
                   ) : (
