@@ -17,7 +17,6 @@ export function CardList() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="For you"
       styles={{
         root: { paddingHorizontal: horizontalPadding },

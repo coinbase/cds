@@ -17,7 +17,6 @@ export function AssetCarousel() {
   return (
     <Carousel
       loop
-      paginationVariant="dot"
       title="Explore Assets"
       snapMode="item"
       styles={{

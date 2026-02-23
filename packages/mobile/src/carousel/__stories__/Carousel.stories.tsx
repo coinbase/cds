@@ -135,7 +135,6 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           autoplay
-          paginationVariant="dot"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -152,7 +151,6 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="snap"
-          paginationVariant="dot"
           snapMode="item"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -173,7 +171,6 @@ const BasicExamples = () => {
           loop
           NavigationComponent={SeeAllComponent}
           drag="free"
-          paginationVariant="dot"
           snapMode="item"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -195,7 +192,6 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="snap"
-          paginationVariant="dot"
           snapMode="page"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -223,7 +219,6 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="none"
-          paginationVariant="dot"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -371,7 +366,6 @@ const AutoplayExample = () => {
       <Carousel
         autoplay
         loop
-        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[2] },
           carousel: { gap: theme.space[2] },
@@ -411,7 +405,6 @@ const DynamicContentExample = () => {
         </Button>
       </HStack>
       <Carousel
-        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
           carousel: { gap: theme.space[2], height: 156 },
@@ -487,7 +480,6 @@ const AnimatedExample = () => {
   return (
     <Example paddingX={0}>
       <Carousel
-        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
           carousel: { gap: theme.space[2] },
@@ -634,7 +626,6 @@ const LoopingExamples = () => {
         <Carousel
           loop
           drag="snap"
-          paginationVariant="dot"
           snapMode="page"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -660,7 +651,6 @@ const LoopingExamples = () => {
           autoplay
           loop
           drag="snap"
-          paginationVariant="dot"
           snapMode="item"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
