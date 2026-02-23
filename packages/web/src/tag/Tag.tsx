@@ -7,16 +7,31 @@ import {
   tagHorizontalSpacing,
 } from '@coinbase/cds-common/tokens/tags';
 import type {
+  IconName,
   SharedAccessibilityProps,
   SharedProps,
   TagColorScheme,
   TagEmphasis,
   TagIntent,
 } from '@coinbase/cds-common/types';
+import { css } from '@linaria/core';
 
 import { useTheme } from '../hooks/useTheme';
+import { Icon } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
+
+const startNodeCss = css`
+  display: inline-flex;
+  align-items: center;
+  margin-inline-end: var(--space-0_5);
+`;
+
+const endNodeCss = css`
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: var(--space-0_5);
+`;
 
 export const tagStaticClassName = 'cds-tag';
 
@@ -45,6 +60,18 @@ export type TagBaseProps = SharedProps &
     color?: ThemeVars.SpectrumColor;
     /** Setting a custom max width for this tag will enable text truncation */
     maxWidth?: BoxProps<BoxDefaultElement>['maxWidth'];
+    /** Set the start node */
+    start?: React.ReactNode;
+    /** Icon to render at the start of the tag. */
+    startIcon?: IconName;
+    /** Whether the start icon is active */
+    startIconActive?: boolean;
+    /** Set the end node */
+    end?: React.ReactNode;
+    /** Icon to render at the end of the tag. */
+    endIcon?: IconName;
+    /** Whether the end icon is active */
+    endIconActive?: boolean;
   };
 
 export type TagProps = TagBaseProps &
@@ -59,6 +86,12 @@ export const Tag = memo(
       colorScheme = 'blue',
       background: customBackground,
       color: customColor,
+      start,
+      startIcon,
+      startIconActive,
+      end,
+      endIcon,
+      endIconActive,
       display = 'inline-flex',
       alignItems = 'center',
       justifyContent = 'center',
@@ -72,14 +105,9 @@ export const Tag = memo(
     const boxStyles = useMemo(
       () => ({
         backgroundColor: `rgb(${theme.spectrum[customBackground ?? background]})`,
-      }),
-      [background, customBackground, theme.spectrum],
-    );
-    const textStyles = useMemo(
-      () => ({
         color: `rgb(${theme.spectrum[customColor ?? foreground]})`,
       }),
-      [foreground, customColor, theme.spectrum],
+      [background, customBackground, foreground, customColor, theme.spectrum],
     );
 
     return (
@@ -98,15 +126,31 @@ export const Tag = memo(
         testID={testID}
         {...props}
       >
+        {start ? (
+          <span className={startNodeCss}>{start}</span>
+        ) : startIcon ? (
+          <span className={startNodeCss}>
+            <Icon active={startIconActive} color="currentColor" name={startIcon} size="xs" />
+          </span>
+        ) : null}
+
         <Text
+          color="currentColor"
           display="inline"
           font={tagFontMap[intent]}
           overflow="truncate"
-          style={textStyles}
           testID={`${testID}--text`}
         >
           {children}
         </Text>
+
+        {end ? (
+          <span className={endNodeCss}>{end}</span>
+        ) : endIcon ? (
+          <span className={endNodeCss}>
+            <Icon active={endIconActive} color="currentColor" name={endIcon} size="xs" />
+          </span>
+        ) : null}
       </Box>
     );
   }),

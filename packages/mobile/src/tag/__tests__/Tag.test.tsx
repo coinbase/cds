@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { tagColorMap, tagEmphasisColorMap } from '@coinbase/cds-common/tokens/tags';
 import { render, screen } from '@testing-library/react-native';
 
@@ -104,6 +104,52 @@ describe('Tag', () => {
     expect(screen.getByTestId(TEST_ID)).toHaveStyle({
       backgroundColor: defaultTheme.lightColor.bgPrimaryWash,
     });
+  });
+
+  it('renders with a startIcon', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" startIcon="add" testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toBeDefined();
+    expect(screen.getByText('Tag')).toBeDefined();
+  });
+
+  it('renders with an endIcon', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" endIcon="add" testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toBeDefined();
+    expect(screen.getByText('Tag')).toBeDefined();
+  });
+
+  it('renders with a custom start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" start={<View testID="custom-start" />} testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('custom-start')).toBeDefined();
+  });
+
+  it('renders with a custom end node', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" end={<View testID="custom-end" />} testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('custom-end')).toBeDefined();
   });
 
   it('verifies tagColorMap maps correctly to tagEmphasisColorMap for backward compatibility', () => {
