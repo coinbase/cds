@@ -2,7 +2,6 @@ import React, { useContext, useMemo } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton';
 import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
@@ -10,7 +9,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout/Box';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { Spacer } from '@coinbase/cds-mobile/layout/Spacer';
-import { TextHeadline } from '@coinbase/cds-mobile/typography/TextHeadline';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { StackHeaderProps, StackNavigationOptions } from '@react-navigation/stack';
 
 import { SearchFilterContext, SetSearchFilterContext } from './ExamplesSearchProvider';
@@ -19,8 +18,6 @@ import { initialRouteName, searchRouteName } from './staticRoutes';
 type UseExampleNavigatorPropsOptions = {
   setColorScheme?: React.Dispatch<React.SetStateAction<ColorScheme>>;
 };
-
-const iconButtonHeight = interactableHeight.regular;
 
 export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigatorPropsOptions) {
   const theme = useTheme();
@@ -49,7 +46,11 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
       const showBackButton = isFocused && canGoBack && !isSearch;
       const showSearch = routeName === initialRouteName;
 
-      const iconButtonPlaceholder = <Box height={iconButtonHeight} />;
+      const iconButtonPlaceholder = (
+        <Box opacity={0} pointerEvents="none">
+          <IconButton transparent name="close" />
+        </Box>
+      );
 
       const leftHeaderButton = showSearch ? (
         <Box marginX={-1}>
@@ -102,7 +103,9 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
                   value={searchFilter}
                 />
               ) : (
-                <TextHeadline align="center">{titleForScene}</TextHeadline>
+                <Text align="center" font="headline">
+                  {titleForScene}
+                </Text>
               )}
             </Box>
             <Spacer />

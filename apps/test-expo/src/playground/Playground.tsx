@@ -2,14 +2,13 @@ import React, { memo, useContext, useMemo } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton';
 import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout/Box';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { Spacer } from '@coinbase/cds-mobile/layout/Spacer';
-import { TextHeadline } from '@coinbase/cds-mobile/typography/TextHeadline';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -28,8 +27,6 @@ const initialRouteName = keyToRouteName('Examples');
 const searchRouteName = keyToRouteName('Search');
 
 const Stack = createNativeStackNavigator<PlaygroundStackParamList>();
-
-const iconButtonHeight = interactableHeight.regular;
 
 const titleOverrides: Record<string, string> = {
   Examples: 'CDS',
@@ -73,7 +70,11 @@ const HeaderContent = memo(
     const { top } = useSafeAreaInsets();
     const style = useMemo(() => ({ paddingTop: top }), [top]);
 
-    const iconButtonPlaceholder = <Box height={iconButtonHeight} />;
+    const iconButtonPlaceholder = (
+      <Box opacity={0} pointerEvents="none">
+        <IconButton transparent name="close" />
+      </Box>
+    );
 
     const leftHeaderButton = showSearch ? (
       <Box marginX={-1}>
@@ -117,7 +118,9 @@ const HeaderContent = memo(
                 value={searchFilter}
               />
             ) : (
-              <TextHeadline align="center">{title}</TextHeadline>
+              <Text align="center" font="headline">
+                {title}
+              </Text>
             )}
           </Box>
           <Spacer />

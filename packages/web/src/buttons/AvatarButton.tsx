@@ -1,5 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import React, { forwardRef, memo } from 'react';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -11,10 +10,34 @@ import type { ButtonBaseProps } from './Button';
 
 export const avatarButtonDefaultElement = 'button';
 
+// Avatar is opinioned on border styles, so Pressable's border props will have no effect
+// see CDS-1611
+type BorderProps = Pick<
+  PressableBaseProps,
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderRadius'
+  | 'borderColor'
+  | 'borderWidth'
+  | 'borderTopWidth'
+  | 'borderEndWidth'
+  | 'borderBottomWidth'
+  | 'borderStartWidth'
+  | 'bordered'
+  | 'borderedBottom'
+  | 'borderedEnd'
+  | 'borderedHorizontal'
+  | 'borderedStart'
+  | 'borderedTop'
+  | 'borderedVertical'
+>;
+
 export type AvatarButtonDefaultElement = typeof avatarButtonDefaultElement;
 
 export type AvatarButtonBaseProps = Polymorphic.ExtendableProps<
-  Omit<PressableBaseProps, 'children'>,
+  Omit<PressableBaseProps, 'children' | keyof BorderProps>,
   Pick<ButtonBaseProps, 'compact'> &
     Pick<
       AvatarBaseProps,
@@ -36,8 +59,6 @@ const baseCss = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--interactable-height);
-  height: var(--interactable-height);
   min-width: unset;
 `;
 
@@ -53,6 +74,7 @@ export const AvatarButton: AvatarButtonComponent = memo(
         compact,
         colorScheme,
         shape,
+        borderColor,
         selected,
         name,
         ...props
@@ -61,29 +83,24 @@ export const AvatarButton: AvatarButtonComponent = memo(
     ) => {
       const Component = (as ?? avatarButtonDefaultElement) satisfies React.ElementType;
 
-      const height = compact ? interactableHeight.compact : interactableHeight.regular;
-      const styles = useMemo(
-        () => ({ '--interactable-height': `${height}px` }) as React.CSSProperties,
-        [height],
-      );
-
       return (
         <Pressable
           ref={ref}
           aria-label={accessibilityLabel}
           as={Component}
           background="transparent"
+          borderWidth={0} // remove Pressable's default transparent border
           className={cx(baseCss, className)}
-          style={styles}
           {...props}
         >
           <Avatar
             alt={alt}
+            borderColor={borderColor}
             colorScheme={colorScheme}
-            dangerouslySetSize={height}
             name={name}
             selected={selected}
             shape={shape}
+            size={compact ? 'xl' : 'xxxl'}
             src={src}
           />
         </Pressable>

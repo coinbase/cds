@@ -1,9 +1,12 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import { ActivityIndicator, type PressableStateCallbackType, type ViewStyle } from 'react-native';
+import { memo } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { IconButtonVariant, IconName, SharedProps } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
+import type {
+  IconButtonVariant,
+  IconName,
+  NegativeSpace,
+  SharedProps,
+} from '@coinbase/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
@@ -36,12 +39,12 @@ export const IconButton = memo(function IconButton({
   background,
   color,
   borderColor,
-  borderWidth = 100,
+  borderWidth = 0, // remove Pressable's default transparent border
   borderRadius = 1000,
   feedback = compact ? 'light' : 'normal',
   flush,
+  padding = compact ? 1.5 : 2,
   loading,
-  style,
   accessibilityHint,
   accessibilityLabel,
   ...props
@@ -56,42 +59,24 @@ export const IconButton = memo(function IconButton({
   const backgroundValue = background ?? variantStyle.background;
   const borderColorValue = borderColor ?? variantStyle.borderColor;
 
-  const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
-
-  const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
-
-  const sizingStyle = useMemo<ViewStyle>(
-    () => ({
-      height: minHeight,
-      width: minHeight,
-      alignItems: 'center',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    }),
-    [minHeight],
-  );
-
-  const pressableStyle = useCallback(
-    (state: PressableStateCallbackType) => [
-      sizingStyle,
-      typeof style === 'function' ? style(state) : style,
-    ],
-    [sizingStyle, style],
-  );
+  const flushMargin = flush ? (-padding as NegativeSpace) : undefined;
 
   return (
     <Pressable
       accessibilityHint={accessibilityHint}
       accessibilityLabel={loading ? `${accessibilityLabel ?? ''}, loading` : accessibilityLabel}
+      alignItems="center"
       background={backgroundValue}
       borderColor={borderColorValue}
       borderRadius={borderRadius}
       borderWidth={borderWidth}
       feedback={feedback}
+      flexDirection="column"
+      justifyContent="center"
       loading={loading}
-      marginEnd={marginEnd}
-      marginStart={marginStart}
-      style={pressableStyle}
+      marginEnd={flush === 'end' ? flushMargin : undefined}
+      marginStart={flush === 'start' ? flushMargin : undefined}
+      padding={padding}
       transparentWhileInactive={transparent}
       {...props}
     >
@@ -99,12 +84,11 @@ export const IconButton = memo(function IconButton({
         <ActivityIndicator
           color={theme.color[colorValue]}
           size="small"
-          style={sizingStyle}
           testID={props.testID ? `${props.testID}-activity-indicator` : undefined}
         />
       ) : (
         /* TO DO: test using currentColor like web does on Icon here */
-        <Icon active={active} color={colorValue} name={name} size={iconSize} style={sizingStyle} />
+        <Icon active={active} color={colorValue} name={name} size={iconSize} />
       )}
     </Pressable>
   );

@@ -63,7 +63,8 @@ export const DefaultComboboxControl = <
       {...props}
       contentNode={
         shouldRenderSearchInput ? (
-          <HStack flexWrap="wrap">
+          // set gap between input and values with top padding
+          <HStack flexWrap="wrap" paddingTop={hasValue ? 1 : 0}>
             <NativeInput
               ref={searchInputRef}
               disabled={disabled || !open}
@@ -71,15 +72,14 @@ export const DefaultComboboxControl = <
               onPress={() => !disabled && setOpen(true)}
               placeholder={typeof placeholder === 'string' ? placeholder : undefined}
               style={{
-                flex: 0,
                 flexGrow: 1,
                 flexShrink: 1,
                 minWidth: 0,
-                padding: 0,
-                height: hasValue ? 24 : 48,
-                marginTop: hasValue ? 0 : -24,
-                marginBottom: hasValue ? -12 : -24,
-                paddingTop: hasValue ? 8 : 0,
+                // Zero out padding - let DefaultSelectControl handle spacing via InputStack
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
                 // This is constrained by the parent container's width. The width is 100%
                 // to ensure it grows to fill the control
                 width: open ? '100%' : undefined,
@@ -106,7 +106,6 @@ export const DefaultComboboxControl = <
         },
         controlValueNode: {
           ...StyleSheet.flatten(props.styles?.controlValueNode),
-          paddingBottom: hasValue && shouldRenderSearchInput ? theme.space[1.5] : 0,
         },
       }}
     />

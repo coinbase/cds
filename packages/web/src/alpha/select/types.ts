@@ -283,6 +283,10 @@ export type SelectDropdownProps<
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
     /** Label displayed above the dropdown */
     label?: React.ReactNode;
+    /** Maximum height of the dropdown container
+     * @default 252
+     */
+    maxHeight?: number;
     /** Whether the dropdown is disabled */
     disabled?: boolean;
     /** Label for the "Select All" option in multi-select mode */

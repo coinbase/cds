@@ -2,10 +2,6 @@
 
 ReferenceLine can be used to add important details to a chart, such as a reference price or date. You can create horizontal lines using `dataY` or vertical lines using `dataX`.
 
-### Simple Reference Line
-
-A minimal reference line without labels, useful for marking key thresholds:
-
 ```jsx live
 <LineChart
   showArea
@@ -166,73 +162,159 @@ Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
 </Box>
 ```
 
-### Custom Component
+### Custom Components
 
 You can adjust the style of the label using a custom `LabelComponent`.
 
 ```jsx live
-function LabelStyleExample() {
-  const LiquidationLabel = useMemo(
-    () =>
-      memo((props) => (
-        <DefaultReferenceLineLabel
-          {...props}
-          background="var(--color-accentSubtleYellow)"
-          borderRadius={4}
-          color="rgb(var(--yellow70))"
-          dx={12}
-          font="label1"
-          horizontalAlignment="left"
-          inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
-        />
-      )),
-    [],
-  );
+function CustomLabelExample() {
+  const PriceLabel = memo((props) => (
+    <DefaultReferenceLineLabel
+      {...props}
+      background="var(--color-bgSecondary)"
+      borderRadius={12.5}
+      color="var(--color-fg)"
+      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+      font="label1"
+    />
+  ));
 
-  const PriceLabel = useMemo(
-    () =>
-      memo((props) => (
-        <DefaultReferenceLineLabel
-          {...props}
-          background="var(--color-bg)"
-          borderRadius={4}
-          color="rgb(var(--yellow70))"
-          dx={-12}
-          font="label1"
-          horizontalAlignment="right"
-          inset={{ top: 2, bottom: 2, left: 4, right: 4 }}
-        />
-      )),
-    [],
-  );
+  function Example() {
+    const hourData = useMemo(() => sparklineInteractiveData.hour, []);
+    const startPrice = hourData[0].value;
+    const endPrice = hourData[hourData.length - 1].value;
+    const isPositive = endPrice >= startPrice;
+    const seriesColor = isPositive ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
 
-  return (
-    <LineChart
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      inset={{ right: 4 }}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-    >
-      <ReferenceLine
-        LabelComponent={LiquidationLabel}
-        dataY={25}
-        label="Liquidation"
-        labelPosition="left"
-        stroke="var(--color-bgWarning)"
+    const formattedStartPrice = useMemo(
+      () =>
+        startPrice.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [startPrice],
+    );
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={[
+          {
+            id: 'hourly-prices',
+            data: hourData.map((d) => d.value),
+            color: seriesColor,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 24 }),
+        }}
+      >
+        <Scrubber />
+        <ReferenceLine
+          LabelComponent={PriceLabel}
+          LineComponent={(props) => (
+            <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+          )}
+          dataY={startPrice}
+          label={formattedStartPrice}
+          stroke="var(--color-fgMuted)"
+          labelDx={-12}
+          labelHorizontalAlignment="right"
+        />
+      </LineChart>
+    );
+  }
+
+  return <Example />;
+}
+```
+
+You can also optionally hide the label based on user scrubbing.
+
+```jsx live
+function StartPriceReferenceLine() {
+  const PriceLabel = memo((props) => {
+    const { scrubberPosition } = useScrubberContext();
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const isScrubbing = scrubberPosition !== undefined;
+
+    const fadeZone = 128;
+
+    const opacity = useMemo(() => {
+      if (!isScrubbing) return 0;
+      const xScale = getXScale();
+      if (!xScale) return 1;
+      const scrubX = xScale(scrubberPosition) ?? 0;
+      const rightEdge = drawingArea.x + drawingArea.width;
+      return rightEdge - scrubX >= fadeZone ? 1 : 0;
+    }, [isScrubbing, scrubberPosition, getXScale, drawingArea]);
+
+    return (
+      <DefaultReferenceLineLabel
+        {...props}
+        background="var(--color-bgSecondary)"
+        borderRadius={12.5}
+        color="var(--color-fg)"
+        inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+        font="label1"
+        styles={{ root: { opacity: opacity, transition: 'opacity 0.25s ease' } }}
       />
-      <ReferenceLine
-        LabelComponent={PriceLabel}
-        dataY={25}
-        label="$25"
-        labelPosition="right"
-        stroke="transparent"
-      />
-    </LineChart>
-  );
+    );
+  });
+
+  function Example() {
+    const hourData = useMemo(() => sparklineInteractiveData.hour, []);
+    const startPrice = hourData[0].value;
+    const endPrice = hourData[hourData.length - 1].value;
+    const isPositive = endPrice >= startPrice;
+    const seriesColor = isPositive ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+
+    const formattedStartPrice = useMemo(
+      () =>
+        startPrice.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [startPrice],
+    );
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={[
+          {
+            id: 'hourly-prices',
+            data: hourData.map((d) => d.value),
+            color: seriesColor,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 24 }),
+        }}
+      >
+        <Scrubber />
+        <ReferenceLine
+          LabelComponent={PriceLabel}
+          LineComponent={(props) => (
+            <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+          )}
+          dataY={startPrice}
+          label={formattedStartPrice}
+          stroke="var(--color-fgMuted)"
+          labelDx={-12}
+          labelHorizontalAlignment="right"
+        />
+      </LineChart>
+    );
+  }
+
+  return <Example />;
 }
 ```
 
@@ -240,12 +322,10 @@ function LabelStyleExample() {
 
 You can pair a ReferenceLine with a custom drag component to create a draggable price target.
 
-```jsx live
+```tsx live
 function DraggablePriceTarget() {
-  const DragIcon = ({ x, y }: { x: number; y: number }) => {
-    const DragCircle = (props: React.SVGProps<SVGCircleElement>) => (
-      <circle {...props} fill="var(--color-fg)" r="1.5" />
-    );
+  const DragIcon = ({ x, y }) => {
+    const DragCircle = (props) => <circle {...props} fill="var(--color-fg)" r="1.5" />;
 
     return (
       <g transform={`translate(${x}, ${y})`}>
@@ -261,17 +341,7 @@ function DraggablePriceTarget() {
     );
   };
 
-  const TrendArrowIcon = ({
-    x,
-    y,
-    isPositive,
-    color,
-  }: {
-    x: number;
-    y: number;
-    isPositive: boolean;
-    color: string;
-  }) => {
+  const TrendArrowIcon = ({ x, y, isPositive, color }) => {
     return (
       <g transform={`translate(${x - 8}, ${y - 8})`}>
         <g
@@ -290,221 +360,209 @@ function DraggablePriceTarget() {
     );
   };
 
-  const DynamicPriceLabel = memo(
-    ({ color, ...props }: React.ComponentProps<typeof DefaultReferenceLineLabel> & { color: string }) => (
-      <DefaultReferenceLineLabel
-        {...props}
-        background={color}
-        borderRadius={4}
-        color="white"
-        dx={-12}
-        font="label1"
-        horizontalAlignment="right"
-        inset={{ top: 5, bottom: 5, left: 10, right: 10 }}
-      />
-    ),
-  );
+  const DynamicPriceLabel = memo(({ color, ...props }) => (
+    <DefaultReferenceLineLabel
+      {...props}
+      background={color}
+      borderRadius={4}
+      color="white"
+      dx={-12}
+      font="label1"
+      horizontalAlignment="right"
+      inset={{ top: 5, bottom: 5, left: 10, right: 10 }}
+    />
+  ));
 
-  const DraggableReferenceLine = memo(
-    ({
-      baselineAmount,
-      startAmount,
-      chartRef,
-    }: {
-      baselineAmount: number;
-      startAmount: number;
-      chartRef: RefObject<SVGSVGElement>;
-    }) => {
-      const theme = useTheme();
-      const { isPhone } = useBreakpoints();
+  const DraggableReferenceLine = memo(({ baselineAmount, startAmount, chartRef }) => {
+    const theme = useTheme();
+    const { isPhone } = useBreakpoints();
 
-      const formatPrice = useCallback((value: number) => {
-        return `$${value.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}`;
-      }, []);
+    const formatPrice = useCallback((value) => {
+      return `$${value.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+    }, []);
 
-      const { getYScale, drawingArea } = useCartesianChartContext();
-      const [amount, setAmount] = useState(startAmount);
-      const [isDragging, setIsDragging] = useState(false);
-      const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });
-      const color = amount >= baselineAmount ? 'var(--color-bgPositive)' : 'var(--color-bgNegative)';
+    const { getYScale, drawingArea } = useCartesianChartContext();
+    const [amount, setAmount] = useState(startAmount);
+    const [isDragging, setIsDragging] = useState(false);
+    const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });
+    const color = amount >= baselineAmount ? 'var(--color-bgPositive)' : 'var(--color-bgNegative)';
 
-      const yScale = getYScale();
+    const yScale = getYScale();
 
-      const labelComponent = useCallback(
-        (props: React.ComponentProps<typeof DefaultReferenceLineLabel>) => (
-          <DynamicPriceLabel {...props} color={color} />
-        ),
-        [color],
-      );
+    const labelComponent = useCallback(
+      (props) => <DynamicPriceLabel {...props} color={color} />,
+      [color],
+    );
 
-      // Set up persistent event listeners on the chart SVG element
-      useEffect(() => {
-        const element = chartRef.current;
+    // Set up persistent event listeners on the chart SVG element
+    useEffect(() => {
+      const element = chartRef.current;
 
-        if (!element || !yScale || !('invert' in yScale && typeof yScale.invert === 'function')) {
-          return;
+      if (!element || !yScale || !('invert' in yScale && typeof yScale.invert === 'function')) {
+        return;
+      }
+
+      const updatePosition = (clientX, clientY) => {
+        const point = element.createSVGPoint();
+        point.x = clientX;
+        point.y = clientY;
+
+        const svgPoint = point.matrixTransform(element.getScreenCTM()?.inverse());
+
+        // Clamp the Y position to the chart area
+        const clampedY = Math.max(
+          drawingArea.y,
+          Math.min(drawingArea.y + drawingArea.height, svgPoint.y),
+        );
+
+        const rawAmount = yScale.invert(clampedY);
+
+        const rawPercentage = ((rawAmount - baselineAmount) / baselineAmount) * 100;
+
+        let targetPercentage = Math.round(rawPercentage);
+
+        if (targetPercentage === 0) {
+          targetPercentage = rawPercentage >= 0 ? 1 : -1;
         }
 
-        const updatePosition = (clientX: number, clientY: number) => {
-          const point = element.createSVGPoint();
-          point.x = clientX;
-          point.y = clientY;
-
-          const svgPoint = point.matrixTransform(element.getScreenCTM()?.inverse());
-
-          // Clamp the Y position to the chart area
-          const clampedY = Math.max(
-            drawingArea.y,
-            Math.min(drawingArea.y + drawingArea.height, svgPoint.y),
-          );
-
-          const rawAmount = yScale.invert(clampedY);
-
-          const rawPercentage = ((rawAmount - baselineAmount) / baselineAmount) * 100;
-
-          let targetPercentage = Math.round(rawPercentage);
-
-          if (targetPercentage === 0) {
-            targetPercentage = rawPercentage >= 0 ? 1 : -1;
-          }
-
-          const newAmount = baselineAmount * (1 + targetPercentage / 100);
-          setAmount(newAmount);
-        };
-
-        const handleMouseMove = (event: MouseEvent) => {
-          if (!isDragging) {
-            return;
-          }
-          updatePosition(event.clientX, event.clientY);
-        };
-
-        const handleTouchMove = (event: TouchEvent) => {
-          if (!isDragging || event.touches.length === 0) {
-            return;
-          }
-          const touch = event.touches[0];
-          updatePosition(touch.clientX, touch.clientY);
-        };
-
-        const handleMouseUp = () => {
-          setIsDragging(false);
-        };
-
-        const handleTouchEnd = () => {
-          setIsDragging(false);
-        };
-
-        const handleMouseLeave = () => {
-          setIsDragging(false);
-        };
-
-        element.addEventListener('mousemove', handleMouseMove);
-        element.addEventListener('mouseup', handleMouseUp);
-        element.addEventListener('mouseleave', handleMouseLeave);
-        element.addEventListener('touchmove', handleTouchMove);
-        element.addEventListener('touchend', handleTouchEnd);
-        element.addEventListener('touchcancel', handleTouchEnd);
-
-        return () => {
-          element.removeEventListener('mousemove', handleMouseMove);
-          element.removeEventListener('mouseup', handleMouseUp);
-          element.removeEventListener('mouseleave', handleMouseLeave);
-          element.removeEventListener('touchmove', handleTouchMove);
-          element.removeEventListener('touchend', handleTouchEnd);
-          element.removeEventListener('touchcancel', handleTouchEnd);
-        };
-      }, [isDragging, yScale, chartRef, baselineAmount, drawingArea.y, drawingArea.height]);
-
-      if (!yScale) return null;
-
-      const yPixel = yScale(amount);
-
-      if (yPixel === undefined || yPixel === null) return null;
-
-      const difference = amount - baselineAmount;
-      const percentageChange = Math.round((difference / baselineAmount) * 100);
-      const isPositive = difference > 0;
-
-      const percentageLabel = isPhone
-        ? `${Math.abs(percentageChange)}%`
-        : `${Math.abs(percentageChange)}% (${formatPrice(Math.abs(difference))})`;
-      const dollarLabel = formatPrice(amount);
-
-      const handleMouseDown = (e: React.MouseEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
+        const newAmount = baselineAmount * (1 + targetPercentage / 100);
+        setAmount(newAmount);
       };
 
-      const handleTouchStart = (e: React.TouchEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
+      const handleMouseMove = (event: MouseEvent) => {
+        if (!isDragging) {
+          return;
+        }
+        updatePosition(event.clientX, event.clientY);
       };
 
-      const padding = 16;
-      const dragIconSize = 16;
-      const trendArrowIconSize = 16;
-      const iconGap = 8;
-      const totalPadding = padding * 2 + iconGap;
+      const handleTouchMove = (event: TouchEvent) => {
+        if (!isDragging || event.touches.length === 0) {
+          return;
+        }
+        const touch = event.touches[0];
+        updatePosition(touch.clientX, touch.clientY);
+      };
 
-      const rectWidth = textDimensions.width + totalPadding + dragIconSize + trendArrowIconSize;
+      const handleMouseUp = () => {
+        setIsDragging(false);
+      };
 
-      return (
-        <>
-          <ReferenceLine
-            LabelComponent={labelComponent}
-            dataY={amount}
-            label={dollarLabel}
-            labelPosition="right"
+      const handleTouchEnd = () => {
+        setIsDragging(false);
+      };
+
+      const handleMouseLeave = () => {
+        setIsDragging(false);
+      };
+
+      element.addEventListener('mousemove', handleMouseMove);
+      element.addEventListener('mouseup', handleMouseUp);
+      element.addEventListener('mouseleave', handleMouseLeave);
+      element.addEventListener('touchmove', handleTouchMove);
+      element.addEventListener('touchend', handleTouchEnd);
+      element.addEventListener('touchcancel', handleTouchEnd);
+
+      return () => {
+        element.removeEventListener('mousemove', handleMouseMove);
+        element.removeEventListener('mouseup', handleMouseUp);
+        element.removeEventListener('mouseleave', handleMouseLeave);
+        element.removeEventListener('touchmove', handleTouchMove);
+        element.removeEventListener('touchend', handleTouchEnd);
+        element.removeEventListener('touchcancel', handleTouchEnd);
+      };
+    }, [isDragging, yScale, chartRef, baselineAmount, drawingArea.y, drawingArea.height]);
+
+    if (!yScale) return null;
+
+    const yPixel = yScale(amount);
+
+    if (yPixel === undefined || yPixel === null) return null;
+
+    const difference = amount - baselineAmount;
+    const percentageChange = Math.round((difference / baselineAmount) * 100);
+    const isPositive = difference > 0;
+
+    const percentageLabel = isPhone
+      ? `${Math.abs(percentageChange)}%`
+      : `${Math.abs(percentageChange)}% (${formatPrice(Math.abs(difference))})`;
+    const dollarLabel = formatPrice(amount);
+
+    const handleMouseDown = (e) => {
+      e.preventDefault();
+      setIsDragging(true);
+    };
+
+    const handleTouchStart = (e) => {
+      e.preventDefault();
+      setIsDragging(true);
+    };
+
+    const padding = 16;
+    const dragIconSize = 16;
+    const trendArrowIconSize = 16;
+    const iconGap = 8;
+    const totalPadding = padding * 2 + iconGap;
+
+    const rectWidth = textDimensions.width + totalPadding + dragIconSize + trendArrowIconSize;
+
+    return (
+      <>
+        <ReferenceLine
+          LabelComponent={labelComponent}
+          dataY={amount}
+          label={dollarLabel}
+          labelPosition="right"
+        />
+        <g
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          style={{
+            cursor: isDragging ? 'grabbing' : 'grab',
+            opacity: textDimensions.width === 0 ? 0 : 1,
+          }}
+        >
+          <rect
+            fill="var(--color-bgSecondary)"
+            height={32}
+            rx={theme.borderRadius['400']}
+            ry={theme.borderRadius['400']}
+            width={rectWidth}
+            x={drawingArea.x}
+            y={yPixel - 16}
           />
-          <g
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
-            style={{
-              cursor: isDragging ? 'grabbing' : 'grab',
-              opacity: textDimensions.width === 0 ? 0 : 1,
-            }}
+          <DragIcon x={drawingArea.x + padding} y={yPixel} />
+          <TrendArrowIcon
+            color={color}
+            isPositive={isPositive}
+            x={drawingArea.x + padding + dragIconSize + iconGap}
+            y={yPixel}
+          />
+          <ChartText
+            disableRepositioning
+            color={color}
+            font="label1"
+            horizontalAlignment="left"
+            onDimensionsChange={(dimensions) => setTextDimensions(dimensions)}
+            verticalAlignment="middle"
+            x={drawingArea.x + padding + dragIconSize + iconGap + trendArrowIconSize}
+            y={yPixel + 1}
           >
-            <rect
-              fill="var(--color-bgSecondary)"
-              height={32}
-              rx={theme.borderRadius['400']}
-              ry={theme.borderRadius['400']}
-              width={rectWidth}
-              x={drawingArea.x}
-              y={yPixel - 16}
-            />
-            <DragIcon x={drawingArea.x + padding} y={yPixel} />
-            <TrendArrowIcon
-              color={color}
-              isPositive={isPositive}
-              x={drawingArea.x + padding + dragIconSize + iconGap}
-              y={yPixel}
-            />
-            <ChartText
-              disableRepositioning
-              color={color}
-              font="label1"
-              horizontalAlignment="left"
-              onDimensionsChange={(dimensions) => setTextDimensions(dimensions)}
-              verticalAlignment="middle"
-              x={drawingArea.x + padding + dragIconSize + iconGap + trendArrowIconSize}
-              y={yPixel + 1}
-            >
-              {percentageLabel}
-            </ChartText>
-          </g>
-        </>
-      );
-    },
-  );
+            {percentageLabel}
+          </ChartText>
+        </g>
+      </>
+    );
+  });
 
-  const BaselinePriceLabel = useMemo(() => memo((props) => (
-    <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />
-  )), []);
+  const BaselinePriceLabel = useMemo(
+    () =>
+      memo((props) => <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />),
+    [],
+  );
 
   const PriceTargetChart = () => {
     const priceData = useMemo(() => sparklineInteractiveData.year.map((d) => d.value), []);
@@ -512,7 +570,7 @@ function DraggablePriceTarget() {
 
     const chartRef = useRef<SVGSVGElement>(null);
 
-    const formatPrice = useCallback((value: number) => {
+    const formatPrice = useCallback((value) => {
       return `$${value.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -525,7 +583,11 @@ function DraggablePriceTarget() {
         showArea
         animate={false}
         height={250}
-        inset={isPhone ? { top: 16, bottom: 16, left: 0, right: 0 } : { top: 16, bottom: 16, left: 8, right: 80 }}
+        inset={
+          isPhone
+            ? { top: 16, bottom: 16, left: 0, right: 0 }
+            : { top: 16, bottom: 16, left: 8, right: 80 }
+        }
         series={[
           {
             id: 'prices',
@@ -551,6 +613,6 @@ function DraggablePriceTarget() {
       </LineChart>
     );
   };
-  return <PriceTargetChart />
+  return <PriceTargetChart />;
 }
 ```

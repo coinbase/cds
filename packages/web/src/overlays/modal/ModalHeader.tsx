@@ -1,6 +1,5 @@
 import React from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
   SharedAccessibilityProps,
   SharedProps,
@@ -72,9 +71,10 @@ export const ModalHeader = ({
 
   if (!title && !onBackButtonClick && !onRequestClose) return null;
 
-  // use empty placeholder which has the same size as IconButton to maintain horizontal position
   const emptyPlaceholder = (
-    <Box height={interactableHeight.compact} width={interactableHeight.compact} />
+    <Box aria-hidden style={{ visibility: 'hidden' }}>
+      <IconButton disabled transparent name="close" tabIndex={-1} />
+    </Box>
   );
 
   return (

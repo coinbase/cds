@@ -11,9 +11,7 @@ import React, {
 import { Pressable } from 'react-native';
 import type { ForwardedRef } from 'react';
 import type {
-  NativeSyntheticEvent,
   TextInput as RNTextInput,
-  TextInputFocusEventData,
   TextInputProps as RNTextInputProps,
   ViewStyle,
 } from 'react-native';
@@ -192,7 +190,7 @@ export const TextInput = memo(
           ...(labelVariant === 'inside' &&
             hasLabel &&
             !compact && {
-              paddingBottom: 0,
+              paddingBottom: theme.space[1],
               paddingTop: 0,
             }),
         }),
@@ -307,6 +305,7 @@ export const TextInput = memo(
                   >
                     <Box
                       {...(labelVariant === 'inside' && {
+                        paddingTop: 1,
                         paddingStart: start ? 0.5 : 2,
                         paddingEnd: 2,
                         background: readOnlyInputBackground,

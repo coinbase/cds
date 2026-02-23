@@ -42,12 +42,6 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton name={iconName} variant="foregroundMuted" {...props} />
-    ),
-    title: <Text font="body">ForegroundMuted</Text>,
-  },
-  {
-    component: (props?: Partial<IconButtonProps>) => (
       <IconButton
         name={iconName}
         style={{ padding: 10, borderRadius: 15, transform: 'scale(0.5)' }}
@@ -58,9 +52,15 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
     ),
-    title: <Text font="body">ForegroundMuted transparent</Text>,
+    title: 'Primary flush start',
+  },
+  {
+    component: (props?: Partial<IconButtonProps>) => (
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush end',
   },
 ];
 
@@ -110,11 +110,6 @@ const IconButtonScreen = () => {
             <HStack key={`icon-wrapper-${name}`} flexWrap="wrap" gap={2}>
               <IconButton accessibilityLabel={accessibilityLabel} name={name} variant="primary" />
               <IconButton accessibilityLabel={accessibilityLabel} name={name} variant="secondary" />
-              <IconButton
-                accessibilityLabel={accessibilityLabel}
-                name={name}
-                variant="foregroundMuted"
-              />
               <IconButton accessibilityLabel={accessibilityLabel} name={name} />
             </HStack>
           );

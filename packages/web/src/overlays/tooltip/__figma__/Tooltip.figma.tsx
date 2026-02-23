@@ -1,7 +1,7 @@
 import { figma } from '@figma/code-connect';
 
 import { Button } from '../../../buttons';
-import { TextBody, TextHeadline } from '../../../typography';
+import { Text } from '../../../typography';
 import { Tooltip } from '../Tooltip';
 
 figma.connect(
@@ -78,8 +78,12 @@ figma.connect(
       <Tooltip
         content={
           <>
-            <TextHeadline as="p">{content.title}</TextHeadline>
-            <TextBody as="p">{content.description}</TextBody>
+            <Text as="p" font="headline">
+              {content.title}
+            </Text>
+            <Text as="p" font="body">
+              {content.description}
+            </Text>
           </>
         }
       >

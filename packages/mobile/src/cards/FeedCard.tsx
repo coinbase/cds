@@ -68,7 +68,7 @@ export const FeedCard = memo(function FeedCard({
       return (
         <CardFooter justifyContent="space-between" testID={testID}>
           {hasFooterActions && (
-            <HStack gap={0.5}>
+            <HStack alignItems="center" gap={0.5}>
               {like && <LikeButton testID={`${testID}-like`} {...like} />}
               {comment && (
                 <IconButton

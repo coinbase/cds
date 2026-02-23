@@ -149,6 +149,85 @@ const sharedRules = {
   ...disabledNewReactHooksRules,
 };
 
+// React 19 introduced new APIs that do not exist in React 18.
+// CDS must remain compatible with React 18 consumers, so we restrict these imports
+// in all publishable packages. The `no-restricted-imports` rule in this object
+// is a superset of the one in `sharedRules` to avoid flat-config override issues.
+const react19CompatibilityRules = {
+  'no-restricted-imports': [
+    'error',
+    {
+      paths: [
+        // Existing restrictions (duplicated because flat config replaces, not merges)
+        {
+          name: '@linaria/core',
+          importNames: ['cx'],
+          message:
+            'Do not import `cx` from Linaria. Use the `cx` function from @coinbase/cds-web instead.',
+        },
+        // React 19-only runtime APIs
+        {
+          name: 'react',
+          importNames: ['cache', 'captureOwnerStack', 'use', 'useActionState', 'useOptimistic'],
+          message:
+            'This is a React 19-only API. CDS must remain compatible with React 18 consumers.',
+        },
+        // React 19-only types (would break .d.ts output for React 18 consumers)
+        {
+          name: 'react',
+          importNames: ['ActionDispatch', 'AnyActionArg', 'AwaitedReactNode', 'Usable'],
+          message:
+            'This is a React 19-only type. CDS must remain compatible with React 18 consumers.',
+        },
+        // React DOM 19-only runtime APIs
+        {
+          name: 'react-dom',
+          importNames: [
+            'preconnect',
+            'prefetchDNS',
+            'preinit',
+            'preinitModule',
+            'preload',
+            'preloadModule',
+            'requestFormReset',
+            'useFormState',
+            'useFormStatus',
+          ],
+          message:
+            'This is a React 19-only API. CDS must remain compatible with React 18 consumers.',
+        },
+        // React DOM 19-only types
+        {
+          name: 'react-dom',
+          importNames: [
+            'FormStatus',
+            'FormStatusNotPending',
+            'FormStatusPending',
+            'PreconnectOptions',
+            'PreinitAs',
+            'PreinitModuleAs',
+            'PreinitModuleOptions',
+            'PreinitOptions',
+            'PreloadAs',
+            'PreloadModuleAs',
+            'PreloadModuleOptions',
+            'PreloadOptions',
+          ],
+          message:
+            'This is a React 19-only type. CDS must remain compatible with React 18 consumers.',
+        },
+      ],
+      patterns: [
+        {
+          group: ['*/booleanStyles', '*/responsive/*'],
+          message:
+            'Do not import these styles directly, as it will cause non-deterministic CSS generation. Use the `getStyles` function from @coinbase/cds-web/styles/styleProps.ts or the component StyleProps API instead.',
+        },
+      ],
+    },
+  ],
+};
+
 // These rules only apply to TS/TSX files in packages/**, and do not apply to stories or tests
 const packageProductionRules = {
   'no-restricted-exports': [
@@ -312,6 +391,19 @@ export default tseslint.config(
       ...typescriptRules,
     },
   },
+  // Restrict React 19-only APIs in publishable packages to maintain React 18 compatibility
+  {
+    files: [
+      'packages/web/**/*.{ts,tsx}',
+      'packages/common/**/*.{ts,tsx}',
+      'packages/mobile/**/*.{ts,tsx}',
+      'packages/web-visualization/**/*.{ts,tsx}',
+      'packages/mobile-visualization/**/*.{ts,tsx}',
+    ],
+    rules: {
+      ...react19CompatibilityRules,
+    },
+  },
   // Rules specific to mobile story files
   {
     files: ['packages/mobile/**/*.stories.tsx'],
@@ -321,6 +413,10 @@ export default tseslint.config(
   {
     files: ['**/*.figma.tsx'],
     extends: [internalPlugin.configs.figmaConnectRules],
+  },
+  {
+    files: ['**/*.mdx'],
+    processor: internalPlugin.processors.mdx,
   },
   {
     files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/jest/**/*.js'],

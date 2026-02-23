@@ -10,14 +10,15 @@ import { Button, type ButtonProps } from '../Button';
 import { ButtonGroup } from '../ButtonGroup';
 
 const buttonStories: Omit<ButtonProps, 'children'>[] = [
-  { variant: 'foregroundMuted' },
   { variant: 'secondary' },
   { variant: 'tertiary' },
   { variant: 'positive' },
   { variant: 'negative' },
+  { variant: 'inverse' },
   { variant: 'secondary', transparent: true },
   { variant: 'positive', transparent: true },
   { variant: 'negative', transparent: true },
+  { variant: 'inverse', transparent: true },
   { block: true },
   { compact: true },
   { compact: true, block: true },
@@ -65,6 +66,16 @@ const ButtonScreen = () => {
           Some really really really long button text that should get truncated after wrapping two
           lines
         </Button>
+      </Example>
+      <Example title="Typography props">
+        <VStack alignItems="flex-start" gap={2}>
+          <Button>I am a headline button</Button>
+          <Button font="body">I am a body button</Button>
+          <Button font="title3">I am a title3 button</Button>
+          <Button fontSize="title3" fontWeight="body">
+            I have custom fontSize & fontWeight
+          </Button>
+        </VStack>
       </Example>
 
       <Example title="Custom endIcon on Button">

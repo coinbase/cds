@@ -2,7 +2,17 @@
 
 ```jsx
 <Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} strokeColor="#F7931A" />
+  <SparklineInteractive
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
 </Box>
 ```
 
@@ -12,7 +22,18 @@ The fill will be added by default
 
 ```jsx
 <Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+  <SparklineInteractive
+    fill
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
 </Box>
 ```
 
@@ -20,11 +41,18 @@ The fill will be added by default
 
 ```jsx
 <Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader
+  <SparklineInteractive
     compact
     fill
-    strokeColor="#F7931A"
     data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} compact defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
   />
 </Box>
 ```
@@ -33,17 +61,31 @@ The fill will be added by default
 
 ```jsx
 <Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader
+  <SparklineInteractive
     data={sparklineInteractiveData}
-    strokeColor="#F7931A"
-    labelNode={
-      <HStack gap={1} alignItems="center" paddingBottom={0}>
-        <Icon active name="wallet" size="s" />
-        <Text as="span" font="title3">
-          CustomHeader
-        </Text>
-      </HStack>
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={
+      <SparklineInteractiveHeader
+        ref={headerRef}
+        defaultLabel="CustomHeader"
+        defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+        defaultTitle={`$${formatPrice(lastPoint.value)}`}
+        labelNode={
+          <HStack gap={1} alignItems="center" paddingBottom={0}>
+            <Icon active name="wallet" size="s" />
+            <Text as="span" font="title3">
+              CustomHeader
+            </Text>
+          </HStack>
+        }
+      />
     }
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
   />
 </Box>
 ```

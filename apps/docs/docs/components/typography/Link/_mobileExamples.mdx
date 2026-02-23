@@ -123,7 +123,8 @@ For better accessibility, we recommend this pattern in mobile.
 ```jsx
 import { AccessibilityInfo, Linking } from 'react-native';
 
-<TextLegal
+<Text
+  font="legal"
   suppressHighlighting
   accessibilityLabel="Consider a case where you have a block of text with an inline link. Like so. You may want to write your code like this. Tap to go to coinbase.com."
   accessibilityRole="link"
@@ -141,7 +142,7 @@ import { AccessibilityInfo, Linking } from 'react-native';
 >
   Consider a case where you have a block of text with an inline link.{' '}
   <Link to="https://www.coinbase.com/">Like so.</Link> You may want to write your code like this.
-</TextLegal>;
+</Text>;
 ```
 
 ### A11y for multiple nested links

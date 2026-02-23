@@ -177,4 +177,17 @@ describe('Button', () => {
     expect(button).not.toHaveAttribute('data-transparent');
     expect(button).toHaveAttribute('data-variant');
   });
+
+  it('passes font props to internal text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button fontFamily="body">Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    const childTextNode = screen.getByText('Child');
+    expect(childTextNode.parentElement).toHaveStyle({
+      '--text-textTransform': 'var(--textTransform-body)',
+    });
+  });
 });

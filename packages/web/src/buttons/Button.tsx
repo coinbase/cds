@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type {
   ButtonVariant,
@@ -10,6 +10,8 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
@@ -17,9 +19,7 @@ import { Text } from '../typography/Text';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
-const DEFAULT_MIN_WIDTH = 100;
-
-export const spinnerHeight = 2.5;
+const defaultLoadingSpinnerSize = 24;
 
 const baseCss = css`
   text-decoration: none;
@@ -90,24 +90,12 @@ const middleNodeCss = css`
   position: relative;
 `;
 
-const flushSpaceCss = css`
+const flushCss = css`
   min-width: unset;
-  margin-inline-start: var(--space-2);
-  margin-inline-end: var(--space-2);
-`;
-
-const flushStartCss = css`
-  margin-inline-start: calc(var(--space-2) * -1);
-`;
-
-const flushEndCss = css`
-  margin-inline-end: calc(var(--space-2) * -1);
 `;
 
 const spinnerStyle = {
-  width: '24px',
-  height: '24px',
-  border: '2px solid',
+  border: 'var(--borderWidth-200) solid',
   borderTopColor: 'var(--color-transparent)',
   borderRightColor: 'var(--color-transparent)',
   borderLeftColor: 'var(--color-transparent)',
@@ -130,6 +118,10 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       disabled?: boolean;
       /** Mark the button as loading and display a spinner. */
       loading?: boolean;
+      /** The size of the loading spinner in pixels
+       *  @default 24
+       */
+      loadingSpinnerSize?: number;
       /** Mark the background and border as transparent until interacted with. */
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
@@ -184,6 +176,7 @@ export const Button: ButtonComponent = memo(
         as,
         variant = 'primary',
         loading,
+        loadingSpinnerSize,
         transparent,
         block,
         compact,
@@ -197,23 +190,29 @@ export const Button: ButtonComponent = memo(
         flush,
         noScaleOnPress,
         numberOfLines,
+        font = 'headline',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
         background,
         color,
         className,
-        // TO DO: get rid of this height and interactableHeight (mobile and web both)
-        height = compact ? 40 : 56,
         borderColor,
-        borderWidth = 100,
+        borderWidth = 0, // remove Pressable's default transparent border
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
         padding,
         paddingX = padding ?? (compact ? 2 : 4),
+        paddingY = padding ?? (compact ? 1 : 2),
         margin = 0,
-        minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
+        minWidth = 'auto',
+        style,
         ...props
       }: ButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
+      const theme = useTheme();
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
       const iconSize = compact ? 's' : 'm';
       const hasIcon = Boolean(startIcon ?? endIcon);
@@ -224,6 +223,23 @@ export const Button: ButtonComponent = memo(
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;
       const borderColorValue = borderColor ?? variantStyle.borderColor;
+
+      const resolvedPaddingX = useResolveResponsiveProp(paddingX);
+
+      const pressableStyle = useMemo(() => {
+        if (!flush || !resolvedPaddingX) return style;
+        const paddingPx = theme.space[resolvedPaddingX];
+        return {
+          ...style,
+          ...(flush === 'start'
+            ? { marginInlineStart: -paddingPx, marginInlineEnd: paddingPx }
+            : { marginInlineStart: paddingPx, marginInlineEnd: -paddingPx }),
+        };
+      }, [flush, resolvedPaddingX, theme.space, style]);
+
+      // due to an odd, legacy implementation detail, the web Spinner uses 10em units to set the width/height of the spinner
+      // the "size" prop of Spinner is set to the font size of the Spinner element so ultimately its pixel size is 10 x size
+      const spinnerHeight = (loadingSpinnerSize ?? defaultLoadingSpinnerSize) / 10;
 
       return (
         <Pressable
@@ -240,9 +256,7 @@ export const Button: ButtonComponent = memo(
             numberOfLines && unsetNoWrapCss,
             hasIcon && iconCss,
             block && blockCss,
-            flush && flushSpaceCss,
-            flush === 'start' && flushStartCss,
-            flush === 'end' && flushEndCss,
+            flush && flushCss,
             className,
           )}
           color={colorValue}
@@ -251,13 +265,14 @@ export const Button: ButtonComponent = memo(
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
-          height={height}
           loading={loading}
           margin={margin}
           minWidth={minWidth}
           noScaleOnPress={noScaleOnPress}
           padding={padding}
           paddingX={paddingX}
+          paddingY={paddingY}
+          style={pressableStyle}
           transparentWhileInactive={transparent}
           {...props}
         >
@@ -283,7 +298,11 @@ export const Button: ButtonComponent = memo(
             <Text
               color="currentColor"
               display="inline"
-              font="headline"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
               numberOfLines={numberOfLines}
             >
               <span className={cx(loading && hiddenCss)}>{children}</span>

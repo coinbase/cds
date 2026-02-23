@@ -17,10 +17,10 @@ import { Control, type ControlBaseProps } from './Control';
 
 const DotSvg = ({
   color = 'black',
-  width = 20,
+  width,
 }: {
   color?: React.CSSProperties['color'];
-  width?: number;
+  width: number;
 }) => {
   return (
     <svg fill="none" height={width} viewBox={`0 0 ${width} ${width}`} width={width}>
@@ -46,9 +46,9 @@ const baseCss = css`
   }
   &:focus-visible {
     outline-style: solid;
-    outline-width: 2px;
+    outline-width: var(--borderWidth-200);
     outline-color: var(--color-bgPrimary);
-    outline-offset: 2px;
+    outline-offset: var(--borderWidth-200);
   }
 `;
 

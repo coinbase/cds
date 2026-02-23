@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.47.2 (2/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix mobile CardRoot style forwarding logic. [[#405](https://github.com/coinbase/cds/pull/405)]
+
+## 8.47.1 (2/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray title spacing and overflow. [[#414](https://github.com/coinbase/cds/pull/414)]
+
+## 8.47.0 (2/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: enable Button text customization via font props. [[#408](https://github.com/coinbase/cds/pull/408)]
+
 ## 8.46.1 (2/12/2026 PST)
 
 #### 🐞 Fixes

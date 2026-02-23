@@ -50,7 +50,7 @@ describe('Interactable', () => {
   ])('resolves %s borderColor from responsive prop', (_, width, expectedToken) => {
     renderWithWidth(width);
     const element = screen.getByTestId('interactable');
-    expect(element.style.getPropertyValue('--interactable-border-color')).toBe(
+    expect(element.style.getPropertyValue('--inter-borderColor')).toBe(
       `var(--color-${expectedToken})`,
     );
   });
@@ -59,7 +59,7 @@ describe('Interactable', () => {
     renderWithWidth();
 
     const element = screen.getByTestId('interactable');
-    expect(element.style.getPropertyValue('--interactable-border-color')).toBe(
+    expect(element.style.getPropertyValue('--inter-borderColor')).toBe(
       `var(--color-${responsiveBorderColor.base})`,
     );
   });

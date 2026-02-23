@@ -286,12 +286,8 @@ export const Drawer = memo(
     );
 
     const drawerStyle: StyleProp<ViewStyle> = useMemo(
-      () => [
-        paddingStyles,
-        { overflow: showHandleBarOutside ? 'visible' : 'hidden' },
-        styles?.drawer,
-      ],
-      [paddingStyles, showHandleBarOutside, styles?.drawer],
+      () => [paddingStyles, { overflow: 'hidden' }, styles?.drawer],
+      [paddingStyles, styles?.drawer],
     );
 
     const handleBar = useMemo(
@@ -365,7 +361,7 @@ export const Drawer = memo(
               style={drawerStyle}
             >
               {showHandleBarInside && handleBar}
-              <View style={overflowStyle}>{content}</View>
+              {showHandleBarInside ? <View style={overflowStyle}>{content}</View> : content}
             </Box>
           </Box>
         </OverlayContentContext.Provider>

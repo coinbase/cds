@@ -4,7 +4,7 @@ The mobile version of `Select` is quite different from web; where on mobile, `Se
 
 On mobile, all `SelectOption`s must be wrapped in a `Menu`. Think of it as a controlled `Select` on web, where you pass it the `value` and `onChange` handler.
 
-```jsx
+```tsx
 const SelectMobile = () => {
   const [isTrayVisible, { toggleOff: handleClose, toggleOn: handleOpenTray }] = useToggler(false);
   const [value, setValue] = useState();

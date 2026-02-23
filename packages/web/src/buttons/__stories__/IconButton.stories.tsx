@@ -11,6 +11,12 @@ const accessibilityLabel = 'Horizontal arrows';
 const variants = [
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
+      <IconButton compact={false} name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Non-compact',
+  },
+  {
+    component: (props?: Partial<IconButtonBaseProps>) => (
       <IconButton name={iconName} variant="primary" {...props} />
     ),
     title: 'Primary',
@@ -35,15 +41,15 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
     ),
-    title: 'ForegroundMuted',
+    title: 'Primary flush start',
   },
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
     ),
-    title: 'ForegroundMuted transparent',
+    title: 'Primary flush end',
   },
 ];
 
@@ -111,7 +117,6 @@ const IconButtonSheet = ({ startIndex, endIndex }: { startIndex: number; endInde
           <HStack alignItems="center" gap={2}>
             <IconButton accessibilityLabel={name} name={name} variant="primary" />
             <IconButton accessibilityLabel={name} name={name} variant="secondary" />
-            <IconButton accessibilityLabel={name} name={name} variant="foregroundMuted" />
           </HStack>
         </VStack>
       ))}

@@ -29,6 +29,7 @@ export const condensedInnerSpacing = {
   paddingY: 1,
   marginX: 0,
 } as const satisfies CellSpacing;
+
 // no padding outside of the pressable area
 export const condensedOuterSpacing = {
   paddingX: 0,
@@ -231,18 +232,22 @@ export const ListCell: ListCellComponent = memo(
         style,
         subtitle,
         subtitleNode,
+        minHeight: minHeightProp,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
 
+      // we need to maintain fixed min-heights for the different cell style variants until they are dropped in a breaking change
+      // see CDS-1620
       const minHeight =
-        spacingVariant === 'compact'
+        minHeightProp ??
+        (spacingVariant === 'compact'
           ? compactListHeight
           : spacingVariant === 'normal'
             ? listHeight
-            : undefined;
+            : undefined);
 
       const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
 

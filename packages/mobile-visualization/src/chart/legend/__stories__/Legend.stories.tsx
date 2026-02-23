@@ -4,7 +4,6 @@ import { Chip } from '@coinbase/cds-mobile/chips';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { TextLabel1, TextLabel2 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 import { Canvas, Group, Path as SkiaPath, Skia } from '@shopify/react-native-skia';
 
@@ -274,8 +273,8 @@ const DynamicData = () => {
       return (
         <HStack gap={1} style={{ alignItems: 'center' }}>
           <DefaultLegendShape color={color} shape={shape} />
-          <TextLabel2>{label}</TextLabel2>
-          <TextLabel1>{formattedValue}</TextLabel1>
+          <Text font="label2">{label}</Text>
+          <Text font="label1">{formattedValue}</Text>
         </HStack>
       );
     },
@@ -377,7 +376,9 @@ const Interactive = () => {
       >
         <HStack gap={1} style={{ alignItems: 'center' }}>
           <DefaultLegendShape color={`rgb(${color50})`} />
-          <TextLabel2 color={isEmphasized ? 'bg' : 'fg'}>{label}</TextLabel2>
+          <Text color={isEmphasized ? 'bg' : 'fg'} font="label2">
+            {label}
+          </Text>
         </HStack>
       </Chip>
     );

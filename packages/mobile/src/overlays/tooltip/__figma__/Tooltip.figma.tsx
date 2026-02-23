@@ -2,7 +2,7 @@ import React from 'react';
 import { figma } from '@figma/code-connect';
 
 import { Button } from '../../../buttons';
-import { TextBody, TextHeadline } from '../../../typography';
+import { Text } from '../../../typography';
 import { Tooltip } from '../Tooltip';
 
 figma.connect(
@@ -79,8 +79,8 @@ figma.connect(
       <Tooltip
         content={
           <>
-            <TextHeadline>{content.title}</TextHeadline>
-            <TextBody>{content.description}</TextBody>
+            <Text font="headline">{content.title}</Text>
+            <Text font="body">{content.description}</Text>
           </>
         }
       >

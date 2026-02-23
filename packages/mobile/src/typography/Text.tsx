@@ -87,6 +87,8 @@ const styles = StyleSheet.create({
   },
 });
 
+const HEADER_FONTS = new Set(['display1', 'display2', 'display3', 'title1', 'title2']);
+
 export const Text = memo(
   forwardRef<NativeText, TextProps>(
     (
@@ -173,6 +175,7 @@ export const Text = memo(
         flexGrow,
         opacity,
         renderEmptyNode = true,
+        accessibilityRole = HEADER_FONTS.has(font) ? 'header' : undefined,
         ...props
       },
       ref,
@@ -369,6 +372,7 @@ export const Text = memo(
       return (
         <Component
           ref={ref}
+          accessibilityRole={accessibilityRole}
           ellipsizeMode={ellipsize}
           numberOfLines={computedNumberOfLines}
           // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern

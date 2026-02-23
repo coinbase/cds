@@ -71,6 +71,7 @@ export const NativeInput = memo(
       const containerStyle: ViewStyle = useMemo(() => {
         return {
           flex: 2,
+          minWidth: 0,
           padding: theme.space[compact ? 1 : 2],
           ...containerSpacing,
           ...(!disabled &&

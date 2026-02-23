@@ -9,8 +9,10 @@ export const imageSize = 48;
 
 export const pictogramScaleMultiplier = 1;
 
+/** @deprecated Will be removed in a future major release. */
 export const listHeight = 80;
 
+/** @deprecated Will be removed in a future major release. */
 export const compactListHeight = 40;
 
 /** Spacing configs for Cells to be parsed in [web/mobile]/hooks/useCellSpacing */
@@ -29,6 +31,7 @@ export const defaultSpacingConfig = {
   },
 } as const;
 
+/** @deprecated Used by deprecated Select component. */
 export const selectOptionHeight = 56;
 
 export const cellPriorities = ['start', 'middle', 'end'] as const;

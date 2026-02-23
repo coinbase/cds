@@ -5,7 +5,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useDateLookup } from '@coinbase/cds-common/visualizations/useDateLookup';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { TextLabel2 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography';
 import times from 'lodash/times';
 
 import type { ChartFormatDate, ChartGetMarker } from './SparklineInteractive';
@@ -39,15 +39,16 @@ const SparklineInteractiveMarkerDate: React.FunctionComponent<
   }, [label.width, label.x]);
 
   return (
-    <TextLabel2
+    <Text
       align="center"
       color="fgMuted"
+      font="label2"
       onLayout={onLayout}
       paddingTop={3}
       style={styles.label}
     >
       {getFormattedDate(x)}
-    </TextLabel2>
+    </Text>
   );
 });
 

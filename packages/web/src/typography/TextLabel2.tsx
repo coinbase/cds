@@ -8,8 +8,10 @@ export const textLabel2DefaultElement = 'span';
 
 export type TextLabel2DefaultElement = typeof textLabel2DefaultElement;
 
+/** @deprecated Use `Text` with `font="label2"` instead. This component will be removed in a future major release. */
 export type TextLabel2BaseProps = TextBaseProps;
 
+/** @deprecated Use `Text` with `font="label2"` instead. This component will be removed in a future major release. */
 export type TextLabel2Props<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextLabel2BaseProps
@@ -20,6 +22,7 @@ type TextLabel2Component = (<AsComponent extends React.ElementType = TextLabel2D
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/** @deprecated Use `Text` with `font="label2"` instead. This component will be removed in a future major release. */
 export const TextLabel2: TextLabel2Component = forwardRef<
   React.ReactElement<TextLabel2BaseProps>,
   TextLabel2BaseProps

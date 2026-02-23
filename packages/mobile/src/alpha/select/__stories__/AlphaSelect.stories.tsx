@@ -1300,7 +1300,7 @@ const SelectV3Screen = () => {
       <Example title="Compact">
         <CompactExample />
       </Example>
-      <Example title="Compact with inside label variant">
+      <Example title="Inside label variant">
         <InsideLabelVariantExample />
       </Example>
       <Example title="With Helper Text">

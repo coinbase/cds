@@ -1,30 +1,26 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo } from 'react';
-import {
-  ActivityIndicator,
-  type PressableStateCallbackType,
-  StyleSheet,
-  type View,
-} from 'react-native';
+import { type PressableStateCallbackType, StyleSheet, type View } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
   ButtonVariant,
   IconName,
+  NegativeSpace,
   SharedAccessibilityProps,
   SharedProps,
 } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
+import { Spinner } from '../loaders';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+
+const defaultLoadingSpinnerSize = 24;
 
 export const styles = StyleSheet.create({
   inline: {
     width: 'auto',
-    minWidth: 64,
   },
   block: {
     width: '100%',
@@ -50,6 +46,10 @@ export type ButtonBaseProps = SharedProps &
     disabled?: boolean;
     /** Mark the button as loading and display a spinner. */
     loading?: boolean;
+    /** The size of the loading spinner in pixels
+     *  @default 24
+     */
+    loadingSpinnerSize?: number;
     /** Mark the background and border as transparent until interacted with. */
     transparent?: boolean;
     /** Change to block and expand to 100% of parent width. */
@@ -93,6 +93,7 @@ export const Button = memo(
     {
       variant = 'primary',
       loading,
+      loadingSpinnerSize,
       transparent,
       block,
       compact,
@@ -106,13 +107,18 @@ export const Button = memo(
       flush,
       noScaleOnPress,
       numberOfLines = 1,
+      font = 'headline',
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
       background,
       color,
       style,
       wrapperStyles,
       feedback = compact ? 'light' : 'normal',
       borderColor,
-      borderWidth = 100,
+      borderWidth = 0, // remove Pressable's default transparent border
       borderRadius = compact ? 700 : 900,
       accessibilityLabel,
       accessibilityHint,
@@ -135,12 +141,9 @@ export const Button = memo(
     const sizingStyle = block ? styles.block : styles.inline;
     const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
 
-    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
-
-    const { paddingX, paddingY, marginStart, marginEnd } = getButtonSpacingProps({
-      compact,
-      flush,
-    });
+    const paddingX = compact ? 2 : 4;
+    const paddingY = compact ? 1 : 2;
+    const flushMargin = flush ? (-paddingX as NegativeSpace) : undefined;
 
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => [
@@ -149,6 +152,8 @@ export const Button = memo(
       ],
       [sizingStyle, style],
     );
+
+    const spinnerSize = loadingSpinnerSize ?? defaultLoadingSpinnerSize;
 
     const childrenNode = useMemo(
       () =>
@@ -159,7 +164,11 @@ export const Button = memo(
           <Text
             align="center"
             color={colorValue}
-            font="headline"
+            font={font}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
+            lineHeight={lineHeight}
             numberOfLines={numberOfLines}
             selectable={false}
             style={styles.text}
@@ -168,7 +177,7 @@ export const Button = memo(
             {children}
           </Text>
         ),
-      [children, colorValue, numberOfLines],
+      [children, colorValue, font, fontFamily, fontSize, fontWeight, lineHeight, numberOfLines],
     );
 
     return (
@@ -183,8 +192,8 @@ export const Button = memo(
         borderWidth={borderWidth}
         feedback={feedback}
         loading={loading}
-        marginEnd={marginEnd}
-        marginStart={marginStart}
+        marginEnd={flush === 'end' ? flushMargin : undefined}
+        marginStart={flush === 'start' ? flushMargin : undefined}
         noScaleOnPress={noScaleOnPress}
         style={pressableStyle}
         transparentWhileInactive={transparent}
@@ -195,13 +204,12 @@ export const Button = memo(
           alignItems="center"
           flexWrap="nowrap"
           justifyContent={justifyContent}
-          minHeight={minHeight}
           paddingX={paddingX}
           paddingY={paddingY}
           style={sizingStyle}
         >
           {loading ? (
-            <ActivityIndicator color={theme.color[colorValue]} size="small" />
+            <Spinner color={theme.color[colorValue]} size={spinnerSize} />
           ) : (
             <>
               {start ??

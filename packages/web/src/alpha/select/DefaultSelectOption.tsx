@@ -42,7 +42,7 @@ const selectOptionCss = css`
       position: absolute;
       inset: 0;
       border-radius: var(--bookendRadius);
-      border: 2px solid var(--color-bgLinePrimary);
+      border: var(--borderWidth-200) solid var(--color-bgLinePrimary);
     }
 
     &:first-child::after {
@@ -158,7 +158,6 @@ const DefaultSelectOptionComponent = memo(
             end={end}
             innerSpacing={selectCellSpacingConfig.innerSpacing}
             media={media}
-            minHeight={compact ? 40 : 56}
             outerSpacing={selectCellSpacingConfig.outerSpacing}
             priority="end"
             selected={selected}

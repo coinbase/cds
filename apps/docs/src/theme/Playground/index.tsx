@@ -12,6 +12,7 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { ErrorBoundaryErrorMessageFallback } from '@docusaurus/theme-common';
+import { parseLanguage } from '@docusaurus/theme-common/internal';
 import * as estreePlugin from 'prettier/plugins/estree.js';
 import * as typescriptPlugin from 'prettier/plugins/typescript.js';
 import { format } from 'prettier/standalone';
@@ -100,13 +101,22 @@ type PlaygroundControlsProps = {
   collapsed: boolean;
   headingText: string;
   onClickCopy: () => void;
+  onClickOpenInStackBlitz: () => void;
+  onClickResetPreview: () => void;
   onToggleCollapsed: () => void;
 };
 
 const PlaygroundControls = memo(
-  ({ collapsed, headingText, onClickCopy, onToggleCollapsed }: PlaygroundControlsProps) => {
+  ({
+    collapsed,
+    headingText,
+    onClickCopy,
+    onClickOpenInStackBlitz,
+    onClickResetPreview,
+    onToggleCollapsed,
+  }: PlaygroundControlsProps) => {
     return (
-      <HStack alignItems="center" gap={2} paddingTop={0.5}>
+      <HStack alignItems="center" columnGap={2} flexWrap="wrap" paddingTop={0.5} rowGap={0.5}>
         <Pressable
           noScaleOnPress
           accessibilityLabel={`${collapsed ? 'Show' : 'Hide'} code${
@@ -133,6 +143,32 @@ const PlaygroundControls = memo(
             </Text>
           </HStack>
         </Pressable>
+        <Pressable
+          noScaleOnPress
+          accessibilityLabel={`Reset preview${headingText ? ` for ${headingText} example` : ''}`}
+          onClick={onClickResetPreview}
+        >
+          <HStack alignItems="center">
+            <Icon name="refresh" paddingEnd={0.5} size="xs" />
+            <Text color="fgPrimary" font="label1">
+              Reset preview
+            </Text>
+          </HStack>
+        </Pressable>
+        <Pressable
+          noScaleOnPress
+          accessibilityLabel={`Open in StackBlitz${
+            headingText ? ` for ${headingText} example` : ''
+          }`}
+          onClick={onClickOpenInStackBlitz}
+        >
+          <HStack alignItems="center">
+            <Icon name="externalLink" paddingEnd={0.5} size="xs" />
+            <Text color="fgPrimary" font="label1">
+              Open in StackBlitz
+            </Text>
+          </HStack>
+        </Pressable>
       </HStack>
     );
   },
@@ -146,20 +182,24 @@ type PlaygroundProps = Omit<LiveProviderProps, 'transformCode'> & {
   hidePreview?: boolean;
   editorStartsExpanded?: boolean;
   metastring?: string;
+  className?: string;
 };
 
 const Playground = memo(function Playground({
   children,
+  className,
   code: codeProp,
   hideControls,
   hidePreview,
   editorStartsExpanded,
+  language,
   metastring,
   ...props
 }: PlaygroundProps): JSX.Element {
   const [code, setCode] = useState(() => (codeProp ?? children ?? '').replace(/\n$/, ''));
   const codeRef = useRef(code);
   const [collapsed, setIsCollapsed] = useState(!editorStartsExpanded);
+  const [previewKey, setPreviewKey] = useState(0);
   const toggleCollapsed = useCallback(() => setIsCollapsed((collapsed) => !collapsed), []);
   const toast = useToast();
   const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
@@ -180,6 +220,18 @@ const Playground = memo(function Playground({
       .catch(() => toast.show('Failed to copy to clipboard'));
   }, [toast]);
 
+  const detectedLanguage = language ?? parseLanguage(className ?? '');
+  const isTypeScript = detectedLanguage !== 'jsx' && detectedLanguage !== 'javascript';
+
+  const handleResetPreview = useCallback(() => {
+    setPreviewKey((k) => k + 1);
+  }, []);
+
+  const handleOpenInStackBlitz = useCallback(async () => {
+    const { openInStackBlitz } = await import('./sandbox/openInStackBlitz');
+    openInStackBlitz(codeRef.current, isTypeScript);
+  }, [isTypeScript]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'KeyS' && (event.ctrlKey || event.metaKey)) {
@@ -194,9 +246,16 @@ const Playground = memo(function Playground({
   return (
     <VStack ref={editorRef} paddingBottom={3} position="relative" zIndex={0}>
       <ThemeProvider activeColorScheme={colorScheme} theme={theme}>
-        <LiveProvider code={code} noInline={noInline} theme={prismTheme} {...props}>
+        <LiveProvider
+          code={code}
+          language={language}
+          noInline={noInline}
+          theme={prismTheme}
+          {...props}
+        >
           {!hidePreview && (
             <VStack
+              key={previewKey}
               background="bg"
               borderRadius={400}
               color="fg"
@@ -221,6 +280,8 @@ const Playground = memo(function Playground({
               collapsed={collapsed}
               headingText={headingText}
               onClickCopy={handleCopyToClipboard}
+              onClickOpenInStackBlitz={handleOpenInStackBlitz}
+              onClickResetPreview={handleResetPreview}
               onToggleCollapsed={toggleCollapsed}
             />
           )}

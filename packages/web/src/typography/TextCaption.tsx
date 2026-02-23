@@ -8,8 +8,10 @@ export const textCaptionDefaultElement = 'span';
 
 export type TextCaptionDefaultElement = typeof textCaptionDefaultElement;
 
+/** @deprecated Use `Text` with `font="caption"` instead. This component will be removed in a future major release. */
 export type TextCaptionBaseProps = TextBaseProps;
 
+/** @deprecated Use `Text` with `font="caption"` instead. This component will be removed in a future major release. */
 export type TextCaptionProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextCaptionBaseProps
@@ -20,6 +22,7 @@ type TextCaptionComponent = (<AsComponent extends React.ElementType = TextCaptio
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/** @deprecated Use `Text` with `font="caption"` instead. This component will be removed in a future major release. */
 export const TextCaption: TextCaptionComponent = forwardRef<
   React.ReactElement<TextCaptionBaseProps>,
   TextCaptionBaseProps

@@ -147,7 +147,27 @@ export type InputStackProps = Omit<
   BoxProps<BoxDefaultElement>,
   'width' | 'height' | 'borderRadius'
 > &
-  InputStackBaseProps;
+  InputStackBaseProps & {
+    classNames?: {
+      /** Root container element */
+      root?: string;
+      /**
+       * Input horizontal container.
+       * Contains the input node, inner label and start/end nodes.
+       */
+      inputContainer?: string;
+      /** Interactable input element */
+      input?: string;
+    };
+    styles?: {
+      /** Root container element */
+      root?: React.CSSProperties;
+      /** Input horizontal container element */
+      inputContainer?: React.CSSProperties;
+      /** Interactable input element */
+      input?: React.CSSProperties;
+    };
+  };
 
 export const InputStack = memo(
   forwardRef<HTMLElement, InputStackProps>(
@@ -174,6 +194,10 @@ export const InputStack = memo(
         labelVariant = 'outside',
         blendStyles,
         inputBackground = 'bg',
+        className,
+        style,
+        classNames,
+        styles,
         ...props
       },
       ref,
@@ -230,10 +254,14 @@ export const InputStack = memo(
         };
       }, [borderColorUnfocused, borderColorFocused, focusedBorderWidth, inputBorderRadius]);
 
+      const rootStyles = useMemo(() => ({ style, ...styles?.root }), [style, styles?.root]);
+
       return (
         <VStack
+          className={cx(className, classNames?.root)}
           gap={inputStackGap}
           opacity={disabled ? accessibleOpacityDisabled : 1}
+          style={rootStyles}
           testID={testID}
           width={width}
           {...props}
@@ -243,7 +271,10 @@ export const InputStack = memo(
             (typeof labelNode === 'string' ? <InputLabel>{labelNode}</InputLabel> : labelNode)}
           <HStack>
             {!!prependNode && <>{prependNode}</>}
-            <div className={inputAreaContainerCss}>
+            <div
+              className={cx(inputAreaContainerCss, classNames?.inputContainer)}
+              style={styles?.inputContainer}
+            >
               <Interactable
                 ref={ref}
                 as="span"
@@ -251,10 +282,10 @@ export const InputStack = memo(
                 blendStyles={blendStyles}
                 borderRadius={borderRadius}
                 borderWidth={borderWidth}
-                className={cx(baseCss, focused && persistedFocusCss)}
+                className={cx(baseCss, focused && persistedFocusCss, classNames?.input)}
                 disabled={disabled}
                 height={height}
-                style={inputAreaStyles}
+                style={{ ...inputAreaStyles, ...styles?.input }}
                 testID="input-interactable-area"
               >
                 {!!focused && !!enableColorSurge && (

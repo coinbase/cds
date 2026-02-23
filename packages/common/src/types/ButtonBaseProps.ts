@@ -4,4 +4,4 @@ export type ButtonVariant =
   | 'tertiary'
   | 'positive'
   | 'negative'
-  | 'foregroundMuted';
+  | 'inverse';

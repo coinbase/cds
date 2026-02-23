@@ -6,7 +6,9 @@ import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { useCartesianChartContext } from '../../ChartProvider';
+import { Scrubber } from '../../scrubber';
 import { ChartText } from '../../text/ChartText';
+import { useScrubberContext } from '../../utils';
 import { DefaultReferenceLineLabel } from '../DefaultReferenceLineLabel';
 import { DottedLine } from '../DottedLine';
 import { LineChart } from '../LineChart';
@@ -306,6 +308,82 @@ const DraggableReferenceLine = memo(
   },
 );
 
+const FADE_ZONE = 128;
+
+const StartPriceLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => {
+  const { scrubberPosition } = useScrubberContext();
+  const { getXScale, drawingArea } = useCartesianChartContext();
+  const isScrubbing = scrubberPosition !== undefined;
+
+  const opacity = useMemo(() => {
+    if (!isScrubbing) return 0;
+    const xScale = getXScale();
+    if (!xScale) return 1;
+    const scrubX = xScale(scrubberPosition) ?? 0;
+    const rightEdge = drawingArea.x + drawingArea.width;
+    return rightEdge - scrubX >= FADE_ZONE ? 1 : 0;
+  }, [isScrubbing, scrubberPosition, getXScale, drawingArea]);
+
+  return (
+    <DefaultReferenceLineLabel
+      {...props}
+      background="var(--color-bgSecondary)"
+      borderRadius={12.5}
+      color="var(--color-fg)"
+      font="label1"
+      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+      styles={{ root: { opacity, transition: 'opacity 0.25s ease' } }}
+    />
+  );
+});
+
+const StartPriceReferenceLine = () => {
+  const hourData = useMemo(() => sparklineInteractiveData.hour, []);
+  const startPrice = hourData[0].value;
+  const endPrice = hourData[hourData.length - 1].value;
+  const isPositive = endPrice >= startPrice;
+  const seriesColor = isPositive ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+
+  const formattedStartPrice = useMemo(
+    () =>
+      startPrice.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [startPrice],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={300}
+      series={[
+        {
+          id: 'hourly-prices',
+          data: hourData.map((d) => d.value),
+          color: seriesColor,
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 24 }),
+      }}
+    >
+      <Scrubber />
+      <ReferenceLine
+        LabelComponent={StartPriceLabel}
+        LineComponent={(props) => <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />}
+        dataY={startPrice}
+        label={formattedStartPrice}
+        labelDx={-12}
+        labelHorizontalAlignment="right"
+        stroke="var(--color-fgMuted)"
+      />
+    </LineChart>
+  );
+};
+
 const PriceTargetChart = () => {
   const priceData = useMemo(() => sparklineInteractiveData.year.map((d) => d.value), []);
 
@@ -473,6 +551,9 @@ export const All = () => {
       </Example>
       <Example title="Price Target">
         <PriceTargetChart />
+      </Example>
+      <Example title="Start Price Reference Line">
+        <StartPriceReferenceLine />
       </Example>
     </VStack>
   );

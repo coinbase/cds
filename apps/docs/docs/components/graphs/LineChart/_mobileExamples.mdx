@@ -172,7 +172,7 @@ function LiveUpdates() {
 By default, null values in data create gaps in a line. Use `connectNulls` to skip null values and draw a continuous line.
 Note that scrubber beacons and points are still only shown at non-null data values.
 
-```jsx
+```tsx
 function MissingData() {
   const theme = useTheme();
   const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
@@ -347,8 +347,7 @@ function Points() {
 
 Renders are done on JS thread, other code is in UI
 
-```jsx
-
+```tsx
 function Performance() {
   const tabs = useMemo(
     () => [
@@ -545,7 +544,7 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 
 You can configure chart transitions using `transition` on LineChart and `beaconTransitions` on [Scrubber](/components/graphs/Scrubber). You can also disable animations by setting the `animate` on LineChart to `false`.
 
-```jsx
+```tsx
 function Transitions() {
   const theme = useTheme();
   const dataCount = 20;
@@ -686,7 +685,7 @@ function Transitions() {
 
 You can use `accessibilityLabel` on the chart to provide a descriptive label.
 
-```jsx
+```tsx
 function BasicAccessible() {
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
@@ -742,7 +741,7 @@ function BasicAccessible() {
 
 Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/graphs/XAxis) and [YAxis](/components/graphs/YAxis).
 
-```jsx
+```tsx
 <LineChart
   showArea
   showXAxis
@@ -808,7 +807,7 @@ Gradients can be applied to the y-axis (default) or x-axis. Each stop requires a
 
 Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
 
-```jsx
+```tsx
 function Gradients() {
   const theme = useTheme();
   const spectrumColors: ThemeVars.SpectrumHue[] = [
@@ -925,7 +924,7 @@ function Gradients() {
 
 You can even pass in a separate gradient for your `Line` and `Area` components.
 
-```jsx
+```tsx
 function GainLossChart() {
   const theme = useTheme();
   const data = useMemo(() => [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8], []);
@@ -993,7 +992,7 @@ Using `legend` will add a default [Legend](/components/graphs/Legend) to your ch
 
 You can use `legendPosition` to place the legend at different positions around the chart.
 
-```jsx
+```tsx
 <LineChart
   legend
   showArea
@@ -1023,7 +1022,8 @@ You can use `legendPosition` to place the legend at different positions around t
   }}
   yAxis={{
     showGrid: true,
-    tickLabelFormatter: (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    tickLabelFormatter: (value: number) =>
+      new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
   }}
 />
 ```
@@ -1104,7 +1104,7 @@ You can also add instances of [ReferenceLine](/components/graphs/ReferenceLine) 
 
 You can also add instances of [Point](/components/graphs/Point) directly inside of a LineChart.
 
-```jsx
+```tsx
 function HighLowPrice() {
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
   const minPrice = Math.min(...data);
@@ -1156,7 +1156,7 @@ You can customize the line used for and which series will render a scrubber beac
 
 You can have scrubber beacon's pulse by either adding `idlePulse` to Scrubber or use Scrubber's ref to dynamically pulse.
 
-```jsx
+```tsx
 function StylingScrubber() {
   const theme = useTheme();
   const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
@@ -1215,7 +1215,7 @@ Charts by default take up `100%` of the `width` and `height` available, but can 
 
 You can also have charts in a compact form.
 
-```jsx
+```tsx
 function Compact() {
   const theme = useTheme();
   const dimensions = { width: 62, height: 18 };
@@ -1326,7 +1326,7 @@ function Compact() {
 
 You can use [PeriodSelector](/components/graphs/PeriodSelector) to have a chart where the user can select a time period and the chart automatically animates.
 
-```jsx
+```tsx
 function AssetPriceWithDottedArea() {
   const fontMgr = useMemo(() => {
     const fontProvider = Skia.TypefaceFontProvider.Make();
@@ -1521,7 +1521,7 @@ function AssetPriceWithDottedArea() {
 
 You can adjust [YAxis](/components/graphs/YAxis) and [Scrubber](/components/graphs/Scrubber) to have a chart where the y-axis is overlaid and the beacon is inverted in style.
 
-```jsx
+```tsx
 function MonotoneAssetPrice() {
   const theme = useTheme();
   const prices = sparklineInteractiveData.hour;
@@ -1763,7 +1763,7 @@ function ServiceAvailability() {
 
 You can combine multiple lines within a series to change styles dynamically.
 
-```jsx
+```tsx
 function ForecastAssetPrice() {
   const startYear = 2020;
   const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];

@@ -163,7 +163,7 @@ function ExampleWithStart() {
 When providing a custom TabComponent, use `useTabsContext()` and call `updateActiveTab(id)` to update selection state. Reflect the active state (e.g., end icon state) based on `activeTab?.id === id`.
 :::
 
-```jsx live noInline
+```tsx live noInline
 function CustomTab({ id, label, ...props }: TabbedChipProps) {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = activeTab?.id === id;

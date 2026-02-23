@@ -177,7 +177,7 @@ export const Toast = memo(
                       name="close"
                       onClick={handleClose}
                       testID={`${testID}-close-button`}
-                      variant="foregroundMuted"
+                      variant="secondary"
                       {...closeButtonAccessibilityProps}
                     />
                   )}

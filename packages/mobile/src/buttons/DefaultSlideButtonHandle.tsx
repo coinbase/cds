@@ -15,7 +15,7 @@ import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 import { Spinner } from '../loaders/Spinner';
 import { Pressable } from '../system/Pressable';
-import { TextHeadline } from '../typography/TextHeadline';
+import { Text } from '../typography/Text';
 
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
@@ -61,19 +61,35 @@ export const styles = StyleSheet.create({
 export const SlideButtonHandleChecked = memo(
   ({ label, end, compact }: SlideButtonHandleCheckedProps) => {
     const theme = useTheme();
-    const handleWidth = compact ? 40 : 56;
+    const iconSize = compact ? 's' : 'm';
+    const iconSizeValue = theme.iconSize[iconSize];
 
     return (
       <Box alignItems="center" height="100%" justifyContent="center" width="100%">
-        {typeof label !== 'string' ? label : <TextHeadline color="fgInverse">{label}</TextHeadline>}
+        {typeof label !== 'string' ? (
+          label
+        ) : (
+          <Text color="fgInverse" font="headline">
+            {label}
+          </Text>
+        )}
         <Box
           alignItems="center"
           height="100%"
           justifyContent="center"
+          padding={compact ? 1.5 : 2}
           pin="right"
-          width={handleWidth}
         >
-          {end ?? <Spinner color={theme.color.fgInverse} size="small" />}
+          {end ?? (
+            <Spinner
+              color={theme.color.fgInverse}
+              // use icon size dimensions for spinner width/height
+              // native ActivityIndicator uses it's own sizes/dimensions that do not align with the CDS theme
+              // couples the customization of this element with the Unchecked variant component (i.e. icon size theme var)
+              // see: CDS-1590
+              style={{ height: iconSizeValue, width: iconSizeValue }}
+            />
+          )}
         </Box>
       </Box>
     );
@@ -82,16 +98,16 @@ export const SlideButtonHandleChecked = memo(
 
 export const SlideButtonHandleUnchecked = memo(
   ({ start, compact }: SlideButtonHandleUncheckedProps) => {
+    const theme = useTheme();
     const iconSize = compact ? 's' : 'm';
-    const handleWidth = compact ? 40 : 56;
 
     return (
       <Box
         alignItems="center"
         height="100%"
         justifyContent="center"
+        padding={compact ? 1.5 : 2}
         pin="right"
-        width={handleWidth}
       >
         {start ?? <Icon color="fgInverse" name="forwardArrow" size={iconSize} />}
       </Box>

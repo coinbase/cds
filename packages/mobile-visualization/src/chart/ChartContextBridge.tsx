@@ -4,7 +4,18 @@
  * https://github.com/pmndrs/its-fine/blob/598b81f02778c22ed21121c2b1a786bdefb14e23/src/index.tsx
  */
 
-import * as React from 'react';
+import {
+  Component,
+  type Context,
+  createContext,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useContext,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
 import type ReactReconciler from 'react-reconciler';
 import { ThemeContext } from '@coinbase/cds-mobile/system/ThemeProvider';
 
@@ -16,11 +27,7 @@ import { CartesianChartContext } from './ChartProvider';
  * Only these contexts will be made available inside the chart's Skia tree.
  * This improves performance by avoiding the overhead of rendering every bridged context.
  */
-const BRIDGED_CONTEXTS: React.Context<any>[] = [
-  ThemeContext,
-  CartesianChartContext,
-  ScrubberContext,
-];
+const BRIDGED_CONTEXTS: Context<any>[] = [ThemeContext, CartesianChartContext, ScrubberContext];
 
 /**
  * Represents a react-internal tree node.
@@ -55,7 +62,7 @@ function traverseTreeNode<T = any>(
 /**
  * Wraps context to hide React development warnings about using contexts between renderers.
  */
-function wrapContext<T>(context: React.Context<T>): React.Context<T> {
+function wrapContext<T>(context: Context<T>): Context<T> {
   try {
     return Object.defineProperties(context, {
       _currentRenderer: {
@@ -89,12 +96,12 @@ console.error = function (...args: any[]) {
   return error.apply(this, args);
 };
 
-const TreeNodeContext = wrapContext(React.createContext<TreeNode>(null!));
+const TreeNodeContext = wrapContext(createContext<TreeNode>(null!));
 
 /**
  * A react-internal tree node provider that binds React children to the React tree for chart context bridging.
  */
-export class ChartBridgeProvider extends React.Component<{ children?: React.ReactNode }> {
+export class ChartBridgeProvider extends Component<{ children?: ReactNode }> {
   private _reactInternals!: TreeNode;
 
   render() {
@@ -110,12 +117,12 @@ export class ChartBridgeProvider extends React.Component<{ children?: React.Reac
  * Returns the current react-internal tree node.
  */
 function useTreeNode(): TreeNode<null> | undefined {
-  const root = React.useContext(TreeNodeContext);
+  const root = useContext(TreeNodeContext);
   if (root === null)
     throw new Error('useTreeNode must be called within a <ChartBridgeProvider />!');
 
-  const id = React.useId();
-  const treeNode = React.useMemo(() => {
+  const id = useId();
+  const treeNode = useMemo(() => {
     for (const maybeNode of [root, root?.alternate]) {
       if (!maybeNode) continue;
       const node = traverseTreeNode<null>(maybeNode, false, (node) => {
@@ -132,8 +139,8 @@ function useTreeNode(): TreeNode<null> | undefined {
   return treeNode;
 }
 
-export type ContextMap = Map<React.Context<any>, any> & {
-  get<T>(context: React.Context<T>): T | undefined;
+export type ContextMap = Map<Context<any>, any> & {
+  get<T>(context: Context<T>): T | undefined;
 };
 
 /**
@@ -141,7 +148,7 @@ export type ContextMap = Map<React.Context<any>, any> & {
  */
 function useContextMap(): ContextMap {
   const treeNode = useTreeNode();
-  const [contextMap] = React.useState(() => new Map<React.Context<any>, any>());
+  const [contextMap] = useState(() => new Map<Context<any>, any>());
 
   // Collect live context
   contextMap.clear();
@@ -159,7 +166,7 @@ function useContextMap(): ContextMap {
         !contextMap.has(context)
       ) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        contextMap.set(context, React.useContext(wrapContext(context)));
+        contextMap.set(context, useContext(wrapContext(context)));
       }
     }
 
@@ -172,7 +179,7 @@ function useContextMap(): ContextMap {
 /**
  * Represents a chart context bridge provider component.
  */
-export type ChartContextBridge = React.FC<React.PropsWithChildren<object>>;
+export type ChartContextBridge = FC<PropsWithChildren<object>>;
 
 /**
  * Returns a ChartContextBridge of live context providers to pierce Context across renderers.
@@ -182,7 +189,7 @@ export function useChartContextBridge(): ChartContextBridge {
   const contextMap = useContextMap();
 
   // Flatten context and their memoized values into a `ChartContextBridge` provider
-  return React.useMemo(
+  return useMemo(
     () =>
       Array.from(contextMap.keys()).reduce(
         (Prev, context) => (props) => (

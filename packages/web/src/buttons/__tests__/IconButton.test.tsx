@@ -157,8 +157,8 @@ describe('IconButton', () => {
     );
     const spinner = screen.getByTestId('icon-button-spinner');
     expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.s}px`);
-    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.s}px`);
+    // Spinner uses fontSize with CSS width/height of 10em, so fontSize = iconSize / 10
+    expect(spinner).toHaveStyle(`font-size: ${defaultTheme.iconSize.s / 10}px`);
   });
 
   it('renders Spinner with correct size when loading and not compact', () => {
@@ -169,8 +169,8 @@ describe('IconButton', () => {
     );
     const spinner = screen.getByTestId('icon-button-spinner');
     expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.m}px`);
-    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.m}px`);
+    // Spinner uses fontSize with CSS width/height of 10em, so fontSize = iconSize / 10
+    expect(spinner).toHaveStyle(`font-size: ${defaultTheme.iconSize.m / 10}px`);
   });
 
   it('sets data attributes for style variants', () => {

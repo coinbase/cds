@@ -22,9 +22,7 @@ const Basic = () => {
           key={`${variant}-input-iconbutton`}
           editable={__DEV__}
           label={variant}
-          start={
-            <InputIconButton active accessibilityLabel="Add" name="add" variant="foregroundMuted" />
-          }
+          start={<InputIconButton active accessibilityLabel="Add" name="add" variant="secondary" />}
           variant={variant}
         />
       ))}
@@ -75,7 +73,7 @@ const AddCustomColor = () => {
           disableInheritFocusStyle
           accessibilityLabel="Add"
           name="add"
-          variant="foregroundMuted"
+          variant="secondary"
         />
       }
     />
@@ -93,7 +91,7 @@ const AddCustomColorEnd = () => {
           transparent
           accessibilityLabel="Add"
           name="add"
-          variant="foregroundMuted"
+          variant="secondary"
         />
       }
       label="Label"
@@ -130,7 +128,7 @@ const InputIconButtonScreen = () => {
 
       <Example title="Using InputIconButton outside of a TextInput should not throw error">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
-          <InputIconButton active name="add" variant="foregroundMuted" />
+          <InputIconButton active name="add" variant="secondary" />
         </Box>
       </Example>
     </ExampleScreen>

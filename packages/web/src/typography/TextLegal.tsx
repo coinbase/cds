@@ -8,8 +8,10 @@ export const textLegalDefaultElement = 'span';
 
 export type TextLegalDefaultElement = typeof textLegalDefaultElement;
 
+/** @deprecated Use `Text` with `font="legal"` instead. This component will be removed in a future major release. */
 export type TextLegalBaseProps = TextBaseProps;
 
+/** @deprecated Use `Text` with `font="legal"` instead. This component will be removed in a future major release. */
 export type TextLegalProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextLegalBaseProps
@@ -20,6 +22,7 @@ type TextLegalComponent = (<AsComponent extends React.ElementType = TextLegalDef
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/** @deprecated Use `Text` with `font="legal"` instead. This component will be removed in a future major release. */
 export const TextLegal: TextLegalComponent = forwardRef<
   React.ReactElement<TextLegalBaseProps>,
   TextLegalBaseProps
