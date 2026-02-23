@@ -203,20 +203,28 @@ export const TextInput = memo(
       'cds-textinput-label',
     ]);
 
+    // Native browser behavior adjusts the value of numeric inputs when the user is focused on the input
+    // and scrolls the page. This prevents that behavior so accidental values changes don't occur.
+    const preventWheelScroll = useCallback((event: WheelEvent) => {
+      event.preventDefault();
+    }, []);
+
     const handleOnFocus = useCallback(
       (e: React.FocusEvent<HTMLInputElement>) => {
         setFocused(true);
         onFocus?.(e);
+        internalRef.current?.addEventListener('wheel', preventWheelScroll);
       },
-      [onFocus],
+      [onFocus, internalRef, preventWheelScroll],
     );
 
     const handleOnBlur = useCallback(
       (e: React.FocusEvent<HTMLInputElement>) => {
         onBlur?.(e);
         setFocused(false);
+        internalRef.current?.removeEventListener('wheel', preventWheelScroll);
       },
-      [onBlur],
+      [onBlur, preventWheelScroll],
     );
 
     const handleNodePress = useCallback(() => {
