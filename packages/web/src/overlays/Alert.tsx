@@ -194,9 +194,9 @@ export const Alert = memo(
             </Box>
             <Box
               flexDirection={actionLayout === 'vertical' ? 'column-reverse' : 'row'}
-              gap={2}
-              paddingX={2}
-              paddingY={3}
+              gap={1}
+              paddingX={3}
+              paddingY={2}
               testID={testID && `${testID}-actions`}
             >
               {dismissAction}
