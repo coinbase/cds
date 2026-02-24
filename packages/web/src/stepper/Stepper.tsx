@@ -239,7 +239,7 @@ export type StepperBaseProps<Metadata extends Record<string, unknown> = Record<s
 export const stepperDefaultElement = 'div';
 export type StepperDefaultElement = typeof stepperDefaultElement;
 
-const cascadeStaggerMs = durations.moderate1;
+const cascadeStaggerMs = durations.moderate2;
 
 export type StepperProps<Metadata extends Record<string, unknown> = Record<string, unknown>> =
   VStackProps<StepperDefaultElement> &
