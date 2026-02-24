@@ -995,7 +995,7 @@ function CustomComponentsCarousel() {
               dangerouslySetBackground="rgb(var(--blue80))"
               description={
                 <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
-                  Use code NOV60 when you  sign up for Coinbase One
+                  Use code NOV60 when you sign up for Coinbase One
                 </Text>
               }
               media={
@@ -1679,7 +1679,7 @@ function ImperativeApiCarousel() {
   const carouselRef = useRef(null);
   const [currentPageInfo, setCurrentPageInfo] = useState('Page 1');
 
-  function handleGoToPage(pageIndex: number) {
+  function handleGoToPage(pageIndex) {
     if (carouselRef.current) {
       const clampedPageIndex = Math.max(0, Math.min(carouselRef.current.totalPages - 1, pageIndex));
       carouselRef.current.goToPage(clampedPageIndex);

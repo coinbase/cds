@@ -69,7 +69,7 @@ function AssetPriceWithMinMax() {
   const minPrice = Math.min(...data);
   const maxPrice = Math.max(...data);
 
-  const formatPrice = useCallback((price: number) => {
+  const formatPrice = useCallback((price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -81,7 +81,7 @@ function AssetPriceWithMinMax() {
       showArea
       areaType="dotted"
       height={{ base: 150, tablet: 200, desktop: 250 }}
-      points={({ dataX, dataY }: PointBaseProps) => {
+      points={({ dataX, dataY }) => {
         const isMin = dataY === minPrice;
         const isMax = dataY === maxPrice;
 
@@ -103,7 +103,7 @@ function AssetPriceWithMinMax() {
       style={{ outlineColor: assets.btc.color }}
     />
   );
-};
+}
 ```
 
 ## Interaction

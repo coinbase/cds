@@ -5,9 +5,95 @@ When possible combining content that is contextually related benefits screen rea
 ### Default usage
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} strokeColor="#F7931A" />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatPrice = (num) => num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+  const generateSubHead = useCallback((point, period) => {
+    const firstPoint = sparklineInteractiveData[period][0];
+    const increase = point.value > firstPoint.value;
+    return {
+      percent: `${formatPrice(Math.abs((point.value - firstPoint.value) / firstPoint.value) * 100)}%`,
+      sign: increase ? 'upwardTrend' : 'downwardTrend',
+      variant: increase ? 'positive' : 'negative',
+      priceChange: `$${formatPrice(Math.abs(point.value - firstPoint.value))}`,
+    };
+  }, []);
+
+  const headerRef = useRef(null);
+  const [currentPeriod, setCurrentPeriod] = useState('day');
+  const data = sparklineInteractiveData[currentPeriod];
+  const lastPoint = data[data.length - 1];
+
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  const handleScrubEnd = useCallback(() => {
+    headerRef.current?.update({
+      title: `$${formatPrice(lastPoint.value)}`,
+      subHead: generateSubHead(lastPoint, currentPeriod),
+    });
+  }, [lastPoint, currentPeriod, generateSubHead]);
+
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        headerNode={
+          <SparklineInteractiveHeader
+            ref={headerRef}
+            defaultLabel="Bitcoin Price"
+            defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+            defaultTitle={`$${formatPrice(lastPoint.value)}`}
+          />
+        }
+        onPeriodChanged={handlePeriodChanged}
+        onScrub={handleScrub}
+        onScrubEnd={handleScrubEnd}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Fill
@@ -15,39 +101,293 @@ When possible combining content that is contextually related benefits screen rea
 The fill will be added by default
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatPrice = (num) => num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+  const generateSubHead = useCallback((point, period) => {
+    const firstPoint = sparklineInteractiveData[period][0];
+    const increase = point.value > firstPoint.value;
+    return {
+      percent: `${formatPrice(Math.abs((point.value - firstPoint.value) / firstPoint.value) * 100)}%`,
+      sign: increase ? 'upwardTrend' : 'downwardTrend',
+      variant: increase ? 'positive' : 'negative',
+      priceChange: `$${formatPrice(Math.abs(point.value - firstPoint.value))}`,
+    };
+  }, []);
+
+  const headerRef = useRef(null);
+  const [currentPeriod, setCurrentPeriod] = useState('day');
+  const data = sparklineInteractiveData[currentPeriod];
+  const lastPoint = data[data.length - 1];
+
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  const handleScrubEnd = useCallback(() => {
+    headerRef.current?.update({
+      title: `$${formatPrice(lastPoint.value)}`,
+      subHead: generateSubHead(lastPoint, currentPeriod),
+    });
+  }, [lastPoint, currentPeriod, generateSubHead]);
+
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        headerNode={
+          <SparklineInteractiveHeader
+            ref={headerRef}
+            defaultLabel="Bitcoin Price"
+            defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+            defaultTitle={`$${formatPrice(lastPoint.value)}`}
+          />
+        }
+        onPeriodChanged={handlePeriodChanged}
+        onScrub={handleScrub}
+        onScrubEnd={handleScrubEnd}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Compact
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader
-    compact
-    fill
-    strokeColor="#F7931A"
-    data={sparklineInteractiveData}
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatPrice = (num) => num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+  const generateSubHead = useCallback((point, period) => {
+    const firstPoint = sparklineInteractiveData[period][0];
+    const increase = point.value > firstPoint.value;
+    return {
+      percent: `${formatPrice(Math.abs((point.value - firstPoint.value) / firstPoint.value) * 100)}%`,
+      sign: increase ? 'upwardTrend' : 'downwardTrend',
+      variant: increase ? 'positive' : 'negative',
+      priceChange: `$${formatPrice(Math.abs(point.value - firstPoint.value))}`,
+    };
+  }, []);
+
+  const headerRef = useRef(null);
+  const [currentPeriod, setCurrentPeriod] = useState('day');
+  const data = sparklineInteractiveData[currentPeriod];
+  const lastPoint = data[data.length - 1];
+
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  const handleScrubEnd = useCallback(() => {
+    headerRef.current?.update({
+      title: `$${formatPrice(lastPoint.value)}`,
+      subHead: generateSubHead(lastPoint, currentPeriod),
+    });
+  }, [lastPoint, currentPeriod, generateSubHead]);
+
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        compact
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        headerNode={
+          <SparklineInteractiveHeader
+            ref={headerRef}
+            compact
+            defaultLabel="Bitcoin Price"
+            defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+            defaultTitle={`$${formatPrice(lastPoint.value)}`}
+          />
+        }
+        onPeriodChanged={handlePeriodChanged}
+        onScrub={handleScrub}
+        onScrubEnd={handleScrubEnd}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```
 
 ### Custom Label
 
 ```jsx live
-<Box padding={3} width="100%">
-  <SparklineInteractivePriceWithHeader
-    data={sparklineInteractiveData}
-    strokeColor="#F7931A"
-    labelNode={
-      <HStack gap={1} alignItems="center">
-        <Icon active name="wallet" size="s" />
-        <Text as="span" font="title3">
-          CustomHeader
-        </Text>
-      </HStack>
-    }
-  />
-</Box>
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatPrice = (num) => num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+  const generateSubHead = useCallback((point, period) => {
+    const firstPoint = sparklineInteractiveData[period][0];
+    const increase = point.value > firstPoint.value;
+    return {
+      percent: `${formatPrice(Math.abs((point.value - firstPoint.value) / firstPoint.value) * 100)}%`,
+      sign: increase ? 'upwardTrend' : 'downwardTrend',
+      variant: increase ? 'positive' : 'negative',
+      priceChange: `$${formatPrice(Math.abs(point.value - firstPoint.value))}`,
+    };
+  }, []);
+
+  const headerRef = useRef(null);
+  const [currentPeriod, setCurrentPeriod] = useState('day');
+  const data = sparklineInteractiveData[currentPeriod];
+  const lastPoint = data[data.length - 1];
+
+  const handleScrub = useCallback(
+    ({ point, period }) => {
+      headerRef.current?.update({
+        title: `$${point.value.toLocaleString('en-US')}`,
+        subHead: generateSubHead(point, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  const handleScrubEnd = useCallback(() => {
+    headerRef.current?.update({
+      title: `$${formatPrice(lastPoint.value)}`,
+      subHead: generateSubHead(lastPoint, currentPeriod),
+    });
+  }, [lastPoint, currentPeriod, generateSubHead]);
+
+  const handlePeriodChanged = useCallback(
+    (period) => {
+      setCurrentPeriod(period);
+      const newData = sparklineInteractiveData[period];
+      const newLastPoint = newData[newData.length - 1];
+      headerRef.current?.update({
+        title: `$${formatPrice(newLastPoint.value)}`,
+        subHead: generateSubHead(newLastPoint, period),
+      });
+    },
+    [generateSubHead],
+  );
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        headerNode={
+          <SparklineInteractiveHeader
+            ref={headerRef}
+            defaultLabel="CustomHeader"
+            defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+            defaultTitle={`$${formatPrice(lastPoint.value)}`}
+            labelNode={
+              <HStack gap={1} alignItems="center">
+                <Icon active name="wallet" size="s" />
+                <Text as="span" font="title3">
+                  CustomHeader
+                </Text>
+              </HStack>
+            }
+          />
+        }
+        onPeriodChanged={handlePeriodChanged}
+        onScrub={handleScrub}
+        onScrubEnd={handleScrubEnd}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
 ```

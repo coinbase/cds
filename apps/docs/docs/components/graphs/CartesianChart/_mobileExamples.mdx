@@ -285,7 +285,7 @@ You can adjust the inset around the entire chart (outside the axes) with the `in
 
 You can also remove the default inset, such as to have a compact line chart.
 
-```jsx
+```tsx
 function Insets() {
   const theme = useTheme();
 
@@ -313,7 +313,6 @@ function Insets() {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-
           showArea
           style={{ border: `2px solid ${theme.color.fgPrimary}` }}
         />
@@ -331,7 +330,6 @@ function Insets() {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-
           showArea
           style={{ border: `2px solid ${theme.color.fgPrimary}` }}
         >
@@ -350,7 +348,6 @@ function Insets() {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-
           showArea
           style={{ border: `2px solid ${theme.color.fgPrimary}` }}
         >
@@ -430,14 +427,12 @@ By default, the scrubber will not allow overflow gestures. You can allow overflo
 
 You can showcase the price and volume of an asset over time within one chart.
 
-```jsx
+```tsx
 function PriceWithVolume() {
   const theme = useTheme();
 
   const [scrubIndex, setScrubIndex] = useState(null);
-  const btcData = btcCandles
-    .slice(0, 180)
-    .reverse()
+  const btcData = btcCandles.slice(0, 180).reverse();
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
   const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -472,12 +467,14 @@ function PriceWithVolume() {
   const currentPrice = btcPrices[displayIndex];
   const currentVolume = btcVolumes[displayIndex];
   const currentDate = btcDates[displayIndex];
-  const priceChange = displayIndex > 0
-    ? ((currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1])
-    : 0;
+  const priceChange =
+    displayIndex > 0
+      ? (currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1]
+      : 0;
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+    if (scrubIndex === null)
+      return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
     return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
   }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
 
@@ -487,7 +484,7 @@ function PriceWithVolume() {
 
   return (
     <VStack gap={2}>
-     <SectionHeader
+      <SectionHeader
         id={headerId}
         style={{ padding: 0 }}
         title={<Text font="title1">Bitcoin</Text>}
@@ -537,9 +534,15 @@ function PriceWithVolume() {
         aria-labelledby={headerId}
         inset={{ top: 8, left: 8, right: 0, bottom: 0 }}
       >
-        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={48} GridLineComponent={ThinSolidLine} />
+        <YAxis
+          axisId="price"
+          showGrid
+          tickLabelFormatter={formatPriceInThousands}
+          width={48}
+          GridLineComponent={ThinSolidLine}
+        />
         <BarPlot seriesIds={['volume']} />
-        <Line seriesId="prices"  showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -551,11 +554,12 @@ function PriceWithVolume() {
 
 You can also create your own type of cartesian chart by using `getSeriesData`, `getXScale`, and `getYScale` directly.
 
-```jsx
+```tsx
 function EarningsHistory() {
   const theme = useTheme();
-  const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string, opacity?: number }) => {
-    const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
+  const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string; opacity?: number }) => {
+    const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } =
+      useCartesianChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);
     const xScale = getXScale();
@@ -634,7 +638,7 @@ function EarningsHistory() {
     [actualEPS, estimatedEPS],
   );
 
-  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number, label: string }) => {
+  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
     return (
       <Box alignItems="center" gap={0.5}>
         <LegendDot opacity={opacity} />
@@ -687,7 +691,7 @@ function EarningsHistory() {
 
 You can have multiple axes with different domains and ranges to showcase different pieces of data over the time time period.
 
-```jsx
+```tsx
 function TradingTrends() {
   const theme = useTheme();
 
@@ -700,15 +704,31 @@ function TradingTrends() {
       return `$${value}M`;
     }, []);
 
-    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} strokeLinecap="butt" />);
-    const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={2} strokeLinecap="butt" />);
+    const ThinSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={1} strokeLinecap="butt" />
+    ));
+    const ThickSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={2} strokeLinecap="butt" />
+    ));
 
     return (
       <CartesianChart
         height={150}
         series={[
-          { id: 'gains', data: gains, yAxisId: 'profit', color: theme.color.bgPositive, stackId: 'bars' },
-          { id: 'losses', data: losses, yAxisId: 'profit', color: theme.color.bgNegative, stackId: 'bars' },
+          {
+            id: 'gains',
+            data: gains,
+            yAxisId: 'profit',
+            color: theme.color.bgPositive,
+            stackId: 'bars',
+          },
+          {
+            id: 'losses',
+            data: losses,
+            yAxisId: 'profit',
+            color: theme.color.bgNegative,
+            stackId: 'bars',
+          },
           {
             id: 'revenue',
             data: [128, 118, 122, 116, 120, 114, 118, 122, 126, 130, 134, 138],
@@ -716,17 +736,52 @@ function TradingTrends() {
             color: theme.color.fgMuted,
           },
         ]}
-        xAxis={{ scaleType: 'band', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }}
+        xAxis={{
+          scaleType: 'band',
+          data: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ],
+        }}
         yAxis={[
-          { id: 'profit', range: ({ min, max }) => ({ min: min, max: max - 64 }), domain: { min: -40, max: 40 } },
-          { id: 'revenue', range: ({ min, max }) => ({ min: max - 64, max }), domain: { min: 100 } },
+          {
+            id: 'profit',
+            range: ({ min, max }) => ({ min: min, max: max - 64 }),
+            domain: { min: -40, max: 40 },
+          },
+          {
+            id: 'revenue',
+            range: ({ min, max }) => ({ min: max - 64, max }),
+            domain: { min: 100 },
+          },
         ]}
       >
-        <YAxis axisId="profit" position="left" showGrid tickLabelFormatter={renderProfit} GridLineComponent={ThinSolidLine} />
+        <YAxis
+          axisId="profit"
+          position="left"
+          showGrid
+          tickLabelFormatter={renderProfit}
+          GridLineComponent={ThinSolidLine}
+        />
         <XAxis />
-        <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" stroke={`rgba(${theme.color.gray15.slice(4)})`} />
+        <ReferenceLine
+          LineComponent={ThickSolidLine}
+          dataY={0}
+          yAxisId="profit"
+          stroke={`rgba(${theme.color.gray15.slice(4)})`}
+        />
         <BarPlot seriesIds={['gains', 'losses']} />
-        <Line seriesId="revenue"  showArea />
+        <Line seriesId="revenue" showArea />
       </CartesianChart>
     );
   }

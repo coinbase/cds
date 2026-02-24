@@ -2323,7 +2323,7 @@ function ExampleNavigator() {
   }, [examples.length]);
 
   return (
-    <ExampleScreen>
+    <ExampleScreen paddingX={0}>
       <VStack gap={4}>
         <HStack alignItems="center" justifyContent="space-between" padding={2}>
           <IconButton
