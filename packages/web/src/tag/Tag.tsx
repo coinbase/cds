@@ -21,16 +21,9 @@ import { Icon } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
-const startNodeCss = css`
+const nodeCss = css`
   display: inline-flex;
   align-items: center;
-  margin-inline-end: var(--space-0_5);
-`;
-
-const endNodeCss = css`
-  display: inline-flex;
-  align-items: center;
-  margin-inline-start: var(--space-0_5);
 `;
 
 export const tagStaticClassName = 'cds-tag';
@@ -94,7 +87,9 @@ export const Tag = memo(
       endIconActive,
       display = 'inline-flex',
       alignItems = 'center',
+      gap = 0.5,
       justifyContent = 'center',
+      paddingY = 0.25,
       testID = tagStaticClassName,
       ...props
     }: TagProps,
@@ -119,17 +114,18 @@ export const Tag = memo(
         className={tagStaticClassName}
         data-testid={testID}
         display={display}
+        gap={gap}
         justifyContent={justifyContent}
         paddingX={tagHorizontalSpacing[intent]}
-        paddingY={0.25}
+        paddingY={paddingY}
         style={boxStyles}
         testID={testID}
         {...props}
       >
         {start ? (
-          <span className={startNodeCss}>{start}</span>
+          <span className={nodeCss}>{start}</span>
         ) : startIcon ? (
-          <span className={startNodeCss}>
+          <span className={nodeCss}>
             <Icon active={startIconActive} color="currentColor" name={startIcon} size="xs" />
           </span>
         ) : null}
@@ -145,9 +141,9 @@ export const Tag = memo(
         </Text>
 
         {end ? (
-          <span className={endNodeCss}>{end}</span>
+          <span className={nodeCss}>{end}</span>
         ) : endIcon ? (
-          <span className={endNodeCss}>
+          <span className={nodeCss}>
             <Icon active={endIconActive} color="currentColor" name={endIcon} size="xs" />
           </span>
         ) : null}

@@ -81,7 +81,9 @@ export const Tag = memo(
         endIconActive,
         alignItems = 'center',
         flexDirection = 'row',
+        gap = 0.5,
         justifyContent = 'center',
+        paddingY = 0.25,
         testID = 'cds-tag',
         ...props
       }: TagProps,
@@ -100,10 +102,10 @@ export const Tag = memo(
           borderRadius={tagBorderRadiusMap[intent]}
           dangerouslySetBackground={backgroundColor}
           flexDirection={flexDirection}
-          gap={0.5}
+          gap={gap}
           justifyContent={justifyContent}
           paddingX={tagHorizontalSpacing[intent]}
-          paddingY={0.25}
+          paddingY={paddingY}
           testID={testID}
           {...props}
         >
