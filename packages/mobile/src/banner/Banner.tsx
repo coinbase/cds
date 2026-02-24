@@ -171,7 +171,7 @@ export const Banner = memo(
     );
 
     const borderBox = (
-      <Box dangerouslySetBackground={theme.color[borderColor]} pin="left" width={4} />
+      <Box pin="left" style={{ backgroundColor: theme.color[borderColor] }} width={4} />
     );
 
     const content = (

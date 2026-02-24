@@ -68,7 +68,7 @@ export const CustomTextNodes = (): JSX.Element => {
           Sign up
         </Button>
       }
-      dangerouslySetBackground="rgb(var(--blue80))"
+      style={{ backgroundColor: 'rgb(var(--blue80))' }}
       description={
         <Text as="p" color="fgInverse" display="block" font="label2">
           Start your free 30 day trial of Coinbase One
@@ -84,7 +84,7 @@ export const CustomTextNodes = (): JSX.Element => {
 };
 
 export const CustomBackground = (): JSX.Element => {
-  return <UpsellCard {...exampleProps} dangerouslySetBackground="rgb(var(--yellow20))" />;
+  return <UpsellCard {...exampleProps} style={{ backgroundColor: 'rgb(var(--yellow20))' }} />;
 };
 
 export const CustomWidth = (): JSX.Element => <UpsellCard {...exampleProps} width="100%" />;

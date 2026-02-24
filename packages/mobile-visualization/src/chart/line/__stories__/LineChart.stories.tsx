@@ -1776,7 +1776,7 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Line Chart with Tag"
         titleAccessory={
-          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+          <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
             ↗ 25.25%
           </Text>
         }
@@ -1799,7 +1799,7 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Actionable Line Chart"
         titleAccessory={
-          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+          <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
             ↗ 8.5%
           </Text>
         }
@@ -1829,7 +1829,7 @@ function DataCardWithLineChart() {
         }
         title="Card with Line Chart"
         titleAccessory={
-          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+          <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
             ↗ 25.25%
           </Text>
         }

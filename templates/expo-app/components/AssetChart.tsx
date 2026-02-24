@@ -40,7 +40,7 @@ const BTCTab = memo(
 
     const wrappedLabel =
       typeof label === 'string' ? (
-        <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+        <Text font="label1" style={{ color: isActive ? btcColor : theme.color.fg }}>
           {label}
         </Text>
       ) : (

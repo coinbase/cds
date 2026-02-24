@@ -25,7 +25,7 @@ function Example() {
   return (
     <VStack gap={2}>
       {assetColors.map((background) => (
-        <VStack key={background} dangerouslySetBackground={background}>
+        <VStack key={background} style={{ backgroundColor: background }}>
           <SparklineGradient {...dimensions} path={path} background={background} color="auto" />
         </VStack>
       ))}

@@ -81,10 +81,10 @@ describe('UpsellCard', () => {
     expect(screen.getByTestId(`${exampleProps.testID}-dismiss-button`)).toBeDefined();
   });
 
-  it('renders dangerouslySetBackground', () => {
+  it('renders custom background via style prop', () => {
     render(
       <DefaultThemeProvider>
-        <UpsellCard {...exampleProps} dangerouslySetBackground="#d3d3d3" />
+        <UpsellCard {...exampleProps} style={{ backgroundColor: '#d3d3d3' }} />
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(exampleProps.testID as string)).toHaveStyle({

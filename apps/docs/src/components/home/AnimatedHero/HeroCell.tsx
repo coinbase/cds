@@ -66,7 +66,7 @@ export const HeroCell = ({
       <Box
         alignItems="center"
         borderRadius={{ base: 200, phone: 100 }}
-        dangerouslySetBackground={isColor ? character : undefined}
+        style={isColor ? { backgroundColor: character } : undefined}
         height="100%"
         justifyContent="center"
         overflow="hidden"

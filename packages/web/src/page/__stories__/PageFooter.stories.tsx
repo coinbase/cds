@@ -123,7 +123,7 @@ const PageFooterInPageRender = () => {
       <VStack
         alignContent="center"
         alignItems="center"
-        dangerouslySetBackground="#FADADD"
+        style={{ backgroundColor: '#FADADD' }}
         flexGrow={1}
         flexShrink={1}
         height="400px"
@@ -133,8 +133,8 @@ const PageFooterInPageRender = () => {
           Primary Content
         </Text>
       </VStack>
-      <Box dangerouslySetBackground="gray" height="500px" />
-      <Box dangerouslySetBackground="orange" height="500px" />
+      <Box height="500px" style={{ backgroundColor: 'gray' }} />
+      <Box height="500px" style={{ backgroundColor: 'orange' }} />
       <PageFooter action={setEndButtonMobile} bottom="0" />
     </VStack>
   );

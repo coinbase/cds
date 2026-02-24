@@ -17,7 +17,7 @@ describe('HelperText.test', () => {
   it('renders custom color', () => {
     render(
       <DefaultThemeProvider>
-        <HelperText color="fgNegative" dangerouslySetColor="yellow" errorIconTestID="error-icon">
+        <HelperText color="fgNegative" errorIconTestID="error-icon" style={{ color: 'yellow' }}>
           Test text
         </HelperText>
       </DefaultThemeProvider>,

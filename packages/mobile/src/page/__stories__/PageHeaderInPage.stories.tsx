@@ -37,12 +37,12 @@ const PageHeaderInPage = () => {
           <VStack
             alignContent="center"
             alignItems="center"
-            dangerouslySetBackground="#FADADD"
             flexGrow={1}
             flexShrink={1}
             height="500px"
             justifyContent="center"
             padding={10}
+            style={{ backgroundColor: '#FADADD' }}
           >
             <Text font="title1">Primary Content</Text>
           </VStack>

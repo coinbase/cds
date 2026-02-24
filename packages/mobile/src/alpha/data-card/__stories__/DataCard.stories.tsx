@@ -45,7 +45,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Progress Bar Card"
             titleAccessory={
-              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+              <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
                 ↗ 25.25%
               </Text>
             }
@@ -111,7 +111,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="High Progress"
             titleAccessory={
-              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+              <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
                 ↗ 25.25%
               </Text>
             }
@@ -182,7 +182,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Progress Bar with Button"
             titleAccessory={
-              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+              <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
                 ↗ 8.5%
               </Text>
             }
@@ -310,7 +310,7 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Card 2"
             titleAccessory={
-              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+              <Text font="label1" style={{ color: `rgb(${spectrum.green70})` }}>
                 ↗ 25.25%
               </Text>
             }

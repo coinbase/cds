@@ -102,7 +102,7 @@ const PressableScreen = () => {
                 accessibilityRole="button"
                 background={color as ThemeVars.Color}
               >
-                <Text dangerouslySetColor={textColor} font="body" padding={1}>
+                <Text font="body" padding={1} style={{ color: textColor }}>
                   {color}
                 </Text>
               </Pressable>
@@ -123,7 +123,7 @@ const PressableScreen = () => {
                 accessibilityRole="button"
                 background={color as ThemeVars.Color}
               >
-                <Text dangerouslySetColor={textColor} font="body" padding={1}>
+                <Text font="body" padding={1} style={{ color: textColor }}>
                   {color}
                 </Text>
               </Pressable>

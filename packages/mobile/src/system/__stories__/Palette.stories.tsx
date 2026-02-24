@@ -18,9 +18,9 @@ const Palette = ({ elevation }: { elevation?: ElevationLevels }) => {
           <Box
             key={name}
             alignItems="center"
-            dangerouslySetBackground={theme.color[name as keyof typeof theme.color]}
             height={100}
             justifyContent="center"
+            style={{ backgroundColor: theme.color[name as keyof typeof theme.color] }}
             width="50%"
           >
             <VStack background="bg">

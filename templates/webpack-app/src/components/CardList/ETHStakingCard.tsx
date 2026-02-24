@@ -6,7 +6,7 @@ import { Text } from '@coinbase/cds-web/typography';
 export const ETHStakingCard = () => {
   return (
     <UpsellCard
-      dangerouslySetBackground="rgb(var(--purple70))"
+      style={{ backgroundColor: 'rgb(var(--purple70))' }}
       title={
         <Text as="h3" font="headline" color="fgInverse">
           Up to 3.29% APR on ETHs

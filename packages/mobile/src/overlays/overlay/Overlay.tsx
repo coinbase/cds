@@ -18,7 +18,7 @@ export type OverlayProps = {
   opacity: Animated.Value;
 } & Omit<VStackProps, 'opacity'>;
 
-export const Overlay = memo(function Overlay({ opacity, ...props }: OverlayProps) {
+export const Overlay = memo(function Overlay({ opacity, style, ...props }: OverlayProps) {
   const theme = useTheme();
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
@@ -26,11 +26,12 @@ export const Overlay = memo(function Overlay({ opacity, ...props }: OverlayProps
         animated
         renderToHardwareTextureAndroid
         background="bgOverlay"
-        dangerouslySetBackground={
+        style={[
           theme.activeColorScheme === 'dark'
-            ? `rgba(${theme?.darkSpectrum?.gray0}, 0.5)`
-            : undefined
-        }
+            ? { backgroundColor: `rgba(${theme?.darkSpectrum?.gray0}, 0.5)` }
+            : undefined,
+          style,
+        ]}
         opacity={opacity}
         pin="all"
         {...props}

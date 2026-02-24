@@ -38,7 +38,7 @@ export const BasicExamples = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Bar Card"
         titleAccessory={
-          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+          <Text font="label1" style={{ color: 'rgb(var(--green70))' }}>
             ↗ 25.25%
           </Text>
         }
@@ -106,7 +106,7 @@ export const Features = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="High Progress"
         titleAccessory={
-          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+          <Text font="label1" style={{ color: 'rgb(var(--green70))' }}>
             ↗ 25.25%
           </Text>
         }
@@ -181,7 +181,7 @@ export const Interactive = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Bar with Button"
         titleAccessory={
-          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+          <Text font="label1" style={{ color: 'rgb(var(--green70))' }}>
             ↗ 8.5%
           </Text>
         }
@@ -207,7 +207,7 @@ export const Interactive = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Circle with Link"
         titleAccessory={
-          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+          <Text font="label1" style={{ color: 'rgb(var(--green70))' }}>
             ↗ 8.5%
           </Text>
         }
@@ -315,7 +315,7 @@ export const MultipleCards = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Card 2"
         titleAccessory={
-          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
+          <Text font="label1" style={{ color: 'rgb(var(--green70))' }}>
             ↗ 25.25%
           </Text>
         }

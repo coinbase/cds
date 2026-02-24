@@ -161,12 +161,14 @@ export const ProgressBar = memo(
             animated
             alignItems="flex-start"
             borderRadius={200}
-            dangerouslySetBackground={!disabled ? theme.color[color] : theme.color.bgLineHeavy}
             flexGrow={0}
             flexShrink={0}
             height="100%"
             justifyContent="center"
-            style={progressStyle}
+            style={[
+              { backgroundColor: !disabled ? theme.color[color] : theme.color.bgLineHeavy },
+              progressStyle,
+            ]}
             testID="cds-progress-bar"
             width="100%"
           />

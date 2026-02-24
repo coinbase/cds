@@ -8,13 +8,14 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { Button, IconButton } from '../buttons';
-import { HStack, VStack } from '../layout';
+import { HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import { Pressable, type PressableDefaultElement, type PressableProps } from '../system';
 import { Text } from '../typography/Text';
 
 export type UpsellCardBaseProps = SharedProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Pick<DimensionStyles, 'width'> & {
+  Pick<DimensionStyles, 'width'> &
+  Pick<HStackProps<HStackDefaultElement>, 'className' | 'style'> & {
     /** Callback fired when the action button is pressed */
     onActionPress?: PressableProps<PressableDefaultElement>['onClick'];
     /** Callback fired when the dismiss button is pressed */
@@ -37,7 +38,7 @@ export type UpsellCardBaseProps = SharedProps &
      */
     background?: ThemeVars.Color;
     /**
-     * @danger This is a migration escape hatch. It is not intended to be used normally.
+     * @deprecated Use `style`, `className`, or `background` to customize card background. This prop will be removed in a future major version of CDS.
      */
     dangerouslySetBackground?: string;
   };
@@ -85,6 +86,8 @@ export const UpsellCard = memo(
     accessibilityLabel,
     width = upsellCardDefaultWidth,
     onClick,
+    className,
+    style,
   }: UpsellCardProps) => {
     const content = (
       <HStack
@@ -94,9 +97,10 @@ export const UpsellCard = memo(
         borderRadius={500}
         dangerouslySetBackground={dangerouslySetBackground}
         minHeight={upsellCardMinHeight}
-        style={{ border: 'none' }}
+        style={{ border: 'none', ...style }}
         testID={testID}
         width={width}
+        className={className}
       >
         <HStack
           alignContent="space-between"

@@ -104,8 +104,8 @@ export const Avatar = memo(
         return (
           <Text
             align="center"
-            dangerouslySetColor={fallbackTextColor}
             font="title2"
+            style={{ color: fallbackTextColor }}
             textTransform="uppercase"
           >
             {placeholderLetter}
@@ -116,8 +116,8 @@ export const Avatar = memo(
         return (
           <Text
             align="center"
-            dangerouslySetColor={fallbackTextColor}
             font="caption"
+            style={{ color: fallbackTextColor }}
             textTransform="uppercase"
           >
             {placeholderLetter}
@@ -128,8 +128,8 @@ export const Avatar = memo(
       return (
         <Text
           align="center"
-          dangerouslySetColor={fallbackTextColor}
           font="body"
+          style={{ color: fallbackTextColor }}
           textTransform="uppercase"
         >
           {placeholderLetter}
@@ -148,10 +148,9 @@ export const Avatar = memo(
       () => (
         <Box
           alignItems="center"
-          dangerouslySetBackground={colorSchemeRgb}
           height="100%"
           justifyContent="center"
-          style={shapeStyle}
+          style={[shapeStyle, { backgroundColor: colorSchemeRgb }]}
           testID={coloredFallbackTestID}
           width="100%"
         >
@@ -165,7 +164,6 @@ export const Avatar = memo(
       <Box
         accessibilityLabel={accessibilityLabel}
         borderColor={borderColor}
-        dangerouslySetBackground={imgSrc}
         flexGrow={0}
         flexShrink={0}
         height={computedSize}

@@ -245,22 +245,22 @@ const ProductUpsellTrayContent = memo(function ProductUpsellTrayContent({
       <VStack position="relative">
         <Box
           bottom={-bottom * SAFE_AREA_OVERFLOW_MULTIPLIER}
-          dangerouslySetBackground={BACKGROUND_COLOR}
           height={bottom * SAFE_AREA_OVERFLOW_MULTIPLIER}
           left={0}
           position="absolute"
           right={0}
+          style={{ backgroundColor: BACKGROUND_COLOR }}
           width="100%"
         />
         <Box
-          dangerouslySetBackground={BACKGROUND_COLOR}
           height={TOP_TRAY_OFFSET}
           left={0}
           position="absolute"
           right={0}
+          style={{ backgroundColor: BACKGROUND_COLOR }}
           top={-TOP_TRAY_OFFSET}
         />
-        <VStack dangerouslySetBackground={BACKGROUND_COLOR} gap={4} paddingTop={5} paddingX={3}>
+        <VStack gap={4} paddingTop={5} paddingX={3} style={{ backgroundColor: BACKGROUND_COLOR }}>
           <Box alignItems="center" justifyContent="center">
             <SpotRectangle name="creditCardExcitement" />
           </Box>

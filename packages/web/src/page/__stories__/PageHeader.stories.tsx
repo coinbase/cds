@@ -73,7 +73,7 @@ const exampleProps = {
     </Text>
   ),
   intermediary2: (
-    <Box dangerouslySetBackground="red">
+    <Box style={{ backgroundColor: 'red' }}>
       <Text as="sub" font="body">
         Hello there. This is a rather long text sentence since I do not have lorem ipsum handy.
         Hello there. This is a rather long text sentence since I do not have lorem ipsum handy.
@@ -340,7 +340,7 @@ const PageHeaderInPageRender = () => {
       <VStack
         alignContent="center"
         alignItems="center"
-        dangerouslySetBackground="#FADADD"
+        style={{ backgroundColor: '#FADADD' }}
         flexGrow={1}
         flexShrink={1}
         height="400px"
@@ -351,8 +351,8 @@ const PageHeaderInPageRender = () => {
           Primary Content
         </Text>
       </VStack>
-      <Box dangerouslySetBackground="gray" height="500px" />
-      <Box dangerouslySetBackground="orange" height="500px" />
+      <Box height="500px" style={{ backgroundColor: 'gray' }} />
+      <Box height="500px" style={{ backgroundColor: 'orange' }} />
       <PageFooter action={setEndButtonMobile} />
     </VStack>
   );

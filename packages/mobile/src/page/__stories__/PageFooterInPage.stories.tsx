@@ -43,11 +43,11 @@ const PageFooterInPageScreen = () => {
         <VStack
           alignContent="center"
           alignItems="center"
-          dangerouslySetBackground="#FADADD"
           gap={0}
           justifyContent="center"
           left={0}
           padding={10}
+          style={{ backgroundColor: '#FADADD' }}
         >
           <Text font="title1">Primary Content</Text>
         </VStack>

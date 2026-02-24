@@ -81,7 +81,7 @@ function Example() {
         <Box
           bordered
           background="bgAlternate"
-          dangerouslySetBackground="rgb(var(--gray100))"
+          style={{ backgroundColor: 'rgb(var(--gray100))' }}
           borderRadius={400}
           padding={1}
         >
@@ -94,7 +94,12 @@ function Example() {
       subtitle: 'Sept earnings',
       onPress: NoopFn,
       header: (
-        <Box bordered dangerouslySetBackground="rgb(var(--gray100))" borderRadius={400} padding={1}>
+        <Box
+          bordered
+          borderRadius={400}
+          padding={1}
+          style={{ backgroundColor: 'rgb(var(--gray100))' }}
+        >
           <Icon active color="bg" name="chartBar" size="s" />
         </Box>
       ),

@@ -178,7 +178,7 @@ export const ThemeColors = () => {
             borderColor="bgLine"
             borderWidth={100}
           >
-            <Text as="p" dangerouslySetColor={textColor} display="block" font="body" padding={1}>
+            <Text as="p" display="block" font="body" padding={1} style={{ color: textColor }}>
               {color}
             </Text>
           </Pressable>
@@ -204,7 +204,7 @@ export const ThemeColorsWithDisabled = () => {
             borderColor="bgLine"
             borderWidth={100}
           >
-            <Text as="p" dangerouslySetColor={textColor} display="block" font="body" padding={1}>
+            <Text as="p" display="block" font="body" padding={1} style={{ color: textColor }}>
               {color}
             </Text>
           </Pressable>

@@ -50,7 +50,7 @@ export const TextAlign = () => {
 export const CustomColor = () => {
   return (
     <div>
-      <HelperText color="fgNegative" dangerouslySetColor="purple">
+      <HelperText color="fgNegative" style={{ color: 'purple' }}>
         Test message
       </HelperText>
     </div>

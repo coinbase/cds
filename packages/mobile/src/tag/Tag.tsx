@@ -100,12 +100,12 @@ export const Tag = memo(
           alignItems={alignItems}
           background="bg"
           borderRadius={tagBorderRadiusMap[intent]}
-          dangerouslySetBackground={backgroundColor}
           flexDirection={flexDirection}
           gap={gap}
           justifyContent={justifyContent}
           paddingX={tagHorizontalSpacing[intent]}
           paddingY={paddingY}
+          style={{ backgroundColor }}
           testID={testID}
           {...props}
         >
@@ -116,9 +116,9 @@ export const Tag = memo(
           ) : null}
 
           <Text
-            dangerouslySetColor={color}
             font={tagFontMap[intent]}
             numberOfLines={1}
+            style={{ color }}
             testID={`${testID}--text`}
           >
             {children}

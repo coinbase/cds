@@ -9,13 +9,14 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { Button, IconButton } from '../buttons';
-import { HStack, VStack } from '../layout';
+import { HStack, type HStackProps, VStack } from '../layout';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type UpsellCardBaseProps = SharedProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Pick<DimensionStyles, 'width'> & {
+  Pick<DimensionStyles, 'width'> &
+  Pick<HStackProps, 'style'> & {
     /** Callback fired when the action button is pressed */
     onActionPress?: PressableProps['onPress'];
     /** Callback fired when the dismiss button is pressed */
@@ -38,7 +39,7 @@ export type UpsellCardBaseProps = SharedProps &
      */
     background?: ThemeVars.Color;
     /**
-     * @danger This is a migration escape hatch. It is not intended to be used normally.
+     * @deprecated Use `style` or `background` to customize card background. This prop will be removed in a future major version of CDS.
      */
     dangerouslySetBackground?: string;
   };
@@ -86,6 +87,7 @@ export const UpsellCard = memo(
     accessibilityLabel,
     width = upsellCardDefaultWidth,
     onPress,
+    style,
   }: UpsellCardProps) => {
     const content = (
       <HStack
@@ -94,6 +96,7 @@ export const UpsellCard = memo(
         borderRadius={500}
         dangerouslySetBackground={dangerouslySetBackground}
         minHeight={upsellCardMinHeight}
+        style={style}
         testID={testID}
         width={width}
       >

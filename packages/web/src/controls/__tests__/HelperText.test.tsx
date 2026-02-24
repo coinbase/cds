@@ -23,8 +23,8 @@ describe('HelperText.test', () => {
     expect(screen.getByTestId('error-icon').className).toContain('fgNegative');
   });
 
-  it('renders custom color via dangerouslySetColor', () => {
-    render(<HelperText dangerouslySetColor="#FF0000">Test text</HelperText>);
+  it('renders custom color via style', () => {
+    render(<HelperText style={{ color: '#FF0000' }}>Test text</HelperText>);
 
     expect(screen.getByText('Test text')).toHaveStyle({
       color: '#FF0000',

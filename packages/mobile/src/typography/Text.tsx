@@ -60,9 +60,9 @@ export type TextBaseProps = StyleProps & {
    * @default false
    */
   noWrap?: boolean;
-  /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+  /** @deprecated Use `style` or the `color` style prop to set custom text colors. This prop will be removed in a future major version of CDS. */
   dangerouslySetColor?: TextStyle['color'];
-  /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+  /** @deprecated Use `style` or the `background` style prop to set custom text background colors. This prop will be removed in a future major version of CDS. */
   dangerouslySetBackground?: TextStyle['backgroundColor'];
   /** @deprecated Do not use this prop. This is a migration escape hatch and will be removed in the next major version of CDS. */
   renderEmptyNode?: boolean;
