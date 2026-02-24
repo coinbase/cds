@@ -16,6 +16,7 @@ import { Scrubber, type ScrubberRef } from '../scrubber';
 
 const dataCount = 15;
 const updateInterval = 2500;
+const rapidUpdateInterval = 800;
 
 function generateNextValue(previousValue: number) {
   const step = Math.random() * 30 - 15;
@@ -53,6 +54,10 @@ const slowSpringBoth: PathProps['transitions'] = {
 const staggeredBoth: BarProps['transitions'] = {
   enter: { type: 'timing', duration: 750, staggerDelay: 250 },
   update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 150 },
+};
+const slowTimingBoth: PathProps['transitions'] = {
+  enter: { type: 'timing', duration: 2000 },
+  update: { type: 'timing', duration: 2000 },
 };
 
 // --- Reusable Chart Components ---
@@ -311,6 +316,57 @@ function BarExample({
   );
 }
 
+function RapidLineExample({ transitions }: { transitions: PathProps['transitions'] }) {
+  const [data, setData] = useState(generateInitialData);
+  const [resetKey, setResetKey] = useState(0);
+  const handleReset = useCallback(() => setResetKey((k) => k + 1), []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+    }, rapidUpdateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <TransitionLineChart key={resetKey} data={data} transitions={transitions} />
+      <Box paddingX={2}>
+        <Button compact onPress={handleReset} variant="secondary">
+          Reset
+        </Button>
+      </Box>
+    </VStack>
+  );
+}
+
+function RapidBarExample({ transitions }: { transitions: PathProps['transitions'] }) {
+  const [data, setData] = useState(generateBarData);
+  const [resetKey, setResetKey] = useState(0);
+  const handleReset = useCallback(() => setResetKey((k) => k + 1), []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData(generateBarData());
+    }, rapidUpdateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <TransitionBarChart key={resetKey} data={data} transitions={transitions} />
+      <Box paddingX={2}>
+        <Button compact onPress={handleReset} variant="secondary">
+          Reset
+        </Button>
+      </Box>
+    </VStack>
+  );
+}
+
 function MultiLineExample({ transitions }: { transitions: PathProps['transitions'] }) {
   const [data1, setData1] = useState(generateInitialData);
   const [data2, setData2] = useState(generateInitialData);
@@ -429,6 +485,16 @@ function ExampleNavigator() {
         category: 'Bar',
         title: 'Staggered Both',
         component: <BarExample transitions={staggeredBoth} />,
+      },
+      {
+        category: 'Line',
+        title: 'Rapid Interrupts',
+        component: <RapidLineExample transitions={slowTimingBoth} />,
+      },
+      {
+        category: 'Bar',
+        title: 'Rapid Interrupts',
+        component: <RapidBarExample transitions={slowTimingBoth} />,
       },
     ],
     [],
