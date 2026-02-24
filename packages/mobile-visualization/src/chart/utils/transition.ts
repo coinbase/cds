@@ -93,65 +93,6 @@ export const getTransition = (
   return value ?? defaultValue;
 };
 
-/**
- * Custom hook that uses d3-interpolate-path for more robust path interpolation.
- * then use Skia's native interpolation in the worklet.
- *
- * @param progress - Shared value between 0 and 1
- * @param fromPath - Starting path as SVG string
- * @param toPath - Ending path as SVG string
- * @returns Interpolated SkPath as a shared value
- */
-export const useD3PathInterpolation = (
-  progress: SharedValue<number>,
-  fromPath: string,
-  toPath: string,
-): SharedValue<SkPath> => {
-  // Pre-compute intermediate paths on JS thread using d3-interpolate-path
-  const { fromSkiaPath, i0, i1, toSkiaPath } = useMemo(() => {
-    const pathInterpolator = interpolatePath(fromPath, toPath);
-    const d = 1e-3;
-
-    return {
-      fromSkiaPath: Skia.Path.MakeFromSVGString(fromPath) ?? Skia.Path.Make(),
-      i0: Skia.Path.MakeFromSVGString(pathInterpolator(d)) ?? Skia.Path.Make(),
-      i1: Skia.Path.MakeFromSVGString(pathInterpolator(1 - d)) ?? Skia.Path.Make(),
-      toSkiaPath: Skia.Path.MakeFromSVGString(toPath) ?? Skia.Path.Make(),
-    };
-  }, [fromPath, toPath]);
-
-  // Store interpolators in shared values so the worklet always has fresh data.
-  // Without this, the useAnimatedReaction dependency array re-registers the
-  // worklet asynchronously, causing instant transitions to use stale interpolators
-  // for one frame (visible as growing bars using the old smaller clip path).
-  const i0Shared = useSharedValue(i0);
-  const i1Shared = useSharedValue(i1);
-  const toSkiaPathShared = useSharedValue(toSkiaPath);
-
-  useEffect(() => {
-    i0Shared.value = i0;
-    i1Shared.value = i1;
-    toSkiaPathShared.value = toSkiaPath;
-  }, [i0, i1, toSkiaPath, i0Shared, i1Shared, toSkiaPathShared]);
-
-  const result = useSharedValue(fromSkiaPath);
-
-  // Track both progress AND toSkiaPathShared so the reaction fires when either changes.
-  // This ensures instant transitions (which skip progress changes) still update the result
-  // when the target path changes.
-  useAnimatedReaction(
-    () => ({ p: progress.value, to: toSkiaPathShared.value }),
-    ({ p }) => {
-      'worklet';
-      result.value = i1Shared.value.interpolate(i0Shared.value, p) ?? toSkiaPathShared.value;
-      notifyChange(result);
-    },
-    [],
-  );
-
-  return result;
-};
-
 // Interpolator and useInterpolator are brought over from non exported code in @shopify/react-native-skia
 /**
  * @worklet
@@ -303,18 +244,36 @@ export const usePathTransition = ({
   const updateTransition = transitions?.update ?? transition;
   const enterTransition = transitions?.enter;
 
-  const previousPathRef = useRef(initialPath ?? currentPath);
-  const progress = useSharedValue(0);
+  const targetPathRef = useRef(initialPath ?? currentPath);
   const isFirstAnimation = useRef(!!initialPath);
+  const interpolatorRef = useRef<((t: number) => string) | null>(null);
+  const progress = useSharedValue(0);
 
-  const fromPath = previousPathRef.current;
-  const toPath = currentPath;
+  const initialSkiaPath =
+    Skia.Path.MakeFromSVGString(initialPath ?? currentPath) ?? Skia.Path.Make();
+  const normalizedStartShared = useSharedValue(initialSkiaPath);
+  const normalizedEndShared = useSharedValue(initialSkiaPath);
+  const fallbackPathShared = useSharedValue(initialSkiaPath);
+  const result = useSharedValue(initialSkiaPath);
 
   useEffect(() => {
-    const shouldAnimate = previousPathRef.current !== currentPath;
+    if (targetPathRef.current !== currentPath) {
+      let fromPath = targetPathRef.current;
+      if (interpolatorRef.current) {
+        const p = Math.min(Math.max(progress.value, 0), 1);
+        fromPath = interpolatorRef.current(p);
+      }
 
-    if (shouldAnimate) {
-      previousPathRef.current = currentPath;
+      targetPathRef.current = currentPath;
+
+      const pathInterpolator = interpolatePath(fromPath, currentPath);
+      interpolatorRef.current = pathInterpolator;
+
+      normalizedStartShared.value =
+        Skia.Path.MakeFromSVGString(pathInterpolator(0)) ?? Skia.Path.Make();
+      normalizedEndShared.value =
+        Skia.Path.MakeFromSVGString(pathInterpolator(1)) ?? Skia.Path.Make();
+      fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
 
       const activeTransition =
         isFirstAnimation.current && enterTransition !== undefined
@@ -326,7 +285,27 @@ export const usePathTransition = ({
       progress.value = 0;
       progress.value = buildTransition(1, activeTransition);
     }
-  }, [currentPath, updateTransition, enterTransition, progress]);
+  }, [
+    currentPath,
+    updateTransition,
+    enterTransition,
+    progress,
+    normalizedStartShared,
+    normalizedEndShared,
+    fallbackPathShared,
+  ]);
 
-  return useD3PathInterpolation(progress, fromPath, toPath);
+  useAnimatedReaction(
+    () => ({ p: progress.value, to: fallbackPathShared.value }),
+    ({ p }) => {
+      'worklet';
+      result.value =
+        normalizedEndShared.value.interpolate(normalizedStartShared.value, p) ??
+        fallbackPathShared.value;
+      notifyChange(result);
+    },
+    [],
+  );
+
+  return result;
 };
