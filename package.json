@@ -90,7 +90,10 @@
     "expo-splash-screen": "[Managed by CMR] Adds support for transitions and bottom images in the splash screen. We aim to upstream some of those improvements to Expo.",
     "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
     "expo-dev-launcher": "[Managed by CMR] Necessary to install the Expo network inspector for the Android `development` build type. Issue tracked internally by Expo.",
-    "react-helmet-async": "Working around Nx graph resolution issue"
+    "react-helmet-async": "Working around Nx graph resolution issue",
+    "ajv": "Request from Coinbase Security team to fix security vulnerability",
+    "elliptic": "Request from Coinbase Security team to fix security vulnerability",
+    "ip": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
