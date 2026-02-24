@@ -147,7 +147,6 @@ function AnimatedStackedAreas() {
   const maxStepOffset = 10000;
   const updateInterval = 500;
   const seriesSpacing = 2000;
-  const myTransition = { type: 'spring', stiffness: 700, damping: 20 };
 
   const seriesConfig = [
     { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
@@ -230,7 +229,10 @@ function AnimatedStackedAreas() {
         type="dotted"
         showLines
         AreaComponent={MemoizedDottedArea}
-        transitions={{ update: myTransition }}
+        transitions={{
+          enter: { type: 'spring', stiffness: 700, damping: 80 },
+          update: { type: 'spring', stiffness: 700, damping: 20 },
+        }}
         inset={0}
         showYAxis
         yAxis={{
