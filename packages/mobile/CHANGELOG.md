@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.47.4 (2/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: set paddingStart on Input for compact label. [[#423](https://github.com/coinbase/cds/pull/423)]
+
+## 8.47.3 ((2/20/2026, 09:16 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.2 (2/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix mobile CardRoot style forwarding logic. [[#405](https://github.com/coinbase/cds/pull/405)]
+
 ## 8.47.1 (2/19/2026 PST)
 
 #### 🐞 Fixes

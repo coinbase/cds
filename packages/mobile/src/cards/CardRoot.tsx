@@ -27,7 +27,7 @@ export type CardRootProps = CardRootBaseProps &
  * When `renderAsPressable` is true, it renders as a Pressable component.
  */
 export const CardRoot = memo(
-  forwardRef<View, CardRootProps>(({ children, style, renderAsPressable, ...props }, ref) => {
+  forwardRef<View, CardRootProps>(({ children, renderAsPressable, ...props }, ref) => {
     const Component = renderAsPressable ? Pressable : HStack;
     return (
       <Component ref={ref} {...props}>

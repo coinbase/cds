@@ -397,6 +397,82 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
   );
 };
 
+// Custom Background Color (use styles.root for non-interactive, blendStyles.background for interactive)
+export const CustomBackgroundColor = (): JSX.Element => {
+  return (
+    <VStack gap={2}>
+      <MessagingCard
+        {...exampleProps}
+        renderAsPressable
+        aria-label="View card details"
+        blendStyles={{ background: 'rgb(var(--blue80))' }}
+        description="Pressable card with custom background via blendStyles.background"
+        media={
+          <RemoteImage
+            alt="Coinbase One promotional image"
+            height={150}
+            resizeMode="cover"
+            shape="rectangle"
+            source={coinbaseOneLogo}
+          />
+        }
+        mediaPlacement="end"
+        onClick={() => alert('Card clicked!')}
+        title="Pressable with Custom Background"
+        type="upsell"
+        width={320}
+      />
+      <MessagingCard
+        {...exampleProps}
+        renderAsPressable
+        aria-label="View nudge details"
+        as="a"
+        blendStyles={{ background: 'rgb(var(--yellow20))' }}
+        description="Link card with custom background via blendStyles.background"
+        href="https://www.coinbase.com"
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+        target="_blank"
+        title="Link with Custom Background"
+        type="nudge"
+        width={320}
+      />
+      <MessagingCard
+        {...exampleProps}
+        as="article"
+        description="Non-pressable card with custom background via styles.root"
+        media={
+          <RemoteImage
+            alt="Coinbase One promotional image"
+            height={150}
+            resizeMode="cover"
+            shape="rectangle"
+            source={coinbaseOneLogo}
+          />
+        }
+        mediaPlacement="end"
+        renderAsPressable={false}
+        styles={{ root: { backgroundColor: 'rgb(var(--blue80))' } }}
+        title="Non-pressable with Custom Background"
+        type="upsell"
+        width={320}
+      />
+      <MessagingCard
+        {...exampleProps}
+        as="article"
+        description="Non-pressable nudge with custom background via styles.root"
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+        renderAsPressable={false}
+        styles={{ root: { backgroundColor: 'rgb(var(--yellow20))' } }}
+        title="Non-pressable Nudge with Custom Background"
+        type="nudge"
+        width={320}
+      />
+    </VStack>
+  );
+};
+
 // Text Content
 export const TextContent = (): JSX.Element => {
   return (

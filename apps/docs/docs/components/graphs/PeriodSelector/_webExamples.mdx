@@ -351,35 +351,41 @@ function CustomizableAssetPriceExample() {
     const [scrubIndex, setScrubIndex] = useState();
     const breakpoints = useBreakpoints();
 
-    const formatPrice = useCallback((price: number) => {
+    const formatPrice = useCallback((price) => {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
       }).format(price);
     }, []);
 
-    const formatYAxisPrice = useCallback((price: number) => {
-      if (breakpoints.isPhone) {
-        // Compact format for mobile: $45k, $1.2M, etc.
-        if (price >= 1000000) {
-          return `$${(price / 1000000).toFixed(1)}M`;
-        } else if (price >= 1000) {
-          return `$${(price / 1000).toFixed(0)}k`;
+    const formatYAxisPrice = useCallback(
+      (price) => {
+        if (breakpoints.isPhone) {
+          // Compact format for mobile: $45k, $1.2M, etc.
+          if (price >= 1000000) {
+            return `$${(price / 1000000).toFixed(1)}M`;
+          } else if (price >= 1000) {
+            return `$${(price / 1000).toFixed(0)}k`;
+          }
+          return `$${price.toFixed(0)}`;
         }
-        return `$${price.toFixed(0)}`;
-      }
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(price);
-    }, [breakpoints.isPhone]);
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(price);
+      },
+      [breakpoints.isPhone],
+    );
     const toggleShowYAxis = useCallback(() => setShowYAxis((show) => !show), []);
     const toggleShowXAxis = useCallback(() => setShowXAxis((show) => !show), []);
 
     const data = useMemo(() => sparklineInteractiveData[activeTab.id], [activeTab.id]);
-    const currentPrice = useMemo(() => sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value, []);
+    const currentPrice = useMemo(
+      () => sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value,
+      [],
+    );
     const currentTimePrice = useMemo(() => {
       if (scrubIndex !== undefined) {
         return data[scrubIndex].value;
@@ -445,17 +451,20 @@ function CustomizableAssetPriceExample() {
       }
     }, []);
 
-    const formatXAxisDate = useCallback((index) => {
-      if (!data[index]) return '';
-      const date = data[index].date;
-      const formatConfig = getFormattingConfigForPeriod(activeTab.id);
+    const formatXAxisDate = useCallback(
+      (index) => {
+        if (!data[index]) return '';
+        const date = data[index].date;
+        const formatConfig = getFormattingConfigForPeriod(activeTab.id);
 
-      if (activeTab.id === 'hour' || activeTab.id === 'day') {
-        return date.toLocaleTimeString('en-US', formatConfig);
-      } else {
-        return date.toLocaleDateString('en-US', formatConfig);
-      }
-    }, [data, activeTab.id, getFormattingConfigForPeriod]);
+        if (activeTab.id === 'hour' || activeTab.id === 'day') {
+          return date.toLocaleTimeString('en-US', formatConfig);
+        } else {
+          return date.toLocaleDateString('en-US', formatConfig);
+        }
+      },
+      [data, activeTab.id, getFormattingConfigForPeriod],
+    );
 
     const isMobile = breakpoints.isPhone || breakpoints.isTabletPortrait;
 
@@ -464,16 +473,25 @@ function CustomizableAssetPriceExample() {
         <SectionHeader
           padding={0}
           title={<Text font="label1">Asset Price</Text>}
-          balance={<RollingNumber format={{ style: 'currency', currency: 'USD' }} font="display3" color="fgMuted" value={currentTimePrice} />}
-          end={isMobile ? undefined : (
-            <HStack alignItems="center">
-              <PeriodSelectorWrapper
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                tabs={tabs}
-                onClickSettings={onClickSettings}
-              />
-            </HStack>)
+          balance={
+            <RollingNumber
+              format={{ style: 'currency', currency: 'USD' }}
+              font="display3"
+              color="fgMuted"
+              value={currentTimePrice}
+            />
+          }
+          end={
+            isMobile ? undefined : (
+              <HStack alignItems="center">
+                <PeriodSelectorWrapper
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  tabs={tabs}
+                  onClickSettings={onClickSettings}
+                />
+              </HStack>
+            )
           }
         />
         <LineChart
@@ -485,7 +503,7 @@ function CustomizableAssetPriceExample() {
             domainLimit: 'strict',
             showGrid: true,
             tickLabelFormatter: formatYAxisPrice,
-            width: breakpoints.isPhone ? 50 : 80
+            width: breakpoints.isPhone ? 50 : 80,
           }}
           xAxis={{
             tickLabelFormatter: formatXAxisDate,

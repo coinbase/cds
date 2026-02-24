@@ -75,7 +75,12 @@ Use `mediaPlacement` to control the position of media content.
 
 ## Upsell Card Styles
 
-MessagingCard with `type="upsell"` supports various background colors to match different promotional purposes. Use the `background` prop for semantic tokens, or `dangerouslySetBackground` for custom spectrum colors.
+MessagingCard with `type="upsell"` supports various background colors to match different promotional purposes. Use the `background` prop for semantic tokens.
+
+For **custom background colors**, use the recommended approach:
+
+- **Non-interactive cards** (`renderAsPressable={false}` or omitted): set the background via `styles.root` (e.g. `styles={{ root: { backgroundColor: 'rgb(...)' } }}`).
+- **Interactive cards** (`renderAsPressable` with `onPress`): set the background via `blendStyles.background` (e.g. `blendStyles={{ background: 'rgb(...)' }}`) so press states are handled correctly.
 
 ### General Upsell
 
@@ -140,7 +145,7 @@ function FeatureUpsell() {
         <MessagingCard
           key={i}
           type="upsell"
-          dangerouslySetBackground={card.bg}
+          styles={{ root: { backgroundColor: card.bg } }}
           title={
             <Text color="fgInverse" font="headline">
               Up to 3.29% APR on ETH
@@ -182,7 +187,7 @@ function CommunityUpsell() {
         <MessagingCard
           key={i}
           type="upsell"
-          dangerouslySetBackground={card.bg}
+          styles={{ root: { backgroundColor: card.bg } }}
           title={
             <Text color="fgInverse" font="headline">
               Join the community
@@ -244,7 +249,7 @@ function ProductUpsell() {
         <MessagingCard
           key={card.title}
           type="upsell"
-          dangerouslySetBackground={card.bg}
+          styles={{ root: { backgroundColor: card.bg } }}
           title={
             <Text color="fgInverse" font="headline">
               {card.title}
@@ -291,7 +296,7 @@ function NewsUpsell() {
         <MessagingCard
           key={i}
           type="upsell"
-          dangerouslySetBackground={card.bg}
+          styles={{ root: { backgroundColor: card.bg } }}
           title={
             <Text color="fgInverse" font="headline">
               Help defend crypto in America
@@ -366,7 +371,7 @@ function DismissibleCards() {
     <VStack gap={2}>
       <MessagingCard
         type="upsell"
-        dangerouslySetBackground={`rgb(${spectrum.teal70})`}
+        styles={{ root: { backgroundColor: `rgb(${spectrum.teal70})` } }}
         title="Dismissible Upsell"
         description="Upsell card with dismiss button"
         width={320}
@@ -566,8 +571,10 @@ function DismissibleCardsList() {
           <MessagingCard
             key={card.id}
             type={card.type}
-            dangerouslySetBackground={
-              card.type === 'upsell' ? `rgb(${spectrum.gray100})` : undefined
+            styles={
+              card.type === 'upsell'
+                ? { root: { backgroundColor: `rgb(${spectrum.gray100})` } }
+                : undefined
             }
             title={card.title}
             description={card.description}
@@ -617,7 +624,7 @@ function InteractiveCards() {
         renderAsPressable
         onPress={() => console.log('Card pressed!')}
         type="upsell"
-        dangerouslySetBackground={`rgb(${spectrum.teal70})`}
+        blendStyles={{ background: `rgb(${spectrum.teal70})` }}
         title="Interactive Upsell"
         description="Tap to interact"
         width={320}
@@ -745,7 +752,7 @@ function MultipleCards() {
           renderAsPressable
           onPress={() => console.log('clicked')}
           type="upsell"
-          dangerouslySetBackground={`rgb(${spectrum.purple70})`}
+          blendStyles={{ background: `rgb(${spectrum.purple70})` }}
           title="Card 3"
           description="Card with onPress handler"
           tag="Action"
@@ -820,7 +827,7 @@ When you need both `onDismissButtonPress` and want the entire card to be pressab
 
 ### Color Contrast
 
-MessagingCard supports custom backgrounds via `background` and `dangerouslySetBackground` props. When using custom background colors, ensure sufficient color contrast between text and background:
+MessagingCard supports custom backgrounds via the `background` prop and, for custom colors, `styles.root` (non-interactive) or `blendStyles.background` (interactive). When using custom background colors, ensure sufficient color contrast between text and background:
 
 - Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
 - Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)

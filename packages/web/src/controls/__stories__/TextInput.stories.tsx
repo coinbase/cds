@@ -153,6 +153,10 @@ export const ColorSurge = () => {
   );
 };
 
+export const NumberInput = function NumberInput() {
+  return <TextInput label="Number Input" type="number" />;
+};
+
 export const Width = function Width() {
   const widths = ['100%', '30%', '75%', '10%'] as const;
 
