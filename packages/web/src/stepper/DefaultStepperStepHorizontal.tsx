@@ -28,7 +28,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
     progress,
     activeStepLabelElement,
     setActiveStepLabelElement,
-    progressSpringConfig,
+    progressTimingConfig,
     animate,
     disableAnimateOnMount,
     StepperStepComponent = DefaultStepperStepHorizontal,
@@ -112,7 +112,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
               isDescendentActive={isDescendentActive}
               parentStep={parentStep}
               progress={progress}
-              progressSpringConfig={progressSpringConfig}
+              progressTimingConfig={progressTimingConfig}
               step={step}
               style={styles?.progress}
               visited={visited}
@@ -127,9 +127,11 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
             complete={complete}
             completedStepAccessibilityLabel={completedStepAccessibilityLabel}
             depth={depth}
+            disableAnimateOnMount={disableAnimateOnMount}
             flatStepIds={flatStepIds}
             isDescendentActive={isDescendentActive}
             parentStep={parentStep}
+            progressTimingConfig={progressTimingConfig}
             setActiveStepLabelElement={setActiveStepLabelElement}
             step={step}
             style={styles?.label}
@@ -180,7 +182,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
                     isDescendentActive={isDescendentActive}
                     parentStep={step}
                     progress={progress}
-                    progressSpringConfig={progressSpringConfig}
+                    progressTimingConfig={progressTimingConfig}
                     setActiveStepLabelElement={setActiveStepLabelElement}
                     step={subStep}
                     styles={styles}
