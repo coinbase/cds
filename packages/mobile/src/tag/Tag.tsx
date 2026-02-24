@@ -110,12 +110,7 @@ export const Tag = memo(
           {start ? (
             start
           ) : startIcon ? (
-            <Icon
-              active={startIconActive}
-              dangerouslySetColor={color}
-              name={startIcon}
-              size="xs"
-            />
+            <Icon active={startIconActive} dangerouslySetColor={color} name={startIcon} size="xs" />
           ) : null}
 
           <Text
@@ -130,12 +125,7 @@ export const Tag = memo(
           {end ? (
             end
           ) : endIcon ? (
-            <Icon
-              active={endIconActive}
-              dangerouslySetColor={color}
-              name={endIcon}
-              size="xs"
-            />
+            <Icon active={endIconActive} dangerouslySetColor={color} name={endIcon} size="xs" />
           ) : null}
         </Box>
       );
