@@ -126,7 +126,6 @@ export const DefaultStepperLabelHorizontal: StepperLabelComponent = memo(
         <MotionBox
           ref={paginationRef}
           animate={{ opacity: showPagination ? 1 : 0 }}
-          initial={{ opacity: disableAnimateOnMount ? 1 : 0 }}
           paddingEnd={1}
           transition={progressTimingConfig}
         >
@@ -134,7 +133,6 @@ export const DefaultStepperLabelHorizontal: StepperLabelComponent = memo(
         </MotionBox>
         <MotionBox
           animate={{ left: showPagination ? paginationWidth : 0 }}
-          initial={{ left: disableAnimateOnMount ? paginationWidth : 0 }}
           maxWidth={`calc(100% - ${paginationWidth}px)`}
           position="absolute"
           transition={progressTimingConfig}

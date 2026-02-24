@@ -295,6 +295,91 @@ export const NestedSteps = () => (
 );
 
 // ------------------------------------------------------------
+// Disable animate on mount
+// ------------------------------------------------------------
+export const DisableAnimateOnMount = () => (
+  <VStack gap={4}>
+    <StepperHorizontalExample
+      disableAnimateOnMount
+      defaultActiveStepId={basicSteps[0].id}
+      steps={basicSteps}
+      title="Default active step (first) – no progress animation on mount"
+    />
+    <StepperHorizontalExample
+      disableAnimateOnMount
+      defaultActiveStepId={basicSteps[2].id}
+      steps={basicSteps}
+      title="Default active step (third) – no progress animation on mount"
+    />
+    <StepperHorizontalExample
+      complete
+      disableAnimateOnMount
+      defaultActiveStepId={basicSteps[2].id}
+      steps={basicSteps}
+      title="Initial complete – no progress animation on mount"
+    />
+    <StepperHorizontalExample
+      disableAnimateOnMount
+      defaultActiveStepId={twoLevelSteps[0].id}
+      steps={twoLevelSteps}
+      title="Nested steps – first step active – no progress animation on mount"
+    />
+    <StepperHorizontalExample
+      disableAnimateOnMount
+      defaultActiveStepId="second-step-substep-one"
+      steps={twoLevelSteps}
+      title="Nested steps – substep active – no progress animation on mount"
+    />
+    <StepperHorizontalExample
+      complete
+      disableAnimateOnMount
+      defaultActiveStepId={twoLevelSteps[2].id}
+      steps={twoLevelSteps}
+      title="Nested steps – initial complete – no progress animation on mount"
+    />
+  </VStack>
+);
+
+// ------------------------------------------------------------
+// Animate false
+// ------------------------------------------------------------
+export const AnimateFalse = () => (
+  <VStack gap={4}>
+    <StepperHorizontalExample
+      animate={false}
+      defaultActiveStepId={basicSteps[0].id}
+      steps={basicSteps}
+      title="Default active step (first) – no animations"
+    />
+    <StepperHorizontalExample
+      animate={false}
+      defaultActiveStepId={basicSteps[2].id}
+      steps={basicSteps}
+      title="Default active step (third) – no animations"
+    />
+    <StepperHorizontalExample
+      complete
+      animate={false}
+      defaultActiveStepId={basicSteps[2].id}
+      steps={basicSteps}
+      title="Initial complete – no animations"
+    />
+    <StepperHorizontalExample
+      animate={false}
+      defaultActiveStepId={twoLevelSteps[0].id}
+      steps={twoLevelSteps}
+      title="Nested steps – first step active – no animations"
+    />
+    <StepperHorizontalExample
+      animate={false}
+      defaultActiveStepId="second-step-substep-one"
+      steps={twoLevelSteps}
+      title="Nested steps – substep active – no animations"
+    />
+  </VStack>
+);
+
+// ------------------------------------------------------------
 // Null Components
 // ------------------------------------------------------------
 export const NullComponents = () => {

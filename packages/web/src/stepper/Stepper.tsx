@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { containsStep, flattenSteps, isStepVisited } from '@coinbase/cds-common/stepper/utils';
@@ -382,37 +382,49 @@ const StepperBase = memo(
         disableAnimateOnMount ? cascadeTargetIndex : -1,
       );
 
-      // Sync filledStepIndex during render (state-driven, no useEffect)
-      if (!animate) {
-        // if animation is disabled, set the filled step index to the cascade target immediately
-        if (filledStepIndex !== cascadeTargetIndex) setFilledStepIndex(cascadeTargetIndex);
-      } else if (cascadeTargetIndex < filledStepIndex) {
-        // going backward, update the filled step index one at a time
-        if (cascadeTargetIndexRef.current !== cascadeTargetIndex) {
-          // when the cascade target just changed, step back one immediately
-          setFilledStepIndex((prev) => prev - 1);
-          cascadeTargetIndexRef.current = cascadeTargetIndex;
-        } else {
-          // otherwise step back one after delay so the current step can animate first
-          setTimeout(() => setFilledStepIndex((prev) => prev - 1), cascadeStaggerMs);
+      const filledStepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+      useEffect(() => {
+        if (filledStepTimeoutRef.current) {
+          clearTimeout(filledStepTimeoutRef.current);
+          filledStepTimeoutRef.current = null;
         }
-      } else if (cascadeTargetIndex > filledStepIndex) {
-        // going forward, update the fill step index one at a time
-        if (cascadeTargetIndexRef.current !== cascadeTargetIndex) {
-          // when the cascade target index just got updated, update the filled step index to the next immediately
-          setFilledStepIndex((prev) => prev + 1);
-          cascadeTargetIndexRef.current = cascadeTargetIndex;
-        } else {
-          // otherwise, update the filled step index one at a time with a delay to allow the current step to animate first
-          setTimeout(() => setFilledStepIndex((prev) => prev + 1), cascadeStaggerMs);
+        if (!animate) {
+          if (filledStepIndex !== cascadeTargetIndex) setFilledStepIndex(cascadeTargetIndex);
+        } else if (cascadeTargetIndex < filledStepIndex) {
+          if (cascadeTargetIndexRef.current !== cascadeTargetIndex) {
+            setFilledStepIndex((prev) => prev - 1);
+            cascadeTargetIndexRef.current = cascadeTargetIndex;
+          } else {
+            filledStepTimeoutRef.current = setTimeout(
+              () => setFilledStepIndex((prev) => prev - 1),
+              cascadeStaggerMs,
+            );
+          }
+        } else if (cascadeTargetIndex > filledStepIndex) {
+          if (cascadeTargetIndexRef.current !== cascadeTargetIndex) {
+            setFilledStepIndex((prev) => prev + 1);
+            cascadeTargetIndexRef.current = cascadeTargetIndex;
+          } else {
+            filledStepTimeoutRef.current = setTimeout(
+              () => setFilledStepIndex((prev) => prev + 1),
+              cascadeStaggerMs,
+            );
+          }
         }
-      }
+        return () => {
+          if (filledStepTimeoutRef.current) {
+            clearTimeout(filledStepTimeoutRef.current);
+            filledStepTimeoutRef.current = null;
+          }
+        };
+      }, [animate, cascadeTargetIndex, filledStepIndex]);
 
       const getStepProgress = useCallback(
         (index: number) => {
           if (!animate) {
             // if animation is disabled, return 0 if the step index is less than the active step index, otherwise return 1
-            if (activeStepIndex < 0) return 0;
+            if (filledStepIndex < 0) return 0;
             return index <= activeStepIndex ? 1 : 0;
           }
           if (filledStepIndex < 0) return 0;
