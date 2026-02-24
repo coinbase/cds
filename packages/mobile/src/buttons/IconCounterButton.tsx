@@ -55,17 +55,19 @@ export const IconCounterButton = memo(
     }: IconCounterButtonProps,
     ref: React.ForwardedRef<View>,
   ) {
+    const rootStyleOverride = styles?.root;
+
     const rootStyle = useMemo<PressableProps['style']>(() => {
-      if (typeof style === 'function' || typeof styles?.root === 'function') {
+      if (typeof style === 'function' || typeof rootStyleOverride === 'function') {
         return (state: PressableStateCallbackType) => {
           const baseStyle = typeof style === 'function' ? style(state) : style;
           const rootOverride =
-            typeof styles?.root === 'function' ? styles.root(state) : styles?.root;
+            typeof rootStyleOverride === 'function' ? rootStyleOverride(state) : rootStyleOverride;
           return [baseStyle, rootOverride];
         };
       }
-      return [style, styles?.root];
-    }, [style, styles?.root]);
+      return [style, rootStyleOverride];
+    }, [rootStyleOverride, style]);
 
     return (
       <Pressable

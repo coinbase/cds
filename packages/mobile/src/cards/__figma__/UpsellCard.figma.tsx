@@ -36,8 +36,8 @@ figma.connect(
       return (
         <UpsellCard
           {...props}
-          style={{ backgroundColor: green60 }}
           description={description.string}
+          style={{ backgroundColor: green60 }}
           title={title.string}
         />
       );

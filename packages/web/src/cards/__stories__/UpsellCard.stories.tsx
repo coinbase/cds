@@ -68,12 +68,12 @@ export const CustomTextNodes = (): JSX.Element => {
           Sign up
         </Button>
       }
-      style={{ backgroundColor: 'rgb(var(--blue80))' }}
       description={
         <Text as="p" color="fgInverse" display="block" font="label2">
           Start your free 30 day trial of Coinbase One
         </Text>
       }
+      style={{ backgroundColor: 'rgb(var(--blue80))' }}
       title={
         <Text as="h3" color="fgInverse" display="block" font="headline">
           Coinbase One

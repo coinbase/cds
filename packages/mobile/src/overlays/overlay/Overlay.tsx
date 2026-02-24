@@ -26,14 +26,14 @@ export const Overlay = memo(function Overlay({ opacity, style, ...props }: Overl
         animated
         renderToHardwareTextureAndroid
         background="bgOverlay"
+        opacity={opacity}
+        pin="all"
         style={[
           theme.activeColorScheme === 'dark'
             ? { backgroundColor: `rgba(${theme?.darkSpectrum?.gray0}, 0.5)` }
             : undefined,
           style,
         ]}
-        opacity={opacity}
-        pin="all"
         {...props}
       />
     </OverlayContentContext.Provider>

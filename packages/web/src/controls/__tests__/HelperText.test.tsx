@@ -48,6 +48,30 @@ describe('HelperText.test', () => {
     });
   });
 
+  it('renders custom root and icon slots with styles and classNames', () => {
+    render(
+      <DefaultThemeProvider>
+        <HelperText
+          classNames={{ root: 'helper-root', icon: 'helper-icon' }}
+          color="fgNegative"
+          errorIconTestID="error-icon"
+          styles={{ root: { color: '#00FF00' }, icon: { color: '#0000FF' } }}
+        >
+          Test text
+        </HelperText>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('Test text')).toHaveStyle({
+      color: '#00FF00',
+    });
+    expect(screen.getByText('Test text').className).toContain('helper-root');
+    expect(screen.getByTestId('error-icon')).toHaveStyle({
+      color: '#0000FF',
+    });
+    expect(screen.getByTestId('error-icon').className).toContain('helper-icon');
+  });
+
   it('renders custom padding', () => {
     render(
       <HelperText padding={4} testID="helper-text-test">

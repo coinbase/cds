@@ -17,6 +17,13 @@ export type HelperTextProps = {
   errorIconAccessibilityLabel?: string;
   /** Test ID for the error icon */
   errorIconTestID?: string;
+  /** Custom styles for individual elements of the HelperText component */
+  styles?: {
+    /** Root text element */
+    root?: TextProps['style'];
+    /** Error icon element */
+    icon?: TextProps['style'];
+  };
 } & TextProps;
 
 export const HelperText = memo(function HelperText({
@@ -26,6 +33,8 @@ export const HelperText = memo(function HelperText({
   children,
   align,
   dangerouslySetColor,
+  style,
+  styles,
   ...props
 }: HelperTextProps) {
   const theme = useTheme();
@@ -36,14 +45,22 @@ export const HelperText = memo(function HelperText({
   const glyph = glyphMap[glyphKey];
 
   const iconStyle = useMemo(
-    () => ({
-      fontFamily: 'CoinbaseIcons',
-      fontSize: iconSize,
-      height: iconSize,
-      width: iconSize,
-      letterSpacing: 4,
-    }),
-    [iconSize],
+    () => [
+      {
+        fontFamily: 'CoinbaseIcons',
+        fontSize: iconSize,
+        height: iconSize,
+        width: iconSize,
+        letterSpacing: 4,
+      },
+      // TODO: when we actually remove dangerouslySetColor:
+      // when migrating from dangerouslySetColor to style.color,
+      // root style/className color will not automatically style the error icon like dangerouslySetColor.
+      // Consumers must set both styles.root and styles.icon (or classNames equivalents).
+      // We need to have a migrator handle this or document in future migration guide.
+      styles?.icon,
+    ],
+    [iconSize, styles?.icon],
   );
 
   return (
@@ -52,6 +69,7 @@ export const HelperText = memo(function HelperText({
       color={color}
       dangerouslySetColor={dangerouslySetColor}
       font="label2"
+      style={[style, styles?.root]}
       {...props}
     >
       {color === 'fgNegative' && (

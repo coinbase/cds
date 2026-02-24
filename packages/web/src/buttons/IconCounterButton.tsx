@@ -81,8 +81,8 @@ export const IconCounterButton = memo(
           {typeof icon === 'string' ? (
             <Icon
               active={active}
-              color={color}
               className={classNames?.icon}
+              color={color}
               dangerouslySetColor={dangerouslySetColor}
               name={icon as IconName}
               size={size}

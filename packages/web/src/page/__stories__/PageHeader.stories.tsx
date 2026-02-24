@@ -340,12 +340,12 @@ const PageHeaderInPageRender = () => {
       <VStack
         alignContent="center"
         alignItems="center"
-        style={{ backgroundColor: '#FADADD' }}
         flexGrow={1}
         flexShrink={1}
         height="400px"
         justifyContent="center"
         padding={3}
+        style={{ backgroundColor: '#FADADD' }}
       >
         <Text as="h3" display="block" font="title1">
           Primary Content

@@ -73,8 +73,8 @@ const UpsellCardScreen = () => {
         <UpsellCard
           {...exampleProps}
           action="This is a very long action button text that will get truncated"
-          style={{ backgroundColor: defaultBackground }}
           description="This is a very long description text that will get truncated"
+          style={{ backgroundColor: defaultBackground }}
           title="This is a very long title text that will get truncated"
         />
       </Example>
@@ -86,12 +86,12 @@ const UpsellCardScreen = () => {
               Sign up
             </Button>
           }
-          style={{ backgroundColor: customTextNodeBackgroundColor }}
           description={
             <Text font="label2" style={{ color: customTextNodeColor }}>
               Start your free 30 day trial of Coinbase One
             </Text>
           }
+          style={{ backgroundColor: customTextNodeBackgroundColor }}
           title={
             <Text font="headline" style={{ color: customTextNodeColor }}>
               Coinbase One
@@ -102,12 +102,12 @@ const UpsellCardScreen = () => {
       <Example title="Custom Background color">
         <UpsellCard
           {...exampleProps}
-          style={{ backgroundColor: customBackgroundColor }}
           description={
             <Text font="label2" style={{ color: customTextNodeColor }}>
               Start your free 30 day trial of Coinbase One
             </Text>
           }
+          style={{ backgroundColor: customBackgroundColor }}
           title={
             <Text font="headline" style={{ color: customTextNodeColor }}>
               Coinbase One
