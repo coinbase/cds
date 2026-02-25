@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useId, useMemo, useState } from 'react';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
@@ -16,7 +17,6 @@ import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
 import { DefaultBarStack } from '../DefaultBarStack';
 import { Bar, type BarComponentProps } from '..';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
 
 export default {
   title: 'Components/Chart/BarChart',

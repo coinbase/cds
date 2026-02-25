@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
@@ -20,7 +21,6 @@ import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
 import { DefaultBarStack } from '../DefaultBarStack';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
