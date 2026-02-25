@@ -143,4 +143,23 @@ describe('Avatar', () => {
 
     expect(screen.getByText('T')).toBeTruthy();
   });
+
+  it('renders a hexagon fallback when shape is hexagon and name is provided without src', async () => {
+    render(
+      <DefaultThemeProvider>
+        <Avatar
+          accessibilityLabel=""
+          colorScheme="pink"
+          name="TestName"
+          shape="hexagon"
+          testID="avatar"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    await screen.findByTestId(coloredFallbackTestID);
+
+    expect(screen.getByTestId(coloredFallbackTestID)).toBeAccessible();
+    expect(screen.getByText('T')).toBeTruthy();
+  });
 });

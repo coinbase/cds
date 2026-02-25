@@ -173,7 +173,7 @@ export const Avatar = memo(
           <Text
             as="p"
             color="fgInverse"
-            display="block"
+            display="inline"
             font="title2"
             style={{ transform: `scale(${dangerouslySetSize * 0.02})` }}
             textAlign="center"
@@ -190,7 +190,7 @@ export const Avatar = memo(
         <Text
           as="p"
           color="fgInverse"
-          display="block"
+          display="inline"
           font={showLargerFont ? 'title2' : 'body'}
           textAlign="center"
           transform="uppercase"
