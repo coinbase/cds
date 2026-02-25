@@ -2,6 +2,7 @@ import React from 'react';
 import startCase from 'lodash/startCase';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { Icon } from '../../icons/Icon';
 import { Tag, type TagBaseProps } from '../Tag';
 
 type TagPropConfig = {
@@ -87,6 +88,35 @@ const TagScreen = () => {
           })}
         </Example>
       ))}
+      <Example inline title="With Icons">
+        <Tag colorScheme="blue" startIcon="add">
+          Start icon
+        </Tag>
+        <Tag colorScheme="green" endIcon="add">
+          End icon
+        </Tag>
+        <Tag colorScheme="purple" endIcon="add" startIcon="add">
+          Both icons
+        </Tag>
+        <Tag colorScheme="red" endIcon="add" intent="promotional" startIcon="add">
+          Promotional with icons
+        </Tag>
+      </Example>
+      <Example inline title="With Custom Nodes">
+        <Tag colorScheme="blue" start={<Icon color="fgNegative" name="add" size="xs" />}>
+          Custom start node
+        </Tag>
+        <Tag colorScheme="green" end={<Icon color="fgPositive" name="add" size="xs" />}>
+          Custom end node
+        </Tag>
+        <Tag
+          colorScheme="purple"
+          end={<Icon color="fgNegative" name="close" size="xs" />}
+          start={<Icon color="fgPositive" name="add" size="xs" />}
+        >
+          Both custom nodes
+        </Tag>
+      </Example>
     </ExampleScreen>
   );
 };
