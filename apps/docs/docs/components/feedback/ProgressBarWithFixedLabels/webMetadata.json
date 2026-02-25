@@ -16,5 +16,10 @@
       "url": "/components/feedback/ProgressBarWithFloatLabel"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
 }

@@ -12,5 +12,6 @@
       "label": "Tray",
       "url": "/components/overlay/Tray/"
     }
-  ]
+  ],
+  "dependencies": []
 }

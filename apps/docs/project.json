@@ -82,6 +82,12 @@
       "options": {
         "cwd": "{workspaceRoot}"
       }
+    },
+    "peer-dependencies": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
     }
   }
 }

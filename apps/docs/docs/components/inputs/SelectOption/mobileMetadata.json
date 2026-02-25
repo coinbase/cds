@@ -14,5 +14,10 @@
       "url": "/components/data-display/ListCell/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
 }

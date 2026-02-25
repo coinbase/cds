@@ -25,6 +25,10 @@
     {
       "name": "react-native-date-picker",
       "version": "^4.4.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
     }
   ]
 }

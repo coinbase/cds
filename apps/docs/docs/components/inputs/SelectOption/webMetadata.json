@@ -15,5 +15,14 @@
       "url": "/components/data-display/ListCell/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    },
+    {
+      "name": "react-dom",
+      "version": "^18.3.1"
+    }
+  ]
 }

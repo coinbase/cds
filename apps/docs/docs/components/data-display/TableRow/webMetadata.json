@@ -33,5 +33,10 @@
       "url": "/components/data-display/TableHeader"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
 }

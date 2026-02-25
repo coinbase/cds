@@ -21,5 +21,10 @@
       "url": "/components/overlay/Overlay/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-safe-area-context",
+      "version": "^4.10.5"
+    }
+  ]
 }

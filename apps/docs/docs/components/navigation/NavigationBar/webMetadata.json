@@ -18,5 +18,10 @@
       "url": "/components/navigation/Sidebar/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
 }

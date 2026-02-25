@@ -25,5 +25,6 @@
       "label": "SelectChip",
       "url": "/components/inputs/SelectChip/"
     }
-  ]
+  ],
+  "dependencies": []
 }

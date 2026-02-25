@@ -8,5 +8,11 @@
       "label": "useTheme",
       "url": "/hooks/useTheme/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

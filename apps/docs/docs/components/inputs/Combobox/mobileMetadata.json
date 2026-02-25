@@ -12,8 +12,16 @@
   ],
   "dependencies": [
     {
-      "name": "fuse.js",
-      "version": "^6.6.2"
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    },
+    {
+      "name": "react-native-safe-area-context",
+      "version": "^4.10.5"
+    },
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
     }
   ]
 }

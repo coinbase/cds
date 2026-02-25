@@ -16,5 +16,6 @@
       "label": "RadioCell",
       "url": "/components/inputs/RadioCell/?platform=mobile"
     }
-  ]
+  ],
+  "dependencies": []
 }

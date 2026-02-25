@@ -17,5 +17,11 @@
       "label": "Radio",
       "url": "/components/inputs/Radio/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

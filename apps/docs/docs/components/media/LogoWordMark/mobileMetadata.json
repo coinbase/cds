@@ -15,5 +15,11 @@
       "label": "SubBrandLogoWordMark",
       "url": "/components/media/SubBrandLogoWordMark/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    }
   ]
 }
