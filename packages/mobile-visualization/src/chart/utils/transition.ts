@@ -4,6 +4,7 @@ import {
   type SharedValue,
   useAnimatedReaction,
   useSharedValue,
+  withDelay,
   withSpring,
   type WithSpringConfig,
   withTiming,
@@ -25,17 +26,37 @@ import { interpolatePath } from 'd3-interpolate-path';
  * // Timing animation
  * { type: 'timing', duration: 500, easing: Easing.inOut(Easing.ease) }
  */
-export type Transition =
+export type Transition = (
   | ({ type: 'timing' } & WithTimingConfig)
-  | ({ type: 'spring' } & WithSpringConfig);
+  | ({ type: 'spring' } & WithSpringConfig)
+) & {
+  /**
+   * Delay in milliseconds (ms) before the animation starts.
+   *
+   * @example
+   * // Wait 2 seconds before animating
+   * { type: 'timing', duration: 500, delay: 2000 }
+   */
+  delay?: number;
+};
 
 /**
- * Default transition configuration used across all chart components.
+ * Default update transition used across all chart components.
+ * `{ type: 'spring', stiffness: 900, damping: 120 }`
  */
 export const defaultTransition: Transition = {
   type: 'spring',
   stiffness: 900,
   damping: 120,
+};
+
+/**
+ * Instant transition that completes immediately with no animation.
+ * Used when a transition is set to `null`.
+ */
+export const instantTransition: Transition = {
+  type: 'timing',
+  duration: 0,
 };
 
 /**
@@ -49,45 +70,27 @@ export const accessoryFadeTransitionDuration = 150;
 export const accessoryFadeTransitionDelay = 350;
 
 /**
- * Custom hook that uses d3-interpolate-path for more robust path interpolation.
- * then use Skia's native interpolation in the worklet.
- *
- * @param progress - Shared value between 0 and 1
- * @param fromPath - Starting path as SVG string
- * @param toPath - Ending path as SVG string
- * @returns Interpolated SkPath as a shared value
+ * Default enter transition for accessory elements (Point, Scrubber beacons).
+ * `{ type: 'timing', duration: 150, delay: 350 }`
  */
-export const useD3PathInterpolation = (
-  progress: SharedValue<number>,
-  fromPath: string,
-  toPath: string,
-): SharedValue<SkPath> => {
-  // Pre-compute intermediate paths on JS thread using d3-interpolate-path
-  const { fromSkiaPath, i0, i1, toSkiaPath } = useMemo(() => {
-    const pathInterpolator = interpolatePath(fromPath, toPath);
-    const d = 1e-3;
+export const defaultAccessoryEnterTransition: Transition = {
+  type: 'timing',
+  duration: accessoryFadeTransitionDuration,
+  delay: accessoryFadeTransitionDelay,
+};
 
-    return {
-      fromSkiaPath: Skia.Path.MakeFromSVGString(fromPath) ?? Skia.Path.Make(),
-      i0: Skia.Path.MakeFromSVGString(pathInterpolator(d)) ?? Skia.Path.Make(),
-      i1: Skia.Path.MakeFromSVGString(pathInterpolator(1 - d)) ?? Skia.Path.Make(),
-      toSkiaPath: Skia.Path.MakeFromSVGString(toPath) ?? Skia.Path.Make(),
-    };
-  }, [fromPath, toPath]);
-
-  const result = useSharedValue(fromSkiaPath);
-
-  useAnimatedReaction(
-    () => progress.value,
-    (t) => {
-      'worklet';
-      result.value = i1.interpolate(i0, t) ?? toSkiaPath;
-      notifyChange(result);
-    },
-    [fromSkiaPath, i0, i1, toSkiaPath],
-  );
-
-  return result;
+/**
+ * Resolves a transition value based on the animation state and a default.
+ * @note Passing in null will disable an animation.
+ * @note Passing in undefined will use the provided default.
+ */
+export const getTransition = (
+  value: Transition | null | undefined,
+  animate: boolean,
+  defaultValue: Transition,
+): Transition => {
+  if (!animate || value === null) return instantTransition;
+  return value ?? defaultValue;
 };
 
 // Interpolator and useInterpolator are brought over from non exported code in @shopify/react-native-skia
@@ -147,18 +150,29 @@ export const useInterpolator = <T>(
  */
 export const buildTransition = (targetValue: number, transition: Transition): number => {
   'worklet';
-  switch (transition.type) {
+  const { delay: delayMs, ...config } = transition;
+
+  let animation: number;
+  switch (config.type) {
     case 'timing': {
-      return withTiming(targetValue, transition);
+      animation = withTiming(targetValue, config);
+      break;
     }
     case 'spring': {
-      return withSpring(targetValue, transition);
+      animation = withSpring(targetValue, config);
+      break;
     }
     default: {
-      // Fallback to default transition config
-      return withSpring(targetValue, defaultTransition);
+      animation = withSpring(targetValue, defaultTransition);
+      break;
     }
   }
+
+  if (delayMs && delayMs > 0) {
+    return withDelay(delayMs, animation);
+  }
+
+  return animation;
 };
 
 /**
@@ -166,15 +180,16 @@ export const buildTransition = (targetValue: number, transition: Transition): nu
  *
  * @param currentPath - Current target path to animate to
  * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath.
- * @param transition - Transition configuration
+ * @param transitions - Transition configuration for enter and update animations
  * @returns Animated SkPath as a shared value
  *
  * @example
  * // Simple path transition
  * const path = usePathTransition({
  *   currentPath: d ?? '',
- *   animate: shouldAnimate,
- *   transition: { type: 'timing', duration: 3000 }
+ *   transitions: {
+ *     update: { type: 'timing', duration: 3000 },
+ *   },
  * });
  *
  * @example
@@ -182,13 +197,16 @@ export const buildTransition = (targetValue: number, transition: Transition): nu
  * const path = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
- *   animate: true,
- *   transition: { type: 'timing', duration: 300 }
+ *   transitions: {
+ *     enter: { type: 'tween', duration: 500 },
+ *     update: { type: 'spring', stiffness: 900, damping: 120 },
+ *   },
  * });
  */
 export const usePathTransition = ({
   currentPath,
   initialPath,
+  transitions,
   transition = defaultTransition,
 }: {
   /**
@@ -202,31 +220,92 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configuration
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter animation (initialPath → currentPath).
+     * Only used when `initialPath` is provided.
+     * If not provided, falls back to `update`.
+     */
+    enter?: Transition;
+    /**
+     * Transition for subsequent data update animations.
+     * @default defaultTransition
+     */
+    update?: Transition;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 }): SharedValue<SkPath> => {
-  // Track the previous path - updated in useEffect AFTER render,
-  // so during render it naturally holds the "from" path value
-  const previousPathRef = useRef(initialPath ?? currentPath);
+  const updateTransition = transitions?.update ?? transition;
+  const enterTransition = transitions?.enter;
+
+  const targetPathRef = useRef(initialPath ?? currentPath);
+  const isFirstAnimation = useRef(!!initialPath);
+  const interpolatorRef = useRef<((t: number) => string) | null>(null);
   const progress = useSharedValue(0);
 
-  // During render: previousPathRef still has old value, currentPath is new
-  const fromPath = previousPathRef.current;
-  const toPath = currentPath;
+  const initialSkiaPath =
+    Skia.Path.MakeFromSVGString(initialPath ?? currentPath) ?? Skia.Path.Make();
+  const normalizedStartShared = useSharedValue(initialSkiaPath);
+  const normalizedEndShared = useSharedValue(initialSkiaPath);
+  const fallbackPathShared = useSharedValue(initialSkiaPath);
+  const result = useSharedValue(initialSkiaPath);
 
   useEffect(() => {
-    const shouldAnimate = previousPathRef.current !== currentPath;
+    if (targetPathRef.current !== currentPath) {
+      let fromPath = targetPathRef.current;
+      if (interpolatorRef.current) {
+        const p = Math.min(Math.max(progress.value, 0), 1);
+        fromPath = interpolatorRef.current(p);
+      }
 
-    if (shouldAnimate) {
-      // Update ref for next path change (happens after this render)
-      previousPathRef.current = currentPath;
+      targetPathRef.current = currentPath;
 
-      // Animate from old path to new path
+      const pathInterpolator = interpolatePath(fromPath, currentPath);
+      interpolatorRef.current = pathInterpolator;
+
+      normalizedStartShared.value =
+        Skia.Path.MakeFromSVGString(pathInterpolator(0)) ?? Skia.Path.Make();
+      normalizedEndShared.value =
+        Skia.Path.MakeFromSVGString(pathInterpolator(1)) ?? Skia.Path.Make();
+      fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+
+      const activeTransition =
+        isFirstAnimation.current && enterTransition !== undefined
+          ? enterTransition
+          : updateTransition;
+
+      isFirstAnimation.current = false;
+
       progress.value = 0;
-      progress.value = buildTransition(1, transition);
+      progress.value = buildTransition(1, activeTransition);
     }
-  }, [currentPath, transition, progress]);
+  }, [
+    currentPath,
+    updateTransition,
+    enterTransition,
+    progress,
+    normalizedStartShared,
+    normalizedEndShared,
+    fallbackPathShared,
+  ]);
 
-  return useD3PathInterpolation(progress, fromPath, toPath);
+  useAnimatedReaction(
+    () => ({ p: progress.value, to: fallbackPathShared.value }),
+    ({ p }) => {
+      'worklet';
+      result.value =
+        normalizedEndShared.value.interpolate(normalizedStartShared.value, p) ??
+        fallbackPathShared.value;
+      notifyChange(result);
+    },
+    [],
+  );
+
+  return result;
 };

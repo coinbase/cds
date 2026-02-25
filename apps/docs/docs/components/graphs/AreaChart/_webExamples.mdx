@@ -132,11 +132,11 @@ You can have different area styles for each series.
 
 ## Animations
 
-You can configure chart transitions using the `transition` prop.
+You can configure chart transitions using the `transitions` prop.
 
 ### Customized Transitions
 
-You can pass in a custom spring based transition to your `AreaChart` for a custom transition.
+You can pass in a custom spring based transition to your `AreaChart` for a custom update transition.
 
 ```jsx live
 function AnimatedStackedAreas() {
@@ -147,7 +147,6 @@ function AnimatedStackedAreas() {
   const maxStepOffset = 10000;
   const updateInterval = 500;
   const seriesSpacing = 2000;
-  const myTransition = { type: 'spring', stiffness: 700, damping: 20 };
 
   const seriesConfig = [
     { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
@@ -230,7 +229,10 @@ function AnimatedStackedAreas() {
         type="dotted"
         showLines
         AreaComponent={MemoizedDottedArea}
-        transition={myTransition}
+        transitions={{
+          enter: { type: 'spring', stiffness: 700, damping: 80 },
+          update: { type: 'spring', stiffness: 700, damping: 20 },
+        }}
         inset={0}
         showYAxis
         yAxis={{

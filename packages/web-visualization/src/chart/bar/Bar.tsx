@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { getBarPath } from '../utils';
+import { type BarTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 
@@ -77,7 +77,37 @@ export type BarBaseProps = {
 
 export type BarProps = BarBaseProps & {
   /**
-   * Transition configuration for animation.
+   * Transition configuration for enter and update animations.
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
+   * }}
+   *
+   * @example
+   * // Custom staggered enter and spring update
+   * transitions={{ enter: { type: 'tween', duration: 0.5, staggerDelay: 0.3 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: BarTransition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: BarTransition | null;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
@@ -121,6 +151,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitions,
     transition,
   }) => {
     const barPath = useMemo(() => {
@@ -149,6 +180,7 @@ export const Bar = memo<BarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         width={width}
         x={x}
         y={y}

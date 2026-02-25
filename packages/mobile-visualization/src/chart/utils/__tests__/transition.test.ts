@@ -5,7 +5,6 @@ import {
   buildTransition,
   defaultTransition,
   type Transition,
-  useD3PathInterpolation,
   usePathTransition,
 } from '../transition';
 
@@ -165,68 +164,6 @@ describe('buildTransition', () => {
   });
 });
 
-describe('useD3PathInterpolation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should create interpolated path', () => {
-    const progress = { value: 0 };
-    const fromPath = 'M0,0L10,10';
-    const toPath = 'M0,0L20,20';
-
-    const { result } = renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
-
-    expect(result.current).toBeDefined();
-    expect(result.current).toHaveProperty('value');
-  });
-
-  it('should handle path changes', () => {
-    const progress = { value: 0.5 };
-    const fromPath1 = 'M0,0L10,10';
-    const toPath1 = 'M0,0L20,20';
-
-    const { result, rerender } = renderHook(
-      ({ from, to }) => useD3PathInterpolation(progress as any, from, to),
-      {
-        initialProps: { from: fromPath1, to: toPath1 },
-      },
-    );
-
-    const firstResult = result.current;
-    expect(firstResult).toBeDefined();
-
-    // Update paths
-    const fromPath2 = 'M0,0L15,15';
-    const toPath2 = 'M0,0L25,25';
-    rerender({ from: fromPath2, to: toPath2 });
-
-    // Result should be updated
-    expect(result.current).toBeDefined();
-  });
-
-  it('should call d3 interpolatePath', () => {
-    const { interpolatePath } = require('d3-interpolate-path');
-    const progress = { value: 0 };
-    const fromPath = 'M0,0L10,10';
-    const toPath = 'M0,0L20,20';
-
-    renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
-
-    expect(interpolatePath).toHaveBeenCalledWith(fromPath, toPath);
-  });
-
-  it('should create Skia paths from SVG strings', () => {
-    const progress = { value: 0 };
-    const fromPath = 'M0,0L10,10';
-    const toPath = 'M0,0L20,20';
-
-    renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
-
-    expect(Skia.Path.MakeFromSVGString).toHaveBeenCalled();
-  });
-});
-
 describe('useInterpolator', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -362,7 +299,7 @@ describe('usePathTransition', () => {
     const { result } = renderHook(() =>
       usePathTransition({
         currentPath,
-        transition,
+        transitions: { update: transition },
       }),
     );
 

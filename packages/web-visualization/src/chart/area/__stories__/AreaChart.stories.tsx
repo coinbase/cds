@@ -1,9 +1,10 @@
 import { VStack } from '@cbhq/cds-web/layout';
 import { Text } from '@cbhq/cds-web/typography';
 
-import { DottedLine } from '../../line';
+import { CartesianChart } from '../../CartesianChart';
+import { DottedLine, Line } from '../../line';
 import { Scrubber } from '../../scrubber/Scrubber';
-import { AreaChart } from '..';
+import { Area, AreaChart } from '..';
 
 export default {
   title: 'Components/Chart/AreaChart',

@@ -142,9 +142,10 @@ export const routes = [
         .default,
   },
   {
-    key: 'Chart',
+    key: 'ChartTransitions',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/__stories__/Chart.stories').default,
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')
+        .default,
   },
   {
     key: 'Checkbox',
@@ -245,6 +246,11 @@ export const routes = [
     key: 'DrawerMisc',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/DrawerMisc.stories').default,
+  },
+  {
+    key: 'DrawerReduceMotion',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/DrawerReduceMotion.stories').default,
   },
   {
     key: 'DrawerRight',
@@ -839,6 +845,11 @@ export const routes = [
     key: 'TrayRedesign',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/TrayRedesign.stories').default,
+  },
+  {
+    key: 'TrayReduceMotion',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/TrayReduceMotion.stories').default,
   },
   {
     key: 'TrayScrollable',

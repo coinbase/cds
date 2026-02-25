@@ -3,7 +3,8 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { usePathTransition } from '../utils/transition';
+import { defaultBarEnterTransition, withStaggerDelayTransition } from '../utils/bar';
+import { defaultTransition, getTransition, usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
 
@@ -23,9 +24,37 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     roundTop = true,
     roundBottom = true,
     yOrigin,
+    transitions,
     transition,
   }) => {
-    const { animate } = useCartesianChartContext();
+    const { animate, drawingArea } = useCartesianChartContext();
+
+    // Compute normalized x position for stagger delay calculation
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const enterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [animate, transitions?.enter, normalizedX],
+    );
+    const updateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [animate, transitions?.update, transition, normalizedX],
+    );
 
     // Generate target clip path (full bar)
     const targetPath = useMemo(() => {
@@ -41,7 +70,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     const animatedClipPath = usePathTransition({
       currentPath: targetPath,
       initialPath,
-      transition,
+      transitions: { enter: enterTransition, update: updateTransition },
     });
 
     const clipPath = animate ? animatedClipPath : targetPath;

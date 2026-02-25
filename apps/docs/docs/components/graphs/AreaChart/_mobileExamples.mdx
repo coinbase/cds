@@ -130,3 +130,476 @@ You can have different area styles for each series.
   ]}
 />
 ```
+
+## Animations
+
+You can configure chart transitions using the `transitions` prop on individual chart elements, or use the `animate` prop to toggle animations entirely.
+
+### Customized Transitions
+
+You can pass in a custom spring or timing based transition to your chart for custom update animations. Use `CartesianChart` with `Area` and `Line` components directly to configure `transitions` per element.
+
+```jsx
+function AnimatedStackedAreas() {
+  const theme = useTheme();
+  const dataCount = 20;
+  const minYValue = 5000;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const updateInterval = 500;
+  const seriesSpacing = 2000;
+  const myTransition = {
+    update: { type: 'spring', stiffness: 700, damping: 20 },
+  };
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: `rgb(${theme.spectrum.red40})` },
+    { id: 'orange', label: 'Orange', color: `rgb(${theme.spectrum.orange40})` },
+    { id: 'yellow', label: 'Yellow', color: `rgb(${theme.spectrum.yellow40})` },
+    { id: 'green', label: 'Green', color: `rgb(${theme.spectrum.green40})` },
+    { id: 'blue', label: 'Blue', color: `rgb(${theme.spectrum.blue40})` },
+    { id: 'indigo', label: 'Indigo', color: `rgb(${theme.spectrum.indigo40})` },
+    { id: 'purple', label: 'Purple', color: `rgb(${theme.spectrum.purple40})` },
+  ];
+
+  const domainLimit = maxDataOffset + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= minYValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minYValue, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minYValue + Math.random() * (maxDataOffset - minYValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MemoizedDottedArea = memo((props) => (
+    <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
+  ));
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <AreaChart
+        stacked
+        height={300}
+        series={series}
+        type="dotted"
+        showLines
+        AreaComponent={MemoizedDottedArea}
+        transition={myTransition.update}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+### Disable Animations
+
+You can also disable animations by setting the `animate` prop to `false`.
+
+```jsx
+function AnimatedStackedAreas() {
+  const theme = useTheme();
+  const dataCount = 20;
+  const minYValue = 5000;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const updateInterval = 500;
+  const seriesSpacing = 2000;
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: `rgb(${theme.spectrum.red40})` },
+    { id: 'orange', label: 'Orange', color: `rgb(${theme.spectrum.orange40})` },
+    { id: 'yellow', label: 'Yellow', color: `rgb(${theme.spectrum.yellow40})` },
+    { id: 'green', label: 'Green', color: `rgb(${theme.spectrum.green40})` },
+    { id: 'blue', label: 'Blue', color: `rgb(${theme.spectrum.blue40})` },
+    { id: 'indigo', label: 'Indigo', color: `rgb(${theme.spectrum.indigo40})` },
+    { id: 'purple', label: 'Purple', color: `rgb(${theme.spectrum.purple40})` },
+  ];
+
+  const domainLimit = maxDataOffset + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= minYValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minYValue, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minYValue + Math.random() * (maxDataOffset - minYValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MemoizedDottedArea = memo((props) => (
+    <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
+  ));
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <AreaChart
+        animate={false}
+        stacked
+        height={300}
+        series={series}
+        type="dotted"
+        showLines
+        AreaComponent={MemoizedDottedArea}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+## Gradients
+
+You can use the `gradient` prop on `series` to enable gradients.
+
+Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
+
+Values in between stops will be interpolated smoothly.
+
+```jsx
+function ContinuousGradient() {
+  const theme = useTheme();
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            height={16}
+            onPress={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(${theme.spectrum[`${color}20`]})`,
+              borderColor: `rgb(${theme.spectrum[`${color}50`]})`,
+              borderWidth: 2,
+              borderRadius: 1000,
+            }}
+            width={16}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: {
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})` },
+                { offset: max, color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})` },
+              ],
+            },
+          },
+        ]}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+}
+```
+
+### Discrete
+
+You can set multiple stops at the same offset to create a discrete gradient.
+
+```jsx
+function DiscreteGradient() {
+  const theme = useTheme();
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            height={16}
+            onPress={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(${theme.spectrum[`${color}20`]})`,
+              borderColor: `rgb(${theme.spectrum[`${color}50`]})`,
+              borderWidth: 2,
+              borderRadius: 1000,
+            }}
+            width={16}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: {
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})` },
+                {
+                  offset: min + (max - min) / 3,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})`,
+                },
+                {
+                  offset: min + (max - min) / 3,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}50`]})`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}50`]})`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})`,
+                },
+                { offset: max, color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})` },
+              ],
+            },
+          },
+        ]}
+        showLines
+        strokeWidth={4}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        fillOpacity={0.5}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+}
+```
+
+### Axes
+
+By default, gradients will be applied to the y-axis. You can apply a gradient to the x-axis by setting `axis` to `x` in the gradient definition.
+
+```jsx
+function XAxisGradient() {
+  const theme = useTheme();
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            height={16}
+            onPress={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(${theme.spectrum[`${color}20`]})`,
+              borderColor: `rgb(${theme.spectrum[`${color}50`]})`,
+              borderWidth: 2,
+              borderRadius: 1000,
+            }}
+            width={16}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: {
+              axis: 'x',
+              stops: ({ min, max }) => [
+                {
+                  offset: min,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})`,
+                  opacity: 0,
+                },
+                {
+                  offset: max,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})`,
+                  opacity: 1,
+                },
+              ],
+            },
+          },
+        ]}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+}
+```
