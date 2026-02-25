@@ -126,7 +126,7 @@ function Example() {
 
 ## With Background
 
-Apply a background color to the card using the `background` prop. When using a background, consider using `variant="tertiary"` on buttons.
+Apply a background color to the card using the `background` prop. When using a background, consider using `variant="inverse"` on buttons.
 
 ```jsx
 function Example() {
@@ -153,7 +153,7 @@ function Example() {
             <RemoteImage source={{ uri: assets.eth.imageUrl }} />
             <RemoteImage source={{ uri: assets.polygon.imageUrl }} />
           </RemoteImageGroup>
-          <Button compact variant="tertiary">
+          <Button compact variant="inverse">
             Share
           </Button>
         </ContentCardFooter>
@@ -275,7 +275,7 @@ function AccessibleCard() {
           </Text>
           <Button
             compact
-            variant="tertiary"
+            variant="inverse"
             onPress={() => console.log('Button pressed - navigating...')}
           >
             View Details

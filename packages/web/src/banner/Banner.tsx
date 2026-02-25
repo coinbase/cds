@@ -200,126 +200,116 @@ export const Banner = memo(
       );
 
       const content = (
-        <Box
-          position="relative"
-          width={width}
-          {...(!showDismiss && marginStyles)}
-          height="fit-content"
+        <HStack
+          ref={ref}
+          background={background}
+          borderRadius={borderRadius}
+          className={className}
+          flexGrow={1}
+          gap={1}
+          minWidth={bannerMinWidth}
+          paddingX={styleVariant === 'contextual' ? 2 : 3}
+          paddingY={2}
+          style={style}
+          testID={testID}
+          {...props}
         >
-          <HStack
-            ref={ref}
-            background={background}
-            borderRadius={borderRadius}
-            className={className}
+          {/** Start */}
+          <Box paddingX={0.5} paddingY={0.25}>
+            <Icon
+              accessibilityLabel={startIconAccessibilityLabel}
+              active={startIconActive}
+              color={iconColor}
+              name={startIcon}
+              size="s"
+              testID={`${testID}-icon`}
+            />
+          </Box>
+          <VStack
+            flexDirection={contentResponsiveConfig}
             flexGrow={1}
-            gap={1}
-            minWidth={bannerMinWidth}
-            paddingX={styleVariant === 'contextual' ? 2 : 3}
-            paddingY={2}
-            style={style}
-            testID={testID}
-            {...props}
+            gap={2}
+            justifyContent="space-between"
+            testID={`${testID}-inner-end-box`}
           >
-            {/** Start */}
-            <Box paddingX={0.5} paddingY={0.25}>
-              <Icon
-                accessibilityLabel={startIconAccessibilityLabel}
-                active={startIconActive}
-                color={iconColor}
-                name={startIcon}
-                size="s"
-                testID={`${testID}-icon`}
-              />
-            </Box>
-            <VStack
-              flexDirection={contentResponsiveConfig}
-              flexGrow={1}
-              gap={2}
-              justifyContent="space-between"
-              testID={`${testID}-inner-end-box`}
-            >
-              {/** Middle */}
-              <VStack gap={2} testID={`${testID}-content-box`}>
-                <VStack gap={0.5}>
-                  {typeof title === 'string' ? (
-                    <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
-                      {title}
-                    </Text>
-                  ) : (
-                    title
-                  )}
-                  {typeof children === 'string' ? (
-                    <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
-                      {children}
-                    </Text>
-                  ) : (
-                    children
-                  )}
-                </VStack>
-                {typeof label === 'string' ? (
-                  <Text color="fgMuted" font="legal" numberOfLines={2}>
-                    {label}
+            {/** Middle */}
+            <VStack gap={2} testID={`${testID}-content-box`}>
+              <VStack gap={0.5}>
+                {typeof title === 'string' ? (
+                  <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
+                    {title}
                   </Text>
                 ) : (
-                  label
+                  title
+                )}
+                {typeof children === 'string' ? (
+                  <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
+                    {children}
+                  </Text>
+                ) : (
+                  children
                 )}
               </VStack>
-              {/** Actions */}
-              {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-                <HStack
-                  alignItems="center"
-                  className={actionContainerCss}
-                  gap={2}
-                  testID={`${testID}-action`}
-                >
-                  {clonedPrimaryAction}
-                  {clonedSecondaryAction}
-                </HStack>
+              {typeof label === 'string' ? (
+                <Text color="fgMuted" font="legal" numberOfLines={2}>
+                  {label}
+                </Text>
+              ) : (
+                label
               )}
             </VStack>
-            {/** Dismissable action */}
-            {showDismiss && (
-              <Box alignItems="flex-start" padding={0.5}>
-                <Pressable
-                  accessibilityLabel={closeAccessibilityLabel}
-                  background="transparent"
-                  borderRadius={1000}
-                  onClick={handleOnDismiss}
-                  role="button"
-                  testID={`${testID}-dismiss-btn`}
-                >
-                  <Icon color={iconButtonColor} name="close" size="s" />
-                </Pressable>
-              </Box>
+            {/** Actions */}
+            {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
+              <HStack
+                alignItems="center"
+                className={actionContainerCss}
+                gap={2}
+                testID={`${testID}-action`}
+              >
+                {clonedPrimaryAction}
+                {clonedSecondaryAction}
+              </HStack>
             )}
-          </HStack>
-          {styleVariant === 'global' && !showDismiss && borderBox}
-        </Box>
+          </VStack>
+          {/** Dismissable action */}
+          {showDismiss && (
+            <Box alignItems="flex-start" padding={0.5}>
+              <Pressable
+                accessibilityLabel={closeAccessibilityLabel}
+                background="transparent"
+                borderRadius={1000}
+                onClick={handleOnDismiss}
+                role="button"
+                testID={`${testID}-dismiss-btn`}
+              >
+                <Icon color={iconButtonColor} name="close" size="s" />
+              </Pressable>
+            </Box>
+          )}
+        </HStack>
       );
 
       return (
-        <Box width={width}>
+        <Box
+          display="block"
+          height="fit-content"
+          position="relative"
+          {...marginStyles}
+          width={width}
+        >
           {showDismiss ? (
-            <Box
-              display="block"
-              height="fit-content"
-              position="relative"
-              width={width}
-              {...marginStyles}
+            <Collapsible
+              accessibilityLabelledBy={accessibilityLabelledBy}
+              collapsed={isCollapsed}
+              id={`${titleId}--controller`}
+              testID={`${testID}-collapsible`}
             >
-              <Collapsible
-                accessibilityLabelledBy={accessibilityLabelledBy}
-                collapsed={isCollapsed}
-                id={`${titleId}--controller`}
-                testID={`${testID}-collapsible`}
-              >
-                {content}
-              </Collapsible>
-              {styleVariant === 'global' && borderBox}
-            </Box>
+              {content}
+            </Collapsible>
           ) : (
             content
           )}
+          {styleVariant === 'global' && borderBox}
         </Box>
       );
     },
