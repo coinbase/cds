@@ -7,7 +7,13 @@ import { Circle, type Color, Group, interpolateColors } from '@shopify/react-nat
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type PointLabelPosition, projectPoint } from '../utils';
-import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultAccessoryEnterTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
@@ -123,8 +129,24 @@ export type PointProps = PointBaseProps & {
    */
   label?: ChartTextChildren;
   /**
-   * Transition configuration for point animations.
-   * Defines how the point transitions when position or color changes.
+   * Transition configuration for enter and update animations.
+   * @note Disable an animation by passing in null.
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
@@ -144,7 +166,8 @@ export const Point = memo<PointProps>(
     labelPosition = 'center',
     labelOffset,
     labelFont,
-    transition = defaultTransition,
+    transitions,
+    transition,
     animate: animateProp,
   }) => {
     const theme = useTheme();
@@ -163,6 +186,21 @@ export const Point = memo<PointProps>(
     const yScale = getYScale(yAxisId);
 
     const shouldAnimate = animate ?? false;
+
+    const updateTransition = useMemo(
+      () =>
+        getTransition(
+          transitions?.update !== undefined ? transitions.update : transition,
+          animate,
+          defaultTransition,
+        ),
+      [animate, transitions?.update, transition],
+    );
+
+    const enterTransition = useMemo(
+      () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      [animate, transitions?.enter],
+    );
 
     // Calculate pixel coordinates from data coordinates
     const pixelCoordinate = useMemo(() => {
@@ -185,8 +223,16 @@ export const Point = memo<PointProps>(
     const animatedX = useSharedValue(0);
     const animatedY = useSharedValue(0);
 
-    // Animated value for color interpolation (0 = old color, 1 = new color)
+    const enterOpacity = useSharedValue(shouldAnimate ? 0 : 1);
+
     const colorProgress = useSharedValue(1);
+
+    const isReady = !!xScale && !!yScale;
+
+    useEffect(() => {
+      if (!shouldAnimate || !isReady) return;
+      enterOpacity.value = buildTransition(1, enterTransition);
+    }, [shouldAnimate, isReady, enterTransition, enterOpacity]);
 
     // Update position when coordinates change
     useEffect(() => {
@@ -195,26 +241,33 @@ export const Point = memo<PointProps>(
       }
 
       if (shouldAnimate && previousPixelCoordinate) {
-        animatedX.value = buildTransition(pixelCoordinate.x, transition);
-        animatedY.value = buildTransition(pixelCoordinate.y, transition);
+        animatedX.value = buildTransition(pixelCoordinate.x, updateTransition);
+        animatedY.value = buildTransition(pixelCoordinate.y, updateTransition);
       } else {
         cancelAnimation(animatedX);
         cancelAnimation(animatedY);
         animatedX.value = pixelCoordinate.x;
         animatedY.value = pixelCoordinate.y;
       }
-    }, [pixelCoordinate, shouldAnimate, previousPixelCoordinate, animatedX, animatedY, transition]);
+    }, [
+      pixelCoordinate,
+      shouldAnimate,
+      previousPixelCoordinate,
+      animatedX,
+      animatedY,
+      updateTransition,
+    ]);
 
     // Update color when fill changes
     useEffect(() => {
       if (shouldAnimate && previousFill && previousFill !== fill) {
         colorProgress.value = 0;
-        colorProgress.value = buildTransition(1, transition);
+        colorProgress.value = buildTransition(1, updateTransition);
       } else {
         cancelAnimation(colorProgress);
         colorProgress.value = 1;
       }
-    }, [fill, shouldAnimate, previousFill, colorProgress, transition]);
+    }, [fill, shouldAnimate, previousFill, colorProgress, updateTransition]);
 
     // Create animated point for circles
     const animatedPoint = useDerivedValue(() => {
@@ -229,21 +282,20 @@ export const Point = memo<PointProps>(
       return interpolateColors(colorProgress.value, [0, 1], [previousFill, fill]);
     }, [colorProgress, previousFill, fill]);
 
-    // Check if point is within drawing area
-    const isWithinDrawingArea = useDerivedValue(() => {
+    const isWithinDrawingArea = useMemo(() => {
+      if (!pixelCoordinate) return false;
       return (
-        animatedX.value >= drawingArea.x &&
-        animatedX.value <= drawingArea.x + drawingArea.width &&
-        animatedY.value >= drawingArea.y &&
-        animatedY.value <= drawingArea.y + drawingArea.height
+        pixelCoordinate.x >= drawingArea.x &&
+        pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
+        pixelCoordinate.y >= drawingArea.y &&
+        pixelCoordinate.y <= drawingArea.y + drawingArea.height
       );
-    }, [animatedX, animatedY, drawingArea]);
+    }, [pixelCoordinate, drawingArea]);
 
-    // Compute effective opacity based on drawing area bounds
     const effectiveOpacity = useDerivedValue(() => {
       const baseOpacity = opacity ?? 1;
-      return isWithinDrawingArea.value ? baseOpacity : 0;
-    }, [isWithinDrawingArea, opacity]);
+      return isWithinDrawingArea ? baseOpacity * enterOpacity.value : 0;
+    }, [isWithinDrawingArea, opacity, enterOpacity]);
 
     const offset = useMemo(() => labelOffset ?? radius * 2, [labelOffset, radius]);
 
@@ -251,8 +303,7 @@ export const Point = memo<PointProps>(
       return null;
     }
 
-    // If animation is disabled or on first render, use static rendering
-    if (!shouldAnimate || !previousPixelCoordinate) {
+    if (!shouldAnimate) {
       const isWithinBounds =
         pixelCoordinate.x >= drawingArea.x &&
         pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
@@ -296,17 +347,12 @@ export const Point = memo<PointProps>(
       );
     }
 
-    // Animated rendering
     return (
-      <>
-        <Group opacity={effectiveOpacity}>
-          {/* Outer stroke circle */}
-          {strokeWidth > 0 && (
-            <Circle c={animatedPoint} color={stroke as Color} r={radius + strokeWidth / 2} />
-          )}
-          {/* Inner fill circle with animated color */}
-          <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
-        </Group>
+      <Group opacity={effectiveOpacity}>
+        {strokeWidth > 0 && (
+          <Circle c={animatedPoint} color={stroke as Color} r={radius + strokeWidth / 2} />
+        )}
+        <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
         {label && (
           <LabelComponent
             dataX={dataX}
@@ -321,7 +367,7 @@ export const Point = memo<PointProps>(
             {label}
           </LabelComponent>
         )}
-      </>
+      </Group>
     );
   },
 );

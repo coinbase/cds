@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { PathBaseProps, PathProps } from '../Path';
 import { type ChartPathCurveType, getAreaPath, type GradientDefinition } from '../utils';
 
 import { DottedArea } from './DottedArea';
@@ -37,13 +37,13 @@ export type AreaBaseProps = {
    * The color of the area.
    * @default color of the series or 'var(--color-fgPrimary)'
    */
-  fill?: string;
+  fill?: PathBaseProps['fill'];
   /**
    * Opacity of the area
    * @note when combined with gradient, both will be applied
    * @default 1
    */
-  fillOpacity?: number;
+  fillOpacity?: PathBaseProps['fillOpacity'];
   /**
    * Baseline value for the gradient.
    * When set, overrides the default baseline.
@@ -58,19 +58,14 @@ export type AreaBaseProps = {
    * Whether to animate the area.
    * Overrides the animate value from the chart context.
    */
-  animate?: boolean;
+  animate?: PathBaseProps['animate'];
 };
 
-export type AreaProps = AreaBaseProps & {
-  /**
-   * Transition configuration for path animations.
-   */
-  transition?: Transition;
-};
+export type AreaProps = AreaBaseProps & Pick<PathProps, 'transitions' | 'transition'>;
 
 export type AreaComponentProps = Pick<
   AreaProps,
-  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transition'
+  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transitions' | 'transition'
 > & {
   /**
    * Path of the area
@@ -96,6 +91,7 @@ export const Area = memo<AreaProps>(
     baseline,
     connectNulls,
     gradient: gradientProp,
+    transitions,
     transition,
     animate,
   }) => {
@@ -160,6 +156,7 @@ export const Area = memo<AreaProps>(
         fillOpacity={fillOpacity}
         gradient={gradient}
         transition={transition}
+        transitions={transitions}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

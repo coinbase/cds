@@ -6,7 +6,13 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { type PointLabelPosition, projectPoint } from '../utils';
+import {
+  defaultAccessoryEnterTransition,
+  defaultTransition,
+  getTransition,
+  type PointLabelPosition,
+  projectPoint,
+} from '../utils';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
@@ -215,8 +221,24 @@ export type PointProps = PointBaseProps &
      */
     accessibilityLabel?: string;
     /**
-     * Transition configuration for animation.
-     * @default defaultTransition
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
      */
     transition?: Transition;
   };
@@ -244,6 +266,7 @@ export const Point = memo<PointProps>(
     labelFont,
     testID,
     animate: animateProp,
+    transitions,
     transition,
     ...svgProps
   }) => {
@@ -254,6 +277,21 @@ export const Point = memo<PointProps>(
       drawingArea,
     } = useCartesianChartContext();
     const animate = animateProp ?? animationEnabled;
+
+    const enterTransition = useMemo(
+      () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      [animate, transitions?.enter],
+    );
+
+    const updateTransition = useMemo(
+      () =>
+        getTransition(
+          transitions?.update !== undefined ? transitions.update : transition,
+          animate,
+          defaultTransition,
+        ),
+      [animate, transitions?.update, transition],
+    );
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
@@ -339,7 +377,7 @@ export const Point = memo<PointProps>(
       return (
         <motion.circle
           // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
-          {...({
+          {...{
             animate: {
               cx: pixelCoordinate.x,
               cy: pixelCoordinate.y,
@@ -348,25 +386,33 @@ export const Point = memo<PointProps>(
             className: cx(innerPointCss, className, classNames?.point),
             cx: pixelCoordinate.x,
             cy: pixelCoordinate.y,
-            fill: fill,
-            initial: false,
-            onClick: onClick
+          }}
+          aria-label={accessibilityLabel}
+          className={cx(innerPointCss, className, classNames?.point)}
+          cx={pixelCoordinate.x}
+          cy={pixelCoordinate.y}
+          fill={fill}
+          onClick={
+            onClick
               ? (event: any) =>
                   onClick(event, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
-              : undefined,
-            onKeyDown: handleKeyDown,
-            r: radius,
-            role: onClick ? 'button' : undefined,
-            stroke: stroke,
-            strokeWidth: strokeWidth,
-            style: mergedStyles,
-            tabIndex: onClick ? 0 : -1,
-            transition: transition,
-            variants: variants,
-            whileHover: onClick ? 'hovered' : 'default',
-            whileTap: onClick ? 'pressed' : 'default',
-            ...svgProps,
-          } as React.ComponentProps<typeof motion.circle>)}
+              : undefined
+          }
+          onKeyDown={handleKeyDown}
+          r={radius}
+          role={onClick ? 'button' : undefined}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          style={mergedStyles}
+          tabIndex={onClick ? 0 : -1}
+          transition={{
+            cx: updateTransition,
+            cy: updateTransition,
+          }}
+          variants={variants}
+          whileHover={onClick ? 'hovered' : 'default'}
+          whileTap={onClick ? 'pressed' : 'default'}
+          {...svgProps}
         />
       );
     }, [
@@ -386,7 +432,7 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
-      transition,
+      updateTransition,
     ]);
 
     if (!xScale || !yScale) {
@@ -395,28 +441,34 @@ export const Point = memo<PointProps>(
 
     return (
       <g opacity={isWithinDrawingArea ? 1 : 0}>
-        <g
-          className={cx(containerCss, classNames?.root)}
-          data-testid={testID}
-          opacity={opacity}
-          style={styles?.root}
+        <motion.g
+          animate={{ opacity: 1 }}
+          initial={animate ? { opacity: 0 } : false}
+          transition={{ opacity: enterTransition }}
         >
-          {innerPoint}
-        </g>
-        {label && (
-          <LabelComponent
-            dataX={dataX}
-            dataY={dataY}
-            fill={fill}
-            font={labelFont}
-            offset={labelOffset}
-            position={labelPosition}
-            x={pixelCoordinate.x}
-            y={pixelCoordinate.y}
+          <g
+            className={cx(containerCss, classNames?.root)}
+            data-testid={testID}
+            opacity={opacity}
+            style={styles?.root}
           >
-            {label}
-          </LabelComponent>
-        )}
+            {innerPoint}
+          </g>
+          {label && (
+            <LabelComponent
+              dataX={dataX}
+              dataY={dataY}
+              fill={fill}
+              font={labelFont}
+              offset={labelOffset}
+              position={labelPosition}
+              x={pixelCoordinate.x}
+              y={pixelCoordinate.y}
+            >
+              {label}
+            </LabelComponent>
+          )}
+        </motion.g>
       </g>
     );
   },

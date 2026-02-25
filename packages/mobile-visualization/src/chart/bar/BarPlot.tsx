@@ -29,7 +29,8 @@ export type BarPlotBaseProps = Pick<
   seriesIds?: string[];
 };
 
-export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transition'>;
+export type BarPlotProps = BarPlotBaseProps &
+  Pick<BarStackGroupProps, 'transitions' | 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.
@@ -51,6 +52,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackGap,
     barMinSize,
     stackMinSize,
+    transitions,
     transition,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
@@ -135,6 +137,7 @@ export const BarPlot = memo<BarPlotProps>(
             strokeWidth={defaultStrokeWidth}
             totalStacks={stackGroups.length}
             transition={transition}
+            transitions={transitions}
             yAxisId={group.yAxisId}
           />
         ))}

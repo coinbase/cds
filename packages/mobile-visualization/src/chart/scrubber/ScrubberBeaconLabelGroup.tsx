@@ -1,11 +1,11 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
-import { useDerivedValue } from 'react-native-reanimated';
+import { useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text';
-import { applySerializableScale, useScrubberContext } from '../utils';
+import { applySerializableScale, unwrapAnimatedValue, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -13,14 +13,26 @@ import {
   type LabelPosition,
   type ScrubberLabelPosition,
 } from '../utils/scrubber';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
-import type { ScrubberBeaconLabelComponent, ScrubberBeaconLabelProps } from './Scrubber';
+import type {
+  ScrubberBeaconLabelComponent,
+  ScrubberBeaconLabelProps,
+  ScrubberBeaconProps,
+} from './Scrubber';
 
 const PositionedLabel = memo<{
   index: number;
   positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
+  isIdle: AnimatedProp<boolean>;
+  updateTransition: Transition;
   label: ChartTextChildren;
   color?: string;
   seriesId: string;
@@ -33,6 +45,8 @@ const PositionedLabel = memo<{
     index,
     positions,
     position,
+    isIdle,
+    updateTransition,
     label,
     color,
     seriesId,
@@ -46,7 +60,20 @@ const PositionedLabel = memo<{
       [positions, index],
     );
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
-    const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
+    const targetY = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
+
+    const animatedY = useSharedValue(0);
+    useAnimatedReaction(
+      () => ({ y: targetY.value, idle: unwrapAnimatedValue(isIdle) }),
+      (current, previous) => {
+        if (previous === null || !previous.idle || !current.idle) {
+          animatedY.value = current.y;
+        } else {
+          animatedY.value = buildTransition(current.y, updateTransition);
+        }
+      },
+      [updateTransition],
+    );
 
     const dx = useDerivedValue(() => {
       return position.value === 'right' ? labelHorizontalOffset : -labelHorizontalOffset;
@@ -68,7 +95,7 @@ const PositionedLabel = memo<{
         opacity={opacity}
         seriesId={seriesId}
         x={x}
-        y={y}
+        y={animatedY}
       />
     );
   },
@@ -107,6 +134,10 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
    * @default DefaultScrubberBeaconLabel
    */
   BeaconLabelComponent?: ScrubberBeaconLabelComponent;
+  /**
+   * Transition configuration for beacon label animations.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
@@ -117,6 +148,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelFont,
     labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
+    transitions,
   }) => {
     const {
       getSeries,
@@ -126,8 +158,18 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       getXAxis,
       drawingArea,
       dataLength,
+      animate,
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
+
+    const isIdle = useDerivedValue(() => {
+      return scrubberPosition.value === undefined;
+    }, [scrubberPosition]);
+
+    const updateTransition = useMemo(
+      () => getTransition(transitions?.update, animate, defaultTransition),
+      [transitions?.update, animate],
+    );
 
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 
@@ -281,6 +323,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           BeaconLabelComponent={BeaconLabelComponent}
           color={labelInfo.color}
           index={index}
+          isIdle={isIdle}
           label={labelInfo.label}
           labelFont={labelFont}
           labelHorizontalOffset={labelHorizontalOffset}
@@ -288,6 +331,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           position={currentPosition}
           positions={allLabelPositions}
           seriesId={info.seriesId}
+          updateTransition={updateTransition}
         />
       );
     });

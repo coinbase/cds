@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { getBarPath, type Transition } from '../utils';
+import { type BarTransition, getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
@@ -75,7 +75,37 @@ export type BarBaseProps = {
 
 export type BarProps = BarBaseProps & {
   /**
-   * Transition configuration for bar animations.
+   * Transition configuration for enter and update animations.
+   * @note Disable an animation by passing in null.
+   *
+   * @default transitions = {{
+   *   enter: { type: 'spring', stiffness: 900, damping: 120, staggerDelay: 250 },
+   *   update: { type: 'spring', stiffness: 900, damping: 120 }
+   * }}
+   *
+   * @example
+   * // Custom staggered enter and spring update
+   * transitions={{ enter: { type: 'timing', duration: 500, staggerDelay: 300 }, update: { type: 'spring', damping: 20 } }}
+   *
+   * @example
+   * // Disable enter animation
+   * transitions={{ enter: null }}
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: BarTransition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: BarTransition | null;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 };
@@ -119,6 +149,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitions,
     transition,
   }) => {
     const theme = useTheme();
@@ -155,6 +186,7 @@ export const Bar = memo<BarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         width={width}
         x={x}
         y={y}

@@ -6,18 +6,27 @@ import {
   type MotionValue,
   type Transition,
   useMotionValue,
-  useTransform,
   type ValueAnimationTransition,
 } from 'framer-motion';
 
 /**
- * Default transition configuration used across all chart components.
+ * Default update transition used across all chart components.
+ * `{ type: 'spring', stiffness: 900, damping: 120, mass: 4 }`
  */
 export const defaultTransition: Transition = {
   type: 'spring',
   stiffness: 900,
   damping: 120,
   mass: 4,
+};
+
+/**
+ * Instant transition that completes immediately with no animation.
+ * Used when a transition is set to `null`.
+ */
+export const instantTransition: Transition = {
+  type: 'tween',
+  duration: 0,
 };
 
 /**
@@ -31,39 +40,61 @@ export const accessoryFadeTransitionDuration = 0.15;
 export const accessoryFadeTransitionDelay = 0.35;
 
 /**
+ * Default enter transition for accessory elements (Point, Scrubber beacons).
+ * `{ type: 'tween', duration: 0.15, delay: 0.35 }`
+ */
+export const defaultAccessoryEnterTransition: Transition = {
+  type: 'tween',
+  duration: accessoryFadeTransitionDuration,
+  delay: accessoryFadeTransitionDelay,
+};
+
+/**
+ * Resolves a transition value based on the animation state and a default.
+ * @note Passing in null will disable an animation.
+ * @note Passing in undefined will use the provided default.
+ */
+export const getTransition = (
+  value: Transition | null | undefined,
+  animate: boolean,
+  defaultValue: Transition,
+): Transition => {
+  if (!animate || value === null) return instantTransition;
+  return value ?? defaultValue;
+};
+
+/**
  * Hook for path animation state and transitions.
  *
  * @param currentPath - Current target path to animate to
  * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath.
- * @param transition - Transition configuration
+ * @param transitions - Transition configuration for enter and update animations
  * @returns MotionValue containing the current interpolated path string
  *
  * @example
  * // Simple path transition
  * const animatedPath = usePathTransition({
  *   currentPath: d ?? '',
- *   transition: {
- *     type: 'spring',
- *     stiffness: 300,
- *     damping: 20
- *   }
+ *   transitions: {
+ *     update: { type: 'spring', stiffness: 300, damping: 20 },
+ *   },
  * });
  *
  * @example
- * // Time based animation
+ * // Enter animation with different initial config (like DefaultBar)
  * const animatedPath = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
- *   transition: {
- *     type: 'tween',
- *     duration: 0.3,
- *     ease: 'easeInOut'
- *   }
+ *   transitions: {
+ *     enter: { type: 'tween', duration: 0.5 },
+ *     update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 },
+ *   },
  * });
  */
 export const usePathTransition = ({
   currentPath,
   initialPath,
+  transitions,
   transition = defaultTransition,
 }: {
   /**
@@ -77,63 +108,77 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configuration
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter animation (initialPath → currentPath).
+     * Only used when `initialPath` is provided.
+     * If not provided, falls back to `update`.
+     */
+    enter?: Transition;
+    /**
+     * Transition for subsequent data update animations.
+     * @default defaultTransition
+     */
+    update?: Transition;
+  };
+  /**
+   * Transition for updates.
+   * @deprecated Use `transitions.update` instead.
    */
   transition?: Transition;
 }): MotionValue<string> => {
-  const isInitialRender = useRef(true);
-  const previousPathRef = useRef(initialPath ?? currentPath);
-  const targetPathRef = useRef(currentPath);
-  const animationRef = useRef<AnimationPlaybackControls | null>(null);
-  const progress = useMotionValue(0);
+  const updateTransition = transitions?.update ?? transition;
+  const enterTransition = transitions?.enter;
 
-  // Derive the interpolated path from progress using useTransform
-  const interpolatedPath = useTransform(progress, (latest) => {
-    const pathInterpolator = interpolatePath(previousPathRef.current, targetPathRef.current);
-    return pathInterpolator(latest);
-  });
+  const previousPathRef = useRef(initialPath ?? currentPath);
+  const targetPathRef = useRef(initialPath ?? currentPath);
+  const animationRef = useRef<AnimationPlaybackControls | null>(null);
+  const isFirstAnimation = useRef(!!initialPath);
+
+  const animatedPath = useMotionValue(initialPath ?? currentPath);
 
   useEffect(() => {
-    // Only proceed if the target path has actually changed
     if (targetPathRef.current !== currentPath) {
-      // Cancel any ongoing animation before starting a new one
-      const wasAnimating = !!animationRef.current;
+      const currentVisualPath = animatedPath.get();
+
       if (animationRef.current) {
-        animationRef.current.cancel();
+        animationRef.current.stop();
         animationRef.current = null;
-      }
-
-      const currentInterpolatedPath = interpolatedPath.get();
-
-      // If we were animating and the interpolated path is different from both start and end,
-      // use it as the starting point for the next animation (smooth interruption)
-      const isInterpolatedPosition =
-        currentInterpolatedPath !== previousPathRef.current &&
-        currentInterpolatedPath !== currentPath;
-
-      if (wasAnimating && isInterpolatedPosition) {
-        previousPathRef.current = currentInterpolatedPath;
+        previousPathRef.current = currentVisualPath;
       }
 
       targetPathRef.current = currentPath;
 
-      progress.set(0);
-      animationRef.current = animate(progress, 1, {
-        ...(transition as ValueAnimationTransition<number>),
+      const activeTransition =
+        isFirstAnimation.current && enterTransition !== undefined
+          ? enterTransition
+          : updateTransition;
+
+      isFirstAnimation.current = false;
+
+      const pathInterpolator = interpolatePath(previousPathRef.current, currentPath);
+
+      animationRef.current = animate(0, 1, {
+        ...(activeTransition as ValueAnimationTransition<number>),
+        onUpdate: (latest) => {
+          animatedPath.set(pathInterpolator(latest));
+        },
         onComplete: () => {
+          animatedPath.set(currentPath);
           previousPathRef.current = currentPath;
+          animationRef.current = null;
         },
       });
-
-      isInitialRender.current = false;
     }
 
     return () => {
       if (animationRef.current) {
-        animationRef.current.cancel();
+        animationRef.current.stop();
       }
     };
-  }, [currentPath, transition, progress, interpolatedPath]);
+  }, [currentPath, updateTransition, enterTransition, animatedPath]);
 
-  return interpolatedPath;
+  return animatedPath;
 };

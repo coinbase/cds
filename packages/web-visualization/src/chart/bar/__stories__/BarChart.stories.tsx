@@ -1,7 +1,8 @@
-import React, { memo, useId } from 'react';
+import React, { memo, useEffect, useId, useMemo, useState } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
@@ -223,6 +224,8 @@ const BandGridPositionExample = ({
 );
 
 const Candlesticks = () => {
+  const staggerDelay = 0.25;
+
   const infoTextRef = React.useRef<HTMLSpanElement>(null);
   const selectedIndexRef = React.useRef<number | undefined>(undefined);
   const [timePeriod, setTimePeriod] = React.useState<TimePeriodTab>(tabs[0]);
@@ -264,8 +267,22 @@ const Candlesticks = () => {
 
   const CandlestickBarComponent = memo<BarComponentProps>(
     ({ x, y, width, height, originY, dataX, ...props }) => {
-      const { getYScale } = useCartesianChartContext();
+      const { getYScale, drawingArea } = useCartesianChartContext();
       const yScale = getYScale();
+
+      const normalizedX = useMemo(
+        () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+        [x, drawingArea.x, drawingArea.width],
+      );
+
+      const transition: Transition = useMemo(
+        () => ({
+          type: 'tween',
+          duration: 0.325,
+          delay: normalizedX * staggerDelay,
+        }),
+        [normalizedX],
+      );
 
       const wickX = x + width / 2;
 
@@ -283,10 +300,14 @@ const Candlesticks = () => {
       const bodyY = openY < closeY ? openY : closeY;
 
       return (
-        <g>
+        <motion.g
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 12 }}
+          transition={transition}
+        >
           <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
           <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-        </g>
+        </motion.g>
       );
     },
   );
@@ -361,7 +382,6 @@ const Candlesticks = () => {
         showYAxis
         BarComponent={CandlestickBarComponent}
         BarStackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
-        animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
         height={400}
@@ -401,6 +421,72 @@ const Candlesticks = () => {
         width="fit-content"
       />
     </VStack>
+  );
+};
+
+type SunlightChartData = Array<{ label: string; value: number }>;
+
+const sunlightData: SunlightChartData = [
+  { label: 'Jan', value: 598 },
+  { label: 'Feb', value: 635 },
+  { label: 'Mar', value: 688 },
+  { label: 'Apr', value: 753 },
+  { label: 'May', value: 812 },
+  { label: 'Jun', value: 855 },
+  { label: 'Jul', value: 861 },
+  { label: 'Aug', value: 828 },
+  { label: 'Sep', value: 772 },
+  { label: 'Oct', value: 710 },
+  { label: 'Nov', value: 648 },
+  { label: 'Dec', value: 605 },
+];
+
+const dayLength = 1440;
+
+const MonthlySunlight = () => {
+  return (
+    <CartesianChart
+      height={300}
+      series={[
+        {
+          id: 'sunlight',
+          data: sunlightData.map(({ value }) => value),
+          yAxisId: 'sunlight',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'day',
+          data: sunlightData.map(() => dayLength),
+          yAxisId: 'day',
+          color: 'rgb(var(--blue100))',
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: sunlightData.map(({ label }) => label),
+      }}
+      yAxis={[
+        {
+          id: 'day',
+          domain: { min: 0, max: dayLength },
+          domainLimit: 'strict',
+        },
+        {
+          id: 'sunlight',
+          domain: { min: 0, max: dayLength },
+          domainLimit: 'strict',
+        },
+      ]}
+    >
+      <YAxis showGrid showLine axisId="day" label="Minutes of sunlight" position="left" />
+      <XAxis showLine />
+      <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+      <BarPlot
+        borderRadius={0}
+        seriesIds={['sunlight']}
+        transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+      />
+    </CartesianChart>
   );
 };
 
@@ -776,6 +862,9 @@ export const All = () => {
           <BandGridPositionExample position="middle" />
           <BandGridPositionExample position="end" />
         </HStack>
+      </Example>
+      <Example title="Monthly Sunlight">
+        <MonthlySunlight />
       </Example>
     </VStack>
   );

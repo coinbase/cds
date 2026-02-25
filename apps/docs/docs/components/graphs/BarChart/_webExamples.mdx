@@ -658,9 +658,288 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
 
 ### Custom Components
 
-#### Candlesticks
+#### Outlined Stacks
 
-You can set the `BarComponent` prop to render a custom component for bars.
+You can set the `BarStackComponent` prop to render a custom component for stacks.
+
+```jsx live
+function MonthlyRewards() {
+  const CustomBarStackComponent = ({ children, ...props }) => {
+    return (
+      <>
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          stroke="var(--color-fg)"
+          strokeWidth={4}
+          height={props.height}
+          width={props.width}
+          x={props.x}
+          y={props.y}
+          clip
+        />
+        <DefaultBarStack {...props}>{children}</DefaultBarStack>
+      </>
+    );
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      stacked
+      BarStackComponent={CustomBarStackComponent}
+      borderRadius={1000}
+      height={300}
+      maxWidth={400}
+      padding={0}
+      series={[
+        { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
+        { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
+        { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
+        {
+          id: 'green',
+          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+          color: '#33c481',
+        },
+      ]}
+      showXAxis
+      xAxis={{
+        data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+        tickLabelFormatter: (value) => {
+          if (value === 'D') {
+            return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+          }
+          return value;
+        },
+      }}
+      yAxis={{ range: ({ min, max }) => ({ min, max: max - 4 }) }}
+      style={{ margin: '0 auto' }}
+    />
+  );
+}
+```
+
+## Animations
+
+You can configure chart transitions using the `transitions` prop.
+
+### Customized Transitions
+
+You can pass in a custom spring based transition to your `BarChart` for a custom update transition.
+
+```jsx live
+function AnimatedStackedBars() {
+  const dataCount = 12;
+  const minValue = 20;
+  const maxValue = 100;
+  const minStep = 10;
+  const maxStep = 40;
+  const updateInterval = 600;
+  const seriesSpacing = 30;
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
+    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
+    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
+    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
+    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
+    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
+    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
+  ];
+
+  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStep - minStep;
+    const offset = Math.random() * range + minStep;
+
+    let direction;
+    if (previousValue >= maxValue) {
+      direction = -1;
+    } else if (previousValue <= minValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minValue, Math.min(maxValue, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minValue + Math.random() * (maxValue - minValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? minValue;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <BarChart
+        stacked
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={series}
+        transitions={{
+          enter: { type: 'spring', stiffness: 700, damping: 80 },
+          update: { type: 'spring', stiffness: 700, damping: 20 },
+        }}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+### Disable Animations
+
+You can also disable animations by setting the `animate` prop to `false`.
+
+```jsx live
+function AnimatedStackedBars() {
+  const dataCount = 12;
+  const minValue = 20;
+  const maxValue = 100;
+  const minStep = 10;
+  const maxStep = 40;
+  const updateInterval = 600;
+  const seriesSpacing = 30;
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
+    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
+    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
+    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
+    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
+    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
+    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
+  ];
+
+  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStep - minStep;
+    const offset = Math.random() * range + minStep;
+
+    let direction;
+    if (previousValue >= maxValue) {
+      direction = -1;
+    } else if (previousValue <= minValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minValue, Math.min(maxValue, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minValue + Math.random() * (maxValue - minValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? minValue;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <BarChart
+        animate={false}
+        stacked
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={series}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+## Composed Examples
+
+### Candlesticks
+
+You can render a candlestick chart by setting the `BarComponent` prop to a custom candlestick component.
 
 ```jsx live
 function Candlesticks() {
@@ -698,9 +977,25 @@ function Candlesticks() {
 
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]);
 
+  const staggerDelay = 0.25;
+
   const CandlestickBarComponent = memo(({ x, y, width, height, originY, dataX, ...props }) => {
-    const { getYScale } = useCartesianChartContext();
+    const { getYScale, drawingArea } = useCartesianChartContext();
     const yScale = getYScale();
+
+    const normalizedX = React.useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const transition = React.useMemo(
+      () => ({
+        type: 'tween',
+        duration: 0.325,
+        delay: normalizedX * staggerDelay,
+      }),
+      [normalizedX],
+    );
 
     const wickX = x + width / 2;
 
@@ -718,10 +1013,10 @@ function Candlesticks() {
     const bodyY = openY < closeY ? openY : closeY;
 
     return (
-      <g>
+      <m.g animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 12 }} transition={transition}>
         <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
         <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-      </g>
+      </m.g>
     );
   });
 
@@ -795,7 +1090,6 @@ function Candlesticks() {
         showYAxis
         BarComponent={CandlestickBarComponent}
         BarStackComponent={({ children }) => <g>{children}</g>}
-        animate={false}
         borderRadius={0}
         height={{ base: 150, tablet: 200, desktop: 250 }}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
@@ -830,142 +1124,103 @@ function Candlesticks() {
 }
 ```
 
-#### Outlined Stacks
+### Monthly Sunlight
 
-You can set the `BarStackComponent` prop to render a custom component for stacks.
+You can combine custom and BarPlot components and transitions to create a springy sunlight chart.
 
-```jsx live
-function MonthlyRewards() {
-  const CustomBarStackComponent = ({ children, ...props }) => {
+```tsx live
+function SunlightChartExample() {
+  const dayLength = 1440;
+  type SunlightChartData = Array<{
+    label: string;
+    value: number;
+  }>;
+  const sunlightData: SunlightChartData = [
+    { label: 'Jan', value: 598 },
+    { label: 'Feb', value: 635 },
+    { label: 'Mar', value: 688 },
+    { label: 'Apr', value: 753 },
+    { label: 'May', value: 812 },
+    { label: 'Jun', value: 855 },
+    { label: 'Jul', value: 861 },
+    { label: 'Aug', value: 828 },
+    { label: 'Sep', value: 772 },
+    { label: 'Oct', value: 710 },
+    { label: 'Nov', value: 648 },
+    { label: 'Dec', value: 605 },
+  ];
+
+  function SunlightChart({
+    data,
+    height = 300,
+    ...props
+  }: Omit<CartesianChartProps, 'series' | 'children'> & { data: SunlightChartData }) {
     return (
-      <>
-        <Bar
-          roundBottom
-          roundTop
-          borderRadius={1000}
-          stroke="var(--color-fg)"
-          strokeWidth={4}
-          height={props.height}
-          width={props.width}
-          x={props.x}
-          y={props.y}
-          clip
+      <CartesianChart
+        {...props}
+        height={height}
+        series={[
+          {
+            id: 'sunlight',
+            data: data.map(({ value }) => value),
+            yAxisId: 'sunlight',
+            color: 'rgb(var(--yellow40))',
+          },
+          {
+            id: 'day',
+            data: data.map(() => dayLength),
+            yAxisId: 'day',
+            color: 'rgb(var(--blue100))',
+          },
+        ]}
+        xAxis={{
+          ...props.xAxis,
+          scaleType: 'band',
+          data: data.map(({ label }) => label),
+        }}
+        yAxis={[
+          {
+            id: 'day',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+          {
+            id: 'sunlight',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+        ]}
+      >
+        <YAxis axisId="day" showGrid showLine position="left" label="Minutes of sunlight" />
+        <XAxis showLine />
+        <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+        <BarPlot
+          borderRadius={0}
+          seriesIds={['sunlight']}
+          transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
         />
-        <DefaultBarStack {...props}>{children}</DefaultBarStack>
-      </>
+      </CartesianChart>
     );
-  };
+  }
 
-  return (
-    <BarChart
-      roundBaseline
-      stacked
-      BarStackComponent={CustomBarStackComponent}
-      borderRadius={1000}
-      height={300}
-      maxWidth={400}
-      padding={0}
-      series={[
-        { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
-        { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
-        { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
-        {
-          id: 'green',
-          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
-          color: '#33c481',
-        },
-      ]}
-      showXAxis
-      xAxis={{
-        data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-        tickLabelFormatter: (value) => {
-          if (value === 'D') {
-            return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
-          }
-          return value;
-        },
-      }}
-      yAxis={{ range: ({ min, max }) => ({ min, max: max - 4 }) }}
-      style={{ margin: '0 auto' }}
-    />
-  );
-}
-```
+  function Example() {
+    return (
+      <VStack gap={2}>
+        <SunlightChart data={sunlightData} />
+        <Text color="fgMuted" font="legal" textAlign="center">
+          2026 sunlight data for the first day of each month in Atlanta, Georgia, provided by{' '}
+          <Link
+            href="https://gml.noaa.gov/grad/solcalc/table.php?lat=33.733&lon=-84.383&year=2026"
+            target="_blank"
+          >
+            NOAA
+          </Link>
+          .
+        </Text>
+      </VStack>
+    );
+  }
 
-## Custom Transitions
-
-You can customize the transition animations for your bar chart using the `transition` prop.
-This allows you to control enter, update, and exit animations separately.
-
-```jsx live
-function UpdatingChartValues() {
-  const [data, setData] = React.useState([45, 80, 120, 95, 150, 110, 85]);
-  const [nullIndex, setNullIndex] = React.useState(null);
-
-  const displayData = React.useMemo(() => {
-    if (nullIndex === null) return data;
-    return data.map((d, i) => (i === nullIndex ? null : d));
-  }, [data, nullIndex]);
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={2}>
-        <Button
-          size="sm"
-          onClick={() =>
-            setData((prev) =>
-              prev[0] > 200 ? [45, 80, 120, 95, 150, 110, 85] : prev.map((d) => d + 25),
-            )
-          }
-        >
-          Update Data
-        </Button>
-        <Button size="sm" onClick={() => setNullIndex((prev) => (prev === null ? 3 : null))}>
-          {nullIndex === null ? 'Hide Bar' : 'Show Bar'}
-        </Button>
-      </HStack>
-
-      <Text font="label">Default Animations</Text>
-      <BarChart
-        height={150}
-        series={[
-          {
-            id: 'weekly-data',
-            data: displayData,
-          },
-        ]}
-        showXAxis
-        showYAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { max: 250 },
-        }}
-      />
-
-      <Text font="label">Custom Update Animations</Text>
-      <BarChart
-        height={150}
-        series={[
-          {
-            id: 'weekly-data-custom',
-            data: displayData,
-          },
-        ]}
-        transition={{ type: 'spring', stiffness: 700, damping: 20 }}
-        showXAxis
-        showYAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { max: 250 },
-        }}
-      />
-    </VStack>
-  );
+  return <Example />;
 }
 ```

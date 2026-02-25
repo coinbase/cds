@@ -1,12 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common';
-import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
 import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
 
-import { Bar, type BarComponent, type BarProps } from './Bar';
+import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
@@ -22,7 +21,7 @@ export type BarSeries = Series & {
 };
 
 export type BarStackBaseProps = Pick<
-  BarProps,
+  BarBaseProps,
   'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
 > & {
   /**
@@ -78,16 +77,11 @@ export type BarStackBaseProps = Pick<
   stackMinSize?: number;
 };
 
-export type BarStackProps = BarStackBaseProps & {
-  /**
-   * Transition configuration for animation.
-   */
-  transition?: Transition;
-};
+export type BarStackProps = BarStackBaseProps & Pick<BarProps, 'transitions' | 'transition'>;
 
 export type BarStackComponentProps = Pick<
   BarStackProps,
-  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transition'
+  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transitions' | 'transition'
 > & {
   /**
    * The y position of the stack.
@@ -139,6 +133,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transitions,
     transition,
   }) => {
     const { getSeriesData, getXAxis, getXScale, getSeries } = useCartesianChartContext();
@@ -701,6 +696,7 @@ export const BarStack = memo<BarStackProps>(
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
         transition={transition}
+        transitions={transitions}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -720,6 +716,7 @@ export const BarStack = memo<BarStackProps>(
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}
+        transitions={transitions}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

@@ -661,3 +661,596 @@ function MultipleYAxes() {
   );
 }
 ```
+
+## Animations
+
+You can configure chart transitions using the `transitions` prop.
+
+### Customized Transitions
+
+You can pass in a custom spring based transition to your `BarChart` for a custom update transition.
+
+```jsx
+function AnimatedStackedBars() {
+  const theme = useTheme();
+  const dataCount = 12;
+  const minValue = 20;
+  const maxValue = 100;
+  const minStep = 10;
+  const maxStep = 40;
+  const updateInterval = 600;
+  const seriesSpacing = 30;
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: `rgb(${theme.spectrum.red40})` },
+    { id: 'orange', label: 'Orange', color: `rgb(${theme.spectrum.orange40})` },
+    { id: 'yellow', label: 'Yellow', color: `rgb(${theme.spectrum.yellow40})` },
+    { id: 'green', label: 'Green', color: `rgb(${theme.spectrum.green40})` },
+    { id: 'blue', label: 'Blue', color: `rgb(${theme.spectrum.blue40})` },
+    { id: 'indigo', label: 'Indigo', color: `rgb(${theme.spectrum.indigo40})` },
+    { id: 'purple', label: 'Purple', color: `rgb(${theme.spectrum.purple40})` },
+  ];
+
+  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStep - minStep;
+    const offset = Math.random() * range + minStep;
+
+    let direction;
+    if (previousValue >= maxValue) {
+      direction = -1;
+    } else if (previousValue <= minValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minValue, Math.min(maxValue, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minValue + Math.random() * (maxValue - minValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? minValue;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <BarChart
+        stacked
+        height={300}
+        series={series}
+        transitions={{
+          enter: { type: 'spring', stiffness: 700, damping: 80 },
+          update: { type: 'spring', stiffness: 700, damping: 20 },
+        }}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+### Disable Animations
+
+You can also disable animations by setting the `animate` prop to `false`.
+
+```jsx
+function AnimatedStackedBars() {
+  const theme = useTheme();
+  const dataCount = 12;
+  const minValue = 20;
+  const maxValue = 100;
+  const minStep = 10;
+  const maxStep = 40;
+  const updateInterval = 600;
+  const seriesSpacing = 30;
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: `rgb(${theme.spectrum.red40})` },
+    { id: 'orange', label: 'Orange', color: `rgb(${theme.spectrum.orange40})` },
+    { id: 'yellow', label: 'Yellow', color: `rgb(${theme.spectrum.yellow40})` },
+    { id: 'green', label: 'Green', color: `rgb(${theme.spectrum.green40})` },
+    { id: 'blue', label: 'Blue', color: `rgb(${theme.spectrum.blue40})` },
+    { id: 'indigo', label: 'Indigo', color: `rgb(${theme.spectrum.indigo40})` },
+    { id: 'purple', label: 'Purple', color: `rgb(${theme.spectrum.purple40})` },
+  ];
+
+  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStep - minStep;
+    const offset = Math.random() * range + minStep;
+
+    let direction;
+    if (previousValue >= maxValue) {
+      direction = -1;
+    } else if (previousValue <= minValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minValue, Math.min(maxValue, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minValue + Math.random() * (maxValue - minValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? minValue;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <BarChart
+        animate={false}
+        stacked
+        height={300}
+        series={series}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+### Stagger Delay
+
+You can use the `staggerDelay` property on bar transitions to create a cascading animation effect where bars animate sequentially from left to right. The delay is distributed across bars based on their horizontal position — the leftmost bar starts immediately, and the rightmost bar starts after the full `staggerDelay` duration.
+
+```jsx
+function StaggeredBars() {
+  const [data, setData] = useState([45, 80, 120, 95, 150, 110, 85]);
+  const [key, setKey] = useState(0);
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Button
+          compact
+          onPress={() => {
+            setData(data.map(() => Math.floor(Math.random() * 150) + 20));
+          }}
+        >
+          Update Data
+        </Button>
+        <Button compact onPress={() => setKey((k) => k + 1)}>
+          Reset
+        </Button>
+      </HStack>
+
+      <Text font="label">Staggered Enter</Text>
+      <BarChart
+        key={`enter-${key}`}
+        height={150}
+        series={[{ id: 'data', data }]}
+        transitions={{
+          enter: { type: 'timing', duration: 750, staggerDelay: 250 },
+          update: null,
+        }}
+        showXAxis
+        showYAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { max: 250 },
+        }}
+      />
+
+      <Text font="label">Staggered Update</Text>
+      <BarChart
+        height={150}
+        series={[{ id: 'data', data }]}
+        transitions={{
+          enter: null,
+          update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 150 },
+        }}
+        showXAxis
+        showYAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { max: 250 },
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+### Delay
+
+You can use the `delay` property on transitions to add a pause before the animation starts. This is useful for coordinating animations between different chart elements or creating intentional pauses.
+
+```jsx
+function DelayedBars() {
+  const [key, setKey] = useState(0);
+
+  return (
+    <VStack gap={2}>
+      <Button compact onPress={() => setKey((k) => k + 1)}>
+        Reset
+      </Button>
+
+      <Text font="label">No Delay</Text>
+      <BarChart
+        key={`no-delay-${key}`}
+        height={150}
+        series={[{ id: 'data', data: [45, 80, 120, 95, 150, 110, 85] }]}
+        transitions={{
+          enter: { type: 'timing', duration: 500 },
+        }}
+        showXAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+      />
+
+      <Text font="label">500ms Delay</Text>
+      <BarChart
+        key={`delay-${key}`}
+        height={150}
+        series={[{ id: 'data', data: [45, 80, 120, 95, 150, 110, 85] }]}
+        transitions={{
+          enter: { type: 'timing', duration: 500, delay: 500 },
+        }}
+        showXAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+      />
+
+      <Text font="label">Stagger + Delay</Text>
+      <BarChart
+        key={`stagger-delay-${key}`}
+        height={150}
+        series={[{ id: 'data', data: [45, 80, 120, 95, 150, 110, 85] }]}
+        transitions={{
+          enter: { type: 'spring', stiffness: 400, damping: 15, delay: 300, staggerDelay: 200 },
+        }}
+        showXAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+## Composed Examples
+
+### Candlesticks
+
+You can render a candlestick chart by setting the `BarComponent` prop to a custom candlestick component.
+
+```tsx
+function Candlesticks() {
+  const infoTextId = useId();
+  const theme = useTheme();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+  const stockData = btcCandles.slice(0, 90).reverse();
+  const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
+    const { getXSerializableScale, drawingArea } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+
+    const rectWidth = useMemo(() => {
+      if (xScale !== undefined && xScale.type === 'band') {
+        return xScale.bandwidth;
+      }
+      return 0;
+    }, [xScale]);
+
+    const xPos = useDerivedValue(() => {
+      const position = unwrapAnimatedValue(scrubberPosition);
+      const xPos =
+        position !== undefined && xScale
+          ? getPointOnSerializableScale(position, xScale)
+          : undefined;
+      return xPos !== undefined ? xPos - rectWidth / 2 : 0;
+    }, [scrubberPosition, xScale]);
+
+    const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
+
+    return (
+      <Rect
+        color={stroke}
+        height={drawingArea.height}
+        opacity={opacity}
+        width={rectWidth}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
+  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]);
+
+  const CandlestickBarComponent = memo<BarComponentProps>(
+    ({ x, y, width, height, originY, dataX }) => {
+      const { getYScale } = useCartesianChartContext();
+      const yScale = getYScale();
+
+      const wickX = x + width / 2;
+      const timePeriodValue = stockData[dataX as number];
+
+      const open = parseFloat(timePeriodValue.open);
+      const close = parseFloat(timePeriodValue.close);
+
+      const bullish = open < close;
+      const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
+      const openY = yScale?.(open) ?? 0;
+      const closeY = yScale?.(close) ?? 0;
+
+      const bodyHeight = Math.abs(openY - closeY);
+      const bodyY = openY < closeY ? openY : closeY;
+
+      return (
+        <>
+          <SkiaLine
+            color={color}
+            p1={{ x: wickX, y }}
+            p2={{ x: wickX, y: y + height }}
+            strokeWidth={1}
+          />
+          <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+        </>
+      );
+    },
+  );
+
+  const formatThousandsPrice = useCallback((price: number) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const formatTime = useCallback(
+    (index: number | null) => {
+      if (index === null || index === undefined || index >= stockData.length) return '';
+      const ts = parseInt(stockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    },
+    [stockData],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text aria-live="polite" font="headline" id={infoTextId}>
+        {currentIndex !== undefined
+          ? `Open: ${formatThousandsPrice(parseFloat(stockData[currentIndex].open))}, Close: ${formatThousandsPrice(parseFloat(stockData[currentIndex].close))}`
+          : formatThousandsPrice(parseFloat(stockData[stockData.length - 1].close))}
+      </Text>
+      <CartesianChart
+        enableScrubbing
+        animate={false}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={setCurrentIndex}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{ scaleType: 'band' }}
+        yAxis={{ domain: { min } }}
+      >
+        <XAxis tickLabelFormatter={formatTime} />
+        <YAxis
+          showGrid
+          GridLineComponent={ThinSolidLine}
+          tickLabelFormatter={formatThousandsPrice}
+          width={40}
+        />
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke={theme.color.fgMuted}
+          seriesIds={[]}
+        />
+        <BarPlot
+          BarComponent={CandlestickBarComponent}
+          BarStackComponent={({ children }) => <>{children}</>}
+        />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+### Monthly Sunlight
+
+You can combine custom BarPlot components and transitions to create a springy sunlight chart.
+
+```tsx
+function SunlightChartExample() {
+  const theme = useTheme();
+  const dayLength = 1440;
+
+  type SunlightChartData = Array<{
+    label: string;
+    value: number;
+  }>;
+
+  const sunlightData: SunlightChartData = [
+    { label: 'Jan', value: 598 },
+    { label: 'Feb', value: 635 },
+    { label: 'Mar', value: 688 },
+    { label: 'Apr', value: 753 },
+    { label: 'May', value: 812 },
+    { label: 'Jun', value: 855 },
+    { label: 'Jul', value: 861 },
+    { label: 'Aug', value: 828 },
+    { label: 'Sep', value: 772 },
+    { label: 'Oct', value: 710 },
+    { label: 'Nov', value: 648 },
+    { label: 'Dec', value: 605 },
+  ];
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  return (
+    <VStack gap={2}>
+      <CartesianChart
+        height={300}
+        series={[
+          {
+            id: 'sunlight',
+            data: sunlightData.map(({ value }) => value),
+            yAxisId: 'sunlight',
+            color: `rgb(${theme.spectrum.yellow40})`,
+          },
+          {
+            id: 'day',
+            data: sunlightData.map(() => dayLength),
+            yAxisId: 'day',
+            color: `rgb(${theme.spectrum.blue100})`,
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+          data: sunlightData.map(({ label }) => label),
+        }}
+        yAxis={[
+          {
+            id: 'day',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+          {
+            id: 'sunlight',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+        ]}
+      >
+        <YAxis
+          axisId="day"
+          showGrid
+          showLine
+          GridLineComponent={ThinSolidLine}
+          position="left"
+          label="Minutes of sunlight"
+        />
+        <XAxis showLine />
+        <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+        <BarPlot
+          borderRadius={0}
+          seriesIds={['sunlight']}
+          transitions={{
+            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 },
+          }}
+        />
+      </CartesianChart>
+      <Text color="fgMuted" font="caption" textAlign="center">
+        2026 sunlight data for the first day of each month in Atlanta, Georgia, provided by NOAA.
+      </Text>
+    </VStack>
+  );
+}
+```
