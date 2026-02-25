@@ -81,6 +81,94 @@ function shouldIgnorePeerDep(packageName: string): boolean {
   return PEER_DEP_SCOPES_TO_IGNORE.some((scope) => packageName.startsWith(scope));
 }
 
+const FILE_EXTENSIONS = ['.tsx', '.ts', '.js', '.jsx'];
+
+function resolveRelativeImport(importPath: string, fromDir: string): string | undefined {
+  const resolved = path.resolve(fromDir, importPath);
+
+  for (const ext of FILE_EXTENSIONS) {
+    if (fs.existsSync(resolved + ext)) return resolved + ext;
+  }
+
+  for (const ext of FILE_EXTENSIONS) {
+    const indexPath = path.join(resolved, `index${ext}`);
+    if (fs.existsSync(indexPath)) return indexPath;
+  }
+
+  return undefined;
+}
+
+type ImportGraphNode = {
+  relativeImports: string[];
+  externalPackages: string[];
+};
+
+type ImportGraph = Map<string, ImportGraphNode>;
+
+async function buildImportGraph(packageDir: string): Promise<ImportGraph> {
+  const sourceFiles = await glob(`${packageDir}/src/**/*.{ts,tsx}`, {
+    ignore: ['**/__tests__/**', '**/__stories__/**'],
+  });
+
+  const graph: ImportGraph = new Map();
+
+  for (const relativeFilePath of sourceFiles) {
+    const filePath = path.resolve(relativeFilePath);
+    try {
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      const imports = extractImports(fileContent);
+      const fromDir = path.dirname(filePath);
+      const relativeImports: string[] = [];
+      const externalPackages: string[] = [];
+
+      for (const importPath of imports) {
+        if (isExternalDependency(importPath)) {
+          externalPackages.push(getPackageName(importPath));
+        } else {
+          const resolvedPath = resolveRelativeImport(importPath, fromDir);
+          if (resolvedPath) relativeImports.push(resolvedPath);
+        }
+      }
+
+      graph.set(filePath, { relativeImports, externalPackages });
+    } catch {
+      // skip unreadable files
+    }
+  }
+
+  return graph;
+}
+
+function collectTransitivePeerDeps(
+  filePath: string,
+  graph: ImportGraph,
+  peerDependencies: Record<string, string>,
+): Dependency[] {
+  const visited = new Set<string>();
+  const foundDeps = new Map<string, Dependency>();
+
+  function dfs(currentPath: string): void {
+    if (visited.has(currentPath)) return;
+    visited.add(currentPath);
+
+    const node = graph.get(currentPath);
+    if (!node) return;
+
+    for (const pkg of node.externalPackages) {
+      if (peerDependencies[pkg] && !shouldIgnorePeerDep(pkg)) {
+        foundDeps.set(pkg, { name: pkg, version: peerDependencies[pkg] });
+      }
+    }
+
+    for (const dep of node.relativeImports) {
+      dfs(dep);
+    }
+  }
+
+  dfs(filePath);
+  return Array.from(foundDeps.values()).sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function getExportPath(filePath: string, packageDir: string): string {
   const srcPath = `${packageDir}/src/`;
   const relativePath = filePath.replace(srcPath, '');
@@ -111,11 +199,43 @@ function isComponentExported(
   return false;
 }
 
+function resolveEffectivePeerDeps(
+  packageJson: any,
+): Record<string, string> {
+  const ownPeerDeps: Record<string, string> = { ...packageJson.peerDependencies };
+  const effective: Record<string, string> = { ...ownPeerDeps };
+
+  for (const [depName, depVersion] of Object.entries(ownPeerDeps)) {
+    if (!depName.startsWith('@coinbase/')) continue;
+
+    const depDir = PACKAGES.find((p) => p.packageName === depName)?.packageDir;
+    if (!depDir) continue;
+
+    try {
+      const depPackageJson = JSON.parse(
+        fs.readFileSync(`${depDir}/package.json`, 'utf-8'),
+      );
+      const nestedPeerDeps: Record<string, string> = depPackageJson.peerDependencies ?? {};
+      for (const [nestedName, nestedVersion] of Object.entries(nestedPeerDeps)) {
+        if (!effective[nestedName]) {
+          effective[nestedName] = nestedVersion as string;
+        }
+      }
+    } catch {
+      // skip if package.json can't be read
+    }
+  }
+
+  return effective;
+}
+
 async function analyzePackageForDocs(
   packageDir: string,
   packageJson: any,
 ): Promise<ComponentPeerDeps> {
-  const packagePeerDependencies = packageJson.peerDependencies;
+  const packagePeerDependencies = resolveEffectivePeerDeps(packageJson);
+  const importGraph = await buildImportGraph(packageDir);
+
   const componentFiles = await glob(`${packageDir}/src/**/*.tsx`, {
     ignore: ['**/__tests__/**', '**/__stories__/**', '**/index.ts'],
   });
@@ -124,26 +244,13 @@ async function analyzePackageForDocs(
 
   for (const filePath of componentFiles) {
     try {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const imports = extractImports(fileContent);
-
       const componentName = path.basename(filePath, '.tsx');
-      const peerDependencies: Dependency[] = [];
-
-      for (const importPath of imports) {
-        if (isExternalDependency(importPath)) {
-          const packageName = getPackageName(importPath);
-          if (
-            Object.keys(packagePeerDependencies).includes(packageName) &&
-            !shouldIgnorePeerDep(packageName)
-          ) {
-            peerDependencies.push({
-              name: packageName,
-              version: packagePeerDependencies[packageName],
-            });
-          }
-        }
-      }
+      const absolutePath = path.resolve(filePath);
+      const peerDependencies = collectTransitivePeerDeps(
+        absolutePath,
+        importGraph,
+        packagePeerDependencies,
+      );
 
       const exportPath = getExportPath(filePath, packageDir);
       const hasExport = isComponentExported(packageJson.exports, exportPath, componentName);
@@ -151,7 +258,7 @@ async function analyzePackageForDocs(
       if (hasExport || peerDependencies.length > 0) {
         results[componentName] = {
           filePath,
-          peerDependencies: peerDependencies.sort((a, b) => a.name.localeCompare(b.name)),
+          peerDependencies,
           exportPath: exportPath || 'root',
         };
       }
@@ -187,7 +294,10 @@ async function collectUnmatchedComponents(
       if (!importMatch) continue;
 
       const rawNames = importMatch[1].trim();
-      const componentNames = rawNames.split(',').map((n: string) => n.trim()).filter(Boolean);
+      const componentNames = rawNames
+        .split(',')
+        .map((n: string) => n.trim())
+        .filter(Boolean);
       const analysisKey = resolveAnalysisKey(metadata.import);
       if (!analysisKey) continue;
 
@@ -241,7 +351,7 @@ function generateDocumentationTable(
     documentation +=
       'These components have metadata files but could not be matched to an analyzed source file.\n';
     documentation +=
-      'This typically means the component is a re-export or composite that doesn\'t have a direct `.tsx` file matching its name.\n\n';
+      "This typically means the component is a re-export or composite that doesn't have a direct `.tsx` file matching its name.\n\n";
     documentation += '| Component | Package | Import |\n';
     documentation += '|-----------|---------|--------|\n';
 
@@ -295,7 +405,10 @@ async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
       }
 
       const rawNames = importMatch[1].trim();
-      const componentNames = rawNames.split(',').map((n: string) => n.trim()).filter(Boolean);
+      const componentNames = rawNames
+        .split(',')
+        .map((n: string) => n.trim())
+        .filter(Boolean);
       const analysisKey = resolveAnalysisKey(metadata.import);
 
       if (!analysisKey) {
