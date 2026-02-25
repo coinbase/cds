@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { Polymorphic } from '@coinbase/cds-web/core/polymorphism';
 import { cx } from '@coinbase/cds-web';
+import type { Polymorphic } from '@coinbase/cds-web/core/polymorphism';
 import { Box } from '@coinbase/cds-web/layout';
 import {
   SegmentedTabs,
@@ -10,10 +10,10 @@ import {
   tabsTransitionConfig,
 } from '@coinbase/cds-web/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-web/tabs/SegmentedTab';
-import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
 import type { StylesAndClassNames } from '@coinbase/cds-web/types';
+import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
