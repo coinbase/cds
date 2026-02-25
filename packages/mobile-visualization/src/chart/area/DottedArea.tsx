@@ -66,6 +66,7 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     gradient: gradientProp,
     animate: animateProp,
+    transitions,
     transition,
     ...pathProps
   }) => {
@@ -96,7 +97,7 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const animatedClipPath = usePathTransition({
       currentPath: d,
-      transition,
+      transitions: { update: transition },
     });
 
     const staticClipPath = useMemo(() => {
@@ -119,6 +120,7 @@ export const DottedArea = memo<DottedAreaProps>(
           d={dottedPath}
           fill={fill}
           transition={transition}
+          transitions={transitions}
           {...pathProps}
         >
           {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}

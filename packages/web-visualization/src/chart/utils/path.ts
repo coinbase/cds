@@ -11,9 +11,19 @@ import {
   curveStepBefore,
   line as d3Line,
 } from 'd3-shape';
+import type { Transition } from 'framer-motion';
 
 import { projectPoint, projectPoints } from './point';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
+
+/**
+ * Default enter transition for path-based components (Line, Area).
+ * `{ type: 'tween', duration: 0.5 }`
+ */
+export const defaultPathEnterTransition: Transition = {
+  type: 'tween',
+  duration: 0.5,
+};
 
 export type ChartPathCurveType =
   | 'bump'

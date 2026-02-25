@@ -1,16 +1,60 @@
-### Default
+Link renders a pressable [Text](/components/typography/Text) element that opens URLs in an in-app browser by default. It inherits parent text styles and supports the same `font` and `color` props as Text.
 
-Default Link text will inherit parent text styles.
+## Basics
+
+By default, Link inherits the text styles of its parent. Pass a `to` prop to set the destination URL.
 
 ```jsx
-<Link>Default is inherited text</Link>
+<Text font="body">
+  Check out the <Link to="https://www.coinbase.com/">Coinbase homepage</Link> for more info.
+</Text>
 ```
 
-### Styling your link
+## Underline
 
-To style a `<Link />` component, simply wrap the `Link` node in the desired `Text` component, using the `as` prop for your usecase (for example, `p` for body text, `h1`/`h2`/`h3` for titles, etc). However, there may be times when a rendering a span is exactly what you want. In those cases, providing a font prop makes sense.
+Use the `underline` prop to add a text decoration underline to the link. This is important for inline links within body text to ensure they are visually distinguishable from surrounding text.
 
-Wrapping your Link in the appropriate Text element
+```jsx
+<Text font="body">
+  Read our{' '}
+  <Link underline to="https://www.coinbase.com/">
+    terms and conditions
+  </Link>{' '}
+  before proceeding.
+</Text>
+```
+
+### Underline with different fonts
+
+The underline works across all font styles.
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Link underline font="body" to="https://www.coinbase.com/">
+    body link
+  </Link>
+  <Link underline font="label1" to="https://www.coinbase.com/">
+    label1 link
+  </Link>
+  <Link underline font="caption" to="https://www.coinbase.com/">
+    caption link
+  </Link>
+  <Link underline font="legal" to="https://www.coinbase.com/">
+    legal link
+  </Link>
+  <Link underline font="title2" to="https://www.coinbase.com/">
+    title2 link
+  </Link>
+</VStack>
+```
+
+## Styling
+
+### Font
+
+To style a Link, either wrap it in the desired [Text](/components/typography/Text) component or use the `font` prop directly on the Link.
+
+#### Wrapping in Text
 
 ```jsx
 <VStack alignItems="flex-start" gap={3}>
@@ -57,9 +101,9 @@ Wrapping your Link in the appropriate Text element
 </VStack>
 ```
 
-### Using the font prop
+#### Using the font prop
 
-If you find yourself in a situation where you simply need to style a link as a Text component without wrapping it in the semantically appropriate text element, reach for the `font` prop.
+If you need to style a link without wrapping it in a parent text element, use the `font` prop directly.
 
 ```jsx
 <VStack alignItems="flex-start" gap={3}>
@@ -71,39 +115,45 @@ If you find yourself in a situation where you simply need to style a link as a T
 </VStack>
 ```
 
-### Color override
+### Color
 
-```jsx
-<Link to="https://www.coinbase.com/" color="fgNegative">
-  With color override
-</Link>
-```
-
-### openInNewWindow and rel props
+Override the default link color using the `color` prop.
 
 ```jsx
 <VStack alignItems="flex-start" gap={3}>
-  <Link font="title1" to="https://www.coinbase.com/" openInNewWindow>
-    Open window in existing tab
+  <Link to="https://www.coinbase.com/" color="fgPrimary">
+    fgPrimary (default)
   </Link>
-  <Link font="title2" to="https://www.coinbase.com/" rel="noreferrer">
-    Sets rel to noreferrer
+  <Link to="https://www.coinbase.com/" color="fgNegative">
+    fgNegative
   </Link>
-  <Link font="title3" to="https://www.coinbase.com/" rel="noopener">
-    Sets rel to noopener
+  <Link underline to="https://www.coinbase.com/" color="fgNegative">
+    fgNegative with underline
   </Link>
 </VStack>
 ```
 
-### Handling onPress
+## Navigation
+
+### Browser options
+
+Control how the link opens with `forceOpenOutsideApp`, `preventRedirectionIntoApp`, and `readerMode`.
 
 ```jsx
-<Link font="headline" to="#tagname" onPress={() => console.log('pressed link')} rel="noopener">
-  Handles onPress
-</Link>
+<VStack alignItems="flex-start" gap={3}>
+  <Link font="body" forceOpenOutsideApp to="https://www.coinbase.com/">
+    Opens outside the app
+  </Link>
+  <Link font="body" preventRedirectionIntoApp to="https://www.coinbase.com/">
+    Prevents redirect back into app
+  </Link>
+  <Link font="body" readerMode to="https://www.coinbase.com/">
+    Opens in reader mode (iOS only)
+  </Link>
+</VStack>
 ```
 
-### Accessibility
+## Accessibility
 
 :::tip Accessibility tip
 
@@ -115,10 +165,25 @@ _The link text must have a 3:1 contrast ratio from the surrounding non-link text
 
 :::
 
-### A11y for nested link in text
+Use the `underline` prop on inline links within body text to ensure they are distinguishable without relying on color alone.
 
-React Native will flatten the nested Text into a string and therefore not able to focus internal link for a11y purpose. You can read more about it in the [official documentation](https://reactnative.dev/docs/text#nested-text).
-For better accessibility, we recommend this pattern in mobile.
+```jsx
+<Text font="body">
+  By continuing, you agree to the{' '}
+  <Link underline to="https://www.coinbase.com/">
+    Terms of Service
+  </Link>{' '}
+  and{' '}
+  <Link underline to="https://www.coinbase.com/">
+    Privacy Policy
+  </Link>
+  .
+</Text>
+```
+
+### Nested link in text
+
+React Native flattens nested Text into a string and cannot focus internal links for accessibility. See the [official documentation](https://reactnative.dev/docs/text#nested-text) for details. For better accessibility, use this pattern:
 
 ```jsx
 import { AccessibilityInfo, Linking } from 'react-native';
@@ -134,7 +199,6 @@ import { AccessibilityInfo, Linking } from 'react-native';
         await openURL('https://www.coinbase.com/');
       }
     } catch (error) {
-      // Handle or log the error appropriately
       console.error('Error in onPress handler:', error);
     }
   }}
@@ -144,11 +208,9 @@ import { AccessibilityInfo, Linking } from 'react-native';
 </TextLegal>;
 ```
 
-### A11y for multiple nested links
+### Multiple nested links
 
-It is an design anti-pattern to have multiple nested links in a single block of text in
-react native, since it's bad for accessibility. Consider pattern like this if more than
-one link is necessary in one paragraph.
+It is a design anti-pattern to have multiple nested links in a single block of text in React Native since it is bad for accessibility. If more than one link is necessary in one paragraph, separate them:
 
 ```jsx
 function MultipleLinksA11yExample() {
@@ -166,7 +228,7 @@ function MultipleLinksA11yExample() {
 
 ### With padding
 
-When applying padding to a `Text` component that contains instances of `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
+When applying padding to a `Text` component that contains a `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
 
 ```jsx
 <Box paddingTop={2}>

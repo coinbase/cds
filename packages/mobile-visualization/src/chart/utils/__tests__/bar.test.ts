@@ -1,5 +1,10 @@
 import { getBarSizeAdjustment } from '../bar';
 
+jest.mock('@shopify/react-native-skia', () => ({
+  Skia: { Path: { Make: jest.fn(), MakeFromSVGString: jest.fn() } },
+  notifyChange: jest.fn(),
+}));
+
 describe('getBarSizeAdjustment', () => {
   it('should return 0 when barCount is 0', () => {
     const result = getBarSizeAdjustment(0, 10);

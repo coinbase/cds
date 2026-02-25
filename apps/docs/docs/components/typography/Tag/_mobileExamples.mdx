@@ -32,6 +32,49 @@ You can control the visual prominence of the Tag using the `emphasis` prop. By d
 </HStack>
 ```
 
+### Icons
+
+Use the `startIcon` and `endIcon` props to render an icon at the start or end of the tag.
+
+```jsx
+<VStack gap={2} alignItems="flex-start">
+  <Tag colorScheme="blue" startIcon="add">
+    Start icon
+  </Tag>
+  <Tag colorScheme="green" endIcon="add">
+    End icon
+  </Tag>
+  <Tag colorScheme="purple" startIcon="add" endIcon="add">
+    Both icons
+  </Tag>
+  <Tag colorScheme="red" intent="promotional" startIcon="add" endIcon="add">
+    Promotional with icons
+  </Tag>
+</VStack>
+```
+
+### Custom Nodes
+
+Use the `start` and `end` props to render custom nodes at the start or end of the tag for full control over styling.
+
+```jsx
+<VStack gap={2} alignItems="flex-start">
+  <Tag colorScheme="blue" start={<Icon color="negative" name="add" size="xs" />}>
+    Custom start node
+  </Tag>
+  <Tag colorScheme="green" end={<Icon color="positive" name="add" size="xs" />}>
+    Custom end node
+  </Tag>
+  <Tag
+    colorScheme="purple"
+    start={<Icon color="positive" name="add" size="xs" />}
+    end={<Icon color="negative" name="close" size="xs" />}
+  >
+    Both custom nodes
+  </Tag>
+</VStack>
+```
+
 ### Composed Examples
 
 #### Account Status
