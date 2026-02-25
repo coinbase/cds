@@ -20,6 +20,7 @@ import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
 import { DefaultBarStack } from '../DefaultBarStack';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -932,6 +933,41 @@ const SunlightChart = () => {
   );
 };
 
+const PriceRange = () => {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data = useMemo(
+    () =>
+      candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]) as [
+        number,
+        number,
+      ][],
+    [],
+  );
+
+  const min = useMemo(() => Math.min(...data.map(([low]) => low)), [data]);
+  const max = useMemo(() => Math.max(...data.map(([, high]) => high)), [data]);
+
+  const tickFormatter = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      showYAxis
+      height={150}
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+    />
+  );
+};
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -1012,6 +1048,10 @@ function ExampleNavigator() {
       {
         title: 'Monthly Sunlight',
         component: <SunlightChart />,
+      },
+      {
+        title: 'Price Range',
+        component: <PriceRange />,
       },
     ],
     [],
