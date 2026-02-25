@@ -37,7 +37,8 @@
       "executor": "nx:run-commands",
       "dependsOn": [
         "^build",
-        "^typecheck"
+        "^typecheck",
+        "peer-dependencies-check"
       ],
       "options": {
         "commands": [
@@ -85,6 +86,12 @@
     },
     "peer-dependencies": {
       "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies-check": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts --fail-on-changes",
       "options": {
         "cwd": "{workspaceRoot}"
       }

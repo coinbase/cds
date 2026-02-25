@@ -381,6 +381,41 @@ function resolveAnalysisKey(importStatement: string): string | undefined {
   return undefined;
 }
 
+function computeDepsForMetadataFile(
+  metadata: any,
+  analysis: PackageAnalysis,
+): { deps: Dependency[]; analysisKey: string; rawNames: string } | undefined {
+  const importMatch = metadata.import?.match(/import\s*{\s*([^}]+)\s*}/);
+  if (!importMatch) return undefined;
+
+  const rawNames = importMatch[1].trim();
+  const componentNames = rawNames
+    .split(',')
+    .map((n: string) => n.trim())
+    .filter(Boolean);
+  const analysisKey = resolveAnalysisKey(metadata.import);
+  if (!analysisKey) return undefined;
+
+  type ComponentEntry = ComponentPeerDeps[string];
+  const matchedData: ComponentEntry[] = [];
+  for (const name of componentNames) {
+    const entry: ComponentEntry | undefined = analysis[analysisKey]?.[name];
+    if (entry) matchedData.push(entry);
+  }
+
+  if (matchedData.length === 0) return { deps: [], analysisKey, rawNames };
+
+  const dedupMap = new Map<string, Dependency>();
+  for (const dep of matchedData.flatMap((d: ComponentEntry) => d.peerDependencies)) {
+    dedupMap.set(dep.name, dep);
+  }
+  return {
+    deps: Array.from(dedupMap.values()).sort((a, b) => a.name.localeCompare(b.name)),
+    analysisKey,
+    rawNames,
+  };
+}
+
 async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
   console.log('Updating metadata files with peer dependency information...');
 
@@ -393,52 +428,23 @@ async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
     try {
       const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf-8'));
       const fileName = path.basename(metadataFile);
-      const isWeb = fileName === 'webMetadata.json';
-      const isMobile = fileName === 'mobileMetadata.json';
+      if (fileName !== 'webMetadata.json' && fileName !== 'mobileMetadata.json') continue;
 
-      if (!isWeb && !isMobile) continue;
-
-      const importMatch = metadata.import?.match(/import\s*{\s*([^}]+)\s*}/);
-      if (!importMatch) {
+      const result = computeDepsForMetadataFile(metadata, analysis);
+      if (!result) {
         console.warn(`Could not extract component name from: ${metadataFile}`);
         continue;
       }
 
-      const rawNames = importMatch[1].trim();
-      const componentNames = rawNames
-        .split(',')
-        .map((n: string) => n.trim())
-        .filter(Boolean);
-      const analysisKey = resolveAnalysisKey(metadata.import);
-
-      if (!analysisKey) {
-        console.warn(`Could not resolve package for import in: ${metadataFile}`);
+      if (result.deps.length === 0 && !analysis[result.analysisKey]?.[result.rawNames]) {
+        console.warn(`Component ${result.rawNames} not found in ${result.analysisKey} analysis`);
+        notFoundComponents++;
         continue;
       }
 
-      type ComponentEntry = ComponentPeerDeps[string];
-      const matchedData: ComponentEntry[] = [];
-      for (const name of componentNames) {
-        const entry: ComponentEntry | undefined = analysis[analysisKey]?.[name];
-        if (entry) matchedData.push(entry);
-      }
-
-      if (matchedData.length > 0) {
-        const allPeerDeps = matchedData.flatMap((d: ComponentEntry) => d.peerDependencies);
-        const dedupMap = new Map<string, Dependency>();
-        for (const dep of allPeerDeps) {
-          dedupMap.set(dep.name, dep);
-        }
-        const uniquePeerDeps = Array.from(dedupMap.values()).sort((a, b) =>
-          a.name.localeCompare(b.name),
-        );
-        metadata.dependencies = uniquePeerDeps;
-        fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2) + '\n');
-        updatedFiles++;
-      } else {
-        console.warn(`Component ${rawNames} not found in ${analysisKey} analysis`);
-        notFoundComponents++;
-      }
+      metadata.dependencies = result.deps;
+      fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2) + '\n');
+      updatedFiles++;
     } catch (error) {
       console.error(`Error updating ${metadataFile}:`, error);
     }
@@ -449,17 +455,64 @@ async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
   console.log(`- Components not found: ${notFoundComponents}`);
 }
 
+async function checkMetadataFiles(analysis: PackageAnalysis): Promise<boolean> {
+  console.log('Checking metadata files for outdated peer dependencies...');
+
+  const metadataFiles = await glob('apps/docs/docs/components/**/*Metadata.json');
+  const outdatedFiles: string[] = [];
+
+  for (const metadataFile of metadataFiles) {
+    try {
+      const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf-8'));
+      const fileName = path.basename(metadataFile);
+      if (fileName !== 'webMetadata.json' && fileName !== 'mobileMetadata.json') continue;
+
+      const result = computeDepsForMetadataFile(metadata, analysis);
+      if (!result || result.deps.length === 0) continue;
+
+      const existingDeps = JSON.stringify(metadata.dependencies ?? []);
+      const expectedDeps = JSON.stringify(result.deps);
+
+      if (existingDeps !== expectedDeps) {
+        outdatedFiles.push(metadataFile);
+      }
+    } catch {
+      // skip unparseable files
+    }
+  }
+
+  if (outdatedFiles.length > 0) {
+    console.error(`\n${outdatedFiles.length} metadata file(s) have outdated peer dependencies:`);
+    for (const file of outdatedFiles) {
+      console.error(`  - ${file}`);
+    }
+    console.error('\nRun "yarn nx run docs:peer-dependencies" to update them.');
+    return false;
+  }
+
+  console.log('\nAll metadata files are up to date.');
+  return true;
+}
+
 async function main(): Promise<void> {
-  const shouldUpdateMetadata = await input({
-    message: 'Should update metadata files? (y/n)',
-    default: 'y',
-    validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
-  });
-  const shouldGenerateReportFiles = await input({
-    message: 'Should generate report files? (y/n)',
-    default: 'y',
-    validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
-  });
+  const ciMode = process.argv.includes('--ci');
+  const checkMode = process.argv.includes('--fail-on-changes');
+
+  let shouldUpdateMetadata = 'y';
+  let shouldGenerateReportFiles = 'n';
+
+  if (!ciMode && !checkMode) {
+    shouldUpdateMetadata = await input({
+      message: 'Should update metadata files? (y/n)',
+      default: 'y',
+      validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
+    });
+    shouldGenerateReportFiles = await input({
+      message: 'Should generate report files? (y/n)',
+      default: 'n',
+      validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
+    });
+  }
 
   console.log('Analyzing component peer dependencies for documentation...');
 
@@ -468,6 +521,11 @@ async function main(): Promise<void> {
   for (const pkg of PACKAGES) {
     const packageJson = JSON.parse(fs.readFileSync(`${pkg.packageDir}/package.json`, 'utf-8'));
     analysis[pkg.key] = await analyzePackageForDocs(pkg.packageDir, packageJson);
+  }
+
+  if (checkMode) {
+    const passed = await checkMetadataFiles(analysis);
+    process.exit(passed ? 0 : 1);
   }
 
   const unmatchedComponents = await collectUnmatchedComponents(analysis);
@@ -482,10 +540,6 @@ async function main(): Promise<void> {
   if (shouldUpdateMetadata === 'y') {
     await updateMetadataFiles(analysis);
   }
-
-  console.log('\nDocumentation generated:');
-  console.log('- component-peer-dependencies.md');
-  console.log('- component-peer-dependencies.json');
 
   console.log(`\nSummary:`);
   for (const pkg of PACKAGES) {
