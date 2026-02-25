@@ -13,12 +13,44 @@ type ComponentPeerDeps = {
   };
 };
 
-type PackageAnalysis = {
-  web: ComponentPeerDeps;
-  mobile: ComponentPeerDeps;
+type PackageConfig = {
+  key: string;
+  packageName: string;
+  packageDir: string;
+  label: string;
 };
 
+type PackageAnalysis = Record<string, ComponentPeerDeps>;
+
+const PACKAGES: PackageConfig[] = [
+  {
+    key: 'web',
+    packageName: '@coinbase/cds-web',
+    packageDir: 'packages/web',
+    label: 'Web Components (@coinbase/cds-web)',
+  },
+  {
+    key: 'mobile',
+    packageName: '@coinbase/cds-mobile',
+    packageDir: 'packages/mobile',
+    label: 'Mobile Components (@coinbase/cds-mobile)',
+  },
+  {
+    key: 'webVisualization',
+    packageName: '@coinbase/cds-web-visualization',
+    packageDir: 'packages/web-visualization',
+    label: 'Web Visualization (@coinbase/cds-web-visualization)',
+  },
+  {
+    key: 'mobileVisualization',
+    packageName: '@coinbase/cds-mobile-visualization',
+    packageDir: 'packages/mobile-visualization',
+    label: 'Mobile Visualization (@coinbase/cds-mobile-visualization)',
+  },
+];
+
 const PEER_DEPS_TO_IGNORE = ['react', 'react-native'];
+const PEER_DEP_SCOPES_TO_IGNORE = ['@coinbase/'];
 
 function extractImports(fileContent: string): string[] {
   const importRegex = /import[\s\S]*?from\s+['"]([^'"]+)['"]/g;
@@ -44,20 +76,47 @@ function isExternalDependency(importPath: string): boolean {
   return !importPath.startsWith('.') && !importPath.startsWith('/');
 }
 
-function getExportPath(filePath: string, platform: 'web' | 'mobile'): string {
-  const srcPath = `packages/${platform}/src/`;
+function shouldIgnorePeerDep(packageName: string): boolean {
+  if (PEER_DEPS_TO_IGNORE.includes(packageName)) return true;
+  return PEER_DEP_SCOPES_TO_IGNORE.some((scope) => packageName.startsWith(scope));
+}
+
+function getExportPath(filePath: string, packageDir: string): string {
+  const srcPath = `${packageDir}/src/`;
   const relativePath = filePath.replace(srcPath, '');
   const dir = path.dirname(relativePath);
   return dir === '.' ? '' : `/${dir}`;
 }
 
+function isComponentExported(
+  exports: Record<string, unknown> | undefined,
+  exportPath: string,
+  componentName: string,
+): boolean {
+  if (!exports) return false;
+
+  // Wildcard export covers all paths
+  if (exports['./*']) return true;
+
+  // Exact path match
+  if (exports[`.${exportPath}`] || exports[`.${exportPath}/${componentName}`]) return true;
+
+  // Check ancestor paths (e.g. "./overlays" covers "./overlays/tooltip/Tooltip")
+  const segments = exportPath.split('/').filter(Boolean);
+  for (let i = segments.length - 1; i > 0; i--) {
+    const ancestorPath = `./${segments.slice(0, i).join('/')}`;
+    if (exports[ancestorPath]) return true;
+  }
+
+  return false;
+}
+
 async function analyzePackageForDocs(
-  packagePath: string,
-  platform: 'web' | 'mobile',
+  packageDir: string,
   packageJson: any,
 ): Promise<ComponentPeerDeps> {
   const packagePeerDependencies = packageJson.peerDependencies;
-  const componentFiles = await glob(`${packagePath}/src/**/*.tsx`, {
+  const componentFiles = await glob(`${packageDir}/src/**/*.tsx`, {
     ignore: ['**/__tests__/**', '**/__stories__/**', '**/index.ts'],
   });
 
@@ -76,7 +135,7 @@ async function analyzePackageForDocs(
           const packageName = getPackageName(importPath);
           if (
             Object.keys(packagePeerDependencies).includes(packageName) &&
-            !PEER_DEPS_TO_IGNORE.includes(packageName)
+            !shouldIgnorePeerDep(packageName)
           ) {
             peerDependencies.push({
               name: packageName,
@@ -86,12 +145,8 @@ async function analyzePackageForDocs(
         }
       }
 
-      // Only include components that are actually exported
-      const exportPath = getExportPath(filePath, platform);
-      const hasExport =
-        packageJson.exports &&
-        (packageJson.exports[`.${exportPath}`] ||
-          packageJson.exports[`.${exportPath}/${componentName}`]);
+      const exportPath = getExportPath(filePath, packageDir);
+      const hasExport = isComponentExported(packageJson.exports, exportPath, componentName);
 
       if (hasExport || peerDependencies.length > 0) {
         results[componentName] = {
@@ -108,39 +163,93 @@ async function analyzePackageForDocs(
   return results;
 }
 
-function generateDocumentationTable(analysis: PackageAnalysis): string {
+type UnmatchedComponent = {
+  componentName: string;
+  metadataFile: string;
+  analysisKey: string;
+  importStatement: string;
+};
+
+async function collectUnmatchedComponents(
+  analysis: PackageAnalysis,
+): Promise<UnmatchedComponent[]> {
+  const metadataFiles = await glob('apps/docs/docs/components/**/*Metadata.json');
+  const unmatched: UnmatchedComponent[] = [];
+
+  for (const metadataFile of metadataFiles) {
+    try {
+      const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf-8'));
+      const fileName = path.basename(metadataFile);
+
+      if (fileName !== 'webMetadata.json' && fileName !== 'mobileMetadata.json') continue;
+
+      const importMatch = metadata.import?.match(/import\s*{\s*([^}]+)\s*}/);
+      if (!importMatch) continue;
+
+      const rawNames = importMatch[1].trim();
+      const componentNames = rawNames.split(',').map((n: string) => n.trim()).filter(Boolean);
+      const analysisKey = resolveAnalysisKey(metadata.import);
+      if (!analysisKey) continue;
+
+      const hasMatch = componentNames.some((name: string) => analysis[analysisKey]?.[name]);
+      if (!hasMatch) {
+        unmatched.push({
+          componentName: rawNames,
+          metadataFile,
+          analysisKey,
+          importStatement: metadata.import,
+        });
+      }
+    } catch {
+      // skip files that can't be parsed
+    }
+  }
+
+  return unmatched.sort((a, b) => a.componentName.localeCompare(b.componentName));
+}
+
+function generateDocumentationTable(
+  analysis: PackageAnalysis,
+  unmatchedComponents: UnmatchedComponent[],
+): string {
   let documentation = '# Component Peer Dependencies\n\n';
   documentation +=
     'This document lists the peer dependencies required for each component when importing individually.\n\n';
 
-  // Web Components
-  documentation += '## Web Components (@coinbase/cds-web)\n\n';
-  documentation += '| Component | Import Path | Peer Dependencies |\n';
-  documentation += '|-----------|-------------|-------------------|\n';
+  for (const pkg of PACKAGES) {
+    const components = Object.entries(analysis[pkg.key] ?? {}).sort(([a], [b]) =>
+      a.localeCompare(b),
+    );
+    documentation += `## ${pkg.label}\n\n`;
+    documentation += '| Component | Import Path | Peer Dependencies |\n';
+    documentation += '|-----------|-------------|-------------------|\n';
 
-  const webComponents = Object.entries(analysis.web).sort(([a], [b]) => a.localeCompare(b));
-  for (const [componentName, info] of webComponents) {
-    const importPath = `@coinbase/cds-web${info.exportPath === 'root' ? '' : info.exportPath}`;
-    const peerDeps =
-      info.peerDependencies.length > 0
-        ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')
-        : 'react';
-    documentation += `| ${componentName} | \`${importPath}\` | ${peerDeps} |\n`;
+    for (const [componentName, info] of components) {
+      const importPath = `${pkg.packageName}${info.exportPath === 'root' ? '' : info.exportPath}`;
+      const peerDeps =
+        info.peerDependencies.length > 0
+          ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')
+          : 'react';
+      documentation += `| ${componentName} | \`${importPath}\` | ${peerDeps} |\n`;
+    }
+
+    documentation += '\n';
   }
 
-  // Mobile Components
-  documentation += '\n## Mobile Components (@coinbase/cds-mobile)\n\n';
-  documentation += '| Component | Import Path | Peer Dependencies |\n';
-  documentation += '|-----------|-------------|-------------------|\n';
+  if (unmatchedComponents.length > 0) {
+    documentation += '## Unmatched Components\n\n';
+    documentation +=
+      'These components have metadata files but could not be matched to an analyzed source file.\n';
+    documentation +=
+      'This typically means the component is a re-export or composite that doesn\'t have a direct `.tsx` file matching its name.\n\n';
+    documentation += '| Component | Package | Import |\n';
+    documentation += '|-----------|---------|--------|\n';
 
-  const mobileComponents = Object.entries(analysis.mobile).sort(([a], [b]) => a.localeCompare(b));
-  for (const [componentName, info] of mobileComponents) {
-    const importPath = `@coinbase/cds-mobile${info.exportPath === 'root' ? '' : info.exportPath}`;
-    const peerDeps =
-      info.peerDependencies.length > 0
-        ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')
-        : 'react';
-    documentation += `| ${componentName} | \`${importPath}\` | ${peerDeps} |\n`;
+    for (const entry of unmatchedComponents) {
+      documentation += `| ${entry.componentName} | ${entry.analysisKey} | \`${entry.importStatement}\` |\n`;
+    }
+
+    documentation += '\n';
   }
 
   return documentation;
@@ -150,10 +259,21 @@ function generateJSONOutput(analysis: PackageAnalysis): string {
   return JSON.stringify(analysis, null, 2);
 }
 
+function resolveAnalysisKey(importStatement: string): string | undefined {
+  // Match the package name from the import's "from" path, checking more specific
+  // package names first to avoid partial matches (e.g. cds-web-visualization before cds-web)
+  const sortedPackages = [...PACKAGES].sort((a, b) => b.packageName.length - a.packageName.length);
+  for (const pkg of sortedPackages) {
+    if (importStatement.includes(pkg.packageName)) {
+      return pkg.key;
+    }
+  }
+  return undefined;
+}
+
 async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
   console.log('Updating metadata files with peer dependency information...');
 
-  // Find all metadata files in the docs directory
   const metadataFiles = await glob('apps/docs/docs/components/**/*Metadata.json');
 
   let updatedFiles = 0;
@@ -168,26 +288,42 @@ async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
 
       if (!isWeb && !isMobile) continue;
 
-      // Extract component name from the import statement
       const importMatch = metadata.import?.match(/import\s*{\s*([^}]+)\s*}/);
       if (!importMatch) {
         console.warn(`Could not extract component name from: ${metadataFile}`);
         continue;
       }
 
-      const componentName = importMatch[1].trim();
-      const platform = isWeb ? 'web' : 'mobile';
-      const componentData = analysis[platform][componentName];
+      const rawNames = importMatch[1].trim();
+      const componentNames = rawNames.split(',').map((n: string) => n.trim()).filter(Boolean);
+      const analysisKey = resolveAnalysisKey(metadata.import);
 
-      if (componentData) {
-        // Add peer dependencies to metadata
-        metadata.dependencies = componentData.peerDependencies;
+      if (!analysisKey) {
+        console.warn(`Could not resolve package for import in: ${metadataFile}`);
+        continue;
+      }
 
-        // Write back to file with pretty formatting
+      type ComponentEntry = ComponentPeerDeps[string];
+      const matchedData: ComponentEntry[] = [];
+      for (const name of componentNames) {
+        const entry: ComponentEntry | undefined = analysis[analysisKey]?.[name];
+        if (entry) matchedData.push(entry);
+      }
+
+      if (matchedData.length > 0) {
+        const allPeerDeps = matchedData.flatMap((d: ComponentEntry) => d.peerDependencies);
+        const dedupMap = new Map<string, Dependency>();
+        for (const dep of allPeerDeps) {
+          dedupMap.set(dep.name, dep);
+        }
+        const uniquePeerDeps = Array.from(dedupMap.values()).sort((a, b) =>
+          a.name.localeCompare(b.name),
+        );
+        metadata.dependencies = uniquePeerDeps;
         fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2) + '\n');
         updatedFiles++;
       } else {
-        console.warn(`Component ${componentName} not found in ${platform} analysis`);
+        console.warn(`Component ${rawNames} not found in ${analysisKey} analysis`);
         notFoundComponents++;
       }
     } catch (error) {
@@ -214,54 +350,43 @@ async function main(): Promise<void> {
 
   console.log('Analyzing component peer dependencies for documentation...');
 
-  const webPackageJson = JSON.parse(fs.readFileSync('packages/web/package.json', 'utf-8'));
-  const mobilePackageJson = JSON.parse(fs.readFileSync('packages/mobile/package.json', 'utf-8'));
+  const analysis: PackageAnalysis = {};
 
-  // Analyze peer dependencies for each component in both packages
-  const webAnalysis = await analyzePackageForDocs('packages/web', 'web', webPackageJson);
-  const mobileAnalysis = await analyzePackageForDocs(
-    'packages/mobile',
-    'mobile',
-    mobilePackageJson,
-  );
+  for (const pkg of PACKAGES) {
+    const packageJson = JSON.parse(fs.readFileSync(`${pkg.packageDir}/package.json`, 'utf-8'));
+    analysis[pkg.key] = await analyzePackageForDocs(pkg.packageDir, packageJson);
+  }
 
-  const analysis: PackageAnalysis = {
-    web: webAnalysis,
-    mobile: mobileAnalysis,
-  };
+  const unmatchedComponents = await collectUnmatchedComponents(analysis);
 
   if (shouldGenerateReportFiles === 'y') {
-    // Generate documentation
-    const docsContent = generateDocumentationTable(analysis);
+    const docsContent = generateDocumentationTable(analysis, unmatchedComponents);
     fs.writeFileSync('component-peer-dependencies.md', docsContent);
     const jsonContent = generateJSONOutput(analysis);
     fs.writeFileSync('component-peer-dependencies.json', jsonContent);
   }
 
   if (shouldUpdateMetadata === 'y') {
-    // Update metadata files
     await updateMetadataFiles(analysis);
   }
 
-  // Print summary
   console.log('\nDocumentation generated:');
   console.log('- component-peer-dependencies.md');
   console.log('- component-peer-dependencies.json');
 
   console.log(`\nSummary:`);
-  console.log(`- Web components analyzed: ${Object.keys(webAnalysis).length}`);
-  console.log(`- Mobile components analyzed: ${Object.keys(mobileAnalysis).length}`);
-
-  const webPeerDeps = new Set(
-    Object.values(webAnalysis).flatMap((c) => c.peerDependencies.map((d) => d.name)),
-  );
-  const mobilePeerDeps = new Set(
-    Object.values(mobileAnalysis).flatMap((c) => c.peerDependencies.map((d) => d.name)),
-  );
+  for (const pkg of PACKAGES) {
+    const count = Object.keys(analysis[pkg.key] ?? {}).length;
+    console.log(`- ${pkg.label}: ${count} components`);
+  }
 
   console.log(`\nUnique peer dependencies:`);
-  console.log(`- Web: ${Array.from(webPeerDeps).join(', ')}`);
-  console.log(`- Mobile: ${Array.from(mobilePeerDeps).join(', ')}`);
+  for (const pkg of PACKAGES) {
+    const peerDeps = new Set(
+      Object.values(analysis[pkg.key] ?? {}).flatMap((c) => c.peerDependencies.map((d) => d.name)),
+    );
+    console.log(`- ${pkg.key}: ${Array.from(peerDeps).join(', ') || '(none)'}`);
+  }
 }
 
 if (require.main === module) {
