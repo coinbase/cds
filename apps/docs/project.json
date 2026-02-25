@@ -33,6 +33,15 @@
         "cwd": "apps/docs"
       }
     },
+    "serve": {
+      "command": "docusaurus serve --dir dist --port 3000",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": [

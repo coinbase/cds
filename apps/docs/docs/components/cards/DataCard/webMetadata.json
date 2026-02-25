@@ -27,7 +27,7 @@
     },
     {
       "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "url": "/components/charts/LineChart/"
     }
   ],
   "dependencies": []
