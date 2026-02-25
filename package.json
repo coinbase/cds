@@ -168,7 +168,7 @@
     "detox": "^20.14.8",
     "diff": "^5.1.0",
     "dotenv-webpack": "7.0.3",
-    "eslint": "^10.0.2",
+    "eslint": "^10.0.1",
     "eslint-import-resolver-typescript": "^3.8.7",
     "eslint-plugin-codegen": "^0.30.0",
     "eslint-plugin-import": "^2.31.0",

@@ -17742,7 +17742,7 @@ __metadata:
     detox: "npm:^20.14.8"
     diff: "npm:^5.1.0"
     dotenv-webpack: "npm:7.0.3"
-    eslint: "npm:^10.0.2"
+    eslint: "npm:^10.0.1"
     eslint-import-resolver-typescript: "npm:^3.8.7"
     eslint-plugin-codegen: "npm:^0.30.0"
     eslint-plugin-import: "npm:^2.31.0"
@@ -19533,7 +19533,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^10.0.2":
+"eslint@npm:^10.0.1":
   version: 10.0.2
   resolution: "eslint@npm:10.0.2"
   dependencies:
