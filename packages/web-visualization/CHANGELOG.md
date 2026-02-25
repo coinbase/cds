@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Clarify framer-motion is a peerDependency. [[#437](https://github.com/coinbase/cds/pull/437)]
+
 ## 3.4.0-beta.19 (2/20/2026 PST)
 
 #### 🚀 Updates
