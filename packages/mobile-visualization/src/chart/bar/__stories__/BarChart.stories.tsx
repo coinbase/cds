@@ -935,13 +935,9 @@ const SunlightChart = () => {
 
 const PriceRange = () => {
   const candles = btcCandles.slice(0, 180).reverse();
-  const data = useMemo(
-    () =>
-      candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]) as [
-        number,
-        number,
-      ][],
-    [],
+  const data: [number, number][] = useMemo(
+    () => candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]),
+    [candles],
   );
 
   const min = useMemo(() => Math.min(...data.map(([low]) => low)), [data]);
