@@ -122,7 +122,7 @@ export const Card = memo(function OldCard({
   );
 
   return (
-    <Box>
+    <Box style={pin ? pinStyles[pin] : undefined}>
       {onPress ? (
         <Pressable
           accessibilityHint={accessibilityHint}
@@ -134,7 +134,6 @@ export const Card = memo(function OldCard({
           noScaleOnPress={noScaleOnPress}
           onPress={onPress}
           style={{
-            ...(pin ? pinStyles[pin] : undefined),
             width: width as DimensionValue,
             height: height as DimensionValue,
           }}
