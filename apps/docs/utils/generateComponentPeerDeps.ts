@@ -199,9 +199,7 @@ function isComponentExported(
   return false;
 }
 
-function resolveEffectivePeerDeps(
-  packageJson: any,
-): Record<string, string> {
+function resolveEffectivePeerDeps(packageJson: any): Record<string, string> {
   const ownPeerDeps: Record<string, string> = { ...packageJson.peerDependencies };
   const effective: Record<string, string> = { ...ownPeerDeps };
 
@@ -212,9 +210,7 @@ function resolveEffectivePeerDeps(
     if (!depDir) continue;
 
     try {
-      const depPackageJson = JSON.parse(
-        fs.readFileSync(`${depDir}/package.json`, 'utf-8'),
-      );
+      const depPackageJson = JSON.parse(fs.readFileSync(`${depDir}/package.json`, 'utf-8'));
       const nestedPeerDeps: Record<string, string> = depPackageJson.peerDependencies ?? {};
       for (const [nestedName, nestedVersion] of Object.entries(nestedPeerDeps)) {
         if (!effective[nestedName]) {
