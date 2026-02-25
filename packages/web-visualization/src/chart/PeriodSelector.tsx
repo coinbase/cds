@@ -1,5 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { Polymorphic } from '@coinbase/cds-web/core/polymorphism';
+import { cx } from '@coinbase/cds-web';
 import { Box } from '@coinbase/cds-web/layout';
 import {
   SegmentedTabs,
@@ -10,6 +11,7 @@ import {
 } from '@coinbase/cds-web/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-web/tabs/SegmentedTab';
 import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
+import type { StylesAndClassNames } from '@coinbase/cds-web/types';
 import { css } from '@linaria/core';
 import { m as motion, type Transition } from 'framer-motion';
 
@@ -23,6 +25,7 @@ export const PeriodSelectorActiveIndicator = memo(
     position = 'absolute',
     borderRadius = 1000,
     style,
+    ...rest
   }: TabsActiveIndicatorProps) => {
     const { width, height, x } = activeTabRect;
     const activeAnimation = useMemo(() => ({ width, x }), [width, x]);
@@ -45,6 +48,7 @@ export const PeriodSelectorActiveIndicator = memo(
           ...style,
         }}
         transition={tabsTransitionConfig}
+        {...rest}
       />
     );
   },
@@ -128,7 +132,21 @@ const PeriodSelectorTab: TabComponent = memo(
   )),
 );
 
-export type PeriodSelectorProps = SegmentedTabsProps;
+/**
+ * Static class names for PeriodSelector component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const periodSelectorClassNames = {
+  /** Root element */
+  root: 'cds-PeriodSelector',
+  /** Tab element */
+  tab: 'cds-PeriodSelector-tab',
+  /** Active indicator element */
+  activeIndicator: 'cds-PeriodSelector-activeIndicator',
+} as const;
+
+export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'classNames' | 'styles'> &
+  StylesAndClassNames<typeof periodSelectorClassNames>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.
@@ -144,6 +162,10 @@ export const PeriodSelector = memo(
         justifyContent = 'space-between',
         TabComponent = PeriodSelectorTab,
         TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+        className,
+        classNames,
+        style,
+        styles,
         ...props
       }: PeriodSelectorProps,
       ref: React.ForwardedRef<HTMLElement>,
@@ -154,7 +176,20 @@ export const PeriodSelector = memo(
         TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
         activeBackground={activeBackground}
         background={background}
+        className={cx(periodSelectorClassNames.root, className, classNames?.root)}
+        classNames={{
+          tab: cx(periodSelectorClassNames.tab, classNames?.tab),
+          activeIndicator: cx(
+            periodSelectorClassNames.activeIndicator,
+            classNames?.activeIndicator,
+          ),
+        }}
         justifyContent={justifyContent}
+        style={styles?.root ? { ...style, ...styles.root } : style}
+        styles={{
+          tab: styles?.tab,
+          activeIndicator: styles?.activeIndicator,
+        }}
         width={width}
         {...props}
       />

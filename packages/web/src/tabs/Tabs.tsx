@@ -14,8 +14,10 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
+import { cx } from '../cx';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
+import type { StylesAndClassNames } from '../types';
 
 const MotionBox = motion<BoxProps<BoxDefaultElement>>(Box);
 
@@ -54,11 +56,26 @@ export type TabComponentProps<TabId extends string = string> = TabValue<TabId> &
    * @default "tab"
    */
   role?: string;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 export type TabComponent<TabId extends string = string> = React.FC<TabComponentProps<TabId>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
+
+/**
+ * Static class names for Tabs component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const tabsClassNames = {
+  /** Root element */
+  root: 'cds-Tabs',
+  /** Tab element */
+  tab: 'cds-Tabs-tab',
+  /** Active indicator element */
+  activeIndicator: 'cds-Tabs-activeIndicator',
+} as const;
 
 export type TabsBaseProps<TabId extends string = string> = {
   /** The array of tabs data. Each tab may optionally define a custom Component to render. */
@@ -74,6 +91,7 @@ export type TabsBaseProps<TabId extends string = string> = {
 } & Omit<TabsOptions<TabId>, 'tabs'>;
 
 export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
+  StylesAndClassNames<typeof tabsClassNames> &
   Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'>;
 
 type TabsFC = <TabId extends string = string>(
@@ -92,6 +110,9 @@ const TabsComponent = memo(
         onActiveTabElementChange,
         disabled,
         onChange,
+        className,
+        classNames,
+        styles,
         role = 'tablist',
         position = 'relative',
         width = 'fit-content',
@@ -176,8 +197,8 @@ const TabsComponent = memo(
       );
 
       const containerStyle = useMemo(
-        () => ({ opacity: disabled ? accessibleOpacityDisabled : 1, ...style }),
-        [disabled, style],
+        () => ({ opacity: disabled ? accessibleOpacityDisabled : 1, ...style, ...styles?.root }),
+        [disabled, style, styles?.root],
       );
 
       const registerRef = useCallback(
@@ -193,6 +214,7 @@ const TabsComponent = memo(
       return (
         <HStack
           ref={mergedContainerRefs}
+          className={cx(tabsClassNames.root, className, classNames?.root)}
           onKeyDown={handleTabsContainerKeyDown}
           position={position}
           role={role}
@@ -204,6 +226,8 @@ const TabsComponent = memo(
             <TabsActiveIndicatorComponent
               activeTabRect={activeTabRect}
               background={activeBackground}
+              className={cx(tabsClassNames.activeIndicator, classNames?.activeIndicator)}
+              style={styles?.activeIndicator}
             />
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
               const RenderedTab = CustomTabComponent ?? TabComponent;
@@ -216,6 +240,8 @@ const TabsComponent = memo(
                     role="tab"
                     tabIndex={activeTab?.id === id || !activeTab ? 0 : -1}
                     {...props}
+                    className={cx(tabsClassNames.tab, classNames?.tab)}
+                    style={styles?.tab}
                   />
                 </TabContainer>
               );
