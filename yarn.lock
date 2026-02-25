@@ -2674,9 +2674,9 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@docusaurus/logger": "npm:^3.7.0"
-    "@docusaurus/types": "npm:^3.7.0"
-    "@docusaurus/utils": "npm:^3.7.0"
+    "@docusaurus/logger": "npm:~3.7.0"
+    "@docusaurus/types": "npm:~3.7.0"
+    "@docusaurus/utils": "npm:~3.7.0"
     "@types/ejs": "npm:^3.1.0"
     "@types/lodash": "npm:^4.14.178"
     ejs: "npm:^3.1.7"
@@ -2698,9 +2698,9 @@ __metadata:
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@coinbase/cds-common": "workspace:^"
-    "@docusaurus/logger": "npm:^3.7.0"
-    "@docusaurus/plugin-content-docs": "npm:^3.7.0"
-    "@docusaurus/types": "npm:^3.7.0"
+    "@docusaurus/logger": "npm:~3.7.0"
+    "@docusaurus/plugin-content-docs": "npm:~3.7.0"
+    "@docusaurus/types": "npm:~3.7.0"
     kbar: "npm:^0.1.0-beta.45"
     lodash: "npm:^4.17.21"
     type-fest: "npm:^2.19.0"
@@ -2715,7 +2715,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@docusaurus/types": "npm:^3.7.0"
+    "@docusaurus/types": "npm:~3.7.0"
     "@types/express": "npm:^4.17.21"
   languageName: unknown
   linkType: soft
@@ -3579,7 +3579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/logger@npm:3.7.0, @docusaurus/logger@npm:^3.7.0":
+"@docusaurus/logger@npm:3.7.0, @docusaurus/logger@npm:~3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/logger@npm:3.7.0"
   dependencies:
@@ -3624,7 +3624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/module-type-aliases@npm:3.7.0":
+"@docusaurus/module-type-aliases@npm:3.7.0, @docusaurus/module-type-aliases@npm:~3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/module-type-aliases@npm:3.7.0"
   dependencies:
@@ -3639,24 +3639,6 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 10c0/fca90450afb0aaafbae20b70adc2b35af81fff20a1d0fcf3c652b0200ac9be870add257e577e227854b20b9ca375fa53f99242435d2576dfeb7ee791d3fb25ae
-  languageName: node
-  linkType: hard
-
-"@docusaurus/module-type-aliases@npm:^3.7.0":
-  version: 3.9.2
-  resolution: "@docusaurus/module-type-aliases@npm:3.9.2"
-  dependencies:
-    "@docusaurus/types": "npm:3.9.2"
-    "@types/history": "npm:^4.7.11"
-    "@types/react": "npm:*"
-    "@types/react-router-config": "npm:*"
-    "@types/react-router-dom": "npm:*"
-    react-helmet-async: "npm:@slorber/react-helmet-async@1.3.0"
-    react-loadable: "npm:@docusaurus/react-loadable@6.0.0"
-  peerDependencies:
-    react: "*"
-    react-dom: "*"
-  checksum: 10c0/60f163ff9004bb1fcbbad94b18200b6bca967da14576f78f5c533f8535aae0a3a723245cb28e1ca93f9d5881d3f1077e03ebf12bbad59d0e1c6916300d086642
   languageName: node
   linkType: hard
 
@@ -3710,7 +3692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/plugin-content-docs@npm:3.7.0, @docusaurus/plugin-content-docs@npm:^3.7.0, @docusaurus/plugin-content-docs@npm:~3.7.0":
+"@docusaurus/plugin-content-docs@npm:3.7.0, @docusaurus/plugin-content-docs@npm:~3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/plugin-content-docs@npm:3.7.0"
   dependencies:
@@ -4002,14 +3984,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/tsconfig@npm:^3.7.0":
-  version: 3.9.2
-  resolution: "@docusaurus/tsconfig@npm:3.9.2"
-  checksum: 10c0/d46241cb488d60f785710ee24980aad394423eaf5f76b64b0d47158fcbe19dd68a886898db83b1b65de18dfeb6c27d78adc8f8c4451d1ac29cc9da009ed15cd4
+"@docusaurus/tsconfig@npm:~3.7.0":
+  version: 3.7.0
+  resolution: "@docusaurus/tsconfig@npm:3.7.0"
+  checksum: 10c0/22a076fa3cf6da25a76f87fbe5b37c09997f5a8729fdc1a69c0c7955dff9f9850f16dc1de8c6d5096d258a95c428fb8839b252b9dbaa648acb7de8a0e5889dea
   languageName: node
   linkType: hard
 
-"@docusaurus/types@npm:3.7.0":
+"@docusaurus/types@npm:3.7.0, @docusaurus/types@npm:~3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/types@npm:3.7.0"
   dependencies:
@@ -4026,27 +4008,6 @@ __metadata:
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
   checksum: 10c0/256d3b579e0f663096d915cfd34851564a243dd3b587901f0b8de7988ea021bf4c9f9bcb9d632f52cddb37f53959be8d93728421ddbba7f9c98a36f0dec454cd
-  languageName: node
-  linkType: hard
-
-"@docusaurus/types@npm:3.9.2, @docusaurus/types@npm:^3.7.0":
-  version: 3.9.2
-  resolution: "@docusaurus/types@npm:3.9.2"
-  dependencies:
-    "@mdx-js/mdx": "npm:^3.0.0"
-    "@types/history": "npm:^4.7.11"
-    "@types/mdast": "npm:^4.0.2"
-    "@types/react": "npm:*"
-    commander: "npm:^5.1.0"
-    joi: "npm:^17.9.2"
-    react-helmet-async: "npm:@slorber/react-helmet-async@1.3.0"
-    utility-types: "npm:^3.10.0"
-    webpack: "npm:^5.95.0"
-    webpack-merge: "npm:^5.9.0"
-  peerDependencies:
-    react: ^18.0.0 || ^19.0.0
-    react-dom: ^18.0.0 || ^19.0.0
-  checksum: 10c0/e50a9931e97944d39375a97a45ded13bc35baf3c9c14fe66d30944ebe1203df7748a7631291f937bef1a7a98db73c23505620cd8f03d109fbbdfa83725fb2857
   languageName: node
   linkType: hard
 
@@ -4076,7 +4037,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/utils@npm:3.7.0, @docusaurus/utils@npm:^3.7.0":
+"@docusaurus/utils@npm:3.7.0, @docusaurus/utils@npm:~3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/utils@npm:3.7.0"
   dependencies:
@@ -18080,7 +18041,7 @@ __metadata:
     "@docusaurus/core": "npm:~3.7.0"
     "@docusaurus/faster": "npm:~3.7.0"
     "@docusaurus/mdx-loader": "npm:~3.7.0"
-    "@docusaurus/module-type-aliases": "npm:^3.7.0"
+    "@docusaurus/module-type-aliases": "npm:~3.7.0"
     "@docusaurus/plugin-client-redirects": "npm:~3.7.0"
     "@docusaurus/plugin-content-blog": "npm:~3.7.0"
     "@docusaurus/plugin-content-docs": "npm:~3.7.0"
@@ -18094,8 +18055,8 @@ __metadata:
     "@docusaurus/theme-common": "npm:~3.7.0"
     "@docusaurus/theme-live-codeblock": "npm:~3.7.0"
     "@docusaurus/theme-search-algolia": "npm:~3.7.0"
-    "@docusaurus/tsconfig": "npm:^3.7.0"
-    "@docusaurus/types": "npm:^3.7.0"
+    "@docusaurus/tsconfig": "npm:~3.7.0"
+    "@docusaurus/types": "npm:~3.7.0"
     "@linaria/babel-preset": "npm:^3.0.0-beta.22"
     "@linaria/core": "npm:^3.0.0-beta.22"
     "@linaria/webpack-loader": "npm:^3.0.0-beta.22"
