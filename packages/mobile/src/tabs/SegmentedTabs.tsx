@@ -22,7 +22,7 @@ const SegmentedTabsComponent = memo(
         TabsActiveIndicatorComponent = SegmentedTabsActiveIndicator,
         activeBackground = 'bgInverse',
         background = 'bgSecondary',
-        borderRadius = 1000,
+        borderRadius = 700,
         ...props
       }: SegmentedTabsProps<TabId>,
       ref: React.ForwardedRef<View>,

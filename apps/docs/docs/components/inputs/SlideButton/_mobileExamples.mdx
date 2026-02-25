@@ -214,6 +214,26 @@ function Example() {
 }
 ```
 
+## Custom Border Radius
+
+Use `borderRadius` to customize the shape of both the handle and the background. Token values are resolved through the theme, so the handle and background always match.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      borderRadius={200}
+    />
+  );
+}
+```
+
 ## Custom Background and Handle Components
 
 You can fully customize the background and handle by providing your own components via `SlideButtonBackgroundComponent` and `SlideButtonHandleComponent`. Your components receive typed props (`SlideButtonBackgroundProps` and `SlideButtonHandleProps`) including a `progress` spring value and the current `checked` state.

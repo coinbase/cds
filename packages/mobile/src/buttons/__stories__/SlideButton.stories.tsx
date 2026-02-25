@@ -30,6 +30,7 @@ const SlideButtonExample = ({
         <IconButton compact name="refresh" onPress={toggleOff} />
       </HStack>
       <SlideButton
+        borderRadius={200}
         checked={checked}
         checkedLabel={checkedLabel ?? 'Confirming...'}
         onChange={setChecked}
@@ -136,6 +137,9 @@ export const SlideButtonStories = () => {
           SlideButtonHandleComponent={CustomHandle}
           height={50}
         />
+      </Example>
+      <Example title="Custom border radius">
+        <SlideButtonExample borderRadius={200} />
       </Example>
     </ExampleScreen>
   );

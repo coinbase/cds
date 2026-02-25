@@ -103,6 +103,11 @@ const TabsComponent = memo(
         alignSelf = 'flex-start',
         opacity,
         onActiveTabElementChange,
+        borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         ...props
       }: TabsProps<TabId>,
       ref: React.ForwardedRef<View>,
@@ -143,6 +148,11 @@ const TabsComponent = memo(
         <HStack
           ref={tabsContainerRef}
           alignSelf={alignSelf}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
           onLayout={updateActiveTabRect}
           opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
           position={position}
@@ -154,6 +164,11 @@ const TabsComponent = memo(
             <TabsActiveIndicatorComponent
               activeTabRect={activeTabRect}
               background={activeBackground}
+              borderBottomLeftRadius={borderBottomLeftRadius}
+              borderBottomRightRadius={borderBottomRightRadius}
+              borderRadius={borderRadius}
+              borderTopLeftRadius={borderTopLeftRadius}
+              borderTopRightRadius={borderTopRightRadius}
               style={styles?.activeIndicator}
             />
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {

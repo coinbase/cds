@@ -4,6 +4,7 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout';
 import { Text } from '../../typography/Text';
 import { SegmentedTab } from '../SegmentedTab';
@@ -200,7 +201,24 @@ const SegmentedTabsScreen = () => (
       title="With Padding"
       width="fit-content"
     />
+    <CustomStylesExample />
   </ExampleScreen>
 );
+
+const CustomStylesExample = () => {
+  const theme = useTheme();
+  return (
+    <SegmentedTabsExample
+      borderRadius={300}
+      defaultActiveTab={basicSegments[0]}
+      padding={1}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={basicSegments}
+      title="Custom Styles"
+    />
+  );
+};
 
 export default SegmentedTabsScreen;

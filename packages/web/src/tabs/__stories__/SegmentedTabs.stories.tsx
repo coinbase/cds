@@ -189,13 +189,14 @@ export const All = () => {
         title="Typed Tabs"
       />
       <SegmentedTabsExample
+        borderRadius={300}
         defaultActiveTab={basicSegments[0]}
-        gap={2}
-        paddingX={3}
-        paddingY={1}
+        padding={0.5}
+        styles={{
+          activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+        }}
         tabs={basicSegments}
-        title="With Padding"
-        width="fit-content"
+        title="Custom Styles"
       />
     </VStack>
   );

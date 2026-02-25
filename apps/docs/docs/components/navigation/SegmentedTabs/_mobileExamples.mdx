@@ -153,6 +153,61 @@ function Example() {
 }
 ```
 
+### Custom Border Radius
+
+Set `borderRadius` on SegmentedTabs to change the shape of both the container and the active indicator automatically.
+
+```jsx
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={300}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Custom Styles
+
+Use the `styles` prop to customize individual elements of the SegmentedTabs. This example sets a different `borderRadius` on the active indicator than the outer container, with padding to create an inset effect.
+
+```jsx
+function Example() {
+  const theme = useTheme();
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={300}
+      onChange={handleChange}
+      padding={1}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={tabs}
+    />
+  );
+}
+```
+
 ### Custom Active Indicator
 
 You can customize the active indicator component and overall styling.

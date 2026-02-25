@@ -116,6 +116,11 @@ const TabsComponent = memo(
         role = 'tablist',
         position = 'relative',
         width = 'fit-content',
+        borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         style,
         ...props
       }: TabsProps<TabId>,
@@ -214,6 +219,11 @@ const TabsComponent = memo(
       return (
         <HStack
           ref={mergedContainerRefs}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
           className={cx(tabsClassNames.root, className, classNames?.root)}
           onKeyDown={handleTabsContainerKeyDown}
           position={position}
@@ -226,6 +236,11 @@ const TabsComponent = memo(
             <TabsActiveIndicatorComponent
               activeTabRect={activeTabRect}
               background={activeBackground}
+              borderBottomLeftRadius={borderBottomLeftRadius}
+              borderBottomRightRadius={borderBottomRightRadius}
+              borderRadius={borderRadius}
+              borderTopLeftRadius={borderTopLeftRadius}
+              borderTopRightRadius={borderTopRightRadius}
               className={cx(tabsClassNames.activeIndicator, classNames?.activeIndicator)}
               style={styles?.activeIndicator}
             />

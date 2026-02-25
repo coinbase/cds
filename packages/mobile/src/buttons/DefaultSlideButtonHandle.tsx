@@ -112,6 +112,10 @@ export const DefaultSlideButtonHandle = memo(
         endCheckedNode,
         checkedLabel,
         borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         ...props
       },
       ref,
@@ -152,6 +156,10 @@ export const DefaultSlideButtonHandle = memo(
           noScaleOnPress
           background={backgroundColor}
           borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
           contentStyle={containerStyle}
           disabled={disabled}
           loading={checked}
