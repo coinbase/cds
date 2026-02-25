@@ -352,7 +352,9 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
 />
 ```
 
-## Negative Data
+## Data
+
+### Negative
 
 ```jsx live
 function PositiveAndNegativeCashFlow() {
@@ -392,7 +394,7 @@ function PositiveAndNegativeCashFlow() {
 }
 ```
 
-## Missing Bars
+### Null
 
 You can pass in `null` or `0` values to not render a bar for that data point.
 
@@ -485,6 +487,40 @@ function MonthlyRewards() {
         },
         categoryPadding: 0.27,
       }}
+    />
+  );
+}
+```
+
+### Range
+
+You can pass in `[min, max]` tuples as data points to render bars that span a range of values.
+
+```jsx live
+function PriceRange() {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]);
+
+  const min = Math.min(...data.map(([low]) => low));
+  const max = Math.max(...data.map(([, high]) => high));
+
+  const tickFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      showYAxis
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+      height={250}
     />
   );
 }
