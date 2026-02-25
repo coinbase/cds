@@ -1,9 +1,10 @@
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
-import { DottedLine } from '../../line';
+import { CartesianChart } from '../../CartesianChart';
+import { DottedLine, Line } from '../../line';
 import { Scrubber } from '../../scrubber/Scrubber';
-import { AreaChart } from '..';
+import { Area, AreaChart } from '..';
 
 export default {
   title: 'Components/Chart/AreaChart',

@@ -1,6 +1,7 @@
 import React from 'react';
 import startCase from 'lodash/startCase';
 
+import { Icon } from '../../icons/Icon';
 import { VStack } from '../../layout';
 import { Tag, type TagBaseProps } from '../Tag';
 
@@ -101,6 +102,41 @@ export const Truncated = () => (
       }`;
       return <Tag key={keyString} {...props} />;
     })}
+  </VStack>
+);
+
+export const WithIcons = () => (
+  <VStack alignItems="flex-start" flexWrap="nowrap" gap={2} padding={0.5}>
+    <Tag colorScheme="blue" startIcon="add">
+      Start icon
+    </Tag>
+    <Tag colorScheme="green" endIcon="add">
+      End icon
+    </Tag>
+    <Tag colorScheme="purple" endIcon="add" startIcon="add">
+      Both icons
+    </Tag>
+    <Tag colorScheme="red" endIcon="add" intent="promotional" startIcon="add">
+      Promotional with icons
+    </Tag>
+  </VStack>
+);
+
+export const WithCustomNodes = () => (
+  <VStack alignItems="flex-start" flexWrap="nowrap" gap={2} padding={0.5}>
+    <Tag colorScheme="blue" start={<Icon color="fgNegative" name="add" size="xs" />}>
+      Custom start node
+    </Tag>
+    <Tag colorScheme="green" end={<Icon color="fgPositive" name="add" size="xs" />}>
+      Custom end node
+    </Tag>
+    <Tag
+      colorScheme="purple"
+      end={<Icon color="fgNegative" name="close" size="xs" />}
+      start={<Icon color="fgPositive" name="add" size="xs" />}
+    >
+      Both custom nodes
+    </Tag>
   </VStack>
 );
 

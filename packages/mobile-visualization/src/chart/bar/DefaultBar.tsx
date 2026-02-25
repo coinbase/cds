@@ -3,7 +3,8 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { getBarPath } from '../utils';
+import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';
+import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -18,7 +19,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     y,
     width,
     height,
-    borderRadius,
+    borderRadius = 4,
     roundTop,
     roundBottom,
     d,
@@ -27,60 +28,59 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     originY,
+    transitions,
     transition,
   }) => {
-    const { animate } = useCartesianChartContext();
+    const { animate, drawingArea } = useCartesianChartContext();
     const theme = useTheme();
 
     const defaultFill = fill || theme.color.fgPrimary;
 
-    const targetPath = useMemo(() => {
-      const effectiveBorderRadius = borderRadius ?? 0;
-      const effectiveRoundTop = roundTop ?? true;
-      const effectiveRoundBottom = roundBottom ?? true;
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
 
-      return (
-        d ||
-        getBarPath(
-          x,
-          y,
-          width,
-          height,
-          effectiveBorderRadius,
-          effectiveRoundTop,
-          effectiveRoundBottom,
-        )
-      );
-    }, [x, y, width, height, borderRadius, roundTop, roundBottom, d]);
+    const enterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [transitions?.enter, animate, normalizedX],
+    );
+    const updateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [transitions?.update, transition, animate, normalizedX],
+    );
 
     const initialPath = useMemo(() => {
-      const effectiveBorderRadius = borderRadius ?? 0;
-      const effectiveRoundTop = roundTop ?? true;
-      const effectiveRoundBottom = roundBottom ?? true;
       const baselineY = originY ?? y + height;
-
-      return getBarPath(
-        x,
-        baselineY,
-        width,
-        1,
-        effectiveBorderRadius,
-        effectiveRoundTop,
-        effectiveRoundBottom,
-      );
+      return getBarPath(x, baselineY, width, 1, borderRadius, !!roundTop, !!roundBottom);
     }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
 
     return (
       <Path
         animate={animate}
         clipPath={null}
-        d={targetPath}
+        d={d}
         fill={stroke ? 'none' : defaultFill}
         fillOpacity={fillOpacity}
         initialPath={initialPath}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        transition={transition}
+        transitions={{
+          enter: enterTransition,
+          update: updateTransition,
+        }}
       />
     );
   },

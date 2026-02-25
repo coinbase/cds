@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.9.0 (2/20/2026 PST)
+
+#### 🚀 Updates
+
+- Add new mobile routes. [[#400](https://github.com/coinbase/cds/pull/400)]
+
 ## 4.8.0 (2/6/2026 PST)
 
 #### 🚀 Updates

@@ -1,20 +1,16 @@
-import React, { memo, useEffect, useMemo } from 'react';
-import { useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { type PathProps } from '../Path';
+import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   getLineData,
   getLinePath,
   type GradientDefinition,
-  type Transition,
 } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
@@ -110,16 +106,11 @@ export type LineBaseProps = {
   animate?: boolean;
 };
 
-export type LineProps = LineBaseProps & {
-  /**
-   * Transition configuration for line animations.
-   */
-  transition?: Transition;
-};
+export type LineProps = LineBaseProps & Pick<PathProps, 'transitions' | 'transition'>;
 
 export type LineComponentProps = Pick<
   LineProps,
-  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
+  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transitions' | 'transition'
 > &
   Pick<PathProps, 'clipPath' | 'strokeCap'> & {
     /**
@@ -150,6 +141,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     points,
     connectNulls,
+    transitions,
     transition,
     gradient: gradientProp,
     ...props
@@ -157,21 +149,6 @@ export const Line = memo<LineProps>(
     const theme = useTheme();
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
       useCartesianChartContext();
-
-    const isReady = !!getXScale();
-
-    // Animation state for delayed point rendering (matches web timing)
-    const pointsOpacity = useSharedValue(animate ? 0 : 1);
-
-    // Delay point appearance until after path enter animation completes
-    useEffect(() => {
-      if (animate && isReady) {
-        pointsOpacity.value = withDelay(
-          accessoryFadeTransitionDelay,
-          withTiming(1, { duration: accessoryFadeTransitionDuration }),
-        );
-      }
-    }, [animate, isReady, pointsOpacity]);
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const gradient = useMemo(
@@ -263,6 +240,7 @@ export const Line = memo<LineProps>(
             gradient={gradient}
             seriesId={seriesId}
             transition={transition}
+            transitions={transitions}
             type={areaType}
           />
         )}
@@ -273,11 +251,12 @@ export const Line = memo<LineProps>(
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
+          transitions={transitions}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
         {points && (
-          <Group opacity={pointsOpacity}>
+          <Group>
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
 
