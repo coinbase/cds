@@ -1,0 +1,45 @@
+{
+  "import": "import { LineChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/line/LineChart.tsx",
+  "description": "A flexible line chart component for displaying data trends over time. Supports multiple series, custom curves, areas, scrubbing, and interactive data exploration.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/charts/CartesianChart/"
+    },
+    {
+      "label": "Point",
+      "url": "/components/charts/Point/"
+    },
+    {
+      "label": "ReferenceLine",
+      "url": "/components/charts/ReferenceLine/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/charts/Scrubber/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/charts/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/charts/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
+}
