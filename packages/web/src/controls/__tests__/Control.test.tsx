@@ -49,4 +49,26 @@ describe('Control', () => {
     expect(console.warn).toHaveBeenCalledTimes(1);
     process.env.NODE_ENV = 'test';
   });
+
+  it('keeps a stable root wrapper regardless of label presence', () => {
+    const { rerender } = render(
+      <DefaultThemeProvider>
+        <Control aria-label="control" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('checkbox').closest('.cds-Control')).toBeTruthy();
+
+    rerender(
+      <DefaultThemeProvider>
+        <Control aria-label="control" label="test label" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('checkbox').closest('.cds-Control')).toBeTruthy();
+  });
 });

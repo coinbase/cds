@@ -4,7 +4,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
 
 import { useTheme } from '../hooks/useTheme';
-import type { BoxBaseProps, BoxProps } from '../layout/Box';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { pinStyles } from '../styles/pinStyles';
 import { Pressable, type PressableProps } from '../system/Pressable';
@@ -121,28 +121,32 @@ export const Card = memo(function OldCard({
     ],
   );
 
-  return onPress ? (
-    <Pressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      background={background}
-      borderRadius={borderRadius}
-      elevation={elevation}
-      noScaleOnPress={noScaleOnPress}
-      onPress={onPress}
-      style={{
-        ...(pin ? pinStyles[pin] : undefined),
-        width: width as DimensionValue,
-        height: height as DimensionValue,
-      }}
-      testID={testID}
-      {...pressableProps}
-    >
-      {content}
-    </Pressable>
-  ) : (
-    content
+  return (
+    <Box>
+      {onPress ? (
+        <Pressable
+          accessibilityHint={accessibilityHint}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="button"
+          background={background}
+          borderRadius={borderRadius}
+          elevation={elevation}
+          noScaleOnPress={noScaleOnPress}
+          onPress={onPress}
+          style={{
+            ...(pin ? pinStyles[pin] : undefined),
+            width: width as DimensionValue,
+            height: height as DimensionValue,
+          }}
+          testID={testID}
+          {...pressableProps}
+        >
+          {content}
+        </Pressable>
+      ) : (
+        content
+      )}
+    </Box>
   );
 });
 

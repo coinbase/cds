@@ -194,11 +194,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
      */
     if (!label) return iconElement;
     return (
-      <label
-        className={cx(COMPONENT_STATIC_CLASSNAME, pointerCss)}
-        htmlFor={inputId}
-        style={labelStyle}
-      >
+      <label className={pointerCss} htmlFor={inputId} style={labelStyle}>
         <Box alignItems="flex-start" flexDirection={isRtl() ? 'row-reverse' : 'row'} gap={1}>
           <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
             {iconElement}
@@ -212,7 +208,11 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
   }, [label, iconElement, inputId, labelStyle, color, disabled, readOnly, labelId]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.
-  return controlElement;
+  return (
+    <Box className={COMPONENT_STATIC_CLASSNAME} width="fit-content">
+      {controlElement}
+    </Box>
+  );
 }) as <ControlValue extends string>(
   props: ControlProps<ControlValue> & { ref?: React.Ref<HTMLInputElement> },
 ) => React.ReactElement;

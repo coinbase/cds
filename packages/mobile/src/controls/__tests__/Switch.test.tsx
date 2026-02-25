@@ -129,6 +129,30 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('test-test-id')).toBeTruthy();
   });
 
+  it('keeps a stable root wrapper regardless of label presence', () => {
+    const { toJSON, rerender } = render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} />
+      </DefaultThemeProvider>,
+    );
+
+    const treeWithoutLabel = toJSON();
+    expect(treeWithoutLabel).toBeTruthy();
+    expect(Array.isArray(treeWithoutLabel)).toBe(false);
+    expect(treeWithoutLabel).toHaveProperty('type', 'View');
+
+    rerender(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()}>with label</Switch>
+      </DefaultThemeProvider>,
+    );
+
+    const treeWithLabel = toJSON();
+    expect(treeWithLabel).toBeTruthy();
+    expect(Array.isArray(treeWithLabel)).toBe(false);
+    expect(treeWithLabel).toHaveProperty('type', 'View');
+  });
+
   it('has default palette', () => {
     render(
       <DefaultThemeProvider>

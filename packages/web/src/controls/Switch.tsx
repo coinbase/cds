@@ -112,18 +112,16 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
     </Control>
   );
 
-  return children ? (
-    <Box
-      alignItems="center"
-      className={COMPONENT_STATIC_CLASSNAME}
-      minHeight="var(--controlSize-switchHeight)"
-      role="presentation"
-      width="fit-content"
-    >
-      {switchNode}
+  return (
+    <Box className={COMPONENT_STATIC_CLASSNAME} role="presentation" width="fit-content">
+      {children ? (
+        <Box alignItems="center" minHeight="var(--controlSize-switchHeight)">
+          {switchNode}
+        </Box>
+      ) : (
+        switchNode
+      )}
     </Box>
-  ) : (
-    switchNode
   );
 });
 

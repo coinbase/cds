@@ -97,6 +97,34 @@ describe('Banner', () => {
     expect(screen.getByTestId(TEST_ID)).toHaveStyle(customCss);
   });
 
+  it('keeps a stable top-level wrapper regardless of dismiss state', () => {
+    const { container, rerender } = render(
+      <DefaultThemeProvider>
+        <Banner startIcon="cashUSD" testID={TEST_ID} title="Banner title" variant="warning">
+          Banner Content
+        </Banner>
+      </DefaultThemeProvider>,
+    );
+
+    expect(container.firstElementChild?.tagName).toBe('DIV');
+
+    rerender(
+      <DefaultThemeProvider>
+        <Banner
+          showDismiss
+          startIcon="cashUSD"
+          testID={TEST_ID}
+          title="Banner title"
+          variant="warning"
+        >
+          Banner Content
+        </Banner>
+      </DefaultThemeProvider>,
+    );
+
+    expect(container.firstElementChild?.tagName).toBe('DIV');
+  });
+
   it('renders warning banner correctly', () => {
     render(
       <DefaultThemeProvider>

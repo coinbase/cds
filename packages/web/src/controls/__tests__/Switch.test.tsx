@@ -92,6 +92,24 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('test-test-id')).toBeTruthy();
   });
 
+  it('keeps a stable root wrapper regardless of label presence', () => {
+    const { rerender } = render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
+
+    rerender(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()}>with label</Switch>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
+  });
+
   it('has default color', () => {
     render(
       <DefaultThemeProvider>

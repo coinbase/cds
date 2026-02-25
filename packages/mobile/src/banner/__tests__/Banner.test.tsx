@@ -39,6 +39,22 @@ describe('Banner', () => {
       flexDirection: 'column',
     });
   });
+
+  it('keeps a stable root wrapper regardless of dismiss state', () => {
+    const { rerender, toJSON } = render(<MockBanner />);
+
+    const visibleTree = toJSON();
+    expect(visibleTree).toBeTruthy();
+    expect(Array.isArray(visibleTree)).toBe(false);
+    expect(visibleTree).toHaveProperty('type', 'View');
+
+    rerender(<MockBanner showDismiss />);
+
+    const dismissibleTree = toJSON();
+    expect(dismissibleTree).toBeTruthy();
+    expect(Array.isArray(dismissibleTree)).toBe(false);
+    expect(dismissibleTree).toHaveProperty('type', 'View');
+  });
 });
 
 describe('Banner actions', () => {

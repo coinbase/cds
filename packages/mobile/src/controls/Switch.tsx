@@ -114,12 +114,16 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends stri
     </Control>
   );
 
-  return children ? (
-    <Box alignItems="center" flexDirection="row" minHeight={switchHeight}>
-      {switchNode}
+  return (
+    <Box>
+      {children ? (
+        <Box alignItems="center" flexDirection="row" minHeight={switchHeight}>
+          {switchNode}
+        </Box>
+      ) : (
+        switchNode
+      )}
     </Box>
-  ) : (
-    switchNode
   );
 });
 

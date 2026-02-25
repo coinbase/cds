@@ -154,12 +154,16 @@ export const SidebarItem = memo(
         ],
       );
 
-      return tooltipContent && isCollapsed ? (
-        <Tooltip content={tooltipContent} disablePortal={disablePortal} placement="right">
-          {content}
-        </Tooltip>
-      ) : (
-        content
+      return (
+        <Box width="100%">
+          {tooltipContent && isCollapsed ? (
+            <Tooltip content={tooltipContent} disablePortal={disablePortal} placement="right">
+              {content}
+            </Tooltip>
+          ) : (
+            content
+          )}
+        </Box>
       );
     },
   ),

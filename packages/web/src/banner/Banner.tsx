@@ -297,26 +297,30 @@ export const Banner = memo(
         </Box>
       );
 
-      return showDismiss ? (
-        <Box
-          display="block"
-          height="fit-content"
-          position="relative"
-          width={width}
-          {...marginStyles}
-        >
-          <Collapsible
-            accessibilityLabelledBy={accessibilityLabelledBy}
-            collapsed={isCollapsed}
-            id={`${titleId}--controller`}
-            testID={`${testID}-collapsible`}
-          >
-            {content}
-          </Collapsible>
-          {styleVariant === 'global' && borderBox}
+      return (
+        <Box width={width}>
+          {showDismiss ? (
+            <Box
+              display="block"
+              height="fit-content"
+              position="relative"
+              width={width}
+              {...marginStyles}
+            >
+              <Collapsible
+                accessibilityLabelledBy={accessibilityLabelledBy}
+                collapsed={isCollapsed}
+                id={`${titleId}--controller`}
+                testID={`${testID}-collapsible`}
+              >
+                {content}
+              </Collapsible>
+              {styleVariant === 'global' && borderBox}
+            </Box>
+          ) : (
+            content
+          )}
         </Box>
-      ) : (
-        content
       );
     },
   ),
