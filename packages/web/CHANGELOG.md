@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.48.1 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Truncate text mid-word in multi-select chips. [[#412](https://github.com/coinbase/cds/pull/412)]
+
 ## 8.48.0 (2/24/2026 PST)
 
 #### 🚀 Updates
