@@ -493,10 +493,10 @@ const MonthlySunlight = () => {
 
 const PriceRange = () => {
   const candles = btcCandles.slice(0, 180).reverse();
-  const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]) as [
-    number,
-    number,
-  ][];
+  const data: [number, number][] = candles.map((candle) => [
+    parseFloat(candle.low),
+    parseFloat(candle.high),
+  ]);
 
   const min = Math.min(...data.map(([low]) => low));
   const max = Math.max(...data.map(([, high]) => high));
