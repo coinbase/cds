@@ -29,7 +29,7 @@ For updates, focus on the specific areas that need improvement rather than rewri
 
 When creating or updating docs, reference these well-documented components to understand the documentation style and patterns:
 
-- **LineChart** (`apps/docs/docs/components/graphs/LineChart/`) - Comprehensive example with many composed examples
+- **LineChart** (`apps/docs/docs/components/charts/LineChart/`) - Comprehensive example with many composed examples
 - **Button** (`apps/docs/docs/components/buttons/Button/`) - Good basic component documentation
 - **IconButton** (`apps/docs/docs/components/buttons/IconButton/`) - Simple component with clear examples
 - **Sidebar** (`apps/docs/docs/components/navigation/Sidebar/`) - Complex component with multiple sub-components
