@@ -50,6 +50,12 @@
         "parallel": false
       }
     },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },
