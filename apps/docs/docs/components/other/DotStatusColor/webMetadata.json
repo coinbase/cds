@@ -18,10 +18,5 @@
       "url": "/components/media/Avatar/"
     }
   ],
-  "dependencies": [
-    {
-      "name": "framer-motion",
-      "version": "^10.18.0"
-    }
-  ]
+  "dependencies": []
 }

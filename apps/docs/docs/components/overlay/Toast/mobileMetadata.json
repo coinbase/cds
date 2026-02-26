@@ -17,10 +17,5 @@
       "url": "/components/feedback/Banner/"
     }
   ],
-  "dependencies": [
-    {
-      "name": "react-native-reanimated",
-      "version": "^3.14.0"
-    }
-  ]
+  "dependencies": []
 }
