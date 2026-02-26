@@ -76,7 +76,10 @@
     "expo-splash-screen": "patch:expo-splash-screen@npm:0.27.5#.yarn/patches/expo-splash-screen-npm-0.27.5-f91e0b41df.patch",
     "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch",
     "expo-dev-launcher": "patch:expo-dev-launcher@npm:4.0.27#.yarn/patches/expo-dev-launcher-npm-4.0.27-c2ab5dd4a5.patch",
-    "react-helmet-async": "^2.0.5"
+    "react-helmet-async": "^2.0.5",
+    "ajv@^6.0.0": "^6.14.0",
+    "elliptic": "^6.6.0",
+    "ip": "^2.0.1"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
@@ -87,7 +90,10 @@
     "expo-splash-screen": "[Managed by CMR] Adds support for transitions and bottom images in the splash screen. We aim to upstream some of those improvements to Expo.",
     "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
     "expo-dev-launcher": "[Managed by CMR] Necessary to install the Expo network inspector for the Android `development` build type. Issue tracked internally by Expo.",
-    "react-helmet-async": "Working around Nx graph resolution issue"
+    "react-helmet-async": "Working around Nx graph resolution issue",
+    "ajv": "Request from Coinbase Security team to fix security vulnerability",
+    "elliptic": "Request from Coinbase Security team to fix security vulnerability",
+    "ip": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
