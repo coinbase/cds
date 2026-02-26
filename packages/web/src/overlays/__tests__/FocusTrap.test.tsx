@@ -183,4 +183,32 @@ describe('FocusTrap', () => {
     fireEvent.keyDown(screen.getByTestId('first'), { key: 'Tab', code: 'Tab', shiftKey: true });
     expect(trigger).toHaveFocus();
   });
+
+  it('allows up/down arrow key navigation in textareas', async () => {
+    const user = userEvent.setup();
+    render(
+      <DefaultThemeProvider>
+        <FocusTrap>
+          <div>
+            <textarea data-testid="textarea" />
+            <button data-testid="button">Button</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+
+    const textarea = screen.getByTestId('textarea');
+    await user.click(textarea);
+
+    const events: KeyboardEvent[] = [];
+    textarea.addEventListener('keydown', (e) => events.push(e));
+
+    await user.keyboard('{ArrowDown}');
+    expect(events).toHaveLength(1);
+    expect(events[0].defaultPrevented).toBe(false);
+
+    await user.keyboard('{ArrowUp}');
+    expect(events).toHaveLength(2);
+    expect(events[1].defaultPrevented).toBe(false);
+  });
 });

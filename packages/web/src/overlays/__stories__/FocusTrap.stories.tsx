@@ -1,4 +1,5 @@
 import { Button } from '../../buttons';
+import { NativeTextArea } from '../../controls/NativeTextArea';
 import { TextInput } from '../../controls/TextInput';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
@@ -44,5 +45,21 @@ export const SingleFocusableChild = () => {
         </VStack>
       </FocusTrap>
     </VStack>
+  );
+};
+
+export const TextArea = () => {
+  return (
+    <FocusTrap>
+      <VStack background="bgPrimaryWash" gap={3} padding={3}>
+        <Text as="h1" display="block" font="headline">
+          Up/Down arrow keys should work
+        </Text>
+        <VStack background="bg">
+          <NativeTextArea placeholder="Type a message..." rows={3} />
+        </VStack>
+        <Button>Submit</Button>
+      </VStack>
+    </FocusTrap>
   );
 };

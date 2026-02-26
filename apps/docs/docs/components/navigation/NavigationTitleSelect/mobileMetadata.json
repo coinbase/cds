@@ -19,5 +19,6 @@
       "label": "SelectOption",
       "url": "/components/inputs/SelectOption"
     }
-  ]
+  ],
+  "dependencies": []
 }

@@ -5,267 +5,185 @@ import path from 'path';
 
 import type { Dependency } from '../src/components/page/Metadata';
 
-type ComponentPeerDeps = {
-  [componentName: string]: {
-    filePath: string;
-    peerDependencies: Dependency[];
-    exportPath: string;
-  };
+type PackageConfig = {
+  packageName: string;
+  packageDir: string;
 };
 
-type PackageAnalysis = {
-  web: ComponentPeerDeps;
-  mobile: ComponentPeerDeps;
-};
+const PACKAGES: PackageConfig[] = [
+  { packageName: '@coinbase/cds-web', packageDir: 'packages/web' },
+  { packageName: '@coinbase/cds-mobile', packageDir: 'packages/mobile' },
+  { packageName: '@coinbase/cds-web-visualization', packageDir: 'packages/web-visualization' },
+  {
+    packageName: '@coinbase/cds-mobile-visualization',
+    packageDir: 'packages/mobile-visualization',
+  },
+];
 
-const PEER_DEPS_TO_IGNORE = ['react', 'react-native'];
-
-function extractImports(fileContent: string): string[] {
-  const importRegex = /import[\s\S]*?from\s+['"]([^'"]+)['"]/g;
-  const imports: string[] = [];
-  let match;
-
-  while ((match = importRegex.exec(fileContent)) !== null) {
-    imports.push(match[1]);
-  }
-
-  return imports;
-}
-
-function getPackageName(importPath: string): string {
-  if (importPath.startsWith('@')) {
-    const parts = importPath.split('/');
-    return parts.length > 1 ? `${parts[0]}/${parts[1]}` : parts[0];
-  }
-  return importPath.split('/')[0];
-}
-
-function isExternalDependency(importPath: string): boolean {
-  return !importPath.startsWith('.') && !importPath.startsWith('/');
-}
-
-function getExportPath(filePath: string, platform: 'web' | 'mobile'): string {
-  const srcPath = `packages/${platform}/src/`;
-  const relativePath = filePath.replace(srcPath, '');
-  const dir = path.dirname(relativePath);
-  return dir === '.' ? '' : `/${dir}`;
-}
-
-async function analyzePackageForDocs(
-  packagePath: string,
-  platform: 'web' | 'mobile',
-  packageJson: any,
-): Promise<ComponentPeerDeps> {
-  const packagePeerDependencies = packageJson.peerDependencies;
-  const componentFiles = await glob(`${packagePath}/src/**/*.tsx`, {
-    ignore: ['**/__tests__/**', '**/__stories__/**', '**/index.ts'],
-  });
-
-  const results: ComponentPeerDeps = {};
-
-  for (const filePath of componentFiles) {
+/**
+ * Build a combined map of peer dependency versions from all known packages.
+ * Keys are dependency names, values are the version range from package.json.
+ */
+function loadPeerDependencyVersions(): Map<string, string> {
+  const versions = new Map<string, string>();
+  for (const pkg of PACKAGES) {
     try {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const imports = extractImports(fileContent);
-
-      const componentName = path.basename(filePath, '.tsx');
-      const peerDependencies: Dependency[] = [];
-
-      for (const importPath of imports) {
-        if (isExternalDependency(importPath)) {
-          const packageName = getPackageName(importPath);
-          if (
-            Object.keys(packagePeerDependencies).includes(packageName) &&
-            !PEER_DEPS_TO_IGNORE.includes(packageName)
-          ) {
-            peerDependencies.push({
-              name: packageName,
-              version: packagePeerDependencies[packageName],
-            });
-          }
-        }
+      const packageJson = JSON.parse(fs.readFileSync(`${pkg.packageDir}/package.json`, 'utf-8'));
+      const peerDeps: Record<string, string> = packageJson.peerDependencies ?? {};
+      for (const [name, version] of Object.entries(peerDeps)) {
+        versions.set(name, version);
       }
-
-      // Only include components that are actually exported
-      const exportPath = getExportPath(filePath, platform);
-      const hasExport =
-        packageJson.exports &&
-        (packageJson.exports[`.${exportPath}`] ||
-          packageJson.exports[`.${exportPath}/${componentName}`]);
-
-      if (hasExport || peerDependencies.length > 0) {
-        results[componentName] = {
-          filePath,
-          peerDependencies: peerDependencies.sort((a, b) => a.name.localeCompare(b.name)),
-          exportPath: exportPath || 'root',
-        };
-      }
-    } catch (error) {
-      console.error(`Error analyzing ${filePath}:`, error);
+    } catch {
+      // skip if package.json can't be read
     }
   }
-
-  return results;
+  return versions;
 }
 
-function generateDocumentationTable(analysis: PackageAnalysis): string {
-  let documentation = '# Component Peer Dependencies\n\n';
-  documentation +=
-    'This document lists the peer dependencies required for each component when importing individually.\n\n';
-
-  // Web Components
-  documentation += '## Web Components (@coinbase/cds-web)\n\n';
-  documentation += '| Component | Import Path | Peer Dependencies |\n';
-  documentation += '|-----------|-------------|-------------------|\n';
-
-  const webComponents = Object.entries(analysis.web).sort(([a], [b]) => a.localeCompare(b));
-  for (const [componentName, info] of webComponents) {
-    const importPath = `@coinbase/cds-web${info.exportPath === 'root' ? '' : info.exportPath}`;
-    const peerDeps =
-      info.peerDependencies.length > 0
-        ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')
-        : 'react';
-    documentation += `| ${componentName} | \`${importPath}\` | ${peerDeps} |\n`;
-  }
-
-  // Mobile Components
-  documentation += '\n## Mobile Components (@coinbase/cds-mobile)\n\n';
-  documentation += '| Component | Import Path | Peer Dependencies |\n';
-  documentation += '|-----------|-------------|-------------------|\n';
-
-  const mobileComponents = Object.entries(analysis.mobile).sort(([a], [b]) => a.localeCompare(b));
-  for (const [componentName, info] of mobileComponents) {
-    const importPath = `@coinbase/cds-mobile${info.exportPath === 'root' ? '' : info.exportPath}`;
-    const peerDeps =
-      info.peerDependencies.length > 0
-        ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')
-        : 'react';
-    documentation += `| ${componentName} | \`${importPath}\` | ${peerDeps} |\n`;
-  }
-
-  return documentation;
+/**
+ * Given a metadata object with a `dependencies` array and the current peer
+ * dependency version map, return a copy with versions synced. Only updates
+ * versions for deps already listed -- never adds or removes entries.
+ */
+function syncDependencyVersions(
+  dependencies: Dependency[],
+  peerDepVersions: Map<string, string>,
+): { synced: Dependency[]; warnings: string[] } {
+  const warnings: string[] = [];
+  const synced = dependencies.map((dep) => {
+    const currentVersion = peerDepVersions.get(dep.name);
+    if (!currentVersion) {
+      warnings.push(`${dep.name} is not listed in any package.json peerDependencies`);
+      return dep;
+    }
+    return { ...dep, version: currentVersion };
+  });
+  return { synced, warnings };
 }
 
-function generateJSONOutput(analysis: PackageAnalysis): string {
-  return JSON.stringify(analysis, null, 2);
-}
+type MetadataFileResult = {
+  filePath: string;
+  updated: boolean;
+  warnings: string[];
+};
 
-async function updateMetadataFiles(analysis: PackageAnalysis): Promise<void> {
-  console.log('Updating metadata files with peer dependency information...');
+async function updateMetadataFiles(peerDepVersions: Map<string, string>): Promise<void> {
+  console.log('Syncing peer dependency versions in metadata files...');
 
-  // Find all metadata files in the docs directory
   const metadataFiles = await glob('apps/docs/docs/components/**/*Metadata.json');
-
-  let updatedFiles = 0;
-  let notFoundComponents = 0;
+  const results: MetadataFileResult[] = [];
 
   for (const metadataFile of metadataFiles) {
     try {
-      const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf-8'));
       const fileName = path.basename(metadataFile);
-      const isWeb = fileName === 'webMetadata.json';
-      const isMobile = fileName === 'mobileMetadata.json';
+      if (fileName !== 'webMetadata.json' && fileName !== 'mobileMetadata.json') continue;
 
-      if (!isWeb && !isMobile) continue;
+      const raw = fs.readFileSync(metadataFile, 'utf-8');
+      const metadata = JSON.parse(raw);
+      const deps: Dependency[] = metadata.dependencies ?? [];
+      if (deps.length === 0) continue;
 
-      // Extract component name from the import statement
-      const importMatch = metadata.import?.match(/import\s*{\s*([^}]+)\s*}/);
-      if (!importMatch) {
-        console.warn(`Could not extract component name from: ${metadataFile}`);
-        continue;
-      }
+      const { synced, warnings } = syncDependencyVersions(deps, peerDepVersions);
+      const changed = JSON.stringify(deps) !== JSON.stringify(synced);
 
-      const componentName = importMatch[1].trim();
-      const platform = isWeb ? 'web' : 'mobile';
-      const componentData = analysis[platform][componentName];
-
-      if (componentData) {
-        // Add peer dependencies to metadata
-        metadata.dependencies = componentData.peerDependencies;
-
-        // Write back to file with pretty formatting
+      if (changed) {
+        metadata.dependencies = synced;
         fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2) + '\n');
-        updatedFiles++;
-      } else {
-        console.warn(`Component ${componentName} not found in ${platform} analysis`);
-        notFoundComponents++;
       }
+
+      results.push({ filePath: metadataFile, updated: changed, warnings });
     } catch (error) {
-      console.error(`Error updating ${metadataFile}:`, error);
+      console.error(`Error processing ${metadataFile}:`, error);
     }
   }
 
-  console.log(`\nMetadata update complete:`);
-  console.log(`- Files updated: ${updatedFiles}`);
-  console.log(`- Components not found: ${notFoundComponents}`);
+  const updatedCount = results.filter((r) => r.updated).length;
+  const warningResults = results.filter((r) => r.warnings.length > 0);
+
+  console.log(`\nVersion sync complete:`);
+  console.log(`- Files updated: ${updatedCount}`);
+
+  if (warningResults.length > 0) {
+    console.warn(`\nWarnings:`);
+    for (const r of warningResults) {
+      for (const w of r.warnings) {
+        console.warn(`  ${r.filePath}: ${w}`);
+      }
+    }
+  }
+}
+
+async function checkMetadataFiles(peerDepVersions: Map<string, string>): Promise<boolean> {
+  console.log('Checking metadata files for outdated peer dependency versions...');
+
+  const metadataFiles = await glob('apps/docs/docs/components/**/*Metadata.json');
+  const outdatedFiles: string[] = [];
+
+  for (const metadataFile of metadataFiles) {
+    try {
+      const fileName = path.basename(metadataFile);
+      if (fileName !== 'webMetadata.json' && fileName !== 'mobileMetadata.json') continue;
+
+      const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf-8'));
+      const deps: Dependency[] = metadata.dependencies ?? [];
+      if (deps.length === 0) continue;
+
+      const { synced } = syncDependencyVersions(deps, peerDepVersions);
+      if (JSON.stringify(deps) !== JSON.stringify(synced)) {
+        outdatedFiles.push(metadataFile);
+      }
+    } catch {
+      // skip unparseable files
+    }
+  }
+
+  if (outdatedFiles.length > 0) {
+    console.error(
+      `\n${outdatedFiles.length} metadata file(s) have outdated peer dependency versions:`,
+    );
+    for (const file of outdatedFiles) {
+      console.error(`  - ${file}`);
+    }
+    console.error('\nRun "yarn nx run docs:peer-dependencies" to update them.');
+    return false;
+  }
+
+  console.log('\nAll metadata files have up-to-date versions.');
+  return true;
 }
 
 async function main(): Promise<void> {
-  const shouldUpdateMetadata = await input({
-    message: 'Should update metadata files? (y/n)',
-    default: 'y',
-    validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
-  });
-  const shouldGenerateReportFiles = await input({
-    message: 'Should generate report files? (y/n)',
-    default: 'y',
-    validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
-  });
+  const ciMode = process.argv.includes('--ci');
+  const checkMode = process.argv.includes('--fail-on-changes');
 
-  console.log('Analyzing component peer dependencies for documentation...');
+  let shouldUpdate = 'y';
 
-  const webPackageJson = JSON.parse(fs.readFileSync('packages/web/package.json', 'utf-8'));
-  const mobilePackageJson = JSON.parse(fs.readFileSync('packages/mobile/package.json', 'utf-8'));
-
-  // Analyze peer dependencies for each component in both packages
-  const webAnalysis = await analyzePackageForDocs('packages/web', 'web', webPackageJson);
-  const mobileAnalysis = await analyzePackageForDocs(
-    'packages/mobile',
-    'mobile',
-    mobilePackageJson,
-  );
-
-  const analysis: PackageAnalysis = {
-    web: webAnalysis,
-    mobile: mobileAnalysis,
-  };
-
-  if (shouldGenerateReportFiles === 'y') {
-    // Generate documentation
-    const docsContent = generateDocumentationTable(analysis);
-    fs.writeFileSync('component-peer-dependencies.md', docsContent);
-    const jsonContent = generateJSONOutput(analysis);
-    fs.writeFileSync('component-peer-dependencies.json', jsonContent);
+  if (!ciMode && !checkMode) {
+    shouldUpdate = await input({
+      message: 'Sync peer dependency versions in metadata files? (y/n)',
+      default: 'y',
+      validate: (value: string) => ['y', 'n'].includes(value) || 'Please enter y or n',
+    });
   }
 
-  if (shouldUpdateMetadata === 'y') {
-    // Update metadata files
-    await updateMetadataFiles(analysis);
+  const peerDepVersions = loadPeerDependencyVersions();
+
+  console.log(
+    `Loaded ${peerDepVersions.size} peer dependency versions from ${PACKAGES.length} packages.`,
+  );
+
+  if (checkMode) {
+    const passed = await checkMetadataFiles(peerDepVersions);
+    process.exit(passed ? 0 : 1);
   }
 
-  // Print summary
-  console.log('\nDocumentation generated:');
-  console.log('- component-peer-dependencies.md');
-  console.log('- component-peer-dependencies.json');
-
-  console.log(`\nSummary:`);
-  console.log(`- Web components analyzed: ${Object.keys(webAnalysis).length}`);
-  console.log(`- Mobile components analyzed: ${Object.keys(mobileAnalysis).length}`);
-
-  const webPeerDeps = new Set(
-    Object.values(webAnalysis).flatMap((c) => c.peerDependencies.map((d) => d.name)),
-  );
-  const mobilePeerDeps = new Set(
-    Object.values(mobileAnalysis).flatMap((c) => c.peerDependencies.map((d) => d.name)),
-  );
-
-  console.log(`\nUnique peer dependencies:`);
-  console.log(`- Web: ${Array.from(webPeerDeps).join(', ')}`);
-  console.log(`- Mobile: ${Array.from(mobilePeerDeps).join(', ')}`);
+  if (shouldUpdate === 'y') {
+    await updateMetadataFiles(peerDepVersions);
+  }
 }
 
 if (require.main === module) {
   main().catch(console.error);
 }
 
-export { analyzePackageForDocs, generateDocumentationTable };
+export { loadPeerDependencyVersions, syncDependencyVersions };
