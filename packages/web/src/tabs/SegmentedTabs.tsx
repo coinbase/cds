@@ -9,7 +9,10 @@ import { Tabs, type TabsProps } from './Tabs';
 export type SegmentedTabsProps<TabId extends string = string> = Partial<
   Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
 > &
-  Omit<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles' | 'classNames'> & {
+  Omit<
+    TabsProps<TabId>,
+    'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles' | 'classNames'
+  > & {
     /** Custom styles for individual elements of the SegmentedTabs component */
     styles?: {
       /** Root element */
