@@ -152,4 +152,36 @@ describe('Card', () => {
 
     expect(onClickSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('applies classNames/styles slots for static and interactive variants', () => {
+    const { rerender } = render(
+      <TestCard
+        classNames={{ content: 'test-card-content', root: 'test-card-root' }}
+        styles={{ root: { borderTopWidth: 3 } }}
+      >
+        {CARD_TEXT}
+      </TestCard>,
+    );
+
+    const content = screen.getByText(CARD_TEXT).closest('.test-card-content');
+    expect(content).toBeTruthy();
+    expect(content?.closest('.test-card-root')).toBeTruthy();
+
+    rerender(
+      <DefaultThemeProvider>
+        <Card
+          classNames={{ pressable: 'test-card-pressable', root: 'test-card-root' }}
+          onClick={noop}
+          styles={{ pressable: { borderBottomWidth: 2 }, root: { borderTopWidth: 3 } }}
+        >
+          {CARD_TEXT}
+        </Card>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button.closest('.test-card-root')).toBeTruthy();
+    expect(button.className).toContain('test-card-pressable');
+    expect(button).toHaveStyle({ borderBottomWidth: 2 });
+  });
 });

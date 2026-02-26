@@ -19,6 +19,7 @@ import type {
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';
+import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
@@ -87,7 +88,64 @@ export type BannerBaseProps = SharedProps & {
 };
 
 export type BannerProps = BannerBaseProps &
-  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'> & {
+    classNames?: {
+      /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
+      root?: string;
+      /** Main content container (`HStack`) for banner body. */
+      content?: string;
+      /** Start icon wrapper. */
+      start?: string;
+      /** Right-side body wrapper containing middle content and actions. */
+      body?: string;
+      /** Middle content wrapper containing title/message/label region. */
+      middle?: string;
+      /**
+       * Label text className.
+       * Applies only when `label` is a string rendered by Banner.
+       * If `label` is a custom node, set className on that node directly.
+       */
+      label?: string;
+      /**
+       * Actions row className.
+       * Applies only when at least one action (`primaryAction` or `secondaryAction`) is rendered.
+       */
+      actions?: string;
+      /**
+       * Dismiss button wrapper className.
+       * Applies only when `showDismiss` is true.
+       */
+      dismiss?: string;
+    };
+    styles?: {
+      /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
+      root?: React.CSSProperties;
+      /** Main content container (`HStack`) for banner body. */
+      content?: React.CSSProperties;
+      /** Start icon wrapper. */
+      start?: React.CSSProperties;
+      /** Right-side body wrapper containing middle content and actions. */
+      body?: React.CSSProperties;
+      /** Middle content wrapper containing title/message/label region. */
+      middle?: React.CSSProperties;
+      /**
+       * Label text style.
+       * Applies only when `label` is a string rendered by Banner.
+       * If `label` is a custom node, style that node directly.
+       */
+      label?: React.CSSProperties;
+      /**
+       * Actions row style.
+       * Applies only when at least one action (`primaryAction` or `secondaryAction`) is rendered.
+       */
+      actions?: React.CSSProperties;
+      /**
+       * Dismiss button wrapper style.
+       * Applies only when `showDismiss` is true.
+       */
+      dismiss?: React.CSSProperties;
+    };
+  };
 
 export const Banner = memo(
   forwardRef(
@@ -119,6 +177,8 @@ export const Banner = memo(
         marginStart,
         marginEnd,
         width = '100%',
+        classNames,
+        styles,
         ...props
       }: BannerProps,
       ref: React.ForwardedRef<HTMLDivElement>,
@@ -204,18 +264,18 @@ export const Banner = memo(
           ref={ref}
           background={background}
           borderRadius={borderRadius}
-          className={className}
+          className={cx(className, classNames?.content)}
           flexGrow={1}
           gap={1}
           minWidth={bannerMinWidth}
           paddingX={styleVariant === 'contextual' ? 2 : 3}
           paddingY={2}
-          style={style}
+          style={{ ...style, ...styles?.content }}
           testID={testID}
           {...props}
         >
           {/** Start */}
-          <Box paddingX={0.5} paddingY={0.25}>
+          <Box className={classNames?.start} paddingX={0.5} paddingY={0.25} style={styles?.start}>
             <Icon
               accessibilityLabel={startIconAccessibilityLabel}
               active={startIconActive}
@@ -226,14 +286,21 @@ export const Banner = memo(
             />
           </Box>
           <VStack
+            className={classNames?.body}
             flexDirection={contentResponsiveConfig}
             flexGrow={1}
             gap={2}
             justifyContent="space-between"
+            style={styles?.body}
             testID={`${testID}-inner-end-box`}
           >
             {/** Middle */}
-            <VStack gap={2} testID={`${testID}-content-box`}>
+            <VStack
+              className={classNames?.middle}
+              gap={2}
+              style={styles?.middle}
+              testID={`${testID}-content-box`}
+            >
               <VStack gap={0.5}>
                 {typeof title === 'string' ? (
                   <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
@@ -251,7 +318,13 @@ export const Banner = memo(
                 )}
               </VStack>
               {typeof label === 'string' ? (
-                <Text color="fgMuted" font="legal" numberOfLines={2}>
+                <Text
+                  className={classNames?.label}
+                  color="fgMuted"
+                  font="legal"
+                  numberOfLines={2}
+                  style={styles?.label}
+                >
                   {label}
                 </Text>
               ) : (
@@ -262,8 +335,9 @@ export const Banner = memo(
             {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
               <HStack
                 alignItems="center"
-                className={actionContainerCss}
+                className={cx(actionContainerCss, classNames?.actions)}
                 gap={2}
+                style={styles?.actions}
                 testID={`${testID}-action`}
               >
                 {clonedPrimaryAction}
@@ -273,7 +347,12 @@ export const Banner = memo(
           </VStack>
           {/** Dismissable action */}
           {showDismiss && (
-            <Box alignItems="flex-start" padding={0.5}>
+            <Box
+              alignItems="flex-start"
+              className={classNames?.dismiss}
+              padding={0.5}
+              style={styles?.dismiss}
+            >
               <Pressable
                 accessibilityLabel={closeAccessibilityLabel}
                 background="transparent"
@@ -291,10 +370,12 @@ export const Banner = memo(
 
       return (
         <Box
+          className={classNames?.root}
           display="block"
           height="fit-content"
           position="relative"
           {...marginStyles}
+          style={styles?.root}
           width={width}
         >
           {showDismiss ? (

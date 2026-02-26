@@ -62,7 +62,14 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
   Partial<
     Pick<
       InteractableBaseProps,
-      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color' | 'elevation'
+      | 'background'
+      | 'borderColor'
+      | 'borderRadius'
+      | 'borderWidth'
+      | 'color'
+      | 'elevation'
+      | 'className'
+      | 'style'
     >
   > & {
     /** Label for the control option. */
@@ -86,6 +93,32 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
   };
 
 export type ControlProps<ControlValue extends string> = ControlBaseProps<ControlValue> & {
+  classNames?: {
+    /** Persistent outer wrapper (`cds-Control`) across labeled and unlabeled variants. */
+    root?: string;
+    /**
+     * Native `<label>` wrapper className.
+     * Applies only when `label` is provided.
+     */
+    label?: string;
+    /** Interactable icon wrapper className. */
+    icon?: string;
+    /** Native input className. */
+    input?: string;
+  };
+  styles?: {
+    /** Persistent outer wrapper (`cds-Control`) across labeled and unlabeled variants. */
+    root?: React.CSSProperties;
+    /**
+     * Native `<label>` wrapper style.
+     * Applies only when `label` is provided.
+     */
+    label?: React.CSSProperties;
+    /** Interactable icon wrapper style. */
+    icon?: React.CSSProperties;
+    /** Native input style. */
+    input?: React.CSSProperties;
+  };
   label?: React.ReactNode;
   children: React.ReactNode;
 };
@@ -111,6 +144,10 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     testID,
     iconStyle,
     labelStyle,
+    className,
+    style,
+    classNames,
+    styles,
     ...htmlProps
   }: ControlProps<ControlValue>,
   ref: React.ForwardedRef<HTMLInputElement>,
@@ -137,10 +174,10 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         borderColor={borderColor}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
-        className={interactableCss}
+        className={cx(interactableCss, classNames?.icon)}
         disabled={disabled || readOnly}
         elevation={elevation}
-        style={iconStyle}
+        style={{ ...iconStyle, ...styles?.icon }}
         testID={testID ? `${testID}-parent` : undefined}
       >
         {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
@@ -150,12 +187,13 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
           aria-labelledby={labelId}
           aria-required={type !== 'checkbox' ? required : undefined}
           checked={checked}
-          className={cx(inputBaseCss, pointerCss)}
+          className={cx(inputBaseCss, pointerCss, classNames?.input)}
           data-testid={testID}
           disabled={disabled}
           id={inputId}
           readOnly={readOnly}
           required={required}
+          style={styles?.input}
           type={type}
           value={value}
           {...htmlProps}
@@ -168,6 +206,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       borderColor,
       borderRadius,
       borderWidth,
+      classNames?.icon,
+      classNames?.input,
       checked,
       children,
       disabled,
@@ -179,6 +219,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       labelId,
       readOnly,
       required,
+      styles?.icon,
+      styles?.input,
       testID,
       type,
       value,
@@ -194,7 +236,11 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
      */
     if (!label) return iconElement;
     return (
-      <label className={pointerCss} htmlFor={inputId} style={labelStyle}>
+      <label
+        className={cx(pointerCss, classNames?.label)}
+        htmlFor={inputId}
+        style={{ ...labelStyle, ...styles?.label }}
+      >
         <Box alignItems="flex-start" flexDirection={isRtl() ? 'row-reverse' : 'row'} gap={1}>
           <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
             {iconElement}
@@ -205,11 +251,26 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         </Box>
       </label>
     );
-  }, [label, iconElement, inputId, labelStyle, color, disabled, readOnly, labelId]);
+  }, [
+    label,
+    iconElement,
+    inputId,
+    labelStyle,
+    color,
+    disabled,
+    readOnly,
+    labelId,
+    classNames?.label,
+    styles?.label,
+  ]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.
   return (
-    <Box className={COMPONENT_STATIC_CLASSNAME} width="fit-content">
+    <Box
+      className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+      style={{ ...style, ...styles?.root }}
+      width="fit-content"
+    >
       {controlElement}
     </Box>
   );

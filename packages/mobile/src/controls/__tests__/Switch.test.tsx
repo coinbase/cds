@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import { Switch } from '../Switch';
 
 describe('Switch.test', () => {
@@ -200,5 +200,43 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('test-test-id')).toHaveStyle({
       backgroundColor: defaultTheme.lightColor.bgTertiary,
     });
+  });
+
+  it('applies styles.root and styles.switchNodeContainer', () => {
+    const { toJSON } = render(
+      <DefaultThemeProvider>
+        <Switch
+          onChange={jest.fn()}
+          styles={{
+            switchNodeContainer: { borderBottomWidth: 2 },
+            root: { borderTopWidth: 1 },
+          }}
+        >
+          label
+        </Switch>
+      </DefaultThemeProvider>,
+    );
+
+    const tree = toJSON();
+    expect(treeHasStyleProp(tree, (s) => s.borderTopWidth === 1)).toBe(true);
+    expect(treeHasStyleProp(tree, (s) => s.borderBottomWidth === 2)).toBe(true);
+  });
+
+  it('applies styles.control and preserves style prop behavior', () => {
+    const { toJSON } = render(
+      <DefaultThemeProvider>
+        <Switch
+          onChange={jest.fn()}
+          style={{ borderRightWidth: 5 }}
+          styles={{
+            control: { borderLeftWidth: 4 },
+          }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const tree = toJSON();
+    expect(treeHasStyleProp(tree, (s) => s.borderLeftWidth === 4)).toBe(true);
+    expect(treeHasStyleProp(tree, (s) => s.borderRightWidth === 5)).toBe(true);
   });
 });

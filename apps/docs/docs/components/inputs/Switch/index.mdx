@@ -16,6 +16,8 @@ import webPropsToc from ':docgen/web/controls/Switch/toc-props';
 
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 
 import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
 import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
@@ -34,12 +36,16 @@ import mobileMetadata from './mobileMetadata.json';
 
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
     webExamples={<WebExamples />}
     mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
     mobileExamples={<MobileExamples />}
     webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
     webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
     mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
   />
 </VStack>

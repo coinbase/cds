@@ -1,5 +1,5 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState } from 'react';
-import type { View } from 'react-native';
+import type { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { variants } from '@coinbase/cds-common/tokens/banner';
 import type {
@@ -68,7 +68,48 @@ export type BannerBaseProps = SharedProps & {
   borderRadius?: ThemeVars.BorderRadius;
 };
 
-export type MobileBannerProps = BannerBaseProps & Omit<HStackProps, 'children'>;
+/**
+ * Canonical props type for Banner.
+ *
+ * Note: docs docgen expects a `${ComponentName}Props` export (for Banner -> BannerProps)
+ * to generate styles selector metadata used by the docs Styles tab.
+ */
+export type BannerProps = BannerBaseProps &
+  Omit<HStackProps, 'children'> & {
+    /** Slot-level styles for Banner. */
+    styles?: {
+      /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
+      root?: StyleProp<ViewStyle>;
+      /** Main content container (`HStack`) for banner body. */
+      content?: StyleProp<ViewStyle>;
+      /** Start icon wrapper. */
+      start?: StyleProp<ViewStyle>;
+      /** Right-side body wrapper containing middle content and actions. */
+      body?: StyleProp<ViewStyle>;
+      /** Middle content wrapper containing title/message/label region. */
+      middle?: StyleProp<ViewStyle>;
+      /**
+       * Label text style.
+       * Applies only when `label` is a string rendered by Banner.
+       * If `label` is a custom node, style that node directly.
+       */
+      label?: StyleProp<TextStyle>;
+      /**
+       * Actions row style.
+       * Applies only when at least one action (`primaryAction` or `secondaryAction`) is rendered.
+       */
+      actions?: StyleProp<ViewStyle>;
+      /**
+       * Dismiss button wrapper style.
+       * Applies only when `showDismiss` is true.
+       */
+      dismiss?: StyleProp<ViewStyle>;
+    };
+  };
+/**
+ * @deprecated Use `BannerProps` instead.
+ */
+export type MobileBannerProps = BannerProps;
 
 export const Banner = memo(
   forwardRef(function Banner(
@@ -97,8 +138,9 @@ export const Banner = memo(
       marginEnd,
       marginBottom,
       marginStart,
+      styles,
       ...props
-    }: MobileBannerProps,
+    }: BannerProps,
     forwardedRef: React.ForwardedRef<View>,
   ) {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -182,7 +224,7 @@ export const Banner = memo(
         gap={1}
         paddingX={styleVariant === 'contextual' ? 2 : 3}
         paddingY={2}
-        style={style}
+        style={[style, styles?.content]}
         testID={testID}
         {...props}
       >
@@ -191,6 +233,7 @@ export const Banner = memo(
           accessibilityLabel={startIconAccessibilityLabel}
           accessibilityRole="image"
           accessible={!!startIconAccessibilityLabel}
+          style={styles?.start}
         >
           <Icon
             active={startIconActive}
@@ -207,10 +250,11 @@ export const Banner = memo(
           flexShrink={1}
           gap={2}
           justifyContent="space-between"
+          style={styles?.body}
           testID={`${testID}-inner-end-box`}
         >
           {/** Middle */}
-          <VStack gap={2} testID={`${testID}-content-box`}>
+          <VStack gap={2} style={styles?.middle} testID={`${testID}-content-box`}>
             <VStack gap={0.5}>
               {typeof title === 'string' ? (
                 <Text color={textColor} font="label1" numberOfLines={2}>
@@ -228,7 +272,7 @@ export const Banner = memo(
               )}
             </VStack>
             {typeof label === 'string' ? (
-              <Text color="fgMuted" font="legal" numberOfLines={1}>
+              <Text color="fgMuted" font="legal" numberOfLines={1} style={styles?.label}>
                 {label}
               </Text>
             ) : (
@@ -237,7 +281,7 @@ export const Banner = memo(
           </VStack>
           {/** Actions */}
           {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-            <HStack alignItems="center" gap={2} testID={`${testID}-action`}>
+            <HStack alignItems="center" gap={2} style={styles?.actions} testID={`${testID}-action`}>
               {clonedPrimaryAction}
               {clonedSecondaryAction}
             </HStack>
@@ -245,7 +289,7 @@ export const Banner = memo(
         </VStack>
         {/** Dismissable action */}
         {showDismiss && (
-          <Box alignItems="flex-start" padding={0.5}>
+          <Box alignItems="flex-start" padding={0.5} style={styles?.dismiss}>
             <Pressable
               accessibilityLabel={closeAccessibilityLabel}
               accessibilityRole="button"
@@ -263,7 +307,7 @@ export const Banner = memo(
     );
 
     return (
-      <Box {...marginStyles}>
+      <Box {...marginStyles} style={styles?.root}>
         {showDismiss ? (
           <Collapsible collapsed={isCollapsed} testID={`${testID}-collapsible`}>
             {content}

@@ -4,6 +4,7 @@ import { switchTransitionConfig } from '@coinbase/cds-common/motion/switch';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { convertTransition } from '../motion/utils';
@@ -38,10 +39,51 @@ const thumbCss = css`
 `;
 
 export type SwitchProps = ControlBaseProps<string> & {
+  /**
+   * Label content rendered next to the switch control.
+   *
+   * @example
+   * ```tsx
+   * <Switch onChange={handleChange}>Dark mode</Switch>
+   * ```
+   */
+  children?: React.ReactNode;
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
+
+  classNames?: {
+    /** Persistent outer wrapper (`cds-Switch`) across all variants. */
+    root?: string;
+    /** Control wrapper className. */
+    control?: string;
+    /**
+     * Inner alignment wrapper used only when `children` is provided (labeled variant).
+     */
+    switchNodeContainer?: string;
+    /** Track wrapper className. */
+    track?: string;
+    /** Thumb wrapper className. */
+    thumb?: string;
+  };
+  styles?: {
+    /** Persistent outer wrapper (`cds-Switch`) across all variants. */
+    root?: React.CSSProperties;
+    /**
+     * Control wrapper style.
+     * Applied to the underlying `Control` element (same element that receives `style`).
+     */
+    control?: React.CSSProperties;
+    /**
+     * Inner alignment wrapper used only when `children` is provided (labeled variant).
+     */
+    switchNodeContainer?: React.CSSProperties;
+    /** Track wrapper style. */
+    track?: React.CSSProperties;
+    /** Thumb wrapper style. */
+    thumb?: React.CSSProperties;
+  };
 };
 
 const MotionBox = motion(Box);
@@ -67,6 +109,10 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
     borderRadius = 1000,
     borderWidth,
     value,
+    className,
+    style,
+    classNames,
+    styles,
     ...props
   },
   ref,
@@ -78,9 +124,11 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
       ref={ref}
       borderRadius={1000}
       checked={checked}
+      className={classNames?.control}
       disabled={disabled}
       label={children}
       role="switch"
+      style={{ ...style, ...styles?.control }}
       type="checkbox"
       value={value}
       {...props}
@@ -91,19 +139,21 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
         borderColor={borderColor}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
-        className={trackCss}
+        className={cx(trackCss, classNames?.track)}
         data-filled={checked}
         justifyContent="flex-start"
+        style={styles?.track}
         testID="switch-track"
       >
         <MotionBox
           animate={checked ? 'checked' : 'unchecked'}
           background={controlColor ?? defaultControlColor}
           borderRadius={1000}
-          className={thumbCss}
+          className={cx(thumbCss, classNames?.thumb)}
           data-testid="switch-thumb"
           elevation={elevation}
           initial={false}
+          style={styles?.thumb}
           testID="switch-thumb"
           transition={convertTransition(switchTransitionConfig)}
           variants={thumbMotionVariants}
@@ -113,9 +163,19 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
   );
 
   return (
-    <Box className={COMPONENT_STATIC_CLASSNAME} role="presentation" width="fit-content">
+    <Box
+      className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+      role="presentation"
+      style={styles?.root}
+      width="fit-content"
+    >
       {children ? (
-        <Box alignItems="center" minHeight="var(--controlSize-switchHeight)">
+        <Box
+          alignItems="center"
+          className={classNames?.switchNodeContainer}
+          minHeight="var(--controlSize-switchHeight)"
+          style={styles?.switchNodeContainer}
+        >
           {switchNode}
         </Box>
       ) : (

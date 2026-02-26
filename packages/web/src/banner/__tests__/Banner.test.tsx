@@ -97,6 +97,26 @@ describe('Banner', () => {
     expect(screen.getByTestId(TEST_ID)).toHaveStyle(customCss);
   });
 
+  it('applies classNames/styles root and content slots', () => {
+    render(
+      <DefaultThemeProvider>
+        <Banner
+          classNames={{ content: 'test-banner-content', root: 'test-banner-root' }}
+          startIcon="cashUSD"
+          styles={{ root: { borderTopWidth: 3 } }}
+          testID={TEST_ID}
+          title="Banner title"
+          variant="warning"
+        >
+          Banner Content
+        </Banner>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(TEST_ID).className).toContain('test-banner-content');
+    expect(screen.getByTestId(TEST_ID).parentElement?.className).toContain('test-banner-root');
+  });
+
   it('keeps a stable top-level wrapper regardless of dismiss state', () => {
     const { container, rerender } = render(
       <DefaultThemeProvider>

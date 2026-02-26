@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { DimensionValue } from 'react-native';
+import type { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
 
@@ -24,7 +24,21 @@ export type CardBaseProps = Pick<
     pressableProps?: Omit<PressableProps, 'onPress'>;
   };
 
-export type CardProps = CardBaseProps & BoxProps;
+export type CardProps = CardBaseProps &
+  BoxProps & {
+    /** Slot-level styles for Card. */
+    styles?: {
+      /** Persistent outer wrapper across pressable and static variants. */
+      root?: StyleProp<ViewStyle>;
+      /** Card content container (`VStack`) style. */
+      content?: StyleProp<ViewStyle>;
+      /**
+       * Pressable wrapper style.
+       * Applies only when `onPress` is provided.
+       */
+      pressable?: StyleProp<ViewStyle>;
+    };
+  };
 
 const getBorderRadiusPinStyle = (borderRadius: number) => ({
   top: {
@@ -72,6 +86,7 @@ export const Card = memo(function OldCard({
   accessibilityLabel,
   accessibilityHint,
   pressableProps,
+  styles,
   borderRadius = 200,
   noScaleOnPress,
   ...props
@@ -84,7 +99,10 @@ export const Card = memo(function OldCard({
     return pin ? getBorderRadiusPinStyle(theme.borderRadius[200])[pin] : undefined;
   }, [pin, theme]);
 
-  const contentStyles = useMemo(() => [borderRadiusPinStyle, style], [borderRadiusPinStyle, style]);
+  const contentStyles = useMemo(
+    () => [borderRadiusPinStyle, style, styles?.content],
+    [borderRadiusPinStyle, style, styles?.content],
+  );
 
   const content = useMemo(
     () => (
@@ -122,7 +140,7 @@ export const Card = memo(function OldCard({
   );
 
   return (
-    <Box style={pin ? pinStyles[pin] : undefined}>
+    <Box style={[pin ? pinStyles[pin] : undefined, styles?.root]}>
       {onPress ? (
         <Pressable
           accessibilityHint={accessibilityHint}
@@ -133,10 +151,13 @@ export const Card = memo(function OldCard({
           elevation={elevation}
           noScaleOnPress={noScaleOnPress}
           onPress={onPress}
-          style={{
-            width: width as DimensionValue,
-            height: height as DimensionValue,
-          }}
+          style={[
+            {
+              width: width as DimensionValue,
+              height: height as DimensionValue,
+            },
+            styles?.pressable,
+          ]}
           testID={testID}
           {...pressableProps}
         >

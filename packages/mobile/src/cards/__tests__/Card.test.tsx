@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react-native';
 
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import { Card } from '../Card';
 
 describe('Card.test', () => {
@@ -26,5 +26,25 @@ describe('Card.test', () => {
     expect(pressableTree).toBeTruthy();
     expect(Array.isArray(pressableTree)).toBe(false);
     expect(pressableTree).toHaveProperty('type', 'View');
+  });
+
+  it('applies styles.root and styles.pressable', () => {
+    const { toJSON } = render(
+      <DefaultThemeProvider>
+        <Card
+          onPress={jest.fn()}
+          styles={{
+            pressable: { borderBottomWidth: 2 },
+            root: { borderTopWidth: 1 },
+          }}
+        >
+          Body
+        </Card>
+      </DefaultThemeProvider>,
+    );
+
+    const tree = toJSON();
+    expect(treeHasStyleProp(tree, (s) => s.borderTopWidth === 1)).toBe(true);
+    expect(treeHasStyleProp(tree, (s) => s.borderBottomWidth === 2)).toBe(true);
   });
 });

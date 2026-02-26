@@ -1,0 +1,30 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { LogoMark } from '@coinbase/cds-web/icons';
+import { HStack } from '@coinbase/cds-web/layout';
+import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
+
+import webStylesData from ':docgen/web/navigation/SidebarItem/styles-data';
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <HStack alignItems="flex-start" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        <SidebarItem
+          active
+          classNames={classNames}
+          icon="home"
+          onClick={() => undefined}
+          title="Home"
+          tooltipContent="Home"
+        />
+      </Sidebar>
+    </HStack>
+  )}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="SidebarItem" styles={webStylesData} />

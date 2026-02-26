@@ -110,6 +110,39 @@ describe('Switch.test', () => {
     expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
   });
 
+  it('applies classNames/styles to root and slots', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch
+          classNames={{
+            control: 'test-switch-control',
+            root: 'test-switch-root',
+            switchNodeContainer: 'test-switch-container',
+            thumb: 'test-switch-thumb',
+            track: 'test-switch-track',
+          }}
+          onChange={jest.fn()}
+          style={{ borderRightWidth: 5 }}
+          styles={{ control: { borderLeftWidth: 4 }, root: { borderTopWidth: 2 } }}
+        >
+          label
+        </Switch>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('switch').closest('.test-switch-root')).toBeTruthy();
+    expect(screen.getByTestId('switch-track').className).toContain('test-switch-track');
+    expect(screen.getByTestId('switch-thumb').className).toContain('test-switch-thumb');
+    expect(screen.getByRole('switch').closest('.test-switch-control')).toBeTruthy();
+    expect(screen.getByTestId('switch-track').closest('.test-switch-container')).toBeTruthy();
+    expect(screen.getByRole('switch').closest('.cds-Control')).toHaveStyle({
+      borderLeftWidth: '4px',
+    });
+    expect(screen.getByRole('switch').closest('.cds-Control')).toHaveStyle({
+      borderRightWidth: '5px',
+    });
+  });
+
   it('has default color', () => {
     render(
       <DefaultThemeProvider>

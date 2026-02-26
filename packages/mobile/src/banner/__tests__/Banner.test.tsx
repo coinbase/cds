@@ -3,7 +3,7 @@ import type { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Text } from '../../typography/Text';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import type { MobileBannerProps } from '../Banner';
 import { Banner } from '../Banner';
 
@@ -54,6 +54,21 @@ describe('Banner', () => {
     expect(dismissibleTree).toBeTruthy();
     expect(Array.isArray(dismissibleTree)).toBe(false);
     expect(dismissibleTree).toHaveProperty('type', 'View');
+  });
+
+  it('applies styles.root and styles.content', () => {
+    const { toJSON } = render(
+      <MockBanner
+        styles={{
+          content: { borderBottomWidth: 2 },
+          root: { borderTopWidth: 1 },
+        }}
+      />,
+    );
+
+    const tree = toJSON();
+    expect(treeHasStyleProp(tree, (s) => s.borderTopWidth === 1)).toBe(true);
+    expect(treeHasStyleProp(tree, (s) => s.borderBottomWidth === 2)).toBe(true);
   });
 });
 

@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { StyleSheet, type View } from 'react-native';
+import { type StyleProp, StyleSheet, type View, type ViewStyle } from 'react-native';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
@@ -7,12 +7,33 @@ import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
 
-export type SwitchBaseProps<SwitchValue extends string> = Omit<
-  ControlBaseProps<SwitchValue>,
-  'style'
->;
+export type SwitchBaseProps<SwitchValue extends string> = ControlBaseProps<SwitchValue>;
 
-export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValue>;
+export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValue> & {
+  /**
+   * Label content rendered next to the switch control.
+   *
+   * @example
+   * ```tsx
+   * <Switch onChange={handleChange}>Dark mode</Switch>
+   * ```
+   */
+  children?: React.ReactNode;
+  /** Slot-level styles for Switch. */
+  styles?: {
+    /** Persistent outer wrapper across all variants. */
+    root?: StyleProp<ViewStyle>;
+    /**
+     * Control wrapper style.
+     * Applied to the underlying `Control` element (same element that receives `style`).
+     */
+    control?: StyleProp<ViewStyle>;
+    /**
+     * Inner alignment wrapper used only when `children` is provided (labeled variant).
+     */
+    switchNodeContainer?: StyleProp<ViewStyle>;
+  };
+};
 
 const SwitchIcon = ({
   pressed,
@@ -95,11 +116,15 @@ const SwitchIcon = ({
 };
 
 const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends string>(
-  { children, ...props }: SwitchProps<SwitchValue>,
+  { children, style, styles, ...props }: SwitchProps<SwitchValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const theme = useTheme();
   const { switchHeight } = theme.controlSize;
+  const controlStyles = useMemo(
+    () => StyleSheet.flatten([style, styles?.control]),
+    [style, styles?.control],
+  );
 
   const switchNode = (
     <Control
@@ -109,15 +134,21 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends stri
       shouldUseSwitchTransition
       accessibilityRole="switch"
       label={children}
+      style={controlStyles}
     >
       {SwitchIcon}
     </Control>
   );
 
   return (
-    <Box>
+    <Box style={styles?.root}>
       {children ? (
-        <Box alignItems="center" flexDirection="row" minHeight={switchHeight}>
+        <Box
+          alignItems="center"
+          flexDirection="row"
+          minHeight={switchHeight}
+          style={styles?.switchNodeContainer}
+        >
           {switchNode}
         </Box>
       ) : (
