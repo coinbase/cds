@@ -287,6 +287,7 @@ const ComboboxBase = memo(
                   <StickyFooter
                     background="bgElevation2"
                     elevation={2}
+                    paddingBottom={6}
                     style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
                   >
                     <Button compact onPress={handleClose}>
