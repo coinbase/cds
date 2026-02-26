@@ -277,7 +277,7 @@ const ComboboxBase = memo(
             footer={({ handleClose }) => (
               <KeyboardAvoidingView
                 behavior="padding"
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 86 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
               >
                 <View
                   style={
@@ -287,7 +287,7 @@ const ComboboxBase = memo(
                   <StickyFooter
                     background="bgElevation2"
                     elevation={2}
-                    paddingBottom={6}
+                    paddingBottom={5}
                     style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
                   >
                     <Button compact onPress={handleClose}>
