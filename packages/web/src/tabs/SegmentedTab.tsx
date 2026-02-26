@@ -13,7 +13,9 @@ import { Text } from '../typography/Text';
 
 import { tabsTransitionConfig } from './Tabs';
 
-const MotionText = motion(Text);
+const MotionBox = motion(Box);
+
+const contentsStyle = { display: 'contents' } as const;
 
 const insetFocusRingCss = css`
   &:focus {
@@ -136,9 +138,10 @@ const SegmentedTabComponent = memo(
           type="button"
           {...props}
         >
-          <Box as="span" justifyContent="center" paddingX={2} paddingY={1}>
+          <MotionBox as="span" justifyContent="center" paddingX={2} paddingY={1} {...motionProps}>
             {typeof label === 'string' ? (
-              <MotionText
+              <Text
+                color="currentColor"
                 font={font}
                 fontFamily={fontFamily}
                 fontSize={fontSize}
@@ -146,14 +149,13 @@ const SegmentedTabComponent = memo(
                 lineHeight={lineHeight}
                 textAlign={textAlign}
                 textTransform={textTransform}
-                {...motionProps}
               >
                 {label}
-              </MotionText>
+              </Text>
             ) : (
               label
             )}
-          </Box>
+          </MotionBox>
         </Pressable>
       );
     },

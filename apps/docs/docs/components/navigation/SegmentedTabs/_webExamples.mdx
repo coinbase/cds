@@ -149,6 +149,37 @@ function Example() {
 }
 ```
 
+### Labels
+
+Labels can be customized with any `ReactNode`, including instances of `Icon`.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: <Icon name="chartLine" size="s" color="currentColor" active /> },
+    { id: 'sell', label: <Icon name="chartCandles" size="s" color="currentColor" active /> },
+    { id: 'convert', label: <Icon name="chartBar" size="s" color="currentColor" active /> },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={300}
+      gap={0.5}
+      onChange={handleChange}
+      padding={0.5}
+      styles={{
+        activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+      }}
+      tabs={tabs}
+      width="fit-content"
+    />
+  );
+}
+```
+
 ## Custom Components
 
 Use `TabComponent` and `TabsActiveIndicatorComponent` to fully customize the tabs and active indicator. Individual tabs can also be customized by providing a `Component` in the tab definition.
