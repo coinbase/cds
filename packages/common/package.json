@@ -60,7 +60,6 @@
     "@types/react": "19.1.2",
     "@types/react-is": "^19.0.0",
     "jest-date-mock": "^1.0.8",
-    "react": "19.1.2",
-    "react-native": "0.81.5"
+    "react": "19.1.2"
   }
 }

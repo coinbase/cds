@@ -157,7 +157,7 @@ const TourComponent = <TourStepId extends string = string>({
     [animationApi, onChange],
   );
 
-  const api = useTour<TourStepId>({ steps, activeTourStep, onChange: handleChange });
+  const api = useTour<TourStepId, View>({ steps, activeTourStep, onChange: handleChange });
   const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
@@ -220,7 +220,7 @@ const TourComponent = <TourStepId extends string = string>({
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
               <animated.View style={animation}>
                 <TourMaskComponent
-                  activeTourStepTarget={activeTourStepTarget as View}
+                  activeTourStepTarget={activeTourStepTarget}
                   borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                   padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                 />

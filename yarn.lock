@@ -2126,7 +2126,6 @@ __metadata:
     lodash: "npm:^4.17.21"
     react: "npm:19.1.2"
     react-is: "npm:19.1.2"
-    react-native: "npm:0.81.5"
     type-fest: "npm:^2.19.0"
     zod: "npm:^3.23.8"
   peerDependencies:
