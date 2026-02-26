@@ -8,5 +8,10 @@
       "url": "/components/animation/Lottie"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "lottie-react-native",
+      "version": "^6.7.0"
+    }
+  ]
 }

@@ -8,5 +8,6 @@
       "label": "Tour",
       "url": "/components/navigation/Tour/"
     }
-  ]
+  ],
+  "dependencies": []
 }
