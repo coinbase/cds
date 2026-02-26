@@ -30,7 +30,6 @@ const SlideButtonExample = ({
         <IconButton compact name="refresh" onPress={toggleOff} />
       </HStack>
       <SlideButton
-        borderRadius={200}
         checked={checked}
         checkedLabel={checkedLabel ?? 'Confirming...'}
         onChange={setChecked}
