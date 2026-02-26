@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.48.3 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: allow arrow up/down keys within focus trapped text area. [[#417](https://github.com/coinbase/cds/pull/417)]
+
 ## 8.48.2 ((2/25/2026, 04:21 PM PST))
 
 This is an artificial version bump with no new change.
