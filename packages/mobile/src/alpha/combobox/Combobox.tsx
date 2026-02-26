@@ -13,6 +13,7 @@ import { KeyboardAvoidingView, Platform, type TextInput, View } from 'react-nati
 import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
+import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 import { Box } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
@@ -247,6 +248,7 @@ const ComboboxBase = memo(
       );
 
       const searchInputRef = useRef<TextInput | null>(null);
+      const safeBottomPadding = useSafeBottomPadding();
       const handleTrayVisibilityChange = useCallback((visibility: 'visible' | 'hidden') => {
         if (visibility === 'visible') {
           searchInputRef.current?.focus();
@@ -277,7 +279,7 @@ const ComboboxBase = memo(
             footer={({ handleClose }) => (
               <KeyboardAvoidingView
                 behavior="padding"
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 106 : 0}
               >
                 <View
                   style={
@@ -287,8 +289,11 @@ const ComboboxBase = memo(
                   <StickyFooter
                     background="bgElevation2"
                     elevation={2}
-                    paddingBottom={5}
-                    style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
+                    style={{
+                      paddingBottom: safeBottomPadding,
+                      shadowOffset: { width: 0, height: -32 },
+                      shadowOpacity: 0.05,
+                    }}
                   >
                     <Button compact onPress={handleClose}>
                       {closeButtonLabel}
@@ -325,6 +330,7 @@ const ComboboxBase = memo(
           handleTrayVisibilityChange,
           label,
           placeholder,
+          safeBottomPadding,
           startNode,
           variant,
         ],
