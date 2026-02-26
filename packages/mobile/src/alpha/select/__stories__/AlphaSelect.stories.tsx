@@ -57,6 +57,14 @@ const exampleOptionsWithNoLabelOrDescription = [
   { value: '4' },
 ];
 
+const exampleOptionsWithLongLabels = [
+  { value: null, label: 'Remove selection' },
+  { value: '1', label: 'Fraction fraction fraction fraction fraction' },
+  { value: '2', label: 'Truncation truncation truncation truncation truncation' },
+  { value: '3', label: 'A A A A A A A A A A A A A A A A' },
+  { value: '4', label: 'Bee Bee Bee Bee Bee Bee Bee Bee Bee Bee' },
+];
+
 const exampleOptionsWithSomeDisabled = [
   { value: null, label: 'Remove selection' },
   { value: '1', label: 'Option 1', disabled: true },
@@ -886,6 +894,23 @@ const MultiSelectCustomSelectAllOptionExample = () => {
   );
 };
 
+const MultiSelectLongLabelOptionsExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select"
+      onChange={onChange}
+      options={exampleOptionsWithLongLabels}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const MultiSelectDisabledExample = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -1404,6 +1429,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Custom Select All Option">
         <MultiSelectCustomSelectAllOptionExample />
+      </Example>
+      <Example title="Multi Select Long Label Options">
+        <MultiSelectLongLabelOptionsExample />
       </Example>
       <Example title="Multi Select Disabled">
         <MultiSelectDisabledExample />

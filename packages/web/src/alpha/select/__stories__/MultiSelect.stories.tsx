@@ -362,6 +362,30 @@ export const CustomSelectAllOption = () => {
   );
 };
 
+export const LongOptionLabels = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Fraction fraction fraction fraction fraction' },
+    { value: '2', label: 'Truncation truncation truncation truncation truncation' },
+    { value: '3', label: 'A A A A A A A A A A A A A A A A' },
+    { value: '4', label: 'Bee Bee Bee Bee Bee Bee Bee Bee Bee Bee' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select - long option labels"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const Disabled = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
