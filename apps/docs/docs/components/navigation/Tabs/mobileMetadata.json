@@ -12,5 +12,11 @@
       "label": "SegmentedTabs",
       "url": "/components/navigation/SegmentedTabs/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
   ]
 }

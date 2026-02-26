@@ -14,14 +14,5 @@
       "url": "/components/charts/LineChart/"
     }
   ],
-  "dependencies": [
-    {
-      "name": "react-native-svg",
-      "version": "^14.1.0"
-    },
-    {
-      "name": "react-native-reanimated",
-      "version": "^3.14.0"
-    }
-  ]
+  "dependencies": []
 }

@@ -21,5 +21,11 @@
       "label": "RadioGroup",
       "url": "/components/inputs/RadioGroup"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

@@ -16,5 +16,6 @@
       "label": "LogoMark",
       "url": "/components/media/LogoMark/"
     }
-  ]
+  ],
+  "dependencies": []
 }

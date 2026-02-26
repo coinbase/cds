@@ -12,8 +12,8 @@
   ],
   "dependencies": [
     {
-      "name": "fuse.js",
-      "version": "^6.6.2"
+      "name": "react-native-safe-area-context",
+      "version": "^4.10.5"
     }
   ]
 }

@@ -8,5 +8,6 @@
       "label": "RemoteImage",
       "url": "/components/media/RemoteImage"
     }
-  ]
+  ],
+  "dependencies": []
 }

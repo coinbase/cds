@@ -13,5 +13,11 @@
       "label": "ControlGroup",
       "url": "/components/inputs/ControlGroup/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

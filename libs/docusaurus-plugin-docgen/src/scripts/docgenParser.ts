@@ -493,14 +493,14 @@ function getDocParent({ declarations = [], parent }: PropItem) {
   return declaration ?? parent?.name ?? '';
 }
 
-function getDocExample(doc: Doc) {
+export function getDocExample(doc: Doc) {
   if (!doc.tags?.example) return undefined;
   return doc.tags.example.includes('tsx')
     ? doc.tags.example.replaceAll('tsx', 'tsx live')
     : '```tsx live\n' + doc.tags.example + '\n```';
 }
 
-function formatPropItemType(value: string) {
+export function formatPropItemType(value: string) {
   switch (value) {
     case 'ReactElement<any, string | JSXElementConstructor<any>>':
       return 'ReactElement';

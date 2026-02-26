@@ -46,7 +46,8 @@
       "executor": "nx:run-commands",
       "dependsOn": [
         "^build",
-        "^typecheck"
+        "^typecheck",
+        "peer-dependencies-check"
       ],
       "options": {
         "commands": [
@@ -56,6 +57,12 @@
         ],
         "cwd": "apps/docs",
         "parallel": false
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js"
       }
     },
     "lint": {
@@ -88,6 +95,18 @@
       "dependsOn": [
         "build-llm-docs"
       ],
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies-check": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts --fail-on-changes",
       "options": {
         "cwd": "{workspaceRoot}"
       }

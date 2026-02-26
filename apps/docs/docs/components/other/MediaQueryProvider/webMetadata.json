@@ -12,5 +12,6 @@
       "label": "useBreakpoints",
       "url": "/hooks/useBreakpoints/"
     }
-  ]
+  ],
+  "dependencies": []
 }
