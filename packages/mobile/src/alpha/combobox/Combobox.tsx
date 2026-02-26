@@ -291,8 +291,6 @@ const ComboboxBase = memo(
                     elevation={2}
                     style={{
                       paddingBottom: safeBottomPadding,
-                      shadowOffset: { width: 0, height: -32 },
-                      shadowOpacity: 0.05,
                     }}
                   >
                     <Button compact onPress={handleClose}>
