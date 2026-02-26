@@ -1,33 +1,34 @@
 import React, { forwardRef, memo } from 'react';
 
 import { cx } from '../cx';
-import type { StylesAndClassNames } from '../types';
 
 import { SegmentedTab } from './SegmentedTab';
 import { SegmentedTabsActiveIndicator } from './SegmentedTabsActiveIndicator';
 import { Tabs, type TabsProps } from './Tabs';
 
-/**
- * Static class names for SegmentedTabs component parts.
- * Use these selectors to target specific elements with CSS.
- */
-export const segmentedTabsClassNames = {
-  /** Root element */
-  root: 'cds-SegmentedTabs',
-  /** Tab element */
-  tab: 'cds-SegmentedTabs-tab',
-  /** Active indicator element */
-  activeIndicator: 'cds-SegmentedTabs-activeIndicator',
-} as const;
-
 export type SegmentedTabsProps<TabId extends string = string> = Partial<
   Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
 > &
-  Omit<
-    TabsProps<TabId>,
-    'TabComponent' | 'TabsActiveIndicatorComponent' | 'classNames' | 'styles'
-  > &
-  StylesAndClassNames<typeof segmentedTabsClassNames>;
+  Omit<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles' | 'classNames'> & {
+    /** Custom styles for individual elements of the SegmentedTabs component */
+    styles?: {
+      /** Root element */
+      root?: React.CSSProperties;
+      /** Tab element */
+      tab?: React.CSSProperties;
+      /** Active indicator element */
+      activeIndicator?: React.CSSProperties;
+    };
+    /** Custom class names for individual elements of the SegmentedTabs component */
+    classNames?: {
+      /** Root element */
+      root?: string;
+      /** Tab element */
+      tab?: string;
+      /** Active indicator element */
+      activeIndicator?: string;
+    };
+  };
 
 type SegmentedTabsFC = <TabId extends string>(
   props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
@@ -57,10 +58,10 @@ const SegmentedTabsComponent = memo(
         activeBackground={activeBackground}
         background={background}
         borderRadius={borderRadius}
-        className={cx(segmentedTabsClassNames.root, className, classNames?.root)}
+        className={cx(className, classNames?.root)}
         classNames={{
-          tab: cx(segmentedTabsClassNames.tab, classNames?.tab),
-          activeIndicator: cx(segmentedTabsClassNames.activeIndicator, classNames?.activeIndicator),
+          tab: classNames?.tab,
+          activeIndicator: classNames?.activeIndicator,
         }}
         role="tablist"
         style={styles?.root ? { ...style, ...styles.root } : style}

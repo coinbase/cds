@@ -17,7 +17,6 @@ import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 import { cx } from '../cx';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
-import type { StylesAndClassNames } from '../types';
 
 const MotionBox = motion<BoxProps<BoxDefaultElement>>(Box);
 
@@ -64,19 +63,6 @@ export type TabComponent<TabId extends string = string> = React.FC<TabComponentP
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-/**
- * Static class names for Tabs component parts.
- * Use these selectors to target specific elements with CSS.
- */
-export const tabsClassNames = {
-  /** Root element */
-  root: 'cds-Tabs',
-  /** Tab element */
-  tab: 'cds-Tabs-tab',
-  /** Active indicator element */
-  activeIndicator: 'cds-Tabs-activeIndicator',
-} as const;
-
 export type TabsBaseProps<TabId extends string = string> = {
   /** The array of tabs data. Each tab may optionally define a custom Component to render. */
   tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
@@ -91,8 +77,26 @@ export type TabsBaseProps<TabId extends string = string> = {
 } & Omit<TabsOptions<TabId>, 'tabs'>;
 
 export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
-  StylesAndClassNames<typeof tabsClassNames> &
-  Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'>;
+  Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'> & {
+    /** Custom styles for individual elements of the Tabs component */
+    styles?: {
+      /** Root element */
+      root?: React.CSSProperties;
+      /** Tab element */
+      tab?: React.CSSProperties;
+      /** Active indicator element */
+      activeIndicator?: React.CSSProperties;
+    };
+    /** Custom class names for individual elements of the Tabs component */
+    classNames?: {
+      /** Root element */
+      root?: string;
+      /** Tab element */
+      tab?: string;
+      /** Active indicator element */
+      activeIndicator?: string;
+    };
+  };
 
 type TabsFC = <TabId extends string = string>(
   props: TabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
@@ -224,7 +228,7 @@ const TabsComponent = memo(
           borderRadius={borderRadius}
           borderTopLeftRadius={borderTopLeftRadius}
           borderTopRightRadius={borderTopRightRadius}
-          className={cx(tabsClassNames.root, className, classNames?.root)}
+          className={cx(className, classNames?.root)}
           onKeyDown={handleTabsContainerKeyDown}
           position={position}
           role={role}
@@ -241,7 +245,7 @@ const TabsComponent = memo(
               borderRadius={borderRadius}
               borderTopLeftRadius={borderTopLeftRadius}
               borderTopRightRadius={borderTopRightRadius}
-              className={cx(tabsClassNames.activeIndicator, classNames?.activeIndicator)}
+              className={classNames?.activeIndicator}
               style={styles?.activeIndicator}
             />
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
@@ -255,7 +259,7 @@ const TabsComponent = memo(
                     role="tab"
                     tabIndex={activeTab?.id === id || !activeTab ? 0 : -1}
                     {...props}
-                    className={cx(tabsClassNames.tab, classNames?.tab)}
+                    className={classNames?.tab}
                     style={styles?.tab}
                   />
                 </TabContainer>

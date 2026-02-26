@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
@@ -134,17 +134,8 @@ const PeriodSelectorTab: TabComponent = memo(
   )),
 );
 
-export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'styles'> & {
-  /** Custom styles for individual elements of the PeriodSelector component */
-  styles?: {
-    /** Root container element */
-    root?: StyleProp<ViewStyle>;
-    /** Tab element */
-    tab?: StyleProp<ViewStyle>;
-    /** Active indicator element */
-    activeIndicator?: StyleProp<ViewStyle>;
-  };
-};
+export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'styles'> &
+  Pick<SegmentedTabsProps, 'styles'>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.

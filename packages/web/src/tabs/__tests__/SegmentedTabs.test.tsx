@@ -7,7 +7,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/test';
-import { segmentedTabsClassNames, SegmentedTabs, type SegmentedTabsProps } from '../SegmentedTabs';
+import { SegmentedTabs, type SegmentedTabsProps } from '../SegmentedTabs';
 
 const TEST_ID = 'mock-segmented-tabs';
 const NoopFn = () => {};
@@ -276,28 +276,5 @@ describe('SegmentedTabs', () => {
     const style = indicator.getAttribute('style');
     expect(style).toContain('transform: translateX(24px) translateZ(0)');
     expect(style).toContain('left: 0');
-  });
-
-  describe('static classNames', () => {
-    it('applies static class names to component elements', () => {
-      render(
-        <DefaultThemeProvider>
-          <TabsContext.Provider value={mockApi}>
-            <SegmentedTabs {...exampleProps} />
-          </TabsContext.Provider>
-        </DefaultThemeProvider>,
-      );
-
-      const root = screen.getByRole('tablist');
-      expect(root).toHaveClass(segmentedTabsClassNames.root);
-
-      const tabElements = screen.getAllByRole('tab');
-      tabElements.forEach((tab) => {
-        expect(tab).toHaveClass(segmentedTabsClassNames.tab);
-      });
-
-      const indicator = screen.getByTestId('tabs-active-indicator');
-      expect(indicator).toHaveClass(segmentedTabsClassNames.activeIndicator);
-    });
   });
 });

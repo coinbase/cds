@@ -10,7 +10,6 @@ import {
   tabsTransitionConfig,
 } from '@coinbase/cds-web/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-web/tabs/SegmentedTab';
-import type { StylesAndClassNames } from '@coinbase/cds-web/types';
 import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
@@ -132,21 +131,8 @@ const PeriodSelectorTab: TabComponent = memo(
   )),
 );
 
-/**
- * Static class names for PeriodSelector component parts.
- * Use these selectors to target specific elements with CSS.
- */
-export const periodSelectorClassNames = {
-  /** Root element */
-  root: 'cds-PeriodSelector',
-  /** Tab element */
-  tab: 'cds-PeriodSelector-tab',
-  /** Active indicator element */
-  activeIndicator: 'cds-PeriodSelector-activeIndicator',
-} as const;
-
-export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'classNames' | 'styles'> &
-  StylesAndClassNames<typeof periodSelectorClassNames>;
+export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'styles' | 'classNames'> &
+  Pick<SegmentedTabsProps, 'styles' | 'classNames'>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.
@@ -176,13 +162,10 @@ export const PeriodSelector = memo(
         TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
         activeBackground={activeBackground}
         background={background}
-        className={cx(periodSelectorClassNames.root, className, classNames?.root)}
+        className={cx(className, classNames?.root)}
         classNames={{
-          tab: cx(periodSelectorClassNames.tab, classNames?.tab),
-          activeIndicator: cx(
-            periodSelectorClassNames.activeIndicator,
-            classNames?.activeIndicator,
-          ),
+          tab: classNames?.tab,
+          activeIndicator: classNames?.activeIndicator,
         }}
         justifyContent={justifyContent}
         style={styles?.root ? { ...style, ...styles.root } : style}
