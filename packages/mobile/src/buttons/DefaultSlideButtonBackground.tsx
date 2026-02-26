@@ -34,8 +34,8 @@ export const DefaultSlideButtonBackground = memo(
       return (
         <Box
           ref={ref}
-          alignItems="center"
           aria-hidden
+          alignItems="center"
           background="bgSecondary"
           borderBottomLeftRadius={borderBottomLeftRadius}
           borderBottomRightRadius={borderBottomRightRadius}

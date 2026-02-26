@@ -155,11 +155,11 @@ export const DefaultSlideButtonHandle = memo(
           ref={ref}
           noScaleOnPress
           background={backgroundColor}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
           borderRadius={borderRadius}
           borderTopLeftRadius={borderTopLeftRadius}
           borderTopRightRadius={borderTopRightRadius}
-          borderBottomLeftRadius={borderBottomLeftRadius}
-          borderBottomRightRadius={borderBottomRightRadius}
           contentStyle={containerStyle}
           disabled={disabled}
           loading={checked}
