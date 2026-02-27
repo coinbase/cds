@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
@@ -932,6 +933,37 @@ const SunlightChart = () => {
   );
 };
 
+const PriceRange = () => {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data: [number, number][] = useMemo(
+    () => candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]),
+    [candles],
+  );
+
+  const min = useMemo(() => Math.min(...data.map(([low]) => low)), [data]);
+  const max = useMemo(() => Math.max(...data.map(([, high]) => high)), [data]);
+
+  const tickFormatter = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      showYAxis
+      height={150}
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+    />
+  );
+};
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -1012,6 +1044,10 @@ function ExampleNavigator() {
       {
         title: 'Monthly Sunlight',
         component: <SunlightChart />,
+      },
+      {
+        title: 'Price Range',
+        component: <PriceRange />,
       },
     ],
     [],

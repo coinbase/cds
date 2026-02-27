@@ -10,7 +10,7 @@ export const useCartesianChartContext = (): CartesianChartContextValue => {
   const context = useContext(CartesianChartContext);
   if (!context) {
     throw new Error(
-      'useCartesianChartContext must be used within a CartesianChart component. See http://cds.coinbase.com/components/graphs/CartesianChart.',
+      'useCartesianChartContext must be used within a CartesianChart component. See https://cds.coinbase.com/components/charts/CartesianChart.',
     );
   }
   return context;

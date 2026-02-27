@@ -42,6 +42,7 @@
     "@coinbase/cds-lottie-files": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
     "@coinbase/cds-web": "workspace:^",
+    "framer-motion": "^10.18.0",
     "react": "^18.0.0 || ~19.1.2",
     "react-dom": "^18.0.0 || ~19.1.2"
   },
@@ -67,6 +68,7 @@
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "react": "19.1.2",
-    "react-dom": "19.1.2"
+    "react-dom": "19.1.2",
+    "framer-motion": "^10.18.0"
   }
 }

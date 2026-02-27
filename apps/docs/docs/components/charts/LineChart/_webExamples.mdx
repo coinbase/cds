@@ -1,0 +1,1891 @@
+LineChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) that makes it easy to create standard line charts, supporting a single x/y axis pair. Charts are built using SVGs.
+
+## Basics
+
+The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` array of numbers.
+
+```jsx live
+<LineChart
+  showArea
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+/>
+```
+
+LineChart also supports multiple lines, interaction, and axes.
+Other props, such as `areaType` can be applied to the chart as a whole or per series.
+
+```jsx live
+function MultipleLine() {
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
+
+  const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
+    },
+    [pages, pageViews, uniqueVisitors],
+  );
+
+  const numberFormatter = useCallback(
+    (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    [],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: 'var(--color-accentBoldGreen)',
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: 'var(--color-accentBoldPurple)',
+          label: 'Unique Visitors',
+          // Default area is gradient
+          areaType: 'dotted',
+        },
+      ]}
+      xAxis={{
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
+      }}
+    >
+      <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+    </LineChart>
+  );
+}
+```
+
+## Data
+
+The data array for each series defines the y values for that series. You can adjust the y values for a series of data by setting the `data` prop on the xAxis.
+
+```jsx live
+function DataFormat() {
+  const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
+  const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
+
+  const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
+    },
+    [xData, yData],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      curve="natural"
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      points
+      series={[
+        {
+          id: 'line',
+          data: yData,
+        },
+      ]}
+      xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
+      yAxis={{
+        domain: { min: 0 },
+        position: 'left',
+        showLine: true,
+        showTickMarks: true,
+        showGrid: true,
+      }}
+    >
+      <Scrubber hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
+    </LineChart>
+  );
+}
+```
+
+### Live Updates
+
+You can change the data passed in via `series` prop to update the chart.
+
+You can also use the `useRef` hook to reference the scrubber and pulse it on each update.
+
+```jsx live
+function LiveUpdates() {
+  const scrubberRef = useRef();
+
+  const initialData = useMemo(() => {
+    return sparklineInteractiveData.hour.map((d) => d.value);
+  }, []);
+
+  const [priceData, setPriceData] = useState(initialData);
+
+  const lastDataPointTimeRef = useRef(Date.now());
+  const updateCountRef = useRef(0);
+
+  const intervalSeconds = 3600 / initialData.length;
+
+  const maxPercentChange = Math.abs(initialData[initialData.length - 1] - initialData[0]) * 0.05;
+
+  useEffect(() => {
+    const priceUpdateInterval = setInterval(
+      () => {
+        setPriceData((currentData) => {
+          const newData = [...currentData];
+          const lastPrice = newData[newData.length - 1];
+
+          const priceChange = (Math.random() - 0.5) * maxPercentChange;
+          const newPrice = Math.round((lastPrice + priceChange) * 100) / 100;
+
+          // Check if we should roll over to a new data point
+          const currentTime = Date.now();
+          const timeSinceLastPoint = (currentTime - lastDataPointTimeRef.current) / 1000;
+
+          if (timeSinceLastPoint >= intervalSeconds) {
+            // Time for a new data point - remove first, add new at end
+            lastDataPointTimeRef.current = currentTime;
+            newData.shift(); // Remove oldest data point
+            newData.push(newPrice); // Add new data point
+            updateCountRef.current = 0;
+          } else {
+            // Just update the last data point
+            newData[newData.length - 1] = newPrice;
+            updateCountRef.current++;
+          }
+
+          return newData;
+        });
+
+        // Pulse the scrubber on each update
+        scrubberRef.current?.pulse();
+      },
+      2000 + Math.random() * 1000,
+    );
+
+    return () => clearInterval(priceUpdateInterval);
+  }, [intervalSeconds, maxPercentChange]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      inset={{ right: 64 }}
+      series={[
+        {
+          id: 'btc',
+          data: priceData,
+          color: assets.btc.color,
+        },
+      ]}
+    >
+      <Scrubber ref={scrubberRef} />
+    </LineChart>
+  );
+}
+```
+
+### Missing Data
+
+By default, null values in data create gaps in a line. Use `connectNulls` to skip null values and draw a continuous line.
+Note that scrubber beacons and points are still only shown at non-null data values.
+
+```jsx live
+function MissingData() {
+  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
+  const pageViews = [2400, 1398, null, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, null, 2780, 1890, 2390, 3490];
+
+  const numberFormatter = useCallback(
+    (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    [],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      // You can render points at every valid data point by always returning true
+      points
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: 'var(--color-accentBoldGreen)',
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
+          connectNulls: true,
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: 'var(--color-accentBoldPurple)',
+          label: 'Unique Visitors',
+        },
+      ]}
+      xAxis={{
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
+      }}
+    >
+      {/* We can offset the overlay to account for the points being drawn on the lines */}
+      <Scrubber overlayOffset={6} />
+    </LineChart>
+  );
+}
+```
+
+#### Empty State
+
+```jsx live
+<LineChart
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'line',
+      color: 'rgb(var(--gray50))',
+      data: [1, 1],
+      showArea: true,
+    },
+  ]}
+  yAxis={{ domain: { min: -1, max: 3 } }}
+/>
+```
+
+### Scales
+
+LineChart uses `linear` scaling on axes by default, but you can also use other types, such as `log`. See [XAxis](/components/charts/XAxis) and [YAxis](/components/charts/YAxis) for more information.
+
+```jsx live
+<LineChart
+  showArea
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  yAxis={{
+    scaleType: 'log',
+    showGrid: true,
+    ticks: [1, 10, 100],
+  }}
+/>
+```
+
+## Interaction
+
+Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
+
+```jsx live
+function Interaction() {
+  const [scrubberPosition, setScrubberPosition] = useState();
+
+  return (
+    <VStack gap={2}>
+      <Text font="label1">
+        {scrubberPosition !== undefined
+          ? `Scrubber position: ${scrubberPosition}`
+          : 'Not scrubbing'}
+      </Text>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        onScrubberPositionChange={setScrubberPosition}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+### Points
+
+You can use `points` from LineChart with `onClick` listeners to render instances of [Point](/components/charts/Point) that are interactable.
+
+```jsx live
+function Points() {
+  const keyMarketShiftIndices = [4, 6, 7, 9, 10];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  return (
+    <CartesianChart
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+    >
+      <Area fill="rgb(var(--blue5))" seriesId="prices" />
+      <Line
+        points={({ dataX, dataY, ...props }) =>
+          keyMarketShiftIndices.includes(dataX)
+            ? {
+                ...props,
+                strokeWidth: 2,
+                stroke: 'var(--color-bg)',
+                radius: 5,
+                onClick: () =>
+                  alert(
+                    `You have clicked a key market shift at position ${dataX + 1} with value ${dataY}!`,
+                  ),
+                accessibilityLabel: `Key market shift point at position ${dataX + 1}, value ${dataY}. Click to view details.`,
+              }
+            : false
+        }
+        seriesId="prices"
+      />
+    </CartesianChart>
+  );
+}
+```
+
+## Animations
+
+You can configure chart transitions using `transitions`. The `transitions` prop accepts an object with `enter` (the clip-path reveal animation) and `update` (data change morph animation) keys. Set either to `null` to disable that animation phase. You can also disable all animations by setting `animate` on LineChart to `false`.
+
+```jsx live
+function Transitions() {
+  const dataCount = 20;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const domainLimit = 20000;
+  const updateInterval = 500;
+
+  const myTransitionConfig = { type: 'spring', stiffness: 700, damping: 20 };
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= -maxDataOffset) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(-maxDataOffset, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MyGradient = memo((props) => {
+    const areaGradient = {
+      stops: ({ min, max }) => [
+        { offset: min, color: negativeColor, opacity: 1 },
+        { offset: 0, color: negativeColor, opacity: 0 },
+        { offset: 0, color: positiveColor, opacity: 0 },
+        { offset: max, color: positiveColor, opacity: 1 },
+      ],
+    };
+
+    return <DottedArea {...props} gradient={areaGradient} />;
+  });
+
+  function CustomTransitionsChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const tickLabelFormatter = useCallback(
+      (value) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        }).format(value),
+      [],
+    );
+
+    const valueAtIndexFormatter = useCallback(
+      (dataIndex) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(data[dataIndex]),
+      [data],
+    );
+
+    const lineGradient = {
+      stops: [
+        { offset: 0, color: negativeColor },
+        { offset: 0, color: positiveColor },
+      ],
+    };
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: lineGradient,
+          },
+        ]}
+        yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+        aria-hidden="true"
+      >
+        <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+        <Line
+          showArea
+          AreaComponent={MyGradient}
+          seriesId="prices"
+          strokeWidth={3}
+          transitions={{ update: myTransitionConfig }}
+        />
+        <Scrubber
+          hideOverlay
+          label={valueAtIndexFormatter}
+          transitions={{ update: myTransitionConfig }}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <CustomTransitionsChart />;
+}
+```
+
+## Accessibility
+
+You can use `accessibilityLabel` on both the chart and the scrubber to provide descriptive labels. The chart's label gives an overview, while the scrubber's label provides specific information about the current data point being viewed.
+
+```jsx live
+function BasicAccessible() {
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  // Chart-level accessibility label provides overview
+  const chartAccessibilityLabel = useMemo(() => {
+    const currentPrice = data[data.length - 1];
+    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
+  }, [data]);
+
+  // Scrubber-level accessibility label provides specific position info
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
+    },
+    [data],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+    </LineChart>
+  );
+}
+```
+
+When a chart has a visible header or title, you can use `aria-labelledby` to reference it, and still provide a dynamic scrubber accessibility label.
+
+```jsx live
+function AccessibleWithHeader() {
+  const headerId = useId();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  // Display label provides overview
+  const displayLabel = useMemo(
+    () => `Revenue chart showing trend. Current value: ${data[data.length - 1]}`,
+    [data],
+  );
+
+  // Scrubber-specific accessibility label
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      return `Viewing position ${index + 1} of ${data.length}, value: ${data[index]}`;
+    },
+    [data],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text font="label1" id={headerId}>
+        {displayLabel}
+      </Text>
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        aria-labelledby={headerId}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        series={[
+          {
+            id: 'revenue',
+            data: data,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+## Styling
+
+### Axes
+
+Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/charts/XAxis) and [YAxis](/components/charts/YAxis).
+
+```jsx live
+<LineChart
+  showArea
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+    tickLabelFormatter: (dataX) => `Day ${dataX}`,
+  }}
+  yAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+  }}
+/>
+```
+
+### Gradients
+
+Gradients can be applied to the y-axis (default) or x-axis. Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
+
+Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
+
+```jsx live
+function Gradients() {
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            borderRadius={1000}
+            height={{ base: 16, tablet: 24, desktop: 24 }}
+            onClick={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(var(--${color}20))`,
+              border: `2px solid rgb(var(--${color}50))`,
+              outlineColor: `rgb(var(--${color}80))`,
+              outline:
+                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
+            }}
+            width={{ base: 16, tablet: 24, desktop: 24 }}
+          />
+        ))}
+      </HStack>
+      <LineChart
+        showYAxis
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        points
+        series={[
+          {
+            id: 'continuousGradient',
+            data: data,
+            gradient: {
+              stops: [
+                { offset: 0, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: Math.max(...data), color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+          {
+            id: 'discreteGradient',
+            data: data.map((d) => d + 50),
+            // You can create a "discrete" gradient by having multiple stops at the same offset
+            gradient: {
+              stops: ({ min, max }) => [
+                // Allows a function which accepts min/max or direct array
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}50))` },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}50))`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}20))`,
+                },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+          {
+            id: 'xAxisGradient',
+            data: data.map((d) => d + 100),
+            gradient: {
+              // You can also configure by the x-axis.
+              axis: 'x',
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))`, opacity: 0 },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))`, opacity: 1 },
+              ],
+            },
+          },
+        ]}
+        strokeWidth={4}
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+You can even pass in a separate gradient for your `Line` and `Area` components.
+
+```jsx live
+function GainLossChart() {
+  const data = useMemo(() => [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8], []);
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  const tickLabelFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  // Line gradient: hard color change at 0 (full opacity for line)
+  const lineGradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
+  };
+
+  const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${tickLabelFormatter(data[data.length - 1])}`;
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      const value = data[index];
+      const status = value >= 0 ? 'gain' : 'loss';
+      return `Position ${index + 1} of ${data.length}: ${tickLabelFormatter(value)} ${status}`;
+    },
+    [data, tickLabelFormatter],
+  );
+
+  const GradientDottedArea = memo((props) => (
+    <DottedArea
+      {...props}
+      gradient={{
+        stops: ({ min, max }) => [
+          { offset: min, color: negativeColor, opacity: 0.4 },
+          { offset: 0, color: negativeColor, opacity: 0 },
+          { offset: 0, color: positiveColor, opacity: 0 },
+          { offset: max, color: positiveColor, opacity: 0.4 },
+        ],
+      }}
+    />
+  ));
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          gradient: lineGradient,
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
+    >
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Line showArea AreaComponent={GradientDottedArea} seriesId="prices" strokeWidth={3} />
+      <Scrubber hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
+    </CartesianChart>
+  );
+}
+```
+
+### Legend
+
+Using `legend` will add a default [Legend](/components/charts/Legend) to your chart.
+
+You can use `legendPosition` to place the legend at different positions around the chart.
+
+```jsx live
+<LineChart
+  legend
+  showArea
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  legendPosition="right"
+  legendAccessibilityLabel="Page Views and Unique Visitors chart, legend"
+  series={[
+    {
+      id: 'pageViews',
+      data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+      color: 'var(--color-accentBoldGreen)',
+      label: 'Page Views',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+      color: 'var(--color-accentBoldPurple)',
+      label: 'Unique Visitors',
+      areaType: 'dotted',
+    },
+  ]}
+  xAxis={{
+    // Used on the x-axis to provide context for each index from the series data array
+    data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+  }}
+  yAxis={{
+    showGrid: true,
+    tickLabelFormatter: (value) =>
+      new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+  }}
+/>
+```
+
+### Lines
+
+You can customize lines by placing props in `LineChart` or at each individual series. Lines can have a `type` of `solid` or `dotted`. They can optionally show an area underneath them (using `showArea`).
+
+```jsx live
+<LineChart
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'top',
+      data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
+    },
+    {
+      id: 'upperMiddle',
+      data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+      color: '#ef4444',
+      type: 'dotted',
+    },
+    {
+      id: 'lowerMiddle',
+      data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+      color: '#f59e0b',
+      curve: 'natural',
+      gradient: {
+        axis: 'x',
+        stops: [
+          { offset: 0, color: '#E3D74D' },
+          { offset: 9, color: '#F7931A' },
+        ],
+      },
+      strokeWidth: 6,
+    },
+    {
+      id: 'bottom',
+      data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+      color: '#800080',
+      curve: 'step',
+      AreaComponent: DottedArea,
+      showArea: true,
+    },
+  ]}
+/>
+```
+
+You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) to your LineChart to highlight a specific x or y value.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  showArea
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={{
+    // Give space before the end of the chart for the scrubber
+    range: ({ min, max }) => ({ min, max: max - 24 }),
+  }}
+>
+  <ReferenceLine
+    LineComponent={(props) => <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />}
+    dataY={10}
+    stroke="var(--color-fg)"
+  />
+  <Scrubber />
+</LineChart>
+```
+
+### Points
+
+You can also add instances of [Point](/components/charts/Point) directly inside of a LineChart.
+
+```jsx live
+function HighLowPrice() {
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+  const minPrice = Math.min(...data);
+  const maxPrice = Math.max(...data);
+
+  const minPriceIndex = data.indexOf(minPrice);
+  const maxPriceIndex = data.indexOf(maxPrice);
+
+  const formatPrice = useCallback((price) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  return (
+    <LineChart
+      showArea
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+    >
+      <Point
+        dataX={minPriceIndex}
+        dataY={minPrice}
+        label={formatPrice(minPrice)}
+        labelPosition="bottom"
+      />
+      <Point
+        dataX={maxPriceIndex}
+        dataY={maxPrice}
+        label={formatPrice(maxPrice)}
+        labelPosition="top"
+      />
+    </LineChart>
+  );
+}
+```
+
+### Scrubber
+
+When using [Scrubber](/components/charts/Scrubber) with series that have labels, labels will automatically render to the side of the scrubber beacon.
+
+You can customize the line used for and which series will render a scrubber beacon.
+
+You can have scrubber beacon's pulse by either adding `idlePulse` to Scrubber or use Scrubber's ref to dynamically pulse.
+
+```jsx live
+function StylingScrubber() {
+  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  const numberFormatter = useCallback(
+    (value) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    [],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: 'var(--color-accentBoldGreen)',
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: 'var(--color-accentBoldPurple)',
+          label: 'Unique Visitors',
+          // Default area is gradient
+          areaType: 'dotted',
+        },
+      ]}
+      xAxis={{
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
+      }}
+    >
+      <Scrubber idlePulse LineComponent={SolidLine} seriesIds={['pageViews']} />
+    </LineChart>
+  );
+}
+```
+
+### Sizing
+
+Charts by default take up `100%` of the `width` and `height` available, but can be customized as any other component.
+
+```jsx live
+function DynamicChartSizing() {
+  const candles = [...btcCandles].reverse();
+  const prices = candles.map((candle) => parseFloat(candle.close));
+  const highs = candles.map((candle) => parseFloat(candle.high));
+  const lows = candles.map((candle) => parseFloat(candle.low));
+
+  const latestPrice = prices[prices.length - 1];
+  const previousPrice = prices[prices.length - 2];
+  const change24h = ((latestPrice - previousPrice) / previousPrice) * 100;
+
+  function DetailCell({ title, description }) {
+    return (
+      <VStack>
+        <Text color="fgMuted" font="label2">
+          {title}
+        </Text>
+        <Text font="headline">{description}</Text>
+      </VStack>
+    );
+  }
+
+  // Calculate 7-day moving average
+  const calculateMA = (data, period) => {
+    const ma = [];
+    for (let i = 0; i < data.length; i++) {
+      if (i >= period - 1) {
+        const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+        ma.push(sum / period);
+      }
+    }
+    return ma;
+  };
+
+  const ma7 = calculateMA(prices, 7);
+  const latestMA7 = ma7[ma7.length - 1];
+
+  const periodHigh = Math.max(...highs);
+  const periodLow = Math.min(...lows);
+
+  const formatPrice = useCallback((price) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatPercentage = useCallback((value) => {
+    const sign = value >= 0 ? '+' : '';
+    return `${sign}${value.toFixed(2)}%`;
+  }, []);
+
+  return (
+    <HStack gap={3}>
+      <Box
+        borderBottomLeftRadius={300}
+        borderTopLeftRadius={300}
+        flexGrow={1}
+        marginTop={-3}
+        marginStart={-3}
+        marginBottom={-3}
+        style={{
+          background: 'linear-gradient(0deg, #D07609 0%, #F7931A 100%)',
+        }}
+      >
+        {/* LineChart fills to take up available width and height */}
+        <LineChart
+          series={[
+            {
+              id: 'btc',
+              data: prices,
+              color: 'white',
+            },
+          ]}
+        />
+      </Box>
+      <VStack gap={1}>
+        <VStack>
+          <Text font="title1">BTC</Text>
+          <Text font="title2">{formatPrice(latestPrice)}</Text>
+        </VStack>
+        <DetailCell description={formatPrice(periodHigh)} title="High" />
+        <DetailCell description={formatPrice(periodLow)} title="Low" />
+        <VStack display={{ base: 'none', tablet: 'flex', desktop: 'flex' }} gap={1}>
+          <DetailCell description={formatPercentage(change24h)} title="24h" />
+          <DetailCell description={formatPrice(latestMA7)} title="7d MA" />
+        </VStack>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+#### Compact
+
+You can also have charts in a compact form.
+
+```jsx live
+function Compact() {
+  const dimensions = { width: 62, height: 18 };
+
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const positiveFloor = Math.min(...sparklineData) - 10;
+
+  const negativeData = sparklineData.map((price) => -1 * price).reverse();
+  const negativeCeiling = Math.max(...negativeData) + 10;
+
+  const formatPrice = useCallback((price) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const CompactChart = memo(({ data, showArea, color, referenceY }) => (
+    <Box style={{ padding: 1 }}>
+      <LineChart
+        {...dimensions}
+        enableScrubbing={false}
+        inset={0}
+        series={[
+          {
+            id: 'btc',
+            data,
+            color,
+          },
+        ]}
+        showArea={showArea}
+      >
+        <ReferenceLine dataY={referenceY} />
+      </LineChart>
+    </Box>
+  ));
+
+  const ChartCell = memo(({ data, showArea, color, referenceY, subdetail }) => {
+    const { isPhone } = useBreakpoints();
+
+    return (
+      <ListCell
+        description={isPhone ? undefined : assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <CompactChart color={color} data={data} referenceY={referenceY} showArea={showArea} />
+        }
+        media={<Avatar src={assets.btc.imageUrl} />}
+        onClick={() => console.log('clicked')}
+        spacingVariant="condensed"
+        style={{ padding: 0 }}
+        subdetail={subdetail}
+        title={isPhone ? undefined : assets.btc.name}
+      />
+    );
+  });
+
+  return (
+    <VStack>
+      <ChartCell
+        color={assets.btc.color}
+        data={sparklineData}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
+        subdetail="-4.55%"
+      />
+      <ChartCell
+        showArea
+        color={assets.btc.color}
+        data={sparklineData}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
+        subdetail="-4.55%"
+      />
+      <ChartCell
+        showArea
+        color="var(--color-fgPositive)"
+        data={sparklineData}
+        referenceY={positiveFloor}
+        subdetail="+0.25%"
+      />
+      <ChartCell
+        showArea
+        color="var(--color-fgNegative)"
+        data={negativeData}
+        referenceY={negativeCeiling}
+        subdetail="-4.55%"
+      />
+    </VStack>
+  );
+}
+```
+
+## Composed Examples
+
+### Asset Price with Dotted Area
+
+You can use [PeriodSelector](/components/charts/PeriodSelector) to have a chart where the user can select a time period and the chart automatically animates.
+
+```jsx live
+function AssetPriceWithDottedArea() {
+  const BTCTab = memo(
+    forwardRef(({ label, ...props }, ref) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
+
+      return (
+        <SegmentedTab
+          ref={ref}
+          label={
+            <Text
+              font="label1"
+              style={{
+                transition: 'color 0.2s ease',
+                color: isActive ? assets.btc.color : undefined,
+              }}
+            >
+              {label}
+            </Text>
+          }
+          {...props}
+        />
+      );
+    }),
+  );
+
+  const BTCActiveIndicator = memo(({ style, ...props }) => (
+    <PeriodSelectorActiveIndicator
+      {...props}
+      style={{ ...style, backgroundColor: `${assets.btc.color}1A` }}
+    />
+  ));
+
+  const AssetPriceDotted = memo(() => {
+    const currentPrice =
+      sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+    const tabs = useMemo(
+      () => [
+        { id: 'hour', label: '1H' },
+        { id: 'day', label: '1D' },
+        { id: 'week', label: '1W' },
+        { id: 'month', label: '1M' },
+        { id: 'year', label: '1Y' },
+        { id: 'all', label: 'All' },
+      ],
+      [],
+    );
+    const [timePeriod, setTimePeriod] = useState(tabs[0]);
+
+    const sparklineTimePeriodData = useMemo(() => {
+      return sparklineInteractiveData[timePeriod.id];
+    }, [timePeriod]);
+
+    const sparklineTimePeriodDataValues = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.value);
+    }, [sparklineTimePeriodData]);
+
+    const sparklineTimePeriodDataTimestamps = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.date);
+    }, [sparklineTimePeriodData]);
+
+    const onPeriodChange = useCallback(
+      (period) => {
+        setTimePeriod(period || tabs[0]);
+      },
+      [tabs, setTimePeriod],
+    );
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }),
+      [],
+    );
+
+    const scrubberPriceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [],
+    );
+
+    const formatPrice = useCallback(
+      (price) => {
+        return priceFormatter.format(price);
+      },
+      [priceFormatter],
+    );
+
+    const formatDate = useCallback((date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const monthDay = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
+
+    const scrubberLabel = useCallback(
+      (index) => {
+        const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return (
+          <>
+            <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+          </>
+        );
+      },
+      [
+        scrubberPriceFormatter,
+        sparklineTimePeriodDataValues,
+        sparklineTimePeriodDataTimestamps,
+        formatDate,
+      ],
+    );
+
+    const chartAccessibilityLabel = `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}`;
+
+    const scrubberAccessibilityLabel = useCallback(
+      (index) => {
+        const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `${price} USD ${date}`;
+      },
+      [
+        scrubberPriceFormatter,
+        sparklineTimePeriodDataValues,
+        sparklineTimePeriodDataTimestamps,
+        formatDate,
+      ],
+    );
+
+    return (
+      <VStack gap={2}>
+        <SectionHeader
+          balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+          end={
+            <VStack justifyContent="center">
+              <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+            </VStack>
+          }
+          style={{ padding: 0 }}
+          title={<Text font="title1">Bitcoin</Text>}
+        />
+        <LineChart
+          enableScrubbing
+          showArea
+          accessibilityLabel={chartAccessibilityLabel}
+          areaType="dotted"
+          height={{ base: 200, tablet: 225, desktop: 250 }}
+          series={[
+            {
+              id: 'btc',
+              data: sparklineTimePeriodDataValues,
+              color: assets.btc.color,
+            },
+          ]}
+          style={{ outlineColor: assets.btc.color }}
+          inset={{ top: 60 }}
+        >
+          <Scrubber
+            idlePulse
+            accessibilityLabel={scrubberAccessibilityLabel}
+            label={scrubberLabel}
+            labelElevated
+          />
+        </LineChart>
+        <PeriodSelector
+          TabComponent={BTCTab}
+          TabsActiveIndicatorComponent={BTCActiveIndicator}
+          activeTab={timePeriod}
+          onChange={onPeriodChange}
+          tabs={tabs}
+        />
+      </VStack>
+    );
+  });
+
+  return <AssetPriceDotted />;
+}
+```
+
+### Monotone Asset Price
+
+You can adjust [YAxis](/components/charts/YAxis) and [Scrubber](/components/charts/Scrubber) to have a chart where the y-axis is overlaid and the beacon is inverted in style.
+
+```jsx live
+function MonotoneAssetPrice() {
+  const prices = sparklineInteractiveData.hour;
+
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
+  const formatPrice = useCallback(
+    (price) => {
+      return priceFormatter.format(price);
+    },
+    [priceFormatter],
+  );
+
+  const CustomYAxisTickLabel = useCallback(
+    (props) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
+    [],
+  );
+
+  const formatDate = useCallback((date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+        </>
+      );
+    },
+    [scrubberPriceFormatter, prices, formatDate],
+  );
+
+  const InvertedBeacon = useMemo(
+    () => (props) => (
+      <DefaultScrubberBeacon
+        {...props}
+        stroke="var(--color-fg)"
+        color="var(--color-bg)"
+        radius={5}
+        strokeWidth={3}
+      />
+    ),
+    [],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      inset={{ top: 64 }}
+      series={[
+        {
+          id: 'btc',
+          data: prices.map((price) => price.value),
+          color: 'var(--color-fg)',
+          gradient: {
+            axis: 'x',
+            stops: ({ min, max }) => [
+              { offset: min, color: 'var(--color-fg)', opacity: 0 },
+              { offset: 32, color: 'var(--color-fg)', opacity: 1 },
+            ],
+          },
+        },
+      ]}
+      style={{ outlineColor: 'var(--color-fg)' }}
+      xAxis={{
+        range: ({ min, max }) => ({ min: 96, max: max }),
+      }}
+      yAxis={{
+        position: 'left',
+        width: 0,
+        showGrid: true,
+        tickLabelFormatter: formatPrice,
+        TickLabelComponent: CustomYAxisTickLabel,
+      }}
+    >
+      <Scrubber
+        hideOverlay
+        BeaconComponent={InvertedBeacon}
+        LineComponent={SolidLine}
+        label={scrubberLabel}
+        labelElevated
+      />
+    </LineChart>
+  );
+}
+```
+
+### Asset Price Widget
+
+```jsx live
+function AssetPriceWidget() {
+  const { isPhone } = useBreakpoints();
+  const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
+  const latestPrice = prices[prices.length - 1];
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  };
+
+  const formatPercentChange = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'percent',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  };
+
+  const percentChange = (latestPrice - prices[0]) / prices[0];
+
+  const chartAccessibilityLabel = `Bitcoin price chart. Current price: ${formatPrice(latestPrice)}. Change: ${formatPercentChange(percentChange)}`;
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      return `Bitcoin price at position ${index + 1}: ${formatPrice(prices[index])}`;
+    },
+    [prices],
+  );
+
+  return (
+    <VStack
+      borderRadius={300}
+      gap={2}
+      overflow="hidden"
+      padding={2}
+      paddingBottom={0}
+      style={{
+        background:
+          'linear-gradient(0deg, rgba(0, 0, 0, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), #ED702F',
+      }}
+    >
+      <HStack alignItems="center" gap={2}>
+        <RemoteImage aria-hidden shape="circle" size="xxl" source={assets.btc.imageUrl} />
+        {!isPhone && (
+          <VStack flexGrow={1} gap={0.25}>
+            <Text aria-hidden font="title1" style={{ color: 'white' }}>
+              BTC
+            </Text>
+            <Text color="fgMuted" font="label1">
+              Bitcoin
+            </Text>
+          </VStack>
+        )}
+        <VStack alignItems="flex-end" flexGrow={isPhone ? 1 : undefined} gap={0.25}>
+          <Text font="title1" style={{ color: 'white' }}>
+            {formatPrice(latestPrice)}
+          </Text>
+          <Text
+            accessibilityLabel={`Up ${formatPercentChange(percentChange)}`}
+            color="fgPositive"
+            font="label1"
+          >
+            +{formatPercentChange(percentChange)}
+          </Text>
+        </VStack>
+      </HStack>
+      <Box marginX={-2}>
+        <LineChart
+          showArea
+          accessibilityLabel={chartAccessibilityLabel}
+          height={92}
+          inset={{ left: 0, right: 18, bottom: 0, top: 0 }}
+          series={[
+            {
+              id: 'btcPrice',
+              data: prices,
+              color: assets.btc.color,
+            },
+          ]}
+          width="100%"
+        >
+          <Scrubber
+            idlePulse
+            accessibilityLabel={scrubberAccessibilityLabel}
+            styles={{ beacon: { stroke: 'white' } }}
+          />
+        </LineChart>
+      </Box>
+    </VStack>
+  );
+}
+```
+
+### Service Availability
+
+You can have irregular data points by passing in `data` to `xAxis`.
+
+```jsx live
+function ServiceAvailability() {
+  const availabilityEvents = useMemo(
+    () => [
+      { date: new Date('2022-01-01'), availability: 79 },
+      { date: new Date('2022-01-03'), availability: 81 },
+      { date: new Date('2022-01-04'), availability: 82 },
+      { date: new Date('2022-01-06'), availability: 91 },
+      { date: new Date('2022-01-07'), availability: 92 },
+      { date: new Date('2022-01-10'), availability: 86 },
+    ],
+    [],
+  );
+
+  const chartAccessibilityLabel = `Availability chart showing ${availabilityEvents.length} data points over time`;
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      const event = availabilityEvents[index];
+      const formattedDate = event.date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+      const status =
+        event.availability >= 90 ? 'Good' : event.availability >= 85 ? 'Warning' : 'Critical';
+      return `${formattedDate}: Availability ${event.availability}% - Status: ${status}`;
+    },
+    [availabilityEvents],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'availability',
+          data: availabilityEvents.map((event) => event.availability),
+          gradient: {
+            stops: ({ min, max }) => [
+              { offset: min, color: 'var(--color-fgNegative)' },
+              { offset: 85, color: 'var(--color-fgNegative)' },
+              { offset: 85, color: 'var(--color-fgWarning)' },
+              { offset: 90, color: 'var(--color-fgWarning)' },
+              { offset: 90, color: 'var(--color-fgPositive)' },
+              { offset: max, color: 'var(--color-fgPositive)' },
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        data: availabilityEvents.map((event) => event.date.getTime()),
+      }}
+      yAxis={{
+        domain: ({ min, max }) => ({ min: Math.max(min - 2, 0), max: Math.min(max + 2, 100) }),
+      }}
+    >
+      <XAxis
+        showGrid
+        showLine
+        showTickMarks
+        tickLabelFormatter={(value) => new Date(value).toLocaleDateString()}
+      />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        position="left"
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <Line
+        curve="stepAfter"
+        points={(props) => ({
+          ...props,
+          fill: 'var(--color-bg)',
+          stroke: props.fill,
+        })}
+        seriesId="availability"
+      />
+      <Scrubber hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
+    </CartesianChart>
+  );
+}
+```
+
+### Forecast Asset Price
+
+You can combine multiple lines within a series to change styles dynamically.
+
+```jsx live
+function ForecastAssetPrice() {
+  const startYear = 2020;
+  const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
+  const currentIndex = 6;
+
+  const strokeWidth = 3;
+  // To prevent cutting off the edge of our lines
+  const clipOffset = strokeWidth;
+
+  const axisFormatter = useCallback(
+    (dataIndex) => {
+      return startYear + dataIndex;
+    },
+    [startYear],
+  );
+
+  const HistoricalLineComponent = memo((props) => {
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+
+    if (!xScale || !drawingArea) return;
+
+    const currentX = xScale(currentIndex);
+
+    if (currentX === undefined) return;
+
+    return (
+      <>
+        <defs>
+          <clipPath id="historical-clip">
+            <rect
+              height={drawingArea.height + clipOffset * 2}
+              width={currentX + clipOffset - drawingArea.x}
+              x={drawingArea.x - clipOffset}
+              y={drawingArea.y - clipOffset}
+            />
+          </clipPath>
+        </defs>
+        <g clipPath="url(#historical-clip)">
+          <SolidLine strokeWidth={strokeWidth} {...props} />
+        </g>
+      </>
+    );
+  });
+
+  // Since the solid and dotted line have different curves,
+  // we need two separate line components. Otherwise we could
+  // have one line component with SolidLine and DottedLine inside
+  // of it and two clipPaths.
+  const ForecastLineComponent = memo((props) => {
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+
+    if (!xScale || !drawingArea) return;
+
+    const currentX = xScale(currentIndex);
+
+    if (currentX === undefined) return;
+
+    return (
+      <>
+        <defs>
+          <clipPath id="forecast-clip">
+            <rect
+              height={drawingArea.height + clipOffset * 2}
+              width={drawingArea.x + drawingArea.width - currentX + clipOffset * 2}
+              x={currentX}
+              y={drawingArea.y - clipOffset}
+            />
+          </clipPath>
+        </defs>
+        <g clipPath="url(#forecast-clip)">
+          <DottedLine
+            strokeDasharray={`0 ${strokeWidth * 2}`}
+            strokeWidth={strokeWidth}
+            {...props}
+          />
+        </g>
+      </>
+    );
+  });
+
+  const CustomScrubber = memo(() => {
+    const { scrubberPosition } = useScrubberContext();
+    const isScrubbing = scrubberPosition !== undefined;
+    // We need a fade in animation for the Scrubber
+    return (
+      <m.g
+        animate={{ opacity: 1 }}
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.15, delay: 0.35 }}
+      >
+        <g style={{ opacity: isScrubbing ? 1 : 0 }}>
+          <Scrubber hideOverlay />
+        </g>
+        <g style={{ opacity: isScrubbing ? 0 : 1 }}>
+          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
+        </g>
+      </m.g>
+    );
+  });
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      maxWidth={512}
+      series={[{ id: 'price', data, color: assets.btc.color }]}
+      style={{ margin: '0 auto' }}
+    >
+      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
+      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
+      <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
+      <CustomScrubber />
+    </CartesianChart>
+  );
+}
+```

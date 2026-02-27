@@ -16,6 +16,17 @@ All notable changes to this project will be documented in this file.
 
 #### 📘 Misc
 
+- Clarify framer-motion is a peerDependency. [[#437](https://github.com/coinbase/cds/pull/437)]
+- Update oudated doc links. [[#440](https://github.com/coinbase/cds/pull/440)]
+
+## 3.4.0-beta.19 (2/20/2026 PST)
+
+#### 🚀 Updates
+
+- Support custom enter transitions [[#400](https://github.com/coinbase/cds/pull/400/)]
+
+#### 📘 Misc
+
 - Update jsdocs for styles props. [[#384](https://github.com/coinbase/cds/pull/384)]
 
 ## 3.4.0-beta.18 (2/8/2026 PST)

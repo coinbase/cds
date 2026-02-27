@@ -91,7 +91,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
 
     if (xScale && !isCategoricalScale(xScale)) {
       throw new Error(
-        'BarStackGroup requires a band scale for x-axis. See https://cds.coinbase.com/components/graphs/XAxis/#scale-type',
+        'BarStackGroup requires a band scale for x-axis. See https://cds.coinbase.com/components/charts/XAxis/#scale-type',
       );
     }
 

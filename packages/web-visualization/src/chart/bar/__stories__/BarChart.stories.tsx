@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useId, useMemo, useState } from 'react';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
@@ -490,6 +491,37 @@ const MonthlySunlight = () => {
   );
 };
 
+const PriceRange = () => {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data: [number, number][] = candles.map((candle) => [
+    parseFloat(candle.low),
+    parseFloat(candle.high),
+  ]);
+
+  const min = Math.min(...data.map(([low]) => low));
+  const max = Math.max(...data.map(([, high]) => high));
+
+  const tickFormatter = React.useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      showYAxis
+      height={250}
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+    />
+  );
+};
+
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -865,6 +897,9 @@ export const All = () => {
       </Example>
       <Example title="Monthly Sunlight">
         <MonthlySunlight />
+      </Example>
+      <Example title="Price Range">
+        <PriceRange />
       </Example>
     </VStack>
   );

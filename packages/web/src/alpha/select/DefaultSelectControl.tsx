@@ -30,6 +30,15 @@ const noFocusOutlineCss = css`
   }
 `;
 
+const selectedOptionChipContentCss = css`
+  min-width: 0;
+
+  & > :not(:last-child) {
+    min-width: 0;
+    max-width: 100%;
+  }
+`;
+
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
   positive: 'fgPositive',
@@ -287,12 +296,15 @@ const DefaultSelectControlComponent = memo(
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
+                    classNames={{ content: selectedOptionChipContentCss }}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
                     onClick={(event) => handleUnselectValue(event, index)}
                   >
-                    {option.label ?? option.description ?? option.value ?? ''}
+                    <Text color="fg" flexShrink={1} font="label1" overflow="truncate">
+                      {option.label ?? option.description ?? option.value ?? ''}
+                    </Text>
                   </InputChip>
                 );
               })}

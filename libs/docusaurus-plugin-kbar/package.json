@@ -29,9 +29,9 @@
   ],
   "dependencies": {
     "@coinbase/cds-common": "workspace:^",
-    "@docusaurus/logger": "^3.7.0",
-    "@docusaurus/plugin-content-docs": "^3.7.0",
-    "@docusaurus/types": "^3.7.0",
+    "@docusaurus/logger": "~3.7.0",
+    "@docusaurus/plugin-content-docs": "~3.7.0",
+    "@docusaurus/types": "~3.7.0",
     "kbar": "^0.1.0-beta.45",
     "lodash": "^4.17.21",
     "type-fest": "^2.19.0"
