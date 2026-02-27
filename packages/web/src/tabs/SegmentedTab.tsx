@@ -2,7 +2,6 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
@@ -14,8 +13,6 @@ import { Text } from '../typography/Text';
 import { tabsTransitionConfig } from './Tabs';
 
 const MotionBox = motion(Box);
-
-const contentsStyle = { display: 'contents' } as const;
 
 const insetFocusRingCss = css`
   &:focus {
