@@ -191,7 +191,7 @@ export const Alert = memo(
               </Box>
               <Box
                 flexDirection={actionFlexDirection}
-                gap={2}
+                gap={1}
                 paddingX={3}
                 paddingY={2}
                 testID={testID && `${testID}-actions`}

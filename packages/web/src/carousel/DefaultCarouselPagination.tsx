@@ -28,12 +28,6 @@ const defaultPaginationCss = css`
   padding: ${INDICATOR_HEIGHT}px 0;
 `;
 
-const pillCss = css`
-  width: ${INDICATOR_ACTIVE_WIDTH}px;
-  height: ${INDICATOR_HEIGHT}px;
-  border-radius: var(--borderRadius-100);
-`;
-
 const dotCss = css`
   height: ${INDICATOR_HEIGHT}px;
   border-radius: var(--borderRadius-100);
@@ -73,21 +67,6 @@ export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps &
 type PaginationIndicatorProps = PressableProps<'button'> & {
   isActive?: boolean;
 };
-
-const PaginationPill = memo(function PaginationPill({
-  isActive,
-  ...props
-}: PaginationIndicatorProps) {
-  return (
-    <Pressable
-      aria-current={isActive ? 'true' : undefined}
-      background={isActive ? 'bgPrimary' : 'bgLine'}
-      borderColor="transparent"
-      data-active={isActive}
-      {...props}
-    />
-  );
-});
 
 const PaginationDot = memo(function PaginationDot({
   isActive,
@@ -180,10 +159,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   style,
   styles,
   testID = 'carousel-pagination',
-  variant = 'pill',
 }: DefaultCarouselPaginationProps) {
-  const isDot = variant === 'dot';
-
   const getAccessibilityLabel = useCallback(
     (index: number) =>
       typeof paginationAccessibilityLabel === 'function'
@@ -200,39 +176,27 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
       style={{ ...style, ...styles?.root }}
     >
       {totalPages > 0 ? (
-        Array.from({ length: totalPages }, (_, index) =>
-          isDot ? (
-            <PaginationDot
-              key={index}
-              accessibilityLabel={getAccessibilityLabel(index)}
-              className={classNames?.dot}
-              isActive={index === activePageIndex}
-              onClick={() => onClickPage?.(index)}
-              style={styles?.dot}
-              testID={`${testID}-${index}`}
-            />
-          ) : (
-            <PaginationPill
-              key={index}
-              accessibilityLabel={getAccessibilityLabel(index)}
-              className={cx(pillCss, classNames?.dot)}
-              isActive={index === activePageIndex}
-              onClick={() => onClickPage?.(index)}
-              style={styles?.dot}
-              testID={`${testID}-${index}`}
-            />
-          ),
-        )
+        Array.from({ length: totalPages }, (_, index) => (
+          <PaginationDot
+            key={index}
+            accessibilityLabel={getAccessibilityLabel(index)}
+            className={classNames?.dot}
+            isActive={index === activePageIndex}
+            onClick={() => onClickPage?.(index)}
+            style={styles?.dot}
+            testID={`${testID}-${index}`}
+          />
+        ))
       ) : (
         <Pressable
           disabled
           aria-hidden="true"
           background="bgLine"
           borderColor="transparent"
-          className={cx(isDot ? dotCss : pillCss, classNames?.dot)}
+          className={cx(dotCss, classNames?.dot)}
           style={{
             opacity: 0,
-            width: isDot ? INDICATOR_INACTIVE_WIDTH : undefined,
+            width: INDICATOR_INACTIVE_WIDTH,
             ...styles?.dot,
           }}
         />

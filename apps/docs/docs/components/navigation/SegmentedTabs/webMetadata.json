@@ -14,5 +14,10 @@
       "url": "/components/navigation/TabNavigation/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
 }

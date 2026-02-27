@@ -3,11 +3,11 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, Series, Transition } from '../utils';
+import type { ChartScaleFunction, Series } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
-import { Bar, type BarComponent, type BarProps } from './Bar';
+import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
@@ -23,7 +23,7 @@ export type BarSeries = Series & {
 };
 
 export type BarStackBaseProps = Pick<
-  BarProps,
+  BarBaseProps,
   'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
 > & {
   /**
@@ -79,16 +79,11 @@ export type BarStackBaseProps = Pick<
   stackMinSize?: number;
 };
 
-export type BarStackProps = BarStackBaseProps & {
-  /**
-   * Transition configurations for different animation phases.
-   */
-  transition?: Transition;
-};
+export type BarStackProps = BarStackBaseProps & Pick<BarProps, 'transitions' | 'transition'>;
 
 export type BarStackComponentProps = Pick<
   BarStackProps,
-  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transition'
+  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transitions' | 'transition'
 > & {
   /**
    * The y position of the stack.
@@ -140,6 +135,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transitions,
     transition,
   }) => {
     const theme = useTheme();
@@ -692,6 +688,7 @@ export const BarStack = memo<BarStackProps>(
         stroke={defaultStroke}
         strokeWidth={defaultStrokeWidth}
         transition={transition}
+        transitions={transitions}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -711,6 +708,7 @@ export const BarStack = memo<BarStackProps>(
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}
+        transitions={transitions}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

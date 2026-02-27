@@ -9,5 +9,10 @@
       "url": "/components/navigation/Coachmark/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-dom",
+      "version": "^18.0.0 || ~19.1.2"
+    }
+  ]
 }

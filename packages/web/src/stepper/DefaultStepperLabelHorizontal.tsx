@@ -1,14 +1,14 @@
 import { memo, useMemo } from 'react';
 import useMeasure from 'react-use-measure';
-import { animated, useSpring } from '@react-spring/web';
+import { m as motion } from 'framer-motion';
 
 import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';
 
-import type { StepperLabelComponent } from './Stepper';
+import { defaultProgressTimingConfig, type StepperLabelComponent } from './Stepper';
 
-const AnimatedBox = animated(Box);
+const MotionBox = motion(Box);
 
 const displayStyle = {
   phone: 'none',
@@ -30,6 +30,7 @@ export const DefaultStepperLabelHorizontal: StepperLabelComponent = memo(
     className,
     style,
     completedStepAccessibilityLabel,
+    progressTimingConfig = defaultProgressTimingConfig,
     setActiveStepLabelElement,
     defaultColor = 'fgMuted',
     activeColor = 'fg',
@@ -45,18 +46,13 @@ export const DefaultStepperLabelHorizontal: StepperLabelComponent = memo(
     fontWeight = font,
     lineHeight = font,
     textTransform,
+    disableAnimateOnMount,
     ...props
   }) {
     const isStepGroupActive = active || isDescendentActive;
+    const showPagination = isStepGroupActive && !complete && !visited;
 
     const [paginationRef, { width: paginationWidth }] = useMeasure();
-    const paginationSpring = useSpring({
-      opacity: isStepGroupActive && !complete && !visited ? 1 : 0,
-    });
-    const labelSpring = useSpring({
-      left: isStepGroupActive && !complete && !visited ? paginationWidth : 0,
-    });
-
     const flatStepIndex = flatStepIds.indexOf(step.id);
 
     const fontProps = useMemo(
@@ -127,17 +123,23 @@ export const DefaultStepperLabelHorizontal: StepperLabelComponent = memo(
         width={width}
         {...props}
       >
-        <AnimatedBox ref={paginationRef} paddingEnd={1} style={paginationSpring}>
+        <MotionBox
+          ref={paginationRef}
+          animate={{ opacity: showPagination ? 1 : 0 }}
+          paddingEnd={1}
+          transition={progressTimingConfig}
+        >
           {paginationText}
-        </AnimatedBox>
-        <AnimatedBox
+        </MotionBox>
+        <MotionBox
+          animate={{ left: showPagination ? paginationWidth : 0 }}
           maxWidth={`calc(100% - ${paginationWidth}px)`}
           position="absolute"
-          style={labelSpring}
+          transition={progressTimingConfig}
           width="100%"
         >
           {labelElement}
-        </AnimatedBox>
+        </MotionBox>
       </HStack>
     );
   },

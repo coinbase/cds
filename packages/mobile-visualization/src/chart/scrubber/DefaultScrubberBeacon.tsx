@@ -16,7 +16,13 @@ import { Circle, Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { unwrapAnimatedValue } from '../utils';
 import { projectPointWithSerializableScale } from '../utils/point';
-import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  instantTransition,
+  type Transition,
+} from '../utils/transition';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
@@ -85,8 +91,8 @@ export const DefaultScrubberBeacon = memo(
       );
 
       const updateTransition = useMemo(
-        () => transitions?.update ?? defaultTransition,
-        [transitions?.update],
+        () => getTransition(transitions?.update, animate, defaultTransition),
+        [transitions?.update, animate],
       );
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,

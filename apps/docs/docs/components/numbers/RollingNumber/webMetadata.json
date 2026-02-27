@@ -5,5 +5,10 @@
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-rollingnumber--examples",
   "figma": "",
   "relatedComponents": [],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
 }

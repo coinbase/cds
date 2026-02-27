@@ -240,7 +240,7 @@ const TourComponent = <TourStepId extends string = string>({
     [animationApi, onChange],
   );
 
-  const api = useTour<TourStepId>({ steps, activeTourStep, onChange: handleChange });
+  const api = useTour<TourStepId, HTMLElement>({ steps, activeTourStep, onChange: handleChange });
   const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
@@ -321,9 +321,7 @@ const TourComponent = <TourStepId extends string = string>({
                   {...({ style: animation } as React.ComponentProps<typeof animated.div>)}
                 >
                   <TourMaskComponent
-                    activeTourStepTargetRect={(
-                      activeTourStepTarget as HTMLElement
-                    ).getBoundingClientRect()}
+                    activeTourStepTargetRect={activeTourStepTarget.getBoundingClientRect()}
                     borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                     padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                   />

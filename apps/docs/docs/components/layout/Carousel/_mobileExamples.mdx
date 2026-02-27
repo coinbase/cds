@@ -31,7 +31,6 @@ function MyCarousel() {
   return (
     <Carousel
       loop
-      paginationVariant="dot"
       title="Explore Assets"
       styles={{
         root: { paddingHorizontal: theme.space[2] },
@@ -90,7 +89,6 @@ function DynamicSizingCarousel() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="Learn more"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -171,7 +169,6 @@ function ResponsiveSizingCarousel() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="Learn more"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -246,7 +243,6 @@ function VariedSizingCarousel() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="Varied Sizing"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -326,7 +322,6 @@ function DragCarousel() {
   return (
     <Carousel
       title="Explore Assets"
-      paginationVariant="dot"
       drag="free"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -363,7 +358,6 @@ function SquareItemsCarousel() {
   return (
     <Carousel
       title="Explore Assets"
-      paginationVariant="dot"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -408,7 +402,6 @@ function OverflowCarousel() {
   return (
     <Carousel
       title="Explore Assets"
-      paginationVariant="dot"
       snapMode="item"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -433,7 +426,7 @@ function OverflowCarousel() {
 
 Use `autoplay` to allow for automatic page advancement. The default interval is 3 seconds but can be changed with `autoplayInterval`.
 
-It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
+It is recommended to use pagination with autoplay so users know how many pages there are.
 
 ```jsx
 function AutoplayCarousel() {
@@ -445,7 +438,6 @@ function AutoplayCarousel() {
     <Carousel
       autoplay
       loop
-      paginationVariant="dot"
       title="Trending Assets"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -477,7 +469,6 @@ function CustomIntervalCarousel() {
       autoplay
       autoplayInterval={5000}
       loop
-      paginationVariant="dot"
       title="5 Second Interval"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -512,7 +503,6 @@ function LoopingCarousel() {
     <Carousel
       autoplay
       loop
-      paginationVariant="dot"
       snapMode="item"
       title="Infinite Scroll"
       styles={{
@@ -543,7 +533,7 @@ You need to use `accessibilityLabel` or `accessibilityLabelledBy` props to provi
 Similar to web, you are provided the `isVisible` render prop, however it is not necessary to use since mobile users do not have a keyboard.
 
 ```jsx
-<Carousel paginationVariant="dot">
+<Carousel>
   <CarouselItem id="btc" accessibilityLabel="Bitcoin">
     <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
   </CarouselItem>
@@ -779,7 +769,6 @@ You can use the `styles` props to customize different parts of the carousel.
 function CustomStylesCarousel() {
   return (
     <Carousel
-      paginationVariant="dot"
       styles={{
         root: { paddingInline: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -1080,7 +1069,6 @@ function DynamicContentCarousel() {
       </HStack>
       <Carousel
         title="Explore Assets"
-        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: horizontalPadding },
           carousel: { gap: horizontalGap, height: 156 },

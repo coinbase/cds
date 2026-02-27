@@ -1,12 +1,11 @@
-import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
+import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { containsStep, flattenSteps, isStepVisited } from '@coinbase/cds-common/stepper/utils';
 import type { IconName } from '@coinbase/cds-common/types';
-import { type SpringConfig, type SpringValue, useSprings } from '@react-spring/web';
+import type { Transition } from 'framer-motion';
 
 import { cx } from '../cx';
-import { useHasMounted } from '../hooks/useHasMounted';
 import type { IconProps } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { VStack, type VStackBaseProps, type VStackProps } from '../layout/VStack';
@@ -73,13 +72,13 @@ export type StepperStepProps<Metadata extends Record<string, unknown> = Record<s
   StepperSubcomponentProps<Metadata> &
     BoxProps<BoxDefaultElement> & {
       /**
-       * An animated SpringValue between 0 and 1.
-       * You can use this to animate your own custom Progress subcomponent.
+       * A value between 0 and 1 representing the step's progress.
+       * Progress bar subcomponents animate to this value with the given progressTimingConfig.
        */
-      progress: SpringValue<number>;
+      progress: number;
       activeStepLabelElement: HTMLElement | null;
       setActiveStepLabelElement: (element: HTMLElement) => void;
-      progressSpringConfig?: SpringConfig;
+      progressTimingConfig?: Transition;
       animate?: boolean;
       disableAnimateOnMount?: boolean;
       completedStepAccessibilityLabel?: string;
@@ -118,6 +117,7 @@ export type StepperHeaderProps<Metadata extends Record<string, unknown> = Record
     activeStep: StepperValue<Metadata> | null;
     flatStepIds: string[];
     complete?: boolean;
+    disableAnimateOnMount?: boolean;
     className?: string;
     style?: React.CSSProperties;
   };
@@ -126,21 +126,23 @@ export type StepperLabelProps<Metadata extends Record<string, unknown> = Record<
   StepperSubcomponentProps<Metadata> &
     BoxProps<BoxDefaultElement> & {
       setActiveStepLabelElement: (element: HTMLElement) => void;
+      progressTimingConfig?: Transition;
       defaultColor?: ResponsiveProp<ThemeVars.Color>;
       activeColor?: ResponsiveProp<ThemeVars.Color>;
       descendentActiveColor?: ResponsiveProp<ThemeVars.Color>;
       visitedColor?: ResponsiveProp<ThemeVars.Color>;
       completeColor?: ResponsiveProp<ThemeVars.Color>;
       completedStepAccessibilityLabel?: string;
+      disableAnimateOnMount?: boolean;
     };
 
 export type StepperProgressProps<
   Metadata extends Record<string, unknown> = Record<string, unknown>,
 > = StepperSubcomponentProps<Metadata> &
   BoxProps<BoxDefaultElement> & {
-    progress: SpringValue<number>;
+    progress: number;
     activeStepLabelElement: HTMLElement | null;
-    progressSpringConfig?: SpringConfig;
+    progressTimingConfig?: Transition;
     animate?: boolean;
     disableAnimateOnMount?: boolean;
     defaultFill?: ResponsiveProp<ThemeVars.Color>;
@@ -224,9 +226,9 @@ export type StepperBaseProps<Metadata extends Record<string, unknown> = Record<s
     StepperIconComponent?: StepperIconComponent<Metadata> | null;
     /** An optional component to render in place of the default Header subcomponent. Set to null to render nothing in this slot. */
     StepperHeaderComponent?: StepperHeaderComponent<Metadata> | null;
-    /** The spring config to use for the progress spring. */
-    progressSpringConfig?: SpringConfig;
-    /** Whether to animate the progress spring.
+    /** The Framer Motion transition config for progress bar animations (e.g. duration in seconds, ease). */
+    progressTimingConfig?: Transition;
+    /** Whether to animate the progress bar.
      * @default true
      */
     animate?: boolean;
@@ -236,6 +238,8 @@ export type StepperBaseProps<Metadata extends Record<string, unknown> = Record<s
 
 export const stepperDefaultElement = 'div';
 export type StepperDefaultElement = typeof stepperDefaultElement;
+
+const cascadeStaggerMs = durations.moderate2;
 
 export type StepperProps<Metadata extends Record<string, unknown> = Record<string, unknown>> =
   VStackProps<StepperDefaultElement> &
@@ -282,7 +286,12 @@ export const horizontalStepGap = {
   desktop: 1,
 } as const;
 
-export const defaultProgressSpringConfig = { friction: 0, tension: 100, clamp: true };
+/** Default progress transition: tween with CDS duration (seconds) and global curve. */
+export const defaultProgressTimingConfig: Transition = {
+  type: 'tween',
+  duration: durations.slow2 / 1000,
+  ease: curves.global,
+};
 
 type StepperComponent = <Metadata extends Record<string, unknown> = Record<string, unknown>>(
   props: StepperProps<Metadata> & { ref?: React.Ref<HTMLDivElement> },
@@ -321,14 +330,13 @@ const StepperBase = memo(
         StepperHeaderComponent = direction === 'vertical'
           ? null
           : (DefaultStepperHeaderHorizontal as StepperHeaderComponent<Metadata>),
-        progressSpringConfig = defaultProgressSpringConfig,
+        progressTimingConfig = defaultProgressTimingConfig,
         animate = true,
         disableAnimateOnMount,
         ...props
       }: StepperProps<Metadata>,
       ref: React.Ref<HTMLDivElement>,
     ) => {
-      const hasMounted = useHasMounted();
       const flatStepIds = useMemo(() => flattenSteps(steps).map((step) => step.id), [steps]);
 
       // Derive activeStep from activeStepId
@@ -362,92 +370,68 @@ const StepperBase = memo(
           : -1;
       }, [activeStepId, steps]);
 
-      const previousComplete = usePreviousValue(complete) ?? false;
-      const previousActiveStepIndex = usePreviousValue(activeStepIndex) ?? -1;
+      // the target step index for the cascade animation
+      const cascadeTargetIndex = useMemo(
+        () => (complete ? steps.length - 1 : activeStepIndex),
+        [complete, steps, activeStepIndex],
+      );
+      // reference to the previous cascade targetIndex
+      const cascadeTargetIndexRef = useRef(cascadeTargetIndex);
+      // the index of the last filled step
+      const [filledStepIndex, setFilledStepIndex] = useState(
+        disableAnimateOnMount ? cascadeTargetIndex : -1,
+      );
 
-      const [progressSprings, progressSpringsApi] = useSprings(steps.length, (index) => ({
-        progress: complete ? 1 : 0,
-        config: progressSpringConfig,
-        immediate: !animate || (disableAnimateOnMount && !hasMounted),
-      }));
+      const filledStepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
       useEffect(() => {
-        // update the previous values for next render
-        let stepsToAnimate: number[] = [];
-        let isAnimatingForward = false;
-
-        // Case when going from not-complete to complete
-        if (Boolean(complete) !== previousComplete) {
-          if (complete) {
-            // Going to complete: animate remaining steps to filled.
-            // Use previousActiveStepIndex to determine which steps are already filled before the completion state update,
-            const lastFilledIndex = Math.max(activeStepIndex, previousActiveStepIndex);
-            stepsToAnimate = Array.from(
-              { length: steps.length - lastFilledIndex - 1 },
-              (_, i) => lastFilledIndex + 1 + i,
-            );
-            isAnimatingForward = true;
+        if (filledStepTimeoutRef.current) {
+          clearTimeout(filledStepTimeoutRef.current);
+          filledStepTimeoutRef.current = null;
+        }
+        if (!animate) {
+          if (filledStepIndex !== cascadeTargetIndex) setFilledStepIndex(cascadeTargetIndex);
+        } else if (cascadeTargetIndex < filledStepIndex) {
+          if (cascadeTargetIndexRef.current !== cascadeTargetIndex) {
+            setFilledStepIndex((prev) => prev - 1);
+            cascadeTargetIndexRef.current = cascadeTargetIndex;
           } else {
-            // Going from complete: animate from end down to activeStepIndex+1
-            stepsToAnimate = Array.from(
-              { length: steps.length - activeStepIndex - 1 },
-              (_, i) => steps.length - 1 - i,
+            filledStepTimeoutRef.current = setTimeout(
+              () => setFilledStepIndex((prev) => prev - 1),
+              cascadeStaggerMs,
             );
-            isAnimatingForward = false;
+          }
+        } else if (cascadeTargetIndex > filledStepIndex) {
+          if (cascadeTargetIndexRef.current !== cascadeTargetIndex) {
+            setFilledStepIndex((prev) => prev + 1);
+            cascadeTargetIndexRef.current = cascadeTargetIndex;
+          } else {
+            filledStepTimeoutRef.current = setTimeout(
+              () => setFilledStepIndex((prev) => prev + 1),
+              cascadeStaggerMs,
+            );
           }
         }
-
-        // Case for normal step navigation (e.g. step 1 => step 2)
-        else if (activeStepIndex !== previousActiveStepIndex) {
-          if (activeStepIndex > previousActiveStepIndex) {
-            // Forward: animate from previousActiveStepIndex+1 to activeStepIndex
-            stepsToAnimate = Array.from(
-              { length: activeStepIndex - previousActiveStepIndex },
-              (_, i) => previousActiveStepIndex + 1 + i,
-            );
-            isAnimatingForward = true;
-          } else {
-            // Backward: animate from previousActiveStepIndex down to activeStepIndex+1
-            stepsToAnimate = Array.from(
-              { length: previousActiveStepIndex - activeStepIndex },
-              (_, i) => previousActiveStepIndex - i,
-            );
-            isAnimatingForward = false;
+        return () => {
+          if (filledStepTimeoutRef.current) {
+            clearTimeout(filledStepTimeoutRef.current);
+            filledStepTimeoutRef.current = null;
           }
-        }
-
-        const animateNextStep = () => {
-          if (stepsToAnimate.length === 0) return;
-          const stepIndex = stepsToAnimate.shift();
-          if (stepIndex === undefined) return;
-
-          progressSpringsApi.start((index) =>
-            index === stepIndex
-              ? {
-                  progress: isAnimatingForward ? 1 : 0,
-                  config: progressSpringConfig,
-                  onRest: animateNextStep,
-                  immediate: !animate || (disableAnimateOnMount && !hasMounted),
-                }
-              : {},
-          );
         };
+      }, [animate, cascadeTargetIndex, filledStepIndex]);
 
-        // start the animation loop for relevant springs (stepsToAnimate)
-        animateNextStep();
-      }, [
-        progressSpringsApi,
-        complete,
-        steps.length,
-        steps,
-        activeStepIndex,
-        previousActiveStepIndex,
-        previousComplete,
-        progressSpringConfig,
-        animate,
-        disableAnimateOnMount,
-        hasMounted,
-      ]);
+      const getStepProgress = useCallback(
+        (index: number) => {
+          if (!animate) {
+            // if animation is disabled, return 0 if the step index is less than the active step index, otherwise return 1
+            if (filledStepIndex < 0) return 0;
+            return index <= activeStepIndex ? 1 : 0;
+          }
+          if (filledStepIndex < 0) return 0;
+          return index <= filledStepIndex ? 1 : 0;
+        },
+        [animate, activeStepIndex, filledStepIndex],
+      );
 
       return (
         <VStack
@@ -462,6 +446,7 @@ const StepperBase = memo(
               activeStep={activeStep}
               className={classNames?.header}
               complete={complete}
+              disableAnimateOnMount={disableAnimateOnMount}
               flatStepIds={flatStepIds}
               style={styles?.header}
             />
@@ -498,8 +483,8 @@ const StepperBase = memo(
                     flatStepIds={flatStepIds}
                     isDescendentActive={isDescendentActive}
                     parentStep={null}
-                    progress={progressSprings[index].progress}
-                    progressSpringConfig={progressSpringConfig}
+                    progress={getStepProgress(index)}
+                    progressTimingConfig={progressTimingConfig}
                     setActiveStepLabelElement={setActiveStepLabelElement}
                     step={step}
                     styles={stepStyles}

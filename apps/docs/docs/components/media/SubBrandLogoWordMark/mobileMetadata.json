@@ -15,5 +15,11 @@
       "label": "LogoMark",
       "url": "/components/media/LogoMark/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "15.12.1"
+    }
   ]
 }

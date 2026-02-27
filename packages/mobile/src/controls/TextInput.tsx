@@ -346,7 +346,7 @@ export const TextInput = memo(
                   importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                   onPress={handleNodePress}
                 >
-                  <HStack paddingStart={compact ? 2 : undefined}>
+                  <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
                     {compact &&
                       (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
                     {!!start && (

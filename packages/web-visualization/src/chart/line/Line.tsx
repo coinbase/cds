@@ -1,15 +1,12 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -109,25 +106,22 @@ export type LineBaseProps = SharedProps & {
   animate?: boolean;
 };
 
-export type LineProps = LineBaseProps & {
-  /**
-   * Transition configuration for line animations.
-   */
-  transition?: Transition;
-  /**
-   * Handler for when a point is clicked.
-   * Passed through to Point components rendered via points.
-   */
-  onPointClick?: PointProps['onClick'];
-  /**
-   * Custom style for the line.
-   */
-  style?: React.CSSProperties;
-  /**
-   * Custom className for the line.
-   */
-  className?: string;
-};
+export type LineProps = LineBaseProps &
+  Pick<PathProps, 'transitions' | 'transition'> & {
+    /**
+     * Handler for when a point is clicked.
+     * Passed through to Point components rendered via points.
+     */
+    onPointClick?: PointProps['onClick'];
+    /**
+     * Custom style for the line.
+     */
+    style?: React.CSSProperties;
+    /**
+     * Custom className for the line.
+     */
+    className?: string;
+  };
 
 export type LineComponentProps = Pick<
   LineProps,
@@ -136,6 +130,7 @@ export type LineComponentProps = Pick<
   | 'strokeWidth'
   | 'gradient'
   | 'animate'
+  | 'transitions'
   | 'transition'
   | 'style'
   | 'className'
@@ -170,6 +165,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     points,
     connectNulls,
+    transitions,
     transition,
     gradient: gradientProp,
     ...props
@@ -264,6 +260,7 @@ export const Line = memo<LineProps>(
             gradient={gradient}
             seriesId={seriesId}
             transition={transition}
+            transitions={transitions}
             type={areaType}
           />
         )}
@@ -273,26 +270,12 @@ export const Line = memo<LineProps>(
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
+          transitions={transitions}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
         {points && (
-          <motion.g
-            data-component="line-points-group"
-            {...(animate
-              ? {
-                  animate: {
-                    opacity: 1,
-                    transition: {
-                      duration: accessoryFadeTransitionDuration,
-                      delay: accessoryFadeTransitionDelay,
-                    },
-                  },
-                  exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
-                  initial: { opacity: 0 },
-                }
-              : {})}
-          >
+          <g data-component="line-points-group">
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
 
@@ -333,6 +316,7 @@ export const Line = memo<LineProps>(
                     key={`${seriesId}-${index}`}
                     onClick={onPointClick}
                     transition={transition}
+                    transitions={transitions}
                     {...defaults}
                   />
                 );
@@ -350,12 +334,13 @@ export const Line = memo<LineProps>(
                   key={`${seriesId}-${index}`}
                   onClick={pointConfig.onClick ?? onPointClick}
                   transition={transition}
+                  transitions={transitions}
                   {...defaults}
                   {...pointConfig}
                 />
               );
             })}
-          </motion.g>
+          </g>
         )}
       </>
     );

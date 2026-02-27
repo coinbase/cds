@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { View } from 'react-native';
 import {
   useAnimatedReaction,
@@ -9,7 +9,6 @@ import {
 } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
-import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
@@ -32,8 +31,6 @@ import {
   Circle,
   FontWeight,
   Group,
-  Line as SkiaLine,
-  Rect,
   Skia,
   type SkTextStyle,
   TextAlign,
@@ -41,7 +38,6 @@ import {
 
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
-import { type BarComponentProps, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
@@ -57,7 +53,6 @@ import {
   buildTransition,
   defaultTransition,
   getLineData,
-  getPointOnSerializableScale,
   projectPointWithSerializableScale,
   type Transition,
   unwrapAnimatedValue,
@@ -68,7 +63,6 @@ import {
   type DottedLineProps,
   Line,
   LineChart,
-  type LineComponentProps,
   ReferenceLine,
   SolidLine,
   type SolidLineProps,
@@ -1327,215 +1321,6 @@ function Performance() {
   );
 }
 
-const candlestickStockData = btcCandles.slice(0, 90).reverse();
-
-const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
-  const formatPrice = useCallback((price: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(parseFloat(price));
-  }, []);
-
-  const formatThousandsPriceNumber = useCallback((price: number) => {
-    const formattedPrice = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price / 1000);
-
-    return `${formattedPrice}k`;
-  }, []);
-
-  const currentText = useMemo(() => {
-    if (currentIndex !== undefined) {
-      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
-        parseFloat(candlestickStockData[currentIndex].close),
-      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
-    }
-    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
-  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
-
-  return (
-    <Text aria-live="polite" font="headline">
-      {currentText}
-    </Text>
-  );
-});
-
-const CandlesticksChart = memo(
-  ({
-    infoTextId,
-    onScrubberPositionChange,
-  }: {
-    infoTextId: string;
-    onScrubberPositionChange: (index: number | undefined) => void;
-  }) => {
-    const theme = useTheme();
-    const min = useMemo(
-      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
-      [],
-    );
-
-    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-    // Custom line component that renders a rect to highlight the entire bandwidth
-    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
-      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-
-      const rectWidth = useMemo(() => {
-        if (xScale !== undefined && xScale.type === 'band') {
-          return xScale.bandwidth;
-        }
-        return 0;
-      }, [xScale]);
-
-      const xPos = useDerivedValue(() => {
-        const position = unwrapAnimatedValue(scrubberPosition);
-        const xPos =
-          position !== undefined && xScale
-            ? getPointOnSerializableScale(position, xScale)
-            : undefined;
-        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
-      }, [scrubberPosition, xScale]);
-
-      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
-
-      return (
-        <Rect
-          color={stroke}
-          height={drawingArea.height}
-          opacity={opacity}
-          width={rectWidth}
-          x={xPos}
-          y={drawingArea.y}
-        />
-      );
-    });
-
-    const candlesData = useMemo(
-      () =>
-        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
-          number,
-          number,
-        ][],
-      [],
-    );
-
-    const CandlestickBarComponent = memo<BarComponentProps>(
-      ({ x, y, width, height, originY, dataX, ...props }) => {
-        const { getYScale } = useCartesianChartContext();
-        const yScale = getYScale();
-
-        const wickX = x + width / 2;
-
-        const timePeriodValue = candlestickStockData[dataX as number];
-
-        const open = parseFloat(timePeriodValue.open);
-        const close = parseFloat(timePeriodValue.close);
-
-        const bullish = open < close;
-        const theme = useTheme();
-        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
-        const openY = yScale?.(open) ?? 0;
-        const closeY = yScale?.(close) ?? 0;
-
-        const bodyHeight = Math.abs(openY - closeY);
-        const bodyY = openY < closeY ? openY : closeY;
-
-        return (
-          <>
-            <SkiaLine
-              color={color}
-              p1={{ x: wickX, y }}
-              p2={{ x: wickX, y: y + height }}
-              strokeWidth={1}
-            />
-            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-          </>
-        );
-      },
-    );
-
-    const formatThousandsPriceNumber = useCallback((price: number) => {
-      const formattedPrice = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(price / 1000);
-
-      return `${formattedPrice}k`;
-    }, []);
-
-    const formatTime = useCallback((index: number | null) => {
-      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
-      const ts = parseInt(candlestickStockData[index].start);
-      return new Date(ts * 1000).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      });
-    }, []);
-
-    return (
-      <CartesianChart
-        enableScrubbing
-        animate={false}
-        aria-labelledby={infoTextId}
-        borderRadius={0}
-        height={150}
-        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
-        series={[
-          {
-            id: 'stock-prices',
-            data: candlesData,
-          },
-        ]}
-        xAxis={{
-          scaleType: 'band',
-        }}
-        yAxis={{
-          domain: { min },
-        }}
-      >
-        <XAxis tickLabelFormatter={formatTime} />
-        <YAxis
-          showGrid
-          GridLineComponent={ThinSolidLine}
-          tickLabelFormatter={formatThousandsPriceNumber}
-          width={40}
-        />
-        <Scrubber
-          hideOverlay
-          LineComponent={BandwidthHighlight}
-          lineStroke={theme.color.fgMuted}
-          seriesIds={[]}
-        />
-        <BarPlot
-          BarComponent={CandlestickBarComponent}
-          BarStackComponent={({ children }) => <g>{children}</g>}
-        />
-      </CartesianChart>
-    );
-  },
-);
-
-function Candlesticks() {
-  const infoTextId = useId();
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
-
-  return (
-    <VStack gap={2}>
-      <CandlesticksHeader currentIndex={currentIndex} />
-      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
-    </VStack>
-  );
-}
-
 function MonotoneAssetPrice() {
   const theme = useTheme();
   const prices = sparklineInteractiveData.hour;
@@ -2287,10 +2072,6 @@ function ExampleNavigator() {
       {
         title: 'Performance',
         component: <Performance />,
-      },
-      {
-        title: 'Candlesticks',
-        component: <Candlesticks />,
       },
       {
         title: 'Monotone Asset Price',

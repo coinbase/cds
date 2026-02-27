@@ -8,5 +8,11 @@
       "label": "BrowserBar",
       "url": "/components/navigation/BrowserBar/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-reanimated",
+      "version": "4.1.1"
+    }
   ]
 }

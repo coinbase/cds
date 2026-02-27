@@ -17,5 +17,6 @@
       "label": "Calendar",
       "url": "/components/other/Calendar/"
     }
-  ]
+  ],
+  "dependencies": []
 }

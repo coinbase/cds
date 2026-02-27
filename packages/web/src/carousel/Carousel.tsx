@@ -160,14 +160,6 @@ export type CarouselPaginationComponentBaseProps = {
    * Accessibility label for the go to page button. You can optionally pass a function that will receive the pageIndex as an argument, and return an accessibility label string.
    */
   paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
-  /**
-   * Visual variant for the pagination indicators.
-   * - 'pill': All indicators are pill-shaped (default)
-   * - 'dot': Inactive indicators are small dots, active indicator expands to a pill
-   * @default 'pill'
-   * @note 'pill' variant is deprecated, use 'dot' instead
-   */
-  variant?: 'pill' | 'dot';
 };
 
 export type CarouselPaginationComponentProps = CarouselPaginationComponentBaseProps & {
@@ -311,14 +303,6 @@ export type CarouselBaseProps = SharedProps &
      * @default 3000 (3 seconds)
      */
     autoplayInterval?: number;
-    /**
-     * Visual variant for the pagination indicators.
-     * - 'pill': All indicators are pill-shaped (default)
-     * - 'dot': Inactive indicators are small dots, active indicator expands to a pill
-     * @default 'pill'
-     * @note 'pill' variant is deprecated, use 'dot' instead
-     */
-    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
   };
 
 export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
@@ -735,7 +719,6 @@ export const Carousel = memo(
         loop,
         autoplay,
         autoplayInterval = 3000,
-        paginationVariant,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -1323,7 +1306,12 @@ export const Carousel = memo(
                 {(title || !hideNavigation) && (
                   <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
                     {typeof title === 'string' ? (
-                      <Text className={classNames?.title} font="title3" style={styles?.title}>
+                      <Text
+                        className={classNames?.title}
+                        font="title3"
+                        numberOfLines={1}
+                        style={styles?.title}
+                      >
                         {title}
                       </Text>
                     ) : (
@@ -1421,7 +1409,6 @@ export const Carousel = memo(
                     paginationAccessibilityLabel={paginationAccessibilityLabel}
                     style={styles?.pagination}
                     totalPages={totalPages}
-                    variant={paginationVariant}
                   />
                 )}
               </CarouselAutoplayContext.Provider>

@@ -1,9 +1,9 @@
-import { memo } from 'react';
-import { animated } from '@react-spring/web';
+import { memo, useMemo } from 'react';
+import { m as motion } from 'framer-motion';
 
 import { Box } from '../layout/Box';
 
-import type { StepperProgressComponent } from './Stepper';
+import { defaultProgressTimingConfig, type StepperProgressComponent } from './Stepper';
 
 export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
   function DefaultStepperProgressHorizontal({
@@ -17,7 +17,7 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
     flatStepIds,
     complete,
     isDescendentActive,
-    progressSpringConfig,
+    progressTimingConfig,
     activeStepLabelElement,
     animate,
     disableAnimateOnMount,
@@ -34,6 +34,14 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
     height = 4,
     ...props
   }) {
+    const transition = useMemo(
+      () =>
+        animate
+          ? (progressTimingConfig ?? defaultProgressTimingConfig)
+          : { type: 'tween' as const, duration: 0 },
+      [animate, progressTimingConfig],
+    );
+
     return (
       <Box
         background={background}
@@ -65,11 +73,14 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
           overflow="hidden"
           width="100%"
         >
-          <animated.div
+          <motion.div
+            animate={{ width: `${progress * 100}%` }}
+            initial={{ width: disableAnimateOnMount ? `${progress * 100}%` : '0%' }}
             style={{
               backgroundColor: 'currentColor',
-              width: progress.to((p) => `${p * 100}%`),
+              height: '100%',
             }}
+            transition={transition}
           />
         </Box>
       </Box>

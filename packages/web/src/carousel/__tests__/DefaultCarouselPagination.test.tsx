@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { domMax, LazyMotion } from 'framer-motion';
 
 import { DefaultThemeProvider } from '../../utils/test';
 import { CarouselAutoplayContext } from '../CarouselContext';
@@ -9,17 +10,9 @@ import { DefaultCarouselPagination } from '../DefaultCarouselPagination';
 jest.mock('framer-motion', () => {
   const realFramerMotion = jest.requireActual('framer-motion');
 
-  const createMockMotionValue = (initialValue: number) => ({
-    get: jest.fn(() => initialValue),
-    set: jest.fn(),
-    on: jest.fn(() => () => {}),
-    onChange: jest.fn(() => () => {}),
-    clearListeners: jest.fn(),
-  });
-
   return {
     ...realFramerMotion,
-    motion: realFramerMotion.motion,
+    motion: realFramerMotion.m,
     useTransform: (value: { get: () => number }, transformer: (v: number) => string) => {
       const transformedValue = transformer(value.get());
       return transformedValue;
@@ -46,14 +39,16 @@ const mockAutoplayContext = {
 const renderPagination = (props: Partial<React.ComponentProps<typeof DefaultCarouselPagination>>) =>
   render(
     <DefaultThemeProvider>
-      <CarouselAutoplayContext.Provider value={mockAutoplayContext}>
-        <DefaultCarouselPagination
-          activePageIndex={0}
-          onClickPage={jest.fn()}
-          totalPages={3}
-          {...props}
-        />
-      </CarouselAutoplayContext.Provider>
+      <LazyMotion features={domMax}>
+        <CarouselAutoplayContext.Provider value={mockAutoplayContext}>
+          <DefaultCarouselPagination
+            activePageIndex={0}
+            onClickPage={jest.fn()}
+            totalPages={3}
+            {...props}
+          />
+        </CarouselAutoplayContext.Provider>
+      </LazyMotion>
     </DefaultThemeProvider>,
   );
 

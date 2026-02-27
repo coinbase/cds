@@ -25,5 +25,11 @@
       "label": "SelectChip",
       "url": "/components/inputs/SelectChip/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-reanimated",
+      "version": "4.1.1"
+    }
   ]
 }

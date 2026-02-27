@@ -40,6 +40,7 @@ export const DottedLine = memo<DottedLineProps>(
     gradient,
     yAxisId,
     animate,
+    transitions,
     transition,
     d,
     ...props
@@ -54,7 +55,7 @@ export const DottedLine = memo<DottedLineProps>(
               animate={animate}
               gradient={gradient}
               id={gradientId}
-              transition={transition}
+              transition={transitions?.update ?? transition}
               yAxisId={yAxisId}
             />
           </defs>
@@ -71,6 +72,7 @@ export const DottedLine = memo<DottedLineProps>(
           strokeOpacity={strokeOpacity}
           strokeWidth={strokeWidth}
           transition={transition}
+          transitions={transitions}
           vectorEffect={vectorEffect}
           {...props}
         />

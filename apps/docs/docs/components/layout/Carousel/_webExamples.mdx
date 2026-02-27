@@ -37,7 +37,6 @@ function MyCarousel() {
     <Box marginX={-3}>
       <Carousel
         loop
-        paginationVariant="dot"
         title="Explore Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
@@ -558,7 +557,6 @@ function SnapModeCarousel() {
       <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
-          paginationVariant="dot"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
             carousel: { gap: 'var(--space-2)' },
@@ -621,7 +619,6 @@ function OverflowCarousel() {
     <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
-        paginationVariant="dot"
         snapMode="item"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
@@ -649,7 +646,7 @@ function OverflowCarousel() {
 
 Use `autoplay` to allow for automatic page advancement. The default interval is 3 seconds but can be changed with `autoplayInterval`.
 
-It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
+It is recommended to use pagination with autoplay so users know how many pages there are.
 
 ```jsx live
 function AutoplayCarousel() {
@@ -675,7 +672,6 @@ function AutoplayCarousel() {
       <Carousel
         autoplay
         loop
-        paginationVariant="dot"
         title="Trending Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
@@ -726,7 +722,6 @@ function LoopingCarousel() {
       <Carousel
         autoplay
         loop
-        paginationVariant="dot"
         snapMode="item"
         title="Infinite Scroll"
         styles={{
@@ -760,7 +755,7 @@ Each carousel item should have proper text within the focusable element or you u
 While not recommended, if your carousel has disabled drag, you can use `isVisible` render prop to prevent users from focusing on carousel items that are not visible.
 
 ```jsx
-<Carousel paginationVariant="dot" drag="none">
+<Carousel drag="none">
   <CarouselItem id="btc" accessibilityLabel="Bitcoin">
     <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
   </CarouselItem>
@@ -1053,7 +1048,6 @@ function CustomStylesCarousel() {
   return (
     <Box marginX={-3}>
       <Carousel
-        paginationVariant="dot"
         styles={{
           root: { position: 'relative', paddingInline: 'var(--space-6)' },
           carousel: { gap: 'var(--space-6)' },
@@ -1351,7 +1345,6 @@ function DynamicContentCarousel() {
       <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
-          paginationVariant="dot"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
             carousel: { gap: 'var(--space-2)', height: '156px' },
@@ -1504,7 +1497,6 @@ function AnimatedSelectionCarousel() {
     <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
-        paginationVariant="dot"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
           carousel: { gap: 'var(--space-2)' },
@@ -1810,7 +1802,6 @@ You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to list
 
 ```tsx
 <Carousel
-  paginationVariant="dot"
   onChangePage={(pageIndex: number) => console.log('Page changed', activePageIndex)}
   onDragStart={() => console.log('Drag started')}
   onDragEnd={() => console.log('Drag ended')}

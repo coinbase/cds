@@ -12,5 +12,6 @@
       "label": "TextInput",
       "url": "/components/inputs/TextInput/"
     }
-  ]
+  ],
+  "dependencies": []
 }

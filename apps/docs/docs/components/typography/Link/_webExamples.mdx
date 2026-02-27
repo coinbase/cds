@@ -1,16 +1,74 @@
-### Default
+Link renders a pressable [Text](/components/typography/Text) element as an anchor (`<a>`) by default. It inherits parent text styles and supports the same `font` and `color` props as Text.
 
-Default Link text will inherit parent text styles.
+## Basics
+
+By default, Link inherits the text styles of its parent. Pass an `href` to set the destination URL.
 
 ```jsx live
-<Link>Default is inherited text</Link>
+<Text font="body" as="p">
+  Check out the <Link href="https://www.coinbase.com/">Coinbase homepage</Link> for more info.
+</Text>
 ```
 
-### Styling your link
+## Underline
 
-To style a `<Link />` component, simply wrap the `Link` node in the desired `Text` component, using the `as` prop for your usecase (for example, `p` for body text, `h1`/`h2`/`h3` for titles, etc). However, there may be times when a rendering a span is exactly what you want. In those cases, providing a font prop makes sense.
+Use the `underline` prop to add a text decoration underline to the link. This is particularly important for inline links within body text to meet [WCAG 2.0 accessibility requirements](https://webaim.org/standards/wcag/checklist).
 
-Wrapping your Link in the appropriate Text element
+```jsx live
+<Text font="body" as="p">
+  Read our{' '}
+  <Link underline href="https://www.coinbase.com/">
+    terms and conditions
+  </Link>{' '}
+  before proceeding.
+</Text>
+```
+
+### Underline with different fonts
+
+The underline works across all font styles.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Link underline font="body" href="https://www.coinbase.com/">
+    body link
+  </Link>
+  <Link underline font="label1" href="https://www.coinbase.com/">
+    label1 link
+  </Link>
+  <Link underline font="caption" href="https://www.coinbase.com/">
+    caption link
+  </Link>
+  <Link underline font="legal" href="https://www.coinbase.com/">
+    legal link
+  </Link>
+  <Link underline font="title2" href="https://www.coinbase.com/">
+    title2 link
+  </Link>
+</VStack>
+```
+
+### Underline within a paragraph
+
+When a link appears inline within body text, always use `underline` so users can distinguish the link from surrounding text without relying on color alone.
+
+```jsx live
+<Text as="p" display="block" font="body">
+  This is a paragraph with an{' '}
+  <Link underline href="https://www.coinbase.com/">
+    inline underlined link
+  </Link>{' '}
+  that is clearly distinguishable from the surrounding text.
+</Text>
+```
+
+## Styling
+
+### Font
+
+To style a Link, either wrap it in the desired [Text](/components/typography/Text) component with the appropriate `as` prop for semantic HTML, or use the `font` prop directly on the Link.
+
+#### Wrapping in Text
 
 ```jsx live
 <VStack alignItems="flex-start" gap={3}>
@@ -57,9 +115,9 @@ Wrapping your Link in the appropriate Text element
 </VStack>
 ```
 
-### Using the font prop
+#### Using the font prop
 
-If you find yourself in a situation where you simply need to style a link as a Text component without wrapping it in the semantically appropriate text element, reach for the `font` prop.
+If you need to style a link without wrapping it in a semantically appropriate text element, use the `font` prop directly.
 
 ```jsx live
 <VStack alignItems="flex-start" gap={3}>
@@ -71,39 +129,52 @@ If you find yourself in a situation where you simply need to style a link as a T
 </VStack>
 ```
 
-### Color override
+### Color
 
-```jsx live
-<Link href="https://www.coinbase.com/" color="fgNegative">
-  With color override
-</Link>
-```
-
-### openInNewWindow and rel props
+Override the default link color using the `color` prop with any CDS foreground token.
 
 ```jsx live
 <VStack alignItems="flex-start" gap={3}>
-  <Link font="title1" href="https://www.coinbase.com/" openInNewWindow>
-    Open window in existing tab
+  <Link href="https://www.coinbase.com/" color="fgPrimary">
+    fgPrimary (default)
   </Link>
-  <Link font="title2" href="https://www.coinbase.com/" rel="noreferrer">
-    Sets rel to noreferrer
+  <Link href="https://www.coinbase.com/" color="fgNegative">
+    fgNegative
   </Link>
-  <Link font="title3" href="https://www.coinbase.com/" rel="noopener">
-    Sets rel to noopener
+  <Link underline href="https://www.coinbase.com/" color="fgNegative">
+    fgNegative with underline
   </Link>
 </VStack>
 ```
 
-### Handling onClick
+## Navigation
+
+### openInNewWindow
+
+Set `openInNewWindow` to open the link in a new browser tab.
 
 ```jsx live
-<Link font="headline" href="#tagname" onClick={() => console.log('pressed link')} rel="noopener">
-  Handles onClick
+<Link font="body" href="https://www.coinbase.com/" openInNewWindow>
+  Opens in a new tab
 </Link>
 ```
 
-### Accessibility
+### rel
+
+Use the `rel` prop to set the relationship between the current document and the linked resource.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Link font="body" href="https://www.coinbase.com/" rel="noreferrer">
+    rel=noreferrer
+  </Link>
+  <Link font="body" href="https://www.coinbase.com/" rel="noopener">
+    rel=noopener
+  </Link>
+</VStack>
+```
+
+## Accessibility
 
 :::tip Accessibility tip
 
@@ -114,3 +185,19 @@ If you find yourself in a situation where you simply need to style a link as a T
 _The link text must have a 3:1 contrast ratio from the surrounding non-link text. The link must present a "non-color designator" (typically the introduction of the underline) on both mouse hover and keyboard focus. These two requirements help ensure that all users can differentiate links from non-link text, even if they have low vision, color deficiency, or have overridden page colors._
 
 :::
+
+Use the `underline` prop on inline links within body text to ensure they are distinguishable without relying on color alone.
+
+```jsx live
+<Text as="p" font="body">
+  By continuing, you agree to the{' '}
+  <Link underline href="https://www.coinbase.com/">
+    Terms of Service
+  </Link>{' '}
+  and{' '}
+  <Link underline href="https://www.coinbase.com/">
+    Privacy Policy
+  </Link>
+  .
+</Text>
+```

@@ -37,6 +37,7 @@ export const DottedLine = memo<DottedLineProps>(
     yAxisId,
     d,
     animate,
+    transitions,
     transition,
     ...props
   }) => {
@@ -54,6 +55,7 @@ export const DottedLine = memo<DottedLineProps>(
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         {...props}
       >
         <DashPathEffect intervals={dashIntervals} />

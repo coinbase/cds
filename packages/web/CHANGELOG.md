@@ -8,6 +8,38 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.48.3 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: allow arrow up/down keys within focus trapped text area. [[#417](https://github.com/coinbase/cds/pull/417)]
+
+## 8.48.2 ((2/25/2026, 04:21 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.1 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Truncate text mid-word in multi-select chips. [[#412](https://github.com/coinbase/cds/pull/412)]
+
+## 8.48.0 (2/24/2026 PST)
+
+#### 🚀 Updates
+
+- Add start/end icon/node support to Tag. [[#421](https://github.com/coinbase/cds/pull/421)]
+
+## 8.47.4 ((2/23/2026, 03:04 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.3 (2/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove behavior of scrolling inside TextInput updating numeric values. [[#413](https://github.com/coinbase/cds/pull/413)]
+
 ## 8.47.2 ((2/19/2026, 03:18 PM PST))
 
 This is an artificial version bump with no new change.

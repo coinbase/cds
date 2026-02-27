@@ -54,6 +54,7 @@ export const GradientArea = memo<GradientAreaProps>(
     yAxisId,
     gradient: gradientProp,
     animate,
+    transitions,
     transition,
     ...pathProps
   }) => {
@@ -78,7 +79,7 @@ export const GradientArea = memo<GradientAreaProps>(
               animate={animate}
               gradient={gradient}
               id={patternId}
-              transition={transition}
+              transition={transitions?.update ?? transition}
               yAxisId={yAxisId}
             />
           </defs>
@@ -89,6 +90,7 @@ export const GradientArea = memo<GradientAreaProps>(
           fill={gradient ? `url(#${patternId})` : fill}
           fillOpacity={fillOpacity}
           transition={transition}
+          transitions={transitions}
           {...pathProps}
         />
       </>

@@ -1,4 +1,5 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import {
   m as motion,
   type Transition,
@@ -7,7 +8,7 @@ import {
 } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, projectPoint } from '../utils';
+import { defaultTransition, getTransition, instantTransition, projectPoint } from '../utils';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
@@ -81,10 +82,14 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries],
       );
 
-      const updateTransition = useMemo(
-        () => transitions?.update ?? defaultTransition,
-        [transitions?.update],
-      );
+      const prevIsIdle = usePreviousValue(isIdle);
+      const isIdleTransition = prevIsIdle !== undefined && isIdle !== prevIsIdle;
+
+      const updateTransition = useMemo(() => {
+        if (isIdleTransition) return instantTransition;
+        if (!isIdle) return instantTransition;
+        return getTransition(transitions?.update, animate, defaultTransition);
+      }, [transitions?.update, isIdle, animate, isIdleTransition]);
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
@@ -169,8 +174,17 @@ export const DefaultScrubberBeacon = memo(
         />
       );
 
-      const beaconCircle =
-        isIdle && animate ? (
+      return (
+        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
+          {isIdle && (
+            <motion.g
+              animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              initial={false}
+              transition={updateTransition}
+            >
+              {pulseCircle}
+            </motion.g>
+          )}
           <motion.circle
             animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
             className={className}
@@ -184,36 +198,6 @@ export const DefaultScrubberBeacon = memo(
             style={style}
             transition={updateTransition}
           />
-        ) : (
-          <circle
-            className={className}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill={color}
-            r={radius}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            style={style}
-          />
-        );
-
-      return (
-        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
-          {isIdle &&
-            (animate ? (
-              <motion.g
-                animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-                initial={false}
-                transition={updateTransition}
-              >
-                {pulseCircle}
-              </motion.g>
-            ) : (
-              <g transform={`translate(${pixelCoordinate.x}, ${pixelCoordinate.y})`}>
-                {pulseCircle}
-              </g>
-            ))}
-          {beaconCircle}
         </g>
       );
     },

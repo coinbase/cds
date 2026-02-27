@@ -140,6 +140,13 @@ export const FocusTrap = memo(function FocusTrap({
 
       if (!element || !document) return;
 
+      const textAreas = element.querySelectorAll('textarea');
+      const activeElementIsTextArea =
+        activeElement && Array.from(textAreas).includes(activeElement as HTMLTextAreaElement);
+      if (activeElementIsTextArea && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        return;
+      }
+
       let focusableElements = Array.from(
         element.querySelectorAll(
           focusTabIndexElements ? FOCUSABLE_ELEMENTS_INCLUDING_TABINDEX : FOCUSABLE_ELEMENTS,

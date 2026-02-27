@@ -11,8 +11,6 @@ import {
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-  withDelay,
-  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
@@ -25,14 +23,15 @@ import {
 } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartInset,
+  defaultAccessoryEnterTransition,
   getPointOnSerializableScale,
+  getTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
 import type { Transition } from '../utils/transition';
+import { buildTransition } from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import { DefaultScrubberLabel } from './DefaultScrubberLabel';
@@ -56,7 +55,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = {
+export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
@@ -90,27 +89,6 @@ export type ScrubberBeaconProps = {
    */
   animate?: boolean;
   /**
-   * Transition configuration for beacon animations.
-   */
-  transitions?: {
-    /**
-     * Transition used for beacon position updates.
-     * @default defaultTransition
-     */
-    update?: Transition;
-    /**
-     * Transition used for the pulse animation.
-     * @default { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
-     */
-    pulse?: Transition;
-    /**
-     * Delay, in milliseconds between pulse transitions
-     * when `idlePulse` is enabled.
-     * @default 400
-     */
-    pulseRepeatDelay?: number;
-  };
-  /**
    * Opacity of the beacon.
    * @default 1
    */
@@ -120,6 +98,35 @@ export type ScrubberBeaconProps = {
    * @default theme.color.bg
    */
   stroke?: string;
+};
+
+export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
+  /**
+   * Transition configuration for beacon animations.
+   */
+  transitions?: {
+    /**
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
+     */
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
+    /**
+     * Transition used for the pulse animation.
+     * @default transition { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
+     */
+    pulse?: Transition;
+    /**
+     * Delay, in milliseconds between pulse transitions
+     * when `idlePulse` is enabled.
+     * @default 400
+     */
+    pulseRepeatDelay?: number;
+  };
 };
 
 export type ScrubberBeaconComponent = React.FC<
@@ -212,17 +219,24 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Transition configuration for the scrubber beacon.
-     */
-    beaconTransitions?: ScrubberBeaconProps['transitions'];
-    /**
      * Stroke color of the scrubber beacon circle.
      * @default theme.color.bg
      */
     beaconStroke?: string;
   };
 
-export type ScrubberProps = ScrubberBaseProps;
+export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Transition configuration for the scrubber.
+   * Controls enter, update, and pulse animations for beacons and beacon labels.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Transition configuration for the scrubber beacon.
+   * @deprecated Use `transitions` instead.
+   */
+  beaconTransitions?: ScrubberBeaconProps['transitions'];
+};
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
 
@@ -253,6 +267,7 @@ export const Scrubber = memo(
         beaconLabelFont,
         idlePulse,
         beaconTransitions,
+        transitions = beaconTransitions,
         beaconStroke,
       },
       ref,
@@ -364,14 +379,16 @@ export const Scrubber = memo(
 
       const isReady = !!xScale;
 
+      const groupEnterTransition = useMemo(
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
+      );
+
       useEffect(() => {
         if (animate && isReady) {
-          scrubberOpacity.value = withDelay(
-            accessoryFadeTransitionDelay,
-            withTiming(1, { duration: accessoryFadeTransitionDuration }),
-          );
+          scrubberOpacity.value = buildTransition(1, groupEnterTransition);
         }
-      }, [animate, isReady, scrubberOpacity]);
+      }, [animate, isReady, scrubberOpacity, groupEnterTransition]);
 
       if (!isReady) return;
 
@@ -406,7 +423,7 @@ export const Scrubber = memo(
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
             stroke={beaconStroke}
-            transitions={beaconTransitions}
+            transitions={transitions}
           />
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
@@ -416,6 +433,7 @@ export const Scrubber = memo(
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              transitions={transitions}
             />
           )}
         </Group>

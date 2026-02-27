@@ -12,5 +12,10 @@
       "url": "/components/data-display/ListCell"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "15.12.1"
+    }
+  ]
 }
