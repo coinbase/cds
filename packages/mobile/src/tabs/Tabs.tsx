@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { type StyleProp, View, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -48,7 +48,11 @@ export type TabsActiveIndicatorProps = {
   activeTabRect: Rect;
 } & BoxProps;
 
-export type TabComponent<TabId extends string = string> = React.FC<TabValue<TabId>>;
+export type TabComponentProps<TabId extends string = string> = TabValue<TabId> & {
+  style?: StyleProp<ViewStyle>;
+};
+
+export type TabComponent<TabId extends string = string> = React.FC<TabComponentProps<TabId>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
@@ -63,6 +67,15 @@ export type TabsBaseProps<TabId extends string = string> = {
   activeBackground?: ThemeVars.Color;
   /** Optional callback to receive the active tab element. */
   onActiveTabElementChange?: (element: View | null) => void;
+  /** Custom styles for individual elements of the Tabs component */
+  styles?: {
+    /** Root container element */
+    root?: StyleProp<ViewStyle>;
+    /** Tab element */
+    tab?: StyleProp<ViewStyle>;
+    /** Active indicator element */
+    activeIndicator?: StyleProp<ViewStyle>;
+  };
 } & Omit<TabsOptions<TabId>, 'tabs'>;
 
 export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
@@ -83,11 +96,18 @@ const TabsComponent = memo(
         activeTab,
         disabled,
         onChange,
+        styles,
+        style,
         role = 'tablist',
         position = 'relative',
         alignSelf = 'flex-start',
         opacity,
         onActiveTabElementChange,
+        borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         ...props
       }: TabsProps<TabId>,
       ref: React.ForwardedRef<View>,
@@ -128,22 +148,34 @@ const TabsComponent = memo(
         <HStack
           ref={tabsContainerRef}
           alignSelf={alignSelf}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
           onLayout={updateActiveTabRect}
           opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
           position={position}
           role={role}
+          style={styles?.root ? [style, styles.root] : style}
           {...props}
         >
           <TabsContext.Provider value={api as TabsApi<string>}>
             <TabsActiveIndicatorComponent
               activeTabRect={activeTabRect}
               background={activeBackground}
+              borderBottomLeftRadius={borderBottomLeftRadius}
+              borderBottomRightRadius={borderBottomRightRadius}
+              borderRadius={borderRadius}
+              borderTopLeftRadius={borderTopLeftRadius}
+              borderTopRightRadius={borderTopRightRadius}
+              style={styles?.activeIndicator}
             />
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab disabled={tabDisabled} id={id} {...props} />
+                  <RenderedTab disabled={tabDisabled} id={id} {...props} style={styles?.tab} />
                 </TabContainer>
               );
             })}
@@ -161,6 +193,7 @@ export const Tabs = TabsComponent as TabsFC;
 export const TabsActiveIndicator = ({
   activeTabRect,
   position = 'absolute',
+  style,
   ...props
 }: TabsActiveIndicatorProps) => {
   const previousActiveTabRect = useRef(activeTabRect);
@@ -190,7 +223,7 @@ export const TabsActiveIndicator = ({
       height={activeTabRect.height}
       position={position}
       role="none"
-      style={animatedBoxStyle}
+      style={[animatedBoxStyle, style]}
       testID="tabs-active-indicator"
       {...props}
     />

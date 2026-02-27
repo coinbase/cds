@@ -1,26 +1,27 @@
 import { useState, useCallback } from 'react';
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { TabbedChips } from '@cbhq/cds-web/alpha/tabbed-chips/TabbedChips';
+import { PeriodSelector } from '@cbhq/cds-web-visualization/chart/PeriodSelector';
 
-import webStylesData from ':docgen/web/alpha/tabbed-chips/TabbedChips/styles-data';
+import webStylesData from ':docgen/web-visualization/chart/PeriodSelector/styles-data';
 
-export const TabbedChipsExample = ({ classNames }) => {
+export const PeriodSelectorExample = ({ classNames }) => {
   const tabs = [
-    { id: 'all', label: 'All' },
-    { id: 'recent', label: 'Recent' },
-    { id: 'favorites', label: 'Favorites' },
-    { id: 'archived', label: 'Archived' },
+    { id: '1H', label: '1H' },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const handleChange = useCallback((tab) => setActiveTab(tab), []);
   return (
-    <TabbedChips
+    <PeriodSelector
       activeTab={activeTab}
       classNames={classNames}
       onChange={handleChange}
       tabs={tabs}
-      width="100%"
     />
   );
 };
@@ -28,9 +29,9 @@ export const TabbedChipsExample = ({ classNames }) => {
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => <TabbedChipsExample classNames={classNames} />}
+  {(classNames) => <PeriodSelectorExample classNames={classNames} />}
 </StylesExplorer>
 
 ## Selectors
 
-<ComponentStylesTable componentName="TabbedChips" styles={webStylesData} />
+<ComponentStylesTable componentName="PeriodSelector" styles={webStylesData} />

@@ -1,13 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react';
 import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
-import { TabsActiveIndicator } from '@cbhq/cds-web/tabs';
 import { SegmentedTabs } from '@cbhq/cds-web/tabs/SegmentedTabs';
-import type { SegmentedTabsActiveIndicatorProps } from '@cbhq/cds-web/tabs/SegmentedTabsActiveIndicator';
 import { type Platform, usePlatformContext } from '@site/src/utils/PlatformContext';
-
-const SegmentedTabsActiveIndicator = ({ ...props }: SegmentedTabsActiveIndicatorProps) => {
-  return <TabsActiveIndicator borderRadius={300} {...props} />;
-};
 
 export const PlatformSwitcher = () => {
   const { supportsWeb, supportsMobile, platform, setPlatform } = usePlatformContext();
@@ -46,7 +40,6 @@ export const PlatformSwitcher = () => {
   return (
     <SegmentedTabs
       ref={segmentedTabsRef}
-      TabsActiveIndicatorComponent={SegmentedTabsActiveIndicator}
       activeTab={activeTab}
       borderRadius={300}
       onChange={handlePlatformChange}
