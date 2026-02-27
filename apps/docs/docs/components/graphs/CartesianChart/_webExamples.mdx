@@ -364,6 +364,255 @@ function Scrubbing() {
 }
 ```
 
+## Animations
+
+CartesianChart delegates transition control to its child components. You can also disable all animations chart-wide by passing `animate={false}` on CartesianChart.
+
+### Enter Only
+
+Disable the update morph animation while keeping a slow enter reveal. Data changes snap instantly but the initial chart appearance animates. Useful when new data arrives frequently and morphing would be distracting.
+
+```tsx live
+function EnterAnimationOnly() {
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(prev: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, prev + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  function Chart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((current) => {
+          const last = current[current.length - 1];
+          return [...current.slice(1), generateNextValue(last)];
+        });
+      }, updateInterval);
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <CartesianChart
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[{ id: 'values', data }]}
+        aria-hidden="true"
+      >
+        <Line
+          seriesId="values"
+          strokeWidth={3}
+          transitions={{
+            update: null,
+            enter: { type: 'tween', duration: 1.0 },
+          }}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <Chart />;
+}
+```
+
+### Update Only
+
+Disable the enter reveal animation while keeping a slow update morph. The chart appears instantly but data changes animate smoothly. Useful when the chart is embedded in content that should not animate on load.
+
+```tsx live
+function UpdateAnimationOnly() {
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(prev: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, prev + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  function Chart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((current) => {
+          const last = current[current.length - 1];
+          return [...current.slice(1), generateNextValue(last)];
+        });
+      }, updateInterval);
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <CartesianChart
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[{ id: 'values', data }]}
+        aria-hidden="true"
+      >
+        <Line
+          seriesId="values"
+          strokeWidth={3}
+          transitions={{
+            enter: null,
+            update: { type: 'spring', stiffness: 900, damping: 120, mass: 8 },
+          }}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <Chart />;
+}
+```
+
+### Mixed Transitions Per Child
+
+Each child component can define its own transitions independently. Here, the `Line` uses a spring morph while the bars snap with no update animation. This lets you fine-tune each visual layer within a single chart.
+
+```tsx live
+function MixedTransitions() {
+  const dataCount = 10;
+  const updateInterval = 2000;
+
+  function generateNextValue(prev: number) {
+    const step = Math.random() * 20 - 10;
+    return Math.max(10, Math.min(100, prev + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  function Chart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((current) => {
+          const last = current[current.length - 1];
+          return [...current.slice(1), generateNextValue(last)];
+        });
+      }, updateInterval);
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <CartesianChart
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[
+          { id: 'line', data, color: 'var(--color-accentBoldBlue)', yAxisId: 'default' },
+          {
+            id: 'bars',
+            data: data.map((d) => d * 0.3),
+            color: 'var(--color-accentBoldPurple)',
+            yAxisId: 'bars',
+          },
+        ]}
+        xAxis={{ scaleType: 'band' }}
+        yAxis={[
+          { id: 'default' },
+          { id: 'bars', range: ({ min, max }) => ({ min: max - 48, max }) },
+        ]}
+        aria-hidden="true"
+      >
+        <BarPlot
+          seriesIds={['bars']}
+          transitions={{
+            update: null,
+            enter: { type: 'tween', duration: 0.6 },
+          }}
+        />
+        <Line
+          seriesId="line"
+          strokeWidth={3}
+          transitions={{
+            update: { type: 'spring', stiffness: 700, damping: 20 },
+          }}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <Chart />;
+}
+```
+
+### No Animations
+
+You can disable all animations chart-wide by setting `animate` to `false` on CartesianChart. This is useful for static snapshots or when performance is a concern. Compare this to the animated examples above — data still updates, but changes snap instantly without any transition.
+
+```tsx live
+function DisableAnimations() {
+  const dataCount = 15;
+  const updateInterval = 2500;
+
+  function generateNextValue(prev: number) {
+    const step = Math.random() * 30 - 15;
+    return Math.max(0, Math.min(100, prev + step));
+  }
+
+  function generateInitialData() {
+    const data = [50];
+    for (let i = 1; i < dataCount; i++) {
+      data.push(generateNextValue(data[i - 1]));
+    }
+    return data;
+  }
+
+  function Chart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((current) => {
+          const last = current[current.length - 1];
+          return [...current.slice(1), generateNextValue(last)];
+        });
+      }, updateInterval);
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <CartesianChart
+        animate={false}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[{ id: 'values', data }]}
+        aria-hidden="true"
+      >
+        <Line seriesId="values" showArea strokeWidth={3} />
+      </CartesianChart>
+    );
+  }
+
+  return <Chart />;
+}
+```
+
 ## Customization
 
 ### Price with Volume

@@ -10,8 +10,14 @@ import {
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
-import type { Transition } from './utils/transition';
-import { usePathTransition } from './utils/transition';
+import { defaultPathEnterTransition } from './utils/path';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+  usePathTransition,
+} from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
@@ -71,6 +77,40 @@ export type PathProps = PathBaseProps &
     | 'transform'
   > & {
     /**
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     *
+     * @default transitions = {{
+     *   enter: { type: 'timing', duration: 500 },
+     *   update: { type: 'spring', stiffness: 900, damping: 120 }
+     * }}
+     *
+     * @example
+     * // Custom enter and update transitions
+     * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+     *
+     * @example
+     * // Disable enter animation
+     * transitions={{ enter: null }}
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
+     */
+    transition?: Transition;
+    /**
      * The SVG path data string.
      */
     d?: AnimatedProp<string | undefined>;
@@ -90,21 +130,16 @@ export type PathProps = PathBaseProps &
      * Will be overridden by clipPath if set.
      */
     clipRect?: Rect;
-    /**
-     * Animation transition
-     *
-     * @example
-     * // Duration based
-     * transition={{ type: 'timing', duration: 300 }}
-     *
-     * @example
-     * // Spring based
-     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-     */
-    transition?: Transition;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
+const AnimatedPath = memo<
+  Omit<
+    PathProps,
+    'animate' | 'clipRect' | 'clipOffset' | 'clipPath' | 'transitions' | 'transition'
+  > & {
+    transitions?: { enter?: Transition; update?: Transition };
+  }
+>(
   ({
     d = '',
     initialPath,
@@ -116,17 +151,15 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     strokeCap,
     strokeJoin,
     children,
-    transition,
+    transitions,
     ...pathProps
   }) => {
     const isDAnimated = typeof d !== 'string';
 
-    // When d is animated, usePathTransition handles static path transitions.
-    // For animated d values, we skip usePathTransition and use useDerivedValue directly.
     const animatedPath = usePathTransition({
       currentPath: isDAnimated ? '' : d,
       initialPath,
-      transition,
+      transitions,
     });
 
     const isFilled = fill !== undefined && fill !== 'none';
@@ -187,6 +220,7 @@ export const Path = memo<PathProps>((props) => {
     strokeCap,
     strokeJoin,
     children,
+    transitions,
     transition,
     ...pathProps
   } = props;
@@ -197,6 +231,21 @@ export const Path = memo<PathProps>((props) => {
 
   const isReady = !!context.getXScale();
 
+  const enterTransition = useMemo(
+    () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),
+    [animate, transitions?.enter],
+  );
+
+  const updateTransition = useMemo(
+    () =>
+      getTransition(
+        transitions?.update !== undefined ? transitions.update : transition,
+        animate,
+        defaultTransition,
+      ),
+    [animate, transitions?.update, transition],
+  );
+
   // The clip offset provides extra padding to prevent path from being cut off
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
@@ -206,9 +255,9 @@ export const Path = memo<PathProps>((props) => {
 
   useEffect(() => {
     if (animate && isReady) {
-      clipProgress.value = withTiming(1, { duration: pathEnterTransitionDuration });
+      clipProgress.value = buildTransition(1, enterTransition);
     }
-  }, [animate, isReady, clipProgress]);
+  }, [animate, isReady, clipProgress, enterTransition]);
 
   // Create initial and target clip paths for animation
   const { initialClipPath, targetClipPath } = useMemo(() => {
@@ -308,7 +357,7 @@ export const Path = memo<PathProps>((props) => {
       strokeJoin={strokeJoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
-      transition={transition}
+      transitions={{ enter: enterTransition, update: updateTransition }}
     >
       {children}
     </AnimatedPath>

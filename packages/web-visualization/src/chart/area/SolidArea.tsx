@@ -32,6 +32,7 @@ export const SolidArea = memo<SolidAreaProps>(
     fillOpacity = 1,
     yAxisId,
     animate,
+    transitions,
     transition,
     gradient,
     ...pathProps
@@ -46,7 +47,7 @@ export const SolidArea = memo<SolidAreaProps>(
               animate={animate}
               gradient={gradient}
               id={patternId}
-              transition={transition}
+              transition={transitions?.update ?? transition}
               yAxisId={yAxisId}
             />
           </defs>
@@ -57,6 +58,7 @@ export const SolidArea = memo<SolidAreaProps>(
           fill={gradient ? `url(#${patternId})` : fill}
           fillOpacity={fillOpacity}
           transition={transition}
+          transitions={transitions}
           {...pathProps}
         />
       </>

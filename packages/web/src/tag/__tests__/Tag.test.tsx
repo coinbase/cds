@@ -113,6 +113,52 @@ describe('Tag', () => {
     });
   });
 
+  it('renders with a startIcon', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" startIcon="add" testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toBeDefined();
+    expect(screen.getByText('Tag')).toBeDefined();
+  });
+
+  it('renders with an endIcon', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" endIcon="add" testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toBeDefined();
+    expect(screen.getByText('Tag')).toBeDefined();
+  });
+
+  it('renders with a custom start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" start={<span data-testid="custom-start">*</span>} testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('custom-start')).toBeInTheDocument();
+  });
+
+  it('renders with a custom end node', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" end={<span data-testid="custom-end">*</span>} testID={TEST_ID}>
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('custom-end')).toBeInTheDocument();
+  });
+
   it('verifies tagColorMap maps correctly to tagEmphasisColorMap for backward compatibility', () => {
     expect(tagColorMap.informational).toEqual(tagEmphasisColorMap.low);
     expect(tagColorMap.promotional).toEqual(tagEmphasisColorMap.high);
