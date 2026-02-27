@@ -4,6 +4,9 @@ import { renderHook } from '@testing-library/react-hooks';
 import {
   buildTransition,
   defaultTransition,
+  getTransition,
+  instantTransition,
+  isInstantTransition,
   type Transition,
   usePathTransition,
 } from '../transition';
@@ -21,6 +24,7 @@ jest.mock('react-native-reanimated', () => {
     }),
     withTiming: jest.fn((toValue, config) => toValue),
     withSpring: jest.fn((toValue, config) => toValue),
+    withDelay: jest.fn((delay, animation) => animation),
     isSharedValue: jest.fn((value) => {
       // Mock isSharedValue to detect objects with a 'value' property
       return value && typeof value === 'object' && 'value' in value;
@@ -161,6 +165,49 @@ describe('buildTransition', () => {
       restDisplacementThreshold: 0.01,
       restSpeedThreshold: 0.01,
     });
+  });
+
+  it('should apply delay when configured', () => {
+    const { withDelay } = require('react-native-reanimated');
+    buildTransition(100, { type: 'timing', duration: 200, delay: 300 });
+    expect(withDelay).toHaveBeenCalled();
+  });
+});
+
+describe('getTransition', () => {
+  it('should return instantTransition when animate is false', () => {
+    expect(getTransition(undefined, false, defaultTransition)).toBe(instantTransition);
+  });
+
+  it('should return instantTransition when value is null', () => {
+    expect(getTransition(null, true, defaultTransition)).toBe(instantTransition);
+  });
+
+  it('should return default when value is undefined', () => {
+    expect(getTransition(undefined, true, defaultTransition)).toBe(defaultTransition);
+  });
+
+  it('should return value when provided', () => {
+    const custom: Transition = { type: 'timing', duration: 123 };
+    expect(getTransition(custom, true, defaultTransition)).toBe(custom);
+  });
+});
+
+describe('isInstantTransition', () => {
+  it('should detect instantTransition', () => {
+    expect(isInstantTransition(instantTransition)).toBe(true);
+  });
+
+  it('should treat timing with zero duration as instant', () => {
+    expect(isInstantTransition({ type: 'timing', duration: 0 })).toBe(true);
+  });
+
+  it('should treat timing with zero duration and delay as instant only when delay is zero', () => {
+    expect(isInstantTransition({ type: 'timing', duration: 0, delay: 10 })).toBe(false);
+  });
+
+  it('should treat spring as non-instant', () => {
+    expect(isInstantTransition({ type: 'spring', damping: 10, stiffness: 100 })).toBe(false);
   });
 });
 
@@ -351,6 +398,33 @@ describe('usePathTransition', () => {
     // Change path again
     rerender({ path: 'M0,0L30,30' });
     expect(result.current).toBeDefined();
+  });
+
+  it('should short-circuit interpolation for instant update transitions', () => {
+    const { interpolatePath } = require('d3-interpolate-path');
+    const { Skia } = require('@shopify/react-native-skia');
+
+    (interpolatePath as jest.Mock).mockClear();
+    (Skia.Path.MakeFromSVGString as jest.Mock).mockClear();
+
+    const { rerender } = renderHook(
+      ({ path }) =>
+        usePathTransition({
+          currentPath: path,
+          transitions: { update: { type: 'timing', duration: 0 } },
+        }),
+      {
+        initialProps: { path: 'M0,0L10,10' },
+      },
+    );
+
+    (interpolatePath as jest.Mock).mockClear();
+    (Skia.Path.MakeFromSVGString as jest.Mock).mockClear();
+
+    rerender({ path: 'M0,0L20,20' });
+
+    expect(interpolatePath).not.toHaveBeenCalled();
+    expect(Skia.Path.MakeFromSVGString).toHaveBeenCalledWith('M0,0L20,20');
   });
 });
 

@@ -15,6 +15,7 @@ import {
   buildTransition,
   defaultTransition,
   getTransition,
+  isInstantTransition,
   type Transition,
   usePathTransition,
 } from './utils/transition';
@@ -251,13 +252,20 @@ export const Path = memo<PathProps>((props) => {
   const totalOffset = clipOffset * 2; // Applied on both sides
 
   // Animation progress for clip path reveal
-  const clipProgress = useSharedValue(animate ? 0 : 1);
+  const clipProgress = useSharedValue(1);
+  const shouldAnimateClip = animate && !isInstantTransition(enterTransition);
 
   useEffect(() => {
-    if (animate && isReady) {
-      clipProgress.value = buildTransition(1, enterTransition);
+    if (!isReady) {
+      return;
     }
-  }, [animate, isReady, clipProgress, enterTransition]);
+    if (shouldAnimateClip) {
+      clipProgress.value = 0;
+      clipProgress.value = buildTransition(1, enterTransition);
+    } else {
+      clipProgress.value = 1;
+    }
+  }, [shouldAnimateClip, isReady, clipProgress, enterTransition]);
 
   // Create initial and target clip paths for animation
   const { initialClipPath, targetClipPath } = useMemo(() => {
@@ -288,7 +296,7 @@ export const Path = memo<PathProps>((props) => {
   const animatedClipPath = usePathInterpolation(
     clipProgress,
     [0, 1],
-    animate && initialClipPath && targetClipPath
+    shouldAnimateClip && initialClipPath && targetClipPath
       ? [initialClipPath, targetClipPath]
       : targetClipPath
         ? [targetClipPath, targetClipPath]
@@ -306,13 +314,13 @@ export const Path = memo<PathProps>((props) => {
     }
 
     // If not animating or paths are null, return target clip path
-    if (!animate || !targetClipPath) {
+    if (!animate || !targetClipPath || !shouldAnimateClip) {
       return targetClipPath;
     }
 
     // Return undefined here since we'll use animatedClipPath directly
     return undefined;
-  }, [clipPathProp, animate, targetClipPath]);
+  }, [clipPathProp, animate, shouldAnimateClip, targetClipPath]);
 
   // Convert SVG path string to SkPath for static rendering
   const staticPath = useDerivedValue(() => {

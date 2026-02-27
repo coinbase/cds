@@ -7,7 +7,7 @@ import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { createGradient, getBaseline } from '../utils';
 import { getDottedAreaPath } from '../utils/path';
-import { usePathTransition } from '../utils/transition';
+import { defaultTransition, getTransition, usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -95,9 +95,19 @@ export const DottedArea = memo<DottedAreaProps>(
       );
     }, [drawingArea, patternSize, dotSize]);
 
+    const shouldAnimate = animateProp ?? animate;
+    const clipTransition = useMemo(
+      () =>
+        getTransition(
+          transitions?.update !== undefined ? transitions.update : transition,
+          shouldAnimate,
+          defaultTransition,
+        ),
+      [shouldAnimate, transitions?.update, transition],
+    );
     const animatedClipPath = usePathTransition({
       currentPath: d,
-      transitions: { update: transition },
+      transitions: { update: clipTransition },
     });
 
     const staticClipPath = useMemo(() => {
@@ -114,9 +124,9 @@ export const DottedArea = memo<DottedAreaProps>(
     }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
     return (
-      <Group clip={animate ? animatedClipPath : staticClipPath}>
+      <Group clip={shouldAnimate ? animatedClipPath : staticClipPath}>
         <Path
-          animate={animateProp ?? animate}
+          animate={shouldAnimate}
           d={dottedPath}
           fill={fill}
           transition={transition}

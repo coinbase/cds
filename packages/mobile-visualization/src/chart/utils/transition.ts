@@ -59,6 +59,15 @@ export const instantTransition: Transition = {
   duration: 0,
 };
 
+export const isInstantTransition = (transition?: Transition | null): boolean => {
+  if (!transition) return false;
+  if (transition === instantTransition) return true;
+  if (transition.type !== 'timing') return false;
+  const duration = transition.duration ?? 0;
+  const delay = transition.delay ?? 0;
+  return duration <= 0 && delay <= 0;
+};
+
 /**
  * Duration in milliseconds for accessory elements to fade in.
  */
@@ -266,6 +275,25 @@ export const usePathTransition = ({
 
       targetPathRef.current = currentPath;
 
+      const activeTransition =
+        isFirstAnimation.current && enterTransition !== undefined
+          ? enterTransition
+          : updateTransition;
+
+      // Short circuit slow interpolation
+      if (isInstantTransition(activeTransition)) {
+        const staticPath = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+        interpolatorRef.current = null;
+        normalizedStartShared.value = staticPath;
+        normalizedEndShared.value = staticPath;
+        fallbackPathShared.value = staticPath;
+        result.value = staticPath;
+        notifyChange(result);
+        progress.value = 1;
+        isFirstAnimation.current = false;
+        return;
+      }
+
       const pathInterpolator = interpolatePath(fromPath, currentPath);
       interpolatorRef.current = pathInterpolator;
 
@@ -275,17 +303,13 @@ export const usePathTransition = ({
         Skia.Path.MakeFromSVGString(pathInterpolator(1)) ?? Skia.Path.Make();
       fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
 
-      const activeTransition =
-        isFirstAnimation.current && enterTransition !== undefined
-          ? enterTransition
-          : updateTransition;
-
       isFirstAnimation.current = false;
 
       progress.value = 0;
       progress.value = buildTransition(1, activeTransition);
     }
   }, [
+    result,
     currentPath,
     updateTransition,
     enterTransition,

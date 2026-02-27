@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.21 (2/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Short-circuit DottedArea interpolation, when animations are disabled. [[#451](https://github.com/avocado-cb/cds/pull/451)]
+
 ## 3.4.0-beta.20 (2/27/2026 PST)
 
 #### 🚀 Updates
