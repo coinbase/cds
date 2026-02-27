@@ -55,6 +55,7 @@ Review the component's JSX to identify elements that should be targetable via st
 | Selector              | Description                                           |
 | --------------------- | ----------------------------------------------------- |
 | `accessory`           | Accessory element (e.g., chevron, icon at end)        |
+| `activeIndicator`     | Active indicator element (e.g., in tabs)              |
 | `bottomContent`       | Bottom section content                                |
 | `carousel`            | Main carousel track element                           |
 | `carouselContainer`   | Outer carousel container                              |
@@ -83,6 +84,7 @@ Review the component's JSX to identify elements that should be targetable via st
 | `step`                | Individual step element (in steppers)                 |
 | `substepContainer`    | Container for nested sub-steps                        |
 | `subtitle`            | Subtitle text element                                 |
+| `tab`                 | Tab element (in tabs)                                 |
 | `tabs`                | Tabs container element                                |
 | `thumb`               | Draggable thumb element (in sliders)                  |
 | `title`               | Title text element                                    |

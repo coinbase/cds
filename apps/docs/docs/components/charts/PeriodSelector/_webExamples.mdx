@@ -1,7 +1,9 @@
-## Basic Example
+PeriodSelector is a specialized [SegmentedTabs](/components/navigation/SegmentedTabs) optimized for chart time-period selection. It provides a transparent background, primary wash active state, and full-width layout by default.
+
+## Basics
 
 ```jsx live
-function BasicExample() {
+function Example() {
   const tabs = [
     { id: '1H', label: '1H' },
     { id: '1D', label: '1D' },
@@ -22,12 +24,12 @@ function BasicExample() {
 }
 ```
 
-## Minimum Width
+## Sizing
 
-You can set the `width` prop to `fit-content` to make the period selector as small as possible.
+Set `width` to `fit-content` to make the selector only as wide as its content, and use `gap` to control spacing between tabs.
 
 ```jsx live
-function MinimumWidthExample() {
+function Example() {
   const tabs = [
     { id: '1W', label: '1W' },
     { id: '1M', label: '1M' },
@@ -48,10 +50,48 @@ function MinimumWidthExample() {
 }
 ```
 
-## Many Periods with Overflow
+## Live Indicator
+
+Use the `LiveTabLabel` component (exported from PeriodSelector) to indicate a live data period. Pair it with a conditional `activeBackground` to visually differentiate the live state.
 
 ```jsx live
-function ManyPeriodsExample() {
+function Example() {
+  const tabs = useMemo(
+    () => [
+      { id: '1H', label: <LiveTabLabel /> },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: '1Y', label: '1Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
+
+  return (
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector
+        activeBackground={activeBackground}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+      />
+    </Box>
+  );
+}
+```
+
+## Overflow
+
+When there are too many tabs to fit in a single row, wrap the selector in a scrollable container with a fade edge and an optional action button.
+
+```jsx live
+function Example() {
   const tabs = useMemo(
     () => [
       { id: '1H', label: '1H' },
@@ -67,7 +107,6 @@ function ManyPeriodsExample() {
   );
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
 
   return (
     <HStack
@@ -125,13 +164,16 @@ function ManyPeriodsExample() {
 }
 ```
 
-## Live Indicator
+## Customization
+
+### Custom Colors
+
+Use the `activeBackground` prop to change the active indicator color. This example conditionally applies a negative wash when the live period is selected.
 
 ```jsx live
-function LiveExample() {
+function Example() {
   const tabs = useMemo(
     () => [
-      // LiveTabLabel is exported from PeriodSelector
       { id: '1H', label: <LiveTabLabel /> },
       { id: '1D', label: '1D' },
       { id: '1W', label: '1W' },
@@ -142,44 +184,8 @@ function LiveExample() {
     [],
   );
 
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState(tabs[1]);
   const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
-
-  const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
-
-  return (
-    <Box overflow="hidden" maxWidth="100%">
-      <PeriodSelector
-        activeBackground={activeBackground}
-        activeTab={activeTab}
-        onChange={setActiveTab}
-        tabs={tabs}
-      />
-    </Box>
-  );
-}
-```
-
-## Customization
-
-### Custom Colors
-
-```jsx live
-function LiveExample() {
-  const tabs = useMemo(
-    () => [
-      { id: '1H', label: '1H' },
-      { id: '1D', label: '1D' },
-      { id: '1W', label: '1W' },
-      { id: '1M', label: '1M' },
-      { id: '1Y', label: '1Y' },
-      { id: 'All', label: 'All' },
-    ],
-    [],
-  );
-
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-  const isLive = useMemo(() => activeTab?.id === 'live', [activeTab]);
 
   const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
 
@@ -198,8 +204,10 @@ function LiveExample() {
 
 ### Color Shifting
 
+Animate the active tab's foreground color using a CSS variable and framer-motion. This pattern is useful for charts where the color changes based on price movement (positive/negative).
+
 ```jsx live
-function ColorShiftingExample() {
+function Example() {
   const TabLabel = memo(({ label }) => (
     <Text font="label1" style={{ color: 'var(--chartActiveColor)' }}>
       {label}
@@ -208,30 +216,12 @@ function ColorShiftingExample() {
 
   const tabs = useMemo(
     () => [
-      {
-        id: '1H',
-        label: <TabLabel label="1H" />,
-      },
-      {
-        id: '1D',
-        label: <TabLabel label="1D" />,
-      },
-      {
-        id: '1W',
-        label: <TabLabel label="1W" />,
-      },
-      {
-        id: '1M',
-        label: <TabLabel label="1M" />,
-      },
-      {
-        id: '1Y',
-        label: <TabLabel label="1Y" />,
-      },
-      {
-        id: 'All',
-        label: <TabLabel label="All" />,
-      },
+      { id: '1H', label: <TabLabel label="1H" /> },
+      { id: '1D', label: <TabLabel label="1D" /> },
+      { id: '1W', label: <TabLabel label="1W" /> },
+      { id: '1M', label: <TabLabel label="1M" /> },
+      { id: '1Y', label: <TabLabel label="1Y" /> },
+      { id: 'All', label: <TabLabel label="All" /> },
     ],
     [],
   );
@@ -275,10 +265,10 @@ function ColorShiftingExample() {
 
 ### Asset Price Chart
 
-You can use a PeriodSelector to control the time period of a LineChart, with a settings icon to enable extra customization for users.
+A composed example using PeriodSelector to control the time period of a [LineChart](/components/charts/LineChart), with a settings tray for axis toggles.
 
 ```jsx live
-function CustomizableAssetPriceExample() {
+function Example() {
   const tabs = [
     { id: 'hour', label: '1H' },
     { id: 'day', label: '1D' },
@@ -361,7 +351,6 @@ function CustomizableAssetPriceExample() {
     const formatYAxisPrice = useCallback(
       (price) => {
         if (breakpoints.isPhone) {
-          // Compact format for mobile: $45k, $1.2M, etc.
           if (price >= 1000000) {
             return `$${(price / 1000000).toFixed(1)}M`;
           } else if (price >= 1000) {

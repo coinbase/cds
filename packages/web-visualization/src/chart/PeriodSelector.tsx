@@ -1,4 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
+import { cx } from '@coinbase/cds-web';
 import type { Polymorphic } from '@coinbase/cds-web/core/polymorphism';
 import { Box } from '@coinbase/cds-web/layout';
 import {
@@ -11,7 +12,7 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-web/tabs/SegmentedTab';
 import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
@@ -23,6 +24,7 @@ export const PeriodSelectorActiveIndicator = memo(
     position = 'absolute',
     borderRadius = 1000,
     style,
+    ...props
   }: TabsActiveIndicatorProps) => {
     const { width, height, x } = activeTabRect;
     const activeAnimation = useMemo(() => ({ width, x }), [width, x]);
@@ -45,6 +47,7 @@ export const PeriodSelectorActiveIndicator = memo(
           ...style,
         }}
         transition={tabsTransitionConfig}
+        {...props}
       />
     );
   },
@@ -128,7 +131,8 @@ const PeriodSelectorTab: TabComponent = memo(
   )),
 );
 
-export type PeriodSelectorProps = SegmentedTabsProps;
+export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'styles' | 'classNames'> &
+  Pick<SegmentedTabsProps, 'styles' | 'classNames'>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.
@@ -144,6 +148,10 @@ export const PeriodSelector = memo(
         justifyContent = 'space-between',
         TabComponent = PeriodSelectorTab,
         TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+        className,
+        classNames,
+        style,
+        styles,
         ...props
       }: PeriodSelectorProps,
       ref: React.ForwardedRef<HTMLElement>,
@@ -154,7 +162,17 @@ export const PeriodSelector = memo(
         TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
         activeBackground={activeBackground}
         background={background}
+        className={cx(className, classNames?.root)}
+        classNames={{
+          tab: classNames?.tab,
+          activeIndicator: classNames?.activeIndicator,
+        }}
         justifyContent={justifyContent}
+        style={styles?.root ? { ...style, ...styles.root } : style}
+        styles={{
+          tab: styles?.tab,
+          activeIndicator: styles?.activeIndicator,
+        }}
         width={width}
         {...props}
       />

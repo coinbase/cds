@@ -134,7 +134,8 @@ const PeriodSelectorTab: TabComponent = memo(
   )),
 );
 
-export type PeriodSelectorProps = SegmentedTabsProps;
+export type PeriodSelectorProps = Omit<SegmentedTabsProps, 'styles'> &
+  Pick<SegmentedTabsProps, 'styles'>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.

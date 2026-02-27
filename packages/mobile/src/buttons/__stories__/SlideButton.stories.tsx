@@ -137,6 +137,9 @@ export const SlideButtonStories = () => {
           height={50}
         />
       </Example>
+      <Example title="Custom border radius">
+        <SlideButtonExample borderRadius={200} />
+      </Example>
     </ExampleScreen>
   );
 };

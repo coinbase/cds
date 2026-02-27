@@ -1,0 +1,37 @@
+import { useState, useCallback } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { PeriodSelector } from '@coinbase/cds-web-visualization/chart/PeriodSelector';
+
+import webStylesData from ':docgen/web-visualization/chart/PeriodSelector/styles-data';
+
+export const PeriodSelectorExample = ({ classNames }) => {
+  const tabs = [
+    { id: '1H', label: '1H' },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((tab) => setActiveTab(tab), []);
+  return (
+    <PeriodSelector
+      activeTab={activeTab}
+      classNames={classNames}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+};
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <PeriodSelectorExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="PeriodSelector" styles={webStylesData} />

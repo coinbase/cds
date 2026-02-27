@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.49.0 (2/26/2026 PST)
+
+#### 🚀 Updates
+
+- Add styles props to Tab components. [[#438](https://github.com/coinbase/cds/pull/438)]
+
 ## 8.48.3 ((2/25/2026, 08:36 PM PST))
 
 This is an artificial version bump with no new change.

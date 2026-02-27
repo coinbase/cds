@@ -14,6 +14,7 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
+import { cx } from '../cx';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
 
@@ -54,6 +55,8 @@ export type TabComponentProps<TabId extends string = string> = TabValue<TabId> &
    * @default "tab"
    */
   role?: string;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 export type TabComponent<TabId extends string = string> = React.FC<TabComponentProps<TabId>>;
@@ -74,7 +77,26 @@ export type TabsBaseProps<TabId extends string = string> = {
 } & Omit<TabsOptions<TabId>, 'tabs'>;
 
 export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
-  Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'>;
+  Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'> & {
+    /** Custom styles for individual elements of the Tabs component */
+    styles?: {
+      /** Root element */
+      root?: React.CSSProperties;
+      /** Tab element */
+      tab?: React.CSSProperties;
+      /** Active indicator element */
+      activeIndicator?: React.CSSProperties;
+    };
+    /** Custom class names for individual elements of the Tabs component */
+    classNames?: {
+      /** Root element */
+      root?: string;
+      /** Tab element */
+      tab?: string;
+      /** Active indicator element */
+      activeIndicator?: string;
+    };
+  };
 
 type TabsFC = <TabId extends string = string>(
   props: TabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
@@ -92,9 +114,17 @@ const TabsComponent = memo(
         onActiveTabElementChange,
         disabled,
         onChange,
+        className,
+        classNames,
+        styles,
         role = 'tablist',
         position = 'relative',
         width = 'fit-content',
+        borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         style,
         ...props
       }: TabsProps<TabId>,
@@ -176,8 +206,8 @@ const TabsComponent = memo(
       );
 
       const containerStyle = useMemo(
-        () => ({ opacity: disabled ? accessibleOpacityDisabled : 1, ...style }),
-        [disabled, style],
+        () => ({ opacity: disabled ? accessibleOpacityDisabled : 1, ...style, ...styles?.root }),
+        [disabled, style, styles?.root],
       );
 
       const registerRef = useCallback(
@@ -193,6 +223,12 @@ const TabsComponent = memo(
       return (
         <HStack
           ref={mergedContainerRefs}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
+          className={cx(className, classNames?.root)}
           onKeyDown={handleTabsContainerKeyDown}
           position={position}
           role={role}
@@ -204,6 +240,13 @@ const TabsComponent = memo(
             <TabsActiveIndicatorComponent
               activeTabRect={activeTabRect}
               background={activeBackground}
+              borderBottomLeftRadius={borderBottomLeftRadius}
+              borderBottomRightRadius={borderBottomRightRadius}
+              borderRadius={borderRadius}
+              borderTopLeftRadius={borderTopLeftRadius}
+              borderTopRightRadius={borderTopRightRadius}
+              className={classNames?.activeIndicator}
+              style={styles?.activeIndicator}
             />
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
               const RenderedTab = CustomTabComponent ?? TabComponent;
@@ -216,6 +259,8 @@ const TabsComponent = memo(
                     role="tab"
                     tabIndex={activeTab?.id === id || !activeTab ? 0 : -1}
                     {...props}
+                    className={classNames?.tab}
+                    style={styles?.tab}
                   />
                 </TabContainer>
               );

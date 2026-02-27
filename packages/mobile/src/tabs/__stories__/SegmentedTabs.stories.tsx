@@ -1,16 +1,25 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView } from 'react-native';
+import {
+  interpolateColor,
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { useTheme } from '../../hooks/useTheme';
+import { Icon, type IconProps } from '../../icons/Icon';
 import { Box } from '../../layout';
 import { Text } from '../../typography/Text';
 import { SegmentedTab } from '../SegmentedTab';
 import { SegmentedTabs, type SegmentedTabsProps } from '../SegmentedTabs';
 import type { TabProps } from '../TabNavigation';
 import type { TabComponent, TabsActiveIndicatorProps } from '../Tabs';
-import { TabsActiveIndicator } from '../Tabs';
+import { TabsActiveIndicator, tabsSpringConfig } from '../Tabs';
 
 const CustomActiveIndicator = ({
   activeTabRect,
@@ -55,6 +64,39 @@ const CustomSegmentedTabColor: TabComponent = (props) => (
 );
 
 const CustomSegmentedTabFont: TabComponent = (props) => <SegmentedTab {...props} font="label2" />;
+
+type ColoredIconProps = {
+  tabId: string;
+  name: IconProps['name'];
+};
+
+const ColoredIcon = memo(({ tabId, name }: ColoredIconProps) => {
+  const { activeTab } = useTabsContext();
+  const isActive = activeTab?.id === tabId;
+  const theme = useTheme();
+
+  const progress = useSharedValue(isActive ? 1 : 0);
+  const [color, setColor] = useState(isActive ? theme.color.fgInverse : theme.color.fg);
+
+  useEffect(() => {
+    progress.value = withSpring(isActive ? 1 : 0, tabsSpringConfig);
+  }, [isActive, progress]);
+
+  useAnimatedReaction(
+    () => interpolateColor(progress.value, [0, 1], [theme.color.fg, theme.color.fgInverse]),
+    (newColor) => {
+      runOnJS(setColor)(newColor);
+    },
+  );
+
+  return <Icon active name={name} size="s" styles={{ icon: { color } }} />;
+});
+
+const iconSegments = [
+  { id: 'buy', label: <ColoredIcon name="chartLine" tabId="buy" /> },
+  { id: 'sell', label: <ColoredIcon name="chartCandles" tabId="sell" /> },
+  { id: 'convert', label: <ColoredIcon name="chartBar" tabId="convert" /> },
+];
 
 const basicSegments = [
   { id: 'buy', label: 'Buy' },
@@ -200,7 +242,49 @@ const SegmentedTabsScreen = () => (
       title="With Padding"
       width="fit-content"
     />
+    <SegmentedTabsExample
+      borderRadius={300}
+      defaultActiveTab={basicSegments[0]}
+      tabs={basicSegments}
+      title="Border Radius"
+    />
+    <CustomStylesExample />
+    <IconLabelsExample />
   </ExampleScreen>
 );
+
+const CustomStylesExample = () => {
+  const theme = useTheme();
+  return (
+    <SegmentedTabsExample
+      borderRadius={300}
+      defaultActiveTab={basicSegments[0]}
+      padding={0.5}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={basicSegments}
+      title="Custom Padding with Inner Border Radius"
+    />
+  );
+};
+
+const IconLabelsExample = () => {
+  const theme = useTheme();
+  return (
+    <SegmentedTabsExample
+      borderRadius={300}
+      defaultActiveTab={iconSegments[0]}
+      gap={0.5}
+      padding={0.5}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={iconSegments}
+      title="Icon Labels"
+      width="fit-content"
+    />
+  );
+};
 
 export default SegmentedTabsScreen;
