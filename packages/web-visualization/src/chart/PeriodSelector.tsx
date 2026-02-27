@@ -24,7 +24,7 @@ export const PeriodSelectorActiveIndicator = memo(
     position = 'absolute',
     borderRadius = 1000,
     style,
-    ...rest
+    ...props
   }: TabsActiveIndicatorProps) => {
     const { width, height, x } = activeTabRect;
     const activeAnimation = useMemo(() => ({ width, x }), [width, x]);
@@ -47,7 +47,7 @@ export const PeriodSelectorActiveIndicator = memo(
           ...style,
         }}
         transition={tabsTransitionConfig}
-        {...rest}
+        {...props}
       />
     );
   },
