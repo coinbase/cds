@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Improve jsdocs. [[#446](https://github.com/coinbase/cds/pull/446)]
+
 ## 8.49.0 ((2/26/2026, 04:03 PM PST))
 
 This is an artificial version bump with no new change.
