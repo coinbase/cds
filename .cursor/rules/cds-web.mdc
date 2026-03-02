@@ -87,7 +87,7 @@ Use the `Box` component's responsive prop API for responsive values:
 
 - Web components should all expose a `style` and `styles` object props for overriding inline styles.
 - As styling is a concern of that specific component, the `style` and `styles` props should never be on the `*BaseProps` type.
-- Styles should be merged into a single object with a `useMemo` hook and applied in the correct order (deafult styles => `style` prop => `styles[ELEMENT_NAME]` prop).
+- Styles should be merged into a single object with a `useMemo` hook and applied in the correct order (default styles => `style` prop => `styles[ELEMENT_NAME]` prop).
 
 **Example:**
 
@@ -138,7 +138,7 @@ Use ARIA attributes:
 ## Web-Specific Props
 
 - `className?: string` - CSS class always applied to root element
-- `style?: React.CSSProperties` - inline styles always applied to root elemenet
+- `style?: React.CSSProperties` - inline styles always applied to root element
 - Polymorphic `as` prop for element type (where applicable e.g. see Box)
 
 ## Reference Components

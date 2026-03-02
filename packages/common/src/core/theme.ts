@@ -5,7 +5,7 @@
 /* eslint-disable no-restricted-syntax, @typescript-eslint/no-empty-object-type */
 
 /**
- * This utility type makes the final intellisense into human-redable literal values.
+ * This utility type makes the final intellisense into human-readable literal values.
  */
 type Prettify<T> = {
   [K in keyof T]: T[K];
