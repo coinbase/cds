@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { ClipPath, Defs, Path, Rect, Svg } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { hexagonShapePath } from '@coinbase/cds-common/media/shape';
 import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
 import type {
   AvatarFallbackColor,
@@ -16,7 +17,6 @@ import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
-import { hexagonClipPathD } from './constants';
 import { RemoteImage } from './RemoteImage';
 import { shapeStyles } from './RemoteImageGroup';
 
@@ -175,7 +175,7 @@ export const Avatar = memo(
           <Svg height="100%" viewBox="0 0 16 16" width="100%">
             <Defs>
               <ClipPath id={avatarHexagonClipPathId}>
-                <Path d={hexagonClipPathD} />
+                <Path d={hexagonShapePath} />
               </ClipPath>
             </Defs>
             <Rect

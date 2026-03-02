@@ -13,11 +13,10 @@ import type {
 import { ClipPath, Defs, Image as SvgImage, Path, Svg, SvgXml } from 'react-native-svg';
 import { SvgCssUri } from 'react-native-svg/css';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { hexagonShapePath } from '@coinbase/cds-common/media/shape';
 import type { AspectRatio, AvatarSize, FixedValue, Shape } from '@coinbase/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
-
-import { hexagonClipPathD } from './constants';
 
 type SourceProp = string | ImageProps['source'];
 
@@ -118,7 +117,7 @@ const HexagonClipPath = ({ image, ...props }: HexagonClipPathProps) => {
     <Svg {...props} viewBox="0 0 16 16">
       <Defs>
         <ClipPath id="hex-hw-shapeclip-clipconfig">
-          <Path d={hexagonClipPathD} />
+          <Path d={hexagonShapePath} />
         </ClipPath>
       </Defs>
       {image}
