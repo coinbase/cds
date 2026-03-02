@@ -1,17 +1,28 @@
+import { useState } from 'react';
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
 import { Switch } from '@coinbase/cds-web/controls';
 
 import webStylesData from ':docgen/web/controls/Switch/styles-data';
 
+export const StatefulSwitchPreview = ({ classNames }) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+return (
+
+<Switch
+  checked={isChecked}
+  classNames={classNames}
+  onChange={(event) => setIsChecked(event.target.checked)}
+>
+  Dark mode
+</Switch>
+); };
+
 ## Explorer
 
 <StylesExplorer selectors={webStylesData.selectors}>
-  {(classNames) => (
-    <Switch classNames={classNames} onChange={() => undefined}>
-      Dark mode
-    </Switch>
-  )}
+  {(classNames) => <StatefulSwitchPreview classNames={classNames} />}
 </StylesExplorer>
 
 ## Selectors
