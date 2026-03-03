@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { type CSSProperties, memo, useCallback, useMemo, useState } from 'react';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { Transition } from 'framer-motion';
@@ -39,6 +39,8 @@ const PositionedLabel = memo<{
   labelHorizontalOffset: number;
   labelFont?: ChartTextProps['font'];
   updateTransition: Transition;
+  className?: string;
+  style?: CSSProperties;
 }>(
   ({
     index,
@@ -52,6 +54,8 @@ const PositionedLabel = memo<{
     labelHorizontalOffset,
     labelFont,
     updateTransition,
+    className,
+    style,
   }) => {
     const pos = positions[index];
 
@@ -67,6 +71,7 @@ const PositionedLabel = memo<{
 
     return (
       <BeaconLabelComponent
+        className={className}
         color={color}
         dx={dx}
         font={labelFont}
@@ -74,6 +79,7 @@ const PositionedLabel = memo<{
         label={label}
         onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
         seriesId={seriesId}
+        style={style}
         transition={updateTransition}
         x={x}
         y={y}
@@ -119,6 +125,14 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
    * Transition configuration for beacon label animations.
    */
   transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Custom class name for each beacon label.
+   */
+  className?: string;
+  /**
+   * Custom inline styles for each beacon label.
+   */
+  style?: CSSProperties;
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
@@ -130,6 +144,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
     transitions,
+    className,
+    style,
   }) => {
     const {
       getSeries,
@@ -305,6 +321,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         <PositionedLabel
           key={info.seriesId}
           BeaconLabelComponent={BeaconLabelComponent}
+          className={className}
           color={labelInfo.color}
           index={index}
           label={labelInfo.label}
@@ -314,6 +331,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           position={currentPosition}
           positions={allLabelPositions}
           seriesId={info.seriesId}
+          style={style}
           updateTransition={updateTransition}
         />
       );
