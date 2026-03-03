@@ -182,7 +182,18 @@ export const LineChart = memo(
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           {series?.map(
-            ({ id, data, label, color, yAxisId, legendShape, ...linePropsFromSeries }) => (
+            ({
+              id,
+              data,
+              label,
+              color,
+              yAxisId,
+              legendShape,
+              transition: seriesTransition,
+              transitions: seriesTransitions,
+              type: seriesType,
+              ...linePropsFromSeries
+            }) => (
               <Line
                 key={id}
                 AreaComponent={AreaComponent}
@@ -197,9 +208,9 @@ export const LineChart = memo(
                 showArea={showArea}
                 strokeOpacity={strokeOpacity}
                 strokeWidth={strokeWidth}
-                transition={linePropsFromSeries.transition ?? transition}
-                transitions={linePropsFromSeries.transitions ?? transitions}
-                type={type}
+                transition={seriesTransition ?? transition}
+                transitions={seriesTransitions ?? transitions}
+                type={seriesType ?? type}
                 {...linePropsFromSeries}
               />
             ),
