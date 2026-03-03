@@ -20,7 +20,6 @@ import {
   buildTransition,
   defaultTransition,
   getTransition,
-  instantTransition,
   type Transition,
 } from '../utils/transition';
 

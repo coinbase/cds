@@ -93,8 +93,8 @@ export const getTransition = (
   value: Transition | null | undefined,
   animate: boolean,
   defaultValue: Transition,
-): Transition => {
-  if (!animate || value === null) return instantTransition;
+): Transition | null => {
+  if (!animate || value === null) return null;
   return value ?? defaultValue;
 };
 
