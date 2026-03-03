@@ -1,4 +1,4 @@
-import { memo, type CSSProperties, useCallback, useMemo, useState } from 'react';
+import { type CSSProperties, memo, useCallback, useMemo, useState } from 'react';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { Transition } from 'framer-motion';
