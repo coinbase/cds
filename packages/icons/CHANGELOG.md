@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (3)
+
+- usdc
+- transferStocks
+- filterLineStack
+
 ## 5.11.0 (2/5/2026 PST)
 
 #### 🚀 Updates
