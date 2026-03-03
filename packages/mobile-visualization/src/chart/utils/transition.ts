@@ -79,6 +79,11 @@ export const defaultAccessoryEnterTransition: Transition = {
   delay: accessoryFadeTransitionDelay,
 };
 
+// Avoid exact endpoint samples, which can intermittently produce non-interpolatable
+// path pairs for SkPath.interpolate on complex morphs.
+// See https://github.com/wcandillon/can-it-be-done-in-react-native/blob/db8d6ee7024e37e8f8d2cb237c0b953b5fc766fe/season5/src/Headspace/Play.tsx
+const pathInterpolationEpsilon = 1e-3;
+
 /**
  * Resolves a transition value based on the animation state and a default.
  * @note Passing in null will disable an animation.
@@ -228,12 +233,12 @@ export const usePathTransition = ({
      * Only used when `initialPath` is provided.
      * If not provided, falls back to `update`.
      */
-    enter?: Transition;
+    enter?: Transition | null;
     /**
      * Transition for subsequent data update animations.
      * @default defaultTransition
      */
-    update?: Transition;
+    update?: Transition | null;
   };
   /**
    * Transition for updates.
@@ -270,9 +275,10 @@ export const usePathTransition = ({
       interpolatorRef.current = pathInterpolator;
 
       normalizedStartShared.value =
-        Skia.Path.MakeFromSVGString(pathInterpolator(0)) ?? Skia.Path.Make();
+        Skia.Path.MakeFromSVGString(pathInterpolator(pathInterpolationEpsilon)) ?? Skia.Path.Make();
       normalizedEndShared.value =
-        Skia.Path.MakeFromSVGString(pathInterpolator(1)) ?? Skia.Path.Make();
+        Skia.Path.MakeFromSVGString(pathInterpolator(1 - pathInterpolationEpsilon)) ??
+        Skia.Path.Make();
       fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
 
       const activeTransition =
