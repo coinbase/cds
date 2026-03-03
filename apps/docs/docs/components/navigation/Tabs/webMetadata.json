@@ -11,5 +11,11 @@
       "label": "SegmentedTabs",
       "url": "/components/navigation/SegmentedTabs"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

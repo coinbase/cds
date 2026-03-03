@@ -52,7 +52,10 @@ describe('SegmentedTab', () => {
     );
     const buyTab = screen.getByText('Buy');
     expect(buyTab).toBeInTheDocument();
-    expect(buyTab.className).toContain('fg');
+    expect(buyTab.className).toContain('currentColor');
+
+    const motionSpan = buyTab.closest('span[style]');
+    expect(motionSpan).toHaveStyle({ color: 'var(--color-fg)' });
   });
 
   it('renders SegmentedTab correctly when disabled', () => {

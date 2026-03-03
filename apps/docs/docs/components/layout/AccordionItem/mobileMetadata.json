@@ -9,5 +9,10 @@
       "url": "/components/layout/Accordion/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
 }

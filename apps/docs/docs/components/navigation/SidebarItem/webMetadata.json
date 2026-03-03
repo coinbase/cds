@@ -14,5 +14,10 @@
       "url": "/components/navigation/SidebarMoreMenu/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-dom",
+      "version": "^18.3.1"
+    }
+  ]
 }

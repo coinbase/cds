@@ -252,6 +252,17 @@ const config: Config = {
   plugins: [
     ['@docusaurus/plugin-sitemap', { id: 'sitemap' }],
     [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [],
+        createRedirects(existingPath: string) {
+          if (existingPath.includes('/components/charts/')) {
+            return [existingPath.replace('/components/charts/', '/components/graphs/')];
+          }
+        },
+      },
+    ],
+    [
       '@docusaurus/theme-live-codeblock',
       {
         id: 'codeblock',

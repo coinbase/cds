@@ -9,5 +9,10 @@
       "url": "/components/typography/Text/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-inappbrowser-reborn",
+      "version": "^3.7.0"
+    }
+  ]
 }

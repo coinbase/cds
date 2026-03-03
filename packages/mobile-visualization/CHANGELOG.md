@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.21 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Fix issues with animations that spread props. [[#463](https://github.com/coinbase/cds/pull/463)]
+
+## 3.4.0-beta.20 (2/27/2026 PST)
+
+#### 🚀 Updates
+
+- Add styles props to PeriodSelector. [[#438](https://github.com/coinbase/cds/pull/438/)]
+
+#### 📘 Misc
+
+- Update outdated doc links. [[#440](https://github.com/coinbase/cds/pull/440)]
+
 ## 3.4.0-beta.19 (2/20/2026 PST)
 
 #### 🚀 Updates

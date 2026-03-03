@@ -176,7 +176,7 @@ export const ChartText = memo<ChartTextProps>(
     fontWeight,
     elevated,
     color = 'var(--color-fgMuted)',
-    background = elevated ? 'var(--color-bg)' : 'transparent',
+    background = elevated ? 'var(--color-bgElevation1)' : 'transparent',
     borderRadius,
     inset: insetInput,
     onDimensionsChange,

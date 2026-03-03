@@ -1,0 +1,198 @@
+PeriodSelector is a specialized [SegmentedTabs](/components/navigation/SegmentedTabs) optimized for chart time-period selection. It provides a transparent background, primary wash active state, and full-width layout by default.
+
+## Basics
+
+```jsx
+function Example() {
+  const tabs = [
+    { id: '1H', label: '1H' },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+## Sizing
+
+Set `width` to `fit-content` to make the selector only as wide as its content, and use `gap` to control spacing between tabs.
+
+```jsx
+function Example() {
+  const tabs = [
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: 'YTD', label: 'YTD' },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return (
+    <PeriodSelector
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+      width="fit-content"
+      gap={0.5}
+    />
+  );
+}
+```
+
+## Live Indicator
+
+Use the `LiveTabLabel` component (exported from PeriodSelector) to indicate a live data period. Pair it with a conditional `activeBackground` to visually differentiate the live state.
+
+```jsx
+function Example() {
+  const tabs = useMemo(
+    () => [
+      { id: '1H', label: <LiveTabLabel /> },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: '1Y', label: '1Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
+
+  return (
+    <PeriodSelector
+      activeBackground={activeBackground}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+## Overflow
+
+When there are too many tabs to fit in a single row, wrap the selector in a horizontal `ScrollView` with an optional action button.
+
+```jsx
+function Example() {
+  const tabs = useMemo(
+    () => [
+      { id: '1H', label: <LiveTabLabel /> },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: 'YTD', label: 'YTD' },
+      { id: '1Y', label: '1Y' },
+      { id: '5Y', label: '5Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const activeBackground = useMemo(() => (!isLive ? 'bgPrimaryWash' : 'bgNegativeWash'), [isLive]);
+
+  return (
+    <HStack alignItems="center" justifyContent="space-between" maxWidth="100%" width="100%">
+      <ScrollView
+        horizontal
+        contentContainerStyle={{ paddingEnd: 8, flexGrow: 1 }}
+        showsHorizontalScrollIndicator={false}
+      >
+        <PeriodSelector
+          activeBackground={activeBackground}
+          activeTab={activeTab}
+          gap={1}
+          justifyContent="flex-start"
+          onChange={setActiveTab}
+          tabs={tabs}
+          width="fit-content"
+        />
+      </ScrollView>
+      <IconButton
+        compact
+        accessibilityLabel="Configure chart"
+        flexShrink={0}
+        name="filter"
+        variant="secondary"
+      />
+    </HStack>
+  );
+}
+```
+
+## Customization
+
+### Custom Colors
+
+Use `TabComponent` and `TabsActiveIndicatorComponent` to fully brand the selector. This example applies a custom asset color to both the active indicator background and the tab text, while keeping the default red styling for live periods.
+
+```jsx
+function Example() {
+  const btcColor = assets.btc.color;
+
+  const BTCActiveIndicator = memo((props) => {
+    const theme = useTheme();
+    const { activeTab } = useTabsContext();
+    const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+    const backgroundColor = useMemo(
+      () => (isLive ? theme.color.bgNegativeWash : `${btcColor}1A`),
+      [isLive, theme.color.bgNegativeWash],
+    );
+
+    return <PeriodSelectorActiveIndicator {...props} background={backgroundColor} />;
+  });
+
+  const BTCTab = memo(
+    forwardRef(({ label, ...props }, ref) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
+      const theme = useTheme();
+
+      const wrappedLabel =
+        typeof label === 'string' ? (
+          <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+            {label}
+          </Text>
+        ) : (
+          label
+        );
+
+      return <SegmentedTab ref={ref} label={wrappedLabel} {...props} />;
+    }),
+  );
+
+  const tabs = [
+    { id: '1H', label: <LiveTabLabel /> },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[1]);
+
+  return (
+    <PeriodSelector
+      TabComponent={BTCTab}
+      TabsActiveIndicatorComponent={BTCActiveIndicator}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```

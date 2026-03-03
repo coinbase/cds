@@ -17,5 +17,11 @@
       "label": "SelectChip",
       "url": "/components/inputs/SelectChip/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-safe-area-context",
+      "version": "^4.10.5"
+    }
   ]
 }
