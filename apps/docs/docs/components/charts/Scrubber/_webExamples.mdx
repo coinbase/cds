@@ -169,9 +169,9 @@ You can use the `beaconStroke` prop to customize the stroke color of the scrubbe
   >
     <Scrubber
       idlePulse
-      hideOverlay
       lineStroke="rgb(var(--gray0))"
       beaconStroke="rgb(var(--red40))"
+      styles={{ overlay: { fill: 'rgb(var(--red40))' } }}
     />
   </LineChart>
 </Box>

@@ -131,7 +131,15 @@ export type ScrubberBeaconComponent = React.FC<
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   Pick<
     ChartTextProps,
-    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity' | 'font'
+    | 'x'
+    | 'y'
+    | 'dx'
+    | 'horizontalAlignment'
+    | 'onDimensionsChange'
+    | 'opacity'
+    | 'font'
+    | 'className'
+    | 'style'
   > & {
     /**
      * Label for the series.
@@ -252,6 +260,8 @@ export type ScrubberProps = ScrubberBaseProps & {
     beacon?: React.CSSProperties;
     /** Scrubber line element */
     line?: React.CSSProperties;
+    /** Scrubber line label element */
+    label?: React.CSSProperties;
     /** Beacon label element */
     beaconLabel?: React.CSSProperties;
   };
@@ -263,6 +273,8 @@ export type ScrubberProps = ScrubberBaseProps & {
     beacon?: string;
     /** Scrubber line element */
     line?: string;
+    /** Scrubber line label element */
+    label?: string;
     /** Beacon label element */
     beaconLabel?: string;
   };
@@ -420,14 +432,14 @@ export const Scrubber = memo(
             <ReferenceLine
               LabelComponent={LabelComponent}
               LineComponent={LineComponent}
-              classNames={{ label: classNames?.line }}
+              classNames={{ label: classNames?.label, line: classNames?.line }}
               dataX={dataX}
               label={typeof label === 'function' ? label(dataIndex) : label}
               labelBoundsInset={labelBoundsInset}
               labelElevated={labelElevated}
               labelFont={labelFont}
               stroke={lineStroke}
-              styles={{ label: styles?.line }}
+              styles={{ label: styles?.label, line: styles?.line }}
             />
           )}
           <ScrubberBeaconGroup
@@ -444,11 +456,13 @@ export const Scrubber = memo(
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              className={classNames?.beaconLabel}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              style={styles?.beaconLabel}
               transitions={transitions}
             />
           )}
