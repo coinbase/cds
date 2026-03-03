@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { ClipPath, Defs, Path, Rect, Svg } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { hexagonShapePath } from '@coinbase/cds-common/media/shape';
+import { hexagonShapePath } from '@coinbase/cds-common/svg/shape';
 import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
 import type {
   AvatarFallbackColor,
