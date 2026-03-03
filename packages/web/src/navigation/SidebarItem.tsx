@@ -134,10 +134,10 @@ export const SidebarItem = memo(
           >
             <Icon
               active={active}
+              className={classNames?.icon}
               color={color}
               name={icon}
               size="m"
-              className={classNames?.icon}
               style={styles?.icon}
             />
             {(variant === 'condensed' || !isCollapsed) && (
