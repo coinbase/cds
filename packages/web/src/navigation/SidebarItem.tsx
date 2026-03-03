@@ -33,8 +33,6 @@ type ManagedPressableProps = Pick<
 type SidebarItemClassNames = {
   /** Persistent outer wrapper across tooltip/non-tooltip variants. */
   root?: string;
-  /** Inner pressable wrapper className. */
-  pressable?: string;
   /** Default content wrapper className. */
   content?: string;
   /** Icon wrapper className. */
@@ -49,8 +47,6 @@ type SidebarItemClassNames = {
 type SidebarItemStyles = {
   /** Persistent outer wrapper across tooltip/non-tooltip variants. */
   root?: React.CSSProperties;
-  /** Inner pressable wrapper style. */
-  pressable?: React.CSSProperties;
   /** Default content wrapper style. */
   content?: React.CSSProperties;
   /** Icon wrapper style. */
@@ -136,9 +132,14 @@ export const SidebarItem = memo(
             style={styles?.content}
             testID={`sidebar-item-${variant}`}
           >
-            <Box className={classNames?.icon} style={styles?.icon}>
-              <Icon active={active} color={color} name={icon} size="m" />
-            </Box>
+            <Icon
+              active={active}
+              color={color}
+              name={icon}
+              size="m"
+              className={classNames?.icon}
+              style={styles?.icon}
+            />
             {(variant === 'condensed' || !isCollapsed) && (
               <Text
                 className={classNames?.title}
@@ -176,14 +177,13 @@ export const SidebarItem = memo(
         () => (
           <Pressable
             ref={ref}
-            className={cx(pressableCss, classNames?.pressable)}
+            className={pressableCss}
             {...pressableProps}
             accessibilityLabel={isCollapsed ? accessibilityLabel : undefined}
             aria-current={active ? 'page' : undefined}
             background="bgPrimaryWash"
             borderRadius={borderRadius ?? (isDefaultVariant ? 1000 : 400)}
             borderWidth={isDefaultVariant ? undefined : 0}
-            style={styles?.pressable}
             transparentWhileInactive={!active}
             width="100%"
           >
@@ -213,8 +213,6 @@ export const SidebarItem = memo(
           icon,
           title,
           defaultComponent,
-          classNames?.pressable,
-          styles?.pressable,
         ],
       );
 

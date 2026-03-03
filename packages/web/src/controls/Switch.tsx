@@ -58,10 +58,6 @@ export type SwitchProps = ControlBaseProps<string> & {
     root?: string;
     /** Control wrapper className. */
     control?: string;
-    /**
-     * Inner alignment wrapper used only when `children` is provided (labeled variant).
-     */
-    switchNodeContainer?: string;
     /** Track wrapper className. */
     track?: string;
     /** Thumb wrapper className. */
@@ -75,10 +71,6 @@ export type SwitchProps = ControlBaseProps<string> & {
      * Applied to the underlying `Control` element (same element that receives `style`).
      */
     control?: React.CSSProperties;
-    /**
-     * Inner alignment wrapper used only when `children` is provided (labeled variant).
-     */
-    switchNodeContainer?: React.CSSProperties;
     /** Track wrapper style. */
     track?: React.CSSProperties;
     /** Thumb wrapper style. */
@@ -164,23 +156,14 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
 
   return (
     <Box
+      alignItems={children ? 'center' : undefined}
       className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+      minHeight={children ? 'var(--controlSize-switchHeight)' : undefined}
       role="presentation"
       style={styles?.root}
       width="fit-content"
     >
-      {children ? (
-        <Box
-          alignItems="center"
-          className={classNames?.switchNodeContainer}
-          minHeight="var(--controlSize-switchHeight)"
-          style={styles?.switchNodeContainer}
-        >
-          {switchNode}
-        </Box>
-      ) : (
-        switchNode
-      )}
+      {switchNode}
     </Box>
   );
 });

@@ -169,11 +169,7 @@ describe('Card', () => {
 
     rerender(
       <DefaultThemeProvider>
-        <Card
-          classNames={{ pressable: 'test-card-pressable', root: 'test-card-root' }}
-          onClick={noop}
-          styles={{ pressable: { borderBottomWidth: 2 }, root: { borderTopWidth: 3 } }}
-        >
+        <Card classNames={{ content: 'test-card-content', root: 'test-card-root' }} onClick={noop}>
           {CARD_TEXT}
         </Card>
       </DefaultThemeProvider>,
@@ -181,7 +177,6 @@ describe('Card', () => {
 
     const button = screen.getByRole('button');
     expect(button.closest('.test-card-root')).toBeTruthy();
-    expect(button.className).toContain('test-card-pressable');
-    expect(button).toHaveStyle({ borderBottomWidth: 2 });
+    expect(screen.getByText(CARD_TEXT).closest('.test-card-content')).toBeTruthy();
   });
 });

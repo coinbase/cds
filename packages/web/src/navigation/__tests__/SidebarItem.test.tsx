@@ -95,7 +95,6 @@ describe('SidebarItem', () => {
             classNames={{
               content: 'test-sidebar-content',
               icon: 'test-sidebar-icon',
-              pressable: 'test-sidebar-pressable',
               root: 'test-sidebar-root',
               title: 'test-sidebar-title',
             }}
@@ -111,9 +110,6 @@ describe('SidebarItem', () => {
     expect(
       screen.getByTestId('sidebar-item-with-classnames').closest('.test-sidebar-root'),
     ).toBeTruthy();
-    expect(screen.getByTestId('sidebar-item-with-classnames').className).toContain(
-      'test-sidebar-pressable',
-    );
     expect(screen.getByText('Assets').className).toContain('test-sidebar-title');
   });
 });

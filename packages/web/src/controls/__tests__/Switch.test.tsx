@@ -117,7 +117,6 @@ describe('Switch.test', () => {
           classNames={{
             control: 'test-switch-control',
             root: 'test-switch-root',
-            switchNodeContainer: 'test-switch-container',
             thumb: 'test-switch-thumb',
             track: 'test-switch-track',
           }}
@@ -134,7 +133,6 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('switch-track').className).toContain('test-switch-track');
     expect(screen.getByTestId('switch-thumb').className).toContain('test-switch-thumb');
     expect(screen.getByRole('switch').closest('.test-switch-control')).toBeTruthy();
-    expect(screen.getByTestId('switch-track').closest('.test-switch-container')).toBeTruthy();
     expect(screen.getByRole('switch').closest('.cds-Control')).toHaveStyle({
       borderLeftWidth: '4px',
     });

@@ -32,11 +32,6 @@ export type CardProps = CardBaseProps &
       root?: StyleProp<ViewStyle>;
       /** Card content container (`VStack`) style. */
       content?: StyleProp<ViewStyle>;
-      /**
-       * Pressable wrapper style.
-       * Applies only when `onPress` is provided.
-       */
-      pressable?: StyleProp<ViewStyle>;
     };
   };
 
@@ -151,13 +146,10 @@ export const Card = memo(function OldCard({
           elevation={elevation}
           noScaleOnPress={noScaleOnPress}
           onPress={onPress}
-          style={[
-            {
-              width: width as DimensionValue,
-              height: height as DimensionValue,
-            },
-            styles?.pressable,
-          ]}
+          style={{
+            width: width as DimensionValue,
+            height: height as DimensionValue,
+          }}
           testID={testID}
           {...pressableProps}
         >

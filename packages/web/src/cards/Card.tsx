@@ -27,11 +27,6 @@ export type CardProps = CardBaseProps &
       root?: string;
       /** Card content container (`VStack`). */
       content?: string;
-      /**
-       * Pressable wrapper element.
-       * Applies only when `href`, `onClick`, `onKeyDown`, or `onKeyUp` makes the card interactive.
-       */
-      pressable?: string;
     };
     /** Slot-level styles for Card. */
     styles?: {
@@ -39,11 +34,6 @@ export type CardProps = CardBaseProps &
       root?: React.CSSProperties;
       /** Card content container (`VStack`). */
       content?: React.CSSProperties;
-      /**
-       * Pressable wrapper element.
-       * Applies only when `href`, `onClick`, `onKeyDown`, or `onKeyUp` makes the card interactive.
-       */
-      pressable?: React.CSSProperties;
     };
   };
 
@@ -122,7 +112,6 @@ export const Card = memo<CardProps>(function Card({
           as="a"
           background={background}
           borderRadius={borderRadius}
-          className={classNames?.pressable}
           elevation={elevation}
           height={height}
           href={href}
@@ -131,7 +120,6 @@ export const Card = memo<CardProps>(function Card({
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           pin={pin}
-          style={styles?.pressable}
           target={target}
           testID={testID}
           width={width}
@@ -145,7 +133,6 @@ export const Card = memo<CardProps>(function Card({
           accessibilityLabelledBy={accessibilityLabelledBy}
           background={background}
           borderRadius={borderRadius}
-          className={classNames?.pressable}
           elevation={elevation}
           height={height}
           noScaleOnPress={noScaleOnPress}
@@ -153,7 +140,6 @@ export const Card = memo<CardProps>(function Card({
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           pin={pin}
-          style={styles?.pressable}
           testID={testID}
           width={width}
         >

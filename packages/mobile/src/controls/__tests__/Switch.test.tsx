@@ -202,13 +202,12 @@ describe('Switch.test', () => {
     });
   });
 
-  it('applies styles.root and styles.switchNodeContainer', () => {
+  it('applies styles.root', () => {
     const { toJSON } = render(
       <DefaultThemeProvider>
         <Switch
           onChange={jest.fn()}
           styles={{
-            switchNodeContainer: { borderBottomWidth: 2 },
             root: { borderTopWidth: 1 },
           }}
         >
@@ -219,7 +218,6 @@ describe('Switch.test', () => {
 
     const tree = toJSON();
     expect(treeHasStyleProp(tree, (s) => s.borderTopWidth === 1)).toBe(true);
-    expect(treeHasStyleProp(tree, (s) => s.borderBottomWidth === 2)).toBe(true);
   });
 
   it('applies styles.control and preserves style prop behavior', () => {

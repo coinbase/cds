@@ -28,10 +28,6 @@ export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValu
      * Applied to the underlying `Control` element (same element that receives `style`).
      */
     control?: StyleProp<ViewStyle>;
-    /**
-     * Inner alignment wrapper used only when `children` is provided (labeled variant).
-     */
-    switchNodeContainer?: StyleProp<ViewStyle>;
   };
 };
 
@@ -141,19 +137,13 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends stri
   );
 
   return (
-    <Box style={styles?.root}>
-      {children ? (
-        <Box
-          alignItems="center"
-          flexDirection="row"
-          minHeight={switchHeight}
-          style={styles?.switchNodeContainer}
-        >
-          {switchNode}
-        </Box>
-      ) : (
-        switchNode
-      )}
+    <Box
+      alignItems={children ? 'center' : undefined}
+      flexDirection={children ? 'row' : undefined}
+      minHeight={children ? switchHeight : undefined}
+      style={styles?.root}
+    >
+      {switchNode}
     </Box>
   );
 });

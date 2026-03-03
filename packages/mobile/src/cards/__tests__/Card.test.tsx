@@ -28,13 +28,13 @@ describe('Card.test', () => {
     expect(pressableTree).toHaveProperty('type', 'View');
   });
 
-  it('applies styles.root and styles.pressable', () => {
+  it('applies styles.root and styles.content', () => {
     const { toJSON } = render(
       <DefaultThemeProvider>
         <Card
           onPress={jest.fn()}
           styles={{
-            pressable: { borderBottomWidth: 2 },
+            content: { borderBottomWidth: 2 },
             root: { borderTopWidth: 1 },
           }}
         >
