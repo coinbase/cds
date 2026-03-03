@@ -396,6 +396,8 @@ export type PictogramName =
   | 'phone'
   | 'pieChart'
   | 'pieChartData'
+  | 'pieChartWithArrow'
+  | 'pieChartWithArrowBlue'
   | 'pizza'
   | 'planet'
   | 'pluginBrowser'

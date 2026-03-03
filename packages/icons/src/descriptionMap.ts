@@ -707,7 +707,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'sortDownCenter',
     'sortDown',
     'more',
-    'sortDoubleArrow'
+    'sortDoubleArrow',
+    'filterLineStack'
   ],
   '🍡': [
     'moreVertical'
@@ -1277,7 +1278,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'doubleChevronRight',
     'directDepositIcon',
     'sendReceive',
-    'distribution'
+    'distribution',
+    'pieChartWithArrow'
   ],
   'payment': [
     'directDeposit',
@@ -1834,7 +1836,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'creatorCoin',
     'distribution',
     'baseQuickBuy',
-    'stableCoin'
+    'stableCoin',
+    'usdc'
   ],
   'defi': [
     'defi'
@@ -2448,7 +2451,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'horizontalLine',
     'chartLine',
     'chartLine',
-    'lineChartCrypto'
+    'lineChartCrypto',
+    'filterLineStack'
   ],
   'calendar': [
     'calendar',
@@ -4996,7 +5000,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'gasFees'
   ],
   'cost': [
-    'gasFees'
+    'gasFees',
+    'usdc'
   ],
   'pump': [
     'gasFees',
@@ -5562,7 +5567,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'dataStack'
   ],
   'stack': [
-    'dataStack'
+    'dataStack',
+    'filterLineStack'
   ],
   '✖️': [
     'plusMinus'
@@ -5712,7 +5718,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'piechart': [
     'allocation',
-    'pieChartData'
+    'pieChartData',
+    'pieChartWithArrow'
   ],
   'Verification': [
     'baseVerification'
@@ -6526,5 +6533,17 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'hooks': [
     'webhooks'
+  ],
+  'usdc': [
+    'usdc'
+  ],
+  'fixed': [
+    'usdc'
+  ],
+  'transferStocks': [
+    'pieChartWithArrow'
+  ],
+  'stocks': [
+    'pieChartWithArrow'
   ]
 };
