@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (4)
+
+###### Pictogram (2)
+
+- pieChartWithArrow
+- pieChartWithArrowBlue
+
+###### SpotSquare (2)
+
+- pieChartWithArrow
+- pieChartWithArrowBlue
+
 ## 4.31.0 (2/3/2026 PST)
 
 #### 🚀 Updates

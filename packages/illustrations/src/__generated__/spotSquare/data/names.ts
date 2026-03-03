@@ -203,6 +203,8 @@ const names: SpotSquareName[] = [
   'performance',
   'phoneNotifications',
   'phoneNumber',
+  'pieChartWithArrow',
+  'pieChartWithArrowBlue',
   'pixBankDeposits',
   'pixDeposits',
   'portfolioPerformance',
