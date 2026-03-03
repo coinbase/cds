@@ -153,8 +153,11 @@ export const useInterpolator = <T>(
  * // Timing animation
  * progress.value = buildTransition(1, { type: 'timing', duration: 500 });
  */
-export const buildTransition = (targetValue: number, transition: Transition): number => {
+export const buildTransition = (targetValue: number, transition: Transition | null): number => {
   'worklet';
+
+  if (transition === null) return targetValue;
+
   const delayMs = transition.delay;
 
   let animation: number;
