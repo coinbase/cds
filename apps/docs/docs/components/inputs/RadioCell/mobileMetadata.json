@@ -16,5 +16,11 @@
       "label": "Radio",
       "url": "/components/inputs/Radio/?platform=mobile"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    }
   ]
 }

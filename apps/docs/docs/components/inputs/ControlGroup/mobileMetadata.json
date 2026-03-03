@@ -31,5 +31,6 @@
       "label": "Switch",
       "url": "/components/inputs/Switch/"
     }
-  ]
+  ],
+  "dependencies": []
 }

@@ -150,16 +150,16 @@ export const useInterpolator = <T>(
  */
 export const buildTransition = (targetValue: number, transition: Transition): number => {
   'worklet';
-  const { delay: delayMs, ...config } = transition;
+  const delayMs = transition.delay;
 
   let animation: number;
-  switch (config.type) {
+  switch (transition.type) {
     case 'timing': {
-      animation = withTiming(targetValue, config);
+      animation = withTiming(targetValue, transition);
       break;
     }
     case 'spring': {
-      animation = withSpring(targetValue, config);
+      animation = withSpring(targetValue, transition);
       break;
     }
     default: {

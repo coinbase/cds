@@ -18,5 +18,10 @@
       "url": "/components/cards/ContentCard/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    }
+  ]
 }

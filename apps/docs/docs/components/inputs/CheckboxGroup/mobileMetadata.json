@@ -20,5 +20,6 @@
       "label": "RadioGroup",
       "url": "/components/inputs/RadioGroup"
     }
-  ]
+  ],
+  "dependencies": []
 }
