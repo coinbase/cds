@@ -402,6 +402,7 @@ const names: PictogramName[] = [
   'phone',
   'pieChart',
   'pieChartData',
+  'pieChartWithArrow',
   'pizza',
   'planet',
   'pluginBrowser',

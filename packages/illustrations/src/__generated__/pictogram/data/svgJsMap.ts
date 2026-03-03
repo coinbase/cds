@@ -1574,6 +1574,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/pieChartData-0.js').content,
     dark: () => require('../svgJs/dark/pieChartData-0.js').content,
   },
+  pieChartWithArrow: {
+    light: () => require('../svgJs/light/pieChartWithArrow-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrow-0.js').content,
+  },
   pizza: {
     light: () => require('../svgJs/light/pizza-3.js').content,
     dark: () => require('../svgJs/dark/pizza-3.js').content,
