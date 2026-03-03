@@ -507,6 +507,7 @@ const versionMap: Record<PictogramName, number> = {
   robot: 0,
   commodities: 0,
   arrowsUpDown: 0,
+  transferStocks: 0,
 };
 
 export default versionMap;

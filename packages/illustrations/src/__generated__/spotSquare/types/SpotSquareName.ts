@@ -238,6 +238,7 @@ export type SpotSquareName =
   | 'taxesDetails'
   | 'tradeImmediately'
   | 'transferringCrypto'
+  | 'transferStocks'
   | 'trendingHotAssets'
   | 'unsupportedAsset'
   | 'verifyEmail'

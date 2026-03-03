@@ -942,6 +942,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/transferringCrypto-6.js').content,
     dark: () => require('../svgJs/dark/transferringCrypto-6.js').content,
   },
+  transferStocks: {
+    light: () => require('../svgJs/light/transferStocks-0.js').content,
+    dark: () => require('../svgJs/dark/transferStocks-0.js').content,
+  },
   trendingHotAssets: {
     light: () => require('../svgJs/light/trendingHotAssets-3.js').content,
     dark: () => require('../svgJs/dark/trendingHotAssets-3.js').content,

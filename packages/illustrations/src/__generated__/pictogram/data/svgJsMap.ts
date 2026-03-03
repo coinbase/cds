@@ -1826,6 +1826,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/transferSend-3.js').content,
     dark: () => require('../svgJs/dark/transferSend-3.js').content,
   },
+  transferStocks: {
+    light: () => require('../svgJs/light/transferStocks-0.js').content,
+    dark: () => require('../svgJs/dark/transferStocks-0.js').content,
+  },
   transistor: {
     light: () => require('../svgJs/light/transistor-2.js').content,
     dark: () => require('../svgJs/dark/transistor-2.js').content,

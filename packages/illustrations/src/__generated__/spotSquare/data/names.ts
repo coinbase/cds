@@ -243,6 +243,7 @@ const names: SpotSquareName[] = [
   'taxDocuments',
   'taxesDetails',
   'tradeImmediately',
+  'transferStocks',
   'transferringCrypto',
   'trendingHotAssets',
   'unsupportedAsset',

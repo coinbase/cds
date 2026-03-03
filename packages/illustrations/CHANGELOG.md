@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (2)
+
+###### Pictogram (1)
+
+- transferStocks
+
+###### SpotSquare (1)
+
+- transferStocks
+
 ## 4.31.0 (2/3/2026 PST)
 
 #### 🚀 Updates

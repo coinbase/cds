@@ -465,6 +465,7 @@ const names: PictogramName[] = [
   'tokenSales',
   'trading',
   'transferSend',
+  'transferStocks',
   'transistor',
   'trendingAssets',
   'trusted',
