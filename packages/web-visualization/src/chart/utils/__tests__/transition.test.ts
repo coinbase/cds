@@ -263,6 +263,30 @@ describe('usePathTransition', () => {
     expect(result.current.get()).toBe(nextPath);
   });
 
+  it('should short-circuit interpolation when enter transition is null', () => {
+    const { interpolatePath } = require('d3-interpolate-path');
+    const initialPath = 'M0,0L10,10';
+    const nextPath = 'M0,0L30,30';
+
+    const { result, rerender } = renderHook(
+      ({ path }) =>
+        usePathTransition({
+          currentPath: path,
+          initialPath,
+          transitions: { enter: null, update: defaultTransition },
+        }),
+      {
+        initialProps: { path: initialPath },
+      },
+    );
+
+    interpolatePath.mockClear();
+    rerender({ path: nextPath });
+
+    expect(interpolatePath).not.toHaveBeenCalled();
+    expect(result.current.get()).toBe(nextPath);
+  });
+
   it('should stop ongoing animation when path changes', () => {
     const { animate } = require('framer-motion');
     const stopMock = jest.fn();
