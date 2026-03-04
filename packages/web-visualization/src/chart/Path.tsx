@@ -165,14 +165,23 @@ export const Path = memo<PathProps>(
         {rect !== null && (
           <defs>
             <clipPath id={clipPathId}>
-              <motion.rect
-                animate="visible"
-                height={rect.height + totalOffset}
-                initial="hidden"
-                variants={clipPathAnimation}
-                x={rect.x - clipOffset}
-                y={rect.y - clipOffset}
-              />
+              {shouldAnimateClip ? (
+                <motion.rect
+                  animate="visible"
+                  height={rect.height + totalOffset}
+                  initial="hidden"
+                  variants={clipPathAnimation}
+                  x={rect.x - clipOffset}
+                  y={rect.y - clipOffset}
+                />
+              ) : (
+                <rect
+                  height={rect.height + totalOffset}
+                  width={rect.width + totalOffset}
+                  x={rect.x - clipOffset}
+                  y={rect.y - clipOffset}
+                />
+              )}
             </clipPath>
           </defs>
         )}
