@@ -42,6 +42,9 @@ const exampleProps: SegmentedTabsProps = {
   tabs,
   activeTab: tabs[0],
   onChange: jest.fn(),
+  // Reanimated's Jest matcher can throw when a style array contains `undefined`.
+  // Providing an explicit indicator style keeps the test environment stable.
+  styles: { activeIndicator: {} },
 };
 
 const mockApi = {
