@@ -54,6 +54,30 @@ const renderChartWithScrubber = (scrubberProps?: React.ComponentProps<typeof Scr
   );
 };
 
+const renderMultiSeriesChartWithScrubber = (
+  scrubberProps?: React.ComponentProps<typeof Scrubber>,
+) => {
+  return render(
+    <DefaultThemeProvider>
+      <CartesianChart
+        enableScrubbing
+        animate={false}
+        height={400}
+        series={[
+          { id: 'alpha', data: [10, 20, 30, 40, 50], label: 'Alpha' },
+          { id: 'beta', data: [50, 40, 30, 20, 10], label: 'Beta' },
+        ]}
+        testID="multi-series-chart"
+        width={600}
+      >
+        <Line seriesId="alpha" />
+        <Line seriesId="beta" />
+        <Scrubber {...scrubberProps} />
+      </CartesianChart>
+    </DefaultThemeProvider>,
+  );
+};
+
 describe('Scrubber', () => {
   describe('basic rendering', () => {
     it('renders scrubber within chart', () => {
@@ -87,6 +111,24 @@ describe('Scrubber', () => {
       const svg = screen.getByTestId('test-chart');
       const overlay = svg.querySelector('[data-testid="scrubber-overlay"]');
       expect(overlay).not.toBeInTheDocument();
+    });
+  });
+
+  describe('series filtering', () => {
+    it('renders beacons only for specified seriesIds', () => {
+      renderMultiSeriesChartWithScrubber({ seriesIds: ['alpha'], testID: 'scrubber' });
+
+      const svg = screen.getByTestId('multi-series-chart');
+      expect(svg.querySelector('[data-testid="scrubber-alpha"]')).toBeInTheDocument();
+      expect(svg.querySelector('[data-testid="scrubber-beta"]')).not.toBeInTheDocument();
+    });
+
+    it('renders beacons for all series when seriesIds is not provided', () => {
+      renderMultiSeriesChartWithScrubber({ testID: 'scrubber' });
+
+      const svg = screen.getByTestId('multi-series-chart');
+      expect(svg.querySelector('[data-testid="scrubber-alpha"]')).toBeInTheDocument();
+      expect(svg.querySelector('[data-testid="scrubber-beta"]')).toBeInTheDocument();
     });
   });
 });

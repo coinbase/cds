@@ -197,8 +197,8 @@ export const LineChart = memo(
                 showArea={showArea}
                 strokeOpacity={strokeOpacity}
                 strokeWidth={strokeWidth}
-                transition={linePropsFromSeries.transition ?? transition}
-                transitions={linePropsFromSeries.transitions ?? transitions}
+                transition={transition}
+                transitions={transitions}
                 type={type}
                 {...linePropsFromSeries}
               />
