@@ -110,9 +110,9 @@ const TransitionAreaChart = memo<{
 }>(({ data, transitions, idlePulse, scrubberRef }) => (
   <AreaChart
     enableScrubbing
+    showLines
     height={200}
     inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
-    showLines
     series={[{ id: 'values', data }]}
     transitions={transitions}
   >
