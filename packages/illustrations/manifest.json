@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-02-03T21:28:59.761Z",
+  "lastUpdated": "2026-03-03T22:04:57.425Z",
   "colors": {
     "light": [
       {
@@ -26,66 +26,6 @@
         },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
-        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
-        "name": "invert",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0E"
-        },
-        "cssVarSetter": "--illustration-invert",
-        "cssVarGetter": "var(--illustration-invert)"
-      },
-      {
-        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
-        "name": "gray",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DB"
-        },
-        "cssVarSetter": "--illustration-gray",
-        "cssVarGetter": "var(--illustration-gray)"
-      },
-      {
-        "key": "4becda743977862f9f06956487546d564ff3fc45",
-        "name": "white",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-white",
-        "cssVarGetter": "var(--illustration-white)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
-        "key": "8271abef0dea9d201283c417e6b6752edd928481",
-        "name": "base-gray",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B1B7C3"
-        },
-        "cssVarSetter": "--illustration-base-gray",
-        "cssVarGetter": "var(--illustration-base-gray)"
       },
       {
         "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
@@ -124,18 +64,6 @@
         "cssVarGetter": "var(--illustration-accent-4)"
       },
       {
-        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
-        "name": "accent-1",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFD200"
-        },
-        "cssVarSetter": "--illustration-accent-1",
-        "cssVarGetter": "var(--illustration-accent-1)"
-      },
-      {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "light",
@@ -146,6 +74,30 @@
         },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
+      },
+      {
+        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
+        "name": "invert",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0E"
+        },
+        "cssVarSetter": "--illustration-invert",
+        "cssVarGetter": "var(--illustration-invert)"
+      },
+      {
+        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
+        "name": "gray",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#CED2DB"
+        },
+        "cssVarSetter": "--illustration-gray",
+        "cssVarGetter": "var(--illustration-gray)"
       },
       {
         "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
@@ -160,16 +112,52 @@
         "cssVarGetter": "var(--illustration-accent-3)"
       },
       {
-        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
-        "name": "black",
+        "key": "4becda743977862f9f06956487546d564ff3fc45",
+        "name": "white",
         "type": "light",
         "prefix": "illustration",
         "paint": {
           "type": "solid",
-          "value": "#0A0B0D"
+          "value": "#FFFFFF"
         },
-        "cssVarSetter": "--illustration-black",
-        "cssVarGetter": "var(--illustration-black)"
+        "cssVarSetter": "--illustration-white",
+        "cssVarGetter": "var(--illustration-white)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFE"
+        },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "8271abef0dea9d201283c417e6b6752edd928481",
+        "name": "base-gray",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#B1B7C3"
+        },
+        "cssVarSetter": "--illustration-base-gray",
+        "cssVarGetter": "var(--illustration-base-gray)"
+      },
+      {
+        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
+        "name": "accent-1",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFD200"
+        },
+        "cssVarSetter": "--illustration-accent-1",
+        "cssVarGetter": "var(--illustration-accent-1)"
       },
       {
         "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
@@ -182,6 +170,18 @@
         },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
       }
     ],
     "dark": [
@@ -208,66 +208,6 @@
         },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
-        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
-        "name": "invert",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-invert",
-        "cssVarGetter": "var(--illustration-invert)"
-      },
-      {
-        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
-        "name": "gray",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
-        "cssVarSetter": "--illustration-gray",
-        "cssVarGetter": "var(--illustration-gray)"
-      },
-      {
-        "key": "4becda743977862f9f06956487546d564ff3fc45",
-        "name": "white",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-white",
-        "cssVarGetter": "var(--illustration-white)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
-        "key": "8271abef0dea9d201283c417e6b6752edd928481",
-        "name": "base-gray",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#727886"
-        },
-        "cssVarSetter": "--illustration-base-gray",
-        "cssVarGetter": "var(--illustration-base-gray)"
       },
       {
         "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
@@ -306,18 +246,6 @@
         "cssVarGetter": "var(--illustration-accent-4)"
       },
       {
-        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
-        "name": "accent-1",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ECD069"
-        },
-        "cssVarSetter": "--illustration-accent-1",
-        "cssVarGetter": "var(--illustration-accent-1)"
-      },
-      {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "dark",
@@ -328,6 +256,30 @@
         },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
+      },
+      {
+        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
+        "name": "invert",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-invert",
+        "cssVarGetter": "var(--illustration-invert)"
+      },
+      {
+        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
+        "name": "gray",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#464B55"
+        },
+        "cssVarSetter": "--illustration-gray",
+        "cssVarGetter": "var(--illustration-gray)"
       },
       {
         "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
@@ -342,16 +294,52 @@
         "cssVarGetter": "var(--illustration-accent-3)"
       },
       {
-        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
-        "name": "black",
+        "key": "4becda743977862f9f06956487546d564ff3fc45",
+        "name": "white",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-white",
+        "cssVarGetter": "var(--illustration-white)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
         "type": "dark",
         "prefix": "illustration",
         "paint": {
           "type": "solid",
           "value": "#0A0B0D"
         },
-        "cssVarSetter": "--illustration-black",
-        "cssVarGetter": "var(--illustration-black)"
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "8271abef0dea9d201283c417e6b6752edd928481",
+        "name": "base-gray",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#727886"
+        },
+        "cssVarSetter": "--illustration-base-gray",
+        "cssVarGetter": "var(--illustration-base-gray)"
+      },
+      {
+        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
+        "name": "accent-1",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#ECD069"
+        },
+        "cssVarSetter": "--illustration-accent-1",
+        "cssVarGetter": "var(--illustration-accent-1)"
       },
       {
         "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
@@ -364,6 +352,18 @@
         },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
       }
     ]
   },
@@ -29145,6 +29145,86 @@
         "svgJsDark": "./pictogram/svgJs/dark/arrowsUpDown-0.js",
         "pngLight": "./pictogram/png/light/arrowsUpDown-0.png",
         "pngDark": "./pictogram/png/dark/arrowsUpDown-0.png"
+      },
+      "version": 0
+    },
+    "28377:29": {
+      "type": "pictogram",
+      "name": "pieChartWithArrow",
+      "hash": "5q0rW7pnRFYuntzNpwSSaQVCBC+u3tlfoWWTmls6JS0=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-03-02T18:23:13.233Z",
+      "lastUpdated": "2026-03-03T01:34:10.718Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/pieChartWithArrow-0.svg",
+        "svgDark": "./pictogram/svg/dark/pieChartWithArrow-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/pieChartWithArrow-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/pieChartWithArrow-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/pieChartWithArrow-0.js",
+        "pngLight": "./pictogram/png/light/pieChartWithArrow-0.png",
+        "pngDark": "./pictogram/png/dark/pieChartWithArrow-0.png"
+      },
+      "version": 0
+    },
+    "28377:47": {
+      "type": "spotSquare",
+      "name": "pieChartWithArrow",
+      "hash": "qz5S8tKbLlU2rCPdnHpizyxx7HfgRNn2H5zhltj0l1k=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-03-02T18:23:13.225Z",
+      "lastUpdated": "2026-03-03T01:34:10.727Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/pieChartWithArrow-0.svg",
+        "svgDark": "./spotSquare/svg/dark/pieChartWithArrow-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/pieChartWithArrow-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/pieChartWithArrow-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/pieChartWithArrow-0.js",
+        "pngLight": "./spotSquare/png/light/pieChartWithArrow-0.png",
+        "pngDark": "./spotSquare/png/dark/pieChartWithArrow-0.png"
+      },
+      "version": 0
+    },
+    "28417:512": {
+      "type": "spotSquare",
+      "name": "pieChartWithArrowBlue",
+      "hash": "wh+4Ir4LzQUFvfPU9W/j+nuHZBCVmeqZMEr/bs0pAf4=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-03-03T21:55:09.217Z",
+      "lastUpdated": "2026-03-03T21:55:09.217Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/pieChartWithArrowBlue-0.svg",
+        "svgDark": "./spotSquare/svg/dark/pieChartWithArrowBlue-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/pieChartWithArrowBlue-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/pieChartWithArrowBlue-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/pieChartWithArrowBlue-0.js",
+        "pngLight": "./spotSquare/png/light/pieChartWithArrowBlue-0.png",
+        "pngDark": "./spotSquare/png/dark/pieChartWithArrowBlue-0.png"
+      },
+      "version": 0
+    },
+    "28417:529": {
+      "type": "pictogram",
+      "name": "pieChartWithArrowBlue",
+      "hash": "9Zs6DU2qpejYXfjPcNrK3rctXxWSPAEutyYKtvszHks=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-03-03T21:56:10.265Z",
+      "lastUpdated": "2026-03-03T21:56:10.265Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/pieChartWithArrowBlue-0.svg",
+        "svgDark": "./pictogram/svg/dark/pieChartWithArrowBlue-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/pieChartWithArrowBlue-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/pieChartWithArrowBlue-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/pieChartWithArrowBlue-0.js",
+        "pngLight": "./pictogram/png/light/pieChartWithArrowBlue-0.png",
+        "pngDark": "./pictogram/png/dark/pieChartWithArrowBlue-0.png"
       },
       "version": 0
     }

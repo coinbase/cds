@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-02-05T14:41:16.156Z",
-  "lastUnicode": 986232,
+  "lastUpdated": "2026-03-03T01:36:13.839Z",
+  "lastUnicode": 986250,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25003,6 +25003,147 @@
           "active": true,
           "size": 12,
           "unicode": 986227
+        }
+      ]
+    },
+    {
+      "nodeId": "6796:434",
+      "name": "usdc",
+      "description": "usdc, fixed, cost, coin",
+      "assetsHash": "lW+SKq28Vb/CeW9QF1+UIjdD45agwkQj+Rudrj6aCcs=",
+      "nameHash": "unyR+X6Yjg/+8ELuMq3RljOPpo+LRmiVMNevUxTlCeE=",
+      "createdAt": "2026-03-02T18:06:44.854Z",
+      "lastUpdated": "2026-03-02T18:06:44.854Z",
+      "svgs": [
+        {
+          "name": "usdc-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986250
+        },
+        {
+          "name": "usdc-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986249
+        },
+        {
+          "name": "usdc-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986248
+        },
+        {
+          "name": "usdc-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986247
+        },
+        {
+          "name": "usdc-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986246
+        },
+        {
+          "name": "usdc-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986245
+        }
+      ]
+    },
+    {
+      "nodeId": "6796:408",
+      "name": "pieChartWithArrow",
+      "description": "transferStocks, transfer, stocks, piechart",
+      "assetsHash": "kaoW4x2PNjcALMyBAvuCRnYT3hXxEcsgX1cTw7hV4No=",
+      "nameHash": "+gLfOLV99/xH8Hf/rjXynjMVR/2XY+EB/Mo0ncjnrrI=",
+      "createdAt": "2026-03-02T18:06:44.864Z",
+      "lastUpdated": "2026-03-03T01:34:26.828Z",
+      "svgs": [
+        {
+          "name": "pieChartWithArrow-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986244
+        },
+        {
+          "name": "pieChartWithArrow-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986243
+        },
+        {
+          "name": "pieChartWithArrow-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986242
+        },
+        {
+          "name": "pieChartWithArrow-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986241
+        },
+        {
+          "name": "pieChartWithArrow-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986240
+        },
+        {
+          "name": "pieChartWithArrow-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986239
+        }
+      ]
+    },
+    {
+      "nodeId": "6796:421",
+      "name": "filterLineStack",
+      "description": "filter, stack, line",
+      "assetsHash": "qZ2pAAKMVeCQoWlc588TtPpVZUdZGWdy0cb9I32oz68=",
+      "nameHash": "Z7HqdZDmuR7Es9/jq1DDdP8rZX0ICKqtfSKFwMadWIc=",
+      "createdAt": "2026-03-02T18:06:44.869Z",
+      "lastUpdated": "2026-03-02T18:06:44.869Z",
+      "svgs": [
+        {
+          "name": "filterLineStack-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986238
+        },
+        {
+          "name": "filterLineStack-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986237
+        },
+        {
+          "name": "filterLineStack-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986236
+        },
+        {
+          "name": "filterLineStack-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986235
+        },
+        {
+          "name": "filterLineStack-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986234
+        },
+        {
+          "name": "filterLineStack-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986233
         }
       ]
     }

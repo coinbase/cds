@@ -197,6 +197,8 @@ export type SpotSquareName =
   | 'performance'
   | 'phoneNotifications'
   | 'phoneNumber'
+  | 'pieChartWithArrow'
+  | 'pieChartWithArrowBlue'
   | 'pixBankDeposits'
   | 'pixDeposits'
   | 'portfolioPerformance'
