@@ -38,7 +38,7 @@ const PositionedLabel = memo<{
   BeaconLabelComponent: ScrubberBeaconLabelComponent;
   labelHorizontalOffset: number;
   labelFont?: ChartTextProps['font'];
-  updateTransition: Transition;
+  updateTransition: Transition | null;
   className?: string;
   style?: CSSProperties;
 }>(

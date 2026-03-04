@@ -58,8 +58,8 @@ export const getTransition = (
   value: Transition | null | undefined,
   animate: boolean,
   defaultValue: Transition,
-): Transition => {
-  if (!animate || value === null) return instantTransition;
+): Transition | null => {
+  if (!animate || value === null) return null;
   return value ?? defaultValue;
 };
 
@@ -116,12 +116,12 @@ export const usePathTransition = ({
      * Only used when `initialPath` is provided.
      * If not provided, falls back to `update`.
      */
-    enter?: Transition;
+    enter?: Transition | null;
     /**
      * Transition for subsequent data update animations.
      * @default defaultTransition
      */
-    update?: Transition;
+    update?: Transition | null;
   };
   /**
    * Transition for updates.
@@ -129,7 +129,7 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): MotionValue<string> => {
-  const updateTransition = transitions?.update ?? transition;
+  const updateTransition = transitions?.update !== undefined ? transitions.update : transition;
   const enterTransition = transitions?.enter;
 
   const previousPathRef = useRef(initialPath ?? currentPath);
@@ -157,6 +157,13 @@ export const usePathTransition = ({
           : updateTransition;
 
       isFirstAnimation.current = false;
+
+      if (activeTransition === null) {
+        animatedPath.set(currentPath);
+        previousPathRef.current = currentPath;
+        animationRef.current = null;
+        return;
+      }
 
       const pathInterpolator = interpolatePath(previousPathRef.current, currentPath);
 
