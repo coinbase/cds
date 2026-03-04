@@ -225,8 +225,6 @@ export const AreaChart = memo(
               LineComponent,
               stackId,
               legendShape,
-              transition: seriesTransition,
-              transitions: seriesTransitions,
               ...areaPropsFromSeries
             }) => (
               <Area
@@ -236,8 +234,8 @@ export const AreaChart = memo(
                 curve={curve}
                 fillOpacity={fillOpacity}
                 seriesId={id}
-                transition={seriesTransition ?? transition}
-                transitions={seriesTransitions ?? transitions}
+                transition={transition}
+                transitions={transitions}
                 type={type}
                 {...areaPropsFromSeries}
               />
@@ -256,9 +254,6 @@ export const AreaChart = memo(
                 stackId,
                 legendShape,
                 type, // Area type (don't pass to Line)
-                lineType: seriesLineType,
-                transition: seriesTransition,
-                transitions: seriesTransitions,
                 ...otherPropsFromSeries
               }) => {
                 return (
@@ -269,9 +264,9 @@ export const AreaChart = memo(
                     curve={curve}
                     seriesId={id}
                     strokeWidth={strokeWidth}
-                    transition={seriesTransition ?? transition}
-                    transitions={seriesTransitions ?? transitions}
-                    type={seriesLineType ?? lineType}
+                    transition={transition}
+                    transitions={transitions}
+                    type={lineType}
                     {...otherPropsFromSeries}
                   />
                 );

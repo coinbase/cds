@@ -178,38 +178,26 @@ export const LineChart = memo(
           {/* Render axes first for grid lines to appear behind everything else */}
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
-          {series?.map(
-            ({
-              id,
-              data,
-              label,
-              color,
-              yAxisId,
-              transition: seriesTransition,
-              transitions: seriesTransitions,
-              type: seriesType,
-              ...linePropsFromSeries
-            }) => (
-              <Line
-                key={id}
-                AreaComponent={AreaComponent}
-                LineComponent={LineComponent}
-                areaType={areaType}
-                connectNulls={connectNulls}
-                curve={curve}
-                opacity={opacity}
-                points={points}
-                seriesId={id}
-                showArea={showArea}
-                strokeOpacity={strokeOpacity}
-                strokeWidth={strokeWidth}
-                transition={seriesTransition ?? transition}
-                transitions={seriesTransitions ?? transitions}
-                type={seriesType ?? type}
-                {...linePropsFromSeries}
-              />
-            ),
-          )}
+          {series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
+            <Line
+              key={id}
+              AreaComponent={AreaComponent}
+              LineComponent={LineComponent}
+              areaType={areaType}
+              connectNulls={connectNulls}
+              curve={curve}
+              opacity={opacity}
+              points={points}
+              seriesId={id}
+              showArea={showArea}
+              strokeOpacity={strokeOpacity}
+              strokeWidth={strokeWidth}
+              transition={transition}
+              transitions={transitions}
+              type={type}
+              {...linePropsFromSeries}
+            />
+          ))}
           {children}
         </CartesianChart>
       );
