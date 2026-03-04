@@ -249,7 +249,7 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): SharedValue<SkPath> => {
-  const updateTransition = transitions?.update ?? transition;
+  const updateTransition = transitions?.update !== undefined ? transitions.update : transition;
   const enterTransition = transitions?.enter;
 
   const targetPathRef = useRef(initialPath ?? currentPath);
@@ -274,6 +274,25 @@ export const usePathTransition = ({
 
       targetPathRef.current = currentPath;
 
+      const activeTransition =
+        isFirstAnimation.current && enterTransition !== undefined
+          ? enterTransition
+          : updateTransition;
+
+      isFirstAnimation.current = false;
+
+      if (activeTransition === null) {
+        const targetPath = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+        interpolatorRef.current = null;
+        normalizedStartShared.value = targetPath;
+        normalizedEndShared.value = targetPath;
+        fallbackPathShared.value = targetPath;
+        progress.value = 1;
+        result.value = targetPath;
+        notifyChange(result);
+        return;
+      }
+
       const pathInterpolator = interpolatePath(fromPath, currentPath);
       interpolatorRef.current = pathInterpolator;
 
@@ -283,13 +302,6 @@ export const usePathTransition = ({
         Skia.Path.MakeFromSVGString(pathInterpolator(1 - pathInterpolationEpsilon)) ??
         Skia.Path.Make();
       fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
-
-      const activeTransition =
-        isFirstAnimation.current && enterTransition !== undefined
-          ? enterTransition
-          : updateTransition;
-
-      isFirstAnimation.current = false;
 
       progress.value = 0;
       progress.value = buildTransition(1, activeTransition);
@@ -302,6 +314,7 @@ export const usePathTransition = ({
     normalizedStartShared,
     normalizedEndShared,
     fallbackPathShared,
+    result,
   ]);
 
   useAnimatedReaction(

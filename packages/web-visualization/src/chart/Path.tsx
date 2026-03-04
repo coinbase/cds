@@ -153,7 +153,7 @@ export const Path = memo<PathProps>(
           transition: enterTransition,
         },
       };
-    }, [rect, totalOffset, enterTransition]);
+    }, [rect, totalOffset, enterTransition, shouldAnimateClip]);
 
     const clipPath = useMemo(
       () => (rect !== null ? `url(#${clipPathId})` : undefined),
