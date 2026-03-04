@@ -23,7 +23,12 @@ import webStylesData from ':docgen/web-visualization/chart/scrubber/Scrubber/sty
         range: ({ min, max }) => ({ min, max: max - 8 }),
       }}
     >
-      <Scrubber classNames={classNames} idlePulse />
+      <Scrubber
+        classNames={classNames}
+        idlePulse
+        label={(dataIndex) => `$${dataIndex}`}
+        labelElevated
+      />
     </LineChart>
   )}
 </StylesExplorer>

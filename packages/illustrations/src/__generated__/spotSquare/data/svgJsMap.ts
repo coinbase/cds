@@ -778,6 +778,14 @@ const svgJsMap = {
     light: () => require('../svgJs/light/phoneNumber-2.js').content,
     dark: () => require('../svgJs/dark/phoneNumber-2.js').content,
   },
+  pieChartWithArrow: {
+    light: () => require('../svgJs/light/pieChartWithArrow-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrow-0.js').content,
+  },
+  pieChartWithArrowBlue: {
+    light: () => require('../svgJs/light/pieChartWithArrowBlue-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrowBlue-0.js').content,
+  },
   pixBankDeposits: {
     light: () => require('../svgJs/light/pixBankDeposits-5.js').content,
     dark: () => require('../svgJs/dark/pixBankDeposits-5.js').content,
