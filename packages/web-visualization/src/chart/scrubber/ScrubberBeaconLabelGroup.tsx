@@ -80,7 +80,7 @@ const PositionedLabel = memo<{
         onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
         seriesId={seriesId}
         style={style}
-        transition={updateTransition}
+        transition={updateTransition ?? instantTransition}
         x={x}
         y={y}
       />
