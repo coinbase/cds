@@ -125,7 +125,8 @@ export const DottedArea = memo<DottedAreaProps>(
           animate={shouldAnimate}
           d={dottedPath}
           fill={fill}
-          transitions={{ enter: transitions?.enter, update: null }}
+          transition={transition}
+          transitions={transitions}
           {...pathProps}
         >
           {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
