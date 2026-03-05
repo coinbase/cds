@@ -30,6 +30,7 @@ export type LineSeries = Series &
       | 'points'
       | 'connectNulls'
       | 'transition'
+      | 'transitions'
     >
   >;
 
@@ -47,6 +48,7 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
     | 'strokeOpacity'
     | 'connectNulls'
     | 'transition'
+    | 'transitions'
     | 'opacity'
   > & {
     /**
@@ -95,6 +97,7 @@ export const LineChart = memo(
         strokeOpacity,
         connectNulls,
         transition,
+        transitions,
         opacity,
         showXAxis,
         showYAxis,
@@ -189,7 +192,8 @@ export const LineChart = memo(
               showArea={showArea}
               strokeOpacity={strokeOpacity}
               strokeWidth={strokeWidth}
-              transition={linePropsFromSeries.transition ?? transition}
+              transition={transition}
+              transitions={transitions}
               type={type}
               {...linePropsFromSeries}
             />

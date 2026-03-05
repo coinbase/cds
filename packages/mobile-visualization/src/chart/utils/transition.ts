@@ -79,6 +79,11 @@ export const defaultAccessoryEnterTransition: Transition = {
   delay: accessoryFadeTransitionDelay,
 };
 
+// Avoid exact endpoint samples, which can intermittently produce non-interpolatable
+// path pairs for SkPath.interpolate on complex morphs.
+// See https://github.com/wcandillon/can-it-be-done-in-react-native/blob/db8d6ee7024e37e8f8d2cb237c0b953b5fc766fe/season5/src/Headspace/Play.tsx
+const pathInterpolationEpsilon = 1e-3;
+
 /**
  * Resolves a transition value based on the animation state and a default.
  * @note Passing in null will disable an animation.
@@ -88,8 +93,8 @@ export const getTransition = (
   value: Transition | null | undefined,
   animate: boolean,
   defaultValue: Transition,
-): Transition => {
-  if (!animate || value === null) return instantTransition;
+): Transition | null => {
+  if (!animate || value === null) return null;
   return value ?? defaultValue;
 };
 
@@ -148,8 +153,11 @@ export const useInterpolator = <T>(
  * // Timing animation
  * progress.value = buildTransition(1, { type: 'timing', duration: 500 });
  */
-export const buildTransition = (targetValue: number, transition: Transition): number => {
+export const buildTransition = (targetValue: number, transition: Transition | null): number => {
   'worklet';
+
+  if (transition === null) return targetValue;
+
   const delayMs = transition.delay;
 
   let animation: number;
@@ -228,12 +236,12 @@ export const usePathTransition = ({
      * Only used when `initialPath` is provided.
      * If not provided, falls back to `update`.
      */
-    enter?: Transition;
+    enter?: Transition | null;
     /**
      * Transition for subsequent data update animations.
      * @default defaultTransition
      */
-    update?: Transition;
+    update?: Transition | null;
   };
   /**
    * Transition for updates.
@@ -241,7 +249,7 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): SharedValue<SkPath> => {
-  const updateTransition = transitions?.update ?? transition;
+  const updateTransition = transitions?.update !== undefined ? transitions.update : transition;
   const enterTransition = transitions?.enter;
 
   const targetPathRef = useRef(initialPath ?? currentPath);
@@ -266,21 +274,34 @@ export const usePathTransition = ({
 
       targetPathRef.current = currentPath;
 
-      const pathInterpolator = interpolatePath(fromPath, currentPath);
-      interpolatorRef.current = pathInterpolator;
-
-      normalizedStartShared.value =
-        Skia.Path.MakeFromSVGString(pathInterpolator(0)) ?? Skia.Path.Make();
-      normalizedEndShared.value =
-        Skia.Path.MakeFromSVGString(pathInterpolator(1)) ?? Skia.Path.Make();
-      fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
-
       const activeTransition =
         isFirstAnimation.current && enterTransition !== undefined
           ? enterTransition
           : updateTransition;
 
       isFirstAnimation.current = false;
+
+      if (activeTransition === null) {
+        const targetPath = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+        interpolatorRef.current = null;
+        normalizedStartShared.value = targetPath;
+        normalizedEndShared.value = targetPath;
+        fallbackPathShared.value = targetPath;
+        progress.value = 1;
+        result.value = targetPath;
+        notifyChange(result);
+        return;
+      }
+
+      const pathInterpolator = interpolatePath(fromPath, currentPath);
+      interpolatorRef.current = pathInterpolator;
+
+      normalizedStartShared.value =
+        Skia.Path.MakeFromSVGString(pathInterpolator(pathInterpolationEpsilon)) ?? Skia.Path.Make();
+      normalizedEndShared.value =
+        Skia.Path.MakeFromSVGString(pathInterpolator(1 - pathInterpolationEpsilon)) ??
+        Skia.Path.Make();
+      fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
 
       progress.value = 0;
       progress.value = buildTransition(1, activeTransition);
@@ -293,6 +314,7 @@ export const usePathTransition = ({
     normalizedStartShared,
     normalizedEndShared,
     fallbackPathShared,
+    result,
   ]);
 
   useAnimatedReaction(

@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.22 (3/4/2026 PST)
+
+#### 🚀 Updates
+
+- Improve PeriodSelector types. [[#464](https://github.com/coinbase/cds/pull/464)]
+- Skip null path transitions. [[#464](https://github.com/coinbase/cds/pull/464)]
+
 ## 3.4.0-beta.21 (3/2/2026 PST)
 
 #### 🚀 Updates

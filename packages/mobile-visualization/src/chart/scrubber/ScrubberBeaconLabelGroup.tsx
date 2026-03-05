@@ -32,7 +32,7 @@ const PositionedLabel = memo<{
   positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
   isIdle: AnimatedProp<boolean>;
-  updateTransition: Transition;
+  updateTransition: Transition | null;
   label: ChartTextChildren;
   color?: string;
   seriesId: string;
