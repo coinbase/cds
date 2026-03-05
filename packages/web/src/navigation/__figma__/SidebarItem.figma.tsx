@@ -13,6 +13,6 @@ figma.connect(
       title: figma.textContent('Label'),
     },
 
-    example: (props) => <SidebarItem icon="home" active {...props} />,
+    example: (props) => <SidebarItem active icon="home" {...props} />,
   },
 );
