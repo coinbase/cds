@@ -21,7 +21,7 @@ export const variants = {
     borderColor: 'bgSecondary',
   },
   tertiary: {
-    color: 'fgInverse',
+    color: 'fg',
     background: 'bgTertiary',
     borderColor: 'bgTertiary',
   },
