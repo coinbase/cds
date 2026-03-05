@@ -145,6 +145,8 @@ export const CartesianChart = memo(
         // to group children, which interferes with gesture-handler
         // https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/gesture-detector/#:~:text=%7B%0A%20%20return%20%3C-,View,-collapsable%3D%7B
         collapsable = false,
+        accessible = true,
+        accessibilityLiveRegion = 'polite',
         ...props
       },
       ref,
@@ -469,14 +471,14 @@ export const CartesianChart = memo(
       const rootBoxProps: BoxProps = useMemo(
         () => ({
           ref,
-          accessibilityLiveRegion: 'polite',
-          accessibilityRole: 'image',
+          accessibilityLiveRegion,
+          accessible,
           height,
           style: rootStyles,
           width,
           ...props,
         }),
-        [ref, height, rootStyles, width, props],
+        [ref, accessibilityLiveRegion, accessible, height, rootStyles, width, props],
       );
 
       return (
