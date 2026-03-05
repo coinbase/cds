@@ -96,19 +96,17 @@ export type PathProps = PathBaseProps &
     clipRect?: Rect | null;
   };
 
-const AnimatedPath = memo<
-  Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'transitions' | 'transition'> & {
-    transitions?: { enter?: Transition; update?: Transition };
-  }
->(({ d = '', initialPath, transitions, ...pathProps }) => {
-  const interpolatedPath = usePathTransition({
-    currentPath: d,
-    initialPath,
-    transitions,
-  });
+const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'transition'>>(
+  ({ d = '', initialPath, transitions, ...pathProps }) => {
+    const interpolatedPath = usePathTransition({
+      currentPath: d,
+      initialPath,
+      transitions,
+    });
 
-  return <motion.path d={interpolatedPath} {...pathProps} />;
-});
+    return <motion.path d={interpolatedPath} {...pathProps} />;
+  },
+);
 
 export const Path = memo<PathProps>(
   ({
@@ -140,12 +138,14 @@ export const Path = memo<PathProps>(
       [animate, transitions?.update, transition],
     );
 
+    const shouldAnimateClip = animate && enterTransition !== null;
+
     // The clip offset provides extra padding to prevent path from being cut off
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
     const totalOffset = clipOffset * 2; // Applied on both sides
 
     const clipPathAnimation = useMemo(() => {
-      if (rect === null) return;
+      if (rect === null || !shouldAnimateClip) return;
       return {
         hidden: { width: 0 },
         visible: {
@@ -153,7 +153,7 @@ export const Path = memo<PathProps>(
           transition: enterTransition,
         },
       };
-    }, [rect, totalOffset, enterTransition]);
+    }, [rect, totalOffset, enterTransition, shouldAnimateClip]);
 
     const clipPath = useMemo(
       () => (rect !== null ? `url(#${clipPathId})` : undefined),
@@ -165,14 +165,23 @@ export const Path = memo<PathProps>(
         {rect !== null && (
           <defs>
             <clipPath id={clipPathId}>
-              <motion.rect
-                animate="visible"
-                height={rect.height + totalOffset}
-                initial="hidden"
-                variants={clipPathAnimation}
-                x={rect.x - clipOffset}
-                y={rect.y - clipOffset}
-              />
+              {shouldAnimateClip ? (
+                <motion.rect
+                  animate="visible"
+                  height={rect.height + totalOffset}
+                  initial="hidden"
+                  variants={clipPathAnimation}
+                  x={rect.x - clipOffset}
+                  y={rect.y - clipOffset}
+                />
+              ) : (
+                <rect
+                  height={rect.height + totalOffset}
+                  width={rect.width + totalOffset}
+                  x={rect.x - clipOffset}
+                  y={rect.y - clipOffset}
+                />
+              )}
             </clipPath>
           </defs>
         )}

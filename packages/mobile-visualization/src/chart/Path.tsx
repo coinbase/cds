@@ -133,12 +133,7 @@ export type PathProps = PathBaseProps &
   };
 
 const AnimatedPath = memo<
-  Omit<
-    PathProps,
-    'animate' | 'clipRect' | 'clipOffset' | 'clipPath' | 'transitions' | 'transition'
-  > & {
-    transitions?: { enter?: Transition; update?: Transition };
-  }
+  Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath' | 'transition'>
 >(
   ({
     d = '',
@@ -246,18 +241,20 @@ export const Path = memo<PathProps>((props) => {
     [animate, transitions?.update, transition],
   );
 
+  const shouldAnimateClip = animate && enterTransition !== null;
+
   // The clip offset provides extra padding to prevent path from being cut off
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
 
   // Animation progress for clip path reveal
-  const clipProgress = useSharedValue(animate ? 0 : 1);
+  const clipProgress = useSharedValue(shouldAnimateClip ? 0 : 1);
 
   useEffect(() => {
-    if (animate && isReady) {
+    if (shouldAnimateClip && isReady) {
       clipProgress.value = buildTransition(1, enterTransition);
     }
-  }, [animate, isReady, clipProgress, enterTransition]);
+  }, [shouldAnimateClip, isReady, clipProgress, enterTransition]);
 
   // Create initial and target clip paths for animation
   const { initialClipPath, targetClipPath } = useMemo(() => {
@@ -288,7 +285,7 @@ export const Path = memo<PathProps>((props) => {
   const animatedClipPath = usePathInterpolation(
     clipProgress,
     [0, 1],
-    animate && initialClipPath && targetClipPath
+    shouldAnimateClip && initialClipPath && targetClipPath
       ? [initialClipPath, targetClipPath]
       : targetClipPath
         ? [targetClipPath, targetClipPath]
@@ -306,13 +303,13 @@ export const Path = memo<PathProps>((props) => {
     }
 
     // If not animating or paths are null, return target clip path
-    if (!animate || !targetClipPath) {
+    if (!shouldAnimateClip || !targetClipPath) {
       return targetClipPath;
     }
 
     // Return undefined here since we'll use animatedClipPath directly
     return undefined;
-  }, [clipPathProp, animate, targetClipPath]);
+  }, [clipPathProp, shouldAnimateClip, targetClipPath]);
 
   // Convert SVG path string to SkPath for static rendering
   const staticPath = useDerivedValue(() => {
@@ -365,7 +362,7 @@ export const Path = memo<PathProps>((props) => {
 
   // Determine which clip path to use
   const finalClipPath =
-    animate && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
+    shouldAnimateClip && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
 
   // If finalClipPath is null, render without clipping
   if (finalClipPath === null) {

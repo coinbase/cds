@@ -1,9 +1,9 @@
-import { Skia } from '@shopify/react-native-skia';
 import { renderHook } from '@testing-library/react-hooks';
 
 import {
   buildTransition,
   defaultTransition,
+  getTransition,
   type Transition,
   usePathTransition,
 } from '../transition';
@@ -78,6 +78,16 @@ describe('accessory transition constants', () => {
     expect(accessoryFadeTransitionDelay).toBeDefined();
     expect(typeof accessoryFadeTransitionDelay).toBe('number');
     expect(accessoryFadeTransitionDelay).toBeGreaterThan(0);
+  });
+});
+
+describe('getTransition', () => {
+  it('should return null when animate is false', () => {
+    expect(getTransition(defaultTransition, false, defaultTransition)).toBeNull();
+  });
+
+  it('should return null when value is null', () => {
+    expect(getTransition(null, true, defaultTransition)).toBeNull();
   });
 });
 
@@ -304,6 +314,28 @@ describe('usePathTransition', () => {
     );
 
     expect(result.current).toBeDefined();
+  });
+
+  it('should short-circuit interpolation when update transition is null', () => {
+    const { interpolatePath } = require('d3-interpolate-path');
+    const nextPath = 'M0,0L30,30';
+
+    const { result, rerender } = renderHook(
+      ({ path }) =>
+        usePathTransition({
+          currentPath: path,
+          transitions: { update: null },
+        }),
+      {
+        initialProps: { path: 'M0,0L10,10' },
+      },
+    );
+
+    interpolatePath.mockClear();
+    rerender({ path: nextPath });
+
+    expect(interpolatePath).not.toHaveBeenCalled();
+    expect((result.current.value as any).svgString).toBe(nextPath);
   });
 
   it('should handle empty paths', () => {
