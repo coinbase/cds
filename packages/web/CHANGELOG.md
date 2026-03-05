@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
 ## 8.49.0 (2/26/2026 PST)
 
 #### 🚀 Updates

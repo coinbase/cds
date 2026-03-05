@@ -8,7 +8,9 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.49.1 ((3/5/2026, 03:13 PM PST))
+
+This is an artificial version bump with no new change.
 
 #### 📘 Misc
 
