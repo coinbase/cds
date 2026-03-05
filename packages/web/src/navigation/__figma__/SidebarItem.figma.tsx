@@ -16,17 +16,3 @@ figma.connect(
     example: (props) => <SidebarItem active {...props} />,
   },
 );
-
-figma.connect(
-  SidebarItem,
-  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=252-12892',
-  {
-    imports: ["import { SidebarItem } from '@coinbase/cds-web/navigation/SidebarItem';"],
-    variant: { type: 'compact', state: 'default', active: 'true' },
-    props: {
-      title: figma.textContent('Label'),
-    },
-    // @ts-expect-error not typed
-    example: (props) => <SidebarItem active compact {...props} />,
-  },
-);
