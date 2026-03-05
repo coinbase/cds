@@ -175,7 +175,7 @@ const TabsComponent = memo(
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab disabled={tabDisabled} id={id} {...props} style={styles?.tab} />
+                  <RenderedTab disabled={tabDisabled} id={id} style={styles?.tab} {...props} />
                 </TabContainer>
               );
             })}
