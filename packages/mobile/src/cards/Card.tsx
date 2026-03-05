@@ -1,10 +1,10 @@
 import React, { memo, useMemo } from 'react';
-import type { DimensionValue, StyleProp, ViewStyle } from 'react-native';
+import type { DimensionValue } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
 
 import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { pinStyles } from '../styles/pinStyles';
 import { Pressable, type PressableProps } from '../system/Pressable';
@@ -24,16 +24,10 @@ export type CardBaseProps = Pick<
     pressableProps?: Omit<PressableProps, 'onPress'>;
   };
 
-export type CardProps = CardBaseProps &
-  BoxProps & {
-    /** Slot-level styles for Card. */
-    styles?: {
-      /** Persistent outer wrapper across pressable and static variants. */
-      root?: StyleProp<ViewStyle>;
-      /** Card content container (`VStack`) style. */
-      content?: StyleProp<ViewStyle>;
-    };
-  };
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This component will be removed in a future release.
+ */
+export type CardProps = CardBaseProps & BoxProps;
 
 const getBorderRadiusPinStyle = (borderRadius: number) => ({
   top: {
@@ -67,6 +61,9 @@ const getBorderRadiusPinStyle = (borderRadius: number) => ({
   all: {},
 });
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This component will be removed in a future release.
+ */
 export const Card = memo(function OldCard({
   children,
   background = 'bg',
@@ -81,7 +78,6 @@ export const Card = memo(function OldCard({
   accessibilityLabel,
   accessibilityHint,
   pressableProps,
-  styles,
   borderRadius = 200,
   noScaleOnPress,
   ...props
@@ -94,10 +90,7 @@ export const Card = memo(function OldCard({
     return pin ? getBorderRadiusPinStyle(theme.borderRadius[200])[pin] : undefined;
   }, [pin, theme]);
 
-  const contentStyles = useMemo(
-    () => [borderRadiusPinStyle, style, styles?.content],
-    [borderRadiusPinStyle, style, styles?.content],
-  );
+  const contentStyles = useMemo(() => [borderRadiusPinStyle, style], [borderRadiusPinStyle, style]);
 
   const content = useMemo(
     () => (
@@ -134,31 +127,28 @@ export const Card = memo(function OldCard({
     ],
   );
 
-  return (
-    <Box style={[pin ? pinStyles[pin] : undefined, styles?.root]}>
-      {onPress ? (
-        <Pressable
-          accessibilityHint={accessibilityHint}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole="button"
-          background={background}
-          borderRadius={borderRadius}
-          elevation={elevation}
-          noScaleOnPress={noScaleOnPress}
-          onPress={onPress}
-          style={{
-            width: width as DimensionValue,
-            height: height as DimensionValue,
-          }}
-          testID={testID}
-          {...pressableProps}
-        >
-          {content}
-        </Pressable>
-      ) : (
-        content
-      )}
-    </Box>
+  return onPress ? (
+    <Pressable
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      background={background}
+      borderRadius={borderRadius}
+      elevation={elevation}
+      noScaleOnPress={noScaleOnPress}
+      onPress={onPress}
+      style={{
+        ...(pin ? pinStyles[pin] : undefined),
+        width: width as DimensionValue,
+        height: height as DimensionValue,
+      }}
+      testID={testID}
+      {...pressableProps}
+    >
+      {content}
+    </Pressable>
+  ) : (
+    content
   );
 });
 

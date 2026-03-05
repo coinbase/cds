@@ -2,9 +2,7 @@ import React, { type HTMLAttributes, memo, type MouseEventHandler, useMemo } fro
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
-import { cx } from '../cx';
 import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout/Box';
-import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 
@@ -19,24 +17,15 @@ export type CardBaseProps = Pick<SharedAccessibilityProps, 'id'> &
     onClick?: MouseEventHandler;
   };
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This component will be removed in a future release.
+ */
 export type CardProps = CardBaseProps &
-  Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'> & {
-    /** Slot-level class names for Card. */
-    classNames?: {
-      /** Top-level Card element (pressable wrapper when linkable, content wrapper otherwise). */
-      root?: string;
-      /** Card content container (`VStack`). */
-      content?: string;
-    };
-    /** Slot-level styles for Card. */
-    styles?: {
-      /** Top-level Card element (pressable wrapper when linkable, content wrapper otherwise). */
-      root?: React.CSSProperties;
-      /** Card content container (`VStack`). */
-      content?: React.CSSProperties;
-    };
-  };
+  Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This component will be removed in a future release.
+ */
 export const Card = memo<CardProps>(function Card({
   children,
   background = 'bg',
@@ -56,10 +45,6 @@ export const Card = memo<CardProps>(function Card({
   borderRadius,
   elevation,
   noScaleOnPress,
-  className,
-  style,
-  classNames,
-  styles,
   ...props
 }) {
   const width = widthProps ?? cardSizes[size].width;
@@ -73,12 +58,10 @@ export const Card = memo<CardProps>(function Card({
       <VStack
         background={linkable ? undefined : background}
         borderRadius={borderRadius}
-        className={classNames?.content}
         elevation={linkable ? undefined : elevation}
         height={linkable ? undefined : height}
         overflow="hidden"
         pin={linkable ? undefined : pin}
-        style={styles?.content}
         testID={linkable ? undefined : testID}
         width={linkable ? undefined : width}
         {...props}
@@ -86,70 +69,58 @@ export const Card = memo<CardProps>(function Card({
         {children}
       </VStack>
     ),
-    [
-      background,
-      borderRadius,
-      children,
-      classNames?.content,
-      elevation,
-      height,
-      linkable,
-      pin,
-      props,
-      styles?.content,
-      testID,
-      width,
-    ],
+    [background, borderRadius, children, elevation, height, linkable, pin, props, testID, width],
   );
+  if (isAnchor) {
+    return (
+      <Pressable
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityLabelledBy={accessibilityLabelledBy}
+        as="a"
+        background={background}
+        borderRadius={borderRadius}
+        elevation={elevation}
+        height={height}
+        href={href}
+        noScaleOnPress={noScaleOnPress}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
+        pin={pin}
+        target={target}
+        testID={testID}
+        width={width}
+      >
+        {content}
+      </Pressable>
+    );
+  }
 
-  return (
-    <Box className={cx(className, classNames?.root)} style={{ ...style, ...styles?.root }}>
-      {isAnchor ? (
-        <Pressable
-          accessibilityHint={accessibilityHint}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityLabelledBy={accessibilityLabelledBy}
-          as="a"
-          background={background}
-          borderRadius={borderRadius}
-          elevation={elevation}
-          height={height}
-          href={href}
-          noScaleOnPress={noScaleOnPress}
-          onClick={onClick}
-          onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
-          pin={pin}
-          target={target}
-          testID={testID}
-          width={width}
-        >
-          {content}
-        </Pressable>
-      ) : isButton ? (
-        <Pressable
-          accessibilityHint={accessibilityHint}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityLabelledBy={accessibilityLabelledBy}
-          background={background}
-          borderRadius={borderRadius}
-          elevation={elevation}
-          height={height}
-          noScaleOnPress={noScaleOnPress}
-          onClick={onClick}
-          onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
-          pin={pin}
-          testID={testID}
-          width={width}
-        >
-          {content}
-        </Pressable>
-      ) : (
-        content
-      )}
-    </Box>
-  );
+  if (isButton) {
+    return (
+      <Pressable
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityLabelledBy={accessibilityLabelledBy}
+        background={background}
+        borderRadius={borderRadius}
+        elevation={elevation}
+        height={height}
+        noScaleOnPress={noScaleOnPress}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
+        pin={pin}
+        testID={testID}
+        width={width}
+      >
+        {content}
+      </Pressable>
+    );
+  }
+
+  return content;
 });
 
 Card.displayName = 'Card';
