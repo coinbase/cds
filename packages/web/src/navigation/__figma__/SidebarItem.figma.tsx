@@ -12,7 +12,7 @@ figma.connect(
     props: {
       title: figma.textContent('Label'),
     },
-    // @ts-expect-error not typed
-    example: (props) => <SidebarItem active {...props} />,
+
+    example: (props) => <SidebarItem icon="home" active {...props} />,
   },
 );
