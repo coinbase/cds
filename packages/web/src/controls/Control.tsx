@@ -9,11 +9,24 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { Interactable, type InteractableBaseProps } from '../system/Interactable';
-import type { FilteredHTMLAttributes } from '../types';
+import type { FilteredHTMLAttributes, StylesAndClassNames } from '../types';
 import { Text } from '../typography/Text';
 import { isRtl } from '../utils/isRtl';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-Control';
+/**
+ * Static class names for Control component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const controlClassNames = {
+  /** Persistent outer wrapper across labeled and unlabeled variants. */
+  root: 'cds-Control',
+  /** Native `<label>` wrapper element. */
+  label: 'cds-Control-label',
+  /** Interactable icon wrapper element. */
+  icon: 'cds-Control-icon',
+  /** Native input element. */
+  input: 'cds-Control-input',
+} as const;
 
 const pointerCss = css`
   &:not(:disabled),
@@ -92,36 +105,11 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
     labelStyle?: React.CSSProperties;
   };
 
-export type ControlProps<ControlValue extends string> = ControlBaseProps<ControlValue> & {
-  classNames?: {
-    /** Persistent outer wrapper (`cds-Control`) across labeled and unlabeled variants. */
-    root?: string;
-    /**
-     * Native `<label>` wrapper className.
-     * Applies only when `label` is provided.
-     */
-    label?: string;
-    /** Interactable icon wrapper className. */
-    icon?: string;
-    /** Native input className. */
-    input?: string;
+export type ControlProps<ControlValue extends string> = ControlBaseProps<ControlValue> &
+  StylesAndClassNames<typeof controlClassNames> & {
+    label?: React.ReactNode;
+    children: React.ReactNode;
   };
-  styles?: {
-    /** Persistent outer wrapper (`cds-Control`) across labeled and unlabeled variants. */
-    root?: React.CSSProperties;
-    /**
-     * Native `<label>` wrapper style.
-     * Applies only when `label` is provided.
-     */
-    label?: React.CSSProperties;
-    /** Interactable icon wrapper style. */
-    icon?: React.CSSProperties;
-    /** Native input style. */
-    input?: React.CSSProperties;
-  };
-  label?: React.ReactNode;
-  children: React.ReactNode;
-};
 
 const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
   {
@@ -174,7 +162,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         borderColor={borderColor}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
-        className={cx(interactableCss, classNames?.icon)}
+        className={cx(interactableCss, controlClassNames.icon, classNames?.icon)}
         disabled={disabled || readOnly}
         elevation={elevation}
         style={{ ...iconStyle, ...styles?.icon }}
@@ -187,7 +175,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
           aria-labelledby={labelId}
           aria-required={type !== 'checkbox' ? required : undefined}
           checked={checked}
-          className={cx(inputBaseCss, pointerCss, classNames?.input)}
+          className={cx(inputBaseCss, pointerCss, controlClassNames.input, classNames?.input)}
           data-testid={testID}
           disabled={disabled}
           id={inputId}
@@ -237,7 +225,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     if (!label) return iconElement;
     return (
       <label
-        className={cx(pointerCss, classNames?.label)}
+        className={cx(pointerCss, controlClassNames.label, classNames?.label)}
         htmlFor={inputId}
         style={{ ...labelStyle, ...styles?.label }}
       >
@@ -267,7 +255,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.
   return (
     <Box
-      className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+      className={cx(controlClassNames.root, className, classNames?.root)}
       style={{ ...style, ...styles?.root }}
       width="fit-content"
     >

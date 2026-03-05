@@ -91,9 +91,14 @@ describe('Control', () => {
     );
 
     expect(screen.getByRole('checkbox').closest('.test-control-root')).toBeTruthy();
+    expect(screen.getByRole('checkbox').closest('.cds-Control')).toBeTruthy();
     expect(screen.getByRole('checkbox').className).toContain('test-control-input');
+    expect(screen.getByRole('checkbox').className).toContain('cds-Control-input');
     expect(screen.getByText('test children').parentElement?.className).toContain(
       'test-control-icon',
+    );
+    expect(screen.getByText('test children').parentElement?.className).toContain(
+      'cds-Control-icon',
     );
   });
 });

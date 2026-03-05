@@ -24,6 +24,7 @@ import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
 import { Pressable } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import type { LinkDefaultElement, LinkProps } from '../typography/Link';
 import { Link } from '../typography/Link';
 import { Text } from '../typography/Text';
@@ -36,6 +37,29 @@ export const contentResponsiveConfig: ResponsiveProps<StaticStyleProps>['flexDir
   phone: 'column',
   tablet: 'row',
   desktop: 'row',
+} as const;
+
+/**
+ * Static class names for Banner component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const bannerClassNames = {
+  /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
+  root: 'cds-Banner',
+  /** Main content container (`HStack`) for banner body. */
+  content: 'cds-Banner-content',
+  /** Start icon wrapper. */
+  start: 'cds-Banner-start',
+  /** Right-side body wrapper containing middle content and actions. */
+  body: 'cds-Banner-body',
+  /** Middle content wrapper containing title/message/label region. */
+  middle: 'cds-Banner-middle',
+  /** Label text element. */
+  label: 'cds-Banner-label',
+  /** Actions row element. */
+  actions: 'cds-Banner-actions',
+  /** Dismiss button wrapper element. */
+  dismiss: 'cds-Banner-dismiss',
 } as const;
 
 export type BannerBaseProps = SharedProps & {
@@ -88,64 +112,8 @@ export type BannerBaseProps = SharedProps & {
 };
 
 export type BannerProps = BannerBaseProps &
-  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'> & {
-    classNames?: {
-      /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
-      root?: string;
-      /** Main content container (`HStack`) for banner body. */
-      content?: string;
-      /** Start icon wrapper. */
-      start?: string;
-      /** Right-side body wrapper containing middle content and actions. */
-      body?: string;
-      /** Middle content wrapper containing title/message/label region. */
-      middle?: string;
-      /**
-       * Label text className.
-       * Applies only when `label` is a string rendered by Banner.
-       * If `label` is a custom node, set className on that node directly.
-       */
-      label?: string;
-      /**
-       * Actions row className.
-       * Applies only when at least one action (`primaryAction` or `secondaryAction`) is rendered.
-       */
-      actions?: string;
-      /**
-       * Dismiss button wrapper className.
-       * Applies only when `showDismiss` is true.
-       */
-      dismiss?: string;
-    };
-    styles?: {
-      /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
-      root?: React.CSSProperties;
-      /** Main content container (`HStack`) for banner body. */
-      content?: React.CSSProperties;
-      /** Start icon wrapper. */
-      start?: React.CSSProperties;
-      /** Right-side body wrapper containing middle content and actions. */
-      body?: React.CSSProperties;
-      /** Middle content wrapper containing title/message/label region. */
-      middle?: React.CSSProperties;
-      /**
-       * Label text style.
-       * Applies only when `label` is a string rendered by Banner.
-       * If `label` is a custom node, style that node directly.
-       */
-      label?: React.CSSProperties;
-      /**
-       * Actions row style.
-       * Applies only when at least one action (`primaryAction` or `secondaryAction`) is rendered.
-       */
-      actions?: React.CSSProperties;
-      /**
-       * Dismiss button wrapper style.
-       * Applies only when `showDismiss` is true.
-       */
-      dismiss?: React.CSSProperties;
-    };
-  };
+  StylesAndClassNames<typeof bannerClassNames> &
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
 export const Banner = memo(
   forwardRef(
@@ -264,7 +232,7 @@ export const Banner = memo(
           ref={ref}
           background={background}
           borderRadius={borderRadius}
-          className={cx(className, classNames?.content)}
+          className={cx(bannerClassNames.content, className, classNames?.content)}
           flexGrow={1}
           gap={1}
           minWidth={bannerMinWidth}
@@ -275,7 +243,12 @@ export const Banner = memo(
           {...props}
         >
           {/** Start */}
-          <Box className={classNames?.start} paddingX={0.5} paddingY={0.25} style={styles?.start}>
+          <Box
+            className={cx(bannerClassNames.start, classNames?.start)}
+            paddingX={0.5}
+            paddingY={0.25}
+            style={styles?.start}
+          >
             <Icon
               accessibilityLabel={startIconAccessibilityLabel}
               active={startIconActive}
@@ -286,7 +259,7 @@ export const Banner = memo(
             />
           </Box>
           <VStack
-            className={classNames?.body}
+            className={cx(bannerClassNames.body, classNames?.body)}
             flexDirection={contentResponsiveConfig}
             flexGrow={1}
             gap={2}
@@ -296,7 +269,7 @@ export const Banner = memo(
           >
             {/** Middle */}
             <VStack
-              className={classNames?.middle}
+              className={cx(bannerClassNames.middle, classNames?.middle)}
               gap={2}
               style={styles?.middle}
               testID={`${testID}-content-box`}
@@ -319,7 +292,7 @@ export const Banner = memo(
               </VStack>
               {typeof label === 'string' ? (
                 <Text
-                  className={classNames?.label}
+                  className={cx(bannerClassNames.label, classNames?.label)}
                   color="fgMuted"
                   font="legal"
                   numberOfLines={2}
@@ -335,7 +308,7 @@ export const Banner = memo(
             {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
               <HStack
                 alignItems="center"
-                className={cx(actionContainerCss, classNames?.actions)}
+                className={cx(actionContainerCss, bannerClassNames.actions, classNames?.actions)}
                 gap={2}
                 style={styles?.actions}
                 testID={`${testID}-action`}
@@ -349,7 +322,7 @@ export const Banner = memo(
           {showDismiss && (
             <Box
               alignItems="flex-start"
-              className={classNames?.dismiss}
+              className={cx(bannerClassNames.dismiss, classNames?.dismiss)}
               padding={0.5}
               style={styles?.dismiss}
             >
@@ -370,7 +343,7 @@ export const Banner = memo(
 
       return (
         <Box
-          className={classNames?.root}
+          className={cx(bannerClassNames.root, classNames?.root)}
           display="block"
           height="fit-content"
           position="relative"

@@ -114,7 +114,9 @@ describe('Banner', () => {
     );
 
     expect(screen.getByTestId(TEST_ID).className).toContain('test-banner-content');
+    expect(screen.getByTestId(TEST_ID).className).toContain('cds-Banner-content');
     expect(screen.getByTestId(TEST_ID).parentElement?.className).toContain('test-banner-root');
+    expect(screen.getByTestId(TEST_ID).parentElement?.className).toContain('cds-Banner');
   });
 
   it('keeps a stable top-level wrapper regardless of dismiss state', () => {

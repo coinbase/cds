@@ -130,9 +130,13 @@ describe('Switch.test', () => {
     );
 
     expect(screen.getByRole('switch').closest('.test-switch-root')).toBeTruthy();
+    expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
     expect(screen.getByTestId('switch-track').className).toContain('test-switch-track');
+    expect(screen.getByTestId('switch-track').className).toContain('cds-Switch-track');
     expect(screen.getByTestId('switch-thumb').className).toContain('test-switch-thumb');
+    expect(screen.getByTestId('switch-thumb').className).toContain('cds-Switch-thumb');
     expect(screen.getByRole('switch').closest('.test-switch-control')).toBeTruthy();
+    expect(screen.getByRole('switch').closest('.cds-Switch-control')).toBeTruthy();
     expect(screen.getByRole('switch').closest('.cds-Control')).toHaveStyle({
       borderLeftWidth: '4px',
     });

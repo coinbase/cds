@@ -110,6 +110,10 @@ describe('SidebarItem', () => {
     expect(
       screen.getByTestId('sidebar-item-with-classnames').closest('.test-sidebar-root'),
     ).toBeTruthy();
+    expect(
+      screen.getByTestId('sidebar-item-with-classnames').closest('.cds-SidebarItem'),
+    ).toBeTruthy();
     expect(screen.getByText('Assets').className).toContain('test-sidebar-title');
+    expect(screen.getByText('Assets').className).toContain('cds-SidebarItem-title');
   });
 });

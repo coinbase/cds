@@ -8,10 +8,24 @@ import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { convertTransition } from '../motion/utils';
+import type { StylesAndClassNames } from '../types';
 
 import { Control, type ControlBaseProps } from './Control';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-Switch';
+/**
+ * Static class names for Switch component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const switchClassNames = {
+  /** Persistent outer wrapper across all variants. */
+  root: 'cds-Switch',
+  /** Underlying `Control` wrapper element. */
+  control: 'cds-Switch-control',
+  /** Track wrapper element. */
+  track: 'cds-Switch-track',
+  /** Thumb wrapper element. */
+  thumb: 'cds-Switch-thumb',
+} as const;
 
 const trackCss = css`
   width: var(--controlSize-switchWidth);
@@ -38,45 +52,22 @@ const thumbCss = css`
   left: 1px;
 `;
 
-export type SwitchProps = ControlBaseProps<string> & {
-  /**
-   * Label content rendered next to the switch control.
-   *
-   * @example
-   * ```tsx
-   * <Switch onChange={handleChange}>Dark mode</Switch>
-   * ```
-   */
-  children?: React.ReactNode;
-  /** Sets the checked/active color of the control.
-   * @default bgPrimary
-   */
-  controlColor?: ThemeVars.Color;
-
-  classNames?: {
-    /** Persistent outer wrapper (`cds-Switch`) across all variants. */
-    root?: string;
-    /** Control wrapper className. */
-    control?: string;
-    /** Track wrapper className. */
-    track?: string;
-    /** Thumb wrapper className. */
-    thumb?: string;
-  };
-  styles?: {
-    /** Persistent outer wrapper (`cds-Switch`) across all variants. */
-    root?: React.CSSProperties;
+export type SwitchProps = ControlBaseProps<string> &
+  StylesAndClassNames<typeof switchClassNames> & {
     /**
-     * Control wrapper style.
-     * Applied to the underlying `Control` element (same element that receives `style`).
+     * Label content rendered next to the switch control.
+     *
+     * @example
+     * ```tsx
+     * <Switch onChange={handleChange}>Dark mode</Switch>
+     * ```
      */
-    control?: React.CSSProperties;
-    /** Track wrapper style. */
-    track?: React.CSSProperties;
-    /** Thumb wrapper style. */
-    thumb?: React.CSSProperties;
+    children?: React.ReactNode;
+    /** Sets the checked/active color of the control.
+     * @default bgPrimary
+     */
+    controlColor?: ThemeVars.Color;
   };
-};
 
 const MotionBox = motion(Box);
 
@@ -116,7 +107,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
       ref={ref}
       borderRadius={1000}
       checked={checked}
-      className={classNames?.control}
+      className={cx(switchClassNames.control, classNames?.control)}
       disabled={disabled}
       label={children}
       role="switch"
@@ -131,7 +122,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
         borderColor={borderColor}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
-        className={cx(trackCss, classNames?.track)}
+        className={cx(trackCss, switchClassNames.track, classNames?.track)}
         data-filled={checked}
         justifyContent="flex-start"
         style={styles?.track}
@@ -141,7 +132,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
           animate={checked ? 'checked' : 'unchecked'}
           background={controlColor ?? defaultControlColor}
           borderRadius={1000}
-          className={cx(thumbCss, classNames?.thumb)}
+          className={cx(thumbCss, switchClassNames.thumb, classNames?.thumb)}
           data-testid="switch-thumb"
           elevation={elevation}
           initial={false}
@@ -157,7 +148,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
   return (
     <Box
       alignItems={children ? 'center' : undefined}
-      className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+      className={cx(switchClassNames.root, className, classNames?.root)}
       minHeight={children ? 'var(--controlSize-switchHeight)' : undefined}
       role="presentation"
       style={styles?.root}

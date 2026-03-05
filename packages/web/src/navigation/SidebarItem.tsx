@@ -8,6 +8,7 @@ import { Box } from '../layout';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 import type { TooltipProps } from '../overlays/tooltip/TooltipProps';
 import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import { Text } from '../typography';
 
 import { useSidebarContext } from './SidebarContext';
@@ -30,33 +31,20 @@ type ManagedPressableProps = Pick<
   'background' | 'width' | 'transparentWhileInactive' | 'className' | 'borderWidth'
 >;
 
-type SidebarItemClassNames = {
+/**
+ * Static class names for SidebarItem component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const sidebarItemClassNames = {
   /** Persistent outer wrapper across tooltip/non-tooltip variants. */
-  root?: string;
-  /** Default content wrapper className. */
-  content?: string;
-  /** Icon wrapper className. */
-  icon?: string;
-  /**
-   * Title text className.
-   * Applies only when the title text is rendered (for example, hidden when collapsed in default variant).
-   */
-  title?: string;
-};
-
-type SidebarItemStyles = {
-  /** Persistent outer wrapper across tooltip/non-tooltip variants. */
-  root?: React.CSSProperties;
-  /** Default content wrapper style. */
-  content?: React.CSSProperties;
-  /** Icon wrapper style. */
-  icon?: React.CSSProperties;
-  /**
-   * Title text style.
-   * Applies only when the title text is rendered (for example, hidden when collapsed in default variant).
-   */
-  title?: React.CSSProperties;
-};
+  root: 'cds-SidebarItem',
+  /** Default content wrapper element. */
+  content: 'cds-SidebarItem-content',
+  /** Icon wrapper element. */
+  icon: 'cds-SidebarItem-icon',
+  /** Title text element. */
+  title: 'cds-SidebarItem-title',
+} as const;
 
 export type SidebarItemProps = {
   /**
@@ -90,9 +78,8 @@ export type SidebarItemProps = {
   Component?: React.ElementType<CustomSidebarItemProps>;
   className?: string;
   style?: React.CSSProperties;
-  classNames?: SidebarItemClassNames;
-  styles?: SidebarItemStyles;
-} & Omit<PressableProps<PressableDefaultElement>, keyof ManagedPressableProps> &
+} & StylesAndClassNames<typeof sidebarItemClassNames> &
+  Omit<PressableProps<PressableDefaultElement>, keyof ManagedPressableProps> &
   Pick<TooltipProps, 'disablePortal'>;
 
 export const SidebarItem = memo(
@@ -124,7 +111,7 @@ export const SidebarItem = memo(
         () => (
           <Box
             alignItems="center"
-            className={classNames?.content}
+            className={cx(sidebarItemClassNames.content, classNames?.content)}
             flexDirection={isDefaultVariant ? 'row' : 'column'}
             gap={isDefaultVariant ? 2 : 0.5}
             paddingX={isDefaultVariant ? 2 : 0.5}
@@ -134,7 +121,7 @@ export const SidebarItem = memo(
           >
             <Icon
               active={active}
-              className={classNames?.icon}
+              className={cx(sidebarItemClassNames.icon, classNames?.icon)}
               color={color}
               name={icon}
               size="m"
@@ -142,7 +129,7 @@ export const SidebarItem = memo(
             />
             {(variant === 'condensed' || !isCollapsed) && (
               <Text
-                className={classNames?.title}
+                className={cx(sidebarItemClassNames.title, classNames?.title)}
                 color={color}
                 font={isDefaultVariant ? 'headline' : 'label1'}
                 fontSize={isDefaultVariant ? 'inherit' : 'legal'}
@@ -218,7 +205,7 @@ export const SidebarItem = memo(
 
       return (
         <Box
-          className={cx(className, classNames?.root)}
+          className={cx(sidebarItemClassNames.root, className, classNames?.root)}
           style={{ ...style, ...styles?.root }}
           width="100%"
         >
