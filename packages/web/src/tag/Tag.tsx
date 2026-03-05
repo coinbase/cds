@@ -151,5 +151,3 @@ export const Tag = memo(
     );
   }),
 );
-
-export type { TagColorScheme, TagEmphasis, TagIntent } from '@coinbase/cds-common/types';
