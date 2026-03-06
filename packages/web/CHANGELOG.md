@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.49.2 (3/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: improve deprecation notice in ListCell. [[#411](https://github.com/coinbase/cds/pull/411)]
+
 ## 8.49.1 (3/5/2026 PST)
 
 #### 🐞 Fixes
