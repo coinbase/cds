@@ -180,6 +180,8 @@ Since icon buttons have no visible text, an `accessibilityLabel` is required to 
 
 When composing a button with a visible label, use `accessibilityLabelledBy` to reference the label's `id` instead. See the [Claim Drop example](#claim-drop) below.
 
+For most use cases, keep the IconButton target area at `40 x 40` or larger. Reserve `iconSize="xs"` for specific constrained layouts, and avoid shrinking the interactive area below `24 x 24`, which is the absolute minimum target size recommended by [WCAG 2.2 target size guidance](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+
 ## Composed Examples
 
 ### Claim Drop
