@@ -104,16 +104,17 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
       transitions,
     });
 
-  return (
-    <motion.path
-      // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
-      {...({
-        d: interpolatedPath,
-        ...pathProps,
-      } as React.ComponentProps<typeof motion.path>)}
-    />
-  );
-});
+    return (
+      <motion.path
+        // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
+        {...({
+          d: interpolatedPath,
+          ...pathProps,
+        } as React.ComponentProps<typeof motion.path>)}
+      />
+    );
+  },
+);
 
 export const Path = memo<PathProps>(
   ({
