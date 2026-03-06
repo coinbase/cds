@@ -179,8 +179,8 @@ export const Default = () => {
         <Button onClick={() => setShowLongContentTray(true)}>Open Long Content Tray</Button>
         {showLongContentTray && (
           <Tray
-            focusTabIndexElements
             disableArrowKeyNavigation
+            focusTabIndexElements
             onCloseComplete={() => setShowLongContentTray(false)}
             title="Long Content Example"
           >
@@ -395,6 +395,8 @@ export const ResponsiveBasicListCells = () => {
       <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
           footer={({ handleClose }) => (
             <PageFooter
               borderedTop
@@ -406,8 +408,6 @@ export const ResponsiveBasicListCells = () => {
               justifyContent={isPhone ? 'center' : 'flex-end'}
             />
           )}
-          focusTabIndexElements
-          disableArrowKeyNavigation
           hideCloseButton={isPhone}
           onCloseComplete={() => setIsOpen(false)}
           pin={isPhone ? 'bottom' : 'right'}

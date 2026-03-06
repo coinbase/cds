@@ -449,10 +449,10 @@ export const Tray = memo(
             <MotionConfig reducedMotion={reduceMotion ? 'always' : undefined}>
               <DragMotionProvider enabled={!preventDismiss}>
                 <FocusTrap
+                  disableArrowKeyNavigation={disableArrowKeyNavigation}
                   focusTabIndexElements={focusTabIndexElements}
                   onEscPress={preventDismiss ? undefined : handleClose}
                   restoreFocusOnUnmount={restoreFocusOnUnmount}
-                  disableArrowKeyNavigation={disableArrowKeyNavigation}
                 >
                   <MotionVStack
                     ref={scope}

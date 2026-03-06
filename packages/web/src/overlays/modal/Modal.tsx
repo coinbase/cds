@@ -203,9 +203,9 @@ export const Modal = memo(
               width={width ?? defaultWidth}
             >
               <FocusTrap
+                disableArrowKeyNavigation={disableArrowKeyNavigation}
                 disableFocusTrap={disableFocusTrap}
                 focusTabIndexElements={focusTabIndexElements}
-                disableArrowKeyNavigation={disableArrowKeyNavigation}
                 onEscPress={shouldCloseOnEscPress ? handleClose : undefined}
                 restoreFocusOnUnmount={restoreFocusOnUnmount}
               >
