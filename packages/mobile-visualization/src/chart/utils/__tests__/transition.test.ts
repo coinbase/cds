@@ -321,7 +321,7 @@ describe('usePathTransition', () => {
     const nextPath = 'M0,0L30,30';
 
     const { result, rerender } = renderHook(
-      ({ path }) =>
+      ({ path }: { path: string }) =>
         usePathTransition({
           currentPath: path,
           transitions: { update: null },
