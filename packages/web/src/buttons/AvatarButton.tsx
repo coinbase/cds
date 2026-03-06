@@ -10,30 +10,6 @@ import type { ButtonBaseProps } from './Button';
 
 export const avatarButtonDefaultElement = 'button';
 
-// Avatar is opinioned on border styles, so Pressable's border props will have no effect
-// see CDS-1611
-type BorderProps = Pick<
-  PressableBaseProps,
-  | 'borderBottomLeftRadius'
-  | 'borderBottomRightRadius'
-  | 'borderTopLeftRadius'
-  | 'borderTopRightRadius'
-  | 'borderRadius'
-  | 'borderColor'
-  | 'borderWidth'
-  | 'borderTopWidth'
-  | 'borderEndWidth'
-  | 'borderBottomWidth'
-  | 'borderStartWidth'
-  | 'bordered'
-  | 'borderedBottom'
-  | 'borderedEnd'
-  | 'borderedHorizontal'
-  | 'borderedStart'
-  | 'borderedTop'
-  | 'borderedVertical'
->;
-
 type DeprecatedAvatarButtonBorderProps = {
   /** @deprecated Border props on `AvatarButton` have no effect and will be removed in a future major release. */
   borderBottomLeftRadius?: PressableBaseProps['borderBottomLeftRadius'];
@@ -74,7 +50,7 @@ type DeprecatedAvatarButtonBorderProps = {
 export type AvatarButtonDefaultElement = typeof avatarButtonDefaultElement;
 
 export type AvatarButtonBaseProps = Polymorphic.ExtendableProps<
-  Omit<PressableBaseProps, 'children' | keyof BorderProps>,
+  Omit<PressableBaseProps, 'children'>,
   DeprecatedAvatarButtonBorderProps &
     Pick<ButtonBaseProps, 'compact'> &
     Pick<

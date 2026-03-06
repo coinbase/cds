@@ -5,30 +5,6 @@ import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
 
-// Avatar is opinioned on border styles, so Pressable's border props will have no effect
-// see CDS-1611
-type BorderProps = Pick<
-  PressableBaseProps,
-  | 'borderBottomLeftRadius'
-  | 'borderBottomRightRadius'
-  | 'borderTopLeftRadius'
-  | 'borderTopRightRadius'
-  | 'borderRadius'
-  | 'borderColor'
-  | 'borderWidth'
-  | 'borderTopWidth'
-  | 'borderEndWidth'
-  | 'borderBottomWidth'
-  | 'borderStartWidth'
-  | 'bordered'
-  | 'borderedBottom'
-  | 'borderedEnd'
-  | 'borderedHorizontal'
-  | 'borderedStart'
-  | 'borderedTop'
-  | 'borderedVertical'
->;
-
 type DeprecatedAvatarButtonBorderProps = {
   /** @deprecated Border props on `AvatarButton` have no effect and will be removed in a future major release. */
   borderBottomLeftRadius?: PressableBaseProps['borderBottomLeftRadius'];
@@ -66,7 +42,7 @@ type DeprecatedAvatarButtonBorderProps = {
   borderedVertical?: PressableBaseProps['borderedVertical'];
 };
 
-export type AvatarButtonProps = Omit<PressableBaseProps, keyof BorderProps> &
+export type AvatarButtonProps = PressableBaseProps &
   DeprecatedAvatarButtonBorderProps &
   Pick<ButtonBaseProps, 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
