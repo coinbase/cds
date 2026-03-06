@@ -82,7 +82,7 @@ const BasicTooltip = ({ content, openDelay, closeDelay }: BasicTooltipProps) => 
 
         <VStack gap={3} paddingX={2}>
           <Tooltip
-            disablePortal
+            hasInteractiveContent
             closeDelay={closeDelay}
             content={
               <VStack gap={2}>
@@ -351,12 +351,9 @@ export const TooltipOnIconReactNode = () => (
 
 export const TooltipWithInteractiveContent = () => (
   <PortalProvider>
-    <VStack gap={2} paddingY={5}>
-      <Text as="span" color="fgMuted" font="body">
-        Set your default display currency.{' '}
-      </Text>
+    <HStack alignItems="center" gap={2}>
       <Tooltip
-        disablePortal
+        hasInteractiveContent
         content={
           <Text color="fg" font="label2">
             Learn more at{' '}
@@ -372,15 +369,11 @@ export const TooltipWithInteractiveContent = () => (
           </Text>
         }
       >
-        <Icon
-          active
-          color="fg"
-          name="info"
-          paddingStart={1}
-          role="button"
-          tabIndex={0}
-        />
+        <Icon active color="fg" name="info" paddingStart={1} role="button" tabIndex={0} />
       </Tooltip>
-    </VStack>
+      <Text as="span" color="fgMuted" font="body">
+        Set your default display currency.{' '}
+      </Text>
+    </HStack>
   </PortalProvider>
 );

@@ -114,7 +114,7 @@ function TooltipVisibilityDelay() {
 
 ### Accessibility (A11y)
 
-Tooltip defaults `disableAutoFocus` and `disableFocusTrap` to `true` because most tooltips contain only non-interactive text, so auto-focus and trapping focus are unnecessary and can surprise keyboard users.
+When tooltip content is non-interactive (text only), focus stays on the trigger and the tooltip is rendered in a portal. When tooltip content has **interactive elements** (links, buttons), set **`hasInteractiveContent={true}`** so the tooltip stays in the document flow and keyboard users can tab into the content. This sets `disablePortal`, `disableAutoFocus`, and `disableFocusTrap` appropriately.
 
 **Tooltip on an icon (or other non-button anchor):**
 
@@ -163,11 +163,9 @@ function TooltipIconReactNodeContent() {
 **When tooltip content is interactive (links, buttons):**
 
 - Prefer **Modal** or another pattern for actionable content when possible. Tooltips are intended for short, non-interactive descriptions.
-- If you must use interactive content inside a tooltip, set **`disablePortal={true}`** so the content stays in the document flow. That allows keyboard users to tab into the tooltip, through its content, and out to the next focusable element on the page. With the default portal, focus behavior can be inconsistent when moving between trigger and content.
+- If you must use interactive content inside a tooltip, set **`hasInteractiveContent={true}`** so the content stays in the document flow. The prop allows keyboard users to tab into the tooltip, through its content, and out to the next focusable element on the page. With the default portal, focus behavior can be inconsistent when moving between trigger and content.
 
 **Example: tooltip with interactive content**
-
-Use `disablePortal={true}` so focus can move naturally inside and out of the tooltip. The anchor keeps focus until the user tabs again; then focus can enter the tooltip and leave to the next element.
 
 ```jsx live
 function TooltipWithInteractiveContent() {
@@ -177,7 +175,6 @@ function TooltipWithInteractiveContent() {
         Set your default display currency.{' '}
       </Text>
       <Tooltip
-        disablePortal
         content={
           <Text font="label2" color="fg">
             Learn more at{' '}
@@ -192,8 +189,9 @@ function TooltipWithInteractiveContent() {
             .
           </Text>
         }
+        hasInteractiveContent
       >
-        <Icon active color="fg" name="info" paddingStart={1} tabIndex={0} />
+        <Icon active color="fg" name="info" paddingStart={1} role="button" tabIndex={0} />
       </Tooltip>
     </Box>
   );
