@@ -132,7 +132,7 @@ export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = Pick<
   FocusTrapProps,
-  'focusTabIndexElements' | 'restoreFocusOnUnmount' | 'disableArrowKeyNavigation'
+  'focusTabIndexElements' | 'disableArrowKeyNavigation'
 > & {
   children?: React.ReactNode | TrayRenderChildren;
   /** ReactNode to render as the Drawer header. Can be a ReactNode or a function that receives { handleClose }. */
@@ -189,6 +189,11 @@ export type TrayBaseProps = Pick<
    * This is useful for supporting reduced motion for accessibility.
    */
   reduceMotion?: boolean;
+  /**
+   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
+   * @default true
+   */
+  restoreFocusOnUnmount?: boolean;
   /**
    * Sets an accessible label for the close button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
