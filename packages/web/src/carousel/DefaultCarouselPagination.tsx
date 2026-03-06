@@ -28,6 +28,12 @@ const defaultPaginationCss = css`
   padding: ${INDICATOR_HEIGHT}px 0;
 `;
 
+const pillCss = css`
+  width: ${INDICATOR_ACTIVE_WIDTH}px;
+  height: ${INDICATOR_HEIGHT}px;
+  border-radius: var(--borderRadius-100);
+`;
+
 const dotCss = css`
   height: ${INDICATOR_HEIGHT}px;
   border-radius: var(--borderRadius-100);
@@ -67,6 +73,24 @@ export type DefaultCarouselPaginationProps = CarouselPaginationComponentProps &
 type PaginationIndicatorProps = PressableProps<'button'> & {
   isActive?: boolean;
 };
+
+const PaginationPill = memo(function PaginationPill({
+  isActive,
+  className,
+  ...props
+}: PaginationIndicatorProps) {
+  return (
+    <Pressable
+      aria-current={isActive ? 'true' : undefined}
+      background={isActive ? 'bgPrimary' : 'bgLine'}
+      borderColor="transparent"
+      borderWidth={0}
+      className={cx(pillCss, className)}
+      data-active={isActive}
+      {...props}
+    />
+  );
+});
 
 const PaginationDot = memo(function PaginationDot({
   isActive,
@@ -159,7 +183,10 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   style,
   styles,
   testID = 'carousel-pagination',
+  variant = 'dot',
 }: DefaultCarouselPaginationProps) {
+  const isDot = variant === 'dot';
+
   const getAccessibilityLabel = useCallback(
     (index: number) =>
       typeof paginationAccessibilityLabel === 'function'
@@ -171,32 +198,47 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   return (
     <HStack
       className={cx(defaultPaginationCss, className, classNames?.root)}
+      data-variant={variant}
       gap={0.5}
       justifyContent="center"
       style={{ ...style, ...styles?.root }}
+      testID={testID}
     >
       {totalPages > 0 ? (
-        Array.from({ length: totalPages }, (_, index) => (
-          <PaginationDot
-            key={index}
-            accessibilityLabel={getAccessibilityLabel(index)}
-            className={classNames?.dot}
-            isActive={index === activePageIndex}
-            onClick={() => onClickPage?.(index)}
-            style={styles?.dot}
-            testID={`${testID}-${index}`}
-          />
-        ))
+        Array.from({ length: totalPages }, (_, index) =>
+          isDot ? (
+            <PaginationDot
+              key={index}
+              accessibilityLabel={getAccessibilityLabel(index)}
+              className={classNames?.dot}
+              isActive={index === activePageIndex}
+              onClick={() => onClickPage?.(index)}
+              style={styles?.dot}
+              testID={`${testID}-${index}`}
+            />
+          ) : (
+            <PaginationPill
+              key={index}
+              accessibilityLabel={getAccessibilityLabel(index)}
+              className={classNames?.dot}
+              isActive={index === activePageIndex}
+              onClick={() => onClickPage?.(index)}
+              style={styles?.dot}
+              testID={`${testID}-${index}`}
+            />
+          ),
+        )
       ) : (
         <Pressable
           disabled
           aria-hidden="true"
           background="bgLine"
           borderColor="transparent"
-          className={cx(dotCss, classNames?.dot)}
+          borderWidth={0}
+          className={cx(isDot ? dotCss : pillCss, classNames?.dot)}
           style={{
             opacity: 0,
-            width: INDICATOR_INACTIVE_WIDTH,
+            width: isDot ? INDICATOR_INACTIVE_WIDTH : undefined,
             ...styles?.dot,
           }}
         />

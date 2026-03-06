@@ -271,15 +271,46 @@ describe('Carousel', () => {
 
       render(<TestCarouselWithItems NavigationComponent={mockNavigation} itemCount={5} />);
 
-      expect(mockNavigation).toHaveBeenCalledWith(
+      expect(mockNavigation).toHaveBeenCalled();
+      expect(mockNavigation.mock.calls[0]?.[0]).toEqual(
         expect.objectContaining({
           onGoNext: expect.any(Function),
           onGoPrevious: expect.any(Function),
           disableGoNext: expect.any(Boolean),
           disableGoPrevious: expect.any(Boolean),
         }),
-        undefined,
       );
+    });
+
+    it('does not pass a pagination variant by default', async () => {
+      const mockPagination = jest.fn((props: { variant?: 'pill' | 'dot' }) => null);
+
+      render(<TestCarouselWithItems PaginationComponent={mockPagination} itemCount={5} />);
+
+      await waitFor(() => {
+        expect(
+          mockPagination.mock.calls.some((call) => {
+            const props = call[0];
+            return props !== undefined && props.variant === undefined;
+          }),
+        ).toBe(true);
+      });
+    });
+
+    it('forwards deprecated paginationVariant to custom pagination components', async () => {
+      const mockPagination = jest.fn((props: { variant?: 'pill' | 'dot' }) => null);
+
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={mockPagination}
+          itemCount={5}
+          paginationVariant="pill"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(mockPagination.mock.calls.some((call) => call[0]?.variant === 'pill')).toBe(true);
+      });
     });
   });
 

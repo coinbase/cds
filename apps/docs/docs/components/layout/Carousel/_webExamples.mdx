@@ -4,6 +4,8 @@ Carousels are a great way to showcase a list of items in a compact and engaging 
 By default, Carousels have navigation and pagination enabled.
 You can also add a title to the Carousel by setting `title` prop.
 
+`paginationVariant` is deprecated. Carousel now defaults to dot pagination. Existing uses of `paginationVariant="pill"` still work during the deprecation window, but new usage should prefer the default pagination or a custom `PaginationComponent`.
+
 You simply wrap each child in a `CarouselItem` component, and can optionally set the `width` prop to control the width of the item.
 
 You can also set the `styles` prop to control the styles of the carousel, such as the gap between items.

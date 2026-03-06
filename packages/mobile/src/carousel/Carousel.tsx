@@ -127,6 +127,13 @@ export type CarouselPaginationComponentBaseProps = {
    * Accessibility label for the go to page button. You can optionally pass a function that will receive the pageIndex as an argument, and return an accessibility label string.
    */
   paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
+  /**
+   * Visual variant for the pagination indicators.
+   * When omitted, the default pagination component renders the current dot-style design.
+   * @default 'dot'
+   * @deprecated `pill` is deprecated and will be removed in a future major release. Prefer the default dot pagination or provide a custom `PaginationComponent`.
+   */
+  variant?: 'pill' | 'dot';
 };
 
 export type CarouselPaginationComponentProps = CarouselPaginationComponentBaseProps & {
@@ -186,6 +193,10 @@ export type CarouselBaseProps = SharedProps &
      * Hides the pagination indicators (dots/bars showing current page).
      */
     hidePagination?: boolean;
+    /**
+     * @deprecated `paginationVariant` will be removed in a future major release. Use the default dot pagination, or provide a custom `PaginationComponent` if you need custom visuals.
+     */
+    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
     /**
      * Custom component to render navigation arrows.
      * @default DefaultCarouselNavigation
@@ -540,6 +551,7 @@ export const Carousel = memo(
         title,
         hideNavigation,
         hidePagination,
+        paginationVariant,
         drag = 'snap',
         snapMode = 'page',
         NavigationComponent = DefaultCarouselNavigation,
@@ -1188,6 +1200,7 @@ export const Carousel = memo(
                   paginationAccessibilityLabel={paginationAccessibilityLabel}
                   style={styles?.pagination}
                   totalPages={totalPages}
+                  variant={paginationVariant}
                 />
               )}
             </VStack>

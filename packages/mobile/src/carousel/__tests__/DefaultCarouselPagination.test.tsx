@@ -47,6 +47,20 @@ const renderPagination = (props: Partial<React.ComponentProps<typeof DefaultCaro
   );
 
 describe('DefaultCarouselPagination', () => {
+  describe('variant', () => {
+    it('defaults to the dot variant', () => {
+      renderPagination({ totalPages: 3 });
+
+      expect(screen.getByTestId('carousel-page-1').props.width).toBeUndefined();
+    });
+
+    it('uses the pill variant when requested', () => {
+      renderPagination({ totalPages: 3, variant: 'pill' });
+
+      expect(screen.getByTestId('carousel-page-1').props.width).toBe(24);
+    });
+  });
+
   describe('paginationAccessibilityLabel', () => {
     it('uses default function that includes page number when not provided', () => {
       renderPagination({ totalPages: 3 });
