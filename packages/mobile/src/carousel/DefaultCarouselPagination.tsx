@@ -191,7 +191,12 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
       : paginationAccessibilityLabel;
 
   return (
-    <HStack gap={0.5} justifyContent="center" style={rootStyles}>
+    <HStack
+      gap={0.5}
+      justifyContent="center"
+      style={rootStyles}
+      testID={`carousel-pagination-${variant}`}
+    >
       {totalPages > 0 ? (
         Array.from({ length: totalPages }, (_, index) =>
           isDot ? (

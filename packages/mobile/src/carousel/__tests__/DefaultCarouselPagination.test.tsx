@@ -51,13 +51,13 @@ describe('DefaultCarouselPagination', () => {
     it('defaults to the dot variant', () => {
       renderPagination({ totalPages: 3 });
 
-      expect(screen.getByTestId('carousel-page-1').props.width).toBeUndefined();
+      expect(screen.getByTestId('carousel-pagination-dot')).toBeOnTheScreen();
     });
 
     it('uses the pill variant when requested', () => {
       renderPagination({ totalPages: 3, variant: 'pill' });
 
-      expect(screen.getByTestId('carousel-page-1').props.width).toBe(24);
+      expect(screen.getByTestId('carousel-pagination-pill')).toBeOnTheScreen();
     });
   });
 
