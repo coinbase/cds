@@ -21,7 +21,14 @@ export type AreaSeries = Series &
   Partial<
     Pick<
       AreaProps,
-      'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill' | 'connectNulls' | 'transition'
+      | 'AreaComponent'
+      | 'curve'
+      | 'fillOpacity'
+      | 'type'
+      | 'fill'
+      | 'connectNulls'
+      | 'transitions'
+      | 'transition'
     >
   > &
   Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>> & {
@@ -36,7 +43,13 @@ export type AreaSeries = Series &
 export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     AreaProps,
-    'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'connectNulls' | 'transition'
+    | 'AreaComponent'
+    | 'curve'
+    | 'fillOpacity'
+    | 'type'
+    | 'connectNulls'
+    | 'transitions'
+    | 'transition'
   > &
   Pick<LineProps, 'LineComponent' | 'strokeWidth'> & {
     /**
@@ -99,6 +112,7 @@ export const AreaChart = memo(
         fillOpacity,
         type,
         connectNulls,
+        transitions,
         transition,
         LineComponent,
         strokeWidth,
@@ -211,7 +225,6 @@ export const AreaChart = memo(
               LineComponent,
               stackId,
               legendShape,
-              transition: seriesTransition,
               ...areaPropsFromSeries
             }) => (
               <Area
@@ -221,7 +234,8 @@ export const AreaChart = memo(
                 curve={curve}
                 fillOpacity={fillOpacity}
                 seriesId={id}
-                transition={seriesTransition ?? transition}
+                transition={transition}
+                transitions={transitions}
                 type={type}
                 {...areaPropsFromSeries}
               />
@@ -240,8 +254,6 @@ export const AreaChart = memo(
                 stackId,
                 legendShape,
                 type, // Area type (don't pass to Line)
-                lineType: seriesLineType,
-                transition: seriesTransition,
                 ...otherPropsFromSeries
               }) => {
                 return (
@@ -252,8 +264,9 @@ export const AreaChart = memo(
                     curve={curve}
                     seriesId={id}
                     strokeWidth={strokeWidth}
-                    transition={seriesTransition ?? transition}
-                    type={seriesLineType ?? lineType}
+                    transition={transition}
+                    transitions={transitions}
+                    type={lineType}
                     {...otherPropsFromSeries}
                   />
                 );

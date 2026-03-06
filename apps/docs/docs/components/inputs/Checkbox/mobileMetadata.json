@@ -24,5 +24,6 @@
       "label": "Switch",
       "url": "/components/inputs/Switch/?platform=mobile"
     }
-  ]
+  ],
+  "dependencies": []
 }

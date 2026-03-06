@@ -8,5 +8,11 @@
       "label": "DatePicker",
       "url": "/components/other/DatePicker"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-dom",
+      "version": "^18.3.1"
+    }
   ]
 }

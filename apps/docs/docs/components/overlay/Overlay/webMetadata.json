@@ -20,5 +20,10 @@
       "url": "/components/overlay/Alert/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
 }

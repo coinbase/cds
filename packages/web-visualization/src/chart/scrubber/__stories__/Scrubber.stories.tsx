@@ -181,10 +181,10 @@ const BeaconStroke = () => {
         ]}
       >
         <Scrubber
-          hideOverlay
           idlePulse
           beaconStroke="rgb(var(--red40))"
           lineStroke="rgb(var(--gray0))"
+          styles={{ overlay: { fill: 'rgb(var(--red40))' } }}
         />
       </LineChart>
     </Box>

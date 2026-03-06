@@ -1,14 +1,23 @@
-import { forwardRef, memo, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import {
+  interpolateColor,
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { IconButton } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { Icon, type IconProps } from '@coinbase/cds-mobile/icons';
 import { HStack } from '@coinbase/cds-mobile/layout';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
+import { tabsSpringConfig } from '@coinbase/cds-mobile/tabs/Tabs';
 import { Text } from '@coinbase/cds-mobile/typography';
 
 import {
@@ -283,6 +292,60 @@ const ColoredExcludingLivePeriodSelectorExample = () => {
   );
 };
 
+type ColoredIconProps = {
+  tabId: string;
+  name: IconProps['name'];
+};
+
+const ColoredIcon = memo(({ tabId, name }: ColoredIconProps) => {
+  const { activeTab } = useTabsContext();
+  const isActive = activeTab?.id === tabId;
+  const theme = useTheme();
+
+  const progress = useSharedValue(isActive ? 1 : 0);
+  const [color, setColor] = useState(isActive ? theme.color.fgPrimary : theme.color.fg);
+
+  useEffect(() => {
+    progress.value = withSpring(isActive ? 1 : 0, tabsSpringConfig);
+  }, [isActive, progress]);
+
+  useAnimatedReaction(
+    () => interpolateColor(progress.value, [0, 1], [theme.color.fg, theme.color.fgPrimary]),
+    (newColor) => {
+      runOnJS(setColor)(newColor);
+    },
+  );
+
+  return <Icon active name={name} size="s" styles={{ icon: { color } }} />;
+});
+
+function IconsPeriodSelectorExample() {
+  const theme = useTheme();
+
+  const tabs = [
+    { id: 'buy', label: <ColoredIcon name="chartLine" tabId="buy" /> },
+    { id: 'sell', label: <ColoredIcon name="chartCandles" tabId="sell" /> },
+    { id: 'convert', label: <ColoredIcon name="chartBar" tabId="convert" /> },
+  ];
+  const [activeTab, updateActiveTab] = useState<TabValue | null>(tabs[0]);
+  const handleChange = useCallback((activeTab: TabValue | null) => updateActiveTab(activeTab), []);
+  return (
+    <PeriodSelector
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={300}
+      gap={0.5}
+      onChange={handleChange}
+      padding={0.5}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={tabs}
+      width="fit-content"
+    />
+  );
+}
+
 export default function All() {
   return (
     <ExampleScreen>
@@ -306,6 +369,9 @@ export default function All() {
       </Example>
       <Example title="With Padding">
         <PaddedPeriodSelectorExample />
+      </Example>
+      <Example title="With Icons">
+        <IconsPeriodSelectorExample />
       </Example>
     </ExampleScreen>
   );

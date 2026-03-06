@@ -22,5 +22,10 @@
       "url": "/components/inputs/SelectOption/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "react-dom",
+      "version": "^18.3.1"
+    }
+  ]
 }

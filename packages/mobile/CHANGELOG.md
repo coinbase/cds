@@ -8,6 +8,60 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
+## 8.49.0 (2/26/2026 PST)
+
+#### 🚀 Updates
+
+- Add styles props to Tab components. [[#438](https://github.com/coinbase/cds/pull/438)]
+
+## 8.48.3 ((2/25/2026, 08:36 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.2 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Deprecate useStatusBarHeight hook.
+
+## 8.48.1 ((2/25/2026, 01:30 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.0 (2/24/2026 PST)
+
+#### 🚀 Updates
+
+- Add start/end icon/node support to Tag. [[#421](https://github.com/coinbase/cds/pull/421)]
+
+## 8.47.4 (2/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: set paddingStart on Input for compact label. [[#423](https://github.com/coinbase/cds/pull/423)]
+
+## 8.47.3 ((2/20/2026, 09:16 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.2 (2/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix mobile CardRoot style forwarding logic. [[#405](https://github.com/coinbase/cds/pull/405)]
+
+## 8.47.1 (2/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray title spacing and overflow. [[#414](https://github.com/coinbase/cds/pull/414)]
+
 ## 8.47.0 (2/19/2026 PST)
 
 #### 🚀 Updates

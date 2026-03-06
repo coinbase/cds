@@ -48,6 +48,7 @@ const ignores = [
 
 // These rules apply to all files
 const sharedRules = {
+  'internal/no-object-rest-spread-in-worklet': 'error',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',
@@ -180,6 +181,7 @@ const testRules = {
 
 // These plugins apply to all files
 const sharedPlugins = {
+  internal: internalPlugin,
   'simple-import-sort': eslintSimpleImportSort,
 };
 
@@ -309,6 +311,10 @@ export default tseslint.config(
   {
     files: ['**/*.figma.tsx'],
     extends: [internalPlugin.configs.figmaConnectRules],
+  },
+  {
+    files: ['**/*.mdx'],
+    processor: internalPlugin.processors.mdx,
   },
   {
     files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/setup.js'],

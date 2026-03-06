@@ -7,7 +7,7 @@ import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { createGradient, getBaseline } from '../utils';
 import { getDottedAreaPath } from '../utils/path';
-import { usePathTransition } from '../utils/transition';
+import { defaultTransition, usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -66,11 +66,14 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     gradient: gradientProp,
     animate: animateProp,
+    transitions,
     transition,
     ...pathProps
   }) => {
     const theme = useTheme();
     const { drawingArea, animate, getYAxis } = useCartesianChartContext();
+
+    const shouldAnimate = animateProp ?? animate;
 
     const yAxisConfig = getYAxis(yAxisId);
 
@@ -78,6 +81,14 @@ export const DottedArea = memo<DottedAreaProps>(
       () => fillProp ?? theme.color.fgPrimary,
       [fillProp, theme.color.fgPrimary],
     );
+
+    const updateTransition = useMemo(() => {
+      return transitions?.update !== undefined
+        ? transitions.update
+        : transition !== undefined
+          ? transition
+          : defaultTransition;
+    }, [transitions?.update, transition]);
 
     const dottedPath = useMemo(() => {
       if (!drawingArea) return '';
@@ -94,15 +105,10 @@ export const DottedArea = memo<DottedAreaProps>(
       );
     }, [drawingArea, patternSize, dotSize]);
 
-    const animatedClipPath = usePathTransition({
+    const clipPath = usePathTransition({
       currentPath: d,
-      transition,
+      transitions: { update: shouldAnimate ? updateTransition : null },
     });
-
-    const staticClipPath = useMemo(() => {
-      if (!d) return;
-      return Skia.Path.MakeFromSVGString(d) ?? undefined;
-    }, [d]);
 
     const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
@@ -112,13 +118,15 @@ export const DottedArea = memo<DottedAreaProps>(
       return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
     }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
+    // Update transition is used for clip path, we skip update animation on Path itself
     return (
-      <Group clip={animate ? animatedClipPath : staticClipPath}>
+      <Group clip={clipPath}>
         <Path
-          animate={animateProp ?? animate}
+          animate={shouldAnimate}
           d={dottedPath}
           fill={fill}
           transition={transition}
+          transitions={transitions}
           {...pathProps}
         >
           {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}

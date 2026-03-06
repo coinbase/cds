@@ -1,8 +1,14 @@
 import React, { memo, useMemo } from 'react';
-import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getBarPath } from '../utils';
+import { Path } from '../Path';
+import {
+  defaultBarEnterTransition,
+  defaultTransition,
+  getBarPath,
+  getTransition,
+  withStaggerDelayTransition,
+} from '../utils';
 
 import type { BarComponentProps } from './Bar';
 
@@ -34,32 +40,66 @@ export const DefaultBar = memo<DefaultBarProps>(
     dataX,
     dataY,
     seriesId,
+    transitions,
     transition,
     ...props
   }) => {
-    const { animate } = useCartesianChartContext();
+    const { animate, drawingArea } = useCartesianChartContext();
+
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const enterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [transitions?.enter, animate, normalizedX],
+    );
+    const updateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [transitions?.update, transition, animate, normalizedX],
+    );
 
     const initialPath = useMemo(() => {
-      if (!animate) return undefined;
-      // Need a minimum height to allow for animation
       const minHeight = 1;
       const initialY = (originY ?? 0) - minHeight;
-      return getBarPath(x, initialY, width, minHeight, borderRadius, !!roundTop, !!roundBottom);
-    }, [animate, x, originY, width, borderRadius, roundTop, roundBottom]);
-
-    if (animate && initialPath) {
-      return (
-        <motion.path
-          {...props}
-          animate={{ d }}
-          fill={fill}
-          fillOpacity={fillOpacity}
-          initial={{ d: initialPath }}
-          transition={transition}
-        />
+      return getBarPath(
+        x,
+        initialY,
+        width,
+        minHeight,
+        borderRadius ?? 0,
+        !!roundTop,
+        !!roundBottom,
       );
-    }
+    }, [x, originY, width, borderRadius, roundTop, roundBottom]);
 
-    return <path {...props} d={d} fill={fill} fillOpacity={fillOpacity} />;
+    return (
+      <Path
+        {...props}
+        animate={animate}
+        clipRect={null}
+        d={d}
+        fill={fill}
+        fillOpacity={fillOpacity}
+        initialPath={initialPath}
+        transitions={{
+          enter: enterTransition,
+          update: updateTransition,
+        }}
+      />
+    );
   },
 );

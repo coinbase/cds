@@ -26,6 +26,7 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
     | 'stackGap'
     | 'barMinSize'
     | 'stackMinSize'
+    | 'transitions'
     | 'transition'
   > & {
     /**
@@ -90,6 +91,7 @@ export const BarChart = memo(
         stackGap,
         barMinSize,
         stackMinSize,
+        transitions,
         transition,
         ...chartProps
       },
@@ -183,6 +185,7 @@ export const BarChart = memo(
             stroke={stroke}
             strokeWidth={strokeWidth}
             transition={transition}
+            transitions={transitions}
           />
           {children}
         </CartesianChart>

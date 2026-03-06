@@ -1,6 +1,4 @@
 import { MDXArticle } from '@site/src/components/page/MDXArticle';
-import { JSONCodeBlock } from '@site/src/components/page/JSONCodeBlock';
-import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
 
 <MDXArticle>
 ## Basic usage
@@ -16,7 +14,11 @@ Do not use `useBreakpoints` for responsive styles. Use CSS media queries or [the
 ```tsx live
 () => {
   const breakpoints = useBreakpoints();
-  return <JSONCodeBlock json={breakpoints} />;
+  return (
+    <pre style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+      {JSON.stringify(breakpoints, null, 2)}
+    </pre>
+  );
 };
 ```
 

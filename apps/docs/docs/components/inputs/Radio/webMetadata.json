@@ -25,5 +25,11 @@
       "label": "Switch",
       "url": "/components/inputs/Switch"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

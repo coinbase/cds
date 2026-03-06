@@ -3,6 +3,7 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
 
+import { Icon } from '../../icons/Icon';
 import { Box, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { SegmentedTab } from '../SegmentedTab';
@@ -75,6 +76,12 @@ const typedSegments: TabValue<TradingAction>[] = [
   { id: 'buy', label: 'Buy' },
   { id: 'sell', label: 'Sell' },
   { id: 'convert', label: 'Convert' },
+];
+
+const iconSegments = [
+  { id: 'buy', label: <Icon color="currentColor" name="chartLine" size="s" /> },
+  { id: 'sell', label: <Icon color="currentColor" name="chartCandles" size="s" /> },
+  { id: 'convert', label: <Icon color="currentColor" name="chartBar" size="s" /> },
 ];
 
 const customSegments = [
@@ -189,12 +196,31 @@ export const All = () => {
         title="Typed Tabs"
       />
       <SegmentedTabsExample
+        borderRadius={300}
         defaultActiveTab={basicSegments[0]}
-        gap={2}
-        paddingX={3}
-        paddingY={1}
         tabs={basicSegments}
-        title="With Padding"
+        title="Border Radius"
+      />
+      <SegmentedTabsExample
+        borderRadius={300}
+        defaultActiveTab={basicSegments[0]}
+        padding={0.5}
+        styles={{
+          activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+        }}
+        tabs={basicSegments}
+        title="Custom Padding with Inner Border Radius"
+      />
+      <SegmentedTabsExample
+        borderRadius={300}
+        defaultActiveTab={iconSegments[0]}
+        gap={0.5}
+        padding={0.5}
+        styles={{
+          activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+        }}
+        tabs={iconSegments}
+        title="Icon Labels"
         width="fit-content"
       />
     </VStack>

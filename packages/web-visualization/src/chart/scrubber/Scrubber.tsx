@@ -10,11 +10,11 @@ import {
 } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartInset,
   type ChartScaleFunction,
+  defaultAccessoryEnterTransition,
   getPointOnScale,
+  getTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -41,7 +41,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = SharedProps & {
+export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
@@ -75,27 +75,6 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   animate?: boolean;
   /**
-   * Transition configuration for beacon animations.
-   */
-  transitions?: {
-    /**
-     * Transition used for beacon position updates.
-     * @default defaultTransition
-     */
-    update?: Transition;
-    /**
-     * Transition used for the pulse animation.
-     * @default { duration: 1.6, ease: 'easeInOut' }
-     */
-    pulse?: Transition;
-    /**
-     * Delay, in seconds between pulse transitions
-     * when `idlePulse` is enabled.
-     * @default 0.4
-     */
-    pulseRepeatDelay?: number;
-  };
-  /**
    * Opacity of the beacon.
    * @default 1
    */
@@ -105,15 +84,45 @@ export type ScrubberBeaconProps = SharedProps & {
    * @default 'var(--color-bg)'
    */
   stroke?: string;
-  /**
-   * Custom className for styling.
-   */
-  className?: string;
-  /**
-   * Custom inline styles.
-   */
-  style?: React.CSSProperties;
 };
+
+export type ScrubberBeaconProps = SharedProps &
+  ScrubberBeaconBaseProps & {
+    /**
+     * Transition configuration for beacon animations.
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+      /**
+       * Transition used for the pulse animation.
+       * @default transition { duration: 1.6, ease: 'easeInOut' }
+       */
+      pulse?: Transition;
+      /**
+       * Delay, in seconds between pulse transitions
+       * when `idlePulse` is enabled.
+       * @default 0.4
+       */
+      pulseRepeatDelay?: number;
+    };
+    /**
+     * Custom className for styling.
+     */
+    className?: string;
+    /**
+     * Custom inline styles.
+     */
+    style?: React.CSSProperties;
+  };
 
 export type ScrubberBeaconComponent = React.FC<
   ScrubberBeaconProps & { ref?: React.Ref<ScrubberBeaconRef> }
@@ -122,7 +131,15 @@ export type ScrubberBeaconComponent = React.FC<
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   Pick<
     ChartTextProps,
-    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity' | 'font'
+    | 'x'
+    | 'y'
+    | 'dx'
+    | 'horizontalAlignment'
+    | 'onDimensionsChange'
+    | 'opacity'
+    | 'font'
+    | 'className'
+    | 'style'
   > & {
     /**
      * Label for the series.
@@ -132,6 +149,11 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
      * Id of the series.
      */
     seriesId: Series['id'];
+    /**
+     * Transition configuration for position animations.
+     * When provided, the label component should animate its y position using this transition.
+     */
+    transition?: Transition;
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
@@ -196,7 +218,7 @@ export type ScrubberBaseProps = SharedProps &
     labelFont?: ChartTextProps['font'];
     /**
      * Bounds inset for the scrubber line label to prevent cutoff at chart edges.
-     * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+     * @default inset { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
      */
     labelBoundsInset?: number | ChartInset;
     /**
@@ -208,10 +230,6 @@ export type ScrubberBaseProps = SharedProps &
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Transition configuration for the scrubber beacon.
-     */
-    beaconTransitions?: ScrubberBeaconProps['transitions'];
-    /**
      * Stroke color of the scrubber beacon circle.
      * @default 'var(--color-bg)'
      */
@@ -219,6 +237,16 @@ export type ScrubberBaseProps = SharedProps &
   };
 
 export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Transition configuration for the scrubber.
+   * Controls enter, update, and pulse animations for beacons and beacon labels.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Transition configuration for the scrubber beacon.
+   * @deprecated Use `transitions` instead.
+   */
+  beaconTransitions?: ScrubberBeaconProps['transitions'];
   /**
    * Accessibility label for the scrubber. Can be a static string or a function that receives the current dataIndex.
    * If not provided, label will be used if it resolves to a string.
@@ -232,6 +260,8 @@ export type ScrubberProps = ScrubberBaseProps & {
     beacon?: React.CSSProperties;
     /** Scrubber line element */
     line?: React.CSSProperties;
+    /** Scrubber line label element */
+    label?: React.CSSProperties;
     /** Beacon label element */
     beaconLabel?: React.CSSProperties;
   };
@@ -243,6 +273,8 @@ export type ScrubberProps = ScrubberBaseProps & {
     beacon?: string;
     /** Scrubber line element */
     line?: string;
+    /** Scrubber line label element */
+    label?: string;
     /** Beacon label element */
     beaconLabel?: string;
   };
@@ -279,6 +311,7 @@ export const Scrubber = memo(
         testID,
         idlePulse,
         beaconTransitions,
+        transitions = beaconTransitions,
         beaconStroke,
         styles,
         classNames,
@@ -353,6 +386,12 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
+      const groupEnterTransition = useMemo(
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
+      );
+      const shouldAnimateGroup = animate && groupEnterTransition !== null;
+
       // Check if we have at least the default X scale
       const defaultXScale = getXScale();
       if (!defaultXScale) return null;
@@ -368,16 +407,12 @@ export const Scrubber = memo(
           data-component="scrubber-group"
           data-testid={testID}
           role="status"
-          {...(animate
+          {...(shouldAnimateGroup
             ? {
                 animate: {
                   opacity: 1,
-                  transition: {
-                    duration: accessoryFadeTransitionDuration,
-                    delay: accessoryFadeTransitionDelay,
-                  },
+                  transition: groupEnterTransition,
                 },
-                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
                 initial: { opacity: 0 },
               }
             : {})}
@@ -398,14 +433,14 @@ export const Scrubber = memo(
             <ReferenceLine
               LabelComponent={LabelComponent}
               LineComponent={LineComponent}
-              classNames={{ label: classNames?.line }}
+              classNames={{ label: classNames?.label, line: classNames?.line }}
               dataX={dataX}
               label={typeof label === 'function' ? label(dataIndex) : label}
               labelBoundsInset={labelBoundsInset}
               labelElevated={labelElevated}
               labelFont={labelFont}
               stroke={lineStroke}
-              styles={{ label: styles?.line }}
+              styles={{ label: styles?.label, line: styles?.line }}
             />
           )}
           <ScrubberBeaconGroup
@@ -417,16 +452,19 @@ export const Scrubber = memo(
             stroke={beaconStroke}
             style={styles?.beacon}
             testID={testID}
-            transitions={beaconTransitions}
+            transitions={transitions}
           />
           {!hideBeaconLabels && beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              className={classNames?.beaconLabel}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
               labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              style={styles?.beaconLabel}
+              transitions={transitions}
             />
           )}
         </motion.g>

@@ -162,7 +162,7 @@ export const getAxisScale = ({
 
   if (!isValidBounds(adjustedDomain))
     throw new Error(
-      'Invalid domain bounds. See https://cds.coinbase.com/http://localhost:3000/components/graphs/XAxis/#domain',
+      'Invalid domain bounds. See https://cds.coinbase.com/components/charts/XAxis/#domain',
     );
 
   if (scaleType === 'band') {
@@ -211,7 +211,7 @@ export const getAxisConfig = (
     // forces id to be defined on every input config when there are multiple axes
     if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
       throw new Error(
-        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/graphs/YAxis/#multiple-y-axes.',
+        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/charts/YAxis/#multiple-y-axes.',
       );
     }
 

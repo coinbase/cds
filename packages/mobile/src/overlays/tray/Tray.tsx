@@ -87,6 +87,7 @@ export const Tray = memo(
   ) {
     const [titleHeight, setTitleHeight] = useState(0);
     const isInsideHandleBar = handleBarVariant === 'inside';
+    const isTitleString = typeof title === 'string';
 
     const { contentStyle, headerStyle, titleStyle, drawerStyles } = useMemo(() => {
       const {
@@ -126,11 +127,11 @@ export const Tray = memo(
                   <Box
                     justifyContent="center"
                     onLayout={onTitleLayout}
-                    paddingBottom={isInsideHandleBar ? 0.75 : 2}
-                    paddingTop={isInsideHandleBar ? 0 : 3}
-                    paddingX={3}
+                    paddingBottom={isInsideHandleBar ? 0.75 : isTitleString ? 2 : 0}
+                    paddingTop={isInsideHandleBar ? 0 : isTitleString ? 3 : 0}
+                    paddingX={isInsideHandleBar || isTitleString ? 3 : 0}
                   >
-                    {typeof title === 'string' ? (
+                    {isTitleString ? (
                       <Text font="title3" style={titleStyle}>
                         {title}
                       </Text>
@@ -151,6 +152,7 @@ export const Tray = memo(
       },
       [
         title,
+        isTitleString,
         contentStyle,
         onTitleLayout,
         isInsideHandleBar,

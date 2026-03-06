@@ -20,5 +20,6 @@
       "label": "TabbedChips",
       "url": "/components/navigation/TabbedChips/"
     }
-  ]
+  ],
+  "dependencies": []
 }
