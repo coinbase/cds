@@ -549,6 +549,7 @@ export const BarStack = memo<BarStackProps>(
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
         transition={transition}
+        transitions={transitions}
         width={barsGrowVertically ? thickness : bar.length}
         x={barsGrowVertically ? indexPos : bar.valuePos}
         y={barsGrowVertically ? bar.valuePos : indexPos}

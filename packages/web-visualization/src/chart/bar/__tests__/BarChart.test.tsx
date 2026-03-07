@@ -1,6 +1,7 @@
 import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import type { BarComponentProps } from '../Bar';
 import { BarChart } from '../BarChart';
 
 jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
@@ -56,6 +57,32 @@ describe('BarChart', () => {
     const clipRect = svg.querySelector('clipPath rect');
     expect(clipRect).toBeInTheDocument();
     expect(Number(clipRect?.getAttribute('width'))).toBeGreaterThan(0);
+  });
+
+  it('passes custom transitions to custom bar components', () => {
+    const customTransitions = {
+      enter: { type: 'tween' as const, duration: 0.25 },
+      update: { type: 'spring' as const, stiffness: 320, damping: 30 },
+    };
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          height={400}
+          series={[{ id: 'test', data: [10, 20, 30, 40, 50] }]}
+          testID="bar-chart-custom-transition"
+          transitions={customTransitions}
+          width={600}
+          xAxis={{ data: ['a', 'b', 'c', 'd', 'e'] }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomBar).toHaveBeenCalled();
+    const firstCallProps = CustomBar.mock.calls[0][0];
+    expect(firstCallProps.transitions).toEqual(customTransitions);
   });
 
   it('shows axes and axis labels when enabled', () => {
