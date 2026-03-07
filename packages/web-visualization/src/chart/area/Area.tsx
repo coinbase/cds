@@ -112,15 +112,22 @@ export const Area = memo<AreaProps>(
     const yScale = getYScale(matchedSeries?.yAxisId);
     const yAxis = getYAxis(matchedSeries?.yAxisId);
 
+    const categoryAxisIsX = useMemo(() => {
+      return layout !== 'horizontal';
+    }, [layout]);
+
+    const categoryAxis = useMemo(() => {
+      return categoryAxisIsX ? xAxis : yAxis;
+    }, [categoryAxisIsX, xAxis, yAxis]);
+
     const area = useMemo(() => {
       if (!sourceData || sourceData.length === 0 || !xScale || !yScale) return '';
 
-      // Get appropriate axis data based on layout
-      const categoryAxisIsX = layout !== 'horizontal';
-      const indexAxis = categoryAxisIsX ? xAxis : yAxis;
       const indexData =
-        indexAxis?.data && Array.isArray(indexAxis.data) && typeof indexAxis.data[0] === 'number'
-          ? (indexAxis.data as number[])
+        categoryAxis?.data &&
+        Array.isArray(categoryAxis.data) &&
+        typeof categoryAxis.data[0] === 'number'
+          ? (categoryAxis.data as number[])
           : undefined;
 
       return getAreaPath({
@@ -133,7 +140,7 @@ export const Area = memo<AreaProps>(
         connectNulls,
         layout,
       });
-    }, [sourceData, xScale, yScale, curve, xAxis, yAxis, connectNulls, layout]);
+    }, [sourceData, xScale, yScale, curve, categoryAxis, categoryAxisIsX, connectNulls, layout]);
 
     const AreaComponent = useMemo((): AreaComponent => {
       if (AreaComponentProp) {

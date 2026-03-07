@@ -7,7 +7,7 @@ import { css } from '@linaria/core';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { CartesianChartProvider } from './ChartProvider';
-import { Legend, type LegendProps } from './legend';
+import { Legend } from './legend';
 import {
   type AxisConfig,
   type CartesianAxisConfigProps,
@@ -307,11 +307,15 @@ export const CartesianChart = memo(
         [stackedDataMap],
       );
 
-      const dataLength = useMemo(() => {
-        // Find which axis is the category axis
-        const categoryAxisIsX = layout !== 'horizontal';
-        const categoryAxisConfig = categoryAxisIsX ? xAxisConfig : (yAxisConfig[0] ?? xAxisConfig);
+      const categoryAxisIsX = useMemo(() => {
+        return layout !== 'horizontal';
+      }, [layout]);
 
+      const categoryAxisConfig = useMemo(() => {
+        return categoryAxisIsX ? xAxisConfig : (yAxisConfig[0] ?? xAxisConfig);
+      }, [categoryAxisIsX, xAxisConfig, yAxisConfig]);
+
+      const dataLength = useMemo(() => {
         // If category axis has categorical data, use that length
         if (categoryAxisConfig.data && categoryAxisConfig.data.length > 0) {
           return categoryAxisConfig.data.length;
@@ -323,7 +327,7 @@ export const CartesianChart = memo(
           const seriesData = getStackedSeriesData(s.id);
           return Math.max(max, seriesData?.length ?? 0);
         }, 0);
-      }, [layout, xAxisConfig, yAxisConfig, series, getStackedSeriesData]);
+      }, [categoryAxisConfig, series, getStackedSeriesData]);
 
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {
