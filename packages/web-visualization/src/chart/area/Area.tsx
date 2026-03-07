@@ -95,7 +95,8 @@ export const Area = memo<AreaProps>(
     transition,
     animate,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
+    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+      useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
     const gradient = useMemo(
@@ -109,14 +110,17 @@ export const Area = memo<AreaProps>(
     const xAxis = getXAxis();
     const xScale = getXScale();
     const yScale = getYScale(matchedSeries?.yAxisId);
+    const yAxis = getYAxis(matchedSeries?.yAxisId);
 
     const area = useMemo(() => {
       if (!sourceData || sourceData.length === 0 || !xScale || !yScale) return '';
 
-      // Get numeric x-axis data if available
-      const xData =
-        xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
-          ? (xAxis.data as number[])
+      // Get appropriate axis data based on layout
+      const categoryAxisIsX = layout !== 'horizontal';
+      const indexAxis = categoryAxisIsX ? xAxis : yAxis;
+      const indexData =
+        indexAxis?.data && Array.isArray(indexAxis.data) && typeof indexAxis.data[0] === 'number'
+          ? (indexAxis.data as number[])
           : undefined;
 
       return getAreaPath({
@@ -124,10 +128,12 @@ export const Area = memo<AreaProps>(
         xScale,
         yScale,
         curve,
-        xData,
+        xData: categoryAxisIsX ? indexData : undefined,
+        yData: !categoryAxisIsX ? indexData : undefined,
         connectNulls,
+        layout,
       });
-    }, [sourceData, xScale, yScale, curve, xAxis?.data, connectNulls]);
+    }, [sourceData, xScale, yScale, curve, xAxis, yAxis, connectNulls, layout]);
 
     const AreaComponent = useMemo((): AreaComponent => {
       if (AreaComponentProp) {

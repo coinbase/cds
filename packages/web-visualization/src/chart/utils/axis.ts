@@ -91,7 +91,7 @@ export type AxisConfig = {
 /**
  * Axis configuration without computed bounds (used for input)
  */
-export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
+export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
   /**
    * Unique identifier for this axis.
    */
@@ -120,6 +120,66 @@ export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
 };
 
+export type CartesianAxisConfig = AxisConfig & {
+  /**
+   * Domain limit type for numeric scales
+   */
+  domainLimit?: 'nice' | 'strict';
+};
+
+/**
+ * Formats the array of user-provided axis configs with default values and validates axis ids.
+ * Ensures at least one axis config exists if no input is provided.
+ * Requires specific axis ids when there are more than 1 axes.
+ * Defaults the axis id for a single axis config if there is no id.
+ * @param type - the type of axis, 'x' or 'y'
+ * @param axes - array of axis configs or single axis config
+ * @param defaultId - the default id to use for the axis
+ * @param defaultScaleType - the default scale type to use for the axis
+ * @returns array of axis configs with IDs
+ */
+export const getAxisConfig = (
+  type: 'x' | 'y',
+  axes: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[] | undefined,
+  defaultId: string = defaultAxisId,
+  defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
+): CartesianAxisConfigProps[] => {
+  const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
+  if (!axes) {
+    return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
+  }
+
+  if (Array.isArray(axes)) {
+    const axesLength = axes.length;
+    // forces id to be defined on every input config when there are multiple axes
+    if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
+      throw new Error(
+        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/graphs/YAxis/#multiple-y-axes.',
+      );
+    }
+
+    return axes.map(({ id, ...axis }) => ({
+      // defaults the axis id if only a single axis is provided
+      id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
+      scaleType: defaultScaleType,
+      domainLimit: defaultDomainLimit,
+      ...axis,
+    })) as CartesianAxisConfigProps[];
+  }
+
+  // Single axis config
+  return [
+    {
+      id: defaultId,
+      scaleType: defaultScaleType,
+      domainLimit: defaultDomainLimit,
+      ...axes,
+    } as CartesianAxisConfigProps,
+  ];
+};
+
+import { type CartesianChartLayout } from './context';
+
 /**
  * Gets a D3 scale based on the axis configuration.
  * Handles both numeric (linear/log) and categorical (band) scales.
@@ -127,27 +187,42 @@ export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
  * For numeric scales, the domain limit controls whether bounds are "nice" (human-friendly)
  * or "strict" (exact min/max). Range can be customized using function-based configuration.
  *
+ * Range inversion is determined by axis role (category vs value) and layout:
+ * - Vertical layout: Y axis (value) is inverted for SVG coordinate system
+ * - Horizontal layout: Y axis (category) is inverted (first category at top)
+ *
  * @param params - Scale parameters
  * @returns The D3 scale function
  * @throws An Error if bounds are invalid
  */
-export const getAxisScale = ({
+export const getCartesianAxisScale = ({
   config,
   type,
   range,
   dataDomain,
+  layout = 'vertical',
 }: {
-  config?: AxisConfig;
+  config?: CartesianAxisConfig;
   type: 'x' | 'y';
   range: AxisBounds;
   dataDomain: AxisBounds;
+  layout?: CartesianChartLayout;
 }): ChartScaleFunction => {
   const scaleType = config?.scaleType ?? 'linear';
 
   let adjustedRange = range;
 
-  // Invert range for Y axis for SVG coordinate system
-  if (type === 'y') {
+  // Determine if this axis needs range inversion for SVG coordinate system.
+  // SVG Y coordinates increase downward, so we need to invert for value axes
+  // where we want higher values at the top.
+  //
+  // For vertical layout: Y axis is the value axis → invert (higher values at top)
+  // For horizontal layout: Y axis is the category axis → don't invert (first category at top is natural)
+  // X axis never needs inversion (left-to-right is natural for both layouts)
+
+  const shouldInvertRange = type === 'y' && layout !== 'horizontal';
+
+  if (shouldInvertRange) {
     adjustedRange = { min: adjustedRange.max, max: adjustedRange.min };
   }
 
@@ -185,62 +260,20 @@ export const getAxisScale = ({
 };
 
 /**
- * Formats the array of user-provided axis configs with default values and validates axis ids.
- * Ensures at least one axis config exists if no input is provided.
- * Requires specific axis ids when there are more than 1 axes.
- * Defaults the axis id for a single axis config if there is no id.
- * @param type - the type of axis, 'x' or 'y'
- * @param axes - array of axis configs or single axis config
- * @param defaultId - the default id to use for the axis
- * @param defaultScaleType - the default scale type to use for the axis
- * @returns array of axis configs with IDs
- */
-export const getAxisConfig = (
-  type: 'x' | 'y',
-  axes: Partial<AxisConfigProps> | Partial<AxisConfigProps>[] | undefined,
-  defaultId: string = defaultAxisId,
-  defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
-): AxisConfigProps[] => {
-  const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
-  if (!axes) {
-    return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
-  }
-
-  if (Array.isArray(axes)) {
-    const axesLength = axes.length;
-    // forces id to be defined on every input config when there are multiple axes
-    if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
-      throw new Error(
-        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/charts/YAxis/#multiple-y-axes.',
-      );
-    }
-
-    return axes.map(({ id, ...axis }) => ({
-      // defaults the axis id if only a single axis is provided
-      id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
-      scaleType: defaultScaleType,
-      domainLimit: defaultDomainLimit,
-      ...axis,
-    }));
-  }
-
-  // Single axis config
-  return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit, ...axes }];
-};
-
-/**
  * Calculates the data domain for an axis based on its configuration and series data.
  * Handles both x and y axes, categorical data, custom domain configurations, and stacking.
  *
  * @param axisParam - The axis configuration
  * @param series - Array of series objects (for stacking support)
  * @param axisType - Whether this is an 'x' or 'y' axis
+ * @param layout - Chart layout ('horizontal' or 'vertical')
  * @returns The calculated axis bounds
  */
-export const getAxisDomain = (
-  axisParam: AxisConfigProps,
+export const getCartesianAxisDomain = (
+  axisParam: CartesianAxisConfigProps,
   series: Series[],
   axisType: 'x' | 'y',
+  layout: CartesianChartLayout = 'vertical',
 ): AxisBounds => {
   let dataDomain: AxisBounds | null = null;
   if (axisParam.data && Array.isArray(axisParam.data) && axisParam.data.length > 0) {
@@ -264,7 +297,11 @@ export const getAxisDomain = (
   }
 
   // Calculate domain from series data
-  const seriesDomain = axisType === 'x' ? getChartDomain(series) : getChartRange(series);
+  // In vertical layout: X is category (index), Y is value (value)
+  // In horizontal layout: Y is category (index), X is value (value)
+  const isCategoryAxis =
+    (layout !== 'horizontal' && axisType === 'x') || (layout === 'horizontal' && axisType === 'y');
+  const seriesDomain = isCategoryAxis ? getChartDomain(series) : getChartRange(series);
 
   // If data sets the domain, use that instead of the series domain
   const preferredDataDomain = dataDomain ?? seriesDomain;
@@ -307,7 +344,7 @@ export const getAxisDomain = (
  * @returns The calculated axis range bounds
  */
 export const getAxisRange = (
-  axisParam: AxisConfigProps,
+  axisParam: CartesianAxisConfigProps,
   chartRect: Rect,
   axisType: 'x' | 'y',
 ): AxisBounds => {

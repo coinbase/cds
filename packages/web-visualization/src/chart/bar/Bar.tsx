@@ -2,7 +2,9 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { type BarTransition, getBarPath } from '../utils';
+import { getBarPath } from '../utils';
+import { useCartesianChartContext } from '../ChartProvider';
+import type { CartesianChartLayout } from '../utils';
 
 import { DefaultBar } from './';
 
@@ -37,10 +39,11 @@ export type BarBaseProps = {
    */
   roundBottom?: boolean;
   /**
-   * Y coordinate of the baseline/origin for animations.
-   * Used to calculate initial animation state.
+   * Coordinate of the baseline/origin for animations.
+   * For vertical layout (bars grow up), this is the Y coordinate.
+   * For horizontal layout (bars grow sideways), this is the X coordinate.
    */
-  originY?: number;
+  origin?: number;
   /**
    * The x-axis data value for this bar.
    */
@@ -139,7 +142,7 @@ export const Bar = memo<BarProps>(
     y,
     width,
     height,
-    originY,
+    origin,
     dataX,
     dataY,
     seriesId,
@@ -149,16 +152,15 @@ export const Bar = memo<BarProps>(
     stroke,
     strokeWidth,
     borderRadius = 4,
-    roundTop = true,
-    roundBottom = true,
-    transitions,
+    roundTop,
+    roundBottom,
     transition,
   }) => {
-    const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
-    }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
+    const { layout } = useCartesianChartContext();
 
-    const effectiveOriginY = originY ?? y + height;
+    const barPath = useMemo(() => {
+      return getBarPath(x, y, width, height, borderRadius, !!roundTop, !!roundBottom, layout);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
     if (!barPath) {
       return null;
@@ -173,7 +175,7 @@ export const Bar = memo<BarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
-        originY={effectiveOriginY}
+        origin={origin ?? (layout === 'horizontal' ? x : y + height)}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}

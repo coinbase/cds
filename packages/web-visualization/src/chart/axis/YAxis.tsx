@@ -116,11 +116,11 @@ export const YAxis = memo<YAxisProps>(
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string';
 
         if (hasStringLabels && !tickLabelFormatter && axisData[value] !== undefined) {
-          // Use the string label from the data array
+          // Only works when there's NO formatter
           return axisData[value];
         }
 
-        // Otherwise use the formatter (if provided) or the value itself
+        // Otherwise passes raw index to formatter
         return tickLabelFormatter?.(value) ?? value;
       },
       [yAxis?.data, tickLabelFormatter],

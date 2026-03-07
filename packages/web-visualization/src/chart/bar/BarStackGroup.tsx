@@ -44,7 +44,7 @@ export type BarStackGroupProps = Pick<
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
   ({ series, yAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
-    const { getXScale, getYScale, drawingArea, dataLength } = useCartesianChartContext();
+    const { layout, getXScale, getYScale, drawingArea, dataLength } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
@@ -52,36 +52,37 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     const stackConfigs = useMemo(() => {
       if (!xScale || !yScale || !drawingArea || dataLength === 0) return [];
 
-      if (!isCategoricalScale(xScale)) {
+      const indexScale = layout !== 'horizontal' ? xScale : yScale;
+
+      if (!isCategoricalScale(indexScale)) {
         return [];
       }
 
-      const categoryWidth = xScale.bandwidth();
+      const categoryWidth = indexScale.bandwidth();
 
-      // Calculate width for each stack within a category
-      // Only apply barPadding when there are multiple stacks
-      const gapWidth = totalStacks > 1 ? (categoryWidth * barPadding) / (totalStacks - 1) : 0;
-      const barWidth = categoryWidth / totalStacks - getBarSizeAdjustment(totalStacks, gapWidth);
+      // Calculate thickness for each stack within a category
+      const gapSize = totalStacks > 1 ? (categoryWidth * barPadding) / (totalStacks - 1) : 0;
+      const stackThickness =
+        categoryWidth / totalStacks - getBarSizeAdjustment(totalStacks, gapSize);
 
       const configs: Array<{
         categoryIndex: number;
-        x: number;
-        width: number;
+        indexPos: number;
+        thickness: number;
       }> = [];
 
       // Calculate position for each category
-      // todo: look at using xDomain for this instead of dataLength
       for (let categoryIndex = 0; categoryIndex < dataLength; categoryIndex++) {
-        // Get x position for this category
-        const categoryX = xScale(categoryIndex);
-        if (categoryX !== undefined) {
-          // Calculate x position for this specific stack within the category
-          const stackX = categoryX + stackIndex * (barWidth + gapWidth);
+        // Get position for this category along the index axis
+        const categoryPos = indexScale(categoryIndex);
+        if (categoryPos !== undefined) {
+          // Calculate position for this specific stack within the category
+          const stackPos = categoryPos + stackIndex * (stackThickness + gapSize);
 
           configs.push({
             categoryIndex,
-            x: stackX,
-            width: barWidth,
+            indexPos: stackPos,
+            thickness: stackThickness,
           });
         }
       }
@@ -89,25 +90,34 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       return configs;
     }, [xScale, yScale, drawingArea, dataLength, stackIndex, totalStacks, barPadding]);
 
-    if (xScale && !isCategoricalScale(xScale)) {
+    const indexScaleComputed = layout !== 'horizontal' ? xScale : yScale;
+    const valueScaleComputed = layout !== 'horizontal' ? yScale : xScale;
+
+    if (indexScaleComputed && !isCategoricalScale(indexScaleComputed)) {
       throw new Error(
-        'BarStackGroup requires a band scale for x-axis. See https://cds.coinbase.com/components/charts/XAxis/#scale-type',
+        `BarStackGroup requires a band scale for ${
+          layout !== 'horizontal' ? 'x-axis' : 'y-axis'
+        }. See https://cds.coinbase.com/components/graphs/${
+          layout !== 'horizontal' ? 'XAxis' : 'YAxis'
+        }/#scale-type`,
       );
     }
 
-    if (!yScale || !drawingArea || stackConfigs.length === 0) return null;
+    if (!indexScaleComputed || !valueScaleComputed || !drawingArea || stackConfigs.length === 0)
+      return null;
 
-    return stackConfigs.map(({ categoryIndex, x, width }) => (
+    return stackConfigs.map(({ categoryIndex, indexPos, thickness }) => (
       <BarStack
         {...props}
         key={`stack-${stackIndex}-category-${categoryIndex}`}
         categoryIndex={categoryIndex}
         rect={drawingArea}
         series={series}
-        width={width}
-        x={x}
+        thickness={thickness}
+        indexPos={indexPos}
         yAxisId={yAxisId}
-        yScale={yScale}
+        indexScale={indexScaleComputed}
+        valueScale={valueScaleComputed}
       />
     ));
   },

@@ -43,49 +43,32 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     transitions,
     transition,
   }) => {
-    const { animate, drawingArea } = useCartesianChartContext();
+    const { animate, layout } = useCartesianChartContext();
     const clipPathId = useId();
 
-    const normalizedX = useMemo(
-      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
-      [x, drawingArea.x, drawingArea.width],
-    );
+    const clipPathData = useMemo(() => {
+      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom, layout);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
-    const enterTransition = useMemo(
-      () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedX,
-        ),
-      [animate, transitions?.enter, normalizedX],
-    );
-    const updateTransition = useMemo(
-      () =>
-        withStaggerDelayTransition(
-          getTransition(
-            transitions?.update !== undefined ? transitions.update : transition,
-            animate,
-            defaultTransition,
-          ),
-          normalizedX,
-        ),
-      [animate, transitions?.update, transition, normalizedX],
-    );
+    const initialClipPathData = useMemo(() => {
+      if (!animate) return undefined;
+      const barsGrowVertically = layout !== 'horizontal';
+      const initialX = barsGrowVertically ? x : (yOrigin ?? x);
+      const initialY = barsGrowVertically ? (yOrigin ?? y + height) : y;
+      const initialWidth = barsGrowVertically ? width : 1;
+      const initialHeight = barsGrowVertically ? 1 : height;
 
-    const targetPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
-    }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
-
-    const initialPath = useMemo(() => {
-      const baselineY = yOrigin ?? y + height;
-      return getBarPath(x, baselineY, width, 1, borderRadius, roundTop, roundBottom);
-    }, [x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
-
-    const animatedClipPath = usePathTransition({
-      currentPath: targetPath,
-      initialPath,
-      transitions: { enter: enterTransition, update: updateTransition },
-    });
+      return getBarPath(
+        initialX,
+        initialY,
+        initialWidth,
+        initialHeight,
+        borderRadius,
+        roundTop,
+        roundBottom,
+        layout,
+      );
+    }, [animate, layout, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
 
     return (
       <>

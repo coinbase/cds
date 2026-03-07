@@ -240,18 +240,16 @@ export type AxisProps = AxisBaseProps & {
    * Formatter function for axis tick values.
    * Tick values will be wrapped in ChartText component.
    *
-   * @example
-   * // XAxis
-   * tickLabelFormatter: (index) => {
-   *   if (index % 12 === 0) {
-   *     return <tspan style={{ fontWeight: 'bold' }}>${prices[index]}</tspan>;
-   *   }
-   *   return `$${prices[index]}`;
-   * }
+   * For band scales with string data, the value will be the string label (e.g., "Jan", "Feb").
+   * For numeric scales, the value will be the number.
    *
    * @example
-   * // YAxis
-   * tickLabelFormatter: (value) => `$${prices[value]}`
+   * // XAxis with categorical data
+   * tickLabelFormatter: (value) => String(value).toUpperCase()
+   *
+   * @example
+   * // YAxis with numeric data
+   * tickLabelFormatter: (value) => `$${value}`
    */
   tickLabelFormatter?: (value: number) => ChartTextChildren;
   /**

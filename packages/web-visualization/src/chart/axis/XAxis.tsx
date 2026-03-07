@@ -105,21 +105,19 @@ export const XAxis = memo<XAxisProps>(
     }, [registrationId, registerAxis, unregisterAxis, position, height]);
 
     const formatTick = useCallback(
-      (value: any) => {
+      (value: number) => {
         // If we have string labels and no custom formatter, use the labels
         const axisData = xAxis?.data;
         const hasStringLabels =
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string';
 
-        let finalValue = value;
-
-        // For band scales with string data, value is an index
-        if (hasStringLabels && typeof value === 'number' && axisData[value] !== undefined) {
-          finalValue = axisData[value];
+        if (hasStringLabels && !tickLabelFormatter && axisData[value] !== undefined) {
+          // Only works when there's NO formatter
+          return axisData[value];
         }
 
-        // Use the formatter (if provided) or the value itself
-        return tickLabelFormatter?.(finalValue) ?? finalValue;
+        // Otherwise passes raw index to formatter
+        return tickLabelFormatter?.(value) ?? value;
       },
       [xAxis?.data, tickLabelFormatter],
     );

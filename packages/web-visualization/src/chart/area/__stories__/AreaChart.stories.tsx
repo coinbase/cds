@@ -127,6 +127,42 @@ export const All = () => {
           ]}
         />
       </Example>
+      <Example title="Horizontal Area">
+        <AreaChart
+          height={400}
+          layout="vertical"
+          series={[
+            {
+              id: 'seoul',
+              label: 'Seoul rainfall',
+              data: [21, 28, 41, 73, 99, 144, 319, 249, 131, 55, 48, 25],
+            },
+          ]}
+          showXAxis
+          showYAxis
+          xAxis={{
+            label: 'rainfall (mm)',
+            showGrid: true,
+          }}
+          yAxis={{
+            data: [
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'June',
+              'July',
+              'Aug',
+              'Sept',
+              'Oct',
+              'Nov',
+              'Dec',
+            ],
+            tickLabelFormatter: (val) => String(val),
+          }}
+        />
+      </Example>
     </VStack>
   );
 };

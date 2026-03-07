@@ -8,7 +8,7 @@ import {
 } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
 import {
-  type AxisConfigProps,
+  type CartesianAxisConfigProps,
   defaultChartInset,
   defaultStackId,
   getChartInset,
@@ -89,13 +89,13 @@ export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type AreaChartProps = AreaChartBaseProps &
@@ -173,15 +173,6 @@ export const AreaChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
-        scaleType: xScaleType,
-        data: xData,
-        categoryPadding: xCategoryPadding,
-        domain: xDomain,
-        domainLimit: xDomainLimit,
-        range: xRange,
-      };
-
       const hasNegativeValues = useMemo(() => {
         if (!series) return false;
         return series.some((s) =>
@@ -193,8 +184,17 @@ export const AreaChart = memo(
         );
       }, [series]);
 
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+      };
+
       // Set default min domain to 0 for area chart, but only if there are no negative values
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,

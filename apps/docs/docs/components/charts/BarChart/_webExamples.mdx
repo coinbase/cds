@@ -22,6 +22,54 @@ To start, pass in a series of data to the chart.
 />
 ```
 
+## Horizontal Bars
+
+To render horizontal bars, set the `layout` prop to `"horizontal"`. In this layout, the Y axis becomes the categorical axis and the X axis becomes the value axis.
+
+```jsx live
+function HorizontalBars() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+
+  return (
+    <BarChart
+      height={400}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          label: 'Seoul rainfall',
+          data: dataset.map((d) => d.seoul),
+          color: 'var(--color-accentBoldBlue)',
+        },
+      ]}
+      showXAxis
+      showYAxis
+      xAxis={{
+        label: 'rainfall (mm)',
+        showGrid: true,
+      }}
+      yAxis={{
+        position: 'left',
+        data: dataset.map((d) => d.month),
+      }}
+    />
+  );
+}
+```
+
 ## Multiple Series
 
 You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.

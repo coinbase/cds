@@ -7,7 +7,12 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
+import {
+  type CartesianAxisConfigProps,
+  defaultChartInset,
+  getChartInset,
+  type Series,
+} from '../utils';
 
 import { Line, type LineProps } from './Line';
 
@@ -70,13 +75,13 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type LineChartProps = LineChartBaseProps &
@@ -151,7 +156,18 @@ export const LineChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
+      const hasNegativeValues = useMemo(() => {
+        if (!series) return false;
+        return series.some((s) =>
+          s.data?.some(
+            (value: number | null | [number, number]) =>
+              (typeof value === 'number' && value < 0) ||
+              (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
+          ),
+        );
+      }, [series]);
+
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
@@ -160,7 +176,7 @@ export const LineChart = memo(
         range: xRange,
       };
 
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,

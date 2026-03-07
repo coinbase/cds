@@ -10,16 +10,17 @@ import { CartesianChartProvider } from './ChartProvider';
 import { Legend, type LegendProps } from './legend';
 import {
   type AxisConfig,
-  type AxisConfigProps,
+  type CartesianAxisConfigProps,
   type CartesianChartContextValue,
+  type CartesianChartLayout,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
   defaultChartInset,
   getAxisConfig,
-  getAxisDomain,
   getAxisRange,
-  getAxisScale,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
   type LegendPosition,
@@ -45,6 +46,13 @@ export type CartesianChartBaseProps = BoxBaseProps &
      */
     series?: Array<Series>;
     /**
+     * Chart layout - describes the direction bars/areas grow.
+     * - 'vertical' (default): Bars grow vertically. X is category axis, Y is value axis.
+     * - 'horizontal': Bars grow horizontally. Y is category axis, X is value axis.
+     * @default 'vertical'
+     */
+    layout?: CartesianChartLayout;
+    /**
      * Whether to animate the chart.
      * @default true
      */
@@ -52,11 +60,13 @@ export type CartesianChartBaseProps = BoxBaseProps &
     /**
      * Configuration for x-axis.
      */
-    xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
+    xAxis?: Partial<Omit<CartesianAxisConfigProps, 'id'>>;
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
      */
-    yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
+    yAxis?:
+      | Partial<Omit<CartesianAxisConfigProps, 'data'>>
+      | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
     /**
      * Inset around the entire chart (outside the axes).
      */
@@ -124,6 +134,7 @@ export const CartesianChart = memo(
       {
         series,
         children,
+        layout = 'vertical',
         animate = true,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
@@ -181,7 +192,7 @@ export const CartesianChart = memo(
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
           return { xAxis: undefined, xScale: undefined };
 
-        const domain = getAxisDomain(xAxisConfig, series ?? [], 'x');
+        const domain = getCartesianAxisDomain(xAxisConfig, series ?? [], 'x', layout);
         const range = getAxisRange(xAxisConfig, chartRect, 'x');
 
         const axisConfig: AxisConfig = {
@@ -190,15 +201,16 @@ export const CartesianChart = memo(
           range,
           data: xAxisConfig.data,
           categoryPadding: xAxisConfig.categoryPadding,
-          domainLimit: xAxisConfig.domainLimit,
+          domainLimit: xAxisConfig.domainLimit ?? (layout === 'horizontal' ? 'nice' : 'strict'),
         };
 
         // Create the scale
-        const scale = getAxisScale({
+        const scale = getCartesianAxisScale({
           config: axisConfig,
           type: 'x',
           range: axisConfig.range,
           dataDomain: axisConfig.domain,
+          layout,
         });
 
         if (!scale) return { xAxis: undefined, xScale: undefined };
@@ -216,7 +228,7 @@ export const CartesianChart = memo(
         };
 
         return { xAxis: finalAxisConfig, xScale: scale };
-      }, [xAxisConfig, series, chartRect]);
+      }, [xAxisConfig, series, chartRect, layout]);
 
       const { yAxes, yScales } = useMemo(() => {
         const axes = new Map<string, AxisConfig>();
@@ -232,7 +244,7 @@ export const CartesianChart = memo(
             series?.filter((s) => (s.yAxisId ?? defaultAxisId) === axisId) ?? [];
 
           // Calculate domain and range
-          const dataDomain = getAxisDomain(axisParam, relevantSeries, 'y');
+          const dataDomain = getCartesianAxisDomain(axisParam, relevantSeries, 'y', layout);
           const range = getAxisRange(axisParam, chartRect, 'y');
 
           const axisConfig: AxisConfig = {
@@ -241,15 +253,16 @@ export const CartesianChart = memo(
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
-            domainLimit: axisParam.domainLimit ?? 'nice',
+            domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'strict' : 'nice'),
           };
 
           // Create the scale
-          const scale = getAxisScale({
+          const scale = getCartesianAxisScale({
             config: axisConfig,
             type: 'y',
             range: axisConfig.range,
             dataDomain: axisConfig.domain,
+            layout,
           });
 
           if (scale) {
@@ -270,7 +283,7 @@ export const CartesianChart = memo(
         });
 
         return { yAxes: axes, yScales: scales };
-      }, [yAxisConfig, series, chartRect]);
+      }, [yAxisConfig, series, chartRect, layout]);
 
       const getXAxis = useCallback(() => xAxis, [xAxis]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
@@ -295,9 +308,13 @@ export const CartesianChart = memo(
       );
 
       const dataLength = useMemo(() => {
-        // If xAxis has categorical data, use that length
-        if (xAxisConfig.data && xAxisConfig.data.length > 0) {
-          return xAxisConfig.data.length;
+        // Find which axis is the category axis
+        const categoryAxisIsX = layout !== 'horizontal';
+        const categoryAxisConfig = categoryAxisIsX ? xAxisConfig : (yAxisConfig[0] ?? xAxisConfig);
+
+        // If category axis has categorical data, use that length
+        if (categoryAxisConfig.data && categoryAxisConfig.data.length > 0) {
+          return categoryAxisConfig.data.length;
         }
 
         // Otherwise, find the longest series
@@ -306,7 +323,7 @@ export const CartesianChart = memo(
           const seriesData = getStackedSeriesData(s.id);
           return Math.max(max, seriesData?.length ?? 0);
         }, 0);
-      }, [xAxisConfig.data, series, getStackedSeriesData]);
+      }, [layout, xAxisConfig, yAxisConfig, series, getStackedSeriesData]);
 
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {
@@ -368,6 +385,7 @@ export const CartesianChart = memo(
 
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
+          layout,
           series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,
@@ -385,6 +403,7 @@ export const CartesianChart = memo(
           getAxisBounds,
         }),
         [
+          layout,
           series,
           getSeries,
           getStackedSeriesData,

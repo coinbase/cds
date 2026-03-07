@@ -170,7 +170,7 @@ export const Line = memo<LineProps>(
     gradient: gradientProp,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+    const { layout, animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
@@ -186,6 +186,10 @@ export const Line = memo<LineProps>(
       () => getYScale(matchedSeries?.yAxisId),
       [getYScale, matchedSeries?.yAxisId],
     );
+    const yAxis = useMemo(
+      () => getYAxis(matchedSeries?.yAxisId),
+      [getYAxis, matchedSeries?.yAxisId],
+    );
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
     const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
@@ -193,10 +197,12 @@ export const Line = memo<LineProps>(
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
 
-      // Get numeric x-axis data if available
-      const xData =
-        xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
-          ? (xAxis.data as number[])
+      // Get appropriate axis data based on layout
+      const categoryAxisIsX = layout !== 'horizontal';
+      const indexAxis = categoryAxisIsX ? xAxis : yAxis;
+      const indexData =
+        indexAxis?.data && Array.isArray(indexAxis.data) && typeof indexAxis.data[0] === 'number'
+          ? (indexAxis.data as number[])
           : undefined;
 
       return getLinePath({
@@ -204,10 +210,12 @@ export const Line = memo<LineProps>(
         xScale,
         yScale,
         curve,
-        xData,
+        xData: categoryAxisIsX ? indexData : undefined,
+        yData: !categoryAxisIsX ? indexData : undefined,
         connectNulls,
+        layout,
       });
-    }, [chartData, xScale, yScale, curve, xAxis?.data, connectNulls]);
+    }, [chartData, xScale, yScale, curve, xAxis, yAxis, connectNulls, layout]);
 
     const LineComponent = useMemo((): LineComponent => {
       if (SelectedLineComponent) {
@@ -245,6 +253,8 @@ export const Line = memo<LineProps>(
       };
     }, [gradient, xScale, yScale]);
 
+    const categoryAxisIsX = layout !== 'horizontal';
+
     if (!xScale || !yScale || !path) return;
 
     return (
@@ -275,18 +285,36 @@ export const Line = memo<LineProps>(
           {...props}
         />
         {points && (
-          <g data-component="line-points-group">
+          <motion.g
+            data-component="line-points-group"
+            {...(animate
+              ? {
+                  animate: {
+                    opacity: 1,
+                    transition: {
+                      duration: accessoryFadeTransitionDuration,
+                      delay: accessoryFadeTransitionDelay,
+                    },
+                  },
+                  exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
+                  initial: { opacity: 0 },
+                }
+              : {})}
+          >
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
 
-              const xValue = xData && xData[index] !== undefined ? xData[index] : index;
+              const indexValue = index; // We use the index along the category axis
+
+              // Determine dataX and dataY for the Point component based on layout
+              const dataX = categoryAxisIsX ? indexValue : value;
+              const dataY = categoryAxisIsX ? value : indexValue;
 
               let pointFill = stroke;
 
               if (gradientConfig && gradient) {
-                // Use the appropriate data value based on gradient axis
-                const axis = gradient.axis ?? 'y';
-                const dataValue = axis === 'x' ? xValue : value;
+                // Gradient evaluation still uses the correct axis value
+                const dataValue = gradient.axis === 'x' ? dataX : dataY;
 
                 const evaluatedColor = evaluateGradientAtValue(
                   gradientConfig.stops,
@@ -294,15 +322,14 @@ export const Line = memo<LineProps>(
                   gradientConfig.scale,
                 );
                 if (evaluatedColor) {
-                  // Apply gradient color to fill if not explicitly set
                   pointFill = evaluatedColor;
                 }
               }
 
               // Build defaults that would be passed to Point
               const defaults: PointBaseProps = {
-                dataX: xValue,
-                dataY: value,
+                dataX,
+                dataY,
                 fill: pointFill,
                 yAxisId: matchedSeries?.yAxisId,
                 opacity,

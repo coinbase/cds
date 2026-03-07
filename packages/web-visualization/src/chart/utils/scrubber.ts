@@ -14,29 +14,24 @@ export type LabelDimensions = {
 };
 
 /**
- * Determines which side (left/right) to place scrubber labels based on available space.
- * Honors the preferred side when there's enough space, otherwise switches to the opposite side.
+ * Determines which side (primary/secondary) to place scrubber labels based on available space.
+ * For horizontal layout, this is left/right.
+ * For vertical layout, this could be top/bottom (though currently we prefer left/right).
  */
 export const getLabelPosition = (
-  beaconX: number,
-  maxLabelWidth: number,
-  drawingArea: Rect,
-  xOffset: number = 16,
-  preferredSide: ScrubberLabelPosition = 'right',
+  beaconPos: number,
+  maxLabelSize: number,
+  drawingAreaSize: number,
+  offset: number = 16,
 ): ScrubberLabelPosition => {
-  if (drawingArea.width <= 0 || drawingArea.height <= 0) {
-    return preferredSide;
+  if (drawingAreaSize <= 0) {
+    return 'right';
   }
 
-  const requiredSpace = maxLabelWidth + xOffset;
+  const availableSpace = drawingAreaSize - beaconPos;
+  const requiredSpace = maxLabelSize + offset;
 
-  if (preferredSide === 'right') {
-    const availableSpace = drawingArea.x + drawingArea.width - beaconX;
-    return requiredSpace <= availableSpace ? 'right' : 'left';
-  }
-
-  const availableSpace = beaconX - drawingArea.x;
-  return requiredSpace <= availableSpace ? 'left' : 'right';
+  return requiredSpace <= availableSpace ? 'right' : 'left';
 };
 
 type LabelWithPosition = {
@@ -54,19 +49,20 @@ type LabelDimension = {
 };
 
 /**
- * Calculates Y positions for all labels avoiding overlaps while maintaining order.
+ * Calculates collision-free positions for labels along a single axis (stacking axis).
  */
-export const calculateLabelYPositions = (
+export const calculateLabelStackedPositions = (
   dimensions: LabelDimension[],
-  drawingArea: Rect,
-  labelHeight: number,
+  stackingStart: number,
+  stackingSize: number,
+  labelThickness: number,
   minGap: number,
 ): Map<string, number> => {
   if (dimensions.length === 0) {
     return new Map();
   }
 
-  // Sort by preferred Y values and create working labels
+  // Sort by preferred positions and create working labels
   const sortedLabels: LabelWithPosition[] = [...dimensions]
     .sort((a, b) => a.preferredY - b.preferredY)
     .map((dim) => ({
@@ -76,13 +72,13 @@ export const calculateLabelYPositions = (
     }));
 
   // Initial bounds fitting
-  const minY = drawingArea.y + labelHeight / 2;
-  const maxY = drawingArea.y + drawingArea.height - labelHeight / 2;
-  const requiredDistance = labelHeight + minGap;
+  const minPos = stackingStart + labelThickness / 2;
+  const maxPos = stackingStart + stackingSize - labelThickness / 2;
+  const requiredDistance = labelThickness + minGap;
 
   for (const label of sortedLabels) {
     // Clamp each label to the drawing area
-    label.finalY = Math.max(minY, Math.min(maxY, label.preferredY));
+    label.finalY = Math.max(minPos, Math.min(maxPos, label.preferredY));
   }
 
   // First pass: push down any overlapping labels
@@ -96,20 +92,18 @@ export const calculateLabelYPositions = (
     }
   }
 
-  // Find collision groups - groups of labels that are tightly packed (gap < minGap between them)
+  // Find collision groups - groups of labels that are tightly packed
   const collisionGroups: LabelWithPosition[][] = [];
   let currentGroup: LabelWithPosition[] = [sortedLabels[0]];
 
   for (let i = 1; i < sortedLabels.length; i++) {
     const prev = sortedLabels[i - 1];
     const current = sortedLabels[i];
-    const gap = current.finalY - prev.finalY - labelHeight;
+    const gap = current.finalY - prev.finalY - labelThickness;
 
     if (gap < minGap + 0.01) {
-      // Labels are touching or very close - part of same collision group
       currentGroup.push(current);
     } else {
-      // Gap is large enough - start new group
       collisionGroups.push(currentGroup);
       currentGroup = [current];
     }
@@ -126,24 +120,21 @@ export const calculateLabelYPositions = (
     const groupLastLabel = group[group.length - 1];
     const groupFirstLabel = group[0];
     const groupOverflow =
-      groupLastLabel.finalY + labelHeight / 2 - (drawingArea.y + drawingArea.height);
+      groupLastLabel.finalY + labelThickness / 2 - (stackingStart + stackingSize);
 
     // Calculate the ideal center point for this group
     const groupPreferredCenter =
       group.reduce((sum, label) => sum + label.preferredY, 0) / group.length;
-    const groupTotalNeeded = group.length * labelHeight + (group.length - 1) * minGap;
+    const groupTotalNeeded = group.length * labelThickness + (group.length - 1) * minGap;
 
     if (groupOverflow <= 0) {
       // Group fits, but let's center it better if possible
-      // Calculate how much we can shift up/down to center around preferred positions
       const currentCenter = (groupFirstLabel.finalY + groupLastLabel.finalY) / 2;
       const desiredShift = groupPreferredCenter - currentCenter;
 
-      // Calculate max shift in each direction
-      const maxShiftUp = groupFirstLabel.finalY - minY;
-      const maxShiftDown = maxY - groupLastLabel.finalY;
+      const maxShiftUp = groupFirstLabel.finalY - minPos;
+      const maxShiftDown = maxPos - groupLastLabel.finalY;
 
-      // Apply the shift, constrained by boundaries
       const actualShift = Math.max(-maxShiftUp, Math.min(maxShiftDown, desiredShift));
 
       if (Math.abs(actualShift) > 0.01) {
@@ -153,9 +144,9 @@ export const calculateLabelYPositions = (
       }
     } else {
       // Group overflows - need to adjust
-      const groupStartY = groupFirstLabel.finalY - labelHeight / 2;
-      const availableSpace = drawingArea.y + drawingArea.height - groupStartY;
-      const maxShiftUp = groupFirstLabel.finalY - minY;
+      const groupStartY = groupFirstLabel.finalY - labelThickness / 2;
+      const availableSpace = stackingStart + stackingSize - groupStartY;
+      const maxShiftUp = groupFirstLabel.finalY - minPos;
 
       if (maxShiftUp >= groupOverflow) {
         // Can shift entire group up to fit
@@ -164,24 +155,25 @@ export const calculateLabelYPositions = (
         }
       } else if (groupTotalNeeded <= availableSpace) {
         // Can't shift enough, but there's room - redistribute with proper spacing
-        let currentY = Math.max(minY, groupFirstLabel.finalY - maxShiftUp);
-        const gap = (availableSpace - group.length * labelHeight) / Math.max(1, group.length - 1);
+        let currentY = Math.max(minPos, groupFirstLabel.finalY - maxShiftUp);
+        const gap =
+          (availableSpace - group.length * labelThickness) / Math.max(1, group.length - 1);
         for (const label of group) {
           label.finalY = currentY;
-          currentY += labelHeight + gap;
+          currentY += labelThickness + gap;
         }
       } else {
         // Not enough space even with compression - compress gaps and fit to bottom
         const compressedGap = Math.max(
           1,
-          (availableSpace - group.length * labelHeight) / Math.max(1, group.length - 1),
+          (availableSpace - group.length * labelThickness) / Math.max(1, group.length - 1),
         );
-        // Position so last label is at maxY
-        let currentY = maxY - (group.length - 1) * (labelHeight + compressedGap);
-        currentY = Math.max(minY, currentY);
+        // Position so last label is at maxPos
+        let currentY = maxPos - (group.length - 1) * (labelThickness + compressedGap);
+        currentY = Math.max(minPos, currentY);
         for (const label of group) {
           label.finalY = currentY;
-          currentY += labelHeight + compressedGap;
+          currentY += labelThickness + compressedGap;
         }
       }
     }

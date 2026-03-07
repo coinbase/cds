@@ -129,6 +129,39 @@ function MultipleLine() {
   );
 }
 
+function HorizontalLine() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+
+  return (
+    <LineChart
+      height={400}
+      layout="vertical"
+      series={[
+        { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
+      ]}
+      showXAxis
+      showYAxis
+      xAxis={{ label: 'rainfall (mm)' }}
+      yAxis={{
+        data: dataset.map((d) => d.month),
+      }}
+    />
+  );
+}
+
 function DataFormat() {
   const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
   const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
@@ -1612,6 +1645,12 @@ export const All = () => {
       </Example>
       <Example title="Points">
         <Points />
+      </Example>
+      <Example title="Horizontal Line (Weather Dataset)">
+        <HorizontalLine />
+      </Example>
+      <Example title="Transitions">
+        <Transitions />
       </Example>
       <Example title="Basic Accessible">
         <BasicAccessible />

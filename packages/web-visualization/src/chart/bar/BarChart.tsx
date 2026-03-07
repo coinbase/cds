@@ -6,7 +6,13 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type AxisConfigProps, defaultChartInset, defaultStackId, getChartInset } from '../utils';
+import {
+  type CartesianAxisConfigProps,
+  defaultChartInset,
+  defaultStackId,
+  getChartInset,
+  type Series,
+} from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';
@@ -55,13 +61,13 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type BarChartProps = BarChartBaseProps &
@@ -129,15 +135,6 @@ export const BarChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
-        scaleType: xScaleType ?? 'band',
-        data: xData,
-        categoryPadding: xCategoryPadding,
-        domain: xDomain,
-        domainLimit: xDomainLimit,
-        range: xRange,
-      };
-
       const hasNegativeValues = useMemo(() => {
         if (!series) return false;
         return series.some((s) =>
@@ -149,12 +146,27 @@ export const BarChart = memo(
         );
       }, [series]);
 
-      // Set default min domain to 0 for area chart, but only if there are no negative values
-      const yAxisConfig: Partial<AxisConfigProps> = {
-        scaleType: yScaleType,
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
+        scaleType: xScaleType ?? (chartProps.layout === 'horizontal' ? 'linear' : 'band'),
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain:
+          chartProps.layout === 'horizontal' && !hasNegativeValues
+            ? { min: 0, ...xDomain }
+            : xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+      };
+
+      // Set default min domain to 0 for bar chart, but only if there are no negative values
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
+        scaleType: yScaleType ?? (chartProps.layout === 'horizontal' ? 'band' : 'linear'),
         data: yData,
         categoryPadding: yCategoryPadding,
-        domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
+        domain:
+          chartProps.layout !== 'horizontal' && !hasNegativeValues
+            ? { min: 0, ...yDomain }
+            : yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
       };
@@ -168,7 +180,15 @@ export const BarChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showXAxis && (
+            <XAxis
+              requestedTickCount={
+                xAxisVisualProps.requestedTickCount ??
+                (chartProps.layout === 'horizontal' ? 5 : undefined)
+              }
+              {...xAxisVisualProps}
+            />
+          )}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           <BarPlot
             BarComponent={BarComponent}
