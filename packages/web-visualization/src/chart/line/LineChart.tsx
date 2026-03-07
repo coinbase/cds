@@ -156,17 +156,6 @@ export const LineChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const hasNegativeValues = useMemo(() => {
-        if (!series) return false;
-        return series.some((s) =>
-          s.data?.some(
-            (value: number | null | [number, number]) =>
-              (typeof value === 'number' && value < 0) ||
-              (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
-          ),
-        );
-      }, [series]);
-
       const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,

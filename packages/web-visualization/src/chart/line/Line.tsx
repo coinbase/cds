@@ -194,12 +194,19 @@ export const Line = memo<LineProps>(
     // Convert sourceData to number array (line only supports numbers, not tuples)
     const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
 
+    const categoryAxisIsX = useMemo(() => {
+      return layout !== 'horizontal';
+    }, [layout]);
+
+    const categoryAxis = useMemo(() => {
+      return categoryAxisIsX ? xAxis : yAxis;
+    }, [categoryAxisIsX, xAxis, yAxis]);
+
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
 
       // Get numeric category-axis data if available
-      const categoryAxisIsX = layout !== 'horizontal';
-      const indexAxis = categoryAxisIsX ? xAxis : yAxis;
+      const indexAxis = categoryAxis;
       const indexData =
         indexAxis?.data && Array.isArray(indexAxis.data) && typeof indexAxis.data[0] === 'number'
           ? (indexAxis.data as number[])
@@ -215,7 +222,7 @@ export const Line = memo<LineProps>(
         connectNulls,
         layout,
       });
-    }, [xScale, yScale, chartData, layout, xAxis, yAxis, curve, connectNulls]);
+    }, [xScale, yScale, chartData, categoryAxis, curve, categoryAxisIsX, connectNulls, layout]);
 
     const LineComponent = useMemo((): LineComponent => {
       if (SelectedLineComponent) {
@@ -234,16 +241,12 @@ export const Line = memo<LineProps>(
     const stroke = strokeProp ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
 
     const categoryData = useMemo(() => {
-      const categoryAxisIsX = layout !== 'horizontal';
-      const indexAxis = categoryAxisIsX ? xAxis : yAxis;
-      const data = indexAxis?.data;
+      const data = categoryAxis?.data;
 
       return data && Array.isArray(data) && data.length > 0 && typeof data[0] === 'number'
         ? (data as number[])
         : null;
-    }, [layout, xAxis, yAxis]);
-
-    const categoryAxisIsX = layout !== 'horizontal';
+    }, [categoryAxis]);
 
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
