@@ -266,52 +266,50 @@ const Candlesticks = () => {
     number,
   ][];
 
-  const CandlestickBarComponent = memo<BarComponentProps>(
-    ({ x, y, width, height, dataX, ...props }) => {
-      const { getYScale } = useCartesianChartContext();
-      const yScale = getYScale();
+  const CandlestickBarComponent = memo<BarComponentProps>(({ x, y, width, height, dataX }) => {
+    const { getYScale, drawingArea } = useCartesianChartContext();
+    const yScale = getYScale();
 
-      const normalizedX = useMemo(
-        () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
-        [x, drawingArea.x, drawingArea.width],
-      );
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
 
-      const transition: Transition = useMemo(
-        () => ({
-          type: 'tween',
-          duration: 0.325,
-          delay: normalizedX * staggerDelay,
-        }),
-        [normalizedX],
-      );
+    const transition: Transition = useMemo(
+      () => ({
+        type: 'tween',
+        duration: 0.325,
+        delay: normalizedX * staggerDelay,
+      }),
+      [normalizedX],
+    );
 
-      const wickX = x + width / 2;
+    const wickX = x + width / 2;
 
-      const timePeriodValue = stockData[dataX as number];
+    const timePeriodValue = stockData[dataX as number];
 
-      const open = parseFloat(timePeriodValue.open);
-      const close = parseFloat(timePeriodValue.close);
+    const open = parseFloat(timePeriodValue.open);
+    const close = parseFloat(timePeriodValue.close);
 
-      const bullish = open < close;
-      const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
-      const openY = yScale?.(open) ?? 0;
-      const closeY = yScale?.(close) ?? 0;
+    const bullish = open < close;
+    const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+    const openY = yScale?.(open) ?? 0;
+    const closeY = yScale?.(close) ?? 0;
 
-      const bodyHeight = Math.abs(openY - closeY);
-      const bodyY = openY < closeY ? openY : closeY;
+    const bodyHeight = Math.abs(openY - closeY);
+    const bodyY = openY < closeY ? openY : closeY;
 
-      return (
-        <motion.g
-          animate={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 12 }}
-          transition={transition}
-        >
-          <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
-          <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-        </motion.g>
-      );
-    },
-  );
+    return (
+      <motion.g
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 12 }}
+        transition={transition}
+      >
+        <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+        <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+      </motion.g>
+    );
+  });
 
   const formatPrice = React.useCallback((price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -425,35 +423,99 @@ const Candlesticks = () => {
   );
 };
 
-const HorizontalBars = () => {
-  const dataset = [
-    { month: 'Jan', seoul: 21 },
-    { month: 'Feb', seoul: 28 },
-    { month: 'Mar', seoul: 41 },
-    { month: 'Apr', seoul: 73 },
-    { month: 'May', seoul: 99 },
-    { month: 'June', seoul: 144 },
-    { month: 'July', seoul: 319 },
-    { month: 'Aug', seoul: 249 },
-    { month: 'Sept', seoul: 131 },
-    { month: 'Oct', seoul: 55 },
-    { month: 'Nov', seoul: 48 },
-    { month: 'Dec', seoul: 25 },
-  ];
+type SunlightChartData = Array<{ label: string; value: number }>;
+
+const sunlightData: SunlightChartData = [
+  { label: 'Jan', value: 598 },
+  { label: 'Feb', value: 635 },
+  { label: 'Mar', value: 688 },
+  { label: 'Apr', value: 753 },
+  { label: 'May', value: 812 },
+  { label: 'Jun', value: 855 },
+  { label: 'Jul', value: 861 },
+  { label: 'Aug', value: 828 },
+  { label: 'Sep', value: 772 },
+  { label: 'Oct', value: 710 },
+  { label: 'Nov', value: 648 },
+  { label: 'Dec', value: 605 },
+];
+
+const dayLength = 1440;
+
+const MonthlySunlight = () => {
+  return (
+    <CartesianChart
+      height={300}
+      series={[
+        {
+          id: 'sunlight',
+          data: sunlightData.map(({ value }) => value),
+          yAxisId: 'sunlight',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'day',
+          data: sunlightData.map(() => dayLength),
+          yAxisId: 'day',
+          color: 'rgb(var(--blue100))',
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: sunlightData.map(({ label }) => label),
+      }}
+      yAxis={[
+        {
+          id: 'day',
+          domain: { min: 0, max: dayLength },
+          domainLimit: 'strict',
+        },
+        {
+          id: 'sunlight',
+          domain: { min: 0, max: dayLength },
+          domainLimit: 'strict',
+        },
+      ]}
+    >
+      <YAxis showGrid showLine axisId="day" label="Minutes of sunlight" position="left" />
+      <XAxis showLine />
+      <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+      <BarPlot
+        borderRadius={0}
+        seriesIds={['sunlight']}
+        transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+      />
+    </CartesianChart>
+  );
+};
+
+const PriceRange = () => {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data: [number, number][] = candles.map((candle) => [
+    parseFloat(candle.low),
+    parseFloat(candle.high),
+  ]);
+
+  const min = Math.min(...data.map(([low]) => low));
+  const max = Math.max(...data.map(([, high]) => high));
+
+  const tickFormatter = React.useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
 
   return (
     <BarChart
-      showXAxis
       showYAxis
-      height={400}
-      inset={0}
-      layout="horizontal"
-      series={[{ id: 'seoul', label: 'Seoul rainfall', data: dataset.map((d) => d.seoul) }]}
-      xAxis={{ label: 'rainfall (mm)' }}
-      yAxis={{
-        position: 'left',
-        data: dataset.map((d) => d.month),
-      }}
+      height={250}
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
     />
   );
 };
@@ -461,9 +523,6 @@ const HorizontalBars = () => {
 export const All = () => {
   return (
     <VStack gap={2}>
-      <Example title="Horizontal Bars (Weather Dataset)">
-        <HorizontalBars />
-      </Example>
       <Example title="Basic">
         <BarChart
           showXAxis
@@ -839,6 +898,35 @@ export const All = () => {
       </Example>
       <Example title="Price Range">
         <PriceRange />
+      </Example>
+      <Example title="Basic">
+        <BarChart
+          showXAxis
+          showYAxis
+          height={400}
+          layout="horizontal"
+          series={[
+            {
+              id: 'weekly-data',
+              data: [45, 52, 38, 45, 19, 23, 32],
+            },
+          ]}
+          xAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `$${value}k`,
+            showGrid: true,
+            showTickMarks: true,
+            showLine: true,
+            tickMarkSize: 12,
+            domain: { max: 50 },
+          }}
+          yAxis={{
+            position: 'left',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            showTickMarks: true,
+            showLine: true,
+          }}
+        />
       </Example>
     </VStack>
   );

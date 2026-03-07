@@ -6,6 +6,7 @@ import type { Transition } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextProps } from '../text';
 import { type ChartScaleFunction, getPointOnScale, useScrubberContext } from '../utils';
+import { defaultTransition, getTransition, instantTransition } from '../utils/transition';
 import {
   calculateLabelStackedPositions,
   getLabelPosition,
@@ -151,6 +152,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       getYAxis,
       drawingArea,
       dataLength,
+      animate,
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 

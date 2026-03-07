@@ -7,7 +7,6 @@ import {
   type ChartScaleFunction,
   evaluateGradientAtValue,
   getGradientConfig,
-  getPointOnScale,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -200,7 +199,7 @@ export const ScrubberBeaconGroup = memo(
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
-      const { layout, getXScale, getYScale, getXAxis, getYAxis, dataLength, series } =
+      const { layout, getXScale, getYScale, getXAxis, getYAxis, dataLength, series, animate } =
         useCartesianChartContext();
 
       // Expose imperative handle with pulse method
@@ -242,8 +241,6 @@ export const ScrubberBeaconGroup = memo(
 
       const isIdle = scrubberPosition === undefined;
 
-      if (dataValue === undefined || dataIndex === undefined) return null;
-
       const createBeaconRef = useCallback(
         (seriesId: string) => {
           return (beaconRef: ScrubberBeaconRef | null) => {
@@ -254,6 +251,8 @@ export const ScrubberBeaconGroup = memo(
         },
         [ScrubberBeaconRefs],
       );
+
+      if (dataValue === undefined || dataIndex === undefined) return null;
 
       return filteredSeries.map((s) => (
         <BeaconWithData

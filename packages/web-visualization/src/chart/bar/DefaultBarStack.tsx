@@ -43,8 +43,34 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     transitions,
     transition,
   }) => {
-    const { animate, layout } = useCartesianChartContext();
+    const { animate, drawingArea, layout } = useCartesianChartContext();
     const clipPathId = useId();
+
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const enterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [transitions?.enter, animate, normalizedX],
+    );
+    const updateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [transitions?.update, transition, animate, normalizedX],
+    );
 
     const clipPathData = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom, layout);
@@ -69,6 +95,15 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
         layout,
       );
     }, [animate, layout, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+
+    const animatedClipPath = usePathTransition({
+      currentPath: clipPathData,
+      initialPath: initialClipPathData,
+      transitions: {
+        enter: enterTransition,
+        update: updateTransition,
+      },
+    });
 
     return (
       <>

@@ -122,6 +122,7 @@ export const Path = memo<PathProps>(
     const context = useCartesianChartContext();
     const rect = clipRect !== undefined ? clipRect : context.drawingArea;
     const animate = animateProp ?? context.animate;
+    const clipPath = rect !== null ? `url(#${clipPathId})` : undefined;
 
     const enterTransition = useMemo(
       () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),

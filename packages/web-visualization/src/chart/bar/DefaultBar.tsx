@@ -46,53 +46,56 @@ export const DefaultBar = memo<DefaultBarProps>(
     transition,
     ...props
   }) => {
-    const { layout, animate } = useCartesianChartContext();
+    const { animate, drawingArea, layout } = useCartesianChartContext();
+
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const enterTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
+          normalizedX,
+        ),
+      [transitions?.enter, animate, normalizedX],
+    );
+    const updateTransition = useMemo(
+      () =>
+        withStaggerDelayTransition(
+          getTransition(
+            transitions?.update !== undefined ? transitions.update : transition,
+            animate,
+            defaultTransition,
+          ),
+          normalizedX,
+        ),
+      [transitions?.update, transition, animate, normalizedX],
+    );
 
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
-      const barsGrowVertically = layout !== 'horizontal';
-      // Need a minimum size to allow for animation
+
       const minSize = 1;
+      const barsGrowVertically = layout !== 'horizontal';
 
-      let initialX = x;
-      let initialY = y;
-      let initialWidth = width;
-      let initialHeight = height;
-
-      if (barsGrowVertically) {
-        // Vertical growth: width is constant, height grows from origin
-        initialY = origin ?? y + height;
-        initialHeight = minSize;
-      } else {
-        // Horizontal growth: height is constant, width grows from origin
-        initialX = origin ?? x;
-        initialWidth = minSize;
-      }
+      const initialX = barsGrowVertically ? x : (origin ?? x);
+      const initialY = barsGrowVertically ? (origin ?? y + height) : y;
+      const initialWidth = barsGrowVertically ? width : minSize;
+      const initialHeight = barsGrowVertically ? minSize : height;
 
       return getBarPath(
         initialX,
         initialY,
         initialWidth,
         initialHeight,
-        borderRadius,
+        borderRadius ?? 0,
         !!roundTop,
         !!roundBottom,
         layout,
       );
     }, [animate, layout, x, y, origin, width, height, borderRadius, roundTop, roundBottom]);
-
-    if (animate && initialPath) {
-      return (
-        <motion.path
-          {...props}
-          animate={{ d }}
-          fill={fill}
-          fillOpacity={fillOpacity}
-          initial={{ d: initialPath }}
-          transition={transition}
-        />
-      );
-    }, [x, originY, width, borderRadius, roundTop, roundBottom]);
 
     return (
       <Path

@@ -147,13 +147,13 @@ function HorizontalLine() {
 
   return (
     <LineChart
+      showXAxis
+      showYAxis
       height={400}
       layout="vertical"
       series={[
         { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
       ]}
-      showXAxis
-      showYAxis
       xAxis={{ label: 'rainfall (mm)' }}
       yAxis={{
         data: dataset.map((d) => d.month),
@@ -1646,12 +1646,6 @@ export const All = () => {
       <Example title="Points">
         <Points />
       </Example>
-      <Example title="Horizontal Line (Weather Dataset)">
-        <HorizontalLine />
-      </Example>
-      <Example title="Transitions">
-        <Transitions />
-      </Example>
       <Example title="Basic Accessible">
         <BasicAccessible />
       </Example>
@@ -1784,6 +1778,9 @@ export const All = () => {
       </Example>
       <Example title="In DataCard">
         <DataCardWithLineChart />
+      </Example>
+      <Example title="Horizontal Line">
+        <HorizontalLine />
       </Example>
     </VStack>
   );

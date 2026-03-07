@@ -400,6 +400,12 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
+      const groupEnterTransition = useMemo(
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
+      );
+      const shouldAnimateGroup = animate && groupEnterTransition !== null;
+
       const categoryAxisIsX = layout !== 'horizontal';
       const indexScale = categoryAxisIsX ? getXScale() : getYScale();
       if (!indexScale) return null;
@@ -419,12 +425,8 @@ export const Scrubber = memo(
             ? {
                 animate: {
                   opacity: 1,
-                  transition: {
-                    duration: accessoryFadeTransitionDuration,
-                    delay: accessoryFadeTransitionDelay,
-                  },
+                  transition: groupEnterTransition,
                 },
-                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
                 initial: { opacity: 0 },
               }
             : {})}
@@ -452,31 +454,32 @@ export const Scrubber = memo(
           {!hideLine &&
             scrubberPosition !== undefined &&
             dataValue !== undefined &&
+            dataIndex !== undefined &&
             (categoryAxisIsX ? (
               <ReferenceLine
                 LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
-                classNames={{ label: classNames?.line }}
+                classNames={{ label: classNames?.label, line: classNames?.line }}
                 dataX={dataValue}
                 label={typeof label === 'function' ? label(dataIndex) : label}
                 labelBoundsInset={labelBoundsInset}
                 labelElevated={labelElevated}
                 labelFont={labelFont}
                 stroke={lineStroke}
-                styles={{ label: styles?.line }}
+                styles={{ label: styles?.label, line: styles?.line }}
               />
             ) : (
               <ReferenceLine
                 LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
-                classNames={{ label: classNames?.line }}
+                classNames={{ label: classNames?.label, line: classNames?.line }}
                 dataY={dataValue}
                 label={typeof label === 'function' ? label(dataIndex) : label}
                 labelBoundsInset={labelBoundsInset}
                 labelElevated={labelElevated}
                 labelFont={labelFont}
                 stroke={lineStroke}
-                styles={{ label: styles?.line }}
+                styles={{ label: styles?.label, line: styles?.line }}
               />
             ))}
           <ScrubberBeaconGroup

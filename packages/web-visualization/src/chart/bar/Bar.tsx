@@ -2,9 +2,8 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { getBarPath } from '../utils';
+import { type BarTransition, getBarPath } from '../utils';
 import { useCartesianChartContext } from '../ChartProvider';
-import type { CartesianChartLayout } from '../utils';
 
 import { DefaultBar } from './';
 
@@ -154,6 +153,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop,
     roundBottom,
+    transitions,
     transition,
   }) => {
     const { layout } = useCartesianChartContext();
