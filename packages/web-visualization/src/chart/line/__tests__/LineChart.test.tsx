@@ -307,4 +307,39 @@ describe('LineChart', () => {
     );
     expect(drawablePaths.length).toBeGreaterThan(1);
   });
+
+  it('maps line points correctly for horizontal layout', () => {
+    render(
+      <DefaultThemeProvider>
+        <LineChart
+          animate={false}
+          curve="linear"
+          height={400}
+          layout="horizontal"
+          points
+          series={[{ id: 'test', data: [10, 20, 30] }]}
+          testID="line-chart-horizontal-layout"
+          width={600}
+          yAxis={{ data: [100, 200, 300] }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const svg = screen.getByTestId('line-chart-horizontal-layout');
+    const pointElements = Array.from(
+      svg.querySelectorAll('[data-component="line-points-group"] circle'),
+    );
+
+    expect(pointElements.length).toBe(3);
+
+    pointElements.forEach((point) => {
+      const cx = Number(point.getAttribute('cx'));
+      const cy = Number(point.getAttribute('cy'));
+
+      expect(cx).toBeGreaterThanOrEqual(0);
+      expect(cx).toBeLessThanOrEqual(600);
+      expect(cy).toBeGreaterThanOrEqual(0);
+      expect(cy).toBeLessThanOrEqual(400);
+    });
+  });
 });

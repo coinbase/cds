@@ -150,7 +150,7 @@ function HorizontalLine() {
       showXAxis
       showYAxis
       height={400}
-      layout="vertical"
+      layout="horizontal"
       series={[
         { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
       ]}

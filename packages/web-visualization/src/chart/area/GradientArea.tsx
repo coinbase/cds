@@ -86,7 +86,6 @@ export const GradientArea = memo<GradientAreaProps>(
         )}
         <Path
           animate={animate}
-          clipOffset={2}
           d={d}
           fill={gradient ? `url(#${patternId})` : fill}
           fillOpacity={fillOpacity}

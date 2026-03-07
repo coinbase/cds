@@ -97,10 +97,10 @@ export const DottedArea = memo<DottedAreaProps>(
           <mask id={maskId}>
             <Path
               animate={animate}
-              clipOffset={2}
               d={d}
               fill={`url(#${patternId})`}
               transition={transition}
+              transitions={transitions}
             />
           </mask>
           {gradient && (
@@ -115,7 +115,6 @@ export const DottedArea = memo<DottedAreaProps>(
         </defs>
         <Path
           animate={animate}
-          clipOffset={2}
           d={d}
           fill={gradient ? `url(#${gradientId})` : fill}
           mask={`url(#${maskId})`}
