@@ -8,7 +8,13 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
+import {
+  type AxisConfigProps,
+  defaultChartInset,
+  getChartInset,
+  getDefaultScrubberAccessibilityStep,
+  type Series,
+} from '../utils';
 
 import { Line, type LineProps } from './Line';
 
@@ -104,6 +110,7 @@ export const LineChart = memo(
         xAxis,
         yAxis,
         inset,
+        accessibilityStep,
         children,
         ...chartProps
       },
@@ -166,9 +173,28 @@ export const LineChart = memo(
         range: yRange,
       };
 
+      const lineChartDataLength = useMemo(() => {
+        if (xData && xData.length > 0) {
+          return xData.length;
+        }
+
+        if (!series || series.length === 0) {
+          return 0;
+        }
+
+        return series.reduce((maxLength, currentSeries) => {
+          return Math.max(maxLength, currentSeries.data?.length ?? 0);
+        }, 0);
+      }, [xData, series]);
+
+      const resolvedAccessibilityStep = useMemo(() => {
+        return accessibilityStep ?? getDefaultScrubberAccessibilityStep(lineChartDataLength);
+      }, [accessibilityStep, lineChartDataLength]);
+
       return (
         <CartesianChart
           {...chartProps}
+          accessibilityStep={resolvedAccessibilityStep}
           ref={ref}
           inset={calculatedInset}
           series={chartSeries}

@@ -13,6 +13,59 @@ export type LabelDimensions = {
   height: number;
 };
 
+export const defaultScrubberAccessibilitySampleCount = 10;
+
+/**
+ * Calculates the fallback scrubber accessibility step based on data length.
+ */
+export const getDefaultScrubberAccessibilityStep = (
+  dataLength: number,
+  sampleCount: number = defaultScrubberAccessibilitySampleCount,
+): number => {
+  if (dataLength <= 0) return 1;
+  return Math.max(1, Math.ceil(dataLength / sampleCount));
+};
+
+/**
+ * Normalizes explicit scrubber accessibility step values.
+ * Falls back to a provided default step when value is undefined.
+ */
+export const normalizeScrubberAccessibilityStep = (
+  step: number | undefined,
+  defaultStep: number = 1,
+): number => {
+  const resolvedDefaultStep = Number.isFinite(defaultStep)
+    ? Math.max(1, Math.floor(defaultStep))
+    : 1;
+
+  if (step === undefined || !Number.isFinite(step)) {
+    return resolvedDefaultStep;
+  }
+
+  return Math.max(1, Math.floor(step));
+};
+
+/**
+ * Builds sampled indices used by screen-reader scrubber navigation.
+ * Always includes the first and last data indices.
+ */
+export const getScrubberSampledIndices = (dataLength: number, step: number): number[] => {
+  if (dataLength <= 0) return [];
+
+  const lastIndex = dataLength - 1;
+  if (lastIndex === 0) return [0];
+
+  const normalizedStep = Math.max(1, Math.floor(step));
+  const sampledIndices = [0];
+
+  for (let dataIndex = normalizedStep; dataIndex < lastIndex; dataIndex += normalizedStep) {
+    sampledIndices.push(dataIndex);
+  }
+
+  sampledIndices.push(lastIndex);
+  return sampledIndices;
+};
+
 /**
  * Determines which side (left/right) to place scrubber labels based on available space.
  * Honors the preferred side when there's enough space, otherwise switches to the opposite side.

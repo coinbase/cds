@@ -1,6 +1,12 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
-import { calculateLabelYPositions, getLabelPosition } from '../scrubber';
+import {
+  calculateLabelYPositions,
+  getDefaultScrubberAccessibilityStep,
+  getLabelPosition,
+  getScrubberSampledIndices,
+  normalizeScrubberAccessibilityStep,
+} from '../scrubber';
 
 describe('getLabelPosition', () => {
   const drawingArea: Rect = {
@@ -81,6 +87,50 @@ describe('getLabelPosition', () => {
       const negativeArea: Rect = { x: 0, y: 0, width: -500, height: -300 };
       const result = getLabelPosition(100, 50, negativeArea);
       expect(result).toBe('right');
+    });
+  });
+});
+
+describe('scrubber accessibility sampling', () => {
+  describe('getDefaultScrubberAccessibilityStep', () => {
+    it('returns 1 for empty data', () => {
+      expect(getDefaultScrubberAccessibilityStep(0)).toBe(1);
+    });
+
+    it('returns ceil(dataLength / 10) by default', () => {
+      expect(getDefaultScrubberAccessibilityStep(99)).toBe(10);
+      expect(getDefaultScrubberAccessibilityStep(14)).toBe(2);
+    });
+  });
+
+  describe('normalizeScrubberAccessibilityStep', () => {
+    it('uses provided default step when value is undefined', () => {
+      expect(normalizeScrubberAccessibilityStep(undefined, 2)).toBe(2);
+    });
+
+    it('uses base default step of 1 when both values are undefined', () => {
+      expect(normalizeScrubberAccessibilityStep(undefined)).toBe(1);
+    });
+
+    it('clamps explicit step to integer >= 1', () => {
+      expect(normalizeScrubberAccessibilityStep(-4, 2)).toBe(1);
+      expect(normalizeScrubberAccessibilityStep(0, 2)).toBe(1);
+      expect(normalizeScrubberAccessibilityStep(2.9, 2)).toBe(2);
+    });
+  });
+
+  describe('getScrubberSampledIndices', () => {
+    it('always includes first and last indices', () => {
+      expect(getScrubberSampledIndices(14, 2)).toEqual([0, 2, 4, 6, 8, 10, 12, 13]);
+    });
+
+    it('returns only bounds when step exceeds range', () => {
+      expect(getScrubberSampledIndices(8, 99)).toEqual([0, 7]);
+    });
+
+    it('handles small data lengths', () => {
+      expect(getScrubberSampledIndices(1, 2)).toEqual([0]);
+      expect(getScrubberSampledIndices(0, 2)).toEqual([]);
     });
   });
 });

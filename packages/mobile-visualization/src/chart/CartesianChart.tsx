@@ -42,8 +42,11 @@ const ChartCanvas = memo(
   },
 );
 
-export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
-  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+export type CartesianChartBaseProps = Omit<BoxBaseProps, 'accessibilityLabel' | 'fontFamily'> &
+  Pick<
+    ScrubberProviderProps,
+    'accessibilityLabel' | 'accessibilityStep' | 'enableScrubbing' | 'onScrubberPositionChange'
+  > & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
@@ -87,7 +90,7 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
 
 export type CartesianChartProps = CartesianChartBaseProps &
   Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
-  Omit<BoxProps, 'fontFamily'> & {
+  Omit<BoxProps, 'accessibilityLabel' | 'fontFamily'> & {
     /**
      * Default font families to use within ChartText.
      * If not provided, will be the default for the system.
@@ -127,6 +130,8 @@ export const CartesianChart = memo(
         children,
         animate = true,
         enableScrubbing,
+        accessibilityLabel,
+        accessibilityStep,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
@@ -468,9 +473,18 @@ export const CartesianChart = memo(
         return legend;
       }, [legend, legendAccessibilityLabel, legendPosition]);
 
+      const resolvedRootAccessibilityLabel = useMemo(() => {
+        if (typeof accessibilityLabel === 'function') {
+          return accessibilityLabel(undefined);
+        }
+
+        return accessibilityLabel;
+      }, [accessibilityLabel]);
+
       const rootBoxProps: BoxProps = useMemo(
         () => ({
           ref,
+          accessibilityLabel: resolvedRootAccessibilityLabel,
           accessibilityLiveRegion,
           accessible,
           height,
@@ -478,35 +492,54 @@ export const CartesianChart = memo(
           width,
           ...props,
         }),
-        [ref, accessibilityLiveRegion, accessible, height, rootStyles, width, props],
+        [
+          ref,
+          resolvedRootAccessibilityLabel,
+          accessibilityLiveRegion,
+          accessible,
+          height,
+          rootStyles,
+          width,
+          props,
+        ],
       );
 
       return (
         <CartesianChartProvider value={contextValue}>
-          <ScrubberProvider
-            allowOverflowGestures={allowOverflowGestures}
-            enableScrubbing={enableScrubbing}
-            onScrubberPositionChange={onScrubberPositionChange}
-          >
-            {legend ? (
-              <Box
-                {...rootBoxProps}
-                flexDirection={
-                  legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
-                }
+          {legend ? (
+            <Box
+              {...rootBoxProps}
+              flexDirection={
+                legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
+              }
+            >
+              {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
+              <ScrubberProvider
+                accessibilityLabel={accessibilityLabel}
+                accessibilityStep={accessibilityStep}
+                allowOverflowGestures={allowOverflowGestures}
+                enableScrubbing={enableScrubbing}
+                onScrubberPositionChange={onScrubberPositionChange}
               >
-                {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
                   <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
                 </Box>
-                {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
-              </Box>
-            ) : (
+              </ScrubberProvider>
+              {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
+            </Box>
+          ) : (
+            <ScrubberProvider
+              accessibilityLabel={accessibilityLabel}
+              accessibilityStep={accessibilityStep}
+              allowOverflowGestures={allowOverflowGestures}
+              enableScrubbing={enableScrubbing}
+              onScrubberPositionChange={onScrubberPositionChange}
+            >
               <Box {...rootBoxProps} collapsable={collapsable} onLayout={onContainerLayout}>
                 <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
               </Box>
-            )}
-          </ScrubberProvider>
+            </ScrubberProvider>
+          )}
         </CartesianChartProvider>
       );
     },

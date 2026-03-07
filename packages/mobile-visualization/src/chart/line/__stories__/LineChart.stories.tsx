@@ -70,7 +70,6 @@ import {
 
 function MultipleLine() {
   const theme = useTheme();
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const pages = useMemo(
     () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
     [],
@@ -79,12 +78,17 @@ function MultipleLine() {
   const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
+  const chartAccessibilityHint = 'Swipe left or right to hear details for each page.';
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index?: number) => {
+      if (index === undefined) {
+        return `${chartAccessibilityLabel} ${chartAccessibilityHint}`;
+      }
+
       return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
     },
-    [pages, pageViews, uniqueVisitors],
+    [chartAccessibilityHint, chartAccessibilityLabel, pages, pageViews, uniqueVisitors],
   );
 
   const numberFormatter = useCallback(
@@ -92,22 +96,15 @@ function MultipleLine() {
     [],
   );
 
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
-
   return (
     <LineChart
       enableScrubbing
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={chartAccessibilityHint}
+      accessibilityLabel={scrubberAccessibilityLabel}
       height={200}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'pageViews',
@@ -140,25 +137,20 @@ function MultipleLine() {
 }
 
 function DataFormat() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
   const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index?: number) => {
+      if (index === undefined) {
+        return chartAccessibilityLabel;
+      }
       return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
     },
-    [xData, yData],
+    [chartAccessibilityLabel, xData, yData],
   );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
     <LineChart
@@ -167,11 +159,10 @@ function DataFormat() {
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={scrubberAccessibilityLabel}
       curve="natural"
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'line',
@@ -517,7 +508,6 @@ function Transitions() {
 }
 
 function BasicAccessible() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   // Chart-level accessibility label provides overview
@@ -528,27 +518,22 @@ function BasicAccessible() {
 
   // Scrubber-level accessibility label provides specific position info
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index?: number) => {
+      if (index === undefined) {
+        return chartAccessibilityLabel;
+      }
       return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
     },
-    [data],
+    [chartAccessibilityLabel, data],
   );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={scrubberAccessibilityLabel}
       height={200}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'prices',
@@ -1034,6 +1019,26 @@ function AssetPriceWithDottedArea() {
       return `${dayOfWeek}, ${monthDay}, ${time}`;
     }, []);
 
+    const accessibilityLabel = useCallback(
+      (index?: number) => {
+        if (index === undefined) {
+          return `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`;
+        }
+
+        const price = formatPrice(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `${price} ${date}`;
+      },
+      [
+        currentPrice,
+        formatDate,
+        formatPrice,
+        sparklineTimePeriodDataTimestamps,
+        sparklineTimePeriodDataValues,
+        timePeriod.label,
+      ],
+    );
+
     return (
       <VStack gap={2}>
         <SectionHeader
@@ -1048,6 +1053,7 @@ function AssetPriceWithDottedArea() {
         <LineChart
           enableScrubbing
           showArea
+          accessibilityLabel={accessibilityLabel}
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
