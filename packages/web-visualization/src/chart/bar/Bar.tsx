@@ -141,7 +141,7 @@ export const Bar = memo<BarProps>(
     y,
     width,
     height,
-    origin,
+    origin: originProp,
     dataX,
     dataY,
     seriesId,
@@ -162,6 +162,10 @@ export const Bar = memo<BarProps>(
       return getBarPath(x, y, width, height, borderRadius, !!roundTop, !!roundBottom, layout);
     }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
+    const origin = useMemo(() => {
+      return originProp ?? (layout === 'horizontal' ? x : y + height);
+    }, [originProp, layout, x, y, height]);
+
     if (!barPath) {
       return null;
     }
@@ -175,7 +179,7 @@ export const Bar = memo<BarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
-        origin={origin ?? (layout === 'horizontal' ? x : y + height)}
+        origin={origin}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}

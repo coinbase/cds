@@ -112,7 +112,6 @@ export const XAxis = memo<XAxisProps>(
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string';
 
         if (hasStringLabels && !tickLabelFormatter && axisData[value] !== undefined) {
-          // Only works when there's NO formatter
           return axisData[value];
         }
 
