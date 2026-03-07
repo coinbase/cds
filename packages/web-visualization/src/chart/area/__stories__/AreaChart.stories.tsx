@@ -129,6 +129,8 @@ export const All = () => {
       </Example>
       <Example title="Horizontal Area">
         <AreaChart
+          showXAxis
+          showYAxis
           height={400}
           layout="vertical"
           series={[
@@ -138,8 +140,6 @@ export const All = () => {
               data: [21, 28, 41, 73, 99, 144, 319, 249, 131, 55, 48, 25],
             },
           ]}
-          showXAxis
-          showYAxis
           xAxis={{
             label: 'rainfall (mm)',
             showGrid: true,

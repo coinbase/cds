@@ -4,9 +4,8 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import { type ChartScaleFunction, getPointOnScale, useScrubberContext } from '../utils';
-import { defaultTransition, getTransition, instantTransition } from '../utils/transition';
 import {
   calculateLabelStackedPositions,
   getLabelPosition,
@@ -14,6 +13,7 @@ import {
   type LabelPosition,
   type ScrubberLabelPosition,
 } from '../utils/scrubber';
+import { defaultTransition, getTransition, instantTransition } from '../utils/transition';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 import type {
@@ -329,7 +329,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       drawingArea,
       labelMinGap,
       categoryAxisIsX,
-      layout,
     ]);
 
     const currentPosition = useMemo(() => {

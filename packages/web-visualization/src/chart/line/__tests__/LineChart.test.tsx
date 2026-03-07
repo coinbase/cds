@@ -312,11 +312,11 @@ describe('LineChart', () => {
     render(
       <DefaultThemeProvider>
         <LineChart
+          points
           animate={false}
           curve="linear"
           height={400}
           layout="horizontal"
-          points
           series={[{ id: 'test', data: [10, 20, 30] }]}
           testID="line-chart-horizontal-layout"
           width={600}

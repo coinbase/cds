@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import {
+  type ChartScaleFunction,
   isCategoricalScale,
   ScrubberContext,
-  type ChartScaleFunction,
   type ScrubberContextValue,
 } from '../utils';
 

@@ -88,7 +88,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }
 
       return configs;
-    }, [xScale, yScale, drawingArea, dataLength, stackIndex, totalStacks, barPadding]);
+    }, [xScale, yScale, drawingArea, dataLength, layout, totalStacks, barPadding, stackIndex]);
 
     const indexScaleComputed = layout !== 'horizontal' ? xScale : yScale;
     const valueScaleComputed = layout !== 'horizontal' ? yScale : xScale;
@@ -111,13 +111,13 @@ export const BarStackGroup = memo<BarStackGroupProps>(
         {...props}
         key={`stack-${stackIndex}-category-${categoryIndex}`}
         categoryIndex={categoryIndex}
+        indexPos={indexPos}
+        indexScale={indexScaleComputed}
         rect={drawingArea}
         series={series}
         thickness={thickness}
-        indexPos={indexPos}
-        yAxisId={yAxisId}
-        indexScale={indexScaleComputed}
         valueScale={valueScaleComputed}
+        yAxisId={yAxisId}
       />
     ));
   },

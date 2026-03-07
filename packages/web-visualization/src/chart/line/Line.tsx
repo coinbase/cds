@@ -215,7 +215,7 @@ export const Line = memo<LineProps>(
         connectNulls,
         layout,
       });
-    }, [chartData, xScale, yScale, curve, xAxis?.data, yAxis?.data, connectNulls, layout]);
+    }, [xScale, yScale, chartData, layout, xAxis, yAxis, curve, connectNulls]);
 
     const LineComponent = useMemo((): LineComponent => {
       if (SelectedLineComponent) {
@@ -241,7 +241,7 @@ export const Line = memo<LineProps>(
       return data && Array.isArray(data) && data.length > 0 && typeof data[0] === 'number'
         ? (data as number[])
         : null;
-    }, [layout, xAxis?.data, yAxis?.data]);
+    }, [layout, xAxis, yAxis]);
 
     const categoryAxisIsX = layout !== 'horizontal';
 

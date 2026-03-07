@@ -1,6 +1,6 @@
 import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
-import type { CartesianChartLayout } from './context';
 
+import type { CartesianChartLayout } from './context';
 import {
   type CategoricalScale,
   type ChartScaleFunction,
@@ -167,7 +167,7 @@ export const projectPoints = ({
     }
 
     // 2. Calculate the position along the value axis (measured magnitude)
-    let val: number = value as number;
+    const val: number = value as number;
     // (In case we ever need to project based on custom valueData, we can add logic here)
 
     // 3. Project to final coordinates based on layout

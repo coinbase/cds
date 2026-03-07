@@ -2,8 +2,8 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
-import { type BarTransition, getBarPath } from '../utils';
 import { useCartesianChartContext } from '../ChartProvider';
+import { type BarTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 

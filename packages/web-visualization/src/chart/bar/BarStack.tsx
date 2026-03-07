@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common';
+import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
@@ -108,6 +109,10 @@ export type BarStackComponentProps = {
    * Transition configuration for animation.
    */
   transition?: Transition;
+  /**
+   * Transition configuration for enter and update animations.
+   */
+  transitions?: BarProps['transitions'];
   /**
    * Border radius for the bars.
    */
@@ -513,7 +518,6 @@ export const BarStack = memo<BarStackProps>(
       indexPos,
       baseline,
       thickness,
-      stackMinSizePx,
       getSeriesData,
       categoryIndex,
       valueScale,
