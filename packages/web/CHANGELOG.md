@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.50.0 (3/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: iconSize customization for IconButton. [[#474](https://github.com/coinbase/cds/pull/474)]
+
+## 8.49.2 (3/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: improve deprecation notice in ListCell. [[#411](https://github.com/coinbase/cds/pull/411)]
+
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
 ## 8.49.0 (2/26/2026 PST)
 
 #### 🚀 Updates
