@@ -683,11 +683,13 @@ function Transitions() {
 
 ## Accessibility
 
-You can use `accessibilityLabel` on the chart to provide a descriptive label.
+Use `accessibilityLabel` on `LineChart` (or `CartesianChart`) to provide both:
+
+- a summary label when focus first lands on the chart
+- point-by-point labels while swiping through scrubber targets
 
 ```tsx
 function BasicAccessible() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   // Chart-level accessibility label provides overview
@@ -696,29 +698,24 @@ function BasicAccessible() {
     return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
   }, [data]);
 
-  // Scrubber-level accessibility label provides specific position info
+  // Scrubber accessibility label provides summary + per-point info
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index?: number) => {
+      if (index === undefined) {
+        return chartAccessibilityLabel;
+      }
       return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
     },
-    [data],
+    [chartAccessibilityLabel, data],
   );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={scrubberAccessibilityLabel}
       height={200}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'prices',
@@ -1433,6 +1430,26 @@ function AssetPriceWithDottedArea() {
       return `${dayOfWeek}, ${monthDay}, ${time}`;
     }, []);
 
+    const accessibilityLabel = useCallback(
+      (index?: number) => {
+        if (index === undefined) {
+          return `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`;
+        }
+
+        const price = formatPrice(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `${price} ${date}`;
+      },
+      [
+        currentPrice,
+        formatDate,
+        formatPrice,
+        sparklineTimePeriodDataTimestamps,
+        sparklineTimePeriodDataValues,
+        timePeriod.label,
+      ],
+    );
+
     return (
       <VStack gap={2}>
         <SectionHeader
@@ -1447,6 +1464,7 @@ function AssetPriceWithDottedArea() {
         <LineChart
           enableScrubbing
           showArea
+          accessibilityLabel={accessibilityLabel}
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
