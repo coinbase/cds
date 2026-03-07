@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react';
-// Legacy compatibility wrapper: this file is the only allowed import site for `react-popper`
-// until `usePopper` is removed in a future major release.
+// eslint-disable-next-line no-restricted-imports -- Temporary v9 compatibility export; remove with `usePopper` in v10.
 import { usePopper as useExternalPopper } from 'react-popper';
-// Legacy compatibility wrapper: this file is the only allowed import site for `@popperjs/core`
-// until `usePopper` is removed in a future major release.
+// eslint-disable-next-line no-restricted-imports -- Temporary v9 compatibility export; remove with `usePopper` in v10.
 import type { Options as PopperOptions } from '@popperjs/core';
 
 import { useTheme } from '../../hooks/useTheme';

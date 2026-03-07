@@ -426,12 +426,6 @@ export default tseslint.config(
       ...react19CompatibilityRules,
     },
   },
-  {
-    files: ['packages/web/src/overlays/popover/usePopper.ts'],
-    rules: {
-      'no-restricted-imports': 'off',
-    },
-  },
   // Rules specific to mobile story files
   {
     files: ['packages/mobile/**/*.stories.tsx'],
