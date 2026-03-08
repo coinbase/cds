@@ -154,4 +154,40 @@ describe('BarChart', () => {
     );
     expect(drawablePaths.length).toBeGreaterThanOrEqual(2);
   });
+
+  it('renders horizontal layout bars from zero baseline with categorical y-axis labels', () => {
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          showYAxis
+          animate={false}
+          height={400}
+          layout="horizontal"
+          series={[{ id: 'test', data: [10, 20, 30] }]}
+          testID="bar-chart-horizontal-layout"
+          width={600}
+          yAxis={{ data: ['A', 'B', 'C'], scaleType: 'band' }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const svg = screen.getByTestId('bar-chart-horizontal-layout');
+    expect(svg.querySelector('[data-axis="y"]')).toBeInTheDocument();
+    expect(screen.getByText('A')).toBeInTheDocument();
+
+    const renderedCategories = new Set(
+      CustomBar.mock.calls
+        .map(([props]) => props.dataY)
+        .filter((value): value is number => typeof value === 'number'),
+    );
+    expect(renderedCategories.has(0)).toBe(true);
+    expect(renderedCategories.has(1)).toBe(true);
+    expect(renderedCategories.has(2)).toBe(true);
+
+    const hasWideBar = CustomBar.mock.calls.some(([props]) => props.width > props.height);
+    expect(hasWideBar).toBe(true);
+  });
 });
