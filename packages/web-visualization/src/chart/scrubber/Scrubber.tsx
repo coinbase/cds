@@ -172,6 +172,8 @@ export type ScrubberBaseProps = SharedProps &
     seriesIds?: string[];
     /**
      * Hides the beacon labels while keeping the line label visible (if provided).
+     * @default true in horizontal layout, false in vertical layout.
+     * @note Beacon labels are always hidden in horizontal layout, and cannot be overridden.
      */
     hideBeaconLabels?: boolean;
     /**
@@ -407,6 +409,7 @@ export const Scrubber = memo(
       const shouldAnimateGroup = animate && groupEnterTransition !== null;
 
       const categoryAxisIsX = layout !== 'horizontal';
+      const showBeaconLabels = !hideBeaconLabels && categoryAxisIsX && beaconLabels.length > 0;
       const indexScale = categoryAxisIsX ? getXScale() : getYScale();
       if (!indexScale) return null;
 
@@ -493,7 +496,7 @@ export const Scrubber = memo(
             testID={testID}
             transitions={transitions}
           />
-          {!hideBeaconLabels && beaconLabels.length > 0 && (
+          {showBeaconLabels && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               className={classNames?.beaconLabel}

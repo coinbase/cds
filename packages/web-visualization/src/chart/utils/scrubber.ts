@@ -14,9 +14,7 @@ export type LabelDimensions = {
 };
 
 /**
- * Determines which side (primary/secondary) to place scrubber labels based on available space.
- * For horizontal layout, this is left/right.
- * For vertical layout, this could be top/bottom (though currently we prefer left/right).
+ * Determines which side (left/right) to place scrubber labels based on available space.
  */
 export const getLabelPosition = (
   beaconPos: number,

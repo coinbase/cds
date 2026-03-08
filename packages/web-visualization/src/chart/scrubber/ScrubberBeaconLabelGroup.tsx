@@ -114,6 +114,7 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
   /**
    * Custom component to render as a scrubber beacon label.
    * @default DefaultScrubberBeaconLabel
+   * @note Beacon labels are only supported in vertical layout.
    */
   BeaconLabelComponent?: ScrubberBeaconLabelComponent;
   /**
@@ -136,7 +137,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
-    labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
     transitions,
     className,
@@ -149,7 +149,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       getXScale,
       getYScale,
       getXAxis,
-      getYAxis,
       drawingArea,
       dataLength,
       animate,
@@ -166,6 +165,10 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       if (!isIdle) return instantTransition;
       return getTransition(transitions?.update, animate, defaultTransition);
     }, [transitions?.update, isIdle, animate, isIdleTransition]);
+
+    if (layout === 'horizontal') {
+      return null;
+    }
 
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 
@@ -195,22 +198,19 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           if (!series) return null;
 
           const sourceData = getSeriesData(label.seriesId);
-          const xScale = getXScale(series.xAxisId);
           const yScale = getYScale(series.yAxisId);
 
           return {
             seriesId: label.seriesId,
             sourceData,
-            xScale,
             yScale,
           };
         })
         .filter((info): info is NonNullable<typeof info> => info !== null);
-    }, [labels, getSeries, getSeriesData, getXScale, getYScale]);
+    }, [labels, getSeries, getSeriesData, getYScale]);
 
-    const categoryAxisIsX = layout !== 'horizontal';
-    const indexAxis = categoryAxisIsX ? getXAxis() : getYAxis();
-    const indexScaleFallback = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+    const indexAxis = getXAxis();
+    const indexScaleFallback = getXScale() as ChartScaleFunction;
 
     const dataIndex = useMemo(() => {
       return scrubberPosition ?? Math.max(0, dataLength - 1);
@@ -253,10 +253,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           }
         }
 
-        const valueScale = categoryAxisIsX ? info.yScale : info.xScale;
-
-        if (dataValue !== undefined && valueScale) {
-          const pixelValuePos = getPointOnScale(dataValue, valueScale);
+        if (dataValue !== undefined && info.yScale) {
+          const pixelValuePos = getPointOnScale(dataValue, info.yScale);
           return {
             seriesId: info.seriesId,
             indexPixelPos: sharedIndexPixelPos,
@@ -275,39 +273,24 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
 
       const validPositions = desiredPositions.filter((pos) => pos !== null);
 
-      // Collision detection logic
-      // In horizontal layout, we stack along Y (the value axis).
-      // In vertical layout, we stack along X (the value axis).
+      // Collision detection logic for vertical charts:
+      // labels are stacked along the Y/value axis.
       const dimensions = validPositions.map((pos) => {
         const trackedDimensions = labelDimensions[pos.seriesId];
         return {
           seriesId: pos.seriesId,
           width: trackedDimensions?.width ?? maxLabelWidth,
           height: trackedDimensions?.height ?? maxLabelHeight,
-          preferredX: categoryAxisIsX ? pos.indexPixelPos : pos.desiredValuePixelPos,
-          preferredY: categoryAxisIsX ? pos.desiredValuePixelPos : pos.indexPixelPos,
+          preferredX: pos.indexPixelPos,
+          preferredY: pos.desiredValuePixelPos,
         };
       });
 
-      // Calculate stacked positions along the value axis
-      // In vertical layout (categoryAxisIsX): stack along Y, bounds are drawingArea.y/height, thickness is maxLabelHeight
-      // In horizontal layout: stack along X, bounds are drawingArea.x/width, thickness is maxLabelWidth
-      const stackingStart = categoryAxisIsX ? drawingArea.y : drawingArea.x;
-      const stackingSize = categoryAxisIsX ? drawingArea.height : drawingArea.width;
-      const labelThickness = categoryAxisIsX ? maxLabelHeight : maxLabelWidth;
-
-      // We need to pass the preferred positions correctly to the utility.
-      // Utility expects 'preferredY' to be the stacking axis coordinate.
-      const adjustedDimensions = dimensions.map((d) => ({
-        ...d,
-        preferredY: categoryAxisIsX ? d.preferredY : d.preferredX,
-      }));
-
       const resolvedPositions = calculateLabelStackedPositions(
-        adjustedDimensions,
-        stackingStart,
-        stackingSize,
-        labelThickness,
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        maxLabelHeight,
         labelMinGap,
       );
 
@@ -316,8 +299,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         const resolvedValuePos = resolvedPositions.get(pos.seriesId) ?? pos.desiredValuePixelPos;
         return {
           seriesId: pos.seriesId,
-          x: categoryAxisIsX ? pos.indexPixelPos : resolvedValuePos,
-          y: categoryAxisIsX ? resolvedValuePos : pos.indexPixelPos,
+          x: pos.indexPixelPos,
+          y: resolvedValuePos,
         };
       });
     }, [
@@ -328,46 +311,15 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       labelDimensions,
       drawingArea,
       labelMinGap,
-      categoryAxisIsX,
     ]);
 
     const currentPosition = useMemo(() => {
       if (!indexScaleFallback || dataIndexValue === undefined) return 'right';
 
       const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width), 40);
-
-      // In vertical layout (categoryAxisIsX), we check room based on the category (X) position
-      // In horizontal layout, we check room based on the value (X) position
-      if (categoryAxisIsX) {
-        const categoryPixelPos = getPointOnScale(dataIndexValue, indexScaleFallback);
-        return getLabelPosition(
-          categoryPixelPos,
-          maxWidth,
-          drawingArea.width,
-          labelHorizontalOffset,
-        );
-      } else {
-        // For horizontal charts, we check if there's room to the right of the average label X candidate
-        // A simple approach is to use the average valuePixel
-        const validPositions = allLabelPositions.filter(
-          (pos): pos is { seriesId: string; x: number; y: number } => pos !== null,
-        );
-        const avgValuePixel =
-          validPositions.length > 0
-            ? validPositions.reduce((sum, pos) => sum + pos.x, 0) / validPositions.length
-            : drawingArea.x + drawingArea.width / 2;
-
-        return getLabelPosition(avgValuePixel, maxWidth, drawingArea.width, labelHorizontalOffset);
-      }
-    }, [
-      dataIndexValue,
-      indexScaleFallback,
-      labelDimensions,
-      drawingArea,
-      labelHorizontalOffset,
-      categoryAxisIsX,
-      allLabelPositions,
-    ]);
+      const categoryPixelPos = getPointOnScale(dataIndexValue, indexScaleFallback);
+      return getLabelPosition(categoryPixelPos, maxWidth, drawingArea.width, labelHorizontalOffset);
+    }, [dataIndexValue, indexScaleFallback, labelDimensions, drawingArea, labelHorizontalOffset]);
 
     return seriesInfo.map((info, index) => {
       const labelInfo = labels.find((label) => label.seriesId === info.seriesId);
