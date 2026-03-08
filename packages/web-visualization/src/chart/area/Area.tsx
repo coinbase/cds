@@ -72,8 +72,15 @@ export type AreaComponentProps = Pick<
    */
   d: SVGProps<SVGPathElement>['d'];
   /**
+   * ID of the x-axis to use.
+   * If not provided, defaults to the default x-axis.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
    * ID of the y-axis to use.
    * If not provided, defaults to the default y-axis.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
 };
@@ -107,8 +114,8 @@ export const Area = memo<AreaProps>(
 
     const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
 
-    const xAxis = getXAxis();
-    const xScale = getXScale();
+    const xAxis = getXAxis(matchedSeries?.xAxisId);
+    const xScale = getXScale(matchedSeries?.xAxisId);
     const yScale = getYScale(matchedSeries?.yAxisId);
     const yAxis = getYAxis(matchedSeries?.yAxisId);
 
@@ -168,6 +175,7 @@ export const Area = memo<AreaProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         gradient={gradient}
+        xAxisId={matchedSeries?.xAxisId}
         transition={transition}
         transitions={transitions}
         yAxisId={matchedSeries?.yAxisId}

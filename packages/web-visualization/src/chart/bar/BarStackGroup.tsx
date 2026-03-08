@@ -22,7 +22,7 @@ export type BarStackGroupProps = Pick<
   | 'transitions'
   | 'transition'
 > &
-  Pick<BarStackProps, 'series' | 'yAxisId'> & {
+  Pick<BarStackProps, 'series' | 'xAxisId' | 'yAxisId'> & {
     /**
      * Index of this stack within the category (0-based).
      */
@@ -43,10 +43,10 @@ export type BarStackGroupProps = Pick<
  * Delegates the actual stacking logic to BarStack for each category.
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
-  ({ series, yAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
+  ({ series, xAxisId, yAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
     const { layout, getXScale, getYScale, drawingArea, dataLength } = useCartesianChartContext();
 
-    const xScale = getXScale();
+    const xScale = getXScale(xAxisId);
     const yScale = getYScale(yAxisId);
 
     const stackConfigs = useMemo(() => {
@@ -117,6 +117,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
         series={series}
         thickness={thickness}
         valueScale={valueScaleComputed}
+        xAxisId={xAxisId}
         yAxisId={yAxisId}
       />
     ));

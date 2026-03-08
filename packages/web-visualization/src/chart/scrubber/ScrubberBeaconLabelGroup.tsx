@@ -195,7 +195,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           if (!series) return null;
 
           const sourceData = getSeriesData(label.seriesId);
-          const xScale = getXScale();
+          const xScale = getXScale(series.xAxisId);
           const yScale = getYScale(series.yAxisId);
 
           return {

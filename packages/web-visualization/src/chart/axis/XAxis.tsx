@@ -38,6 +38,12 @@ const axisLineCss = css`
 
 export type XAxisBaseProps = AxisBaseProps & {
   /**
+   * The ID of the axis to render.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  axisId?: string;
+  /**
    * The position of the axis relative to the chart's drawing area.
    * @default 'bottom'
    */
@@ -53,6 +59,7 @@ export type XAxisProps = AxisProps & XAxisBaseProps;
 
 export const XAxis = memo<XAxisProps>(
   ({
+    axisId,
     position = 'bottom',
     showGrid,
     requestedTickCount,
@@ -94,8 +101,8 @@ export const XAxis = memo<XAxisProps>(
       drawingArea,
     } = useCartesianChartContext();
 
-    const xScale = getXScale();
-    const xAxis = getXAxis();
+    const xScale = getXScale(axisId);
+    const xAxis = getXAxis(axisId);
 
     const axisBounds = getAxisBounds(registrationId);
 

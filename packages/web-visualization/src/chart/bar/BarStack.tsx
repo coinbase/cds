@@ -54,8 +54,15 @@ export type BarStackBaseProps = Pick<
    */
   rect: Rect;
   /**
+   * X axis ID to use.
+   * If not provided, defaults to defaultAxisId.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
    * Y axis ID to use.
-   * If not provided, will use the yAxisId from the first series.
+   * If not provided, defaults to defaultAxisId.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
   /**
@@ -152,6 +159,7 @@ export const BarStack = memo<BarStackProps>(
     indexScale,
     valueScale,
     rect,
+    xAxisId,
     BarComponent: defaultBarComponent,
     fillOpacity: defaultFillOpacity,
     stroke: defaultStroke,
@@ -170,7 +178,7 @@ export const BarStack = memo<BarStackProps>(
     const barMinSizePx = barMinSize;
     const stackMinSizePx = stackMinSize;
 
-    const xAxis = getXAxis();
+    const xAxis = getXAxis(xAxisId);
     const barsGrowVertically = layout !== 'horizontal';
 
     const baseline = useMemo(() => {

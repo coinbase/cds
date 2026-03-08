@@ -58,6 +58,7 @@ export const DottedArea = memo<DottedAreaProps>(
     peakOpacity = 1,
     baselineOpacity = 0,
     baseline,
+    xAxisId,
     yAxisId,
     gradient: gradientProp,
     animate,
@@ -109,6 +110,7 @@ export const DottedArea = memo<DottedAreaProps>(
               gradient={gradient}
               id={gradientId}
               transition={transitions?.update ?? transition}
+              xAxisId={xAxisId}
               yAxisId={yAxisId}
             />
           )}

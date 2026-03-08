@@ -145,6 +145,11 @@ export const getAxisConfig = (
   defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
 ): CartesianAxisConfigProps[] => {
   const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
+  const axisName = type === 'x' ? 'x-axis' : 'y-axis';
+  const axisDocUrl =
+    type === 'x'
+      ? 'https://cds.coinbase.com/components/charts/XAxis'
+      : 'https://cds.coinbase.com/components/charts/YAxis';
   if (!axes) {
     return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
   }
@@ -154,13 +159,22 @@ export const getAxisConfig = (
     // forces id to be defined on every input config when there are multiple axes
     if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
       throw new Error(
-        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/graphs/YAxis/#multiple-y-axes.',
+        `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
       );
+    }
+
+    if (axesLength > 1) {
+      const ids = axes.map(({ id }) => id).filter((id): id is string => id !== undefined);
+      if (new Set(ids).size !== ids.length) {
+        throw new Error(
+          `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
+        );
+      }
     }
 
     return axes.map(({ id, ...axis }) => ({
       // defaults the axis id if only a single axis is provided
-      id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
+      id: axesLength > 1 ? (id ?? defaultAxisId) : (id ?? defaultId),
       scaleType: defaultScaleType,
       domainLimit: defaultDomainLimit,
       ...axis,

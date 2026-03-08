@@ -205,6 +205,37 @@ describe('XAxis', () => {
       expect(tickMarkPaths?.length).toBeGreaterThan(0);
     });
   });
+
+  describe('axis selection', () => {
+    it('uses axisId to select x-axis config when multiple x axes are provided', () => {
+      renderChart(
+        <>
+          <XAxis axisId="x-a" position="bottom" ticks={[0]} />
+          <XAxis axisId="x-b" position="top" ticks={[0]} />
+          <Line seriesId="test" />
+        </>,
+        {
+          layout: 'horizontal',
+          xAxis: [
+            {
+              id: 'x-a',
+              data: ['A1', 'A2', 'A3'],
+              scaleType: 'linear',
+            },
+            {
+              id: 'x-b',
+              data: ['B1', 'B2', 'B3'],
+              scaleType: 'linear',
+            },
+          ],
+          yAxis: { scaleType: 'band' },
+        },
+      );
+
+      expect(screen.getByText('A1')).toBeInTheDocument();
+      expect(screen.getByText('B1')).toBeInTheDocument();
+    });
+  });
 });
 
 describe('Multiple Y Axes', () => {

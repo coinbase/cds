@@ -51,6 +51,7 @@ export const GradientArea = memo<GradientAreaProps>(
     peakOpacity = 0.3,
     baselineOpacity = 0,
     baseline,
+    xAxisId,
     yAxisId,
     gradient: gradientProp,
     animate,
@@ -80,6 +81,7 @@ export const GradientArea = memo<GradientAreaProps>(
               gradient={gradient}
               id={patternId}
               transition={transitions?.update ?? transition}
+              xAxisId={xAxisId}
               yAxisId={yAxisId}
             />
           </defs>

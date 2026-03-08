@@ -141,8 +141,15 @@ export type LineComponentProps = Pick<
      */
     d: SVGProps<SVGPathElement>['d'];
     /**
+     * ID of the x-axis to use.
+     * If not provided, defaults to the default x-axis.
+     * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+     */
+    xAxisId?: string;
+    /**
      * ID of the y-axis to use.
      * If not provided, defaults to the default y-axis.
+     * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
      */
     yAxisId?: string;
   };
@@ -180,8 +187,14 @@ export const Line = memo<LineProps>(
     );
     const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
-    const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-    const xScale = useMemo(() => getXScale(), [getXScale]);
+    const xAxis = useMemo(
+      () => getXAxis(matchedSeries?.xAxisId),
+      [getXAxis, matchedSeries?.xAxisId],
+    );
+    const xScale = useMemo(
+      () => getXScale(matchedSeries?.xAxisId),
+      [getXScale, matchedSeries?.xAxisId],
+    );
     const yScale = useMemo(
       () => getYScale(matchedSeries?.yAxisId),
       [getYScale, matchedSeries?.yAxisId],
@@ -287,6 +300,7 @@ export const Line = memo<LineProps>(
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
           transitions={transitions}
+          xAxisId={matchedSeries?.xAxisId}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
@@ -328,6 +342,7 @@ export const Line = memo<LineProps>(
                 dataX: categoryAxisIsX ? indexValue : value,
                 dataY: categoryAxisIsX ? value : indexValue,
                 fill: pointFill,
+                xAxisId: matchedSeries?.xAxisId,
                 yAxisId: matchedSeries?.yAxisId,
                 opacity,
                 testID: undefined,

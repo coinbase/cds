@@ -53,18 +53,20 @@ export type CartesianChartContextValue = {
    */
   height: number;
   /**
-   * Get x-axis configuration.
+   * Get x-axis configuration by ID.
+   * @param id - The axis ID. Defaults to defaultAxisId.
    */
-  getXAxis: () => AxisConfig | undefined;
+  getXAxis: (id?: string) => AxisConfig | undefined;
   /**
    * Get y-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
   getYAxis: (id?: string) => AxisConfig | undefined;
   /**
-   * Get x-axis scale function.
+   * Get x-axis scale function by ID.
+   * @param id - The axis ID. Defaults to defaultAxisId.
    */
-  getXScale: () => ChartScaleFunction | undefined;
+  getXScale: (id?: string) => ChartScaleFunction | undefined;
   /**
    * Get y-axis scale function by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.

@@ -35,6 +35,7 @@ export const SolidLine = memo<SolidLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
+    xAxisId,
     yAxisId,
     animate,
     transitions,
@@ -53,6 +54,7 @@ export const SolidLine = memo<SolidLineProps>(
               gradient={gradient}
               id={gradientId}
               transition={transitions?.update ?? transition}
+              xAxisId={xAxisId}
               yAxisId={yAxisId}
             />
           </defs>

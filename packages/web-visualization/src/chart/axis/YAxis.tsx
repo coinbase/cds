@@ -40,6 +40,7 @@ export type YAxisBaseProps = AxisBaseProps & {
   /**
    * The ID of the axis to render.
    * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   axisId?: string;
   /**

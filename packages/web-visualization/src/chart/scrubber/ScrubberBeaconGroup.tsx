@@ -71,7 +71,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
       if (dataValue === undefined) return series?.color ?? 'var(--color-fgPrimary)';
 
       if (gradient) {
-        const xScale = getXScale();
+        const xScale = getXScale(series?.xAxisId);
         const yScale = getYScale(series?.yAxisId);
 
         if (xScale && yScale) {
@@ -109,6 +109,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
       dataIndexValue,
       dataValue,
       series?.color,
+      series?.xAxisId,
       series?.yAxisId,
       getXScale,
       getYScale,
