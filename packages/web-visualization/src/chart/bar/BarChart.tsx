@@ -125,7 +125,6 @@ export const BarChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
-        requestedTickCount: xRequestedTickCount,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -204,12 +203,7 @@ export const BarChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && (
-            <XAxis
-              requestedTickCount={xRequestedTickCount ?? (isHorizontal ? 5 : undefined)}
-              {...xAxisVisualProps}
-            />
-          )}
+          {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           <BarPlot
             BarComponent={BarComponent}
