@@ -89,6 +89,7 @@ export const YAxis = memo<YAxisProps>(
     const registrationId = useId();
     const {
       animate,
+      layout,
       getYScale,
       getYAxis,
       registerAxis,
@@ -150,11 +151,14 @@ export const YAxis = memo<YAxisProps>(
       return getAxisTicksData({
         scaleFunction: yScale as any,
         ticks,
-        requestedTickCount: tickInterval !== undefined ? undefined : (requestedTickCount ?? 5),
+        requestedTickCount:
+          tickInterval !== undefined
+            ? undefined
+            : (requestedTickCount ?? (layout === 'horizontal' ? undefined : 5)),
         categories,
         tickInterval: tickInterval,
       });
-    }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
+    }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data, layout]);
 
     const isBandScale = useMemo(() => {
       if (!yScale) return false;

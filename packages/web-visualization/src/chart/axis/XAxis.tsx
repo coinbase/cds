@@ -85,6 +85,7 @@ export const XAxis = memo<XAxisProps>(
     const registrationId = useId();
     const {
       animate,
+      layout,
       getXScale,
       getXAxis,
       registerAxis,
@@ -143,7 +144,7 @@ export const XAxis = memo<XAxisProps>(
       return getAxisTicksData({
         scaleFunction: xScale,
         ticks,
-        requestedTickCount,
+        requestedTickCount: requestedTickCount ?? (layout === 'horizontal' ? 5 : undefined),
         categories,
         possibleTickValues:
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string'
@@ -155,7 +156,16 @@ export const XAxis = memo<XAxisProps>(
           maxStep: tickMaxStep,
         },
       });
-    }, [ticks, xScale, requestedTickCount, tickInterval, tickMinStep, tickMaxStep, xAxis?.data]);
+    }, [
+      ticks,
+      xScale,
+      requestedTickCount,
+      tickInterval,
+      tickMinStep,
+      tickMaxStep,
+      xAxis?.data,
+      layout,
+    ]);
 
     const isBandScale = useMemo(() => {
       if (!xScale) return false;

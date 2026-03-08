@@ -3,7 +3,16 @@ import { render, screen } from '@testing-library/react';
 
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
+import { getAxisTicksData } from '../../utils';
 import { XAxis, YAxis } from '..';
+
+jest.mock('../../utils', () => {
+  const actual = jest.requireActual('../../utils');
+  return {
+    ...actual,
+    getAxisTicksData: jest.fn(actual.getAxisTicksData),
+  };
+});
 
 jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
   useDimensions: jest.fn(() => ({
@@ -35,7 +44,10 @@ beforeAll(() => {
   }));
 });
 
-const renderChart = (children: React.ReactNode) => {
+const renderChart = (
+  children: React.ReactNode,
+  chartProps: Partial<React.ComponentProps<typeof CartesianChart>> = {},
+) => {
   return render(
     <DefaultThemeProvider>
       <CartesianChart
@@ -44,6 +56,7 @@ const renderChart = (children: React.ReactNode) => {
         series={[{ id: 'test', data: [10, 20, 30, 40, 50] }]}
         testID="test-chart"
         width={600}
+        {...chartProps}
       >
         {children}
       </CartesianChart>
@@ -378,6 +391,76 @@ describe('Axis labels', () => {
     const labelGroup = svg.querySelector('[data-testid="y-axis-label"]');
 
     expect(labelGroup).not.toBeInTheDocument();
+  });
+});
+
+describe('Layout-aware requestedTickCount defaults', () => {
+  it('defaults XAxis requestedTickCount to 5 only for horizontal layout', () => {
+    const getAxisTicksDataMock = jest.mocked(getAxisTicksData);
+    getAxisTicksDataMock.mockClear();
+
+    const horizontal = renderChart(
+      <>
+        <XAxis />
+        <Line seriesId="test" />
+      </>,
+      { layout: 'horizontal' },
+    );
+
+    expect(getAxisTicksDataMock).toHaveBeenCalled();
+    const horizontalRequestedTickCount =
+      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+    expect(horizontalRequestedTickCount).toBe(5);
+
+    horizontal.unmount();
+    getAxisTicksDataMock.mockClear();
+
+    renderChart(
+      <>
+        <XAxis />
+        <Line seriesId="test" />
+      </>,
+      { layout: 'vertical' },
+    );
+
+    expect(getAxisTicksDataMock).toHaveBeenCalled();
+    const verticalRequestedTickCount =
+      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+    expect(verticalRequestedTickCount).toBeUndefined();
+  });
+
+  it('defaults YAxis requestedTickCount to 5 only for vertical layout', () => {
+    const getAxisTicksDataMock = jest.mocked(getAxisTicksData);
+    getAxisTicksDataMock.mockClear();
+
+    const vertical = renderChart(
+      <>
+        <YAxis />
+        <Line seriesId="test" />
+      </>,
+      { layout: 'vertical' },
+    );
+
+    expect(getAxisTicksDataMock).toHaveBeenCalled();
+    const verticalRequestedTickCount =
+      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+    expect(verticalRequestedTickCount).toBe(5);
+
+    vertical.unmount();
+    getAxisTicksDataMock.mockClear();
+
+    renderChart(
+      <>
+        <YAxis />
+        <Line seriesId="test" />
+      </>,
+      { layout: 'horizontal' },
+    );
+
+    expect(getAxisTicksDataMock).toHaveBeenCalled();
+    const horizontalRequestedTickCount =
+      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+    expect(horizontalRequestedTickCount).toBeUndefined();
   });
 });
 
