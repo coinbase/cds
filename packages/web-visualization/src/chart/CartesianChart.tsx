@@ -16,7 +16,8 @@ import {
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
-  defaultChartInset,
+  defaultHorizontalLayoutChartInset,
+  defaultVerticalLayoutChartInset,
   getAxisConfig,
   getAxisRange,
   getCartesianAxisDomain,
@@ -162,7 +163,16 @@ export const CartesianChart = memo(
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
       const svgRef = useRef<SVGSVGElement | null>(null);
 
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
+      const calculatedInset = useMemo(
+        () =>
+          getChartInset(
+            inset,
+            layout === 'horizontal'
+              ? defaultHorizontalLayoutChartInset
+              : defaultVerticalLayoutChartInset,
+          ),
+        [inset, layout],
+      );
 
       // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
       const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp), [xAxisConfigProp]);

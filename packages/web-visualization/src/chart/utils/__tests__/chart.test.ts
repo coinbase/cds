@@ -2,7 +2,10 @@ import {
   type AxisBounds,
   type ChartInset,
   defaultChartInset,
+  defaultHorizontalChartInset,
+  defaultHorizontalLayoutChartInset,
   defaultStackId,
+  defaultVerticalLayoutChartInset,
   getChartDomain,
   getChartInset,
   getChartRange,
@@ -370,14 +373,35 @@ describe('isValidBounds', () => {
   });
 });
 
-describe('defaultChartInset', () => {
+describe('defaultVerticalLayoutChartInset', () => {
   it('should have correct default values', () => {
-    expect(defaultChartInset).toEqual({
+    expect(defaultVerticalLayoutChartInset).toEqual({
       top: 32,
       left: 16,
       bottom: 16,
       right: 16,
     });
+  });
+});
+
+describe('defaultHorizontalLayoutChartInset', () => {
+  it('should reserve additional right label room', () => {
+    expect(defaultHorizontalLayoutChartInset).toEqual({
+      top: 16,
+      left: 16,
+      bottom: 16,
+      right: 48,
+    });
+  });
+});
+
+describe('deprecated chart inset aliases', () => {
+  it('maps defaultHorizontalChartInset to defaultHorizontalLayoutChartInset', () => {
+    expect(defaultHorizontalChartInset).toEqual(defaultHorizontalLayoutChartInset);
+  });
+
+  it('maps defaultChartInset to defaultHorizontalLayoutChartInset', () => {
+    expect(defaultChartInset).toEqual(defaultHorizontalLayoutChartInset);
   });
 });
 

@@ -335,12 +335,25 @@ export type ChartInset = {
   right: number;
 };
 
-export const defaultChartInset: ChartInset = {
+export const defaultVerticalLayoutChartInset: ChartInset = {
   top: 32,
   left: 16,
   bottom: 16,
   right: 16,
 };
+
+export const defaultHorizontalLayoutChartInset: ChartInset = {
+  top: 16,
+  left: 16,
+  bottom: 16,
+  right: 48,
+};
+
+/**
+ * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or
+ * `defaultHorizontalLayoutChartInset` for horizontal layout charts.
+ */
+export const defaultChartInset: ChartInset = defaultVerticalLayoutChartInset;
 
 /**
  * Normalize padding to include all sides with a value.
