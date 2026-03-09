@@ -161,8 +161,8 @@ describe('BarChart', () => {
     render(
       <DefaultThemeProvider>
         <BarChart
-          BarComponent={CustomBar}
           showYAxis
+          BarComponent={CustomBar}
           animate={false}
           height={400}
           layout="horizontal"

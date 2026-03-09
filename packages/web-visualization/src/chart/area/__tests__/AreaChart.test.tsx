@@ -136,10 +136,10 @@ describe('AreaChart', () => {
     render(
       <DefaultThemeProvider>
         <AreaChart
-          AreaComponent={CustomArea}
-          LineComponent={CustomLine}
           showLines
           stacked
+          AreaComponent={CustomArea}
+          LineComponent={CustomLine}
           height={400}
           series={[
             { id: 'series-a', data: [100, 120, 110, 130, 125] },

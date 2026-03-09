@@ -199,8 +199,8 @@ describe('CartesianChart', () => {
         children: (
           <>
             <YAxis showLine position="left" />
-            <XAxis axisId="x-a" position="bottom" showLine />
-            <XAxis axisId="x-b" position="top" showLine />
+            <XAxis showLine axisId="x-a" position="bottom" />
+            <XAxis showLine axisId="x-b" position="top" />
             <Line seriesId="series-a" />
             <Line seriesId="series-b" />
           </>

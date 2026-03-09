@@ -175,9 +175,9 @@ export const Area = memo<AreaProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         gradient={gradient}
-        xAxisId={matchedSeries?.xAxisId}
         transition={transition}
         transitions={transitions}
+        xAxisId={matchedSeries?.xAxisId}
         yAxisId={matchedSeries?.yAxisId}
       />
     );
