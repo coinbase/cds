@@ -58,10 +58,15 @@ const LottieContent = memo(
 );
 
 export const Lottie = memo(
-  forwardRef(({ colorFilters: colorFiltersProp, ...props }: LottieProps, forwardedRef: React.ForwardedRef<LottieView>) => {
-    const colorFilters = useLottieColorFilters(props.source, colorFiltersProp);
-    return <LottieContent ref={forwardedRef} colorFilters={colorFilters} {...props} />;
-  }),
+  forwardRef(
+    (
+      { colorFilters: colorFiltersProp, ...props }: LottieProps,
+      forwardedRef: React.ForwardedRef<LottieView>,
+    ) => {
+      const colorFilters = useLottieColorFilters(props.source, colorFiltersProp);
+      return <LottieContent ref={forwardedRef} colorFilters={colorFilters} {...props} />;
+    },
+  ),
 );
 
 LottieContent.displayName = 'LottieContent';
