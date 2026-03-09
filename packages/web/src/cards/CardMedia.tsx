@@ -28,24 +28,12 @@ const imageProps: Record<CardMediaPlacement, CardMediaImageSizeObject> = {
 
 export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }: CardMediaProps) {
   if (props.type === 'spotSquare') {
-    return (
-      <SpotSquare
-        dimension={defaultMediaDimension}
-        name={props.name}
-        testID={props.testID}
-        {...props}
-      />
-    );
+    return <SpotSquare dimension={defaultMediaDimension} testID={props.testID} {...props} />;
   }
 
   if (props.type === 'pictogram') {
     return (
-      <Pictogram
-        dimension={defaultPictogramMediaDimension}
-        name={props.name}
-        testID={props.testID}
-        {...props}
-      />
+      <Pictogram dimension={defaultPictogramMediaDimension} testID={props.testID} {...props} />
     );
   }
 
