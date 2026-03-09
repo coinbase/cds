@@ -1,14 +1,18 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import type { Rect } from '@coinbase/cds-common/types';
 import { Button } from '@coinbase/cds-web/buttons';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { Box, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
+import { m as motion } from 'framer-motion';
 
 import {
+  ChartText,
   type ChartTextChildren,
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
+  type DefaultScrubberBeaconLabelProps,
   DefaultScrubberLabel,
   getLineData,
   type ScrubberBeaconLabelProps,
@@ -625,6 +629,189 @@ const HideOverlay = () => {
   );
 };
 
+const matchupBlueData = [
+  47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
+  64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
+];
+const matchupRedData = matchupBlueData.map((value) => 100 - value);
+const matchupTeamLabels: Record<string, string> = {
+  blue: 'BLUE',
+  red: 'RED',
+};
+
+type TeamBeaconLabelProps = Omit<
+  DefaultScrubberBeaconLabelProps,
+  'label' | 'verticalAlignment' | 'font' | 'inset' | 'elevated' | 'borderRadius' | 'background'
+> & {
+  teamLabel: string;
+  percentageLabel: string;
+};
+
+const TeamBeaconLabel = memo<TeamBeaconLabelProps>(
+  ({
+    color = 'var(--color-fgPrimary)',
+    teamLabel,
+    percentageLabel,
+    transition,
+    x,
+    y,
+    dx,
+    horizontalAlignment,
+    onDimensionsChange,
+    ...chartTextProps
+  }) => {
+    const teamLabelDimensionsRef = useRef<Rect | null>(null);
+    const percentageLabelDimensionsRef = useRef<Rect | null>(null);
+
+    const emitCombinedDimensions = useCallback(() => {
+      if (!onDimensionsChange) {
+        return;
+      }
+
+      const teamRect = teamLabelDimensionsRef.current;
+      const percentageRect = percentageLabelDimensionsRef.current;
+
+      if (!teamRect || !percentageRect) {
+        return;
+      }
+
+      const minX = Math.min(teamRect.x, percentageRect.x);
+      const minY = Math.min(teamRect.y, percentageRect.y);
+      const maxX = Math.max(teamRect.x + teamRect.width, percentageRect.x + percentageRect.width);
+      const maxY = Math.max(teamRect.y + teamRect.height, percentageRect.y + percentageRect.height);
+
+      onDimensionsChange({
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY,
+      });
+    }, [onDimensionsChange]);
+
+    const handleTeamLabelDimensionsChange = useCallback(
+      (rect: Rect) => {
+        teamLabelDimensionsRef.current = rect;
+        emitCombinedDimensions();
+      },
+      [emitCombinedDimensions],
+    );
+
+    const handlePercentageLabelDimensionsChange = useCallback(
+      (rect: Rect) => {
+        percentageLabelDimensionsRef.current = rect;
+        emitCombinedDimensions();
+      },
+      [emitCombinedDimensions],
+    );
+
+    return (
+      <motion.g animate={{ y }} initial={false} transition={transition}>
+        <ChartText
+          disableRepositioning
+          color={color}
+          dx={dx}
+          font="legal"
+          horizontalAlignment={horizontalAlignment}
+          onDimensionsChange={handleTeamLabelDimensionsChange}
+          verticalAlignment="bottom"
+          x={x}
+          y={transition ? 0 : y}
+          {...chartTextProps}
+        >
+          {teamLabel}
+        </ChartText>
+        <ChartText
+          disableRepositioning
+          color={color}
+          dx={dx}
+          font="title3"
+          horizontalAlignment={horizontalAlignment}
+          onDimensionsChange={handlePercentageLabelDimensionsChange}
+          verticalAlignment="top"
+          x={x}
+          y={transition ? 0 : y}
+        >
+          {percentageLabel}
+        </ChartText>
+      </motion.g>
+    );
+  },
+);
+
+const MatchupBeaconLabels = () => {
+  const MatchupScrubberBeaconLabel = memo(
+    ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, dataLength } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const dataIndex = useMemo(() => {
+        return scrubberPosition ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
+
+      const teamLabel = matchupTeamLabels[seriesId] ?? String(seriesId).toUpperCase();
+
+      const value: number | null = useMemo(() => {
+        if (seriesData === undefined) {
+          return null;
+        }
+
+        return seriesData[dataIndex];
+      }, [dataIndex, seriesData]);
+
+      return (
+        <TeamBeaconLabel
+          {...props}
+          color={color}
+          percentageLabel={`${value ?? 0}%`}
+          seriesId={seriesId}
+          teamLabel={teamLabel}
+        />
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={250}
+      series={[
+        {
+          id: 'blue',
+          data: matchupBlueData,
+          color: 'rgb(var(--blue50))',
+          label: 'BLUE',
+        },
+        {
+          id: 'red',
+          data: matchupRedData,
+          color: 'rgb(var(--red50))',
+          label: 'RED',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 64 }),
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <Scrubber
+        idlePulse
+        BeaconLabelComponent={MatchupScrubberBeaconLabel}
+        beaconLabelHorizontalOffset={16}
+        beaconLabelPreferredSide="right"
+      />
+    </LineChart>
+  );
+};
+
 export const All = () => {
   return (
     <VStack gap={4}>
@@ -681,6 +868,9 @@ export const All = () => {
       </Example>
       <Example title="Hide Overlay">
         <HideOverlay />
+      </Example>
+      <Example title="Matchup Beacon Labels">
+        <MatchupBeaconLabels />
       </Example>
     </VStack>
   );
