@@ -8,6 +8,7 @@ import type {
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
 import { DotSymbol } from '../../dots/DotSymbol';
+import { Icon } from '../../icons/Icon';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
@@ -81,6 +82,7 @@ const BasicTooltip = ({ content, openDelay, closeDelay }: BasicTooltipProps) => 
 
         <VStack gap={3} paddingX={2}>
           <Tooltip
+            hasInteractiveContent
             closeDelay={closeDelay}
             content={
               <VStack gap={2}>
@@ -314,3 +316,64 @@ DelayedVisibility.args = {
   openDelay: 400,
   closeDelay: 150,
 };
+
+export const TooltipOnIcon = () => (
+  <PortalProvider>
+    <HStack alignItems="center" gap={2}>
+      <Tooltip content="This will be visible to other users.">
+        <Icon active color="fg" name="info" role="button" tabIndex={0} />
+      </Tooltip>
+      <Text as="span" color="fgMuted" font="body">
+        Focus the icon to hear the tooltip announced.
+      </Text>
+    </HStack>
+  </PortalProvider>
+);
+
+export const TooltipOnIconReactNode = () => (
+  <PortalProvider>
+    <HStack alignItems="center" gap={2}>
+      <Tooltip
+        content={
+          <Text font="label2">
+            Styled <strong>description</strong> text.
+          </Text>
+        }
+      >
+        <Icon active color="fg" name="info" role="button" tabIndex={0} />
+      </Tooltip>
+      <Text as="span" color="fgMuted" font="body">
+        Focus the icon to hear the tooltip announced.
+      </Text>
+    </HStack>
+  </PortalProvider>
+);
+
+export const TooltipWithInteractiveContent = () => (
+  <PortalProvider>
+    <HStack alignItems="center" gap={2}>
+      <Tooltip
+        hasInteractiveContent
+        content={
+          <Text color="fg" font="label2">
+            Learn more at{' '}
+            <Text
+              as="a"
+              href="https://www.coinbase.com/settings"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Settings
+            </Text>
+            .
+          </Text>
+        }
+      >
+        <Icon active color="fg" name="info" paddingStart={1} role="button" tabIndex={0} />
+      </Tooltip>
+      <Text as="span" color="fgMuted" font="body">
+        Set your default display currency.{' '}
+      </Text>
+    </HStack>
+  </PortalProvider>
+);
