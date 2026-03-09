@@ -99,19 +99,8 @@ Follow this systematic approach:
    - If the theme of the research goal cannot be found within the project source code, abandon the research task
 
 2. **Environment Preparation**
-   - Check if the project's repository has already been cloned:
-     ```bash
-     ls temp/repo-cache | grep {{REPO NAME}}
-     ```
-   - If the repository has already been cloned, update it to the latest commit:
-     ```bash
-     cd temp/repo-cache/{{PROJECT NAME}} && git pull --quiet
-     ```
-   - If the repository has not been cloned, clone it:
-     ```bash
-     git clone --depth 1 {{PROJECT REPO URL}} temp/repo-cache/{{PROJECT NAME}} --quiet
-     ```
-   - **NEVER** clone another repository outside of the SINGLE project you are researching.
+   - Use the `github-repo-manager` skill (`.claude/skills/github-repo-manager/SKILL.md`) to ensure the project's repository is cloned and up to date in `temp/repo-cache/`.
+   - Only manage the single repository you are researching.
 
 3. **Deep Technical Analysis**
    - Examine actual source code implementations, not just documentation
