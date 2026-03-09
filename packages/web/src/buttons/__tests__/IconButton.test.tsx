@@ -194,8 +194,8 @@ describe('IconButton', () => {
     );
 
     const spinner = screen.getByTestId('icon-button-spinner');
-    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.xs}px`);
-    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.xs}px`);
+    // Spinner uses fontSize with CSS width/height of 10em, so fontSize = iconSize / 10
+    expect(spinner).toHaveStyle(`font-size: ${defaultTheme.iconSize.xs / 10}px`);
   });
 
   it('sets data attributes for style variants', () => {

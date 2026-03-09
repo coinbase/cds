@@ -71,4 +71,20 @@ describe('AvatarButton', () => {
 
     expect(spy).toHaveBeenCalled();
   });
+
+  it('accepts deprecated border props without changing rendering', () => {
+    render(
+      <DefaultThemeProvider>
+        <AvatarButton
+          bordered
+          accessibilityLabel="Sneezy"
+          borderRadius={900}
+          borderWidth={300}
+          testID="avatar-button"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('avatar-button')).toBeTruthy();
+  });
 });

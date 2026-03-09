@@ -79,6 +79,16 @@ const sharedRules = {
           message:
             'Do not import `cx` from Linaria. Use the `cx` function from @coinbase/cds-web instead.',
         },
+        {
+          name: 'react-popper',
+          message:
+            'Do not import `react-popper` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
+        },
+        {
+          name: '@popperjs/core',
+          message:
+            'Do not import `@popperjs/core` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
+        },
       ],
       patterns: [
         {
@@ -166,6 +176,16 @@ const react19CompatibilityRules = {
           importNames: ['cx'],
           message:
             'Do not import `cx` from Linaria. Use the `cx` function from @coinbase/cds-web instead.',
+        },
+        {
+          name: 'react-popper',
+          message:
+            'Do not import `react-popper` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
+        },
+        {
+          name: '@popperjs/core',
+          message:
+            'Do not import `@popperjs/core` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
         },
         // React 19-only runtime APIs
         {

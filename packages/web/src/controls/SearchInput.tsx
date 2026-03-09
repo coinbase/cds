@@ -8,6 +8,12 @@ import { InputIcon } from './InputIcon';
 import { InputIconButton } from './InputIconButton';
 import { TextInput, type TextInputBaseProps } from './TextInput';
 
+/** @deprecated Use local constants or the `compact` prop instead. This export will be removed in a future major release. */
+export const scales = {
+  regular: 56,
+  compact: 40,
+} as const;
+
 type HTMLElementProps = React.InputHTMLAttributes<HTMLInputElement> &
   Required<Pick<HTMLInputElement, 'value'>>;
 
