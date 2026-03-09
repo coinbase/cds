@@ -30,11 +30,9 @@ const imageProps: Record<CardMediaPlacement, CardMediaImageSizeObject> = {
 export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }: CardMediaProps) {
   switch (props.type) {
     case 'spotSquare':
-      return <SpotSquare dimension={defaultMediaDimension} testID={props.testID} {...props} />;
+      return <SpotSquare dimension={defaultMediaDimension} {...props} />;
     case 'pictogram':
-      return (
-        <Pictogram dimension={defaultPictogramMediaDimension} testID={props.testID} {...props} />
-      );
+      return <Pictogram dimension={defaultPictogramMediaDimension} {...props} />;
     case 'image':
       return (
         <RemoteImage

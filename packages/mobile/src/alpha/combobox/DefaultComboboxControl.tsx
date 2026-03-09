@@ -32,6 +32,7 @@ export const DefaultComboboxControl = <
   searchInputRef,
   hideSearchInput,
   accessibilityLabel,
+  styles,
   ...props
 }: ComboboxControlProps<Type, SelectOptionValue>) => {
   const theme = useTheme();
@@ -97,13 +98,13 @@ export const DefaultComboboxControl = <
       options={options}
       setOpen={setOpen}
       styles={{
-        ...props.styles,
+        ...styles,
         controlEndNode: {
-          ...StyleSheet.flatten(props.styles?.controlEndNode),
+          ...StyleSheet.flatten(styles?.controlEndNode),
           alignItems: hasValue && shouldRenderSearchInput ? 'flex-end' : 'center',
         },
         controlValueNode: {
-          ...StyleSheet.flatten(props.styles?.controlValueNode),
+          ...StyleSheet.flatten(styles?.controlValueNode),
         },
       }}
       value={value}
