@@ -71,6 +71,7 @@ export const Toast = memo(
 
       return (
         <Box
+          accessibilityRole="alert"
           alignSelf="center"
           bottom={(bottomOffset as number) ?? safeAreaBottom}
           maxWidth="100%"
@@ -82,7 +83,6 @@ export const Toast = memo(
           }}
           zIndex={zIndex.portal}
           {...props}
-          accessibilityRole="alert"
         >
           <HStack
             animated

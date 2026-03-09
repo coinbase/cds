@@ -425,7 +425,7 @@ const TabNavigationComponent = memo(
             onScroll={handleOnScroll}
             position="relative"
           >
-            <VStack testID={testID} {...props} padding={0}>
+            <VStack padding={0} testID={testID} {...props}>
               <HStack
                 accessibilityLabel={accessibilityLabel}
                 accessibilityLabelledBy={accessibilityLabelledBy}

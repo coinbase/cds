@@ -14,5 +14,5 @@ export const LottieStatusAnimation = ({
   const { playMarkers, Lottie } = useLottie(tradeStatus);
   const handlePolling = useStatusAnimationPoller({ status, playMarkers, onFinish });
 
-  return <Lottie {...otherProps} onAnimationFinish={handlePolling} testID={testID} />;
+  return <Lottie onAnimationFinish={handlePolling} testID={testID} {...otherProps} />;
 };

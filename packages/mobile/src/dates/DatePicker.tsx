@@ -161,7 +161,6 @@ export const DatePicker = memo(
         <Box ref={ref} width={width}>
           <DateInput
             ref={dateInputRef}
-            {...props}
             accessibilityLabel={accessibilityLabel}
             accessibilityLabelledBy={accessibilityLabelledBy}
             compact={compact}
@@ -182,6 +181,7 @@ export const DatePicker = memo(
             requiredError={requiredError}
             style={dateInputStyle}
             variant={variant}
+            {...props}
           />
           {showNativePicker && (
             <NativeDatePicker

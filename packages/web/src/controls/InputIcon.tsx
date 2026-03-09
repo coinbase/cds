@@ -39,10 +39,10 @@ export const InputIcon = memo(
       return (
         <Box paddingX={2} testID={testID}>
           <Icon
+            ref={ref}
             color={disableInheritFocusStyle ? color : (variantColor ?? color)}
             size="s"
             {...props}
-            ref={ref}
           />
         </Box>
       );

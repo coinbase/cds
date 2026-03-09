@@ -114,7 +114,7 @@ type HexagonClipPathProps = {
 
 const HexagonClipPath = ({ image, ...props }: HexagonClipPathProps) => {
   return (
-    <Svg {...props} viewBox="0 0 16 16">
+    <Svg viewBox="0 0 16 16" {...props}>
       <Defs>
         <ClipPath id="hex-hw-shapeclip-clipconfig">
           <Path d={hexagonShapePath} />
@@ -227,11 +227,11 @@ export const RemoteImage = memo(function RemoteImage({
       <SvgCssUri
         accessibilityRole="image"
         accessible={!!props.accessibilityLabel}
+        height={computedHeight}
         style={styles}
         uri={isImageURISource(transformedSource) ? (transformedSource?.uri ?? null) : null}
-        {...props}
-        height={computedHeight}
         width={computedWidth}
+        {...props}
       />
     );
   }
@@ -285,8 +285,8 @@ export const RemoteImage = memo(function RemoteImage({
       onError={onError}
       onLoad={onLoad}
       source={transformedSource as ImageSourcePropType}
-      {...props}
       style={stylesWithDimensions}
+      {...props}
     />
   );
 });

@@ -23,8 +23,8 @@ export default function DocSidebar(props: Props): JSX.Element {
 
   return (
     <>
-      {shouldRenderSidebarDesktop && <DocSidebarDesktop {...props} sidebar={filteredSidebar} />}
-      {shouldRenderSidebarMobile && <DocSidebarMobile {...props} sidebar={filteredSidebar} />}
+      {shouldRenderSidebarDesktop && <DocSidebarDesktop sidebar={filteredSidebar} {...props} />}
+      {shouldRenderSidebarMobile && <DocSidebarMobile sidebar={filteredSidebar} {...props} />}
     </>
   );
 }

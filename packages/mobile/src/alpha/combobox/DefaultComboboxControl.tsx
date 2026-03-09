@@ -55,12 +55,6 @@ export const DefaultComboboxControl = <
     <SelectControlComponent
       accessibilityLabel={computedAccessibilityLabel}
       align={align}
-      disabled={disabled}
-      open={open}
-      options={options}
-      setOpen={setOpen}
-      value={value}
-      {...props}
       contentNode={
         shouldRenderSearchInput ? (
           // set gap between input and values with top padding
@@ -98,6 +92,10 @@ export const DefaultComboboxControl = <
           </>
         )
       }
+      disabled={disabled}
+      open={open}
+      options={options}
+      setOpen={setOpen}
       styles={{
         ...props.styles,
         controlEndNode: {
@@ -108,6 +106,8 @@ export const DefaultComboboxControl = <
           ...StyleSheet.flatten(props.styles?.controlValueNode),
         },
       }}
+      value={value}
+      {...props}
     />
   );
 };

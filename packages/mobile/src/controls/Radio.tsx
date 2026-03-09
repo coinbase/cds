@@ -83,13 +83,13 @@ const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
 
   return (
     <Control<RadioValue>
-      {...props}
       ref={ref}
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabelValue}
       accessibilityRole="radio"
       hitSlop={5}
       label={children}
+      {...props}
     >
       {RadioIcon}
     </Control>

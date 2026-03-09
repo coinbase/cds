@@ -171,12 +171,12 @@ export const LineChart = memo(
 
       return (
         <CartesianChart
-          {...chartProps}
           ref={ref}
           inset={calculatedInset}
           series={chartSeries}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
+          {...chartProps}
         >
           {/* Render axes first for grid lines to appear behind everything else */}
           {showXAxis && <XAxis {...xAxisVisualProps} />}

@@ -43,8 +43,8 @@ export const SheetTabs = (
   props: Omit<CDSTabsProps, 'TabComponent' | 'TabsActiveIndicatorComponent'>,
 ) => (
   <CDSTabs
-    {...props}
     TabComponent={CustomTab}
     TabsActiveIndicatorComponent={CustomTabsActiveIndicator}
+    {...props}
   />
 );

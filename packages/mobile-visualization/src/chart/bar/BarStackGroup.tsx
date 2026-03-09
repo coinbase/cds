@@ -97,7 +97,6 @@ export const BarStackGroup = memo<BarStackGroupProps>(
 
     return stackConfigs.map(({ categoryIndex, x, width }) => (
       <BarStack
-        {...props}
         key={`stack-${stackIndex}-category-${categoryIndex}`}
         categoryIndex={categoryIndex}
         rect={drawingArea}
@@ -105,6 +104,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
         width={width}
         x={x}
         yScale={yScale}
+        {...props}
       />
     ));
   },

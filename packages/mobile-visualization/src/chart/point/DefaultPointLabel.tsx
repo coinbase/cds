@@ -26,11 +26,11 @@ export const DefaultPointLabel = memo<DefaultPointLabelProps>(
 
     return (
       <ChartText
-        {...props}
         horizontalAlignment={horizontalAlignment}
         verticalAlignment={verticalAlignment}
         x={labelCoordinates.x}
         y={labelCoordinates.y}
+        {...props}
       >
         {children}
       </ChartText>

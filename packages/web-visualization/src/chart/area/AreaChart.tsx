@@ -205,12 +205,12 @@ export const AreaChart = memo(
 
       return (
         <CartesianChart
-          {...chartProps}
           ref={ref}
           inset={calculatedInset}
           series={seriesToRender}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
+          {...chartProps}
         >
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}

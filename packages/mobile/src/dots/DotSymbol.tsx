@@ -121,7 +121,7 @@ export const DotSymbol = memo(
     const shouldShow = children !== undefined ? childrenSize !== null : true;
 
     return (
-      <View {...props} style={style}>
+      <View style={style} {...props}>
         <View onLayout={onChildrenLayout} testID={`${props.testID}-children`}>
           {children}
         </View>

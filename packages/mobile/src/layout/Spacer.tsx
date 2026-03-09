@@ -49,7 +49,6 @@ export const Spacer = memo(function Spacer({
 
   return (
     <Component
-      {...viewProps}
       accessibilityRole="none"
       style={
         getSpacerStyle({
@@ -65,6 +64,7 @@ export const Spacer = memo(function Spacer({
           spacingScaleValues: theme.space,
         }) as ViewStyle
       }
+      {...viewProps}
     />
   );
 });

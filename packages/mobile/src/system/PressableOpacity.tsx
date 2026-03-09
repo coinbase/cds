@@ -12,7 +12,7 @@ export type PressableOpacityProps = Omit<
 /** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. */
 export const PressableOpacity = ({ children, ...props }: PressableOpacityProps) => {
   return (
-    <Pressable {...props} background="transparent" borderColor="transparent">
+    <Pressable background="transparent" borderColor="transparent" {...props}>
       {children}
     </Pressable>
   );

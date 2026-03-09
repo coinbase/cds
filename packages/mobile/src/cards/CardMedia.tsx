@@ -32,19 +32,19 @@ export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }
     case 'spotSquare':
       return (
         <SpotSquare
-          {...props}
           dimension={defaultMediaDimension}
           name={props.name}
           testID={props.testID}
+          {...props}
         />
       );
     case 'pictogram':
       return (
         <Pictogram
-          {...props}
           dimension={defaultPictogramMediaDimension}
           name={props.name}
           testID={props.testID}
+          {...props}
         />
       );
     case 'image':

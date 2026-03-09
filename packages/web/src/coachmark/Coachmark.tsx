@@ -72,7 +72,6 @@ export const Coachmark = memo(
       return (
         <InvertedThemeProvider>
           <VStack
-            {...props}
             ref={ref}
             borderRadius={400}
             maxWidth={400}
@@ -80,6 +79,7 @@ export const Coachmark = memo(
             position="relative"
             testID={testID}
             width={width}
+            {...props}
           >
             {media}
             {!!onClose && (

@@ -30,10 +30,10 @@ export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }
   if (props.type === 'spotSquare') {
     return (
       <SpotSquare
-        {...props}
         dimension={defaultMediaDimension}
         name={props.name}
         testID={props.testID}
+        {...props}
       />
     );
   }
@@ -41,10 +41,10 @@ export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }
   if (props.type === 'pictogram') {
     return (
       <Pictogram
-        {...props}
         dimension={defaultPictogramMediaDimension}
         name={props.name}
         testID={props.testID}
+        {...props}
       />
     );
   }

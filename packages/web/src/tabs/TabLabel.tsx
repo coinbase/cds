@@ -106,13 +106,13 @@ export const TabLabel = memo(
                 <Text as="h2" color={color} display="block" font={font} {...props} />
                 {/* This element is used to ensure the element width doesn't change when we change font-weight */}
                 <Text
+                  aria-hidden="true"
                   as="h2"
+                  className={hiddenCss}
                   color={color}
                   display="block"
                   font={font}
                   {...props}
-                  aria-hidden="true"
-                  className={hiddenCss}
                 />
               </>
             )}
@@ -124,12 +124,12 @@ export const TabLabel = memo(
           ) : (
             <Text
               as="h2"
+              className={variant === 'primary' ? primaryTabLabelCss : undefined}
               color={color}
               display="block"
               font={font}
               id={accessibilityLabelId}
               {...props}
-              className={variant === 'primary' ? primaryTabLabelCss : undefined}
             />
           ))}
         <Collapsible collapsed={!count} direction="horizontal" paddingStart={0.5} role="status">

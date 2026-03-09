@@ -88,7 +88,6 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     return (
       <Path
-        {...props}
         animate={animate}
         clipRect={null}
         d={d}
@@ -99,6 +98,7 @@ export const DefaultBar = memo<DefaultBarProps>(
           enter: enterTransition,
           update: updateTransition,
         }}
+        {...props}
       />
     );
   },

@@ -164,15 +164,15 @@ export const SidebarItem = memo(
         () => (
           <Pressable
             ref={ref}
-            className={pressableCss}
-            {...pressableProps}
             accessibilityLabel={isCollapsed ? accessibilityLabel : undefined}
             aria-current={active ? 'page' : undefined}
             background="bgPrimaryWash"
             borderRadius={borderRadius ?? (isDefaultVariant ? 1000 : 400)}
             borderWidth={isDefaultVariant ? undefined : 0}
+            className={pressableCss}
             transparentWhileInactive={!active}
             width="100%"
+            {...pressableProps}
           >
             {Component ? (
               <Component

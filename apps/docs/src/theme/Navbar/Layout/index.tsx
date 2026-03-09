@@ -18,10 +18,10 @@ function NavbarBackdrop(props: ComponentProps<'div'>) {
   }
   return (
     <div
-      {...props}
       className={clsx('navbar-sidebar__backdrop', props.className)}
       onClick={mobileSidebar.toggle}
       role="presentation"
+      {...props}
     />
   );
 }

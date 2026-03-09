@@ -124,13 +124,13 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends stri
 
   const switchNode = (
     <Control
-      {...props}
       ref={ref}
       accessible
       shouldUseSwitchTransition
       accessibilityRole="switch"
       label={children}
       style={controlStyles}
+      {...props}
     >
       {SwitchIcon}
     </Control>
