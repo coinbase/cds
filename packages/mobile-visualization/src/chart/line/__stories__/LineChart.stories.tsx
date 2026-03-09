@@ -52,7 +52,6 @@ import {
   type AxisBounds,
   buildTransition,
   defaultTransition,
-  getLineData,
   projectPointWithSerializableScale,
   type Transition,
   unwrapAnimatedValue,
