@@ -17,14 +17,15 @@ export const Tooltip = ({
   elevation,
   placement = 'top',
   gap = 1,
-  disablePortal,
   testID,
   zIndex,
   tooltipId: tooltipIdDefault,
   visible,
+  hasInteractiveContent,
   invertColorScheme = true,
-  disableFocusTrap,
-  disableAutoFocus,
+  disableAutoFocus = hasInteractiveContent,
+  disableFocusTrap = hasInteractiveContent,
+  disablePortal = hasInteractiveContent,
   disableTypeFocus,
   focusTabIndexElements,
   respectNegativeTabIndex,
@@ -49,10 +50,17 @@ export const Tooltip = ({
   );
 
   const clonedChild = useMemo(() => {
-    return cloneElement(children, {
-      'aria-describedby': tooltipId,
-    });
-  }, [children, tooltipId]);
+    const isStringContent = typeof content === 'string';
+    return cloneElement(
+      children,
+      // String content: Use only aria-label so the trigger is announced on focus without
+      // double announcement (aria-describedby would point to the same text when the tooltip is open).
+      // Non-string content: Use only aria-describedby to associate the visible tooltip (id=tooltipId).
+      // We cannot use aria-label here (it accepts only strings). May not announce on focus for
+      // non-button triggers due to timing (describedby target mounts when tooltip opens).
+      isStringContent ? { 'aria-label': content } : { 'aria-describedby': tooltipId },
+    );
+  }, [children, content, tooltipId]);
 
   const contentPosition = useMemo(
     () => ({
@@ -62,6 +70,18 @@ export const Tooltip = ({
   );
 
   const isVisible = useMemo(() => visible !== false && isOpen, [visible, isOpen]);
+
+  const handleBlur = useCallback(
+    (event?: React.FocusEvent) => {
+      const relatedTarget = event?.relatedTarget as Node | null;
+      const currentTarget = event?.currentTarget as Node | null;
+      if (relatedTarget && currentTarget?.contains(relatedTarget)) {
+        return;
+      }
+      handleOnBlur();
+    },
+    [handleOnBlur],
+  );
 
   return (
     <Popover
@@ -85,7 +105,7 @@ export const Tooltip = ({
       disableTypeFocus={disableTypeFocus}
       focusTabIndexElements={focusTabIndexElements}
       invertColorScheme={invertColorScheme}
-      onBlur={handleOnBlur}
+      onBlur={handleBlur}
       onFocus={handleOnFocus}
       onMouseDown={preventMouseDown}
       onMouseEnter={handleMouseEnter}
