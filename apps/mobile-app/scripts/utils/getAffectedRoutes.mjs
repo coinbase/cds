@@ -5,6 +5,10 @@ import pkg from '../../package.json' with { type: 'json' };
 
 import { routes } from './routes.mjs';
 
+const IGNORE_CHANGED_FILES_REGEX =
+  /^((CHANGELOG|README|MIGRATION|CONTRIBUTING)(\.md)?|[^/]+\.yml|OWNERS|project\.json|[^/]+\.[dD]ockerfile|tsconfig\.json|jest\.config\.js|\.?eslint.*)$/;
+const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$)/;
+
 /**
  * Returns an array of changed filepaths between a branch and another base branch
  */
@@ -73,13 +77,27 @@ const getImportPathsFromFiles = (files, sourceDirectories, workspaceDirectoryMap
   });
 
 /**
+ * Returns true when a changed file should impact mobile visreg.
+ */
+const isFileVisregRelevant = (file, sourceDirectories) => {
+  const matchingDirectory = sourceDirectories.find((directory) => file.startsWith(directory));
+  if (!matchingDirectory) {
+    return false;
+  }
+
+  const relativeFilePath = file.slice(matchingDirectory.length + 1);
+  return (
+    !DEV_FILES_REGEX.test(relativeFilePath) && !IGNORE_CHANGED_FILES_REGEX.test(relativeFilePath)
+  );
+};
+
+/**
  * Returns an object with a boolean for whether the common package changed and an array of
  * ui-mobile-playground route keys that were affected by the changed files.
  */
 export const getAffectedRoutes = async (log = false) => {
   const baseBranch = process.env.BUILDKITE_PULL_REQUEST_BASE_BRANCH || 'master';
   const changedFiles = getChangedFilesOnBranch('HEAD', baseBranch);
-  const commonChanged = changedFiles.some((file) => file.match('^packages/common/.*/'));
   const workspaceDependencies = getWorkspaceDependencies(pkg.dependencies);
 
   const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
@@ -90,12 +108,10 @@ export const getAffectedRoutes = async (log = false) => {
   const workspaceDirectoryMap = getWorkspaceDirectoryMap(workspaceDependencies, tsconfigPaths);
   const sourceDirectories = Object.values(workspaceDirectoryMap).flat();
 
-  // The relevantChangedFiles don't include packages/common files because cds-common is not in the
-  // package.json. This won't matter because we just run all the tests if any of the files in
-  // packages/common changed.
   const relevantChangedFiles = changedFiles.filter((file) =>
-    sourceDirectories.some((directory) => file.startsWith(directory)),
+    isFileVisregRelevant(file, sourceDirectories),
   );
+  const commonChanged = relevantChangedFiles.some((file) => file.startsWith('packages/common/'));
 
   const affectedImportPaths = getImportPathsFromFiles(
     relevantChangedFiles,
