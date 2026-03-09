@@ -1,4 +1,4 @@
-import type { Animated, LayoutRectangle, ViewProps } from 'react-native';
+import type { AccessibilityState, Animated, LayoutRectangle, ViewProps } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type {
   BaseTooltipPlacement,
@@ -74,6 +74,14 @@ export type TooltipBaseProps = SharedProps &
      * is read correctly for voice-overs.
      */
     accessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
+    /**
+     * Accessibility state for the trigger (e.g. disabled). Screen readers announce
+     * it (e.g. "dimmed" on iOS) and do not activate on double-tap.
+     * @note Setting `disabled` here is equivalent to the top-level `disabled` prop
+     * (platform-dependent), so set e.g. `{ disabled: true }` only when a screen
+     * reader is active to avoid blocking touch/press for other users.
+     */
+    accessibilityState?: AccessibilityState;
   };
 
 export type TooltipProps = TooltipBaseProps;

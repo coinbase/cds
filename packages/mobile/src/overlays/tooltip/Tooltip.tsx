@@ -21,6 +21,7 @@ export const Tooltip = memo(
     accessibilityHint,
     accessibilityLabelForContent,
     accessibilityHintForContent,
+    accessibilityState,
     visible,
     invertColorScheme = true,
     elevation,
@@ -105,8 +106,9 @@ export const Tooltip = memo(
           typeof children === 'string' && accessibilityHint === undefined
             ? children
             : accessibilityHint,
+        accessibilityState,
       }),
-      [children, accessibilityLabel, accessibilityHint],
+      [children, accessibilityLabel, accessibilityHint, accessibilityState],
     );
 
     const accessibilityPropsForContent = useMemo(

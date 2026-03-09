@@ -83,8 +83,6 @@ function Example() {
 
 The `disabledDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
 
-The `disabledDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
-
 Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props.
 
 ```jsx live
@@ -222,7 +220,7 @@ function Example() {
 
 ## Styling
 
-DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/) for the input (`classNames.dateInput`, `styles.dateInput`) plus [Calendar](/components/other/Calendar/) slots via `classNames.calendar` and `styles.calendar`.
 
 ### Compact
 
@@ -591,11 +589,11 @@ function Example() {
 
 ## Event Lifecycle
 
-- Selecting a date with the native picker (mobile) or Calendar (web):
+- Selecting a date with the Calendar:
 
   `onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose`
 
-- Closing the native picker (mobile) or Calendar (web) without selecting a date:
+- Closing the Calendar without selecting a date:
 
   `onOpen -> onCancel -> onClose`
 

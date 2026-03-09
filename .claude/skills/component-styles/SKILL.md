@@ -64,6 +64,7 @@ Review the component's JSX to identify elements that should be targetable via st
 | `accessory`           | Accessory element (e.g., chevron, icon at end)        |
 | `activeIndicator`     | Active indicator element (e.g., in tabs)              |
 | `bottomContent`       | Bottom section content                                |
+| `calendarDayCell`     | Individual date cell in a calendar grid               |
 | `carousel`            | Main carousel track element                           |
 | `carouselContainer`   | Outer carousel container                              |
 | `childrenContainer`   | Container wrapping children                           |

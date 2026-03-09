@@ -105,6 +105,8 @@ export type DrawerBaseProps = SharedProps &
      * the slide transform so the drawer follows the user's finger naturally.
      */
     reduceMotion?: boolean;
+    /** Callback fired when the open animation completes. */
+    onOpenComplete?: () => void;
   };
 
 export type DrawerProps = DrawerBaseProps & {
@@ -147,6 +149,7 @@ export const Drawer = memo(
       accessibilityLabel,
       accessibilityLabelledBy,
       reduceMotion,
+      onOpenComplete,
       style,
       styles,
       accessibilityRole = 'alert',
@@ -203,10 +206,11 @@ export const Drawer = memo(
         Animated.parallel([animateOverlayIn, animateDrawerIn]).start(({ finished }) => {
           if (finished) {
             isMounted.current = true;
+            onOpenComplete?.();
           }
         });
       }
-    }, [drawerAnimation, animateDrawerIn, animateOverlayIn]);
+    }, [drawerAnimation, animateDrawerIn, animateOverlayIn, onOpenComplete]);
 
     const panGestureHandlers = useDrawerPanResponder({
       pin,

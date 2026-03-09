@@ -24,6 +24,7 @@ import { HStack } from '../layout/HStack';
 import { VStack, type VStackDefaultElement, type VStackProps } from '../layout/VStack';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import { Text } from '../typography/Text';
 
 const pressableCss = css`
@@ -102,7 +103,71 @@ export type CalendarDayProps = {
   isCurrentMonth?: boolean;
   /** Tooltip content shown when hovering or focusing a disabled Calendar Day. */
   disabledError?: string;
+  /** Custom class name for the date cell (CalendarPressable). */
+  className?: string;
+  /** Custom style for the date cell (CalendarPressable). */
+  style?: React.CSSProperties;
 };
+
+export type CalendarBaseProps = {
+  /** Currently selected Calendar date. Date used to generate the Calendar month. Will be rendered with active styles. */
+  selectedDate?: Date | null;
+  /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
+  seedDate?: Date;
+  /** Callback function fired when pressing a Calendar date. */
+  onPressDate?: (date: Date) => void;
+  /** Disables user interaction. */
+  disabled?: boolean;
+  /** Hides the Calendar next and previous month arrows, but does not prevent navigating to the next or previous months via keyboard. This probably only makes sense to be used when `minDate` and `maxDate` are set to the first and last days of the same month. */
+  hideControls?: boolean;
+  /** Array of disabled dates, and date tuples for date ranges. Make sure to set `disabledDateError` as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
+  disabledDates?: (Date | [Date, Date])[];
+  /** Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
+  highlightedDates?: (Date | [Date, Date])[];
+  /** Minimum date allowed to be selected, inclusive. Dates before the `minDate` are disabled. All navigation to months before the `minDate` is disabled. */
+  minDate?: Date;
+  /** Maximum date allowed to be selected, inclusive. Dates after the `maxDate` are disabled. All navigation to months after the `maxDate` is disabled. */
+  maxDate?: Date;
+  /**
+   * Tooltip content shown when hovering or focusing a disabled date, including dates before the `minDate` or after the `maxDate`.
+   * @default 'Date unavailable'
+   */
+  disabledDateError?: string;
+  /**
+   * Accessibility label describing the Calendar next month arrow.
+   * @default 'Go to next month'
+   */
+  nextArrowAccessibilityLabel?: string;
+  /**
+   * Accessibility label describing the Calendar previous month arrow.
+   * @default 'Go to previous month'
+   */
+  previousArrowAccessibilityLabel?: string;
+  /**
+   * Accessibility hint for the current day when it is not disabled. Omit or leave default for non-localized usage.
+   * @default 'Today'
+   */
+  todayAccessibilityHint?: string;
+};
+
+/**
+ * Static class names for Calendar component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const calendarClassNames = {
+  /** Root element */
+  root: 'cds-Calendar',
+  /** Header section */
+  header: 'cds-Calendar-header',
+  /** Month and year title text element */
+  title: 'cds-Calendar-title',
+  /** Navigation controls element */
+  navigation: 'cds-Calendar-navigation',
+  /** Main content area */
+  content: 'cds-Calendar-content',
+  /** Individual date cell in a calendar grid */
+  calendarDayCell: 'cds-Calendar-calendarDayCell',
+} as const;
 
 const getDayAccessibilityLabel = (date: Date, locale = 'en-US') =>
   `${date.toLocaleDateString(locale, {
@@ -140,6 +205,8 @@ const CalendarDay = memo(
         isCurrentMonth,
         onClick,
         disabledError = 'Date unavailable',
+        className,
+        style,
       },
       ref,
     ) => {
@@ -156,9 +223,12 @@ const CalendarDay = memo(
             aria-pressed={active ? 'true' : undefined}
             background={active ? 'bgPrimary' : 'bg'}
             borderColor={isToday ? 'bgPrimary' : undefined}
+            className={className}
             data-calendar-date={getISOStringLocal(date)}
+            data-highlight={highlighted ? 'true' : undefined}
             disabled={disabled}
             onClick={disabled ? undefined : handleClick}
+            style={style}
             tabIndex={date.getDate() === 1 ? undefined : -1}
           >
             <Text color={active ? 'fgInverse' : highlighted ? 'fgPrimary' : undefined} font="body">
@@ -166,7 +236,18 @@ const CalendarDay = memo(
             </Text>
           </CalendarPressable>
         ),
-        [date, active, disabled, highlighted, isToday, accessibilityLabel, handleClick, ref],
+        [
+          date,
+          active,
+          disabled,
+          highlighted,
+          isToday,
+          accessibilityLabel,
+          handleClick,
+          ref,
+          className,
+          style,
+        ],
       );
       if (!isCurrentMonth) return <div />;
       if (!disabled || (disabled && !disabledError)) return calendarDayButton;
@@ -179,43 +260,20 @@ const CalendarDay = memo(
   ),
 );
 
-export type CalendarProps = {
-  /** Currently selected Calendar date. Date used to generate the Calendar month. Will be rendered with active styles. */
-  selectedDate?: Date | null;
-  /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
-  seedDate?: Date;
-  /** Callback function fired when pressing a Calendar date. */
-  onPressDate?: (date: Date) => void;
-  /** Disables user interaction. */
-  disabled?: boolean;
-  /** Hides the Calendar next and previous month arrows, but does not prevent navigating to the next or previous months via keyboard. This probably only makes sense to be used when `minDate` and `maxDate` are set to the first and last days of the same month. */
-  hideControls?: boolean;
-  /** Array of disabled dates, and date tuples for date ranges. Make sure to set `disabledDateError` as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
-  disabledDates?: (Date | [Date, Date])[];
-  /** Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
-  highlightedDates?: (Date | [Date, Date])[];
-  /** Minimum date allowed to be selected, inclusive. Dates before the `minDate` are disabled. All navigation to months before the `minDate` is disabled. */
-  minDate?: Date;
-  /** Maximum date allowed to be selected, inclusive. Dates after the `maxDate` are disabled. All navigation to months after the `maxDate` is disabled. */
-  maxDate?: Date;
-  /**
-   * Tooltip content shown when hovering or focusing a disabled date, including dates before the `minDate` or after the `maxDate`.
-   * @default 'Date unavailable'
-   */
-  disabledDateError?: string;
-  /**
-   * Accessibility label describing the Calendar next month arrow.
-   * @default 'Go to next month'
-   */
-  nextArrowAccessibilityLabel?: string;
-  /**
-   * Accessibility label describing the Calendar previous month arrow.
-   * @default 'Go to previous month'
-   */
-  previousArrowAccessibilityLabel?: string;
-  className?: string;
-  style?: React.CSSProperties;
-} & Omit<VStackProps<VStackDefaultElement>, 'children' | 'ref'>;
+export type CalendarProps = CalendarBaseProps &
+  StylesAndClassNames<typeof calendarClassNames> &
+  Omit<VStackProps<VStackDefaultElement>, 'children' | 'ref'> & {
+    /**
+     * Custom class name for the root container.
+     * @deprecated Use `classNames.root` instead.
+     */
+    className?: string;
+    /**
+     * Custom style for the root container.
+     * @deprecated Use `styles.root` instead.
+     */
+    style?: React.CSSProperties;
+  };
 
 // These could be dynamically generated, but our Calendar and DatePicker aren't localized so there's no point
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -236,6 +294,8 @@ export const Calendar = memo(
         disabledDateError = 'Date unavailable',
         className,
         style,
+        classNames,
+        styles,
         nextArrowAccessibilityLabel = 'Go to next month',
         previousArrowAccessibilityLabel = 'Go to previous month',
         ...props
@@ -376,33 +436,52 @@ export const Calendar = memo(
         return () => window.removeEventListener('keydown', handleCalendarFocus);
       }, [handleCalendarFocus]);
 
+      const rootClassName = cx(calendarClassNames.root, className, classNames?.root);
+      const rootStyle = useMemo(
+        () => (style || styles?.root ? { ...style, ...styles?.root } : undefined),
+        [style, styles?.root],
+      );
+
       return (
         <VStack
           ref={calendarRef}
           background="bg"
           borderRadius={400}
-          className={className}
+          className={rootClassName}
           opacity={disabled ? accessibleOpacityDisabled : undefined}
           overflow="auto"
           padding={2}
-          style={style}
+          style={rootStyle}
           width={360}
           {...props}
         >
           <HStack
             alignItems="center"
+            className={cx(calendarClassNames.header, classNames?.header)}
             justifyContent="space-between"
             paddingBottom={2}
             paddingX={1.5}
+            style={styles?.header}
           >
-            <Text as="h3" display="block" font="headline">
+            <Text
+              as="h3"
+              className={cx(calendarClassNames.title, classNames?.title)}
+              display="block"
+              font="headline"
+              style={styles?.title}
+            >
               {calendarSeedDate.toLocaleDateString('en-US', {
                 month: 'long',
                 year: 'numeric',
               })}
             </Text>
             {!hideControls && (
-              <HStack gap={1} marginEnd={-1}>
+              <HStack
+                className={cx(calendarClassNames.navigation, classNames?.navigation)}
+                gap={1}
+                marginEnd={-1}
+                style={styles?.navigation}
+              >
                 <CalendarPressable
                   accessibilityLabel={previousArrowAccessibilityLabel}
                   background="bg"
@@ -422,7 +501,13 @@ export const Calendar = memo(
               </HStack>
             )}
           </HStack>
-          <Grid gap={1} justifyContent="space-between" templateColumns="repeat(7, 40px)">
+          <Grid
+            className={cx(calendarClassNames.content, classNames?.content)}
+            gap={1}
+            justifyContent="space-between"
+            style={styles?.content}
+            templateColumns="repeat(7, 40px)"
+          >
             {daysOfWeek.map((day) => (
               <VStack key={day} alignItems="center" height={40} justifyContent="center" width={40}>
                 <Text font="body" userSelect="none">
@@ -436,6 +521,7 @@ export const Calendar = memo(
                 <CalendarDay
                   key={time}
                   active={time === selectedTime}
+                  className={cx(calendarClassNames.calendarDayCell, classNames?.calendarDayCell)}
                   date={date}
                   disabled={
                     disabled ||
@@ -448,6 +534,7 @@ export const Calendar = memo(
                   isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
                   isToday={time === today.getTime()}
                   onClick={onPressDate}
+                  style={styles?.calendarDayCell}
                 />
               );
             })}

@@ -5,7 +5,7 @@ import {
   animateDropdownTransformInConfig,
   animateDropdownTransformOutConfig,
 } from '@coinbase/cds-common/animation/dropdown';
-import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import type { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 import { getISOStringLocal } from '@coinbase/cds-common/dates/getISOStringLocal';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
@@ -24,7 +24,7 @@ import { DateInput, type DateInputProps } from './DateInput';
 
 const MotionVStack = motion(VStack);
 
-export type DatePickerProps = {
+export type DatePickerBaseProps = {
   /** Control the date value of the DatePicker. */
   date: Date | null;
   /** Callback function fired when the date changes, e.g. when a valid date is selected or unselected. */
@@ -42,22 +42,39 @@ export type DatePickerProps = {
   /** Maximum date allowed to be selected, inclusive. Dates after the `maxDate` are disabled. All navigation to months after the `maxDate` is disabled. */
   maxDate?: Date;
   /**
-   * Error text to display when a disabled date is selected with the DateInput, including dates before the `minDate` or after the `maxDate`. Also used as the tooltip content shown when hovering or focusing a disabled date on the Calendar.
+   * Error text to display when a disabled date is selected with the DateInput, including dates before the `minDate` or after the `maxDate`.
    * @default 'Date unavailable'
    */
   disabledDateError?: string;
+  /** Callback function fired when the picker is opened. */
+  onOpen?: () => void;
+  /** Callback function fired when the picker is closed. Will always be called after `onCancel`, `onConfirm`, and `onChangeDate`. */
+  onClose?: () => void;
+  /** Callback function fired when the user selects a date using the picker. Interacting with the DateInput does not fire this callback. Will always be called before `onClose`. */
+  onConfirm?: () => void;
+  /** Callback function fired when the user closes the picker without selecting a date. Interacting with the DateInput does not fire this callback. Will always be called before `onClose`. */
+  onCancel?: () => void;
+  /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
+  seedDate?: Date;
+  /** Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
+  highlightedDates?: (Date | [Date, Date])[];
+  /**
+   * Accessibility label describing the Calendar next month arrow.
+   * @default 'Go to next month'
+   */
+  nextArrowAccessibilityLabel?: string;
+  /**
+   * Accessibility label describing the Calendar previous month arrow.
+   * @default 'Go to previous month'
+   */
+  previousArrowAccessibilityLabel?: string;
+};
+
+export type DatePickerProps = DatePickerBaseProps & {
   /** Control the default open state of the Calendar popover. */
   defaultOpen?: boolean;
   /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  /** Callback function fired when the Calendar popover is opened.  */
-  onOpen?: () => void;
-  /** Callback function fired when the Calendar popover is closed. Will always be called after `onCancel`, `onConfirm`, and `onChangeDate`.  */
-  onClose?: () => void;
-  /** Callback function fired when the user selects a date using the Calendar popover. Interacting with the DateInput does not fire this callback. Will always be called before `onClose`. */
-  onConfirm?: () => void;
-  /** Callback function fired when the user closes the Calendar popover without selecting a date. Interacting with the DateInput does not fire this callback. Will always be called before `onClose`. */
-  onCancel?: () => void;
   /**
    * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
    *
@@ -70,30 +87,54 @@ export type DatePickerProps = {
    * @default 'Open calendar' / 'Close calendar'
    */
   calendarIconButtonAccessibilityLabel?: string;
+  /**
+   * Custom style to apply to the Calendar container.
+   * @deprecated Use `styles.calendar` instead.
+   */
   calendarStyle?: React.CSSProperties;
+  /**
+   * Custom class name to apply to the Calendar container.
+   * @deprecated Use `classNames.calendar` instead.
+   */
   calendarClassName?: string;
+  /**
+   * Custom style to apply to the DateInput.
+   * @deprecated Use `styles.dateInput` instead.
+   */
   dateInputStyle?: React.CSSProperties;
+  /**
+   * Custom class name to apply to the DateInput.
+   * @deprecated Use `classNames.dateInput` instead.
+   */
   dateInputClassName?: string;
+  /** Custom class names for the DateInput and Calendar subcomponents. */
+  classNames?: {
+    dateInput?: string;
+    calendar?: string;
+  };
+  /** Custom styles for the DateInput and Calendar subcomponents. */
+  styles?: {
+    dateInput?: React.CSSProperties;
+    calendar?: React.CSSProperties;
+  };
 } & Omit<
-  DateInputProps,
-  | 'date'
-  | 'separator'
-  | 'onChangeDate'
-  | 'disabledDates'
-  | 'minDate'
-  | 'maxDate'
-  | 'disabledDateError'
-  | 'className'
-  | 'style'
-> &
+    DateInputProps,
+    | 'date'
+    | 'separator'
+    | 'onChangeDate'
+    | 'disabledDates'
+    | 'minDate'
+    | 'maxDate'
+    | 'disabledDateError'
+    | 'className'
+    | 'style'
+  > &
   Pick<
     CalendarProps,
     | 'seedDate'
     | 'highlightedDates'
     | 'nextArrowAccessibilityLabel'
     | 'previousArrowAccessibilityLabel'
-    | 'className'
-    | 'style'
   > &
   Pick<PopoverProps, 'showOverlay'>;
 
@@ -148,6 +189,8 @@ export const DatePicker = memo(
         calendarClassName,
         dateInputStyle,
         dateInputClassName,
+        classNames,
+        styles,
         width = '100%',
         onOpen,
         onClose,
@@ -235,7 +278,7 @@ export const DatePicker = memo(
             {...props}
             accessibilityLabel={accessibilityLabel}
             accessibilityLabelledBy={accessibilityLabelledBy}
-            className={dateInputClassName}
+            className={classNames?.dateInput ?? dateInputClassName}
             compact={compact}
             date={date}
             disabled={disabled}
@@ -253,7 +296,7 @@ export const DatePicker = memo(
             onErrorDate={onErrorDate}
             required={required}
             requiredError={requiredError}
-            style={dateInputStyle}
+            style={styles?.dateInput ?? dateInputStyle}
             variant={variant}
           />
         ),
@@ -280,6 +323,8 @@ export const DatePicker = memo(
           variant,
           dateInputClassName,
           dateInputStyle,
+          classNames,
+          styles,
           props,
         ],
       );
@@ -299,6 +344,7 @@ export const DatePicker = memo(
             <Calendar
               ref={calendarRef}
               className={calendarClassName}
+              classNames={{ root: classNames?.calendar }}
               disabled={disabled}
               disabledDateError={disabledDateError}
               disabledDates={disabledDates}
@@ -311,6 +357,7 @@ export const DatePicker = memo(
               seedDate={seedDate}
               selectedDate={date}
               style={calendarStyle}
+              styles={{ root: styles?.calendar }}
             />
           </MotionVStack>
         ),
@@ -325,10 +372,12 @@ export const DatePicker = memo(
           disabledDateError,
           handleConfirmCalendarDate,
           calendarRef,
-          calendarStyle,
-          calendarClassName,
           nextArrowAccessibilityLabel,
           previousArrowAccessibilityLabel,
+          calendarClassName,
+          calendarStyle,
+          classNames,
+          styles,
         ],
       );
 
