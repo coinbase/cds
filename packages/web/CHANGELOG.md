@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.51.0 (3/9/2026 PST)
+
+#### 🚀 Updates
+
+- Added hasInteractiveContent prop to Tooltip to correctly handle keyboard navigation when content includes interactive elements. [[#469](https://github.com/coinbase/cds/pull/469)] [DX-5097]
+
+#### 🐞 Fixes
+
+- Fixed issue when tooltip does not announce its content when content is a React Node instead of a string. [[#469](https://github.com/coinbase/cds/pull/469)]
+
 ## 8.50.0 (3/6/2026 PST)
 
 #### 🚀 Updates
