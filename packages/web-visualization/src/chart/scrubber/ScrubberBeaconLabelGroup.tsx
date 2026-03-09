@@ -166,10 +166,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       return getTransition(transitions?.update, animate, defaultTransition);
     }, [transitions?.update, isIdle, animate, isIdleTransition]);
 
-    if (layout === 'horizontal') {
-      return null;
-    }
-
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 
     const handleDimensionsChange = useCallback((seriesId: string, dimensions: LabelDimensions) => {
@@ -320,6 +316,10 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       const categoryPixelPos = getPointOnScale(dataIndexValue, indexScaleFallback);
       return getLabelPosition(categoryPixelPos, maxWidth, drawingArea.width, labelHorizontalOffset);
     }, [dataIndexValue, indexScaleFallback, labelDimensions, drawingArea, labelHorizontalOffset]);
+
+    if (layout === 'horizontal') {
+      return null;
+    }
 
     return seriesInfo.map((info, index) => {
       const labelInfo = labels.find((label) => label.seriesId === info.seriesId);

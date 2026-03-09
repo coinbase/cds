@@ -2,7 +2,6 @@ import {
   type AxisBounds,
   type ChartInset,
   defaultChartInset,
-  defaultHorizontalChartInset,
   defaultHorizontalLayoutChartInset,
   defaultStackId,
   defaultVerticalLayoutChartInset,
@@ -396,12 +395,8 @@ describe('defaultHorizontalLayoutChartInset', () => {
 });
 
 describe('deprecated chart inset aliases', () => {
-  it('maps defaultHorizontalChartInset to defaultHorizontalLayoutChartInset', () => {
-    expect(defaultHorizontalChartInset).toEqual(defaultHorizontalLayoutChartInset);
-  });
-
-  it('maps defaultChartInset to defaultHorizontalLayoutChartInset', () => {
-    expect(defaultChartInset).toEqual(defaultHorizontalLayoutChartInset);
+  it('maps defaultChartInset to defaultVerticalLayoutChartInset', () => {
+    expect(defaultChartInset).toEqual(defaultVerticalLayoutChartInset);
   });
 });
 
