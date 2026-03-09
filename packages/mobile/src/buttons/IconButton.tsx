@@ -4,6 +4,7 @@ import { transparentVariants, variants } from '@coinbase/cds-common/tokens/butto
 import type {
   IconButtonVariant,
   IconName,
+  IconSize,
   NegativeSpace,
   SharedProps,
 } from '@coinbase/cds-common/types';
@@ -19,6 +20,11 @@ export type IconButtonBaseProps = SharedProps &
   Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush' | 'loading'> & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
+    /**
+     * Size for the icon rendered inside the button.
+     * @default compact ? 's' : 'm'
+     */
+    iconSize?: IconSize;
     /** Whether the icon is active */
     active?: boolean;
     /**
@@ -39,6 +45,7 @@ export const IconButton = memo(function IconButton({
   background,
   color,
   borderColor,
+  iconSize = compact ? 's' : 'm',
   borderWidth = 0, // remove Pressable's default transparent border
   borderRadius = 1000,
   feedback = compact ? 'light' : 'normal',
@@ -50,7 +57,6 @@ export const IconButton = memo(function IconButton({
   ...props
 }: IconButtonProps) {
   const theme = useTheme();
-  const iconSize = compact ? 's' : 'm';
 
   const variantMap = transparent ? transparentVariants : variants;
   const variantStyle = variantMap[variant];

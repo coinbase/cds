@@ -166,17 +166,17 @@ export const Popover = memo(
         refs.setFloating,
         floatingStyles,
         handleCaptureEvents,
-        handleClose,
-        testID,
-        content,
-        controlledElementAccessibilityProps,
-        disableFocusTrap,
+        autoFocusDelay,
         disableAutoFocus,
+        disableFocusTrap,
         disableTypeFocus,
         focusTabIndexElements,
+        handleClose,
         respectNegativeTabIndex,
-        autoFocusDelay,
         restoreFocusOnUnmount,
+        testID,
+        controlledElementAccessibilityProps,
+        content,
       ],
     );
 
@@ -201,13 +201,13 @@ export const Popover = memo(
     return (
       <div
         className={block ? blockCss : undefined}
+        onBlur={onBlur}
         onMouseEnter={disabled ? undefined : onMouseEnter}
         onMouseLeave={disabled ? undefined : onMouseLeave}
       >
         <div
           ref={refs.setReference}
           className={cx(subjectCss, block && blockCss)}
-          onBlur={onBlur}
           onClick={disabled ? undefined : onPressSubject}
           onFocus={disabled ? undefined : onFocus}
           onMouseDown={disabled ? undefined : onMouseDown}

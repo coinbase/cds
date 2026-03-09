@@ -82,7 +82,7 @@ You can use tooltips within `TextInput` to provide more context.
       <InputLabel htmlFor="tooltip-input-example">Display name</InputLabel>
       {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
       <Tooltip content="This will be visible to other users.">
-        <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+        <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} role="button" />
       </Tooltip>
     </HStack>
   }
@@ -108,6 +108,92 @@ function TooltipVisibilityDelay() {
         <Button>Open 400 / Close 150</Button>
       </Tooltip>
     </HStack>
+  );
+}
+```
+
+### Accessibility (A11y)
+
+When tooltip content is non-interactive (text only), focus stays on the trigger and the tooltip is rendered in a portal. When tooltip content has **interactive elements** (links, buttons), set **`hasInteractiveContent={true}`** so the tooltip stays in the document flow and keyboard users can tab into the content. This sets `disablePortal`, `disableAutoFocus`, and `disableFocusTrap` appropriately.
+
+**Tooltip on an icon (or other non-button anchor):**
+
+When using an Icon (or other non-`<button>` element) as the tooltip trigger, add **`role="button"`** and **`tabIndex={0}`** so screen readers (e.g. VoiceOver) can discover it with arrow keys and announce the tooltip. If the icon performs an action on click, use **IconButton** instead so the trigger is a real `<button>`.
+
+**Example: tooltip on an icon (string content)**
+
+```jsx live
+function TooltipIconStringContent() {
+  return (
+    <HStack alignItems="center" gap={2}>
+      <Tooltip content="This will be visible to other users.">
+        <Icon active color="fg" name="info" role="button" tabIndex={0} />
+      </Tooltip>
+      <Text as="span" font="body" color="fgMuted">
+        Focus the icon to hear the tooltip announced.
+      </Text>
+    </HStack>
+  );
+}
+```
+
+**Example: tooltip on an icon (React node content)**
+
+```jsx live
+function TooltipIconReactNodeContent() {
+  return (
+    <HStack alignItems="center" gap={2}>
+      <Tooltip
+        content={
+          <Text font="label2">
+            Styled <strong>description</strong> text.
+          </Text>
+        }
+      >
+        <Icon active color="fg" name="info" role="button" tabIndex={0} />
+      </Tooltip>
+      <Text as="span" font="body" color="fgMuted">
+        Focus the icon to hear the tooltip announced.
+      </Text>
+    </HStack>
+  );
+}
+```
+
+**When tooltip content is interactive (links, buttons):**
+
+- Prefer **Modal** or another pattern for actionable content when possible. Tooltips are intended for short, non-interactive descriptions.
+- If you must use interactive content inside a tooltip, set **`hasInteractiveContent={true}`** so the content stays in the document flow. The prop allows keyboard users to tab into the tooltip, through its content, and out to the next focusable element on the page. With the default portal, focus behavior can be inconsistent when moving between trigger and content.
+
+**Example: tooltip with interactive content**
+
+```jsx live
+function TooltipWithInteractiveContent() {
+  return (
+    <Box position="relative" paddingY={5}>
+      <Text as="span" font="body" color="fgMuted">
+        Set your default display currency.{' '}
+      </Text>
+      <Tooltip
+        content={
+          <Text font="label2" color="fg">
+            Learn more at{' '}
+            <Text
+              as="a"
+              href="https://www.coinbase.com/settings"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Settings
+            </Text>
+            .
+          </Text>
+        }
+        hasInteractiveContent
+      >
+        <Icon active color="fg" name="info" paddingStart={1} role="button" tabIndex={0} />
+      </Tooltip>
+    </Box>
   );
 }
 ```
