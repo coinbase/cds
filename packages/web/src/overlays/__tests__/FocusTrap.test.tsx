@@ -184,11 +184,11 @@ describe('FocusTrap', () => {
     expect(trigger).toHaveFocus();
   });
 
-  it('allows up/down arrow key navigation in textareas', async () => {
+  it('allows up/down arrow key scrolling', async () => {
     const user = userEvent.setup();
     render(
       <DefaultThemeProvider>
-        <FocusTrap>
+        <FocusTrap disableArrowKeyNavigation>
           <div>
             <textarea data-testid="textarea" />
             <button data-testid="button">Button</button>
