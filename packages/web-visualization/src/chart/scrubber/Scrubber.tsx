@@ -461,34 +461,20 @@ export const Scrubber = memo(
           {!hideLine &&
             scrubberPosition !== undefined &&
             dataValue !== undefined &&
-            dataIndex !== undefined &&
-            (categoryAxisIsX ? (
+            dataIndex !== undefined && (
               <ReferenceLine
                 LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
                 classNames={{ label: classNames?.label, line: classNames?.line }}
-                dataX={dataValue}
                 label={typeof label === 'function' ? label(dataIndex) : label}
                 labelBoundsInset={labelBoundsInset}
                 labelElevated={labelElevated}
                 labelFont={labelFont}
                 stroke={lineStroke}
                 styles={{ label: styles?.label, line: styles?.line }}
+                {...(categoryAxisIsX ? { dataX: dataValue } : { dataY: dataValue })}
               />
-            ) : (
-              <ReferenceLine
-                LabelComponent={LabelComponent}
-                LineComponent={LineComponent}
-                classNames={{ label: classNames?.label, line: classNames?.line }}
-                dataY={dataValue}
-                label={typeof label === 'function' ? label(dataIndex) : label}
-                labelBoundsInset={labelBoundsInset}
-                labelElevated={labelElevated}
-                labelFont={labelFont}
-                stroke={lineStroke}
-                styles={{ label: styles?.label, line: styles?.line }}
-              />
-            ))}
+            )}
           <ScrubberBeaconGroup
             ref={beaconGroupRef}
             BeaconComponent={BeaconComponent}
