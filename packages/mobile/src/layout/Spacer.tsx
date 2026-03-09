@@ -79,7 +79,5 @@ export const Spacer = memo(function Spacer({
     ],
   );
 
-  return (
-    <Component accessibilityRole="none" style={styles} {...viewProps} />
-  );
+  return <Component accessibilityRole="none" style={styles} {...viewProps} />;
 });

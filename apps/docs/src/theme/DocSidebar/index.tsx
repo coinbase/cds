@@ -5,7 +5,7 @@ import type { Props } from '@theme/DocSidebar';
 import DocSidebarDesktop from '@theme/DocSidebar/Desktop';
 import DocSidebarMobile from '@theme/DocSidebar/Mobile';
 
-export default function DocSidebar(props: Props): JSX.Element {
+export default function DocSidebar({ sidebar, ...props }: Props): JSX.Element {
   const windowSize = useWindowSizeWithBreakpointOverride();
 
   const filterItems = (items: PropSidebarItem[] = []): PropSidebarItem[] => {
@@ -13,7 +13,7 @@ export default function DocSidebar(props: Props): JSX.Element {
   };
 
   // Filter the sidebar items
-  const filteredSidebar = filterItems([...props.sidebar]);
+  const filteredSidebar = filterItems([...sidebar]);
 
   // Desktop sidebar visible on hydration: need SSR rendering
   const shouldRenderSidebarDesktop = windowSize === 'desktop' || windowSize === 'ssr';
