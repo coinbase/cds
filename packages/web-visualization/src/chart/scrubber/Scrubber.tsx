@@ -51,19 +51,15 @@ export type ScrubberBeaconBaseProps = {
    */
   color?: string;
   /**
-   * Value on the scrubber index axis in data space.
-   * In vertical layout this maps to X, and in horizontal layout this maps to Y.
-   */
-  dataIndexValue: number;
-  /**
    * X coordinate in data space.
-   *
-   * @deprecated Use `dataIndexValue` + `dataY` instead.
-   * This prop is only set in vertical layout for backward compatibility.
+   * In vertical layout this is the scrubber index-axis value.
+   * In horizontal layout this is the series value.
    */
-  dataX?: number;
+  dataX: number;
   /**
-   * Series value at the current scrubber index in data space.
+   * Y coordinate in data space.
+   * In vertical layout this is the series value.
+   * In horizontal layout this is the scrubber index-axis value.
    */
   dataY: number;
   /**

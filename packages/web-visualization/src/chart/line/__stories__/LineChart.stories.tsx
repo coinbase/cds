@@ -1412,12 +1412,7 @@ function ForecastAssetPrice() {
           <Scrubber hideOverlay />
         </g>
         <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <DefaultScrubberBeacon
-            dataIndexValue={currentIndex}
-            dataX={currentIndex}
-            dataY={data[currentIndex]}
-            seriesId="price"
-          />
+          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
         </g>
       </m.g>
     );
@@ -1503,51 +1498,45 @@ function MonotoneAssetPrice() {
     [scrubberPriceFormatter, prices, formatDate],
   );
 
-  const CustomScrubberBeacon = memo(
-    ({ dataIndexValue, dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps) => {
-      const { layout, getSeries, getXScale, getYScale } = useCartesianChartContext();
-      const categoryAxisIsX = layout !== 'horizontal';
-      const resolvedDataX = categoryAxisIsX ? (dataX ?? dataIndexValue) : dataY;
-      const resolvedDataY = categoryAxisIsX ? dataY : dataIndexValue;
+  const CustomScrubberBeacon = memo(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps) => {
+    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+    const targetSeries = getSeries(seriesId);
+    const xScale = getXScale();
+    const yScale = getYScale(targetSeries?.yAxisId);
 
-      const targetSeries = getSeries(seriesId);
-      const xScale = getXScale();
-      const yScale = getYScale(targetSeries?.yAxisId);
+    const pixelCoordinate = useMemo(() => {
+      if (!xScale || !yScale) return;
+      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+    }, [dataX, dataY, xScale, yScale]);
 
-      const pixelCoordinate = useMemo(() => {
-        if (!xScale || !yScale) return;
-        return projectPoint({ x: resolvedDataX, y: resolvedDataY, xScale, yScale });
-      }, [resolvedDataX, resolvedDataY, xScale, yScale]);
+    if (!pixelCoordinate) return;
 
-      if (!pixelCoordinate) return;
-
-      if (isIdle) {
-        return (
-          <m.circle
-            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill="var(--color-bg)"
-            r={5}
-            stroke="var(--color-fg)"
-            strokeWidth={3}
-            transition={defaultTransition}
-          />
-        );
-      }
-
+    if (isIdle) {
       return (
-        <circle
+        <m.circle
+          animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
           cx={pixelCoordinate.x}
           cy={pixelCoordinate.y}
           fill="var(--color-bg)"
           r={5}
           stroke="var(--color-fg)"
           strokeWidth={3}
+          transition={defaultTransition}
         />
       );
-    },
-  );
+    }
+
+    return (
+      <circle
+        cx={pixelCoordinate.x}
+        cy={pixelCoordinate.y}
+        fill="var(--color-bg)"
+        r={5}
+        stroke="var(--color-fg)"
+        strokeWidth={3}
+      />
+    );
+  });
 
   return (
     <LineChart

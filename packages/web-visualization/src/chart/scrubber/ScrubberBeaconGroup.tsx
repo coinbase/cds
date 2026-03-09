@@ -117,7 +117,6 @@ const BeaconWithData = memo<BeaconWithDataProps>(
     ]);
 
     if (dataValue === undefined) return null;
-
     const categoryAxisIsX = layout !== 'horizontal';
 
     return (
@@ -126,9 +125,8 @@ const BeaconWithData = memo<BeaconWithDataProps>(
         animate={animate}
         className={className}
         color={color}
-        dataIndexValue={dataIndexValue}
-        dataY={dataValue}
-        {...(categoryAxisIsX ? { dataX: dataIndexValue } : {})}
+        dataX={categoryAxisIsX ? dataIndexValue : dataValue}
+        dataY={categoryAxisIsX ? dataValue : dataIndexValue}
         idlePulse={idlePulse}
         isIdle={isIdle}
         seriesId={seriesId}
