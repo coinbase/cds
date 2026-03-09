@@ -5,7 +5,6 @@ import pkg from '../../package.json' with { type: 'json' };
 
 import { routes } from './routes.mjs';
 
-// Keep this aligned with tools/ci/getAffectedPackages.ts where possible.
 const IGNORE_CHANGED_FILES_REGEX =
   /^((CHANGELOG|README|MIGRATION|CONTRIBUTING)(\.md)?|[^/]+\.yml|OWNERS|project\.json|[^/]+\.[dD]ockerfile|tsconfig\.json|jest\.config\.js|\.?eslint.*)$/;
 const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$)/;
