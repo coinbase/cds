@@ -19,7 +19,7 @@ type BeaconWithDataProps = Pick<
   'seriesId' | 'idlePulse' | 'animate' | 'transitions' | 'stroke' | 'className' | 'style' | 'testID'
 > & {
   dataIndex: number;
-  dataX: number;
+  dataIndexValue: number;
   isIdle: boolean;
   BeaconComponent: ScrubberBeaconComponent;
   beaconRef: (ref: ScrubberBeaconRef | null) => void;
@@ -30,7 +30,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
   ({
     seriesId,
     dataIndex,
-    dataX: dataIndexValue, // In vertical layout, this is actually the index value on Y
+    dataIndexValue,
     isIdle,
     BeaconComponent,
     idlePulse,
@@ -126,8 +126,9 @@ const BeaconWithData = memo<BeaconWithDataProps>(
         animate={animate}
         className={className}
         color={color}
-        dataX={categoryAxisIsX ? dataIndexValue : dataValue}
-        dataY={categoryAxisIsX ? dataValue : dataIndexValue}
+        dataIndexValue={dataIndexValue}
+        dataY={dataValue}
+        {...(categoryAxisIsX ? { dataX: dataIndexValue } : {})}
         idlePulse={idlePulse}
         isIdle={isIdle}
         seriesId={seriesId}
@@ -216,28 +217,28 @@ export const ScrubberBeaconGroup = memo(
         return series?.filter((s) => seriesIds.includes(s.id)) ?? [];
       }, [series, seriesIds]);
 
-      const { dataValue, dataIndex } = useMemo(() => {
+      const { dataIndexValue, dataIndex } = useMemo(() => {
         const categoryAxisIsX = layout !== 'horizontal';
         const indexScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
         const indexAxis = categoryAxisIsX ? getXAxis() : getYAxis();
-        if (!indexScale) return { dataValue: undefined, dataIndex: undefined };
+        if (!indexScale) return { dataIndexValue: undefined, dataIndex: undefined };
 
         const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual data value if axis has data
-        let dataValue: number;
+        let dataIndexValue: number;
         if (
           indexAxis?.data &&
           Array.isArray(indexAxis.data) &&
           indexAxis.data[dataIndex] !== undefined
         ) {
           const val = indexAxis.data[dataIndex];
-          dataValue = typeof val === 'string' ? dataIndex : val;
+          dataIndexValue = typeof val === 'string' ? dataIndex : val;
         } else {
-          dataValue = dataIndex;
+          dataIndexValue = dataIndex;
         }
 
-        return { dataValue, dataIndex };
+        return { dataIndexValue, dataIndex };
       }, [getXScale, getYScale, getXAxis, getYAxis, scrubberPosition, dataLength, layout]);
 
       const isIdle = scrubberPosition === undefined;
@@ -253,7 +254,7 @@ export const ScrubberBeaconGroup = memo(
         [ScrubberBeaconRefs],
       );
 
-      if (dataValue === undefined || dataIndex === undefined) return null;
+      if (dataIndexValue === undefined || dataIndex === undefined) return null;
 
       return filteredSeries.map((s) => (
         <BeaconWithData
@@ -263,7 +264,7 @@ export const ScrubberBeaconGroup = memo(
           beaconRef={createBeaconRef(s.id)}
           className={className}
           dataIndex={dataIndex}
-          dataX={dataValue}
+          dataIndexValue={dataIndexValue}
           idlePulse={idlePulse}
           isIdle={isIdle}
           seriesId={s.id}

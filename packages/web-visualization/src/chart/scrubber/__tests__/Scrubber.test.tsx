@@ -213,7 +213,14 @@ describe('DefaultScrubberBeacon', () => {
           width={600}
         >
           <Line seriesId="test" />
-          <DefaultScrubberBeacon isIdle dataX={2} dataY={30} seriesId="test" {...props} />
+          <DefaultScrubberBeacon
+            dataIndexValue={2}
+            isIdle
+            dataX={2}
+            dataY={30}
+            seriesId="test"
+            {...props}
+          />
         </CartesianChart>
       </DefaultThemeProvider>,
     );

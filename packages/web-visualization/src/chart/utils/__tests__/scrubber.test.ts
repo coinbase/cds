@@ -1,6 +1,27 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
-import { calculateLabelStackedPositions, getLabelPosition } from '../scrubber';
+import { calculateLabelYPositions, getLabelPosition } from '../scrubber';
+
+const calculateLabelStackedPositions = (
+  dimensions: Array<{
+    seriesId: string;
+    width: number;
+    height: number;
+    preferredX: number;
+    preferredY: number;
+  }>,
+  stackingStart: number,
+  stackingSize: number,
+  labelThickness: number,
+  minGap: number,
+) => {
+  return calculateLabelYPositions(
+    dimensions,
+    { x: 0, y: stackingStart, width: 0, height: stackingSize },
+    labelThickness,
+    minGap,
+  );
+};
 
 describe('getLabelPosition', () => {
   const drawingArea: Rect = {
@@ -12,7 +33,7 @@ describe('getLabelPosition', () => {
 
   describe('with default xOffset (16)', () => {
     it('should return "right" when enough space is available on the right', () => {
-      const result = getLabelPosition(100, 50, drawingArea.width);
+      const result = getLabelPosition(100, 50, drawingArea);
       expect(result).toBe('right');
       // Available right space: 500 - 100 = 400
       // Required space: 50 + 16 = 66
@@ -20,7 +41,7 @@ describe('getLabelPosition', () => {
     });
 
     it('should return "left" when not enough space on the right', () => {
-      const result = getLabelPosition(450, 50, drawingArea.width);
+      const result = getLabelPosition(450, 50, drawingArea);
       expect(result).toBe('left');
       // Available right space: 500 - 450 = 50
       // Required space: 50 + 16 = 66
@@ -28,19 +49,19 @@ describe('getLabelPosition', () => {
     });
 
     it('should return "right" at the beginning of drawing area', () => {
-      const result = getLabelPosition(0, 50, drawingArea.width);
+      const result = getLabelPosition(0, 50, drawingArea);
       expect(result).toBe('right');
     });
 
     it('should return "left" at the end of drawing area', () => {
-      const result = getLabelPosition(500, 50, drawingArea.width);
+      const result = getLabelPosition(500, 50, drawingArea);
       expect(result).toBe('left');
     });
   });
 
   describe('with custom xOffset', () => {
     it('should return "right" with larger offset when space available', () => {
-      const result = getLabelPosition(100, 50, drawingArea.width, 32);
+      const result = getLabelPosition(100, 50, drawingArea, 32);
       expect(result).toBe('right');
       // Available right space: 500 - 100 = 400
       // Required space: 50 + 32 = 82
@@ -48,7 +69,7 @@ describe('getLabelPosition', () => {
     });
 
     it('should return "left" with larger offset when not enough space', () => {
-      const result = getLabelPosition(430, 50, drawingArea.width, 32);
+      const result = getLabelPosition(430, 50, drawingArea, 32);
       expect(result).toBe('left');
       // Available right space: 500 - 430 = 70
       // Required space: 50 + 32 = 82
@@ -56,7 +77,7 @@ describe('getLabelPosition', () => {
     });
 
     it('should handle zero offset', () => {
-      const result = getLabelPosition(450, 50, drawingArea.width, 0);
+      const result = getLabelPosition(450, 50, drawingArea, 0);
       expect(result).toBe('right');
       // Available right space: 500 - 450 = 50
       // Required space: 50 + 0 = 50
@@ -67,19 +88,19 @@ describe('getLabelPosition', () => {
   describe('edge cases', () => {
     it('should return "right" when drawing area width is 0', () => {
       const emptyArea: Rect = { x: 0, y: 0, width: 0, height: 300 };
-      const result = getLabelPosition(100, 50, emptyArea.width);
+      const result = getLabelPosition(100, 50, emptyArea);
       expect(result).toBe('right');
     });
 
     it('should return "right" when drawing area height is 0', () => {
       const emptyArea: Rect = { x: 0, y: 0, width: 500, height: 0 };
-      const result = getLabelPosition(100, 50, emptyArea.width);
+      const result = getLabelPosition(100, 50, emptyArea);
       expect(result).toBe('right');
     });
 
     it('should return "right" when drawing area is negative', () => {
       const negativeArea: Rect = { x: 0, y: 0, width: -500, height: -300 };
-      const result = getLabelPosition(100, 50, negativeArea.width);
+      const result = getLabelPosition(100, 50, negativeArea);
       expect(result).toBe('right');
     });
   });

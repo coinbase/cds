@@ -5,15 +5,20 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text';
-import { type ChartScaleFunction, getPointOnScale, useScrubberContext } from '../utils';
 import {
-  calculateLabelStackedPositions,
+  defaultTransition,
+  getPointOnScale,
+  getTransition,
+  instantTransition,
+  useScrubberContext,
+} from '../utils';
+import {
+  calculateLabelYPositions,
   getLabelPosition,
   type LabelDimensions,
   type LabelPosition,
   type ScrubberLabelPosition,
 } from '../utils/scrubber';
-import { defaultTransition, getTransition, instantTransition } from '../utils/transition';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 import type {
@@ -114,7 +119,6 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
   /**
    * Custom component to render as a scrubber beacon label.
    * @default DefaultScrubberBeaconLabel
-   * @note Beacon labels are only supported in vertical layout.
    */
   BeaconLabelComponent?: ScrubberBeaconLabelComponent;
   /**
@@ -137,13 +141,13 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
+    labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
     transitions,
     className,
     style,
   }) => {
     const {
-      layout,
       getSeries,
       getSeriesData,
       getXScale,
@@ -205,121 +209,110 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         .filter((info): info is NonNullable<typeof info> => info !== null);
     }, [labels, getSeries, getSeriesData, getYScale]);
 
-    const indexAxis = getXAxis();
-    const indexScaleFallback = getXScale() as ChartScaleFunction;
+    const xScale = getXScale();
+    const xAxis = getXAxis();
 
     const dataIndex = useMemo(() => {
       return scrubberPosition ?? Math.max(0, dataLength - 1);
     }, [scrubberPosition, dataLength]);
 
-    const dataIndexValue = useMemo(() => {
-      if (
-        indexAxis?.data &&
-        Array.isArray(indexAxis.data) &&
-        indexAxis.data[dataIndex] !== undefined
-      ) {
-        const val = indexAxis.data[dataIndex];
-        return typeof val === 'string' ? dataIndex : val;
+    const dataX = useMemo(() => {
+      if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex] !== undefined) {
+        const dataValue = xAxis.data[dataIndex];
+        return typeof dataValue === 'string' ? dataIndex : dataValue;
       }
       return dataIndex;
-    }, [indexAxis, dataIndex]);
+    }, [xAxis, dataIndex]);
 
     const allLabelPositions = useMemo(() => {
-      if (!indexScaleFallback || dataIndexValue === undefined) return [];
+      if (!xScale || dataX === undefined) return [];
 
-      const sharedIndexPixelPos = getPointOnScale(dataIndexValue, indexScaleFallback);
+      const sharedPixelX = getPointOnScale(dataX, xScale);
 
       const desiredPositions = seriesInfo.map((info) => {
-        let dataValue: number | undefined;
-        if (
-          info.sourceData &&
-          dataIndex !== undefined &&
-          dataIndex >= 0 &&
-          dataIndex < info.sourceData.length
-        ) {
-          const val = info.sourceData[dataIndex];
+        let dataY: number | undefined;
+        if (info.yScale) {
+          if (
+            info.sourceData &&
+            dataIndex !== undefined &&
+            dataIndex >= 0 &&
+            dataIndex < info.sourceData.length
+          ) {
+            const dataValue = info.sourceData[dataIndex];
 
-          if (Array.isArray(val)) {
-            const validValues = val.filter((v): v is number => v !== null);
-            if (validValues.length >= 1) {
-              dataValue = validValues[validValues.length - 1];
+            if (Array.isArray(dataValue)) {
+              const validValues = dataValue.filter((val): val is number => val !== null);
+              if (validValues.length >= 1) {
+                dataY = validValues[validValues.length - 1];
+              }
             }
-          } else if (typeof val === 'number') {
-            dataValue = val;
           }
         }
 
-        if (dataValue !== undefined && info.yScale) {
-          const pixelValuePos = getPointOnScale(dataValue, info.yScale);
+        if (dataY !== undefined && info.yScale) {
           return {
             seriesId: info.seriesId,
-            indexPixelPos: sharedIndexPixelPos,
-            desiredValuePixelPos: pixelValuePos,
+            x: sharedPixelX,
+            desiredY: getPointOnScale(dataY, info.yScale),
           };
         }
 
+        // Return null for invalid data
         return null;
       });
 
-      const maxLabelHeight = Math.max(
-        ...Object.values(labelDimensions).map((dim) => dim.height),
-        16,
-      );
-      const maxLabelWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width), 40);
+      const maxLabelHeight = Math.max(...Object.values(labelDimensions).map((dim) => dim.height));
 
+      const maxLabelWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
+
+      // Only apply collision detection to valid positions
       const validPositions = desiredPositions.filter((pos) => pos !== null);
 
-      // Collision detection logic for vertical charts:
-      // labels are stacked along the Y/value axis.
+      // Convert to LabelDimension format expected by utility
       const dimensions = validPositions.map((pos) => {
         const trackedDimensions = labelDimensions[pos.seriesId];
         return {
           seriesId: pos.seriesId,
           width: trackedDimensions?.width ?? maxLabelWidth,
           height: trackedDimensions?.height ?? maxLabelHeight,
-          preferredX: pos.indexPixelPos,
-          preferredY: pos.desiredValuePixelPos,
+          preferredX: pos.x,
+          preferredY: pos.desiredY,
         };
       });
 
-      const resolvedPositions = calculateLabelStackedPositions(
+      // Calculate Y positions with collision resolution for valid positions only
+      const yPositions = calculateLabelYPositions(
         dimensions,
-        drawingArea.y,
-        drawingArea.height,
+        drawingArea,
         maxLabelHeight,
         labelMinGap,
       );
 
+      // Return all positions (including null ones)
       return desiredPositions.map((pos) => {
         if (!pos) return null;
-        const resolvedValuePos = resolvedPositions.get(pos.seriesId) ?? pos.desiredValuePixelPos;
         return {
           seriesId: pos.seriesId,
-          x: pos.indexPixelPos,
-          y: resolvedValuePos,
+          x: pos.x,
+          y: yPositions.get(pos.seriesId) ?? pos.desiredY,
         };
       });
-    }, [
-      seriesInfo,
-      dataIndex,
-      dataIndexValue,
-      indexScaleFallback,
-      labelDimensions,
-      drawingArea,
-      labelMinGap,
-    ]);
+    }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, drawingArea, labelMinGap]);
 
     const currentPosition = useMemo(() => {
-      if (!indexScaleFallback || dataIndexValue === undefined) return 'right';
+      if (!xScale || dataX === undefined) return labelPreferredSide;
 
-      const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width), 40);
-      const categoryPixelPos = getPointOnScale(dataIndexValue, indexScaleFallback);
-      return getLabelPosition(categoryPixelPos, maxWidth, drawingArea.width, labelHorizontalOffset);
-    }, [dataIndexValue, indexScaleFallback, labelDimensions, drawingArea, labelHorizontalOffset]);
+      const pixelX = getPointOnScale(dataX, xScale);
+      const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-    if (layout === 'horizontal') {
-      return null;
-    }
+      return getLabelPosition(
+        pixelX,
+        maxWidth,
+        drawingArea,
+        labelHorizontalOffset,
+        labelPreferredSide,
+      );
+    }, [dataX, xScale, labelDimensions, drawingArea, labelHorizontalOffset, labelPreferredSide]);
 
     return seriesInfo.map((info, index) => {
       const labelInfo = labels.find((label) => label.seriesId === info.seriesId);

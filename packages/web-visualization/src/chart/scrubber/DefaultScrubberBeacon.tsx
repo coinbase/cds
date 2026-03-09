@@ -47,6 +47,7 @@ export const DefaultScrubberBeacon = memo(
       {
         seriesId,
         color: colorProp,
+        dataIndexValue,
         dataX,
         dataY,
         isIdle,
@@ -66,6 +67,7 @@ export const DefaultScrubberBeacon = memo(
       const [scope, animateFn] = useAnimate();
       const {
         animate: animateContext,
+        layout,
         getSeries,
         getXScale,
         getYScale,
@@ -101,8 +103,12 @@ export const DefaultScrubberBeacon = memo(
 
       const pixelCoordinate = useMemo(() => {
         if (!xScale || !yScale) return;
-        return projectPoint({ x: dataX, y: dataY, xScale, yScale });
-      }, [dataX, dataY, xScale, yScale]);
+        const categoryAxisIsX = layout !== 'horizontal';
+        const resolvedDataX = categoryAxisIsX ? (dataX ?? dataIndexValue) : dataY;
+        const resolvedDataY = categoryAxisIsX ? dataY : dataIndexValue;
+
+        return projectPoint({ x: resolvedDataX, y: resolvedDataY, xScale, yScale });
+      }, [dataIndexValue, dataX, dataY, xScale, yScale, layout]);
 
       const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
       const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
