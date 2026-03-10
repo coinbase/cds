@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { LottieStatusAnimationType } from '@coinbase/cds-common/types/LottieStatusAnimationProps';
+import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 
 import { Button } from '../../buttons';
 import { Box, HStack, VStack } from '../../layout';
@@ -10,16 +10,10 @@ export default {
   title: 'Components/LottieStatusAnimation',
 };
 
-const statuses: LottieStatusAnimationType[] = [
-  'loading',
-  'success',
-  'failure',
-  'pending',
-  'cardSuccess',
-];
+const statuses: LottieStatus[] = ['loading', 'success', 'failure', 'pending', 'cardSuccess'];
 
 export const Default = () => {
-  const [status, setStatus] = useState<LottieStatusAnimationType>('loading');
+  const [status, setStatus] = useState<LottieStatus>('loading');
 
   const [key, setKey] = useState(0);
   const handleReset = () => {
