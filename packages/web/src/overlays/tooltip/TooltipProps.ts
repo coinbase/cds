@@ -60,6 +60,10 @@ export type TooltipBaseProps = SharedProps &
      * A unique ID used to ensure tooltips are accessible
      */
     tooltipId?: string;
+    /**
+     * Whether the tooltip has interactive elements inside the content.
+     */
+    hasInteractiveContent?: boolean;
   };
 
 export type TooltipProps = TooltipBaseProps;

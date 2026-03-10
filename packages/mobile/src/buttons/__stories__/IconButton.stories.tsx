@@ -104,6 +104,21 @@ const IconButtonScreen = () => {
           );
         })}
       </Example>
+      <Example inline title="Icon sizes">
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+          <HStack gap={2}>
+            <IconButton accessibilityLabel="Extra small icon" iconSize="xs" name={iconName} />
+            <IconButton accessibilityLabel="Small icon" iconSize="s" name={iconName} />
+            <IconButton accessibilityLabel="Medium icon" iconSize="m" name={iconName} />
+            <IconButton
+              accessibilityLabel="Large icon"
+              compact={false}
+              iconSize="l"
+              name={iconName}
+            />
+          </HStack>
+        </Box>
+      </Example>
       <Example title="All">
         {names.map((name) => {
           return (

@@ -52,12 +52,12 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `spacingVariant="compact"` instead. `compact` will be removed in a future major release.
+     * @deprecated Use `spacingVariant="condensed"` instead. `compact` will be removed in a future major release.
      */
     compact?: boolean;
     /**
      * Spacing variant configuration.
-     * Deprecated value: 'compact'. Prefer 'condensed'.
+     * Deprecated values: 'normal' and 'compact'. Prefer 'condensed'.
      *
      * When `spacingVariant="normal"`:
      * 1. `min-height` is `80px`
@@ -78,7 +78,8 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      *
      * @default 'normal'
      */
-    spacingVariant?: 'normal' | 'compact' | 'condensed';
+    spacingVariant?: /** @deprecated Use 'condensed' instead. */
+    'normal' | /** @deprecated Use 'condensed' instead. */ 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
     /**
