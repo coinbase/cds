@@ -127,6 +127,28 @@ export const All = () => {
           ]}
         />
       </Example>
+      <Example title="Horizontal Layout">
+        <AreaChart
+          enableScrubbing
+          showLines
+          showXAxis
+          showYAxis
+          height={200}
+          layout="horizontal"
+          series={[
+            {
+              id: 'volume',
+              data: [68, 54, 43, 29, 18],
+              label: 'Volume',
+            },
+          ]}
+          type="gradient"
+          xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
+          yAxis={{ data: ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'], scaleType: 'band' }}
+        >
+          <Scrubber />
+        </AreaChart>
+      </Example>
     </VStack>
   );
 };

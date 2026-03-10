@@ -66,10 +66,14 @@ export type ScrubberBeaconBaseProps = {
   color?: AnimatedProp<string>;
   /**
    * X coordinate in data space.
+   * In vertical layout this is the scrubber index-axis value.
+   * In horizontal layout this is the series value.
    */
   dataX: AnimatedProp<number>;
   /**
    * Y coordinate in data space.
+   * In vertical layout this is the series value.
+   * In horizontal layout this is the scrubber index-axis value.
    */
   dataY: AnimatedProp<number>;
   /**
@@ -163,6 +167,8 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
     seriesIds?: string[];
     /**
      * Hides the beacon labels while keeping the line label visible (if provided).
+     * @default true in horizontal layout, false in vertical layout.
+     * @note Beacon labels are always hidden in horizontal layout, and cannot be overridden.
      */
     hideBeaconLabels?: boolean;
     /**
@@ -276,11 +282,27 @@ export const Scrubber = memo(
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXSerializableScale, getXAxis, series, drawingArea, animate, dataLength } =
-        useCartesianChartContext();
+      const {
+        layout,
+        getXSerializableScale,
+        getYSerializableScale,
+        getXAxis,
+        getYAxis,
+        series,
+        drawingArea,
+        animate,
+        dataLength,
+      } = useCartesianChartContext();
 
-      const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
+      const indexAxis = useMemo(
+        () => (categoryAxisIsX ? getXAxis() : getYAxis()),
+        [categoryAxisIsX, getXAxis, getYAxis],
+      );
+      const indexScale = useMemo(
+        () => (categoryAxisIsX ? getXSerializableScale() : getYSerializableScale()),
+        [categoryAxisIsX, getXSerializableScale, getYSerializableScale],
+      );
 
       // Animation state for delayed scrubber rendering (matches web timing)
       const scrubberOpacity = useSharedValue(animate ? 0 : 1);
@@ -303,13 +325,17 @@ export const Scrubber = memo(
         return scrubberPosition.value ?? Math.max(0, dataLength - 1);
       }, [scrubberPosition, dataLength]);
 
-      const dataX = useDerivedValue(() => {
-        if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {
-          const dataValue = xAxis.data[dataIndex.value];
-          return typeof dataValue === 'string' ? dataIndex.value : dataValue;
+      const dataValue = useDerivedValue(() => {
+        if (
+          indexAxis?.data &&
+          Array.isArray(indexAxis.data) &&
+          indexAxis.data[dataIndex.value] !== undefined
+        ) {
+          const axisValue = indexAxis.data[dataIndex.value];
+          return typeof axisValue === 'string' ? dataIndex.value : axisValue;
         }
         return dataIndex.value;
-      }, [xAxis, dataIndex]);
+      }, [indexAxis, dataIndex]);
 
       const lineOpacity = useDerivedValue(() => {
         return scrubberPosition.value !== undefined ? 1 : 0;
@@ -319,21 +345,34 @@ export const Scrubber = memo(
         return scrubberPosition.value !== undefined ? 0.8 : 0;
       }, [scrubberPosition]);
 
+      const pixelPosition = useDerivedValue(() => {
+        if (dataValue.value === undefined || !indexScale) return undefined;
+        return getPointOnSerializableScale(dataValue.value, indexScale);
+      }, [dataValue, indexScale]);
+
       const overlayWidth = useDerivedValue(() => {
-        const pixelX =
-          dataX.value !== undefined && xScale
-            ? getPointOnSerializableScale(dataX.value, xScale)
-            : 0;
-        return drawingArea.x + drawingArea.width - pixelX + overlayOffset;
-      }, [dataX, xScale]);
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX
+          ? drawingArea.x + drawingArea.width - pixel + overlayOffset
+          : drawingArea.width + overlayOffset * 2;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+      const overlayHeight = useDerivedValue(() => {
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX
+          ? drawingArea.height + overlayOffset * 2
+          : drawingArea.y + drawingArea.height - pixel + overlayOffset;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
 
       const overlayX = useDerivedValue(() => {
-        const xValue =
-          dataX.value !== undefined && xScale
-            ? getPointOnSerializableScale(dataX.value, xScale)
-            : 0;
-        return xValue;
-      }, [dataX, xScale]);
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX ? pixel : drawingArea.x - overlayOffset;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+      const overlayY = useDerivedValue(() => {
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX ? drawingArea.y - overlayOffset : pixel;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
 
       const resolvedLabelValue = useSharedValue<SkParagraph | string>('');
 
@@ -377,7 +416,8 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      const isReady = !!xScale;
+      const showBeaconLabels = !hideBeaconLabels && categoryAxisIsX && beaconLabels.length > 0;
+      const isReady = !!indexScale;
 
       const groupEnterTransition = useMemo(
         () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
@@ -397,18 +437,18 @@ export const Scrubber = memo(
           {!hideOverlay && (
             <Rect
               color={theme.color.bg}
-              height={drawingArea.height + overlayOffset * 2}
+              height={overlayHeight}
               opacity={overlayOpacity}
               width={overlayWidth}
               x={overlayX}
-              y={drawingArea.y - overlayOffset}
+              y={overlayY}
             />
           )}
           {!hideLine && (
             <ReferenceLine
               LabelComponent={LabelComponent}
               LineComponent={LineComponent}
-              dataX={dataX}
+              {...(categoryAxisIsX ? { dataX: dataValue } : { dataY: dataValue })}
               label={resolvedLabelValue}
               labelBoundsInset={labelBoundsInset}
               labelElevated={labelElevated}
@@ -425,7 +465,7 @@ export const Scrubber = memo(
             stroke={beaconStroke}
             transitions={transitions}
           />
-          {!hideBeaconLabels && beaconLabels.length > 0 && (
+          {showBeaconLabels && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               labelFont={beaconLabelFont}

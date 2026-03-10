@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { Area } from '../area/Area';
 import { XAxis } from '../axis/XAxis';
 import { YAxis } from '../axis/YAxis';
+import type { BarComponentProps } from '../bar/Bar';
 import { BarPlot } from '../bar/BarPlot';
 import { CartesianChart } from '../CartesianChart';
 import { Line } from '../line/Line';
@@ -178,6 +179,68 @@ describe('CartesianChart', () => {
       });
 
       expect(svg.querySelectorAll('[data-axis="y"][data-position="left"]').length).toBe(2);
+    });
+
+    it('renders multiple x axes in horizontal layout', () => {
+      const svg = renderCartesianChart({
+        testID: 'cartesian-multi-x-horizontal',
+        series: [
+          { id: 'series-a', data: [10, 20, 30], xAxisId: 'x-a' },
+          { id: 'series-b', data: [100, 200, 300], xAxisId: 'x-b' },
+        ],
+        chartProps: {
+          layout: 'horizontal',
+          xAxis: [
+            { id: 'x-a', scaleType: 'linear' },
+            { id: 'x-b', scaleType: 'linear' },
+          ],
+          yAxis: { scaleType: 'band' },
+        },
+        children: (
+          <>
+            <YAxis showLine position="left" />
+            <XAxis showLine axisId="x-a" position="bottom" />
+            <XAxis showLine axisId="x-b" position="top" />
+            <Line seriesId="series-a" />
+            <Line seriesId="series-b" />
+          </>
+        ),
+      });
+
+      const xAxes = svg.querySelectorAll('[data-axis="x"]');
+      expect(xAxes.length).toBe(2);
+      expect(svg.querySelector('[data-axis="x"][data-position="bottom"]')).toBeInTheDocument();
+      expect(svg.querySelector('[data-axis="x"][data-position="top"]')).toBeInTheDocument();
+    });
+
+    it('throws when horizontal layout is configured with multiple y axes', () => {
+      expect(() =>
+        renderCartesianChart({
+          testID: 'cartesian-invalid-horizontal-multi-y',
+          chartProps: {
+            layout: 'horizontal',
+            yAxis: [
+              { id: 'y-a', scaleType: 'band' },
+              { id: 'y-b', scaleType: 'band' },
+            ],
+          },
+        }),
+      ).toThrow('only one y-axis');
+    });
+
+    it('throws when vertical layout is configured with multiple x axes', () => {
+      expect(() =>
+        renderCartesianChart({
+          testID: 'cartesian-invalid-vertical-multi-x',
+          chartProps: {
+            layout: 'vertical',
+            xAxis: [
+              { id: 'x-a', scaleType: 'linear' },
+              { id: 'x-b', scaleType: 'linear' },
+            ],
+          },
+        }),
+      ).toThrow('layout="horizontal"');
     });
 
     it.each([
@@ -506,6 +569,44 @@ describe('CartesianChart', () => {
         Boolean(path.getAttribute('d')),
       );
       expect(drawablePaths.length).toBeGreaterThan(0);
+    });
+
+    it('routes horizontal bar series to their configured x-axis scales', () => {
+      const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+      renderCartesianChart({
+        testID: 'cartesian-horizontal-bar-multi-x-routing',
+        series: [
+          { id: 'fast-axis-series', data: [10, 10, 10], xAxisId: 'fast-axis' },
+          { id: 'slow-axis-series', data: [10, 10, 10], xAxisId: 'slow-axis' },
+        ],
+        chartProps: {
+          layout: 'horizontal',
+          xAxis: [
+            { id: 'fast-axis', domain: { min: 0, max: 10 }, domainLimit: 'strict' },
+            { id: 'slow-axis', domain: { min: 0, max: 100 }, domainLimit: 'strict' },
+          ],
+          yAxis: { scaleType: 'band' },
+        },
+        children: (
+          <BarPlot
+            BarComponent={CustomBar}
+            seriesIds={['fast-axis-series', 'slow-axis-series']}
+            transitions={{ enter: null, update: null }}
+          />
+        ),
+      });
+
+      const fastAxisWidths = CustomBar.mock.calls
+        .filter(([props]) => props.seriesId === 'fast-axis-series')
+        .map(([props]) => props.width as number);
+      const slowAxisWidths = CustomBar.mock.calls
+        .filter(([props]) => props.seriesId === 'slow-axis-series')
+        .map(([props]) => props.width as number);
+
+      expect(fastAxisWidths.length).toBeGreaterThan(0);
+      expect(slowAxisWidths.length).toBeGreaterThan(0);
+      expect(Math.min(...fastAxisWidths)).toBeGreaterThan(Math.max(...slowAxisWidths));
     });
 
     it('renders mixed line and bar composition', () => {

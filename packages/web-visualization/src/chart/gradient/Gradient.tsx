@@ -11,9 +11,16 @@ export type GradientBaseProps = {
    */
   gradient: GradientDefinition;
   /**
+   * X-axis ID to use for gradient processing.
+   * When provided, the gradient will align with the specified x-axis range.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
    * Y-axis ID to use for gradient processing.
    * When provided, the gradient will align with the specified y-axis range.
    * This ensures gradients work correctly when the axis has a custom range configuration.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
 };
@@ -39,11 +46,11 @@ export type GradientProps = GradientBaseProps & {
  * The gradient can be referenced via `fill="url(#${id})"` or `stroke="url(#${id})"`.
  */
 export const Gradient = memo<GradientProps>(
-  ({ id, gradient, yAxisId, animate: animateProp, transition }) => {
+  ({ id, gradient, xAxisId, yAxisId, animate: animateProp, transition }) => {
     const context = useCartesianChartContext();
     const animate = animateProp ?? context.animate;
 
-    const xScale = context.getXScale();
+    const xScale = context.getXScale(xAxisId);
     const yScale = context.getYScale(yAxisId);
 
     // Process gradient definition into stops
@@ -54,7 +61,7 @@ export const Gradient = memo<GradientProps>(
 
     const drawingArea = context.drawingArea;
     const yAxis = context.getYAxis(yAxisId);
-    const xAxis = context.getXAxis();
+    const xAxis = context.getXAxis(xAxisId);
 
     // If gradient processing failed, don't render
     if (!stops) return null;

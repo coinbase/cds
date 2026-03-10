@@ -125,6 +125,7 @@ type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
   /**
    * The ID of the y-axis to use for positioning.
    * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
   /**
