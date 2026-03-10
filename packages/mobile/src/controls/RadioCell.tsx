@@ -27,7 +27,7 @@ export type RadioCellBaseProps<RadioValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<RadioValue>, 'style' | 'children' | 'title'> &
+} & Omit<ControlBaseProps<RadioValue>, 'style' | 'children' | 'title' | 'borderWidth'> &
   Omit<PressableProps, 'children' | 'noScaleOnPress'>;
 
 export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {
@@ -60,6 +60,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
     borderRadius = 200,
     background = 'bg',
     borderColor = 'bgLine',
+    controlColor,
     accessibilityLabel,
     accessibilityHint,
     testID,
@@ -216,6 +217,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
           <Radio
             accessible={false}
             checked={!!checked}
+            controlColor={controlColor}
             disabled={disabled}
             pointerEvents="none"
             readOnly={readOnly}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Button } from '@coinbase/cds-web/buttons';
 import { Switch } from '@coinbase/cds-web/controls';
 
@@ -11,7 +11,18 @@ export default {
   component: CheckboxCell,
 };
 
-export const Default = () => {
+const Example = ({ children, title }: { children: ReactNode; title: string }) => {
+  return (
+    <VStack gap={2}>
+      <Text as="h2" display="block" font="title3">
+        {title}
+      </Text>
+      {children}
+    </VStack>
+  );
+};
+
+const Default = () => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -24,7 +35,7 @@ export const Default = () => {
   );
 };
 
-export const WithDescription = () => {
+const WithDescription = () => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -38,7 +49,7 @@ export const WithDescription = () => {
   );
 };
 
-export const CustomIds = () => {
+const CustomIds = () => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -65,7 +76,7 @@ export const CustomIds = () => {
   );
 };
 
-export const CustomContent = () => {
+const CustomContent = () => {
   const [preferences, setPreferences] = useState({
     notifications: false,
     marketing: false,
@@ -148,7 +159,7 @@ export const CustomContent = () => {
   );
 };
 
-export const LongContent = () => {
+const LongContent = () => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -164,7 +175,7 @@ export const LongContent = () => {
   );
 };
 
-export const States = () => {
+const States = () => {
   const [unchecked, setUnchecked] = useState(false);
   const [checked, setChecked] = useState(true);
   const [disabledUnchecked, setDisabledUnchecked] = useState(false);
@@ -209,7 +220,7 @@ export const States = () => {
   );
 };
 
-export const PaddingVariations = () => {
+const PaddingVariations = () => {
   const [selected, setSelected] = useState<string>('padding-2');
 
   return (
@@ -253,7 +264,7 @@ export const PaddingVariations = () => {
   );
 };
 
-export const BorderVariations = () => {
+const BorderVariations = () => {
   const [selected, setSelected] = useState<string>('border-100');
 
   return (
@@ -297,7 +308,7 @@ export const BorderVariations = () => {
   );
 };
 
-export const BorderRadiusVariations = () => {
+const BorderRadiusVariations = () => {
   const [selected, setSelected] = useState<string>('radius-200');
 
   return (
@@ -350,7 +361,7 @@ export const BorderRadiusVariations = () => {
   );
 };
 
-export const InteractiveDemo = () => {
+const InteractiveDemo = () => {
   const [checked, setChecked] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [hasDescription, setHasDescription] = useState(true);
@@ -384,7 +395,7 @@ export const InteractiveDemo = () => {
   );
 };
 
-export const CheckboxGroup = () => {
+const CheckboxGroup = () => {
   const [preferences, setPreferences] = useState({
     notifications: true,
     marketing: false,
@@ -440,7 +451,7 @@ export const CheckboxGroup = () => {
   );
 };
 
-export const SettingsPanel = () => {
+const SettingsPanel = () => {
   const [settings, setSettings] = useState({
     darkMode: false,
     autoSave: true,
@@ -514,7 +525,7 @@ export const SettingsPanel = () => {
   );
 };
 
-export const OnboardingFlow = () => {
+const OnboardingFlow = () => {
   const [agreements, setAgreements] = useState({
     terms: false,
     privacy: false,
@@ -575,6 +586,52 @@ export const OnboardingFlow = () => {
           Please accept the required terms to continue.
         </Text>
       )}
+    </VStack>
+  );
+};
+
+export const All = () => {
+  return (
+    <VStack gap={4}>
+      <Example title="Default">
+        <Default />
+      </Example>
+      <Example title="With Description">
+        <WithDescription />
+      </Example>
+      <Example title="Custom IDs">
+        <CustomIds />
+      </Example>
+      <Example title="Custom Content">
+        <CustomContent />
+      </Example>
+      <Example title="Long Content">
+        <LongContent />
+      </Example>
+      <Example title="States">
+        <States />
+      </Example>
+      <Example title="Padding Variations">
+        <PaddingVariations />
+      </Example>
+      <Example title="Border Variations">
+        <BorderVariations />
+      </Example>
+      <Example title="Border Radius Variations">
+        <BorderRadiusVariations />
+      </Example>
+      <Example title="Interactive Demo">
+        <InteractiveDemo />
+      </Example>
+      <Example title="Checkbox Group">
+        <CheckboxGroup />
+      </Example>
+      <Example title="Settings Panel">
+        <SettingsPanel />
+      </Example>
+      <Example title="Onboarding Flow">
+        <OnboardingFlow />
+      </Example>
     </VStack>
   );
 };

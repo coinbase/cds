@@ -27,7 +27,7 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title'> &
+} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title' | 'borderWidth'> &
   Omit<PressableBaseProps, 'children' | 'noScaleOnPress'>;
 
 export type CheckboxCellProps<CheckboxValue extends string> =
@@ -60,6 +60,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     borderRadius = 200,
     background = 'bg',
     borderColor = 'bgLine',
+    controlColor,
     accessibilityLabel,
     accessibilityHint,
     testID,
@@ -217,6 +218,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
           <Checkbox
             accessible={false}
             checked={!!checked}
+            controlColor={controlColor}
             disabled={disabled}
             indeterminate={indeterminate}
             pointerEvents="none"

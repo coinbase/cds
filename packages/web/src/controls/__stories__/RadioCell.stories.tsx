@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Switch } from '@coinbase/cds-web/controls';
 
 import { VStack } from '../../layout';
@@ -10,7 +10,18 @@ export default {
   component: RadioCell,
 };
 
-export const Default = () => {
+const Example = ({ children, title }: { children: ReactNode; title: string }) => {
+  return (
+    <VStack gap={2}>
+      <Text as="h2" display="block" font="title3">
+        {title}
+      </Text>
+      {children}
+    </VStack>
+  );
+};
+
+const Default = () => {
   const [selected, setSelected] = useState<string>('');
 
   return (
@@ -23,7 +34,7 @@ export const Default = () => {
   );
 };
 
-export const WithDescription = () => {
+const WithDescription = () => {
   const [selected, setSelected] = useState<string>('');
 
   return (
@@ -37,7 +48,7 @@ export const WithDescription = () => {
   );
 };
 
-export const CustomIds = () => {
+const CustomIds = () => {
   const [selected, setSelected] = useState<string>('option-with-ids');
 
   return (
@@ -76,7 +87,7 @@ export const CustomIds = () => {
   );
 };
 
-export const CustomContent = () => {
+const CustomContent = () => {
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
 
   return (
@@ -193,7 +204,7 @@ export const CustomContent = () => {
   );
 };
 
-export const LongContent = () => {
+const LongContent = () => {
   const [selected, setSelected] = useState<string>('');
 
   return (
@@ -209,7 +220,7 @@ export const LongContent = () => {
   );
 };
 
-export const States = () => {
+const States = () => {
   const [selectedState, setSelectedState] = useState<string>('checked');
 
   return (
@@ -251,7 +262,7 @@ export const States = () => {
   );
 };
 
-export const BasicRadioGroup = () => {
+const BasicRadioGroup = () => {
   const [selectedOption, setSelectedOption] = useState<string>('option1');
 
   const options = [
@@ -280,7 +291,7 @@ export const BasicRadioGroup = () => {
   );
 };
 
-export const GapVariations = () => {
+const GapVariations = () => {
   const [selected, setSelected] = useState<string>('gap-2');
 
   return (
@@ -325,7 +336,7 @@ export const GapVariations = () => {
   );
 };
 
-export const DirectionalGaps = () => {
+const DirectionalGaps = () => {
   const [selected, setSelected] = useState<string>('default');
 
   return (
@@ -373,7 +384,7 @@ export const DirectionalGaps = () => {
   );
 };
 
-export const PaddingVariations = () => {
+const PaddingVariations = () => {
   const [selected, setSelected] = useState<string>('padding-2');
 
   return (
@@ -417,7 +428,7 @@ export const PaddingVariations = () => {
   );
 };
 
-export const BorderVariations = () => {
+const BorderVariations = () => {
   const [selected, setSelected] = useState<string>('border-100');
 
   return (
@@ -461,7 +472,7 @@ export const BorderVariations = () => {
   );
 };
 
-export const BorderRadiusVariations = () => {
+const BorderRadiusVariations = () => {
   const [selected, setSelected] = useState<string>('radius-200');
 
   return (
@@ -514,7 +525,7 @@ export const BorderRadiusVariations = () => {
   );
 };
 
-export const InteractiveDemo = () => {
+const InteractiveDemo = () => {
   const [selected, setSelected] = useState<string>('demo');
   const [disabled, setDisabled] = useState(false);
   const [hasDescription, setHasDescription] = useState(true);
@@ -563,7 +574,7 @@ export const InteractiveDemo = () => {
   );
 };
 
-export const PaymentMethods = () => {
+const PaymentMethods = () => {
   const [selectedMethod, setSelectedMethod] = useState<string>('credit-card');
 
   const paymentMethods = [
@@ -616,7 +627,7 @@ export const PaymentMethods = () => {
   );
 };
 
-export const SubscriptionPlans = () => {
+const SubscriptionPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState<string>('pro');
 
   return (
@@ -681,7 +692,7 @@ export const SubscriptionPlans = () => {
   );
 };
 
-export const AccountSettings = () => {
+const AccountSettings = () => {
   const [theme, setTheme] = useState<string>('system');
   const [language, setLanguage] = useState<string>('english');
   const [timezone, setTimezone] = useState<string>('auto');
@@ -796,7 +807,7 @@ export const AccountSettings = () => {
   );
 };
 
-export const SurveyForm = () => {
+const SurveyForm = () => {
   const [satisfaction, setSatisfaction] = useState<string>('');
   const [frequency, setFrequency] = useState<string>('');
   const [recommendation, setRecommendation] = useState<string>('');
@@ -900,6 +911,64 @@ export const SurveyForm = () => {
           </VStack>
         </VStack>
       </VStack>
+    </VStack>
+  );
+};
+
+export const All = () => {
+  return (
+    <VStack gap={4}>
+      <Example title="Default">
+        <Default />
+      </Example>
+      <Example title="With Description">
+        <WithDescription />
+      </Example>
+      <Example title="Custom IDs">
+        <CustomIds />
+      </Example>
+      <Example title="Custom Content">
+        <CustomContent />
+      </Example>
+      <Example title="Long Content">
+        <LongContent />
+      </Example>
+      <Example title="States">
+        <States />
+      </Example>
+      <Example title="Basic Radio Group">
+        <BasicRadioGroup />
+      </Example>
+      <Example title="Gap Variations">
+        <GapVariations />
+      </Example>
+      <Example title="Directional Gaps">
+        <DirectionalGaps />
+      </Example>
+      <Example title="Padding Variations">
+        <PaddingVariations />
+      </Example>
+      <Example title="Border Variations">
+        <BorderVariations />
+      </Example>
+      <Example title="Border Radius Variations">
+        <BorderRadiusVariations />
+      </Example>
+      <Example title="Interactive Demo">
+        <InteractiveDemo />
+      </Example>
+      <Example title="Payment Methods">
+        <PaymentMethods />
+      </Example>
+      <Example title="Subscription Plans">
+        <SubscriptionPlans />
+      </Example>
+      <Example title="Account Settings">
+        <AccountSettings />
+      </Example>
+      <Example title="Survey Form">
+        <SurveyForm />
+      </Example>
     </VStack>
   );
 };
