@@ -9,9 +9,9 @@ import {
   isValidBounds,
   type Series,
 } from './chart';
+import type { CartesianChartLayout } from './context';
 import { getPointOnScale } from './point';
 import {
-  type CategoricalScale,
   type ChartAxisScaleType,
   type ChartScaleFunction,
   getCategoricalScale,
@@ -128,73 +128,6 @@ export type CartesianAxisConfig = AxisConfig & {
 };
 
 /**
- * Formats the array of user-provided axis configs with default values and validates axis ids.
- * Ensures at least one axis config exists if no input is provided.
- * Requires specific axis ids when there are more than 1 axes.
- * Defaults the axis id for a single axis config if there is no id.
- * @param type - the type of axis, 'x' or 'y'
- * @param axes - array of axis configs or single axis config
- * @param defaultId - the default id to use for the axis
- * @param defaultScaleType - the default scale type to use for the axis
- * @returns array of axis configs with IDs
- */
-export const getAxisConfig = (
-  type: 'x' | 'y',
-  axes: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[] | undefined,
-  defaultId: string = defaultAxisId,
-  defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
-): CartesianAxisConfigProps[] => {
-  const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
-  const axisName = type === 'x' ? 'x-axis' : 'y-axis';
-  const axisDocUrl =
-    type === 'x'
-      ? 'https://cds.coinbase.com/components/charts/XAxis'
-      : 'https://cds.coinbase.com/components/charts/YAxis';
-  if (!axes) {
-    return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
-  }
-
-  if (Array.isArray(axes)) {
-    const axesLength = axes.length;
-    // forces id to be defined on every input config when there are multiple axes
-    if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
-      throw new Error(
-        `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
-      );
-    }
-
-    if (axesLength > 1) {
-      const ids = axes.map(({ id }) => id).filter((id): id is string => id !== undefined);
-      if (new Set(ids).size !== ids.length) {
-        throw new Error(
-          `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
-        );
-      }
-    }
-
-    return axes.map(({ id, ...axis }) => ({
-      // defaults the axis id if only a single axis is provided
-      id: axesLength > 1 ? (id ?? defaultAxisId) : (id ?? defaultId),
-      scaleType: defaultScaleType,
-      domainLimit: defaultDomainLimit,
-      ...axis,
-    })) as CartesianAxisConfigProps[];
-  }
-
-  // Single axis config
-  return [
-    {
-      id: defaultId,
-      scaleType: defaultScaleType,
-      domainLimit: defaultDomainLimit,
-      ...axes,
-    } as CartesianAxisConfigProps,
-  ];
-};
-
-import { type CartesianChartLayout } from './context';
-
-/**
  * Gets a D3 scale based on the axis configuration.
  * Handles both numeric (linear/log) and categorical (band) scales.
  *
@@ -271,6 +204,71 @@ export const getCartesianAxisScale = ({
 
     return scale;
   }
+};
+
+/**
+ * Formats the array of user-provided axis configs with default values and validates axis ids.
+ * Ensures at least one axis config exists if no input is provided.
+ * Requires specific axis ids when there are more than 1 axes.
+ * Defaults the axis id for a single axis config if there is no id.
+ * @param type - the type of axis, 'x' or 'y'
+ * @param axes - array of axis configs or single axis config
+ * @param defaultId - the default id to use for the axis
+ * @param defaultScaleType - the default scale type to use for the axis
+ * @returns array of axis configs with IDs
+ */
+export const getAxisConfig = (
+  type: 'x' | 'y',
+  axes: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[] | undefined,
+  defaultId: string = defaultAxisId,
+  defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
+): CartesianAxisConfigProps[] => {
+  const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
+  const axisName = type === 'x' ? 'x-axis' : 'y-axis';
+  const axisDocUrl =
+    type === 'x'
+      ? 'https://cds.coinbase.com/components/charts/XAxis'
+      : 'https://cds.coinbase.com/components/charts/YAxis';
+  if (!axes) {
+    return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
+  }
+
+  if (Array.isArray(axes)) {
+    const axesLength = axes.length;
+    // forces id to be defined on every input config when there are multiple axes
+    if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
+      throw new Error(
+        `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
+      );
+    }
+
+    if (axesLength > 1) {
+      const ids = axes.map(({ id }) => id).filter((id): id is string => id !== undefined);
+      if (new Set(ids).size !== ids.length) {
+        throw new Error(
+          `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
+        );
+      }
+    }
+
+    return axes.map(({ id, ...axis }) => ({
+      // defaults the axis id if only a single axis is provided
+      id: axesLength > 1 ? (id ?? defaultAxisId) : (id ?? defaultId),
+      scaleType: defaultScaleType,
+      domainLimit: defaultDomainLimit,
+      ...axis,
+    })) as CartesianAxisConfigProps[];
+  }
+
+  // Single axis config
+  return [
+    {
+      id: defaultId,
+      scaleType: defaultScaleType,
+      domainLimit: defaultDomainLimit,
+      ...axes,
+    } as CartesianAxisConfigProps,
+  ];
 };
 
 /**

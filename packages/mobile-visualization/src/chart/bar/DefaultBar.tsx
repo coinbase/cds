@@ -27,11 +27,11 @@ export const DefaultBar = memo<DefaultBarProps>(
     fillOpacity = 1,
     stroke,
     strokeWidth,
-    originY,
+    origin,
     transitions,
     transition,
   }) => {
-    const { animate, drawingArea } = useCartesianChartContext();
+    const { animate, drawingArea, layout } = useCartesianChartContext();
     const theme = useTheme();
 
     const defaultFill = fill || theme.color.fgPrimary;
@@ -63,9 +63,28 @@ export const DefaultBar = memo<DefaultBarProps>(
     );
 
     const initialPath = useMemo(() => {
-      const baselineY = originY ?? y + height;
-      return getBarPath(x, baselineY, width, 1, borderRadius, !!roundTop, !!roundBottom);
-    }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
+      if (!animate) return undefined;
+
+      const minSize = 1;
+      const barsGrowVertically = layout !== 'horizontal';
+      const baseline = origin ?? (barsGrowVertically ? y + height : x);
+
+      const initialX = barsGrowVertically ? x : baseline;
+      const initialY = barsGrowVertically ? baseline : y;
+      const initialWidth = barsGrowVertically ? width : minSize;
+      const initialHeight = barsGrowVertically ? minSize : height;
+
+      return getBarPath(
+        initialX,
+        initialY,
+        initialWidth,
+        initialHeight,
+        borderRadius,
+        !!roundTop,
+        !!roundBottom,
+        layout,
+      );
+    }, [animate, layout, x, y, origin, width, height, borderRadius, roundTop, roundBottom]);
 
     return (
       <Path

@@ -22,6 +22,54 @@ To start, pass in a series of data to the chart.
 />
 ```
 
+## Horizontal Bars
+
+To render horizontal bars, set the `layout` prop to `"horizontal"`. In this layout, the Y axis becomes the categorical axis and the X axis becomes the value axis.
+
+```jsx
+function HorizontalBars() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+
+  return (
+    <BarChart
+      height={400}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          label: 'Seoul rainfall',
+          data: dataset.map((d) => d.seoul),
+          color: 'var(--color-accentBoldBlue)',
+        },
+      ]}
+      showXAxis
+      showYAxis
+      xAxis={{
+        label: 'rainfall (mm)',
+        showGrid: true,
+      }}
+      yAxis={{
+        position: 'left',
+        data: dataset.map((d) => d.month),
+      }}
+    />
+  );
+}
+```
+
 ## Multiple Series
 
 You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.
@@ -628,7 +676,7 @@ You can also set the `barMinSize` prop to control the minimum size for individua
 />
 ```
 
-### Multiple Y Axes
+### Multiple Axes
 
 You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stacked.
 
@@ -696,6 +744,69 @@ function MultipleYAxes() {
     </CartesianChart>
   );
 }
+```
+
+When using horizontal layout, you can use multiple x axes.
+
+```jsx
+<CartesianChart
+  layout="horizontal"
+  legend
+  height={400}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  legendPosition="bottom"
+  series={[
+    {
+      id: 'revenue',
+      label: 'Revenue ($)',
+      data: [455, 520, 380, 455, 285, 235],
+      xAxisId: 'revenue',
+      color: 'var(--color-accentBoldYellow)',
+    },
+    {
+      id: 'profitMargin',
+      label: 'Profit Margin (%)',
+      data: [23, 20, 16, 38, 12, 9],
+      xAxisId: 'profitMargin',
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={[
+    {
+      id: 'revenue',
+      domain: { min: 0 },
+    },
+    {
+      id: 'profitMargin',
+      domain: { min: 0, max: 100 },
+    },
+  ]}
+  yAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    scaleType: 'band',
+  }}
+>
+  <YAxis showLine showTickMarks position="left" />
+  <XAxis
+    showGrid
+    showLine
+    showTickMarks
+    axisId="revenue"
+    position="top"
+    requestedTickCount={5}
+    height={60}
+    tickLabelFormatter={(value) => `$${value}k`}
+  />
+  <XAxis
+    showLine
+    showTickMarks
+    axisId="profitMargin"
+    position="bottom"
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `${value}%`}
+  />
+  <BarPlot />
+</CartesianChart>
 ```
 
 ## Animations

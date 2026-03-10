@@ -64,8 +64,15 @@ export type Series = {
    */
   gradient?: GradientDefinition;
   /**
+   * Id of the x-axis this series uses.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
    * Id of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
   /**
@@ -113,15 +120,16 @@ export const getChartDomain = (
 };
 
 /**
- * Creates a composite stack key that includes both stack ID and y-axis ID.
- * This ensures series with different y-scales don't get stacked together.
+ * Creates a composite stack key that includes stack ID and axis IDs.
+ * This ensures series with different scales don't get stacked together.
  */
 const createStackKey = (series: Series): string | undefined => {
   if (series.stackId === undefined) return undefined;
 
-  // Include y-axis ID to prevent cross-scale stacking
+  // Include axis IDs to prevent cross-scale stacking
+  const xAxisId = series.xAxisId || 'default';
   const yAxisId = series.yAxisId || 'default';
-  return `${series.stackId}:${yAxisId}`;
+  return `${series.stackId}:${xAxisId}:${yAxisId}`;
 };
 
 /**
@@ -329,12 +337,25 @@ export type ChartInset = {
   right: number;
 };
 
-export const defaultChartInset: ChartInset = {
+export const defaultVerticalLayoutChartInset: ChartInset = {
   top: 32,
   left: 16,
   bottom: 16,
   right: 16,
 };
+
+export const defaultHorizontalLayoutChartInset: ChartInset = {
+  top: 16,
+  left: 16,
+  bottom: 16,
+  right: 48,
+};
+
+/**
+ * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or
+ * `defaultHorizontalLayoutChartInset` for horizontal layout charts.
+ */
+export const defaultChartInset: ChartInset = defaultVerticalLayoutChartInset;
 
 /**
  * Normalize padding to include all sides with a value.

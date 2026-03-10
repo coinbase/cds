@@ -71,7 +71,7 @@ export const BarChart = memo(
   forwardRef<SVGSVGElement, BarChartProps>(
     (
       {
-        series,
+        series: seriesProp,
         stacked,
         showXAxis,
         showYAxis,
@@ -96,15 +96,12 @@ export const BarChart = memo(
       },
       ref,
     ) => {
-      const transformedSeries = useMemo(() => {
-        if (!stacked || !series) return series;
-        return series.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-      }, [series, stacked]);
+      const series: Array<BarSeries> | undefined = useMemo(() => {
+        if (!stacked || !seriesProp) return seriesProp;
+        return seriesProp.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
+      }, [seriesProp, stacked]);
 
-      // Unlike other charts with custom props per series, we do not need to pick out
-      // the props from each series that shouldn't be passed to CartesianChart
-      const seriesToRender = transformedSeries;
-      const seriesIds = useMemo(() => seriesToRender?.map((s) => s.id), [seriesToRender]);
+      const seriesIds = useMemo(() => series?.map((s) => s.id), [series]);
       const isHorizontal = chartProps.layout === 'horizontal';
       const defaultXScaleType = isHorizontal ? 'linear' : 'band';
       const defaultYScaleType = isHorizontal ? 'band' : 'linear';
@@ -117,6 +114,7 @@ export const BarChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -191,11 +189,11 @@ export const BarChart = memo(
           {...chartProps}
           ref={ref}
           inset={inset}
-          series={seriesToRender}
+          series={series}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           <BarPlot
             BarComponent={BarComponent}

@@ -64,6 +64,28 @@ const StackedExample = () => {
   );
 };
 
+const HorizontalExample = () => {
+  return (
+    <AreaChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      height={280}
+      layout="horizontal"
+      series={[
+        {
+          id: 'volume',
+          data: [68, 54, 43, 29, 18],
+        },
+      ]}
+      xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
+      yAxis={{ data: ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'], scaleType: 'band' }}
+    >
+      <Scrubber />
+    </AreaChart>
+  );
+};
+
 const AreaChartStories = () => {
   return (
     <ExampleScreen>
@@ -92,6 +114,9 @@ const AreaChartStories = () => {
         >
           <Scrubber />
         </AreaChart>
+      </Example>
+      <Example title="Horizontal Layout">
+        <HorizontalExample />
       </Example>
       <Example title="Styles">
         <AreaChart

@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
+import { useCartesianChartContext } from '../ChartProvider';
 import { type BarTransition, getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
@@ -36,9 +37,11 @@ export type BarBaseProps = {
    */
   roundBottom?: boolean;
   /**
-   * Y coordinate of the baseline/origin.
+   * Coordinate of the baseline/origin for animations.
+   * For vertical layout (bars grow up), this is the Y coordinate.
+   * For horizontal layout (bars grow sideways), this is the X coordinate.
    */
-  originY?: number;
+  origin?: number;
   /**
    * The x-axis data value for this bar.
    */
@@ -137,7 +140,7 @@ export const Bar = memo<BarProps>(
     y,
     width,
     height,
-    originY,
+    origin: originProp,
     dataX,
     dataY,
     seriesId,
@@ -153,6 +156,7 @@ export const Bar = memo<BarProps>(
     transition,
   }) => {
     const theme = useTheme();
+    const { layout } = useCartesianChartContext();
 
     // Use theme color as default if no fill is provided
     const effectiveFill = fill ?? theme.color.fgPrimary;
@@ -160,10 +164,10 @@ export const Bar = memo<BarProps>(
     const borderRadiusPixels = useMemo(() => borderRadius ?? 0, [borderRadius]);
 
     const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadiusPixels, roundTop, roundBottom);
-    }, [x, y, width, height, borderRadiusPixels, roundTop, roundBottom]);
+      return getBarPath(x, y, width, height, borderRadiusPixels, roundTop, roundBottom, layout);
+    }, [x, y, width, height, borderRadiusPixels, roundTop, roundBottom, layout]);
 
-    const effectiveOriginY = originY ?? y + height;
+    const effectiveOrigin = originProp ?? (layout === 'horizontal' ? x : y + height);
 
     if (!barPath) {
       return null;
@@ -179,7 +183,7 @@ export const Bar = memo<BarProps>(
         fill={effectiveFill}
         fillOpacity={fillOpacity}
         height={height}
-        originY={effectiveOriginY}
+        origin={effectiveOrigin}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}

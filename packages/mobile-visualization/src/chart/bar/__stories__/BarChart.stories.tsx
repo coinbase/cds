@@ -111,7 +111,7 @@ const CustomBarStackComponent = memo(({ children, ...props }: BarStackComponentP
         borderRadius={1000}
         fill={theme.color.bgTertiary}
         height={diameter}
-        originY={props.y}
+        origin={props.y}
         width={diameter}
         x={props.x}
         y={props.y - diameter}
@@ -723,7 +723,7 @@ const CandlesticksChart = memo(
     );
 
     const CandlestickBarComponent = memo<BarComponentProps>(
-      ({ x, y, width, height, originY, dataX, ...props }) => {
+      ({ x, y, width, height, dataX, ...props }) => {
         const { getYScale } = useCartesianChartContext();
         const yScale = getYScale();
 
@@ -964,6 +964,23 @@ const PriceRange = () => {
   );
 };
 
+const HorizontalBarChart = () => {
+  const labels = ['BTC', 'ETH', 'SOL', 'ADA'];
+  const allocation = [42, 28, 18, 12];
+
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={220}
+      layout="horizontal"
+      series={[{ id: 'allocation', data: allocation, color: assets.btc.color }]}
+      xAxis={{ domain: { min: 0, max: 50 }, tickLabelFormatter: (value) => `${value}%` }}
+      yAxis={{ data: labels, scaleType: 'band' }}
+    />
+  );
+};
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -1048,6 +1065,10 @@ function ExampleNavigator() {
       {
         title: 'Price Range',
         component: <PriceRange />,
+      },
+      {
+        title: 'Horizontal Layout',
+        component: <HorizontalBarChart />,
       },
     ],
     [],

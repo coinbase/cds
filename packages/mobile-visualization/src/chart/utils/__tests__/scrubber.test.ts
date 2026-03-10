@@ -2,6 +2,27 @@ import type { Rect } from '@coinbase/cds-common/types';
 
 import { calculateLabelYPositions, getLabelPosition } from '../scrubber';
 
+const calculateLabelStackedPositions = (
+  dimensions: Array<{
+    seriesId: string;
+    width: number;
+    height: number;
+    preferredX: number;
+    preferredY: number;
+  }>,
+  stackingStart: number,
+  stackingSize: number,
+  labelThickness: number,
+  minGap: number,
+) => {
+  return calculateLabelYPositions(
+    dimensions,
+    { x: 0, y: stackingStart, width: 0, height: stackingSize },
+    labelThickness,
+    minGap,
+  );
+};
+
 describe('getLabelPosition', () => {
   const drawingArea: Rect = {
     x: 0,
@@ -85,7 +106,7 @@ describe('getLabelPosition', () => {
   });
 });
 
-describe('calculateLabelYPositions', () => {
+describe('calculateLabelStackedPositions', () => {
   const drawingArea: Rect = {
     x: 0,
     y: 0,
@@ -97,7 +118,13 @@ describe('calculateLabelYPositions', () => {
 
   describe('with no labels', () => {
     it('should return empty map', () => {
-      const result = calculateLabelYPositions([], drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        [],
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
       expect(result.size).toBe(0);
     });
   });

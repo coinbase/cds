@@ -153,6 +153,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -205,7 +206,7 @@ export const AreaChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           {series?.map(
             ({

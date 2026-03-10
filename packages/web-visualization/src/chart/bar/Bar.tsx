@@ -151,8 +151,8 @@ export const Bar = memo<BarProps>(
     stroke,
     strokeWidth,
     borderRadius = 4,
-    roundTop,
-    roundBottom,
+    roundTop = true,
+    roundBottom = true,
     transitions,
     transition,
   }) => {

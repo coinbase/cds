@@ -136,6 +136,7 @@ export const LineChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
 
@@ -178,10 +179,10 @@ export const LineChart = memo(
           yAxis={yAxisConfig}
         >
           {/* Render axes first for grid lines to appear behind everything else */}
-          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           {series?.map(
-            ({ id, data, label, color, yAxisId, legendShape, ...linePropsFromSeries }) => (
+            ({ id, data, label, color, xAxisId, yAxisId, legendShape, ...linePropsFromSeries }) => (
               <Line
                 key={id}
                 AreaComponent={AreaComponent}
