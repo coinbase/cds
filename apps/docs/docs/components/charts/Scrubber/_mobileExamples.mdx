@@ -833,3 +833,145 @@ function PercentageBeaconLabels() {
   );
 }
 ```
+
+### Multi Line Beacon Label
+
+You can render two-line beacon labels by returning a custom Skia paragraph from `BeaconLabelComponent`.
+
+```tsx
+const matchupBlueData = [
+  47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
+  64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
+];
+const matchupRedData = matchupBlueData.map((value) => 100 - value);
+const matchupTeamLabels: Record<string, string> = {
+  blue: 'BLUE',
+  red: 'RED',
+};
+
+function MatchupBeaconLabels() {
+  const theme = useTheme();
+
+  const MatchupScrubberBeaconLabel = memo(
+    ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series, fontProvider } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const dataLength = useMemo(
+        () =>
+          series?.reduce((max, currentSeries) => {
+            const data = getSeriesData(currentSeries.id);
+            return Math.max(max, data?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
+
+      const teamLabel = matchupTeamLabels[seriesId] ?? String(seriesId).toUpperCase();
+      const labelColor = color ?? theme.color.fgPrimary;
+      const legalFontSize = theme.fontSize.legal;
+      const title3FontSize = theme.fontSize.title3;
+
+      const teamStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: legalFontSize,
+          fontStyle: {
+            weight: FontWeight.Normal,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [labelColor, legalFontSize],
+      );
+
+      const percentageStyle: SkTextStyle = useMemo(
+        () => ({
+          fontFamilies: ['Inter'],
+          fontSize: title3FontSize,
+          fontStyle: {
+            weight: FontWeight.Bold,
+          },
+          color: Skia.Color(labelColor),
+        }),
+        [title3FontSize, labelColor],
+      );
+
+      const matchupLabel = useDerivedValue(() => {
+        if (seriesData === undefined) {
+          return teamLabel;
+        }
+
+        const value = seriesData[dataIndex.value];
+        const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontProvider);
+
+        builder.pushStyle(teamStyle);
+        builder.addText(teamLabel);
+        builder.addText('\n');
+        builder.pushStyle(percentageStyle);
+        builder.addText(`${value}%`);
+
+        const paragraph = builder.build();
+        paragraph.layout(240);
+        return paragraph;
+      }, [dataIndex, fontProvider, percentageStyle, seriesData, teamLabel, teamStyle]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background="transparent"
+          color={labelColor}
+          elevated={false}
+          inset={0}
+          label={matchupLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={150}
+      inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
+      series={[
+        {
+          id: 'blue',
+          data: matchupBlueData,
+          color: `rgb(${theme.spectrum.blue50})`,
+          label: 'BLUE',
+        },
+        {
+          id: 'red',
+          data: matchupRedData,
+          color: `rgb(${theme.spectrum.red50})`,
+          label: 'RED',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 72 }),
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <Scrubber
+        idlePulse
+        BeaconLabelComponent={MatchupScrubberBeaconLabel}
+        beaconLabelHorizontalOffset={16}
+        beaconLabelPreferredSide="right"
+      />
+    </LineChart>
+  );
+}
+```
