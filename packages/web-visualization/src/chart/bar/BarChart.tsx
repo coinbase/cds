@@ -11,7 +11,17 @@ import { type CartesianAxisConfigProps, defaultStackId, type Series } from '../u
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';
 
-export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
+export type BarChartBaseProps = Omit<
+  CartesianChartBaseProps,
+  | 'xAxis'
+  | 'yAxis'
+  | 'series'
+  | 'borderRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+> &
   Pick<
     BarPlotProps,
     | 'barPadding'
@@ -65,7 +75,17 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
   };
 
 export type BarChartProps = BarChartBaseProps &
-  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
+  Omit<
+    CartesianChartProps,
+    | 'xAxis'
+    | 'yAxis'
+    | 'series'
+    | 'borderRadius'
+    | 'borderTopLeftRadius'
+    | 'borderTopRightRadius'
+    | 'borderBottomLeftRadius'
+    | 'borderBottomRightRadius'
+  >;
 
 export const BarChart = memo(
   forwardRef<SVGSVGElement, BarChartProps>(

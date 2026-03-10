@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useId, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
@@ -520,6 +520,110 @@ const PriceRange = () => {
   );
 };
 
+const PopulationPyramid = () => {
+  const ageGroups = [
+    '100+ yrs',
+    '95-99 yrs',
+    '90-94 yrs',
+    '85-89 yrs',
+    '80-84 yrs',
+    '75-79 yrs',
+    '70-74 yrs',
+    '65-69 yrs',
+    '60-64 yrs',
+    '55-59 yrs',
+    '50-54 yrs',
+    '45-49 yrs',
+    '40-44 yrs',
+    '35-39 yrs',
+    '30-34 yrs',
+    '25-29 yrs',
+    '20-24 yrs',
+    '15-19 yrs',
+    '10-14 yrs',
+    '5-9 yrs',
+    '0-4 yrs',
+  ];
+
+  const malePopulation = [
+    14587, 48604, 83560, 128957, 184152, 248505, 498683, 706420, 852333, 939629, 1002195, 1001264,
+    960282, 1161371, 1105023, 1061755, 1019343, 1023264, 1026330, 984773, 944071,
+  ];
+
+  const femalePopulation = [
+    14122, 46974, 80768, 124663, 178043, 240293, 482271, 683270, 824525, 909115, 969807, 969070,
+    929571, 1122380, 1068050, 1026356, 985483, 989404, 992505, 952453, 913222,
+  ];
+
+  const numberWithSuffixFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+      }),
+    [],
+  );
+
+  const tickLabelFormatter = useCallback(
+    (value: number) => numberWithSuffixFormatter.format(Math.abs(value)),
+    [numberWithSuffixFormatter],
+  );
+
+  const domainSymmetric = useCallback((bounds: { min: number; max: number }) => {
+    const extremum = Math.max(-bounds.min, bounds.max);
+    const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
+    return { min: -roundedExtremum, max: roundedExtremum };
+  }, []);
+
+  const series = [
+    {
+      id: 'male',
+      label: 'Male',
+      data: malePopulation.map((population) => -population),
+      color: 'rgb(var(--blue40))',
+      stackId: 'population',
+    },
+    {
+      id: 'female',
+      label: 'Female',
+      data: femalePopulation,
+      color: 'rgb(var(--pink40))',
+      stackId: 'population',
+    },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showXAxis
+        showYAxis
+        stacked
+        borderRadius={2}
+        height={550}
+        layout="horizontal"
+        series={series}
+        xAxis={{
+          tickLabelFormatter,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+          domain: domainSymmetric,
+          showLine: true,
+          showTickMarks: true,
+        }}
+        yAxis={{
+          position: 'left',
+          data: ageGroups,
+          showLine: true,
+          showTickMarks: true,
+          bandTickMarkPlacement: 'edges',
+          width: 80,
+        }}
+      >
+        <ReferenceLine LineComponent={SolidLine} dataX={0} />
+      </BarChart>
+    </VStack>
+  );
+};
+
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -927,6 +1031,9 @@ export const All = () => {
             showLine: true,
           }}
         />
+      </Example>
+      <Example title="Population Pyramid">
+        <PopulationPyramid />
       </Example>
     </VStack>
   );
