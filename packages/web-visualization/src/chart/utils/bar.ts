@@ -5,7 +5,8 @@ import { defaultTransition } from './transition';
 /**
  * A bar-specific transition that extends Transition with stagger support.
  * When `staggerDelay` is provided, bars will animate with increasing delays
- * based on their horizontal position (leftmost starts first, rightmost last).
+ * based on their position along the category axis (vertical: left-to-right,
+ * horizontal: top-to-bottom).
  *
  * @example
  * // Bars stagger in from left to right over 0.25s, each animating for 0.75s
@@ -23,19 +24,19 @@ export type BarTransition = Transition & {
  * Strips `staggerDelay` from a transition and computes a positional delay.
  *
  * @param transition - The transition config (may include staggerDelay)
- * @param normalizedX - The bar's normalized x position (0 = left edge, 1 = right edge)
+ * @param normalizedPosition - The bar's normalized position along the category axis (0–1)
  * @returns A standard Transition with computed delay
  */
 export const withStaggerDelayTransition = (
   transition: BarTransition | null,
-  normalizedX: number,
+  normalizedPosition: number,
 ): Transition | null => {
   if (!transition) return null;
   const { staggerDelay, ...baseTransition } = transition;
   if (!staggerDelay) return transition;
   return {
     ...baseTransition,
-    delay: (baseTransition?.delay ?? 0) + normalizedX * staggerDelay,
+    delay: (baseTransition?.delay ?? 0) + normalizedPosition * staggerDelay,
   };
 };
 

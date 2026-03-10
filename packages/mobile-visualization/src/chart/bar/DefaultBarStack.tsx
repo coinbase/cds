@@ -29,19 +29,22 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
 
-    // Compute normalized x position for stagger delay calculation
-    const normalizedX = useMemo(
-      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
-      [x, drawingArea.x, drawingArea.width],
-    );
+    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
+    const normalizedStagger = useMemo(() => {
+      const barsGrowVertically = layout !== 'horizontal';
+      if (barsGrowVertically) {
+        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
+      }
+      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
+    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
 
     const enterTransition = useMemo(
       () =>
         withStaggerDelayTransition(
           getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedX,
+          normalizedStagger,
         ),
-      [animate, transitions?.enter, normalizedX],
+      [animate, transitions?.enter, normalizedStagger],
     );
     const updateTransition = useMemo(
       () =>
@@ -51,9 +54,9 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
             animate,
             defaultTransition,
           ),
-          normalizedX,
+          normalizedStagger,
         ),
-      [animate, transitions?.update, transition, normalizedX],
+      [animate, transitions?.update, transition, normalizedStagger],
     );
 
     // Generate target clip path (full bar)

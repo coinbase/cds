@@ -112,7 +112,11 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     if (!indexScaleComputed || !valueScaleComputed || !drawingArea || stackConfigs.length === 0)
       return;
 
-    return stackConfigs.map(({ categoryIndex, indexPos, thickness }) => (
+    // In horizontal layout, render stacks in reverse order so top rows (lower categoryIndex)
+    // appear on top. Otherwise bottom rows would overlap and obscure top rows during animation.
+    const orderedConfigs = layout === 'horizontal' ? [...stackConfigs].reverse() : stackConfigs;
+
+    return orderedConfigs.map(({ categoryIndex, indexPos, thickness }) => (
       <BarStack
         {...props}
         key={`stack-${stackIndex}-category-${categoryIndex}`}

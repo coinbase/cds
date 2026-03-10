@@ -915,7 +915,9 @@ const SunlightChartInner = memo(
         <BarPlot
           borderRadius={0}
           seriesIds={['sunlight']}
-          transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+          transitions={{
+            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1000 },
+          }}
         />
       </CartesianChart>
     );

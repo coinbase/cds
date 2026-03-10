@@ -1855,8 +1855,8 @@ function HorizontalLayoutLineChart() {
 
   return (
     <LineChart
-      showArea
       points
+      showArea
       showXAxis
       showYAxis
       height={240}
