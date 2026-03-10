@@ -64,28 +64,6 @@ const StackedExample = () => {
   );
 };
 
-const HorizontalExample = () => {
-  return (
-    <AreaChart
-      enableScrubbing
-      showXAxis
-      showYAxis
-      height={280}
-      layout="horizontal"
-      series={[
-        {
-          id: 'volume',
-          data: [68, 54, 43, 29, 18],
-        },
-      ]}
-      xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
-      yAxis={{ data: ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'], scaleType: 'band' }}
-    >
-      <Scrubber />
-    </AreaChart>
-  );
-};
-
 const AreaChartStories = () => {
   return (
     <ExampleScreen>
@@ -100,23 +78,20 @@ const AreaChartStories = () => {
           enableScrubbing
           showLines
           showYAxis
-          height={400}
+          height={150}
           series={[
             {
               id: 'pageViews',
               data: [24, 13, -98, 39, 48, 38, 43],
             },
           ]}
-          type="solid"
+          type="gradient"
           yAxis={{
             showGrid: true,
           }}
         >
           <Scrubber />
         </AreaChart>
-      </Example>
-      <Example title="Horizontal Layout">
-        <HorizontalExample />
       </Example>
       <Example title="Styles">
         <AreaChart
@@ -145,6 +120,28 @@ const AreaChartStories = () => {
             },
           ]}
         />
+      </Example>
+      <Example title="Horizontal Layout">
+        <AreaChart
+          enableScrubbing
+          showLines
+          showXAxis
+          showYAxis
+          height={280}
+          layout="horizontal"
+          series={[
+            {
+              id: 'volume',
+              data: [68, 54, 43, 29, 18],
+              label: 'Volume',
+            },
+          ]}
+          type="gradient"
+          xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
+          yAxis={{ data: ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'], scaleType: 'band' }}
+        >
+          <Scrubber />
+        </AreaChart>
       </Example>
     </ExampleScreen>
   );

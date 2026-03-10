@@ -127,41 +127,27 @@ export const All = () => {
           ]}
         />
       </Example>
-      <Example title="Horizontal Area">
+      <Example title="Horizontal Layout">
         <AreaChart
+          enableScrubbing
+          showLines
           showXAxis
           showYAxis
-          height={400}
-          layout="vertical"
+          height={200}
+          layout="horizontal"
           series={[
             {
-              id: 'seoul',
-              label: 'Seoul rainfall',
-              data: [21, 28, 41, 73, 99, 144, 319, 249, 131, 55, 48, 25],
+              id: 'volume',
+              data: [68, 54, 43, 29, 18],
+              label: 'Volume',
             },
           ]}
-          xAxis={{
-            label: 'rainfall (mm)',
-            showGrid: true,
-          }}
-          yAxis={{
-            data: [
-              'Jan',
-              'Feb',
-              'Mar',
-              'Apr',
-              'May',
-              'June',
-              'July',
-              'Aug',
-              'Sept',
-              'Oct',
-              'Nov',
-              'Dec',
-            ],
-            tickLabelFormatter: (val) => String(val),
-          }}
-        />
+          type="gradient"
+          xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
+          yAxis={{ data: ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'], scaleType: 'band' }}
+        >
+          <Scrubber />
+        </AreaChart>
       </Example>
     </VStack>
   );
