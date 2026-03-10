@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import type { LottieStatusAnimationType } from '@coinbase/cds-common';
+import type { LottieStatus } from '@coinbase/cds-common';
 import { join } from '@coinbase/cds-common';
 
 import { Button } from '../../buttons/Button';
@@ -8,16 +8,10 @@ import { HStack } from '../../layout/HStack';
 import { Spacer } from '../../layout/Spacer';
 import { LottieStatusAnimation } from '../LottieStatusAnimation';
 
-const statuses: LottieStatusAnimationType[] = [
-  'loading',
-  'success',
-  'failure',
-  'pending',
-  'cardSuccess',
-];
+const statuses: LottieStatus[] = ['loading', 'success', 'failure', 'pending', 'cardSuccess'];
 
 const LottieStatusAnimationScreen = () => {
-  const [status, setStatus] = useState<LottieStatusAnimationType>('loading');
+  const [status, setStatus] = useState<LottieStatus>('loading');
   const buttons = useMemo(() => {
     return join(
       statuses.map((item) => (

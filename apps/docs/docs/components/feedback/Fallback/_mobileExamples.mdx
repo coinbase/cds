@@ -19,15 +19,11 @@ The shape of the fallback can further be customized with the `shape` prop.
 </HStack>
 ```
 
-:::tip Rectangular fallback width
+### Rectangular fallback width
 
-If the fallback shape is a rectangle and the width is specified as a number, then by default, the width value will be recalculated and randomized within a predetermined threshold (e.g. to add some variety when mulitple fallbacks are presented together). If this behavior is undesirable (e.g. in server-side rendered web apps), randomization can be disabled with the `disableRandomRectWidth` prop.
+If the fallback shape is a rectangle and the width is specified as a number, then by default, the width value will be recalculated and randomized within a predetermined threshold (e.g. to add some variety when multiple fallbacks are presented together). If this behavior is undesirable, randomization can be disabled with the `disableRandomRectWidth` prop.
 
-<br />
-
-Alternatively, you may create a rectangle width variant by setting a number value on the `rectWidthVariant` prop. Variants map to a predetermined set of width values, which are cycled through repeatedly when the set is exhausted. Therefore, it's still possible to achieve some variety, but in a deterministic manner (i.e. safe for server-side rendering). Here's an example:
-
-<br />
+Alternatively, you may create a rectangle width variant by setting a number value on the `rectWidthVariant` prop. Variants map to a predetermined set of width values, which are cycled through repeatedly when the set is exhausted. Therefore, it's still possible to achieve some variety, but in a deterministic manner.
 
 ```jsx
 function RenderFallbacksInList() {
@@ -42,4 +38,61 @@ function RenderFallbacksInList() {
 }
 ```
 
-:::
+### Accessibility
+
+Fallback has an `accessibilityLabel` prop to describe the loading state for assistive technologies. Wrap Fallback in a live region container to announce loading state changes.
+
+```jsx
+function AccessibleFallback() {
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  return (
+    <VStack gap={2}>
+      <Box accessibilityLiveRegion="polite">
+        {isLoading ? (
+          <Fallback width={150} height={45} accessibilityLabel="Loading user profile" />
+        ) : (
+          <Text>Profile content here</Text>
+        )}
+      </Box>
+      <Button onPress={() => setIsLoading(!isLoading)}>Toggle loading</Button>
+    </VStack>
+  );
+}
+```
+
+If you render multiple Fallbacks in an area, you may use `aria-hidden` prop on each Fallback to disable individual announcements from assistive technologies. If you choose to do so, please add your own label in the parent container to indicate the loading state for the entire area. While the label element can be visually hidden, it is still crucial to mark the container as a live region for the label to be announced when state changes.
+
+```jsx
+function AccessibleFallbackGroup() {
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const visuallyHiddenStyle = {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+  };
+
+  return (
+    <VStack gap={2}>
+      <Box accessibilityLiveRegion="polite" position="relative">
+        {isLoading ? (
+          <>
+            <Text style={visuallyHiddenStyle}>Loading table data</Text>
+            <VStack gap={1}>
+              <Fallback width={150} height={20} aria-hidden />
+              <Fallback width={150} height={20} aria-hidden />
+              <Fallback width={150} height={20} aria-hidden />
+            </VStack>
+          </>
+        ) : (
+          <Text>Table content here</Text>
+        )}
+      </Box>
+      <Button onPress={() => setIsLoading(!isLoading)}>Toggle loading</Button>
+    </VStack>
+  );
+}
+```

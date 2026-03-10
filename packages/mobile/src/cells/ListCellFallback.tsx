@@ -1,6 +1,7 @@
 import { memo, type ReactNode, useMemo } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import { type StyleProp, StyleSheet, Text, type ViewStyle } from 'react-native';
 import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
 import { useTheme } from '../hooks/useTheme';
@@ -15,6 +16,7 @@ import { MediaFallback } from './MediaFallback';
 
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Pick<ListCellBaseProps, 'compact' | 'innerSpacing' | 'outerSpacing' | 'spacingVariant'> & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
@@ -73,6 +75,7 @@ export const ListCellFallback = memo(function ListCellFallback({
   spacingVariant = compact ? 'compact' : 'normal',
   innerSpacing,
   outerSpacing,
+  accessibilityLabel = 'Loading',
   ...props
 }: ListCellFallbackProps) {
   const theme = useTheme();
@@ -84,6 +87,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={spacingVariant === 'condensed' ? theme.lineHeight.label2 : theme.lineHeight.body}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
@@ -111,6 +115,7 @@ export const ListCellFallback = memo(function ListCellFallback({
       <VStack alignContent="flex-end" alignItems="flex-end" gap={0.5} justifyContent="center">
         {!!detail && (
           <Fallback
+            aria-hidden
             disableRandomRectWidth={disableRandomRectWidth}
             height={theme.lineHeight.body}
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
@@ -121,6 +126,7 @@ export const ListCellFallback = memo(function ListCellFallback({
         )}
         {!!subdetail && (
           <Fallback
+            aria-hidden
             disableRandomRectWidth={disableRandomRectWidth}
             height={
               spacingVariant === 'condensed' ? theme.lineHeight.label2 : theme.lineHeight.body
@@ -152,6 +158,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={theme.lineHeight.body}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 4)}
@@ -175,6 +182,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={theme.lineHeight.label1}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
@@ -196,7 +204,7 @@ export const ListCellFallback = memo(function ListCellFallback({
       return;
     }
 
-    return <MediaFallback testID="list-cell-fallback-media" type={media} />;
+    return <MediaFallback aria-hidden testID="list-cell-fallback-media" type={media} />;
   }, [media]);
 
   const titleFallback = useMemo(() => {
@@ -206,6 +214,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={theme.lineHeight.headline}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
@@ -229,9 +238,11 @@ export const ListCellFallback = memo(function ListCellFallback({
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
+      position="relative"
       styles={{ accessory: styles?.accessory }}
       {...props}
     >
+      {accessibilityLabel && <Text style={localStyles.visuallyHidden}>{accessibilityLabel}</Text>}
       <VStack gap={0.5}>
         {titleFallback}
         {subtitleFallback}
@@ -239,4 +250,14 @@ export const ListCellFallback = memo(function ListCellFallback({
       </VStack>
     </Cell>
   );
+});
+
+const localStyles = StyleSheet.create({
+  visuallyHidden: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+  },
 });

@@ -31,6 +31,7 @@ describe('ContentCellFallback', () => {
     expect(fallback).toBeInTheDocument();
     expect(Fallback).toHaveBeenCalledWith(
       {
+        'aria-hidden': true,
         disableRandomRectWidth: true,
         height: 18,
         percentage: true,
@@ -47,6 +48,7 @@ describe('ContentCellFallback', () => {
     expect(fallback).toBeInTheDocument();
     expect(Fallback).toHaveBeenCalledWith(
       {
+        'aria-hidden': true,
         disableRandomRectWidth: true,
         height: 18,
         percentage: true,
@@ -63,6 +65,7 @@ describe('ContentCellFallback', () => {
     expect(fallback).toBeInTheDocument();
     expect(Fallback).toHaveBeenCalledWith(
       {
+        'aria-hidden': true,
         disableRandomRectWidth: true,
         height: 16,
         percentage: true,
@@ -80,6 +83,7 @@ describe('ContentCellFallback', () => {
     expect(fallback).toBeInTheDocument();
     expect(Fallback).toHaveBeenCalledWith(
       {
+        'aria-hidden': true,
         disableRandomRectWidth: true,
         height: 24,
         percentage: true,

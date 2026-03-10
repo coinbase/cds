@@ -1,19 +1,21 @@
-import React, { memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common';
+import { memo } from 'react';
 import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
 
-import { Fallback } from '../layout/Fallback';
+import { Fallback, type FallbackProps } from '../layout/Fallback';
 
 import type { CellMediaType } from './CellMedia';
 
 export type MediaFallbackProps = {
   type: CellMediaType;
-} & SharedProps;
+} & Omit<FallbackProps, 'width' | 'height' | 'shape'>;
 
-export const MediaFallback = memo(function MediaFallback({ type, testID }: MediaFallbackProps) {
+export const MediaFallback = memo(function MediaFallback({
+  type,
+  ...fallbackProps
+}: MediaFallbackProps) {
   if (type === 'image') {
-    return <Fallback height={imageSize} shape="squircle" width={imageSize} />;
+    return <Fallback {...fallbackProps} height={imageSize} shape="squircle" width={imageSize} />;
   }
 
-  return <Fallback height={mediaSize} shape="circle" testID={testID} width={mediaSize} />;
+  return <Fallback {...fallbackProps} height={mediaSize} shape="circle" width={mediaSize} />;
 });
