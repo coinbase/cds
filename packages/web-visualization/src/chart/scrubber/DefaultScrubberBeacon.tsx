@@ -180,7 +180,7 @@ export const DefaultScrubberBeacon = memo(
             <motion.g
               animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               initial={false}
-              transition={updateTransition}
+              transition={updateTransition ?? instantTransition}
             >
               {pulseCircle}
             </motion.g>
@@ -196,7 +196,7 @@ export const DefaultScrubberBeacon = memo(
             stroke={stroke}
             strokeWidth={strokeWidth}
             style={style}
-            transition={updateTransition}
+            transition={updateTransition ?? instantTransition}
           />
         </g>
       );

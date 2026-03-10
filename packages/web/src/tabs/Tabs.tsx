@@ -254,13 +254,13 @@ const TabsComponent = memo(
                 <TabContainer key={id} id={id} registerRef={registerRef}>
                   <RenderedTab
                     data-rendered-tab
+                    className={classNames?.tab}
                     disabled={tabDisabled}
                     id={id}
                     role="tab"
+                    style={styles?.tab}
                     tabIndex={activeTab?.id === id || !activeTab ? 0 : -1}
                     {...props}
-                    className={classNames?.tab}
-                    style={styles?.tab}
                   />
                 </TabContainer>
               );

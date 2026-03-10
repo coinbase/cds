@@ -1,3 +1,4 @@
+import { Text } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { debounce } from '../../utils/debounce';
@@ -113,6 +114,21 @@ describe('IconButton', () => {
     );
 
     expect(screen.getByTestId('icon-button-activity-indicator')).toBeTruthy();
+  });
+
+  it('renders Icon with overridden iconSize', () => {
+    const { UNSAFE_getAllByType } = render(
+      <DefaultThemeProvider>
+        <>
+          <IconButton accessibilityLabel="extra-small icon" iconSize="xs" name={name} />
+          <IconButton accessibilityLabel="medium icon" iconSize="m" name={name} />
+        </>
+      </DefaultThemeProvider>,
+    );
+
+    const [xsIcon, mediumIcon] = UNSAFE_getAllByType(Text);
+
+    expect(xsIcon.props.style[0].fontSize).toBeLessThan(mediumIcon.props.style[0].fontSize);
   });
 
   it('handles loading state without accessibility label', () => {

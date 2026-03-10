@@ -292,7 +292,12 @@ export const Line = memo<LineProps>(
               // If points is true, render with defaults
               if (points === true) {
                 return (
-                  <Point key={`${seriesId}-${xValue}`} transition={transition} {...defaults} />
+                  <Point
+                    key={`${seriesId}-${xValue}`}
+                    transition={transition}
+                    transitions={transitions}
+                    {...defaults}
+                  />
                 );
               }
 
@@ -307,6 +312,7 @@ export const Line = memo<LineProps>(
                 <Point
                   key={`${seriesId}-${xValue}`}
                   transition={transition}
+                  transitions={transitions}
                   {...defaults}
                   {...pointConfig}
                 />

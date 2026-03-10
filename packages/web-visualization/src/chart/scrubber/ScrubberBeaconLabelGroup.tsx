@@ -38,7 +38,7 @@ const PositionedLabel = memo<{
   BeaconLabelComponent: ScrubberBeaconLabelComponent;
   labelHorizontalOffset: number;
   labelFont?: ChartTextProps['font'];
-  updateTransition: Transition;
+  updateTransition: Transition | null;
   className?: string;
   style?: CSSProperties;
 }>(
@@ -80,7 +80,7 @@ const PositionedLabel = memo<{
         onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
         seriesId={seriesId}
         style={style}
-        transition={updateTransition}
+        transition={updateTransition ?? instantTransition}
         x={x}
         y={y}
       />
