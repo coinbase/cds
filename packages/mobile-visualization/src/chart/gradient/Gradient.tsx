@@ -11,6 +11,11 @@ export type GradientBaseProps = {
    */
   gradient: GradientDefinition;
   /**
+   * X-axis ID to use for gradient processing.
+   * When provided, the gradient will align with the specified x-axis range.
+   */
+  xAxisId?: string;
+  /**
    * Y-axis ID to use for gradient processing.
    * When provided, the gradient will align with the specified y-axis range.
    * This ensures gradients work correctly when the axis has a custom range configuration.
@@ -29,10 +34,10 @@ export type GradientProps = GradientBaseProps;
  *   {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
  * </Path>
  */
-export const Gradient = memo<GradientProps>(({ gradient, yAxisId }) => {
+export const Gradient = memo<GradientProps>(({ gradient, xAxisId, yAxisId }) => {
   const context = useCartesianChartContext();
 
-  const xScale = context.getXScale();
+  const xScale = context.getXScale(xAxisId);
   const yScale = context.getYScale(yAxisId);
 
   const axis = gradient.axis ?? 'y';

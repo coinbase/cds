@@ -30,6 +30,7 @@ export const SolidArea = memo<SolidAreaProps>(
     d,
     fill = 'var(--color-fgPrimary)',
     fillOpacity = 1,
+    xAxisId,
     yAxisId,
     animate,
     transitions,
@@ -48,6 +49,7 @@ export const SolidArea = memo<SolidAreaProps>(
               gradient={gradient}
               id={patternId}
               transition={transitions?.update ?? transition}
+              xAxisId={xAxisId}
               yAxisId={yAxisId}
             />
           </defs>

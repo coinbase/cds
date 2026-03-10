@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Transition } from 'framer-motion';
 
+import { useCartesianChartContext } from '../ChartProvider';
 import { type BarTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
@@ -37,10 +38,11 @@ export type BarBaseProps = {
    */
   roundBottom?: boolean;
   /**
-   * Y coordinate of the baseline/origin for animations.
-   * Used to calculate initial animation state.
+   * Coordinate of the baseline/origin for animations.
+   * For vertical layout (bars grow up), this is the Y coordinate.
+   * For horizontal layout (bars grow sideways), this is the X coordinate.
    */
-  originY?: number;
+  origin?: number;
   /**
    * The x-axis data value for this bar.
    */
@@ -139,7 +141,7 @@ export const Bar = memo<BarProps>(
     y,
     width,
     height,
-    originY,
+    origin: originProp,
     dataX,
     dataY,
     seriesId,
@@ -154,11 +156,15 @@ export const Bar = memo<BarProps>(
     transitions,
     transition,
   }) => {
-    const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
-    }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
+    const { layout } = useCartesianChartContext();
 
-    const effectiveOriginY = originY ?? y + height;
+    const barPath = useMemo(() => {
+      return getBarPath(x, y, width, height, borderRadius, !!roundTop, !!roundBottom, layout);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
+
+    const origin = useMemo(() => {
+      return originProp ?? (layout === 'horizontal' ? x : y + height);
+    }, [originProp, layout, x, y, height]);
 
     if (!barPath) {
       return null;
@@ -173,7 +179,7 @@ export const Bar = memo<BarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
-        originY={effectiveOriginY}
+        origin={origin}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}

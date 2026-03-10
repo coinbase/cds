@@ -1848,6 +1848,31 @@ function DataCardWithLineChart() {
   );
 }
 
+function HorizontalLayoutLineChart() {
+  const symbols = ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'];
+  const allocations = [72, 46, 33, 21, 14];
+
+  return (
+    <LineChart
+      points
+      showArea
+      showXAxis
+      showYAxis
+      height={240}
+      layout="horizontal"
+      series={[
+        {
+          id: 'allocations',
+          data: allocations,
+          color: assets.btc.color,
+        },
+      ]}
+      xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
+      yAxis={{ data: symbols, scaleType: 'band' }}
+    />
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -1873,6 +1898,10 @@ function ExampleNavigator() {
             ]}
           />
         ),
+      },
+      {
+        title: 'Horizontal Layout',
+        component: <HorizontalLayoutLineChart />,
       },
       {
         title: 'Multiple Lines',

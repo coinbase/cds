@@ -67,7 +67,9 @@ export type AxisBaseProps = {
    * This value is passed into d3 and may not be respected.
    * @note This property is overridden when `ticks` is provided.
    * @note this property overrides the `tickInterval` property.
-   * @default 5 (for y-axis)
+   * @default 5 for value axes by layout:
+   * - X axis when chart layout is horizontal
+   * - Y axis when chart layout is vertical
    */
   requestedTickCount?: number;
   /**

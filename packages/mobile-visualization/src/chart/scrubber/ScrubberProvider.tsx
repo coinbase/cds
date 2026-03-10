@@ -37,28 +37,35 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     throw new Error('ScrubberProvider must be used within a ChartContext');
   }
 
-  const { getXSerializableScale, getXAxis } = chartContext;
+  const { layout, getXSerializableScale, getYSerializableScale, getXAxis, getYAxis } = chartContext;
   const scrubberPosition = useSharedValue<number | undefined>(undefined);
 
-  const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-  const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+  const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
+  const categoryAxis = useMemo(
+    () => (categoryAxisIsX ? getXAxis() : getYAxis()),
+    [categoryAxisIsX, getXAxis, getYAxis],
+  );
+  const categoryScale = useMemo(
+    () => (categoryAxisIsX ? getXSerializableScale() : getYSerializableScale()),
+    [categoryAxisIsX, getXSerializableScale, getYSerializableScale],
+  );
 
-  const getDataIndexFromX = useCallback(
-    (touchX: number): number => {
+  const getDataIndexFromPosition = useCallback(
+    (touchPosition: number): number => {
       'worklet';
 
-      if (!xScale || !xAxis) return 0;
+      if (!categoryScale || !categoryAxis) return 0;
 
-      if (xScale.type === 'band') {
-        const [domainMin, domainMax] = xScale.domain;
+      if (categoryScale.type === 'band') {
+        const [domainMin, domainMax] = categoryScale.domain;
         const categoryCount = domainMax - domainMin + 1;
         let closestIndex = 0;
         let closestDistance = Infinity;
 
         for (let i = 0; i < categoryCount; i++) {
-          const xPos = getPointOnSerializableScale(i, xScale);
-          if (xPos !== undefined) {
-            const distance = Math.abs(touchX - xPos);
+          const categoryPos = getPointOnSerializableScale(i, categoryScale);
+          if (categoryPos !== undefined) {
+            const distance = Math.abs(touchPosition - categoryPos);
             if (distance < closestDistance) {
               closestDistance = distance;
               closestIndex = i;
@@ -67,19 +74,18 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         }
         return closestIndex;
       } else {
-        // For numeric scales with axis data, find the nearest data point
-        const axisData = xAxis.data;
+        // For numeric scales with axis data, find the nearest data point.
+        const axisData = categoryAxis.data;
         if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-          // We have numeric axis data - find the closest data point
           const numericData = axisData as number[];
           let closestIndex = 0;
           let closestDistance = Infinity;
 
           for (let i = 0; i < numericData.length; i++) {
-            const xValue = numericData[i];
-            const xPos = getPointOnSerializableScale(xValue, xScale);
-            if (xPos !== undefined) {
-              const distance = Math.abs(touchX - xPos);
+            const dataValue = numericData[i];
+            const categoryPos = getPointOnSerializableScale(dataValue, categoryScale);
+            if (categoryPos !== undefined) {
+              const distance = Math.abs(touchPosition - categoryPos);
               if (distance < closestDistance) {
                 closestDistance = distance;
                 closestIndex = i;
@@ -88,14 +94,14 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           }
           return closestIndex;
         } else {
-          const xValue = invertSerializableScale(touchX, xScale);
-          const dataIndex = Math.round(xValue);
-          const domain = xAxis.domain;
+          const dataValue = invertSerializableScale(touchPosition, categoryScale);
+          const dataIndex = Math.round(dataValue);
+          const domain = categoryAxis.domain;
           return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
         }
       }
     },
-    [xAxis, xScale],
+    [categoryAxis, categoryScale],
   );
 
   const handleStartEndHaptics = useCallback(() => {
@@ -125,14 +131,16 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
           // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
           if (Platform.OS === 'android') {
-            const newScrubberPosition = getDataIndexFromX(event.x);
+            const pointerPosition = categoryAxisIsX ? event.x : event.y;
+            const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
             if (newScrubberPosition !== scrubberPosition.value) {
               scrubberPosition.value = newScrubberPosition;
             }
           }
         })
         .onUpdate(function onUpdate(event) {
-          const newScrubberPosition = getDataIndexFromX(event.x);
+          const pointerPosition = categoryAxisIsX ? event.x : event.y;
+          const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
           if (newScrubberPosition !== scrubberPosition.value) {
             scrubberPosition.value = newScrubberPosition;
           }
@@ -151,7 +159,8 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     [
       allowOverflowGestures,
       handleStartEndHaptics,
-      getDataIndexFromX,
+      getDataIndexFromPosition,
+      categoryAxisIsX,
       scrubberPosition,
       enableScrubbing,
     ],
