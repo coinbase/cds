@@ -364,6 +364,7 @@ export const BarStack = memo<BarStackProps>(
           roundTop,
           roundBottom,
           shouldApplyGap,
+          BarComponent: s.BarComponent,
         });
       });
 
