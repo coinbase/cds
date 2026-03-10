@@ -77,6 +77,7 @@ export const DottedArea = memo<DottedAreaProps>(
     const shouldAnimate = animateProp ?? animate;
 
     const valueAxisConfig = layout !== 'horizontal' ? getYAxis(yAxisId) : getXAxis(xAxisId);
+    const gradientAxis = layout !== 'horizontal' ? 'y' : 'x';
 
     const fill = useMemo(
       () => fillProp ?? theme.color.fgPrimary,
@@ -122,8 +123,9 @@ export const DottedArea = memo<DottedAreaProps>(
         fill,
         peakOpacity,
         baselineOpacity,
+        gradientAxis,
       );
-    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
+    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity, gradientAxis]);
 
     // Update transition is used for clip path, we skip update animation on Path itself
     return (

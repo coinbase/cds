@@ -61,6 +61,7 @@ export const GradientArea = memo<GradientAreaProps>(
     const theme = useTheme();
 
     const valueAxisConfig = layout !== 'horizontal' ? getYAxis(yAxisId) : getXAxis(xAxisId);
+    const gradientAxis = layout !== 'horizontal' ? 'y' : 'x';
 
     const fill = useMemo(
       () => fillProp ?? theme.color.fgPrimary,
@@ -78,8 +79,9 @@ export const GradientArea = memo<GradientAreaProps>(
         fill,
         peakOpacity,
         baselineOpacity,
+        gradientAxis,
       );
-    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
+    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity, gradientAxis]);
 
     return (
       <Path
