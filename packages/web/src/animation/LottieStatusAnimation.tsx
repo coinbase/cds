@@ -1,16 +1,45 @@
-import React, { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { lottieStatusToAccessibilityLabel } from '@cbhq/cds-common/lottie/statusToAccessibilityLabel';
 import { useStatusAnimationPoller } from '@cbhq/cds-common/lottie/useStatusAnimationPoller';
+import type { DimensionValue } from '@cbhq/cds-common/types/DimensionStyles';
 import type { LottiePlayer } from '@cbhq/cds-common/types/LottiePlayer';
-import type { LottieStatusAnimationProps } from '@cbhq/cds-common/types/LottieStatusAnimationProps';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import type { TradeStatusLottie } from '@cbhq/cds-lottie-files/tradeStatus';
 import { tradeStatus } from '@cbhq/cds-lottie-files/tradeStatus';
+import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 
 import { Lottie } from './Lottie';
 
 type LottiePlayerRef = LottiePlayer<TradeStatusLottie>;
 
+type LottieStatusAnimationBaseProps = {
+  status?: LottieStatus;
+  onFinish?: () => void;
+};
+
+type LottieStatusAnimationPropsWithWidth = {
+  width: DimensionValue;
+} & LottieStatusAnimationBaseProps;
+
+type LottieStatusAnimationPropsWithHeight = {
+  height: DimensionValue;
+} & LottieStatusAnimationBaseProps;
+
+export type LottieStatusAnimationProps = (
+  | LottieStatusAnimationPropsWithWidth
+  | LottieStatusAnimationPropsWithHeight
+) &
+  SharedProps &
+  SharedAccessibilityProps;
 export const LottieStatusAnimation = memo(
-  ({ status = 'loading', onFinish, testID, ...otherProps }: LottieStatusAnimationProps) => {
+  ({
+    status = 'loading',
+    onFinish,
+    testID,
+    accessibilityLabel,
+    ...otherProps
+  }: LottieStatusAnimationProps) => {
     const [, forceUpdate] = useState(0);
     const lottie = useRef<LottiePlayerRef>();
 
@@ -27,10 +56,18 @@ export const LottieStatusAnimation = memo(
       }
     }, []);
 
+    const label = useMemo(
+      () => accessibilityLabel ?? lottieStatusToAccessibilityLabel[status as LottieStatus],
+      [accessibilityLabel, status],
+    );
+
     return (
       <Lottie
         ref={handleRef}
+        accessibilityLabel={label}
+        aria-live="polite"
         onAnimationFinish={handlePolling}
+        role="status"
         source={tradeStatus}
         testID={testID}
         {...otherProps}

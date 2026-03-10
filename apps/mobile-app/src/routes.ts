@@ -268,6 +268,10 @@ export const routes = [
       require('@cbhq/cds-mobile/overlays/__stories__/DrawerTop.stories').default,
   },
   {
+    key: 'Fallback',
+    getComponent: () => require('@cbhq/cds-mobile/layout/__stories__/Fallback.stories').default,
+  },
+  {
     key: 'FloatingAssetCard',
     getComponent: () =>
       require('@cbhq/cds-mobile/cards/__stories__/FloatingAssetCard.stories').default,

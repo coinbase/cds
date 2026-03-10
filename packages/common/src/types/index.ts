@@ -29,6 +29,7 @@ export * from './IllustrationProps';
 export * from './InputBaseProps';
 export * from './LottiePlayer';
 export * from './LottieSource';
+export * from './LottieStatus';
 export * from './LottieStatusAnimationProps';
 export * from './Motion';
 export * from './OverlayLifecycleProps';
