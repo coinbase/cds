@@ -1,0 +1,145 @@
+SegmentedControl uses native radio inputs with labels to provide an accessible, compact switch between options. It supports both text labels and icon options.
+
+## Basics
+
+Pass an array of `options` with `value` and `label` properties. Use `value` and `onChange` for controlled usage, or omit them for uncontrolled behavior. The component manages its own state when uncontrolled.
+
+```jsx live
+function SegmentedControlBasic() {
+  const options = [
+    { value: 'eth', label: 'ETH' },
+    { value: 'usd', label: 'USD' },
+    { value: 'btc', label: 'BTC' },
+  ];
+
+  const [selected, setSelected] = useState('eth');
+
+  return (
+    <VStack gap={2}>
+      <SegmentedControl options={options} value={selected} onChange={setSelected} />
+      <Text font="caption" color="fgMuted">
+        Selected: {selected}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Uncontrolled
+
+When you omit `value` and `onChange`, SegmentedControl manages selection internally. Use `onChange` only when you need to react to changes.
+
+```jsx live
+function SegmentedControlUncontrolled() {
+  const options = [
+    { value: 'list', label: 'List' },
+    { value: 'grid', label: 'Grid' },
+  ];
+
+  return <SegmentedControl options={options} />;
+}
+```
+
+## Icons
+
+For icon-only segments, set `type="icon"` and provide `iconSize` and options with `label` as an icon name. Use `accessibilityLabel` on each option for screen readers.
+
+```jsx live
+function SegmentedControlIcons() {
+  const options = [
+    { value: 'eth', label: 'ethereum', accessibilityLabel: 'Ethereum' },
+    { value: 'usd', label: 'cashUSD', accessibilityLabel: 'US Dollar' },
+  ];
+
+  const [value, setValue] = useState('eth');
+
+  return (
+    <VStack gap={3}>
+      <SegmentedControl
+        type="icon"
+        iconSize="s"
+        options={options}
+        value={value}
+        onChange={setValue}
+      />
+      <SegmentedControl
+        type="icon"
+        iconSize="m"
+        options={options}
+        value={value}
+        onChange={setValue}
+      />
+      <SegmentedControl
+        type="icon"
+        iconSize="l"
+        options={options}
+        value={value}
+        onChange={setValue}
+      />
+    </VStack>
+  );
+}
+```
+
+You can also set `active` to `true` to apply an active icon style.
+
+```jsx live
+function SegmentedControlActiveIcons() {
+  const options = [
+    { value: 'eth', label: 'ethereum', accessibilityLabel: 'Ethereum', active: true },
+    { value: 'usd', label: 'cashUSD', accessibilityLabel: 'US Dollar' },
+  ];
+
+  const [value, setValue] = useState('eth');
+
+  return (
+    <SegmentedControl
+      type="icon"
+      iconSize="m"
+      options={options}
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```
+
+## Disabled
+
+Disable the entire control with the `disabled` prop.
+
+```jsx live
+function SegmentedControlDisabled() {
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+  ];
+
+  return <SegmentedControl disabled options={options} value="option1" />;
+}
+```
+
+## Accessibility
+
+Provide `accessibilityLabel` on each option when using icons so screen readers can announce the segment. For text options, the label text is used automatically.
+
+```jsx live
+function SegmentedControlAccessible() {
+  const options = [
+    { value: 'eth', label: 'ethereum', accessibilityLabel: 'View in Ethereum' },
+    { value: 'usd', label: 'cashUSD', accessibilityLabel: 'View in US Dollars' },
+  ];
+
+  const [value, setValue] = useState('eth');
+
+  return (
+    <SegmentedControl
+      type="icon"
+      iconSize="m"
+      options={options}
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```
