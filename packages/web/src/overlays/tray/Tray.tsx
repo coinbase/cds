@@ -37,7 +37,7 @@ import { VStack } from '../../layout/VStack';
 import type { ResponsiveProp } from '../../styles/styleProps';
 import type { StylesAndClassNames } from '../../types';
 import { Text } from '../../typography/Text';
-import { FocusTrap } from '../FocusTrap';
+import { FocusTrap, type FocusTrapProps } from '../FocusTrap';
 import { HandleBar } from '../handlebar/HandleBar';
 import { Overlay } from '../overlay/Overlay';
 import { Portal } from '../Portal';
@@ -130,7 +130,10 @@ export const trayClassNames = {
 
 export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
-export type TrayBaseProps = {
+export type TrayBaseProps = Pick<
+  FocusTrapProps,
+  'focusTabIndexElements' | 'disableArrowKeyNavigation'
+> & {
   children?: React.ReactNode | TrayRenderChildren;
   /** ReactNode to render as the Drawer header. Can be a ReactNode or a function that receives { handleClose }. */
   header?: React.ReactNode | TrayRenderChildren;
@@ -182,22 +185,15 @@ export type TrayBaseProps = {
   /** z-index for the tray overlay */
   zIndex?: number;
   /**
-   * Allow any element with `tabIndex` attribute to be focusable in FocusTrap, rather than only focusing specific interactive element types like button.
-   * This can be useful when having long content in a Modal.
-   */
-  focusTabIndexElements?: boolean;
-  /**
-   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
-   *
-   * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
-   * @default true
-   */
-  restoreFocusOnUnmount?: boolean;
-  /**
    * When true, the tray will use opacity animation instead of transform animation.
    * This is useful for supporting reduced motion for accessibility.
    */
   reduceMotion?: boolean;
+  /**
+   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
+   * @default true
+   */
+  restoreFocusOnUnmount?: boolean;
   /**
    * Sets an accessible label for the close button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -266,6 +262,7 @@ export const Tray = memo(
       accessibilityLabelledBy,
       focusTabIndexElements,
       restoreFocusOnUnmount = true,
+      disableArrowKeyNavigation,
       reduceMotion,
       closeAccessibilityLabel = 'Close',
       closeAccessibilityHint,
@@ -452,6 +449,7 @@ export const Tray = memo(
             <MotionConfig reducedMotion={reduceMotion ? 'always' : undefined}>
               <DragMotionProvider enabled={!preventDismiss}>
                 <FocusTrap
+                  disableArrowKeyNavigation={disableArrowKeyNavigation}
                   focusTabIndexElements={focusTabIndexElements}
                   onEscPress={preventDismiss ? undefined : handleClose}
                   restoreFocusOnUnmount={restoreFocusOnUnmount}
