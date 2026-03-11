@@ -1,14 +1,15 @@
-import execa from 'execa';
-import fs from 'fs';
-import { select, input, confirm } from '@inquirer/prompts';
-import path from 'path';
-import semver from 'semver';
-import { color, log, logNewLine, logWarn, logInfo } from './ci/logging';
+import { confirm, input, select } from '@inquirer/prompts';
 import { createProjectGraphAsync } from '@nx/devkit';
 import { execSync } from 'child_process';
-import { projectsNeedingVersion } from './ci/getProjectsNeedingVersion';
+import execa from 'execa';
+import fs from 'fs';
+import path from 'path';
+import semver from 'semver';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+
+import { projectsNeedingVersion } from './ci/getProjectsNeedingVersion';
+import { color, log, logInfo, logNewLine, logWarn } from './ci/logging';
 
 const UNRELEASED_HEADER = '## Unreleased';
 const TEMPLATE_TOKEN = '<!-- template-start -->';
@@ -17,7 +18,6 @@ export type VersionBump = 'major' | 'minor' | 'patch' | 'none';
 
 interface LogEntry {
   bump: VersionBump;
-  jira?: string;
   pr?: string;
   message: string;
 }
@@ -25,7 +25,6 @@ interface LogEntry {
 interface PrefillOptions {
   message?: string;
   bump?: VersionBump;
-  jira?: string;
   pr?: string;
 }
 
@@ -35,7 +34,6 @@ interface VersionOptions {
   message?: string;
   bump?: VersionBump;
   pr?: string;
-  jira?: string;
 }
 
 export async function getRemoteRepoUrl(): Promise<string> {
@@ -126,10 +124,6 @@ async function formatLogs(logs: LogEntry[], version: string | null): Promise<str
       line += ` [[#${logItem.pr}](${repoUrl}/pull/${logItem.pr})]`;
     }
 
-    if (logItem.jira) {
-      line += ` [${logItem.jira}]`;
-    }
-
     groups[logItem.bump || 'none'].push(`- ${line}`);
   });
 
@@ -160,7 +154,6 @@ async function gatherLogs(
 ): Promise<boolean> {
   let addingLogs = true;
   while (addingLogs) {
-    // eslint-disable-next-line no-await-in-loop
     const bump = await select<VersionBump>({
       message: 'Type of change?',
       choices: [
@@ -203,21 +196,12 @@ async function gatherLogs(
       validate: (value: string) => (value && !value.match(/^\d+$/) ? 'Must be a number' : true),
     });
 
-    const jira = await input({
-      message: 'JIRA issue (e.g. XX-456)?',
-      default: '',
-      validate: (value: string) =>
-        value && !value.match(/^[A-Z0-9]+-\d+$/)
-          ? 'Must be in the format of a JIRA issue ID'
-          : true,
-    });
-
     const again = await confirm({
       message: `Add another entry for ${projectName}?`,
       default: false,
     });
 
-    const logItem = { bump, message, pr: pr || undefined, jira: jira || undefined };
+    const logItem = { bump, message, pr: pr || undefined };
     logs.push(logItem);
     if (again) {
       logNewLine();
@@ -316,7 +300,7 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
     log(`Versioning project ${color.project(projectName)} ${color.muted(`(${projectPath})`)}`);
 
     const pkgPath = path.join(projectRoot, 'package.json');
-    // eslint-disable-next-line no-await-in-loop
+
     const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8')) as {
       name: string;
       version: string;
@@ -329,24 +313,17 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
     const bump = prefills?.bump;
     const message = prefills?.message;
     if (projectName && bump && message) {
-      const jira = prefills?.jira;
       const pr = prefills?.pr;
-      // validate jira and pr
-      if (jira && !/^[0-9A-Z-]+$/i.test(jira || '')) {
-        throw new Error(`Invalid jira: ${jira}`);
-      }
-
+      // validate pr
       if (pr && !/^[0-9]+$/.test(pr || '')) {
         throw new Error(`Invalid pr: ${pr}`);
       }
       logs.push({
         bump,
         message,
-        jira: prefills?.jira,
         pr: prefills?.pr,
       });
     } else {
-      // eslint-disable-next-line no-await-in-loop
       again = await gatherLogs(projectName, logs, prefills);
     }
     const nextVersion = determineNextVersion(logs, pkg.version);
@@ -359,7 +336,6 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
 
     log(`Updating changelog with ${logs.length} entries`);
 
-    // eslint-disable-next-line no-await-in-loop
     await updateChangelog(projectRoot, logs, nextVersion);
 
     if (nextVersion) {
@@ -371,7 +347,6 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
 
       pkg.version = nextVersion;
 
-      // eslint-disable-next-line no-await-in-loop
       await fs.promises.writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
     } else {
       log(`Added an unreleased entry to ${color.project(pkg.name)}`);
@@ -379,7 +354,6 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
 
     logNewLine();
     if (again) {
-      // eslint-disable-next-line no-await-in-loop
       await bumpVersion('', prefills);
     }
   }
@@ -408,10 +382,6 @@ function parseArgs(): VersionOptions {
       type: 'string',
       description: 'PR number (e.g. 123)',
     })
-    .option('jira', {
-      type: 'string',
-      description: 'JIRA issue (e.g. XX-456)',
-    })
     .positional('project', {
       type: 'string',
       description: 'Project name to bump version for',
@@ -432,7 +402,6 @@ function parseArgs(): VersionOptions {
     message: argv.message,
     bump: argv.bump as VersionBump | undefined,
     pr: argv.pr,
-    jira: argv.jira,
   };
 }
 
@@ -455,7 +424,6 @@ async function main() {
   await bumpVersion(selectedProject, {
     message,
     bump: options.bump,
-    jira: options.jira,
     pr: options.pr,
   });
 }
