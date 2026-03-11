@@ -24,6 +24,12 @@ const LABEL_SIZE = 20;
 
 export type XAxisBaseProps = AxisBaseProps & {
   /**
+   * The ID of the axis to render.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  axisId?: string;
+  /**
    * The position of the axis relative to the chart's drawing area.
    * @default 'bottom'
    */
@@ -39,6 +45,7 @@ export type XAxisProps = AxisProps & XAxisBaseProps;
 
 export const XAxis = memo<XAxisProps>(
   ({
+    axisId,
     position = 'bottom',
     showGrid,
     requestedTickCount,
@@ -68,6 +75,7 @@ export const XAxis = memo<XAxisProps>(
     const {
       animate,
       drawingArea,
+      layout,
       getXScale,
       getXAxis,
       registerAxis,
@@ -75,8 +83,8 @@ export const XAxis = memo<XAxisProps>(
       getAxisBounds,
     } = useCartesianChartContext();
 
-    const xScale = getXScale();
-    const xAxis = getXAxis();
+    const xScale = getXScale(axisId);
+    const xAxis = getXAxis(axisId);
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
@@ -86,21 +94,18 @@ export const XAxis = memo<XAxisProps>(
     }, [registrationId, registerAxis, unregisterAxis, position, height]);
 
     const formatTick = useCallback(
-      (value: any) => {
+      (value: number) => {
         // If we have string labels and no custom formatter, use the labels
         const axisData = xAxis?.data;
         const hasStringLabels =
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string';
 
-        let finalValue = value;
-
-        // For band scales with string data, value is an index
-        if (hasStringLabels && typeof value === 'number' && axisData[value] !== undefined) {
-          finalValue = axisData[value];
+        if (hasStringLabels && !tickLabelFormatter && axisData[value] !== undefined) {
+          return axisData[value];
         }
 
-        // Use the formatter (if provided) or the value itself
-        return tickLabelFormatter?.(finalValue) ?? finalValue;
+        // Otherwise passes raw index to formatter
+        return tickLabelFormatter?.(value) ?? value;
       },
       [xAxis?.data, tickLabelFormatter],
     );
@@ -124,31 +129,31 @@ export const XAxis = memo<XAxisProps>(
         categories = domain.map(String);
       }
 
-      let possibleTickValues: number[] | undefined;
-
-      // If we have discrete data, we can use the indices as possible tick values
-      if (
-        axisData &&
-        Array.isArray(axisData) &&
-        (typeof axisData[0] === 'string' ||
-          (typeof axisData[0] === 'number' && isCategoricalScale(xScale)))
-      ) {
-        possibleTickValues = Array.from({ length: axisData.length }, (_, i) => i);
-      }
-
       return getAxisTicksData({
         scaleFunction: xScale,
         ticks,
-        requestedTickCount,
+        requestedTickCount: requestedTickCount ?? (layout === 'horizontal' ? 5 : undefined),
         categories,
-        possibleTickValues,
+        possibleTickValues:
+          axisData && Array.isArray(axisData) && typeof axisData[0] === 'string'
+            ? Array.from({ length: axisData.length }, (_, i) => i)
+            : undefined,
         tickInterval: tickInterval,
         options: {
           minStep: tickMinStep,
           maxStep: tickMaxStep,
         },
       });
-    }, [ticks, xScale, requestedTickCount, tickInterval, tickMinStep, tickMaxStep, xAxis?.data]);
+    }, [
+      ticks,
+      xScale,
+      requestedTickCount,
+      tickInterval,
+      tickMinStep,
+      tickMaxStep,
+      xAxis?.data,
+      layout,
+    ]);
 
     const isBandScale = useMemo(() => {
       if (!xScale) return false;

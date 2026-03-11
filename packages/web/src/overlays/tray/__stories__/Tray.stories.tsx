@@ -178,8 +178,13 @@ export const Default = () => {
         <Text font="headline">Tray with Long Content</Text>
         <Button onClick={() => setShowLongContentTray(true)}>Open Long Content Tray</Button>
         {showLongContentTray && (
-          <Tray onCloseComplete={() => setShowLongContentTray(false)} title="Long Content Example">
-            <VStack gap={1}>
+          <Tray
+            disableArrowKeyNavigation
+            focusTabIndexElements
+            onCloseComplete={() => setShowLongContentTray(false)}
+            title="Long Content Example"
+          >
+            <VStack gap={1} tabIndex={0}>
               <Text font="body">
                 This example demonstrates how the tray handles a large amount of content. The tray
                 should expand appropriately and enable scrolling when needed.
@@ -390,6 +395,8 @@ export const ResponsiveBasicListCells = () => {
       <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
           footer={({ handleClose }) => (
             <PageFooter
               borderedTop
@@ -411,20 +418,22 @@ export const ResponsiveBasicListCells = () => {
           }}
           title="Section header"
         >
-          {Array.from({ length: 20 }, (_, i) => (
-            <ListCell
-              key={i}
-              accessory="arrow"
-              description="Description"
-              innerSpacing={{
-                marginX: -4,
-                paddingX: 4,
-                paddingY: 1,
-              }}
-              spacingVariant="condensed"
-              title="Title"
-            />
-          ))}
+          <VStack tabIndex={0}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </VStack>
         </Tray>
       )}
     </>

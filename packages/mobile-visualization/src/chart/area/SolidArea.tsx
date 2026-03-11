@@ -31,6 +31,7 @@ export const SolidArea = memo<SolidAreaProps>(
     d,
     fill,
     fillOpacity = 1,
+    xAxisId,
     yAxisId,
     animate,
     transitions,
@@ -50,7 +51,7 @@ export const SolidArea = memo<SolidAreaProps>(
         transitions={transitions}
         {...pathProps}
       >
-        {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+        {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
       </Path>
     );
   },

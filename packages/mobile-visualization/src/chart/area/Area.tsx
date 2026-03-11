@@ -72,8 +72,15 @@ export type AreaComponentProps = Pick<
    */
   d: string;
   /**
+   * ID of the x-axis to use.
+   * If not provided, defaults to the default x-axis.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
    * ID of the y-axis to use.
    * If not provided, defaults to the default y-axis.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
 };
@@ -95,7 +102,8 @@ export const Area = memo<AreaProps>(
     transition,
     animate,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
+    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+      useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
     const gradient = useMemo(
@@ -106,17 +114,27 @@ export const Area = memo<AreaProps>(
 
     const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
 
-    const xAxis = getXAxis();
-    const xScale = getXScale();
+    const xAxis = getXAxis(matchedSeries?.xAxisId);
+    const xScale = getXScale(matchedSeries?.xAxisId);
     const yScale = getYScale(matchedSeries?.yAxisId);
+    const yAxis = getYAxis(matchedSeries?.yAxisId);
+
+    const categoryAxisIsX = useMemo(() => {
+      return layout !== 'horizontal';
+    }, [layout]);
+
+    const categoryAxis = useMemo(() => {
+      return categoryAxisIsX ? xAxis : yAxis;
+    }, [categoryAxisIsX, xAxis, yAxis]);
 
     const area = useMemo(() => {
       if (!sourceData || sourceData.length === 0 || !xScale || !yScale) return '';
 
-      // Get numeric x-axis data if available
-      const xData =
-        xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
-          ? (xAxis.data as number[])
+      const indexData =
+        categoryAxis?.data &&
+        Array.isArray(categoryAxis.data) &&
+        typeof categoryAxis.data[0] === 'number'
+          ? (categoryAxis.data as number[])
           : undefined;
 
       return getAreaPath({
@@ -124,10 +142,12 @@ export const Area = memo<AreaProps>(
         xScale,
         yScale,
         curve,
-        xData,
+        xData: categoryAxisIsX ? indexData : undefined,
+        yData: !categoryAxisIsX ? indexData : undefined,
         connectNulls,
+        layout,
       });
-    }, [sourceData, xScale, yScale, curve, xAxis?.data, connectNulls]);
+    }, [sourceData, xScale, yScale, curve, categoryAxis, categoryAxisIsX, connectNulls, layout]);
 
     const AreaComponent = useMemo((): AreaComponent => {
       if (AreaComponentProp) {
@@ -157,6 +177,7 @@ export const Area = memo<AreaProps>(
         gradient={gradient}
         transition={transition}
         transitions={transitions}
+        xAxisId={matchedSeries?.xAxisId}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

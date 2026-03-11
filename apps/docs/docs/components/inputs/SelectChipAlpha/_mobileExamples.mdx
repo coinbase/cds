@@ -1,8 +1,10 @@
-SelectChip is built on top of the [Alpha Select](/components/inputs/SelectAlpha/) component. It provides a chip-styled interface while maintaining all the functionality of Select, including support for single and multi-selection, option groups, and custom components.
+SelectChip is a chip-styled control built on top of the [Alpha Select](/components/inputs/SelectAlpha/). It supports single and multi-selection, option groups, custom start/end nodes, and shares the same `classNames` and `styles` API for targeting internal elements (see the Styles tab).
 
 :::note Duplicate Values
 Avoid using options with duplicate values. Each option's `value` should be unique within the options array to ensure proper selection behavior.
 :::
+
+## Basics
 
 ### Basic usage
 
@@ -18,7 +20,6 @@ function ExampleDefault() {
   const [value, setValue] = useState<string | null>(null);
   return (
     <SelectChip
-      label="Select a value"
       accessibilityLabel="Select a value"
       onChange={setValue}
       options={exampleOptions}
@@ -29,7 +30,9 @@ function ExampleDefault() {
 }
 ```
 
-### Single select with groups
+## Single select
+
+### With groups
 
 ```tsx
 function ExampleSingleGroups() {
@@ -58,7 +61,6 @@ function ExampleSingleGroups() {
   return (
     <SelectChip
       accessibilityLabel="Select a value"
-      label="Select a value"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -68,7 +70,7 @@ function ExampleSingleGroups() {
 }
 ```
 
-### With disabled option group
+### With disabled group
 
 ```tsx
 function ExampleDisabledGroup() {
@@ -98,7 +100,6 @@ function ExampleDisabledGroup() {
   return (
     <SelectChip
       accessibilityLabel="Select a value"
-      label="Select a value"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -108,7 +109,9 @@ function ExampleDisabledGroup() {
 }
 ```
 
-### Multi-select
+## Multi-select
+
+### Basic
 
 :::note Disabled Options and Select All
 Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
@@ -126,8 +129,7 @@ function ExampleMulti() {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   return (
     <SelectChip
-      accessibilityLabel="Select multiple values"
-      label="Select multiple values"
+      controlAccessibilityLabel="Select multiple values"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Choose options"
@@ -138,7 +140,7 @@ function ExampleMulti() {
 }
 ```
 
-### Multi-select with groups
+### With groups
 
 ```tsx
 function ExampleMultiGroups() {
@@ -166,8 +168,7 @@ function ExampleMultiGroups() {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   return (
     <SelectChip
-      accessibilityLabel="Select multiple values"
-      label="Select multiple values"
+      controlAccessibilityLabel="Select multiple values"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Choose options"
@@ -178,7 +179,7 @@ function ExampleMultiGroups() {
 }
 ```
 
-### Multi-select with assets
+### With assets
 
 ```tsx
 function ExampleMultiAssets() {
@@ -200,11 +201,8 @@ function ExampleMultiAssets() {
     initialValue: ['eth', 'btc'],
   });
 
-  // Get startNode based on selected assets
   const startNode = useMemo(() => {
     if (value.length === 0) return null;
-
-    // Multiple assets selected - use RemoteImageGroup
     return (
       <RemoteImageGroup shape="circle" size={24}>
         {value.map((assetValue) => {
@@ -218,7 +216,7 @@ function ExampleMultiAssets() {
 
   return (
     <SelectChip
-      accessibilityLabel="Select multiple assets"
+      controlAccessibilityLabel="Select multiple assets"
       maxWidth={400}
       onChange={onChange}
       options={exampleOptions}
@@ -230,6 +228,8 @@ function ExampleMultiAssets() {
   );
 }
 ```
+
+## Customization
 
 ### Compact
 
@@ -245,7 +245,6 @@ function ExampleCompact() {
   return (
     <SelectChip
       compact
-      label="Choose an option"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -255,7 +254,33 @@ function ExampleCompact() {
 }
 ```
 
-### With start and end nodes
+### Inverted
+
+```tsx
+function ExampleInverted() {
+  const exampleOptions = [
+    { value: null, label: 'Clear selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+  const hasValue = value !== null;
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      invertColorScheme={!hasValue}
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Start and end nodes
 
 ```tsx
 function ExampleWithNodes() {
@@ -278,7 +303,6 @@ function ExampleWithNodes() {
   };
   return (
     <SelectChip
-      label="Choose an asset"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an asset"
@@ -289,20 +313,12 @@ function ExampleWithNodes() {
 }
 ```
 
-### Empty options
+### Empty state
 
 ```tsx
 function ExampleEmptyOptions() {
   const [value, setValue] = useState<string | null>(null);
-  return (
-    <SelectChip
-      label="Select ..."
-      onChange={setValue}
-      options={[]}
-      placeholder="Select ..."
-      value={value}
-    />
-  );
+  return <SelectChip onChange={setValue} options={[]} placeholder="Select ..." value={value} />;
 }
 ```
 
@@ -320,7 +336,6 @@ function ExampleDescriptions() {
   return (
     <SelectChip
       accessibilityLabel="Select a value"
-      label="Select a value"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -330,7 +345,7 @@ function ExampleDescriptions() {
 }
 ```
 
-### With display value
+### Display value override
 
 Use the `displayValue` prop to override the displayed value and avoid truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
 
@@ -350,7 +365,7 @@ function ExampleDisplayValue() {
       : undefined;
   return (
     <SelectChip
-      accessibilityLabel="Select multiple values"
+      controlAccessibilityLabel="Select multiple values"
       displayValue={displayValue}
       onChange={onChange}
       options={exampleOptions}
@@ -362,7 +377,7 @@ function ExampleDisplayValue() {
 }
 ```
 
-### With max width
+### Max width
 
 ```tsx
 function ExampleMaxWidth() {
@@ -379,7 +394,6 @@ function ExampleMaxWidth() {
         <Text>Default maxWidth (200px):</Text>
         <SelectChip
           accessibilityLabel="Select a value"
-          label="Select a value"
           onChange={setValue}
           options={exampleOptions}
           placeholder="Choose an option"
@@ -390,7 +404,6 @@ function ExampleMaxWidth() {
         <Text>Custom maxWidth (150px):</Text>
         <SelectChip
           accessibilityLabel="Select a value"
-          label="Select a value"
           maxWidth={150}
           onChange={setValue}
           options={exampleOptions}
@@ -402,7 +415,6 @@ function ExampleMaxWidth() {
         <Text>No maxWidth constraint:</Text>
         <SelectChip
           accessibilityLabel="Select a value"
-          label="Select a value"
           maxWidth="100%"
           onChange={setValue}
           options={exampleOptions}
@@ -415,7 +427,7 @@ function ExampleMaxWidth() {
 }
 ```
 
-### Disabled
+### Disabled state
 
 ```tsx
 function ExampleDisabled() {

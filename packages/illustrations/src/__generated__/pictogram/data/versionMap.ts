@@ -509,6 +509,7 @@ const versionMap: Record<PictogramName, number> = {
   arrowsUpDown: 0,
   pieChartWithArrow: 0,
   pieChartWithArrowBlue: 0,
+  download: 0,
 };
 
 export default versionMap;

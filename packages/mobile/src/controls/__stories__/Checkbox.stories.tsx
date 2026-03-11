@@ -39,8 +39,17 @@ const CheckboxScreen = () => {
         <Checkbox checked disabled>
           Checked and disabled
         </Checkbox>
+      </Example>
+
+      <Example inline title="Read Only">
         <Checkbox readOnly>Read Only</Checkbox>
+      </Example>
+
+      <Example inline title="No Label">
         <Checkbox accessibilityLabel="checkbox with no label" />
+      </Example>
+
+      <Example inline title="Multi-line Label">
         <Checkbox>
           This checkbox has a multi-line label. The checkbox and label should align at the top. The
           label is super duper long and it keeps going on forever. This checkbox has a multi-line
@@ -129,6 +138,18 @@ const CheckboxScreen = () => {
           onChange={() => setChecked((s) => !s)}
         >
           Style props indeterminate
+        </Checkbox>
+      </Example>
+
+      <Example inline title="Custom Border Width">
+        <Checkbox checked={checked} onChange={() => setChecked((s) => !s)}>
+          Default (100)
+        </Checkbox>
+        <Checkbox borderWidth={200} checked={checked} onChange={() => setChecked((s) => !s)}>
+          Border width 200
+        </Checkbox>
+        <Checkbox borderWidth={500} checked={checked} onChange={() => setChecked((s) => !s)}>
+          Border width 500
         </Checkbox>
       </Example>
     </ExampleScreen>

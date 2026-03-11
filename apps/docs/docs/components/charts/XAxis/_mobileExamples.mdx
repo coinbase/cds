@@ -22,6 +22,58 @@ The XAxis component provides a horizontal axis for charts with automatic tick ge
 </CartesianChart>
 ```
 
+## Multiple X Axes (Horizontal Layout)
+
+When `layout="horizontal"`, you can configure multiple x-axes and bind each series to an axis with `xAxisId`.
+Use `XAxis`'s `axisId` prop to render each axis configuration.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={300}
+  layout="horizontal"
+  series={[
+    {
+      id: 'temperature',
+      label: 'Temperature',
+      data: [72, 68, 74, 70],
+      color: 'var(--color-accentBoldBlue)',
+      xAxisId: 'temperature-axis',
+    },
+    {
+      id: 'volume',
+      label: 'Volume',
+      data: [1200, 900, 1500, 1100],
+      color: 'var(--color-accentBoldOrange)',
+      xAxisId: 'volume-axis',
+    },
+  ]}
+  xAxis={[
+    {
+      id: 'temperature-axis',
+      domain: { min: 60, max: 80 },
+      domainLimit: 'strict',
+    },
+    {
+      id: 'volume-axis',
+      domain: { min: 0, max: 2000 },
+      domainLimit: 'strict',
+    },
+  ]}
+  yAxis={{
+    scaleType: 'band',
+    data: ['Mon', 'Tue', 'Wed', 'Thu'],
+  }}
+>
+  <YAxis showLine showTickMarks />
+  <XAxis axisId="temperature-axis" label="Temp (F)" position="bottom" showLine />
+  <XAxis axisId="volume-axis" label="Volume" position="top" showLine />
+  <Line seriesId="temperature" />
+  <Line seriesId="volume" />
+  <Scrubber />
+</CartesianChart>
+```
+
 ## Axis Config
 
 Properties related to the scale of an axis are set on the Chart component. This includes `scaleType`, `domain`, `domainLimit`, `range`, `data`, and `categoryPadding`.
