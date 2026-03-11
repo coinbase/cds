@@ -56,6 +56,11 @@ export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioVa
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
+  /**
+   * Optional. Sets the border width of the control.
+   * @default 100
+   */
+  borderWidth?: ThemeVars.BorderWidth;
 };
 
 export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;

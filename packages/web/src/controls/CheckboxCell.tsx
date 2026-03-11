@@ -18,7 +18,7 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = Omit<
 > &
   Omit<
     ControlBaseProps<CheckboxValue>,
-    'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked' | 'borderWidth'
+    'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
   > & {
     checked?: boolean;
     title: React.ReactNode;

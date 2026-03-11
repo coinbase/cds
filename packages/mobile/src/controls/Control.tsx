@@ -43,7 +43,12 @@ export type ControlBaseProps<ControlValue extends string> = Omit<
   PressableProps,
   'disabled' | 'children' | 'style'
 > &
-  Partial<Pick<InteractableBaseProps, 'background' | 'borderColor' | 'borderRadius' | 'color'>> & {
+  Partial<
+    Pick<
+      InteractableBaseProps,
+      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color'
+    >
+  > & {
     /** Label for the control option. */
     children?: React.ReactNode;
     /** Set the control to selected/on. */
@@ -58,10 +63,6 @@ export type ControlBaseProps<ControlValue extends string> = Omit<
     accessibilityLabel?: string;
     /** Enable indeterminate state. Useful when you want to indicate that sub-items of a control are partially filled. */
     indeterminate?: boolean;
-    /** Sets the border width of the control.
-     * @default 100
-     */
-    borderWidth?: ThemeVars.BorderWidth;
     /** Toggle control selected state. */
     onChange?: (value: ControlValue | undefined, checked?: boolean) => void;
     /** Sets the checked/active color of the control.

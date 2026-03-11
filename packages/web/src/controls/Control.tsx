@@ -62,7 +62,7 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
   Partial<
     Pick<
       InteractableBaseProps,
-      'background' | 'borderColor' | 'borderRadius' | 'color' | 'elevation'
+      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color' | 'elevation'
     >
   > & {
     /** Label for the control option. */
@@ -79,10 +79,6 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
     accessibilityLabel?: string;
     /** Enable indeterminate state. Useful when you want to indicate that sub-items of a control are partially filled. */
     indeterminate?: boolean;
-    /** Sets the border width of the control.
-     * @default 100
-     */
-    borderWidth?: InteractableBaseProps['borderWidth'];
     /** Style for the icon element */
     iconStyle?: React.CSSProperties;
     /** Style for the label element */

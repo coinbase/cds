@@ -14,6 +14,11 @@ export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<C
    * @default fgInverse
    */
   controlColor?: ThemeVars.Color;
+  /**
+   * Optional. Sets the border width of the control.
+   * @default 100
+   */
+  borderWidth?: ThemeVars.BorderWidth;
 };
 
 export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;

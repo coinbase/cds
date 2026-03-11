@@ -18,7 +18,7 @@ export type RadioCellBaseProps<RadioValue extends string> = Omit<
 > &
   Omit<
     ControlBaseProps<RadioValue>,
-    'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked' | 'borderWidth'
+    'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
   > & {
     checked?: boolean;
     title: React.ReactNode;
