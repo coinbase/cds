@@ -106,7 +106,7 @@ describe('getLabelPosition', () => {
   });
 });
 
-describe('calculateLabelYPositions', () => {
+describe('calculateLabelStackedPositions', () => {
   const drawingArea: Rect = {
     x: 0,
     y: 0,
