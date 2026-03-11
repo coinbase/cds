@@ -32,24 +32,20 @@ const BasicLineChart = memo(function BasicLineChart() {
   const categories = useMemo(() => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], []);
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Line chart with ${data.length} days of data. Tap segments to move scrubber.`;
-      }
-      return `${categories[index]}: ${data[index]}`;
-    },
+    (index: number) => `${categories[index]}: ${data[index]}`,
     [categories, data],
   );
 
   return (
     <LineChart
+      accessibilityLabel={`Line chart with ${data.length} days of data. Tap segments to move scrubber.`}
       enableScrubbing
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={scrubberAccessibilityLabel}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[{ id: 'line', data, color: theme.color.accentBoldBlue }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
@@ -67,24 +63,22 @@ const DataFormatLineChart = memo(function DataFormatLineChart() {
   const chartAccessibilityLabel = `Chart with uneven X values ${xData.join(', ')}. ${yData.length} data points.`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) return chartAccessibilityLabel;
-      return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
-    },
-    [chartAccessibilityLabel, xData, yData],
+    (index: number) => `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`,
+    [xData, yData],
   );
 
   return (
     <LineChart
+      accessibilityLabel={chartAccessibilityLabel}
       enableScrubbing
       points
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={scrubberAccessibilityLabel}
       curve="natural"
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[{ id: 'line', data: yData, color: theme.color.accentBoldGreen }]}
       xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
       yAxis={{
@@ -106,23 +100,19 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
   const values = useMemo(() => [40, 65, 55, 80, 72, 90], []);
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Bar chart with ${values.length} months. Tap segments to move scrubber.`;
-      }
-      return `${categories[index]}: ${values[index]}`;
-    },
+    (index: number) => `${categories[index]}: ${values[index]}`,
     [categories, values],
   );
 
   return (
     <BarChart
+      accessibilityLabel={`Bar chart with ${values.length} months. Tap segments to move scrubber.`}
       enableScrubbing
       showXAxis
       showYAxis
-      accessibilityLabel={scrubberAccessibilityLabel}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[{ id: 'bars', data: values, color: theme.color.accentBoldPurple }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
@@ -153,25 +143,21 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
   );
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate segments.`;
-      }
-      return `${dataset[index].month}: ${dataset[index].rainfall}mm rainfall`;
-    },
+    (index: number) => `${dataset[index].month}: ${dataset[index].rainfall}mm rainfall`,
     [dataset],
   );
 
   return (
     <BarChart
+      accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate segments.`}
       enableScrubbing
       showXAxis
       showYAxis
-      accessibilityLabel={scrubberAccessibilityLabel}
       borderRadius={2}
       height={400}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       layout="horizontal"
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'seoul',
@@ -213,21 +199,18 @@ const ServiceAvailability = memo(function ServiceAvailability() {
   );
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`;
-      }
-      return `Point ${index + 1}: ${availabilityEvents[index].availability}% availability on ${availabilityEvents[index].date.toLocaleDateString()}`;
-    },
+    (index: number) =>
+      `Point ${index + 1}: ${availabilityEvents[index].availability}% availability on ${availabilityEvents[index].date.toLocaleDateString()}`,
     [availabilityEvents],
   );
 
   return (
     <CartesianChart
+      accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`}
       enableScrubbing
-      accessibilityLabel={scrubberAccessibilityLabel}
-      accessibilityStep={1}
       height={200}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      scrubberAccessibilityLabelStep={1}
       series={[
         {
           id: 'availability',
@@ -289,22 +272,18 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
   );
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Line chart with ${data.length} data points. Swipe to navigate segments.`;
-      }
-      return `Point ${index + 1}: ${data[index]}`;
-    },
+    (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
   );
 
   return (
     <LineChart
+      accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate segments.`}
       enableScrubbing
       showArea
-      accessibilityLabel={scrubberAccessibilityLabel}
-      accessibilityStep={1}
       height={200}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      scrubberAccessibilityLabelStep={1}
       series={[{ id: 'prices', data, color: theme.color.accentBoldBlue }]}
     >
       <Scrubber hideOverlay />
@@ -338,10 +317,7 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
   );
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Cash flow chart: ${categories.length} days with gains and losses. Tap segments to move scrubber.`;
-      }
+    (index: number) => {
       const net = gains[index] + losses[index];
       const netStr = net >= 0 ? `+$${net}M` : `-$${Math.abs(net)}M`;
       return `${categories[index]}: ${netStr}`;
@@ -351,10 +327,11 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
 
   return (
     <CartesianChart
+      accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Tap segments to move scrubber.`}
       enableScrubbing
-      accessibilityLabel={scrubberAccessibilityLabel}
       height={280}
       inset={32}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={series}
       xAxis={{ data: categories, scaleType: 'band' }}
     >
@@ -429,23 +406,18 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
-  const accessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`;
-      }
+  const chartAccessibilityLabel = useMemo(
+    () =>
+      `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`,
+    [currentPrice, formatPrice, timePeriod.label],
+  );
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) => {
       const price = formatPrice(sparklineTimePeriodDataValues[index]);
       const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
       return `${price} ${date}`;
     },
-    [
-      currentPrice,
-      formatDate,
-      formatPrice,
-      sparklineTimePeriodDataTimestamps,
-      sparklineTimePeriodDataValues,
-      timePeriod.label,
-    ],
+    [formatDate, formatPrice, sparklineTimePeriodDataTimestamps, sparklineTimePeriodDataValues],
   );
 
   const BTCTab: TabComponent = memo(
@@ -489,12 +461,13 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
         title={<Text font="title1">Bitcoin</Text>}
       />
       <LineChart
+        accessibilityLabel={chartAccessibilityLabel}
         enableScrubbing
         showArea
-        accessibilityLabel={accessibilityLabel}
         areaType="dotted"
         height={200}
         inset={{ top: 52 }}
+        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
         series={[
           {
             id: 'btc',

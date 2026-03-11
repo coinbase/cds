@@ -80,14 +80,9 @@ function MultipleLine() {
   const chartAccessibilityHint = 'Swipe left or right to hear details for each page.';
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return `${chartAccessibilityLabel} ${chartAccessibilityHint}`;
-      }
-
-      return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
-    },
-    [chartAccessibilityHint, chartAccessibilityLabel, pages, pageViews, uniqueVisitors],
+    (index: number) =>
+      `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`,
+    [pages, pageViews, uniqueVisitors],
   );
 
   const numberFormatter = useCallback(
@@ -97,13 +92,14 @@ function MultipleLine() {
 
   return (
     <LineChart
+      accessibilityHint={chartAccessibilityHint}
+      accessibilityLabel={`${chartAccessibilityLabel} ${chartAccessibilityHint}`}
       enableScrubbing
       showArea
       showXAxis
       showYAxis
-      accessibilityHint={chartAccessibilityHint}
-      accessibilityLabel={scrubberAccessibilityLabel}
       height={200}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'pageViews',
@@ -142,26 +138,22 @@ function DataFormat() {
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return chartAccessibilityLabel;
-      }
-      return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
-    },
-    [chartAccessibilityLabel, xData, yData],
+    (index: number) => `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`,
+    [xData, yData],
   );
 
   return (
     <LineChart
+      accessibilityLabel={chartAccessibilityLabel}
       enableScrubbing
       points
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={scrubberAccessibilityLabel}
       curve="natural"
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'line',
@@ -515,24 +507,19 @@ function BasicAccessible() {
     return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
   }, [data]);
 
-  // Scrubber-level accessibility label provides specific position info
   const scrubberAccessibilityLabel = useCallback(
-    (index?: number) => {
-      if (index === undefined) {
-        return chartAccessibilityLabel;
-      }
-      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
-    },
-    [chartAccessibilityLabel, data],
+    (index: number) => `Price at position ${index + 1} of ${data.length}: ${data[index]}`,
+    [data],
   );
 
   return (
     <LineChart
+      accessibilityLabel={chartAccessibilityLabel}
       enableScrubbing
       showArea
       showYAxis
-      accessibilityLabel={scrubberAccessibilityLabel}
       height={200}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -1018,24 +1005,14 @@ function AssetPriceWithDottedArea() {
       return `${dayOfWeek}, ${monthDay}, ${time}`;
     }, []);
 
-    const accessibilityLabel = useCallback(
-      (index?: number) => {
-        if (index === undefined) {
-          return `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`;
-        }
-
+    const chartAccessibilityLabel = `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`;
+    const scrubberAccessibilityLabel = useCallback(
+      (index: number) => {
         const price = formatPrice(sparklineTimePeriodDataValues[index]);
         const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
         return `${price} ${date}`;
       },
-      [
-        currentPrice,
-        formatDate,
-        formatPrice,
-        sparklineTimePeriodDataTimestamps,
-        sparklineTimePeriodDataValues,
-        timePeriod.label,
-      ],
+      [formatDate, formatPrice, sparklineTimePeriodDataTimestamps, sparklineTimePeriodDataValues],
     );
 
     return (
@@ -1050,12 +1027,13 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
+          accessibilityLabel={chartAccessibilityLabel}
           enableScrubbing
           showArea
-          accessibilityLabel={accessibilityLabel}
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
+          scrubberAccessibilityLabel={scrubberAccessibilityLabel}
           series={[
             {
               id: 'btc',

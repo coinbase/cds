@@ -270,24 +270,20 @@ const PriceWithVolumeChart = memo(
     }, [formatDate, formatPriceInThousands, formatVolume]);
 
     const scrubberAccessibilityLabel = useCallback(
-      (dataIndex?: number) => {
-        if (dataIndex === undefined) {
-          return chartAccessibilityLabel;
-        }
-
-        return `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
+      (dataIndex: number) =>
+        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
           btcPrices[dataIndex],
-        )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`;
-      },
-      [chartAccessibilityLabel, formatDate, formatPriceInThousands, formatVolume],
+        )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
+      [btcDates, btcPrices, btcVolumes, formatDate, formatPriceInThousands, formatVolume],
     );
 
     return (
       <CartesianChart
+        accessibilityLabel={chartAccessibilityLabel}
         enableScrubbing
-        accessibilityLabel={scrubberAccessibilityLabel}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
+        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',

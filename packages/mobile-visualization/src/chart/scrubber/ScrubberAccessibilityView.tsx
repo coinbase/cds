@@ -14,33 +14,20 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
   },
-  summaryTarget: {
-    opacity: 0,
-    position: 'absolute',
-    width: 1,
-    height: 1,
-    left: 0,
-    top: 0,
-  },
   segments: {
     flex: 1,
   },
 });
 
-const summaryHintHorizontal = 'Swipe left or right to hear more points.';
-const summaryHintVertical = 'Swipe up or down to hear more points.';
-
-export type ScrubberAccessibilityLabel = string | ((dataIndex?: number) => string);
-
 export type ScrubberAccessibilityViewProps = {
-  accessibilityLabel?: ScrubberAccessibilityLabel;
+  accessibilityLabel?: (dataIndex: number) => string;
   accessibilityStep?: number;
 };
 
-export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView({
+export const ScrubberAccessibilityView = memo(({
   accessibilityLabel,
   accessibilityStep,
-}: ScrubberAccessibilityViewProps) {
+}: ScrubberAccessibilityViewProps) => {
   const isScreenReaderEnabled = useScreenReaderStatus();
   const shouldShow = isScreenReaderEnabled;
   const {
@@ -74,13 +61,6 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
     [dataLength, resolvedStep],
   );
 
-  const summaryLabel = useMemo(() => {
-    if (accessibilityLabel === undefined) return;
-    const label =
-      typeof accessibilityLabel === 'function' ? accessibilityLabel(undefined) : accessibilityLabel;
-    return label || undefined;
-  }, [accessibilityLabel]);
-
   const segmentOrientation = isHorizontalLayout ? 'vertical' : 'horizontal';
   const { leading, segmentWeights, trailing } = useMemo(
     () =>
@@ -100,8 +80,7 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
 
     return sampledIndices.map((index, position) => {
       const weight = segmentWeights[position] ?? 1;
-      const pointLabel =
-        typeof accessibilityLabel === 'function' ? accessibilityLabel(index) : accessibilityLabel;
+      const pointLabel = accessibilityLabel(index);
 
       return {
         index,
@@ -135,19 +114,10 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
     return null;
   }
 
-  const summaryHint = isHorizontalLayout ? summaryHintVertical : summaryHintHorizontal;
   const segmentsFlexDirection = isHorizontalLayout ? 'column' : 'row';
 
   return (
     <View pointerEvents="box-none" style={[styles.container, overlayStyle]}>
-      {summaryLabel && (
-        <View
-          accessible
-          accessibilityHint={summaryHint}
-          accessibilityLabel={summaryLabel}
-          style={styles.summaryTarget}
-        />
-      )}
       <View style={[styles.segments, { flexDirection: segmentsFlexDirection }]}>
         {leading > 0 && <View style={getSegmentStyle(leading)} />}
         {sampledSegments.map((segment) => (

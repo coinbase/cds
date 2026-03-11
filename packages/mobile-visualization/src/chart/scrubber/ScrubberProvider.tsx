@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
@@ -7,17 +7,6 @@ import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 import { useCartesianChartContext } from '../ChartProvider';
 import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
-
-import {
-  type ScrubberAccessibilityLabel,
-  ScrubberAccessibilityView,
-} from './ScrubberAccessibilityView';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableScrubbing'>> & {
   children: React.ReactNode;
@@ -30,17 +19,6 @@ export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableSc
    * Receives the dataIndex of the scrubber or undefined when not scrubbing.
    */
   onScrubberPositionChange?: (index: number | undefined) => void;
-  /**
-   * Accessibility label for scrubber navigation.
-   * When a function is provided, it receives:
-   * - `undefined` for the summary/overview label
-   * - `dataIndex` for each scrubber point label
-   */
-  accessibilityLabel?: ScrubberAccessibilityLabel;
-  /**
-   * Number of data points to move between screen-reader samples.
-   */
-  accessibilityStep?: number;
 };
 
 /**
@@ -50,8 +28,6 @@ export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableSc
 export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
   enableScrubbing,
-  accessibilityLabel,
-  accessibilityStep,
   onScrubberPositionChange,
   allowOverflowGestures,
 }) => {
@@ -199,15 +175,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   );
 
   const content = (
-    <ScrubberContext.Provider value={contextValue}>
-      <View style={styles.container}>
-        {children}
-        <ScrubberAccessibilityView
-          accessibilityLabel={accessibilityLabel}
-          accessibilityStep={accessibilityStep}
-        />
-      </View>
-    </ScrubberContext.Provider>
+    <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
   );
 
   // Wrap with gesture handler only if scrubbing is enabled

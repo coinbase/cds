@@ -108,7 +108,7 @@ export const LineChart = memo(
         xAxis,
         yAxis,
         inset,
-        accessibilityStep,
+        scrubberAccessibilityLabelStep,
         children,
         ...chartProps
       },
@@ -185,16 +185,18 @@ export const LineChart = memo(
         }, 0);
       }, [xData, series]);
 
-      const resolvedAccessibilityStep = useMemo(() => {
-        return accessibilityStep ?? getDefaultScrubberAccessibilityStep(lineChartDataLength);
-      }, [accessibilityStep, lineChartDataLength]);
+      const resolvedScrubberAccessibilityLabelStep = useMemo(() => {
+        return (
+          scrubberAccessibilityLabelStep ?? getDefaultScrubberAccessibilityStep(lineChartDataLength)
+        );
+      }, [scrubberAccessibilityLabelStep, lineChartDataLength]);
 
       return (
         <CartesianChart
           {...chartProps}
           ref={ref}
-          accessibilityStep={resolvedAccessibilityStep}
           inset={inset}
+          scrubberAccessibilityLabelStep={resolvedScrubberAccessibilityLabelStep}
           series={chartSeries}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
