@@ -75,15 +75,6 @@ const ChartCanvas = memo(
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
   Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
     /**
-     * Function that returns the accessibility label for each scrubber point.
-     * Receives `dataIndex` for each scrubber point label.
-     */
-    scrubberAccessibilityLabel?: ScrubberAccessibilityViewProps['accessibilityLabel'];
-    /**
-     * Number of data points to move between screen-reader samples.
-     */
-    scrubberAccessibilityLabelStep?: number;
-    /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
      */
@@ -152,6 +143,15 @@ export type CartesianChartProps = CartesianChartBaseProps &
      * If not provided, the only available fonts will be those defined by the system.
      */
     fontProvider?: SkTypefaceFontProvider;
+    /**
+     * Function that returns the accessibility label for each scrubber point.
+     * Receives `dataIndex` for each scrubber point label.
+     */
+    scrubberAccessibilityLabel?: ScrubberAccessibilityViewProps['accessibilityLabel'];
+    /**
+     * Number of data points to move between screen-reader samples.
+     */
+    scrubberAccessibilityLabelStep?: number;
     /**
      * Custom styles for the root element.
      */

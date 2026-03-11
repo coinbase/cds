@@ -83,7 +83,13 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
   };
 
 export type LineChartProps = LineChartBaseProps &
-  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series' | 'scrubberAccessibilityLabelStep'> & {
+    /**
+     * Number of data points to move between screen-reader samples.
+     * @default Computed from data length (targeting 10 samples)
+     */
+    scrubberAccessibilityLabelStep?: number;
+  };
 
 export const LineChart = memo(
   forwardRef<View, LineChartProps>(
@@ -109,6 +115,7 @@ export const LineChart = memo(
         yAxis,
         inset,
         scrubberAccessibilityLabelStep,
+        layout = 'vertical',
         children,
         ...chartProps
       },
@@ -171,31 +178,26 @@ export const LineChart = memo(
         range: yRange,
       };
 
+      const categoryAxisData = layout === 'horizontal' ? yData : xData;
       const lineChartDataLength = useMemo(() => {
-        if (xData && xData.length > 0) {
-          return xData.length;
-        }
+        if (categoryAxisData && categoryAxisData.length > 0) return categoryAxisData.length;
+        if (!series || series.length === 0) return 0;
+        return series.reduce((max, s) => Math.max(max, s.data?.length ?? 0), 0);
+      }, [categoryAxisData, series]);
 
-        if (!series || series.length === 0) {
-          return 0;
-        }
-
-        return series.reduce((maxLength, currentSeries) => {
-          return Math.max(maxLength, currentSeries.data?.length ?? 0);
-        }, 0);
-      }, [xData, series]);
-
-      const resolvedScrubberAccessibilityLabelStep = useMemo(() => {
-        return (
-          scrubberAccessibilityLabelStep ?? getDefaultScrubberAccessibilityStep(lineChartDataLength)
-        );
-      }, [scrubberAccessibilityLabelStep, lineChartDataLength]);
+      const resolvedScrubberAccessibilityLabelStep = useMemo(
+        () =>
+          scrubberAccessibilityLabelStep ??
+          getDefaultScrubberAccessibilityStep(lineChartDataLength),
+        [scrubberAccessibilityLabelStep, lineChartDataLength],
+      );
 
       return (
         <CartesianChart
           {...chartProps}
           ref={ref}
           inset={inset}
+          layout={layout}
           scrubberAccessibilityLabelStep={resolvedScrubberAccessibilityLabelStep}
           series={chartSeries}
           xAxis={xAxisConfig}
