@@ -18,20 +18,26 @@ export type FocusTrapProps = {
    */
   disableFocusTrap?: boolean;
   /**
-   * If `true`, the focus trap will include the trigger in the focus trap.
-   */
-  includeTriggerInFocusTrap?: boolean;
-  /**
    * If `true`, the focus trap will not automatically shift focus to itself when it opens, and
    * replace it to the last focused element when it closes.
    * @default false
    */
   disableAutoFocus?: boolean;
   /**
+   * If `true`, the focus trap will not allow arrow key navigation.
+   * @default false
+   */
+  disableArrowKeyNavigation?: boolean;
+  /**
    * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
    * @default false
    */
   restoreFocusOnUnmount?: boolean;
+  /**
+   * If `true`, the focus trap will include the trigger in the focus trap.
+   * @default false
+   */
+  includeTriggerInFocusTrap?: boolean;
   /**
    * If `true`, the focus trap will respect negative `tabIndex` values, removing them from the list of focusable elements.
    * @default false
@@ -86,8 +92,9 @@ export const FocusTrap = memo(function FocusTrap({
   onEscPress,
   disableTypeFocus,
   disableFocusTrap,
-  includeTriggerInFocusTrap,
   disableAutoFocus,
+  disableArrowKeyNavigation,
+  includeTriggerInFocusTrap,
   respectNegativeTabIndex,
   focusTabIndexElements,
   autoFocusDelay,
@@ -140,10 +147,7 @@ export const FocusTrap = memo(function FocusTrap({
 
       if (!element || !document) return;
 
-      const textAreas = element.querySelectorAll('textarea');
-      const activeElementIsTextArea =
-        activeElement && Array.from(textAreas).includes(activeElement as HTMLTextAreaElement);
-      if (activeElementIsTextArea && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+      if (disableArrowKeyNavigation && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
         return;
       }
 
@@ -309,7 +313,13 @@ export const FocusTrap = memo(function FocusTrap({
         focusPrevElement();
       }
     },
-    [focusTabIndexElements, disableTypeFocus, respectNegativeTabIndex, includeTriggerInFocusTrap],
+    [
+      focusTabIndexElements,
+      disableTypeFocus,
+      disableArrowKeyNavigation,
+      respectNegativeTabIndex,
+      includeTriggerInFocusTrap,
+    ],
   );
 
   const handleKeyDown = useCallback(
