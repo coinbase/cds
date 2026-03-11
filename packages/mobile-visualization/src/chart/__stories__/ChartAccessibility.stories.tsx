@@ -351,10 +351,7 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
 
 const LegendPosition = memo(function LegendPosition() {
   const theme = useTheme();
-  const categories = useMemo(
-    () => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    [],
-  );
+  const categories = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], []);
   const revenueData = useMemo(() => [455, 520, 380, 455, 285, 235], []);
   const profitMarginData = useMemo(() => [23, 20, 16, 38, 12, 9], []);
 

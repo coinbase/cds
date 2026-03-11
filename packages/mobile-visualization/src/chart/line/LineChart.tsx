@@ -8,13 +8,17 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import {
-  type CartesianAxisConfigProps,
-  getDefaultScrubberAccessibilityStep,
-  type Series,
-} from '../utils';
+import { type CartesianAxisConfigProps, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
+
+const getDefaultScrubberAccessibilityStep = (
+  dataLength: number,
+  sampleCount: number = 10,
+): number => {
+  if (dataLength <= 0) return 1;
+  return Math.max(1, Math.ceil(dataLength / sampleCount));
+};
 
 export type LineSeries = Series &
   Partial<
