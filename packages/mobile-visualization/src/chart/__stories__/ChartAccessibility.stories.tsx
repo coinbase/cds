@@ -117,9 +117,7 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
       series={[{ id: 'bars', data: values, color: theme.color.accentBoldPurple }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
-    >
-      <Scrubber hideOverlay />
-    </BarChart>
+    />
   );
 });
 
@@ -344,7 +342,6 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
       />
       <BarPlot />
       <ReferenceLine LineComponent={SolidLine} dataY={0} />
-      <Scrubber hideOverlay />
     </CartesianChart>
   );
 });
@@ -429,7 +426,6 @@ const LegendPosition = memo(function LegendPosition() {
         tickLabelFormatter={(value) => `${value}%`}
       />
       <BarPlot />
-      <Scrubber hideOverlay />
     </CartesianChart>
   );
 });
