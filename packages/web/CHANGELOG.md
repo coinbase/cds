@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.52.1 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Add keyboard scroll support to FocusTrap, Tray, and Modal. [[#481](https://github.com/coinbase/cds/pull/481)]
+
 ## 8.52.0 (3/10/2026 PST)
 
 #### 🚀 Updates
