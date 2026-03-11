@@ -236,7 +236,7 @@ export type CalendarStyles = {
   /** Container for the days-of-week header and the date grid */
   content?: StyleProp<ViewStyle>;
   /** Individual date cell element, basic ViewStyle applied to the pressable wrapper */
-  calendarDayCell?: StyleProp<ViewStyle>;
+  day?: StyleProp<ViewStyle>;
 };
 
 export type CalendarRefHandle = {
@@ -543,7 +543,7 @@ export const Calendar = memo(
                       isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
                       isToday={time === todayTime}
                       onPress={handleDatePress}
-                      style={styles?.calendarDayCell}
+                      style={styles?.day}
                       todayAccessibilityHint={todayAccessibilityHint}
                     />
                   );

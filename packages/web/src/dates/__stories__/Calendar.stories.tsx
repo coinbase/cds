@@ -115,25 +115,25 @@ export const SlotStyling = () => {
   return (
     <>
       <style>{`
-        .cds-Calendar-calendarDayCell[aria-pressed="true"] {
+        .cds-Calendar-day[aria-pressed="true"] {
           background-color: var(--color-bgWarning);
           border-color: var(--color-bgWarning);
         }
-        .cds-Calendar-calendarDayCell[aria-current="date"] {
+        .cds-Calendar-day[aria-current="date"] {
           border-color: var(--color-accentBoldYellow);
         }
-        .cds-Calendar-calendarDayCell[aria-disabled="true"] {
+        .cds-Calendar-day[aria-disabled="true"] {
           background-color: var(--color-bgDisabled);
           border-color: var(--color-bgDisabled);
         }
-        .cds-Calendar-calendarDayCell[aria-disabled="true"] span {
+        .cds-Calendar-day[aria-disabled="true"] span {
           color: var(--color-bgPositive);
         }
-        .cds-Calendar-calendarDayCell[data-highlight="true"] {
+        .cds-Calendar-day[data-highlight="true"] {
           background-color: var(--color-bgPositiveWash);
           border-color: var(--color-bgPositive);
         }
-        .cds-Calendar-calendarDayCell[data-highlight="true"] span {
+        .cds-Calendar-day[data-highlight="true"] span {
           color: var(--color-fg);
         }
       `}</style>
@@ -158,7 +158,7 @@ export const SlotStyling = () => {
               borderRadius: 16,
             },
             content: { paddingBottom: 8, paddingTop: 8 },
-            calendarDayCell: { borderRadius: 8 },
+            day: { borderRadius: 8 },
           }}
         />
       </VStack>

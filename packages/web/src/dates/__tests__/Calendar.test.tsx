@@ -20,6 +20,6 @@ describe('Calendar static classNames', () => {
     expect(root?.querySelector(`.${calendarClassNames.title}`)).toBeInTheDocument();
     expect(root?.querySelector(`.${calendarClassNames.navigation}`)).toBeInTheDocument();
     expect(root?.querySelector(`.${calendarClassNames.content}`)).toBeInTheDocument();
-    expect(root?.querySelector(`.${calendarClassNames.calendarDayCell}`)).toBeInTheDocument();
+    expect(root?.querySelector(`.${calendarClassNames.day}`)).toBeInTheDocument();
   });
 });

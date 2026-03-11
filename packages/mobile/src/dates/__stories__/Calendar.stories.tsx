@@ -161,7 +161,7 @@ const CalendarScreen = () => {
               paddingBottom: 0,
             },
             content: { paddingVertical: 8 },
-            calendarDayCell: {
+            day: {
               borderColor: color.bgNegative,
               borderWidth: 1,
             },

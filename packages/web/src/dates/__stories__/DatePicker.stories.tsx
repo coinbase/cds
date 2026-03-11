@@ -103,7 +103,7 @@ export const Examples = () => {
             border-color: var(--color-bgLineHeavy);
             border-width: medium;
           }
-          .cds-Calendar-calendarDayCell {
+          .cds-Calendar-day {
             border-radius: var(--borderRadius-0);
           }
         `}</style>

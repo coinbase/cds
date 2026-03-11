@@ -166,7 +166,7 @@ export const calendarClassNames = {
   /** Main content area */
   content: 'cds-Calendar-content',
   /** Individual date cell in a calendar grid */
-  calendarDayCell: 'cds-Calendar-calendarDayCell',
+  day: 'cds-Calendar-day',
 } as const;
 
 const getDayAccessibilityLabel = (date: Date, locale = 'en-US') =>
@@ -521,7 +521,7 @@ export const Calendar = memo(
                 <CalendarDay
                   key={time}
                   active={time === selectedTime}
-                  className={cx(calendarClassNames.calendarDayCell, classNames?.calendarDayCell)}
+                  className={cx(calendarClassNames.day, classNames?.day)}
                   date={date}
                   disabled={
                     disabled ||
@@ -534,7 +534,7 @@ export const Calendar = memo(
                   isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
                   isToday={time === today.getTime()}
                   onClick={onPressDate}
-                  style={styles?.calendarDayCell}
+                  style={styles?.day}
                 />
               );
             })}

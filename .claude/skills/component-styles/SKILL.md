@@ -64,13 +64,13 @@ Review the component's JSX to identify elements that should be targetable via st
 | `accessory`           | Accessory element (e.g., chevron, icon at end)        |
 | `activeIndicator`     | Active indicator element (e.g., in tabs)              |
 | `bottomContent`       | Bottom section content                                |
-| `calendarDayCell`     | Individual date cell in a calendar grid               |
 | `carousel`            | Main carousel track element                           |
 | `carouselContainer`   | Outer carousel container                              |
 | `childrenContainer`   | Container wrapping children                           |
 | `content`             | Main content area                                     |
 | `contentContainer`    | Container wrapping content                            |
 | `description`         | Description text element                              |
+| `day`                 | Date cell in a calendar grid                          |
 | `end`                 | End slot content (e.g., actions, icons)               |
 | `fill`                | Fill/progress indicator within a track                |
 | `header`              | Header section                                        |
