@@ -1,5 +1,6 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
+import type { SerializableLinearScale } from '../scale';
 import {
   calculateLabelYPositions,
   getDefaultScrubberAccessibilityStep,
@@ -8,7 +9,6 @@ import {
   getScrubberSegmentWeights,
   normalizeScrubberAccessibilityStep,
 } from '../scrubber';
-import type { SerializableLinearScale } from '../scale';
 
 const calculateLabelStackedPositions = (
   dimensions: Array<{
