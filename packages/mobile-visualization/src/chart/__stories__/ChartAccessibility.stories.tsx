@@ -19,7 +19,7 @@ import { XAxis, YAxis } from '../axis';
 import { BarChart } from '../bar/BarChart';
 import { BarPlot } from '../bar/BarPlot';
 import { CartesianChart } from '../CartesianChart';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
+import { Line, ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { LineChart } from '../line/LineChart';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../PeriodSelector';
 import { Scrubber } from '../scrubber';
@@ -195,6 +195,120 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
         bandTickMarkPlacement: 'edges',
       }}
     ></BarChart>
+  );
+});
+
+const ServiceAvailability = memo(function ServiceAvailability() {
+  const theme = useTheme();
+  const availabilityEvents = useMemo(
+    () => [
+      { date: new Date('2022-01-01'), availability: 79 },
+      { date: new Date('2022-01-03'), availability: 81 },
+      { date: new Date('2022-01-04'), availability: 82 },
+      { date: new Date('2022-01-06'), availability: 91 },
+      { date: new Date('2022-01-07'), availability: 92 },
+      { date: new Date('2022-01-10'), availability: 86 },
+    ],
+    [],
+  );
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index?: number) => {
+      if (index === undefined) {
+        return `Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`;
+      }
+      return `Point ${index + 1}: ${availabilityEvents[index].availability}% availability on ${availabilityEvents[index].date.toLocaleDateString()}`;
+    },
+    [availabilityEvents],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      accessibilityLabel={scrubberAccessibilityLabel}
+      accessibilityStep={1}
+      height={200}
+      series={[
+        {
+          id: 'availability',
+          data: availabilityEvents.map((event) => event.availability),
+          gradient: {
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.fgNegative },
+              { offset: 85, color: theme.color.fgNegative },
+              { offset: 85, color: theme.color.fgWarning },
+              { offset: 90, color: theme.color.fgWarning },
+              { offset: 90, color: theme.color.fgPositive },
+              { offset: max, color: theme.color.fgPositive },
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        data: availabilityEvents.map((event) => event.date.getTime()),
+      }}
+      yAxis={{
+        domain: ({ min, max }) => ({ min: Math.max(min - 2, 0), max: Math.min(max + 2, 100) }),
+      }}
+    >
+      <XAxis
+        showGrid
+        showLine
+        showTickMarks
+        tickLabelFormatter={(value) => new Date(value).toLocaleDateString()}
+      />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        position="left"
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <Line
+        curve="stepAfter"
+        points={(props) => ({
+          ...props,
+          fill: theme.color.bg,
+          stroke: props.fill,
+        })}
+        seriesId="availability"
+      />
+      <Scrubber hideOverlay />
+    </CartesianChart>
+  );
+});
+
+const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
+  const theme = useTheme();
+  const data = useMemo(
+    () => [
+      10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58, 10, 22, 29, 45, 98, 45, 22, 52, 21, 4,
+      68, 20, 21, 58,
+    ],
+    [],
+  );
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index?: number) => {
+      if (index === undefined) {
+        return `Line chart with ${data.length} data points. Swipe to navigate segments.`;
+      }
+      return `Point ${index + 1}: ${data[index]}`;
+    },
+    [data],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      accessibilityLabel={scrubberAccessibilityLabel}
+      accessibilityStep={1}
+      height={200}
+      series={[{ id: 'prices', data, color: theme.color.accentBoldBlue }]}
+    >
+      <Scrubber hideOverlay />
+    </LineChart>
   );
 });
 
@@ -439,6 +553,11 @@ function ExampleNavigator() {
       {
         title: 'Horizontal Bar Chart',
         component: <AccessibilityHorizontalBarChart />,
+      },
+      { title: 'Service Availability', component: <ServiceAvailability /> },
+      {
+        title: 'Basic Prices (28 pts, step 1)',
+        component: <BasicPricesWithManyPoints />,
       },
       { title: 'Positive/Negative Cash Flow', component: <PositiveAndNegativeCashFlow /> },
       { title: 'Bitcoin Price (Dotted Area)', component: <AssetPriceWithDottedArea /> },
