@@ -40,12 +40,13 @@ const checkboxCss = css`
 `;
 
 export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
-  /** Sets the checked/active color of the control.
+  /**
+   * Sets the checked/active color of the checkbox.
    * @default fgInverse
    */
   controlColor?: ThemeVars.Color;
   /**
-   * Optional. Sets the border width of the control.
+   * Sets the border width of the checkbox.
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;

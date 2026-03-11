@@ -20,12 +20,13 @@ export type RadioBaseProps<RadioValue extends string> = Omit<
   ControlBaseProps<RadioValue>,
   'controlColor'
 > & {
-  /** Sets the checked/active color of the control.
+  /**
+   * Sets the checked/active color of the radio.
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
   /**
-   * Optional. Sets the border width of the control.
+   * Sets the border width of the radio.
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
