@@ -43,7 +43,7 @@ const BasicLineChart = memo(function BasicLineChart() {
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={`Line chart with ${data.length} days of data. Tap segments to move scrubber.`}
+      accessibilityLabel={`Line chart with ${data.length} days of data. Swipe to navigate.`}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
@@ -110,7 +110,7 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
       enableScrubbing
       showXAxis
       showYAxis
-      accessibilityLabel={`Bar chart with ${values.length} months. Tap segments to move scrubber.`}
+      accessibilityLabel={`Bar chart with ${values.length} months. Swipe to navigate.`}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
@@ -151,7 +151,7 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
       enableScrubbing
       showXAxis
       showYAxis
-      accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate segments.`}
+      accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate.`}
       borderRadius={2}
       height={400}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
@@ -206,7 +206,7 @@ const ServiceAvailability = memo(function ServiceAvailability() {
   return (
     <CartesianChart
       enableScrubbing
-      accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`}
+      accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate.`}
       height={200}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       scrubberAccessibilityLabelStep={1}
@@ -279,7 +279,7 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
     <LineChart
       enableScrubbing
       showArea
-      accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate segments.`}
+      accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate.`}
       height={200}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       scrubberAccessibilityLabelStep={1}
@@ -327,7 +327,7 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
   return (
     <CartesianChart
       enableScrubbing
-      accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Tap segments to move scrubber.`}
+      accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Swipe to navigate.`}
       height={280}
       inset={32}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
@@ -361,7 +361,7 @@ const LegendPosition = memo(function LegendPosition() {
   return (
     <CartesianChart
       enableScrubbing
-      accessibilityLabel="Bar chart showing Revenue and Profit Margin by month. January through June. Tap segments to move scrubber."
+      accessibilityLabel="Bar chart showing Revenue and Profit Margin by month. January through June. Swipe to navigate."
       height={200}
       inset={{ bottom: 8, left: 0, right: 0, top: 8 }}
       legend={
@@ -658,7 +658,7 @@ function ExampleNavigator() {
         </HStack>
         <VStack gap={2} padding={2}>
           <Text color="fgMuted" font="label2">
-            Tap chart segments to move the scrubber beacon. With screen reader: swipe to navigate.
+            Swipe to navigate chart segments.
           </Text>
           <Box padding={1}>{currentExample.component}</Box>
         </VStack>

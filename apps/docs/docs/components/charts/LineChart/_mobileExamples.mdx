@@ -363,7 +363,7 @@ function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
-  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Tap segments to navigate.`;
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
@@ -575,7 +575,7 @@ const PerformanceChart = memo(
       [formatDate, sparklineTimePeriodDataTimestamps],
     );
 
-    const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Tap segments to navigate.`;
+    const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Swipe to navigate.`;
     const scrubberAccessibilityLabel = useCallback(
       (index: number) => {
         const price = formatPriceThousands(sparklineTimePeriodDataValues[index]);
@@ -639,7 +639,7 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 <LineChart
   enableScrubbing
   allowOverflowGestures
-  accessibilityLabel="Chart with overflow gestures. Tap segments to navigate."
+  accessibilityLabel="Chart with overflow gestures. Swipe to navigate."
   scrubberAccessibilityLabel={(index) => `Point ${index + 1}`}
   ...
 >
@@ -684,7 +684,7 @@ function BasicAccessible() {
   // Chart-level accessibility label provides overview when focus lands on the chart
   const chartAccessibilityLabel = useMemo(
     () =>
-      `Price chart showing trend over ${data.length} data points. Current value: ${data[data.length - 1]}. Tap segments to navigate.`,
+      `Price chart showing trend over ${data.length} data points. Current value: ${data[data.length - 1]}. Swipe to navigate.`,
     [data],
   );
 
@@ -1443,7 +1443,7 @@ function AssetPriceWithDottedArea() {
 
     const chartAccessibilityLabel = useMemo(
       () =>
-        `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}. Tap segments to navigate.`,
+        `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}. Swipe to navigate.`,
       [currentPrice, formatPrice, timePeriod.label],
     );
 
@@ -1667,7 +1667,7 @@ function MonotoneAssetPrice() {
     [theme.color.fg, theme.color.bg],
   );
 
-  const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Tap segments to navigate.`;
+  const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => {
       const price = scrubberPriceFormatter.format(prices[index].value);

@@ -29,7 +29,7 @@ import {
 
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
-const chartAccessibilityLabel = `Price chart with ${sampleData.length} data points. Tap segments to navigate.`;
+const chartAccessibilityLabel = `Price chart with ${sampleData.length} data points. Swipe to navigate.`;
 const scrubberAccessibilityLabel = (index: number) => `Point ${index + 1}: ${sampleData[index]}`;
 
 const BasicScrubber = () => {
@@ -76,7 +76,7 @@ const SeriesFilter = () => {
   return (
     <LineChart
       enableScrubbing
-      accessibilityLabel="Chart with multiple series. Tap segments to navigate."
+      accessibilityLabel="Chart with multiple series. Swipe to navigate."
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={150}
       series={[
@@ -303,7 +303,7 @@ const CustomBeaconLabel = () => {
       enableScrubbing
       showArea
       showYAxis
-      accessibilityLabel="Temperature chart with 6 data points. Tap segments to navigate."
+      accessibilityLabel="Temperature chart with 6 data points. Swipe to navigate."
       scrubberAccessibilityLabel={(index: number) =>
         `Point ${index + 1}: ${[25, 30, 35, 45, 60, 100][index]}°F`
       }
@@ -455,7 +455,7 @@ const PercentageBeaconLabels = () => {
         <LineChart
           enableScrubbing
           showArea
-          accessibilityLabel="NYC vs ATL comparison chart. Tap segments to navigate."
+          accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           scrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           areaType="dotted"
           height={150}
@@ -478,7 +478,7 @@ const PercentageBeaconLabels = () => {
         <LineChart
           enableScrubbing
           showArea
-          accessibilityLabel="NYC vs ATL comparison chart. Tap segments to navigate."
+          accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           scrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           areaType="dotted"
           height={150}
@@ -510,7 +510,7 @@ const HideBeaconLabels = () => {
       enableScrubbing
       legend
       showArea
-      accessibilityLabel="Website visitors across 7 pages. Tap segments to navigate."
+      accessibilityLabel="Website visitors across 7 pages. Swipe to navigate."
       scrubberAccessibilityLabel={(index: number) =>
         `Page ${index + 1}: ${[2400, 1398, 9800, 3908, 4800, 3800, 4300][index]} views`
       }
@@ -605,12 +605,21 @@ const CustomLabelComponent = () => {
   );
 };
 
+const ethData = [5, 15, 18, 30, 65, 30, 15, 35, 15, 2, 45, 12, 15, 40];
+
 const LabelFonts = () => {
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) => `Day ${index + 1}: BTC ${sampleData[index]}, ETH ${ethData[index]}`,
+    [],
+  );
+
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
+      accessibilityLabel="BTC and ETH comparison chart. Swipe to navigate."
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -621,7 +630,7 @@ const LabelFonts = () => {
         },
         {
           id: 'eth',
-          data: [5, 15, 18, 30, 65, 30, 15, 35, 15, 2, 45, 12, 15, 40],
+          data: ethData,
           label: 'ETH',
           color: assets.eth.color,
         },
@@ -870,7 +879,7 @@ const MatchupBeaconLabels = () => {
     <LineChart
       enableScrubbing
       showArea
-      accessibilityLabel="BLUE vs RED matchup chart. Tap segments to navigate."
+      accessibilityLabel="BLUE vs RED matchup chart. Swipe to navigate."
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       areaType="dotted"
       height={300}

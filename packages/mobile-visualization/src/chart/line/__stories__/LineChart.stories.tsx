@@ -326,7 +326,7 @@ function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
-  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Tap segments to navigate.`;
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
@@ -493,7 +493,7 @@ function Transitions() {
       ],
     };
 
-    const chartAccessibilityLabel = `Price chart with ${data.length} data points. Tap segments to navigate.`;
+    const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
     const scrubberAccessibilityLabel = useCallback(
       (index: number) => `Point ${index + 1}: ${valueAtIndexFormatter(index)}`,
       [valueAtIndexFormatter],
@@ -723,7 +723,7 @@ function GainLossChart() {
     />
   ));
 
-  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Tap segments to navigate.`;
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${tickLabelFormatter(data[index])}`,
     [data, tickLabelFormatter],
@@ -1282,7 +1282,7 @@ const PerformanceChart = memo(
       [formatDate, sparklineTimePeriodDataTimestamps],
     );
 
-    const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Tap segments to navigate.`;
+    const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Swipe to navigate.`;
     const scrubberAccessibilityLabel = useCallback(
       (index: number) => {
         const price = formatPriceThousands(sparklineTimePeriodDataValues[index]);
@@ -1485,7 +1485,7 @@ function MonotoneAssetPrice() {
     [],
   );
 
-  const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Tap segments to navigate.`;
+  const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => {
       const price = scrubberPriceFormatter.format(prices[index].value);
@@ -1612,7 +1612,7 @@ function ServiceAvailability() {
     [],
   );
 
-  const chartAccessibilityLabel = `Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`;
+  const chartAccessibilityLabel = `Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `Point ${index + 1}: ${availabilityEvents[index].availability}% availability on ${availabilityEvents[index].date.toLocaleDateString()}`,
@@ -1790,7 +1790,7 @@ function ForecastAssetPrice() {
     );
   });
 
-  const chartAccessibilityLabel = `Forecast chart with ${data.length} data points. Tap segments to navigate.`;
+  const chartAccessibilityLabel = `Forecast chart with ${data.length} data points. Swipe to navigate.`;
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${axisFormatter(index)}, value ${data[index]}`,
     [axisFormatter, data],
@@ -2144,7 +2144,7 @@ function ExampleNavigator() {
           <LineChart
             enableScrubbing
             showArea
-            accessibilityLabel="Price chart with reference line. 14 data points. Tap segments to navigate."
+            accessibilityLabel="Price chart with reference line. 14 data points. Swipe to navigate."
             scrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
             height={200}
             series={[
