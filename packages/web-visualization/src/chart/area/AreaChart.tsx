@@ -7,13 +7,7 @@ import {
   type CartesianChartProps,
 } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
-import {
-  type AxisConfigProps,
-  defaultChartInset,
-  defaultStackId,
-  getChartInset,
-  type Series,
-} from '../utils';
+import { type CartesianAxisConfigProps, defaultStackId, type Series } from '../utils';
 
 import { Area, type AreaProps } from './Area';
 
@@ -89,13 +83,13 @@ export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type AreaChartProps = AreaChartBaseProps &
@@ -128,8 +122,6 @@ export const AreaChart = memo(
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
-
       // Convert AreaSeries to Series for Chart context
       const chartSeries = useMemo(() => {
         return series?.map(
@@ -138,6 +130,7 @@ export const AreaChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            xAxisId: s.xAxisId,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
             gradient: s.gradient,
@@ -160,6 +153,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -173,15 +167,6 @@ export const AreaChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
-        scaleType: xScaleType,
-        data: xData,
-        categoryPadding: xCategoryPadding,
-        domain: xDomain,
-        domainLimit: xDomainLimit,
-        range: xRange,
-      };
-
       const hasNegativeValues = useMemo(() => {
         if (!series) return false;
         return series.some((s) =>
@@ -193,8 +178,17 @@ export const AreaChart = memo(
         );
       }, [series]);
 
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+      };
+
       // Set default min domain to 0 for area chart, but only if there are no negative values
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,
@@ -207,12 +201,12 @@ export const AreaChart = memo(
         <CartesianChart
           {...chartProps}
           ref={ref}
-          inset={calculatedInset}
+          inset={inset}
           series={seriesToRender}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           {series?.map(
             ({

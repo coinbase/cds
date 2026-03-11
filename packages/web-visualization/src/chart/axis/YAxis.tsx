@@ -40,6 +40,7 @@ export type YAxisBaseProps = AxisBaseProps & {
   /**
    * The ID of the axis to render.
    * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   axisId?: string;
   /**
@@ -89,6 +90,7 @@ export const YAxis = memo<YAxisProps>(
     const registrationId = useId();
     const {
       animate,
+      layout,
       getYScale,
       getYAxis,
       registerAxis,
@@ -116,11 +118,10 @@ export const YAxis = memo<YAxisProps>(
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string';
 
         if (hasStringLabels && !tickLabelFormatter && axisData[value] !== undefined) {
-          // Use the string label from the data array
           return axisData[value];
         }
 
-        // Otherwise use the formatter (if provided) or the value itself
+        // Otherwise passes raw index to formatter
         return tickLabelFormatter?.(value) ?? value;
       },
       [yAxis?.data, tickLabelFormatter],
@@ -151,11 +152,14 @@ export const YAxis = memo<YAxisProps>(
       return getAxisTicksData({
         scaleFunction: yScale as any,
         ticks,
-        requestedTickCount: tickInterval !== undefined ? undefined : (requestedTickCount ?? 5),
+        requestedTickCount:
+          tickInterval !== undefined
+            ? undefined
+            : (requestedTickCount ?? (layout === 'horizontal' ? undefined : 5)),
         categories,
         tickInterval: tickInterval,
       });
-    }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
+    }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data, layout]);
 
     const isBandScale = useMemo(() => {
       if (!yScale) return false;

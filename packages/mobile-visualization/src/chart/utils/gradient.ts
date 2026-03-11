@@ -316,7 +316,8 @@ export const getBaseline = (axisBounds: AxisBounds, baseline: number = 0): numbe
  * @param fill - The color to use for the gradient
  * @param peakOpacity - Opacity at the peak of the gradient
  * @param baselineOpacity - Opacity at the baseline
- * @returns A gradient definition with y-axis stops in ascending order
+ * @param axis - The axis the gradient maps to ('y' for vertical, 'x' for horizontal layout)
+ * @returns A gradient definition with stops in ascending order
  */
 export const createGradient = (
   axisBounds: AxisBounds,
@@ -324,6 +325,7 @@ export const createGradient = (
   fill: string,
   peakOpacity: number,
   baselineOpacity: number,
+  axis: 'x' | 'y' = 'y',
 ): GradientDefinition => {
   const { min, max } = axisBounds;
 
@@ -332,7 +334,7 @@ export const createGradient = (
 
   if (lowerBound < baselineValue && baselineValue < upperBound) {
     return {
-      axis: 'y',
+      axis,
       stops: [
         { offset: lowerBound, color: fill, opacity: peakOpacity },
         { offset: baselineValue, color: fill, opacity: baselineOpacity },
@@ -344,7 +346,7 @@ export const createGradient = (
   const peakValue = Math.abs(min - baselineValue) > Math.abs(max - baselineValue) ? min : max;
 
   return {
-    axis: 'y',
+    axis,
     stops: [
       { offset: peakValue, color: fill, opacity: peakOpacity },
       { offset: baselineValue, color: fill, opacity: baselineOpacity },

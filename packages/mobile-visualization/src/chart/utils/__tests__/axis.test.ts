@@ -1,4 +1,9 @@
-import { formatAxisTick, getAxisTicksData } from '../axis';
+import {
+  formatAxisTick,
+  getAxisTicksData,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
+} from '../axis';
 import {
   type CategoricalScale,
   getCategoricalScale,
@@ -509,5 +514,60 @@ describe('formatAxisTick', () => {
   it('should handle null/undefined values', () => {
     expect(formatAxisTick(null)).toBe(null);
     expect(formatAxisTick(undefined)).toBe(undefined);
+  });
+});
+
+describe('cartesian layout helpers', () => {
+  it('should invert y-axis range only for vertical layout', () => {
+    const verticalScale = getCartesianAxisScale({
+      type: 'y',
+      range: { min: 0, max: 100 },
+      dataDomain: { min: 0, max: 10 },
+      layout: 'vertical',
+    });
+    const horizontalScale = getCartesianAxisScale({
+      type: 'y',
+      range: { min: 0, max: 100 },
+      dataDomain: { min: 0, max: 10 },
+      layout: 'horizontal',
+    });
+
+    expect(verticalScale(0)).toBe(100);
+    expect(verticalScale(10)).toBe(0);
+    expect(horizontalScale(0)).toBe(0);
+    expect(horizontalScale(10)).toBe(100);
+  });
+
+  it('should treat y-axis as category axis in horizontal layout', () => {
+    const domain = getCartesianAxisDomain(
+      {
+        id: 'DEFAULT_AXIS_ID',
+        scaleType: 'band',
+        domainLimit: 'strict',
+      },
+      [{ id: 'series1', data: [10, 20, 30] }],
+      'y',
+      'horizontal',
+    );
+
+    expect(domain).toEqual({ min: 0, max: 2 });
+  });
+
+  it('should compute horizontal x-axis domain from provided series', () => {
+    const domain = getCartesianAxisDomain(
+      {
+        id: 'left',
+        scaleType: 'linear',
+        domainLimit: 'strict',
+      },
+      [
+        { id: 'series1', data: [1, 2, 3], xAxisId: 'left' },
+        { id: 'series2', data: [100, 200, 300], xAxisId: 'right' },
+      ],
+      'x',
+      'horizontal',
+    );
+
+    expect(domain).toEqual({ min: 1, max: 300 });
   });
 });

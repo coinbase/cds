@@ -2,20 +2,37 @@ import React, { useState } from 'react';
 
 import { VStack } from '../../layout';
 import { Box } from '../../layout/Box';
+import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { Radio, RadioGroup } from '../RadioGroup';
 
-export const Normal = () => {
-  const [checked, setChecked] = useState(false);
+export default {
+  title: 'Components/RadioGroup',
+  component: RadioGroup,
+};
 
+const Example: React.FC<React.PropsWithChildren<{ title: string }>> = ({ children, title }) => {
+  return (
+    <VStack gap={2}>
+      <Text as="h2" display="block" font="title3">
+        {title}
+      </Text>
+      {children}
+    </VStack>
+  );
+};
+
+function Normal() {
+  const [checked, setChecked] = useState(false);
   return (
     <Radio checked={checked} name="normal-radio" onChange={() => setChecked((s) => !s)}>
       Normal
     </Radio>
   );
-};
+}
 
-export const CustomColors = () => {
+function CustomColors() {
   const [checked, setChecked] = useState(false);
   return (
     <VStack gap={2}>
@@ -40,21 +57,7 @@ export const CustomColors = () => {
       </Radio>
     </VStack>
   );
-};
-
-export const DisabledUnselected = () => <Radio disabled>Disabled unselected</Radio>;
-
-export const DisabledSelected = () => (
-  <Radio checked disabled>
-    Disabled selected
-  </Radio>
-);
-
-export const MultiLineLabels = () => (
-  <Box width="250px">
-    <Radio>This radio has a multi-line label. The radio and label should align at the top.</Radio>
-  </Box>
-);
+}
 
 const options1 = {
   btc: 'Bitcoin',
@@ -74,7 +77,7 @@ const options3 = {
   'hamachi-salad': <Text font="label1">Hamachi salad</Text>,
 };
 
-export const Group = () => {
+function Groups() {
   const [group1, setGroup1] = useState<string>('btc');
   const [group2, setGroup2] = useState<string>();
   const [group3, setGroup3] = useState<string>();
@@ -135,9 +138,72 @@ export const Group = () => {
       />
     </>
   );
-};
+}
 
-export default {
-  title: 'Components/RadioGroup',
-  component: RadioGroup,
+function CustomBorderWidth() {
+  const [selected, setSelected] = useState<string>();
+  return (
+    <VStack gap={2}>
+      <Radio
+        checked={selected === 'default'}
+        name="border-width-radio"
+        onChange={() => setSelected('default')}
+        value="default"
+      >
+        Default radio (20px, borderWidth 100)
+      </Radio>
+      <Radio
+        borderWidth={200}
+        checked={selected === 'medium'}
+        name="border-width-radio"
+        onChange={() => setSelected('medium')}
+        value="small"
+      >
+        Medium thickness radio (borderWidth 200)
+      </Radio>
+      <Radio
+        borderWidth={500}
+        checked={selected === 'thick'}
+        name="border-width-radio"
+        onChange={() => setSelected('thick')}
+        value="thick"
+      >
+        Thicker thickness radio (borderWidth 500)
+      </Radio>
+    </VStack>
+  );
+}
+
+export const All = () => {
+  return (
+    <VStack gap={4}>
+      <Example title="Default">
+        <Normal />
+      </Example>
+      <Example title="Custom Colors">
+        <CustomColors />
+      </Example>
+      <Example title="States">
+        <VStack gap={2}>
+          <Radio disabled>Disabled unselected</Radio>
+          <Radio checked disabled>
+            Disabled selected
+          </Radio>
+        </VStack>
+      </Example>
+      <Example title="Multi-line Labels">
+        <Box width="250px">
+          <Radio>
+            This radio has a multi-line label. The radio and label should align at the top.
+          </Radio>
+        </Box>
+      </Example>
+      <Example title="Groups">
+        <Groups />
+      </Example>
+      <Example title="Custom Border Width">
+        <CustomBorderWidth />
+      </Example>
+    </VStack>
+  );
 };

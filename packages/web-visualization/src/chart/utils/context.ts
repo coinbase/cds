@@ -6,10 +6,25 @@ import type { Series } from './chart';
 import type { ChartScaleFunction } from './scale';
 
 /**
+ * Chart layout for Cartesian charts.
+ * Describes the direction bars/areas grow.
+ * - 'vertical': Bars grow vertically (up/down). X is category axis, Y is value axis.
+ * - 'horizontal': Bars grow horizontally (left/right). Y is category axis, X is value axis.
+ */
+export type CartesianChartLayout = 'horizontal' | 'vertical';
+
+/**
  * Context value for Cartesian (X/Y) coordinate charts.
  * Contains axis-specific methods and properties for rectangular coordinate systems.
  */
 export type CartesianChartContextValue = {
+  /**
+   * Chart layout - describes the direction bars/areas grow.
+   * @default 'vertical'
+   * - 'vertical': Bars grow vertically (up/down). X is category axis, Y is value axis.
+   * - 'horizontal': Bars grow horizontally (left/right). Y is category axis, X is value axis.
+   */
+  layout: CartesianChartLayout;
   /**
    * The series data for the chart.
    */
@@ -38,18 +53,20 @@ export type CartesianChartContextValue = {
    */
   height: number;
   /**
-   * Get x-axis configuration.
+   * Get x-axis configuration by ID.
+   * @param id - The axis ID. Defaults to defaultAxisId.
    */
-  getXAxis: () => AxisConfig | undefined;
+  getXAxis: (id?: string) => AxisConfig | undefined;
   /**
    * Get y-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
   getYAxis: (id?: string) => AxisConfig | undefined;
   /**
-   * Get x-axis scale function.
+   * Get x-axis scale function by ID.
+   * @param id - The axis ID. Defaults to defaultAxisId.
    */
-  getXScale: () => ChartScaleFunction | undefined;
+  getXScale: (id?: string) => ChartScaleFunction | undefined;
   /**
    * Get y-axis scale function by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.

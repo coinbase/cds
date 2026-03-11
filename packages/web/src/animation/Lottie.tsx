@@ -194,7 +194,7 @@ export const Lottie = memo(
         handlers,
         resizeMode = 'contain',
         filterSize = defaultFilterSize,
-        ...otherProps
+        ...boxProps
       }: LottieProps<Marker, Source>,
       // String wont work on literal unions, so use any here
       forwardedRef: React.ForwardedRef<LottiePlayer<LottieSource<any>>>,
@@ -253,7 +253,7 @@ export const Lottie = memo(
       );
       useLottieListeners(animationRef, listeners);
 
-      return <Box ref={containerRef} as="div" className={lottieCss} {...otherProps} />;
+      return <Box ref={containerRef} as="div" className={lottieCss} {...boxProps} />;
     },
   ),
 );

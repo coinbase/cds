@@ -51,8 +51,15 @@ export type PointBaseProps = SharedProps & {
   /**
    * Optional Y-axis id to specify which axis to plot along.
    * @default first y-axis defined in chart props.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
+  /**
+   * Optional X-axis id to specify which axis to plot along.
+   * @default first x-axis defined in chart props.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
   /**
    * Radius of the point.
    * @default 5
@@ -247,6 +254,7 @@ export const Point = memo<PointProps>(
   ({
     dataX,
     dataY,
+    xAxisId,
     yAxisId,
     fill = 'var(--color-fgPrimary)',
     radius = 5,
@@ -293,7 +301,7 @@ export const Point = memo<PointProps>(
       [animate, transitions?.update, transition],
     );
 
-    const xScale = getXScale();
+    const xScale = getXScale(xAxisId);
     const yScale = getYScale(yAxisId);
 
     const pixelCoordinate = useMemo(() => {

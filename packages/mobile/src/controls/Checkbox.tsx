@@ -9,19 +9,23 @@ import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
 
-export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue>;
-
-export type CheckboxProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
-  /** Sets the checked/active color of the control.
-   * @default bgPrimary
+export type CheckboxBaseProps<CheckboxValue extends string> = Omit<
+  ControlBaseProps<CheckboxValue>,
+  'controlColor'
+> & {
+  /**
+   * Sets the checked/active color of the checkbox.
+   * @default fgInverse
    */
   controlColor?: ThemeVars.Color;
   /**
-   * Optional.Sets the border width of the checkbox.
+   * Sets the border width of the checkbox.
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
 };
+
+export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;
 
 const CheckboxIcon = memo(
   ({
