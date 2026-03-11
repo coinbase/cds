@@ -76,9 +76,9 @@ const Simple = () => {
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={defaultChartHeight}
       inset={32}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'pageViews',
@@ -123,8 +123,8 @@ const Simple = () => {
 
 const TimeOfDayAxesExample = () => {
   const theme = useTheme();
-  const lineA = [5, 5, 10, 90, 85, 70, 30, 25, 25];
-  const lineB = [90, 85, 70, 25, 23, 40, 45, 40, 50];
+  const lineA = useMemo(() => [5, 5, 10, 90, 85, 70, 30, 25, 25], []);
+  const lineB = useMemo(() => [90, 85, 70, 25, 23, 40, 45, 40, 50], []);
 
   const timeData = useMemo(
     () =>
@@ -179,8 +179,8 @@ const TimeOfDayAxesExample = () => {
     <LineChart
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={defaultChartHeight}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'lineA',
@@ -220,7 +220,8 @@ const multipleYAxesData = [1, 10, 30, 50, 70, 90, 100];
 
 const MultipleYAxesExample = () => {
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => `Point ${index + 1}: linear ${multipleYAxesData[index]}, log ${multipleYAxesData[index]}`,
+    (index: number) =>
+      `Point ${index + 1}: linear ${multipleYAxesData[index]}, log ${multipleYAxesData[index]}`,
     [],
   );
 
@@ -228,30 +229,30 @@ const MultipleYAxesExample = () => {
     <CartesianChart
       enableScrubbing
       accessibilityLabel="Chart with linear and log axes. 7 data points. Swipe to navigate."
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={defaultChartHeight}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
-      {
-        id: 'linear',
-        yAxisId: 'linearAxis',
-        data: multipleYAxesData,
-        label: 'linear',
-      },
-      { id: 'log', yAxisId: 'logAxis', data: multipleYAxesData, label: 'log' },
-    ]}
-    xAxis={{ data: multipleYAxesData }}
-    yAxis={[
-      { id: 'linearAxis', scaleType: 'linear' },
-      { id: 'logAxis', scaleType: 'log' },
-    ]}
-  >
-    <XAxis showLine showTickMarks />
-    <YAxis showLine showTickMarks axisId="logAxis" position="left" />
-    <YAxis showLine showTickMarks axisId="linearAxis" position="left" />
-    <Line curve="natural" seriesId="linear" />
-    <Line curve="natural" seriesId="log" />
-    <Scrubber />
-  </CartesianChart>
+        {
+          id: 'linear',
+          yAxisId: 'linearAxis',
+          data: multipleYAxesData,
+          label: 'linear',
+        },
+        { id: 'log', yAxisId: 'logAxis', data: multipleYAxesData, label: 'log' },
+      ]}
+      xAxis={{ data: multipleYAxesData }}
+      yAxis={[
+        { id: 'linearAxis', scaleType: 'linear' },
+        { id: 'logAxis', scaleType: 'log' },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis showLine showTickMarks axisId="logAxis" position="left" />
+      <YAxis showLine showTickMarks axisId="linearAxis" position="left" />
+      <Line curve="natural" seriesId="linear" />
+      <Line curve="natural" seriesId="log" />
+      <Scrubber />
+    </CartesianChart>
   );
 };
 
@@ -350,9 +351,12 @@ const CustomTickMarkSizes = () => {
 };
 
 const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
-  const exponentialData = [
-    1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
-  ];
+  const exponentialData = useMemo(
+    () => [
+      1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
+    ],
+    [],
+  );
 
   const scrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${exponentialData[index]}`,
@@ -363,8 +367,8 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={`Exponential growth chart with ${exponentialData.length} data points. Swipe to navigate.`}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={defaultChartHeight}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'growthLinear',

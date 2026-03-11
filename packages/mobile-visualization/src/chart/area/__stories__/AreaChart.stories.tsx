@@ -19,8 +19,8 @@ const BasicExample = () => {
       enableScrubbing
       showYAxis
       accessibilityLabel={`Area chart with ${basicData.length} data points. Swipe to navigate.`}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       height={400}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[{ id: 'pageViews', data: basicData }]}
       yAxis={{
         showGrid: true,
@@ -55,10 +55,10 @@ const StackedExample = () => {
       enableScrubbing
       showLines
       stacked
-      curve="natural"
       accessibilityLabel={`Stacked rewards chart with ${currentRewardsData.length} data points. Swipe to navigate.`}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      curve="natural"
       height={256}
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
         {
           id: 'currentRewards',
@@ -95,10 +95,10 @@ const AreaChartStories = () => {
           showLines
           showYAxis
           accessibilityLabel="Area chart with negative values. 7 data points. Swipe to navigate."
+          height={150}
           scrubberAccessibilityLabel={(index: number) =>
             `Point ${index + 1}: ${[24, 13, -98, 39, 48, 38, 43][index]}`
           }
-          height={150}
           series={[
             {
               id: 'pageViews',
@@ -148,11 +148,11 @@ const AreaChartStories = () => {
           showXAxis
           showYAxis
           accessibilityLabel="Volume by asset. 5 data points. Swipe to navigate."
+          height={280}
+          layout="horizontal"
           scrubberAccessibilityLabel={(index: number) =>
             `${['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'][index]}: ${[68, 54, 43, 29, 18][index]}%`
           }
-          height={280}
-          layout="horizontal"
           series={[
             {
               id: 'volume',

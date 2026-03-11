@@ -274,7 +274,7 @@ const PriceWithVolumeChart = memo(
         `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
           btcPrices[dataIndex],
         )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
-      [btcDates, btcPrices, btcVolumes, formatDate, formatPriceInThousands, formatVolume],
+      [formatDate, formatPriceInThousands, formatVolume],
     );
 
     return (
