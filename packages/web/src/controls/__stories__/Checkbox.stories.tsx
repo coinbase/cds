@@ -9,16 +9,32 @@ import { Text } from '../../typography/Text';
 import { Checkbox } from '../Checkbox';
 import { CheckboxGroup } from '../CheckboxGroup';
 
-export const Normal = () => {
+export default {
+  title: 'Components/Checkbox',
+  component: Checkbox,
+};
+
+const Example: React.FC<React.PropsWithChildren<{ title: string }>> = ({ children, title }) => {
+  return (
+    <VStack gap={2}>
+      <Text as="h2" display="block" font="title3">
+        {title}
+      </Text>
+      {children}
+    </VStack>
+  );
+};
+
+function Normal() {
   const [checked, setChecked] = useState(false);
   return (
     <Checkbox checked={checked} name="normal-checkbox" onChange={() => setChecked((s) => !s)}>
       Normal
     </Checkbox>
   );
-};
+}
 
-export const CustomColor = () => {
+function CustomColor() {
   const [checked, setChecked] = useState(false);
   return (
     <VStack gap={2}>
@@ -55,9 +71,9 @@ export const CustomColor = () => {
       </Checkbox>
     </VStack>
   );
-};
+}
 
-export const Indeterminate = () => {
+function Indeterminate() {
   const [indeterminate, setIndeterminate] = useState(false);
   return (
     <Checkbox
@@ -68,7 +84,7 @@ export const Indeterminate = () => {
       Indeterminate
     </Checkbox>
   );
-};
+}
 
 const darkNormalCss = css`
   padding: 20px;
@@ -77,7 +93,7 @@ const darkNormalCss = css`
   background-color: var(--color-bg);
 `;
 
-export const DarkNormal = () => {
+function DarkNormal() {
   const [checked, setChecked] = useState(false);
   return (
     <ThemeProvider activeColorScheme="dark" theme={defaultTheme}>
@@ -89,7 +105,7 @@ export const DarkNormal = () => {
       </div>
     </ThemeProvider>
   );
-};
+}
 
 export const NoLabel = () => {
   const [checked, setChecked] = useState(false);
@@ -99,41 +115,42 @@ export const NoLabel = () => {
 // This story does not render a label on purpose
 NoLabel.parameters = { a11y: { config: { rules: [{ id: 'label', enabled: false }] } } };
 
-export const DisabledUnselected = () => (
-  <Checkbox checked disabled>
-    Disabled selected
-  </Checkbox>
-);
+function States() {
+  return (
+    <VStack gap={2}>
+      <Checkbox disabled>Disabled unselected</Checkbox>
+      <Checkbox checked disabled>
+        Disabled selected
+      </Checkbox>
+    </VStack>
+  );
+}
 
-export const ReadOnlyUnselected = () => <Checkbox readOnly>Read-only unselected</Checkbox>;
-ReadOnlyUnselected.parameters = {
-  /**
-   * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-   * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-   */
-  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
-};
-
-export const ReadOnlySelected = () => (
-  <Checkbox checked readOnly>
-    Read-only selected
-  </Checkbox>
-);
-ReadOnlySelected.parameters = {
-  /**
-   * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-   * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-   */
-  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
-};
-
-export const MultiLineLabel = () => (
-  <Box width="250px">
-    <Checkbox>
-      This checkbox has a multi-line label. The checkbox and label should align at the top.
+export const ReadOnly = () => (
+  <VStack gap={2}>
+    <Checkbox readOnly>Read-only unselected</Checkbox>
+    <Checkbox checked readOnly>
+      Read-only selected
     </Checkbox>
-  </Box>
+  </VStack>
 );
+ReadOnly.parameters = {
+  /**
+   * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
+   * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
+   */
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+function MultiLineLabel() {
+  return (
+    <Box width="250px">
+      <Checkbox>
+        This checkbox has a multi-line label. The checkbox and label should align at the top.
+      </Checkbox>
+    </Box>
+  );
+}
 
 const options = {
   'fish-taco': 'Fish tacos',
@@ -145,7 +162,7 @@ const options = {
 };
 const optionValues = Object.keys(options);
 
-export const Group = () => {
+function Group() {
   const [selectedValues, { toggle }] = useCheckboxGroupState(optionValues);
   return (
     <>
@@ -166,7 +183,7 @@ export const Group = () => {
       </CheckboxGroup>
     </>
   );
-};
+}
 
 const gridLayoutCss = css`
   display: grid;
@@ -174,7 +191,7 @@ const gridLayoutCss = css`
   gap: 16px;
 `;
 
-export const CustomLayoutCheckboxGroup = () => {
+function CustomLayoutCheckboxGroup() {
   const [selectedValues, { toggle }] = useCheckboxGroupState(optionValues);
   return (
     <>
@@ -195,9 +212,69 @@ export const CustomLayoutCheckboxGroup = () => {
       </CheckboxGroup>
     </>
   );
-};
+}
 
-export default {
-  title: 'Components/Checkbox',
-  component: Checkbox,
+function CustomBorderWidth() {
+  const [checked, setChecked] = useState(false);
+  return (
+    <VStack gap={2}>
+      <Checkbox
+        checked={checked}
+        name="border-width-default"
+        onChange={() => setChecked((s) => !s)}
+      >
+        Default (100)
+      </Checkbox>
+      <Checkbox
+        borderWidth={200}
+        checked={checked}
+        name="border-width-200"
+        onChange={() => setChecked((s) => !s)}
+      >
+        Border width 200
+      </Checkbox>
+      <Checkbox
+        borderWidth={500}
+        checked={checked}
+        name="border-width-500"
+        onChange={() => setChecked((s) => !s)}
+      >
+        Border width 500
+      </Checkbox>
+    </VStack>
+  );
+}
+
+export const All = () => {
+  return (
+    <VStack gap={4}>
+      <Example title="Default">
+        <Normal />
+      </Example>
+      <Example title="Custom Color">
+        <CustomColor />
+      </Example>
+      <Example title="Indeterminate">
+        <Indeterminate />
+      </Example>
+      <Example title="Dark Theme">
+        <DarkNormal />
+      </Example>
+      <Example title="States">
+        <States />
+      </Example>
+      <Example title="Multi-line Label">
+        <MultiLineLabel />
+      </Example>
+      <Example title="Checkbox Group">
+        <Group />
+      </Example>
+      <Example title="Custom Layout Checkbox Group">
+        <CustomLayoutCheckboxGroup />
+      </Example>
+      <Example title="Custom Border Width">
+        <CustomBorderWidth />
+      </Example>
+    </VStack>
+  );
 };

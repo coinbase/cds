@@ -39,17 +39,20 @@ const checkboxCss = css`
   }
 `;
 
-export type CheckboxProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
-  /** Sets the checked/active color of the control.
+export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
+  /**
+   * Sets the checked/active color of the checkbox.
    * @default fgInverse
    */
   controlColor?: ThemeVars.Color;
   /**
-   * Optional.Sets the border width of the control.
+   * Sets the border width of the checkbox.
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
 };
+
+export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;
 
 const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extends string>(
   {
@@ -95,7 +98,6 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extend
       ref={ref}
       aria-label={props.accessibilityLabel}
       borderRadius={borderRadius}
-      borderWidth={borderWidth}
       checked={checked}
       elevation={elevation}
       label={children}
