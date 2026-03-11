@@ -205,6 +205,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/inputs/SegmentedControl/segmentedControl',
+              label: 'SegmentedControl',
+            },
+            {
+              type: 'doc',
               id: 'components/inputs/SelectChipAlpha/selectChipAlpha',
               label: 'SelectChip (Alpha)',
             },
