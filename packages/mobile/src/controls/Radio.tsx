@@ -16,7 +16,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioValue> & {
+export type RadioBaseProps<RadioValue extends string> = Omit<
+  ControlBaseProps<RadioValue>,
+  'controlColor'
+> & {
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */

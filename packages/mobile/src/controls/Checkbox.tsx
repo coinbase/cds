@@ -9,7 +9,10 @@ import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
 
-export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<CheckboxValue> & {
+export type CheckboxBaseProps<CheckboxValue extends string> = Omit<
+  ControlBaseProps<CheckboxValue>,
+  'controlColor'
+> & {
   /** Sets the checked/active color of the control.
    * @default fgInverse
    */
