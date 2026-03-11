@@ -211,7 +211,7 @@ export const ScrubberAccessibilityView = memo(
       [drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height],
     );
 
-    const shouldShow = useMemo(
+    const shouldHide = useMemo(
       () =>
         !isScreenReaderEnabled ||
         !enableScrubbing ||
@@ -231,7 +231,7 @@ export const ScrubberAccessibilityView = memo(
       ],
     );
 
-    if (!shouldShow) return;
+    if (shouldHide) return;
 
     const segmentsFlexDirection = isHorizontalLayout ? 'column' : 'row';
 

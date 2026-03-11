@@ -788,14 +788,14 @@ const CandlesticksChart = memo(
     return (
       <CartesianChart
         enableScrubbing
-        animate={false}
         accessibilityLabel={`Candlestick chart with ${candlesData.length} data points. Swipe to navigate.`}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
         height={150}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
+        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
         series={[
           {
             id: 'stock-prices',
