@@ -38,11 +38,11 @@ const BasicLineChart = memo(function BasicLineChart() {
 
   return (
     <LineChart
-      accessibilityLabel={`Line chart with ${data.length} days of data. Tap segments to move scrubber.`}
       enableScrubbing
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={`Line chart with ${data.length} days of data. Tap segments to move scrubber.`}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
@@ -69,12 +69,12 @@ const DataFormatLineChart = memo(function DataFormatLineChart() {
 
   return (
     <LineChart
-      accessibilityLabel={chartAccessibilityLabel}
       enableScrubbing
       points
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
       curve="natural"
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
@@ -106,10 +106,10 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
 
   return (
     <BarChart
-      accessibilityLabel={`Bar chart with ${values.length} months. Tap segments to move scrubber.`}
       enableScrubbing
       showXAxis
       showYAxis
+      accessibilityLabel={`Bar chart with ${values.length} months. Tap segments to move scrubber.`}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
@@ -149,10 +149,10 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
 
   return (
     <BarChart
-      accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate segments.`}
       enableScrubbing
       showXAxis
       showYAxis
+      accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate segments.`}
       borderRadius={2}
       height={400}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
@@ -206,8 +206,8 @@ const ServiceAvailability = memo(function ServiceAvailability() {
 
   return (
     <CartesianChart
-      accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`}
       enableScrubbing
+      accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate segments.`}
       height={200}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       scrubberAccessibilityLabelStep={1}
@@ -278,9 +278,9 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
 
   return (
     <LineChart
-      accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate segments.`}
       enableScrubbing
       showArea
+      accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate segments.`}
       height={200}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       scrubberAccessibilityLabelStep={1}
@@ -327,8 +327,8 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
 
   return (
     <CartesianChart
-      accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Tap segments to move scrubber.`}
       enableScrubbing
+      accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Tap segments to move scrubber.`}
       height={280}
       inset={32}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
@@ -461,9 +461,9 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
         title={<Text font="title1">Bitcoin</Text>}
       />
       <LineChart
-        accessibilityLabel={chartAccessibilityLabel}
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
         areaType="dotted"
         height={200}
         inset={{ top: 52 }}

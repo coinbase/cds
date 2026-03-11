@@ -576,16 +576,6 @@ export const CartesianChart = memo(
         [ref, accessible, accessibilityLiveRegion, height, rootStyles, width, props],
       );
 
-      const chartContent = (
-        <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
-          <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
-          <ScrubberAccessibilityView
-            accessibilityLabel={scrubberAccessibilityLabel}
-            accessibilityStep={scrubberAccessibilityLabelStep}
-          />
-        </Box>
-      );
-
       return (
         <CartesianChartProvider value={contextValue}>
           <ScrubberProvider
@@ -601,7 +591,13 @@ export const CartesianChart = memo(
                 }
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
-                {chartContent}
+                <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
+                  <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+                  <ScrubberAccessibilityView
+                    accessibilityLabel={scrubberAccessibilityLabel}
+                    accessibilityStep={scrubberAccessibilityLabelStep}
+                  />
+                </Box>
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
             ) : (
