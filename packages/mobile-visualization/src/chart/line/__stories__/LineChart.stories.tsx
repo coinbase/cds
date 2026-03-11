@@ -92,12 +92,12 @@ function MultipleLine() {
 
   return (
     <LineChart
-      accessibilityHint={chartAccessibilityHint}
-      accessibilityLabel={`${chartAccessibilityLabel} ${chartAccessibilityHint}`}
       enableScrubbing
       showArea
       showXAxis
       showYAxis
+      accessibilityHint={chartAccessibilityHint}
+      accessibilityLabel={`${chartAccessibilityLabel} ${chartAccessibilityHint}`}
       height={200}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
@@ -144,12 +144,12 @@ function DataFormat() {
 
   return (
     <LineChart
-      accessibilityLabel={chartAccessibilityLabel}
       enableScrubbing
       points
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
       curve="natural"
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
@@ -514,10 +514,10 @@ function BasicAccessible() {
 
   return (
     <LineChart
-      accessibilityLabel={chartAccessibilityLabel}
       enableScrubbing
       showArea
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
       height={200}
       scrubberAccessibilityLabel={scrubberAccessibilityLabel}
       series={[
@@ -1027,9 +1027,9 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
-          accessibilityLabel={chartAccessibilityLabel}
           enableScrubbing
           showArea
+          accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}

@@ -19,6 +19,7 @@ import { XAxis, YAxis } from '../axis';
 import { BarChart } from '../bar/BarChart';
 import { BarPlot } from '../bar/BarPlot';
 import { CartesianChart } from '../CartesianChart';
+import { Legend } from '../legend';
 import { Line, ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { LineChart } from '../line/LineChart';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../PeriodSelector';
@@ -348,6 +349,94 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
   );
 });
 
+const LegendPosition = memo(function LegendPosition() {
+  const theme = useTheme();
+  const categories = useMemo(
+    () => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    [],
+  );
+  const revenueData = useMemo(() => [455, 520, 380, 455, 285, 235], []);
+  const profitMarginData = useMemo(() => [23, 20, 16, 38, 12, 9], []);
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `${categories[index]}: Revenue $${revenueData[index]}k, Profit Margin ${profitMarginData[index]}%`,
+    [categories, profitMarginData, revenueData],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      accessibilityLabel="Bar chart showing Revenue and Profit Margin by month. January through June. Tap segments to move scrubber."
+      height={200}
+      inset={{ bottom: 8, left: 0, right: 0, top: 8 }}
+      legend={
+        <Legend
+          accessibilityLabel="Chart legend: Revenue and Profit Margin"
+          justifyContent="flex-end"
+        />
+      }
+      legendPosition="bottom"
+      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: revenueData,
+          yAxisId: 'revenue',
+          color: `rgb(${theme.spectrum.yellow40})`,
+          legendShape: 'squircle',
+        },
+        {
+          id: 'profitMargin',
+          label: 'Profit Margin',
+          data: profitMarginData,
+          yAxisId: 'profitMargin',
+          color: theme.color.fgPositive,
+          legendShape: 'squircle',
+        },
+      ]}
+      xAxis={{
+        data: categories,
+        scaleType: 'band',
+        range: ({ min, max }) => ({ min, max: max - 128 }),
+      }}
+      yAxis={[
+        {
+          id: 'revenue',
+          domain: { min: 0 },
+        },
+        {
+          id: 'profitMargin',
+          domain: { max: 100, min: 0 },
+        },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        axisId="revenue"
+        position="left"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `$${value}k`}
+        width={60}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        axisId="profitMargin"
+        position="right"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <BarPlot />
+      <Scrubber hideOverlay />
+    </CartesianChart>
+  );
+});
+
 const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
   const theme = useTheme();
   const fontMgr = useMemo(() => Skia.TypefaceFontProvider.Make(), []);
@@ -533,6 +622,7 @@ function ExampleNavigator() {
         component: <BasicPricesWithManyPoints />,
       },
       { title: 'Positive/Negative Cash Flow', component: <PositiveAndNegativeCashFlow /> },
+      { title: 'Legend Position', component: <LegendPosition /> },
       { title: 'Bitcoin Price (Dotted Area)', component: <AssetPriceWithDottedArea /> },
     ],
     [],

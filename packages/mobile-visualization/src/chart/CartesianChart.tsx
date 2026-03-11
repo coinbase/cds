@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type StyleProp, type View, type ViewStyle } from 'react-native';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
@@ -14,7 +14,7 @@ import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/Scrubbe
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
-import { Legend, type LegendProps } from './legend';
+import { Legend } from './legend';
 import {
   type AxisConfig,
   type CartesianAxisConfigProps,
@@ -36,17 +36,25 @@ import {
   useTotalAxisPadding,
 } from './utils';
 
-const ChartCanvas = memo(
-  ({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) => {
-    const ContextBridge = useChartContextBridge();
+type ChartCanvasProps = Pick<
+  CartesianChartProps,
+  'accessible' | 'accessibilityLabel' | 'accessibilityLiveRegion' | 'accessibilityRole'
+> & {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+};
 
-    return (
-      <Canvas style={[{ width: '100%', height: '100%' }, style]}>
+const ChartCanvas = memo(({ children, style, ...props }: ChartCanvasProps) => {
+  const ContextBridge = useChartContextBridge();
+
+  return (
+    <View style={[StyleSheet.absoluteFill, style]} {...props}>
+      <Canvas style={[{ width: '100%', height: '100%' }]}>
         <ContextBridge>{children}</ContextBridge>
       </Canvas>
-    );
-  },
-);
+    </View>
+  );
+});
 
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
   Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
@@ -565,15 +573,12 @@ export const CartesianChart = memo(
       const rootBoxProps: BoxProps = useMemo(
         () => ({
           ref,
-          accessible,
-          accessibilityLiveRegion,
-          accessibilityRole: 'image',
           height,
           style: rootStyles,
           width,
           ...props,
         }),
-        [ref, accessible, accessibilityLiveRegion, height, rootStyles, width, props],
+        [ref, height, rootStyles, width, props],
       );
 
       return (
@@ -586,13 +591,22 @@ export const CartesianChart = memo(
             {legend ? (
               <Box
                 {...rootBoxProps}
+                accessible={false}
                 flexDirection={
                   legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
                 }
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
-                  <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+                  <ChartCanvas
+                    accessibilityLabel={props.accessibilityLabel}
+                    accessibilityLiveRegion={accessibilityLiveRegion}
+                    accessibilityRole="image"
+                    accessible={accessible && props.accessibilityLabel != null}
+                    style={styles?.chart}
+                  >
+                    {children}
+                  </ChartCanvas>
                   <ScrubberAccessibilityView
                     accessibilityLabel={scrubberAccessibilityLabel}
                     accessibilityStep={scrubberAccessibilityLabelStep}
@@ -601,8 +615,21 @@ export const CartesianChart = memo(
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
             ) : (
-              <Box {...rootBoxProps} collapsable={collapsable} onLayout={onContainerLayout}>
-                <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+              <Box
+                {...rootBoxProps}
+                accessible={false}
+                collapsable={collapsable}
+                onLayout={onContainerLayout}
+              >
+                <ChartCanvas
+                  accessibilityLabel={props.accessibilityLabel}
+                  accessibilityLiveRegion={accessibilityLiveRegion}
+                  accessibilityRole="image"
+                  accessible={accessible && props.accessibilityLabel != null}
+                  style={styles?.chart}
+                >
+                  {children}
+                </ChartCanvas>
                 <ScrubberAccessibilityView
                   accessibilityLabel={scrubberAccessibilityLabel}
                   accessibilityStep={scrubberAccessibilityLabelStep}
