@@ -228,6 +228,40 @@ describe('scrubber accessibility sampling', () => {
       expect(result.leading).toBeGreaterThanOrEqual(0);
       expect(result.trailing).toBeGreaterThanOrEqual(0);
     });
+
+    it('returns vertical (top-to-bottom) segment weights for horizontal chart layout', () => {
+      const bandScale = {
+        type: 'band' as const,
+        domain: [0, 5] as [number, number],
+        range: [0, 50] as [number, number],
+        bandwidth: 8,
+        step: 10,
+      };
+      const yAxis = {
+        scaleType: 'band' as const,
+        domain: { min: 0, max: 5 },
+        range: { min: 0, max: 50 },
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        domainLimit: 'strict' as const,
+      };
+      const sampledIndices = [0, 1, 2];
+
+      const result = getScrubberSegmentWeights(
+        sampledIndices,
+        6,
+        bandScale,
+        yAxis,
+        drawingArea,
+        'vertical',
+      );
+
+      expect(result.segmentWeights).toHaveLength(3);
+      expect(result.segmentWeights[0]).toBe(bandScale.step);
+      expect(result.segmentWeights[1]).toBe(bandScale.step);
+      expect(result.segmentWeights[2]).toBe(bandScale.step);
+      expect(result.leading).toBeGreaterThanOrEqual(0);
+      expect(result.trailing).toBeGreaterThanOrEqual(0);
+    });
   });
 });
 

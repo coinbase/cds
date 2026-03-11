@@ -71,18 +71,18 @@ export const getScrubberSampledIndices = (dataLength: number, step: number): num
 };
 
 /**
- * Resolves the x-value in scale domain for a given data index.
- * For band scales: uses index. For numeric scales with axis data: uses xAxis.data[index].
+ * Resolves the category value in scale domain for a given data index.
+ * For band scales: uses index. For numeric scales with axis data: uses axis.data[index].
  */
-function getXValueForIndex(
+function getCategoryValueForIndex(
   index: number,
-  xScale: SerializableScale,
-  xAxis: AxisConfig | undefined,
+  scale: SerializableScale,
+  axis: AxisConfig | undefined,
 ): number {
-  if (xScale.type === 'band') {
+  if (scale.type === 'band') {
     return index;
   }
-  const axisData = xAxis?.data;
+  const axisData = axis?.data;
   if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
     const numericData = axisData as number[];
     return numericData[index] ?? index;
@@ -96,25 +96,28 @@ export type ScrubberSegmentWeightsResult = {
   trailing: number;
 };
 
+export type ScrubberSegmentOrientation = 'horizontal' | 'vertical';
+
 /**
- * Computes segment weights for scrubber accessibility view based on the chart's x-scale.
+ * Computes segment weights for scrubber accessibility view based on the chart's category axis scale.
  * For band scales: each segment spans one band (stepStart to stepEnd) with leading/trailing
  * spacing for outer padding. For numeric scales: weights reflect actual pixel span.
+ *
+ * @param orientation - 'horizontal' for left-to-right (vertical chart layout), 'vertical' for top-to-bottom (horizontal chart layout)
  */
 export const getScrubberSegmentWeights = (
   sampledIndices: number[],
   dataLength: number,
-  xScale: SerializableScale | undefined,
-  xAxis: AxisConfig | undefined,
+  categoryScale: SerializableScale | undefined,
+  categoryAxis: AxisConfig | undefined,
   drawingArea: Rect,
+  orientation: ScrubberSegmentOrientation = 'horizontal',
 ): ScrubberSegmentWeightsResult => {
-  if (
-    sampledIndices.length === 0 ||
-    !xScale ||
-    !xAxis ||
-    drawingArea.width <= 0 ||
-    drawingArea.height <= 0
-  ) {
+  const dimensionSize = orientation === 'horizontal' ? drawingArea.width : drawingArea.height;
+  const dimensionStart = orientation === 'horizontal' ? drawingArea.x : drawingArea.y;
+  const dimensionEnd = dimensionStart + dimensionSize;
+
+  if (sampledIndices.length === 0 || !categoryScale || !categoryAxis || dimensionSize <= 0) {
     const segmentWeights = sampledIndices.map((index, position) => {
       const nextIndex = sampledIndices[position + 1] ?? dataLength;
       return Math.max(1, nextIndex - index);
@@ -122,25 +125,26 @@ export const getScrubberSegmentWeights = (
     return { leading: 0, segmentWeights, trailing: 0 };
   }
 
-  const leftEdge = drawingArea.x;
-  const rightEdge = drawingArea.x + drawingArea.width;
-
-  if (xScale.type === 'band') {
-    const bandScale = xScale as SerializableBandScale;
+  if (categoryScale.type === 'band') {
+    const bandScale = categoryScale as SerializableBandScale;
     const segmentWeights: number[] = [];
     let leading = 0;
     let trailing = 0;
 
     for (let i = 0; i < sampledIndices.length; i++) {
-      const xValue = getXValueForIndex(sampledIndices[i], xScale, xAxis);
-      const posStart = getPointOnSerializableScale(xValue, bandScale, 'stepStart');
-      const posEnd = getPointOnSerializableScale(xValue, bandScale, 'stepEnd');
-      segmentWeights.push(Math.max(1, posEnd - posStart));
+      const categoryValue = getCategoryValueForIndex(
+        sampledIndices[i],
+        categoryScale,
+        categoryAxis,
+      );
+      const posStart = getPointOnSerializableScale(categoryValue, bandScale, 'stepStart');
+      const posEnd = getPointOnSerializableScale(categoryValue, bandScale, 'stepEnd');
+      segmentWeights.push(Math.max(1, Math.abs(posEnd - posStart)));
       if (i === 0) {
-        leading = Math.max(0, posStart - leftEdge);
+        leading = Math.max(0, Math.min(posStart, posEnd) - dimensionStart);
       }
       if (i === sampledIndices.length - 1) {
-        trailing = Math.max(0, rightEdge - posEnd);
+        trailing = Math.max(0, dimensionEnd - Math.max(posStart, posEnd));
       }
     }
 
@@ -149,13 +153,16 @@ export const getScrubberSegmentWeights = (
 
   const segmentWeights = sampledIndices.map((index, position) => {
     const prevIndex = position > 0 ? sampledIndices[position - 1] : -1;
-    const xValue = getXValueForIndex(index, xScale, xAxis);
-    const posEnd = getPointOnSerializableScale(xValue, xScale);
+    const categoryValue = getCategoryValueForIndex(index, categoryScale, categoryAxis);
+    const posEnd = getPointOnSerializableScale(categoryValue, categoryScale);
     const posStart =
       prevIndex < 0
-        ? leftEdge
-        : getPointOnSerializableScale(getXValueForIndex(prevIndex, xScale, xAxis), xScale);
-    return Math.max(1, posEnd - posStart);
+        ? dimensionStart
+        : getPointOnSerializableScale(
+            getCategoryValueForIndex(prevIndex, categoryScale, categoryAxis),
+            categoryScale,
+          );
+    return Math.max(1, Math.abs(posEnd - posStart));
   });
 
   return { leading: 0, segmentWeights, trailing: 0 };

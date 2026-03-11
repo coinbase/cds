@@ -16,11 +16,11 @@ import { Text } from '@coinbase/cds-mobile/typography';
 import { FontWeight, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
 
 import { XAxis, YAxis } from '../axis';
-import { CartesianChart } from '../CartesianChart';
 import { BarChart } from '../bar/BarChart';
 import { BarPlot } from '../bar/BarPlot';
-import { LineChart } from '../line/LineChart';
+import { CartesianChart } from '../CartesianChart';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
+import { LineChart } from '../line/LineChart';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../PeriodSelector';
 import { Scrubber } from '../scrubber';
 
@@ -132,6 +132,72 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
   );
 });
 
+const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBarChart() {
+  const theme = useTheme();
+  const dataset = useMemo(
+    () => [
+      { month: 'Jan', rainfall: 21 },
+      { month: 'Feb', rainfall: 28 },
+      { month: 'Mar', rainfall: 41 },
+      { month: 'Apr', rainfall: 73 },
+      { month: 'May', rainfall: 99 },
+      { month: 'June', rainfall: 144 },
+      { month: 'July', rainfall: 319 },
+      { month: 'Aug', rainfall: 249 },
+      { month: 'Sept', rainfall: 131 },
+      { month: 'Oct', rainfall: 55 },
+      { month: 'Nov', rainfall: 48 },
+      { month: 'Dec', rainfall: 25 },
+    ],
+    [],
+  );
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index?: number) => {
+      if (index === undefined) {
+        return `Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate segments.`;
+      }
+      return `${dataset[index].month}: ${dataset[index].rainfall}mm rainfall`;
+    },
+    [dataset],
+  );
+
+  return (
+    <BarChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      accessibilityLabel={scrubberAccessibilityLabel}
+      borderRadius={2}
+      height={400}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          label: 'Seoul rainfall',
+          data: dataset.map((d) => d.rainfall),
+          color: theme.color.accentBoldBlue,
+        },
+      ]}
+      xAxis={{
+        label: 'rainfall (mm)',
+        GridLineComponent: (props) => <SolidLine {...props} strokeWidth={1} />,
+        showGrid: true,
+        showLine: true,
+        showTickMarks: true,
+      }}
+      yAxis={{
+        position: 'left',
+        data: dataset.map((d) => d.month),
+        showLine: true,
+        showTickMarks: true,
+        bandTickMarkPlacement: 'edges',
+      }}
+    ></BarChart>
+  );
+});
+
 const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() {
   const theme = useTheme();
   const categories = useMemo(() => Array.from({ length: 31 }, (_, i) => `3/${i + 1}`), []);
@@ -172,11 +238,11 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
   return (
     <CartesianChart
       enableScrubbing
+      accessibilityLabel={scrubberAccessibilityLabel}
       height={280}
       inset={32}
       series={series}
       xAxis={{ data: categories, scaleType: 'band' }}
-      accessibilityLabel={scrubberAccessibilityLabel}
     >
       <XAxis />
       <YAxis
@@ -370,6 +436,10 @@ function ExampleNavigator() {
       { title: 'Basic Line Chart', component: <BasicLineChart /> },
       { title: 'Data Format (Uneven X)', component: <DataFormatLineChart /> },
       { title: 'Bar Chart', component: <AccessibilityBarChart /> },
+      {
+        title: 'Horizontal Bar Chart',
+        component: <AccessibilityHorizontalBarChart />,
+      },
       { title: 'Positive/Negative Cash Flow', component: <PositiveAndNegativeCashFlow /> },
       { title: 'Bitcoin Price (Dotted Area)', component: <AssetPriceWithDottedArea /> },
     ],

@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
   },
   segments: {
     flex: 1,
-    flexDirection: 'row',
   },
 });
 
-const defaultSummaryHint = 'Swipe left or right to hear more points.';
+const summaryHintHorizontal = 'Swipe left or right to hear more points.';
+const summaryHintVertical = 'Swipe up or down to hear more points.';
 
 export type ScrubberAccessibilityLabel = string | ((dataIndex?: number) => string);
 
@@ -43,11 +43,26 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
 }: ScrubberAccessibilityViewProps) {
   const isScreenReaderEnabled = useScreenReaderStatus();
   const shouldShow = isScreenReaderEnabled;
-  const { dataLength, drawingArea, getXAxis, getXSerializableScale } = useCartesianChartContext();
+  const {
+    dataLength,
+    drawingArea,
+    layout,
+    getXAxis,
+    getYAxis,
+    getXSerializableScale,
+    getYSerializableScale,
+  } = useCartesianChartContext();
   const { enableScrubbing } = useScrubberContext();
 
-  const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-  const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+  const isHorizontalLayout = layout === 'horizontal';
+  const categoryAxis = useMemo(
+    () => (isHorizontalLayout ? getYAxis() : getXAxis()),
+    [isHorizontalLayout, getXAxis, getYAxis],
+  );
+  const categoryScale = useMemo(
+    () => (isHorizontalLayout ? getYSerializableScale() : getXSerializableScale()),
+    [isHorizontalLayout, getXSerializableScale, getYSerializableScale],
+  );
 
   const resolvedStep = useMemo(
     () => normalizeScrubberAccessibilityStep(accessibilityStep),
@@ -66,9 +81,18 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
     return label || undefined;
   }, [accessibilityLabel]);
 
+  const segmentOrientation = isHorizontalLayout ? 'vertical' : 'horizontal';
   const { leading, segmentWeights, trailing } = useMemo(
-    () => getScrubberSegmentWeights(sampledIndices, dataLength, xScale, xAxis, drawingArea),
-    [sampledIndices, dataLength, xScale, xAxis, drawingArea],
+    () =>
+      getScrubberSegmentWeights(
+        sampledIndices,
+        dataLength,
+        categoryScale,
+        categoryAxis,
+        drawingArea,
+        segmentOrientation,
+      ),
+    [sampledIndices, dataLength, categoryScale, categoryAxis, drawingArea, segmentOrientation],
   );
 
   const sampledSegments = useMemo(() => {
@@ -111,17 +135,20 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
     return null;
   }
 
+  const summaryHint = isHorizontalLayout ? summaryHintVertical : summaryHintHorizontal;
+  const segmentsFlexDirection = isHorizontalLayout ? 'column' : 'row';
+
   return (
     <View pointerEvents="box-none" style={[styles.container, overlayStyle]}>
       {summaryLabel && (
         <View
           accessible
-          accessibilityHint={defaultSummaryHint}
+          accessibilityHint={summaryHint}
           accessibilityLabel={summaryLabel}
           style={styles.summaryTarget}
         />
       )}
-      <View style={styles.segments}>
+      <View style={[styles.segments, { flexDirection: segmentsFlexDirection }]}>
         {leading > 0 && <View style={getSegmentStyle(leading)} />}
         {sampledSegments.map((segment) => (
           <Pressable
