@@ -206,7 +206,7 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/inputs/SegmentedControl/segmentedControl',
-              label: 'SegmentedControl',
+              label: 'SegmentedControl (Deprecated)',
             },
             {
               type: 'doc',
