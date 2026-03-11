@@ -1,9 +1,11 @@
 import React, { memo, useMemo } from 'react';
+import { StyleSheet, Text } from 'react-native';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
 import { useTheme } from '../hooks/useTheme';
-import { Fallback } from '../layout';
+import { Box, Fallback } from '../layout';
 
 import type { CellSpacing } from './Cell';
 import type { CellAccessoryType } from './CellAccessory';
@@ -19,7 +21,8 @@ type ContentCellFallbackSpacingProps = {
 };
 
 export type ContentCellFallbackProps = FallbackRectWidthProps &
-  ContentCellFallbackSpacingProps & {
+  ContentCellFallbackSpacingProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
     /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
@@ -49,6 +52,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
   spacingVariant = 'normal',
   innerSpacing,
   outerSpacing,
+  accessibilityLabel = 'Loading',
 }: ContentCellFallbackProps) {
   const theme = useTheme();
 
@@ -65,6 +69,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={theme.lineHeight.label2}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
@@ -80,6 +85,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={titleHeight}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
@@ -95,6 +101,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={subtitleHeight}
         paddingBottom={description ? 0.5 : undefined}
@@ -112,6 +119,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
         height={descriptionHeight}
         paddingTop={0.5}
@@ -122,21 +130,34 @@ export const ContentCellFallback = memo(function ContentCellFallback({
   }, [description, disableRandomRectWidth, rectWidthVariant, descriptionHeight]);
 
   return (
-    <ContentCell
-      accessory={accessory}
-      accessoryNode={accessoryNode}
-      descriptionNode={descriptionNode}
-      innerSpacing={
-        innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
-      }
-      media={media ? <MediaFallback type={media} /> : undefined}
-      metaNode={metaNode}
-      outerSpacing={
-        outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
-      }
-      spacingVariant={spacingVariant}
-      subtitleNode={subtitleNode}
-      titleNode={titleNode}
-    />
+    <Box position="relative">
+      {accessibilityLabel && <Text style={localStyles.visuallyHidden}>{accessibilityLabel}</Text>}
+      <ContentCell
+        accessory={accessory}
+        accessoryNode={accessoryNode}
+        descriptionNode={descriptionNode}
+        innerSpacing={
+          innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
+        }
+        media={media ? <MediaFallback aria-hidden type={media} /> : undefined}
+        metaNode={metaNode}
+        outerSpacing={
+          outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
+        }
+        spacingVariant={spacingVariant}
+        subtitleNode={subtitleNode}
+        titleNode={titleNode}
+      />
+    </Box>
   );
+});
+
+const localStyles = StyleSheet.create({
+  visuallyHidden: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+  },
 });

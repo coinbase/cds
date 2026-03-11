@@ -8,6 +8,26 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.23 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- Add layout prop on CartesianChart. [[#483](https://github.com/coinbase/cds/pull/483)]
+
+## 3.4.0-beta.22 (3/4/2026 PST)
+
+#### 🚀 Updates
+
+- Improve PeriodSelector types. [[#464](https://github.com/coinbase/cds/pull/464)]
+- Skip null path transitions. [[#464](https://github.com/coinbase/cds/pull/464)]
+
+## 3.4.0-beta.21 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Fix styles props on Scrubber. [[#463](https://github.com/coinbase/cds/pull/463)]
+- Fix text elevation background. [[#463](https://github.com/coinbase/cds/pull/463)]
+
 ## 3.4.0-beta.20 (2/27/2026 PST)
 
 #### 🚀 Updates

@@ -6,7 +6,7 @@ For simplicity there is no build process since the repo root depends on this lib
 
 The plugin encapsulates the following rules:
 
-### no-deprecated-jsdoc
+## no-deprecated-jsdoc
 
 Detects JSDoc comments containing `@deprecated` tags. This rule helps identify deprecated code that should be migrated or removed in later, breaking version releases.
 
@@ -19,23 +19,39 @@ The rule catches deprecation markers on:
 - Class declarations (including members)
 - Export declarations
 
-### safely-spread-props
+## no-object-rest-spread-in-worklet
+
+Disallows object rest/spread syntax inside functions marked with the Reanimated `'worklet'` directive.
+
+This prevents crashes where transpiled helper functions (such as Babel's `_objectWithoutPropertiesLoose`) are called on the UI thread as non-worklet functions.
+
+Examples this rule flags inside worklets:
+
+- `const { delay, ...config } = transition`
+- `const next = { ...config, duration: 200 }`
+
+Recommended pattern inside worklets:
+
+- Read fields directly (for example, `const delayMs = transition.delay`)
+- Pass existing objects directly when safe, rather than reconstructing with spread
+
+## safely-spread-props
 
 This rule checks that React component `...spread` props do not contain properties that the receiving component does not expect.
 CDS components often compose together type interfaces from many other components. In some of those cases the component with the majority of the props usually receives its props with a `...spread`.
-We have encounted situations where developers accidentally forgot to descture a prop intended for a different element and it ended up passed to the wrong component via the spread props.
+We have encountered situations where developers accidentally forgot to destructure a prop intended for a different element and it ended up passed to the wrong component via spread props.
 
-At this time this rule is intended to only be used within this repo in the cds-web and cds-modile packages. However, after a trial period we may consider opening it up to a wider audience.
+At this time this rule is intended to only be used within this repo in the cds-web and cds-mobile packages. However, after a trial period we may consider opening it up to a wider audience.
 
-### example-screen-default
+## example-screen-default
 
 Ensures every Storybook file default-exports a component whose rendered output is rooted in `ExampleScreen`. This keeps documentation consistent and aligns with the patterns showcased in the mobile package.
 
-### example-screen-contains-example
+## example-screen-contains-example
 
 Validates that any `ExampleScreen` Storybook story ultimately renders at least one `<Example>` component. The rule looks through components defined in the same file to make sure examples exist even when they are encapsulated in helper components.
 
-### figma-connect-imports-required
+## figma-connect-imports-required
 
 Ensures that `figma.connect()` calls have a non-empty `imports` array. This rule validates that:
 
@@ -43,11 +59,11 @@ Ensures that `figma.connect()` calls have a non-empty `imports` array. This rule
 - The `imports` property is an array
 - The `imports` array contains at least one import statement
 
-### figma-connect-imports-package-match
+## figma-connect-imports-package-match
 
 Ensures that import paths in `figma.connect()` calls match the package context of the file. This rule validates that imports come from the same package as the file containing the `figma.connect()` call. Shared packages like `@coinbase/cds-common` are allowed from any context.
 
-### no-typescript-in-jsx-codeblock
+## no-typescript-in-jsx-codeblock
 
 An ESLint _processor_ (not a traditional rule) for MDX files that detects fenced code blocks marked as ` ```jsx ` which contain TypeScript syntax. These blocks should either use `tsx` as the language tag or have the TypeScript annotations removed.
 

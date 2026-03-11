@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 import { css } from '@linaria/core';
@@ -12,6 +13,18 @@ import { Fallback } from '../layout';
 import { useTableCellSpacing, useTableCellTag, useTableContext } from './hooks/useTable';
 import type { TableCellProps } from './TableCell';
 
+const visuallyHiddenCss = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`;
+
 export type TableCellFallbackProps = {
   /** Display title shimmer. */
   title?: boolean;
@@ -23,6 +36,7 @@ export type TableCellFallbackProps = {
   end?: CellMediaType;
 } & SharedProps &
   FallbackRectWidthProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Pick<TableCellProps, 'width' | 'outerSpacing' | 'innerSpacing' | 'as'>;
 
 const tableCellCss = css`
@@ -44,6 +58,7 @@ export const TableCellFallback = memo(
     innerSpacing,
     disableRandomRectWidth,
     rectWidthVariant,
+    accessibilityLabel = 'Loading Cell',
     ...props
   }: TableCellFallbackProps) => {
     const TableCellComponent = useTableCellTag(as);
@@ -60,14 +75,21 @@ export const TableCellFallback = memo(
     return (
       <TableCellComponent className={tableCellCss} data-testid={testID} {...props}>
         <Cell
-          accessory={end && <MediaFallback testID="table-cell-fallback-accessory" type={end} />}
+          accessory={
+            end && <MediaFallback aria-hidden testID="table-cell-fallback-accessory" type={end} />
+          }
           gap={cellGap}
           innerSpacing={cellInnerSpacing}
-          media={start && <MediaFallback testID="table-cell-fallback-media" type={start} />}
+          media={
+            start && <MediaFallback aria-hidden testID="table-cell-fallback-media" type={start} />
+          }
           outerSpacing={cellOuterSpacing}
+          position="relative"
         >
+          {accessibilityLabel && <span className={visuallyHiddenCss}>{accessibilityLabel}</span>}
           {title && (
             <Fallback
+              aria-hidden
               percentage
               disableRandomRectWidth={disableRandomRectWidth}
               height={24}
@@ -78,6 +100,7 @@ export const TableCellFallback = memo(
           )}
           {subtitle && (
             <Fallback
+              aria-hidden
               percentage
               disableRandomRectWidth={disableRandomRectWidth}
               height={16}

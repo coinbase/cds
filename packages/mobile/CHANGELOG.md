@@ -8,6 +8,35 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.52.0 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- A11y improvements to Fallback, Spinner, and LottieStatusAnimation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Simplify the ProgressBar component implementation. [[#388](https://github.com/coinbase/cds/pull/388)]
+
+## 8.51.0 ((3/9/2026, 06:39 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.50.0 (3/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: iconSize customization for IconButton. [[#474](https://github.com/coinbase/cds/pull/474)]
+
+## 8.49.2 (3/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: improve deprecation notice in ListCell. [[#411](https://github.com/coinbase/cds/pull/411)]
+
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
 ## 8.49.0 (2/26/2026 PST)
 
 #### 🚀 Updates

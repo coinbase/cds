@@ -39,11 +39,11 @@ yarn nx run illustrations:release
 
 - **IMPORTANT:** If any illustrations are renamed or deleted, this update will be a breaking change for consumers. Please ensure that you publish a migration guide and a migrator script along with this release to aid consumers with migration.
 
-2. Commit the changes with a message in the following format: `feat: Publish illustrations mm/dd/yyyy`
+3. Commit the changes with a message in the following format: `feat: Publish illustrations mm/dd/yyyy`
 
-3. Open a PR with the changes
+4. Open a PR with the changes
 
-4. Bump the package version and update the changelog
+5. Bump the package version and update the changelog
 
 ```shell
 yarn changelog illustrations
@@ -55,13 +55,13 @@ yarn changelog illustrations
   - PR number?: Copy/paste your PR number
   - Skip the rest (press enter to use defaults)
 
-5. Run `yarn release` to generate website changelogs.
+6. Run `yarn release` to generate website changelogs.
 
-6. Commit and push the changes to your existing PR
+7. Commit and push the changes to your existing PR
 
-7. When the Percy diffs are ready, share them with the Illustrations DRI for approval. Merge your PR once the DRI has signed off.
+8. When the Percy diffs are ready, share them with the Illustrations DRI for approval. Merge your PR once the DRI has signed off.
 
-<!-- 8. TODO: add a step to check deployment status -->
+<!-- TODO: add a step to check deployment status -->
 
 If not, manually trigger the builds if necessary and/or deploy the targets as needed when the build is complete. **_NOTE:_** If you're releasing both icons and illustrations at the same time, you only need to deploy to `production::cds-docs` once, so just pick whichever commit is the most recent and deploy from there.
 

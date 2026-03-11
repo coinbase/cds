@@ -1,7 +1,7 @@
 import React, { Children, isValidElement, useMemo } from 'react';
+import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
 import type {
   AvatarSize,
-  MarginProps,
   NegativeSpace,
   Shape,
   SharedAccessibilityProps,
@@ -45,16 +45,16 @@ const borderRadiusCss: Record<Shape, LinariaClassName> = {
     border-radius: 100%;
   `,
   square: css`
-    border-radius: 4px;
+    border-radius: ${shapeBorderRadius.square}px;
   `,
   hexagon: css`
-    border-radius: 0;
+    border-radius: ${shapeBorderRadius.hexagon}px;
   `,
   squircle: css`
-    border-radius: 8px;
+    border-radius: ${shapeBorderRadius.squircle}px;
   `,
   rectangle: css`
-    border-radius: 0;
+    border-radius: ${shapeBorderRadius.rectangle}px;
   `,
 };
 

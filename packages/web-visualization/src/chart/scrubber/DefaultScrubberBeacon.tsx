@@ -74,7 +74,7 @@ export const DefaultScrubberBeacon = memo(
       const animate = animateProp ?? animateContext;
 
       const targetSeries = getSeries(seriesId);
-      const xScale = getXScale();
+      const xScale = getXScale(targetSeries?.xAxisId);
       const yScale = getYScale(targetSeries?.yAxisId);
 
       const color = useMemo(
@@ -180,7 +180,7 @@ export const DefaultScrubberBeacon = memo(
             <motion.g
               animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               initial={false}
-              transition={updateTransition}
+              transition={updateTransition ?? instantTransition}
             >
               {pulseCircle}
             </motion.g>
@@ -196,7 +196,7 @@ export const DefaultScrubberBeacon = memo(
             stroke={stroke}
             strokeWidth={strokeWidth}
             style={style}
-            transition={updateTransition}
+            transition={updateTransition ?? instantTransition}
           />
         </g>
       );

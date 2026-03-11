@@ -1,4 +1,4 @@
-import { memo, useId, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -56,7 +56,6 @@ export const BarPlot = memo<BarPlotProps>(
     transition,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
-    const clipPathId = useId();
 
     const targetSeries = useMemo(() => {
       // Then filter by seriesIds if provided
@@ -73,20 +72,23 @@ export const BarPlot = memo<BarPlotProps>(
         {
           stackId: string;
           series: BarSeries[];
+          xAxisId?: string;
           yAxisId?: string;
         }
       >();
 
-      // Group series into stacks based on stackId + yAxisId combination
+      // Group series into stacks based on stackId + axis ID combination
       targetSeries.forEach((series) => {
+        const xAxisId = series.xAxisId ?? defaultAxisId;
         const yAxisId = series.yAxisId ?? defaultAxisId;
         const stackId = series.stackId || `individual-${series.id}`;
-        const stackKey = `${stackId}:${yAxisId}`;
+        const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
 
         if (!groups.has(stackKey)) {
           groups.set(stackKey, {
             stackId: stackKey,
             series: [],
+            xAxisId: series.xAxisId,
             yAxisId: series.yAxisId,
           });
         }
@@ -138,6 +140,7 @@ export const BarPlot = memo<BarPlotProps>(
             totalStacks={stackGroups.length}
             transition={transition}
             transitions={transitions}
+            xAxisId={group.xAxisId}
             yAxisId={group.yAxisId}
           />
         ))}

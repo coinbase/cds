@@ -111,7 +111,7 @@ const CustomBarStackComponent = memo(({ children, ...props }: BarStackComponentP
         borderRadius={1000}
         fill={theme.color.bgTertiary}
         height={diameter}
-        originY={props.y}
+        origin={props.y}
         width={diameter}
         x={props.x}
         y={props.y - diameter}
@@ -723,7 +723,7 @@ const CandlesticksChart = memo(
     );
 
     const CandlestickBarComponent = memo<BarComponentProps>(
-      ({ x, y, width, height, originY, dataX, ...props }) => {
+      ({ x, y, width, height, dataX, ...props }) => {
         const { getYScale } = useCartesianChartContext();
         const yScale = getYScale();
 
@@ -915,7 +915,9 @@ const SunlightChartInner = memo(
         <BarPlot
           borderRadius={0}
           seriesIds={['sunlight']}
-          transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+          transitions={{
+            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1000 },
+          }}
         />
       </CartesianChart>
     );
@@ -961,6 +963,130 @@ const PriceRange = () => {
       series={[{ id: 'prices', data, color: assets.btc.color }]}
       yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
     />
+  );
+};
+
+const HorizontalBarChart = () => {
+  const labels = ['BTC', 'ETH', 'SOL', 'ADA'];
+  const allocation = [42, 28, 18, 12];
+
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={220}
+      layout="horizontal"
+      series={[{ id: 'allocation', data: allocation, color: assets.btc.color }]}
+      xAxis={{ domain: { min: 0, max: 50 }, tickLabelFormatter: (value) => `${value}%` }}
+      yAxis={{ data: labels, scaleType: 'band' }}
+    />
+  );
+};
+
+const PopulationPyramid = () => {
+  const theme = useTheme();
+
+  const ageGroups = [
+    '100+ yrs',
+    '95-99 yrs',
+    '90-94 yrs',
+    '85-89 yrs',
+    '80-84 yrs',
+    '75-79 yrs',
+    '70-74 yrs',
+    '65-69 yrs',
+    '60-64 yrs',
+    '55-59 yrs',
+    '50-54 yrs',
+    '45-49 yrs',
+    '40-44 yrs',
+    '35-39 yrs',
+    '30-34 yrs',
+    '25-29 yrs',
+    '20-24 yrs',
+    '15-19 yrs',
+    '10-14 yrs',
+    '5-9 yrs',
+    '0-4 yrs',
+  ];
+
+  const malePopulation = [
+    14587, 48604, 83560, 128957, 184152, 248505, 498683, 706420, 852333, 939629, 1002195, 1001264,
+    960282, 1161371, 1105023, 1061755, 1019343, 1023264, 1026330, 984773, 944071,
+  ];
+
+  const femalePopulation = [
+    14122, 46974, 80768, 124663, 178043, 240293, 482271, 683270, 824525, 909115, 969807, 969070,
+    929571, 1122380, 1068050, 1026356, 985483, 989404, 992505, 952453, 913222,
+  ];
+
+  const numberWithSuffixFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+      }),
+    [],
+  );
+
+  const tickLabelFormatter = useCallback(
+    (value: number) => numberWithSuffixFormatter.format(Math.abs(value)),
+    [numberWithSuffixFormatter],
+  );
+
+  const domainSymmetric = useCallback((bounds: { min: number; max: number }) => {
+    const extremum = Math.max(-bounds.min, bounds.max);
+    const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
+    return { min: -roundedExtremum, max: roundedExtremum };
+  }, []);
+
+  const series = [
+    {
+      id: 'male',
+      label: 'Male',
+      data: malePopulation.map((population) => -population),
+      color: `rgb(${theme.spectrum.blue40})`,
+      stackId: 'population',
+    },
+    {
+      id: 'female',
+      label: 'Female',
+      data: femalePopulation,
+      color: `rgb(${theme.spectrum.pink40})`,
+      stackId: 'population',
+    },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showXAxis
+        showYAxis
+        stacked
+        borderRadius={2}
+        height={550}
+        inset={0}
+        layout="horizontal"
+        series={series}
+        xAxis={{
+          domain: domainSymmetric,
+          GridLineComponent: ThinSolidLine,
+          showGrid: true,
+          showLine: true,
+          showTickMarks: true,
+          tickLabelFormatter,
+        }}
+        yAxis={{
+          bandTickMarkPlacement: 'edges',
+          data: ageGroups,
+          position: 'left',
+          showLine: true,
+          showTickMarks: true,
+          width: 80,
+        }}
+      >
+        <ReferenceLine LineComponent={SolidLine} dataX={0} />
+      </BarChart>
+    </VStack>
   );
 };
 
@@ -1048,6 +1174,14 @@ function ExampleNavigator() {
       {
         title: 'Price Range',
         component: <PriceRange />,
+      },
+      {
+        title: 'Horizontal Layout',
+        component: <HorizontalBarChart />,
+      },
+      {
+        title: 'Population Pyramid',
+        component: <PopulationPyramid />,
       },
     ],
     [],

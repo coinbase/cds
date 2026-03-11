@@ -5,7 +5,7 @@ import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography';
 
-import { Area } from '../area/Area';
+import { AreaChart } from '../area/AreaChart';
 import type { BarProps } from '../bar/Bar';
 import { BarChart } from '../bar/BarChart';
 import { CartesianChart } from '../CartesianChart';
@@ -108,21 +108,21 @@ const TransitionAreaChart = memo<{
   idlePulse?: boolean;
   scrubberRef?: React.RefObject<ScrubberRef | null>;
 }>(({ data, transitions, idlePulse, scrubberRef }) => (
-  <CartesianChart
+  <AreaChart
     enableScrubbing
+    showLines
     height={200}
     inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
     series={[{ id: 'values', data }]}
+    transitions={transitions}
   >
-    <Area seriesId="values" transitions={transitions} />
-    <Line seriesId="values" transitions={transitions} />
     <Scrubber
       ref={scrubberRef as React.RefObject<ScrubberRef>}
       hideOverlay
       idlePulse={idlePulse}
       transitions={transitions}
     />
-  </CartesianChart>
+  </AreaChart>
 ));
 
 const MultiLineChart = memo<{

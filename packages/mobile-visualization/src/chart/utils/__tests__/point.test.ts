@@ -702,6 +702,35 @@ describe('projectPoints', () => {
     expect(result[2]).toEqual({ x: 20, y: 70 }); // data[2] = 3 used as y
   });
 
+  it('should project points for horizontal layout', () => {
+    const result = projectPoints({
+      data: [1, 2, 3],
+      xScale,
+      yScale,
+      layout: 'horizontal',
+    });
+
+    expect(result).toHaveLength(3);
+    expect(result[0]).toEqual({ x: 10, y: 100 }); // value on x, index on y
+    expect(result[1]).toEqual({ x: 20, y: 90 });
+    expect(result[2]).toEqual({ x: 30, y: 80 });
+  });
+
+  it('should use yData as category values in horizontal layout', () => {
+    const result = projectPoints({
+      data: [1, 2, 3],
+      yData: [0, 5, 10],
+      xScale,
+      yScale,
+      layout: 'horizontal',
+    });
+
+    expect(result).toHaveLength(3);
+    expect(result[0]).toEqual({ x: 10, y: 100 });
+    expect(result[1]).toEqual({ x: 20, y: 50 });
+    expect(result[2]).toEqual({ x: 30, y: 0 });
+  });
+
   it('should handle single data point', () => {
     const result = projectPoints({
       data: [5],

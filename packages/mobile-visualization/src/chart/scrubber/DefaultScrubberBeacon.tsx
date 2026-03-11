@@ -20,7 +20,6 @@ import {
   buildTransition,
   defaultTransition,
   getTransition,
-  instantTransition,
   type Transition,
 } from '../utils/transition';
 
@@ -79,7 +78,10 @@ export const DefaultScrubberBeacon = memo(
         useCartesianChartContext();
 
       const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const xScale = useMemo(
+        () => getXSerializableScale(targetSeries?.xAxisId),
+        [getXSerializableScale, targetSeries?.xAxisId],
+      );
       const yScale = useMemo(
         () => getYSerializableScale(targetSeries?.yAxisId),
         [getYSerializableScale, targetSeries?.yAxisId],

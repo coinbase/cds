@@ -1,11 +1,11 @@
 import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
 
+import type { CartesianChartLayout } from './context';
 import {
   type CategoricalScale,
   type ChartScaleFunction,
   isCategoricalScale,
   isLogScale,
-  isNumericScale,
   type PointAnchor,
 } from './scale';
 
@@ -32,7 +32,7 @@ export const getPointOnScale = (
   anchor: PointAnchor = 'middle',
 ): number => {
   if (isCategoricalScale(scale)) {
-    const bandScale = scale;
+    const bandScale = scale as CategoricalScale;
     const bandStart = bandScale(dataValue);
     if (bandStart === undefined) return 0;
 
@@ -46,13 +46,12 @@ export const getPointOnScale = (
         return stepStart;
       case 'bandStart':
         return bandStart;
+      case 'middle':
+        return bandStart + bandwidth / 2;
       case 'bandEnd':
         return bandStart + bandwidth;
       case 'stepEnd':
         return stepStart + step;
-      case 'middle':
-      default:
-        return bandStart + bandwidth / 2;
     }
   }
 
@@ -112,12 +111,18 @@ export const projectPoints = ({
   yScale,
   xData,
   yData,
+  layout = 'vertical',
 }: {
   data: (number | null | { x: number; y: number })[];
   xData?: number[];
   yData?: number[];
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
+  /**
+   * Chart layout.
+   * @default 'vertical'
+   */
+  layout?: CartesianChartLayout;
 }): Array<{ x: number; y: number } | null> => {
   if (data.length === 0) {
     return [];
@@ -137,39 +142,30 @@ export const projectPoints = ({
       });
     }
 
-    // For scales with axis data, determine the correct x value
-    let xValue: number = index;
+    // Determine values/scales based on role (index vs value) and layout.
+    const categoryAxisIsX = layout !== 'horizontal';
+    const indexScale = categoryAxisIsX ? xScale : yScale;
+    const indexData = categoryAxisIsX ? xData : yData;
 
-    // For band scales, always use the index
-    if (!isCategoricalScale(xScale)) {
-      // For numeric scales with axis data, use the axis data values instead of indices
-      if (xData && Array.isArray(xData) && xData.length > 0) {
-        // Check if it's numeric data
-        if (typeof xData[0] === 'number') {
-          const numericXData = xData as number[];
-          xValue = numericXData[index] ?? index;
+    // 1. Calculate position along the index axis (categorical or numeric domain).
+    let indexValue: number = index;
+    if (!isCategoricalScale(indexScale)) {
+      if (indexData && Array.isArray(indexData) && indexData.length > 0) {
+        if (typeof indexData[0] === 'number') {
+          indexValue = (indexData as number[])[index] ?? index;
         }
       }
     }
 
-    let yValue: number = value as number;
-    if (
-      isNumericScale(yScale) &&
-      yData &&
-      Array.isArray(yData) &&
-      yData.length > 0 &&
-      typeof yData[0] === 'number' &&
-      typeof value === 'number'
-    ) {
-      yValue = value as number;
+    // 2. Calculate position along the value axis (measured magnitude).
+    const valueAsNumber = value as number;
+
+    // 3. Project final coordinates based on layout.
+    if (categoryAxisIsX) {
+      return projectPoint({ x: indexValue, y: valueAsNumber, xScale, yScale });
     }
 
-    return projectPoint({
-      x: xValue,
-      y: yValue,
-      xScale,
-      yScale,
-    });
+    return projectPoint({ x: valueAsNumber, y: indexValue, xScale, yScale });
   });
 };
 

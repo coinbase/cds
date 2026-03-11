@@ -10,7 +10,7 @@ Runtime: NodeJS (see .nvmrc for version)
 
 - NEVER make commits without being instructed to do so directly
 - IMPORTANT: After you are done writing code, ALWAYS perform these tasks:
-  1. run the unit for the **specific file(s)** you modified
+  1. run the unit tests for the **specific file(s)** you modified
   2. run typecheck on the **specific package(s)** you modified
   3. run the formatter
 - For complex tasks, ask clarifying questions to the user before executing

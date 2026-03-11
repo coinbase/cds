@@ -3,6 +3,7 @@ import {
   remoteImageDarkFallbackSrc,
   remoteImageLightFallbackSrc,
 } from '@coinbase/cds-common/media/remoteImageFallbackSrc';
+import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
 import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
 import type { AspectRatio, Shape } from '@coinbase/cds-common/types/Shape';
 import { css } from '@linaria/core';
@@ -45,19 +46,19 @@ const fallbackCss = css`
 
 const borderRadiusCss = {
   circle: css`
-    border-radius: 1e5px;
+    border-radius: ${shapeBorderRadius.circle}px;
   `,
   squircle: css`
-    border-radius: 8px;
+    border-radius: ${shapeBorderRadius.squircle}px;
   `,
   square: css`
-    border-radius: 4px;
+    border-radius: ${shapeBorderRadius.square}px;
   `,
   rectangle: css`
-    border-radius: 0;
+    border-radius: ${shapeBorderRadius.rectangle}px;
   `,
   hexagon: css`
-    border-radius: 0;
+    border-radius: ${shapeBorderRadius.hexagon}px;
   `,
 };
 

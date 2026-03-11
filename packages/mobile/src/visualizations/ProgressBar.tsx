@@ -78,18 +78,11 @@ export const ProgressBar = memo(
       const theme = useTheme();
       const height = useProgressSize(weight);
 
-      const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
-        usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
+      const animatedProgress = useRef(new Animated.Value(disableAnimateOnMount ? progress : 0));
 
-      addPreviousPercent(progress);
-      const previousPercent = getPreviousPercent() ?? 0;
-
-      const animatedProgress = useRef(new Animated.Value(previousPercent));
-
-      const [innerWidth, setInnerWidth] = useState<number>(-1);
-
+      const [trackWidth, setTrackWidth] = useState<number>(-1);
       useEffect(() => {
-        if (innerWidth > -1) {
+        if (trackWidth > -1) {
           onAnimationStart?.();
 
           Animated.timing(
@@ -103,13 +96,13 @@ export const ProgressBar = memo(
             if (finished) onAnimationEnd?.();
           });
         }
-      }, [progress, animatedProgress, innerWidth, onAnimationStart, onAnimationEnd]);
+      }, [progress, trackWidth, onAnimationEnd, onAnimationStart]);
 
       const handleLayout = useCallback((event: LayoutChangeEvent) => {
-        setInnerWidth(event.nativeEvent.layout.width);
+        setTrackWidth(event.nativeEvent.layout.width);
       }, []);
 
-      const rootStyle = useMemo(() => {
+      const trackStyle = useMemo(() => {
         const justifyContent = I18nManager.isRTL ? ('flex-end' as const) : ('flex-start' as const);
         return [
           {
@@ -128,19 +121,19 @@ export const ProgressBar = memo(
       const progressStyle = useMemo(
         () => [
           {
-            opacity: innerWidth > -1 ? 1 : 0,
+            opacity: trackWidth > -1 ? 1 : 0,
             transform: [
               {
                 translateX: animatedProgress.current.interpolate({
                   inputRange: [0, 1],
-                  outputRange: I18nManager.isRTL ? [innerWidth, 0] : [innerWidth * -1, 0],
+                  outputRange: I18nManager.isRTL ? [trackWidth, 0] : [-trackWidth, 0],
                 }),
               },
             ],
           },
           styles?.progress,
         ],
-        [innerWidth, styles?.progress],
+        [trackWidth, styles?.progress],
       );
 
       return (
@@ -154,14 +147,14 @@ export const ProgressBar = memo(
           flexGrow={1}
           flexShrink={0}
           onLayout={handleLayout}
-          style={rootStyle}
+          style={trackStyle}
           testID={testID}
         >
           <Box
             animated
             alignItems="flex-start"
+            background={!disabled ? color : 'bgLineHeavy'}
             borderRadius={200}
-            dangerouslySetBackground={!disabled ? theme.color[color] : theme.color.bgLineHeavy}
             flexGrow={0}
             flexShrink={0}
             height="100%"
