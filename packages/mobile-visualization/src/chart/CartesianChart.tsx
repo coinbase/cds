@@ -54,7 +54,7 @@ const ChartCanvas = memo(
     ...restProps
   }: ChartCanvasProps) => {
     const ContextBridge = useChartContextBridge();
-    const isAccessible = accessible && accessibilityLabel != null;
+    const isAccessible = accessible && accessibilityLabel !== null;
 
     return (
       <View
@@ -606,18 +606,18 @@ export const CartesianChart = memo(
           >
             {legend ? (
               <Box
-                {...rootBoxProps}
                 accessible={false}
                 flexDirection={
                   legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
                 }
+                {...rootBoxProps}
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
                   <ChartCanvas
                     accessibilityLabel={props.accessibilityLabel}
                     accessibilityLiveRegion={accessibilityLiveRegion}
-                    accessible={accessible && props.accessibilityLabel != null}
+                    accessible={accessible}
                     style={styles?.chart}
                   >
                     {children}
@@ -631,15 +631,15 @@ export const CartesianChart = memo(
               </Box>
             ) : (
               <Box
-                {...rootBoxProps}
                 accessible={false}
                 collapsable={collapsable}
                 onLayout={onContainerLayout}
+                {...rootBoxProps}
               >
                 <ChartCanvas
                   accessibilityLabel={props.accessibilityLabel}
                   accessibilityLiveRegion={accessibilityLiveRegion}
-                  accessible={accessible && props.accessibilityLabel != null}
+                  accessible={accessible}
                   style={styles?.chart}
                 >
                   {children}
