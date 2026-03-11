@@ -5,6 +5,7 @@ import { useScreenReaderStatus } from '@coinbase/cds-mobile/hooks/useScreenReade
 import { useCartesianChartContext } from '../ChartProvider';
 import {
   getScrubberSampledIndices,
+  getScrubberSegmentWeights,
   normalizeScrubberAccessibilityStep,
   useScrubberContext,
 } from '../utils';
@@ -41,8 +42,12 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
   accessibilityStep,
 }: ScrubberAccessibilityViewProps) {
   const isScreenReaderEnabled = useScreenReaderStatus();
-  const { dataLength, drawingArea } = useCartesianChartContext();
-  const { enableScrubbing, scrubberPosition } = useScrubberContext();
+  const shouldShow = isScreenReaderEnabled;
+  const { dataLength, drawingArea, getXAxis, getXSerializableScale } = useCartesianChartContext();
+  const { enableScrubbing } = useScrubberContext();
+
+  const xAxis = useMemo(() => getXAxis(), [getXAxis]);
+  const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
 
   const resolvedStep = useMemo(
     () => normalizeScrubberAccessibilityStep(accessibilityStep),
@@ -61,13 +66,16 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
     return label || undefined;
   }, [accessibilityLabel]);
 
+  const { leading, segmentWeights, trailing } = useMemo(
+    () => getScrubberSegmentWeights(sampledIndices, dataLength, xScale, xAxis, drawingArea),
+    [sampledIndices, dataLength, xScale, xAxis, drawingArea],
+  );
+
   const sampledSegments = useMemo(() => {
     if (accessibilityLabel === undefined) return [];
 
     return sampledIndices.map((index, position) => {
-      const nextIndex = sampledIndices[position + 1] ?? dataLength;
-      const weight = Math.max(1, nextIndex - index);
-
+      const weight = segmentWeights[position] ?? 1;
       const pointLabel =
         typeof accessibilityLabel === 'function' ? accessibilityLabel(index) : accessibilityLabel;
 
@@ -77,16 +85,9 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
         accessibilityLabel: pointLabel || `Data point ${index + 1}`,
       };
     });
-  }, [accessibilityLabel, sampledIndices, dataLength]);
+  }, [accessibilityLabel, sampledIndices, segmentWeights]);
 
   const getSegmentStyle = useCallback((weight: number) => ({ flex: weight }), []);
-
-  const handleActivate = useCallback(
-    (index: number) => {
-      scrubberPosition.value = index;
-    },
-    [scrubberPosition],
-  );
 
   const overlayStyle = useMemo(
     () => ({
@@ -99,7 +100,7 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
   );
 
   if (
-    !isScreenReaderEnabled ||
+    !shouldShow ||
     !enableScrubbing ||
     !accessibilityLabel ||
     dataLength <= 0 ||
@@ -114,23 +115,23 @@ export const ScrubberAccessibilityView = memo(function ScrubberAccessibilityView
     <View pointerEvents="box-none" style={[styles.container, overlayStyle]}>
       {summaryLabel && (
         <View
+          accessible
           accessibilityHint={defaultSummaryHint}
           accessibilityLabel={summaryLabel}
-          accessible
           style={styles.summaryTarget}
         />
       )}
       <View style={styles.segments}>
+        {leading > 0 && <View style={getSegmentStyle(leading)} />}
         {sampledSegments.map((segment) => (
           <Pressable
             key={segment.index}
-            accessibilityLabel={segment.accessibilityLabel}
             accessible
-            onFocus={() => handleActivate(segment.index)}
-            onPress={() => handleActivate(segment.index)}
+            accessibilityLabel={segment.accessibilityLabel}
             style={getSegmentStyle(segment.weight)}
           />
         ))}
+        {trailing > 0 && <View style={getSegmentStyle(trailing)} />}
       </View>
     </View>
   );

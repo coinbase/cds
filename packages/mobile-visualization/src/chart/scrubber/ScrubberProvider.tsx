@@ -7,9 +7,10 @@ import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 import { useCartesianChartContext } from '../ChartProvider';
 import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
+
 import {
-  ScrubberAccessibilityView,
   type ScrubberAccessibilityLabel,
+  ScrubberAccessibilityView,
 } from './ScrubberAccessibilityView';
 
 const styles = StyleSheet.create({

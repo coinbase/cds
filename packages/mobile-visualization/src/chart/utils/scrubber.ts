@@ -1,5 +1,9 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
+import type { AxisConfig } from './axis';
+import { getPointOnSerializableScale } from './point';
+import type { SerializableBandScale, SerializableScale } from './scale';
+
 export type ScrubberLabelPosition = 'left' | 'right';
 
 export type LabelPosition = {
@@ -64,6 +68,97 @@ export const getScrubberSampledIndices = (dataLength: number, step: number): num
 
   sampledIndices.push(lastIndex);
   return sampledIndices;
+};
+
+/**
+ * Resolves the x-value in scale domain for a given data index.
+ * For band scales: uses index. For numeric scales with axis data: uses xAxis.data[index].
+ */
+function getXValueForIndex(
+  index: number,
+  xScale: SerializableScale,
+  xAxis: AxisConfig | undefined,
+): number {
+  if (xScale.type === 'band') {
+    return index;
+  }
+  const axisData = xAxis?.data;
+  if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
+    const numericData = axisData as number[];
+    return numericData[index] ?? index;
+  }
+  return index;
+}
+
+export type ScrubberSegmentWeightsResult = {
+  leading: number;
+  segmentWeights: number[];
+  trailing: number;
+};
+
+/**
+ * Computes segment weights for scrubber accessibility view based on the chart's x-scale.
+ * For band scales: each segment spans one band (stepStart to stepEnd) with leading/trailing
+ * spacing for outer padding. For numeric scales: weights reflect actual pixel span.
+ */
+export const getScrubberSegmentWeights = (
+  sampledIndices: number[],
+  dataLength: number,
+  xScale: SerializableScale | undefined,
+  xAxis: AxisConfig | undefined,
+  drawingArea: Rect,
+): ScrubberSegmentWeightsResult => {
+  if (
+    sampledIndices.length === 0 ||
+    !xScale ||
+    !xAxis ||
+    drawingArea.width <= 0 ||
+    drawingArea.height <= 0
+  ) {
+    const segmentWeights = sampledIndices.map((index, position) => {
+      const nextIndex = sampledIndices[position + 1] ?? dataLength;
+      return Math.max(1, nextIndex - index);
+    });
+    return { leading: 0, segmentWeights, trailing: 0 };
+  }
+
+  const leftEdge = drawingArea.x;
+  const rightEdge = drawingArea.x + drawingArea.width;
+
+  if (xScale.type === 'band') {
+    const bandScale = xScale as SerializableBandScale;
+    const segmentWeights: number[] = [];
+    let leading = 0;
+    let trailing = 0;
+
+    for (let i = 0; i < sampledIndices.length; i++) {
+      const xValue = getXValueForIndex(sampledIndices[i], xScale, xAxis);
+      const posStart = getPointOnSerializableScale(xValue, bandScale, 'stepStart');
+      const posEnd = getPointOnSerializableScale(xValue, bandScale, 'stepEnd');
+      segmentWeights.push(Math.max(1, posEnd - posStart));
+      if (i === 0) {
+        leading = Math.max(0, posStart - leftEdge);
+      }
+      if (i === sampledIndices.length - 1) {
+        trailing = Math.max(0, rightEdge - posEnd);
+      }
+    }
+
+    return { leading, segmentWeights, trailing };
+  }
+
+  const segmentWeights = sampledIndices.map((index, position) => {
+    const prevIndex = position > 0 ? sampledIndices[position - 1] : -1;
+    const xValue = getXValueForIndex(index, xScale, xAxis);
+    const posEnd = getPointOnSerializableScale(xValue, xScale);
+    const posStart =
+      prevIndex < 0
+        ? leftEdge
+        : getPointOnSerializableScale(getXValueForIndex(prevIndex, xScale, xAxis), xScale);
+    return Math.max(1, posEnd - posStart);
+  });
+
+  return { leading: 0, segmentWeights, trailing: 0 };
 };
 
 /**

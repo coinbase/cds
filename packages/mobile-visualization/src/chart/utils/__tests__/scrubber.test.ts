@@ -5,8 +5,10 @@ import {
   getDefaultScrubberAccessibilityStep,
   getLabelPosition,
   getScrubberSampledIndices,
+  getScrubberSegmentWeights,
   normalizeScrubberAccessibilityStep,
 } from '../scrubber';
+import type { SerializableLinearScale } from '../scale';
 
 describe('getLabelPosition', () => {
   const drawingArea: Rect = {
@@ -131,6 +133,79 @@ describe('scrubber accessibility sampling', () => {
     it('handles small data lengths', () => {
       expect(getScrubberSampledIndices(1, 2)).toEqual([0]);
       expect(getScrubberSampledIndices(0, 2)).toEqual([]);
+    });
+  });
+
+  describe('getScrubberSegmentWeights', () => {
+    const drawingArea: Rect = { x: 0, y: 0, width: 100, height: 50 };
+
+    it('returns index-based weights when scale is unavailable', () => {
+      const sampledIndices = [0, 2, 5];
+      const result = getScrubberSegmentWeights(
+        sampledIndices,
+        6,
+        undefined,
+        undefined,
+        drawingArea,
+      );
+      expect(result).toEqual({
+        leading: 0,
+        segmentWeights: [2, 3, 1],
+        trailing: 0,
+      });
+    });
+
+    it('returns scale-based weights for uneven xData (e.g. [1,2,3,5,8,10])', () => {
+      const xData = [1, 2, 3, 5, 8, 10];
+      const xScale: SerializableLinearScale = {
+        type: 'linear',
+        domain: [1, 10],
+        range: [0, 100],
+      };
+      const xAxis = {
+        scaleType: 'linear' as const,
+        domain: { min: 1, max: 10 },
+        range: { min: 0, max: 100 },
+        data: xData,
+        domainLimit: 'strict' as const,
+      };
+      const sampledIndices = [0, 1, 2, 3, 4, 5];
+
+      const result = getScrubberSegmentWeights(sampledIndices, 6, xScale, xAxis, drawingArea);
+
+      expect(result.leading).toBe(0);
+      expect(result.trailing).toBe(0);
+      expect(result.segmentWeights.every((w) => w >= 1)).toBe(true);
+      const maxSpan = Math.max(...result.segmentWeights);
+      const minSpan = Math.min(...result.segmentWeights);
+      expect(maxSpan).toBeGreaterThan(minSpan);
+    });
+
+    it('returns band-aligned weights with leading/trailing for band scale', () => {
+      const bandScale = {
+        type: 'band' as const,
+        domain: [0, 5] as [number, number],
+        range: [0, 100] as [number, number],
+        bandwidth: 14,
+        step: 16.67,
+      };
+      const xAxis = {
+        scaleType: 'band' as const,
+        domain: { min: 0, max: 5 },
+        range: { min: 0, max: 100 },
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        domainLimit: 'strict' as const,
+      };
+      const sampledIndices = [0, 1, 2];
+
+      const result = getScrubberSegmentWeights(sampledIndices, 6, bandScale, xAxis, drawingArea);
+
+      expect(result.segmentWeights).toHaveLength(3);
+      expect(result.segmentWeights[0]).toBe(bandScale.step);
+      expect(result.segmentWeights[1]).toBe(bandScale.step);
+      expect(result.segmentWeights[2]).toBe(bandScale.step);
+      expect(result.leading).toBeGreaterThanOrEqual(0);
+      expect(result.trailing).toBeGreaterThanOrEqual(0);
     });
   });
 });
