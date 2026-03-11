@@ -14,6 +14,12 @@ All notable changes to this project will be documented in this file.
 
 - Deprecate SegmentedControl. [[#493](https://github.com/coinbase/cds/pull/493)]
 
+## 8.52.2 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Configure control borderWidth and controlColor. [[#457](https://github.com/coinbase/cds/pull/457)]
+
 ## 8.52.1 (3/11/2026 PST)
 
 #### 🐞 Fixes

@@ -29,8 +29,17 @@ const RadioGroupScreen = () => {
           Disabled Selected
         </Radio>
         <Radio disabled>Disabled</Radio>
+      </Example>
+
+      <Example inline title="Read Only">
         <Radio readOnly>Read Only</Radio>
+      </Example>
+
+      <Example inline title="No Label">
         <Radio accessibilityLabel="radio with no label" />
+      </Example>
+
+      <Example inline title="Multi-line Label">
         <Radio>
           This radio has a multi-line label. The radio and label should align at the top. The label
           is super duper long and it keeps going on forever. This radio has a multi-line label.
@@ -124,6 +133,32 @@ const RadioGroupScreen = () => {
               >
                 Style props
               </Radio>
+            </VStack>
+          );
+        }}
+      </Example>
+
+      <Example inline title="Custom Border Width">
+        {() => {
+          const toggleChecked = () => setChecked((prevChecked) => !prevChecked);
+          const smallRadioTheme = {
+            ...defaultTheme,
+            controlSize: {
+              ...defaultTheme.controlSize,
+              radioSize: 18,
+            },
+          };
+
+          return (
+            <VStack gap={2}>
+              <Radio checked={checked} onChange={toggleChecked}>
+                Default radio (20px, borderWidth 100)
+              </Radio>
+              <ThemeProvider activeColorScheme="light" theme={smallRadioTheme}>
+                <Radio borderWidth={200} checked={checked} onChange={toggleChecked}>
+                  Smaller radio (18px, borderWidth 200)
+                </Radio>
+              </ThemeProvider>
             </VStack>
           );
         }}
