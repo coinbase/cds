@@ -139,7 +139,6 @@ export type ScrubberAccessibilityViewProps = {
 export const ScrubberAccessibilityView = memo(
   ({ accessibilityLabel, accessibilityStep }: ScrubberAccessibilityViewProps) => {
     const isScreenReaderEnabled = useScreenReaderStatus();
-    const shouldShow = isScreenReaderEnabled;
     const {
       dataLength,
       drawingArea,
@@ -212,17 +211,27 @@ export const ScrubberAccessibilityView = memo(
       [drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height],
     );
 
-    if (
-      !shouldShow ||
-      !enableScrubbing ||
-      !accessibilityLabel ||
-      dataLength <= 0 ||
-      drawingArea.width <= 0 ||
-      drawingArea.height <= 0 ||
-      sampledSegments.length === 0
-    ) {
-      return null;
-    }
+    const shouldShow = useMemo(
+      () =>
+        !isScreenReaderEnabled ||
+        !enableScrubbing ||
+        !accessibilityLabel ||
+        dataLength <= 0 ||
+        drawingArea.width <= 0 ||
+        drawingArea.height <= 0 ||
+        sampledSegments.length === 0,
+      [
+        isScreenReaderEnabled,
+        enableScrubbing,
+        accessibilityLabel,
+        dataLength,
+        drawingArea.width,
+        drawingArea.height,
+        sampledSegments.length,
+      ],
+    );
+
+    if (!shouldShow) return;
 
     const segmentsFlexDirection = isHorizontalLayout ? 'column' : 'row';
 
