@@ -1,6 +1,7 @@
 import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import type { BarComponentProps } from '../Bar';
 import { BarChart } from '../BarChart';
 
 jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
@@ -56,6 +57,32 @@ describe('BarChart', () => {
     const clipRect = svg.querySelector('clipPath rect');
     expect(clipRect).toBeInTheDocument();
     expect(Number(clipRect?.getAttribute('width'))).toBeGreaterThan(0);
+  });
+
+  it('passes custom transitions to custom bar components', () => {
+    const customTransitions = {
+      enter: { type: 'tween' as const, duration: 0.25 },
+      update: { type: 'spring' as const, stiffness: 320, damping: 30 },
+    };
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          height={400}
+          series={[{ id: 'test', data: [10, 20, 30, 40, 50] }]}
+          testID="bar-chart-custom-transition"
+          transitions={customTransitions}
+          width={600}
+          xAxis={{ data: ['a', 'b', 'c', 'd', 'e'] }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomBar).toHaveBeenCalled();
+    const firstCallProps = CustomBar.mock.calls[0][0];
+    expect(firstCallProps.transitions).toEqual(customTransitions);
   });
 
   it('shows axes and axis labels when enabled', () => {
@@ -126,5 +153,41 @@ describe('BarChart', () => {
       Boolean(path.getAttribute('d')),
     );
     expect(drawablePaths.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('renders horizontal layout bars from zero baseline with categorical y-axis labels', () => {
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          showYAxis
+          BarComponent={CustomBar}
+          animate={false}
+          height={400}
+          layout="horizontal"
+          series={[{ id: 'test', data: [10, 20, 30] }]}
+          testID="bar-chart-horizontal-layout"
+          width={600}
+          yAxis={{ data: ['A', 'B', 'C'], scaleType: 'band' }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const svg = screen.getByTestId('bar-chart-horizontal-layout');
+    expect(svg.querySelector('[data-axis="y"]')).toBeInTheDocument();
+    expect(screen.getByText('A')).toBeInTheDocument();
+
+    const renderedCategories = new Set(
+      CustomBar.mock.calls
+        .map(([props]) => props.dataY)
+        .filter((value): value is number => typeof value === 'number'),
+    );
+    expect(renderedCategories.has(0)).toBe(true);
+    expect(renderedCategories.has(1)).toBe(true);
+    expect(renderedCategories.has(2)).toBe(true);
+
+    const hasWideBar = CustomBar.mock.calls.some(([props]) => props.width > props.height);
+    expect(hasWideBar).toBe(true);
   });
 });

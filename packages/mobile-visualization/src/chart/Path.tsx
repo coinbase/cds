@@ -260,26 +260,30 @@ export const Path = memo<PathProps>((props) => {
   const { initialClipPath, targetClipPath } = useMemo(() => {
     if (!rect) return { initialClipPath: null, targetClipPath: null };
 
-    // Initial clip path (width = 0)
+    const categoryAxisIsX = context.layout !== 'horizontal';
+    const fullWidth = rect.width + totalOffset;
+    const fullHeight = rect.height + totalOffset;
+
+    // Initial clip path starts collapsed on the category axis.
     const initial = Skia.Path.Make();
     initial.addRect({
       x: rect.x - clipOffset,
       y: rect.y - clipOffset,
-      width: 0,
-      height: rect.height + totalOffset,
+      width: categoryAxisIsX ? 0 : fullWidth,
+      height: categoryAxisIsX ? fullHeight : 0,
     });
 
-    // Target clip path (full width)
+    // Target clip path is fully expanded.
     const target = Skia.Path.Make();
     target.addRect({
       x: rect.x - clipOffset,
       y: rect.y - clipOffset,
-      width: rect.width + totalOffset,
-      height: rect.height + totalOffset,
+      width: fullWidth,
+      height: fullHeight,
     });
 
     return { initialClipPath: initial, targetClipPath: target };
-  }, [rect, clipOffset, totalOffset]);
+  }, [rect, clipOffset, totalOffset, context.layout]);
 
   // Use usePathInterpolation for animated clip path
   const animatedClipPath = usePathInterpolation(

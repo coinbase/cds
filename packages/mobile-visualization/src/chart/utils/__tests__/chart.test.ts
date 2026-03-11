@@ -165,6 +165,27 @@ describe('getStackedSeriesData', () => {
     ]);
   });
 
+  it('should not stack series with different xAxisId', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [1, 2, 3], stackId: 'stack1', xAxisId: 'top' },
+      { id: 'series2', data: [4, 5, 6], stackId: 'stack1', xAxisId: 'bottom' },
+    ];
+
+    const result = getStackedSeriesData(series);
+
+    expect(result.size).toBe(2);
+    expect(result.get('series1')).toEqual([
+      [0, 1],
+      [0, 2],
+      [0, 3],
+    ]);
+    expect(result.get('series2')).toEqual([
+      [0, 4],
+      [0, 5],
+      [0, 6],
+    ]);
+  });
+
   it('should handle null values in data', () => {
     const series: Series[] = [{ id: 'series1', data: [1, null, 3] }];
 

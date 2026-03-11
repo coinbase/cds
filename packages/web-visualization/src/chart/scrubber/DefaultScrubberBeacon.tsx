@@ -74,7 +74,7 @@ export const DefaultScrubberBeacon = memo(
       const animate = animateProp ?? animateContext;
 
       const targetSeries = getSeries(seriesId);
-      const xScale = getXScale();
+      const xScale = getXScale(targetSeries?.xAxisId);
       const yScale = getYScale(targetSeries?.yAxisId);
 
       const color = useMemo(

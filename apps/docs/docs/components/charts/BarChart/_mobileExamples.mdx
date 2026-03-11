@@ -1,4 +1,4 @@
-## Basic Example
+## Basics
 
 Bar charts are a useful component for comparing discrete categories of data.
 They are helpful for highlighting trends to users or allowing them to compare proportions at a glance.
@@ -20,6 +20,54 @@ To start, pass in a series of data to the chart.
     showGrid: true,
   }}
 />
+```
+
+## Horizontal Bars
+
+To render horizontal bars, set the `layout` prop to `"horizontal"`. In this layout, the Y axis becomes the categorical axis and the X axis becomes the value axis.
+
+```jsx
+function HorizontalBars() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+
+  return (
+    <BarChart
+      height={400}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          label: 'Seoul rainfall',
+          data: dataset.map((d) => d.seoul),
+          color: 'var(--color-accentBoldBlue)',
+        },
+      ]}
+      showXAxis
+      showYAxis
+      xAxis={{
+        label: 'rainfall (mm)',
+        showGrid: true,
+      }}
+      yAxis={{
+        position: 'left',
+        data: dataset.map((d) => d.month),
+      }}
+    />
+  );
+}
 ```
 
 ## Multiple Series
@@ -281,7 +329,7 @@ function MonthlyGainsByAsset() {
 
 ## Border Radius
 
-Bars have a default border radius of `100`. You can change this by setting the `borderRadius` prop on the chart.
+Bars have a default borderRadius of `4`. You can change this by setting the `borderRadius` prop on the chart.
 
 Stacks will only round the top corners of touching bars.
 
@@ -628,7 +676,7 @@ You can also set the `barMinSize` prop to control the minimum size for individua
 />
 ```
 
-### Multiple Y Axes
+### Multiple Axes
 
 You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stacked.
 
@@ -698,349 +746,113 @@ function MultipleYAxes() {
 }
 ```
 
+When using horizontal layout, you can use multiple x axes.
+
+```jsx
+<CartesianChart
+  layout="horizontal"
+  legend
+  height={400}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  legendPosition="bottom"
+  series={[
+    {
+      id: 'revenue',
+      label: 'Revenue ($)',
+      data: [455, 520, 380, 455, 285, 235],
+      xAxisId: 'revenue',
+      color: 'var(--color-accentBoldYellow)',
+    },
+    {
+      id: 'profitMargin',
+      label: 'Profit Margin (%)',
+      data: [23, 20, 16, 38, 12, 9],
+      xAxisId: 'profitMargin',
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={[
+    {
+      id: 'revenue',
+      domain: { min: 0 },
+    },
+    {
+      id: 'profitMargin',
+      domain: { min: 0, max: 100 },
+    },
+  ]}
+  yAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    scaleType: 'band',
+  }}
+>
+  <YAxis showLine showTickMarks position="left" />
+  <XAxis
+    showGrid
+    showLine
+    showTickMarks
+    axisId="revenue"
+    position="top"
+    requestedTickCount={5}
+    height={60}
+    tickLabelFormatter={(value) => `$${value}k`}
+  />
+  <XAxis
+    showLine
+    showTickMarks
+    axisId="profitMargin"
+    position="bottom"
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `${value}%`}
+  />
+  <BarPlot />
+</CartesianChart>
+```
+
 ## Animations
 
 You can configure chart transitions using the `transitions` prop.
 
-### Customized Transitions
-
-You can pass in a custom spring based transition to your `BarChart` for a custom update transition.
-
 ```jsx
-function AnimatedStackedBars() {
-  const theme = useTheme();
-  const dataCount = 12;
-  const minValue = 20;
-  const maxValue = 100;
-  const minStep = 10;
-  const maxStep = 40;
-  const updateInterval = 600;
-  const seriesSpacing = 30;
-
-  const seriesConfig = [
-    { id: 'red', label: 'Red', color: `rgb(${theme.spectrum.red40})` },
-    { id: 'orange', label: 'Orange', color: `rgb(${theme.spectrum.orange40})` },
-    { id: 'yellow', label: 'Yellow', color: `rgb(${theme.spectrum.yellow40})` },
-    { id: 'green', label: 'Green', color: `rgb(${theme.spectrum.green40})` },
-    { id: 'blue', label: 'Blue', color: `rgb(${theme.spectrum.blue40})` },
-    { id: 'indigo', label: 'Indigo', color: `rgb(${theme.spectrum.indigo40})` },
-    { id: 'purple', label: 'Purple', color: `rgb(${theme.spectrum.purple40})` },
-  ];
-
-  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
-
-  function generateNextValue(previousValue) {
-    const range = maxStep - minStep;
-    const offset = Math.random() * range + minStep;
-
-    let direction;
-    if (previousValue >= maxValue) {
-      direction = -1;
-    } else if (previousValue <= minValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(minValue, Math.min(maxValue, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = minValue + Math.random() * (maxValue - minValue);
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  function AnimatedChart() {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? minValue;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const series = seriesConfig.map((config, index) => ({
-      id: config.id,
-      label: config.label,
-      color: config.color,
-      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
-    }));
-
-    return (
-      <BarChart
-        stacked
-        height={300}
-        series={series}
-        transitions={{
-          enter: { type: 'spring', stiffness: 700, damping: 80 },
-          update: { type: 'spring', stiffness: 700, damping: 20 },
-        }}
-        inset={0}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-          width: 0,
-          tickLabelFormatter: () => '',
-          domain: { min: 0, max: domainLimit },
-        }}
-      />
-    );
-  }
-
-  return <AnimatedChart />;
-}
+<BarChart
+  {...props}
+  transitions={{
+    enter: { type: 'spring', stiffness: 700, damping: 80 },
+    update: { type: 'spring', stiffness: 700, damping: 20 },
+  }}
+/>
 ```
 
-### Disable Animations
-
-You can also disable animations by setting the `animate` prop to `false`.
+Also, you can toggle animations by setting `animate` to `true` or `false`.
 
 ```jsx
-function AnimatedStackedBars() {
-  const theme = useTheme();
-  const dataCount = 12;
-  const minValue = 20;
-  const maxValue = 100;
-  const minStep = 10;
-  const maxStep = 40;
-  const updateInterval = 600;
-  const seriesSpacing = 30;
-
-  const seriesConfig = [
-    { id: 'red', label: 'Red', color: `rgb(${theme.spectrum.red40})` },
-    { id: 'orange', label: 'Orange', color: `rgb(${theme.spectrum.orange40})` },
-    { id: 'yellow', label: 'Yellow', color: `rgb(${theme.spectrum.yellow40})` },
-    { id: 'green', label: 'Green', color: `rgb(${theme.spectrum.green40})` },
-    { id: 'blue', label: 'Blue', color: `rgb(${theme.spectrum.blue40})` },
-    { id: 'indigo', label: 'Indigo', color: `rgb(${theme.spectrum.indigo40})` },
-    { id: 'purple', label: 'Purple', color: `rgb(${theme.spectrum.purple40})` },
-  ];
-
-  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
-
-  function generateNextValue(previousValue) {
-    const range = maxStep - minStep;
-    const offset = Math.random() * range + minStep;
-
-    let direction;
-    if (previousValue >= maxValue) {
-      direction = -1;
-    } else if (previousValue <= minValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(minValue, Math.min(maxValue, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = minValue + Math.random() * (maxValue - minValue);
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  function AnimatedChart() {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? minValue;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const series = seriesConfig.map((config, index) => ({
-      id: config.id,
-      label: config.label,
-      color: config.color,
-      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
-    }));
-
-    return (
-      <BarChart
-        animate={false}
-        stacked
-        height={300}
-        series={series}
-        inset={0}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-          width: 0,
-          tickLabelFormatter: () => '',
-          domain: { min: 0, max: domainLimit },
-        }}
-      />
-    );
-  }
-
-  return <AnimatedChart />;
-}
+<BarChart {...props} animate={false} />
 ```
 
 ### Stagger Delay
 
-You can use the `staggerDelay` property on bar transitions to create a cascading animation effect where bars animate sequentially from left to right. The delay is distributed across bars based on their horizontal position — the leftmost bar starts immediately, and the rightmost bar starts after the full `staggerDelay` duration.
+You can set `staggerDelay` (in milliseconds) on bar transitions to create a cascading animation effect where bars animate sequentially from left to right. The delay is distributed across bars based on their horizontal position — the leftmost bar starts immediately, and the rightmost bar starts after the full `staggerDelay` duration.
 
 ```jsx
-function StaggeredBars() {
-  const [data, setData] = useState([45, 80, 120, 95, 150, 110, 85]);
-  const [key, setKey] = useState(0);
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={2}>
-        <Button
-          compact
-          onPress={() => {
-            setData(data.map(() => Math.floor(Math.random() * 150) + 20));
-          }}
-        >
-          Update Data
-        </Button>
-        <Button compact onPress={() => setKey((k) => k + 1)}>
-          Reset
-        </Button>
-      </HStack>
-
-      <Text font="label">Staggered Enter</Text>
-      <BarChart
-        key={`enter-${key}`}
-        height={150}
-        series={[{ id: 'data', data }]}
-        transitions={{
-          enter: { type: 'timing', duration: 750, staggerDelay: 250 },
-          update: null,
-        }}
-        showXAxis
-        showYAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { max: 250 },
-        }}
-      />
-
-      <Text font="label">Staggered Update</Text>
-      <BarChart
-        height={150}
-        series={[{ id: 'data', data }]}
-        transitions={{
-          enter: null,
-          update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 150 },
-        }}
-        showXAxis
-        showYAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-        yAxis={{
-          showGrid: true,
-          domain: { max: 250 },
-        }}
-      />
-    </VStack>
-  );
-}
+<BarChart
+  {...props}
+  transitions={{
+    enter: { type: 'spring', stiffness: 700, damping: 80, staggerDelay: 250 },
+  }}
+/>
 ```
 
 ### Delay
 
-You can use the `delay` property on transitions to add a pause before the animation starts. This is useful for coordinating animations between different chart elements or creating intentional pauses.
+You can set `delay` (in milliseconds) on transitions to add a pause before the animation starts.
 
 ```jsx
-function DelayedBars() {
-  const [key, setKey] = useState(0);
-
-  return (
-    <VStack gap={2}>
-      <Button compact onPress={() => setKey((k) => k + 1)}>
-        Reset
-      </Button>
-
-      <Text font="label">No Delay</Text>
-      <BarChart
-        key={`no-delay-${key}`}
-        height={150}
-        series={[{ id: 'data', data: [45, 80, 120, 95, 150, 110, 85] }]}
-        transitions={{
-          enter: { type: 'timing', duration: 500 },
-        }}
-        showXAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-      />
-
-      <Text font="label">500ms Delay</Text>
-      <BarChart
-        key={`delay-${key}`}
-        height={150}
-        series={[{ id: 'data', data: [45, 80, 120, 95, 150, 110, 85] }]}
-        transitions={{
-          enter: { type: 'timing', duration: 500, delay: 500 },
-        }}
-        showXAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-      />
-
-      <Text font="label">Stagger + Delay</Text>
-      <BarChart
-        key={`stagger-delay-${key}`}
-        height={150}
-        series={[{ id: 'data', data: [45, 80, 120, 95, 150, 110, 85] }]}
-        transitions={{
-          enter: { type: 'spring', stiffness: 400, damping: 15, delay: 300, staggerDelay: 200 },
-        }}
-        showXAxis
-        xAxis={{
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        }}
-      />
-    </VStack>
-  );
-}
+<BarChart
+  {...props}
+  transitions={{
+    enter: { type: 'spring', stiffness: 700, damping: 80, delay: 250 },
+  }}
+/>
 ```
 
 ## Composed Examples
@@ -1279,7 +1091,7 @@ function SunlightChartExample() {
           borderRadius={0}
           seriesIds={['sunlight']}
           transitions={{
-            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 },
+            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1000 },
           }}
         />
       </CartesianChart>
@@ -1288,5 +1100,85 @@ function SunlightChartExample() {
       </Text>
     </VStack>
   );
+}
+```
+
+### Buy vs Sell
+
+You can combine a horizontal BarChart with a custom legend to create a buy vs sell chart.
+
+```tsx
+function BuyVsSellExample() {
+  function BuyVsSellLegend({ buy, sell }: { buy: number; sell: number }) {
+    return (
+      <HStack gap={1} justifyContent="space-between">
+        <DefaultLegendEntry
+          label={
+            <Text font="legal" color="fgMuted">
+              {buy}% bought
+            </Text>
+          }
+          color="var(--color-fgPositive)"
+        />
+        <DefaultLegendEntry
+          label={
+            <Text font="legal" color="fgMuted">
+              {sell}% sold
+            </Text>
+          }
+          color="var(--color-fgNegative)"
+        />
+      </HStack>
+    );
+  }
+
+  function BuyVsSellChart({
+    buy,
+    sell,
+    animate = false,
+    borderRadius = 3,
+    height = 6,
+    inset = 0,
+    layout = 'horizontal',
+    stackGap = 4,
+    xAxis,
+    yAxis,
+    ...props
+  }: Omit<BarChartProps, 'series'> & { buy: number; sell: number }) {
+    return (
+      <VStack gap={1.5}>
+        <BarChart
+          animate={animate}
+          roundBaseline
+          stacked
+          borderRadius={borderRadius}
+          height={height}
+          inset={inset}
+          layout={layout}
+          series={[
+            {
+              id: 'buy',
+              data: [buy],
+              color: 'var(--color-fgPositive)',
+              legendShape: 'circle',
+            },
+            {
+              id: 'sell',
+              data: [sell],
+              color: 'var(--color-fgNegative)',
+              legendShape: 'circle',
+            },
+          ]}
+          stackGap={stackGap}
+          xAxis={{ domainLimit: 'strict', ...xAxis }}
+          yAxis={{ categoryPadding: 0, ...yAxis }}
+          {...props}
+        />
+        <BuyVsSellLegend buy={buy} sell={sell} />
+      </VStack>
+    );
+  }
+
+  return <BuyVsSellChart buy={76} sell={24} />;
 }
 ```

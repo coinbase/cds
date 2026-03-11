@@ -3,7 +3,9 @@ import { render, screen } from '@testing-library/react';
 
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
+import { ReferenceLine } from '../../line/ReferenceLine';
 import { DefaultScrubberBeacon } from '../DefaultScrubberBeacon';
+import { DefaultScrubberLabel } from '../DefaultScrubberLabel';
 import { Scrubber } from '../Scrubber';
 
 jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
@@ -78,6 +80,48 @@ const renderMultiSeriesChartWithScrubber = (
   );
 };
 
+const renderHorizontalReferenceLineWithDefaultScrubberLabel = () => {
+  return render(
+    <DefaultThemeProvider>
+      <CartesianChart
+        animate={false}
+        height={400}
+        layout="horizontal"
+        series={[{ id: 'test', data: [10, 20, 30, 40, 50] }]}
+        testID="horizontal-reference-line-chart"
+        width={600}
+      >
+        <ReferenceLine LabelComponent={DefaultScrubberLabel} dataY={30} label="Price" />
+      </CartesianChart>
+    </DefaultThemeProvider>,
+  );
+};
+
+const renderHorizontalMultiSeriesChartWithScrubber = (
+  scrubberProps?: React.ComponentProps<typeof Scrubber>,
+) => {
+  return render(
+    <DefaultThemeProvider>
+      <CartesianChart
+        enableScrubbing
+        animate={false}
+        height={400}
+        layout="horizontal"
+        series={[
+          { id: 'alpha', data: [10, 20, 30, 40, 50], label: 'Alpha' },
+          { id: 'beta', data: [50, 40, 30, 20, 10], label: 'Beta' },
+        ]}
+        testID="horizontal-multi-series-chart"
+        width={600}
+      >
+        <Line seriesId="alpha" />
+        <Line seriesId="beta" />
+        <Scrubber {...scrubberProps} />
+      </CartesianChart>
+    </DefaultThemeProvider>,
+  );
+};
+
 describe('Scrubber', () => {
   describe('basic rendering', () => {
     it('renders scrubber within chart', () => {
@@ -129,6 +173,30 @@ describe('Scrubber', () => {
       const svg = screen.getByTestId('multi-series-chart');
       expect(svg.querySelector('[data-testid="scrubber-alpha"]')).toBeInTheDocument();
       expect(svg.querySelector('[data-testid="scrubber-beta"]')).toBeInTheDocument();
+    });
+  });
+
+  describe('horizontal layout labels', () => {
+    it('positions default scrubber line label in the right inset', () => {
+      renderHorizontalReferenceLineWithDefaultScrubberLabel();
+
+      const textNode = screen.getByText('Price').closest('text');
+      expect(textNode).toBeInTheDocument();
+      expect(textNode).toHaveAttribute('text-anchor', 'middle');
+      expect(textNode).toHaveAttribute('dx', '24');
+      expect(textNode).toHaveAttribute('dy', '0');
+
+      const x = Number(textNode?.getAttribute('x'));
+      const dx = Number(textNode?.getAttribute('dx'));
+      expect(x + dx).toBe(576);
+      expect(x).toBeGreaterThan(540);
+    });
+
+    it('always hides beacon labels in horizontal layout', () => {
+      renderHorizontalMultiSeriesChartWithScrubber({ hideBeaconLabels: false });
+
+      expect(screen.queryByText('Alpha')).not.toBeInTheDocument();
+      expect(screen.queryByText('Beta')).not.toBeInTheDocument();
     });
   });
 });

@@ -313,6 +313,7 @@ describe('projectPoints', () => {
   });
 
   it('should project numeric data array', () => {
+    // Default layout is now 'vertical': X is category (index), Y is value
     const result = projectPoints({
       data: [1, 2, 3],
       xScale,

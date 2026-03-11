@@ -253,7 +253,9 @@ function SeriesStacks() {
 
 ## Axes
 
-You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` accepts an object while `yAxis` accepts an object or array.
+You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` accepts an object or array, while `yAxis` accepts an object or array.
+
+When `layout="horizontal"`, you can define multiple x-axes (for multiple value scales) but only one y-axis.
 
 ```jsx
 <CartesianChart
