@@ -38,23 +38,39 @@ import {
 
 type ChartCanvasProps = Pick<
   CartesianChartProps,
-  'accessible' | 'accessibilityLabel' | 'accessibilityLiveRegion' | 'accessibilityRole'
+  'accessible' | 'accessibilityLabel' | 'accessibilityLiveRegion'
 > & {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
-const ChartCanvas = memo(({ children, style, ...props }: ChartCanvasProps) => {
-  const ContextBridge = useChartContextBridge();
+const ChartCanvas = memo(
+  ({
+    children,
+    style,
+    accessible = true,
+    accessibilityLabel,
+    accessibilityLiveRegion = 'polite',
+    ...restProps
+  }: ChartCanvasProps) => {
+    const ContextBridge = useChartContextBridge();
+    const isAccessible = accessible && accessibilityLabel != null;
 
-  return (
-    <View style={[StyleSheet.absoluteFill, style]} {...props}>
-      <Canvas style={[{ width: '100%', height: '100%' }]}>
-        <ContextBridge>{children}</ContextBridge>
-      </Canvas>
-    </View>
-  );
-});
+    return (
+      <View
+        accessibilityLabel={isAccessible ? accessibilityLabel : undefined}
+        accessibilityLiveRegion={isAccessible ? accessibilityLiveRegion : undefined}
+        accessible={isAccessible}
+        style={[StyleSheet.absoluteFill, style]}
+        {...restProps}
+      >
+        <Canvas style={[{ width: '100%', height: '100%' }]}>
+          <ContextBridge>{children}</ContextBridge>
+        </Canvas>
+      </View>
+    );
+  },
+);
 
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
   Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
@@ -601,7 +617,6 @@ export const CartesianChart = memo(
                   <ChartCanvas
                     accessibilityLabel={props.accessibilityLabel}
                     accessibilityLiveRegion={accessibilityLiveRegion}
-                    accessibilityRole="image"
                     accessible={accessible && props.accessibilityLabel != null}
                     style={styles?.chart}
                   >
@@ -624,7 +639,6 @@ export const CartesianChart = memo(
                 <ChartCanvas
                   accessibilityLabel={props.accessibilityLabel}
                   accessibilityLiveRegion={accessibilityLiveRegion}
-                  accessibilityRole="image"
                   accessible={accessible && props.accessibilityLabel != null}
                   style={styles?.chart}
                 >
