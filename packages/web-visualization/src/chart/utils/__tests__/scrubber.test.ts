@@ -2,6 +2,27 @@ import type { Rect } from '@coinbase/cds-common/types';
 
 import { calculateLabelYPositions, getLabelPosition } from '../scrubber';
 
+const calculateLabelStackedPositions = (
+  dimensions: Array<{
+    seriesId: string;
+    width: number;
+    height: number;
+    preferredX: number;
+    preferredY: number;
+  }>,
+  stackingStart: number,
+  stackingSize: number,
+  labelThickness: number,
+  minGap: number,
+) => {
+  return calculateLabelYPositions(
+    dimensions,
+    { x: 0, y: stackingStart, width: 0, height: stackingSize },
+    labelThickness,
+    minGap,
+  );
+};
+
 describe('getLabelPosition', () => {
   const drawingArea: Rect = {
     x: 0,
@@ -85,7 +106,7 @@ describe('getLabelPosition', () => {
   });
 });
 
-describe('calculateLabelYPositions', () => {
+describe('calculateLabelStackedPositions', () => {
   const drawingArea: Rect = {
     x: 0,
     y: 0,
@@ -97,7 +118,13 @@ describe('calculateLabelYPositions', () => {
 
   describe('with no labels', () => {
     it('should return empty map', () => {
-      const result = calculateLabelYPositions([], drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        [],
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
       expect(result.size).toBe(0);
     });
   });
@@ -107,7 +134,13 @@ describe('calculateLabelYPositions', () => {
       const dimensions = [
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 150 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
       expect(result.get('label1')).toBe(150);
     });
 
@@ -115,7 +148,13 @@ describe('calculateLabelYPositions', () => {
       const dimensions = [
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 5 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
       // minY = 0 + 24/2 = 12
       expect(result.get('label1')).toBe(12);
     });
@@ -124,7 +163,13 @@ describe('calculateLabelYPositions', () => {
       const dimensions = [
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 295 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
       // maxY = 0 + 300 - 24/2 = 288
       expect(result.get('label1')).toBe(288);
     });
@@ -137,7 +182,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 100 },
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 150 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
       expect(result.get('label1')).toBe(50);
       expect(result.get('label2')).toBe(100);
       expect(result.get('label3')).toBe(150);
@@ -150,7 +201,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 150 },
         { seriesId: 'label4', width: 50, height: 24, preferredX: 100, preferredY: 200 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // All labels should stay at their exact preferred positions
       expect(result.get('label1')).toBe(50);
@@ -166,7 +223,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 50 },
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 60 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // Labels form collision group and are centered around their average (50+60)/2 = 55
       // With spacing of 28, they're positioned at 55-14=41 and 55+14=69
@@ -183,7 +246,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 55 },
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 60 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // Labels form collision group and are centered around their average (50+55+60)/3 = 55
       // Middle label at 55, others spaced 28 apart
@@ -202,7 +271,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 50 },
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 55 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // Despite different input order, results should be same as cascade test
       expect(result.get('label1')).toBe(27);
@@ -218,7 +293,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 260 },
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 270 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // label1 should stay at preferred position (not part of collision)
       expect(result.get('label1')).toBe(50);
@@ -244,7 +325,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'Denver', width: 100, height: 24, preferredX: 100, preferredY: 238 },
         { seriesId: 'Phoenix', width: 100, height: 24, preferredX: 100, preferredY: 242 },
       ];
-      const result = calculateLabelYPositions(dimensions, smallArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        smallArea.y,
+        smallArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // Boston should stay at preferred position (clamped to minY = 44)
       expect(result.get('Boston')).toBe(44);
@@ -277,7 +364,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 260 },
         { seriesId: 'label4', width: 50, height: 24, preferredX: 100, preferredY: 265 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // label1 and label2 should stay at preferred positions (not part of collision)
       expect(result.get('label1')).toBe(50);
@@ -307,7 +400,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 70 },
         { seriesId: 'label4', width: 50, height: 24, preferredX: 100, preferredY: 75 },
       ];
-      const result = calculateLabelYPositions(dimensions, smallDrawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        smallDrawingArea.y,
+        smallDrawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // All labels should fit within drawing area
       const positions = [
@@ -338,7 +437,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'group2', width: 50, height: 24, preferredX: 100, preferredY: 155 },
         { seriesId: 'group3', width: 50, height: 24, preferredX: 100, preferredY: 160 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // Isolated label should stay at preferred position
       expect(result.get('isolated')).toBe(50);
@@ -359,7 +464,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 0 },
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 5 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       const label1Y = result.get('label1')!;
       const label2Y = result.get('label2')!;
@@ -376,7 +487,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'wide', width: 100, height: 24, preferredX: 100, preferredY: 50 },
         { seriesId: 'narrow', width: 30, height: 24, preferredX: 100, preferredY: 60 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        minGap,
+      );
 
       // Labels form collision group, centered around (50+60)/2 = 55
       expect(result.get('wide')).toBe(41);
@@ -394,7 +511,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 50 },
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 60 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, largeGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        largeGap,
+      );
 
       // Centered around (50+60)/2 = 55, with spacing of 24+16=40
       expect(result.get('label1')).toBe(35);
@@ -410,7 +533,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label1', width: 50, height: 24, preferredX: 100, preferredY: 50 },
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 60 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, smallGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        labelHeight,
+        smallGap,
+      );
 
       // Centered around (50+60)/2 = 55, with spacing of 24+1=25
       expect(result.get('label1')).toBe(42.5);
@@ -428,7 +557,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label1', width: 50, height: 32, preferredX: 100, preferredY: 50 },
         { seriesId: 'label2', width: 50, height: 32, preferredX: 100, preferredY: 60 },
       ];
-      const result = calculateLabelYPositions(dimensions, drawingArea, largeLabelHeight, minGap);
+      const result = calculateLabelStackedPositions(
+        dimensions,
+        drawingArea.y,
+        drawingArea.height,
+        largeLabelHeight,
+        minGap,
+      );
 
       // Centered around (50+60)/2 = 55, with spacing of 32+4=36
       expect(result.get('label1')).toBe(37);

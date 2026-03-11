@@ -63,6 +63,7 @@ export const DottedArea = memo<DottedAreaProps>(
     peakOpacity = 1,
     baselineOpacity = 0,
     baseline,
+    xAxisId,
     yAxisId,
     gradient: gradientProp,
     animate: animateProp,
@@ -71,11 +72,12 @@ export const DottedArea = memo<DottedAreaProps>(
     ...pathProps
   }) => {
     const theme = useTheme();
-    const { drawingArea, animate, getYAxis } = useCartesianChartContext();
+    const { drawingArea, animate, layout, getXAxis, getYAxis } = useCartesianChartContext();
 
     const shouldAnimate = animateProp ?? animate;
 
-    const yAxisConfig = getYAxis(yAxisId);
+    const valueAxisConfig = layout !== 'horizontal' ? getYAxis(yAxisId) : getXAxis(xAxisId);
+    const gradientAxis = layout !== 'horizontal' ? 'y' : 'x';
 
     const fill = useMemo(
       () => fillProp ?? theme.color.fgPrimary,
@@ -112,11 +114,18 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
-      if (!yAxisConfig) return;
+      if (!valueAxisConfig) return;
 
-      const baselineValue = getBaseline(yAxisConfig.domain, baseline);
-      return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
-    }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
+      const baselineValue = getBaseline(valueAxisConfig.domain, baseline);
+      return createGradient(
+        valueAxisConfig.domain,
+        baselineValue,
+        fill,
+        peakOpacity,
+        baselineOpacity,
+        gradientAxis,
+      );
+    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity, gradientAxis]);
 
     // Update transition is used for clip path, we skip update animation on Path itself
     return (
@@ -129,7 +138,7 @@ export const DottedArea = memo<DottedAreaProps>(
           transitions={transitions}
           {...pathProps}
         >
-          {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+          {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
         </Path>
       </Group>
     );

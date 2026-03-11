@@ -21,6 +21,45 @@ The only prop required is `series`, which takes an array of series objects. Each
 />
 ```
 
+## Layout
+
+Lines can be rendered horizontally or vertically by setting the `layout` prop.
+
+```jsx
+function HorizontalLine() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+
+  return (
+    <LineChart
+      height={400}
+      layout="horizontal"
+      series={[
+        { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
+      ]}
+      showXAxis
+      showYAxis
+      xAxis={{ label: 'rainfall (mm)' }}
+      yAxis={{
+        data: dataset.map((d) => d.month),
+      }}
+    />
+  );
+}
+```
+
 LineChart also supports multiple lines, interaction, and axes.
 Other props, such as `areaType` can be applied to the chart as a whole or per series.
 
@@ -545,140 +584,20 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 You can configure chart transitions using `transitions` on Line (or LineChart) and `transitions` on [Scrubber](/components/charts/Scrubber). The `transitions` prop accepts an object with `enter` (the reveal animation) and `update` (data change animation) keys. Set either to `null` to disable that animation phase. You can also disable animations by setting `animate` on LineChart to `false`.
 
 ```tsx
-function Transitions() {
-  const theme = useTheme();
-  const dataCount = 20;
-  const maxDataOffset = 15000;
-  const minStepOffset = 2500;
-  const maxStepOffset = 10000;
-  const domainLimit = 20000;
-  const updateInterval = 500;
+<Line
+  {...lineProps}
+  transitions={{ update: { type: 'spring', stiffness: 700, damping: 20 } }}
+/>
+<Scrubber
+  {...scrubberProps}
+  transitions={{ update: { type: 'spring', stiffness: 700, damping: 20 } }}
+/>
+```
 
-  const myTransitionConfig: Transition = { type: 'spring', stiffness: 700, damping: 20 };
-  const negativeColor = `rgb(${theme.spectrum.gray15})`;
-  const positiveColor = theme.color.fgPositive;
+Also, you can toggle animations by setting `animate` to `true` or `false`.
 
-  function generateNextValue(previousValue: number) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataOffset) {
-      direction = -1;
-    } else if (previousValue <= -maxDataOffset) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(-maxDataOffset, Math.min(maxDataOffset, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  const MyGradient = memo((props: DottedAreaProps) => {
-    const areaGradient = {
-      stops: ({ min, max }: AxisBounds) => [
-        { offset: min, color: negativeColor, opacity: 1 },
-        { offset: 0, color: negativeColor, opacity: 0 },
-        { offset: 0, color: positiveColor, opacity: 0 },
-        { offset: max, color: positiveColor, opacity: 1 },
-      ],
-    };
-
-    return <DottedArea {...props} gradient={areaGradient} />;
-  });
-
-  function CustomTransitionsChart() {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 0;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const tickLabelFormatter = useCallback(
-      (value: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          maximumFractionDigits: 0,
-        }).format(value),
-      [],
-    );
-
-    const valueAtIndexFormatter = useCallback(
-      (dataIndex: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(data[dataIndex]),
-      [data],
-    );
-
-    const lineGradient = {
-      stops: [
-        { offset: 0, color: negativeColor },
-        { offset: 0, color: positiveColor },
-      ],
-    };
-
-    return (
-      <CartesianChart
-        enableScrubbing
-        height={200}
-        inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            gradient: lineGradient,
-          },
-        ]}
-        yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
-      >
-        <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-        <Line
-          showArea
-          AreaComponent={MyGradient}
-          seriesId="prices"
-          strokeWidth={3}
-          transitions={{ update: myTransitionConfig }}
-        />
-        <Scrubber
-          hideOverlay
-          label={valueAtIndexFormatter}
-          transitions={{ update: myTransitionConfig }}
-        />
-      </CartesianChart>
-    );
-  }
-
-  return <CustomTransitionsChart />;
-}
+```tsx
+<LineChart {...props} animate={false} />
 ```
 
 ## Accessibility

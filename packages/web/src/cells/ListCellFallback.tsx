@@ -1,10 +1,24 @@
 import { memo, useMemo } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import { css } from '@linaria/core';
 
 import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
+
+const visuallyHiddenCss = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`;
 
 import { Cell } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
@@ -14,6 +28,7 @@ import { MediaFallback } from './MediaFallback';
 
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Pick<ListCellBaseProps, 'innerSpacing' | 'outerSpacing' | 'spacingVariant'> & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
@@ -89,6 +104,7 @@ export const ListCellFallback = memo(function ListCellFallback({
   spacingVariant,
   innerSpacing,
   outerSpacing,
+  accessibilityLabel = 'Loading',
   ...props
 }: ListCellFallbackProps) {
   // We cant use ListCell here as we need to account for percentage based widths.
@@ -101,6 +117,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         percentage
         className={classNames?.helperText}
         disableRandomRectWidth={disableRandomRectWidth}
@@ -134,6 +151,7 @@ export const ListCellFallback = memo(function ListCellFallback({
         testID="list-cell-fallback-detail"
       >
         <Fallback
+          aria-hidden
           percentage
           className={classNames?.detail}
           disableRandomRectWidth={disableRandomRectWidth}
@@ -143,6 +161,7 @@ export const ListCellFallback = memo(function ListCellFallback({
           width={60}
         />
         <Fallback
+          aria-hidden
           percentage
           className={classNames?.subdetail}
           disableRandomRectWidth={disableRandomRectWidth}
@@ -172,6 +191,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         percentage
         className={classNames?.title}
         disableRandomRectWidth={disableRandomRectWidth}
@@ -191,6 +211,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         percentage
         className={classNames?.subtitle}
         disableRandomRectWidth={disableRandomRectWidth}
@@ -210,6 +231,7 @@ export const ListCellFallback = memo(function ListCellFallback({
 
     return (
       <Fallback
+        aria-hidden
         percentage
         className={classNames?.description}
         disableRandomRectWidth={disableRandomRectWidth}
@@ -234,7 +256,7 @@ export const ListCellFallback = memo(function ListCellFallback({
       return undefined;
     }
 
-    return <MediaFallback testID="list-cell-fallback-media" type={media} />;
+    return <MediaFallback aria-hidden testID="list-cell-fallback-media" type={media} />;
   }, [media]);
 
   return (
@@ -251,9 +273,11 @@ export const ListCellFallback = memo(function ListCellFallback({
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
+      position="relative"
       styles={{ accessory: styles?.accessory }}
       {...props}
     >
+      {accessibilityLabel && <span className={visuallyHiddenCss}>{accessibilityLabel}</span>}
       <VStack gap={0.5}>
         {titleFallback}
         {subtitleFallback}

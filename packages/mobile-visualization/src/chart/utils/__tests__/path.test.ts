@@ -45,6 +45,16 @@ describe('getPathCurveFunction', () => {
     expect(curveFunction).toBeDefined();
     expect(typeof curveFunction).toBe('function');
   });
+
+  it('should switch orientation-aware curves for horizontal layout', () => {
+    const verticalMonotone = getPathCurveFunction('monotone', 'vertical');
+    const horizontalMonotone = getPathCurveFunction('monotone', 'horizontal');
+    const verticalBump = getPathCurveFunction('bump', 'vertical');
+    const horizontalBump = getPathCurveFunction('bump', 'horizontal');
+
+    expect(horizontalMonotone).not.toBe(verticalMonotone);
+    expect(horizontalBump).not.toBe(verticalBump);
+  });
 });
 
 describe('getLinePath', () => {
@@ -178,6 +188,18 @@ describe('getLinePath', () => {
       yScale,
     });
     expect(result).toBe('M0,50Z');
+  });
+
+  it('should project line points for horizontal layout', () => {
+    const result = getLinePath({
+      data: [1, 2, 3],
+      curve: 'linear',
+      xScale,
+      yScale,
+      layout: 'horizontal',
+    });
+
+    expect(result).toBe('M10,100L20,90L30,80');
   });
 });
 
@@ -317,6 +339,18 @@ describe('getAreaPath', () => {
     });
     expect(result).toBe('M0,50L0,100Z');
   });
+
+  it('should generate area path for horizontal layout', () => {
+    const result = getAreaPath({
+      data: [1, 2],
+      curve: 'linear',
+      xScale,
+      yScale,
+      layout: 'horizontal',
+    });
+
+    expect(result).toBe('M10,100L20,90L0,90L0,100Z');
+  });
 });
 
 describe('getBarPath', () => {
@@ -373,5 +407,12 @@ describe('getBarPath', () => {
     expect(topRounding).not.toBe(bottomRounding);
     expect(bottomRounding).not.toBe(bothRounding);
     expect(noRounding).not.toBe(bothRounding);
+  });
+
+  it('should map roundTop/roundBottom to left-right faces in horizontal layout', () => {
+    const result = getBarPath(10, 20, 30, 40, 5, true, false, 'horizontal');
+    expect(result).toBe(
+      'M 10 20 L 35 20 A 5 5 0 0 1 40 25 L 40 55 A 5 5 0 0 1 35 60 L 10 60 A 0 0 0 0 1 10 60 L 10 20 A 0 0 0 0 1 10 20 Z',
+    );
   });
 });

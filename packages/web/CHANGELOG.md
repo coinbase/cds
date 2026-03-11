@@ -8,6 +8,55 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.52.2 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Configure control borderWidth and controlColor. [[#457](https://github.com/coinbase/cds/pull/457)]
+
+## 8.52.1 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Add keyboard scroll support to FocusTrap, Tray, and Modal. [[#481](https://github.com/coinbase/cds/pull/481)]
+
+## 8.52.0 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- A11y improvements to Fallback, Spinner, and LottieStatusAnimation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Simplify the ProgressBar component implementation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Use shapeBorderRadius tokens in RemoteImage/RemoteImageGroup. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Removed useFallbackShape implementation from web and reuse the same hook defined in common. [[#388](https://github.com/coinbase/cds/pull/388)]
+
+## 8.51.0 (3/9/2026 PST)
+
+#### 🚀 Updates
+
+- Added hasInteractiveContent prop to Tooltip to correctly handle keyboard navigation when content includes interactive elements. [[#469](https://github.com/coinbase/cds/pull/469)] [DX-5097]
+
+#### 🐞 Fixes
+
+- Fixed issue when tooltip does not announce its content when content is a React Node instead of a string. [[#469](https://github.com/coinbase/cds/pull/469)]
+
+## 8.50.0 (3/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: iconSize customization for IconButton. [[#474](https://github.com/coinbase/cds/pull/474)]
+
+## 8.49.2 (3/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: improve deprecation notice in ListCell. [[#411](https://github.com/coinbase/cds/pull/411)]
+
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
 ## 8.49.0 (2/26/2026 PST)
 
 #### 🚀 Updates

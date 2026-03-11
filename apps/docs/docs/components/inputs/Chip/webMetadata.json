@@ -2,15 +2,23 @@
   "import": "import { Chip } from '@coinbase/cds-web/chips/Chip'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/chips/Chip.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chips-chip--default",
-  "description": "A compact, interactive content element.",
+  "description": "A compact content element for tags, filters, and selections.",
   "relatedComponents": [
     {
       "label": "InputChip",
       "url": "/components/inputs/InputChip/"
     },
     {
+      "label": "MediaChip",
+      "url": "/components/inputs/MediaChip/"
+    },
+    {
       "label": "SelectChip",
       "url": "/components/inputs/SelectChip/"
+    },
+    {
+      "label": "TabbedChips",
+      "url": "/components/navigation/TabbedChipsAlpha/"
     }
   ],
   "dependencies": []

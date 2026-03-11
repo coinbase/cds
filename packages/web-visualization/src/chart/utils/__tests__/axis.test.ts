@@ -1,4 +1,9 @@
-import { formatAxisTick, getAxisTicksData } from '../axis';
+import {
+  formatAxisTick,
+  getAxisTicksData,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
+} from '../axis';
 import {
   type CategoricalScale,
   getCategoricalScale,
@@ -486,6 +491,105 @@ describe('getAxisTicksData', () => {
       // Should be limited by possibleTickValues length
       expect(result.length).toBe(11); // All possible values
     });
+  });
+});
+
+describe('getCartesianAxisDomain', () => {
+  const series = [
+    { id: 's1', data: [10, 20, 30] },
+    { id: 's2', data: [5, 15, 25] },
+  ];
+
+  // New layout semantics:
+  // - 'vertical': Bars grow vertically (up/down). X is category axis, Y is value axis.
+  // - 'horizontal': Bars grow horizontally (left/right). Y is category axis, X is value axis.
+
+  it('should return correct domain for x-axis in vertical layout (category axis)', () => {
+    const domain = getCartesianAxisDomain(
+      { id: 'x', scaleType: 'band', domainLimit: 'strict' },
+      series,
+      'x',
+      'vertical',
+    );
+    // For x in vertical, it's the index domain: 0 to dataLength - 1
+    expect(domain).toEqual({ min: 0, max: 2 });
+  });
+
+  it('should return correct domain for y-axis in vertical layout (value axis)', () => {
+    const domain = getCartesianAxisDomain(
+      { id: 'y', scaleType: 'linear', domainLimit: 'nice' },
+      series,
+      'y',
+      'vertical',
+    );
+    // For y in vertical, it's the value domain: min/max of all data
+    expect(domain).toEqual({ min: 5, max: 30 });
+  });
+
+  it('should return correct domain for x-axis in horizontal layout (value axis)', () => {
+    const domain = getCartesianAxisDomain(
+      { id: 'x', scaleType: 'linear', domainLimit: 'nice' },
+      series,
+      'x',
+      'horizontal',
+    );
+    // For x in horizontal, it's the value domain: min/max of all data
+    expect(domain).toEqual({ min: 5, max: 30 });
+  });
+
+  it('should return correct domain for y-axis in horizontal layout (category axis)', () => {
+    const domain = getCartesianAxisDomain(
+      { id: 'y', scaleType: 'band', domainLimit: 'strict' },
+      series,
+      'y',
+      'horizontal',
+    );
+    // For y in horizontal, it's the index domain: 0 to dataLength - 1
+    expect(domain).toEqual({ min: 0, max: 2 });
+  });
+});
+
+describe('getCartesianAxisScale', () => {
+  const range = { min: 0, max: 400 };
+  const dataDomain = { min: 0, max: 100 };
+
+  it('should NOT invert y-axis range in horizontal layout (y is category axis)', () => {
+    const scale = getCartesianAxisScale({
+      type: 'y',
+      range,
+      dataDomain,
+      layout: 'horizontal',
+    });
+    // Y axis is the category axis in horizontal layout - no inversion needed
+    // First category (index 0) at top (SVG y=0), last category at bottom (y=400)
+    expect(scale(0)).toBe(0);
+    expect(scale(100)).toBe(400);
+  });
+
+  it('should NOT invert x-axis range in horizontal layout (x is value axis)', () => {
+    const scale = getCartesianAxisScale({
+      type: 'x',
+      range,
+      dataDomain,
+      layout: 'horizontal',
+    });
+    // X axis is the value axis in horizontal layout - no inversion needed (left-to-right is natural)
+    expect(scale(0)).toBe(0);
+    expect(scale(100)).toBe(400);
+  });
+
+  it('should invert y-axis range in vertical layout (y is value axis)', () => {
+    const scale = getCartesianAxisScale({
+      type: 'y',
+      range,
+      dataDomain,
+      layout: 'vertical',
+    });
+    // Y axis is the value axis in vertical layout - inversion needed
+    // Higher values should appear at top (lower SVG y coordinate)
+    // scale(0) -> 400 (bottom), scale(100) -> 0 (top)
+    expect(scale(0)).toBe(400);
+    expect(scale(100)).toBe(0);
   });
 });
 

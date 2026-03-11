@@ -1,7 +1,7 @@
 import type { Animated, StyleProp, ViewStyle } from 'react-native';
 import type { LottieSource } from '@coinbase/cds-common/types';
 
-import type { BoxBaseProps } from '../layout';
+import type { BoxBaseProps, BoxProps } from '../layout';
 
 export type LottieBaseProps<T extends LottieSource = LottieSource> = Omit<
   BoxBaseProps,
@@ -10,12 +10,10 @@ export type LottieBaseProps<T extends LottieSource = LottieSource> = Omit<
   /**
    * A boolean flag indicating whether or not the animation should start automatically when
    * mounted. This only affects the imperative API.
-   * @default false
    */
   autoplay?: boolean;
   /**
    * A boolean flag indicating whether or not the animation should loop.
-   * @default false
    */
   loop?: boolean;
   /**
@@ -50,4 +48,4 @@ export type LottieBaseProps<T extends LottieSource = LottieSource> = Omit<
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
-export type LottieProps<T extends LottieSource = LottieSource> = LottieBaseProps<T>;
+export type LottieProps<T extends LottieSource = LottieSource> = LottieBaseProps<T> & BoxProps;

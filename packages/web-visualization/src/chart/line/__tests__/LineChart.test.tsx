@@ -1,6 +1,7 @@
 import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import type { LineComponentProps } from '../Line';
 import { LineChart } from '../LineChart';
 
 jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
@@ -54,6 +55,74 @@ describe('LineChart', () => {
     const clipRect = svg.querySelector('clipPath rect');
     expect(clipRect).toBeInTheDocument();
     expect(Number(clipRect?.getAttribute('width'))).toBeGreaterThan(0);
+  });
+
+  it('passes custom transitions to custom line components', () => {
+    const customTransitions = {
+      enter: { type: 'tween' as const, duration: 0.25 },
+      update: { type: 'spring' as const, stiffness: 320, damping: 30 },
+    };
+    const CustomLine = jest.fn((props: LineComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <LineChart
+          LineComponent={CustomLine}
+          height={400}
+          series={[{ id: 'test', data: [10, 20, 30, 40, 50] }]}
+          testID="line-chart-custom-transition"
+          transitions={customTransitions}
+          width={600}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomLine).toHaveBeenCalled();
+    const firstCallProps = CustomLine.mock.calls[0][0];
+    expect(firstCallProps.transitions).toEqual(customTransitions);
+  });
+
+  it('allows series-level transitions to override chart transitions', () => {
+    const chartTransitions = {
+      enter: { type: 'tween' as const, duration: 0.2 },
+      update: { type: 'spring' as const, stiffness: 200, damping: 20 },
+    };
+    const seriesTransitions = {
+      enter: { type: 'tween' as const, duration: 0.5 },
+      update: { type: 'spring' as const, stiffness: 500, damping: 45 },
+    };
+    const CustomLine = jest.fn((props: LineComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <LineChart
+          LineComponent={CustomLine}
+          animate={false}
+          height={400}
+          series={[
+            {
+              id: 'series-a',
+              color: '#111111',
+              data: [10, 20, 30, 40, 50],
+              transitions: seriesTransitions,
+            },
+            { id: 'series-b', color: '#222222', data: [5, 10, 15, 20, 25] },
+          ]}
+          testID="line-chart-series-transition-overrides"
+          transitions={chartTransitions}
+          width={600}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const callProps = CustomLine.mock.calls.map(([props]) => props as LineComponentProps);
+    const seriesAProps = callProps.find((props) => props.stroke === '#111111');
+    const seriesBProps = callProps.find((props) => props.stroke === '#222222');
+
+    expect(seriesAProps).toBeDefined();
+    expect(seriesBProps).toBeDefined();
+    expect(seriesAProps?.transitions).toEqual(seriesTransitions);
+    expect(seriesBProps?.transitions).toEqual(chartTransitions);
   });
 
   it('shows axes and axis labels when enabled', () => {
@@ -306,5 +375,40 @@ describe('LineChart', () => {
       Boolean(path.getAttribute('d')),
     );
     expect(drawablePaths.length).toBeGreaterThan(1);
+  });
+
+  it('maps line points correctly for horizontal layout', () => {
+    render(
+      <DefaultThemeProvider>
+        <LineChart
+          points
+          animate={false}
+          curve="linear"
+          height={400}
+          layout="horizontal"
+          series={[{ id: 'test', data: [10, 20, 30] }]}
+          testID="line-chart-horizontal-layout"
+          width={600}
+          yAxis={{ data: [100, 200, 300] }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const svg = screen.getByTestId('line-chart-horizontal-layout');
+    const pointElements = Array.from(
+      svg.querySelectorAll('[data-component="line-points-group"] circle'),
+    );
+
+    expect(pointElements.length).toBe(3);
+
+    pointElements.forEach((point) => {
+      const cx = Number(point.getAttribute('cx'));
+      const cy = Number(point.getAttribute('cy'));
+
+      expect(cx).toBeGreaterThanOrEqual(0);
+      expect(cx).toBeLessThanOrEqual(600);
+      expect(cy).toBeGreaterThanOrEqual(0);
+      expect(cy).toBeLessThanOrEqual(400);
+    });
   });
 });

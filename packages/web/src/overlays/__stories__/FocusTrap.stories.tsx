@@ -48,9 +48,9 @@ export const SingleFocusableChild = () => {
   );
 };
 
-export const TextArea = () => {
+export const DisableArrowKeyNavigation = () => {
   return (
-    <FocusTrap>
+    <FocusTrap disableArrowKeyNavigation>
       <VStack background="bgPrimaryWash" gap={3} padding={3}>
         <Text as="h1" display="block" font="headline">
           Up/Down arrow keys should work

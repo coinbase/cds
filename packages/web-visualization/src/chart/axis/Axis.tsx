@@ -90,7 +90,9 @@ export type AxisBaseProps = SharedProps & {
    * This value is passed into d3 and may not be respected.
    * @note This property is overridden when `ticks` is provided.
    * @note this property overrides the `tickInterval` property.
-   * @default 5 (for y-axis)
+   * @default 5 for value axes by layout:
+   * - X axis when chart layout is horizontal
+   * - Y axis when chart layout is vertical
    */
   requestedTickCount?: number;
   /**
@@ -240,18 +242,16 @@ export type AxisProps = AxisBaseProps & {
    * Formatter function for axis tick values.
    * Tick values will be wrapped in ChartText component.
    *
-   * @example
-   * // XAxis
-   * tickLabelFormatter: (index) => {
-   *   if (index % 12 === 0) {
-   *     return <tspan style={{ fontWeight: 'bold' }}>${prices[index]}</tspan>;
-   *   }
-   *   return `$${prices[index]}`;
-   * }
+   * For band scales with string data, the value will be the string label (e.g., "Jan", "Feb").
+   * For numeric scales, the value will be the number.
    *
    * @example
-   * // YAxis
-   * tickLabelFormatter: (value) => `$${prices[value]}`
+   * // XAxis with categorical data
+   * tickLabelFormatter: (value) => String(value).toUpperCase()
+   *
+   * @example
+   * // YAxis with numeric data
+   * tickLabelFormatter: (value) => `$${value}`
    */
   tickLabelFormatter?: (value: number) => ChartTextChildren;
   /**

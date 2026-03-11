@@ -20,7 +20,9 @@ export default function NavbarMobileSidebar(): JSX.Element | null {
   }, []);
 
   const handleEscPress = useCallback(() => {
-    mobileSidebar.toggle();
+    if (mobileSidebar.shown) {
+      mobileSidebar.toggle();
+    }
   }, [mobileSidebar]);
 
   // Set aria-hidden on main content when sidebar is open

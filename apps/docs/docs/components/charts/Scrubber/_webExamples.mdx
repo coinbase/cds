@@ -75,6 +75,7 @@ All series will be scrubbed by default. You can set `seriesIds` to show only spe
 
 Setting `label` on a series will display a label to the side of the scrubber beacon, and
 setting `label` on Scrubber displays a label above the scrubber line.
+In `layout="horizontal"`, beacon labels are intentionally hidden to avoid overlap with scrubber beacons.
 
 ```jsx live
 <LineChart
@@ -709,5 +710,187 @@ function PercentageBeaconLabels() {
   }
 
   return <Example />;
+}
+```
+
+### Multi Line Beacon Label
+
+You can use a custom `BeaconLabelComponent` to render each beacon label as two lines (team name + percentage).
+
+```jsx live
+function MatchupBeaconLabels() {
+  const matchupBlueData = [
+    47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
+    64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
+  ];
+  const matchupRedData = matchupBlueData.map((value) => 100 - value);
+  const matchupTeamLabels = {
+    blue: 'BLUE',
+    red: 'RED',
+  };
+
+  const TeamBeaconLabel = memo(
+    ({
+      color = 'var(--color-fgPrimary)',
+      teamLabel,
+      percentageLabel,
+      transition,
+      x,
+      y,
+      dx,
+      horizontalAlignment,
+      onDimensionsChange,
+      ...chartTextProps
+    }) => {
+      const teamLabelDimensionsRef = useRef(null);
+      const percentageLabelDimensionsRef = useRef(null);
+
+      const emitCombinedDimensions = useCallback(() => {
+        if (!onDimensionsChange) {
+          return;
+        }
+
+        const teamRect = teamLabelDimensionsRef.current;
+        const percentageRect = percentageLabelDimensionsRef.current;
+
+        if (!teamRect || !percentageRect) {
+          return;
+        }
+
+        const minX = Math.min(teamRect.x, percentageRect.x);
+        const minY = Math.min(teamRect.y, percentageRect.y);
+        const maxX = Math.max(teamRect.x + teamRect.width, percentageRect.x + percentageRect.width);
+        const maxY = Math.max(
+          teamRect.y + teamRect.height,
+          percentageRect.y + percentageRect.height,
+        );
+
+        onDimensionsChange({
+          x: minX,
+          y: minY,
+          width: maxX - minX,
+          height: maxY - minY,
+        });
+      }, [onDimensionsChange]);
+
+      const handleTeamLabelDimensionsChange = useCallback(
+        (rect) => {
+          teamLabelDimensionsRef.current = rect;
+          emitCombinedDimensions();
+        },
+        [emitCombinedDimensions],
+      );
+
+      const handlePercentageLabelDimensionsChange = useCallback(
+        (rect) => {
+          percentageLabelDimensionsRef.current = rect;
+          emitCombinedDimensions();
+        },
+        [emitCombinedDimensions],
+      );
+
+      return (
+        <m.g animate={{ y }} initial={false} transition={transition}>
+          <ChartText
+            disableRepositioning
+            color={color}
+            dx={dx}
+            font="legal"
+            horizontalAlignment={horizontalAlignment}
+            onDimensionsChange={handleTeamLabelDimensionsChange}
+            verticalAlignment="bottom"
+            x={x}
+            y={transition ? 0 : y}
+            {...chartTextProps}
+          >
+            {teamLabel}
+          </ChartText>
+          <ChartText
+            disableRepositioning
+            color={color}
+            dx={dx}
+            font="title3"
+            horizontalAlignment={horizontalAlignment}
+            onDimensionsChange={handlePercentageLabelDimensionsChange}
+            verticalAlignment="top"
+            x={x}
+            y={transition ? 0 : y}
+          >
+            {percentageLabel}
+          </ChartText>
+        </m.g>
+      );
+    },
+  );
+
+  const MatchupScrubberBeaconLabel = memo(({ seriesId, color, ...props }) => {
+    const { getSeriesData, dataLength } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+
+    const seriesData = useMemo(
+      () => getLineData(getSeriesData(seriesId)),
+      [getSeriesData, seriesId],
+    );
+
+    const dataIndex = useMemo(() => {
+      return scrubberPosition ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
+
+    const teamLabel = matchupTeamLabels[seriesId] ?? String(seriesId).toUpperCase();
+
+    const value = useMemo(() => {
+      if (seriesData === undefined) {
+        return null;
+      }
+
+      return seriesData[dataIndex];
+    }, [dataIndex, seriesData]);
+
+    return (
+      <TeamBeaconLabel
+        {...props}
+        color={color}
+        percentageLabel={`${value ?? 0}%`}
+        seriesId={seriesId}
+        teamLabel={teamLabel}
+      />
+    );
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      areaType="dotted"
+      height={250}
+      series={[
+        {
+          id: 'blue',
+          data: matchupBlueData,
+          color: 'rgb(var(--blue50))',
+          label: 'BLUE',
+        },
+        {
+          id: 'red',
+          data: matchupRedData,
+          color: 'rgb(var(--red50))',
+          label: 'RED',
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 64 }),
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <Scrubber
+        idlePulse
+        BeaconLabelComponent={MatchupScrubberBeaconLabel}
+        beaconLabelHorizontalOffset={16}
+        beaconLabelPreferredSide="right"
+      />
+    </LineChart>
+  );
 }
 ```

@@ -48,6 +48,7 @@ const BasicModalExample: React.FC<
   width,
   maxWidth,
   focusTabIndexElements,
+  disableArrowKeyNavigation,
 }) => {
   const [visible, setVisible] = useState(defaultVisible ?? true);
 
@@ -57,6 +58,7 @@ const BasicModalExample: React.FC<
         Open Modal
       </Button>
       <Modal
+        disableArrowKeyNavigation={disableArrowKeyNavigation}
         disablePortal={disablePortal}
         focusTabIndexElements={focusTabIndexElements}
         hideDividers={hideDividers}
@@ -165,7 +167,7 @@ export const ModalWithoutPortal = () => {
 export const LongModal = () => {
   const { triggerRef } = useTriggerFocus();
   return (
-    <BasicModalExample focusTabIndexElements triggerRef={triggerRef}>
+    <BasicModalExample disableArrowKeyNavigation focusTabIndexElements triggerRef={triggerRef}>
       <LoremIpsum repeat={30} />
     </BasicModalExample>
   );

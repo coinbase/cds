@@ -132,11 +132,7 @@ You can have different area styles for each series.
 
 ## Animations
 
-You can configure chart transitions using the `transitions` prop.
-
-### Customized Transitions
-
-You can pass in a custom spring based transition to your `AreaChart` for a custom update transition.
+You can configure chart transitions using the `transitions` prop. Also, you can toggle animations by setting `animate` to `true` or `false`.
 
 ```jsx live
 function AnimatedStackedAreas() {
@@ -197,7 +193,7 @@ function AnimatedStackedAreas() {
     <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
   ));
 
-  function AnimatedChart() {
+  function AnimatedChart(props) {
     const [data, setData] = useState(generateInitialData);
 
     useEffect(() => {
@@ -241,125 +237,36 @@ function AnimatedStackedAreas() {
           tickLabelFormatter: () => '',
           domain: { min: 0, max: domainLimit },
         }}
+        {...props}
       />
     );
   }
 
-  return <AnimatedChart />;
-}
-```
-
-### Disable Animations
-
-You can also disable animations by setting the `animate` prop to `false`.
-
-```jsx live
-function AnimatedStackedAreas() {
-  const dataCount = 20;
-  const minYValue = 5000;
-  const maxDataOffset = 15000;
-  const minStepOffset = 2500;
-  const maxStepOffset = 10000;
-  const updateInterval = 500;
-  const seriesSpacing = 2000;
-  const myTransition = { type: 'spring', stiffness: 700, damping: 20 };
-
-  const seriesConfig = [
-    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
-    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
-    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
-    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
-    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
-    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
-    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
-  ];
-
-  const domainLimit = maxDataOffset + seriesConfig.length * seriesSpacing;
-
-  function generateNextValue(previousValue) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataOffset) {
-      direction = -1;
-    } else if (previousValue <= minYValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(minYValue, Math.min(maxDataOffset, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = minYValue + Math.random() * (maxDataOffset - minYValue);
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  const MemoizedDottedArea = memo((props) => (
-    <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
-  ));
-
-  function AnimatedChart() {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 0;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const series = seriesConfig.map((config, index) => ({
-      id: config.id,
-      label: config.label,
-      color: config.color,
-      // First series gets animated data, others get constant height
-      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
-    }));
+  function AnimatedChartExample() {
+    const animatedStates = [
+      { id: 'on', label: 'On' },
+      { id: 'off', label: 'Off' },
+    ];
+    const [animatedState, setAnimatedState] = useState(animatedStates[0]);
 
     return (
-      <AreaChart
-        animate={false}
-        overflow="visible"
-        stacked
-        height={{ base: 200, tablet: 250, desktop: 300 }}
-        series={series}
-        type="dotted"
-        showLines
-        AreaComponent={MemoizedDottedArea}
-        inset={0}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-          width: 0,
-          tickLabelFormatter: () => '',
-          domain: { min: 0, max: domainLimit },
-        }}
-      />
+      <VStack gap={2}>
+        <HStack justifyContent="flex-end" gap={2} alignItems="center">
+          <Text as="h3" font="headline">
+            Animations
+          </Text>
+          <SegmentedTabs
+            activeTab={animatedState}
+            onChange={setAnimatedState}
+            tabs={animatedStates}
+          />
+        </HStack>
+        <AnimatedChart animate={animatedState.id === 'on'} />
+      </VStack>
     );
   }
 
-  return <AnimatedChart />;
+  return <AnimatedChartExample />;
 }
 ```
 

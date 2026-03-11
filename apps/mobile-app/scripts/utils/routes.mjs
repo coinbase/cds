@@ -268,6 +268,10 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/DrawerTop.stories').default,
   },
   {
+    key: 'Fallback',
+    getComponent: () => require('@coinbase/cds-mobile/layout/__stories__/Fallback.stories').default,
+  },
+  {
     key: 'FloatingAssetCard',
     getComponent: () =>
       require('@coinbase/cds-mobile/cards/__stories__/FloatingAssetCard.stories').default,
