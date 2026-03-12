@@ -1110,6 +1110,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/done-4.js').content,
     dark: () => require('../svgJs/dark/done-4.js').content,
   },
+  download: {
+    light: () => require('../svgJs/light/download-0.js').content,
+    dark: () => require('../svgJs/dark/download-0.js').content,
+  },
   driversLicense: {
     light: () => require('../svgJs/light/driversLicense-3.js').content,
     dark: () => require('../svgJs/dark/driversLicense-3.js').content,
