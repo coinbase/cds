@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Deprecate SegmentedControl. [[#493](https://github.com/coinbase/cds/pull/493)]
+
 ## 8.52.2 (3/11/2026 PST)
 
 #### 🐞 Fixes

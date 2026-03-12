@@ -96,6 +96,7 @@ module.exports = {
     'controls/Select',
     'controls/SelectOption',
     'controls/SearchInput',
+    'controls/SegmentedControl',
     'controls/Switch',
     'controls/TextInput',
     'dates/Calendar',
