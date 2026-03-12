@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-03T01:36:13.839Z",
+  "lastUpdated": "2026-03-11T23:48:44.571Z",
   "lastUnicode": 986250,
   "iconSets": [
     {
@@ -12414,10 +12414,10 @@
       "nodeId": "2:10870",
       "name": "ideal",
       "description": "ideal, payment, brand, 💳, 🏦",
-      "assetsHash": "9dJCtJmYS7OGkJURgZ7c/2tiEhmMpK5fcgCHvTyqdjQ=",
+      "assetsHash": "eMaVLzhVddY2Ts+3iYYqjZJXajPA8wtvz08Jpq6K2UQ=",
       "nameHash": "8P2wMnQgCJ/+aALN46L2CYaff9t7gNRyC4vE1gJ9ATU=",
       "createdAt": "2023-02-01T23:26:07.623Z",
-      "lastUpdated": "2025-03-27T17:59:18.118Z",
+      "lastUpdated": "2026-03-11T15:15:59.036Z",
       "svgs": [
         {
           "name": "ideal-24-inactive",
