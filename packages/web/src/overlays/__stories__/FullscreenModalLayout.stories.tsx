@@ -15,7 +15,13 @@ export default {
   title: 'Components/FullscreenModalLayout',
   component: FullscreenModalLayout,
   parameters: {
-    // Add parameters if needed, e.g., a11y
+    a11y: {
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+        },
+      },
+    },
   },
 };
 

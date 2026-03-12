@@ -46,7 +46,7 @@ export const CoachmarkExamples = () => {
             <Text as="p" color="fgMuted" display="block" font="caption">
               50%
             </Text>
-            <ProgressBar progress={0.5} />
+            <ProgressBar accessibilityLabel="Progress bar" progress={0.5} />
             <Text as="p" display="block" font="body">
               Add up to 3 lines of body copy. Deliver your message with clarity and impact
             </Text>
