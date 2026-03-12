@@ -63,66 +63,86 @@ function HorizontalLine() {
 LineChart also supports multiple lines, interaction, and axes.
 Other props, such as `areaType` can be applied to the chart as a whole or per series.
 
-```jsx
-<LineChart
-  enableScrubbing
-  showArea
-  series={[
-    {
-      id: 'pageViews',
-      data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
-      color: theme.color.accentBoldGreen,
-      // Label will render next to scrubber beacon
-      label: 'Page Views',
-    },
-    {
-      id: 'uniqueVisitors',
-      data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
-      color: theme.color.accentBoldPurple,
-      label: 'Unique Visitors',
-      // Default area is gradient
-      areaType: 'dotted',
-    },
-  ]}
-  xAxis={{
-    // Used on the x-axis to provide context for each index from the series data array
-    data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
-  }}
->
-  <Scrubber />
-</LineChart>
+```tsx
+function MultipleLine() {
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
+
+  const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`,
+    [pages, pageViews, uniqueVisitors],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: theme.color.accentBoldGreen,
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: theme.color.accentBoldPurple,
+          label: 'Unique Visitors',
+          areaType: 'dotted',
+        },
+      ]}
+      xAxis={{ data: pages }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
 ```
 
 ## Data
 
 The data array for each series defines the y values for that series. You can adjust the y values for a series of data by setting the `data` prop on the xAxis.
 
-```jsx
-const yData = [2, 5.5, 2, 8.5, 1.5, 5];
-const xData = [1, 2, 3, 5, 8, 10];
+```tsx
+function DataFormat() {
+  const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
+  const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
-return (
-  <LineChart
-    enableScrubbing
-    showArea
-    series={[
-      {
-        id: 'line',
-        data: yData,
-      },
-    ]}
-    xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
-    yAxis={{
-      domain: { min: 0 },
-      position: 'left',
-      showLine: true,
-      showTickMarks: true,
-      showGrid: true,
-    }}
-  >
-    <Scrubber />
-  </LineChart>
-);
+  const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`,
+    [xData, yData],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      series={[{ id: 'line', data: yData }]}
+      xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
+      yAxis={{
+        domain: { min: 0 },
+        position: 'left',
+        showLine: true,
+        showTickMarks: true,
+        showGrid: true,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
 ```
 
 ### Live Updates
@@ -131,7 +151,7 @@ You can change the data passed in via `series` prop to update the chart.
 
 You can also use the `useRef` hook to reference the scrubber and pulse it on each update.
 
-```jsx
+```tsx
 function LiveUpdates() {
   const scrubberRef = useRef < ScrubberRef > null;
 
@@ -186,10 +206,18 @@ function LiveUpdates() {
     return () => clearInterval(priceUpdateInterval);
   }, [intervalSeconds, maxPercentChange]);
 
+  const chartAccessibilityLabel = `Live price chart with ${priceData.length} data points.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${priceData[index]}`,
+    [priceData],
+  );
+
   return (
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ right: 64 }}
       series={[
@@ -214,9 +242,24 @@ Note that scrubber beacons and points are still only shown at non-null data valu
 ```tsx
 function MissingData() {
   const theme = useTheme();
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-  const pageViews = [2400, 1398, null, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, null, 2780, 1890, 2390, 3490];
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, null, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, null, 2780, 1890, 2390, 3490], []);
+
+  const chartAccessibilityLabel = `Website visitors across ${pages.length} pages. Some data points are missing.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      const pv = pageViews[index];
+      const uv = uniqueVisitors[index];
+      const pvStr = pv != null ? pv : 'no data';
+      const uvStr = uv != null ? uv : 'no data';
+      return `${pages[index]}: ${pvStr} views, ${uvStr} unique visitors.`;
+    },
+    [pages, pageViews, uniqueVisitors],
+  );
 
   const numberFormatter = useCallback(
     (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
@@ -229,6 +272,8 @@ function MissingData() {
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       // You can render points at every valid data point by always returning true
       points
@@ -313,9 +358,16 @@ LineChart uses `linear` scaling on axes by default, but you can also use other t
 
 Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
 
-```jsx
+```tsx
 function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${data[index]}`,
+    [data],
+  );
 
   return (
     <VStack gap={2}>
@@ -327,14 +379,11 @@ function Interaction() {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         onScrubberPositionChange={setScrubberPosition}
-        series={[
-          {
-            id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-          },
-        ]}
+        series={[{ id: 'prices', data }]}
       >
         <Scrubber />
       </LineChart>
@@ -526,11 +575,28 @@ const PerformanceChart = memo(
       [formatDate, sparklineTimePeriodDataTimestamps],
     );
 
+    const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Swipe to navigate.`;
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const price = formatPriceThousands(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `Point ${index + 1}: ${price}, ${date}`;
+      },
+      [
+        formatDate,
+        formatPriceThousands,
+        sparklineTimePeriodDataTimestamps,
+        sparklineTimePeriodDataValues,
+      ],
+    );
+
     return (
       <LineChart
         enableScrubbing
         showArea
         showYAxis
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         areaType="dotted"
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
@@ -573,6 +639,8 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 <LineChart
   enableScrubbing
   allowOverflowGestures
+  accessibilityLabel="Chart with overflow gestures. Swipe to navigate."
+  getScrubberAccessibilityLabel={(index) => `Point ${index + 1}`}
   ...
 >
   ...
@@ -602,42 +670,38 @@ Also, you can toggle animations by setting `animate` to `true` or `false`.
 
 ## Accessibility
 
-You can use `accessibilityLabel` on the chart to provide a descriptive label.
+Use `accessibilityLabel` on `LineChart` (or `CartesianChart`) to provide both:
+
+- a summary label when focus first lands on the chart
+- point-by-point labels while swiping through scrubber targets
+
+`getScrubberAccessibilityLabel` defines the per-segment text announced by screen readers. You do not need to add a `Scrubber` component for accessibility—`enableScrubbing` with `getScrubberAccessibilityLabel` is sufficient. BarChart and other charts work the same way.
 
 ```tsx
 function BasicAccessible() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
-  // Chart-level accessibility label provides overview
-  const chartAccessibilityLabel = useMemo(() => {
-    const currentPrice = data[data.length - 1];
-    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
-  }, [data]);
-
-  // Scrubber-level accessibility label provides specific position info
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
-    },
+  // Chart-level accessibility label provides overview when focus lands on the chart
+  const chartAccessibilityLabel = useMemo(
+    () =>
+      `Price chart showing trend over ${data.length} data points. Current value: ${data[data.length - 1]}. Swipe to navigate.`,
     [data],
   );
 
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
+  // Per-segment label announced when screen reader user taps or swipes to a segment
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Price at position ${index + 1} of ${data.length}: ${data[index]}`,
+    [data],
+  );
 
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'prices',
@@ -882,9 +946,17 @@ function GainLossChart() {
     />
   ));
 
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${data[index]}`,
+    [data],
+  );
+
   return (
     <CartesianChart
       enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -993,30 +1065,35 @@ You can customize lines by placing props in `LineChart` or at each individual se
 
 You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) to your LineChart to highlight a specific x or y value.
 
-```jsx
-<LineChart
-  enableScrubbing
-  showArea
-  height={200}
-  series={[
-    {
-      id: 'prices',
-      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-      color: theme.color.fgPositive,
-    },
-  ]}
-  xAxis={{
-    // Give space before the end of the chart for the scrubber
-    range: ({ min, max }) => ({ min, max: max - 24 }),
-  }}
->
-  <ReferenceLine
-    LineComponent={(props) => <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />}
-    dataY={10}
-    stroke={theme.color.fg}
-  />
-  <Scrubber />
-</LineChart>
+```tsx
+function ReferenceLineExample() {
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  const chartAccessibilityLabel = `Price chart with reference line at 10. ${data.length} data points.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${data[index]}`,
+    [data],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
+      series={[{ id: 'prices', data, color: theme.color.fgPositive }]}
+      xAxis={{ range: ({ min, max }) => ({ min, max: max - 24 }) }}
+    >
+      <ReferenceLine
+        LineComponent={(props) => <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />}
+        dataY={10}
+        stroke={theme.color.fg}
+      />
+      <Scrubber />
+    </LineChart>
+  );
+}
 ```
 
 ### Points
@@ -1078,9 +1155,19 @@ You can have scrubber beacon's pulse by either adding `idlePulse` to Scrubber or
 ```tsx
 function StylingScrubber() {
   const theme = useTheme();
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
+
+  const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `${pages[index]}: ${pageViews[index]} views, ${uniqueVisitors[index]} unique visitors.`,
+    [pages, pageViews, uniqueVisitors],
+  );
 
   const numberFormatter = useCallback(
     (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
@@ -1093,6 +1180,8 @@ function StylingScrubber() {
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -1352,6 +1441,21 @@ function AssetPriceWithDottedArea() {
       return `${dayOfWeek}, ${monthDay}, ${time}`;
     }, []);
 
+    const chartAccessibilityLabel = useMemo(
+      () =>
+        `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}. Swipe to navigate.`,
+      [currentPrice, formatPrice, timePeriod.label],
+    );
+
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const price = formatPrice(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `${price} ${date}`;
+      },
+      [formatDate, formatPrice, sparklineTimePeriodDataTimestamps, sparklineTimePeriodDataValues],
+    );
+
     return (
       <VStack gap={2}>
         <SectionHeader
@@ -1366,6 +1470,8 @@ function AssetPriceWithDottedArea() {
         <LineChart
           enableScrubbing
           showArea
+          accessibilityLabel={chartAccessibilityLabel}
+          getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
@@ -1561,10 +1667,22 @@ function MonotoneAssetPrice() {
     [theme.color.fg, theme.color.bg],
   );
 
+  const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+      return `${price} USD ${date}`;
+    },
+    [formatDate, prices, scrubberPriceFormatter],
+  );
+
   return (
     <LineChart
       enableScrubbing
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 64 }}
       series={[

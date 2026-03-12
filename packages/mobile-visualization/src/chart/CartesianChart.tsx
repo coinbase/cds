@@ -6,11 +6,15 @@ import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
+import {
+  ScrubberAccessibilityView,
+  type ScrubberAccessibilityViewProps,
+} from './scrubber/ScrubberAccessibilityView';
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
-import { Legend, type LegendProps } from './legend';
+import { Legend } from './legend';
 import {
   type AxisConfig,
   type CartesianAxisConfigProps,
@@ -32,12 +36,32 @@ import {
   useTotalAxisPadding,
 } from './utils';
 
+type ChartCanvasProps = Pick<
+  CartesianChartProps,
+  'accessible' | 'accessibilityLabel' | 'accessibilityLiveRegion'
+> & {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+};
+
 const ChartCanvas = memo(
-  ({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) => {
+  ({
+    children,
+    style,
+    accessible = true,
+    accessibilityLabel,
+    accessibilityLiveRegion = 'polite',
+  }: ChartCanvasProps) => {
     const ContextBridge = useChartContextBridge();
+    const isAccessible = accessible && accessibilityLabel !== null;
 
     return (
-      <Canvas style={[{ width: '100%', height: '100%' }, style]}>
+      <Canvas
+        accessibilityLabel={isAccessible ? accessibilityLabel : undefined}
+        accessibilityLiveRegion={isAccessible ? accessibilityLiveRegion : undefined}
+        accessible={isAccessible}
+        style={[{ width: '100%', height: '100%' }, style]}
+      >
         <ContextBridge>{children}</ContextBridge>
       </Canvas>
     );
@@ -116,6 +140,15 @@ export type CartesianChartProps = CartesianChartBaseProps &
      */
     fontProvider?: SkTypefaceFontProvider;
     /**
+     * Function that returns the accessibility label for each scrubber point.
+     * Receives `dataIndex` for each scrubber point label.
+     */
+    getScrubberAccessibilityLabel?: ScrubberAccessibilityViewProps['accessibilityLabel'];
+    /**
+     * Number of data points to move between screen-reader samples.
+     */
+    scrubberAccessibilityLabelStep?: number;
+    /**
      * Custom styles for the root element.
      */
     style?: StyleProp<ViewStyle>;
@@ -143,6 +176,8 @@ export const CartesianChart = memo(
         layout = 'vertical',
         animate = true,
         enableScrubbing,
+        getScrubberAccessibilityLabel,
+        scrubberAccessibilityLabelStep,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
@@ -161,6 +196,9 @@ export const CartesianChart = memo(
         // to group children, which interferes with gesture-handler
         // https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/gesture-detector/#:~:text=%7B%0A%20%20return%20%3C-,View,-collapsable%3D%7B
         collapsable = false,
+        accessible = true,
+        accessibilityLabel,
+        accessibilityLiveRegion = 'polite',
         ...props
       },
       ref,
@@ -548,8 +586,6 @@ export const CartesianChart = memo(
       const rootBoxProps: BoxProps = useMemo(
         () => ({
           ref,
-          accessibilityLiveRegion: 'polite',
-          accessibilityRole: 'image',
           height,
           style: rootStyles,
           width,
@@ -567,20 +603,42 @@ export const CartesianChart = memo(
           >
             {legend ? (
               <Box
-                {...rootBoxProps}
                 flexDirection={
                   legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
                 }
+                {...rootBoxProps}
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
-                  <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+                  <ChartCanvas
+                    accessibilityLabel={accessibilityLabel}
+                    accessibilityLiveRegion={accessibilityLiveRegion}
+                    accessible={accessible}
+                    style={styles?.chart}
+                  >
+                    {children}
+                  </ChartCanvas>
+                  <ScrubberAccessibilityView
+                    accessibilityLabel={getScrubberAccessibilityLabel}
+                    accessibilityStep={scrubberAccessibilityLabelStep}
+                  />
                 </Box>
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
             ) : (
-              <Box {...rootBoxProps} collapsable={collapsable} onLayout={onContainerLayout}>
-                <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+              <Box collapsable={collapsable} onLayout={onContainerLayout} {...rootBoxProps}>
+                <ChartCanvas
+                  accessibilityLabel={accessibilityLabel}
+                  accessibilityLiveRegion={accessibilityLiveRegion}
+                  accessible={accessible}
+                  style={styles?.chart}
+                >
+                  {children}
+                </ChartCanvas>
+                <ScrubberAccessibilityView
+                  accessibilityLabel={getScrubberAccessibilityLabel}
+                  accessibilityStep={scrubberAccessibilityLabelStep}
+                />
               </Box>
             )}
           </ScrubberProvider>

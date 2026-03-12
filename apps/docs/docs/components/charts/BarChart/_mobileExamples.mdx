@@ -855,6 +855,37 @@ You can set `delay` (in milliseconds) on transitions to add a pause before the a
 />
 ```
 
+## Accessibility
+
+BarChart supports screen reader accessibility through `enableScrubbing` and `getScrubberAccessibilityLabel`. You do not need to add a [Scrubber](/components/charts/Scrubber) component—the chart renders invisible tap targets that screen reader users can navigate with swipe or tap.
+
+```tsx
+function AccessibleBarChart() {
+  const categories = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], []);
+  const values = useMemo(() => [40, 65, 55, 80, 72, 90], []);
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `${categories[index]}: ${values[index]}`,
+    [categories, values],
+  );
+
+  return (
+    <BarChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      accessibilityLabel={`Bar chart with ${values.length} months. Swipe to navigate.`}
+      height={180}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      series={[{ id: 'bars', data: values, color: 'var(--color-accentBoldPurple)' }]}
+      xAxis={{ data: categories, showGrid: true }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    />
+  );
+}
+```
+
 ## Composed Examples
 
 ### Candlesticks

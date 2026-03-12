@@ -29,12 +29,17 @@ import {
 
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
+const chartAccessibilityLabel = `Price chart with ${sampleData.length} data points. Swipe to navigate.`;
+const getScrubberAccessibilityLabel = (index: number) => `Point ${index + 1}: ${sampleData[index]}`;
+
 const BasicScrubber = () => {
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -54,31 +59,46 @@ const BasicScrubber = () => {
   );
 };
 
+const seriesFilterData = {
+  top: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
+  upperMiddle: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+  lowerMiddle: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+  bottom: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+};
+
 const SeriesFilter = () => {
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `Point ${index + 1}: top ${seriesFilterData.top[index]}, lowerMiddle ${seriesFilterData.lowerMiddle[index]}`,
+    [],
+  );
+
   return (
     <LineChart
       enableScrubbing
+      accessibilityLabel="Chart with multiple series. Swipe to navigate."
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
           id: 'top',
-          data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
+          data: seriesFilterData.top,
         },
         {
           id: 'upperMiddle',
-          data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+          data: seriesFilterData.upperMiddle,
           color: '#ef4444',
           type: 'dotted',
         },
         {
           id: 'lowerMiddle',
-          data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+          data: seriesFilterData.lowerMiddle,
           color: '#f59e0b',
           curve: 'natural',
         },
         {
           id: 'bottom',
-          data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+          data: seriesFilterData.bottom,
           color: '#800080',
           curve: 'step',
           showArea: true,
@@ -95,6 +115,8 @@ const WithLabels = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -116,6 +138,8 @@ const IdlePulse = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -138,6 +162,8 @@ const ImperativePulse = () => {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         series={[
           {
@@ -163,6 +189,8 @@ const BeaconStroke = () => {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         series={[
           {
@@ -201,6 +229,8 @@ const CustomBeacon = () => {
       enableScrubbing
       showArea
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -273,7 +303,11 @@ const CustomBeaconLabel = () => {
       enableScrubbing
       showArea
       showYAxis
+      accessibilityLabel="Temperature chart with 6 data points. Swipe to navigate."
       areaType="dotted"
+      getScrubberAccessibilityLabel={(index: number) =>
+        `Point ${index + 1}: ${[25, 30, 35, 45, 60, 100][index]}°F`
+      }
       height={150}
       series={[
         {
@@ -421,7 +455,9 @@ const PercentageBeaconLabels = () => {
         <LineChart
           enableScrubbing
           showArea
+          accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           areaType="dotted"
+          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           height={150}
           inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
           series={seriesData}
@@ -442,7 +478,9 @@ const PercentageBeaconLabels = () => {
         <LineChart
           enableScrubbing
           showArea
+          accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           areaType="dotted"
+          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           height={150}
           inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
           series={seriesData}
@@ -472,6 +510,10 @@ const HideBeaconLabels = () => {
       enableScrubbing
       legend
       showArea
+      accessibilityLabel="Website visitors across 7 pages. Swipe to navigate."
+      getScrubberAccessibilityLabel={(index: number) =>
+        `Page ${index + 1}: ${[2400, 1398, 9800, 3908, 4800, 3800, 4300][index]} views`
+      }
       height={200}
       inset={{ top: 60 }}
       series={[
@@ -503,6 +545,8 @@ const LabelElevated = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 60 }}
       series={[
@@ -542,6 +586,8 @@ const CustomLabelComponent = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 16, bottom: 64 }}
       series={[
@@ -559,12 +605,21 @@ const CustomLabelComponent = () => {
   );
 };
 
+const ethData = [5, 15, 18, 30, 65, 30, 15, 35, 15, 2, 45, 12, 15, 40];
+
 const LabelFonts = () => {
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Day ${index + 1}: BTC ${sampleData[index]}, ETH ${ethData[index]}`,
+    [],
+  );
+
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
+      accessibilityLabel="BTC and ETH comparison chart. Swipe to navigate."
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -575,7 +630,7 @@ const LabelFonts = () => {
         },
         {
           id: 'eth',
-          data: [5, 15, 18, 30, 65, 30, 15, 35, 15, 2, 45, 12, 15, 40],
+          data: ethData,
           label: 'ETH',
           color: assets.eth.color,
         },
@@ -599,6 +654,8 @@ const LabelBoundsInset = () => {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ left: 0, right: 0 }}
         series={[
@@ -613,6 +670,8 @@ const LabelBoundsInset = () => {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ left: 0, right: 0 }}
         series={[
@@ -636,6 +695,8 @@ const CustomLine = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -674,6 +735,8 @@ const HiddenScrubberWhenIdle = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -693,6 +756,8 @@ const HideOverlay = () => {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={150}
       series={[
         {
@@ -804,11 +869,19 @@ const MatchupBeaconLabels = () => {
     },
   );
 
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `Point ${index + 1}: BLUE ${matchupBlueData[index]}%, RED ${matchupRedData[index]}%`,
+    [],
+  );
+
   return (
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel="BLUE vs RED matchup chart. Swipe to navigate."
       areaType="dotted"
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={300}
       inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
       series={[
