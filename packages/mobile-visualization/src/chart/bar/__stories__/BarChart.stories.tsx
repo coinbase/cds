@@ -777,12 +777,22 @@ const CandlesticksChart = memo(
       });
     }, []);
 
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const candle = candlestickStockData[index];
+        return `${formatTime(index)}: O ${formatThousandsPriceNumber(parseFloat(candle.open))} H ${formatThousandsPriceNumber(parseFloat(candle.high))} L ${formatThousandsPriceNumber(parseFloat(candle.low))} C ${formatThousandsPriceNumber(parseFloat(candle.close))}`;
+      },
+      [formatTime, formatThousandsPriceNumber],
+    );
+
     return (
       <CartesianChart
         enableScrubbing
+        accessibilityLabel={`Candlestick chart with ${candlesData.length} data points. Swipe to navigate.`}
         animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}

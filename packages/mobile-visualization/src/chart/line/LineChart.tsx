@@ -12,6 +12,14 @@ import { type CartesianAxisConfigProps, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
 
+const getDefaultScrubberAccessibilityStep = (
+  dataLength: number,
+  sampleCount: number = 10,
+): number => {
+  if (dataLength <= 0) return 1;
+  return Math.max(1, Math.ceil(dataLength / sampleCount));
+};
+
 export type LineSeries = Series &
   Partial<
     Pick<
@@ -79,7 +87,13 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
   };
 
 export type LineChartProps = LineChartBaseProps &
-  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series' | 'scrubberAccessibilityLabelStep'> & {
+    /**
+     * Number of data points to move between screen-reader samples.
+     * @default Computed from data length (targeting 10 samples)
+     */
+    scrubberAccessibilityLabelStep?: number;
+  };
 
 export const LineChart = memo(
   forwardRef<View, LineChartProps>(
@@ -104,6 +118,8 @@ export const LineChart = memo(
         xAxis,
         yAxis,
         inset,
+        scrubberAccessibilityLabelStep,
+        layout = 'vertical',
         children,
         ...chartProps
       },
@@ -166,11 +182,27 @@ export const LineChart = memo(
         range: yRange,
       };
 
+      const categoryAxisData = layout === 'horizontal' ? yData : xData;
+      const lineChartDataLength = useMemo(() => {
+        if (categoryAxisData && categoryAxisData.length > 0) return categoryAxisData.length;
+        if (!series || series.length === 0) return 0;
+        return series.reduce((max, s) => Math.max(max, s.data?.length ?? 0), 0);
+      }, [categoryAxisData, series]);
+
+      const resolvedScrubberAccessibilityLabelStep = useMemo(
+        () =>
+          scrubberAccessibilityLabelStep ??
+          getDefaultScrubberAccessibilityStep(lineChartDataLength),
+        [scrubberAccessibilityLabelStep, lineChartDataLength],
+      );
+
       return (
         <CartesianChart
           {...chartProps}
           ref={ref}
           inset={inset}
+          layout={layout}
+          scrubberAccessibilityLabelStep={resolvedScrubberAccessibilityLabelStep}
           series={chartSeries}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}

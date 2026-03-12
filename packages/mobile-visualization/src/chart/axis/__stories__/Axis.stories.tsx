@@ -63,11 +63,20 @@ const Simple = () => {
   const pageNames = data.map((d) => d.name);
   const pageUniqueVisitors = data.map((d) => d.uv);
 
+  const chartAccessibilityLabel = `Page views and unique visitors across ${pageNames.length} pages. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `${pageNames[index]}: ${pageViews[index]} views, ${pageUniqueVisitors[index]} unique visitors`,
+    [pageNames, pageViews, pageUniqueVisitors],
+  );
+
   return (
     <LineChart
       enableScrubbing
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}
       inset={32}
       series={[
@@ -114,8 +123,8 @@ const Simple = () => {
 
 const TimeOfDayAxesExample = () => {
   const theme = useTheme();
-  const lineA = [5, 5, 10, 90, 85, 70, 30, 25, 25];
-  const lineB = [90, 85, 70, 25, 23, 40, 45, 40, 50];
+  const lineA = useMemo(() => [5, 5, 10, 90, 85, 70, 30, 25, 25], []);
+  const lineB = useMemo(() => [90, 85, 70, 25, 23, 40, 45, 40, 50], []);
 
   const timeData = useMemo(
     () =>
@@ -160,9 +169,17 @@ const TimeOfDayAxesExample = () => {
     return timeData.map((d, index) => index).filter((d) => d % 2 === 0);
   }, [timeData]);
 
+  const chartAccessibilityLabel = `Chart with ${lineA.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: lineA ${lineA[index]}, lineB ${lineB[index]}`,
+    [lineA, lineB],
+  );
+
   return (
     <LineChart
       enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}
       series={[
         {
@@ -199,33 +216,45 @@ const TimeOfDayAxesExample = () => {
   );
 };
 
-const MultipleYAxesExample = () => (
-  <CartesianChart
-    enableScrubbing
-    height={defaultChartHeight}
-    series={[
-      {
-        id: 'linear',
-        yAxisId: 'linearAxis',
-        data: [1, 10, 30, 50, 70, 90, 100],
-        label: 'linear',
-      },
-      { id: 'log', yAxisId: 'logAxis', data: [1, 10, 30, 50, 70, 90, 100], label: 'log' },
-    ]}
-    xAxis={{ data: [1, 10, 30, 50, 70, 90, 100] }}
-    yAxis={[
-      { id: 'linearAxis', scaleType: 'linear' },
-      { id: 'logAxis', scaleType: 'log' },
-    ]}
-  >
-    <XAxis showLine showTickMarks />
-    <YAxis showLine showTickMarks axisId="logAxis" position="left" />
-    <YAxis showLine showTickMarks axisId="linearAxis" position="left" />
-    <Line curve="natural" seriesId="linear" />
-    <Line curve="natural" seriesId="log" />
-    <Scrubber />
-  </CartesianChart>
-);
+const multipleYAxesData = [1, 10, 30, 50, 70, 90, 100];
+
+const MultipleYAxesExample = () => {
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `Point ${index + 1}: linear ${multipleYAxesData[index]}, log ${multipleYAxesData[index]}`,
+    [],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      accessibilityLabel="Chart with linear and log axes. 7 data points. Swipe to navigate."
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'linear',
+          yAxisId: 'linearAxis',
+          data: multipleYAxesData,
+          label: 'linear',
+        },
+        { id: 'log', yAxisId: 'logAxis', data: multipleYAxesData, label: 'log' },
+      ]}
+      xAxis={{ data: multipleYAxesData }}
+      yAxis={[
+        { id: 'linearAxis', scaleType: 'linear' },
+        { id: 'logAxis', scaleType: 'log' },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis showLine showTickMarks axisId="logAxis" position="left" />
+      <YAxis showLine showTickMarks axisId="linearAxis" position="left" />
+      <Line curve="natural" seriesId="linear" />
+      <Line curve="natural" seriesId="log" />
+      <Scrubber />
+    </CartesianChart>
+  );
+};
 
 const AxesOnAllSides = () => {
   const theme = useTheme();
@@ -322,13 +351,23 @@ const CustomTickMarkSizes = () => {
 };
 
 const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
-  const exponentialData = [
-    1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
-  ];
+  const exponentialData = useMemo(
+    () => [
+      1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
+    ],
+    [],
+  );
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${exponentialData[index]}`,
+    [exponentialData],
+  );
 
   return (
     <CartesianChart
       enableScrubbing
+      accessibilityLabel={`Exponential growth chart with ${exponentialData.length} data points. Swipe to navigate.`}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}
       series={[
         {

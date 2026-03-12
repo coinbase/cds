@@ -2,6 +2,8 @@
 
 Scrubber can be used to provide horizontal interaction with a chart. As you drag over the chart, you will see a line and scrubber beacon following.
 
+The Scrubber component is optional. Charts like [BarChart](/components/charts/BarChart) can use `enableScrubbing` with `getScrubberAccessibilityLabel` for screen reader accessibility without adding Scrubber—invisible tap targets allow users to navigate segments. Add Scrubber when you want the visual beacon, overlay, and labels for touch users.
+
 ```jsx
 <LineChart
   enableScrubbing

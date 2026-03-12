@@ -280,6 +280,7 @@ export type PictogramName =
   | 'directDepositNavigation'
   | 'dollarShowcase'
   | 'done'
+  | 'download'
   | 'driversLicense'
   | 'driversLicenseWheel'
   | 'earnCoins'

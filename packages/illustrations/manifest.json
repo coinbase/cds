@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-03-03T22:04:57.425Z",
+  "lastUpdated": "2026-03-11T22:22:21.081Z",
   "colors": {
     "light": [
       {
@@ -29225,6 +29225,26 @@
         "svgJsDark": "./pictogram/svgJs/dark/pieChartWithArrowBlue-0.js",
         "pngLight": "./pictogram/png/light/pieChartWithArrowBlue-0.png",
         "pngDark": "./pictogram/png/dark/pieChartWithArrowBlue-0.png"
+      },
+      "version": 0
+    },
+    "28633:2306": {
+      "type": "pictogram",
+      "name": "download",
+      "hash": "5aA7uCDKWn7udEnLTquFP2oNBdJwXtXiA7j8oZIS1BE=",
+      "width": 48,
+      "height": 48,
+      "description": "below, currency, money, arrow, downwards, down, direction, 👇, ⬇️, 🔻, 💰, 💸, 💵, 💶, 💷, 💴",
+      "createdAt": "2026-03-11T21:09:16.029Z",
+      "lastUpdated": "2026-03-11T21:09:16.029Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/download-0.svg",
+        "svgDark": "./pictogram/svg/dark/download-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/download-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/download-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/download-0.js",
+        "pngLight": "./pictogram/png/light/download-0.png",
+        "pngDark": "./pictogram/png/dark/download-0.png"
       },
       "version": 0
     }
