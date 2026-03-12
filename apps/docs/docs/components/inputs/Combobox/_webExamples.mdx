@@ -146,6 +146,38 @@ function GroupedOptions() {
 }
 ```
 
+## Accessibility
+
+Use accessibility labels to provide clear control and dropdown context. For multi-select, add remove and hidden-selection labels so screen readers can describe chip actions and +X summaries.
+
+```tsx live
+function AccessibilityProps() {
+  const priorityOptions: SelectOption[] = [
+    { value: 'high', label: 'High Priority' },
+    { value: 'medium', label: 'Medium Priority' },
+    { value: 'low', label: 'Low Priority' },
+  ];
+
+  const { value, onChange } = useMultiSelect({ initialValue: ['medium'] });
+
+  return (
+    <Combobox
+      accessibilityLabel="Priority options list"
+      controlAccessibilityLabel="Task priority combobox"
+      hiddenSelectedOptionsLabel="priorities"
+      label="Task Priority"
+      maxSelectedOptionsToShow={1}
+      onChange={onChange}
+      options={priorityOptions}
+      placeholder="Choose priority..."
+      removeSelectedOptionAccessibilityLabel="Remove priority"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
 ## Styling
 
 ### Selection Display Limit
