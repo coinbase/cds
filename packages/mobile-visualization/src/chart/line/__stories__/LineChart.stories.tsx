@@ -98,8 +98,8 @@ function MultipleLine() {
       showYAxis
       accessibilityHint={chartAccessibilityHint}
       accessibilityLabel={`${chartAccessibilityLabel} ${chartAccessibilityHint}`}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[
         {
           id: 'pageViews',
@@ -151,9 +151,9 @@ function DataFormat() {
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       curve="natural"
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'line',
@@ -239,9 +239,9 @@ function LiveUpdates() {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ right: 64 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'btc',
@@ -289,8 +289,8 @@ function MissingData() {
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[
         {
           id: 'pageViews',
@@ -343,9 +343,9 @@ function Interaction() {
         enableScrubbing
         showArea
         accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         onScrubberPositionChange={setScrubberPosition}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[{ id: 'prices', data }]}
       >
         <Scrubber />
@@ -503,9 +503,9 @@ function Transitions() {
       <CartesianChart
         enableScrubbing
         accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -555,8 +555,8 @@ function BasicAccessible() {
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[
         {
           id: 'prices',
@@ -733,8 +733,8 @@ function GainLossChart() {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[
         {
           id: 'prices',
@@ -820,8 +820,8 @@ function StylingScrubber() {
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[
         {
           id: 'pageViews',
@@ -1088,9 +1088,9 @@ function AssetPriceWithDottedArea() {
           showArea
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
+          getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
           height={200}
           inset={{ top: 52 }}
-          getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
           series={[
             {
               id: 'btc',
@@ -1304,10 +1304,10 @@ const PerformanceChart = memo(
         showYAxis
         accessibilityLabel={chartAccessibilityLabel}
         areaType="dotted"
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'high',
@@ -1559,9 +1559,9 @@ function MonotoneAssetPrice() {
       enableScrubbing
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 64 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'btc',
@@ -1623,8 +1623,8 @@ function ServiceAvailability() {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[
         {
           id: 'availability',
@@ -1800,8 +1800,8 @@ function ForecastAssetPrice() {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       series={[{ id: 'price', data, color: assets.btc.color }]}
     >
       <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
@@ -2145,8 +2145,8 @@ function ExampleNavigator() {
             enableScrubbing
             showArea
             accessibilityLabel="Price chart with reference line. 14 data points. Swipe to navigate."
-            height={200}
             getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
+            height={200}
             series={[
               {
                 id: 'prices',

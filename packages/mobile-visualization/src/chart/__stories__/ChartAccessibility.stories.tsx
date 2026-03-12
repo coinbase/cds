@@ -44,9 +44,9 @@ const BasicLineChart = memo(function BasicLineChart() {
       showXAxis
       showYAxis
       accessibilityLabel={`Line chart with ${data.length} days of data. Swipe to navigate.`}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'line', data, color: theme.color.accentBoldBlue }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
@@ -77,9 +77,9 @@ const DataFormatLineChart = memo(function DataFormatLineChart() {
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       curve="natural"
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'line', data: yData, color: theme.color.accentBoldGreen }]}
       xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
       yAxis={{
@@ -111,9 +111,9 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
       showXAxis
       showYAxis
       accessibilityLabel={`Bar chart with ${values.length} months. Swipe to navigate.`}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'bars', data: values, color: theme.color.accentBoldPurple }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
@@ -153,10 +153,10 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
       showYAxis
       accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate.`}
       borderRadius={2}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={400}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       layout="horizontal"
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'seoul',
@@ -207,8 +207,8 @@ const ServiceAvailability = memo(function ServiceAvailability() {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate.`}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       scrubberAccessibilityLabelStep={1}
       series={[
         {
@@ -280,8 +280,8 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
       enableScrubbing
       showArea
       accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate.`}
-      height={200}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
       scrubberAccessibilityLabelStep={1}
       series={[{ id: 'prices', data, color: theme.color.accentBoldBlue }]}
     >
@@ -328,9 +328,9 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
     <CartesianChart
       enableScrubbing
       accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Swipe to navigate.`}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={280}
       inset={32}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={series}
       xAxis={{ data: categories, scaleType: 'band' }}
     >
@@ -362,6 +362,7 @@ const LegendPosition = memo(function LegendPosition() {
     <CartesianChart
       enableScrubbing
       accessibilityLabel="Bar chart showing Revenue and Profit Margin by month. January through June. Swipe to navigate."
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ bottom: 8, left: 0, right: 0, top: 8 }}
       legend={
@@ -371,7 +372,6 @@ const LegendPosition = memo(function LegendPosition() {
         />
       }
       legendPosition="bottom"
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'revenue',
@@ -547,9 +547,9 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         areaType="dotted"
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         inset={{ top: 52 }}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'btc',

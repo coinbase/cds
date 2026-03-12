@@ -281,9 +281,9 @@ const PriceWithVolumeChart = memo(
       <CartesianChart
         enableScrubbing
         accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',

@@ -76,9 +76,9 @@ const Simple = () => {
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}
       inset={32}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'pageViews',
@@ -179,8 +179,8 @@ const TimeOfDayAxesExample = () => {
     <LineChart
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
-      height={defaultChartHeight}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={defaultChartHeight}
       series={[
         {
           id: 'lineA',
@@ -229,8 +229,8 @@ const MultipleYAxesExample = () => {
     <CartesianChart
       enableScrubbing
       accessibilityLabel="Chart with linear and log axes. 7 data points. Swipe to navigate."
-      height={defaultChartHeight}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={defaultChartHeight}
       series={[
         {
           id: 'linear',
@@ -367,8 +367,8 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={`Exponential growth chart with ${exponentialData.length} data points. Swipe to navigate.`}
-      height={defaultChartHeight}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={defaultChartHeight}
       series={[
         {
           id: 'growthLinear',

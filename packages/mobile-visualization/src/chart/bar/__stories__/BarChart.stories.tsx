@@ -792,10 +792,10 @@ const CandlesticksChart = memo(
         animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'stock-prices',

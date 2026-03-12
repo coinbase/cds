@@ -39,8 +39,8 @@ const BasicScrubber = () => {
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -77,8 +77,8 @@ const SeriesFilter = () => {
     <LineChart
       enableScrubbing
       accessibilityLabel="Chart with multiple series. Swipe to navigate."
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'top',
@@ -116,8 +116,8 @@ const WithLabels = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -139,8 +139,8 @@ const IdlePulse = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -163,8 +163,8 @@ const ImperativePulse = () => {
         enableScrubbing
         showArea
         accessibilityLabel={chartAccessibilityLabel}
-        height={150}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+        height={150}
         series={[
           {
             id: 'prices',
@@ -190,8 +190,8 @@ const BeaconStroke = () => {
         enableScrubbing
         showArea
         accessibilityLabel={chartAccessibilityLabel}
-        height={150}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+        height={150}
         series={[
           {
             id: 'prices',
@@ -230,8 +230,8 @@ const CustomBeacon = () => {
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -305,10 +305,10 @@ const CustomBeaconLabel = () => {
       showYAxis
       accessibilityLabel="Temperature chart with 6 data points. Swipe to navigate."
       areaType="dotted"
-      height={150}
       getScrubberAccessibilityLabel={(index: number) =>
         `Point ${index + 1}: ${[25, 30, 35, 45, 60, 100][index]}°F`
       }
+      height={150}
       series={[
         {
           id: 'Boston',
@@ -457,9 +457,9 @@ const PercentageBeaconLabels = () => {
           showArea
           accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           areaType="dotted"
+          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           height={150}
           inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           series={seriesData}
           xAxis={{
             range: ({ min, max }) => ({ min, max: max - 92 }),
@@ -480,9 +480,9 @@ const PercentageBeaconLabels = () => {
           showArea
           accessibilityLabel="NYC vs ATL comparison chart. Swipe to navigate."
           areaType="dotted"
+          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           height={150}
           inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           series={seriesData}
           xAxis={{
             range: ({ min, max }) => ({ min, max: max - 92 }),
@@ -511,11 +511,11 @@ const HideBeaconLabels = () => {
       legend
       showArea
       accessibilityLabel="Website visitors across 7 pages. Swipe to navigate."
-      height={200}
-      inset={{ top: 60 }}
       getScrubberAccessibilityLabel={(index: number) =>
         `Page ${index + 1}: ${[2400, 1398, 9800, 3908, 4800, 3800, 4300][index]} views`
       }
+      height={200}
+      inset={{ top: 60 }}
       series={[
         {
           id: 'pageViews',
@@ -546,9 +546,9 @@ const LabelElevated = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 60 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -587,9 +587,9 @@ const CustomLabelComponent = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 16, bottom: 64 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -619,8 +619,8 @@ const LabelFonts = () => {
       showArea
       showYAxis
       accessibilityLabel="BTC and ETH comparison chart. Swipe to navigate."
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'btc',
@@ -655,9 +655,9 @@ const LabelBoundsInset = () => {
         enableScrubbing
         showArea
         accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ left: 0, right: 0 }}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -671,9 +671,9 @@ const LabelBoundsInset = () => {
         enableScrubbing
         showArea
         accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ left: 0, right: 0 }}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -696,8 +696,8 @@ const CustomLine = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -736,8 +736,8 @@ const HiddenScrubberWhenIdle = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -757,8 +757,8 @@ const HideOverlay = () => {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      height={150}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
       series={[
         {
           id: 'prices',
@@ -881,9 +881,9 @@ const MatchupBeaconLabels = () => {
       showArea
       accessibilityLabel="BLUE vs RED matchup chart. Swipe to navigate."
       areaType="dotted"
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={300}
       inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'blue',
