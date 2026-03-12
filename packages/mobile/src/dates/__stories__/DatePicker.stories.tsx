@@ -133,7 +133,7 @@ export const FullExample = () => {
           openCalendarAccessibilityLabel="Seed date calendar"
         />
       </Example>
-      <Example title="DatePicker with minimum date of today">
+      <Example title="DatePicker with minimum date of tomorrow">
         <ExampleDatePicker
           disabledDateError="Future dates only"
           invalidDateError="Future dates only"

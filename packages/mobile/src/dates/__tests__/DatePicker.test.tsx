@@ -144,15 +144,15 @@ describe('DatePicker', () => {
     fireEvent.press(calendarButton);
 
     await waitFor(() => {
-      const confirmButton = screen.getByLabelText('Confirm date selection');
+      const confirmButton = screen.getByLabelText('Confirm');
       expect(confirmButton).toBeDisabled();
     });
   });
 
-  it('confirm button has custom accessibility hint when disabled', async () => {
+  it('confirm button has custom accessibility hint', async () => {
     render(
       <DatePickerExample
-        confirmButtonDisabledAccessibilityHint="Custom disabled hint"
+        confirmButtonAccessibilityHint="Custom confirm button hint"
         label="Date"
       />,
     );
@@ -162,8 +162,8 @@ describe('DatePicker', () => {
     fireEvent.press(calendarButton);
 
     await waitFor(() => {
-      const confirmButton = screen.getByLabelText('Confirm date selection');
-      expect(confirmButton).toHaveProp('accessibilityHint', 'Custom disabled hint');
+      const confirmButton = screen.getByLabelText('Confirm');
+      expect(confirmButton).toHaveProp('accessibilityHint', 'Custom confirm button hint');
     });
   });
 
@@ -184,7 +184,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm button should now be enabled
-    const confirmButton = screen.getByLabelText('Confirm date selection');
+    const confirmButton = screen.getByLabelText('Confirm');
     expect(confirmButton).not.toBeDisabled();
   });
 
@@ -221,7 +221,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm selection
-    const confirmButton = screen.getByLabelText('Confirm date selection');
+    const confirmButton = screen.getByLabelText('Confirm');
     fireEvent.press(confirmButton);
 
     // Wait for animations to complete and callbacks to be called
@@ -398,20 +398,6 @@ describe('DatePicker', () => {
     expect(input).toHaveProp('accessibilityLabel', 'Custom label');
   });
 
-  it('renders with custom confirm button accessibility label', async () => {
-    render(
-      <DatePickerExample confirmButtonAccessibilityLabel="Custom confirm label" label="Date" />,
-    );
-
-    // Open calendar
-    const calendarButton = screen.getByLabelText('Open calendar');
-    fireEvent.press(calendarButton);
-
-    await waitFor(() => {
-      expect(screen.getByLabelText('Custom confirm label')).toBeTruthy();
-    });
-  });
-
   it('renders DateInput with compact variant', () => {
     render(<DatePickerExample compact label="Date" />);
 
@@ -470,7 +456,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm selection
-    const confirmButton = screen.getByLabelText('Confirm date selection');
+    const confirmButton = screen.getByLabelText('Confirm');
     fireEvent.press(confirmButton);
 
     // Error should be cleared
@@ -506,7 +492,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm selection
-    const confirmButton = screen.getByLabelText('Confirm date selection');
+    const confirmButton = screen.getByLabelText('Confirm');
     fireEvent.press(confirmButton);
 
     // Custom error should NOT be cleared
@@ -575,7 +561,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Close without confirming
-    const handleBar = screen.getByLabelText('Close calendar');
+    const handleBar = screen.getByLabelText('Close calendar without selecting a date');
     fireEvent.press(handleBar);
 
     // onChangeDate should not have been called
@@ -586,7 +572,7 @@ describe('DatePicker', () => {
 
     await waitFor(() => {
       // Confirm button should be disabled (selection was reset)
-      const confirmButton = screen.getByLabelText('Confirm date selection');
+      const confirmButton = screen.getByLabelText('Confirm');
       expect(confirmButton).toBeDisabled();
     });
   });
@@ -608,7 +594,7 @@ describe('DatePicker', () => {
     });
 
     // Try to press disabled confirm button
-    const confirmButton = screen.getByLabelText('Confirm date selection');
+    const confirmButton = screen.getByLabelText('Confirm');
     expect(confirmButton).toBeDisabled();
 
     // Press it anyway (should not trigger callbacks)

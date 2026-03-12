@@ -23,6 +23,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useA11y } from '../hooks/useA11y';
 import { useScreenReaderStatus } from '../hooks/useScreenReaderStatus';
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
@@ -31,7 +32,7 @@ import { Tooltip } from '../overlays/tooltip/Tooltip';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
-const CALENDAR_DAY_SIZE = 40;
+const CALENDAR_DAY_SPACING_VALUE = 5;
 
 // These could be dynamically generated, but our Calendar and DatePicker aren't localized so there's no point
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -54,25 +55,17 @@ export type CalendarPressableBaseProps = PressableBaseProps & {
 
 const CalendarPressable = memo(
   forwardRef<View, CalendarPressableBaseProps>(
-    (
-      {
-        background = 'transparent',
-        borderRadius = 1000,
-        width = CALENDAR_DAY_SIZE,
-        height = CALENDAR_DAY_SIZE,
-        children,
-        ...props
-      },
-      ref,
-    ) => {
+    ({ background = 'transparent', borderRadius = 1000, children, ...props }, ref) => {
+      const theme = useTheme();
+      const calendarDayDimensionValue = theme.space[CALENDAR_DAY_SPACING_VALUE];
       return (
         <Pressable
           ref={ref}
           background={background}
           borderRadius={borderRadius}
           contentStyle={styles.pressable}
-          height={height}
-          width={width}
+          height={calendarDayDimensionValue}
+          width={calendarDayDimensionValue}
           {...props}
         >
           {children}
@@ -103,6 +96,8 @@ export type CalendarDayProps = {
   disabledError?: string;
   /** Accessibility hint for the current day when it is not disabled. */
   todayAccessibilityHint?: string;
+  /** Accessibility hint announced for highlighted dates. */
+  highlightedDateAccessibilityHint?: string;
   /** Custom style for the date cell pressable wrapper */
   style?: StyleProp<ViewStyle>;
 };
@@ -129,10 +124,12 @@ const CalendarDay = memo(
         onPress,
         disabledError,
         todayAccessibilityHint,
+        highlightedDateAccessibilityHint,
         style,
       },
       ref,
     ) => {
+      const theme = useTheme();
       const { locale } = useLocale();
       const handlePress = useCallback(() => onPress?.(date), [date, onPress]);
       const accessibilityLabel = useMemo(
@@ -146,11 +143,22 @@ const CalendarDay = memo(
 
       // Period between phrases gives screen readers a clear pause (e.g. "Today. Date unavailable").
       const accessibilityHint = useMemo(() => {
-        if (disabled) {
-          return isToday ? `${todayAccessibilityHint}. ${disabledError}` : disabledError;
-        }
-        return isToday ? todayAccessibilityHint : undefined;
-      }, [disabled, isToday, todayAccessibilityHint, disabledError]);
+        const hints = [
+          isToday ? todayAccessibilityHint : undefined,
+          highlighted ? highlightedDateAccessibilityHint : undefined,
+          disabled ? disabledError : undefined,
+        ]
+          .filter(Boolean)
+          .join('. ');
+        return hints || undefined;
+      }, [
+        disabled,
+        highlighted,
+        isToday,
+        todayAccessibilityHint,
+        highlightedDateAccessibilityHint,
+        disabledError,
+      ]);
 
       const isScreenReaderEnabled = useScreenReaderStatus();
 
@@ -164,7 +172,8 @@ const CalendarDay = memo(
       );
 
       if (!isCurrentMonth) {
-        return <Box aria-hidden={true} height={CALENDAR_DAY_SIZE} width={CALENDAR_DAY_SIZE} />;
+        const dimensionValue = theme.space[CALENDAR_DAY_SPACING_VALUE];
+        return <Box aria-hidden={true} height={dimensionValue} width={dimensionValue} />;
       }
 
       const dayButton = (
@@ -283,6 +292,11 @@ export type CalendarBaseProps = SharedProps & {
    * @default 'Today'
    */
   todayAccessibilityHint?: string;
+  /**
+   * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
+   * @default 'Highlighted'
+   */
+  highlightedDateAccessibilityHint?: string;
 };
 
 export type CalendarProps = CalendarBaseProps &
@@ -308,12 +322,15 @@ export const Calendar = memo(
         nextArrowAccessibilityLabel = 'Go to next month',
         previousArrowAccessibilityLabel = 'Go to previous month',
         todayAccessibilityHint = 'Today',
+        highlightedDateAccessibilityHint = 'Highlighted',
         testID,
         styles,
         ...props
       },
       ref,
     ) => {
+      const theme = useTheme();
+      const calendarDayDimensionValue = theme.space[CALENDAR_DAY_SPACING_VALUE];
       const { setA11yFocus, announceForA11y } = useA11y();
       const today = useMemo(() => getMidnightDate(new Date()), []);
       const todayTime = useMemo(() => today.getTime(), [today]);
@@ -512,9 +529,9 @@ export const Calendar = memo(
                 <Box
                   key={day}
                   alignItems="center"
-                  height={CALENDAR_DAY_SIZE}
+                  height={calendarDayDimensionValue}
                   justifyContent="center"
-                  width={CALENDAR_DAY_SIZE}
+                  width={calendarDayDimensionValue}
                 >
                   <Text font="body" userSelect="none">
                     {day.charAt(0)}
@@ -540,6 +557,7 @@ export const Calendar = memo(
                       }
                       disabledError={disabledDateError}
                       highlighted={highlightedTimes.has(time)}
+                      highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
                       isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
                       isToday={time === todayTime}
                       onPress={handleDatePress}

@@ -79,7 +79,7 @@ export type DatePickerProps = DatePickerBaseProps & {
   openCalendarAccessibilityLabel?: string;
   /**
    * Accessibility label for the handle bar that closes the picker.
-   * @default 'Close calendar'
+   * @default 'Close calendar without selecting a date'
    */
   closeCalendarAccessibilityLabel?: string;
   /**
@@ -93,16 +93,13 @@ export type DatePickerProps = DatePickerBaseProps & {
    */
   confirmText?: string;
   /**
-   * Accessibility label for the confirm button.
-   * @default 'Confirm date selection'
+   * Accessibility hint for the confirm button.
    */
-  confirmButtonAccessibilityLabel?: string;
+  confirmButtonAccessibilityHint?: string;
   /**
-   * Accessibility hint for the confirm button in its disabled state.
-   * Only applies when no date is selected. When a date is selected, no hint is shown.
-   * @default 'Select a date first'
+   * Disables the confirm button independently of the DatePicker `disabled` prop.
    */
-  confirmButtonDisabledAccessibilityHint?: string;
+  confirmButtonDisabled?: boolean;
   /** Custom styles for the DateInput and Calendar subcomponents. */
   styles?: {
     dateInput?: DateInputProps['style'];
@@ -122,6 +119,7 @@ export type DatePickerProps = DatePickerBaseProps & {
     CalendarProps,
     | 'seedDate'
     | 'highlightedDates'
+    | 'highlightedDateAccessibilityHint'
     | 'nextArrowAccessibilityLabel'
     | 'previousArrowAccessibilityLabel'
   >;
@@ -133,6 +131,7 @@ export const DatePicker = memo(
         date,
         styles,
         highlightedDates,
+        highlightedDateAccessibilityHint,
         nextArrowAccessibilityLabel,
         previousArrowAccessibilityLabel,
         disabledDates,
@@ -152,14 +151,14 @@ export const DatePicker = memo(
         accessibilityLabel,
         accessibilityLabelledBy,
         calendarIconButtonAccessibilityLabel,
-        openCalendarAccessibilityLabel,
-        closeCalendarAccessibilityLabel,
+        openCalendarAccessibilityLabel = 'Open calendar',
+        closeCalendarAccessibilityLabel = 'Close calendar without selecting a date',
         dateInputStyle,
         compact,
         variant,
         confirmText = 'Confirm',
-        confirmButtonDisabledAccessibilityHint = 'Select a date first',
-        confirmButtonAccessibilityLabel = 'Confirm date selection',
+        confirmButtonAccessibilityHint,
+        confirmButtonDisabled,
         helperText,
         width = '100%',
         onOpen,
@@ -233,17 +232,21 @@ export const DatePicker = memo(
               disableInheritFocusStyle
               transparent
               accessibilityLabel={
-                openCalendarAccessibilityLabel ??
-                calendarIconButtonAccessibilityLabel ??
-                'Open calendar'
+                calendarIconButtonAccessibilityLabel ?? openCalendarAccessibilityLabel
               }
+              disabled={disabled}
               name="calendarEmpty"
               onPress={handleOpenPicker}
               variant="secondary"
             />
           </VStack>
         ),
-        [handleOpenPicker, openCalendarAccessibilityLabel, calendarIconButtonAccessibilityLabel],
+        [
+          handleOpenPicker,
+          openCalendarAccessibilityLabel,
+          calendarIconButtonAccessibilityLabel,
+          disabled,
+        ],
       );
 
       return (
@@ -282,11 +285,9 @@ export const DatePicker = memo(
                   <Button
                     block
                     compact
-                    accessibilityHint={
-                      !calendarSelectedDate ? confirmButtonDisabledAccessibilityHint : undefined
-                    }
-                    accessibilityLabel={confirmButtonAccessibilityLabel}
-                    disabled={!calendarSelectedDate}
+                    accessibilityHint={confirmButtonAccessibilityHint}
+                    accessibilityLabel={confirmText}
+                    disabled={confirmButtonDisabled || disabled || !calendarSelectedDate}
                     onPress={() => {
                       if (calendarSelectedDate) {
                         closedByConfirmRef.current = true;
@@ -299,11 +300,7 @@ export const DatePicker = memo(
                   </Button>
                 </StickyFooter>
               )}
-              handleBarAccessibilityLabel={
-                closeCalendarAccessibilityLabel ??
-                calendarIconButtonAccessibilityLabel ??
-                'Close calendar'
-              }
+              handleBarAccessibilityLabel={closeCalendarAccessibilityLabel}
               handleBarVariant="inside"
               onCloseComplete={handleTrayCloseComplete}
               onOpenComplete={handleModalShow}
@@ -313,6 +310,7 @@ export const DatePicker = memo(
                 disabled={disabled}
                 disabledDateError={disabledDateError}
                 disabledDates={disabledDates}
+                highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
                 highlightedDates={highlightedDates}
                 maxDate={maxDate}
                 minDate={minDate}

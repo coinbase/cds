@@ -126,11 +126,6 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/dates/__stories__/Calendar.stories').default,
   },
   {
-    key: 'CalendarCustomTrigger',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/dates/__stories__/CalendarCustomTrigger.stories').default,
-  },
-  {
     key: 'Card',
     getComponent: () => require('@coinbase/cds-mobile/cards/__stories__/Card.stories').default,
   },

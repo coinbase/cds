@@ -103,6 +103,8 @@ export type CalendarDayProps = {
   isCurrentMonth?: boolean;
   /** Tooltip content shown when hovering or focusing a disabled Calendar Day. */
   disabledError?: string;
+  /** Accessibility hint announced for highlighted dates. */
+  highlightedDateAccessibilityHint?: string;
   /** Custom class name for the date cell (CalendarPressable). */
   className?: string;
   /** Custom style for the date cell (CalendarPressable). */
@@ -148,6 +150,11 @@ export type CalendarBaseProps = {
    * @default 'Today'
    */
   todayAccessibilityHint?: string;
+  /**
+   * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
+   * @default 'Highlighted'
+   */
+  highlightedDateAccessibilityHint?: string;
 };
 
 /**
@@ -205,6 +212,7 @@ const CalendarDay = memo(
         isCurrentMonth,
         onClick,
         disabledError = 'Date unavailable',
+        highlightedDateAccessibilityHint,
         className,
         style,
       },
@@ -212,7 +220,10 @@ const CalendarDay = memo(
     ) => {
       const { locale } = useLocale();
       const handleClick = useCallback(() => onClick?.(date), [date, onClick]);
-      const accessibilityLabel = getDayAccessibilityLabel(date, locale);
+      const baseLabel = getDayAccessibilityLabel(date, locale);
+      const accessibilityLabel = highlighted
+        ? `${baseLabel}. ${highlightedDateAccessibilityHint}`
+        : baseLabel;
       const calendarDayButton = useMemo(
         () => (
           <CalendarPressable
@@ -298,6 +309,7 @@ export const Calendar = memo(
         styles,
         nextArrowAccessibilityLabel = 'Go to next month',
         previousArrowAccessibilityLabel = 'Go to previous month',
+        highlightedDateAccessibilityHint = 'Highlighted',
         ...props
       },
       ref,
@@ -531,6 +543,7 @@ export const Calendar = memo(
                   }
                   disabledError={disabledDateError}
                   highlighted={highlightedTimes.includes(time)}
+                  highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
                   isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
                   isToday={time === today.getTime()}
                   onClick={onPressDate}
