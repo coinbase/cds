@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import { type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
@@ -51,23 +51,19 @@ const ChartCanvas = memo(
     accessible = true,
     accessibilityLabel,
     accessibilityLiveRegion = 'polite',
-    ...restProps
   }: ChartCanvasProps) => {
     const ContextBridge = useChartContextBridge();
     const isAccessible = accessible && accessibilityLabel !== null;
 
     return (
-      <View
+      <Canvas
         accessibilityLabel={isAccessible ? accessibilityLabel : undefined}
         accessibilityLiveRegion={isAccessible ? accessibilityLiveRegion : undefined}
         accessible={isAccessible}
-        style={[StyleSheet.absoluteFill, style]}
-        {...restProps}
+        style={[{ width: '100%', height: '100%' }, style]}
       >
-        <Canvas style={[{ width: '100%', height: '100%' }]}>
-          <ContextBridge>{children}</ContextBridge>
-        </Canvas>
-      </View>
+        <ContextBridge>{children}</ContextBridge>
+      </Canvas>
     );
   },
 );

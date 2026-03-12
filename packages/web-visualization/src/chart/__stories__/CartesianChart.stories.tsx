@@ -158,12 +158,12 @@ const PredictionMarket = () => {
 
   const chartAccessibilityLabel = useMemo(() => {
     const lastIndex = eaglesData.length - 1;
-    const eagles = eaglesData[lastIndex];
-    const ravens = 100 - eagles;
+    const teamA = eaglesData[lastIndex];
+    const teamB = 100 - teamA;
 
-    return `Super Bowl LX prediction market chart with ${eaglesData.length} data points. Latest odds: Eagles ${eagles.toFixed(
+    return `Prediction market chart with ${eaglesData.length} data points. Latest odds: Team A ${teamA.toFixed(
       1,
-    )} cents, Ravens ${ravens.toFixed(1)} cents.`;
+    )}%, Team B ${teamB.toFixed(1)}%.`;
   }, [eaglesData]);
 
   const [scrubberLabel, setScrubberLabel] = useState<string | null>(null);
@@ -191,11 +191,11 @@ const PredictionMarket = () => {
 
   const getScrubberAccessibilityLabel = useCallback(
     (dataIndex: number) => {
-      const eagles = eaglesData[dataIndex];
-      const ravens = 100 - eagles;
-      return `At position ${dataIndex + 1} of ${eaglesData.length}: Eagles ${eagles.toFixed(
+      const teamA = eaglesData[dataIndex];
+      const teamB = 100 - teamA;
+      return `At position ${dataIndex + 1} of ${eaglesData.length}: Team A ${teamA.toFixed(
         1,
-      )} cents, Ravens ${ravens.toFixed(1)} cents.`;
+      )}%, Team B ${teamB.toFixed(1)}%.`;
     },
     [eaglesData],
   );
