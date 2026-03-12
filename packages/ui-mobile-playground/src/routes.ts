@@ -142,6 +142,12 @@ export const routes = [
         .default,
   },
   {
+    key: 'ChartAccessibility',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/ChartAccessibility.stories')
+        .default,
+  },
+  {
     key: 'ChartTransitions',
     getComponent: () =>
       require('@cbhq/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')

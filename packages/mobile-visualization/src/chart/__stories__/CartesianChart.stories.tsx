@@ -251,6 +251,10 @@ const PriceWithVolumeChart = memo(
       });
     }, []);
 
+    const formatVolume = useCallback((volume: number) => {
+      return `${(volume / 1000).toFixed(2)}K`;
+    }, []);
+
     const scrubberLabel = useCallback(
       (dataIndex: number) => {
         return formatDate(btcDates[dataIndex]);
@@ -258,9 +262,26 @@ const PriceWithVolumeChart = memo(
       [formatDate],
     );
 
+    const chartAccessibilityLabel = useMemo(() => {
+      const lastIndex = btcPrices.length - 1;
+      return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPriceInThousands(
+        btcPrices[lastIndex],
+      )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
+    }, [formatDate, formatPriceInThousands, formatVolume]);
+
+    const getScrubberAccessibilityLabel = useCallback(
+      (dataIndex: number) =>
+        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
+          btcPrices[dataIndex],
+        )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
+      [formatDate, formatPriceInThousands, formatVolume],
+    );
+
     return (
       <CartesianChart
         enableScrubbing
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
         series={[
