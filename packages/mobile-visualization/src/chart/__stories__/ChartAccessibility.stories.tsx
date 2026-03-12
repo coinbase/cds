@@ -32,7 +32,7 @@ const BasicLineChart = memo(function BasicLineChart() {
   const data = useMemo(() => [2, 4, 3, 6, 5, 8, 7], []);
   const categories = useMemo(() => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], []);
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `${categories[index]}: ${data[index]}`,
     [categories, data],
   );
@@ -46,7 +46,7 @@ const BasicLineChart = memo(function BasicLineChart() {
       accessibilityLabel={`Line chart with ${data.length} days of data. Swipe to navigate.`}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'line', data, color: theme.color.accentBoldBlue }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
@@ -63,7 +63,7 @@ const DataFormatLineChart = memo(function DataFormatLineChart() {
 
   const chartAccessibilityLabel = `Chart with uneven X values ${xData.join(', ')}. ${yData.length} data points.`;
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`,
     [xData, yData],
   );
@@ -79,7 +79,7 @@ const DataFormatLineChart = memo(function DataFormatLineChart() {
       curve="natural"
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'line', data: yData, color: theme.color.accentBoldGreen }]}
       xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
       yAxis={{
@@ -100,7 +100,7 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
   const categories = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], []);
   const values = useMemo(() => [40, 65, 55, 80, 72, 90], []);
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `${categories[index]}: ${values[index]}`,
     [categories, values],
   );
@@ -113,7 +113,7 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
       accessibilityLabel={`Bar chart with ${values.length} months. Swipe to navigate.`}
       height={180}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'bars', data: values, color: theme.color.accentBoldPurple }]}
       xAxis={{ data: categories, showGrid: true }}
       yAxis={{ domain: { min: 0 }, showGrid: true }}
@@ -141,7 +141,7 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
     [],
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `${dataset[index].month}: ${dataset[index].rainfall}mm rainfall`,
     [dataset],
   );
@@ -156,7 +156,7 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
       height={400}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       layout="horizontal"
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'seoul',
@@ -197,7 +197,7 @@ const ServiceAvailability = memo(function ServiceAvailability() {
     [],
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `Point ${index + 1}: ${availabilityEvents[index].availability}% availability on ${availabilityEvents[index].date.toLocaleDateString()}`,
     [availabilityEvents],
@@ -208,7 +208,7 @@ const ServiceAvailability = memo(function ServiceAvailability() {
       enableScrubbing
       accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate.`}
       height={200}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       scrubberAccessibilityLabelStep={1}
       series={[
         {
@@ -270,7 +270,7 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
     [],
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
   );
@@ -281,7 +281,7 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
       showArea
       accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate.`}
       height={200}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       scrubberAccessibilityLabelStep={1}
       series={[{ id: 'prices', data, color: theme.color.accentBoldBlue }]}
     >
@@ -315,7 +315,7 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
     [gains, losses, theme.color.fgNegative, theme.color.fgPositive],
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => {
       const net = gains[index] + losses[index];
       const netStr = net >= 0 ? `+$${net}M` : `-$${Math.abs(net)}M`;
@@ -330,7 +330,7 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
       accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Swipe to navigate.`}
       height={280}
       inset={32}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={series}
       xAxis={{ data: categories, scaleType: 'band' }}
     >
@@ -352,7 +352,7 @@ const LegendPosition = memo(function LegendPosition() {
   const revenueData = useMemo(() => [455, 520, 380, 455, 285, 235], []);
   const profitMarginData = useMemo(() => [23, 20, 16, 38, 12, 9], []);
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `${categories[index]}: Revenue $${revenueData[index]}k, Profit Margin ${profitMarginData[index]}%`,
     [categories, profitMarginData, revenueData],
@@ -371,7 +371,7 @@ const LegendPosition = memo(function LegendPosition() {
         />
       }
       legendPosition="bottom"
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'revenue',
@@ -493,7 +493,7 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
       `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`,
     [currentPrice, formatPrice, timePeriod.label],
   );
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => {
       const price = formatPrice(sparklineTimePeriodDataValues[index]);
       const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
@@ -549,7 +549,7 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
         areaType="dotted"
         height={200}
         inset={{ top: 52 }}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'btc',

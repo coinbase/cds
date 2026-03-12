@@ -20,7 +20,7 @@ function BasicLegend() {
 
   const chartAccessibilityLabel = `Website traffic across ${pages.length} pages showing page views and unique visitors.`;
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index) => {
       return `${pages[index]}: ${numberFormatter(pageViews[index])} page views, ${numberFormatter(uniqueVisitors[index])} unique visitors.`;
     },
@@ -60,7 +60,7 @@ function BasicLegend() {
         tickLabelFormatter: numberFormatter,
       }}
     >
-      <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+      <Scrubber accessibilityLabel={getScrubberAccessibilityLabel} />
     </LineChart>
   );
 }
@@ -144,7 +144,7 @@ function WrappedLegend() {
 
   const chartAccessibilityLabel = `Regional precipitation data across ${precipitationData.length} US regions over 12 months.`;
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index) => {
       const month = xAxisData[index];
       const regionValues = precipitationData
@@ -174,7 +174,7 @@ function WrappedLegend() {
         showTickMarks: true,
       }}
     >
-      <Scrubber hideBeaconLabels hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
+      <Scrubber hideBeaconLabels hideOverlay accessibilityLabel={getScrubberAccessibilityLabel} />
     </LineChart>
   );
 }
@@ -586,7 +586,7 @@ function CustomLegendEntry() {
 
   const chartAccessibilityLabel = `Candidate polling data over ${timeLabels.length} months showing support percentages for 3 candidates.`;
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index) => {
       const month = timeLabels[index];
       const candidateValues = series
@@ -643,7 +643,7 @@ function CustomLegendEntry() {
         tickLabelFormatter: (value) => `${value}%`,
       }}
     >
-      <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+      <Scrubber accessibilityLabel={getScrubberAccessibilityLabel} />
     </LineChart>
   );
 }

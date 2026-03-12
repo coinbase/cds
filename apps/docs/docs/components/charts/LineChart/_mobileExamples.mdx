@@ -73,7 +73,7 @@ function MultipleLine() {
   const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`,
     [pages, pageViews, uniqueVisitors],
@@ -84,7 +84,7 @@ function MultipleLine() {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'pageViews',
@@ -118,7 +118,7 @@ function DataFormat() {
   const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`,
     [xData, yData],
   );
@@ -128,7 +128,7 @@ function DataFormat() {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'line', data: yData }]}
       xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
       yAxis={{
@@ -207,7 +207,7 @@ function LiveUpdates() {
   }, [intervalSeconds, maxPercentChange]);
 
   const chartAccessibilityLabel = `Live price chart with ${priceData.length} data points.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${priceData[index]}`,
     [priceData],
   );
@@ -217,7 +217,7 @@ function LiveUpdates() {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ right: 64 }}
       series={[
@@ -250,7 +250,7 @@ function MissingData() {
   const uniqueVisitors = useMemo(() => [4000, 3000, null, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pages.length} pages. Some data points are missing.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => {
       const pv = pageViews[index];
       const uv = uniqueVisitors[index];
@@ -273,7 +273,7 @@ function MissingData() {
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       // You can render points at every valid data point by always returning true
       points
@@ -364,7 +364,7 @@ function Interaction() {
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
   );
@@ -380,7 +380,7 @@ function Interaction() {
         enableScrubbing
         showArea
         accessibilityLabel={chartAccessibilityLabel}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         onScrubberPositionChange={setScrubberPosition}
         series={[{ id: 'prices', data }]}
@@ -576,7 +576,7 @@ const PerformanceChart = memo(
     );
 
     const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Swipe to navigate.`;
-    const scrubberAccessibilityLabel = useCallback(
+    const getScrubberAccessibilityLabel = useCallback(
       (index: number) => {
         const price = formatPriceThousands(sparklineTimePeriodDataValues[index]);
         const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
@@ -596,7 +596,7 @@ const PerformanceChart = memo(
         showArea
         showYAxis
         accessibilityLabel={chartAccessibilityLabel}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         areaType="dotted"
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
@@ -640,7 +640,7 @@ By default, charts will not track gestures that go outside of the chart bounds. 
   enableScrubbing
   allowOverflowGestures
   accessibilityLabel="Chart with overflow gestures. Swipe to navigate."
-  scrubberAccessibilityLabel={(index) => `Point ${index + 1}`}
+  getScrubberAccessibilityLabel={(index) => `Point ${index + 1}`}
   ...
 >
   ...
@@ -675,7 +675,7 @@ Use `accessibilityLabel` on `LineChart` (or `CartesianChart`) to provide both:
 - a summary label when focus first lands on the chart
 - point-by-point labels while swiping through scrubber targets
 
-`scrubberAccessibilityLabel` defines the per-segment text announced by screen readers. You do not need to add a `Scrubber` component for accessibility—`enableScrubbing` with `scrubberAccessibilityLabel` is sufficient. BarChart and other charts work the same way.
+`getScrubberAccessibilityLabel` defines the per-segment text announced by screen readers. You do not need to add a `Scrubber` component for accessibility—`enableScrubbing` with `getScrubberAccessibilityLabel` is sufficient. BarChart and other charts work the same way.
 
 ```tsx
 function BasicAccessible() {
@@ -689,7 +689,7 @@ function BasicAccessible() {
   );
 
   // Per-segment label announced when screen reader user taps or swipes to a segment
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Price at position ${index + 1} of ${data.length}: ${data[index]}`,
     [data],
   );
@@ -700,7 +700,7 @@ function BasicAccessible() {
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -947,7 +947,7 @@ function GainLossChart() {
   ));
 
   const chartAccessibilityLabel = `Price chart with ${data.length} data points.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
   );
@@ -956,7 +956,7 @@ function GainLossChart() {
     <CartesianChart
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -1070,7 +1070,7 @@ function ReferenceLineExample() {
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   const chartAccessibilityLabel = `Price chart with reference line at 10. ${data.length} data points.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${data[index]}`,
     [data],
   );
@@ -1080,7 +1080,7 @@ function ReferenceLineExample() {
       enableScrubbing
       showArea
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[{ id: 'prices', data, color: theme.color.fgPositive }]}
       xAxis={{ range: ({ min, max }) => ({ min, max: max - 24 }) }}
@@ -1163,7 +1163,7 @@ function StylingScrubber() {
   const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `${pages[index]}: ${pageViews[index]} views, ${uniqueVisitors[index]} unique visitors.`,
     [pages, pageViews, uniqueVisitors],
@@ -1181,7 +1181,7 @@ function StylingScrubber() {
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -1447,7 +1447,7 @@ function AssetPriceWithDottedArea() {
       [currentPrice, formatPrice, timePeriod.label],
     );
 
-    const scrubberAccessibilityLabel = useCallback(
+    const getScrubberAccessibilityLabel = useCallback(
       (index: number) => {
         const price = formatPrice(sparklineTimePeriodDataValues[index]);
         const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
@@ -1471,7 +1471,7 @@ function AssetPriceWithDottedArea() {
           enableScrubbing
           showArea
           accessibilityLabel={chartAccessibilityLabel}
-          scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+          getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
@@ -1668,7 +1668,7 @@ function MonotoneAssetPrice() {
   );
 
   const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Swipe to navigate.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => {
       const price = scrubberPriceFormatter.format(prices[index].value);
       const date = formatDate(prices[index].date);
@@ -1682,7 +1682,7 @@ function MonotoneAssetPrice() {
       enableScrubbing
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 64 }}
       series={[

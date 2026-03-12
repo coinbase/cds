@@ -269,7 +269,7 @@ const PriceWithVolumeChart = memo(
       )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
     }, [formatDate, formatPriceInThousands, formatVolume]);
 
-    const scrubberAccessibilityLabel = useCallback(
+    const getScrubberAccessibilityLabel = useCallback(
       (dataIndex: number) =>
         `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
           btcPrices[dataIndex],
@@ -283,7 +283,7 @@ const PriceWithVolumeChart = memo(
         accessibilityLabel={chartAccessibilityLabel}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',

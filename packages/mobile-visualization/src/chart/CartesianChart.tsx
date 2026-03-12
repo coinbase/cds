@@ -147,7 +147,7 @@ export type CartesianChartProps = CartesianChartBaseProps &
      * Function that returns the accessibility label for each scrubber point.
      * Receives `dataIndex` for each scrubber point label.
      */
-    scrubberAccessibilityLabel?: ScrubberAccessibilityViewProps['accessibilityLabel'];
+    getScrubberAccessibilityLabel?: ScrubberAccessibilityViewProps['accessibilityLabel'];
     /**
      * Number of data points to move between screen-reader samples.
      */
@@ -180,7 +180,7 @@ export const CartesianChart = memo(
         layout = 'vertical',
         animate = true,
         enableScrubbing,
-        scrubberAccessibilityLabel,
+        getScrubberAccessibilityLabel,
         scrubberAccessibilityLabelStep,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
@@ -201,6 +201,7 @@ export const CartesianChart = memo(
         // https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/gesture-detector/#:~:text=%7B%0A%20%20return%20%3C-,View,-collapsable%3D%7B
         collapsable = false,
         accessible = true,
+        accessibilityLabel,
         accessibilityLiveRegion = 'polite',
         ...props
       },
@@ -606,7 +607,6 @@ export const CartesianChart = memo(
           >
             {legend ? (
               <Box
-                accessible={false}
                 flexDirection={
                   legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
                 }
@@ -615,7 +615,7 @@ export const CartesianChart = memo(
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
                   <ChartCanvas
-                    accessibilityLabel={props.accessibilityLabel}
+                    accessibilityLabel={accessibilityLabel}
                     accessibilityLiveRegion={accessibilityLiveRegion}
                     accessible={accessible}
                     style={styles?.chart}
@@ -623,21 +623,16 @@ export const CartesianChart = memo(
                     {children}
                   </ChartCanvas>
                   <ScrubberAccessibilityView
-                    accessibilityLabel={scrubberAccessibilityLabel}
+                    accessibilityLabel={getScrubberAccessibilityLabel}
                     accessibilityStep={scrubberAccessibilityLabelStep}
                   />
                 </Box>
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
             ) : (
-              <Box
-                accessible={false}
-                collapsable={collapsable}
-                onLayout={onContainerLayout}
-                {...rootBoxProps}
-              >
+              <Box collapsable={collapsable} onLayout={onContainerLayout} {...rootBoxProps}>
                 <ChartCanvas
-                  accessibilityLabel={props.accessibilityLabel}
+                  accessibilityLabel={accessibilityLabel}
                   accessibilityLiveRegion={accessibilityLiveRegion}
                   accessible={accessible}
                   style={styles?.chart}
@@ -645,7 +640,7 @@ export const CartesianChart = memo(
                   {children}
                 </ChartCanvas>
                 <ScrubberAccessibilityView
-                  accessibilityLabel={scrubberAccessibilityLabel}
+                  accessibilityLabel={getScrubberAccessibilityLabel}
                   accessibilityStep={scrubberAccessibilityLabelStep}
                 />
               </Box>

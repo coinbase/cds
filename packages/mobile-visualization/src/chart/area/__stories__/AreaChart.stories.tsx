@@ -9,7 +9,7 @@ import { AreaChart } from '..';
 const basicData = [24, 13, 98, 39, 48, 38, 43];
 
 const BasicExample = () => {
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${basicData[index]}`,
     [],
   );
@@ -20,7 +20,7 @@ const BasicExample = () => {
       showYAxis
       accessibilityLabel={`Area chart with ${basicData.length} data points. Swipe to navigate.`}
       height={400}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[{ id: 'pageViews', data: basicData }]}
       yAxis={{
         showGrid: true,
@@ -44,7 +44,7 @@ const potentialRewardsData = [
 const StackedExample = () => {
   const theme = useTheme();
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `Point ${index + 1}: current ${currentRewardsData[index]}, potential ${potentialRewardsData[index]}`,
     [],
@@ -58,7 +58,7 @@ const StackedExample = () => {
       accessibilityLabel={`Stacked rewards chart with ${currentRewardsData.length} data points. Swipe to navigate.`}
       curve="natural"
       height={256}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'currentRewards',
@@ -96,7 +96,7 @@ const AreaChartStories = () => {
           showYAxis
           accessibilityLabel="Area chart with negative values. 7 data points. Swipe to navigate."
           height={150}
-          scrubberAccessibilityLabel={(index: number) =>
+          getScrubberAccessibilityLabel={(index: number) =>
             `Point ${index + 1}: ${[24, 13, -98, 39, 48, 38, 43][index]}`
           }
           series={[
@@ -150,7 +150,7 @@ const AreaChartStories = () => {
           accessibilityLabel="Volume by asset. 5 data points. Swipe to navigate."
           height={280}
           layout="horizontal"
-          scrubberAccessibilityLabel={(index: number) =>
+          getScrubberAccessibilityLabel={(index: number) =>
             `${['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'][index]}: ${[68, 54, 43, 29, 18][index]}%`
           }
           series={[

@@ -64,7 +64,7 @@ const Simple = () => {
   const pageUniqueVisitors = data.map((d) => d.uv);
 
   const chartAccessibilityLabel = `Page views and unique visitors across ${pageNames.length} pages. Swipe to navigate.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `${pageNames[index]}: ${pageViews[index]} views, ${pageUniqueVisitors[index]} unique visitors`,
     [pageNames, pageViews, pageUniqueVisitors],
@@ -78,7 +78,7 @@ const Simple = () => {
       accessibilityLabel={chartAccessibilityLabel}
       height={defaultChartHeight}
       inset={32}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'pageViews',
@@ -170,7 +170,7 @@ const TimeOfDayAxesExample = () => {
   }, [timeData]);
 
   const chartAccessibilityLabel = `Chart with ${lineA.length} data points. Swipe to navigate.`;
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: lineA ${lineA[index]}, lineB ${lineB[index]}`,
     [lineA, lineB],
   );
@@ -180,7 +180,7 @@ const TimeOfDayAxesExample = () => {
       enableScrubbing
       accessibilityLabel={chartAccessibilityLabel}
       height={defaultChartHeight}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'lineA',
@@ -219,7 +219,7 @@ const TimeOfDayAxesExample = () => {
 const multipleYAxesData = [1, 10, 30, 50, 70, 90, 100];
 
 const MultipleYAxesExample = () => {
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `Point ${index + 1}: linear ${multipleYAxesData[index]}, log ${multipleYAxesData[index]}`,
     [],
@@ -230,7 +230,7 @@ const MultipleYAxesExample = () => {
       enableScrubbing
       accessibilityLabel="Chart with linear and log axes. 7 data points. Swipe to navigate."
       height={defaultChartHeight}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'linear',
@@ -358,7 +358,7 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
     [],
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Point ${index + 1}: ${exponentialData[index]}`,
     [exponentialData],
   );
@@ -368,7 +368,7 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
       enableScrubbing
       accessibilityLabel={`Exponential growth chart with ${exponentialData.length} data points. Swipe to navigate.`}
       height={defaultChartHeight}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'growthLinear',

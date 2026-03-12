@@ -30,7 +30,7 @@ import {
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
 const chartAccessibilityLabel = `Price chart with ${sampleData.length} data points. Swipe to navigate.`;
-const scrubberAccessibilityLabel = (index: number) => `Point ${index + 1}: ${sampleData[index]}`;
+const getScrubberAccessibilityLabel = (index: number) => `Point ${index + 1}: ${sampleData[index]}`;
 
 const BasicScrubber = () => {
   return (
@@ -40,7 +40,7 @@ const BasicScrubber = () => {
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -67,7 +67,7 @@ const seriesFilterData = {
 };
 
 const SeriesFilter = () => {
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `Point ${index + 1}: top ${seriesFilterData.top[index]}, lowerMiddle ${seriesFilterData.lowerMiddle[index]}`,
     [],
@@ -78,7 +78,7 @@ const SeriesFilter = () => {
       enableScrubbing
       accessibilityLabel="Chart with multiple series. Swipe to navigate."
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'top',
@@ -117,7 +117,7 @@ const WithLabels = () => {
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -140,7 +140,7 @@ const IdlePulse = () => {
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -164,7 +164,7 @@ const ImperativePulse = () => {
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         height={150}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -191,7 +191,7 @@ const BeaconStroke = () => {
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         height={150}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -231,7 +231,7 @@ const CustomBeacon = () => {
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -306,7 +306,7 @@ const CustomBeaconLabel = () => {
       accessibilityLabel="Temperature chart with 6 data points. Swipe to navigate."
       areaType="dotted"
       height={150}
-      scrubberAccessibilityLabel={(index: number) =>
+      getScrubberAccessibilityLabel={(index: number) =>
         `Point ${index + 1}: ${[25, 30, 35, 45, 60, 100][index]}°F`
       }
       series={[
@@ -459,7 +459,7 @@ const PercentageBeaconLabels = () => {
           areaType="dotted"
           height={150}
           inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-          scrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
+          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           series={seriesData}
           xAxis={{
             range: ({ min, max }) => ({ min, max: max - 92 }),
@@ -482,7 +482,7 @@ const PercentageBeaconLabels = () => {
           areaType="dotted"
           height={150}
           inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-          scrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
+          getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
           series={seriesData}
           xAxis={{
             range: ({ min, max }) => ({ min, max: max - 92 }),
@@ -513,7 +513,7 @@ const HideBeaconLabels = () => {
       accessibilityLabel="Website visitors across 7 pages. Swipe to navigate."
       height={200}
       inset={{ top: 60 }}
-      scrubberAccessibilityLabel={(index: number) =>
+      getScrubberAccessibilityLabel={(index: number) =>
         `Page ${index + 1}: ${[2400, 1398, 9800, 3908, 4800, 3800, 4300][index]} views`
       }
       series={[
@@ -548,7 +548,7 @@ const LabelElevated = () => {
       accessibilityLabel={chartAccessibilityLabel}
       height={200}
       inset={{ top: 60 }}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -589,7 +589,7 @@ const CustomLabelComponent = () => {
       accessibilityLabel={chartAccessibilityLabel}
       height={200}
       inset={{ top: 16, bottom: 64 }}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -608,7 +608,7 @@ const CustomLabelComponent = () => {
 const ethData = [5, 15, 18, 30, 65, 30, 15, 35, 15, 2, 45, 12, 15, 40];
 
 const LabelFonts = () => {
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) => `Day ${index + 1}: BTC ${sampleData[index]}, ETH ${ethData[index]}`,
     [],
   );
@@ -620,7 +620,7 @@ const LabelFonts = () => {
       showYAxis
       accessibilityLabel="BTC and ETH comparison chart. Swipe to navigate."
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'btc',
@@ -657,7 +657,7 @@ const LabelBoundsInset = () => {
         accessibilityLabel={chartAccessibilityLabel}
         height={150}
         inset={{ left: 0, right: 0 }}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -673,7 +673,7 @@ const LabelBoundsInset = () => {
         accessibilityLabel={chartAccessibilityLabel}
         height={150}
         inset={{ left: 0, right: 0 }}
-        scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         series={[
           {
             id: 'prices',
@@ -697,7 +697,7 @@ const CustomLine = () => {
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -737,7 +737,7 @@ const HiddenScrubberWhenIdle = () => {
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -758,7 +758,7 @@ const HideOverlay = () => {
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={150}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'prices',
@@ -869,7 +869,7 @@ const MatchupBeaconLabels = () => {
     },
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (index: number) =>
       `Point ${index + 1}: BLUE ${matchupBlueData[index]}%, RED ${matchupRedData[index]}%`,
     [],
@@ -883,7 +883,7 @@ const MatchupBeaconLabels = () => {
       areaType="dotted"
       height={300}
       inset={{ bottom: 8, left: 8, top: 8, right: 0 }}
-      scrubberAccessibilityLabel={scrubberAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       series={[
         {
           id: 'blue',

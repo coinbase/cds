@@ -189,7 +189,7 @@ const PredictionMarket = () => {
     [eaglesData.length],
   );
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (dataIndex: number) => {
       const eagles = eaglesData[dataIndex];
       const ravens = 100 - eagles;
@@ -237,7 +237,7 @@ const PredictionMarket = () => {
         ))}
         <CustomYAxis />
         <Scrubber
-          accessibilityLabel={scrubberAccessibilityLabel}
+          accessibilityLabel={getScrubberAccessibilityLabel}
           label={scrubberLabel}
           seriesIds={scrubbedSeries}
         />
@@ -443,7 +443,7 @@ const PriceWithVolume = () => {
     )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
   }, [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume]);
 
-  const scrubberAccessibilityLabel = useCallback(
+  const getScrubberAccessibilityLabel = useCallback(
     (dataIndex: number) => {
       return `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPrice(
         btcPrices[dataIndex],
@@ -517,7 +517,7 @@ const PriceWithVolume = () => {
         />
         <BarPlot seriesIds={['volume']} />
         <Line showArea seriesId="prices" />
-        <Scrubber accessibilityLabel={scrubberAccessibilityLabel} seriesIds={['prices']} />
+        <Scrubber accessibilityLabel={getScrubberAccessibilityLabel} seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
   );
