@@ -50,7 +50,7 @@ function MultiSelect() {
     { value: 'strawberry', label: 'Strawberry' },
   ];
 
-  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
 
   return (
     <Combobox
@@ -158,7 +158,7 @@ function AccessibilityProps() {
     { value: 'low', label: 'Low Priority' },
   ];
 
-  const { value, onChange } = useMultiSelect({ initialValue: ['medium'] });
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
 
   return (
     <Combobox
@@ -195,9 +195,7 @@ function LimitDisplayedSelections() {
     { value: 'de', label: 'Germany', description: 'Europe' },
   ];
 
-  const { value, onChange } = useMultiSelect({
-    initialValue: ['us', 'ca', 'mx', 'uk'],
-  });
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
 
   return (
     <Combobox
@@ -226,7 +224,7 @@ function AlignmentExample() {
     { value: 'cherry', label: 'Cherry' },
     { value: 'date', label: 'Date' },
   ];
-  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
 
   return (
     <VStack gap={2}>
@@ -290,7 +288,7 @@ function CompactExample() {
     { value: 'banana', label: 'Banana' },
     { value: 'cherry', label: 'Cherry' },
   ];
-  const { value, onChange } = useMultiSelect({ initialValue: ['apple'] });
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
 
   return (
     <Combobox
@@ -397,8 +395,99 @@ function CountrySelectionExample() {
 You can add a dynamic option to Combobox to enable free solo where users can provide their own value.
 
 ```tsx live
-function FreeSoloComboboxExample() {
+function FreeSoloExample() {
   const CREATE_OPTION_PREFIX = '__create__';
+
+  const FreeSoloCombobox = useMemo(() => {
+    function StableFreeSoloCombobox({
+      freeSolo = false,
+      options: initialOptions,
+      value,
+      onChange,
+      placeholder = 'Search or type to add...',
+      ...comboboxProps
+    }) {
+      const [searchText, setSearchText] = useState('');
+      const [options, setOptions] = useState(initialOptions);
+
+      useEffect(() => {
+        if (!freeSolo) return;
+        const initialSet = new Set(initialOptions.map((option) => option.value));
+        const valueSet = new Set(Array.isArray(value) ? value : value != null ? [value] : []);
+        setOptions((prevOptions) => {
+          const addedStillSelected = prevOptions.filter(
+            (option) => !initialSet.has(option.value) && valueSet.has(option.value),
+          );
+          return [...initialOptions, ...addedStillSelected];
+        });
+      }, [freeSolo, initialOptions, value]);
+
+      const optionsWithCreate = useMemo(() => {
+        if (!freeSolo) return options;
+        const trimmedSearch = searchText.trim();
+        if (!trimmedSearch) return options;
+
+        const alreadyExists = options.some(
+          (option) =>
+            typeof option.label === 'string' &&
+            option.label.toLowerCase() === trimmedSearch.toLowerCase(),
+        );
+        if (alreadyExists) return options;
+
+        return [
+          ...options,
+          { value: `${CREATE_OPTION_PREFIX}${trimmedSearch}`, label: `Add "${trimmedSearch}"` },
+        ];
+      }, [freeSolo, options, searchText]);
+
+      const handleChange = useCallback(
+        (newValue) => {
+          if (!freeSolo) {
+            onChange(newValue);
+            return;
+          }
+
+          const values = Array.isArray(newValue) ? newValue : newValue ? [newValue] : [];
+          const createValue = values.find((optionValue) =>
+            String(optionValue).startsWith(CREATE_OPTION_PREFIX),
+          );
+
+          if (!createValue) {
+            onChange(newValue);
+            return;
+          }
+
+          const newLabel = String(createValue).slice(CREATE_OPTION_PREFIX.length);
+          const normalizedValue = newLabel.toLowerCase();
+          const newOption = { value: normalizedValue, label: newLabel };
+
+          setOptions((prevOptions) => [...prevOptions, newOption]);
+
+          const updatedValues = values
+            .filter((optionValue) => !String(optionValue).startsWith(CREATE_OPTION_PREFIX))
+            .concat(normalizedValue);
+
+          onChange(comboboxProps.type === 'multi' ? updatedValues : normalizedValue);
+          setSearchText('');
+        },
+        [comboboxProps.type, freeSolo, onChange],
+      );
+
+      return (
+        <Combobox
+          {...comboboxProps}
+          {...(freeSolo ? { searchText, onSearch: setSearchText } : {})}
+          onChange={handleChange}
+          options={freeSolo ? optionsWithCreate : initialOptions}
+          placeholder={placeholder}
+          value={value}
+        />
+      );
+    }
+
+    return StableFreeSoloCombobox;
+  }, [CREATE_OPTION_PREFIX]);
+
   const fruitOptions = [
     { value: 'apple', label: 'Apple' },
     { value: 'banana', label: 'Banana' },
@@ -408,92 +497,18 @@ function FreeSoloComboboxExample() {
     { value: 'fig', label: 'Fig' },
   ];
 
-  function FreeSoloCombobox({
-    freeSolo = false,
-    options: initialOptions,
-    value,
-    onChange,
-    placeholder = 'Search or type to add...',
-    ...comboboxProps
-  }) {
-    const [searchText, setSearchText] = useState('');
-    const [options, setOptions] = useState(initialOptions);
-
-    useEffect(() => {
-      if (!freeSolo) return;
-      const initialSet = new Set(initialOptions.map((o) => o.value));
-      const valueSet = new Set(Array.isArray(value) ? value : value != null ? [value] : []);
-      setOptions((prev) => {
-        const addedStillSelected = prev.filter(
-          (o) => !initialSet.has(o.value) && valueSet.has(o.value),
-        );
-        return [...initialOptions, ...addedStillSelected];
-      });
-    }, [value, freeSolo, initialOptions]);
-
-    const optionsWithCreate = useMemo(() => {
-      if (!freeSolo) return options;
-      const trimmed = searchText.trim();
-      if (!trimmed) return options;
-      const alreadyExists = options.some(
-        (o) => typeof o.label === 'string' && o.label.toLowerCase() === trimmed.toLowerCase(),
-      );
-      if (alreadyExists) return options;
-      return [
-        ...options,
-        { value: `${CREATE_OPTION_PREFIX}${trimmed}`, label: `Add "${trimmed}"` },
-      ];
-    }, [options, searchText, freeSolo]);
-
-    const handleChange = useCallback(
-      (newValue) => {
-        if (!freeSolo) {
-          onChange(newValue);
-          return;
-        }
-        const values = Array.isArray(newValue) ? newValue : newValue ? [newValue] : [];
-        const createValue = values.find((v) => String(v).startsWith(CREATE_OPTION_PREFIX));
-        if (createValue) {
-          const newLabel = String(createValue).slice(CREATE_OPTION_PREFIX.length);
-          const newOption = { value: newLabel.toLowerCase(), label: newLabel };
-          setOptions((prev) => [...prev, newOption]);
-          const updatedValues = values
-            .filter((v) => !String(v).startsWith(CREATE_OPTION_PREFIX))
-            .concat(newOption.value);
-          onChange(comboboxProps.type === 'multi' ? updatedValues : newOption.value);
-          setSearchText('');
-        } else {
-          onChange(newValue);
-        }
-      },
-      [onChange, freeSolo, comboboxProps.type],
-    );
-
-    return (
-      <Combobox
-        {...comboboxProps}
-        {...(freeSolo ? { searchText, onSearch: setSearchText } : {})}
-        onChange={handleChange}
-        options={freeSolo ? optionsWithCreate : initialOptions}
-        placeholder={placeholder}
-        value={value}
-      />
-    );
-  }
-
-  const [standardSingleValue, setStandardSingle] = useState(null);
-  const [freeSoloSingleValue, setFreeSoloSingle] = useState(null);
+  const [standardSingleValue, setStandardSingleValue] = useState(null);
+  const [freeSoloSingleValue, setFreeSoloSingleValue] = useState(null);
   const standardMulti = useMultiSelect({ initialValue: [] });
   const freeSoloMulti = useMultiSelect({ initialValue: [] });
-  const baseOptions = fruitOptions;
 
   return (
     <VStack gap={4}>
       <FreeSoloCombobox
         freeSolo={false}
         label="Standard single"
-        onChange={setStandardSingle}
-        options={baseOptions}
+        onChange={setStandardSingleValue}
+        options={fruitOptions}
         placeholder="Search fruits..."
         type="single"
         value={standardSingleValue}
@@ -501,8 +516,8 @@ function FreeSoloComboboxExample() {
       <FreeSoloCombobox
         freeSolo
         label="FreeSolo single"
-        onChange={setFreeSoloSingle}
-        options={baseOptions}
+        onChange={setFreeSoloSingleValue}
+        options={fruitOptions}
         placeholder="Search or type to add..."
         type="single"
         value={freeSoloSingleValue}
@@ -511,7 +526,7 @@ function FreeSoloComboboxExample() {
         freeSolo={false}
         label="Standard multi"
         onChange={standardMulti.onChange}
-        options={baseOptions}
+        options={fruitOptions}
         placeholder="Search fruits..."
         type="multi"
         value={standardMulti.value}
@@ -520,7 +535,7 @@ function FreeSoloComboboxExample() {
         freeSolo
         label="FreeSolo multi"
         onChange={freeSoloMulti.onChange}
-        options={baseOptions}
+        options={fruitOptions}
         placeholder="Search or type to add..."
         type="multi"
         value={freeSoloMulti.value}
