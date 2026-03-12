@@ -336,7 +336,7 @@ function HelperTextExample() {
 
 ### Country Selection
 
-You can pass in flags to `media` to create a country selector.
+You can include flag emoji in labels to create a country selector.
 
 ```tsx live
 function CountrySelectionExample() {
@@ -351,25 +351,25 @@ function CountrySelectionExample() {
     {
       label: 'North America',
       options: [
-        { value: 'us', label: 'United States', media: getFlagEmoji('us') },
-        { value: 'ca', label: 'Canada', media: getFlagEmoji('ca') },
-        { value: 'mx', label: 'Mexico', media: getFlagEmoji('mx') },
+        { value: 'us', label: `${getFlagEmoji('us')} United States` },
+        { value: 'ca', label: `${getFlagEmoji('ca')} Canada` },
+        { value: 'mx', label: `${getFlagEmoji('mx')} Mexico` },
       ],
     },
     {
       label: 'Europe',
       options: [
-        { value: 'uk', label: 'United Kingdom', media: getFlagEmoji('gb') },
-        { value: 'fr', label: 'France', media: getFlagEmoji('fr') },
-        { value: 'de', label: 'Germany', media: getFlagEmoji('de') },
+        { value: 'uk', label: `${getFlagEmoji('gb')} United Kingdom` },
+        { value: 'fr', label: `${getFlagEmoji('fr')} France` },
+        { value: 'de', label: `${getFlagEmoji('de')} Germany` },
       ],
     },
     {
       label: 'Asia',
       options: [
-        { value: 'jp', label: 'Japan', media: getFlagEmoji('jp') },
-        { value: 'cn', label: 'China', media: getFlagEmoji('cn') },
-        { value: 'in', label: 'India', media: getFlagEmoji('in') },
+        { value: 'jp', label: `${getFlagEmoji('jp')} Japan` },
+        { value: 'cn', label: `${getFlagEmoji('cn')} China` },
+        { value: 'in', label: `${getFlagEmoji('in')} India` },
       ],
     },
   ];

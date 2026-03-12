@@ -1261,25 +1261,25 @@ const countrySelectionOptions: SelectOptionList<'multi'> = [
   {
     label: 'North America',
     options: [
-      { value: 'us', label: 'United States', media: <span>{getFlagEmoji('us')}</span> },
-      { value: 'ca', label: 'Canada', media: <span>{getFlagEmoji('ca')}</span> },
-      { value: 'mx', label: 'Mexico', media: <span>{getFlagEmoji('mx')}</span> },
+      { value: 'us', label: `${getFlagEmoji('us')} United States` },
+      { value: 'ca', label: `${getFlagEmoji('ca')} Canada` },
+      { value: 'mx', label: `${getFlagEmoji('mx')} Mexico` },
     ],
   },
   {
     label: 'Europe',
     options: [
-      { value: 'uk', label: 'United Kingdom', media: <span>{getFlagEmoji('gb')}</span> },
-      { value: 'fr', label: 'France', media: <span>{getFlagEmoji('fr')}</span> },
-      { value: 'de', label: 'Germany', media: <span>{getFlagEmoji('de')}</span> },
+      { value: 'uk', label: `${getFlagEmoji('gb')} United Kingdom` },
+      { value: 'fr', label: `${getFlagEmoji('fr')} France` },
+      { value: 'de', label: `${getFlagEmoji('de')} Germany` },
     ],
   },
   {
     label: 'Asia',
     options: [
-      { value: 'jp', label: 'Japan', media: <span>{getFlagEmoji('jp')}</span> },
-      { value: 'cn', label: 'China', media: <span>{getFlagEmoji('cn')}</span> },
-      { value: 'in', label: 'India', media: <span>{getFlagEmoji('in')}</span> },
+      { value: 'jp', label: `${getFlagEmoji('jp')} Japan` },
+      { value: 'cn', label: `${getFlagEmoji('cn')} China` },
+      { value: 'in', label: `${getFlagEmoji('in')} India` },
     ],
   },
 ];

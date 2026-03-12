@@ -56,15 +56,23 @@ const fruitOptions: SelectOption[] = [
   { value: 'lemon', label: 'Lemon' },
 ];
 
+function getFlagEmoji(cc: string): string {
+  return cc
+    .toUpperCase()
+    .split('')
+    .map((c) => String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0)))
+    .join('');
+}
+
 const countryOptions: SelectOption[] = [
-  { value: 'us', label: 'United States', description: 'North America' },
-  { value: 'ca', label: 'Canada', description: 'North America' },
-  { value: 'mx', label: 'Mexico', description: 'North America' },
-  { value: 'uk', label: 'United Kingdom', description: 'Europe' },
-  { value: 'fr', label: 'France', description: 'Europe' },
-  { value: 'de', label: 'Germany', description: 'Europe' },
-  { value: 'jp', label: 'Japan', description: 'Asia' },
-  { value: 'cn', label: 'China', description: 'Asia' },
+  { value: 'us', label: `${getFlagEmoji('us')} United States`, description: 'North America' },
+  { value: 'ca', label: `${getFlagEmoji('ca')} Canada`, description: 'North America' },
+  { value: 'mx', label: `${getFlagEmoji('mx')} Mexico`, description: 'North America' },
+  { value: 'uk', label: `${getFlagEmoji('gb')} United Kingdom`, description: 'Europe' },
+  { value: 'fr', label: `${getFlagEmoji('fr')} France`, description: 'Europe' },
+  { value: 'de', label: `${getFlagEmoji('de')} Germany`, description: 'Europe' },
+  { value: 'jp', label: `${getFlagEmoji('jp')} Japan`, description: 'Asia' },
+  { value: 'cn', label: `${getFlagEmoji('cn')} China`, description: 'Asia' },
 ];
 
 const cryptoOptions: SelectOption[] = [
