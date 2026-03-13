@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import type { Weight } from '../types/Weight';
 
+/** @deprecated Use getProgressSize instead */
 export const useProgressSize = (weight: Weight) => {
   return useMemo(() => {
     switch (weight) {

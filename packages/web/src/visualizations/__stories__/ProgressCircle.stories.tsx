@@ -39,6 +39,49 @@ export const Default = () => {
   );
 };
 
+export const Indeterminate = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <HStack gap={2}>
+          <ProgressCircle
+            indeterminate
+            color="bgPositive"
+            contentNode={<Text>Positive</Text>}
+            progress={calculateProgress(0.75)}
+            size={100}
+          />
+          <ProgressCircle indeterminate progress={calculateProgress(0.75)} size={100} />
+          <ProgressCircle
+            indeterminate
+            progress={calculateProgress(0.75)}
+            size={100}
+            weight="thin"
+          />
+          <ProgressCircle
+            indeterminate
+            progress={calculateProgress(0.75)}
+            size={100}
+            weight="normal"
+          />
+          <ProgressCircle
+            indeterminate
+            progress={calculateProgress(0.75)}
+            size={100}
+            weight="semiheavy"
+          />
+          <ProgressCircle
+            indeterminate
+            progress={calculateProgress(0.75)}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+
 export const Heavy = () => {
   return (
     <ProgressContainerWithButtons>

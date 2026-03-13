@@ -1,10 +1,5 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import {
-  ActivityIndicator,
-  type PressableStateCallbackType,
-  type View,
-  type ViewStyle,
-} from 'react-native';
+import { forwardRef, memo, useCallback, useMemo } from 'react';
+import { type PressableStateCallbackType, type View, type ViewStyle } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
@@ -17,9 +12,11 @@ import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpaci
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
+import { Box } from '../layout/Box';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
-import type { ButtonBaseProps } from './Button';
+import { type ButtonBaseProps } from './Button';
 
 export type IconButtonBaseProps = SharedProps &
   Omit<PressableBaseProps, 'children'> &
@@ -67,7 +64,7 @@ export const IconButton = memo(
     ref,
   ) {
     const theme = useTheme();
-
+    const iconSizeValue = theme.iconSize[iconSize];
     const variantMap = transparent ? transparentVariants : variants;
     const variantStyle = variantMap[variant];
 
@@ -116,12 +113,15 @@ export const IconButton = memo(
         {...props}
       >
         {loading ? (
-          <ActivityIndicator
-            color={theme.color[colorValue]}
-            size="small"
-            style={sizingStyle}
-            testID={props.testID ? `${props.testID}-activity-indicator` : undefined}
-          />
+          <Box alignItems="center" height={minHeight} justifyContent="center" width={minHeight}>
+            <ProgressCircle
+              indeterminate
+              color={colorValue}
+              size={iconSizeValue}
+              testID={props.testID ? `${props.testID}-progress-circle` : undefined}
+              weight="thin"
+            />
+          </Box>
         ) : (
           /* TO DO: test using currentColor like web does on Icon here */
           <Icon

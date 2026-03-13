@@ -1,11 +1,11 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 import type { ProgressCircleContentProps } from './ProgressCircle';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
 export const DefaultProgressCircleContent = memo(
   ({
-    progress,
+    progress = 0,
     disableAnimateOnMount,
     disabled,
     color = 'fgMuted',

@@ -13,10 +13,11 @@ import {
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
-import { Spinner } from '../loaders/Spinner';
 import { Pressable } from '../system/Pressable';
 import { TextHeadline } from '../typography/TextHeadline';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
+import { progressCircleHeight } from './Button';
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
 export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
@@ -73,7 +74,14 @@ export const SlideButtonHandleChecked = memo(
           pin="right"
           width={handleWidth}
         >
-          {end ?? <Spinner color={theme.color.fgInverse} size="small" />}
+          {end ?? (
+            <ProgressCircle
+              indeterminate
+              color="fgInverse"
+              size={progressCircleHeight}
+              weight="thin"
+            />
+          )}
         </Box>
       </Box>
     );

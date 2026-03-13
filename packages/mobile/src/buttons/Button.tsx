@@ -20,6 +20,9 @@ import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
+
+export const progressCircleHeight = 24;
 
 export const styles = StyleSheet.create({
   inline: {
@@ -210,7 +213,12 @@ export const Button = memo(
           style={sizingStyle}
         >
           {loading ? (
-            <ActivityIndicator color={theme.color[colorValue]} size="small" />
+            <ProgressCircle
+              indeterminate
+              color={colorValue}
+              size={progressCircleHeight}
+              weight="thin"
+            />
           ) : (
             <>
               {start ??

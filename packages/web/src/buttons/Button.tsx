@@ -11,15 +11,15 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
-import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { ProgressCircle } from '../visualizations';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
 const DEFAULT_MIN_WIDTH = 100;
 
-export const spinnerHeight = 2.5;
+export const spinnerHeight = 24;
 
 const baseCss = css`
   text-decoration: none;
@@ -282,7 +282,13 @@ export const Button: ButtonComponent = memo(
           <span className={middleNodeCss}>
             {loading && (
               <span className={spinnerContainerCss}>
-                <Spinner color="currentColor" size={spinnerHeight} style={spinnerStyle} />
+                <ProgressCircle
+                  indeterminate
+                  accessibilityLabel="Loading"
+                  color="currentColor"
+                  size={spinnerHeight}
+                  weight="thin"
+                />
               </span>
             )}
             <Text

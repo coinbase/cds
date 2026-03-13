@@ -1,21 +1,21 @@
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
 import type { Placement } from '@coinbase/cds-common/types';
 import { isStorybook } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 import type { MotionStyle } from 'framer-motion';
-import { m as motion, useAnimation } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
 import { useDimensions } from '../hooks/useDimensions';
-import { useIsoEffect } from '../hooks/useIsoEffect';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
-import { convertTransition } from '../motion/utils';
+import { useMotionProps } from '../motion/useMotionProps';
 import { isRtl } from '../utils/isRtl';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
+
+const MotionBox = motion(Box);
 import { type ProgressBaseProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
@@ -38,11 +38,16 @@ const floatingTextContainerCss = css`
 
 const motionStyle: MotionStyle = { originX: isRtl() ? 'left' : 'right' };
 
+const getEndTranslateX = (containerWidth: number, textContainerWidth: number, progress: number) =>
+  isRtl()
+    ? Math.min(containerWidth - textContainerWidth, containerWidth - containerWidth * progress)
+    : Math.max(0, containerWidth * progress - textContainerWidth);
+
 const ProgressBarFloatLabel = memo(
   ({
     label,
     disabled,
-    progress,
+    progress = 0,
     disableAnimateOnMount,
     labelPlacement,
     styles,
@@ -50,48 +55,19 @@ const ProgressBarFloatLabel = memo(
   }: ProgressBarFloatLabelProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const textContainerRef = useRef<HTMLDivElement>(null);
-    const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
-      usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
-    const animationControls = useAnimation();
-    const [hasAnimationMounted, setHasAnimationMounted] = useState(!disableAnimateOnMount);
+    const [targetX, setTargetX] = useState<number | null>(null);
 
-    addPreviousPercent(progress);
-    const previousPercent = getPreviousPercent() ?? 0;
-
-    // the animation uses a pixel translate which is outdated on a window resize, we have to account for this
     const { observe, width: cWidth, height: cHeight } = useDimensions();
-
     const { value: labelNum, render: renderLabel } = getProgressBarLabelParts(label);
 
-    useIsoEffect(() => {
-      if (textContainerRef.current && containerRef.current && cHeight > 0 && cWidth > 0) {
-        const containerWidth = containerRef.current.offsetWidth;
-        const textContainerWidth = textContainerRef.current.offsetWidth;
+    useEffect(() => {
+      if (cWidth <= 0 || cHeight <= 0) return;
 
-        const startLeftTranslate = isRtl()
-          ? Math.min(
-              containerWidth - textContainerWidth,
-              containerWidth - containerWidth * previousPercent,
-            )
-          : Math.max(0, containerWidth * previousPercent - textContainerWidth);
-        const endLeftTranslate = isRtl()
-          ? Math.min(
-              containerWidth - textContainerWidth,
-              containerWidth - containerWidth * progress,
-            )
-          : Math.max(0, containerWidth * progress - textContainerWidth);
+      const containerWidth = containerRef.current?.offsetWidth ?? cWidth;
+      const textContainerWidth = textContainerRef.current?.offsetWidth ?? 0;
 
-        if (!hasAnimationMounted && disableAnimateOnMount) {
-          void animationControls.set({ x: endLeftTranslate });
-          setHasAnimationMounted(true);
-        } else {
-          void animationControls.start({
-            x: [startLeftTranslate, endLeftTranslate],
-            transition: convertTransition(animateProgressBaseSpec),
-          });
-        }
-      }
-    }, [progress, cWidth, cHeight, previousPercent, disableAnimateOnMount]);
+      setTargetX(getEndTranslateX(containerWidth, textContainerWidth, progress));
+    }, [progress, cWidth, cHeight]);
 
     const setupContainerRef = useCallback(
       (ref: HTMLDivElement) => {
@@ -100,6 +76,16 @@ const ProgressBarFloatLabel = memo(
       },
       [observe],
     );
+
+    const motionProps = useMotionProps({
+      style: motionStyle,
+      animate: {
+        x: targetX ?? 0,
+        opacity: targetX !== null ? 1 : 0,
+      },
+      initial: !progress || disableAnimateOnMount ? false : { x: 0, opacity: 0 },
+      transition: animateProgressBaseSpec,
+    });
 
     return (
       <Box
@@ -112,12 +98,14 @@ const ProgressBarFloatLabel = memo(
         testID="cds-progress-label-container"
         width="100%"
       >
-        <motion.div
+        <MotionBox
           ref={textContainerRef}
-          animate={animationControls}
+          animate={motionProps.animate}
           className={floatingTextContainerCss}
           data-testid="cds-progress-bar-float-label"
-          style={{ ...motionStyle, opacity: hasAnimationMounted ? 1 : 0 }}
+          initial={motionProps.initial}
+          style={motionProps.style}
+          transition={motionProps.transition}
         >
           <ProgressTextLabel
             className={classNames?.label}
@@ -128,7 +116,7 @@ const ProgressBarFloatLabel = memo(
             style={styles?.label}
             value={labelNum}
           />
-        </motion.div>
+        </MotionBox>
       </Box>
     );
   },

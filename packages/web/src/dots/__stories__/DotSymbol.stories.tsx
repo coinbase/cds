@@ -6,9 +6,9 @@ import { avatarDotSizeMap, avatarIconSizeMap } from '@coinbase/cds-common/tokens
 
 import { Icon } from '../../icons/Icon';
 import { HStack, VStack } from '../../layout';
-import { Spinner } from '../../loaders/Spinner';
 import { Avatar } from '../../media/Avatar';
 import { Text } from '../../typography/Text';
+import { ProgressCircle } from '../../visualizations/ProgressCircle';
 import { DotSymbol } from '..';
 
 export default {
@@ -176,7 +176,7 @@ export const AllDotSymbol = () => {
 
 export const CustomSymbol = () => {
   return (
-    <DotSymbol pin="bottom-end" symbol={<Spinner size={1} />}>
+    <DotSymbol pin="bottom-end" symbol={<ProgressCircle indeterminate size={10} />}>
       <Icon active name="airdrop" size="l" />
     </DotSymbol>
   );

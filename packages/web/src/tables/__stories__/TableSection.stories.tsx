@@ -2,8 +2,8 @@ import React from 'react';
 import type { Meta, Story } from '@storybook/react';
 
 import { VStack } from '../../layout/VStack';
-import { Spinner } from '../../loaders/Spinner';
 import { Text } from '../../typography/Text';
+import { ProgressCircle } from '../../visualizations/ProgressCircle';
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '..';
 
 export default {
@@ -65,7 +65,7 @@ export const LoadingStateExample: Story = () => {
       </TableHeader>
       <TableBody>
         <VStack alignItems="center" justifyContent="center" minHeight={500}>
-          <Spinner color="bgPrimary" size={4} />
+          <ProgressCircle indeterminate color="bgPrimary" size={40} />
           <Text as="p" color="fgMuted" display="block" font="headline" paddingTop={2}>
             Loading content...
           </Text>
