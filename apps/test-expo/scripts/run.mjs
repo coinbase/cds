@@ -25,11 +25,13 @@ if (!platform) {
 const buildInfo = getBuildInfo({ platform, profile, target: 'simulator' });
 const builder = createBuilder(buildInfo);
 
-// Build if needed, launch, and start Metro
 await builder.buildIfNeeded();
 
 console.log(`Launching ${platform}...`);
 await builder.ensureSimulatorRunning();
 await builder.install();
 await builder.launch();
-await builder.startMetro();
+
+if (profile === 'debug') {
+  await builder.startMetro();
+}

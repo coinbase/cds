@@ -156,6 +156,10 @@ apps/mobile-app/prebuilds/android-*
 !apps/mobile-app/credentials/android-release-*.keystore
 # temporary build directory for native compilation
 apps/mobile-app/build/
+apps/test-expo/prebuilds/android-*
+!apps/test-expo/prebuilds/android-release-*.zip
+# temporary build directory for native compilation
+apps/test-expo/build/
 
 #reassure
 **/.reassure/*

@@ -43,5 +43,7 @@ dts/
 /ios
 /android
 
-# custom build artifacts (generated, too large to commit)
+# generated build artifacts (xcodebuild/gradle output, not committed)
 builds/
+# extracted prebuilt .app directories (recreated by patch-bundle from the committed tarballs)
+prebuilds/**/*.app

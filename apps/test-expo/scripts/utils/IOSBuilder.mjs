@@ -185,4 +185,12 @@ export class IOSBuilder extends PlatformBuilder {
     console.log(`Launching ${this.ios.bundleId}...`);
     await run('xcrun', ['simctl', 'launch', 'booted', this.ios.bundleId]);
   }
+
+  async applyBundle(bundlePath) {
+    const outBundle = `${this.ios.app}/main.jsbundle`;
+    console.log(`\nCopying bundle → ${outBundle}...`);
+    await fs.copyFile(bundlePath, outBundle);
+    console.log('iOS bundle patched successfully.');
+    console.log(`App ready at: ${this.ios.app}`);
+  }
 }

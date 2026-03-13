@@ -82,7 +82,7 @@ const HeaderContent = memo(
       </Box>
     ) : showBackButton ? (
       <Box marginX={-1}>
-        <IconButton transparent name="backArrow" onPress={onGoBack} />
+        <IconButton transparent name="backArrow" onPress={onGoBack} testID="nav-back-button" />
       </Box>
     ) : (
       iconButtonPlaceholder

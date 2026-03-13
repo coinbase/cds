@@ -3,6 +3,7 @@
     "name": "test-expo",
     "slug": "test-expo",
     "version": "1.0.0",
+    "scheme": "testexpo",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

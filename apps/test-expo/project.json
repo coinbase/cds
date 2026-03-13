@@ -12,15 +12,31 @@
       }
     },
     "ios": {
-      "command": "node ./scripts/run.mjs --platform ios",
-      "options": {
-        "cwd": "apps/test-expo"
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "debug",
+      "configurations": {
+        "debug": {
+          "cwd": "apps/test-expo",
+          "command": "node ./scripts/run.mjs --platform ios --profile debug"
+        },
+        "release": {
+          "cwd": "apps/test-expo",
+          "command": "node ./scripts/run.mjs --platform ios --profile release"
+        }
       }
     },
     "android": {
-      "command": "node ./scripts/run.mjs --platform android",
-      "options": {
-        "cwd": "apps/test-expo"
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "debug",
+      "configurations": {
+        "debug": {
+          "cwd": "apps/test-expo",
+          "command": "node ./scripts/run.mjs --platform android --profile debug"
+        },
+        "release": {
+          "cwd": "apps/test-expo",
+          "command": "node ./scripts/run.mjs --platform android --profile release"
+        }
       }
     },
     "lint": {
@@ -55,6 +71,18 @@
         "android-release": {
           "args": "--platform android --profile release"
         }
+      }
+    },
+    "patch-bundle-ios": {
+      "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release",
+      "options": {
+        "cwd": "apps/test-expo"
+      }
+    },
+    "patch-bundle-android": {
+      "command": "node ./scripts/patch-bundle.mjs --platform android --profile release",
+      "options": {
+        "cwd": "apps/test-expo"
       }
     },
     "build": {

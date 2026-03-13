@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-const OUTPUT_DIRECTORY = 'builds';
+const OUTPUT_DIRECTORY = 'prebuilds';
 const APP_NAME = 'testexpo';
 const IOS_SCHEME = 'testexpo';
 const IOS_BUNDLE_ID = 'com.anonymous.test-expo';

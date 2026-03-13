@@ -8,6 +8,8 @@ appId: ${APP_ID}
     element: '${ROUTE_NAME}.*'
     direction: DOWN
     timeout: 30000
+    centerElement: true
+    speed: 25
 - tapOn:
     text: '${ROUTE_NAME}.*'
 - waitForAnimationToEnd

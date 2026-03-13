@@ -1,4 +1,6 @@
+import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import { readdirSync } from 'node:fs';
 
 import { run } from './shell.mjs';
 
@@ -55,6 +57,11 @@ export class PlatformBuilder {
     throw new Error('Not implemented');
   }
 
+  /** Apply a bundle file to the native artifact — platform-specific */
+  async applyBundle(_bundlePath) {
+    throw new Error('Not implemented');
+  }
+
   // ─────────────────────────────────────────────────────────────────
   // Shared methods - common to both platforms
   // ─────────────────────────────────────────────────────────────────
@@ -90,6 +97,33 @@ export class PlatformBuilder {
       await this.bootSimulator();
     }
     await this.waitForSimulator();
+  }
+
+  /**
+   * Patches a fresh JS bundle into the pre-built native artifact.
+   * Runs expo export, finds the output bundle, then delegates platform-specific
+   * placement to applyBundle().
+   */
+  async patchBundle() {
+    const { platform } = this.buildInfo;
+    const exportDir = `/tmp/expo-export-${platform}`;
+
+    await this.extractArtifact();
+
+    console.log(`\nExporting JS bundle to ${exportDir}...`);
+    execSync(`npx expo export --platform ${platform} --output-dir ${exportDir}`, {
+      stdio: 'inherit',
+    });
+
+    const jsDir = `${exportDir}/_expo/static/js/${platform}`;
+    const bundleFiles = readdirSync(jsDir).filter((f) => f.startsWith('index-'));
+    if (bundleFiles.length === 0) {
+      throw new Error(`No bundle found in ${jsDir}`);
+    }
+    const bundlePath = `${jsDir}/${bundleFiles[0]}`;
+    console.log(`\nFound bundle: ${bundlePath}`);
+
+    await this.applyBundle(bundlePath);
   }
 
   /** Start Metro bundler */

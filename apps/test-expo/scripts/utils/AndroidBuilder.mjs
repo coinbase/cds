@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { execSync, spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -121,5 +121,35 @@ export class AndroidBuilder extends PlatformBuilder {
   async launch() {
     console.log(`Launching ${this.android.packageId}...`);
     await run('adb', ['shell', 'am', 'start', '-n', `${this.android.packageId}/.MainActivity`]);
+  }
+
+  async applyBundle(bundlePath) {
+    const apk = path.resolve(this.android.apk);
+    const patchDir = `/tmp/apk-patch-${Date.now()}`;
+    const assetsDir = `${patchDir}/assets`;
+    const patchedBundle = `${assetsDir}/index.android.bundle`;
+    const alignedApk = `${apk}.aligned`;
+
+    await fs.mkdir(assetsDir, { recursive: true });
+    await fs.copyFile(bundlePath, patchedBundle);
+
+    // Replace assets/index.android.bundle in the APK (cd into patchDir so zip path is correct)
+    console.log(`\nPatching bundle into APK: ${apk}...`);
+    execSync(`zip -u ${apk} assets/index.android.bundle`, { cwd: patchDir, stdio: 'inherit' });
+
+    // Re-align (zip modification breaks alignment) then re-sign with debug keystore
+    execSync(`zipalign -f 4 ${apk} ${alignedApk}`, { stdio: 'inherit' });
+    await fs.rename(alignedApk, apk);
+
+    const debugKeystore = path.resolve(process.env.HOME, '.android/debug.keystore');
+    execSync(
+      `apksigner sign --ks ${debugKeystore} --ks-pass pass:android --key-pass pass:android ${apk}`,
+      { stdio: 'inherit' },
+    );
+
+    await fs.rm(patchDir, { recursive: true });
+
+    console.log('Android bundle patched successfully.');
+    console.log(`APK ready at: ${apk}`);
   }
 }

@@ -62,7 +62,7 @@ jobs:
         run: echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Prepare iOS app (extract prebuild + patch JS bundle)
-        run: yarn nx run mobile-app:patch-bundle-ios
+        run: yarn nx run test-expo:patch-bundle-ios
 
       - name: Boot iOS simulator
         run: |
@@ -74,7 +74,7 @@ jobs:
           sleep 30
 
       - name: Install app on simulator
-        run: xcrun simctl install booted apps/mobile-app/prebuilds/ios-release-hermes.app
+        run: xcrun simctl install booted apps/test-expo/prebuilds/ios-release/testexpo.app
 
       - name: Capture screenshots
         run: yarn nx run mobile-visreg:ios

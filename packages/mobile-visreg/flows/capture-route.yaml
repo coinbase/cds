@@ -8,6 +8,7 @@ appId: ${APP_ID}
     element: '${ROUTE_NAME}.*'
     direction: DOWN
     timeout: 10000
+    centerElement: true
 - tapOn:
     text: '${ROUTE_NAME}.*'
 # waitForAnimationToEnd covers both the navigation transition and any modal animations,
