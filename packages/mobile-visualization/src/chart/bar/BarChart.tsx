@@ -135,6 +135,7 @@ export const BarChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
         id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
@@ -145,6 +146,7 @@ export const BarChart = memo(
         domain: yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
@@ -168,6 +170,7 @@ export const BarChart = memo(
           domain: isHorizontal && !hasNegativeValues ? { min: 0, ...xDomain } : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
+          baseline: xBaseline,
         }),
         [
           xScaleType,
@@ -179,6 +182,7 @@ export const BarChart = memo(
           xDomain,
           xDomainLimit,
           xRange,
+          xBaseline,
         ],
       );
 
@@ -191,6 +195,7 @@ export const BarChart = memo(
           domain: !isHorizontal && !hasNegativeValues ? { min: 0, ...yDomain } : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
+          baseline: yBaseline,
         }),
         [
           yScaleType,
@@ -202,6 +207,7 @@ export const BarChart = memo(
           yDomain,
           yDomainLimit,
           yRange,
+          yBaseline,
         ],
       );
 

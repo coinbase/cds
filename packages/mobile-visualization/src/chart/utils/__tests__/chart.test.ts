@@ -102,6 +102,71 @@ describe('getStackedSeriesData', () => {
     ]);
   });
 
+  it('should apply axis baseline map to non-stacked numeric series', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [11, 12, 13] },
+      { id: 'series2', data: [4, 5, 6] },
+    ];
+
+    const result = getStackedSeriesData(series, {
+      seriesBaselineById: new Map([
+        ['series1', 10],
+        ['series2', 3],
+      ]),
+    });
+
+    expect(result.get('series1')).toEqual([
+      [10, 11],
+      [10, 12],
+      [10, 13],
+    ]);
+    expect(result.get('series2')).toEqual([
+      [3, 4],
+      [3, 5],
+      [3, 6],
+    ]);
+  });
+
+  it('should not override tuple data when baseline map is provided', () => {
+    const series: Series[] = [
+      {
+        id: 'series1',
+        data: [
+          [8, 11],
+          [8, 12],
+        ],
+      },
+    ];
+
+    const result = getStackedSeriesData(series, {
+      seriesBaselineById: new Map([['series1', 99]]),
+    });
+
+    expect(result.get('series1')).toEqual([
+      [8, 11],
+      [8, 12],
+    ]);
+  });
+
+  it('should not apply axis baseline map to stacked series', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [1, 2], stackId: 'stack1' },
+      { id: 'series2', data: [3, 4], stackId: 'stack1' },
+    ];
+
+    const result = getStackedSeriesData(series, {
+      seriesBaselineById: new Map([
+        ['series1', 10],
+        ['series2', 20],
+      ]),
+    });
+
+    expect(result.get('series1')).toEqual([
+      [0, 1],
+      [0, 2],
+    ]);
+  });
+
   it('should handle series with tuple data', () => {
     const series: Series[] = [
       {

@@ -190,4 +190,25 @@ describe('BarChart', () => {
     const hasWideBar = CustomBar.mock.calls.some(([props]) => props.width > props.height);
     expect(hasWideBar).toBe(true);
   });
+
+  it('uses value-axis baseline for non-stacked bar tuples', () => {
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          animate={false}
+          height={300}
+          series={[{ id: 'baseline-series', data: [20, 30] }]}
+          width={500}
+          xAxis={{ data: ['A', 'B'] }}
+          yAxis={{ baseline: 10, domain: { min: 0, max: 40 } }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomBar).toHaveBeenCalled();
+    expect(CustomBar.mock.calls[0][0].dataY).toEqual([10, 20]);
+  });
 });

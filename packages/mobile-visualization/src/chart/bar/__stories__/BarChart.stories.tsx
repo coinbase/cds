@@ -623,7 +623,7 @@ const BandGridPositionExample = ({
 
 // --- Composed Examples ---
 
-const candlestickStockData = btcCandles.slice(0, 90).reverse();
+const candlestickStockData = [...btcCandles].reverse().slice(0, 90);
 
 const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
   const formatPrice = useCallback((price: string) => {
@@ -946,7 +946,7 @@ const SunlightChart = () => {
 };
 
 const PriceRange = () => {
-  const candles = btcCandles.slice(0, 180).reverse();
+  const candles = [...btcCandles].reverse().slice(0, 180);
   const data: [number, number][] = useMemo(
     () => candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]),
     [candles],
@@ -989,6 +989,31 @@ const HorizontalBarChart = () => {
       series={[{ id: 'allocation', data: allocation, color: assets.btc.color }]}
       xAxis={{ domain: { min: 0, max: 50 }, tickLabelFormatter: (value) => `${value}%` }}
       yAxis={{ data: labels, scaleType: 'band' }}
+    />
+  );
+};
+
+const AxisBaselineExample = () => {
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      accessibilityLabel="Bar chart with custom axis baseline at 100."
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'net-flow',
+          data: [112, 97, 121, 103, 129, 118, 94],
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        baseline: 100,
+        domain: { min: 80, max: 140 },
+        showGrid: true,
+      }}
     />
   );
 };
@@ -1121,6 +1146,10 @@ function ExampleNavigator() {
       {
         title: 'Negative Values with Top Axis',
         component: <NegativeValuesWithTopAxis />,
+      },
+      {
+        title: 'Axis Baseline',
+        component: <AxisBaselineExample />,
       },
       {
         title: 'Positive and Negative Cash Flow',

@@ -153,6 +153,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
         id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
@@ -163,6 +164,7 @@ export const AreaChart = memo(
         domain: yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
@@ -185,6 +187,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
       };
 
       // Set default min domain to 0 for area chart, but only if there are no negative values
@@ -195,6 +198,7 @@ export const AreaChart = memo(
         domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
       };
 
       return (

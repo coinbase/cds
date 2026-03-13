@@ -102,7 +102,16 @@ export const Area = memo<AreaProps>(
     transition,
     animate,
   }) => {
-    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+    const {
+      layout,
+      getSeries,
+      getSeriesData,
+      getSeriesBaseline,
+      getXScale,
+      getYScale,
+      getXAxis,
+      getYAxis,
+    } =
       useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
@@ -113,6 +122,10 @@ export const Area = memo<AreaProps>(
     const fill = useMemo(() => fillProp ?? matchedSeries?.color, [fillProp, matchedSeries?.color]);
 
     const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
+    const resolvedBaseline = useMemo(
+      () => baseline ?? getSeriesBaseline(seriesId),
+      [baseline, getSeriesBaseline, seriesId],
+    );
 
     const xAxis = getXAxis(matchedSeries?.xAxisId);
     const xScale = getXScale(matchedSeries?.xAxisId);
@@ -170,7 +183,7 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         animate={animate}
-        baseline={baseline}
+        baseline={resolvedBaseline}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

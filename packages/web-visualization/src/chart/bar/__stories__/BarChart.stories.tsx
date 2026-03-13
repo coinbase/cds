@@ -495,7 +495,7 @@ const MonthlySunlight = () => {
 };
 
 const PriceRange = () => {
-  const candles = btcCandles.slice(0, 180).reverse();
+  const candles = [...btcCandles].reverse().slice(0, 180);
   const data: [number, number][] = candles.map((candle) => [
     parseFloat(candle.low),
     parseFloat(candle.high),
@@ -713,6 +713,27 @@ export const All = () => {
           />
           <BarPlot />
         </CartesianChart>
+      </Example>
+      <Example title="Axis Baseline">
+        <BarChart
+          showXAxis
+          showYAxis
+          height={260}
+          series={[
+            {
+              id: 'net-flow',
+              data: [112, 97, 121, 103, 129, 118, 94],
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            baseline: 100,
+            domain: { min: 80, max: 140 },
+            showGrid: true,
+          }}
+        />
       </Example>
       <Example title="Positive and Negative Cash Flow">
         <PositiveAndNegativeCashFlow />

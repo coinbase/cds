@@ -163,16 +163,32 @@ export const BarStack = memo<BarStackProps>(
     transition,
   }) => {
     const theme = useTheme();
-    const { layout, getSeriesData, getXAxis, getYAxis } = useCartesianChartContext();
+    const { layout, getSeriesBaseline, getSeriesData, getXAxis, getYAxis } =
+      useCartesianChartContext();
 
     const xAxis = getXAxis(xAxisId);
     const yAxis = getYAxis(yAxisId);
     const barsGrowVertically = layout !== 'horizontal';
 
-    const baseline = useMemo(() => {
+    const usesStackedSemantics = useMemo(
+      () => series.some((s) => s.stackId !== undefined),
+      [series],
+    );
+
+    const baselineValue = useMemo(() => {
+      if (!usesStackedSemantics) {
+        const axisBaseline = getSeriesBaseline(series[0]?.id);
+        if (axisBaseline !== undefined) {
+          return axisBaseline;
+        }
+      }
+
       const domain = valueScale.domain();
       const [domainMin, domainMax] = domain;
-      const baselineValue = domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
+      return domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
+    }, [usesStackedSemantics, getSeriesBaseline, series, valueScale]);
+
+    const baseline = useMemo(() => {
       const fallback = barsGrowVertically ? rect.y + rect.height : rect.x;
       const baselinePos = valueScale(baselineValue) ?? fallback;
 
@@ -181,7 +197,7 @@ export const BarStack = memo<BarStackProps>(
       }
 
       return Math.max(rect.x, Math.min(baselinePos, rect.x + rect.width));
-    }, [rect, valueScale, barsGrowVertically]);
+    }, [rect, valueScale, barsGrowVertically, baselineValue]);
 
     const seriesGradients = useMemo(() => {
       return series.map((s) => {
@@ -297,11 +313,11 @@ export const BarStack = memo<BarStackProps>(
         if (stackGap && allBars.length > 1) {
           const barsAboveBaseline = allBars.filter((bar) => {
             const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-            return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
+            return bottom >= baselineValue && top !== bottom && bar.shouldApplyGap;
           });
           const barsBelowBaseline = allBars.filter((bar) => {
             const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-            return bottom <= 0 && bottom !== top && bar.shouldApplyGap;
+            return bottom <= baselineValue && bottom !== top && bar.shouldApplyGap;
           });
 
           if (barsAboveBaseline.length > 1) {
@@ -413,8 +429,8 @@ export const BarStack = memo<BarStackProps>(
         // Sort to be in ascending order
         const [bottom, top] = (value as [number, number]).sort((a, b) => a - b);
 
-        const isAboveBaseline = bottom >= 0 && top !== bottom;
-        const isBelowBaseline = bottom <= 0 && bottom !== top;
+        const isAboveBaseline = bottom >= baselineValue && top !== bottom;
+        const isBelowBaseline = bottom <= baselineValue && bottom !== top;
 
         const barBottom = yScale(bottom) ?? baseline;
         const barTop = yScale(top) ?? baseline;
@@ -483,11 +499,11 @@ export const BarStack = memo<BarStackProps>(
         // Separate bars by baseline side
         const barsAboveBaseline = allBars.filter((bar) => {
           const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-          return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
+          return bottom >= baselineValue && top !== bottom && bar.shouldApplyGap;
         });
         const barsBelowBaseline = allBars.filter((bar) => {
           const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-          return bottom <= 0 && bottom !== top && bar.shouldApplyGap;
+          return bottom <= baselineValue && bottom !== top && bar.shouldApplyGap;
         });
 
         // Apply proportional gaps to bars above baseline
@@ -571,10 +587,10 @@ export const BarStack = memo<BarStackProps>(
 
             const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
 
-            if (bottom === 0) {
+            if (bottom === baselineValue) {
               // Expand away from baseline (upward for positive)
               newTop = top + heightIncrease / scaleUnit;
-            } else if (top === 0) {
+            } else if (top === baselineValue) {
               // Expand away from baseline (downward for negative)
               newBottom = bottom - heightIncrease / scaleUnit;
             } else {
@@ -728,10 +744,10 @@ export const BarStack = memo<BarStackProps>(
 
           const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
 
-          if (bottom === 0) {
+          if (bottom === baselineValue) {
             // Expand away from baseline (upward for positive)
             newTop = top + heightIncrease / scaleUnit;
-          } else if (top === 0) {
+          } else if (top === baselineValue) {
             // Expand away from baseline (downward for negative)
             newBottom = bottom - heightIncrease / scaleUnit;
           } else {
@@ -857,6 +873,7 @@ export const BarStack = memo<BarStackProps>(
       categoryIndex,
       roundBaseline,
       baseline,
+      baselineValue,
       stackGap,
       barMinSize,
       stackMinSize,

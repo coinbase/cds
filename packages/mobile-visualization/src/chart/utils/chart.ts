@@ -89,6 +89,14 @@ export type Series = {
   legendShape?: LegendShape;
 };
 
+type GetStackedSeriesDataOptions = {
+  /**
+   * Optional per-series baseline values used when normalizing non-stacked numeric series.
+   * Series not present in this map fall back to baseline 0.
+   */
+  seriesBaselineById?: ReadonlyMap<string, number>;
+};
+
 /**
  * Calculates the domain of a chart from series data.
  * Domain represents the range of x-values from the data.
@@ -141,6 +149,7 @@ const createStackKey = (series: Series): string | undefined => {
  */
 export const getStackedSeriesData = (
   series: Series[],
+  options?: GetStackedSeriesDataOptions,
 ): Map<string, Array<[number, number] | null>> => {
   const stackedDataMap = new Map<string, Array<[number, number] | null>>();
 
@@ -172,7 +181,8 @@ export const getStackedSeriesData = (
       }
 
       if (typeof val === 'number') {
-        return [0, val];
+        const baseline = options?.seriesBaselineById?.get(s.id) ?? 0;
+        return [baseline, val];
       }
 
       return null;

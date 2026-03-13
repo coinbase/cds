@@ -417,10 +417,41 @@ export const CartesianChart = memo(
         [series],
       );
 
+      const valueAxisBaselineById = useMemo(() => {
+        const baselineMap = new Map<string, number>();
+        const valueAxisConfig = layout === 'horizontal' ? xAxisConfig : yAxisConfig;
+
+        valueAxisConfig.forEach((axis) => {
+          if (axis.baseline !== undefined) {
+            baselineMap.set(axis.id ?? defaultAxisId, axis.baseline);
+          }
+        });
+
+        return baselineMap;
+      }, [layout, xAxisConfig, yAxisConfig]);
+
+      const seriesBaselineById = useMemo(() => {
+        const baselineMap = new Map<string, number>();
+        if (!series || series.length === 0 || valueAxisBaselineById.size === 0) {
+          return baselineMap;
+        }
+
+        series.forEach((s) => {
+          const valueAxisId =
+            layout === 'horizontal' ? (s.xAxisId ?? defaultAxisId) : (s.yAxisId ?? defaultAxisId);
+          const axisBaseline = valueAxisBaselineById.get(valueAxisId);
+          if (axisBaseline !== undefined) {
+            baselineMap.set(s.id, axisBaseline);
+          }
+        });
+
+        return baselineMap;
+      }, [series, layout, valueAxisBaselineById]);
+
       const stackedDataMap = useMemo(() => {
         if (!series) return new Map<string, Array<[number, number] | null>>();
-        return calculateStackedSeriesData(series);
-      }, [series]);
+        return calculateStackedSeriesData(series, { seriesBaselineById });
+      }, [series, seriesBaselineById]);
 
       const getStackedSeriesData = useCallback(
         (seriesId?: string) => {
@@ -428,6 +459,14 @@ export const CartesianChart = memo(
           return stackedDataMap.get(seriesId);
         },
         [stackedDataMap],
+      );
+
+      const getSeriesBaseline = useCallback(
+        (seriesId?: string) => {
+          if (!seriesId) return undefined;
+          return seriesBaselineById.get(seriesId);
+        },
+        [seriesBaselineById],
       );
 
       const categoryAxisIsX = useMemo(() => {
@@ -523,6 +562,7 @@ export const CartesianChart = memo(
           series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,
+          getSeriesBaseline,
           animate,
           width: chartWidth,
           height: chartHeight,
@@ -545,6 +585,7 @@ export const CartesianChart = memo(
           series,
           getSeries,
           getStackedSeriesData,
+          getSeriesBaseline,
           animate,
           chartWidth,
           chartHeight,

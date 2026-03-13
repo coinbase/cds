@@ -97,6 +97,16 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
    */
   id: string;
   /**
+   * Baseline value used as the origin for non-stacked numeric series on this axis.
+   * Only applies when this axis is the value axis for the current chart layout.
+   *
+   * - Vertical layout: `yAxis.baseline`
+   * - Horizontal layout: `xAxis.baseline`
+   *
+   * @default 0
+   */
+  baseline?: number;
+  /**
    * Domain configuration for the axis (data space).
    *
    * The domainLimit parameter (inherited from AxisConfig) controls how initial domain bounds are calculated:

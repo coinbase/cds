@@ -398,7 +398,7 @@ const EarningsHistory = () => {
 
 const PriceWithVolume = () => {
   const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
-  const btcData = btcCandles.slice(0, 180).reverse();
+  const btcData = [...btcCandles].reverse().slice(0, 180);
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
   const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -448,6 +448,12 @@ const PriceWithVolume = () => {
       )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`;
     },
     [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume],
+  );
+
+  const scrubberLabel = useCallback(
+    (dataIndex: number) =>
+      `${formatPrice(btcPrices[dataIndex])} ${formatDate(btcDates[dataIndex])}`,
+    [btcDates, btcPrices, formatDate, formatPrice],
   );
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
@@ -515,7 +521,11 @@ const PriceWithVolume = () => {
         />
         <BarPlot seriesIds={['volume']} />
         <Line showArea seriesId="prices" />
-        <Scrubber accessibilityLabel={getScrubberAccessibilityLabel} seriesIds={['prices']} />
+        <Scrubber
+          accessibilityLabel={getScrubberAccessibilityLabel}
+          label={scrubberLabel}
+          seriesIds={['prices']}
+        />
       </CartesianChart>
     </VStack>
   );

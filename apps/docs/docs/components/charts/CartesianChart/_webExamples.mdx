@@ -218,6 +218,202 @@ You can provide a `stackId` to stack series together.
 </LineChart>
 ```
 
+### Gradients
+
+Gradient configuration is shared across [AreaChart](/components/charts/AreaChart/), [LineChart](/components/charts/LineChart/), and [BarChart](/components/charts/BarChart/) through the `series[].gradient` prop.
+
+Gradients can be applied to the y-axis (default) or x-axis. Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
+
+Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
+
+```jsx live
+function GradientModes() {
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            borderRadius={1000}
+            height={{ base: 16, tablet: 24, desktop: 24 }}
+            onClick={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(var(--${color}20))`,
+              border: `2px solid rgb(var(--${color}50))`,
+              outlineColor: `rgb(var(--${color}80))`,
+              outline:
+                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
+            }}
+            width={{ base: 16, tablet: 24, desktop: 24 }}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        showYAxis
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        series={[
+          {
+            id: 'continuousGradient',
+            data: data,
+            gradient: {
+              stops: [
+                { offset: 0, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: Math.max(...data), color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+          {
+            id: 'discreteGradient',
+            data: data.map((d) => d + 50),
+            gradient: {
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}50))` },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}50))`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}20))`,
+                },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+          {
+            id: 'xAxisGradient',
+            data: data.map((d) => d + 100),
+            gradient: {
+              axis: 'x',
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))`, opacity: 0 },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))`, opacity: 1 },
+              ],
+            },
+          },
+        ]}
+        strokeWidth={4}
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+```jsx live
+<BarChart
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'temperature',
+      data: [12, 25, 38, 52, 45, 30, 18],
+      gradient: {
+        axis: 'y',
+        stops: ({ min, max }) => [
+          { offset: min, color: 'var(--color-accentBoldGreen)' },
+          { offset: (min + max) / 2, color: 'var(--color-accentBoldYellow)' },
+          { offset: max, color: 'var(--color-accentBoldRed)' },
+        ],
+      },
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `${value}°C`,
+    showGrid: true,
+  }}
+/>
+```
+
+You can also pass separate gradients to `Line` and `Area` layers inside `CartesianChart`.
+
+```jsx live
+function LayerGradients() {
+  const data = useMemo(() => [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8], []);
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  const tickLabelFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  const lineGradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
+  };
+
+  const GradientDottedArea = memo((props) => (
+    <DottedArea
+      {...props}
+      gradient={{
+        stops: ({ min, max }) => [
+          { offset: min, color: negativeColor, opacity: 0.4 },
+          { offset: 0, color: negativeColor, opacity: 0 },
+          { offset: 0, color: positiveColor, opacity: 0 },
+          { offset: max, color: positiveColor, opacity: 0.4 },
+        ],
+      }}
+    />
+  ));
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          gradient: lineGradient,
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
+    >
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Line showArea AreaComponent={GradientDottedArea} seriesId="prices" strokeWidth={3} />
+      <Scrubber hideOverlay />
+    </CartesianChart>
+  );
+}
+```
+
 ## Axes
 
 You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` accepts an object or array, while `yAxis` accepts an object or array.
@@ -369,6 +565,82 @@ function Scrubbing() {
 ## Animations
 
 CartesianChart delegates transition control to its child components. You can also disable all animations chart-wide by passing `animate={false}` on CartesianChart.
+
+### Wrapper Chart APIs
+
+[AreaChart](/components/charts/AreaChart/), [LineChart](/components/charts/LineChart/), and [BarChart](/components/charts/BarChart/) expose this same animation model via their `transitions` and `animate` props.
+
+```jsx live
+function WrapperChartAnimations() {
+  const data = [10, 22, 29, 45, 98, 45, 22];
+
+  return (
+    <VStack gap={2}>
+      <AreaChart
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[{ id: 'area', data }]}
+        transitions={{
+          enter: { type: 'spring', stiffness: 700, damping: 80 },
+          update: { type: 'spring', stiffness: 700, damping: 20 },
+        }}
+      />
+      <LineChart
+        showArea
+        animate={false}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[{ id: 'line', data }]}
+      />
+    </VStack>
+  );
+}
+```
+
+You can also target specific children directly, such as animating both the line path and the scrubber indicator.
+
+```jsx live
+function ChildTransitions() {
+  const data = [10, 22, 29, 45, 98, 45, 22];
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[{ id: 'values', data }]}
+      yAxis={{ showGrid: true }}
+    >
+      <Line
+        seriesId="values"
+        transitions={{ update: { type: 'spring', stiffness: 700, damping: 20 } }}
+      />
+      <Scrubber transitions={{ update: { type: 'spring', stiffness: 700, damping: 20 } }} />
+    </CartesianChart>
+  );
+}
+```
+
+### Bar Delay Controls
+
+Bar transitions support `staggerDelay` (cascade timing across bars) and `delay` (fixed wait before animation starts).
+
+```jsx live
+<BarChart
+  showXAxis
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'bars',
+      data: [45, 52, 38, 45, 19, 23, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  }}
+  transitions={{
+    enter: { type: 'spring', stiffness: 700, damping: 80, staggerDelay: 250, delay: 100 },
+  }}
+/>
+```
 
 ### Enter Only
 
@@ -664,11 +936,22 @@ function PriceWithVolume() {
       ? (currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1]
       : 0;
 
-  const accessibilityLabel = useMemo(() => {
+  const chartAccessibilityLabel = useMemo(() => {
     if (scrubIndex === null)
       return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
     return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
   }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (dataIndex) =>
+      `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPrice(btcPrices[dataIndex])}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
+    [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume],
+  );
+
+  const scrubberLabel = useCallback(
+    (dataIndex) => `${formatPrice(btcPrices[dataIndex])} ${formatDate(btcDates[dataIndex])}`,
+    [btcDates, btcPrices, formatDate, formatPrice],
+  );
 
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -723,7 +1006,7 @@ function PriceWithVolume() {
             range: ({ min, max }) => ({ min: max - 32, max }),
           },
         ]}
-        accessibilityLabel={accessibilityLabel}
+        accessibilityLabel={chartAccessibilityLabel}
         aria-labelledby={headerId}
         inset={{ top: 8, left: 8, right: 0, bottom: 0 }}
       >
@@ -736,7 +1019,11 @@ function PriceWithVolume() {
         />
         <BarPlot seriesIds={['volume']} />
         <Line seriesId="prices" showArea />
-        <Scrubber seriesIds={['prices']} />
+        <Scrubber
+          accessibilityLabel={getScrubberAccessibilityLabel}
+          label={scrubberLabel}
+          seriesIds={['prices']}
+        />
       </CartesianChart>
     </VStack>
   );

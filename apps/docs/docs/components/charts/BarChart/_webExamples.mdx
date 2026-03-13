@@ -553,7 +553,7 @@ You can pass in `[min, max]` tuples as data points to render bars that span a ra
 
 ```jsx live
 function PriceRange() {
-  const candles = btcCandles.slice(0, 180).reverse();
+  const candles = [...btcCandles].reverse().slice(0, 180);
   const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]);
 
   const min = Math.min(...data.map(([low]) => low));
@@ -874,138 +874,6 @@ function MonthlyRewards() {
 }
 ```
 
-## Animations
-
-You can configure chart transitions using the `transitions` prop. Also, you can toggle animations by setting `animate` to `true` or `false`.
-
-```jsx live
-function AnimatedStackedBars() {
-  const dataCount = 12;
-  const minValue = 20;
-  const maxValue = 100;
-  const minStep = 10;
-  const maxStep = 40;
-  const updateInterval = 600;
-  const seriesSpacing = 30;
-
-  const seriesConfig = [
-    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
-    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
-    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
-    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
-    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
-    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
-    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
-  ];
-
-  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
-
-  function generateNextValue(previousValue) {
-    const range = maxStep - minStep;
-    const offset = Math.random() * range + minStep;
-
-    let direction;
-    if (previousValue >= maxValue) {
-      direction = -1;
-    } else if (previousValue <= minValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(minValue, Math.min(maxValue, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = minValue + Math.random() * (maxValue - minValue);
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  function AnimatedChart(props) {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? minValue;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const series = seriesConfig.map((config, index) => ({
-      id: config.id,
-      label: config.label,
-      color: config.color,
-      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
-    }));
-
-    return (
-      <BarChart
-        stacked
-        height={{ base: 200, tablet: 250, desktop: 300 }}
-        series={series}
-        transitions={{
-          enter: { type: 'spring', stiffness: 700, damping: 80 },
-          update: { type: 'spring', stiffness: 700, damping: 20 },
-        }}
-        inset={0}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-          width: 0,
-          tickLabelFormatter: () => '',
-          domain: { min: 0, max: domainLimit },
-        }}
-        {...props}
-      />
-    );
-  }
-
-  function AnimatedChartExample() {
-    const animatedStates = [
-      { id: 'on', label: 'On' },
-      { id: 'off', label: 'Off' },
-    ];
-    const [animatedState, setAnimatedState] = useState(animatedStates[0]);
-
-    return (
-      <VStack gap={2}>
-        <HStack justifyContent="flex-end" gap={2} alignItems="center">
-          <Text as="h3" font="headline">
-            Animations
-          </Text>
-          <SegmentedTabs
-            activeTab={animatedState}
-            onChange={setAnimatedState}
-            tabs={animatedStates}
-          />
-        </HStack>
-        <AnimatedChart animate={animatedState.id === 'on'} />
-      </VStack>
-    );
-  }
-
-  return <AnimatedChartExample />;
-}
-```
-
 ## Composed Examples
 
 ### Candlesticks
@@ -1017,7 +885,7 @@ function Candlesticks() {
   const infoTextId = useId();
   const infoTextRef = React.useRef(null);
   const selectedIndexRef = React.useRef(null);
-  const stockData = btcCandles.slice(0, 90).reverse();
+  const stockData = [...btcCandles].reverse().slice(0, 90);
   const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
 
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);

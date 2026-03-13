@@ -219,7 +219,7 @@ const EarningsHistory = () => {
   );
 };
 
-const btcData = btcCandles.slice(0, 180).reverse();
+const btcData = [...btcCandles].reverse().slice(0, 180);
 
 const btcPrices = btcData.map((candle) => parseFloat(candle.close));
 const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -236,6 +236,13 @@ const PriceWithVolumeChart = memo(
     onScrubberPositionChange: (index: number | undefined) => void;
   }) => {
     const theme = useTheme();
+
+    const formatPrice = useCallback((price: number) => {
+      return `$${price.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+    }, []);
 
     const formatPriceInThousands = useCallback((price: number) => {
       return `$${(price / 1000).toLocaleString('en-US', {
@@ -257,25 +264,27 @@ const PriceWithVolumeChart = memo(
 
     const scrubberLabel = useCallback(
       (dataIndex: number) => {
-        return formatDate(btcDates[dataIndex]);
+        return `${formatPrice(btcPrices[dataIndex])} ${formatDate(btcDates[dataIndex])}`;
       },
-      [formatDate],
+      [formatDate, formatPrice],
     );
 
     const chartAccessibilityLabel = useMemo(() => {
       const lastIndex = btcPrices.length - 1;
-      return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPriceInThousands(
+      return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPrice(
         btcPrices[lastIndex],
       )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
-    }, [formatDate, formatPriceInThousands, formatVolume]);
+    }, [formatDate, formatPrice, formatVolume]);
 
     const getScrubberAccessibilityLabel = useCallback(
       (dataIndex: number) =>
-        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
+        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPrice(
           btcPrices[dataIndex],
         )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
-      [formatDate, formatPriceInThousands, formatVolume],
+      [formatDate, formatPrice, formatVolume],
     );
+
+    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
     return (
       <CartesianChart
@@ -298,7 +307,7 @@ const PriceWithVolumeChart = memo(
             yAxisId: 'volume',
           },
         ]}
-        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 8 }) }}
+        xAxis={{ scaleType: 'band' }}
         yAxis={[
           {
             id: 'price',
@@ -310,7 +319,13 @@ const PriceWithVolumeChart = memo(
           },
         ]}
       >
-        <YAxis showGrid axisId="price" tickLabelFormatter={formatPriceInThousands} width={20} />
+        <YAxis
+          showGrid
+          GridLineComponent={ThinSolidLine}
+          axisId="price"
+          tickLabelFormatter={formatPriceInThousands}
+          width={80}
+        />
         <BarPlot seriesIds={['volume']} />
         <Line showArea seriesId="prices" />
         <Scrubber label={scrubberLabel} seriesIds={['prices']} />

@@ -159,6 +159,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
         id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
@@ -169,6 +170,7 @@ export const AreaChart = memo(
         domain: yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
@@ -180,6 +182,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
       };
 
       const hasNegativeValues = useMemo(() => {
@@ -201,6 +204,7 @@ export const AreaChart = memo(
         domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
       };
 
       return (
