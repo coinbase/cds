@@ -14,6 +14,14 @@ import { TabsActiveIndicator } from '../Tabs';
 export default {
   title: 'Components/Tabs/Segmented Tabs',
   component: SegmentedTabs,
+  parameters: {
+    a11y: {
+      context: {
+        include: ['body'],
+        exclude: ['.no-a11y-checks'],
+      },
+    },
+  },
 };
 
 const CustomActiveIndicator = ({
@@ -79,9 +87,18 @@ const typedSegments: TabValue<TradingAction>[] = [
 ];
 
 const iconSegments = [
-  { id: 'buy', label: <Icon color="currentColor" name="chartLine" size="s" /> },
-  { id: 'sell', label: <Icon color="currentColor" name="chartCandles" size="s" /> },
-  { id: 'convert', label: <Icon color="currentColor" name="chartBar" size="s" /> },
+  {
+    id: 'buy',
+    label: <Icon accessibilityLabel="Buy" color="currentColor" name="chartLine" size="s" />,
+  },
+  {
+    id: 'sell',
+    label: <Icon accessibilityLabel="Sell" color="currentColor" name="chartCandles" size="s" />,
+  },
+  {
+    id: 'convert',
+    label: <Icon accessibilityLabel="Convert" color="currentColor" name="chartBar" size="s" />,
+  },
 ];
 
 const customSegments = [
@@ -158,24 +175,28 @@ export const All = () => {
         tabs={basicSegmentsWithDisabled}
         title="Disabled Segment"
       />
-      <SegmentedTabsExample
-        defaultActiveTab={customSegments[0]}
-        tabs={customSegments}
-        title="Custom Single Segment"
-      />
-      <SegmentedTabsExample
-        defaultActiveTab={mixedCustomSegments[0]}
-        tabs={mixedCustomSegments}
-        title="Mixed Custom Segments"
-      />
-      <SegmentedTabsExample
-        TabComponent={AnotherCustomSegmentedTab}
-        TabsActiveIndicatorComponent={CustomActiveIndicator}
-        borderRadius={0}
-        defaultActiveTab={basicSegments[0]}
-        tabs={basicSegments}
-        title="Custom Segment & Active Indicator"
-      />
+      {/* Custom styles result in various color contrast violations but this isn't in the default component
+          so it's a violation that's safe to avoid */}
+      <VStack className="no-a11y-checks">
+        <SegmentedTabsExample
+          defaultActiveTab={customSegments[0]}
+          tabs={customSegments}
+          title="Custom Single Segment"
+        />
+        <SegmentedTabsExample
+          defaultActiveTab={mixedCustomSegments[0]}
+          tabs={mixedCustomSegments}
+          title="Mixed Custom Segments"
+        />
+        <SegmentedTabsExample
+          TabComponent={AnotherCustomSegmentedTab}
+          TabsActiveIndicatorComponent={CustomActiveIndicator}
+          borderRadius={0}
+          defaultActiveTab={basicSegments[0]}
+          tabs={basicSegments}
+          title="Custom Segment & Active Indicator"
+        />
+      </VStack>
       <Box maxWidth={300} overflow="auto">
         <SegmentedTabsExample
           defaultActiveTab={longSegments[4]}
@@ -229,12 +250,10 @@ export const All = () => {
 
 const disableA11yCheck = {
   a11y: {
-    config: {
-      /**
-       * Disabled Color contrast ratio rule since the activated tab has an animated indicator which didn't catch by the a11y runner
-       * @link https://dequeuniversity.com/rules/axe/4.6/color-contrast?application=axeAPI
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
     },
   },
 };

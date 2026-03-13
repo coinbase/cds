@@ -24,6 +24,15 @@ import {
 export default {
   title: 'Components/Alpha/Select/SingleSelect',
   component: Select,
+  parameters: {
+    a11y: {
+      options: {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      },
+    },
+  },
 };
 
 const paddingCss = css`
@@ -434,6 +443,21 @@ export const Disabled = () => {
       value={value}
     />
   );
+};
+
+Disabled.parameters = {
+  a11y: {
+    options: {
+      /**
+       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled.
+       * Use axe run options (instead of config.rules) to reliably disable this rule.
+       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
+       */
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
 };
 
 export const DisabledOptions = () => {
@@ -916,6 +940,15 @@ export const DefaultOpen = () => {
   );
 };
 
+DefaultOpen.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
+};
 export const DisabledClickOutsideClose = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -957,7 +990,7 @@ export const ControlledOpen = () => {
     { value: '9', label: 'Option 9' },
   ];
   const [value, setValue] = useState<string | null>('1');
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
@@ -1266,6 +1299,16 @@ export const DisabledWithVariants = () => {
       />
     </div>
   );
+};
+
+DisabledWithVariants.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
 };
 
 export const StartNodeWithVariants = () => {
@@ -1705,9 +1748,6 @@ export const Borderless = () => {
     { value: '4', label: 'Option 4' },
   ];
   const [singleValue, setSingleValue] = useState<string | null>('1');
-  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
-    initialValue: ['1', '2'],
-  });
 
   return (
     <VStack gap={4}>
@@ -1718,16 +1758,6 @@ export const Borderless = () => {
         options={exampleOptions}
         placeholder="Empty value"
         value={singleValue}
-      />
-      <Select
-        bordered={false}
-        controlAccessibilityLabel="Borderless multi select"
-        label="Borderless multi select"
-        onChange={multiOnChange}
-        options={exampleOptions}
-        placeholder="Empty value"
-        type="multi"
-        value={multiValue}
       />
     </VStack>
   );

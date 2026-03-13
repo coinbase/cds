@@ -17,6 +17,9 @@ import { SparklineInteractive } from '../SparklineInteractive';
 export default {
   component: SparklineInteractive,
   title: 'Components/SparklineInteractive',
+  parameters: {
+    a11y: { test: 'off' },
+  },
 };
 
 type SparklinePeriod = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';

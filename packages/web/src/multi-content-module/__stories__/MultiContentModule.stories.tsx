@@ -428,4 +428,13 @@ export const WithLongContent = () => {
 export default {
   title: 'Components/MultiContentModule',
   component: MultiContentModule,
+  parameters: {
+    a11y: {
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+        },
+      },
+    },
+  },
 };

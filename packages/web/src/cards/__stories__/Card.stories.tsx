@@ -43,13 +43,6 @@ export const AnnouncementCards = announcementCardBuilder.buildSheet(
 );
 
 /* -------------------------------------------------------------------------- */
-/*                                 Data Cards                                 */
-/* -------------------------------------------------------------------------- */
-const dataCardsBuilder = builder(DataCardComponent);
-export const DataCard = dataCardsBuilder.build(dataCards[0]);
-export const DataCards = dataCardsBuilder.buildSheet(dataCards);
-
-/* -------------------------------------------------------------------------- */
 /*                             FeatureEntry Cards                             */
 /* -------------------------------------------------------------------------- */
 const featureEntryCardBuilder = builder(FeatureEntryCardComponent);

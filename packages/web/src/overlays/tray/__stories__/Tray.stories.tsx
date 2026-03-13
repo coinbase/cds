@@ -452,6 +452,8 @@ export const ResponsiveIllustrationListCells = () => {
       <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
           footer={({ handleClose }) => (
             <PageFooter
               borderedTop
@@ -478,20 +480,22 @@ export const ResponsiveIllustrationListCells = () => {
             </VStack>
           }
         >
-          {Array.from({ length: 20 }, (_, i) => (
-            <ListCell
-              key={i}
-              accessory="arrow"
-              description="Description"
-              innerSpacing={{
-                marginX: -4,
-                paddingX: 4,
-                paddingY: 1,
-              }}
-              spacingVariant="condensed"
-              title="Title"
-            />
-          ))}
+          <VStack tabIndex={0}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </VStack>
         </Tray>
       )}
     </>
@@ -519,6 +523,8 @@ export const ResponsiveFullBleedImageListCells = () => {
       <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
       {isOpen && (
         <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
           classNames={{
             closeButton: 'tray-close-button-inverted',
           }}
@@ -571,20 +577,22 @@ export const ResponsiveFullBleedImageListCells = () => {
             </Box>
           }
         >
-          {Array.from({ length: 20 }, (_, i) => (
-            <ListCell
-              key={i}
-              accessory="arrow"
-              description="Description"
-              innerSpacing={{
-                marginX: -4,
-                paddingX: 4,
-                paddingY: 1,
-              }}
-              spacingVariant="condensed"
-              title="Title"
-            />
-          ))}
+          <VStack tabIndex={0}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </VStack>
         </Tray>
       )}
     </>

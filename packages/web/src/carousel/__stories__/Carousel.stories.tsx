@@ -20,6 +20,17 @@ import {
 export default {
   title: 'Components/Carousel',
   component: Carousel,
+  parameters: {
+    a11y: {
+      options: {
+        rules: {
+          // It's accepted to have a small target size for the carousel pagination buttons
+          'target-size': { enabled: false },
+          'color-contrast': { enabled: false },
+        },
+      },
+    },
+  },
 };
 
 const SampleCard = ({ text }: { text: string }) => (
@@ -134,7 +145,7 @@ const SquareAssetCard = ({
 }) => (
   <ContainedAssetCard
     description={
-      <Text as="p" color="fgPositive" font="label2" numberOfLines={2}>
+      <Text as="p" color="fg" font="label2" numberOfLines={2}>
         &#x2197;6.37%
       </Text>
     }

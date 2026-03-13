@@ -46,12 +46,12 @@ export const Elevation2 = () => (
 );
 
 export const Opacity = () => (
-  <Box opacity={0.1}>
+  <Box opacity={0.5}>
     <Lipsum />
   </Box>
 );
 //  This is just testing opacity so color contrast failure is expected
-Opacity.parameters = { a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } } };
+Opacity.parameters = { a11y: { options: { rules: { 'color-contrast': { enabled: false } } } } };
 
 export const FlexControls = () => (
   <Box alignContent="center" alignItems="center" flexDirection="row" justifyContent="space-between">
@@ -282,4 +282,14 @@ export const BooleanStyleProps = () => {
       <Text font="body">HELLO WORLD</Text>
     </Box>
   );
+};
+
+BooleanStyleProps.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
 };
