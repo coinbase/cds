@@ -6,7 +6,7 @@ Components for React Native.
 
 Add the relative path to the CDS icon font to your react-native.config.js. If your project lives in the monorepo this lives in the root `react-native.config.js` file. There is an example for CDS playground in there.
 
-You will need to run `npx react-native link` to link the assets for Android and iOS and then run build, `npx react-native run-ios` or `npx react-native run-android` for them to be available.
+Assets for Android and iOS are automatically linked via autolinking (React Native 0.60+). After updating `react-native.config.js`, run the build and then use `npx react-native run-ios` or `npx react-native run-android` to make them available.
 
 ### Outside mono/repo
 
