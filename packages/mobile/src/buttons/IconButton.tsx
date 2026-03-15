@@ -72,6 +72,7 @@ export const IconButton = memo(function IconButton({
       accessibilityHint={accessibilityHint}
       accessibilityLabel={loading ? `${accessibilityLabel ?? ''}, loading` : accessibilityLabel}
       alignItems="center"
+      alignSelf="flex-start"
       background={backgroundValue}
       borderColor={borderColorValue}
       borderRadius={borderRadius}

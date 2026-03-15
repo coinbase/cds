@@ -125,7 +125,7 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
        *  @default 24
        */
       loadingSpinnerSize?: number;
-      /** Mark the background and border as transparent until interacted with. */
+      /** Set the background to transparent until interacted with. */
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
       block?: boolean;
