@@ -222,7 +222,8 @@
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
     "react-popper": "^2.2.4",
-    "react-use-measure": "^2"
+    "react-use-measure": "^2",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

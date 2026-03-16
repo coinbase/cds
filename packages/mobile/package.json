@@ -207,7 +207,8 @@
     "@react-spring/native": "^9.7.4",
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
-    "type-fest": "^2.19.0"
+    "type-fest": "^2.19.0",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
