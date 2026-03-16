@@ -1,6 +1,8 @@
-AreaChart is a cartesian chart variant that allows for easy visualization of stacked data.
+AreaChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) that has some unique features over [LineChart](/components/charts/LineChart), such as the ability to stack areas on top of each other and a default minimum domain of 0. Charts are built using SVGs.
 
-## Basic Example
+## Basics
+
+The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` array of numbers.
 
 ```jsx live
 <AreaChart
@@ -22,7 +24,11 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
 />
 ```
 
-## Simple
+## Data
+
+### Positive and Negative
+
+Area grows from the baseline to each value, allowing for both positive and negative data to be shown. Also, you can set `baseline` to any value you'd like.
 
 ```jsx live
 <AreaChart
@@ -30,26 +36,86 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
   inset={0}
   series={[
     {
-      id: 'prices',
-      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+      id: 'area',
+      data: [-40, -28, -21, -5, 48, -5, -28, 2, -29, -48, 18, -30, -29, 8],
+      gradient: {
+        stops: [
+          { offset: 0, color: 'var(--color-fgNegative)' },
+          { offset: 0, color: 'var(--color-fgPositive)' },
+        ],
+      },
     },
   ]}
-  type="gradient"
+  type="dotted"
   showLines
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
 />
+```
+
+### Range
+
+You can pass in `[min, max]` tuples as data points to render an area that span a range of values.
+
+```jsx live
+<AreaChart
+  legend={<Legend seriesIds={['marketCap']} />}
+  showXAxis
+  showYAxis
+  height={250}
+  series={[
+    {
+      id: 'marketCap',
+      label: 'Market Cap',
+      data: [5.4, 5.8, 6.1, 5.9, 6.0, 6.3],
+      showLines: true,
+      fillOpacity: 0,
+    },
+    {
+      id: 'confidenceInterval',
+      label: 'Confidence Interval',
+      data: [
+        [5.3, 5.5],
+        [5.6, 6.0],
+        [5.8, 6.2],
+        [5.8, 6.1],
+        [5.9, 6.3],
+        [6.2, 6.5],
+      ],
+      fillOpacity: 0.3,
+    },
+  ]}
+  xAxis={{
+    showLine: true,
+    showTickMarks: true,
+    data: ['January', 'February', 'March', 'April', 'May', 'June'],
+  }}
+  yAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+    domain: { min: 5.0, max: 7.0 },
+    tickLabelFormatter: (val) => `$${val}B`,
+  }}
+>
+  <Line seriesId="marketCap" />
+</AreaChart>
 ```
 
 ## Stacking
 
-You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/charts/CartesianChart/#series-stacks) for more details.
+You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/charts/CartesianChart/#series-stacks) for more info on stacking.
 
 ```jsx live
 <AreaChart
   showLines
   stacked
   curve="natural"
+  legend
   height={{ base: 150, tablet: 200, desktop: 250 }}
-  inset={0}
+  inset={{ top: 0, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'currentRewards',
@@ -58,6 +124,8 @@ You can use the `stacked` prop to stack all areas on top of each other. You can 
         3700, 4170,
       ],
       color: 'var(--color-fg)',
+      legendShape: 'squircle',
+      label: 'Current Rewards',
     },
     {
       id: 'potentialRewards',
@@ -67,6 +135,8 @@ You can use the `stacked` prop to stack all areas on top of each other. You can 
       ],
       color: 'var(--color-fgPositive)',
       LineComponent: (props) => <DottedLine {...props} strokeDasharray="6 6" />,
+      legendShape: 'squircle',
+      label: 'Potential Rewards',
     },
   ]}
   AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
@@ -74,30 +144,9 @@ You can use the `stacked` prop to stack all areas on top of each other. You can 
 />
 ```
 
-## Negative Values
+## Styling
 
-When an area chart contains negative values, the baseline automatically adjusts to zero instead of the bottom of the chart. The area fills from the data line to the zero baseline, properly showing both positive and negative regions.
-
-```jsx live
-<AreaChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
-  inset={0}
-  series={[
-    {
-      id: 'pageViews',
-      data: [24, 13, -98, 39, 48, 38, 43],
-    },
-  ]}
-  AreaComponent={(props) => <SolidArea {...props} opacity={0.4} />}
-  showLines
-  showYAxis
-  yAxis={{
-    showGrid: true,
-  }}
-/>
-```
-
-## Area Styles
+### Areas
 
 You can have different area styles for each series.
 
@@ -127,6 +176,200 @@ You can have different area styles for each series.
       type: 'gradient',
     },
   ]}
+/>
+```
+
+### Axes
+
+Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/charts/XAxis) and [YAxis](/components/charts/YAxis).
+
+```jsx live
+<AreaChart
+  showLines
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+    tickLabelFormatter: (dataX) => `Day ${dataX}`,
+  }}
+  yAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+  }}
+  fillOpacity={0.5}
+/>
+```
+
+### Curve
+
+You can compare different curve interpolation strategies on a per-series basis.
+
+```jsx live
+<AreaChart
+  legend
+  showLines
+  showYAxis
+  height={{ base: 180, tablet: 220, desktop: 260 }}
+  series={[
+    {
+      id: 'linear',
+      label: 'Linear',
+      data: [10, 22, 20, 30, 28, 42, 40],
+      color: 'var(--color-fg)',
+      curve: 'linear',
+      fillOpacity: 0.12,
+      legendShape: 'square',
+    },
+    {
+      id: 'natural',
+      label: 'Natural',
+      data: [9, 18, 26, 24, 36, 34, 46],
+      color: 'var(--color-fgPositive)',
+      curve: 'natural',
+      fillOpacity: 0.12,
+      legendShape: 'pill',
+    },
+    {
+      id: 'step',
+      label: 'Step',
+      data: [7, 12, 19, 19, 31, 31, 43],
+      color: 'var(--color-fgWarning)',
+      curve: 'stepAfter',
+      fillOpacity: 0.12,
+      legendShape: 'squircle',
+    },
+  ]}
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+### Gradient
+
+You can build threshold-based gradients with hard transitions by reusing stop offsets.
+
+```jsx live
+<AreaChart
+  showLines
+  showYAxis
+  height={{ base: 180, tablet: 220, desktop: 260 }}
+  series={[
+    {
+      id: 'netFlow',
+      label: 'Net Flow',
+      data: [-9, -7, -3, -1, 2, 5, 3, -2, 1, 6, 8, 4],
+      gradient: {
+        stops: ({ min, max }) => [
+          { offset: min, color: 'var(--color-fgNegative)', opacity: 0.45 },
+          { offset: -2, color: 'var(--color-fgNegative)', opacity: 0.45 },
+          { offset: -2, color: 'var(--color-fgWarning)', opacity: 0.45 },
+          { offset: 2, color: 'var(--color-fgWarning)', opacity: 0.45 },
+          { offset: 2, color: 'var(--color-fgPositive)', opacity: 0.45 },
+          { offset: max, color: 'var(--color-fgPositive)', opacity: 0.45 },
+        ],
+      },
+      type: 'gradient',
+    },
+  ]}
+  yAxis={{
+    showGrid: true,
+    domain: { min: -10, max: 10 },
+    tickLabelFormatter: (value) => `${value}%`,
+  }}
+/>
+```
+
+### Legend
+
+Legend entries are driven by each series' `label`, `color`, and `legendShape`.
+
+```jsx live
+<AreaChart
+  legend
+  legendPosition="right"
+  showLines
+  showYAxis
+  height={{ base: 190, tablet: 230, desktop: 270 }}
+  series={[
+    {
+      id: 'retained',
+      label: 'Retained',
+      data: [62, 64, 63, 66, 68, 70],
+      color: 'var(--color-fgPositive)',
+      legendShape: 'pill',
+    },
+    {
+      id: 'new',
+      label: 'New',
+      data: [24, 28, 31, 29, 34, 36],
+      color: 'var(--color-fgWarning)',
+      legendShape: 'circle',
+      type: 'dotted',
+    },
+    {
+      id: 'churned',
+      label: 'Churned',
+      data: [14, 12, 11, 13, 10, 9],
+      color: 'var(--color-fgNegative)',
+      legendShape: 'square',
+      fillOpacity: 0.2,
+    },
+  ]}
+  xAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  }}
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+### Line
+
+`showLines` can be combined with chart-level and series-level line styling.
+
+```jsx live
+<AreaChart
+  legend
+  showLines
+  showYAxis
+  lineType="dotted"
+  strokeWidth={3}
+  height={{ base: 180, tablet: 220, desktop: 260 }}
+  series={[
+    {
+      id: 'historical',
+      label: 'Historical',
+      data: [48, 52, 57, 60, 66, 70, 74],
+      color: 'var(--color-fg)',
+      type: 'gradient',
+      lineType: 'solid',
+      legendShape: 'square',
+    },
+    {
+      id: 'forecast',
+      label: 'Forecast',
+      data: [46, 50, 54, 58, 64, 72, 82],
+      color: 'var(--color-fgPositive)',
+      type: 'dotted',
+      LineComponent: (props) => <DottedLine {...props} strokeDasharray="2 8" />,
+      legendShape: 'pill',
+    },
+  ]}
+  yAxis={{
+    showGrid: true,
+  }}
 />
 ```
 
@@ -234,3 +477,7 @@ function CustomBaseline() {
   );
 }
 ```
+
+### Forecast Range (todo)
+
+You can pair tuple data with a projected line to communicate uncertainty and expected direction together.

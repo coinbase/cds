@@ -2,20 +2,32 @@ import React, { memo, useCallback, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { IconButton } from '@coinbase/cds-web/buttons';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
+import { Icon } from '@coinbase/cds-web/icons';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-web/system';
+import { SegmentedTabs } from '@coinbase/cds-web/tabs';
 import { Text } from '@coinbase/cds-web/typography';
+import { AnimatePresence, m as motion } from 'framer-motion';
+import type { DateTimeFormatOptions } from 'intl';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
-import { Line } from '../line/Line';
+import {
+  DefaultReferenceLineLabel,
+  DottedLine,
+  ReferenceLine,
+  type ReferenceLineLabelComponentProps,
+  SolidLine,
+  type SolidLineProps,
+} from '../line';
+import { Line, type LineComponentProps } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { isCategoricalScale } from '../utils';
+import { defaultTransition, isCategoricalScale } from '../utils';
 import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
@@ -59,212 +71,6 @@ type PredictionRowProps = {
   isSelected: boolean;
   onSelect: () => void;
   controlColor: 'accentBoldBlue' | 'accentBoldGreen';
-};
-
-const PredictionRow = ({
-  seriesData,
-  currentPrice,
-  isSelected,
-  onSelect,
-  controlColor,
-}: PredictionRowProps) => (
-  <Pressable alignItems="center" gap={3} justifyContent="space-between" onClick={onSelect}>
-    <Text font="headline">{seriesData.label}</Text>
-    <LineChart
-      curve="natural"
-      enableScrubbing={false}
-      height={6}
-      inset={0}
-      series={[seriesData]}
-      width={60}
-    />
-    <HStack alignItems="center" gap={2}>
-      <Text font="title4">{currentPrice}¢</Text>
-      <Radio checked={isSelected} controlColor={controlColor} onChange={() => {}} tabIndex={-1} />
-    </HStack>
-  </Pressable>
-);
-
-const CustomYAxis = memo(() => {
-  return (
-    <YAxis
-      showGrid
-      GridLineComponent={SolidLine}
-      requestedTickCount={2}
-      tickLabelFormatter={(value) => `${Math.round(value)}%`}
-    />
-  );
-});
-
-const PredictionMarket = () => {
-  const tabs = [
-    { id: '1H', label: '1H' },
-    { id: '1D', label: '1D' },
-    { id: '1W', label: '1W' },
-    { id: '1M', label: '1M' },
-    { id: '1Y', label: '1Y' },
-    { id: 'All', label: 'All' },
-  ];
-
-  const eaglesData = useMemo(
-    () => [
-      48, 48.2, 48.8, 49.1, 49.5, 50.2, 50.8, 51.1, 51.3, 51.5, 51.8, 51.6, 51.4, 51.7, 51.9, 51.5,
-      51.3, 51.1, 50.9, 50.7, 50.5, 50.8, 51.0, 50.6, 50.3, 49.8, 49.5, 49.2, 48.9, 49.1, 49.4,
-      49.7, 50.0, 50.2, 49.9, 49.6, 49.3, 49.0, 48.7, 48.9, 49.2, 49.5, 49.8, 50.1, 50.3, 51.0,
-      51.7, 52.4, 53.1, 54,
-    ],
-    [],
-  );
-
-  const seriesConfig = useMemo(
-    () => [
-      {
-        id: 'eagles',
-        data: eaglesData,
-        label: 'Eagles',
-        color: 'var(--color-accentBoldBlue)',
-        controlColor: 'accentBoldBlue' as const,
-      },
-      {
-        id: 'ravens',
-        data: eaglesData.map((price) => 100 - price),
-        label: 'Ravens',
-        color: 'var(--color-accentBoldGreen)',
-        controlColor: 'accentBoldGreen' as const,
-      },
-    ],
-    [eaglesData],
-  );
-
-  const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
-
-  const handleSeriesClick = useCallback((seriesId: string) => {
-    setSelectedSeriesId((prev) => (prev === seriesId ? null : seriesId));
-  }, []);
-
-  const getSeriesOpacity = (seriesId: string) => {
-    if (selectedSeriesId === null) {
-      return 1;
-    }
-    return selectedSeriesId === seriesId ? 1 : 0.3;
-  };
-
-  const scrubbedSeries = useMemo(() => {
-    return selectedSeriesId ? [selectedSeriesId] : undefined;
-  }, [selectedSeriesId]);
-
-  const chartAccessibilityLabel = useMemo(() => {
-    const lastIndex = eaglesData.length - 1;
-    const teamA = eaglesData[lastIndex];
-    const teamB = 100 - teamA;
-
-    return `Prediction market chart with ${eaglesData.length} data points. Latest odds: Team A ${teamA.toFixed(
-      1,
-    )}%, Team B ${teamB.toFixed(1)}%.`;
-  }, [eaglesData]);
-
-  const [scrubberLabel, setScrubberLabel] = useState<string | null>(null);
-  const updateScrubberLabel = useCallback(
-    (scrubberPosition: number | undefined) => {
-      if (
-        scrubberPosition === null ||
-        scrubberPosition === undefined ||
-        scrubberPosition >= eaglesData.length
-      )
-        return null;
-
-      const timestamp = Date.now() - (eaglesData.length - 1 - scrubberPosition) * 60000;
-      const date = new Date(timestamp);
-      setScrubberLabel(
-        date.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        }),
-      );
-    },
-    [eaglesData.length],
-  );
-
-  const getScrubberAccessibilityLabel = useCallback(
-    (dataIndex: number) => {
-      const teamA = eaglesData[dataIndex];
-      const teamB = 100 - teamA;
-      return `At position ${dataIndex + 1} of ${eaglesData.length}: Team A ${teamA.toFixed(
-        1,
-      )}%, Team B ${teamB.toFixed(1)}%.`;
-    },
-    [eaglesData],
-  );
-
-  return (
-    <VStack gap={4} style={{ margin: 'calc(var(--space-1) * -2.5)' }}>
-      <VStack paddingTop={2} paddingX={2}>
-        <Text as="h1" font="title1">
-          Super Bowl LX
-        </Text>
-        <Text color="fgMuted" font="title2">
-          Eagles vs. Ravens
-        </Text>
-      </VStack>
-      <CartesianChart
-        enableScrubbing
-        accessibilityLabel={chartAccessibilityLabel}
-        height={300}
-        inset={{ top: 40, right: 0, bottom: 32, left: 0 }}
-        onScrubberPositionChange={updateScrubberLabel}
-        paddingEnd={2}
-        series={seriesConfig}
-        xAxis={{
-          // Add a bit of margin within the chart's range (pixels)
-          range: ({ max, min }) => ({ min, max: max - 32 }),
-        }}
-        yAxis={{
-          domain: { min: 40, max: 60 },
-        }}
-      >
-        {seriesConfig.map((series) => (
-          <Line
-            key={series.id}
-            curve="natural"
-            opacity={getSeriesOpacity(series.id)}
-            seriesId={series.id}
-            showArea={selectedSeriesId !== null && selectedSeriesId === series.id}
-          />
-        ))}
-        <CustomYAxis />
-        <Scrubber
-          accessibilityLabel={getScrubberAccessibilityLabel}
-          label={scrubberLabel}
-          seriesIds={scrubbedSeries}
-        />
-      </CartesianChart>
-      <Box paddingX={2}>
-        <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
-      </Box>
-      <Divider />
-      <VStack gap={3} paddingX={2}>
-        <HStack alignItems="center" gap={2}>
-          <Text as="h2" font="title3">
-            Make a prediction
-          </Text>
-        </HStack>
-        <VStack gap={2}>
-          {seriesConfig.map((series) => (
-            <PredictionRow
-              key={series.id}
-              controlColor={series.controlColor}
-              currentPrice={series.data[series.data.length - 1]}
-              isSelected={selectedSeriesId === series.id}
-              onSelect={() => handleSeriesClick(series.id)}
-              seriesData={series}
-            />
-          ))}
-        </VStack>
-      </VStack>
-    </VStack>
-  );
 };
 
 const EarningsHistory = () => {
@@ -596,6 +402,296 @@ function TradingTrends() {
   );
 }
 
+const advancedTabs = [
+  { id: 'hour', label: '1H' },
+  { id: 'day', label: '1D' },
+  { id: 'week', label: '1W' },
+  { id: 'month', label: '1M' },
+  { id: 'year', label: 'YTD' },
+];
+
+type ChartType = 'area' | 'line' | 'candlestick';
+type ChartScaleType = 'linear' | 'log';
+
+const chartTypeTabs: TabValue<ChartType>[] = [
+  { id: 'area', label: <Icon active color="currentColor" name="lineChartCrypto" size="s" /> },
+  { id: 'line', label: <Icon active color="currentColor" name="chartLine" size="s" /> },
+  { id: 'candlestick', label: <Icon active color="currentColor" name="chartCandles" size="s" /> },
+];
+
+const chartScaleTypeTabs: TabValue<ChartScaleType>[] = [
+  { id: 'linear', label: 'Linear' },
+  { id: 'log', label: 'Log' },
+];
+
+const getFormattingConfigForPeriod = (period: string): DateTimeFormatOptions => {
+  switch (period) {
+    case 'hour':
+    case 'day':
+      return {
+        hour: 'numeric',
+        minute: 'numeric',
+      };
+
+    case 'week':
+    case 'month':
+      return {
+        month: 'numeric',
+        day: 'numeric',
+      };
+
+    default:
+      return {
+        month: 'numeric',
+        year: 'numeric',
+      };
+  }
+};
+
+const chartTransition = { enter: null };
+
+const DottedReferenceLine = memo((props: LineComponentProps) => (
+  <DottedLine
+    {...props}
+    animate={true}
+    stroke="var(--color-fg)"
+    strokeDasharray="0 16"
+    strokeWidth={3}
+    transitions={chartTransition}
+  />
+));
+
+export const Advanced = () => {
+  const [activeTab, setActiveTab] = useState(advancedTabs[3]);
+  const [chartType, setChartType] = useState<TabValue<ChartType>>(chartTypeTabs[0]);
+  const [scaleType, setScaleType] = useState<TabValue<ChartScaleType>>(chartScaleTypeTabs[0]);
+  const [showVolume, setShowVolume] = useState(true);
+
+  const candles = useMemo(() => [...btcCandles].reverse(), []);
+
+  const prices = candles.map((candle) => parseFloat(candle.close));
+  const dates = candles.map((candle) => new Date(parseInt(candle.start, 10) * 1000));
+  const volumes = candles.map((candle) => parseFloat(candle.volume));
+
+  const startingPrice = prices[0];
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatLabel = useCallback(
+    (dataIndex: number) => {
+      const price = prices[dataIndex];
+      const date = dates[dataIndex];
+
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{formatPrice(price)}</tspan> {formatDate(date)}
+        </>
+      );
+    },
+    [dates, formatDate, formatPrice, prices],
+  );
+
+  const PriceLabel = memo((props: ReferenceLineLabelComponentProps) => (
+    <DefaultReferenceLineLabel
+      {...props}
+      background="var(--color-bgSecondary)"
+      borderRadius={12.5}
+      color="var(--color-fg)"
+      dx={12}
+      font="label1"
+      horizontalAlignment="left"
+      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+    />
+  ));
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `${formatPrice(prices[index])} ${formatDate(dates[index])}`,
+    [dates, formatDate, formatPrice, prices],
+  );
+
+  const formatXAxisDate = useCallback(
+    (index: number) => {
+      if (!candles[index]) return '';
+      const date = dates[index];
+      const formatConfig = getFormattingConfigForPeriod(activeTab.id);
+
+      if (activeTab.id === 'hour' || activeTab.id === 'day') {
+        return date.toLocaleTimeString('en-US', formatConfig);
+      } else {
+        return date.toLocaleDateString('en-US', formatConfig);
+      }
+    },
+    [candles, dates, activeTab.id],
+  );
+
+  const handleChartTypeChange = useCallback((chartType: TabValue<ChartType> | null) => {
+    setChartType(chartType ?? chartTypeTabs[0]);
+  }, []);
+
+  const handleScaleTypeChange = useCallback((scaleType: TabValue<ChartScaleType> | null) => {
+    setScaleType(scaleType ?? chartScaleTypeTabs[0]);
+  }, []);
+
+  const series = useMemo(
+    () => [
+      {
+        id: 'pricesArea',
+        data: prices,
+        color: assets.btc.color,
+        gradient: {
+          stops: [
+            { offset: startingPrice, color: 'var(--color-fgNegative)' },
+            { offset: startingPrice, color: 'var(--color-fgPositive)' },
+          ],
+        },
+        yAxisId: 'pricesArea',
+      },
+      {
+        id: 'pricesLine',
+        data: prices,
+        color: assets.btc.color,
+        yAxisId: 'pricesLine',
+      },
+      {
+        id: 'volume',
+        data: volumes,
+        color: 'var(--color-fgMuted)',
+        yAxisId: 'volume',
+      },
+    ],
+    [prices, startingPrice, volumes],
+  );
+
+  return (
+    <VStack gap={2}>
+      <CartesianChart
+        enableScrubbing
+        height={300}
+        series={series}
+        xAxis={{
+          scaleType: 'band',
+        }}
+        yAxis={[
+          {
+            id: 'pricesArea',
+            baseline: startingPrice,
+            scaleType: scaleType.id,
+            domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
+            range: ({ min, max }) => ({ min: min, max: showVolume ? max - 32 : max }),
+          },
+          {
+            id: 'pricesLine',
+            scaleType: scaleType.id,
+            domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
+            range: ({ min, max }) => ({ min: min, max: showVolume ? max - 32 : max }),
+          },
+          { id: 'volume', range: ({ max }) => ({ min: max - 32, max }) },
+        ]}
+      >
+        <XAxis tickLabelFormatter={formatXAxisDate} />
+        <YAxis showGrid axisId="pricesLine" tickLabelFormatter={formatPrice} width={80} />
+        <AnimatePresence key="animations" initial={false}>
+          {chartType.id === 'area' && (
+            <motion.g
+              key="area"
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              transition={defaultTransition}
+            >
+              <Area fillOpacity={0.5} seriesId="pricesArea" transitions={chartTransition} />
+              <Line seriesId="pricesArea" transitions={chartTransition} />
+            </motion.g>
+          )}
+          {chartType.id === 'line' && (
+            <motion.g
+              key="line"
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              transition={defaultTransition}
+            >
+              <Line
+                showArea
+                areaType="dotted"
+                seriesId="pricesLine"
+                transitions={chartTransition}
+              />
+            </motion.g>
+          )}
+          {showVolume && (
+            <motion.g
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              transition={defaultTransition}
+            >
+              <BarPlot seriesIds={['volume']} transitions={chartTransition} />
+            </motion.g>
+          )}
+        </AnimatePresence>
+        <ReferenceLine
+          LabelComponent={PriceLabel}
+          LineComponent={DottedReferenceLine}
+          dataY={startingPrice}
+          label={formatPrice(startingPrice)}
+          yAxisId="pricesLine"
+        />
+        <Scrubber
+          hideOverlay
+          idlePulse
+          labelElevated
+          accessibilityLabel={getScrubberAccessibilityLabel}
+          label={formatLabel}
+          seriesIds={[chartType.id === 'area' ? 'pricesArea' : 'pricesLine']}
+        />
+      </CartesianChart>
+      <HStack gap={2}>
+        <SegmentedTabs
+          accessibilityLabel="Switch chart type"
+          activeTab={chartType}
+          borderRadius={300}
+          gap={0.5}
+          onChange={handleChartTypeChange}
+          padding={0.5}
+          styles={{
+            activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+          }}
+          tabs={chartTypeTabs}
+          width="fit-content"
+        />
+        <IconButton
+          active={showVolume}
+          name="chartVolume"
+          onClick={() => setShowVolume(!showVolume)}
+        />
+        <SegmentedTabs
+          accessibilityLabel="Switch chart scale type"
+          activeTab={scaleType}
+          borderRadius={300}
+          gap={0.5}
+          onChange={handleScaleTypeChange}
+          padding={0.5}
+          styles={{
+            activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+          }}
+          tabs={chartScaleTypeTabs}
+          width="fit-content"
+        />
+      </HStack>
+    </VStack>
+  );
+};
+
 const Example: React.FC<
   React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
 > = ({ children, title, description }) => {
@@ -620,11 +716,11 @@ export const Miscellaneous = () => {
       <Example title="Price With Volume">
         <PriceWithVolume />
       </Example>
-      <Example title="Prediction Market">
-        <PredictionMarket />
-      </Example>
       <Example title="Trading Trends">
         <TradingTrends />
+      </Example>
+      <Example title="Advanced">
+        <Advanced />
       </Example>
     </VStack>
   );

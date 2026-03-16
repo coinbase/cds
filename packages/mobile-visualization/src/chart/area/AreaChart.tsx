@@ -140,6 +140,7 @@ export const AreaChart = memo(
             xAxisId: s.xAxisId,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
+            legendShape: s.legendShape,
           }),
         );
       }, [series]);

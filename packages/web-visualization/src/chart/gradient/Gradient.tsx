@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { GradientDefinition } from '../utils';
+import { defaultTransition, type GradientDefinition, instantTransition } from '../utils';
 import { getGradientConfig } from '../utils/gradient';
 
 export type GradientBaseProps = {
@@ -37,6 +37,7 @@ export type GradientProps = GradientBaseProps & {
   animate?: boolean;
   /**
    * Transition configuration for animation.
+   * @default defaultTransition
    */
   transition?: Transition;
 };
@@ -46,9 +47,14 @@ export type GradientProps = GradientBaseProps & {
  * The gradient can be referenced via `fill="url(#${id})"` or `stroke="url(#${id})"`.
  */
 export const Gradient = memo<GradientProps>(
-  ({ id, gradient, xAxisId, yAxisId, animate: animateProp, transition }) => {
+  ({ id, gradient, xAxisId, yAxisId, animate: animateProp, transition: transitionProp }) => {
     const context = useCartesianChartContext();
     const animate = animateProp ?? context.animate;
+
+    const transition = useMemo(() => {
+      if (!animate) return instantTransition;
+      return transitionProp ?? defaultTransition;
+    }, [transitionProp, animate]);
 
     const xScale = context.getXScale(xAxisId);
     const yScale = context.getYScale(yAxisId);
@@ -107,22 +113,14 @@ export const Gradient = memo<GradientProps>(
     }
 
     return (
-      <linearGradient gradientUnits="userSpaceOnUse" id={id} {...coordinates}>
+      <motion.linearGradient
+        animate={coordinates}
+        gradientUnits="userSpaceOnUse"
+        id={id}
+        transition={transition}
+      >
         {stops.map((stop, index) => {
           const offset = `${stop.offset * 100}%`;
-          const opacity = stop.opacity;
-
-          if (!animate) {
-            return (
-              <stop
-                key={`${id}-stop-${index}`}
-                offset={offset}
-                stopColor={stop.color}
-                stopOpacity={opacity ?? 1}
-              />
-            );
-          }
-
           return (
             <motion.stop
               key={`${id}-stop-${index}`}
@@ -133,12 +131,12 @@ export const Gradient = memo<GradientProps>(
                 offset,
               }}
               stopColor={stop.color}
-              stopOpacity={opacity ?? 1}
+              stopOpacity={stop.opacity ?? 1}
               transition={transition}
             />
           );
         })}
-      </linearGradient>
+      </motion.linearGradient>
     );
   },
 );
