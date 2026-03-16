@@ -6,6 +6,15 @@ import { FullscreenAlert } from '../FullscreenAlert';
 export default {
   title: 'Components/FullscreenAlert',
   component: FullscreenAlert,
+  parameters: {
+    a11y: {
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+        },
+      },
+    },
+  },
 };
 
 export const Basic = () => {

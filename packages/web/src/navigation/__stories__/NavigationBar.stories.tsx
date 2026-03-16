@@ -18,13 +18,15 @@ export default {
 };
 
 const a11ySkipConfig = {
-  config: {
+  options: {
     /**
      * The TabNavigation docs explain the proper way to setup the tabpanel.
      * Disabled because CDS TabNavigation doesn't have associated panels.
      * @link https://cds.coinbase.com/components/tab-navigation#accessibility
      * */
-    rules: [{ id: 'aria-valid-attr-value', enabled: false }],
+    rules: {
+      'aria-valid-attr-value': { enabled: false },
+    },
   },
 };
 
@@ -65,15 +67,15 @@ export const NavigationBarFullExampleDefault = () => {
         bottom={<TabNavigation onChange={handleTabChange} tabs={tabs} value={value} />}
         end={
           <HStack alignItems="center" gap={1}>
-            <IconButton name="helpCenterQuestionMark" />
+            <IconButton accessibilityLabel="Help Center" name="helpCenterQuestionMark" />
             <IconButton
               active
               accessibilityLabel="Notifications"
               name="bell"
               onClick={() => handlePress('Notifications')}
             />
-            <IconButton name="appSwitcher" />
-            <IconButton active name="profile" />
+            <IconButton accessibilityLabel="App Switcher" name="appSwitcher" />
+            <IconButton active accessibilityLabel="Profile" name="profile" />
           </HStack>
         }
         start={
@@ -107,12 +109,17 @@ export const NavigationBarMobileExample = () => {
       <NavigationBar
         end={
           <HStack alignItems="center" gap={1}>
-            <IconButton compact name="search" variant="secondary" />
-            <IconButton compact name="appSwitcher" variant="secondary" />
+            <IconButton compact accessibilityLabel="Search" name="search" variant="secondary" />
+            <IconButton
+              compact
+              accessibilityLabel="App Switcher"
+              name="appSwitcher"
+              variant="secondary"
+            />
             <AvatarButton compact alt="User" name="Sam Smith" />
           </HStack>
         }
-        start={<IconButton compact transparent name="hamburger" />}
+        start={<IconButton compact transparent accessibilityLabel="Hamburger" name="hamburger" />}
       >
         <LogoMark size={32} />
       </NavigationBar>
@@ -145,13 +152,27 @@ export const NavigationBarWithSearch = () => {
               </Button>
             </HStack>
             <HStack gap={1}>
-              <IconButton active compact name="search" variant="secondary" />
-              <IconButton active compact name="appSwitcher" variant="secondary" />
+              <IconButton
+                active
+                compact
+                accessibilityLabel="Search"
+                name="search"
+                variant="secondary"
+              />
+              <IconButton
+                active
+                compact
+                accessibilityLabel="App Switcher"
+                name="appSwitcher"
+                variant="secondary"
+              />
               <AvatarButton compact alt="User" name="Sam Smith" />
             </HStack>
           </HStack>
         }
-        start={<IconButton compact name="backArrow" variant="secondary" />}
+        start={
+          <IconButton compact accessibilityLabel="Back" name="backArrow" variant="secondary" />
+        }
       >
         <NavigationTitle>Page Title</NavigationTitle>
       </NavigationBar>

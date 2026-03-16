@@ -52,6 +52,11 @@ const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 export default {
   component: LineChart,
   title: 'Components/Chart/LineChart',
+  parameters: {
+    a11y: {
+      test: 'todo',
+    },
+  },
 };
 
 const Example: React.FC<

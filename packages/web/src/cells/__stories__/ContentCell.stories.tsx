@@ -370,7 +370,7 @@ export const Fallback = () => {
       ) : (
         <ContentCell
           accessory="more"
-          description="Review portfolio performance"
+          description="Review portfolio"
           media={<Avatar size="m" src={assets.eth.imageUrl} />}
           meta="Updated just now"
           spacingVariant="condensed"

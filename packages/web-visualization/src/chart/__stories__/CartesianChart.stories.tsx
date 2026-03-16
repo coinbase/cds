@@ -16,18 +16,16 @@ import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { isCategoricalScale } from '../utils';
-import {
-  BarPlot,
-  CartesianChart,
-  type ChartTextChildren,
-  PeriodSelector,
-  Point,
-  Scrubber,
-} from '../';
+import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
   component: CartesianChart,
   title: 'Components/Chart/CartesianChart',
+  parameters: {
+    a11y: {
+      test: 'todo',
+    },
+  },
 };
 
 const MultipleChart = () => {

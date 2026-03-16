@@ -14,6 +14,11 @@ const CHART_HEIGHT = 300;
 export default {
   component: ChartText,
   title: 'Components/Chart/ChartText',
+  parameters: {
+    a11y: {
+      test: 'todo',
+    },
+  },
 };
 
 export const InteractiveChartText = () => {

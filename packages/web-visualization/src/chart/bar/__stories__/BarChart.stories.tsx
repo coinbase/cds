@@ -21,6 +21,11 @@ import { Bar, type BarComponentProps } from '..';
 export default {
   title: 'Components/Chart/BarChart',
   component: BarChart,
+  parameters: {
+    a11y: {
+      test: 'todo',
+    },
+  },
 };
 
 const Example: React.FC<

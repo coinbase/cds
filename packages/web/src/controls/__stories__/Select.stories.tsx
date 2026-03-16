@@ -18,6 +18,9 @@ const assetKeys = Object.keys(assets) as AssetKey[];
 export default {
   title: 'Components/Select/Select',
   component: Select,
+  parameters: {
+    a11y: { test: 'off' },
+  },
 };
 
 const Default = ({

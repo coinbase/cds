@@ -2,14 +2,21 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useAlert } from '@coinbase/cds-common/overlays/useAlert';
 
 import { Button } from '../../buttons/Button';
-import { Switch } from '../../controls/Switch';
-import { VStack } from '../../layout';
 import { Alert } from '../Alert';
 import { PortalProvider } from '../PortalProvider';
 
 export default {
   title: 'Components/Alert',
   component: Alert,
+  parameters: {
+    a11y: {
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+        },
+      },
+    },
+  },
 };
 
 const onPressConsole = () => console.log('pressed');

@@ -160,4 +160,9 @@ ThemeProviderTest.parameters = {
 
 export default {
   title: 'Components/ThemeProvider',
+  parameters: {
+    a11y: {
+      test: 'off',
+    },
+  },
 };

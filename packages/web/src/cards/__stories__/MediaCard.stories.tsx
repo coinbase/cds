@@ -128,11 +128,7 @@ export const TextContent = (): JSX.Element => {
           </TextLabel2>
         }
         media={exampleMedia}
-        subtitle={
-          <TextHeadline as="p" color="fgPositive">
-            Custom Subtitle
-          </TextHeadline>
-        }
+        subtitle={<TextHeadline as="p">Custom Subtitle</TextHeadline>}
         thumbnail={exampleThumbnail}
         title={<TextTitle3 as="p">Custom Title</TextTitle3>}
         width={320}
@@ -184,48 +180,50 @@ export const MultipleCards = (): JSX.Element => {
   return (
     <Carousel styles={{ carousel: { gap: 16 } }}>
       <CarouselItem id="card1">
-        <MediaCard
-          as="article"
-          {...exampleProps}
-          media={exampleMedia}
-          thumbnail={exampleThumbnail}
-        />
+        {({ isVisible }) => (
+          <MediaCard
+            as="article"
+            {...exampleProps}
+            media={exampleMedia}
+            tabIndex={isVisible ? 0 : -1}
+            thumbnail={exampleThumbnail}
+          />
+        )}
       </CarouselItem>
       <CarouselItem id="card2">
-        <MediaCard
-          ref={ref}
-          renderAsPressable
-          accessibilityLabel="View Bitcoin details"
-          as="a"
-          description="Another card with different content"
-          href="https://www.google.com"
-          media={exampleMedia}
-          subtitle="BTC"
-          thumbnail={
-            <RemoteImage
-              alt="Bitcoin thumbnail"
-              shape="circle"
-              size="l"
-              source={assets.btc.imageUrl}
-            />
-          }
-          title="Bitcoin"
-          width={320}
-        />
+        {({ isVisible }) => (
+          <MediaCard
+            ref={ref}
+            renderAsPressable
+            accessibilityLabel="View Bitcoin details"
+            as="a"
+            description="Another card with different content"
+            href="https://www.google.com"
+            media={exampleMedia}
+            subtitle="BTC"
+            tabIndex={isVisible ? 0 : -1}
+            thumbnail={exampleThumbnail}
+            title="Bitcoin"
+            width={320}
+          />
+        )}
       </CarouselItem>
       <CarouselItem id="card3">
-        <MediaCard
-          ref={ref2}
-          renderAsPressable
-          accessibilityLabel="View Ethereum details"
-          as="button"
-          description="Card with onClick handler"
-          onClick={() => console.log('clicked')}
-          subtitle="ETH"
-          thumbnail={exampleThumbnail}
-          title="Ethereum"
-          width={320}
-        />
+        {({ isVisible }) => (
+          <MediaCard
+            ref={ref2}
+            renderAsPressable
+            accessibilityLabel="View Ethereum details"
+            as="button"
+            description="Card with onClick handler"
+            onClick={() => console.log('clicked')}
+            subtitle="ETH"
+            tabIndex={isVisible ? 0 : -1}
+            thumbnail={exampleThumbnail}
+            title="Ethereum"
+            width={320}
+          />
+        )}
       </CarouselItem>
     </Carousel>
   );
