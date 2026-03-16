@@ -15,7 +15,7 @@ import { Box, VStack } from '../layout';
 import { Tray } from '../overlays/tray/Tray';
 import { StickyFooter } from '../sticky-footer/StickyFooter';
 
-import { Calendar, type CalendarProps, type CalendarRefHandle } from './Calendar';
+import { Calendar, type CalendarRefHandle } from './Calendar';
 import { DateInput, type DateInputProps } from './DateInput';
 
 export type DatePickerBaseProps = {
@@ -62,6 +62,11 @@ export type DatePickerBaseProps = {
    * @default 'Go to previous month'
    */
   previousArrowAccessibilityLabel?: string;
+  /**
+   * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
+   * @default 'Highlighted'
+   */
+  highlightedDateAccessibilityHint?: string;
 };
 
 export type DatePickerProps = DatePickerBaseProps & {
@@ -96,10 +101,6 @@ export type DatePickerProps = DatePickerBaseProps & {
    * Accessibility hint for the confirm button.
    */
   confirmButtonAccessibilityHint?: string;
-  /**
-   * Disables the confirm button independently of the DatePicker `disabled` prop.
-   */
-  confirmButtonDisabled?: boolean;
   /** Custom styles for the DateInput and Calendar subcomponents. */
   styles?: {
     dateInput?: DateInputProps['style'];
@@ -114,14 +115,6 @@ export type DatePickerProps = DatePickerBaseProps & {
     | 'maxDate'
     | 'disabledDateError'
     | 'style'
-  > &
-  Pick<
-    CalendarProps,
-    | 'seedDate'
-    | 'highlightedDates'
-    | 'highlightedDateAccessibilityHint'
-    | 'nextArrowAccessibilityLabel'
-    | 'previousArrowAccessibilityLabel'
   >;
 
 export const DatePicker = memo(
@@ -158,7 +151,6 @@ export const DatePicker = memo(
         variant,
         confirmText = 'Confirm',
         confirmButtonAccessibilityHint,
-        confirmButtonDisabled,
         helperText,
         width = '100%',
         onOpen,
@@ -287,7 +279,7 @@ export const DatePicker = memo(
                     compact
                     accessibilityHint={confirmButtonAccessibilityHint}
                     accessibilityLabel={confirmText}
-                    disabled={confirmButtonDisabled || disabled || !calendarSelectedDate}
+                    disabled={disabled || !calendarSelectedDate}
                     onPress={() => {
                       if (calendarSelectedDate) {
                         closedByConfirmRef.current = true;

@@ -21,11 +21,18 @@ import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
 import { Grid } from '../layout/Grid';
 import { HStack } from '../layout/HStack';
-import { VStack, type VStackDefaultElement, type VStackProps } from '../layout/VStack';
+import {
+  VStack,
+  type VStackBaseProps,
+  type VStackDefaultElement,
+  type VStackProps,
+} from '../layout/VStack';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import type { StylesAndClassNames } from '../types';
 import { Text } from '../typography/Text';
+
+const CALENDAR_DAY_DIMENSION = 40;
 
 const pressableCss = css`
   display: flex;
@@ -58,8 +65,8 @@ const CalendarPressable: CalendarPressableComponent = memo(
         as,
         className,
         borderRadius = 1000,
-        width = 40,
-        height = 40,
+        width = CALENDAR_DAY_DIMENSION,
+        height = CALENDAR_DAY_DIMENSION,
         background = 'transparent',
         children,
         ...props
@@ -111,7 +118,7 @@ export type CalendarDayProps = {
   style?: React.CSSProperties;
 };
 
-export type CalendarBaseProps = {
+export type CalendarBaseProps = Omit<VStackBaseProps, 'children'> & {
   /** Currently selected Calendar date. Date used to generate the Calendar month. Will be rendered with active styles. */
   selectedDate?: Date | null;
   /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
@@ -145,11 +152,6 @@ export type CalendarBaseProps = {
    * @default 'Go to previous month'
    */
   previousArrowAccessibilityLabel?: string;
-  /**
-   * Accessibility hint for the current day when it is not disabled. Omit or leave default for non-localized usage.
-   * @default 'Today'
-   */
-  todayAccessibilityHint?: string;
   /**
    * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
    * @default 'Highlighted'
@@ -518,10 +520,16 @@ export const Calendar = memo(
             gap={1}
             justifyContent="space-between"
             style={styles?.content}
-            templateColumns="repeat(7, 40px)"
+            templateColumns={`repeat(7, ${CALENDAR_DAY_DIMENSION}px)`}
           >
             {daysOfWeek.map((day) => (
-              <VStack key={day} alignItems="center" height={40} justifyContent="center" width={40}>
+              <VStack
+                key={day}
+                alignItems="center"
+                height={CALENDAR_DAY_DIMENSION}
+                justifyContent="center"
+                width={CALENDAR_DAY_DIMENSION}
+              >
                 <Text font="body" userSelect="none">
                   {day.charAt(0)}
                 </Text>

@@ -23,16 +23,15 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useA11y } from '../hooks/useA11y';
 import { useScreenReaderStatus } from '../hooks/useScreenReaderStatus';
-import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Box } from '../layout/Box';
+import { Box, type BoxBaseProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack, type VStackProps } from '../layout/VStack';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
-const CALENDAR_DAY_SPACING_VALUE = 5;
+const CALENDAR_DAY_DIMENSION = 40;
 
 // These could be dynamically generated, but our Calendar and DatePicker aren't localized so there's no point
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -56,16 +55,14 @@ export type CalendarPressableBaseProps = PressableBaseProps & {
 const CalendarPressable = memo(
   forwardRef<View, CalendarPressableBaseProps>(
     ({ background = 'transparent', borderRadius = 1000, children, ...props }, ref) => {
-      const theme = useTheme();
-      const calendarDayDimensionValue = theme.space[CALENDAR_DAY_SPACING_VALUE];
       return (
         <Pressable
           ref={ref}
           background={background}
           borderRadius={borderRadius}
           contentStyle={styles.pressable}
-          height={calendarDayDimensionValue}
-          width={calendarDayDimensionValue}
+          height={CALENDAR_DAY_DIMENSION}
+          width={CALENDAR_DAY_DIMENSION}
           {...props}
         >
           {children}
@@ -129,7 +126,6 @@ const CalendarDay = memo(
       },
       ref,
     ) => {
-      const theme = useTheme();
       const { locale } = useLocale();
       const handlePress = useCallback(() => onPress?.(date), [date, onPress]);
       const accessibilityLabel = useMemo(
@@ -172,8 +168,9 @@ const CalendarDay = memo(
       );
 
       if (!isCurrentMonth) {
-        const dimensionValue = theme.space[CALENDAR_DAY_SPACING_VALUE];
-        return <Box aria-hidden={true} height={dimensionValue} width={dimensionValue} />;
+        return (
+          <Box aria-hidden={true} height={CALENDAR_DAY_DIMENSION} width={CALENDAR_DAY_DIMENSION} />
+        );
       }
 
       const dayButton = (
@@ -232,77 +229,75 @@ const CalendarDay = memo(
 
 CalendarDay.displayName = 'CalendarDay';
 
-/** Custom styles for individual elements of the Calendar component (mobile). */
-export type CalendarStyles = {
-  /** Root container element */
-  root?: StyleProp<ViewStyle>;
-  /** Header row containing month label and navigation arrows */
-  header?: StyleProp<ViewStyle>;
-  /** Month and year title text element */
-  title?: StyleProp<TextStyle>;
-  /** Navigation controls element */
-  navigation?: StyleProp<ViewStyle>;
-  /** Container for the days-of-week header and the date grid */
-  content?: StyleProp<ViewStyle>;
-  /** Individual date cell element, basic ViewStyle applied to the pressable wrapper */
-  day?: StyleProp<ViewStyle>;
-};
-
 export type CalendarRefHandle = {
   /** Sets accessibility focus on the selected date, seed date, or today. */
   focusInitialDate: () => void;
 };
 
-export type CalendarBaseProps = SharedProps & {
-  /** Currently selected Calendar date. Date used to generate the Calendar month. Will be rendered with active styles. */
-  selectedDate?: Date | null;
-  /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
-  seedDate?: Date;
-  /** Callback function fired when pressing a Calendar date. */
-  onPressDate?: (date: Date) => void;
-  /** Disables user interaction. */
-  disabled?: boolean;
-  /** Hides the Calendar next and previous month arrows, but does not prevent navigating to the next or previous months via keyboard. This probably only makes sense to be used when `minDate` and `maxDate` are set to the first and last days of the same month. */
-  hideControls?: boolean;
-  /** Array of disabled dates, and date tuples for date ranges. Make sure to set `disabledDateError` as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
-  disabledDates?: (Date | [Date, Date])[];
-  /** Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
-  highlightedDates?: (Date | [Date, Date])[];
-  /** Minimum date allowed to be selected, inclusive. Dates before the `minDate` are disabled. All navigation to months before the `minDate` is disabled. */
-  minDate?: Date;
-  /** Maximum date allowed to be selected, inclusive. Dates after the `maxDate` are disabled. All navigation to months after the `maxDate` is disabled. */
-  maxDate?: Date;
-  /**
-   * Tooltip content shown when hovering or focusing a disabled date, including dates before the `minDate` or after the `maxDate`.
-   * @default 'Date unavailable'
-   */
-  disabledDateError?: string;
-  /**
-   * Accessibility label describing the Calendar next month arrow.
-   * @default 'Go to next month'
-   */
-  nextArrowAccessibilityLabel?: string;
-  /**
-   * Accessibility label describing the Calendar previous month arrow.
-   * @default 'Go to previous month'
-   */
-  previousArrowAccessibilityLabel?: string;
-  /**
-   * Accessibility hint for the current day when it is not disabled. Omit or leave default for non-localized usage.
-   * @default 'Today'
-   */
-  todayAccessibilityHint?: string;
-  /**
-   * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
-   * @default 'Highlighted'
-   */
-  highlightedDateAccessibilityHint?: string;
-};
+export type CalendarBaseProps = SharedProps &
+  Omit<BoxBaseProps, 'children'> & {
+    /** Currently selected Calendar date. Date used to generate the Calendar month. Will be rendered with active styles. */
+    selectedDate?: Date | null;
+    /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
+    seedDate?: Date;
+    /** Callback function fired when pressing a Calendar date. */
+    onPressDate?: (date: Date) => void;
+    /** Disables user interaction. */
+    disabled?: boolean;
+    /** Hides the Calendar next and previous month arrows, but does not prevent navigating to the next or previous months via keyboard. This probably only makes sense to be used when `minDate` and `maxDate` are set to the first and last days of the same month. */
+    hideControls?: boolean;
+    /** Array of disabled dates, and date tuples for date ranges. Make sure to set `disabledDateError` as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
+    disabledDates?: (Date | [Date, Date])[];
+    /** Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
+    highlightedDates?: (Date | [Date, Date])[];
+    /** Minimum date allowed to be selected, inclusive. Dates before the `minDate` are disabled. All navigation to months before the `minDate` is disabled. */
+    minDate?: Date;
+    /** Maximum date allowed to be selected, inclusive. Dates after the `maxDate` are disabled. All navigation to months after the `maxDate` is disabled. */
+    maxDate?: Date;
+    /**
+     * Tooltip content shown when hovering or focusing a disabled date, including dates before the `minDate` or after the `maxDate`.
+     * @default 'Date unavailable'
+     */
+    disabledDateError?: string;
+    /**
+     * Accessibility label describing the Calendar next month arrow.
+     * @default 'Go to next month'
+     */
+    nextArrowAccessibilityLabel?: string;
+    /**
+     * Accessibility label describing the Calendar previous month arrow.
+     * @default 'Go to previous month'
+     */
+    previousArrowAccessibilityLabel?: string;
+    /**
+     * Accessibility hint for the current day when it is not disabled. Omit or leave default for non-localized usage.
+     * @default 'Today'
+     */
+    todayAccessibilityHint?: string;
+    /**
+     * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
+     * @default 'Highlighted'
+     */
+    highlightedDateAccessibilityHint?: string;
+  };
 
 export type CalendarProps = CalendarBaseProps &
   Omit<VStackProps, 'children' | 'ref' | 'style'> & {
     /** Custom styles for individual elements of the Calendar component. */
-    styles?: CalendarStyles;
+    styles?: {
+      /** Root container element */
+      root?: StyleProp<ViewStyle>;
+      /** Header row containing month label and navigation arrows */
+      header?: StyleProp<ViewStyle>;
+      /** Month and year title text element */
+      title?: StyleProp<TextStyle>;
+      /** Navigation controls element */
+      navigation?: StyleProp<ViewStyle>;
+      /** Container for the days-of-week header and the date grid */
+      content?: StyleProp<ViewStyle>;
+      /** Individual date cell element, basic ViewStyle applied to the pressable wrapper */
+      day?: StyleProp<ViewStyle>;
+    };
   };
 
 export const Calendar = memo(
@@ -324,13 +319,12 @@ export const Calendar = memo(
         todayAccessibilityHint = 'Today',
         highlightedDateAccessibilityHint = 'Highlighted',
         testID,
+        style,
         styles,
         ...props
       },
       ref,
     ) => {
-      const theme = useTheme();
-      const calendarDayDimensionValue = theme.space[CALENDAR_DAY_SPACING_VALUE];
       const { setA11yFocus, announceForA11y } = useA11y();
       const today = useMemo(() => getMidnightDate(new Date()), []);
       const todayTime = useMemo(() => today.getTime(), [today]);
@@ -372,17 +366,6 @@ export const Calendar = memo(
       const focusTargetTime = useMemo(
         () => selectedTime || (seedDate ? getMidnightDate(seedDate).getTime() : null) || todayTime,
         [selectedTime, seedDate, todayTime],
-      );
-
-      const handleDatePress = useCallback(
-        (date: Date) => {
-          onPressDate?.(date);
-
-          // Note: We don't need to re-focus the button after selection.
-          // The button remains focused after activation, and both TalkBack and VoiceOver
-          // automatically announce the updated accessibilityState={{ selected: true }}.
-        },
-        [onPressDate],
       );
 
       useImperativeHandle(
@@ -481,7 +464,7 @@ export const Calendar = memo(
           borderRadius={400}
           opacity={disabled ? accessibleOpacityDisabled : undefined}
           overflow="hidden"
-          style={styles?.root}
+          style={[style, styles?.root]}
           testID={testID}
           {...props}
         >
@@ -529,9 +512,9 @@ export const Calendar = memo(
                 <Box
                   key={day}
                   alignItems="center"
-                  height={calendarDayDimensionValue}
+                  height={CALENDAR_DAY_DIMENSION}
                   justifyContent="center"
-                  width={calendarDayDimensionValue}
+                  width={CALENDAR_DAY_DIMENSION}
                 >
                   <Text font="body" userSelect="none">
                     {day.charAt(0)}
@@ -560,7 +543,7 @@ export const Calendar = memo(
                       highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
                       isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
                       isToday={time === todayTime}
-                      onPress={handleDatePress}
+                      onPress={onPressDate}
                       style={styles?.day}
                       todayAccessibilityHint={todayAccessibilityHint}
                     />

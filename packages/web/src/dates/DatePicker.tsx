@@ -19,7 +19,7 @@ import {
   type PopoverProps,
 } from '../overlays/popover/PopoverProps';
 
-import { Calendar, type CalendarProps } from './Calendar';
+import { Calendar } from './Calendar';
 import { DateInput, type DateInputProps } from './DateInput';
 
 const MotionVStack = motion(VStack);
@@ -68,6 +68,11 @@ export type DatePickerBaseProps = {
    * @default 'Go to previous month'
    */
   previousArrowAccessibilityLabel?: string;
+  /**
+   * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
+   * @default 'Highlighted'
+   */
+  highlightedDateAccessibilityHint?: string;
 };
 
 export type DatePickerProps = DatePickerBaseProps & {
@@ -129,13 +134,6 @@ export type DatePickerProps = DatePickerBaseProps & {
     | 'className'
     | 'style'
   > &
-  Pick<
-    CalendarProps,
-    | 'seedDate'
-    | 'highlightedDates'
-    | 'nextArrowAccessibilityLabel'
-    | 'previousArrowAccessibilityLabel'
-  > &
   Pick<PopoverProps, 'showOverlay'>;
 
 const calendarAnimation: AnimationProps = getMotionProps({
@@ -168,6 +166,7 @@ export const DatePicker = memo(
         seedDate,
         disabledDates,
         highlightedDates,
+        highlightedDateAccessibilityHint,
         minDate,
         maxDate,
         requiredError = 'This field is required',
@@ -348,6 +347,7 @@ export const DatePicker = memo(
               disabled={disabled}
               disabledDateError={disabledDateError}
               disabledDates={disabledDates}
+              highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
               highlightedDates={highlightedDates}
               maxDate={maxDate}
               minDate={minDate}
@@ -367,6 +367,7 @@ export const DatePicker = memo(
           seedDate,
           disabledDates,
           highlightedDates,
+          highlightedDateAccessibilityHint,
           minDate,
           maxDate,
           disabledDateError,
