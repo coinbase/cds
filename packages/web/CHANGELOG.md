@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.53.0 (3/16/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update Checkbox borderRadius to match design. [[#509](https://github.com/coinbase/cds/pull/509)]
 
 #### 📘 Misc
 
