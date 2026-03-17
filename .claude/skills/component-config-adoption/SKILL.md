@@ -25,7 +25,7 @@ Before coding, identify:
 
 1. Component name (for example `Button`, `Tag`, `DatePicker`)
 2. Platform (`web`, `mobile`, or both)
-3. Target prop type to register in `ComponentConfig` (for initial rollout, use `*Props`)
+3. Target prop type to register in `ComponentConfig` (for initial rollout, use `*BaseProps`)
 4. Whether style merge behavior is needed in provider stories/tests
 
 ## Implementation Steps
@@ -42,18 +42,17 @@ For the current baseline setup, keep this map intentionally small (`Button` only
 Pattern:
 
 ```ts
-import type { MyComponentProps } from '../category/MyComponent';
+import type { MyComponentBaseProps } from '../category/MyComponent';
 
 export type ComponentConfig = {
-  MyComponent?: ConfigResolver<MyComponentProps>;
+  MyComponent?: ConfigResolver<MyComponentBaseProps>;
 };
 ```
 
 Notes:
 
 - Use `ConfigResolver<...>` so both static object config and functional config are supported.
-- For initial testing, prefer `*Props` over `*BaseProps` to keep adoption friction low.
-- If the user asks for minimal scope, only include `Button?: ConfigResolver<ButtonProps>`.
+- Use `*BaseProps` for resolver typing to avoid platform specific and polymorphic type issues.
 
 ### 2) Adopt `useComponentConfig` In Component
 
@@ -189,5 +188,5 @@ Preferred locations:
 - Forgetting to register the component in `ComponentConfig` causes type errors or prevents config usage.
 - Calling `useComponentConfig` after deriving props can bypass expected defaults.
 - Using unregistered config keys in tests/stories leads to noisy failures during initial rollout.
-- Mixing `*BaseProps` and `*Props` inconsistently across platforms makes resolver typing harder to reason about.
+- Using `*Props` for polymorphic components can over-narrow resolver typing (for example default `'button'` on web).
 - Accidentally changing `memo` / `forwardRef` wrappers during adoption.
