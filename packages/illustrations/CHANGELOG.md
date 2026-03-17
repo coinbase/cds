@@ -8,6 +8,108 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (79)
+
+###### Pictogram (29)
+
+- instoEarnCoins
+- instoNftLibrary
+- instoWalletWarning
+- instoEthRewards
+- instoAdvancedTradingRebates
+- instoDecentralizationEverything
+- instoRiskStaking
+- instoGem
+- instoStakingGraph
+- instoKey
+- instoDecentralizedExchange
+- instoSelfCustodyWallet
+- instoBorrowingLending
+- instoAccount
+- instoEthStakingChart
+- instoEarnGraph
+- instoPasswordWalletLocked
+- instoRestaking
+- instoAddressBook
+- instoDelegate
+- instoCrypto101
+- instoDecentralizedWeb3
+- instoApyInterest
+- instoAuthenticatorProgress
+- instoCoinbaseOneShield
+- instoTrading
+- instoFiat
+- instoprimeMobileApp
+- instoEth
+
+###### HeroSquare (26)
+
+- instoSecurityKeyAuth
+- instoWalletSecurity
+- instoGovernance
+- instoEarnGlobe
+- instoStakingMissedReturns
+- instoRequestSent
+- instoEthStakingUpsell
+- instoWeb3MobileSetupStart
+- tradingPerpetualsUsdc
+- instoCoinbaseOneProtectedCrypto
+- instoOnChain
+- instoDocumentSuccess
+- instoOnChain
+- cryptoPortfolioUsdc
+- instoWallet
+- instoPhoneUnknown
+- instoKeyGenerationPending
+- instoAddBankAccount
+- instoEthStakingRewards
+- instoStaking
+- instoPrimeStaking
+- instoOpenEmail
+- instoPrivateKey
+- instoKeyGenerationComplete
+- instoAdd2Fa
+- instoEnableBiometrics
+
+###### SpotIcon (2)
+
+- instoStakingProduct
+- instantAccess
+
+###### SpotRectangle (10)
+
+- instoSemiCustodial
+- instoEmptyTrading
+- instoCryptoAndMore
+- instoPrimeStaking
+- instoEthStakingMovement
+- stakingUpgrade
+- insto
+- instoStaking
+- instoGetStartedInMinutes
+- instoCurrency
+
+###### SpotSquare (12)
+
+- instantUnstaking
+- instoEthStakingRewards
+- instoStaking
+- instoPrimeStaking
+- instoEthStaking
+- instoAuthenticatorProgress
+- instoSideChainSide
+- instoUbiKey
+- instoSecurityKey
+- instoWaiting
+- instoDappWallet
+- instoPixDeposits
+
+##### ⭐️ Updated (1)
+
+###### Pictogram (1)
+
+- browserMultiPlatform
+
 ## 4.33.0 (3/11/2026 PST)
 
 #### 🚀 Updates
