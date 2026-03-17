@@ -76,6 +76,8 @@ Fill out the [pull request template](https://github.com/coinbase/cds/blob/master
 
 Before requesting review, update the version and changelog:
 
+Use the [Versioning section in README](README.md#versioning) when choosing whether a change is major, minor, or patch.
+
 ```sh
 # Update changelog and bump version
 yarn bump-version
