@@ -172,5 +172,52 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
         },
       ],
     },
+    // Chip with onPress requires accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { Chip } from '@coinbase/cds-mobile';
+        const Component = () => {
+          return <Chip onPress={() => {}}>BTC</Chip>;
+        }
+      `,
+      errors: [{ messageId: 'missingAccessibilityLabel' as const }],
+    },
+    // SegmentedTabs requires accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { SegmentedTabs } from '@coinbase/cds-mobile';
+        const tabs = [{ id: 'buy', label: 'Buy' }];
+        const Component = () => {
+          return <SegmentedTabs activeTab={tabs[0]} onChange={() => {}} tabs={tabs} />;
+        }
+      `,
+      errors: [{ messageId: 'missingAccessibilityLabel' as const }],
+    },
+    // Combobox requires accessibilityHint
+    {
+      code: normalizeIndent`
+        import { Combobox } from '@coinbase/cds-mobile';
+        const options = [{ value: 'a', label: 'A' }];
+        const Component = () => {
+          return (
+            <Combobox accessibilityLabel="test" onChange={() => {}} options={options} />
+          );
+        }
+      `,
+      errors: [{ messageId: 'missingAccessibilityHint' as const }],
+    },
+    // Tray requires accessible name
+    {
+      code: normalizeIndent`
+        import { Tray } from '@coinbase/cds-mobile';
+        const Component = () => {
+          return <Tray title="Test" />;
+        }
+      `,
+      errors: [
+        { messageId: 'missingAccessibleName' as const },
+        { messageId: 'missingHandleBarAccessibilityLabel' as const },
+      ],
+    },
   ],
 });

@@ -20,6 +20,9 @@ const ruleCreator = ESLintUtils.RuleCreator(
 type MessageIds =
   | 'missingAccessibilityLabel'
   | 'missingAccessibilityLabelSuggestion'
+  | 'missingAccessibleName'
+  | 'missingAccessibilityHint'
+  | 'missingHiddenSelectedOptionsLabel'
   | 'missingHandleBarAccessibilityLabel'
   | 'missingHelperTextErrorIconAccessibilityLabel'
   | 'missingCalendarOpenCloseAccessibilityLabels'
@@ -51,7 +54,13 @@ const config = {
     'NavigationBar',
     'Sidebar',
     'Popover',
+    'SegmentedTabs',
   ],
+  checkForInteractiveAccessibilityLabelProps: ['Chip', 'MediaChip', 'ListCell'],
+  checkForComboboxAccessibilityLabelProps: ['Combobox'],
+  checkForComboboxMultiSelectionAccessibilityLabelProps: ['Combobox'],
+  checkForComboboxAccessibilityHintProps: ['Combobox'],
+  checkForAccessibleNameProps: ['Tray'],
   checkForMissingHandleBarAccessibilityLabel: ['Drawer', 'SelectChip', 'Tray'],
   checkForHelperTextErrorIconAccessibilityLabelProps: ['TextInput'],
   checkForCalendarOpenCloseAccessibilityLabelProps: ['DatePicker'],
@@ -77,6 +86,9 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
     messages: {
       missingAccessibilityLabel: `Missing 'accessibilityLabel' on <{{componentName}}>.`,
       missingAccessibilityLabelSuggestion: `Add missing accessibility label`,
+      missingAccessibleName: `Missing an accessible name on <{{componentName}}>. Add 'accessibilityLabel' or 'accessibilityLabelledBy'.`,
+      missingAccessibilityHint: `Missing 'accessibilityHint' on <{{componentName}}>.`,
+      missingHiddenSelectedOptionsLabel: `Missing 'hiddenSelectedOptionsLabel' on <{{componentName}}> when type='multi'.`,
       missingHandleBarAccessibilityLabel: `Missing 'handleBarAccessibilityLabel' on <{{componentName}}>.`,
       missingHelperTextErrorIconAccessibilityLabel: `Missing 'helperTextErrorIconAccessibilityLabel' on <{{componentName}}>.`,
       missingCalendarOpenCloseAccessibilityLabels: `Missing calendar open/close accessibility label on <{{componentName}}>. Provide both 'openCalendarAccessibilityLabel' and 'closeCalendarAccessibilityLabel' (or deprecated 'calendarIconButtonAccessibilityLabel').`,
@@ -118,6 +130,9 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
         const {
           hasLabel,
           hasAccessibilityLabel,
+          hasAccessibilityLabelledBy,
+          hasHiddenSelectedOptionsLabel,
+          hasAccessibilityHint,
           hasSpreadProps,
           componentName,
           hasInnerText,
@@ -127,6 +142,8 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
           hasCloseCalendarAccessibilityLabel,
           hasDeprecatedCalendarIconButtonAccessibilityLabel,
           hasOnDismissPressProp,
+          hasOnClickProp,
+          hasOnPressProp,
           hasMissingStartIconAccessibilityLabel,
           hasMissingClearIconAccessibilityLabel,
         } = extractA11yAttributesState(node, node.openingElement);
@@ -150,12 +167,59 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
           isTextInputWithNegativeVariant = false;
         }
 
+        let isComboboxWithMultiType = false;
+        if (getSimpleNameFromJSX(node.openingElement) === 'Combobox') {
+          const attributes = node.openingElement.attributes as TSESTree.JSXAttribute[];
+          const typeAttribute = attributes.find((attr) => attr.name?.name === 'type');
+          if (typeAttribute) {
+            const typeValue = typeAttribute.value;
+            if (typeValue && typeValue.type === AST_NODE_TYPES.Literal) {
+              isComboboxWithMultiType = typeValue.value === 'multi';
+            }
+          }
+        }
+
         const conditionalChecks: ConditionalCheckType[] = [
           {
             configArray: config.componentsRequiringAccessibilityLabel,
-            condition: !hasAccessibilityLabel && !(hasSpreadProps || hasInnerText || hasLabel),
+            condition:
+              !hasAccessibilityLabel &&
+              !hasAccessibilityLabelledBy &&
+              !(hasSpreadProps || hasInnerText || hasLabel),
             messageId: 'missingAccessibilityLabel',
             suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.checkForInteractiveAccessibilityLabelProps,
+            condition:
+              (hasOnClickProp || hasOnPressProp) &&
+              !hasAccessibilityLabel &&
+              !hasAccessibilityLabelledBy,
+            messageId: 'missingAccessibilityLabel',
+            suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.checkForComboboxAccessibilityLabelProps,
+            condition: !hasAccessibilityLabel && !hasAccessibilityLabelledBy,
+            messageId: 'missingAccessibleName',
+            suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.checkForComboboxAccessibilityHintProps,
+            condition: !hasAccessibilityHint,
+            messageId: 'missingAccessibilityHint',
+            suggestedPropToAdd: 'accessibilityHint',
+          },
+          {
+            configArray: config.checkForComboboxMultiSelectionAccessibilityLabelProps,
+            condition: isComboboxWithMultiType && !hasHiddenSelectedOptionsLabel,
+            messageId: 'missingHiddenSelectedOptionsLabel',
+            suggestedPropToAdd: 'hiddenSelectedOptionsLabel',
+          },
+          {
+            configArray: config.checkForAccessibleNameProps,
+            condition: !hasAccessibilityLabel && !hasAccessibilityLabelledBy,
+            messageId: 'missingAccessibleName',
           },
           {
             configArray: config.checkForMissingHandleBarAccessibilityLabel,

@@ -173,5 +173,63 @@ ruleTester.run('control-has-associated-label-extended', rule, {
         },
       ],
     },
+    // Chip with onClick requires accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { Chip } from '@coinbase/cds-web';
+        const Component = () => {
+          return <Chip onClick={() => {}}>BTC</Chip>;
+        }
+      `,
+      errors: [{ messageId: 'missingAccessibilityLabel' as const }],
+    },
+    // SegmentedTabs requires accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { SegmentedTabs } from '@coinbase/cds-web';
+        const tabs = [{ id: 'buy', label: 'Buy' }];
+        const Component = () => {
+          return <SegmentedTabs activeTab={tabs[0]} onChange={() => {}} tabs={tabs} />;
+        }
+      `,
+      errors: [{ messageId: 'missingAccessibilityLabel' as const }],
+    },
+    // Combobox requires controlAccessibilityLabel
+    {
+      code: normalizeIndent`
+        import { Combobox } from '@coinbase/cds-web';
+        const options = [{ value: 'a', label: 'A' }];
+        const Component = () => {
+          return <Combobox accessibilityLabel="test" onChange={() => {}} options={options} />;
+        }
+      `,
+      errors: [{ messageId: 'missingControlAccessibilityLabel' as const }],
+    },
+    // ModalHeader with back action requires backAccessibilityLabel
+    {
+      code: normalizeIndent`
+        import { ModalHeader } from '@coinbase/cds-web';
+        const Component = () => {
+          return (
+            <ModalHeader closeAccessibilityLabel="Close" onBackButtonClick={() => {}} title="Title" />
+          );
+        }
+      `,
+      errors: [{ messageId: 'missingBackAccessibilityLabel' as const }],
+    },
+    // Table requires caption or accessible name props
+    {
+      code: normalizeIndent`
+        import { Table } from '@coinbase/cds-web';
+        const Component = () => {
+          return (
+            <Table>
+              <tbody />
+            </Table>
+          );
+        }
+      `,
+      errors: [{ messageId: 'missingTableAccessibleName' as const }],
+    },
   ],
 });

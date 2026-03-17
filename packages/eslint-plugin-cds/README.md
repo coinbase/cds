@@ -152,6 +152,21 @@ For components listed under `collapsibleCheckForControlledElementAccessibilityPr
   - Checks for presence of `accessibilityLabel` when `onDismissPress` is present
 - `SearchInput`
   - Checks for presence of `startIconAccessibilityLabel` and `clearIconAccessibilityLabel`
+- `Chip`, `MediaChip`, `ListCell`
+  - Checks for presence of `accessibilityLabel` when interactive (`onClick`)
+- `Combobox`
+  - Checks for presence of `accessibilityLabel` / `accessibilityLabelledBy`
+  - Checks for presence of `controlAccessibilityLabel`
+  - Checks for presence of `removeSelectedOptionAccessibilityLabel` and `hiddenSelectedOptionsLabel` when `type="multi"`
+- `Tray`
+  - Checks for presence of `accessibilityLabel` or `accessibilityLabelledBy`
+- `Table`
+  - Checks for accessible table name via `TableCaption`, `accessibilityLabelledBy`, or `accessibilityLabel`
+- `ModalHeader`
+  - Checks for presence of `closeAccessibilityLabel`
+  - Checks for presence of `backAccessibilityLabel` when `onBackButtonClick` is present
+- `SegmentedTabs`
+  - Checks for presence of `accessibilityLabel`
 
 #### 🔍 hasValidA11yDescriptorsExtended (mobile)
 
@@ -196,6 +211,16 @@ This rule also checks for other required a11y labels that need to be enforced ou
   - Checks for presence of `accessibilityLabel` when `onDismissPress` is present
 - `SearchInput`
   - Checks for presence of `startIconAccessibilityLabel` and `clearIconAccessibilityLabel`
+- `Chip`, `MediaChip`, `ListCell`
+  - Checks for presence of `accessibilityLabel` when interactive (`onPress`/`onClick`)
+- `Combobox`
+  - Checks for presence of `accessibilityLabel` / `accessibilityLabelledBy`
+  - Checks for presence of `accessibilityHint`
+  - Checks for presence of `hiddenSelectedOptionsLabel` when `type="multi"`
+- `Tray`
+  - Checks for presence of `accessibilityLabel` or `accessibilityLabelledBy`
+- `SegmentedTabs`
+  - Checks for presence of `accessibilityLabel`
 
 ### Current CDS Best Practices Rules
 
