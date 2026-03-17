@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.53.1 (3/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: update RemoteImageGroup excess bg color. [[#512](https://github.com/coinbase/cds/pull/512)]
+
 ## 8.53.0 (3/16/2026 PST)
 
 #### 🚀 Updates
