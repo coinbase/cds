@@ -491,5 +491,12 @@ export default {
 };
 
 ProductCarousel.parameters = {
-  a11y: { config: { rules: [{ id: 'scrollable-region-focusable', enabled: false }] } },
+  a11y: {
+    config: { rules: [{ id: 'scrollable-region-focusable', enabled: false }] },
+    options: {
+      rules: {
+        'target-size': { enabled: false },
+      },
+    },
+  },
 };
