@@ -2733,7 +2733,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
+"@coinbase/eslint-plugin-cds@workspace:^, @coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
   version: 0.0.0-use.local
   resolution: "@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
   dependencies:
@@ -18091,6 +18091,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.2"
     "@babel/template": "npm:^7.20.7"
     "@babel/types": "npm:^7.20.7"
+    "@coinbase/eslint-plugin-cds": "workspace:^"
     "@coinbase/eslint-plugin-internal": "workspace:^"
     "@figma/code-connect": "npm:^1.3.13"
     "@graphql-tools/jest-transform": "npm:^2.0.0"

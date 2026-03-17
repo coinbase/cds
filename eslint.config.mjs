@@ -14,6 +14,7 @@ import eslintReactNative from 'eslint-plugin-react-native';
 import eslintCodegen from 'eslint-plugin-codegen';
 import internalPlugin from '@coinbase/eslint-plugin-internal';
 import eslintSimpleImportSort from 'eslint-plugin-simple-import-sort';
+import cds from '@coinbase/eslint-plugin-cds';
 
 const ignores = [
   '*.md',
@@ -165,6 +166,8 @@ const typescriptRules = {
   '@typescript-eslint/no-unsafe-function-type': 'error',
   '@typescript-eslint/no-unused-vars': 'off',
   '@typescript-eslint/prefer-namespace-keyword': 'off',
+  '@coinbase/cds/control-has-associated-label-extended': 'warn',
+  '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
 };
 
 // These rules only apply to test files
@@ -188,6 +191,7 @@ const sharedPlugins = {
 // These plugins only apply to TS/TSX files
 const typescriptPlugins = {
   codegen: eslintCodegen,
+  '@coinbase/cds': cds,
 };
 
 // These plugins only apply to React Native files
