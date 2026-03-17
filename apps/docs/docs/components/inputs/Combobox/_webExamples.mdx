@@ -1,51 +1,8 @@
-## A note on search logic
+## Basics
 
-We use [fuse.js](https://www.fusejs.io/) to power the fuzzy search logic for Combobox. You can override this search logic with your own using the `filterFunction` prop.
-
-## Multi-Select
-
-Basic multi-selection combobox with search.
+To start, you can provide a label, an array of options, control state.
 
 ```tsx live
-function MultiSelect() {
-  const fruitOptions: SelectOption[] = [
-    { value: 'apple', label: 'Apple' },
-    { value: 'banana', label: 'Banana' },
-    { value: 'cherry', label: 'Cherry' },
-    { value: 'date', label: 'Date' },
-    { value: 'elderberry', label: 'Elderberry' },
-    { value: 'fig', label: 'Fig' },
-    { value: 'grape', label: 'Grape' },
-    { value: 'honeydew', label: 'Honeydew' },
-    { value: 'kiwi', label: 'Kiwi' },
-    { value: 'lemon', label: 'Lemon' },
-    { value: 'mango', label: 'Mango' },
-    { value: 'orange', label: 'Orange' },
-    { value: 'papaya', label: 'Papaya' },
-    { value: 'raspberry', label: 'Raspberry' },
-    { value: 'strawberry', label: 'Strawberry' },
-  ];
-
-  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
-
-  return (
-    <Combobox
-      label="Select fruits"
-      onChange={onChange}
-      options={fruitOptions}
-      placeholder="Search and select fruits..."
-      type="multi"
-      value={value}
-    />
-  );
-}
-```
-
-## Single Select
-
-Standard single-selection combobox with an option to clear the current value.
-
-```jsx live
 function SingleSelect() {
   const singleSelectOptions = [
     { value: null, label: 'Remove selection' },
@@ -69,12 +26,12 @@ function SingleSelect() {
 }
 ```
 
-## Helper Text
+### Multiple Selections
 
-Communicate limits or guidance by pairing helper text with multi-select usage.
+You can also allow users to select multiple options with `type="multi"`.
 
 ```tsx live
-function HelperText() {
+function MultiSelect() {
   const fruitOptions: SelectOption[] = [
     { value: 'apple', label: 'Apple' },
     { value: 'banana', label: 'Banana' },
@@ -93,7 +50,273 @@ function HelperText() {
     { value: 'strawberry', label: 'Strawberry' },
   ];
 
-  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      label="Select fruits"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Search and select fruits..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+## Search
+
+We use [fuse.js](https://www.fusejs.io/) for fuzzy search by default. You can override with `filterFunction`.
+
+```tsx live
+function CustomFilter() {
+  const cryptoOptions: SelectOption[] = [
+    { value: 'btc', label: 'Bitcoin', description: 'BTC • Digital Gold' },
+    { value: 'eth', label: 'Ethereum', description: 'ETH • Smart Contracts' },
+    { value: 'usdc', label: 'USD Coin', description: 'USDC • Stablecoin' },
+    { value: 'sol', label: 'Solana', description: 'SOL • High Performance' },
+  ];
+
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  const filterFunction = useCallback((options: SelectOption[], searchText: string) => {
+    const search = searchText.toLowerCase().trim();
+    if (!search) return options;
+    return options.filter((option) => {
+      const label = typeof option.label === 'string' ? option.label.toLowerCase() : '';
+      const description =
+        typeof option.description === 'string' ? option.description.toLowerCase() : '';
+      return label.startsWith(search) || description.startsWith(search);
+    });
+  }, []);
+
+  return (
+    <Combobox
+      filterFunction={filterFunction}
+      label="Custom filter (starts with)"
+      onChange={onChange}
+      options={cryptoOptions}
+      placeholder="Type to filter..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+## Grouped
+
+Display options under headers using `label` and `options`. Sort options by the same dimension you group by.
+
+```tsx live
+function GroupedOptions() {
+  const groupedOptions = [
+    {
+      label: 'Fruits',
+      options: [
+        { value: 'apple', label: 'Apple' },
+        { value: 'banana', label: 'Banana' },
+        { value: 'cherry', label: 'Cherry' },
+        { value: 'date', label: 'Date' },
+      ],
+    },
+    {
+      label: 'Vegetables',
+      options: [
+        { value: 'carrot', label: 'Carrot' },
+        { value: 'broccoli', label: 'Broccoli' },
+        { value: 'spinach', label: 'Spinach' },
+      ],
+    },
+  ];
+
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      label="Category"
+      onChange={onChange}
+      options={groupedOptions}
+      placeholder="Search by category..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+## Accessibility
+
+Use accessibility labels to provide clear control and dropdown context. For multi-select, add remove and hidden-selection labels so screen readers can describe chip actions and +X summaries.
+
+```tsx live
+function AccessibilityProps() {
+  const priorityOptions: SelectOption[] = [
+    { value: 'high', label: 'High Priority' },
+    { value: 'medium', label: 'Medium Priority' },
+    { value: 'low', label: 'Low Priority' },
+  ];
+
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      accessibilityLabel="Priority options list"
+      controlAccessibilityLabel="Task priority combobox"
+      hiddenSelectedOptionsLabel="priorities"
+      label="Task Priority"
+      maxSelectedOptionsToShow={1}
+      onChange={onChange}
+      options={priorityOptions}
+      placeholder="Choose priority..."
+      removeSelectedOptionAccessibilityLabel="Remove priority"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+## Styling
+
+### Selection Display Limit
+
+Cap visible chips with `maxSelectedOptionsToShow`; the rest show as +X more. Pair with `hiddenSelectedOptionsLabel` for screen readers.
+
+```tsx live
+function LimitDisplayedSelections() {
+  const countryOptions: SelectOption[] = [
+    { value: 'us', label: 'United States', description: 'North America' },
+    { value: 'ca', label: 'Canada', description: 'North America' },
+    { value: 'mx', label: 'Mexico', description: 'North America' },
+    { value: 'uk', label: 'United Kingdom', description: 'Europe' },
+    { value: 'fr', label: 'France', description: 'Europe' },
+    { value: 'de', label: 'Germany', description: 'Europe' },
+  ];
+
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      hiddenSelectedOptionsLabel="countries"
+      label="Countries"
+      maxSelectedOptionsToShow={2}
+      onChange={onChange}
+      options={countryOptions}
+      placeholder="Select countries..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Alignment
+
+Align selected values with the `align` prop.
+
+```tsx live
+function AlignmentExample() {
+  const fruitOptions: SelectOption[] = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <VStack gap={2}>
+      <Combobox
+        align="start"
+        label="Align start"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        align="end"
+        label="Align end"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search..."
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```
+
+### Borderless
+
+Remove the border with `bordered={false}`.
+
+```tsx live
+function BorderlessExample() {
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+  ];
+  const [value, setValue] = useState('apple');
+
+  return (
+    <Combobox
+      bordered={false}
+      label="Borderless"
+      onChange={setValue}
+      options={fruitOptions}
+      placeholder="Search..."
+      value={value}
+    />
+  );
+}
+```
+
+### Compact
+
+Use smaller sizing with `compact`.
+
+```tsx live
+function CompactExample() {
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      compact
+      label="Compact"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Compact combobox..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Helper Text
+
+Add guidance with `helperText`.
+
+```tsx live
+function HelperTextExample() {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const fruitOptions: SelectOption[] = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
 
   return (
     <Combobox
@@ -109,65 +332,161 @@ function HelperText() {
 }
 ```
 
-## Alignment
+## Composed Examples
 
-The alignment of the selected value(s) can be adjusted using the `align` prop.
+### Country Selection
 
-::::note
-Left / right alignment is preferred for styling.
-::::
+You can include flag emoji in labels to create a country selector.
 
 ```tsx live
-function AlignmentExample() {
-  const fruitOptions: SelectOption[] = [
-    { value: 'apple', label: 'Apple' },
-    { value: 'banana', label: 'Banana' },
-    { value: 'cherry', label: 'Cherry' },
-    { value: 'date', label: 'Date' },
-    { value: 'elderberry', label: 'Elderberry' },
-    { value: 'fig', label: 'Fig' },
+function CountrySelectionExample() {
+  const getFlagEmoji = (cc) =>
+    cc
+      .toUpperCase()
+      .split('')
+      .map((c) => String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0)))
+      .join('');
+
+  const countryOptions = [
+    {
+      label: 'North America',
+      options: [
+        { value: 'us', label: `${getFlagEmoji('us')} United States` },
+        { value: 'ca', label: `${getFlagEmoji('ca')} Canada` },
+        { value: 'mx', label: `${getFlagEmoji('mx')} Mexico` },
+      ],
+    },
+    {
+      label: 'Europe',
+      options: [
+        { value: 'uk', label: `${getFlagEmoji('gb')} United Kingdom` },
+        { value: 'fr', label: `${getFlagEmoji('fr')} France` },
+        { value: 'de', label: `${getFlagEmoji('de')} Germany` },
+      ],
+    },
+    {
+      label: 'Asia',
+      options: [
+        { value: 'jp', label: `${getFlagEmoji('jp')} Japan` },
+        { value: 'cn', label: `${getFlagEmoji('cn')} China` },
+        { value: 'in', label: `${getFlagEmoji('in')} India` },
+      ],
+    },
   ];
-  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
-    initialValue: ['apple', 'banana'],
-  });
+
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
 
   return (
-    <VStack gap={1}>
-      <Combobox
-        label="Default align - start"
-        onChange={multiOnChange}
-        options={fruitOptions}
-        placeholder="Empty value"
-        type="multi"
-        value={multiValue}
-      />
-      <Combobox
-        align="end"
-        label="End align"
-        onChange={multiOnChange}
-        options={fruitOptions}
-        placeholder="Empty value"
-        type="multi"
-        value={multiValue}
-      />
-    </VStack>
+    <Combobox
+      label="Country"
+      maxSelectedOptionsToShow={3}
+      onChange={onChange}
+      options={countryOptions}
+      placeholder="Select countries..."
+      type="multi"
+      value={value}
+    />
   );
 }
 ```
 
-## Borderless
+### Free Solo
 
-You can remove the border from the combobox control by setting `bordered` to `false`.
+You can add a dynamic option to Combobox to enable free solo where users can provide their own value.
 
-```jsx live
-function BorderlessExample() {
-  const singleSelectOptions = [
-    { value: null, label: 'Remove selection' },
-    { value: 'apple', label: 'Apple' },
-    { value: 'banana', label: 'Banana' },
-    { value: 'cherry', label: 'Cherry' },
-    { value: 'date', label: 'Date' },
-  ];
+```tsx live
+function FreeSoloExample() {
+  const CREATE_OPTION_PREFIX = '__create__';
+
+  const FreeSoloCombobox = useMemo(() => {
+    function StableFreeSoloCombobox({
+      freeSolo = false,
+      options: initialOptions,
+      value,
+      onChange,
+      placeholder = 'Search or type to add...',
+      ...comboboxProps
+    }) {
+      const [searchText, setSearchText] = useState('');
+      const [options, setOptions] = useState(initialOptions);
+
+      useEffect(() => {
+        if (!freeSolo) return;
+        const initialSet = new Set(initialOptions.map((option) => option.value));
+        const valueSet = new Set(Array.isArray(value) ? value : value != null ? [value] : []);
+        setOptions((prevOptions) => {
+          const addedStillSelected = prevOptions.filter(
+            (option) => !initialSet.has(option.value) && valueSet.has(option.value),
+          );
+          return [...initialOptions, ...addedStillSelected];
+        });
+      }, [freeSolo, initialOptions, value]);
+
+      const optionsWithCreate = useMemo(() => {
+        if (!freeSolo) return options;
+        const trimmedSearch = searchText.trim();
+        if (!trimmedSearch) return options;
+
+        const alreadyExists = options.some(
+          (option) =>
+            typeof option.label === 'string' &&
+            option.label.toLowerCase() === trimmedSearch.toLowerCase(),
+        );
+        if (alreadyExists) return options;
+
+        return [
+          ...options,
+          { value: `${CREATE_OPTION_PREFIX}${trimmedSearch}`, label: `Add "${trimmedSearch}"` },
+        ];
+      }, [freeSolo, options, searchText]);
+
+      const handleChange = useCallback(
+        (newValue) => {
+          if (!freeSolo) {
+            onChange(newValue);
+            return;
+          }
+
+          const values = Array.isArray(newValue) ? newValue : newValue ? [newValue] : [];
+          const createValue = values.find((optionValue) =>
+            String(optionValue).startsWith(CREATE_OPTION_PREFIX),
+          );
+
+          if (!createValue) {
+            onChange(newValue);
+            return;
+          }
+
+          const newLabel = String(createValue).slice(CREATE_OPTION_PREFIX.length);
+          const normalizedValue = newLabel.toLowerCase();
+          const newOption = { value: normalizedValue, label: newLabel };
+
+          setOptions((prevOptions) => [...prevOptions, newOption]);
+
+          const updatedValues = values
+            .filter((optionValue) => !String(optionValue).startsWith(CREATE_OPTION_PREFIX))
+            .concat(normalizedValue);
+
+          onChange(comboboxProps.type === 'multi' ? updatedValues : normalizedValue);
+          setSearchText('');
+        },
+        [comboboxProps.type, freeSolo, onChange],
+      );
+
+      return (
+        <Combobox
+          {...comboboxProps}
+          {...(freeSolo ? { searchText, onSearch: setSearchText } : {})}
+          onChange={handleChange}
+          options={freeSolo ? optionsWithCreate : initialOptions}
+          placeholder={placeholder}
+          value={value}
+        />
+      );
+    }
+
+    return StableFreeSoloCombobox;
+  }, [CREATE_OPTION_PREFIX]);
 
   const fruitOptions = [
     { value: 'apple', label: 'Apple' },
@@ -175,31 +494,51 @@ function BorderlessExample() {
     { value: 'cherry', label: 'Cherry' },
     { value: 'date', label: 'Date' },
     { value: 'elderberry', label: 'Elderberry' },
+    { value: 'fig', label: 'Fig' },
   ];
 
-  const [singleValue, setSingleValue] = useState('apple');
-  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
-    initialValue: ['apple'],
-  });
+  const [standardSingleValue, setStandardSingleValue] = useState(null);
+  const [freeSoloSingleValue, setFreeSoloSingleValue] = useState(null);
+  const standardMulti = useMultiSelect({ initialValue: [] });
+  const freeSoloMulti = useMultiSelect({ initialValue: [] });
 
   return (
     <VStack gap={4}>
-      <Combobox
-        bordered={false}
-        label="Borderless single select"
-        onChange={setSingleValue}
-        options={singleSelectOptions}
+      <FreeSoloCombobox
+        freeSolo={false}
+        label="Standard single"
+        onChange={setStandardSingleValue}
+        options={fruitOptions}
         placeholder="Search fruits..."
-        value={singleValue}
+        type="single"
+        value={standardSingleValue}
       />
-      <Combobox
-        bordered={false}
-        label="Borderless multi select"
-        onChange={multiOnChange}
+      <FreeSoloCombobox
+        freeSolo
+        label="FreeSolo single"
+        onChange={setFreeSoloSingleValue}
+        options={fruitOptions}
+        placeholder="Search or type to add..."
+        type="single"
+        value={freeSoloSingleValue}
+      />
+      <FreeSoloCombobox
+        freeSolo={false}
+        label="Standard multi"
+        onChange={standardMulti.onChange}
         options={fruitOptions}
         placeholder="Search fruits..."
         type="multi"
-        value={multiValue}
+        value={standardMulti.value}
+      />
+      <FreeSoloCombobox
+        freeSolo
+        label="FreeSolo multi"
+        onChange={freeSoloMulti.onChange}
+        options={fruitOptions}
+        placeholder="Search or type to add..."
+        type="multi"
+        value={freeSoloMulti.value}
       />
     </VStack>
   );
