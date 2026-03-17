@@ -132,7 +132,7 @@ function GroupedOptions() {
 
 ## Accessibility
 
-Use `accessibilityLabel` and `accessibilityHint` to describe purpose and interaction. For multi-select, add hidden-selection labels so screen readers can describe +X summaries.
+Use `accessibilityLabel` and `accessibilityHint` to describe purpose and additional context. For multi-select, add hidden-selection labels so screen readers can describe +X summaries.
 
 ```jsx
 function AccessibilityProps() {
@@ -146,7 +146,7 @@ function AccessibilityProps() {
 
   return (
     <Combobox
-      accessibilityHint="Double tap to open options, then select one or more priorities"
+      accessibilityHint="Select one or more priorities"
       accessibilityLabel="Task priority combobox"
       accessibilityRoles={{ option: 'button' }}
       hiddenSelectedOptionsLabel="priorities"

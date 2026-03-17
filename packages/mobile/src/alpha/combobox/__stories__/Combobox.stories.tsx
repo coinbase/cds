@@ -412,6 +412,7 @@ const AccessibilityLabelExample = () => {
 
   return (
     <Combobox
+      accessibilityHint="Select one or more fruits"
       accessibilityLabel="Custom accessibility label"
       label="Accessible combobox"
       onChange={onChange}
@@ -1097,7 +1098,7 @@ const Default = () => {
       <Example title="Controlled search">
         <ControlledSearchExample />
       </Example>
-      <Example title="Custom accessibility label">
+      <Example title="Custom accessibility label and hint">
         <AccessibilityLabelExample />
       </Example>
       <Example title="Options with descriptions">
