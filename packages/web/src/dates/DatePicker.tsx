@@ -89,9 +89,19 @@ export type DatePickerProps = DatePickerBaseProps & {
   restoreFocusOnUnmount?: boolean;
   /**
    * Accessibility label describing the calendar IconButton, which opens the calendar when pressed.
-   * @default 'Open calendar' / 'Close calendar'
+   * @deprecated Use openCalendarAccessibilityLabel/closeCalendarAccessibilityLabel instead
    */
   calendarIconButtonAccessibilityLabel?: string;
+  /**
+   * Accessibility label for the calendar IconButton when the popover is closed (opens the calendar when pressed).
+   * @default 'Open calendar'
+   */
+  openCalendarAccessibilityLabel?: string;
+  /**
+   * Accessibility label for the calendar IconButton when the popover is open (closes the calendar when pressed).
+   * @default 'Close calendar'
+   */
+  closeCalendarAccessibilityLabel?: string;
   /**
    * Custom style to apply to the Calendar container.
    * @deprecated Use `styles.calendar` instead.
@@ -177,6 +187,8 @@ export const DatePicker = memo(
         accessibilityLabel,
         accessibilityLabelledBy,
         calendarIconButtonAccessibilityLabel,
+        openCalendarAccessibilityLabel = 'Open calendar',
+        closeCalendarAccessibilityLabel = 'Close calendar',
         nextArrowAccessibilityLabel,
         previousArrowAccessibilityLabel,
         compact,
@@ -260,7 +272,7 @@ export const DatePicker = memo(
               transparent
               accessibilityLabel={
                 calendarIconButtonAccessibilityLabel ??
-                (showCalendar ? 'Close calendar' : 'Open calendar')
+                (showCalendar ? closeCalendarAccessibilityLabel : openCalendarAccessibilityLabel)
               }
               name="calendarEmpty"
               onClick={handleOpenCalendar}
@@ -268,7 +280,13 @@ export const DatePicker = memo(
             />
           </VStack>
         ),
-        [handleOpenCalendar, showCalendar, calendarIconButtonAccessibilityLabel],
+        [
+          handleOpenCalendar,
+          showCalendar,
+          calendarIconButtonAccessibilityLabel,
+          openCalendarAccessibilityLabel,
+          closeCalendarAccessibilityLabel,
+        ],
       );
 
       const dateInput = useMemo(

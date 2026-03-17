@@ -223,15 +223,13 @@ const CalendarDay = memo(
       const { locale } = useLocale();
       const handleClick = useCallback(() => onClick?.(date), [date, onClick]);
       const baseLabel = getDayAccessibilityLabel(date, locale);
-      const accessibilityLabel = highlighted
-        ? `${baseLabel}. ${highlightedDateAccessibilityHint}`
-        : baseLabel;
       const calendarDayButton = useMemo(
         () => (
           <CalendarPressable
             ref={ref}
             focusable
-            accessibilityLabel={accessibilityLabel}
+            accessibilityHint={highlighted ? highlightedDateAccessibilityHint : undefined}
+            accessibilityLabel={baseLabel}
             aria-current={isToday ? 'date' : undefined}
             aria-pressed={active ? 'true' : undefined}
             background={active ? 'bgPrimary' : 'bg'}
@@ -254,8 +252,9 @@ const CalendarDay = memo(
           active,
           disabled,
           highlighted,
+          highlightedDateAccessibilityHint,
           isToday,
-          accessibilityLabel,
+          baseLabel,
           handleClick,
           ref,
           className,

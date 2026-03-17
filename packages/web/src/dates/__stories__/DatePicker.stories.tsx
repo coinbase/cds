@@ -144,7 +144,7 @@ export const AccessibilityLabels = () => {
           required
           {...exampleProps}
           {...props}
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          closeCalendarAccessibilityLabel="Close calendar"
           disabledDates={[[oneWeekAgo, twoDaysAgo], today, oneWeekLater]}
           highlightedDates={[
             [fourDaysAgo, twoDaysAgo],
@@ -152,6 +152,7 @@ export const AccessibilityLabels = () => {
           ]}
           label="Birthdate"
           nextArrowAccessibilityLabel="Next month"
+          openCalendarAccessibilityLabel="Open calendar"
           previousArrowAccessibilityLabel="Previous month"
         />
       </VStack>
@@ -168,7 +169,7 @@ export const AccessibilityLabels = () => {
           required
           {...exampleProps}
           {...props}
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          closeCalendarAccessibilityLabel="Close calendar"
           disabledDates={[[oneWeekAgo, twoDaysAgo], today, oneWeekLater]}
           highlightedDates={[
             [fourDaysAgo, twoDaysAgo],
@@ -178,6 +179,7 @@ export const AccessibilityLabels = () => {
           maxDate={lastDayThisMonth}
           minDate={firstDayThisMonth}
           nextArrowAccessibilityLabel="Next month"
+          openCalendarAccessibilityLabel="Open calendar"
           previousArrowAccessibilityLabel="Previous month"
         />
       </VStack>

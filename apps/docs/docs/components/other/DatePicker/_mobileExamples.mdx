@@ -148,8 +148,15 @@ function Example() {
       onChangeDate={setDate}
       onErrorDate={setError}
       label="Birthdate"
-      calendarIconButtonAccessibilityLabel="Open calendar to select birthdate"
+      accessibilityLabel="Birthdate"
+      accessibilityHint="Enter date or select from calendar using the calendar button."
+      openCalendarAccessibilityLabel="Open calendar to select birthdate"
+      closeCalendarAccessibilityLabel="Close calendar without selecting a date"
       confirmText="Confirm birthdate selection"
+      confirmButtonAccessibilityHint="Confirms the selected birthdate"
+      nextArrowAccessibilityLabel="Go to next month"
+      previousArrowAccessibilityLabel="Go to previous month"
+      highlightedDateAccessibilityHint="Highlighted"
       invalidDateError="Please enter a valid date"
       disabledDateError="Date unavailable"
       requiredError="This field is required"

@@ -144,7 +144,7 @@ describe('DatePicker', () => {
     fireEvent.press(calendarButton);
 
     await waitFor(() => {
-      const confirmButton = screen.getByLabelText('Confirm');
+      const confirmButton = screen.getByRole('button', { name: 'Confirm' });
       expect(confirmButton).toBeDisabled();
     });
   });
@@ -162,7 +162,7 @@ describe('DatePicker', () => {
     fireEvent.press(calendarButton);
 
     await waitFor(() => {
-      const confirmButton = screen.getByLabelText('Confirm');
+      const confirmButton = screen.getByRole('button', { name: 'Confirm' });
       expect(confirmButton).toHaveProp('accessibilityHint', 'Custom confirm button hint');
     });
   });
@@ -184,7 +184,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm button should now be enabled
-    const confirmButton = screen.getByLabelText('Confirm');
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
     expect(confirmButton).not.toBeDisabled();
   });
 
@@ -221,7 +221,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm selection
-    const confirmButton = screen.getByLabelText('Confirm');
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
     fireEvent.press(confirmButton);
 
     // Wait for animations to complete and callbacks to be called
@@ -269,7 +269,7 @@ describe('DatePicker', () => {
     expect(mockOnOpen).toHaveBeenCalledTimes(1);
 
     await waitFor(() => {
-      expect(screen.getByText('Confirm')).toBeTruthy();
+      expect(screen.getByRole('button', { name: 'Confirm' })).toBeTruthy();
     });
 
     // Close calendar using testID
@@ -456,7 +456,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm selection
-    const confirmButton = screen.getByLabelText('Confirm');
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
     fireEvent.press(confirmButton);
 
     // Error should be cleared
@@ -492,7 +492,7 @@ describe('DatePicker', () => {
     fireEvent.press(july15Button);
 
     // Confirm selection
-    const confirmButton = screen.getByLabelText('Confirm');
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
     fireEvent.press(confirmButton);
 
     // Custom error should NOT be cleared
@@ -572,7 +572,7 @@ describe('DatePicker', () => {
 
     await waitFor(() => {
       // Confirm button should be disabled (selection was reset)
-      const confirmButton = screen.getByLabelText('Confirm');
+      const confirmButton = screen.getByRole('button', { name: 'Confirm' });
       expect(confirmButton).toBeDisabled();
     });
   });
@@ -590,11 +590,11 @@ describe('DatePicker', () => {
     fireEvent.press(calendarButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Confirm')).toBeTruthy();
+      expect(screen.getByRole('button', { name: 'Confirm' })).toBeTruthy();
     });
 
     // Try to press disabled confirm button
-    const confirmButton = screen.getByLabelText('Confirm');
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
     expect(confirmButton).toBeDisabled();
 
     // Press it anyway (should not trigger callbacks)

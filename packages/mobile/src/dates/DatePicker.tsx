@@ -278,7 +278,6 @@ export const DatePicker = memo(
                     block
                     compact
                     accessibilityHint={confirmButtonAccessibilityHint}
-                    accessibilityLabel={confirmText}
                     disabled={disabled || !calendarSelectedDate}
                     onPress={() => {
                       if (calendarSelectedDate) {
