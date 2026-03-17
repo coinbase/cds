@@ -266,6 +266,18 @@ const versionMap: Record<SpotSquareName, number> = {
   goldSilverFutures: 0,
   pieChartWithArrow: 0,
   pieChartWithArrowBlue: 0,
+  instantUnstaking: 0,
+  instoPrimeStaking: 0,
+  instoEthStakingRewards: 0,
+  instoStaking: 0,
+  instoEthStaking: 0,
+  instoAuthenticatorProgress: 0,
+  instoUbiKey: 0,
+  instoSideChainSide: 0,
+  instoSecurityKey: 0,
+  instoWaiting: 0,
+  instoDappWallet: 0,
+  instoPixDeposits: 0,
 };
 
 export default versionMap;

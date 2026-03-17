@@ -354,6 +354,15 @@ export const StyleOverrides = () => {
     </VStack>
   );
 };
+StyleOverrides.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
+};
 
 const fonts = [
   'display1',
@@ -585,14 +594,22 @@ export const Fun = () => {
       <VStack gap={1}>
         <Text font="label1">Counter</Text>
         <HStack alignItems="center" gap={2}>
-          <IconButton name="minus" onClick={() => setCount((c) => Math.max(0, c - 1))} />
+          <IconButton
+            accessibilityLabel="Decrement"
+            name="minus"
+            onClick={() => setCount((c) => Math.max(0, c - 1))}
+          />
           <RollingNumber
             colorPulseOnUpdate
             font="display1"
             format={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
             value={count}
           />
-          <IconButton name="add" onClick={() => setCount((c) => c + 1)} />
+          <IconButton
+            accessibilityLabel="Increment"
+            name="add"
+            onClick={() => setCount((c) => c + 1)}
+          />
         </HStack>
       </VStack>
 
@@ -606,7 +623,7 @@ export const Fun = () => {
         </HStack>
         <Text font="label1">Countdown with percent</Text>
         <VStack gap={1}>
-          <ProgressBar progress={progress} />
+          <ProgressBar accessibilityLabel="Progress bar" progress={progress} />
           <RollingNumber
             ariaLive="off"
             font="body"

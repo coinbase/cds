@@ -68,15 +68,6 @@ export const DarkNormal = () => {
   );
 };
 
-export const NoLabel = () => {
-  const [checked, setChecked] = useState(false);
-  return <Switch checked={checked} onChange={() => setChecked((prevChecked) => !prevChecked)} />;
-};
-// This is intention to check the view of Switch without any text
-NoLabel.parameters = {
-  a11y: { config: { rules: [{ id: 'label', enabled: false }] } },
-};
-
 export const On = () => <Switch checked>On</Switch>;
 
 export const DisabledOff = () => <Switch disabled>Disabled off</Switch>;

@@ -224,6 +224,16 @@ const versionMap: Record<SpotRectangleName, number> = {
   calendar: 0,
   graphChartTrading: 0,
   usdcLoanEth: 0,
+  instoEmptyTrading: 0,
+  instoSemiCustodial: 0,
+  instoCryptoAndMore: 0,
+  instoPrimeStaking: 0,
+  stakingUpgrade: 0,
+  instoEthStakingMovement: 0,
+  instoGetStartedInMinutes: 0,
+  insto: 0,
+  instoStaking: 0,
+  instoCurrency: 0,
 };
 
 export default versionMap;

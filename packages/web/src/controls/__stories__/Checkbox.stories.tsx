@@ -113,7 +113,12 @@ export const NoLabel = () => {
 };
 
 // This story does not render a label on purpose
-NoLabel.parameters = { a11y: { config: { rules: [{ id: 'label', enabled: false }] } } };
+NoLabel.parameters = {
+  a11y: {
+    config: { rules: [{ id: 'label', enabled: false }] },
+    test: 'off',
+  },
+};
 
 function States() {
   return (

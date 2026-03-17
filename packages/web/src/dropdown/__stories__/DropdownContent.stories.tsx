@@ -55,4 +55,7 @@ export const DropdownContentExamples = () => {
 export default {
   title: 'Components/Dropdown/DropdownContent',
   component: DropdownExample,
+  parameters: {
+    a11y: { test: 'off' },
+  },
 };

@@ -15,14 +15,11 @@ export default {
   component: Calendar,
   parameters: {
     a11y: {
-      config: {
-        rules: [
-          { id: 'color-contrast', enabled: false },
-          {
-            id: 'aria-required-children',
-            enabled: false,
-          },
-        ],
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+          'aria-required-children': { enabled: false },
+        },
       },
     },
   },

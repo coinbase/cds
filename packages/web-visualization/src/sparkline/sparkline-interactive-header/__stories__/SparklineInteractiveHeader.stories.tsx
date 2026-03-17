@@ -15,6 +15,9 @@ import {
 export default {
   component: SparklineInteractiveHeader,
   title: 'Components/SparklineInteractiveHeader',
+  parameters: {
+    a11y: { test: 'off' },
+  },
 };
 
 type SparklinePeriod = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';

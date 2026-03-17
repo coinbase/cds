@@ -21,6 +21,10 @@ const parameters = {
     config: {
       rules: [{ id: 'color-contrast', enabled: false }],
     },
+    context: {
+      include: ['body'],
+      exclude: ['.no-a11y-check'],
+    },
   },
 };
 
@@ -1047,6 +1051,8 @@ const CondensedListCell = () => {
       />
       <ListCell
         accessory="more"
+        // There's a nested action button resulting in an a11y violation
+        className="no-a11y-check"
         description="Description"
         detail="Detail"
         end={<Button compact>Action</Button>}

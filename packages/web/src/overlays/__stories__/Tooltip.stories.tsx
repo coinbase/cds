@@ -340,7 +340,7 @@ export const TooltipOnIconReactNode = () => (
           </Text>
         }
       >
-        <Icon active color="fg" name="info" role="button" tabIndex={0} />
+        <Icon active color="fg" name="info" tabIndex={0} />
       </Tooltip>
       <Text as="span" color="fgMuted" font="body">
         Focus the icon to hear the tooltip announced.
@@ -369,7 +369,7 @@ export const TooltipWithInteractiveContent = () => (
           </Text>
         }
       >
-        <Icon active color="fg" name="info" paddingStart={1} role="button" tabIndex={0} />
+        <Icon active color="fg" name="info" paddingStart={1} tabIndex={0} />
       </Tooltip>
       <Text as="span" color="fgMuted" font="body">
         Set your default display currency.{' '}

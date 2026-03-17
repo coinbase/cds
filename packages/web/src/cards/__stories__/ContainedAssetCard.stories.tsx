@@ -9,8 +9,10 @@ import type { ContainedAssetCardProps } from '../ContainedAssetCard';
 import { ContainedAssetCard } from '../ContainedAssetCard';
 
 const a11ySkipConfig = {
-  config: {
-    rules: [{ id: 'color-contrast', enabled: false }],
+  options: {
+    rules: {
+      'color-contrast': { enabled: false },
+    },
   },
 };
 
