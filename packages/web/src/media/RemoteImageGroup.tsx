@@ -139,7 +139,7 @@ export const RemoteImageGroup = ({
       {excess > 0 && (
         <Box
           alignItems="center"
-          background="bgOverlay"
+          background="bgSecondary"
           borderColor={borderColor}
           borderWidth={borderWidth}
           className={cx(excessContainerCss, borderRadiusCss[shape])}

@@ -29,6 +29,30 @@
         "{projectRoot}/dist"
       ]
     },
+    "build-for-percy": {
+      "command": "storybook build --output-dir dist",
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "{projectRoot}/*",
+        "{projectRoot}/**/*",
+        "{projectRoot}/**/__stories__/**",
+        "{projectRoot}/**/*.stories.*",
+        "{workspaceRoot}/packages/web/**/*.stories.*",
+        "{workspaceRoot}/packages/web-visualization/**/*.stories.*",
+        "!{projectRoot}/scripts/**"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "cwd": "apps/storybook",
+        "env": {
+          "STORYBOOK_PERCY": "true"
+        }
+      }
+    },
     "test-a11y": {
       "command": "vitest --project=storybook",
       "options": {
@@ -134,7 +158,7 @@
     "percy": {
       "command": "tsx ./scripts/run-percy.ts",
       "dependsOn": [
-        "build"
+        "build-for-percy"
       ],
       "inputs": [
         "{projectRoot}/dist"

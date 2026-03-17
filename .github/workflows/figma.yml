@@ -109,7 +109,14 @@ jobs:
   audit-figma-integrations:
     name: Audit Figma Integrations
     runs-on: ubuntu-latest
-    if: github.ref_name == 'master' && github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch' || (github.ref_name == 'master' && github.event_name == 'push')
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -122,4 +129,15 @@ jobs:
       - name: Run Audit
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-        run: yarn audit-figma-integration
+        run: yarn audit-figma-integration --html
+      - name: Prepare Pages directory
+        run: find temp/ -name "figma-audit-*.html" -exec cp {} temp/index.html \;
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload audit report
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: temp/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
