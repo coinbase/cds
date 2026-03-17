@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 import { css } from '@linaria/core';
 
@@ -9,6 +9,7 @@ import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
+import type { ComboboxProps } from '../Combobox';
 import {
   Combobox,
   type ComboboxControlComponent,
@@ -1248,6 +1249,209 @@ export const DynamicOptions = () => {
       <Button compact onClick={addOption}>
         Add more options
       </Button>
+    </VStack>
+  );
+};
+
+function getFlagEmoji(cc: string): string {
+  return cc
+    .toUpperCase()
+    .split('')
+    .map((c) => String.fromCodePoint(0x1f1e6 - 65 + c.charCodeAt(0)))
+    .join('');
+}
+
+const countrySelectionOptions: SelectOptionList<'multi'> = [
+  {
+    label: 'North America',
+    options: [
+      { value: 'us', label: `${getFlagEmoji('us')} United States` },
+      { value: 'ca', label: `${getFlagEmoji('ca')} Canada` },
+      { value: 'mx', label: `${getFlagEmoji('mx')} Mexico` },
+    ],
+  },
+  {
+    label: 'Europe',
+    options: [
+      { value: 'uk', label: `${getFlagEmoji('gb')} United Kingdom` },
+      { value: 'fr', label: `${getFlagEmoji('fr')} France` },
+      { value: 'de', label: `${getFlagEmoji('de')} Germany` },
+    ],
+  },
+  {
+    label: 'Asia',
+    options: [
+      { value: 'jp', label: `${getFlagEmoji('jp')} Japan` },
+      { value: 'cn', label: `${getFlagEmoji('cn')} China` },
+      { value: 'in', label: `${getFlagEmoji('in')} India` },
+    ],
+  },
+];
+
+export const CountrySelectionExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      label="Country"
+      maxSelectedOptionsToShow={3}
+      onChange={onChange}
+      options={countrySelectionOptions}
+      placeholder="Select countries..."
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+const CREATE_OPTION_PREFIX = '__create__';
+
+type FreeSoloComboboxProps<
+  Type extends 'single' | 'multi' = 'multi',
+  SelectOptionValue extends string = string,
+> = Omit<
+  React.ComponentProps<typeof Combobox>,
+  'options' | 'searchText' | 'onSearch' | 'onChange'
+> & {
+  freeSolo?: boolean;
+  options: SelectOption[];
+  value: Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null;
+  onChange: (value: Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null) => void;
+};
+
+function FreeSoloCombobox<
+  Type extends 'single' | 'multi' = 'multi',
+  SelectOptionValue extends string = string,
+>({
+  freeSolo = false,
+  options: initialOptions,
+  value,
+  onChange,
+  placeholder = 'Search or type to add...',
+  ...comboboxProps
+}: FreeSoloComboboxProps<Type, SelectOptionValue>) {
+  const [searchText, setSearchText] = useState('');
+  const [options, setOptions] = useState<SelectOption[]>(initialOptions);
+
+  useEffect(() => {
+    if (!freeSolo) return;
+    const initialSet = new Set(initialOptions.map((o) => o.value));
+    const valueSet = new Set(Array.isArray(value) ? value : value != null ? [value] : []);
+    setOptions((prev) => {
+      const addedStillSelected = prev.filter(
+        (o) => !initialSet.has(o.value) && valueSet.has(o.value as string),
+      );
+      return [...initialOptions, ...addedStillSelected];
+    });
+  }, [value, freeSolo, initialOptions]);
+
+  const optionsWithCreate = useMemo<SelectOption[]>(() => {
+    if (!freeSolo) return options;
+    const trimmed = searchText.trim();
+    if (!trimmed) return options;
+    const alreadyExists = options.some(
+      (o) => typeof o.label === 'string' && o.label.toLowerCase() === trimmed.toLowerCase(),
+    );
+    if (alreadyExists) return options;
+    return [...options, { value: `${CREATE_OPTION_PREFIX}${trimmed}`, label: `Add "${trimmed}"` }];
+  }, [options, searchText, freeSolo]);
+
+  const handleChange = useCallback(
+    (newValue: string | string[] | null) => {
+      if (!freeSolo) {
+        onChange(newValue as Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null);
+        return;
+      }
+
+      const values = Array.isArray(newValue) ? newValue : newValue ? [newValue] : [];
+      const createValue = values.find((v) => String(v).startsWith(CREATE_OPTION_PREFIX));
+
+      if (createValue) {
+        const newLabel = String(createValue).slice(CREATE_OPTION_PREFIX.length);
+        const newOption: SelectOption = { value: newLabel.toLowerCase(), label: newLabel };
+        setOptions((prev) => [...prev, newOption]);
+        const updatedValues = values
+          .filter((v) => !String(v).startsWith(CREATE_OPTION_PREFIX))
+          .concat(newOption.value as string);
+
+        if (comboboxProps.type === 'multi') {
+          onChange(updatedValues as Type extends 'multi' ? SelectOptionValue[] : never);
+        } else {
+          onChange(
+            newOption.value as SelectOptionValue as Type extends 'multi'
+              ? never
+              : SelectOptionValue | null,
+          );
+        }
+        setSearchText('');
+      } else {
+        onChange(newValue as Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null);
+      }
+    },
+    [onChange, freeSolo, comboboxProps.type],
+  );
+
+  const effectiveOptions = freeSolo ? optionsWithCreate : initialOptions;
+  const effectiveSearchProps = freeSolo ? { searchText, onSearch: setSearchText } : {};
+
+  return (
+    <Combobox
+      {...comboboxProps}
+      {...effectiveSearchProps}
+      onChange={handleChange}
+      options={effectiveOptions}
+      placeholder={placeholder}
+      value={value}
+    />
+  );
+}
+
+export const FreeSoloComboboxExample = () => {
+  const [standardSingleValue, setStandardSingle] = useState<string | null>(null);
+  const [freeSoloSingleValue, setFreeSoloSingle] = useState<string | null>(null);
+  const standardMulti = useMultiSelect({ initialValue: [] });
+  const freeSoloMulti = useMultiSelect({ initialValue: [] });
+
+  const baseOptions = fruitOptions.slice(0, 6);
+
+  return (
+    <VStack gap={4}>
+      <FreeSoloCombobox<'single'>
+        freeSolo={false}
+        label="Standard single"
+        onChange={setStandardSingle}
+        options={baseOptions}
+        placeholder="Search fruits..."
+        type="single"
+        value={standardSingleValue}
+      />
+      <FreeSoloCombobox<'single'>
+        freeSolo
+        label="FreeSolo single"
+        onChange={setFreeSoloSingle}
+        options={baseOptions}
+        placeholder="Search or type to add..."
+        type="single"
+        value={freeSoloSingleValue}
+      />
+      <FreeSoloCombobox
+        freeSolo={false}
+        label="Standard multi"
+        onChange={standardMulti.onChange}
+        options={baseOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={standardMulti.value}
+      />
+      <FreeSoloCombobox
+        freeSolo
+        label="FreeSolo multi"
+        onChange={freeSoloMulti.onChange}
+        options={baseOptions}
+        placeholder="Search or type to add..."
+        type="multi"
+        value={freeSoloMulti.value}
+      />
     </VStack>
   );
 };

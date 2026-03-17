@@ -3,6 +3,7 @@ module.exports = {
   storybook: {
     // Useful for isolating Percy diffs when running from the command line
     exclude: [
+      'Accessibility',
       'Core Components/AccessibilityAnnouncer',
       'Interactive/Table',
       'Interactive/TabNavigation',

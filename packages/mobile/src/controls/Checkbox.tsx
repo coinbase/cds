@@ -36,7 +36,7 @@ const CheckboxIcon = memo(
     controlColor = 'fgInverse',
     background = checked || indeterminate ? 'bgPrimary' : 'bg',
     borderColor = checked || indeterminate ? 'bgPrimary' : 'bgLineHeavy',
-    borderRadius,
+    borderRadius = 100,
     borderWidth = 100,
     elevation,
     animatedScaleValue,
