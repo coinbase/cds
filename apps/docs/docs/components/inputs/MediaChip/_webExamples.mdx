@@ -1,15 +1,15 @@
-### Basic Usage
+MediaChip automatically adjusts spacing based on the combination of `start`, `children`, and `end` content.
 
-MediaChip automatically calculates spacing based on the content you provide (start, children, end).
+## Basics
 
-:::tip Recommended component sizes for regular sized chip
+:::tip Recommended component sizes for regular-sized chips
 
 - Start: **24×24** circular media
 - End: **xs** size icons
   :::
 
 ```tsx live
-<HStack gap={2}>
+<HStack gap={2} flexWrap="wrap">
   <MediaChip>Label only</MediaChip>
   <MediaChip
     start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
@@ -22,9 +22,9 @@ MediaChip automatically calculates spacing based on the content you provide (sta
 </HStack>
 ```
 
-### Configurations
+## Layout Configurations
 
-MediaChip supports all 6 spacing configurations automatically.
+MediaChip supports all six content combinations automatically.
 
 ```tsx live
 <VStack gap={2}>
@@ -55,11 +55,13 @@ MediaChip supports all 6 spacing configurations automatically.
 </VStack>
 ```
 
-### Compact Variant
+## Styling
+
+### Compact
 
 The compact variant reduces spacing for denser layouts.
 
-:::tip Recommended component sizes for compact chip
+:::tip Recommended component sizes for compact chips
 
 - Start: **16×16** circular media
 - End: **xs** size icons
@@ -82,15 +84,15 @@ The compact variant reduces spacing for denser layouts.
 </HStack>
 ```
 
-### Inverted State
+### Invert color scheme
 
-Use the inverted prop to emphasize the chip with inverted colors.
+Use `invertColorScheme` to emphasize the chip with inverted colors.
 
 ```tsx live
-<HStack gap={2}>
-  <MediaChip inverted>Selected</MediaChip>
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip invertColorScheme>Selected</MediaChip>
   <MediaChip
-    inverted
+    invertColorScheme
     end={<Icon active color="fg" name="check" size="xs" />}
     start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
   >
@@ -99,12 +101,32 @@ Use the inverted prop to emphasize the chip with inverted colors.
 </HStack>
 ```
 
-### Interactive
+### Custom spacing
 
-MediaChip can be made interactive by providing an onClick handler.
+Override automatic spacing with custom values when needed.
 
 ```tsx live
-<HStack gap={2}>
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip paddingX={4} paddingY={2}>
+    Custom spacing
+  </MediaChip>
+  <MediaChip
+    paddingStart={3}
+    paddingEnd={5}
+    paddingY={1.5}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Asymmetric padding
+  </MediaChip>
+</HStack>
+```
+
+## Interactivity
+
+Provide `onClick` to make MediaChip interactive. Use `disabled` to prevent interaction.
+
+```tsx live
+<HStack gap={2} flexWrap="wrap">
   <MediaChip onClick={() => alert('Clicked!')}>Clickable</MediaChip>
   <MediaChip
     onClick={() => alert('Clicked!')}
@@ -118,22 +140,23 @@ MediaChip can be made interactive by providing an onClick handler.
 </HStack>
 ```
 
-### Custom Spacing
+## Accessibility
 
-You can override the automatic spacing with custom values if needed.
+When `onClick` is provided and visible text is unclear (or absent), provide an `accessibilityLabel`.
 
 ```tsx live
-<HStack gap={2}>
-  <MediaChip paddingX={4} paddingY={2}>
-    Custom spacing
-  </MediaChip>
+<HStack gap={2} flexWrap="wrap">
   <MediaChip
-    paddingStart={3}
-    paddingEnd={5}
-    paddingY={1.5}
+    accessibilityLabel="Open Ethereum details"
+    onClick={() => alert('Open ETH')}
     start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  />
+  <MediaChip
+    accessibilityLabel="Open token filter"
+    end={<Icon active color="fg" name="caretDown" size="xs" />}
+    onClick={() => alert('Open filter')}
   >
-    Asymmetric padding
+    Filter
   </MediaChip>
 </HStack>
 ```

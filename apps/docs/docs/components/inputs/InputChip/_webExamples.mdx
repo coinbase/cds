@@ -1,9 +1,35 @@
-### Basic usage
+InputChip is built for remove actions. For other uses, see [Chip](/components/inputs/Chip/) which supports interaction.
+
+## Basics
+
+Use `onClick` for remove behavior.
+
+```tsx live
+function Example() {
+  const [selectedValues, setSelectedValues] = React.useState(['BTC', 'ETH', 'SOL']);
+
+  return (
+    <HStack gap={2} flexWrap="wrap">
+      {selectedValues.map((value) => (
+        <InputChip
+          key={value}
+          onClick={() => setSelectedValues((current) => current.filter((item) => item !== value))}
+          value={value}
+        />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Disabled
+
+Use `disabled` when the value should stay visible but not removable.
 
 ```tsx live
 function Example() {
   return (
-    <HStack gap={2}>
+    <HStack gap={2} flexWrap="wrap">
       <InputChip onClick={() => console.log('Remove Basic')} value="Basic Chip" />
       <InputChip disabled onClick={() => {}} value="Disabled Chip" />
     </HStack>
@@ -11,20 +37,22 @@ function Example() {
 }
 ```
 
-### With Custom Start Element
+## Styling
+
+### With start content
 
 ```tsx live
 function Example() {
   return (
     <VStack gap={2}>
-      <HStack gap={2}>
+      <HStack gap={2} flexWrap="wrap">
         <InputChip
           onClick={() => console.log('Remove Star')}
           value="With Icon"
           start={<Icon name="star" />}
         />
       </HStack>
-      <HStack gap={2}>
+      <HStack gap={2} flexWrap="wrap">
         <InputChip
           onClick={() => console.log('Remove BTC')}
           value="BTC"
@@ -41,16 +69,54 @@ function Example() {
 }
 ```
 
-### With Custom Accessibility Label
+### Compact
+
+Use `compact` to reduce chip height and spacing in dense layouts.
 
 ```tsx live
 function Example() {
   return (
-    <HStack gap={2}>
+    <HStack gap={2} flexWrap="wrap">
+      <InputChip onClick={() => console.log('Remove Default')} value="Default" />
+      <InputChip compact onClick={() => console.log('Remove Compact')} value="Compact" />
+    </HStack>
+  );
+}
+```
+
+### Invert color scheme
+
+Use `invertColorScheme` to emphasize removable values.
+
+```tsx live
+function Example() {
+  return (
+    <HStack gap={2} flexWrap="wrap">
+      <InputChip onClick={() => console.log('Remove Default')} value="Default" />
+      <InputChip
+        invertColorScheme
+        onClick={() => console.log('Remove Inverted')}
+        value="Inverted"
+      />
+    </HStack>
+  );
+}
+```
+
+## Accessibility
+
+InputChip defaults to a remove label (`Remove ${children}` for string content, otherwise `Remove option`).
+Override `accessibilityLabel` when you need more specific wording.
+
+```tsx live
+function Example() {
+  return (
+    <HStack gap={2} flexWrap="wrap">
+      <InputChip onClick={() => console.log('Remove BTC')} value="BTC" />
       <InputChip
         onClick={() => console.log('Remove Custom')}
         value="Custom Label"
-        accessibilityLabel="Custom remove action"
+        accessibilityLabel="Remove custom selection"
       />
     </HStack>
   );
