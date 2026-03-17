@@ -237,7 +237,11 @@ const labelCss = css`
 
 const PressableLabel = ({ onClick, ...props }: CustomLabelProps) => {
   return (
-    <Pressable onClick={() => onClick(props.step.id)} style={{ width: '100%' }}>
+    <Pressable
+      accessibilityLabel={props.step.label as string}
+      onClick={() => onClick(props.step.id)}
+      style={{ width: '100%' }}
+    >
       <DefaultStepperLabelHorizontal {...props} className={labelCss} />
     </Pressable>
   );

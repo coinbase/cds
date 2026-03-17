@@ -246,9 +246,17 @@ const svgJsMap = {
     light: () => require('../svgJs/light/idVerification-3.js').content,
     dark: () => require('../svgJs/dark/idVerification-3.js').content,
   },
+  instantAccess: {
+    light: () => require('../svgJs/light/instantAccess-0.js').content,
+    dark: () => require('../svgJs/dark/instantAccess-0.js').content,
+  },
   institutionalProduct: {
     light: () => require('../svgJs/light/institutionalProduct-2.js').content,
     dark: () => require('../svgJs/dark/institutionalProduct-2.js').content,
+  },
+  instoStakingProduct: {
+    light: () => require('../svgJs/light/instoStakingProduct-0.js').content,
+    dark: () => require('../svgJs/dark/instoStakingProduct-0.js').content,
   },
   internationalExchangeProduct: {
     light: () => require('../svgJs/light/internationalExchangeProduct-1.js').content,

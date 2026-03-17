@@ -615,62 +615,71 @@ export const MultipleCards = (): JSX.Element => {
   return (
     <Carousel styles={{ carousel: { gap: 16 } }}>
       <CarouselItem id="card1">
-        <MessagingCard
-          as="article"
-          {...exampleProps}
-          description="Non-interactive card"
-          media={
-            <RemoteImage
-              alt="Coinbase One promotional image"
-              height={108}
-              resizeMode="cover"
-              shape="rectangle"
-              source={coinbaseOneLogo}
-            />
-          }
-          mediaPlacement="end"
-          title="Card 1"
-          type="upsell"
-        />
+        {({ isVisible }) => (
+          <MessagingCard
+            as="article"
+            {...exampleProps}
+            description="Non-interactive card"
+            media={
+              <RemoteImage
+                alt="Coinbase One promotional image"
+                height={108}
+                resizeMode="cover"
+                shape="rectangle"
+                source={coinbaseOneLogo}
+              />
+            }
+            mediaPlacement="end"
+            tabIndex={isVisible ? 0 : -1}
+            title="Card 1"
+            type="upsell"
+          />
+        )}
       </CarouselItem>
       <CarouselItem id="card2">
-        <MessagingCard
-          ref={ref1}
-          renderAsPressable
-          aria-label="View Card 2 details"
-          as="a"
-          description="Clickable card with href"
-          href="https://www.google.com"
-          media={<Pictogram dimension="64x64" name="addToWatchlist" />}
-          mediaPlacement="end"
-          tag="Link"
-          target="_blank"
-          title="Card 2"
-          type="nudge"
-        />
+        {({ isVisible }) => (
+          <MessagingCard
+            ref={ref1}
+            renderAsPressable
+            aria-label="View Card 2 details"
+            as="a"
+            description="Clickable card with href"
+            href="https://www.google.com"
+            media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+            mediaPlacement="end"
+            tabIndex={isVisible ? 0 : -1}
+            tag="Link"
+            target="_blank"
+            title={isVisible ? 'Card 2' : undefined}
+            type="nudge"
+          />
+        )}
       </CarouselItem>
       <CarouselItem id="card3">
-        <MessagingCard
-          ref={ref2}
-          renderAsPressable
-          aria-label="View Card 3 details"
-          as="button"
-          description="Card with onClick handler"
-          media={
-            <RemoteImage
-              alt="Coinbase One promotional image"
-              height={108}
-              resizeMode="cover"
-              shape="rectangle"
-              source={coinbaseOneLogo}
-            />
-          }
-          mediaPlacement="end"
-          onClick={() => console.log('clicked')}
-          tag="Action"
-          title="Card 3"
-          type="upsell"
-        />
+        {({ isVisible }) => (
+          <MessagingCard
+            ref={ref2}
+            renderAsPressable
+            aria-label="View Card 3 details"
+            as="button"
+            description="Card with onClick handler"
+            media={
+              <RemoteImage
+                alt="Coinbase One promotional image"
+                height={108}
+                resizeMode="cover"
+                shape="rectangle"
+                source={coinbaseOneLogo}
+              />
+            }
+            mediaPlacement="end"
+            onClick={() => console.log('clicked')}
+            tabIndex={isVisible ? 0 : -1}
+            tag="Action"
+            title={isVisible ? 'Card 3' : undefined}
+            type="upsell"
+          />
+        )}
       </CarouselItem>
     </Carousel>
   );

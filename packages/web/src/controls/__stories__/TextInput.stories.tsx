@@ -260,7 +260,15 @@ export const CustomLabel = function CustomLabel() {
           <HStack alignItems="center">
             <InputLabel htmlFor="display-name-tooltip">Display name</InputLabel>
             <Tooltip content="This will be visible to other users.">
-              <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+              <Icon
+                active
+                color="fg"
+                name="info"
+                padding={0.75}
+                role="button"
+                size="xs"
+                tabIndex={0}
+              />
             </Tooltip>
           </HStack>
         }
@@ -500,12 +508,10 @@ export const RenderInputDisabled = () => {
 RenderInputDisabled.bind({});
 RenderInputDisabled.parameters = {
   a11y: {
-    config: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
     },
   },
 };

@@ -88,6 +88,7 @@ export const ControlledCollapse = () => {
 
   const renderEnd = () => (
     <IconButton
+      accessibilityLabel={collapsed ? 'Expand' : 'Collapse'}
       height="48px"
       name={collapsed ? 'caretRight' : 'caretLeft'}
       onClick={() => setCollapsed(!collapsed)}
@@ -183,6 +184,7 @@ export const CustomLogo = () => {
           logo={renderLogo}
           renderEnd={() => (
             <IconButton
+              accessibilityLabel={collapsed ? 'Expand' : 'Collapse'}
               name={collapsed ? 'caretRight' : 'caretLeft'}
               onClick={() => setCollapsed(!collapsed)}
             />
@@ -433,9 +435,7 @@ export const CondensedTradingInterface = () => {
         <VStack background="bgAlternate" flexGrow={1} gap={2} padding={3}>
           <HStack justifyContent="space-between">
             <Text font="title3">BTC/USD</Text>
-            <Text color="fgPositive" font="title3">
-              $67,432.50
-            </Text>
+            <Text font="title3">$67,432.50</Text>
           </HStack>
           <Box
             background="bg"

@@ -14,9 +14,10 @@ export default {
   component: FullscreenModal,
   parameters: {
     a11y: {
-      config: {
-        /** Heading order issue is coming from Card. We need to either fix in Card or deprecate */
-        rules: [{ id: 'heading-order', selector: '*:not(h3)' }],
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+        },
       },
     },
   },

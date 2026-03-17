@@ -446,6 +446,42 @@ const svgJsMap = {
     light: () => require('../svgJs/light/holdingCrypto-3.js').content,
     dark: () => require('../svgJs/dark/holdingCrypto-3.js').content,
   },
+  insto: {
+    light: () => require('../svgJs/light/insto-0.js').content,
+    dark: () => require('../svgJs/dark/insto-0.js').content,
+  },
+  instoCryptoAndMore: {
+    light: () => require('../svgJs/light/instoCryptoAndMore-0.js').content,
+    dark: () => require('../svgJs/dark/instoCryptoAndMore-0.js').content,
+  },
+  instoCurrency: {
+    light: () => require('../svgJs/light/instoCurrency-0.js').content,
+    dark: () => require('../svgJs/dark/instoCurrency-0.js').content,
+  },
+  instoEmptyTrading: {
+    light: () => require('../svgJs/light/instoEmptyTrading-0.js').content,
+    dark: () => require('../svgJs/dark/instoEmptyTrading-0.js').content,
+  },
+  instoEthStakingMovement: {
+    light: () => require('../svgJs/light/instoEthStakingMovement-0.js').content,
+    dark: () => require('../svgJs/dark/instoEthStakingMovement-0.js').content,
+  },
+  instoGetStartedInMinutes: {
+    light: () => require('../svgJs/light/instoGetStartedInMinutes-0.js').content,
+    dark: () => require('../svgJs/dark/instoGetStartedInMinutes-0.js').content,
+  },
+  instoPrimeStaking: {
+    light: () => require('../svgJs/light/instoPrimeStaking-0.js').content,
+    dark: () => require('../svgJs/dark/instoPrimeStaking-0.js').content,
+  },
+  instoSemiCustodial: {
+    light: () => require('../svgJs/light/instoSemiCustodial-0.js').content,
+    dark: () => require('../svgJs/dark/instoSemiCustodial-0.js').content,
+  },
+  instoStaking: {
+    light: () => require('../svgJs/light/instoStaking-0.js').content,
+    dark: () => require('../svgJs/dark/instoStaking-0.js').content,
+  },
   insuranceProtection: {
     light: () => require('../svgJs/light/insuranceProtection-5.js').content,
     dark: () => require('../svgJs/dark/insuranceProtection-5.js').content,
@@ -721,6 +757,10 @@ const svgJsMap = {
   staking: {
     light: () => require('../svgJs/light/staking-5.js').content,
     dark: () => require('../svgJs/dark/staking-5.js').content,
+  },
+  stakingUpgrade: {
+    light: () => require('../svgJs/light/stakingUpgrade-0.js').content,
+    dark: () => require('../svgJs/dark/stakingUpgrade-0.js').content,
   },
   startToday: {
     light: () => require('../svgJs/light/startToday-4.js').content,
