@@ -24,6 +24,7 @@ const DOC_SECTIONS = {
   components: 'docs/components/**/*.mdx',
   hooks: 'docs/hooks/**/*.mdx',
   'getting-started': 'docs/getting-started/**/*.mdx',
+  guides: 'docs/guides/**/*.mdx',
 };
 
 /**
