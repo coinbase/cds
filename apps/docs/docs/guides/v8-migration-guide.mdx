@@ -1,0 +1,1762 @@
+---
+id: v8-migration-guide
+title: v8 Migration Guide
+slug: /guides/v8-migration-guide
+hide_title: true
+---
+
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Tag } from '@coinbase/cds-web/tag/Tag';
+import { Icon } from '@coinbase/cds-web/icons';
+
+<VStack gap={5}>
+<ContentHeader title="v8 Migration Guide" />
+
+<MDXSection>
+<MDXArticle>
+
+## Introduction
+
+CDS v8 is our most feature packed release ever! Including but not limited to:
+
+- 🔮 Expanded styling and customization options
+- 🔥 Faster renders and smaller flamegraphs
+- 🦾 Improved accessibility of components and theming
+- 🧩 Simplified and more predictable internal architecture
+
+To enable global theming and style customization for all CDS components, some APIs were deprecated or outright deleted. We appreciate the impact this will have on teams adopting CDS v8 and are committed to supporting developers through this upgrade 🏎️
+
+If you experience any trouble migrating we're ready to help! Just reach out via Slack.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## New Packages
+
+- `@coinbase/cds-common@8.1.0`
+- `@coinbase/cds-mobile@8.1.0`
+- `@coinbase/cds-mobile-visualization@3.0.0`
+- `@coinbase/cds-web@8.1.0`
+- `@coinbase/cds-web-visualization@3.0.0`
+- `@coinbase/cds-icons@5.0.0`
+- `@coinbase/cds-lottie-files@3.0.0`
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Migration Script
+
+Before diving into the breaking changes, we highly recommend starting with our automated migration script. The `@coinbase/cds-migrator` package handles many of the repetitive transformations automatically, saving you significant time and effort.
+
+### What the Migration Script Automates
+
+The migration script handles these transformations automatically:
+
+- **Icon migrations**: Active/inactive suffix removal, renamed icons, and active prop additions
+- **Color token updates**: Converts old color names to new semantic tokens
+- **Border radius/width tokens**: Updates string tokens to numeric values and CSS variables
+- **Import path updates**: Fixes outdated import paths throughout your codebase
+- **Component prop changes**: Updates `responsiveConfig` to direct responsive props
+- **Hook migrations**: Updates `useSpectrum`, `useAccessibleForeground`, and other deprecated hooks
+
+Look for the <Tag intent="promotional" colorScheme="blue">Migration Script ✓</Tag> tags throughout this guide to identify what's automated.
+
+### Running the Migration Script (Internal to Coinbase)
+
+For detailed instructions on running the migration script, refer to the Migrator Guide, reach out via Slack if you need help finding the guide.
+
+### What Requires Manual Migration
+
+While the script handles most changes, some breaking changes require manual intervention:
+
+- **ThemeProvider setup**: Converting from legacy providers to the new ThemeProvider
+- **Scale/density system removal**: Creating custom dense themes
+- **Custom styling**: Updating CSS-in-JS and styled components
+- **Type definitions**: Updating polymorphic component prop types
+- **Complex component patterns**: Advanced usage that can't be automatically detected
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Dependency Updates
+
+### Linaria Dependency Requirements
+
+**Important:** If you are using `@linaria/core` in your application code, you must properly declare it in your `package.json` dependencies. In CDS v8, we moved `@linaria/core` from `dependencies` to `devDependencies`, which means it will no longer be automatically available to consuming applications.
+
+```json
+{
+  "dependencies": {
+    "@linaria/core": "^6.0.0"
+  }
+}
+```
+
+This is required if your application directly imports from `@linaria/core`:
+
+```tsx
+import { css, cx } from '@linaria/core';
+```
+
+**Alternative for `cx` function:** If you're only using the `cx` function from `@linaria/core`, you can import it directly from `@coinbase/cds-web` instead of adding the dependency:
+
+```tsx
+// ❌ Requires @linaria/core dependency
+import { cx } from '@linaria/core';
+
+// ✅ No additional dependency needed
+import { cx } from '@coinbase/cds-web';
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## 💥 Breaking Change Overview
+
+Here's a high-level overview of the major breaking changes in v8:
+
+### 🎨 Theming System Changes
+
+- **New ThemeProvider**: Requires `theme` and `activeColorScheme` props (no defaults)
+- **Provider consolidation**: `SpectrumProvider`, `DarkModeProvider`, `LightModeProvider`, and scale providers replaced by single `ThemeProvider`
+- **Spectrum vs Color**: Distinction between spectrum (`"r,g,b"`) and color (CSS values) - prefer color tokens
+- **CSS variables**: Preferred way to access theme values on web for performance
+- **No inheritance**: ThemeProvider no longer auto-inherits from parent providers
+- **Color scheme classes**: ThemeProvider adds `.dark`/`.light` classes to container
+- **Scale/density removed**: No scale system - create custom themes for dense styles
+- **Theme inversion**: `invertSpectrum` → `invertColorScheme`, new `InvertedThemeProvider`
+
+### 🎭 Style System Changes
+
+- **Safari support**: Requires Safari 15.4+ for web (CSS layers, `:focus-visible`, `:has()`)
+- **CSS layers**: All CDS styles scoped to `@layer cds` for better specificity control
+- **CSS reset**: New global styles override browser defaults for polymorphic components
+- **Improved polymorphism**: Better type safety for polymorphic components with `as` prop
+- **Elevation simplified**: Streamlined system without `ElevationProvider`/`useElevationStyles`
+- **CSS-in-JS**: Static CSS variables and Linaria-compiled styles instead of runtime calculations
+
+### 🪙 Token Changes
+
+- **Color tokens**: Complete redesign with semantic naming:
+  - Foreground: `foreground` → `fg`, `primary` → `fgPrimary`
+  - Background: `background` → `bg`, `primary` → `bgPrimary`
+  - Border: `line` → `bgLine`, `primary` → `bgLinePrimary`
+- **Border radius**: String tokens → numeric (`rounded` → `200`, `roundedFull` → `1000`)
+- **Border width**: String tokens → numeric (`button` → `100`, `focusRing` → `200`)
+- **Import paths**: Many token imports moved to new package locations
+
+### ⭐ Icon Changes
+
+- **Active states**: Controlled by `active` prop instead of icon name suffixes (`starFilled` → `<Icon name="star" active />`)
+- **Renamed icons**: Several icons renamed for clarity
+- **Removed props**: `bordered` prop removed from Icon component
+- **Removed components**: `NavigationIcon` and `NavigationIconButton` removed
+
+### 🧩 Component Changes
+
+- **Responsive props**: `responsiveConfig` prop removed, use direct responsive props
+- **Media queries**: `deviceBreakpoints`/`deviceMqs` → `breakpoints`/`media`
+- **Removed providers**: `DevicePreferencesProvider`, `BreakpointsProvider`, `FeatureFlagProvider`
+- **Removed components**: Several utility components removed or renamed (`InteractableContent` → `Interactable`)
+- **Import paths**: Component import paths updated to new package structure
+
+### 🔧 Hook & Utility Changes
+
+- **useTheme**: Replaces `useSpectrum`, `useScale`, and other theming hooks
+- **Accessibility**: `useAccessibleForeground` → `getAccessibleColor` with new API
+- **Spacing**: `useSpacingScale`/`useSpacingValue` → direct theme token access
+- **Typography**: `useTypographyStyles` → direct theme property access
+- **Scale hooks**: `useScale`, `useScaleConditional` removed (no scale system)
+- **Palette utilities**: `paletteValueToRgbaString`, `usePalette` → theme-based approach
+
+### 📝 Type Changes
+
+- **Polymorphic types**: Now require type arguments (`TextProps<'h1'>`, `BoxProps<'div'>`)
+- **Default elements**: `TextDefaultElement`, `BoxDefaultElement` exported for defaults
+- **Removed types**: `HTMLNonHeadingTextTags`, `NoopFn`, `SetState`, `Overflow`, `IconPixelSize`
+- **Updated types**: `GapSpacing` → `ThemeVars.Space`
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Theming Updates
+
+### The New ThemeProvider
+
+In CDS v8, the theming system has been completely redesigned. The new `ThemeProvider` is the single source of truth for all styling and requires both `theme` and `activeColorScheme` props.
+
+**Basic Setup:**
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+
+const App = () => {
+  return (
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <YourAppContent />
+    </ThemeProvider>
+  );
+};
+```
+
+**Custom Theme:**
+
+```tsx
+const customTheme = {
+  ...defaultTheme,
+  lightColor: {
+    ...defaultTheme.lightColor,
+    bgPrimary: 'rgb(255, 0, 0)',
+  },
+  space: {
+    ...defaultTheme.space,
+    5: 32,
+  },
+};
+```
+
+### The useTheme Hook
+
+The `useTheme()` hook provides access to the current theme and active color scheme:
+
+```tsx
+const MyComponent = () => {
+  const theme = useTheme();
+  console.log(theme.activeColorScheme); // "light" or "dark"
+  console.log(theme.spectrum); // Reference to lightSpectrum or darkSpectrum
+  console.log(theme.color); // Reference to lightColor or darkColor
+  console.log(theme.color.bgPrimary); // "rgb(0,82,255)" or "rgb(87,139,250)"
+  console.log(theme.space[2]); // "16px"
+  console.log(theme.borderRadius[200]); // "8px"
+  console.log(theme.fontSize.display3); // "2.5rem"
+};
+```
+
+**Performance Note:** Whenever possible, use CSS variables on web instead of the `useTheme()` hook to ensure best performance.
+
+### Note about Spectrum vs Color
+
+The difference between `theme.spectrum` and `theme.color` is that spectrum values are just `"r,g,b"` strings while color values are valid CSS values. The `theme.color` values have semantic names and you should always prefer to use these values instead of spectrum values when styling UI.
+
+```tsx
+const lightSpectrum = {
+  red60: '207,32,47',
+};
+
+const theme = {
+  lightSpectrum,
+  lightColor: {
+    bgNegative: `rgb(${lightSpectrum.red60})`,
+  },
+};
+
+// In components:
+const theme = useTheme();
+console.log(theme.spectrum.red60); // "207,32,47"
+console.log(theme.color.bgNegative); // "rgb(207,32,47)"
+```
+
+### CSS Variables (Web)
+
+On web, `ThemeProvider` creates CSS variables for all theme values:
+
+| JS variable               | CSS variable         |
+| ------------------------- | -------------------- |
+| `theme.color.bgPrimary`   | `--color-bgPrimary`  |
+| `theme.space[2]`          | `--space-2`          |
+| `theme.borderRadius[200]` | `--borderRadius-200` |
+
+### Color Scheme Classes (Web)
+
+On web, the ThemeProvider adds a `.dark` or `.light` class to its container element depending on the `activeColorScheme`. You can use this class for writing styles specific to the color schemes.
+
+```css
+const myStyles = css`
+.dark {
+  background-image: url('http://example.com/dark.png');
+}
+
+.light {
+  background-image: url('http://example.com/light.png');
+}
+`;
+```
+
+### ThemeProvider Requirements
+
+The ThemeProvider no longer includes default values for the `theme` or `activeColorScheme` props. These props are now required on every ThemeProvider. Any component calling the `useTheme()` hook without a parent ThemeProvider will throw an error, and component styles will be broken.
+
+### ThemeProvider Inheritance
+
+The ThemeProvider no longer automatically inherits and merges themes from parent ThemeProviders. However you can manually inherit the theme if you want:
+
+```tsx
+const MyPage = () => {
+  const theme = useTheme();
+
+  const customTheme = {
+    ...theme,
+    fontFamily: {
+      ...theme.fontFamily,
+      label1: 'Arial',
+    },
+  };
+
+  return (
+    <ThemeProvider theme={customTheme} activeColorScheme={theme.activeColorScheme}>
+      Customized theming!
+    </ThemeProvider>
+  );
+};
+```
+
+### Scale/Density System Removed
+
+In CDS v8, the concept of scale/density no longer exists. To achieve dense/xSmall scale styles, you can create a new theme that updates the values of `space`, `fontSize`, `lineHeight`, `controlSize`, `iconSize`, etc.
+
+We have an example `coinbaseDenseTheme` you can use to emulate the old dense/xSmall scale styles - [web link](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/themes/coinbaseDenseTheme.ts) and [mobile link](https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/themes/coinbaseDenseTheme.ts). However you need to copy this theme into your application, it will be deleted from CDS in the next major release.
+
+### Inverting the Theme
+
+Some component props like `invertSpectrum` allow inverting a component tree to use the opposite of the current `activeColorScheme`. These props have been renamed to `invertColorScheme`.
+
+We have a new InvertedThemeProvider that will do this inversion automatically if the opposite color palette is defined in the theme. If the opposite colors are not defined then the InvertedThemeProvider does nothing.
+
+```tsx
+const MyComponent = ({ invertColorScheme }) => {
+  const Wrapper = invertColorScheme ? InvertedThemeProvider : React.Fragment;
+  return <Wrapper>Hello world</Wrapper>;
+};
+```
+
+### Removed Theming APIs
+
+The following theming-related APIs have been removed:
+
+**Providers:**
+
+- `SpectrumProvider` / `RootSpectrumProvider` - [see migration instructions](#migrating-rootspectrumprovider)
+- `DarkModeProvider` / `LightModeProvider` - [see migration instructions](#migrating-darkmodeprovider--lightmodeprovider)
+- `ScaleProvider` / `RootScaleProvider` / `DenseScaleProvider` / `NormalScaleProvider` - [see dense theme migration](#creating-dense-themes)
+
+**Hooks:**
+
+- `useSpectrum` - Replaced by `useTheme` hook
+- `useScale` / `useScaleConditional` - [see migration instructions](#migrating-scale-related-hooks-no-direct-replacement)
+- `useSpectrumConditional` - [see migration instructions](#migrating-usespectrumconditional)
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Style Updates
+
+### Safari Web Support
+
+CDS v8 for web supports Safari 15.4 and later, released March 14, 2022. We make use of features like CSS layers and selectors like `:focus-visible` and `:has()`.
+
+### CSS Layers
+
+All CDS web CSS is now scoped to a [CSS layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) for better specificity control:
+
+```css
+@layer cds {
+  .hello-world {
+    color: red;
+  }
+}
+```
+
+This causes CDS CSS to have lower style specificity than styles that are not on a CSS layer - which makes it easy to ensure your custom styles always overwrite CDS. This solves problems with non-deterministic styles based on stylesheet load order.
+
+### New Web Global Styles
+
+CDS web global styles now include a CSS reset which override the browser default styles for some elements. This ensures that polymorphic components render correctly, regardless of their HTML element. See the [full style reset here](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/styles/global.ts).
+
+### Improved Polymorphism
+
+Many web components are now fully polymorphic with strong type checking:
+
+```tsx
+// Without the `as` prop, href throws a type error
+<Button href="example.com" />
+// With the `as` prop, all native anchor props are valid
+<Button as="a" href="example.com" />
+```
+
+### Elevation Changes
+
+CDS v8 introduces a simplified elevation system that replaces the complex context-based approach with streamlined implementations for both web and mobile platforms. The elevation prop continues to support the same levels (0, 1, 2), but the underlying implementation has been significantly simplified for better performance and developer experience.
+
+In CDS web, the new elevation system uses static CSS variables and Linaria-compiled styles instead of runtime calculations. v8 removes the `ElevationProvider` context and `useElevationStyles` hook in favor of direct component props. This change eliminates the need for context providers and custom hooks while providing more consistent visual results across light and dark themes.
+
+In CDS mobile, the complex `ElevationConfigsProvider` and `createElevationConfigForSpectrum` system has been replaced with direct theme-based styling through the `getElevationStyles` function, removing the need for context providers and wrapper components.
+
+### Removed Style APIs
+
+The following style-related APIs have been removed:
+
+**Providers:**
+
+- `ElevationConfigsProvider` - [see migration instructions](#migrating-elevationconfigsprovider)
+
+**Hooks:**
+
+- `useTypographyStyles` - [see migration instructions](#migrating-usetypographystyles)
+- `useThemeProviderStyles` - [see migration instructions](#migrating-usethemeproviderstyles)
+- `useSpacingStyles` - [see migration instructions](#migrating-usespacingstyles)
+- `useSpacingScale` / `useSpacingValue` - [see migration instructions](#migrating-usespacingscale--usespacingvalue)
+
+### New Style Tokens
+
+CDS v8 introduces many new themeable style tokens. The value of these tokens is configured in the ThemeProvider.
+
+**Example: Using New Color Tokens**
+
+```tsx
+// ❌ Before (v7)
+<Box background="primary" color="primaryForeground">
+  <Text color="secondary">Hello</Text>
+</Box>
+
+// ✅ After (v8)
+<Box background="bgPrimary" color="fgInverse">
+  <Text color="fgMuted">Hello</Text>
+</Box>
+```
+
+### CSS Variables in Styled Components
+
+```tsx
+// ❌ Before (v7)
+const StyledCard = styled.div`
+  background: ${palette.background};
+  border: 1px solid ${palette.line};
+  padding: ${spacing[3]};
+`;
+
+// ✅ After (v8)
+const StyledCard = styled.div`
+  background: var(--color-bg);
+  border: var(--borderWidth-100) solid var(--color-bgLine);
+  padding: var(--space-3);
+`;
+```
+
+### Mobile StyleSheet Updates
+
+```tsx
+// ❌ Before (v7)
+import { borderRadius, colors } from '@coinbase/cds-mobile/tokens';
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.background,
+    borderRadius: borderRadius.rounded,
+  },
+});
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+const MyComponent = () => {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    card: {
+      backgroundColor: theme.color.bg,
+      borderRadius: theme.borderRadius[200],
+    },
+  });
+
+  return <View style={styles.card} />;
+};
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Token Updates
+
+### Foreground Color Token Mapping
+
+| v7 Token              | v8 Token      |
+| --------------------- | ------------- |
+| `foreground`          | `fg`          |
+| `foregroundMuted`     | `fgMuted`     |
+| `primary`             | `fgPrimary`   |
+| `primaryForeground`   | `fgInverse`   |
+| `secondary`           | `bgSecondary` |
+| `secondaryForeground` | `fg`          |
+| `positive`            | `fgPositive`  |
+| `positiveForeground`  | `fgInverse`   |
+| `negative`            | `fgNegative`  |
+| `negativeForeground`  | `fgInverse`   |
+| `warning`             | `bgWarning`   |
+| `warningForeground`   | `fgWarning`   |
+
+### Background Color Token Mapping
+
+| v7 Token              | v8 Token         |
+| --------------------- | ---------------- |
+| `background`          | `bg`             |
+| `backgroundAlternate` | `bgAlternate`    |
+| `backgroundOverlay`   | `bgOverlay`      |
+| `backgroundInverse`   | `bgInverse`      |
+| `primary`             | `bgPrimary`      |
+| `secondary`           | `bgSecondary`    |
+| `positive`            | `bgPositive`     |
+| `negative`            | `bgNegative`     |
+| `warning`             | `bgWarning`      |
+| `primaryWash`         | `bgPrimaryWash`  |
+| `negativeWash`        | `bgNegativeWash` |
+| `transparent`         | `transparent`    |
+
+### Border Color Token Mapping
+
+| v7 Token            | v8 Token              |
+| ------------------- | --------------------- |
+| `primary`           | `bgLinePrimary`       |
+| `primaryWash`       | `bgLinePrimarySubtle` |
+| `secondary`         | `bgLine`              |
+| `positive`          | `bgPositive`          |
+| `negative`          | `bgNegative`          |
+| `line`              | `bgLine`              |
+| `lineHeavy`         | `bgLineHeavy`         |
+| `transparent`       | `transparent`         |
+| `warning`           | `bgWarning`           |
+| `warningForeground` | `fgWarning`           |
+
+### Border Radius Token Mapping
+
+| v7 Token        | v8 Token |
+| --------------- | -------- |
+| `roundedNone`   | `0`      |
+| `roundedSmall`  | `100`    |
+| `rounded`       | `200`    |
+| `roundedMedium` | `300`    |
+| `roundedLarge`  | `400`    |
+| `roundedXLarge` | `500`    |
+| `roundedFull`   | `1000`   |
+
+### Border Width Token Mapping
+
+| v7 Token    | v8 Token |
+| ----------- | -------- |
+| `none`      | `0`      |
+| `button`    | `100`    |
+| `card`      | `100`    |
+| `checkbox`  | `200`    |
+| `radio`     | `200`    |
+| `sparkline` | `200`    |
+| `focusRing` | `200`    |
+| `input`     | `100`    |
+
+### Removed Token APIs
+
+The following token-related APIs have been removed:
+
+**Functions:**
+
+- `paletteValueToRgbaString` - [see migration instructions](#migrating-color-palette-functions)
+- `paletteAliasToRgbaString` - [see migration instructions](#migrating-color-palette-functions)
+
+**Hooks:**
+
+- `usePalette` - [see migration instructions](#migrating-color-palette-functions)
+- `usePaletteConfig` - [see migration instructions](#migrating-color-palette-functions)
+
+**Constants:**
+
+- `defaultPalette` - [see migration instructions](#migrating-color-palette-functions)
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Icon Updates
+
+### Renamed Icons
+
+<Tag intent="promotional">Migration Script ✓</Tag>
+
+The following icons have been renamed:
+
+- `visibleInactive` → `invisible`
+- `followInactive` → `followAdd`
+- `visibleFilled` → `visible`
+- `rocketInactive` → `noRocket`
+- `followActive` → `following`
+
+### Active State Changes
+
+<Tag intent="promotional">Migration Script ✓</Tag>
+
+For certain UI icons whose names end with Active or Inactive suffixes, their active state is now controlled by a boolean `active` prop -- see the complete [migration instructions](#icon-components-with-active-states).
+
+**Affected icons**: See the complete [UI Icon Exceptions list](#icon-components-with-active-states) in the migration instructions.
+
+**Affected components**: `Icon`, `CellMedia`, `IconButton`, `Button`, `Banner`.
+
+### Removed Icon APIs
+
+The following icon-related APIs have been removed:
+
+**Props:**
+
+- `bordered` prop from `Icon` component - [see migration instructions](#migrating-bordered-icon-prop)
+
+**Components:**
+
+- `NavigationIcon` & `NavigationIconButton` - Use standard `Icon` and `IconButton` instead - [see migration instructions](#migrating-navigationiconnavigationiconbutton)
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Component Updates
+
+### Responsive Props
+
+<Tag intent="promotional">Migration Script ✓</Tag>
+
+The `responsiveConfig` prop has been removed. Pass responsive values directly to each prop:
+
+```tsx
+// ❌ Before
+const responsiveConfig = { desktop: { gap: 2 }, tablet: { gap: 3 } };
+<Box responsiveConfig={responsiveConfig}>Content</Box>
+
+// ✅ After
+<Box gap={{ desktop: 2, tablet: 3 }}>Content</Box>
+```
+
+### Breakpoints & Media Queries
+
+Import paths and values have been updated:
+
+```tsx
+// ❌ Before (v7)
+import { deviceBreakpoints, deviceMqs } from '@coinbase/cds-web/layout/breakpoints';
+
+// ✅ After (v8)
+import { breakpoints, media } from '@coinbase/cds-web/styles/media';
+```
+
+### Removed Component APIs
+
+The following component-related APIs have been removed:
+
+**Providers:**
+
+- `DevicePreferencesProvider` - [see migration instructions](#migrating-devicepreferencesprovider)
+- `BreakpointsProvider` - [see migration instructions](#migrating-breakpointsprovider)
+- `FeatureFlagProvider` - [see migration instructions](#migrating-featureflagprovider)
+
+**Components:**
+
+- `InteractableContent` - Renamed to `Interactable` - [see migration instructions](#migrating-interactablecontent)
+
+**Hooks:**
+
+- `useMergedRef` - [see migration instructions](#migrating-usemergedref)
+- `useToggler` - [see migration instructions](#migrating-usetoggler)
+- `useMediaQuery` / `useDeviceColorScheme` - Use theme-based approach instead
+- `useIconSize` / `useAvatarSize` - [see migration instructions](#migrating-scale-related-hooks-no-direct-replacement)
+- `useInteractableHeight` - [see migration instructions](#migrating-scale-related-hooks-no-direct-replacement)
+
+**Utilities:**
+
+- `overflowClassName` - Replace with inline CSS: `{ overflow: auto; text-overflow: unset; white-space: normal; }` - [see migration instructions](#migrating-overflowclassname)
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Type Updates
+
+### Polymorphic Component Props
+
+All polymorphic component prop types now require a type argument:
+
+```tsx
+// ❌ Before (v7)
+interface MyComponentProps {
+  textProps: TextProps;
+  boxProps: BoxProps;
+}
+
+// ✅ After (v8)
+import { TextProps, TextDefaultElement } from '@coinbase/cds-web/typography/Text';
+import { BoxProps, BoxDefaultElement } from '@coinbase/cds-web/layout/Box';
+
+interface MyComponentProps {
+  textProps: TextProps<TextDefaultElement>;
+  boxProps: BoxProps<BoxDefaultElement>;
+}
+
+// Or with specific element types
+interface MySpecificComponentProps {
+  headingProps: TextProps<'h1'>;
+  linkProps: BoxProps<'a'>;
+}
+```
+
+### Removed Type APIs
+
+The following type-related APIs have been removed:
+
+**Types:**
+
+- `HTMLNonHeadingTextTags` - Define locally if needed - [see migration instructions](#migrating-removed-types)
+- `LinkTypography` - Replace with `LinkProps<LinkDefaultElement>['font']`
+- `BoxElement` - Use `BoxDefaultElement` or define as `keyof JSX.IntrinsicElements`
+- `Overflow` - Define locally as `{ overflow?: 'visible' | 'hidden' | 'scroll' | 'auto' | 'clip' }` - [see migration instructions](#migrating-removed-types)
+
+**Constants:**
+
+- `paletteForegrounds`, `paletteBackgrounds`, `paletteBorders`
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## FAQ
+
+### Why upgrade to v8?
+
+CDS v8 brings faster performance, full theming and customization, powerful new APIs, and improved accessibility. It also includes React 19 support, a rebuilt docs site, and an MCP server to streamline development.
+
+### What new features are included?
+
+This release includes:
+
+- Theming and customization
+- Drastically improved performance
+- CDS MCP Server
+- Powerful new APIs
+- All new docs site
+- React 19 support
+- 5 new components
+
+### Are migration scripts available?
+
+Yes! We provide the `@coinbase/cds-migrator` package to assist with automated migration. For detailed instructions, refer to the [Migrator Guide](https://github.com/coinbase/cds-staging/blob/master/packages/migrator/README.md).
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Appendix: Detailed Migration Instructions
+
+This section provides step-by-step instructions for migrating specific APIs and components that have been removed or updated. Each section corresponds to the breaking changes outlined above.
+
+**Note:** Code examples may show platform-specific import paths (e.g., `@coinbase/cds-web` or `@coinbase/cds-mobile`). Adjust the import paths based on your target platform.
+
+### Theming Migration Instructions
+
+_See [Theming Updates](#theming-updates) for overview_
+
+#### Migrating DevicePreferencesProvider
+
+**On Web:**
+
+```tsx
+// ❌ Before (v7)
+import { DevicePreferencesProvider } from '@coinbase/cds-web/system';
+
+const App = () => (
+  <DevicePreferencesProvider>
+    <YourAppContent />
+  </DevicePreferencesProvider>
+);
+
+// ✅ After (v8)
+import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider';
+import { useMediaQuery } from '@coinbase/cds-web/hooks/useMediaQuery';
+
+const App = () => {
+  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+  const activeColorScheme = prefersDark ? 'dark' : 'light';
+
+  return (
+    <MediaQueryProvider>
+      <ThemeProvider theme={defaultTheme} activeColorScheme={activeColorScheme}>
+        <YourAppContent />
+      </ThemeProvider>
+    </MediaQueryProvider>
+  );
+};
+```
+
+**On Mobile:**
+
+```tsx
+// ❌ Before (v7)
+import { DevicePreferencesProvider } from '@coinbase/cds-mobile/system';
+
+// ✅ After (v8)
+import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import { useDeviceColorScheme } from '@coinbase/cds-mobile/hooks/useDeviceColorScheme';
+
+const App = () => {
+  const deviceColorScheme = useDeviceColorScheme();
+  const [userPreference, setUserPreference] = useState<'system' | 'light' | 'dark'>('system');
+
+  const activeColorScheme = userPreference === 'system' ? deviceColorScheme : userPreference;
+
+  return (
+    <ThemeProvider theme={defaultTheme} activeColorScheme={activeColorScheme}>
+      <YourApp />
+      {/* Somewhere in your settings */}
+      <Button onPress={() => setUserPreference('dark')}>Dark Mode</Button>
+      <Button onPress={() => setUserPreference('light')}>Light Mode</Button>
+      <Button onPress={() => setUserPreference('system')}>Follow System</Button>
+    </ThemeProvider>
+  );
+};
+```
+
+#### Migrating BreakpointsProvider
+
+**Steps:**
+
+1. Remove the `BreakpointsProvider` import
+2. Add `import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider'`
+3. Replace `BreakpointsProvider` with `MediaQueryProvider`
+4. Add the `defaultValues` prop if needed
+
+```tsx
+// ❌ Before (v7)
+import { BreakpointsProvider } from '@coinbase/cds-web/system/BreakpointsProvider';
+
+// ✅ After (v8)
+import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider';
+
+const App = () => (
+  <MediaQueryProvider>
+    <YourApp />
+  </MediaQueryProvider>
+);
+```
+
+#### Migrating RootSpectrumProvider
+
+**Steps:**
+
+1. Replace `RootSpectrumProvider` with `ThemeProvider`
+2. Add your own device color scheme detection logic using `useDeviceColorScheme()` hook
+3. Implement user preference state management
+
+```tsx
+// ❌ Before (v7)
+import { RootSpectrumProvider } from '@coinbase/cds-mobile/system';
+
+// ✅ After (v8) - Manual override with state management
+import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import { useDeviceColorScheme } from '@coinbase/cds-mobile/hooks/useDeviceColorScheme';
+
+const App = () => {
+  const deviceColorScheme = useDeviceColorScheme();
+  const [userPreference, setUserPreference] = useState<'system' | 'light' | 'dark'>('system');
+
+  const activeColorScheme = userPreference === 'system' ? deviceColorScheme : userPreference;
+
+  return (
+    <ThemeProvider theme={defaultTheme} activeColorScheme={activeColorScheme}>
+      <YourApp />
+      {/* Somewhere in your settings */}
+      <Button onPress={() => setUserPreference('dark')}>Dark Mode</Button>
+      <Button onPress={() => setUserPreference('light')}>Light Mode</Button>
+      <Button onPress={() => setUserPreference('system')}>Follow System</Button>
+    </ThemeProvider>
+  );
+};
+```
+
+#### Migrating DarkModeProvider / LightModeProvider
+
+**Steps:**
+
+1. Remove `DarkModeProvider` and `LightModeProvider` imports
+2. Replace with `ThemeProvider` that has `activeColorScheme` set to `"dark"` or `"light"`
+
+```tsx
+// ❌ Before (v7)
+import { DarkModeProvider, LightModeProvider } from '@coinbase/cds-mobile/system';
+
+<DarkModeProvider>
+  <YourApp />
+</DarkModeProvider>
+
+<LightModeProvider>
+  <YourApp />
+</LightModeProvider>
+
+// ✅ After (v8)
+import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+
+<ThemeProvider theme={defaultTheme} activeColorScheme="dark">
+  <YourApp />
+</ThemeProvider>
+
+<ThemeProvider theme={defaultTheme} activeColorScheme="light">
+  <YourApp />
+</ThemeProvider>
+```
+
+#### Migrating FeatureFlagProvider
+
+**Steps:**
+
+1. Simply remove `FeatureFlagProvider` from your component tree
+2. The benefits it provided are now automatic in v8
+
+```tsx
+// ❌ Before (v7)
+import { FeatureFlagProvider } from '@coinbase/cds-web/system';
+
+<FeatureFlagProvider>
+  <YourApp />
+</FeatureFlagProvider>
+
+// ✅ After (v8)
+// Simply remove the provider - modern behaviors like CSS gap are now default
+<YourApp />
+```
+
+**What was automated:**
+
+- CSS gap support
+- Fabric support
+- Other modern behaviors that required opt-in
+
+#### Migrating ElevationConfigsProvider
+
+**Steps:**
+
+1. Remove `ElevationConfigsProvider` from your component tree
+2. The elevation system has been simplified and no longer needs this provider
+
+```tsx
+// ❌ Before (v7)
+import { ElevationConfigsProvider } from '@coinbase/cds-mobile/system';
+
+<ElevationConfigsProvider>
+  <YourApp />
+</ElevationConfigsProvider>
+
+// ✅ After (v8)
+// Simply remove the provider - elevation is now handled directly by components
+<YourApp />
+```
+
+#### Creating Dense Themes
+
+_Related to the scale system removal mentioned in [Theming Updates](#theming-updates)_
+
+**Steps:**
+
+1. Copy the example `coinbaseDenseTheme` from CDS
+2. Create theme switching logic
+
+**Example:**
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { coinbaseDenseTheme } from '@coinbase/cds-web/themes/coinbaseDenseTheme';
+import { coinbaseTheme } from '@coinbase/cds-web/themes/coinbaseTheme';
+
+// override the dense theme with your own values if needed
+const myDenseTheme = {
+  ...coinbaseDenseTheme,
+  id: 'dense-theme',
+  space: {
+    '0': 0,
+    '0.25': 2,
+    '0.5': 4,
+    '0.75': 6,
+    '1': 8,
+    '1.5': 10,
+    '2': 12, // vs 16 in default
+    '3': 16, // vs 24 in default
+    '4': 20, // vs 32 in default
+    '5': 24, // vs 40 in default
+    // ... other smaller values
+  },
+  fontSize: {
+    headline: 14, // vs 16 in default
+    body: 14, // vs 16 in default
+    // ... other smaller font sizes
+  },
+  // ... other dense tokens
+};
+
+const App = ({ activeColorScheme }) => {
+  const [isDense, setIsDense] = React.useState(false);
+  const theme = isDense ? myDenseTheme : coinbaseTheme;
+
+  return (
+    <ThemeProvider theme={theme} activeColorScheme={activeColorScheme}>
+      <Button onClick={() => setIsDense((d) => !d)}>Toggle Density</Button>
+      <YourApp />
+    </ThemeProvider>
+  );
+};
+```
+
+### Style Migration Instructions
+
+_See [Style Updates](#style-updates) for overview_
+
+#### Migrating useThemeProviderStyles
+
+**Steps:**
+
+1. Update the import path: `import { useThemeProviderStyles } from '@coinbase/cds-web/system/ThemeProvider';`
+2. Remove `className` references (no longer returned)
+3. Update hook usage
+
+```tsx
+// ❌ Before (v7)
+const { className, style } = useThemeProviderStyles();
+
+// ✅ After (v8)
+import { useThemeProviderStyles } from '@coinbase/cds-web/system/ThemeProvider';
+const style = useThemeProviderStyles();
+```
+
+#### Migrating useTypographyStyles
+
+_Related to new style tokens mentioned in [Style Updates](#style-updates)_
+
+**On Web:**
+
+```tsx
+// ❌ Before (v7)
+const styles = useTypographyStyles('body');
+
+// ✅ After (v8)
+const styles = {
+  fontFamily: 'var(--fontFamily-text)',
+  fontSize: 'var(--fontSize-body)',
+  lineHeight: 'var(--lineHeight-body)',
+};
+
+// For display typography:
+const displayStyles = {
+  fontFamily: 'var(--fontFamily-display1)',
+  fontSize: 'var(--fontSize-display1)',
+  fontWeight: 'var(--fontWeight-display1)',
+  lineHeight: 'var(--lineHeight-display1)',
+};
+```
+
+**On Mobile:**
+
+```tsx
+// ❌ Before (v7)
+const styles = useTypographyStyles('headline');
+
+// ✅ After (v8)
+const theme = useTheme();
+const headlineStyles = useMemo(
+  () => ({
+    fontSize: theme.fontSize.headline,
+    lineHeight: theme.lineHeight.headline,
+    fontWeight: theme.fontWeight.headline,
+    fontFamily: theme.fontFamily.headline,
+  }),
+  [theme],
+);
+
+// Or access individual values directly
+const bodyLineHeight = theme.lineHeight.body;
+```
+
+#### Migrating useSpacingStyles
+
+**Steps:**
+
+1. Remove the import of `useSpacingStyles`
+2. Replace with native padding/margin style properties
+
+```tsx
+// ❌ Before (v7)
+const spacingStyles = useSpacingStyles();
+
+// ✅ After (v8)
+// web
+const styles = css`
+  padding: var(--space-1)
+  margin: calc(-1 * var(--space-1)))
+`;
+
+// mobile
+const theme = useTheme();
+const styles = {
+  padding: theme.space[1],
+  margin: -theme.space[1],
+};
+```
+
+### Token Migration Instructions
+
+_See [Token Updates](#token-updates) for overview and mapping tables_
+
+#### Migrating useSpacingScale / useSpacingValue
+
+**On Web:**
+
+```tsx
+// ❌ Before (v7)
+import { useSpacingValue } from '@coinbase/cds-web/hooks/useSpacingValue';
+const paddingValue = useSpacingValue(3);
+
+// ✅ After (v8) - CSS Variables
+const paddingValue = 'var(--space-3)';
+
+// Or direct calculation
+const paddingValue = 3 * 8; // 24px
+```
+
+**On Mobile:**
+
+```tsx
+// ❌ Before (v7)
+import { useSpacingValue } from '@coinbase/cds-mobile/hooks/useSpacingValue';
+const spacing = useSpacingValue(1);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+const theme = useTheme();
+const spacing = theme.space[1];
+```
+
+#### Migrating borderRadius Tokens
+
+_Refer to [Border Radius Token Mapping](#token-updates) table_
+
+**Steps:**
+
+1. Remove the import of `borderRadius`
+2. Replace usage with CSS variables or theme tokens
+
+```tsx
+// ❌ Before (v7)
+import { borderRadius } from '@coinbase/cds-common/tokens/borderRadius';
+const radius = borderRadius.rounded;
+
+// ✅ After (v8) - CSS Variables
+const radius = 'var(--borderRadius-200)';
+
+// Or using useTheme Hook:
+const theme = useTheme();
+const radius = theme.borderRadius[200];
+```
+
+#### Migrating borderWidth Tokens
+
+_Refer to [Border Width Token Mapping](#token-updates) table_
+
+**Steps:**
+
+1. Remove the import of `borderWidth`
+2. Import `useTheme` if needed
+3. Replace with theme tokens
+
+```tsx
+// ❌ Before (v7)
+import { borderWidth } from '@coinbase/cds-common/tokens/borderWidth';
+const width = borderWidth.button;
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+const theme = useTheme();
+const width = theme.borderWidth[100];
+```
+
+#### Migrating Color Palette Functions
+
+_Refer to [Color Token Mapping](#token-updates) table_
+
+**paletteValueToRgbaString:**
+
+```tsx
+// ❌ Before (v7)
+import { paletteValueToRgbaString } from '@coinbase/cds-common/palette/paletteValueToRgbaString';
+const color = paletteValueToRgbaString('green0', activeColorScheme);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+const theme = useTheme();
+const color = `rgba(${theme.spectrum.green0}, 0.1)`;
+```
+
+**paletteValueToHex:**
+
+```tsx
+// ❌ Before (v7)
+import { paletteValueToHex } from '@coinbase/cds-common/palette/paletteValueToHex';
+const color = paletteValueToHex('gray60', activeColorScheme);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+const theme = useTheme();
+const color = theme.spectrum.gray60;
+```
+
+**paletteAliasToRgbaString:**
+
+```tsx
+// ❌ Before (v7)
+import { paletteAliasToRgbaString } from '@coinbase/cds-common/palette/paletteAlias';
+const color = paletteAliasToRgbaString('primary', activeColorScheme);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+const theme = useTheme();
+const color = theme.color.fgPrimary;
+```
+
+**usePalette:**
+
+```tsx
+// ❌ Before (v7)
+import { usePalette } from '@coinbase/cds-web/hooks/usePalette';
+const palette = usePalette();
+const color = palette.foregroundMuted;
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+const theme = useTheme();
+const color = theme.color.fgMuted;
+```
+
+**Palette Constants (paletteForegrounds, paletteBackgrounds, paletteBorders):**
+
+```tsx
+// ❌ Before (v7)
+import {
+  paletteBackgrounds,
+  paletteForegrounds,
+  paletteBorders,
+} from '@coinbase/cds-common/palette/constants';
+const bgColor = paletteBackgrounds[1];
+const textColor = paletteForegrounds[0];
+const borderColor = paletteBorders[2];
+
+// ✅ After (v8)
+// Use specific color token names instead
+const bgColor = 'bgAlternate';
+const textColor = 'fg';
+const borderColor = 'bgLine';
+```
+
+**Steps:**
+
+1. Identify the palette color name from the [v7 array](https://github.com/coinbase/cds-staging/blob/v7/packages/common/src/palette/constants.ts#L81-L122)
+2. Find the corresponding new color token from the [color mapping tables](#token-updates)
+3. Replace array access with direct token name
+
+**defaultPalette / usePaletteConfig:**
+
+```tsx
+// ❌ Before (v7)
+import { defaultPalette } from '@coinbase/cds-common/palette/constants';
+import { usePaletteConfig } from '@coinbase/cds-common/palette/usePaletteConfig';
+
+// ✅ After (v8) - CSS Variables
+const bgColor = 'var(--color-bg)';
+
+// Or using useTheme
+const theme = useTheme();
+const bg = theme.color.bg;
+
+// If passing to ThemeProvider, use coinbaseTheme instead:
+import { coinbaseTheme } from '@coinbase/cds-web/themes/coinbaseTheme';
+```
+
+### Icon Migration Instructions
+
+_See [Icon Updates](#icon-updates) for overview_
+
+#### Icon Components with Active States
+
+_Related to [Active State Changes](#icon-updates) mentioned above_
+
+**Component-to-Prop Mapping:**
+
+- **Icon**: `['name', 'active']`
+- **CellMedia**: `['name', 'active']`
+- **DotSymbol**: `['iconName', 'active']`
+- **IconButton**: `['name', 'active']`
+- **InputIcon**: `['name', 'active']`
+- **InputIconButton**: `['name', 'active']`
+- **Banner**: `['startIcon', 'startIconActive']`
+- **Button**: `[['startIcon', 'startIconActive'], ['endIcon', 'endIconActive']]`
+
+**UI Icon Exceptions List:**
+Only apply active prop logic if the icon name is in this list: `add`, `affiliates`, `airdrop`, `artwork`, `avatar`, `bell`, `book`, `briefcase`, `calculator`, `camera`, `chartBar`, `chartPie`, `chartPieCircle`, `chatBubble`, `circleCheckmark`, `circleCross`, `clock`, `coinbaseOne`, `crypto`, `cryptobasics`, `currencies`, `defi`, `dot`, `email`, `error`, `ethereum`, `flame`, `games`, `gavel`, `gear`, `giftCard`, `group`, `heart`, `home`, `info`, `institute`, `keyboard`, `lightbulb`, `lightningBolt`, `lock`, `marketCap`, `megaphone`, `microphone`, `music`, `newsFeed`, `newsletter`, `nft`, `orderHistory`, `paperAirplane`, `passport`, `pencil`, `play`, `profile`, `questionMark`, `regulated`, `safe`, `save`, `shield`, `sortDoubleArrow`, `sortDown`, `sortDownCenter`, `sortUp`, `sortUpCenter`, `soundOff`, `soundOn`, `sparkle`, `speaker`, `stake`, `taxesReceipt`, `telephone`, `thumbsDown`, `thumbsUp`, `trashCan`, `trophy`, `unlock`, `verifiedBadge`, `visibleFilled`, `wallet`, `warning`, `wrapToken`.
+
+**Steps:**
+
+If the icon name ends with Active or Inactive:
+
+1. Remove the suffix from the icon name
+2. Add the active prop for icons with Active suffix
+
+**Example:**
+
+```tsx
+// ❌ Before
+<Icon name="bellActive" />
+<Icon name="heartInactive" />
+<Button startIcon="bellActive" endIcon="heartInactive" />
+
+// ✅ After
+<Icon name="bell" active />
+<Icon name="heart" />
+<Button startIcon="bell" startIconActive endIcon="heart" />
+```
+
+#### Migrating bordered Icon Prop
+
+_Related to [Removed bordered Prop](#icon-updates) mentioned above_
+
+**Steps:**
+
+1. Find all instances using regex: `<Icon\s+[^>]*\bbordered\b[^>]*>`
+2. Remove the `bordered` prop
+3. Wrap the Icon in a bordered Box
+
+**Example:**
+
+```tsx
+// ❌ Before
+<Icon name="info" bordered />
+
+// ✅ After
+<Box bordered borderRadius={1000} borderColor="fgPrimary">
+  <Icon name="info" />
+</Box>
+```
+
+### Component Migration Instructions
+
+_See [Component Updates](#component-updates) for overview_
+
+#### Migrating NavigationIcon/NavigationIconButton
+
+_Related to [Removed Components](#component-updates) mentioned above_
+
+**Steps:**
+
+1. Remove imports:
+   ```tsx
+   import { NavigationIcon } from '@coinbase/cds-web/icons';
+   import { NavigationIconButton } from '@coinbase/cds-web/buttons';
+   ```
+2. Replace with:
+   ```tsx
+   import { Icon } from '@coinbase/cds-web/icons';
+   import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
+   ```
+3. Update component usage:
+
+```tsx
+// ❌ Before
+<NavigationIcon name="home" />
+<NavigationIconButton name="settings" onClick={handleClick} />
+
+// ✅ After
+<Icon name="home" />
+<IconButton name="settings" onClick={handleClick} />
+```
+
+#### Migrating InteractableContent
+
+_Related to [Removed Components](#component-updates) mentioned above_
+
+**Steps:**
+
+1. Remove import: `import { InteractableContent } from '@coinbase/cds-web/system';`
+2. Import Interactable: `import { Interactable } from '@coinbase/cds-web/system';`
+3. Replace all usage: `<InteractableContent>` → `<Interactable>`
+
+#### Migrating Responsive Props
+
+_Related to [Responsive Props](#component-updates) mentioned above_
+
+The `responsiveConfig` prop migration is automated by the migration script, but here's the pattern:
+
+```tsx
+// ❌ Before
+const responsiveConfig = { desktop: { gap: 2 }, tablet: { gap: 3 } };
+<Box responsiveConfig={responsiveConfig}>Content</Box>
+
+// ✅ After
+<Box gap={{ desktop: 2, tablet: 3 }}>Content</Box>
+```
+
+#### Migrating Breakpoints & Media Queries
+
+_Related to [Breakpoints & Media Queries](#component-updates) mentioned above_
+
+**Steps:**
+
+1. Update import paths
+2. Update breakpoint values (note the changes)
+
+```tsx
+// ❌ Before (v7)
+import { deviceBreakpoints, deviceMqs } from '@coinbase/cds-web/layout/breakpoints';
+
+// ✅ After (v8)
+import { breakpoints, media } from '@coinbase/cds-web/styles/media';
+```
+
+**Note:** Breakpoint values have changed. For example, `phone` now starts at `0` and `media.phone` is a `max-width` query.
+
+#### Migrating overflowClassName
+
+_Related to [Removed Utilities](#component-updates) mentioned above_
+
+**Steps:**
+
+1. Remove the import of `overflowClassName`
+2. Replace with equivalent CSS styles
+
+```tsx
+// ❌ Before (v7)
+import { overflowClassName } from '@coinbase/cds-web/cells/Cell';
+
+// ✅ After (v8)
+const overflowStyles = {
+  overflow: 'auto',
+  textOverflow: 'unset',
+  whiteSpace: 'normal',
+};
+```
+
+### Type Migration Instructions
+
+_See [Type Updates](#type-updates) for overview_
+
+#### Migrating Polymorphic Component Types
+
+_Related to [Polymorphic Component Props](#type-updates) mentioned above_
+
+**BoxElement:**
+
+```tsx
+// ❌ Before (v7)
+import { BoxElement } from '@coinbase/cds-web/layout/Box';
+type MyProps = { as?: BoxElement };
+
+// ✅ After (v8) - Option 1
+import { BoxDefaultElement } from '@coinbase/cds-web/layout/Box';
+type MyProps = VStackProps<BoxDefaultElement>;
+
+// ✅ After (v8) - Option 2
+type MyProps = { as?: keyof JSX.IntrinsicElements };
+```
+
+**TextProps:**
+
+```tsx
+// ❌ Before (v7)
+import { TextProps } from '@coinbase/cds-web/typography/Text';
+
+// ✅ After (v8)
+import { TextProps, TextDefaultElement } from '@coinbase/cds-web/typography/Text';
+
+// Usage
+type MyProps = {
+  textProps: TextProps<'h1'>; // specific element
+  defaultTextProps: TextProps<TextDefaultElement>; // default element
+};
+```
+
+**LinkTypography:**
+
+```tsx
+// ❌ Before (v7)
+import { LinkTypography } from '@coinbase/cds-common/types/LinkBaseProps';
+type FontProp = LinkTypography;
+
+// ✅ After (v8)
+import { LinkProps, LinkDefaultElement } from '@coinbase/cds-web/typography/Link';
+type FontProp = LinkProps<LinkDefaultElement>['font'];
+```
+
+#### Migrating Removed Types
+
+_Related to [Removed Types](#type-updates) mentioned above_
+
+**HTMLNonHeadingTextTags:**
+
+```tsx
+// ❌ Before (v7)
+import { HTMLNonHeadingTextTags } from '@coinbase/cds-web/typography';
+
+// ✅ After (v8) - Define locally
+type HTMLNonHeadingTextTags = 'p' | 'span' | 'div' | 'label' | 'legend' | 'caption';
+```
+
+**NoopFn:**
+
+```tsx
+// ❌ Before (v7)
+import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+
+// ✅ After (v8)
+type NoopFn = () => void;
+```
+
+**SetState:**
+
+```tsx
+// ❌ Before (v7)
+import { SetState } from '@coinbase/cds-common/types';
+
+// ✅ After (v8)
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+```
+
+**Overflow:**
+
+```tsx
+// ❌ Before (v7)
+import { Overflow } from '@coinbase/cds-web/types';
+
+// ✅ After (v8)
+type Overflow = {
+  overflow?: 'visible' | 'hidden' | 'scroll' | 'auto' | 'clip';
+};
+```
+
+**IconPixelSize:**
+
+```tsx
+// ❌ Before (v7)
+import { IconPixelSize } from '@coinbase/cds-common/types/IconSize';
+
+// ✅ After (v8)
+type IconPixelSize = 8 | 12 | 16 | 24 | 32;
+```
+
+**GapSpacing:**
+
+```tsx
+// ❌ Before (v7)
+import { GapSpacing } from '@coinbase/cds-common/types/TooltipBaseProps';
+
+// ✅ After (v8)
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+type GapSpacing = ThemeVars.Space;
+```
+
+### Hook Migration Instructions
+
+_Cross-references to various sections above_
+
+#### Migrating useAccessibleForeground
+
+<Tag intent="promotional">Migration Script ✓</Tag>
+
+_Related to color token changes in [Token Updates](#token-updates)_
+
+```tsx
+// ❌ Before (v7)
+import { useAccessibleForeground } from '@coinbase/cds-web/color/useAccessibleForeground';
+
+const MyComponent = () => {
+  const backgroundColor = 'rgb(255, 0, 0)';
+  const foregroundColor = useAccessibleForeground({
+    background: backgroundColor,
+    color: 'auto',
+    usage: 'normalText',
+  });
+
+  return <div style={{ backgroundColor, color: foregroundColor }}>Content</div>;
+};
+
+// ✅ After (v8)
+import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
+
+const MyComponent = () => {
+  const backgroundColor = 'rgb(255, 0, 0)';
+  const foregroundColor = getAccessibleColor({
+    background: backgroundColor,
+    foreground: 'auto', // Can only be 'auto' or undefined
+    usage: 'normalText',
+  });
+
+  return <div style={{ backgroundColor, color: foregroundColor }}>Content</div>;
+};
+```
+
+#### Migrating useMergedRef
+
+```tsx
+// ❌ Before (v7)
+import { useMergedRef } from '@coinbase/cds-common/hooks/useMergedRef';
+const mergedRef = useMergedRef(ref1, ref2);
+
+// ✅ After (v8)
+import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+const mergedRef = useMergeRefs(ref1, ref2);
+```
+
+#### Migrating useToggler
+
+```tsx
+// ❌ Before (v7)
+import { useToggler } from '@coinbase/cds-common/hooks/useToggler';
+const [isOpen, toggleIsOpen] = useToggler(false);
+
+// ✅ After (v8)
+import React from 'react';
+const [isOpen, setIsOpen] = React.useState(false);
+const toggleIsOpen = () => setIsOpen((prev) => !prev);
+```
+
+#### Migrating useSpectrumConditional
+
+_Related to theming changes in [Theming Updates](#theming-updates)_
+
+```tsx
+// ❌ Before (v7)
+import { useSpectrumConditional } from '@coinbase/cds-common/hooks/useSpectrumConditional';
+const value = useSpectrumConditional(config);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+const theme = useTheme();
+const value = config(theme.activeColorScheme);
+```
+
+#### Migrating useInteractableHeight
+
+```tsx
+// ❌ Before (v7)
+import { useInteractableHeight } from '@coinbase/cds-common/hooks/useInteractableHeight';
+const height = useInteractableHeight(compact);
+
+// ✅ After (v8)
+import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+const height = compact ? interactableHeight.compact : interactableHeight.regular;
+```
+
+#### Migrating useIconSize
+
+```tsx
+// ❌ Before (v7)
+import { useIconSize } from '@coinbase/cds-web/hooks/useIconSize';
+const { iconSize } = useIconSize(size);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+const theme = useTheme();
+const iconSize = theme.iconSize[size];
+```
+
+#### Migrating useAvatarSize
+
+```tsx
+// ❌ Before (v7)
+import { useAvatarSize } from '@coinbase/cds-mobile/hooks/useAvatarSize';
+const avatarSize = useAvatarSize(size);
+
+// ✅ After (v8)
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+const theme = useTheme();
+const avatarSize = theme.avatarSize[size];
+```
+
+#### Migrating Scale-Related Hooks (No Direct Replacement)
+
+_Related to scale system removal in [Theming Updates](#scaledensity-system-removed)_
+
+**useScale:**
+
+```tsx
+// ❌ Before (v7) - Scale-based rendering
+const MyComponent = () => {
+  const scale = useScale();
+  if (scale === 'xSmall') {
+    return <CompactLayout />;
+  }
+  return <NormalLayout />;
+};
+
+// ✅ After (v8) - Direct component choice or user preference
+const MyComponent = ({ isCompact }: { isCompact?: boolean }) => {
+  if (isCompact) {
+    return <CompactLayout />;
+  }
+  return <NormalLayout />;
+};
+
+// Or custom theme-based detection
+const useIsDenseTheme = () => {
+  const theme = useTheme();
+  return theme.id === 'dense-theme' || theme.space[2] < 16;
+};
+```
+
+**useScaleConditional:**
+
+```tsx
+// ❌ Before (v7)
+import { useScaleConditional } from '@coinbase/cds-common/scale/useScaleConditional';
+const size = useScaleConditional(mediaSize);
+
+// ✅ After (v8)
+const size = mediaSize.normal; // Access values directly
+```
+
+</MDXArticle>
+</MDXSection>
+
+</VStack>

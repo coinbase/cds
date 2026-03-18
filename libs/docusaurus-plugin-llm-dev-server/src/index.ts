@@ -11,7 +11,7 @@ type PluginOptions = {
 };
 
 type Platform = 'web' | 'mobile';
-type DocType = 'components' | 'hooks' | 'getting-started';
+type DocType = 'components' | 'hooks' | 'getting-started' | 'guides';
 
 export default function plugin(context: LoadContext, options: PluginOptions = {}): Plugin<void> {
   const { siteDir } = context;
@@ -81,7 +81,7 @@ export default function plugin(context: LoadContext, options: PluginOptions = {}
                     return res.status(404).send('Platform not found');
                   }
 
-                  if (!['components', 'hooks', 'getting-started'].includes(docType)) {
+                  if (!['components', 'hooks', 'getting-started', 'guides'].includes(docType)) {
                     return res.status(404).send('Doc type not found');
                   }
 
