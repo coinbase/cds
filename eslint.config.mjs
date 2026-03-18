@@ -168,6 +168,10 @@ const typescriptRules = {
   '@typescript-eslint/prefer-namespace-keyword': 'off',
   '@coinbase/cds/control-has-associated-label-extended': 'warn',
   '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+  '@coinbase/cds/web-tooltip-interactive-content': 'warn',
+  '@coinbase/cds/web-chart-scrubbing-accessibility': 'warn',
+  '@coinbase/cds/mobile-chart-scrubbing-accessibility': 'warn',
+  '@coinbase/cds/no-v7-imports': 'warn',
 };
 
 // These rules only apply to test files
