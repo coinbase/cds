@@ -22288,6 +22288,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch::locator=design-system%40workspace%3A.":
+  version: 7.1.6
+  resolution: "glob@patch:glob@npm%3A7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch::version=7.1.6&hash=900bbf&locator=design-system%40workspace%3A."
+  dependencies:
+    fs.realpath: "npm:^1.0.0"
+    inflight: "npm:^1.0.4"
+    inherits: "npm:2"
+    minimatch: "npm:^3.0.4"
+    once: "npm:^1.3.0"
+    path-is-absolute: "npm:^1.0.0"
+  checksum: 10c0/4294ad951773b035f6df9cb7b1fbb3a70aeb29056e66a98476206dbe9be372b9c97f104ee1d54c8260e8a4074c5c081b6ff25e5fda8ea0fb47a3816bff3024a3
+  languageName: node
+  linkType: hard
+
 "global-dirs@npm:^3.0.0":
   version: 3.0.0
   resolution: "global-dirs@npm:3.0.0"

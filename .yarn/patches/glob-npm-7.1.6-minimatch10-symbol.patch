@@ -1,0 +1,41 @@
+diff --git a/sync.js b/sync.js
+--- a/sync.js
++++ b/sync.js
+@@ -18,6 +18,10 @@ var ownProp = common.ownProp
+ var childrenIgnored = common.childrenIgnored
+ var isIgnored = common.isIgnored
+ 
++function safeJoin (arr) {
++  return arr.map(function (p) { return typeof p === 'symbol' ? '**' : p }).join('/')
++}
++
+ function globSync (pattern, options) {
+   if (typeof options === 'function' || arguments.length === 3)
+     throw new TypeError('callback provided to sync glob\n'+
+@@ -89,7 +93,7 @@ GlobSync.prototype._process = function (pattern, index, inGlobStar) {
+   switch (n) {
+     // if not, then this is rather simple
+     case pattern.length:
+-      this._processSimple(pattern.join('/'), index)
++      this._processSimple(safeJoin(pattern), index)
+       return
+ 
+     case 0:
+@@ -102,7 +106,7 @@ GlobSync.prototype._process = function (pattern, index, inGlobStar) {
+       // pattern has some string bits in the front.
+       // whatever it starts with, whether that's 'absolute' like /foo/bar,
+       // or 'relative' like '../baz'
+-      prefix = pattern.slice(0, n).join('/')
++      prefix = safeJoin(pattern.slice(0, n))
+       break
+   }
+ 
+@@ -112,7 +116,7 @@ GlobSync.prototype._process = function (pattern, index, inGlobStar) {
+   var read
+   if (prefix === null)
+     read = '.'
+-  else if (isAbsolute(prefix) || isAbsolute(pattern.join('/'))) {
++  else if (isAbsolute(prefix) || isAbsolute(safeJoin(pattern))) {
+     if (!prefix || !isAbsolute(prefix))
+       prefix = '/' + prefix
+     read = prefix
