@@ -827,43 +827,23 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
-    // {
-    //   type: 'category',
-    //   label: 'Guides',
-    //   customProps: {
-    //     icon: 'application',
-    //     kbar: {
-    //       description: 'Guides for using CDS',
-    //     },
-    //   },
-    //   items: [
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/polymorphic-components',
-    //     //   label: 'Polymorphic Components',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/integrate-with-build-tools',
-    //     //   label: 'Integrate with Build Tools',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/build-new-components',
-    //     //   label: 'Build New Components',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/contribute-guidelines',
-    //     //   label: 'Contribute Guidelines',
-    //     // },
-    //     // {
-    //     //   type: 'doc',
-    //     //   id: 'guides/advanced-customization',
-    //     //   label: 'Advanced Customization',
-    //     // },
-    //   ],
-    // },
+    {
+      type: 'category',
+      label: 'Guides',
+      customProps: {
+        icon: 'application',
+        kbar: {
+          description: 'Guides for using CDS',
+        },
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'guides/v8-migration-guide',
+          label: 'v8 Migration Guide',
+        },
+      ],
+    },
     {
       type: 'category',
       label: `Changelogs`,
