@@ -129,6 +129,30 @@ const generateDocs = (outputPath) => {
     }
     sections.push({ name: 'Hooks', routes: hookRoutes });
 
+    const guidesOutputPath = path.join(platformOutputPath, 'guides');
+    fs.mkdirSync(guidesOutputPath, { recursive: true });
+    const guideRoutes = [];
+
+    const guides = globSync(`${__dirname}/../docs/guides/*`);
+    for (const guidePath of guides) {
+      const content = generateDoc(platform, guidePath);
+      if (!content) continue;
+
+      const name = path.basename(guidePath, '.mdx');
+      const guideFile = `${name}.txt`;
+      const guideDocPath = path.join(guidesOutputPath, guideFile);
+
+      fs.writeFileSync(guideDocPath, content);
+
+      const metadata = getMetadata(guidePath, platform);
+      guideRoutes.push({
+        name,
+        description: metadata?.description,
+        path: guideDocPath,
+      });
+    }
+    sections.push({ name: 'Guides', routes: guideRoutes });
+
     generateRoutesDoc(sections, platformOutputPath);
   }
 };

@@ -6,7 +6,7 @@ const { generateDoc } = require('./generateDoc.cjs');
 /**
  * Resolve the file path for a doc and generate its content
  * @param {string} platform - 'web' or 'mobile'
- * @param {string} docType - 'components', 'hooks', or 'getting-started'
+ * @param {string} docType - 'components', 'hooks', 'getting-started', or 'guides'
  * @param {string} docName - The name of the doc (e.g., 'Button', 'useTheme', 'installation')
  * @param {string} siteDir - The Docusaurus site directory
  * @returns {string|null} - The generated doc content, or null if not found
