@@ -19,12 +19,24 @@ import {
   type PopoverProps,
 } from '../overlays/popover/PopoverProps';
 
-import { Calendar } from './Calendar';
+import { Calendar, type CalendarBaseProps } from './Calendar';
 import { DateInput, type DateInputProps } from './DateInput';
 
 const MotionVStack = motion(VStack);
 
-export type DatePickerBaseProps = {
+export type DatePickerBaseProps = Pick<
+  CalendarBaseProps,
+  | 'disabled'
+  | 'disabledDates'
+  | 'disabledDateError'
+  | 'highlightedDateAccessibilityHint'
+  | 'highlightedDates'
+  | 'maxDate'
+  | 'minDate'
+  | 'nextArrowAccessibilityLabel'
+  | 'previousArrowAccessibilityLabel'
+  | 'seedDate'
+> & {
   /** Control the date value of the DatePicker. */
   date: Date | null;
   /** Callback function fired when the date changes, e.g. when a valid date is selected or unselected. */
@@ -33,19 +45,6 @@ export type DatePickerBaseProps = {
   error: DateInputValidationError | null;
   /** Callback function fired when validation finds an error, e.g. required input fields and impossible or disabled dates. Will always be called after `onChangeDate`. */
   onErrorDate: (error: DateInputValidationError | null) => void;
-  /** Disables user interaction. */
-  disabled?: boolean;
-  /** Array of disabled dates, and date tuples for date ranges. Make sure to set `disabledDateError` as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
-  disabledDates?: (Date | [Date, Date])[];
-  /** Minimum date allowed to be selected, inclusive. Dates before the `minDate` are disabled. All navigation to months before the `minDate` is disabled. */
-  minDate?: Date;
-  /** Maximum date allowed to be selected, inclusive. Dates after the `maxDate` are disabled. All navigation to months after the `maxDate` is disabled. */
-  maxDate?: Date;
-  /**
-   * Error text to display when a disabled date is selected with the DateInput, including dates before the `minDate` or after the `maxDate`.
-   * @default 'Date unavailable'
-   */
-  disabledDateError?: string;
   /** Callback function fired when the picker is opened. */
   onOpen?: () => void;
   /** Callback function fired when the picker is closed. Will always be called after `onCancel`, `onConfirm`, and `onChangeDate`. */
@@ -54,39 +53,6 @@ export type DatePickerBaseProps = {
   onConfirm?: () => void;
   /** Callback function fired when the user closes the picker without selecting a date. Interacting with the DateInput does not fire this callback. Will always be called before `onClose`. */
   onCancel?: () => void;
-  /** Date used to generate the Calendar month when there is no value for the `selectedDate` prop, defaults to today. */
-  seedDate?: Date;
-  /** Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
-  highlightedDates?: (Date | [Date, Date])[];
-  /**
-   * Accessibility label describing the Calendar next month arrow.
-   * @default 'Go to next month'
-   */
-  nextArrowAccessibilityLabel?: string;
-  /**
-   * Accessibility label describing the Calendar previous month arrow.
-   * @default 'Go to previous month'
-   */
-  previousArrowAccessibilityLabel?: string;
-  /**
-   * Accessibility hint announced for highlighted dates. Applied to all highlighted dates.
-   * @default 'Highlighted'
-   */
-  highlightedDateAccessibilityHint?: string;
-};
-
-export type DatePickerProps = DatePickerBaseProps & {
-  /** Control the default open state of the Calendar popover. */
-  defaultOpen?: boolean;
-  /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  /**
-   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
-   *
-   * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
-   * @default true
-   */
-  restoreFocusOnUnmount?: boolean;
   /**
    * Accessibility label describing the calendar IconButton, which opens the calendar when pressed.
    * @deprecated Use openCalendarAccessibilityLabel/closeCalendarAccessibilityLabel instead
@@ -102,6 +68,20 @@ export type DatePickerProps = DatePickerBaseProps & {
    * @default 'Close calendar'
    */
   closeCalendarAccessibilityLabel?: string;
+};
+
+export type DatePickerProps = DatePickerBaseProps & {
+  /** Control the default open state of the Calendar popover. */
+  defaultOpen?: boolean;
+  /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
+   *
+   * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
+   * @default true
+   */
+  restoreFocusOnUnmount?: boolean;
   /**
    * Custom style to apply to the Calendar container.
    * @deprecated Use `styles.calendar` instead.
@@ -313,7 +293,7 @@ export const DatePicker = memo(
             onErrorDate={onErrorDate}
             required={required}
             requiredError={requiredError}
-            style={styles?.dateInput ?? dateInputStyle}
+            style={{ ...dateInputStyle, ...styles?.dateInput }}
             variant={variant}
           />
         ),

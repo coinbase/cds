@@ -1,4 +1,4 @@
-Calendar is a date grid for selecting dates and powers the picker in [DatePicker](/components/other/DatePicker). It can be used standalone or inside a [Tray](/components/overlay/Tray) with a confirm action. On mobile, use the `styles` prop to customize slots; `classNames` are not supported.
+Calendar is a date grid for selecting dates and powers the picker in [DatePicker](/components/other/DatePicker). It can be used standalone or inside a [Tray](/components/overlay/Tray) with a confirm action.
 
 ### Basic usage
 
@@ -211,7 +211,7 @@ function Example() {
 
 ### Slot styling
 
-Use the `styles` prop to target specific elements: `root`, `header`, `monthLabel`, `navArrows` (container), `navArrow` (each button), `dayHeader`, `content` (day header + date grid), `calendarGrid` (date cells container), and `dayCell` (use `dayCell.button` for the cell container and `dayCell.text` for the date number; both use `base`, and button also uses `pressed`/`disabled`, text uses `selected`/`disabled`/`highlighted`).
+Use the `styles` prop to target: **`root`** (outer container), **`header`** (month row), **`title`** (month/year text), **`navigation`** (both arrow buttons’ container), **`content`** (weekday row + date grid), and **`day`** (each date cell pressable — single `ViewStyle`).
 
 ```jsx
 function Example() {
@@ -234,24 +234,21 @@ function Example() {
           borderRadius: 16,
           paddingBottom: 0,
         },
-        monthLabel: { opacity: 0.9 },
-        navArrows: {
+        title: { opacity: 0.9 },
+        navigation: {
           borderColor: '#888',
           borderRadius: 8,
           borderStyle: 'dashed',
           borderWidth: 1,
           padding: 4,
         },
-        navArrow: { backgroundColor: 'transparent' },
-        calendarGrid: { paddingVertical: 8 },
-        dayCell: { button: { base: { borderRadius: 8 } } },
+        content: { paddingVertical: 8 },
+        day: { borderRadius: 8 },
       }}
     />
   );
 }
 ```
-
-On web you can also use `classNames` and CSS to target elements like icon or day-header text; on mobile only the `styles` prop is supported.
 
 ### Accessibility
 

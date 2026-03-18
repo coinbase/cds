@@ -275,15 +275,7 @@ const CalendarDay = memo(
 export type CalendarProps = CalendarBaseProps &
   StylesAndClassNames<typeof calendarClassNames> &
   Omit<VStackProps<VStackDefaultElement>, 'children' | 'ref'> & {
-    /**
-     * Custom class name for the root container.
-     * @deprecated Use `classNames.root` instead.
-     */
     className?: string;
-    /**
-     * Custom style for the root container.
-     * @deprecated Use `styles.root` instead.
-     */
     style?: React.CSSProperties;
   };
 
@@ -450,10 +442,6 @@ export const Calendar = memo(
       }, [handleCalendarFocus]);
 
       const rootClassName = cx(calendarClassNames.root, className, classNames?.root);
-      const rootStyle = useMemo(
-        () => (style || styles?.root ? { ...style, ...styles?.root } : undefined),
-        [style, styles?.root],
-      );
 
       return (
         <VStack
@@ -464,7 +452,7 @@ export const Calendar = memo(
           opacity={disabled ? accessibleOpacityDisabled : undefined}
           overflow="auto"
           padding={2}
-          style={rootStyle}
+          style={{ ...style, ...styles?.root }}
           width={360}
           {...props}
         >

@@ -180,7 +180,7 @@ const CalendarDay = memo(
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="button"
           accessibilityState={accessibilityState}
-          background={disabled ? 'bg' : active ? 'bgPrimary' : 'bg'}
+          background={active && !disabled ? 'bgPrimary' : 'bg'}
           borderColor={isToday ? 'bgPrimary' : undefined}
           bordered={isToday}
           disabled={disabled}
@@ -191,17 +191,7 @@ const CalendarDay = memo(
           <Text
             accessible={false}
             align="center"
-            color={
-              disabled
-                ? highlighted
-                  ? 'fgPrimary'
-                  : undefined
-                : active
-                  ? 'fgInverse'
-                  : highlighted
-                    ? 'fgPrimary'
-                    : undefined
-            }
+            color={active && !disabled ? 'fgInverse' : highlighted ? 'fgPrimary' : undefined}
             font="body"
           >
             {date.getDate()}
