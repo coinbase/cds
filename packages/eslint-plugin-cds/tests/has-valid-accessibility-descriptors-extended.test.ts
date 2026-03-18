@@ -50,11 +50,35 @@ const validButtonWithNestedExpression = `
   }
 `;
 
+const validComboboxWithRequiredA11yProps = `
+  import { Combobox } from '@coinbase/cds-mobile';
+  const options = [{ value: 'a', label: 'A' }];
+  const Component = () => {
+    return (
+      <Combobox
+        accessibilityHint="Select one"
+        accessibilityLabel="Priority"
+        onChange={() => {}}
+        options={options}
+      />
+    );
+  }
+`;
+
+const validTrayWithA11yProps = `
+  import { Tray } from '@coinbase/cds-mobile';
+  const Component = () => {
+    return <Tray accessibilityLabel="Details tray" handleBarAccessibilityLabel="Drag handle" title="Test" />;
+  };
+`;
+
 const valid = [
   validButtonWithInnerText,
   validButtonWithCorrectLabel,
   validButtonWithNestedInnerText,
   validButtonWithNestedExpression,
+  validComboboxWithRequiredA11yProps,
+  validTrayWithA11yProps,
 ];
 
 // @ts-expect-error - not sure why the rule type is not matching up with the rule tester
@@ -73,7 +97,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
       `,
       errors: [
         {
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -102,7 +126,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
       `,
       errors: [
         {
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -134,7 +158,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
       errors: [
         {
           // error on Button element
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -153,7 +177,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
         },
         {
           // error on IconButton element
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -180,7 +204,22 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
           return <Chip onPress={() => {}}>BTC</Chip>;
         }
       `,
-      errors: [{ messageId: 'missingAccessibilityLabel' as const }],
+      errors: [
+        {
+          messageId: 'missingAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { Chip } from '@coinbase/cds-mobile';
+                const Component = () => {
+                  return <Chip accessibilityLabel="" onPress={() => {}}>BTC</Chip>;
+                }
+              `,
+            },
+          ],
+        },
+      ],
     },
     // SegmentedTabs requires accessibilityLabel
     {
@@ -191,7 +230,23 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
           return <SegmentedTabs activeTab={tabs[0]} onChange={() => {}} tabs={tabs} />;
         }
       `,
-      errors: [{ messageId: 'missingAccessibilityLabel' as const }],
+      errors: [
+        {
+          messageId: 'missingAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { SegmentedTabs } from '@coinbase/cds-mobile';
+                const tabs = [{ id: 'buy', label: 'Buy' }];
+                const Component = () => {
+                  return <SegmentedTabs accessibilityLabel="" activeTab={tabs[0]} onChange={() => {}} tabs={tabs} />;
+                }
+              `,
+            },
+          ],
+        },
+      ],
     },
     // Combobox requires accessibilityHint
     {
@@ -204,7 +259,25 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
           );
         }
       `,
-      errors: [{ messageId: 'missingAccessibilityHint' as const }],
+      errors: [
+        {
+          messageId: 'missingAccessibilityHint',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { Combobox } from '@coinbase/cds-mobile';
+                const options = [{ value: 'a', label: 'A' }];
+                const Component = () => {
+                  return (
+                    <Combobox accessibilityHint="" accessibilityLabel="test" onChange={() => {}} options={options} />
+                  );
+                }
+              `,
+            },
+          ],
+        },
+      ],
     },
     // Tray requires accessible name
     {
@@ -215,8 +288,8 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
         }
       `,
       errors: [
-        { messageId: 'missingAccessibleName' as const },
-        { messageId: 'missingHandleBarAccessibilityLabel' as const },
+        { messageId: 'missingAccessibleName' },
+        { messageId: 'missingHandleBarAccessibilityLabel' },
       ],
     },
   ],
