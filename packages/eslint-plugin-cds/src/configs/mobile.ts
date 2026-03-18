@@ -23,6 +23,7 @@ export function buildMobileConfig(plugin: Record<string, unknown>) {
     rules: {
       'react-native-a11y/has-accessibility-hint': 'off',
       '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+      '@coinbase/cds/mobile-chart-scrubbing-accessibility': 'warn',
     },
   };
 }
@@ -32,5 +33,6 @@ export const legacyMobileConfig = {
   rules: {
     'react-native-a11y/has-accessibility-hint': 'off',
     '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+    '@coinbase/cds/mobile-chart-scrubbing-accessibility': 'warn',
   },
 };

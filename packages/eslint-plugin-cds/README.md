@@ -102,7 +102,7 @@ To test on consumer repos locally, you will need to build your `eslint-plugin-cd
 
 ### ♿ Accessibility Rules
 
-We currently have two additional accessibility rules:
+We currently have several additional accessibility rules:
 
 #### 🔍 controlHasAssociatedLabelExtended (Web)
 
@@ -221,6 +221,43 @@ This rule also checks for other required a11y labels that need to be enforced ou
   - Checks for presence of `accessibilityLabel` or `accessibilityLabelledBy`
 - `SegmentedTabs`
   - Checks for presence of `accessibilityLabel`
+
+#### 🔍 webChartScrubbingAccessibility (web)
+
+**Rule Description**:
+
+The `webChartScrubbingAccessibility` rule enforces chart accessibility descriptors when web chart scrubbing is enabled (`enableScrubbing`).
+
+**Extended Targeted Components**
+
+- `LineChart`, `BarChart`, `CartesianChart`, `AreaChart`
+  - Checks for chart-level accessible naming via `accessibilityLabel` or `aria-labelledby`
+  - Checks for scrubber-level labels via either:
+    - `getScrubberAccessibilityLabel`, or
+    - `<Scrubber accessibilityLabel={...} />` child
+
+#### 🔍 mobileChartScrubbingAccessibility (mobile)
+
+**Rule Description**:
+
+The `mobileChartScrubbingAccessibility` rule enforces chart accessibility descriptors when mobile chart scrubbing is enabled (`enableScrubbing`).
+
+**Extended Targeted Components**
+
+- `LineChart`, `BarChart`, `CartesianChart`, `AreaChart`
+  - Checks for chart-level accessible naming via `accessibilityLabel` or `aria-labelledby`
+  - Checks for per-point labels via `getScrubberAccessibilityLabel`
+
+#### 🔍 webTooltipInteractiveContent (web)
+
+**Rule Description**:
+
+The `webTooltipInteractiveContent` rule requires `hasInteractiveContent` when tooltip `content` includes interactive elements (for example buttons or links), matching CDS tooltip accessibility guidance.
+
+**Extended Targeted Components**
+
+- `Tooltip`
+  - Checks for presence of `hasInteractiveContent` when interactive content is detected in the `content` prop
 
 ### Current CDS Best Practices Rules
 
