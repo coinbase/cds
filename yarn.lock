@@ -2772,6 +2772,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@coinbase/mobile-visreg@workspace:packages/mobile-visreg":
+  version: 0.0.0-use.local
+  resolution: "@coinbase/mobile-visreg@workspace:packages/mobile-visreg"
+  dependencies:
+    "@percy/cli": "npm:^1.31.1"
+  languageName: unknown
+  linkType: soft
+
 "@coinbase/static-assets@workspace:libs/static-assets":
   version: 0.0.0-use.local
   resolution: "@coinbase/static-assets@workspace:libs/static-assets"

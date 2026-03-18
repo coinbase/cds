@@ -1,0 +1,16 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    appId: ${APP_ID}
+- assertVisible:
+    text: 'CDS'
+- scrollUntilVisible:
+    element: '${ROUTE_NAME}.*'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    text: '${ROUTE_NAME}.*'
+# waitForAnimationToEnd covers both the navigation transition and any modal animations,
+# so routes that auto-open a modal (e.g. AlertBasic) are captured in their designed state.
+- waitForAnimationToEnd
+- takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
