@@ -441,14 +441,12 @@ export const Calendar = memo(
         return () => window.removeEventListener('keydown', handleCalendarFocus);
       }, [handleCalendarFocus]);
 
-      const rootClassName = cx(calendarClassNames.root, className, classNames?.root);
-
       return (
         <VStack
           ref={calendarRef}
           background="bg"
           borderRadius={400}
-          className={rootClassName}
+          className={cx(calendarClassNames.root, className, classNames?.root)}
           opacity={disabled ? accessibleOpacityDisabled : undefined}
           overflow="auto"
           padding={2}

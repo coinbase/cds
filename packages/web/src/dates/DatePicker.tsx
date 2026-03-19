@@ -11,6 +11,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
 
 import { InputIconButton } from '../controls/InputIconButton';
+import { cx } from '../cx';
 import { Box, VStack } from '../layout';
 import { getMotionProps } from '../motion/useMotionProps';
 import { Popover } from '../overlays/popover/Popover';
@@ -70,59 +71,9 @@ export type DatePickerBaseProps = Pick<
   closeCalendarAccessibilityLabel?: string;
 };
 
-export type DatePickerProps = DatePickerBaseProps & {
-  /** Control the default open state of the Calendar popover. */
-  defaultOpen?: boolean;
-  /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  /**
-   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
-   *
-   * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
-   * @default true
-   */
-  restoreFocusOnUnmount?: boolean;
-  /**
-   * Custom style to apply to the Calendar container.
-   * @deprecated Use `styles.calendar` instead.
-   */
-  calendarStyle?: React.CSSProperties;
-  /**
-   * Custom class name to apply to the Calendar container.
-   * @deprecated Use `classNames.calendar` instead.
-   */
-  calendarClassName?: string;
-  /**
-   * Custom style to apply to the DateInput.
-   * @deprecated Use `styles.dateInput` instead.
-   */
-  dateInputStyle?: React.CSSProperties;
-  /**
-   * Custom class name to apply to the DateInput.
-   * @deprecated Use `classNames.dateInput` instead.
-   */
-  dateInputClassName?: string;
-  /** Custom class names for the DateInput and Calendar subcomponents. */
-  classNames?: {
-    dateInput?: string;
-    calendar?: string;
-    calendarHeader?: string;
-    calendarTitle?: string;
-    calendarNavigation?: string;
-    calendarContent?: string;
-    calendarDay?: string;
-  };
-  /** Custom styles for the DateInput and Calendar subcomponents. */
-  styles?: {
-    dateInput?: React.CSSProperties;
-    calendar?: React.CSSProperties;
-    calendarHeader?: React.CSSProperties;
-    calendarTitle?: React.CSSProperties;
-    calendarNavigation?: React.CSSProperties;
-    calendarContent?: React.CSSProperties;
-    calendarDay?: React.CSSProperties;
-  };
-} & Omit<
+export type DatePickerProps = DatePickerBaseProps &
+  Pick<PopoverProps, 'showOverlay'> &
+  Omit<
     DateInputProps,
     | 'date'
     | 'separator'
@@ -133,8 +84,59 @@ export type DatePickerProps = DatePickerBaseProps & {
     | 'disabledDateError'
     | 'className'
     | 'style'
-  > &
-  Pick<PopoverProps, 'showOverlay'>;
+  > & {
+    /** Control the default open state of the Calendar popover. */
+    defaultOpen?: boolean;
+    /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    /**
+     * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
+     *
+     * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
+     * @default true
+     */
+    restoreFocusOnUnmount?: boolean;
+    /**
+     * Custom style to apply to the Calendar container.
+     * @deprecated Use `styles.calendar` instead.
+     */
+    calendarStyle?: React.CSSProperties;
+    /**
+     * Custom class name to apply to the Calendar container.
+     * @deprecated Use `classNames.calendar` instead.
+     */
+    calendarClassName?: string;
+    /**
+     * Custom style to apply to the DateInput.
+     * @deprecated Use `styles.dateInput` instead.
+     */
+    dateInputStyle?: React.CSSProperties;
+    /**
+     * Custom class name to apply to the DateInput.
+     * @deprecated Use `classNames.dateInput` instead.
+     */
+    dateInputClassName?: string;
+    /** Custom class names for the DateInput and Calendar subcomponents. */
+    classNames?: {
+      dateInput?: string;
+      calendar?: string;
+      calendarHeader?: string;
+      calendarTitle?: string;
+      calendarNavigation?: string;
+      calendarContent?: string;
+      calendarDay?: string;
+    };
+    /** Custom styles for the DateInput and Calendar subcomponents. */
+    styles?: {
+      dateInput?: React.CSSProperties;
+      calendar?: React.CSSProperties;
+      calendarHeader?: React.CSSProperties;
+      calendarTitle?: React.CSSProperties;
+      calendarNavigation?: React.CSSProperties;
+      calendarContent?: React.CSSProperties;
+      calendarDay?: React.CSSProperties;
+    };
+  };
 
 const calendarAnimation: AnimationProps = getMotionProps({
   enterConfigs: [
@@ -285,7 +287,7 @@ export const DatePicker = memo(
             {...props}
             accessibilityLabel={accessibilityLabel}
             accessibilityLabelledBy={accessibilityLabelledBy}
-            className={classNames?.dateInput ?? dateInputClassName}
+            className={cx(classNames?.dateInput, dateInputClassName)}
             compact={compact}
             date={date}
             disabled={disabled}

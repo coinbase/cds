@@ -180,7 +180,7 @@ const CalendarDay = memo(
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="button"
           accessibilityState={accessibilityState}
-          background={active && !disabled ? 'bgPrimary' : 'bg'}
+          background={active && !disabled ? 'bgPrimary' : undefined}
           borderColor={isToday ? 'bgPrimary' : undefined}
           bordered={isToday}
           disabled={disabled}
@@ -234,7 +234,7 @@ export type CalendarBaseProps = SharedProps &
     onPressDate?: (date: Date) => void;
     /** Disables user interaction. */
     disabled?: boolean;
-    /** Hides the Calendar next and previous month arrows, but does not prevent navigating to the next or previous months via keyboard. This probably only makes sense to be used when `minDate` and `maxDate` are set to the first and last days of the same month. */
+    /** Hides the Calendar next and previous month arrows. This probably only makes sense to be used when `minDate` and `maxDate` are set to the first and last days of the same month. */
     hideControls?: boolean;
     /** Array of disabled dates, and date tuples for date ranges. Make sure to set `disabledDateError` as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. */
     disabledDates?: (Date | [Date, Date])[];
@@ -272,7 +272,7 @@ export type CalendarBaseProps = SharedProps &
   };
 
 export type CalendarProps = CalendarBaseProps &
-  Omit<VStackProps, 'children' | 'ref' | 'style'> & {
+  Omit<VStackProps, 'children' | 'ref'> & {
     /** Custom styles for individual elements of the Calendar component. */
     styles?: {
       /** Root container element */
@@ -450,12 +450,8 @@ export const Calendar = memo(
 
       return (
         <VStack
-          background="bg"
-          borderRadius={400}
           opacity={disabled ? accessibleOpacityDisabled : undefined}
-          overflow="hidden"
           style={[style, styles?.root]}
-          testID={testID}
           {...props}
         >
           <HStack
@@ -474,7 +470,6 @@ export const Calendar = memo(
                   accessibilityLabel={previousArrowAccessibilityLabel}
                   accessibilityRole="button"
                   accessibilityState={previousArrowAccessibilityState}
-                  background="bg"
                   disabled={disableGoPreviousMonth}
                   feedback="light"
                   onPress={disableGoPreviousMonth ? undefined : handleGoPreviousMonth}
@@ -485,7 +480,6 @@ export const Calendar = memo(
                   accessibilityLabel={nextArrowAccessibilityLabel}
                   accessibilityRole="button"
                   accessibilityState={nextArrowAccessibilityState}
-                  background="bg"
                   disabled={disableGoNextMonth}
                   feedback="light"
                   onPress={disableGoNextMonth ? undefined : handleGoNextMonth}

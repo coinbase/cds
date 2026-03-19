@@ -65,34 +65,8 @@ export type DatePickerBaseProps = Pick<
   closeCalendarAccessibilityLabel?: string;
 };
 
-export type DatePickerProps = DatePickerBaseProps & {
-  /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
-  onChange?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
-  /**
-   * Custom style to apply to the DateInput.
-   * @deprecated Use `styles.dateInput` instead.
-   */
-  dateInputStyle?: StyleProp<ViewStyle>;
-  /**
-   * Text to display on the confirm button.
-   * @default 'Confirm'
-   */
-  confirmText?: string;
-  /**
-   * Accessibility hint for the confirm button.
-   */
-  confirmButtonAccessibilityHint?: string;
-  /** Custom styles for the DateInput and Calendar subcomponents. */
-  styles?: {
-    dateInput?: DateInputProps['style'];
-    calendar?: StyleProp<ViewStyle>;
-    calendarHeader?: StyleProp<ViewStyle>;
-    calendarTitle?: StyleProp<TextStyle>;
-    calendarNavigation?: StyleProp<ViewStyle>;
-    calendarContent?: StyleProp<ViewStyle>;
-    calendarDay?: StyleProp<ViewStyle>;
-  };
-} & Omit<
+export type DatePickerProps = DatePickerBaseProps &
+  Omit<
     DateInputProps,
     | 'date'
     | 'separator'
@@ -102,7 +76,34 @@ export type DatePickerProps = DatePickerBaseProps & {
     | 'maxDate'
     | 'disabledDateError'
     | 'style'
-  >;
+  > & {
+    /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
+    onChange?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
+    /**
+     * Custom style to apply to the DateInput.
+     * @deprecated Use `styles.dateInput` instead.
+     */
+    dateInputStyle?: StyleProp<ViewStyle>;
+    /**
+     * Text to display on the confirm button.
+     * @default 'Confirm'
+     */
+    confirmText?: string;
+    /**
+     * Accessibility hint for the confirm button.
+     */
+    confirmButtonAccessibilityHint?: string;
+    /** Custom styles for the DateInput and Calendar subcomponents. */
+    styles?: {
+      dateInput?: DateInputProps['style'];
+      calendar?: StyleProp<ViewStyle>;
+      calendarHeader?: StyleProp<ViewStyle>;
+      calendarTitle?: StyleProp<TextStyle>;
+      calendarNavigation?: StyleProp<ViewStyle>;
+      calendarContent?: StyleProp<ViewStyle>;
+      calendarDay?: StyleProp<ViewStyle>;
+    };
+  };
 
 export const DatePicker = memo(
   forwardRef<View, DatePickerProps>(
