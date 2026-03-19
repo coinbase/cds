@@ -86,8 +86,8 @@ export type NudgeCardProps = NudgeCardBaseProps;
  * />
  * ```
  */
-export const NudgeCard = memo(
-  ({
+export const NudgeCard = memo((_props: NudgeCardProps) => {
+  const {
     title,
     description,
     pictogram,
@@ -104,108 +104,107 @@ export const NudgeCard = memo(
     onPress,
     maxWidth,
     ...props
-  }: NudgeCardProps) => {
-    const hasMedia = pictogram || media;
-    const paddingBottom = action ? 1 : 2;
-    const spacingProps = getCardBodySpacingProps({ paddingBottom, compact: true });
+  } = _props;
+  const hasMedia = pictogram || media;
+  const paddingBottom = action ? 1 : 2;
+  const spacingProps = getCardBodySpacingProps({ paddingBottom, compact: true });
 
-    const renderAction = isValidElement(action) ? (
-      action
-    ) : (
-      <Pressable accessibilityRole="button" background="transparent" onPress={onActionPress}>
-        <Text color="fgPrimary" font="headline" numberOfLines={1} paddingY={1}>
-          {action}
-        </Text>
-      </Pressable>
-    );
+  const renderAction = isValidElement(action) ? (
+    action
+  ) : (
+    <Pressable accessibilityRole="button" background="transparent" onPress={onActionPress}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1} paddingY={1}>
+        {action}
+      </Text>
+    </Pressable>
+  );
 
-    const renderMedia = pictogram ? (
-      <Pictogram
-        dimension={action ? '64x64' : '48x48'}
-        name={pictogram}
-        testID={`${testID}-pictogram`}
-      />
-    ) : (
-      media
-    );
+  const renderMedia = pictogram ? (
+    <Pictogram
+      dimension={action ? '64x64' : '48x48'}
+      name={pictogram}
+      testID={`${testID}-pictogram`}
+    />
+  ) : (
+    media
+  );
 
-    const content = (
-      <Box
-        background={background}
-        borderColor="transparent"
-        borderRadius={500}
-        maxWidth={maxWidth}
-        paddingEnd={onDismissPress ? 3 : 0}
-        position="relative"
-        testID={testID}
-        width={width}
+  const content = (
+    <Box
+      background={background}
+      borderColor="transparent"
+      borderRadius={500}
+      maxWidth={maxWidth}
+      paddingEnd={onDismissPress ? 3 : 0}
+      position="relative"
+      testID={testID}
+      width={width}
+    >
+      {onDismissPress ? (
+        // zIndex is required otherwise CardBody sits on top of it
+        <Box padding={0.5} position="absolute" right={0} top={0} zIndex={2}>
+          <IconButton
+            transparent
+            accessibilityLabel={
+              accessibilityLabel ?? `Dismiss the ${typeof title === 'string' ? title : ''} card`
+            }
+            name="close"
+            onPress={onDismissPress}
+            testID={`${testID}-dismiss-button`}
+            variant="secondary"
+          />
+        </Box>
+      ) : null}
+      {/* ported over from CardBody */}
+      <HStack
+        alignItems="center"
+        flexGrow={1}
+        gap={2}
+        justifyContent={mediaPosition === 'right' ? 'space-between' : 'flex-start'}
+        {...spacingProps}
+        {...props}
       >
-        {onDismissPress ? (
-          // zIndex is required otherwise CardBody sits on top of it
-          <Box padding={0.5} position="absolute" right={0} top={0} zIndex={2}>
-            <IconButton
-              transparent
-              accessibilityLabel={
-                accessibilityLabel ?? `Dismiss the ${typeof title === 'string' ? title : ''} card`
-              }
-              name="close"
-              onPress={onDismissPress}
-              testID={`${testID}-dismiss-button`}
-              variant="secondary"
-            />
-          </Box>
-        ) : null}
-        {/* ported over from CardBody */}
-        <HStack
-          alignItems="center"
-          flexGrow={1}
-          gap={2}
-          justifyContent={mediaPosition === 'right' ? 'space-between' : 'flex-start'}
-          {...spacingProps}
-          {...props}
-        >
-          {hasMedia && mediaPosition === 'left' ? renderMedia : null}
-          <VStack alignItems="flex-start" flexGrow={1} flexShrink={1} gap={2} maxWidth={maxWidth}>
-            <VStack gap={0.5} maxWidth="100%" paddingTop={hasMedia ? 0 : 2}>
-              {typeof title === 'string' ? (
-                <Text
-                  ellipsize="tail"
-                  font="headline"
-                  numberOfLines={numberOfLines}
-                  testID={`${testID}-title`}
-                  textTransform="none"
-                >
-                  {title}
-                </Text>
-              ) : (
-                title
-              )}
-              {typeof description === 'string' ? (
-                <Text
-                  ellipsize="tail"
-                  font="label2"
-                  numberOfLines={numberOfLines}
-                  testID={`${testID}-description`}
-                  textTransform="none"
-                >
-                  {description}
-                </Text>
-              ) : (
-                description
-              )}
-            </VStack>
-            {action ? renderAction : null}
+        {hasMedia && mediaPosition === 'left' ? renderMedia : null}
+        <VStack alignItems="flex-start" flexGrow={1} flexShrink={1} gap={2} maxWidth={maxWidth}>
+          <VStack gap={0.5} maxWidth="100%" paddingTop={hasMedia ? 0 : 2}>
+            {typeof title === 'string' ? (
+              <Text
+                ellipsize="tail"
+                font="headline"
+                numberOfLines={numberOfLines}
+                testID={`${testID}-title`}
+                textTransform="none"
+              >
+                {title}
+              </Text>
+            ) : (
+              title
+            )}
+            {typeof description === 'string' ? (
+              <Text
+                ellipsize="tail"
+                font="label2"
+                numberOfLines={numberOfLines}
+                testID={`${testID}-description`}
+                textTransform="none"
+              >
+                {description}
+              </Text>
+            ) : (
+              description
+            )}
           </VStack>
-          {hasMedia && mediaPosition === 'right' ? renderMedia : null}
-        </HStack>
-      </Box>
-    );
-    return onPress ? (
-      <Pressable accessibilityRole="button" background="transparent" onPress={onPress}>
-        {content}
-      </Pressable>
-    ) : (
-      content
-    );
-  },
-);
+          {action ? renderAction : null}
+        </VStack>
+        {hasMedia && mediaPosition === 'right' ? renderMedia : null}
+      </HStack>
+    </Box>
+  );
+  return onPress ? (
+    <Pressable accessibilityRole="button" background="transparent" onPress={onPress}>
+      {content}
+    </Pressable>
+  ) : (
+    content
+  );
+});

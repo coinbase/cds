@@ -9,6 +9,7 @@ import {
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
 import { useMotionProps } from '../motion/useMotionProps';
@@ -67,7 +68,11 @@ export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioVa
 export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
 const RadioWithRef = forwardRef(function RadioWithRef<RadioValue extends string>(
-  {
+  _props: RadioProps<RadioValue>,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) {
+  const mergedProps = useComponentConfig('Radio', _props);
+  const {
     children,
     controlColor = 'bgPrimary',
     checked = false,
@@ -76,9 +81,7 @@ const RadioWithRef = forwardRef(function RadioWithRef<RadioValue extends string>
     borderWidth = 100,
     elevation,
     ...props
-  }: RadioProps<RadioValue>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+  } = mergedProps;
   const theme = useTheme();
   const iconWidth = theme.controlSize.radioSize;
 

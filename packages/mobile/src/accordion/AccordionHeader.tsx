@@ -10,6 +10,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import type { CollapsibleBaseProps } from '../collapsible/Collapsible';
 import { useCellSpacing } from '../hooks/useCellSpacing';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, HStack, VStack } from '../layout';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 import { Pressable } from '../system/Pressable';
@@ -51,26 +52,36 @@ export type AccordionHeaderBaseProps = SharedProps &
 
 export type AccordionMediaProps = AccordionMediaBaseProps;
 
-export const AccordionMedia = memo(({ media }: AccordionMediaProps) => <Box>{media}</Box>);
+export const AccordionMedia = memo((_props: AccordionMediaProps) => {
+  const mergedProps = useComponentConfig('AccordionMedia', _props);
+  const { media } = mergedProps;
+  return <Box>{media}</Box>;
+});
 
 export type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) => (
-  <Box flexGrow={1} flexShrink={1} justifyContent="flex-start">
-    <VStack>
-      <Text font="headline">{title}</Text>
-      {!!subtitle && (
-        <Text color="fgMuted" font="body">
-          {subtitle}
-        </Text>
-      )}
-    </VStack>
-  </Box>
-));
+export const AccordionTitle = memo((_props: AccordionTitleProps) => {
+  const mergedProps = useComponentConfig('AccordionTitle', _props);
+  const { title, subtitle } = mergedProps;
+  return (
+    <Box flexGrow={1} flexShrink={1} justifyContent="flex-start">
+      <VStack>
+        <Text font="headline">{title}</Text>
+        {!!subtitle && (
+          <Text color="fgMuted" font="body">
+            {subtitle}
+          </Text>
+        )}
+      </VStack>
+    </Box>
+  );
+});
 
 export type AccordionIconProps = AccordionIconBaseProps;
 
-export const AccordionIcon = memo(({ collapsed }: AccordionIconProps) => {
+export const AccordionIcon = memo((_props: AccordionIconProps) => {
+  const mergedProps = useComponentConfig('AccordionIcon', _props);
+  const { collapsed } = mergedProps;
   return (
     <Box justifyContent="flex-end">
       <AnimatedCaret rotate={collapsed ? accordionIconHiddenRotate : accordionIconVisibleRotate} />
@@ -85,45 +96,36 @@ export type AccordionHeaderProps = AccordionHeaderBaseProps;
  * Composes an Accordion Media, Title, and Icon.
  */
 export const AccordionHeader = memo(
-  forwardRef(
-    (
-      { itemKey, title, subtitle, onPress, media, collapsed, testID }: AccordionHeaderProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const { setActiveKey, activeKey } = useAccordionContext();
-      const spacing = useCellSpacing();
-      const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
+  forwardRef((_props: AccordionHeaderProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('AccordionHeader', _props);
+    const { itemKey, title, subtitle, onPress, media, collapsed, testID } = mergedProps;
+    const { setActiveKey, activeKey } = useAccordionContext();
+    const spacing = useCellSpacing();
+    const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
 
-      const handlePress = useCallback(() => {
-        onPress?.(itemKey);
-        setActiveKey(itemKey === activeKey ? null : itemKey);
-      }, [onPress, itemKey, setActiveKey, activeKey]);
+    const handlePress = useCallback(() => {
+      onPress?.(itemKey);
+      setActiveKey(itemKey === activeKey ? null : itemKey);
+    }, [onPress, itemKey, setActiveKey, activeKey]);
 
-      return (
-        <Pressable
-          ref={forwardedRef}
-          noScaleOnPress
-          transparentWhileInactive
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole="togglebutton"
-          accessibilityState={{ expanded: !collapsed }}
-          background="bg"
-          onPress={handlePress}
-          testID={testID}
-        >
-          <HStack
-            alignItems="center"
-            gap={2}
-            minHeight={listHeight}
-            width="100%"
-            {...spacing.outer}
-          >
-            {!!media && <AccordionMedia media={media} />}
-            <AccordionTitle subtitle={subtitle} title={title} />
-            <AccordionIcon collapsed={collapsed} />
-          </HStack>
-        </Pressable>
-      );
-    },
-  ),
+    return (
+      <Pressable
+        ref={forwardedRef}
+        noScaleOnPress
+        transparentWhileInactive
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="togglebutton"
+        accessibilityState={{ expanded: !collapsed }}
+        background="bg"
+        onPress={handlePress}
+        testID={testID}
+      >
+        <HStack alignItems="center" gap={2} minHeight={listHeight} width="100%" {...spacing.outer}>
+          {!!media && <AccordionMedia media={media} />}
+          <AccordionTitle subtitle={subtitle} title={title} />
+          <AccordionIcon collapsed={collapsed} />
+        </HStack>
+      </Pressable>
+    );
+  }),
 );

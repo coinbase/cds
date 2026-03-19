@@ -20,6 +20,8 @@ import type {
 } from '@coinbase/cds-illustrations';
 import { isDevelopment } from '@coinbase/cds-utils';
 
+import type { ComponentConfig } from '../core/componentConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 export type IllustrationNamesMap = {
@@ -76,19 +78,15 @@ export type IllustrationBasePropsWithA11y<Type extends IllustrationVariant> =
 export function createIllustration<Variant extends IllustrationVariant>(
   variant: Variant,
   config: IllustrationConfigShape<Variant>,
+  componentConfigKey: keyof ComponentConfig,
 ) {
   const defaultSize = getDefaultSizeObjectForIllustration(variant);
 
   type IllustrationProps = IllustrationBasePropsWithA11y<Variant>;
 
-  const Illustration = memo(function Illustration({
-    name,
-    dimension,
-    scaleMultiplier,
-    testID,
-    alt = '',
-    fallback = null,
-  }: IllustrationProps) {
+  const Illustration = memo(function Illustration(_props: IllustrationProps) {
+    const mergedProps = useComponentConfig(componentConfigKey, _props);
+    const { name, dimension, scaleMultiplier, testID, alt = '', fallback = null } = mergedProps;
     const { activeColorScheme } = useTheme();
     const version = config[name];
 

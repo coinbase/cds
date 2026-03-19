@@ -11,6 +11,7 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';
 import { useTheme } from '../hooks/useTheme';
@@ -45,48 +46,48 @@ export type DotStatusColorBaseProps = SharedProps &
 
 export type DotStatusColorProps = DotStatusColorBaseProps;
 
-export const DotStatusColor = memo(
-  ({ variant, pin, size = 's', children, overlap, ...props }: DotStatusColorProps) => {
-    const theme = useTheme();
-    const iconSize = theme.iconSize[size];
-    const [childrenSize, onLayout] = useDotsLayout();
+export const DotStatusColor = memo((_props: DotStatusColorProps) => {
+  const mergedProps = useComponentConfig('DotStatusColor', _props);
+  const { variant, pin, size = 's', children, overlap, ...props } = mergedProps;
+  const theme = useTheme();
+  const iconSize = theme.iconSize[size];
+  const [childrenSize, onLayout] = useDotsLayout();
 
-    const transforms = useDotPinStyles(childrenSize, iconSize, overlap);
+  const transforms = useDotPinStyles(childrenSize, iconSize, overlap);
 
-    const pinStyles = useMemo(() => {
-      if (pin && transforms !== null) {
-        const [vertical, horizontal] = (pin as string).split('-');
+  const pinStyles = useMemo(() => {
+    if (pin && transforms !== null) {
+      const [vertical, horizontal] = (pin as string).split('-');
 
-        return getTransform(
-          transforms[horizontal as DotPinStylesKey],
-          transforms[vertical as DotPinStylesKey],
-        );
-      }
-      return {};
-    }, [pin, transforms]);
+      return getTransform(
+        transforms[horizontal as DotPinStylesKey],
+        transforms[vertical as DotPinStylesKey],
+      );
+    }
+    return {};
+  }, [pin, transforms]);
 
-    const dotContentStyles: ViewStyle = useMemo(() => {
-      return {
-        borderRadius: theme.borderRadius[1000],
-        width: iconSize,
-        height: iconSize,
-        backgroundColor: theme.color[variantColorMap[variant]],
-        alignItems: 'center',
-        justifyContent: 'center',
-        ...pinStyles,
-      };
-    }, [iconSize, theme.color, theme.borderRadius, pinStyles, variant]);
+  const dotContentStyles: ViewStyle = useMemo(() => {
+    return {
+      borderRadius: theme.borderRadius[1000],
+      width: iconSize,
+      height: iconSize,
+      backgroundColor: theme.color[variantColorMap[variant]],
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...pinStyles,
+    };
+  }, [iconSize, theme.color, theme.borderRadius, pinStyles, variant]);
 
-    // only check childrenSize when children is defined
-    const shouldShow = children !== undefined ? childrenSize !== null : true;
+  // only check childrenSize when children is defined
+  const shouldShow = children !== undefined ? childrenSize !== null : true;
 
-    return (
-      <View {...props}>
-        <View onLayout={onLayout} testID={`${props.testID}-children`}>
-          {children}
-        </View>
-        {shouldShow && <View style={dotContentStyles} testID="dotstatuscolor-inner-container" />}
+  return (
+    <View {...props}>
+      <View onLayout={onLayout} testID={`${props.testID}-children`}>
+        {children}
       </View>
-    );
-  },
-);
+      {shouldShow && <View style={dotContentStyles} testID="dotstatuscolor-inner-container" />}
+    </View>
+  );
+});

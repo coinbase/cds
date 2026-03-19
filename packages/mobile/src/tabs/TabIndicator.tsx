@@ -4,11 +4,12 @@ import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout';
 
 import { useTabIndicatorStyles } from './hooks/useTabIndicatorStyles';
 
-export type TabIndicatorProps = SharedProps & {
+export type TabIndicatorBaseProps = SharedProps & {
   /** The width of the active TabLabel. */
   width: number;
   /** The xPosition of the active TabLabel. */
@@ -19,36 +20,35 @@ export type TabIndicatorProps = SharedProps & {
   background?: ThemeVars.Color;
 };
 
-export const TabIndicator = memo(
-  forwardRef(
-    (
-      { width, x, background = 'bg', testID, ...props }: TabIndicatorProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const { widthStyle, xStyle } = useTabIndicatorStyles({ width, x });
+export type TabIndicatorProps = TabIndicatorBaseProps;
 
-      return (
-        <Animated.View ref={forwardedRef} style={xStyle} testID={testID} {...props}>
+export const TabIndicator = memo(
+  forwardRef((_props: TabIndicatorProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('TabIndicator', _props);
+    const { width, x, background = 'bg', testID, ...props } = mergedProps;
+    const { widthStyle, xStyle } = useTabIndicatorStyles({ width, x });
+
+    return (
+      <Animated.View ref={forwardedRef} style={xStyle} testID={testID} {...props}>
+        <Box
+          background="bgPrimary"
+          flexGrow={1}
+          height={2}
+          overflow="hidden"
+          testID="cds-tab-indicator-inner-bar-container"
+        >
           <Box
-            background="bgPrimary"
-            flexGrow={1}
+            animated
+            background={background}
             height={2}
-            overflow="hidden"
-            testID="cds-tab-indicator-inner-bar-container"
-          >
-            <Box
-              animated
-              background={background}
-              height={2}
-              style={widthStyle}
-              testID="cds-tab-indicator-inner-bar"
-              width="100%"
-            />
-          </Box>
-        </Animated.View>
-      );
-    },
-  ),
+            style={widthStyle}
+            testID="cds-tab-indicator-inner-bar"
+            width="100%"
+          />
+        </Box>
+      </Animated.View>
+    );
+  }),
 );
 
 TabIndicator.displayName = 'TabIndicator';

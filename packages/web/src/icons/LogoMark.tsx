@@ -3,6 +3,7 @@ import type { LogoMarkParams } from '@coinbase/cds-common/hooks/useLogo';
 import { useLogoMark } from '@coinbase/cds-common/hooks/useLogo';
 import { css } from '@linaria/core';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 const iconCss = css`
@@ -22,7 +23,11 @@ const transitionCss = css`
   transition: fill 150ms ease-in-out;
 `;
 
-export const LogoMark = memo(({ size, foreground }: Omit<LogoMarkParams, 'colorScheme'>) => {
+export type LogoMarkBaseProps = Omit<LogoMarkParams, 'colorScheme'>;
+
+export const LogoMark = memo((_props: LogoMarkBaseProps) => {
+  const mergedProps = useComponentConfig('LogoMark', _props);
+  const { size, foreground } = mergedProps;
   const { activeColorScheme } = useTheme();
   const { viewBox, width, height, path, color } = useLogoMark({
     size,

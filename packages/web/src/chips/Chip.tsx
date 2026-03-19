@@ -4,6 +4,7 @@ import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { HStackProps } from '../layout';
 import { Box, HStack } from '../layout';
 import type { PressableProps } from '../system';
@@ -24,7 +25,11 @@ const transitionCss = css`
  */
 export const Chip = memo(
   forwardRef(function Chip(
-    {
+    _props: ChipProps,
+    ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
+  ) {
+    const mergedProps = useComponentConfig('Chip', _props);
+    const {
       as,
       alignItems = 'center',
       width = 'fit-content',
@@ -58,9 +63,7 @@ export const Chip = memo(
       color = 'fg',
       onClick,
       ...props
-    }: ChipProps,
-    ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
-  ) {
+    } = mergedProps;
     const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
 
     const containerProps = {

@@ -17,6 +17,7 @@ import {
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack } from '../../layout';
 
 import { useModalAnimation } from './useModalAnimation';
@@ -48,7 +49,9 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Modal = memo(
-  forwardRef<ModalRefBaseProps, ModalProps>((props, ref) => {
+  forwardRef<ModalRefBaseProps, ModalProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('Modal', _props);
+    const props = mergedProps;
     const {
       children,
       visible,

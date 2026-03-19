@@ -10,6 +10,7 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout/Box';
 
@@ -39,16 +40,18 @@ export type RemoteImageGroupBaseProps = SharedProps &
 
 export type RemoteImageGroupProps = RemoteImageGroupBaseProps;
 
-export const RemoteImageGroup = ({
-  children,
-  size = 'm',
-  max = 4,
-  shape = 'circle',
-  testID,
-  borderWidth,
-  borderColor = borderWidth ? 'bg' : undefined,
-  ...props
-}: RemoteImageGroupProps) => {
+export const RemoteImageGroup = (_props: RemoteImageGroupProps) => {
+  const mergedProps = useComponentConfig('RemoteImageGroup', _props);
+  const {
+    children,
+    size = 'm',
+    max = 4,
+    shape = 'circle',
+    testID,
+    borderWidth,
+    borderColor = borderWidth ? 'bg' : undefined,
+    ...props
+  } = mergedProps;
   const { avatarSize, fontFamily, color } = useTheme();
 
   const shapeStyle = shapeStyles[shape];

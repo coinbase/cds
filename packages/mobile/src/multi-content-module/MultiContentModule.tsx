@@ -3,6 +3,7 @@ import type { View } from 'react-native';
 import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
 
 import { Button } from '../buttons';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Pictogram } from '../illustrations';
 import type { VStackProps } from '../layout';
 import { Box, VStack } from '../layout';
@@ -32,8 +33,9 @@ export type MultiContentModuleProps = MultiContentModuleBaseProps & {
 } & Omit<VStackProps, 'children'>;
 
 export const MultiContentModule = memo(
-  forwardRef(function MultiContentModule(
-    {
+  forwardRef(function MultiContentModule(_props: MultiContentModuleProps, ref: React.Ref<View>) {
+    const mergedProps = useComponentConfig('MultiContentModule', _props);
+    const {
       pictogram,
       title,
       description,
@@ -47,9 +49,7 @@ export const MultiContentModule = memo(
       accessibilityLabel,
       style,
       ...props
-    }: MultiContentModuleProps,
-    ref: React.Ref<View>,
-  ) {
+    } = mergedProps;
     return (
       <VStack
         ref={ref}

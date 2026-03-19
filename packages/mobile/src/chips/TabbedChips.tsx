@@ -47,16 +47,17 @@ type TabbedChipsFC = <TabId extends string = string>(
 
 const TabbedChipsComponent = memo(
   forwardRef(function TabbedChips<TabId extends string = string>(
-    {
+    _props: TabbedChipsProps<TabId>,
+    ref: React.ForwardedRef<View>,
+  ) {
+    const {
       tabs,
       value = tabs[0].id,
       testID = 'tabbed-chips',
       onChange,
       Component = TabComponent,
       ...props
-    }: TabbedChipsProps<TabId>,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = _props;
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
     const [scrollTarget, setScrollTarget] = useState<View | null>(null);
     const handleChange = useCallback(

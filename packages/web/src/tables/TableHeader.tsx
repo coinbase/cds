@@ -3,10 +3,11 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { TableSection, type TableSectionProps } from './TableSection';
 
-export type TableHeaderProps = TableSectionProps & {
+export type TableHeaderBaseProps = TableSectionProps & {
   /**
    * Use to make a header stick to the top of the table when scrolled
    * This will require setting a height or maxHeight on the Table or its parent
@@ -14,6 +15,8 @@ export type TableHeaderProps = TableSectionProps & {
    */
   sticky?: boolean;
 };
+
+export type TableHeaderProps = TableHeaderBaseProps;
 
 export const tableHeaderStaticClassName = 'cds-table-header';
 
@@ -23,7 +26,9 @@ const tableStickyCss = css`
   z-index: ${zIndex.interactable};
 `;
 
-export const TableHeader = memo(({ children, sticky, testID, ...props }: TableHeaderProps) => {
+export const TableHeader = memo((_props: TableHeaderProps) => {
+  const mergedProps = useComponentConfig('TableHeader', _props);
+  const { children, sticky, testID, ...props } = mergedProps;
   return (
     <TableSection
       as="thead"

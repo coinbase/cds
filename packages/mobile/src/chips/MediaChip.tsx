@@ -2,14 +2,18 @@ import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 import { getMediaChipSpacingProps } from '@coinbase/cds-common/chips/getMediaChipSpacingProps';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
 import { Chip } from './Chip';
 import type { ChipProps } from './ChipProps';
 
 export type MediaChipProps = ChipProps;
+export type MediaChipBaseProps = MediaChipProps;
 
 export const MediaChip = memo(
-  forwardRef(function MediaChip(
-    {
+  forwardRef(function MediaChip(_props: MediaChipProps, ref: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('MediaChip', _props);
+    const {
       start,
       children,
       end,
@@ -22,9 +26,7 @@ export const MediaChip = memo(
       paddingStart,
       paddingEnd,
       ...props
-    }: MediaChipProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const spacingProps = useMemo(() => {
       const defaults = getMediaChipSpacingProps({
         compact: !!compact,

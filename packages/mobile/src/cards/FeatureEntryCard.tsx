@@ -9,18 +9,19 @@ export type FeatureEntryCardBaseProps = CardBaseProps & CardBodyBaseProps;
 export type FeatureEntryCardProps = FeatureEntryCardBaseProps;
 
 /** @deprecated Use MessagingCard instead. FeatureEntryCard will be removed in a future major release. */
-export const FeatureEntryCard = memo(function FeatureEntryCard({
-  onPress,
-  testID = 'feature-entry-card',
-  accessibilityHint,
-  accessibilityLabel,
-  description,
-  title,
-  borderRadius = 0,
-  elevation = 0,
-  onActionPress,
-  ...props
-}: FeatureEntryCardProps) {
+export const FeatureEntryCard = memo(function FeatureEntryCard(_props: FeatureEntryCardProps) {
+  const {
+    onPress,
+    testID = 'feature-entry-card',
+    accessibilityHint,
+    accessibilityLabel,
+    description,
+    title,
+    borderRadius = 0,
+    elevation = 0,
+    onActionPress,
+    ...props
+  } = _props;
   return (
     <Card
       accessibilityHint={

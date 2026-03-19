@@ -4,6 +4,7 @@ import type { ThemeVars } from '@coinbase/cds-common';
 import { CardRoot, type CardRootBaseProps } from '../../cards/CardRoot';
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 
 import { DataCardLayout, type DataCardLayoutProps } from './DataCardLayout';
 
@@ -41,7 +42,11 @@ const dataCardContainerProps = {
 export const DataCard: DataCardComponent = memo(
   forwardRef<React.ReactElement<DataCardBaseProps>, DataCardBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: DataCardProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('DataCard', _props);
+      const {
         title,
         subtitle,
         titleAccessory,
@@ -56,29 +61,29 @@ export const DataCard: DataCardComponent = memo(
         classNames: { root: rootClassName, ...layoutClassNames } = {},
         styles: { root: rootStyle, ...layoutStyles } = {},
         ...props
-      }: DataCardProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => (
-      <CardRoot
-        ref={ref}
-        as={as as React.ElementType}
-        className={cx(rootClassName, className)}
-        style={{ ...rootStyle, ...style }}
-        {...dataCardContainerProps}
-        {...props}
-      >
-        <DataCardLayout
-          classNames={layoutClassNames}
-          layout={layout}
-          styles={layoutStyles}
-          subtitle={subtitle}
-          thumbnail={thumbnail}
-          title={title}
-          titleAccessory={titleAccessory}
+      } = mergedProps;
+      return (
+        <CardRoot
+          ref={ref}
+          as={as as React.ElementType}
+          className={cx(rootClassName, className)}
+          style={{ ...rootStyle, ...style }}
+          {...dataCardContainerProps}
+          {...props}
         >
-          {children}
-        </DataCardLayout>
-      </CardRoot>
-    ),
+          <DataCardLayout
+            classNames={layoutClassNames}
+            layout={layout}
+            styles={layoutStyles}
+            subtitle={subtitle}
+            thumbnail={thumbnail}
+            title={title}
+            titleAccessory={titleAccessory}
+          >
+            {children}
+          </DataCardLayout>
+        </CardRoot>
+      );
+    },
   ),
 );

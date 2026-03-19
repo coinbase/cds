@@ -4,6 +4,7 @@ import type { IconName } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { InputIcon } from './InputIcon';
@@ -96,7 +97,11 @@ export type SearchInputProps = SearchInputBaseProps &
 
 export const SearchInput = memo(
   forwardRef(function SearchInput(
-    {
+    _props: SearchInputProps,
+    ref: React.ForwardedRef<HTMLInputElement>,
+  ) {
+    const mergedProps = useComponentConfig('SearchInput', _props);
+    const {
       onChange,
       onClear,
       onChangeText,
@@ -112,9 +117,7 @@ export const SearchInput = memo(
       startIconAccessibilityLabel = 'Back',
       clearIconAccessibilityLabel = 'Clear search query',
       ...props
-    }: SearchInputProps,
-    ref: React.ForwardedRef<HTMLInputElement>,
-  ) {
+    } = mergedProps;
     const internalRef = useRef<HTMLInputElement>(null);
     const refs = useMergeRefs(ref, internalRef);
 

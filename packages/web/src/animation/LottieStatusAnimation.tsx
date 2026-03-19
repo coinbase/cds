@@ -9,22 +9,24 @@ import type { TradeStatusLottie } from '@coinbase/cds-lottie-files/tradeStatus';
 import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
 import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
 import { Lottie } from './Lottie';
 
 type LottiePlayerRef = LottiePlayer<TradeStatusLottie>;
 
-type LottieStatusAnimationBaseProps = {
+type LottieStatusAnimationCoreProps = {
   status?: LottieStatus;
   onFinish?: () => void;
 };
 
 type LottieStatusAnimationPropsWithWidth = {
   width: DimensionValue;
-} & LottieStatusAnimationBaseProps;
+} & LottieStatusAnimationCoreProps;
 
 type LottieStatusAnimationPropsWithHeight = {
   height: DimensionValue;
-} & LottieStatusAnimationBaseProps;
+} & LottieStatusAnimationCoreProps;
 
 export type LottieStatusAnimationProps = (
   | LottieStatusAnimationPropsWithWidth
@@ -32,46 +34,43 @@ export type LottieStatusAnimationProps = (
 ) &
   SharedProps &
   SharedAccessibilityProps;
-export const LottieStatusAnimation = memo(
-  ({
-    status = 'loading',
+
+export type LottieStatusAnimationBaseProps = LottieStatusAnimationProps;
+
+export const LottieStatusAnimation = memo((_props: LottieStatusAnimationProps) => {
+  const mergedProps = useComponentConfig('LottieStatusAnimation', _props);
+  const { status = 'loading', onFinish, testID, accessibilityLabel, ...otherProps } = mergedProps;
+  const [, forceUpdate] = useState(0);
+  const lottie = useRef<LottiePlayerRef>();
+
+  const handlePolling = useStatusAnimationPoller({
+    status,
+    playMarkers: lottie.current?.playMarkers,
     onFinish,
-    testID,
-    accessibilityLabel,
-    ...otherProps
-  }: LottieStatusAnimationProps) => {
-    const [, forceUpdate] = useState(0);
-    const lottie = useRef<LottiePlayerRef>();
+  });
 
-    const handlePolling = useStatusAnimationPoller({
-      status,
-      playMarkers: lottie.current?.playMarkers,
-      onFinish,
-    });
+  const handleRef = useCallback((el: LottiePlayerRef | null) => {
+    if (el && !lottie.current) {
+      lottie.current = el;
+      forceUpdate((prev) => prev + 1);
+    }
+  }, []);
 
-    const handleRef = useCallback((el: LottiePlayerRef | null) => {
-      if (el && !lottie.current) {
-        lottie.current = el;
-        forceUpdate((prev) => prev + 1);
-      }
-    }, []);
+  const label = useMemo(
+    () => accessibilityLabel ?? lottieStatusToAccessibilityLabel[status as LottieStatus],
+    [accessibilityLabel, status],
+  );
 
-    const label = useMemo(
-      () => accessibilityLabel ?? lottieStatusToAccessibilityLabel[status as LottieStatus],
-      [accessibilityLabel, status],
-    );
-
-    return (
-      <Lottie
-        ref={handleRef}
-        accessibilityLabel={label}
-        aria-live="polite"
-        onAnimationFinish={handlePolling}
-        role="status"
-        source={tradeStatus}
-        testID={testID}
-        {...otherProps}
-      />
-    );
-  },
-);
+  return (
+    <Lottie
+      ref={handleRef}
+      accessibilityLabel={label}
+      aria-live="polite"
+      onAnimationFinish={handlePolling}
+      role="status"
+      source={tradeStatus}
+      testID={testID}
+      {...otherProps}
+    />
+  );
+});

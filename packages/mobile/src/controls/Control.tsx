@@ -15,6 +15,7 @@ import {
 } from '@coinbase/cds-common/tokens/interactable';
 import { isDevelopment } from '@coinbase/cds-utils';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import type { InteractableBaseProps } from '../system';
 import type { TextProps } from '../typography/Text';
@@ -87,7 +88,11 @@ export type ControlProps<ControlValue extends string> = Omit<
 };
 
 const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
-  {
+  _props: ControlProps<ControlValue>,
+  ref: React.ForwardedRef<View>,
+) {
+  const mergedProps = useComponentConfig('Control', _props);
+  const {
     testID,
     label,
     checked,
@@ -112,9 +117,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     borderRadius,
     borderWidth,
     ...props
-  }: ControlProps<ControlValue>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   const theme = useTheme();
 
   if (isDevelopment() && accessible && !label && !accessibilityLabel) {

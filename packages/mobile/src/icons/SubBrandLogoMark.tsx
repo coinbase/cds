@@ -3,14 +3,17 @@ import { G, Path, Svg } from 'react-native-svg';
 import type { SubBrandLogoMarkParams } from '@coinbase/cds-common/hooks/useSubBrandLogo';
 import { useSubBrandLogoMark } from '@coinbase/cds-common/hooks/useSubBrandLogo';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
-export type SubBrandLogoMarkProps = SubBrandLogoMarkParams;
+export type SubBrandLogoMarkBaseProps = Omit<SubBrandLogoMarkParams, 'colorScheme'>;
+export type SubBrandLogoMarkProps = SubBrandLogoMarkBaseProps;
 
-export const SubBrandLogoMark = memo((props: Omit<SubBrandLogoMarkProps, 'colorScheme'>) => {
+export const SubBrandLogoMark = memo((_props: SubBrandLogoMarkProps) => {
+  const mergedProps = useComponentConfig('SubBrandLogoMark', _props);
   const { activeColorScheme } = useTheme();
   const { logoColor, typeColor, viewBox, logoPath, typePath } = useSubBrandLogoMark({
-    ...props,
+    ...mergedProps,
     colorScheme: activeColorScheme,
   });
 

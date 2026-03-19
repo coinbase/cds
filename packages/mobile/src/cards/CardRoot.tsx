@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 
@@ -27,7 +28,9 @@ export type CardRootProps = CardRootBaseProps &
  * When `renderAsPressable` is true, it renders as a Pressable component.
  */
 export const CardRoot = memo(
-  forwardRef<View, CardRootProps>(({ children, renderAsPressable, ...props }, ref) => {
+  forwardRef<View, CardRootProps>((_props: CardRootProps, ref) => {
+    const mergedProps = useComponentConfig('CardRoot', _props);
+    const { children, renderAsPressable, ...props } = mergedProps;
     const Component = renderAsPressable ? Pressable : HStack;
     return (
       <Component ref={ref} {...props}>

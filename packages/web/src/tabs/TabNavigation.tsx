@@ -165,7 +165,10 @@ type TabNavigationFC = <TabId extends string | undefined = string>(
 const TabNavigationComponent = memo(
   forwardRef(
     <TabId extends string>(
-      {
+      _props: TabNavigationProps<TabId>,
+      forwardedRef: ForwardedRef<HTMLElement | null>,
+    ) => {
+      const {
         tabs,
         value: valueFromProps,
         variant = 'primary',
@@ -181,9 +184,7 @@ const TabNavigationComponent = memo(
         role = 'tablist',
         paddleStyle,
         ...props
-      }: TabNavigationProps<TabId>,
-      forwardedRef: ForwardedRef<HTMLElement | null>,
-    ) => {
+      } = _props;
       const value = valueFromProps ?? tabs[0].id;
       const [activeTabLayout, setActiveTabLayout] = useState(fallbackLayout);
       const { observe, width } = useDimensions();

@@ -7,6 +7,7 @@ import type {
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type GroupDirection } from '../layout';
 
 import type { ButtonBaseProps } from './Button';
@@ -40,13 +41,9 @@ const fillCss = css`
   flex: 1;
 `;
 
-export const ButtonGroup = memo(function ButtonGroup({
-  accessibilityLabel,
-  block,
-  children,
-  testID,
-  direction,
-}: ButtonGroupProps) {
+export const ButtonGroup = memo(function ButtonGroup(_props: ButtonGroupProps) {
+  const mergedProps = useComponentConfig('ButtonGroup', _props);
+  const { accessibilityLabel, block, children, testID, direction } = mergedProps;
   const isVertical = direction === 'vertical';
 
   return (

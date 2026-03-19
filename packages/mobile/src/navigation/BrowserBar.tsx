@@ -1,11 +1,12 @@
 import React, { createContext, memo, useContext, useEffect, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { HStack, type HStackProps } from '../layout';
 
 import { NavBarEnd, NavBarStart } from './TopNavBar';
 
-export type BrowserBarProps = SharedProps &
+export type BrowserBarBaseProps = SharedProps &
   Omit<HStackProps, 'children'> & {
     children: React.ReactNode;
     /**
@@ -17,6 +18,8 @@ export type BrowserBarProps = SharedProps &
      */
     end?: React.ReactNode;
   };
+
+export type BrowserBarProps = BrowserBarBaseProps;
 
 export const BrowserBarContext = createContext<{
   hideStart: boolean;
@@ -46,8 +49,9 @@ export const useBrowserBarContext = () => {
   return context;
 };
 
-export const BrowserBar = memo(
-  ({
+export const BrowserBar = memo((_props: BrowserBarProps) => {
+  const mergedProps = useComponentConfig('BrowserBar', _props);
+  const {
     start,
     end,
     paddingX = 3,
@@ -57,38 +61,37 @@ export const BrowserBar = memo(
     testID,
     children,
     ...props
-  }: BrowserBarProps) => {
-    const [hideStart, setHideStart] = useState(false);
-    const [hideEnd, setHideEnd] = useState(false);
-    return (
-      <BrowserBarContext.Provider
-        value={{ hideStart, hideEnd, setHideStart, setHideEnd, isWithinBrowserBar: true }}
+  } = mergedProps;
+  const [hideStart, setHideStart] = useState(false);
+  const [hideEnd, setHideEnd] = useState(false);
+  return (
+    <BrowserBarContext.Provider
+      value={{ hideStart, hideEnd, setHideStart, setHideEnd, isWithinBrowserBar: true }}
+    >
+      <HStack
+        alignItems="center"
+        // gap is instead passed to paddingEnd and paddingStart of NavBarStart and NavBarEnd to ensure that
+        // when the start and end node collapse, the gap between the start and end node and the children
+        // also collapse, and the nav bar middle content can expand to the full width of the browser bar
+        gap={0}
+        paddingBottom={paddingBottom}
+        paddingTop={paddingTop}
+        paddingX={paddingX}
+        testID={testID}
+        {...props}
       >
-        <HStack
-          alignItems="center"
-          // gap is instead passed to paddingEnd and paddingStart of NavBarStart and NavBarEnd to ensure that
-          // when the start and end node collapse, the gap between the start and end node and the children
-          // also collapse, and the nav bar middle content can expand to the full width of the browser bar
-          gap={0}
-          paddingBottom={paddingBottom}
-          paddingTop={paddingTop}
-          paddingX={paddingX}
-          testID={testID}
-          {...props}
-        >
-          <NavBarStart flexBasis="auto" flexGrow={0} paddingEnd={gap}>
-            {hideStart ? null : start}
-          </NavBarStart>
-          <HStack flexBasis={0} flexGrow={1} flexShrink={0}>
-            {children}
-          </HStack>
-          <NavBarEnd flexBasis="auto" flexGrow={0} paddingStart={gap}>
-            {hideEnd ? null : end}
-          </NavBarEnd>
+        <NavBarStart flexBasis="auto" flexGrow={0} paddingEnd={gap}>
+          {hideStart ? null : start}
+        </NavBarStart>
+        <HStack flexBasis={0} flexGrow={1} flexShrink={0}>
+          {children}
         </HStack>
-      </BrowserBarContext.Provider>
-    );
-  },
-);
+        <NavBarEnd flexBasis="auto" flexGrow={0} paddingStart={gap}>
+          {hideEnd ? null : end}
+        </NavBarEnd>
+      </HStack>
+    </BrowserBarContext.Provider>
+  );
+});
 
 BrowserBar.displayName = 'BrowserBar';

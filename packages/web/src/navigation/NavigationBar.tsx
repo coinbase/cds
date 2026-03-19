@@ -5,6 +5,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { type BoxBaseProps, type BoxProps, HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 import type { StylesAndClassNames } from '../types';
@@ -80,8 +81,9 @@ export type NavigationBarProps = NavigationBarBaseProps &
   StylesAndClassNames<typeof navigationBarClassNames> &
   Omit<BoxProps<NavigationBarDefaultElement>, 'children'>;
 
-export const NavigationBar = memo(
-  ({
+export const NavigationBar = memo((_props: NavigationBarProps) => {
+  const mergedProps = useComponentConfig('NavigationBar', _props);
+  const {
     start,
     children,
     end,
@@ -105,60 +107,59 @@ export const NavigationBar = memo(
     styles,
     testID,
     ...props
-  }: NavigationBarProps) => {
-    const prevStart = usePreviousValue<NavigationBarProps['start']>(start);
-    const startNode = useMemo(() => start || prevStart, [start, prevStart]);
-    return (
-      <VStack
-        borderedBottom
-        accessibilityLabel={accessibilityLabel}
-        as="nav"
-        background={background}
-        className={cx(navigationBarClassNames.root, className, classNames?.root)}
-        gap={rowGap}
-        left={left}
-        paddingBottom={paddingBottom}
-        paddingTop={paddingTop}
-        paddingX={paddingX}
-        position={position}
-        right={right}
-        style={{ ...style, ...styles?.root }}
-        testID={testID}
-        top={top}
-        width={width}
-        zIndex={zIndex.navigation}
-        {...props}
-      >
-        <HStack alignItems="center" gap={columnGap ?? { base: 2, phone: 1 }} overflow="auto">
-          <Collapsible
-            collapsed={!start}
-            dangerouslyDisableOverflowHidden={dangerouslyDisableOverflowHidden}
-            direction="horizontal"
-          >
-            <HStack
-              alignItems="center"
-              className={cx(navigationBarClassNames.start, classNames?.start)}
-              paddingEnd={columnGap ?? { base: 2, phone: 1 }}
-              style={styles?.start}
-            >
-              {startNode}
-            </HStack>
-          </Collapsible>
+  } = mergedProps;
+  const prevStart = usePreviousValue<NavigationBarProps['start']>(start);
+  const startNode = useMemo(() => start || prevStart, [start, prevStart]);
+  return (
+    <VStack
+      borderedBottom
+      accessibilityLabel={accessibilityLabel}
+      as="nav"
+      background={background}
+      className={cx(navigationBarClassNames.root, className, classNames?.root)}
+      gap={rowGap}
+      left={left}
+      paddingBottom={paddingBottom}
+      paddingTop={paddingTop}
+      paddingX={paddingX}
+      position={position}
+      right={right}
+      style={{ ...style, ...styles?.root }}
+      testID={testID}
+      top={top}
+      width={width}
+      zIndex={zIndex.navigation}
+      {...props}
+    >
+      <HStack alignItems="center" gap={columnGap ?? { base: 2, phone: 1 }} overflow="auto">
+        <Collapsible
+          collapsed={!start}
+          dangerouslyDisableOverflowHidden={dangerouslyDisableOverflowHidden}
+          direction="horizontal"
+        >
           <HStack
             alignItems="center"
-            className={cx(navigationBarClassNames.content, classNames?.content)}
-            flexGrow={1}
-            gap={1}
-            style={styles?.content}
+            className={cx(navigationBarClassNames.start, classNames?.start)}
+            paddingEnd={columnGap ?? { base: 2, phone: 1 }}
+            style={styles?.start}
           >
-            {children}
+            {startNode}
           </HStack>
-          {end}
+        </Collapsible>
+        <HStack
+          alignItems="center"
+          className={cx(navigationBarClassNames.content, classNames?.content)}
+          flexGrow={1}
+          gap={1}
+          style={styles?.content}
+        >
+          {children}
         </HStack>
-        {bottom}
-      </VStack>
-    );
-  },
-);
+        {end}
+      </HStack>
+      {bottom}
+    </VStack>
+  );
+});
 
 NavigationBar.displayName = 'NavigationBar';

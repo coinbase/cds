@@ -16,6 +16,7 @@ import type {
   TagIntent,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box, type BoxProps } from '../layout';
@@ -64,73 +65,70 @@ export type TagProps = TagBaseProps &
   Omit<BoxProps, 'color' | 'background' | 'children' | 'maxWidth'>;
 
 export const Tag = memo(
-  forwardRef(
-    (
-      {
-        children,
-        intent = 'informational',
-        emphasis = intent === 'informational' ? 'low' : 'high',
-        colorScheme = 'blue',
-        background: customBackground,
-        color: customColor,
-        start,
-        startIcon,
-        startIconActive,
-        end,
-        endIcon,
-        endIconActive,
-        alignItems = 'center',
-        flexDirection = 'row',
-        gap = 0.5,
-        justifyContent = 'center',
-        paddingY = 0.25,
-        testID = 'cds-tag',
-        ...props
-      }: TagProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const theme = useTheme();
-      const { background, foreground } = tagEmphasisColorMap[emphasis][colorScheme];
-      const backgroundColor = `rgb(${theme.spectrum[customBackground ?? background]})`;
-      const color = `rgb(${theme.spectrum[customColor ?? foreground]})`;
+  forwardRef((_props: TagProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('Tag', _props);
+    const {
+      children,
+      intent = 'informational',
+      emphasis = intent === 'informational' ? 'low' : 'high',
+      colorScheme = 'blue',
+      background: customBackground,
+      color: customColor,
+      start,
+      startIcon,
+      startIconActive,
+      end,
+      endIcon,
+      endIconActive,
+      alignItems = 'center',
+      flexDirection = 'row',
+      gap = 0.5,
+      justifyContent = 'center',
+      paddingY = 0.25,
+      testID = 'cds-tag',
+      ...props
+    } = mergedProps;
+    const theme = useTheme();
+    const { background, foreground } = tagEmphasisColorMap[emphasis][colorScheme];
+    const backgroundColor = `rgb(${theme.spectrum[customBackground ?? background]})`;
+    const color = `rgb(${theme.spectrum[customColor ?? foreground]})`;
 
-      return (
-        <Box
-          ref={forwardedRef}
-          alignItems={alignItems}
-          background="bg"
-          borderRadius={tagBorderRadiusMap[intent]}
-          dangerouslySetBackground={backgroundColor}
-          flexDirection={flexDirection}
-          gap={gap}
-          justifyContent={justifyContent}
-          paddingX={tagHorizontalSpacing[intent]}
-          paddingY={paddingY}
-          testID={testID}
-          {...props}
+    return (
+      <Box
+        ref={forwardedRef}
+        alignItems={alignItems}
+        background="bg"
+        borderRadius={tagBorderRadiusMap[intent]}
+        dangerouslySetBackground={backgroundColor}
+        flexDirection={flexDirection}
+        gap={gap}
+        justifyContent={justifyContent}
+        paddingX={tagHorizontalSpacing[intent]}
+        paddingY={paddingY}
+        testID={testID}
+        {...props}
+      >
+        {start ? (
+          start
+        ) : startIcon ? (
+          <Icon active={startIconActive} dangerouslySetColor={color} name={startIcon} size="xs" />
+        ) : null}
+
+        <Text
+          dangerouslySetColor={color}
+          font={tagFontMap[intent]}
+          numberOfLines={1}
+          testID={`${testID}--text`}
         >
-          {start ? (
-            start
-          ) : startIcon ? (
-            <Icon active={startIconActive} dangerouslySetColor={color} name={startIcon} size="xs" />
-          ) : null}
+          {children}
+        </Text>
 
-          <Text
-            dangerouslySetColor={color}
-            font={tagFontMap[intent]}
-            numberOfLines={1}
-            testID={`${testID}--text`}
-          >
-            {children}
-          </Text>
-
-          {end ? (
-            end
-          ) : endIcon ? (
-            <Icon active={endIconActive} dangerouslySetColor={color} name={endIcon} size="xs" />
-          ) : null}
-        </Box>
-      );
-    },
-  ),
+        {end ? (
+          end
+        ) : endIcon ? (
+          <Icon active={endIconActive} dangerouslySetColor={color} name={endIcon} size="xs" />
+        ) : null}
+      </Box>
+    );
+  }),
 );

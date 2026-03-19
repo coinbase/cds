@@ -3,6 +3,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, type BoxBaseProps, HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 
@@ -91,7 +92,11 @@ const mapMediaPositionToMediaPlacement: Record<
 export const ContentCardBody: ContentCardBodyComponent = memo(
   forwardRef<React.ReactElement<ContentCardBodyBaseProps>, ContentCardBodyBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: ContentCardBodyProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('ContentCardBody', _props);
+      const {
         as,
         body,
         label,
@@ -108,9 +113,7 @@ export const ContentCardBody: ContentCardBodyComponent = memo(
         classNames,
         className,
         ...props
-      }: ContentCardBodyProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? contentCardBodyDefaultElement) satisfies React.ElementType;
       const isHorizontal = mediaPlacement === 'start' || mediaPlacement === 'end';
       const isMediaFirst = !!media && (mediaPlacement === 'top' || mediaPlacement === 'start');

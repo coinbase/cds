@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 
@@ -44,99 +45,96 @@ export type CollapsibleBaseProps = SharedProps &
 export type CollapsibleProps = CollapsibleBaseProps;
 
 export const Collapsible = memo(
-  forwardRef(
-    (
-      {
-        children,
-        collapsed = true,
-        maxHeight,
-        maxWidth,
-        accessibilityLabelledBy,
-        direction = 'vertical',
-        testID,
-        id,
-        role = 'region',
-        dangerouslyDisableOverflowHidden = false,
-        // Spacing
-        padding,
-        paddingBottom,
-        paddingEnd,
-        paddingX,
-        paddingStart,
-        paddingTop,
-        paddingY,
-      }: CollapsibleProps,
-      forwardedRef: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const { style: motionStyle, ...motionProps } = useCollapsibleMotionProps({
-        collapsed,
-        direction,
-        dangerouslyDisableOverflowHidden,
-      });
+  forwardRef((_props: CollapsibleProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('Collapsible', _props);
+    const {
+      children,
+      collapsed = true,
+      maxHeight,
+      maxWidth,
+      accessibilityLabelledBy,
+      direction = 'vertical',
+      testID,
+      id,
+      role = 'region',
+      dangerouslyDisableOverflowHidden = false,
+      // Spacing
+      padding,
+      paddingBottom,
+      paddingEnd,
+      paddingX,
+      paddingStart,
+      paddingTop,
+      paddingY,
+    } = mergedProps;
+    const { style: motionStyle, ...motionProps } = useCollapsibleMotionProps({
+      collapsed,
+      direction,
+      dangerouslyDisableOverflowHidden,
+    });
 
-      const sizeProps = useMemo(() => {
-        return direction === 'horizontal'
-          ? {
-              maxWidth,
-              // prevent horizontal scrollbar when animating
-              display: 'inline-flex' as const,
-            }
-          : { maxHeight };
-      }, [direction, maxWidth, maxHeight]);
+    const sizeProps = useMemo(() => {
+      return direction === 'horizontal'
+        ? {
+            maxWidth,
+            // prevent horizontal scrollbar when animating
+            display: 'inline-flex' as const,
+          }
+        : { maxHeight };
+    }, [direction, maxWidth, maxHeight]);
 
-      // visibility is used to prevent child content from being focusable when collapsed
-      const [visibility, setVisibility] = useState<
-        Extract<React.CSSProperties['visibility'], 'visible' | 'hidden'>
-      >(collapsed ? 'hidden' : 'visible');
-      // update the visibility to "visible" when the content is expanding
-      if (!collapsed && visibility !== 'visible') {
-        setVisibility('visible');
+    // visibility is used to prevent child content from being focusable when collapsed
+    const [visibility, setVisibility] = useState<
+      Extract<React.CSSProperties['visibility'], 'visible' | 'hidden'>
+    >(collapsed ? 'hidden' : 'visible');
+    // update the visibility to "visible" when the content is expanding
+    if (!collapsed && visibility !== 'visible') {
+      setVisibility('visible');
+    }
+
+    // when the animation completes, set the visibility to "hidden" if the content should be collapsed
+    // this is to prevent children of the Collapsible element from being focusable in this state
+    const handleAnimationComplete = useCallback(() => {
+      if (collapsed) {
+        setVisibility('hidden');
       }
+    }, [collapsed]);
 
-      // when the animation completes, set the visibility to "hidden" if the content should be collapsed
-      // this is to prevent children of the Collapsible element from being focusable in this state
-      const handleAnimationComplete = useCallback(() => {
-        if (collapsed) {
-          setVisibility('hidden');
-        }
-      }, [collapsed]);
+    // merge visible style with the computed framer-motion styles
+    const style = useMemo(() => {
+      return {
+        ...motionStyle,
+        visibility,
+      };
+    }, [visibility, motionStyle]);
 
-      // merge visible style with the computed framer-motion styles
-      const style = useMemo(() => {
-        return {
-          ...motionStyle,
-          visibility,
-        };
-      }, [visibility, motionStyle]);
-
-      return (
-        <motion.div
-          {...motionProps}
-          ref={forwardedRef}
-          aria-labelledby={accessibilityLabelledBy}
-          className={COMPONENT_STATIC_CLASSNAME}
-          data-testid={testID}
-          id={id}
-          onAnimationComplete={handleAnimationComplete}
-          role={role}
-          style={style}
-        >
-          <Box display="block" paddingTop={paddingTop}>
-            <Box
-              overflow={maxWidth || maxHeight ? 'auto' : undefined}
-              {...sizeProps}
-              padding={padding}
-              paddingBottom={paddingBottom}
-              paddingEnd={paddingEnd}
-              paddingStart={paddingStart}
-              paddingX={paddingX}
-              paddingY={paddingY}
-            >
-              {children}
-            </Box>
+    return (
+      <motion.div
+        {...motionProps}
+        ref={forwardedRef}
+        aria-labelledby={accessibilityLabelledBy}
+        className={COMPONENT_STATIC_CLASSNAME}
+        data-testid={testID}
+        id={id}
+        onAnimationComplete={handleAnimationComplete}
+        role={role}
+        style={style}
+      >
+        <Box display="block" paddingTop={paddingTop}>
+          <Box
+            overflow={maxWidth || maxHeight ? 'auto' : undefined}
+            {...sizeProps}
+            padding={padding}
+            paddingBottom={paddingBottom}
+            paddingEnd={paddingEnd}
+            paddingStart={paddingStart}
+            paddingX={paddingX}
+            paddingY={paddingY}
+          >
+            {children}
           </Box>
-        </motion.div>
-      );
-    },
-  ),
+        </Box>
+      </motion.div>
+    );
+  }),
 );

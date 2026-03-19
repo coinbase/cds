@@ -15,6 +15,7 @@ import type { ElevationLevels } from '@coinbase/cds-common';
 import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
 import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@coinbase/cds-common/tokens/drawer';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import {
@@ -70,8 +71,9 @@ export const TrayContext = createContext<{
 });
 
 export const Tray = memo(
-  forwardRef<DrawerRefBaseProps, TrayProps>(function Tray(
-    {
+  forwardRef<DrawerRefBaseProps, TrayProps>(function Tray(_props, ref) {
+    const mergedProps = useComponentConfig('Tray', _props);
+    const {
       children,
       title,
       header,
@@ -82,9 +84,7 @@ export const Tray = memo(
       verticalDrawerPercentageOfView = defaultVerticalDrawerPercentageOfView,
       styles,
       ...props
-    },
-    ref,
-  ) {
+    } = mergedProps;
     const [titleHeight, setTitleHeight] = useState(0);
     const isInsideHandleBar = handleBarVariant === 'inside';
     const isTitleString = typeof title === 'string';

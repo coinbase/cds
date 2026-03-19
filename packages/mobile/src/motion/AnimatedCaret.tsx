@@ -5,6 +5,7 @@ import { animateRotateConfig } from '@coinbase/cds-common/motion/animatedCaret';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon, type IconProps } from '../icons';
 import { HStack } from '../layout/HStack';
 
@@ -41,13 +42,9 @@ export const useAnimatedCaretAnimation = () => {
   );
 };
 
-export const AnimatedCaret = memo(function AnimatedCaret({
-  rotate,
-  size = 's',
-  color = 'fgMuted',
-  style,
-  ...props
-}: AnimatedCaretProps) {
+export const AnimatedCaret = memo(function AnimatedCaret(_props: AnimatedCaretProps) {
+  const mergedProps = useComponentConfig('AnimatedCaret', _props);
+  const { rotate, size = 's', color = 'fgMuted', style, ...props } = mergedProps;
   const { animatedStyles, animate } = useAnimatedCaretAnimation();
   const previousRotate = usePreviousValue(rotate);
 

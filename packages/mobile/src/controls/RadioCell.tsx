@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useSelectionCellBorderStyle } from '../hooks/useSelectionCellBorderStyle';
 import { useTheme } from '../hooks/useTheme';
@@ -46,7 +47,11 @@ export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<Radio
 };
 
 const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string>(
-  {
+  _props: RadioCellProps<RadioValue>,
+  ref: React.ForwardedRef<View>,
+) {
+  const mergedProps = useComponentConfig('RadioCell', _props);
+  const {
     title,
     description,
     checked,
@@ -75,9 +80,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
     pressedBorderWidth = 200,
     styles,
     ...props
-  }: RadioCellProps<RadioValue>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   const theme = useTheme();
   const [layout, setLayout] = useLayout();
   const [pressed, setPressed] = useState(false);

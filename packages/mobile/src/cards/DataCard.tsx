@@ -65,20 +65,21 @@ export type DataCardBaseProps = CardBaseProps &
 
 export type DataCardProps = DataCardBaseProps;
 
-export const DataCard = memo(function DataCard({
-  onPress,
-  title,
-  description,
-  progressVariant,
-  progress,
-  progressColor,
-  startLabel: startLabelProp,
-  endLabel: endLabelProp,
-  testID = 'data-card',
-  borderRadius = 0,
-  elevation = 0,
-  ...cardProps
-}: DataCardProps) {
+export const DataCard = memo(function DataCard(_props: DataCardProps) {
+  const {
+    onPress,
+    title,
+    description,
+    progressVariant,
+    progress,
+    progressColor,
+    startLabel: startLabelProp,
+    endLabel: endLabelProp,
+    testID = 'data-card',
+    borderRadius = 0,
+    elevation = 0,
+    ...cardProps
+  } = _props;
   const content = useMemo(() => {
     const TextEndLabel = progressVariant === 'bar' ? TextLabel2 : TextBody;
     return (

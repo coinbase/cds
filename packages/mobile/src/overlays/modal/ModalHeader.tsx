@@ -4,6 +4,7 @@ import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, HStack } from '../../layout';
 import { Text } from '../../typography/Text';
 
@@ -50,15 +51,17 @@ export type ModalHeaderBaseProps = SharedProps & {
 
 export type ModalHeaderProps = ModalHeaderBaseProps;
 
-export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = ({
-  title,
-  onBackButtonClick,
-  backAccessibilityLabel,
-  backAccessibilityHint,
-  closeAccessibilityLabel,
-  closeAccessibilityHint,
-  testID,
-}) => {
+export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = (_props) => {
+  const mergedProps = useComponentConfig('ModalHeader', _props);
+  const {
+    title,
+    onBackButtonClick,
+    backAccessibilityLabel,
+    backAccessibilityHint,
+    closeAccessibilityLabel,
+    closeAccessibilityHint,
+    testID,
+  } = mergedProps;
   const { onRequestClose, hideCloseButton, hideDividers } = useModalContext();
 
   return (

@@ -3,6 +3,7 @@ import type { View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import { isDevelopment } from '@coinbase/cds-utils';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Group, type GroupProps } from '../layout';
 
 export type ControlGroupOption<ControlComponentProps> = Omit<
@@ -27,11 +28,14 @@ export type ControlGroupProps<
     onChange?: (value: ControlValue | undefined, checked?: boolean) => void;
   };
 
+export type ControlGroupBaseProps = ControlGroupProps<string, { value?: string }>;
+
 const ControlGroupWithRef = forwardRef(function ControlGroup<
   ControlValue extends string,
   ControlComponentProps extends { value?: ControlValue },
->(
-  {
+>(_props: ControlGroupProps<ControlValue, ControlComponentProps>, ref: React.ForwardedRef<View>) {
+  const mergedProps = useComponentConfig('ControlGroup', _props);
+  const {
     ControlComponent,
     options,
     label,
@@ -43,9 +47,7 @@ const ControlGroupWithRef = forwardRef(function ControlGroup<
     gap = 2,
     role = 'group',
     ...restProps
-  }: ControlGroupProps<ControlValue, ControlComponentProps>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   if (isDevelopment() && !label && !ariaLabelledby && !ariaLabel) {
     console.warn('Please specify a label or aria-labelledby for the ControlGroup.');
   }

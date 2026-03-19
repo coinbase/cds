@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { Box, type BoxBaseProps } from './Box';
 
@@ -42,7 +43,11 @@ export const Spacer: SpacerComponent = forwardRef<
   SpacerBaseProps
 >(
   <AsComponent extends React.ElementType>(
-    {
+    _props: SpacerProps<AsComponent>,
+    ref?: Polymorphic.Ref<AsComponent>,
+  ) => {
+    const mergedProps = useComponentConfig('Spacer', _props);
+    const {
       as,
       flexGrow,
       flexShrink,
@@ -54,9 +59,7 @@ export const Spacer: SpacerComponent = forwardRef<
       minHorizontal,
       minVertical,
       ...props
-    }: SpacerProps<AsComponent>,
-    ref?: Polymorphic.Ref<AsComponent>,
-  ) => {
+    } = mergedProps;
     const Component = (as ?? spacerDefaultElement) satisfies React.ElementType;
     const isFixedSize = horizontal !== undefined || vertical !== undefined;
 

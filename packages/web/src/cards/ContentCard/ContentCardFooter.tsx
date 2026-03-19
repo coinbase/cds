@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 
 import type { Polymorphic } from '../../core/polymorphism';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { type BoxBaseProps, HStack } from '../../layout';
 
 export const contentCardFooterDefaultElement = 'footer';
@@ -23,14 +24,11 @@ type ContentCardFooterComponent = (<
 export const ContentCardFooter: ContentCardFooterComponent = memo(
   forwardRef<React.ReactElement<ContentCardFooterBaseProps>, ContentCardFooterBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
-        as,
-        children,
-        justifyContent = 'space-between',
-        ...props
-      }: ContentCardFooterProps<AsComponent>,
+      _props: ContentCardFooterProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
+      const mergedProps = useComponentConfig('ContentCardFooter', _props);
+      const { as, children, justifyContent = 'space-between', ...props } = mergedProps;
       const Component = (as ?? contentCardFooterDefaultElement) satisfies React.ElementType;
       return (
         <HStack ref={ref} as={Component} justifyContent={justifyContent} {...props}>

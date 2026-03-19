@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, HStack, VStack } from '../../layout';
 import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography';
@@ -44,8 +45,9 @@ export type DataCardLayoutProps = DataCardLayoutBaseProps & {
   };
 };
 
-export const DataCardLayout = memo(
-  ({
+export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
+  const mergedProps = useComponentConfig('DataCardLayout', _props);
+  const {
     title,
     subtitle,
     titleAccessory,
@@ -54,76 +56,75 @@ export const DataCardLayout = memo(
     classNames = {},
     styles = {},
     children,
-  }: DataCardLayoutProps) => {
-    const titleNode = useMemo(() => {
-      if (typeof title === 'string') {
-        return (
-          <Text as="div" font="headline" numberOfLines={2}>
-            {title}
-          </Text>
-        );
-      }
-      return title;
-    }, [title]);
+  } = mergedProps;
+  const titleNode = useMemo(() => {
+    if (typeof title === 'string') {
+      return (
+        <Text as="div" font="headline" numberOfLines={2}>
+          {title}
+        </Text>
+      );
+    }
+    return title;
+  }, [title]);
 
-    const subtitleNode = useMemo(() => {
-      if (typeof subtitle === 'string') {
-        return (
-          <Text as="div" color="fgMuted" font="label2" numberOfLines={1}>
-            {subtitle}
-          </Text>
-        );
-      }
-      return subtitle;
-    }, [subtitle]);
+  const subtitleNode = useMemo(() => {
+    if (typeof subtitle === 'string') {
+      return (
+        <Text as="div" color="fgMuted" font="label2" numberOfLines={1}>
+          {subtitle}
+        </Text>
+      );
+    }
+    return subtitle;
+  }, [subtitle]);
 
-    const layoutContainerSpacingProps = useMemo(() => {
-      return {
-        flexDirection: layout === 'horizontal' ? 'row' : 'column',
-        gap: layout === 'horizontal' ? 2 : 1,
-        padding: 2,
-      } as const;
-    }, [layout]);
+  const layoutContainerSpacingProps = useMemo(() => {
+    return {
+      flexDirection: layout === 'horizontal' ? 'row' : 'column',
+      gap: layout === 'horizontal' ? 2 : 1,
+      padding: 2,
+    } as const;
+  }, [layout]);
 
-    const headerSpacingProps = useMemo(() => {
-      return {
-        flexDirection: layout === 'horizontal' ? 'column' : 'row',
-        gap: layout === 'horizontal' ? 2 : 1.5,
-        alignItems: layout === 'horizontal' ? 'flex-start' : 'center',
-        justifyContent: layout === 'horizontal' ? 'space-between' : 'flex-start',
-      } as const;
-    }, [layout]);
+  const headerSpacingProps = useMemo(() => {
+    return {
+      flexDirection: layout === 'horizontal' ? 'column' : 'row',
+      gap: layout === 'horizontal' ? 2 : 1.5,
+      alignItems: layout === 'horizontal' ? 'flex-start' : 'center',
+      justifyContent: layout === 'horizontal' ? 'space-between' : 'flex-start',
+    } as const;
+  }, [layout]);
 
-    return (
+  return (
+    <Box
+      className={classNames?.layoutContainer}
+      flexGrow={1}
+      style={styles?.layoutContainer}
+      {...layoutContainerSpacingProps}
+    >
       <Box
-        className={classNames?.layoutContainer}
         flexGrow={1}
-        style={styles?.layoutContainer}
-        {...layoutContainerSpacingProps}
+        {...headerSpacingProps}
+        className={classNames?.headerContainer}
+        style={styles?.headerContainer}
       >
-        <Box
-          flexGrow={1}
-          {...headerSpacingProps}
-          className={classNames?.headerContainer}
-          style={styles?.headerContainer}
-        >
-          {thumbnail}
-          <VStack className={classNames?.textContainer} style={styles?.textContainer}>
-            {subtitleNode}
-            <HStack
-              alignItems="center"
-              className={classNames?.titleContainer}
-              columnGap={0.5}
-              flexWrap="wrap"
-              style={styles?.titleContainer}
-            >
-              {titleNode}
-              {titleAccessory}
-            </HStack>
-          </VStack>
-        </Box>
-        {children}
+        {thumbnail}
+        <VStack className={classNames?.textContainer} style={styles?.textContainer}>
+          {subtitleNode}
+          <HStack
+            alignItems="center"
+            className={classNames?.titleContainer}
+            columnGap={0.5}
+            flexWrap="wrap"
+            style={styles?.titleContainer}
+          >
+            {titleNode}
+            {titleAccessory}
+          </HStack>
+        </VStack>
       </Box>
-    );
-  },
-);
+      {children}
+    </Box>
+  );
+});

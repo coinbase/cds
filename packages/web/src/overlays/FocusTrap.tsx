@@ -4,6 +4,7 @@ import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { FOCUSABLE_ELEMENTS } from '@coinbase/cds-common/tokens/overlays';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { getBrowserGlobals } from '../utils/browser';
 
 export type FocusTrapProps = {
@@ -55,6 +56,8 @@ export type FocusTrapProps = {
   autoFocusDelay?: number;
 };
 
+export type FocusTrapBaseProps = FocusTrapProps;
+
 const DEBOUNCE_MS = 50;
 export const NAVIGATION_KEYS = ['Tab', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
 const ALPHABET_KEYS = [
@@ -87,19 +90,21 @@ const ALPHABET_KEYS = [
 ];
 const FOCUSABLE_ELEMENTS_INCLUDING_TABINDEX = `${FOCUSABLE_ELEMENTS}, [tabindex]`;
 
-export const FocusTrap = memo(function FocusTrap({
-  children,
-  onEscPress,
-  disableTypeFocus,
-  disableFocusTrap,
-  disableAutoFocus,
-  disableArrowKeyNavigation,
-  includeTriggerInFocusTrap,
-  respectNegativeTabIndex,
-  focusTabIndexElements,
-  autoFocusDelay,
-  restoreFocusOnUnmount,
-}: FocusTrapProps) {
+export const FocusTrap = memo((_props: FocusTrapProps) => {
+  const mergedProps = useComponentConfig('FocusTrap', _props);
+  const {
+    children,
+    onEscPress,
+    disableTypeFocus,
+    disableFocusTrap,
+    disableAutoFocus,
+    disableArrowKeyNavigation,
+    includeTriggerInFocusTrap,
+    respectNegativeTabIndex,
+    focusTabIndexElements,
+    autoFocusDelay,
+    restoreFocusOnUnmount,
+  } = mergedProps;
   const isFocused = useRef(false);
   const childrenRef = useRef<HTMLElement>(null);
   const previouslyFocusedElement = useRef<HTMLElement | null>(null);

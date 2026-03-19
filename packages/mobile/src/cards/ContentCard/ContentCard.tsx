@@ -2,6 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack, type VStackProps } from '../../layout';
 
 export type ContentCardBaseProps = VStackProps;
@@ -9,8 +10,9 @@ export type ContentCardBaseProps = VStackProps;
 export type ContentCardProps = ContentCardBaseProps;
 
 export const ContentCard = memo(
-  forwardRef(function ContentCard(
-    {
+  forwardRef(function ContentCard(_props: ContentCardProps, ref: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('ContentCard', _props);
+    const {
       testID,
       children,
       maxWidth = contentCardMaxWidth,
@@ -19,9 +21,7 @@ export const ContentCard = memo(
       padding = 2,
       gap = 2,
       ...props
-    }: ContentCardProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     return (
       <VStack
         ref={ref}

@@ -1,6 +1,8 @@
 import React, { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
+
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
 import { DefaultSelectDropdown } from './DefaultSelectDropdown';
@@ -9,6 +11,7 @@ import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
 import {
   isSelectOptionGroup,
+  type SelectBaseProps,
   type SelectComponent,
   type SelectDropdownProps,
   type SelectProps,
@@ -45,10 +48,19 @@ export type {
 
 export { isSelectOptionGroup };
 
+export type AlphaSelectBaseProps = SelectBaseProps;
+
 const SelectBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: SelectProps<Type, SelectOptionValue>,
+      ref: React.Ref<SelectRef>,
+    ) => {
+      const mergedProps = useComponentConfig(
+        'Select',
+        _props as AlphaSelectBaseProps,
+      ) as SelectProps<Type, SelectOptionValue>;
+      const {
         value,
         type = 'single' as Type,
         options,
@@ -91,9 +103,7 @@ const SelectBase = memo(
         styles,
         testID,
         ...props
-      }: SelectProps<Type, SelectOptionValue>,
-      ref: React.Ref<SelectRef>,
-    ) => {
+      } = mergedProps;
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;

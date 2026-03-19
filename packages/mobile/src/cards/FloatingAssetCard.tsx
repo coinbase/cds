@@ -57,8 +57,8 @@ export type FloatingAssetCardProps = FloatingAssetCardBaseProps;
  * Note: The floating variation (media outside the card container) is no longer supported.
  * MediaCard provides a contained layout with media placement options (start/end).
  */
-export const FloatingAssetCard = memo(
-  ({
+export const FloatingAssetCard = memo((_props: FloatingAssetCardProps) => {
+  const {
     title,
     description,
     subtitle,
@@ -66,68 +66,67 @@ export const FloatingAssetCard = memo(
     testID = 'floating-asset-card',
     size = 's',
     onPress,
-  }: FloatingAssetCardProps) => {
-    const width = useMemo(
-      () => (size === 'l' ? floatingAssetCardLargeWidth : floatingAssetCardSmallDimension),
-      [size],
-    );
-    const pressableStyles = useMemo(() => {
-      return {
-        minWidth: floatingAssetCardSmallDimension,
-        maxWidth: width,
-      };
-    }, [width]);
+  } = _props;
+  const width = useMemo(
+    () => (size === 'l' ? floatingAssetCardLargeWidth : floatingAssetCardSmallDimension),
+    [size],
+  );
+  const pressableStyles = useMemo(() => {
+    return {
+      minWidth: floatingAssetCardSmallDimension,
+      maxWidth: width,
+    };
+  }, [width]);
 
-    const content = (
-      <VStack gap={1} maxWidth={width} testID={testID}>
-        <HStack
-          bordered
-          borderRadius={500}
-          height={floatingAssetCardSmallDimension}
-          maxWidth={width}
-          minWidth={floatingAssetCardSmallDimension}
-          overflow="hidden"
-        >
-          {media}
-        </HStack>
-        <VStack gap={0.5} maxWidth={width}>
-          {typeof subtitle === 'string' ? (
-            <Text color="fgMuted" font="legal" numberOfLines={1}>
-              {subtitle}
-            </Text>
-          ) : (
-            subtitle
-          )}
-          {typeof title === 'string' ? (
-            <Text font="headline" numberOfLines={3}>
-              {title}
-            </Text>
-          ) : (
-            title
-          )}
-          {typeof description === 'string' ? (
-            <Text color="fgMuted" font="label2" numberOfLines={2}>
-              {description}
-            </Text>
-          ) : (
-            description
-          )}
-        </VStack>
-      </VStack>
-    );
-    return onPress ? (
-      <Pressable
-        accessibilityRole="button"
-        background="transparent"
+  const content = (
+    <VStack gap={1} maxWidth={width} testID={testID}>
+      <HStack
+        bordered
         borderRadius={500}
-        onPress={onPress}
-        style={pressableStyles}
-        testID={testID}
+        height={floatingAssetCardSmallDimension}
+        maxWidth={width}
+        minWidth={floatingAssetCardSmallDimension}
+        overflow="hidden"
       >
-        {content}
-      </Pressable>
-    ) : (
-      content
-    );
-  },
-);
+        {media}
+      </HStack>
+      <VStack gap={0.5} maxWidth={width}>
+        {typeof subtitle === 'string' ? (
+          <Text color="fgMuted" font="legal" numberOfLines={1}>
+            {subtitle}
+          </Text>
+        ) : (
+          subtitle
+        )}
+        {typeof title === 'string' ? (
+          <Text font="headline" numberOfLines={3}>
+            {title}
+          </Text>
+        ) : (
+          title
+        )}
+        {typeof description === 'string' ? (
+          <Text color="fgMuted" font="label2" numberOfLines={2}>
+            {description}
+          </Text>
+        ) : (
+          description
+        )}
+      </VStack>
+    </VStack>
+  );
+  return onPress ? (
+    <Pressable
+      accessibilityRole="button"
+      background="transparent"
+      borderRadius={500}
+      onPress={onPress}
+      style={pressableStyles}
+      testID={testID}
+    >
+      {content}
+    </Pressable>
+  ) : (
+    content
+  );
+});

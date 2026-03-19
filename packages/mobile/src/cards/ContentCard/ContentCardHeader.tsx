@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import type { HStackProps } from '../../layout';
 import { HStack, VStack } from '../../layout';
 import { Avatar } from '../../media';
@@ -36,7 +37,11 @@ export type ContentCardHeaderProps = ContentCardHeaderBaseProps & HStackProps;
 
 export const ContentCardHeader = memo(
   forwardRef(function ContentCardHeader(
-    {
+    _props: ContentCardHeaderProps,
+    ref: React.ForwardedRef<View>,
+  ) {
+    const mergedProps = useComponentConfig('ContentCardHeader', _props);
+    const {
       avatar,
       title,
       meta,
@@ -49,9 +54,7 @@ export const ContentCardHeader = memo(
       styles,
       style,
       ...props
-    }: ContentCardHeaderProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (

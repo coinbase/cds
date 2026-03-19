@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { render, screen } from '@testing-library/react';
 
 import type { ComponentConfig } from '../../core/componentConfig';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
@@ -15,7 +15,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 
 const ButtonSpy = ({ testID, ...props }: Record<string, any>) => {
   const mergedProps = useComponentConfig('Button', props);
-  return <div data-testid={testID} data-props={JSON.stringify(mergedProps)} />;
+  return <div data-props={JSON.stringify(mergedProps)} data-testid={testID} />;
 };
 
 const getProps = (testID: string) => {

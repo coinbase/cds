@@ -27,6 +27,7 @@ import {
 import { css } from '@linaria/core';
 import { animated, config as springConfig, useSpring } from '@react-spring/web';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useScrollBlocker } from '../hooks/useScrollBlocker';
 import { FocusTrap } from '../overlays/FocusTrap';
 import { Portal } from '../overlays/Portal';
@@ -67,7 +68,7 @@ export type TourMaskComponentProps = {
 
 export type TourMaskComponent = React.FC<TourMaskComponentProps>;
 
-export type TourProps<TourStepId extends string = string> = TourOptions<TourStepId> & {
+export type TourBaseProps<TourStepId extends string = string> = TourOptions<TourStepId> & {
   children?: React.ReactNode;
   /**
    * The Component to render as a tour overlay and mask.
@@ -120,6 +121,8 @@ export type TourProps<TourStepId extends string = string> = TourOptions<TourStep
   disableAutoScroll?: boolean;
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy' | 'id'> &
   SharedProps;
+
+export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId>;
 
 const defaultScrollOptions: TourScrollOptions = {
   behavior: 'smooth',
@@ -180,28 +183,30 @@ export type TourFC = <TourStepId extends string = string>(
 const defaultTourStepOffset = 24;
 const defaultTourStepShiftPadding = 32;
 
-const TourComponent = <TourStepId extends string = string>({
-  steps,
-  activeTourStep,
-  onChange,
-  children,
-  TourMaskComponent = DefaultTourMask,
-  TourStepArrowComponent = DefaultTourStepArrow,
-  hideOverlay,
-  tourStepOffset = defaultTourStepOffset,
-  tourStepShift,
-  tourStepAutoPlacement,
-  tourMaskPadding,
-  tourMaskBorderRadius,
-  scrollOptions = defaultScrollOptions,
-  disablePortal,
-  disableAutoScroll,
-  accessibilityLabel,
-  accessibilityLabelledBy,
-  id,
-  testID,
-}: TourProps<TourStepId>) => {
-  const tourStepArrowRef = useRef<HTMLElement>(null);
+const TourComponent = <TourStepId extends string = string>(_props: TourProps<TourStepId>) => {
+  const mergedProps = useComponentConfig('Tour', _props);
+  const {
+    steps,
+    activeTourStep,
+    onChange,
+    children,
+    TourMaskComponent = DefaultTourMask,
+    TourStepArrowComponent = DefaultTourStepArrow,
+    hideOverlay,
+    tourStepOffset = defaultTourStepOffset,
+    tourStepShift,
+    tourStepAutoPlacement,
+    tourMaskPadding,
+    tourMaskBorderRadius,
+    scrollOptions = defaultScrollOptions,
+    disablePortal,
+    disableAutoScroll,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    id,
+    testID,
+  } = mergedProps;
+  const tourStepArrowRef = useRef<HTMLDivElement>(null);
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 

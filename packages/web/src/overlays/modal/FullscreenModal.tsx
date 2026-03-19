@@ -3,6 +3,7 @@ import { css } from '@linaria/core';
 
 import { cx } from '../../cx';
 import { useA11yLabels } from '../../hooks/useA11yLabels';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack } from '../../layout';
 import { breakpoints } from '../../styles/media';
 import { type FocusTrapProps } from '../FocusTrap';
@@ -71,6 +72,8 @@ export type FullscreenModalProps = {
 > &
   Pick<ModalHeaderProps, 'closeAccessibilityLabel'> &
   Pick<FocusTrapProps, 'disableFocusTrap' | 'focusTabIndexElements'>;
+
+export type FullscreenModalBaseProps = FullscreenModalProps;
 
 const contentMaxWidth = 800;
 const secondaryContentWidth = 400;
@@ -142,32 +145,34 @@ const contentCss = css`
   }
 `;
 
-export const FullscreenModal = memo(function FullscreenModal({
-  focusTabIndexElements,
-  logo,
-  visible,
-  onRequestClose,
-  primaryContent,
-  primaryContentClassName,
-  secondaryContent,
-  secondaryContentClassName,
-  title,
-  testID,
-  zIndex,
-  disablePortal,
-  contentContainerClassName,
-  hideDivider,
-  showSecondaryContentDivider,
-  role,
-  onDidClose,
-  shouldCloseOnEscPress = true,
-  disableFocusTrap,
-  restoreFocusOnUnmount = true,
-  accessibilityLabelledBy,
-  accessibilityLabel,
-  closeAccessibilityLabel,
-  contentStyle,
-}: FullscreenModalProps) {
+export const FullscreenModal = memo((_props: FullscreenModalProps) => {
+  const mergedProps = useComponentConfig('FullscreenModal', _props);
+  const {
+    focusTabIndexElements,
+    logo,
+    visible,
+    onRequestClose,
+    primaryContent,
+    primaryContentClassName,
+    secondaryContent,
+    secondaryContentClassName,
+    title,
+    testID,
+    zIndex,
+    disablePortal,
+    contentContainerClassName,
+    hideDivider,
+    showSecondaryContentDivider,
+    role,
+    onDidClose,
+    shouldCloseOnEscPress = true,
+    disableFocusTrap,
+    restoreFocusOnUnmount = true,
+    accessibilityLabelledBy,
+    accessibilityLabel,
+    closeAccessibilityLabel,
+    contentStyle,
+  } = mergedProps;
   const { labelledBySource, labelledBy, label } = useA11yLabels({
     accessibilityLabelledBy,
     accessibilityLabel,

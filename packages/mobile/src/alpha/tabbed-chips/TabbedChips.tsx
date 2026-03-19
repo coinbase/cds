@@ -6,6 +6,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
 import { Box, type BoxProps, OverflowGradient } from '../../layout';
 import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs';
@@ -92,7 +93,11 @@ type TabbedChipsFC = <TabId extends string = string>(
 
 const TabbedChipsComponent = memo(
   forwardRef(function TabbedChips<TabId extends string = string>(
-    {
+    _props: TabbedChipsProps<TabId>,
+    ref: React.ForwardedRef<View>,
+  ) {
+    const mergedProps = useComponentConfig('TabbedChips', _props);
+    const {
       tabs,
       activeTab = tabs[0],
       testID = 'tabbed-chips',
@@ -104,9 +109,7 @@ const TabbedChipsComponent = memo(
       styles,
       autoScrollOffset = 30,
       ...accessibilityProps
-    }: TabbedChipsProps<TabId>,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const [scrollTarget, setScrollTarget] = useState<View | null>(null);
     const {
       scrollRef,

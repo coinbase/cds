@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { type SharedProps } from '@coinbase/cds-common';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons';
 import { HStack, VStack, type VStackProps } from '../layout';
@@ -44,6 +45,8 @@ export type NumpadProps = {
 } & SharedProps &
   VStackProps;
 
+export type NumpadBaseProps = NumpadProps;
+
 const buttonValues: NumpadValue[][] = [
   [1, 2, 3],
   [4, 5, 6],
@@ -66,8 +69,9 @@ const styles = StyleSheet.create({
 });
 
 export const Numpad = memo(
-  forwardRef(function Numpad(
-    {
+  forwardRef(function Numpad(_props: NumpadProps, forwardedRef: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('Numpad', _props);
+    const {
       separator = '.',
       disabled,
       onPress,
@@ -83,9 +87,7 @@ export const Numpad = memo(
       gap = 2,
       feedback,
       ...props
-    }: NumpadProps,
-    forwardedRef: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const buttons = useMemo(() => {
       return buttonValues.map((values, i) => {
         return (

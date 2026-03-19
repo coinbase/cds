@@ -2,6 +2,7 @@ import React, { forwardRef, useMemo } from 'react';
 import { type DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { Box, type BoxBaseProps } from './Box';
 
@@ -60,7 +61,11 @@ type GridComponent = (<AsComponent extends React.ElementType = GridDefaultElemen
 
 export const Grid: GridComponent = forwardRef<React.ReactElement<GridBaseProps>, GridBaseProps>(
   <AsComponent extends React.ElementType>(
-    {
+    _props: GridProps<AsComponent>,
+    ref?: Polymorphic.Ref<AsComponent>,
+  ) => {
+    const mergedProps = useComponentConfig('Grid', _props);
+    const {
       as,
       rows,
       columns,
@@ -69,9 +74,7 @@ export const Grid: GridComponent = forwardRef<React.ReactElement<GridBaseProps>,
       display = 'grid',
       templateColumns,
       ...props
-    }: GridProps<AsComponent>,
-    ref?: Polymorphic.Ref<AsComponent>,
-  ) => {
+    } = mergedProps;
     const Component = (as ?? gridDefaultElement) satisfies React.ElementType;
     const isImplicit = !columns && !templateColumns && !!columnMin;
 

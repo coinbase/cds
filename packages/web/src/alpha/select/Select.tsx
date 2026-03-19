@@ -3,6 +3,7 @@ import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating
 
 import { cx } from '../../cx';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHasMounted } from '../../hooks/useHasMounted';
 import { Box } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
@@ -14,7 +15,12 @@ import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
-import { type SelectDropdownProps, type SelectProps, type SelectType } from './types';
+import {
+  type SelectBaseProps,
+  type SelectDropdownProps,
+  type SelectProps,
+  type SelectType,
+} from './types';
 
 // Re-export all types for backward compatibility
 export type {
@@ -40,6 +46,8 @@ export type {
 // Re-export the type guard function
 export { isSelectOptionGroup } from './types';
 
+export type AlphaSelectBaseProps = SelectBaseProps;
+
 export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
   dropdown: 'listbox',
   option: 'option',
@@ -60,7 +68,14 @@ type SelectComponent = <
 const SelectBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: SelectProps<Type, SelectOptionValue>,
+      ref: React.Ref<SelectRef>,
+    ) => {
+      const mergedProps = useComponentConfig(
+        'Select',
+        _props as AlphaSelectBaseProps,
+      ) as SelectProps<Type, SelectOptionValue>;
+      const {
         value,
         type = 'single' as Type,
         options,
@@ -104,9 +119,7 @@ const SelectBase = memo(
         className,
         classNames,
         testID,
-      }: SelectProps<Type, SelectOptionValue>,
-      ref: React.Ref<SelectRef>,
-    ) => {
+      } = mergedProps;
       const hasMounted = useHasMounted();
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;

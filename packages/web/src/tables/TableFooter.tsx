@@ -1,10 +1,16 @@
 import React, { memo } from 'react';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
 import { TableSection, type TableSectionProps } from './TableSection';
 
-export type TableFooterProps = TableSectionProps;
+export type TableFooterBaseProps = TableSectionProps;
 
-export const TableFooter = memo(({ children, testID, ...props }: TableFooterProps) => {
+export type TableFooterProps = TableFooterBaseProps;
+
+export const TableFooter = memo((_props: TableFooterProps) => {
+  const mergedProps = useComponentConfig('TableFooter', _props);
+  const { children, testID, ...props } = mergedProps;
   return (
     <TableSection as="tfoot" data-testid={testID} {...props}>
       {children}

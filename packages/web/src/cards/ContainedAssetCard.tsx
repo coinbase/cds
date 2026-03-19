@@ -92,25 +92,26 @@ const focusRingCss = css`
  * />
  * ```
  */
-export const ContainedAssetCard = ({
-  header,
-  title,
-  subtitle,
-  description,
-  size = 's',
-  children,
-  className,
-  flexDirection = 'row',
-  background = 'bgAlternate',
-  borderRadius = 500,
-  height = containedAssetCardHeight,
-  width = size === 'l' ? containedAssetCardLargeWidth : containedAssetCardSmallWidth,
-  minWidth = size === 'l' ? containedAssetCardLargeMinWidth : containedAssetCardSmallMinWidth,
-  overflow = 'hidden',
-  onClick,
-  testID = 'contained-asset-card',
-  ...props
-}: ContainedAssetCardProps) => {
+export const ContainedAssetCard = (_props: ContainedAssetCardProps) => {
+  const {
+    header,
+    title,
+    subtitle,
+    description,
+    size = 's',
+    children,
+    className,
+    flexDirection = 'row',
+    background = 'bgAlternate',
+    borderRadius = 500,
+    height = containedAssetCardHeight,
+    width = size === 'l' ? containedAssetCardLargeWidth : containedAssetCardSmallWidth,
+    minWidth = size === 'l' ? containedAssetCardLargeMinWidth : containedAssetCardSmallMinWidth,
+    overflow = 'hidden',
+    onClick,
+    testID = 'contained-asset-card',
+    ...props
+  } = _props;
   return (
     <Box
       as={onClick ? 'button' : 'div'}

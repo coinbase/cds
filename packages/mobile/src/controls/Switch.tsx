@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, type View } from 'react-native';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { Interactable } from '../system/Interactable';
@@ -95,9 +96,11 @@ const SwitchIcon = ({
 };
 
 const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends string>(
-  { children, ...props }: SwitchProps<SwitchValue>,
+  _props: SwitchProps<SwitchValue>,
   ref: React.ForwardedRef<View>,
 ) {
+  const mergedProps = useComponentConfig('Switch', _props);
+  const { children, ...props } = mergedProps;
   const theme = useTheme();
   const { switchHeight } = theme.controlSize;
 

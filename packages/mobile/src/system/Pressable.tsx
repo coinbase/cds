@@ -9,6 +9,7 @@ import {
 import type { ComponentEventHandlerProps, ValidateProps } from '@coinbase/cds-common';
 import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { usePressAnimation } from '../hooks/usePressAnimation';
 import { Haptics } from '../utils/haptics';
 
@@ -58,8 +59,9 @@ export type PressableBaseProps = AccessibilityProps &
 export type PressableProps = PressableBaseProps & NativePressableProps;
 
 export const Pressable = memo(
-  forwardRef(function Pressable(
-    {
+  forwardRef(function Pressable(_props: PressableProps, forwardedRef: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('Pressable', _props);
+    const {
       // Interactable
       children,
       disabled,
@@ -159,9 +161,7 @@ export const Pressable = memo(
       debounceTime,
       testID,
       ...props
-    }: PressableProps,
-    forwardedRef: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const [pressIn, pressOut, pressScale] = usePressAnimation();
     const [pressed, setPressed] = useState(false);
     const lastPressedTimeStampRef = useRef<number | null>(null);

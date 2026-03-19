@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { Box, type BoxBaseProps } from './Box';
 
@@ -25,9 +26,11 @@ export const HStack: HStackComponent = forwardRef<
   HStackBaseProps
 >(
   <AsComponent extends React.ElementType>(
-    { as, flexDirection = 'row', ...props }: HStackProps<AsComponent>,
+    _props: HStackProps<AsComponent>,
     ref?: Polymorphic.Ref<AsComponent>,
   ) => {
+    const mergedProps = useComponentConfig('HStack', _props);
+    const { as, flexDirection = 'row', ...props } = mergedProps;
     const Component = (as ?? hStackDefaultElement) satisfies React.ElementType;
 
     return <Box ref={ref} as={Component} flexDirection={flexDirection} {...props} />;

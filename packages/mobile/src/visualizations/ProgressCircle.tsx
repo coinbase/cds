@@ -10,6 +10,7 @@ import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgress
 import { isTest } from '@coinbase/cds-utils';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout';
 
@@ -144,123 +145,120 @@ const ProgressCircleInner = memo(
 );
 
 export const ProgressCircle = memo(
-  forwardRef(
-    (
-      {
-        weight = 'normal',
-        progress,
-        // Default is empty string due to iOS VoiceOver repeating percentage multiple times when
-        // a11y label isn't specified
-        accessibilityLabel = '',
-        color = 'bgPrimary',
-        disabled,
-        disableAnimateOnMount,
-        testID,
-        hideContent,
-        hideText,
-        size,
-        contentNode,
-        style,
-        styles,
-        onAnimationEnd,
-        onAnimationStart,
-      }: ProgressCircleProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const theme = useTheme();
-      const strokeWidth = useProgressSize(weight);
+  forwardRef((_props: ProgressCircleProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('ProgressCircle', _props);
+    const {
+      weight = 'normal',
+      progress,
+      // Default is empty string due to iOS VoiceOver repeating percentage multiple times when
+      // a11y label isn't specified
+      accessibilityLabel = '',
+      color = 'bgPrimary',
+      disabled,
+      disableAnimateOnMount,
+      testID,
+      hideContent,
+      hideText,
+      size,
+      contentNode,
+      style,
+      styles,
+      onAnimationEnd,
+      onAnimationStart,
+    } = mergedProps;
+    const theme = useTheme();
+    const strokeWidth = useProgressSize(weight);
 
-      const visSize = size ?? '100%';
+    const visSize = size ?? '100%';
 
-      const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
+    const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
-      const textContainerStyle = useMemo(
-        () => [{ padding: strokeWidth }, styles?.textContainer],
-        [strokeWidth, styles?.textContainer],
-      );
+    const textContainerStyle = useMemo(
+      () => [{ padding: strokeWidth }, styles?.textContainer],
+      [strokeWidth, styles?.textContainer],
+    );
 
-      return (
-        <VisualizationContainer height={visSize} width={visSize}>
-          {({ width, height, circleSize }: VisualizationContainerDimension) => (
+    return (
+      <VisualizationContainer height={visSize} width={visSize}>
+        {({ width, height, circleSize }: VisualizationContainerDimension) => (
+          <Box
+            ref={forwardedRef}
+            accessible
+            accessibilityLabel={accessibilityLabel}
+            accessibilityRole="progressbar"
+            accessibilityValue={{
+              min: 0,
+              max: 100,
+              now: Math.round(progress * 100),
+            }}
+            alignItems="center"
+            height={height}
+            justifyContent="center"
+            style={rootStyle}
+            testID={testID}
+            width={width}
+          >
             <Box
-              ref={forwardedRef}
-              accessible
-              accessibilityLabel={accessibilityLabel}
-              accessibilityRole="progressbar"
-              accessibilityValue={{
-                min: 0,
-                max: 100,
-                now: Math.round(progress * 100),
-              }}
-              alignItems="center"
-              height={height}
-              justifyContent="center"
-              style={rootStyle}
-              testID={testID}
-              width={width}
+              flexGrow={0}
+              flexShrink={0}
+              height={circleSize}
+              style={styles?.svgContainer}
+              width={circleSize}
             >
-              <Box
-                flexGrow={0}
-                flexShrink={0}
+              <Svg
+                key={circleSize}
                 height={circleSize}
-                style={styles?.svgContainer}
+                style={styles?.svg}
+                viewBox={`0 0 ${circleSize} ${circleSize}`}
                 width={circleSize}
               >
-                <Svg
-                  key={circleSize}
-                  height={circleSize}
-                  style={styles?.svg}
-                  viewBox={`0 0 ${circleSize} ${circleSize}`}
-                  width={circleSize}
-                >
-                  <G origin={`${circleSize / 2}, ${circleSize / 2}`} rotation={-90}>
-                    <Circle
-                      {...getProgressCircleParams({
-                        size: circleSize,
-                        strokeWidth,
-                        stroke: theme.color.bgLine,
-                      })}
-                      {...(styles?.circle || {})}
-                    />
-                    <ProgressCircleInner
-                      color={color}
-                      disableAnimateOnMount={disableAnimateOnMount}
-                      onAnimationEnd={onAnimationEnd}
-                      onAnimationStart={onAnimationStart}
-                      progress={progress}
-                      size={circleSize}
-                      style={styles?.progress}
-                      visuallyDisabled={disabled}
-                      weight={weight}
-                    />
-                  </G>
-                </Svg>
-                {!hideText && !hideContent && (
-                  <Box height="100%" position="absolute" style={textContainerStyle} width="100%">
-                    {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
-                    <Box
-                      alignItems="center"
-                      borderRadius={1000}
-                      height="100%"
-                      justifyContent="center"
-                      overflow="hidden"
-                      width="100%"
-                    >
-                      {contentNode ?? (
-                        <DefaultProgressCircleContent
-                          disableAnimateOnMount={disableAnimateOnMount}
-                          disabled={disabled}
-                          progress={progress}
-                        />
-                      )}
-                    </Box>
+                <G origin={`${circleSize / 2}, ${circleSize / 2}`} rotation={-90}>
+                  <Circle
+                    {...getProgressCircleParams({
+                      size: circleSize,
+                      strokeWidth,
+                      stroke: theme.color.bgLine,
+                    })}
+                    {...(styles?.circle || {})}
+                  />
+                  <ProgressCircleInner
+                    color={color}
+                    disableAnimateOnMount={disableAnimateOnMount}
+                    onAnimationEnd={onAnimationEnd}
+                    onAnimationStart={onAnimationStart}
+                    progress={progress}
+                    size={circleSize}
+                    style={styles?.progress}
+                    visuallyDisabled={disabled}
+                    weight={weight}
+                  />
+                </G>
+              </Svg>
+              {!hideText && !hideContent && (
+                <Box height="100%" position="absolute" style={textContainerStyle} width="100%">
+                  {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
+                  <Box
+                    alignItems="center"
+                    borderRadius={1000}
+                    height="100%"
+                    justifyContent="center"
+                    overflow="hidden"
+                    width="100%"
+                  >
+                    {contentNode ?? (
+                      <DefaultProgressCircleContent
+                        disableAnimateOnMount={disableAnimateOnMount}
+                        disabled={disabled}
+                        progress={progress}
+                      />
+                    )}
                   </Box>
-                )}
-              </Box>
+                </Box>
+              )}
             </Box>
-          )}
-        </VisualizationContainer>
-      );
-    },
-  ),
+          </Box>
+        )}
+      </VisualizationContainer>
+    );
+  }),
 );

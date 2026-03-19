@@ -11,6 +11,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
 
 import { InputIconButton } from '../controls/InputIconButton';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, VStack } from '../layout';
 import { getMotionProps } from '../motion/useMotionProps';
 import { Popover } from '../overlays/popover/Popover';
@@ -97,6 +98,8 @@ export type DatePickerProps = {
   > &
   Pick<PopoverProps, 'showOverlay'>;
 
+export type DatePickerBaseProps = DatePickerProps;
+
 const calendarAnimation: AnimationProps = getMotionProps({
   enterConfigs: [
     animateDropdownOpacityInConfig,
@@ -115,239 +118,236 @@ const calendarPopoverPosition: PopoverContentPositionConfig = {
 };
 
 export const DatePicker = memo(
-  forwardRef<HTMLDivElement, DatePickerProps>(
-    (
-      {
+  forwardRef<HTMLDivElement, DatePickerProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('DatePicker', _props);
+    const {
+      date,
+      onChangeDate,
+      error,
+      onErrorDate,
+      required,
+      disabled,
+      seedDate,
+      disabledDates,
+      highlightedDates,
+      minDate,
+      maxDate,
+      requiredError = 'This field is required',
+      invalidDateError = 'Please enter a valid date',
+      disabledDateError = 'Date unavailable',
+      label,
+      restoreFocusOnUnmount = true,
+      accessibilityLabel,
+      accessibilityLabelledBy,
+      calendarIconButtonAccessibilityLabel,
+      nextArrowAccessibilityLabel,
+      previousArrowAccessibilityLabel,
+      compact,
+      variant,
+      helperText,
+      showOverlay,
+      defaultOpen = false,
+      calendarStyle,
+      calendarClassName,
+      dateInputStyle,
+      dateInputClassName,
+      width = '100%',
+      onOpen,
+      onClose,
+      onConfirm,
+      onCancel,
+      onChange,
+      ...props
+    } = mergedProps;
+    const [showCalendar, setShowCalendar] = useState<boolean>(defaultOpen);
+    const calendarRef = useRef<HTMLDivElement | null>(null);
+
+    /**
+     * Be careful to preserve the correct event orders
+     *   1. Selecting a date with the Calendar:                     onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose
+     *   2. Closing the Calendar without selecting a date:          onOpen -> onCancel -> onClose
+     *   3. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     *   4. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     */
+
+    const handleOpenCalendar = useCallback(
+      (event: React.MouseEvent) => {
+        event.stopPropagation(); // Prevents DateInput's IconButton click event from propagating to the DateInput's TextInput
+        onOpen?.();
+        setShowCalendar(true);
+        // Handle setting focus after opening the Calendar Popover - defaults to selectedDate, then seedDate, then today, then first of month
+        setTimeout(() => {
+          const dateString = getISOStringLocal(date || seedDate || new Date());
+          const element = calendarRef.current?.querySelector<HTMLElement>(
+            `[data-calendar-date="${dateString}"]`,
+          );
+          if (element) element.focus();
+          else calendarRef.current?.querySelector<HTMLElement>('[data-calendar-date]')?.focus();
+        }, 10);
+      },
+      [date, seedDate, onOpen],
+    );
+
+    const handleCloseCalendar = useCallback(() => {
+      onClose?.();
+      setShowCalendar(false);
+    }, [onClose]);
+
+    const handleCancelCalendar = useCallback(() => {
+      onCancel?.();
+      handleCloseCalendar();
+    }, [onCancel, handleCloseCalendar]);
+
+    const handleConfirmCalendarDate = useCallback(
+      (date: Date | null) => {
+        onConfirm?.();
+        onChangeDate(date);
+        if (error && error.type !== 'custom') onErrorDate(null);
+        // Wait to close the calendar for a bit, so we can see the selected date change
+        setTimeout(() => {
+          handleCloseCalendar();
+        }, 10);
+      },
+      [onConfirm, onChangeDate, error, onErrorDate, handleCloseCalendar],
+    );
+
+    const dateInputCalendarButton = useMemo(
+      () => (
+        <VStack paddingEnd={0.5}>
+          <InputIconButton
+            disableInheritFocusStyle
+            transparent
+            accessibilityLabel={
+              calendarIconButtonAccessibilityLabel ??
+              (showCalendar ? 'Close calendar' : 'Open calendar')
+            }
+            name="calendarEmpty"
+            onClick={handleOpenCalendar}
+            variant="secondary"
+          />
+        </VStack>
+      ),
+      [handleOpenCalendar, showCalendar, calendarIconButtonAccessibilityLabel],
+    );
+
+    const dateInput = useMemo(
+      () => (
+        <DateInput
+          {...props}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityLabelledBy={accessibilityLabelledBy}
+          className={dateInputClassName}
+          compact={compact}
+          date={date}
+          disabled={disabled}
+          disabledDateError={disabledDateError}
+          disabledDates={disabledDates}
+          end={dateInputCalendarButton}
+          error={error}
+          helperText={helperText}
+          invalidDateError={invalidDateError}
+          label={label}
+          maxDate={maxDate}
+          minDate={minDate}
+          onChange={onChange}
+          onChangeDate={onChangeDate}
+          onErrorDate={onErrorDate}
+          required={required}
+          requiredError={requiredError}
+          style={dateInputStyle}
+          variant={variant}
+        />
+      ),
+      [
         date,
         onChangeDate,
         error,
         onErrorDate,
         required,
+        compact,
+        disabled,
+        dateInputCalendarButton,
+        requiredError,
+        invalidDateError,
+        disabledDates,
+        minDate,
+        maxDate,
+        disabledDateError,
+        onChange,
+        label,
+        accessibilityLabel,
+        accessibilityLabelledBy,
+        helperText,
+        variant,
+        dateInputClassName,
+        dateInputStyle,
+        props,
+      ],
+    );
+
+    const calendar = useMemo(
+      () => (
+        <MotionVStack
+          background
+          borderRadius={400}
+          elevation={2}
+          overflow="auto"
+          role="menu"
+          tabIndex={0}
+          zIndex={zIndex.dropdown}
+          {...calendarAnimation}
+        >
+          <Calendar
+            ref={calendarRef}
+            className={calendarClassName}
+            disabled={disabled}
+            disabledDateError={disabledDateError}
+            disabledDates={disabledDates}
+            highlightedDates={highlightedDates}
+            maxDate={maxDate}
+            minDate={minDate}
+            nextArrowAccessibilityLabel={nextArrowAccessibilityLabel}
+            onPressDate={handleConfirmCalendarDate}
+            previousArrowAccessibilityLabel={previousArrowAccessibilityLabel}
+            seedDate={seedDate}
+            selectedDate={date}
+            style={calendarStyle}
+          />
+        </MotionVStack>
+      ),
+      [
+        date,
         disabled,
         seedDate,
         disabledDates,
         highlightedDates,
         minDate,
         maxDate,
-        requiredError = 'This field is required',
-        invalidDateError = 'Please enter a valid date',
-        disabledDateError = 'Date unavailable',
-        label,
-        restoreFocusOnUnmount = true,
-        accessibilityLabel,
-        accessibilityLabelledBy,
-        calendarIconButtonAccessibilityLabel,
-        nextArrowAccessibilityLabel,
-        previousArrowAccessibilityLabel,
-        compact,
-        variant,
-        helperText,
-        showOverlay,
-        defaultOpen = false,
+        disabledDateError,
+        handleConfirmCalendarDate,
+        calendarRef,
         calendarStyle,
         calendarClassName,
-        dateInputStyle,
-        dateInputClassName,
-        width = '100%',
-        onOpen,
-        onClose,
-        onConfirm,
-        onCancel,
-        onChange,
-        ...props
-      },
-      ref,
-    ) => {
-      const [showCalendar, setShowCalendar] = useState<boolean>(defaultOpen);
-      const calendarRef = useRef<HTMLDivElement | null>(null);
+        nextArrowAccessibilityLabel,
+        previousArrowAccessibilityLabel,
+      ],
+    );
 
-      /**
-       * Be careful to preserve the correct event orders
-       *   1. Selecting a date with the Calendar:                     onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose
-       *   2. Closing the Calendar without selecting a date:          onOpen -> onCancel -> onClose
-       *   3. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
-       *   4. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
-       */
-
-      const handleOpenCalendar = useCallback(
-        (event: React.MouseEvent) => {
-          event.stopPropagation(); // Prevents DateInput's IconButton click event from propagating to the DateInput's TextInput
-          onOpen?.();
-          setShowCalendar(true);
-          // Handle setting focus after opening the Calendar Popover - defaults to selectedDate, then seedDate, then today, then first of month
-          setTimeout(() => {
-            const dateString = getISOStringLocal(date || seedDate || new Date());
-            const element = calendarRef.current?.querySelector<HTMLElement>(
-              `[data-calendar-date="${dateString}"]`,
-            );
-            if (element) element.focus();
-            else calendarRef.current?.querySelector<HTMLElement>('[data-calendar-date]')?.focus();
-          }, 10);
-        },
-        [date, seedDate, onOpen],
-      );
-
-      const handleCloseCalendar = useCallback(() => {
-        onClose?.();
-        setShowCalendar(false);
-      }, [onClose]);
-
-      const handleCancelCalendar = useCallback(() => {
-        onCancel?.();
-        handleCloseCalendar();
-      }, [onCancel, handleCloseCalendar]);
-
-      const handleConfirmCalendarDate = useCallback(
-        (date: Date | null) => {
-          onConfirm?.();
-          onChangeDate(date);
-          if (error && error.type !== 'custom') onErrorDate(null);
-          // Wait to close the calendar for a bit, so we can see the selected date change
-          setTimeout(() => {
-            handleCloseCalendar();
-          }, 10);
-        },
-        [onConfirm, onChangeDate, error, onErrorDate, handleCloseCalendar],
-      );
-
-      const dateInputCalendarButton = useMemo(
-        () => (
-          <VStack paddingEnd={0.5}>
-            <InputIconButton
-              disableInheritFocusStyle
-              transparent
-              accessibilityLabel={
-                calendarIconButtonAccessibilityLabel ??
-                (showCalendar ? 'Close calendar' : 'Open calendar')
-              }
-              name="calendarEmpty"
-              onClick={handleOpenCalendar}
-              variant="secondary"
-            />
-          </VStack>
-        ),
-        [handleOpenCalendar, showCalendar, calendarIconButtonAccessibilityLabel],
-      );
-
-      const dateInput = useMemo(
-        () => (
-          <DateInput
-            {...props}
-            accessibilityLabel={accessibilityLabel}
-            accessibilityLabelledBy={accessibilityLabelledBy}
-            className={dateInputClassName}
-            compact={compact}
-            date={date}
-            disabled={disabled}
-            disabledDateError={disabledDateError}
-            disabledDates={disabledDates}
-            end={dateInputCalendarButton}
-            error={error}
-            helperText={helperText}
-            invalidDateError={invalidDateError}
-            label={label}
-            maxDate={maxDate}
-            minDate={minDate}
-            onChange={onChange}
-            onChangeDate={onChangeDate}
-            onErrorDate={onErrorDate}
-            required={required}
-            requiredError={requiredError}
-            style={dateInputStyle}
-            variant={variant}
-          />
-        ),
-        [
-          date,
-          onChangeDate,
-          error,
-          onErrorDate,
-          required,
-          compact,
-          disabled,
-          dateInputCalendarButton,
-          requiredError,
-          invalidDateError,
-          disabledDates,
-          minDate,
-          maxDate,
-          disabledDateError,
-          onChange,
-          label,
-          accessibilityLabel,
-          accessibilityLabelledBy,
-          helperText,
-          variant,
-          dateInputClassName,
-          dateInputStyle,
-          props,
-        ],
-      );
-
-      const calendar = useMemo(
-        () => (
-          <MotionVStack
-            background
-            borderRadius={400}
-            elevation={2}
-            overflow="auto"
-            role="menu"
-            tabIndex={0}
-            zIndex={zIndex.dropdown}
-            {...calendarAnimation}
-          >
-            <Calendar
-              ref={calendarRef}
-              className={calendarClassName}
-              disabled={disabled}
-              disabledDateError={disabledDateError}
-              disabledDates={disabledDates}
-              highlightedDates={highlightedDates}
-              maxDate={maxDate}
-              minDate={minDate}
-              nextArrowAccessibilityLabel={nextArrowAccessibilityLabel}
-              onPressDate={handleConfirmCalendarDate}
-              previousArrowAccessibilityLabel={previousArrowAccessibilityLabel}
-              seedDate={seedDate}
-              selectedDate={date}
-              style={calendarStyle}
-            />
-          </MotionVStack>
-        ),
-        [
-          date,
-          disabled,
-          seedDate,
-          disabledDates,
-          highlightedDates,
-          minDate,
-          maxDate,
-          disabledDateError,
-          handleConfirmCalendarDate,
-          calendarRef,
-          calendarStyle,
-          calendarClassName,
-          nextArrowAccessibilityLabel,
-          previousArrowAccessibilityLabel,
-        ],
-      );
-
-      return (
-        <Box ref={ref} width={width}>
-          <Popover
-            block
-            respectNegativeTabIndex
-            content={calendar}
-            contentPosition={calendarPopoverPosition}
-            onClose={handleCancelCalendar}
-            restoreFocusOnUnmount={restoreFocusOnUnmount}
-            showOverlay={showOverlay}
-            visible={showCalendar}
-          >
-            {dateInput}
-          </Popover>
-        </Box>
-      );
-    },
-  ),
+    return (
+      <Box ref={ref} width={width}>
+        <Popover
+          block
+          respectNegativeTabIndex
+          content={calendar}
+          contentPosition={calendarPopoverPosition}
+          onClose={handleCancelCalendar}
+          restoreFocusOnUnmount={restoreFocusOnUnmount}
+          showOverlay={showOverlay}
+          visible={showCalendar}
+        >
+          {dateInput}
+        </Popover>
+      </Box>
+    );
+  }),
 );

@@ -11,6 +11,7 @@ import NativeDatePicker from 'react-native-date-picker';
 import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 
 import { InputIconButton } from '../controls/InputIconButton';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, VStack } from '../layout';
 
 import { DateInput, type DateInputProps } from './DateInput';
@@ -65,138 +66,137 @@ export type DatePickerProps = {
   | 'style'
 >;
 
+export type DatePickerBaseProps = DatePickerProps;
+
 export const DatePicker = memo(
-  forwardRef<View, DatePickerProps>(
-    (
-      {
-        date,
-        onChangeDate,
-        error,
-        onErrorDate,
-        required,
-        disabled,
-        seedDate,
-        minDate,
-        maxDate,
-        requiredError = 'This field is required',
-        invalidDateError = 'Please enter a valid date',
-        disabledDateError = 'Date unavailable',
-        label,
-        accessibilityLabel,
-        accessibilityLabelledBy,
-        calendarIconButtonAccessibilityLabel,
-        dateInputStyle,
-        compact,
-        variant,
-        helperText,
-        width = '100%',
-        onOpen,
-        onClose,
-        onConfirm,
-        onCancel,
-        onChange,
-        ...props
-      },
-      ref,
-    ) => {
-      const [showNativePicker, setShowNativePicker] = useState(false);
-      const dateInputRef = useRef<TextInput | null>(null);
+  forwardRef<View, DatePickerProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('DatePicker', _props);
+    const {
+      date,
+      onChangeDate,
+      error,
+      onErrorDate,
+      required,
+      disabled,
+      seedDate,
+      minDate,
+      maxDate,
+      requiredError = 'This field is required',
+      invalidDateError = 'Please enter a valid date',
+      disabledDateError = 'Date unavailable',
+      label,
+      accessibilityLabel,
+      accessibilityLabelledBy,
+      calendarIconButtonAccessibilityLabel,
+      dateInputStyle,
+      compact,
+      variant,
+      helperText,
+      width = '100%',
+      onOpen,
+      onClose,
+      onConfirm,
+      onCancel,
+      onChange,
+      ...props
+    } = mergedProps;
+    const [showNativePicker, setShowNativePicker] = useState(false);
+    const dateInputRef = useRef<TextInput | null>(null);
 
-      const today = useMemo(() => new Date(), []);
+    const today = useMemo(() => new Date(), []);
 
-      /**
-       * Be careful to preserve the correct event orders
-       *   1. Selecting a date with the native picker:                onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose
-       *   2. Closing the native picker without selecting a date:     onOpen -> onCancel -> onClose
-       *   3. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
-       *   4. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
-       */
+    /**
+     * Be careful to preserve the correct event orders
+     *   1. Selecting a date with the native picker:                onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose
+     *   2. Closing the native picker without selecting a date:     onOpen -> onCancel -> onClose
+     *   3. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     *   4. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     */
 
-      const handleOpenNativePicker = useCallback(() => {
-        onOpen?.();
-        setShowNativePicker(true);
-      }, [onOpen]);
+    const handleOpenNativePicker = useCallback(() => {
+      onOpen?.();
+      setShowNativePicker(true);
+    }, [onOpen]);
 
-      const handleCloseNativePicker = useCallback(() => {
-        onClose?.();
-        setShowNativePicker(false);
-      }, [onClose]);
+    const handleCloseNativePicker = useCallback(() => {
+      onClose?.();
+      setShowNativePicker(false);
+    }, [onClose]);
 
-      const handleConfirmNativePicker = useCallback(
-        (date: Date) => {
-          onConfirm?.();
-          onChangeDate(date);
-          if (error && error.type !== 'custom') onErrorDate(null);
-          handleCloseNativePicker();
-          dateInputRef.current?.focus();
-        },
-        [onChangeDate, onConfirm, error, onErrorDate, handleCloseNativePicker],
-      );
-
-      const handleCancelNativePicker = useCallback(() => {
-        onCancel?.();
+    const handleConfirmNativePicker = useCallback(
+      (date: Date) => {
+        onConfirm?.();
+        onChangeDate(date);
+        if (error && error.type !== 'custom') onErrorDate(null);
         handleCloseNativePicker();
-      }, [onCancel, handleCloseNativePicker]);
+        dateInputRef.current?.focus();
+      },
+      [onChangeDate, onConfirm, error, onErrorDate, handleCloseNativePicker],
+    );
 
-      const dateInputCalendarButton = useMemo(
-        () => (
-          <VStack paddingEnd={0.5}>
-            <InputIconButton
-              disableInheritFocusStyle
-              transparent
-              accessibilityLabel={
-                calendarIconButtonAccessibilityLabel ??
-                (showNativePicker ? 'Close calendar' : 'Open calendar')
-              }
-              name="calendarEmpty"
-              onPress={handleOpenNativePicker}
-              variant="secondary"
-            />
-          </VStack>
-        ),
-        [handleOpenNativePicker, showNativePicker, calendarIconButtonAccessibilityLabel],
-      );
+    const handleCancelNativePicker = useCallback(() => {
+      onCancel?.();
+      handleCloseNativePicker();
+    }, [onCancel, handleCloseNativePicker]);
 
-      return (
-        <Box ref={ref} width={width}>
-          <DateInput
-            ref={dateInputRef}
-            {...props}
-            accessibilityLabel={accessibilityLabel}
-            accessibilityLabelledBy={accessibilityLabelledBy}
-            compact={compact}
-            date={date}
-            disabled={disabled}
-            disabledDateError={disabledDateError}
-            end={dateInputCalendarButton}
-            error={error}
-            helperText={helperText}
-            invalidDateError={invalidDateError}
-            label={label}
-            maxDate={maxDate}
-            minDate={minDate}
-            onChange={onChange}
-            onChangeDate={onChangeDate}
-            onErrorDate={onErrorDate}
-            required={required}
-            requiredError={requiredError}
-            style={dateInputStyle}
-            variant={variant}
+    const dateInputCalendarButton = useMemo(
+      () => (
+        <VStack paddingEnd={0.5}>
+          <InputIconButton
+            disableInheritFocusStyle
+            transparent
+            accessibilityLabel={
+              calendarIconButtonAccessibilityLabel ??
+              (showNativePicker ? 'Close calendar' : 'Open calendar')
+            }
+            name="calendarEmpty"
+            onPress={handleOpenNativePicker}
+            variant="secondary"
           />
-          {showNativePicker && (
-            <NativeDatePicker
-              modal
-              date={date || seedDate || today}
-              maximumDate={maxDate}
-              minimumDate={minDate}
-              mode="date"
-              onCancel={handleCancelNativePicker}
-              onConfirm={handleConfirmNativePicker}
-              open={showNativePicker}
-            />
-          )}
-        </Box>
-      );
-    },
-  ),
+        </VStack>
+      ),
+      [handleOpenNativePicker, showNativePicker, calendarIconButtonAccessibilityLabel],
+    );
+
+    return (
+      <Box ref={ref} width={width}>
+        <DateInput
+          ref={dateInputRef}
+          {...props}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityLabelledBy={accessibilityLabelledBy}
+          compact={compact}
+          date={date}
+          disabled={disabled}
+          disabledDateError={disabledDateError}
+          end={dateInputCalendarButton}
+          error={error}
+          helperText={helperText}
+          invalidDateError={invalidDateError}
+          label={label}
+          maxDate={maxDate}
+          minDate={minDate}
+          onChange={onChange}
+          onChangeDate={onChangeDate}
+          onErrorDate={onErrorDate}
+          required={required}
+          requiredError={requiredError}
+          style={dateInputStyle}
+          variant={variant}
+        />
+        {showNativePicker && (
+          <NativeDatePicker
+            modal
+            date={date || seedDate || today}
+            maximumDate={maxDate}
+            minimumDate={minDate}
+            mode="date"
+            onCancel={handleCancelNativePicker}
+            onConfirm={handleConfirmNativePicker}
+            open={showNativePicker}
+          />
+        )}
+      </Box>
+    );
+  }),
 );

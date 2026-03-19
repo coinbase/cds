@@ -5,6 +5,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { borderStyle, pinStyle } from '../styles/booleanStyles';
 import type { fontFamily } from '../styles/responsive/base';
 import { getStyles, type ResponsiveProp, type StyleProps } from '../styles/styleProps';
@@ -54,7 +55,11 @@ type BoxComponent = (<AsComponent extends React.ElementType = BoxDefaultElement>
 export const Box: BoxComponent = memo(
   forwardRef<React.ReactElement<BoxBaseProps>, BoxBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: Polymorphic.Props<AsComponent, BoxBaseProps>,
+      ref: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('Box', _props);
+      const {
         children,
         as,
         accessibilityLabel,
@@ -158,9 +163,7 @@ export const Box: BoxComponent = memo(
         opacity,
         // End style props
         ...props
-      }: Polymorphic.Props<AsComponent, BoxBaseProps>,
-      ref: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = as ?? boxDefaultElement;
 
       const inlineStyle = useMemo(

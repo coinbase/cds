@@ -168,10 +168,8 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
     }
 >;
 
-export type ButtonProps<AsComponent extends React.ElementType = ButtonDefaultElement> = Polymorphic.Props<
-  AsComponent,
-  ButtonBaseProps
->;
+export type ButtonProps<AsComponent extends React.ElementType = ButtonDefaultElement> =
+  Polymorphic.Props<AsComponent, ButtonBaseProps>;
 
 type ButtonComponent = (<AsComponent extends React.ElementType = ButtonDefaultElement>(
   props: ButtonProps<AsComponent>,

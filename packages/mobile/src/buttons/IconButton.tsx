@@ -10,6 +10,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
@@ -37,26 +38,28 @@ export type IconButtonBaseProps = SharedProps &
 
 export type IconButtonProps = IconButtonBaseProps;
 
-export const IconButton = memo(function IconButton({
-  name,
-  active,
-  variant = 'secondary',
-  transparent,
-  compact = true,
-  background,
-  color,
-  borderColor,
-  iconSize = compact ? 's' : 'm',
-  borderWidth = 100,
-  borderRadius = 1000,
-  feedback = compact ? 'light' : 'normal',
-  flush,
-  loading,
-  style,
-  accessibilityHint,
-  accessibilityLabel,
-  ...props
-}: IconButtonProps) {
+export const IconButton = memo(function IconButton(_props: IconButtonProps) {
+  const mergedProps = useComponentConfig('IconButton', _props);
+  const {
+    name,
+    active,
+    variant = 'secondary',
+    transparent,
+    compact = true,
+    background,
+    color,
+    borderColor,
+    iconSize = compact ? 's' : 'm',
+    borderWidth = 100,
+    borderRadius = 1000,
+    feedback = compact ? 'light' : 'normal',
+    flush,
+    loading,
+    style,
+    accessibilityHint,
+    accessibilityLabel,
+    ...props
+  } = mergedProps;
   const theme = useTheme();
 
   const variantMap = transparent ? transparentVariants : variants;

@@ -3,6 +3,7 @@ import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common';
 
 import { CardRoot, type CardRootProps } from '../../cards/CardRoot';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 
 import { DataCardLayout, type DataCardLayoutProps } from './DataCardLayout';
 
@@ -22,21 +23,20 @@ const dataCardContainerProps = {
 };
 
 export const DataCard = memo(
-  forwardRef<View, DataCardProps>(
-    (
-      {
-        title,
-        subtitle,
-        titleAccessory,
-        thumbnail,
-        children,
-        layout,
-        style,
-        styles: { root: rootStyle, ...layoutStyles } = {},
-        ...props
-      },
-      ref,
-    ) => (
+  forwardRef<View, DataCardProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('DataCard', _props);
+    const {
+      title,
+      subtitle,
+      titleAccessory,
+      thumbnail,
+      children,
+      layout,
+      style,
+      styles: { root: rootStyle, ...layoutStyles } = {},
+      ...props
+    } = mergedProps;
+    return (
       <CardRoot ref={ref} style={[style, rootStyle]} {...dataCardContainerProps} {...props}>
         <DataCardLayout
           layout={layout}
@@ -49,8 +49,8 @@ export const DataCard = memo(
           {children}
         </DataCardLayout>
       </CardRoot>
-    ),
-  ),
+    );
+  }),
 );
 
 DataCard.displayName = 'DataCard';

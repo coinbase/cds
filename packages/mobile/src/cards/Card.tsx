@@ -3,6 +3,7 @@ import type { DimensionValue } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
@@ -58,24 +59,26 @@ const getBorderRadiusPinStyle = (borderRadius: number) => ({
   all: {},
 });
 
-export const Card = memo(function OldCard({
-  children,
-  background = 'bg',
-  elevation = 1,
-  size = 'large',
-  onPress,
-  pin,
-  style,
-  width: widthProps,
-  height: heightProps,
-  testID,
-  accessibilityLabel,
-  accessibilityHint,
-  pressableProps,
-  borderRadius = 200,
-  noScaleOnPress,
-  ...props
-}: CardProps) {
+export const Card = memo(function OldCard(_props: CardProps) {
+  const mergedProps = useComponentConfig('Card', _props);
+  const {
+    children,
+    background = 'bg',
+    elevation = 1,
+    size = 'large',
+    onPress,
+    pin,
+    style,
+    width: widthProps,
+    height: heightProps,
+    testID,
+    accessibilityLabel,
+    accessibilityHint,
+    pressableProps,
+    borderRadius = 200,
+    noScaleOnPress,
+    ...props
+  } = mergedProps;
   const width = widthProps ?? cardSizes[size].width;
   const height = heightProps ?? cardSizes[size].height;
   const theme = useTheme();

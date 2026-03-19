@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import { Button } from '../buttons';
 import { useA11yLabels } from '../hooks/useA11yLabels';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { HeroSquare } from '../illustrations';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
@@ -53,6 +54,8 @@ export type FullscreenAlertProps = Pick<AlertProps, 'title' | 'body'> &
     onDismissActionPress?: () => void;
   };
 
+export type FullscreenAlertBaseProps = FullscreenAlertProps;
+
 const centerContentCss = css`
   height: 100%;
   align-items: center;
@@ -79,23 +82,25 @@ const primaryContentCss = css`
   }
 `;
 
-export const FullscreenAlert = memo(function FullscreenAlert({
-  visible,
-  onRequestClose,
-  title,
-  body,
-  heroSquare,
-  preferredActionLabel,
-  onPreferredActionPress,
-  preferredActionVariant,
-  dismissActionLabel,
-  onDismissActionPress,
-  disablePortal,
-  accessibilityLabel,
-  accessibilityLabelledBy,
-  testID,
-  closeAccessibilityLabel,
-}: FullscreenAlertProps) {
+export const FullscreenAlert = memo((_props: FullscreenAlertProps) => {
+  const mergedProps = useComponentConfig('FullscreenAlert', _props);
+  const {
+    visible,
+    onRequestClose,
+    title,
+    body,
+    heroSquare,
+    preferredActionLabel,
+    onPreferredActionPress,
+    preferredActionVariant,
+    dismissActionLabel,
+    onDismissActionPress,
+    disablePortal,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    testID,
+    closeAccessibilityLabel,
+  } = mergedProps;
   const { labelledBySource, labelledBy, label } = useA11yLabels({
     accessibilityLabelledBy,
     accessibilityLabel,

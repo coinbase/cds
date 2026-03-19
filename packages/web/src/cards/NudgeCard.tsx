@@ -152,30 +152,31 @@ export type NudgeCardProps = NudgeCardBaseProps & Omit<BoxProps<BoxDefaultElemen
  * />
  * ```
  */
-export const NudgeCard = ({
-  title,
-  description,
-  pictogram,
-  media,
-  mediaPosition = 'right',
-  action,
-  className,
-  onActionPress,
-  numberOfLines = 3,
-  onDismissPress,
-  width = 327,
-  minWidth = 327,
-  testID = 'nudge-card',
-  accessibilityLabel,
-  maxHeight,
-  maxWidth,
-  background = 'bgAlternate',
-  minHeight,
-  height,
-  aspectRatio,
-  onClick,
-  ...props
-}: NudgeCardProps) => {
+export const NudgeCard = (_props: NudgeCardProps) => {
+  const {
+    title,
+    description,
+    pictogram,
+    media,
+    mediaPosition = 'right',
+    action,
+    className,
+    onActionPress,
+    numberOfLines = 3,
+    onDismissPress,
+    width = 327,
+    minWidth = 327,
+    testID = 'nudge-card',
+    accessibilityLabel,
+    maxHeight,
+    maxWidth,
+    background = 'bgAlternate',
+    minHeight,
+    height,
+    aspectRatio,
+    onClick,
+    ...props
+  } = _props;
   const hasMedia = pictogram || media;
   const paddingBottom = action ? 1 : 2;
   const paddingProps = getCardBodyPaddingProps({

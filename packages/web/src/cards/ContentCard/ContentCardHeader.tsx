@@ -3,6 +3,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { type BoxBaseProps, HStack, VStack } from '../../layout';
 import { Avatar } from '../../media';
 import { Text } from '../../typography/Text';
@@ -61,7 +62,11 @@ type ContentCardHeaderComponent = (<
 export const ContentCardHeader: ContentCardHeaderComponent = memo(
   forwardRef<React.ReactElement<ContentCardHeaderBaseProps>, ContentCardHeaderBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: ContentCardHeaderProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('ContentCardHeader', _props);
+      const {
         as,
         avatar,
         title,
@@ -76,9 +81,7 @@ export const ContentCardHeader: ContentCardHeaderComponent = memo(
         className,
         gap = 1.5,
         ...props
-      }: ContentCardHeaderProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? contentCardHeaderDefaultElement) satisfies React.ElementType;
       const titleNode = useMemo(() => {
         if (typeof title === 'string') {

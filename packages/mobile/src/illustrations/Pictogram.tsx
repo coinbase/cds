@@ -17,6 +17,6 @@ export type PictogramBaseProps = IllustrationBaseProps<'pictogram'> &
 
 export type PictogramProps = PictogramBaseProps;
 
-export const Pictogram = createIllustration('pictogram', pictogramIllustrations);
+export const Pictogram = createIllustration('pictogram', pictogramIllustrations, 'Pictogram');
 
 export type { PictogramName } from '@coinbase/cds-illustrations';

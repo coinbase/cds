@@ -10,6 +10,7 @@ import {
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';
 import { getStyles, type StyleProps } from '../styles/styleProps';
@@ -88,23 +89,204 @@ const styles = StyleSheet.create({
 });
 
 export const Text = memo(
-  forwardRef<NativeText, TextProps>(
-    (
-      {
-        children,
-        style,
-        animated,
+  forwardRef<NativeText, TextProps>((_props: TextProps, ref) => {
+    const mergedProps = useComponentConfig('Text', _props);
+    const {
+      children,
+      style,
+      animated,
+      disabled,
+      mono,
+      underline,
+      tabularNumbers,
+      numberOfLines,
+      ellipsize,
+      noWrap,
+      testID,
+      dangerouslySetColor,
+      dangerouslySetBackground,
+      // Begin style props
+      display,
+      position,
+      overflow,
+      zIndex,
+      gap,
+      columnGap,
+      rowGap,
+      justifyContent,
+      alignContent,
+      alignItems,
+      alignSelf,
+      flexDirection,
+      flexWrap,
+      color = 'fg',
+      background,
+      borderColor,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderTopWidth,
+      borderEndWidth,
+      borderBottomWidth,
+      borderStartWidth,
+      elevation,
+      borderWidth,
+      borderRadius,
+      font = 'inherit',
+      fontFamily = font,
+      fontSize = font,
+      fontWeight = font,
+      lineHeight = font,
+      align = 'start',
+      textDecorationStyle,
+      textDecorationLine,
+      textTransform,
+      padding,
+      paddingX,
+      paddingY,
+      paddingTop,
+      paddingBottom,
+      paddingStart,
+      paddingEnd,
+      margin,
+      marginX,
+      marginY,
+      marginTop,
+      marginBottom,
+      marginStart,
+      marginEnd,
+      userSelect,
+      width,
+      height,
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight,
+      aspectRatio,
+      top,
+      bottom,
+      left,
+      right,
+      transform,
+      flexBasis,
+      flexShrink,
+      flexGrow,
+      opacity,
+      renderEmptyNode = true,
+      ...props
+    } = mergedProps;
+    const Component = animated ? Animated.Text : NativeText;
+
+    const theme = useTheme();
+    const textAlign = useTextAlign(align);
+    const monoFontFamily = mono && fontFamily !== 'inherit' && theme.fontFamilyMono?.[fontFamily];
+    const textTransformValue =
+      textTransform ??
+      (fontFamily !== 'inherit'
+        ? theme.textTransform[fontFamily as keyof typeof theme.textTransform]
+        : undefined);
+    const computedNumberOfLines =
+      noWrap || (ellipsize && typeof numberOfLines === 'undefined') ? 1 : numberOfLines;
+
+    const propStyles = useMemo(
+      () => [
+        disabled && styles.disabled,
+        underline && styles.underline,
+        tabularNumbers && styles.tabularNumbers,
+        ellipsize && styles.ellipsize,
+        monoFontFamily ? { fontFamily: monoFontFamily } : undefined,
+        dangerouslySetColor ? { color: dangerouslySetColor } : undefined,
+        dangerouslySetBackground ? { backgroundColor: dangerouslySetBackground } : undefined,
+      ],
+      [
         disabled,
-        mono,
         underline,
         tabularNumbers,
-        numberOfLines,
         ellipsize,
-        noWrap,
-        testID,
+        monoFontFamily,
         dangerouslySetColor,
         dangerouslySetBackground,
-        // Begin style props
+      ],
+    );
+
+    const memoizedStyles = useMemo(
+      () => [
+        getStyles(
+          {
+            display,
+            position,
+            overflow,
+            zIndex,
+            gap,
+            columnGap,
+            rowGap,
+            justifyContent,
+            alignContent,
+            alignItems,
+            alignSelf,
+            flexDirection,
+            flexWrap,
+            color,
+            background,
+            borderColor,
+            borderWidth,
+            borderRadius,
+            borderTopLeftRadius,
+            borderTopRightRadius,
+            borderBottomLeftRadius,
+            borderBottomRightRadius,
+            borderTopWidth,
+            borderEndWidth,
+            borderBottomWidth,
+            borderStartWidth,
+            elevation,
+            fontFamily,
+            fontSize,
+            fontWeight,
+            lineHeight,
+            textDecorationStyle,
+            textDecorationLine,
+            textTransform: textTransformValue,
+            padding,
+            paddingX,
+            paddingY,
+            paddingTop,
+            paddingBottom,
+            paddingStart,
+            paddingEnd,
+            margin,
+            marginX,
+            marginY,
+            marginTop,
+            marginBottom,
+            marginStart,
+            marginEnd,
+            userSelect,
+            width,
+            height,
+            minWidth,
+            minHeight,
+            maxWidth,
+            maxHeight,
+            aspectRatio,
+            top,
+            bottom,
+            left,
+            right,
+            transform,
+            flexBasis,
+            flexShrink,
+            flexGrow,
+            opacity,
+            ...textAlign,
+          },
+          theme,
+        ),
+        propStyles,
+        style,
+      ],
+      [
         display,
         position,
         overflow,
@@ -118,9 +300,11 @@ export const Text = memo(
         alignSelf,
         flexDirection,
         flexWrap,
-        color = 'fg',
+        color,
         background,
         borderColor,
+        borderWidth,
+        borderRadius,
         borderTopLeftRadius,
         borderTopRightRadius,
         borderBottomLeftRadius,
@@ -130,17 +314,13 @@ export const Text = memo(
         borderBottomWidth,
         borderStartWidth,
         elevation,
-        borderWidth,
-        borderRadius,
-        font = 'inherit',
-        fontFamily = font,
-        fontSize = font,
-        fontWeight = font,
-        lineHeight = font,
-        align = 'start',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
         textDecorationStyle,
         textDecorationLine,
-        textTransform,
+        textTransformValue,
         padding,
         paddingX,
         paddingY,
@@ -172,214 +352,32 @@ export const Text = memo(
         flexShrink,
         flexGrow,
         opacity,
-        renderEmptyNode = true,
-        ...props
-      },
-      ref,
-    ) => {
-      const Component = animated ? Animated.Text : NativeText;
+        textAlign,
+        theme,
+        propStyles,
+        style,
+      ],
+    );
 
-      const theme = useTheme();
-      const textAlign = useTextAlign(align);
-      const monoFontFamily = mono && fontFamily !== 'inherit' && theme.fontFamilyMono?.[fontFamily];
-      const textTransformValue =
-        textTransform ??
-        (fontFamily !== 'inherit'
-          ? theme.textTransform[fontFamily as keyof typeof theme.textTransform]
-          : undefined);
-      const computedNumberOfLines =
-        noWrap || (ellipsize && typeof numberOfLines === 'undefined') ? 1 : numberOfLines;
+    if (
+      !renderEmptyNode &&
+      (children === null || children === undefined || children === '' || Number.isNaN(children))
+    )
+      return null;
 
-      const propStyles = useMemo(
-        () => [
-          disabled && styles.disabled,
-          underline && styles.underline,
-          tabularNumbers && styles.tabularNumbers,
-          ellipsize && styles.ellipsize,
-          monoFontFamily ? { fontFamily: monoFontFamily } : undefined,
-          dangerouslySetColor ? { color: dangerouslySetColor } : undefined,
-          dangerouslySetBackground ? { backgroundColor: dangerouslySetBackground } : undefined,
-        ],
-        [
-          disabled,
-          underline,
-          tabularNumbers,
-          ellipsize,
-          monoFontFamily,
-          dangerouslySetColor,
-          dangerouslySetBackground,
-        ],
-      );
-
-      const memoizedStyles = useMemo(
-        () => [
-          getStyles(
-            {
-              display,
-              position,
-              overflow,
-              zIndex,
-              gap,
-              columnGap,
-              rowGap,
-              justifyContent,
-              alignContent,
-              alignItems,
-              alignSelf,
-              flexDirection,
-              flexWrap,
-              color,
-              background,
-              borderColor,
-              borderWidth,
-              borderRadius,
-              borderTopLeftRadius,
-              borderTopRightRadius,
-              borderBottomLeftRadius,
-              borderBottomRightRadius,
-              borderTopWidth,
-              borderEndWidth,
-              borderBottomWidth,
-              borderStartWidth,
-              elevation,
-              fontFamily,
-              fontSize,
-              fontWeight,
-              lineHeight,
-              textDecorationStyle,
-              textDecorationLine,
-              textTransform: textTransformValue,
-              padding,
-              paddingX,
-              paddingY,
-              paddingTop,
-              paddingBottom,
-              paddingStart,
-              paddingEnd,
-              margin,
-              marginX,
-              marginY,
-              marginTop,
-              marginBottom,
-              marginStart,
-              marginEnd,
-              userSelect,
-              width,
-              height,
-              minWidth,
-              minHeight,
-              maxWidth,
-              maxHeight,
-              aspectRatio,
-              top,
-              bottom,
-              left,
-              right,
-              transform,
-              flexBasis,
-              flexShrink,
-              flexGrow,
-              opacity,
-              ...textAlign,
-            },
-            theme,
-          ),
-          propStyles,
-          style,
-        ],
-        [
-          display,
-          position,
-          overflow,
-          zIndex,
-          gap,
-          columnGap,
-          rowGap,
-          justifyContent,
-          alignContent,
-          alignItems,
-          alignSelf,
-          flexDirection,
-          flexWrap,
-          color,
-          background,
-          borderColor,
-          borderWidth,
-          borderRadius,
-          borderTopLeftRadius,
-          borderTopRightRadius,
-          borderBottomLeftRadius,
-          borderBottomRightRadius,
-          borderTopWidth,
-          borderEndWidth,
-          borderBottomWidth,
-          borderStartWidth,
-          elevation,
-          fontFamily,
-          fontSize,
-          fontWeight,
-          lineHeight,
-          textDecorationStyle,
-          textDecorationLine,
-          textTransformValue,
-          padding,
-          paddingX,
-          paddingY,
-          paddingTop,
-          paddingBottom,
-          paddingStart,
-          paddingEnd,
-          margin,
-          marginX,
-          marginY,
-          marginTop,
-          marginBottom,
-          marginStart,
-          marginEnd,
-          userSelect,
-          width,
-          height,
-          minWidth,
-          minHeight,
-          maxWidth,
-          maxHeight,
-          aspectRatio,
-          top,
-          bottom,
-          left,
-          right,
-          transform,
-          flexBasis,
-          flexShrink,
-          flexGrow,
-          opacity,
-          textAlign,
-          theme,
-          propStyles,
-          style,
-        ],
-      );
-
-      if (
-        !renderEmptyNode &&
-        (children === null || children === undefined || children === '' || Number.isNaN(children))
-      )
-        return null;
-
-      return (
-        <Component
-          ref={ref}
-          ellipsizeMode={ellipsize}
-          numberOfLines={computedNumberOfLines}
-          style={memoizedStyles}
-          testID={testID}
-          {...props}
-        >
-          {children}
-        </Component>
-      );
-    },
-  ),
+    return (
+      <Component
+        ref={ref}
+        ellipsizeMode={ellipsize}
+        numberOfLines={computedNumberOfLines}
+        style={memoizedStyles}
+        testID={testID}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  }),
 );
 
 Text.displayName = 'Text';

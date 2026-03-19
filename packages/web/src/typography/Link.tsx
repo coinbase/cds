@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import { Text } from './Text';
@@ -67,7 +68,11 @@ const baseCss = css`
 export const Link: LinkComponent = memo(
   forwardRef<React.ReactElement<LinkBaseProps>, LinkBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: LinkProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('Link', _props);
+      const {
         // Text props
         children,
         color = 'fgPrimary',
@@ -84,9 +89,7 @@ export const Link: LinkComponent = memo(
         noScaleOnPress = true,
         openInNewWindow = false,
         ...props
-      }: LinkProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? linkDefaultElement) satisfies React.ElementType;
       const isAnchor = Component === 'a';
 

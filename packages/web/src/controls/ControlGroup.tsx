@@ -4,6 +4,7 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxProps } from '../layout';
 import { Text } from '../typography';
 
@@ -40,11 +41,17 @@ export type ControlGroupProps<
     name?: string;
   };
 
+export type ControlGroupBaseProps = ControlGroupProps<string, { value?: string }>;
+
 const ControlGroupWithRef = forwardRef(function ControlGroup<
   ControlValue extends string,
   ControlComponentProps extends { value?: ControlValue },
 >(
-  {
+  _props: ControlGroupProps<ControlValue, ControlComponentProps>,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
+  const mergedProps = useComponentConfig('ControlGroup', _props);
+  const {
     ControlComponent: ControlComponent,
     options,
     label,
@@ -57,9 +64,7 @@ const ControlGroupWithRef = forwardRef(function ControlGroup<
     name,
     role = 'group',
     ...restProps
-  }: ControlGroupProps<ControlValue, ControlComponentProps>,
-  ref: React.ForwardedRef<HTMLDivElement>,
-) {
+  } = mergedProps;
   const generatedId = useId();
   const labelId = `${generatedId}-label`;
 

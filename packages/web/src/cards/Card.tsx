@@ -2,6 +2,7 @@ import React, { type HTMLAttributes, memo, type MouseEventHandler, useMemo } fro
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
@@ -20,27 +21,29 @@ export type CardBaseProps = Pick<SharedAccessibilityProps, 'id'> &
 export type CardProps = CardBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
-export const Card = memo<CardProps>(function Card({
-  children,
-  background = 'bg',
-  size = 'large',
-  onClick,
-  onKeyDown,
-  onKeyUp,
-  href,
-  target,
-  pin,
-  width: widthProps,
-  height: heightProps,
-  accessibilityLabel,
-  accessibilityLabelledBy,
-  accessibilityHint,
-  testID,
-  borderRadius,
-  elevation,
-  noScaleOnPress,
-  ...props
-}) {
+export const Card = memo<CardProps>(function Card(_props: CardProps) {
+  const mergedProps = useComponentConfig('Card', _props);
+  const {
+    children,
+    background = 'bg',
+    size = 'large',
+    onClick,
+    onKeyDown,
+    onKeyUp,
+    href,
+    target,
+    pin,
+    width: widthProps,
+    height: heightProps,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    accessibilityHint,
+    testID,
+    borderRadius,
+    elevation,
+    noScaleOnPress,
+    ...props
+  } = mergedProps;
   const width = widthProps ?? cardSizes[size].width;
   const height = heightProps ?? cardSizes[size].height;
   const isAnchor = Boolean(href);

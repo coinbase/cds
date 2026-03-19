@@ -2,6 +2,7 @@ import { forwardRef, memo } from 'react';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { CardRoot, type CardRootBaseProps } from '../CardRoot';
 
 import { MessagingCardLayout, type MessagingCardLayoutProps } from './MessagingCardLayout';
@@ -31,7 +32,11 @@ type MessagingCardComponent = (<AsComponent extends React.ElementType = 'article
 export const MessagingCard: MessagingCardComponent = memo(
   forwardRef<React.ReactElement<MessagingCardBaseProps>, MessagingCardBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: MessagingCardProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('MessagingCard', _props);
+      const {
         as,
         type,
         title,
@@ -50,37 +55,37 @@ export const MessagingCard: MessagingCardComponent = memo(
         className,
         style,
         ...props
-      }: MessagingCardProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => (
-      <CardRoot
-        ref={ref}
-        as={as as React.ElementType}
-        background={type === 'upsell' ? 'bgPrimary' : 'bgAlternate'}
-        borderRadius={500}
-        borderWidth={0}
-        className={cx(rootClassName, className)}
-        overflow="hidden"
-        style={{ ...rootStyle, ...style }}
-        {...props}
-      >
-        <MessagingCardLayout
-          action={action}
-          actionButtonAccessibilityLabel={actionButtonAccessibilityLabel}
-          classNames={layoutClassNames}
-          description={description}
-          dismissButton={dismissButton}
-          dismissButtonAccessibilityLabel={dismissButtonAccessibilityLabel}
-          media={media}
-          mediaPlacement={mediaPlacement}
-          onActionButtonClick={onActionButtonClick}
-          onDismissButtonClick={onDismissButtonClick}
-          styles={layoutStyles}
-          tag={tag}
-          title={title}
-          type={type}
-        />
-      </CardRoot>
-    ),
+      } = mergedProps;
+      return (
+        <CardRoot
+          ref={ref}
+          as={as as React.ElementType}
+          background={type === 'upsell' ? 'bgPrimary' : 'bgAlternate'}
+          borderRadius={500}
+          borderWidth={0}
+          className={cx(rootClassName, className)}
+          overflow="hidden"
+          style={{ ...rootStyle, ...style }}
+          {...props}
+        >
+          <MessagingCardLayout
+            action={action}
+            actionButtonAccessibilityLabel={actionButtonAccessibilityLabel}
+            classNames={layoutClassNames}
+            description={description}
+            dismissButton={dismissButton}
+            dismissButtonAccessibilityLabel={dismissButtonAccessibilityLabel}
+            media={media}
+            mediaPlacement={mediaPlacement}
+            onActionButtonClick={onActionButtonClick}
+            onDismissButtonClick={onDismissButtonClick}
+            styles={layoutStyles}
+            tag={tag}
+            title={title}
+            type={type}
+          />
+        </CardRoot>
+      );
+    },
   ),
 );

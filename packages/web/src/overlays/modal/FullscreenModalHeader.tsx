@@ -3,6 +3,7 @@ import { css } from '@linaria/core';
 
 import { IconButton } from '../../buttons';
 import type { Polymorphic } from '../../core/polymorphism';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { LogoMark } from '../../icons/LogoMark';
 import { Box, HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
 import { breakpoints } from '../../styles/media';
@@ -53,7 +54,11 @@ const headerLogoInnerCss = css`
 
 export const FullscreenModalHeader = memo(
   forwardRef(function FullscreenModalHeader(
-    {
+    _props: FullscreenModalHeaderProps,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const mergedProps = useComponentConfig('FullscreenModalHeader', _props);
+    const {
       logo,
       title,
       onRequestClose,
@@ -65,9 +70,7 @@ export const FullscreenModalHeader = memo(
       paddingX = 4,
       paddingY = 2,
       ...props
-    }: FullscreenModalHeaderProps,
-    ref: React.Ref<HTMLDivElement>,
-  ) {
+    } = mergedProps;
     const actualBorderedBottom = hideDivider === undefined ? borderedBottom : !hideDivider;
 
     return (

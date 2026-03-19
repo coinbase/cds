@@ -12,6 +12,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useIsoEffect } from '../hooks/useIsoEffect';
 
 import { Interactable, type InteractableBaseProps } from './Interactable';
@@ -88,7 +89,11 @@ export const Pressable: PressableComponent = forwardRef<
   PressableBaseProps
 >(
   <AsComponent extends React.ElementType>(
-    {
+    _props: PressableProps<AsComponent>,
+    ref?: Polymorphic.Ref<AsComponent>,
+  ) => {
+    const mergedProps = useComponentConfig('Pressable', _props);
+    const {
       as,
       className,
       disabled,
@@ -108,9 +113,7 @@ export const Pressable: PressableComponent = forwardRef<
       transparentWhilePressed,
       padding = 0,
       ...props
-    }: PressableProps<AsComponent>,
-    ref?: Polymorphic.Ref<AsComponent>,
-  ) => {
+    } = mergedProps;
     const Component = (as ?? pressableDefaultElement) satisfies React.ElementType;
     const elementRef = useRef(null);
     useImperativeHandle(ref, () => elementRef.current, []); // Merges forwarded ref with internal elementRef

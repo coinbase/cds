@@ -5,6 +5,7 @@ import { accordionSpacing } from '@coinbase/cds-common/tokens/accordion';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { Collapsible, type CollapsibleBaseProps } from '../collapsible/Collapsible';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 export type AccordionPanelBaseProps = SharedProps &
   Pick<CollapsibleBaseProps, 'collapsed' | 'children'> & {
@@ -23,22 +24,19 @@ export type AccordionPanelProps = AccordionPanelBaseProps;
  * Accepts a unique `itemKey` prop to uniquely identify one panel from another.
  */
 export const AccordionPanel = memo(
-  forwardRef(
-    (
-      { children, collapsed = true, testID }: AccordionPanelProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      return (
-        <Collapsible
-          ref={forwardedRef}
-          collapsed={collapsed}
-          maxHeight={accordionVisibleMaxHeight}
-          testID={testID}
-          {...accordionSpacing}
-        >
-          {children}
-        </Collapsible>
-      );
-    },
-  ),
+  forwardRef((_props: AccordionPanelProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('AccordionPanel', _props);
+    const { children, collapsed = true, testID } = mergedProps;
+    return (
+      <Collapsible
+        ref={forwardedRef}
+        collapsed={collapsed}
+        maxHeight={accordionVisibleMaxHeight}
+        testID={testID}
+        {...accordionSpacing}
+      >
+        {children}
+      </Collapsible>
+    );
+  }),
 );

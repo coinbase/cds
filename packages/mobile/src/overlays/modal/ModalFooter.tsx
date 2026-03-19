@@ -1,13 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import type { PressableProps } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { ButtonGroup, type ButtonGroupProps } from '../../buttons/ButtonGroup';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout/Box';
 
-export type ModalFooterProps = {
+export type ModalFooterBaseProps = {
   /** Primary action button */
   primaryAction: NonNullable<
     React.ReactElement<ButtonBaseProps & { onPress?: PressableProps['onPress'] }>
@@ -16,13 +17,11 @@ export type ModalFooterProps = {
   secondaryAction?: React.ReactElement<ButtonBaseProps & { onPress?: PressableProps['onPress'] }>;
 } & Pick<ButtonGroupProps, 'direction'> &
   SharedProps;
+export type ModalFooterProps = ModalFooterBaseProps;
 
-export const ModalFooter = ({
-  primaryAction,
-  secondaryAction,
-  direction = 'horizontal',
-  testID,
-}: ModalFooterProps) => {
+export const ModalFooter = memo((_props: ModalFooterProps) => {
+  const mergedProps = useComponentConfig('ModalFooter', _props);
+  const { primaryAction, secondaryAction, direction = 'horizontal', testID } = mergedProps;
   const { hideDividers = false } = useModalContext();
   const actions = [secondaryAction, primaryAction].filter(Boolean);
   const isVertical = direction === 'vertical';
@@ -43,4 +42,4 @@ export const ModalFooter = ({
       </ButtonGroup>
     </Box>
   );
-};
+});

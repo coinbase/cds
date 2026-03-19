@@ -15,6 +15,7 @@ import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
 
@@ -104,8 +105,9 @@ type TabsFC = <TabId extends string = string>(
 
 const TabsComponent = memo(
   forwardRef(
-    <TabId extends string>(
-      {
+    <TabId extends string>(_props: TabsProps<TabId>, ref: React.ForwardedRef<HTMLElement>) => {
+      const mergedProps = useComponentConfig('Tabs', _props);
+      const {
         tabs,
         TabComponent,
         TabsActiveIndicatorComponent,
@@ -127,9 +129,7 @@ const TabsComponent = memo(
         borderBottomRightRadius,
         style,
         ...props
-      }: TabsProps<TabId>,
-      ref: React.ForwardedRef<HTMLElement>,
-    ) => {
+      } = mergedProps;
       const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
 
       const [tabsContainerRef, tabsContainerRect] = useMeasure({

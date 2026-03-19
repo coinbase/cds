@@ -4,6 +4,7 @@ import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/Illu
 
 import { Button } from '../buttons';
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Pictogram } from '../illustrations';
 import type { VStackBaseProps } from '../layout';
 import { Box, VStack } from '../layout';
@@ -50,7 +51,11 @@ type MultiContentModuleComponent = (<
 export const MultiContentModule: MultiContentModuleComponent = memo(
   forwardRef<React.ReactElement<MultiContentModuleBaseProps>, MultiContentModuleBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: MultiContentModuleProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('MultiContentModule', _props);
+      const {
         as,
         pictogram,
         title,
@@ -66,9 +71,7 @@ export const MultiContentModule: MultiContentModuleComponent = memo(
         maxWidth = defaultMaxWidth,
         style,
         ...props
-      }: MultiContentModuleProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? multiContentModuleDefaultElement) satisfies React.ElementType;
       const multiContentModulePaddingX = useMemo(
         () => ({

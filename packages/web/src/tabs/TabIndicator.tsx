@@ -3,13 +3,14 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { useAnimateTabIndicator } from './hooks/useAnimateTabIndicator';
 
 const MotionBox = motion(Box);
 
-export type TabIndicatorProps = SharedProps & {
+export type TabIndicatorBaseProps = SharedProps & {
   /** The width of the active TabLabel. */
   width: number;
   /** The xPosition of the active TabLabel. */
@@ -20,40 +21,39 @@ export type TabIndicatorProps = SharedProps & {
   background?: ThemeVars.Color;
 };
 
-export const TabIndicator = memo(
-  forwardRef(
-    (
-      { width, x, background = 'bg', testID, ...props }: TabIndicatorProps,
-      ref: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const { widthMotionProps, xMotionProps } = useAnimateTabIndicator({ width, x });
+export type TabIndicatorProps = TabIndicatorBaseProps;
 
-      return (
-        <Box ref={ref} testID={testID} {...props}>
+export const TabIndicator = memo(
+  forwardRef((_props: TabIndicatorProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('TabIndicator', _props);
+    const { width, x, background = 'bg', testID, ...props } = mergedProps;
+    const { widthMotionProps, xMotionProps } = useAnimateTabIndicator({ width, x });
+
+    return (
+      <Box ref={ref} testID={testID} {...props}>
+        <MotionBox
+          animate={xMotionProps.animate}
+          background="bgPrimary"
+          height={2}
+          initial={false}
+          overflow="hidden"
+          testID="cds-tab-indicator-inner-bar-container"
+          transition={xMotionProps.transition}
+          width={width}
+        >
           <MotionBox
-            animate={xMotionProps.animate}
-            background="bgPrimary"
+            animate={widthMotionProps.animate}
+            background={background}
             height={2}
             initial={false}
-            overflow="hidden"
-            testID="cds-tab-indicator-inner-bar-container"
-            transition={xMotionProps.transition}
-            width={width}
-          >
-            <MotionBox
-              animate={widthMotionProps.animate}
-              background={background}
-              height={2}
-              initial={false}
-              testID="cds-tab-indicator-inner-bar"
-              transition={widthMotionProps.transition}
-              width="100%"
-            />
-          </MotionBox>
-        </Box>
-      );
-    },
-  ),
+            testID="cds-tab-indicator-inner-bar"
+            transition={widthMotionProps.transition}
+            width="100%"
+          />
+        </MotionBox>
+      </Box>
+    );
+  }),
 );
 
 TabIndicator.displayName = 'TabIndicator';

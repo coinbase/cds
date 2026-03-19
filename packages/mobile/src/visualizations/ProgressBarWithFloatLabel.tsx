@@ -12,6 +12,7 @@ import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues'
 import type { Placement } from '@coinbase/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { Box, VStack } from '../layout';
 
@@ -152,10 +153,13 @@ export type ProgressBarWithFloatLabelProps = Pick<
   };
 };
 
+export type ProgressBarWithFloatLabelBaseProps = ProgressBarWithFloatLabelProps;
+
 export const ProgressBarWithFloatLabel: React.FC<
   React.PropsWithChildren<ProgressBarWithFloatLabelProps>
-> = memo(
-  ({
+> = memo((_props: React.PropsWithChildren<ProgressBarWithFloatLabelProps>) => {
+  const mergedProps = useComponentConfig('ProgressBarWithFloatLabel', _props);
+  const {
     label,
     labelPlacement = 'above',
     progress,
@@ -165,26 +169,25 @@ export const ProgressBarWithFloatLabel: React.FC<
     testID,
     style,
     styles,
-  }) => {
-    const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
+  } = mergedProps;
+  const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
-    const progressBarFloatLabel = (
-      <ProgressBarFloatLabel
-        disableAnimateOnMount={disableAnimateOnMount}
-        disabled={disabled}
-        label={label}
-        labelPlacement={labelPlacement}
-        progress={progress}
-        styles={styles}
-      />
-    );
+  const progressBarFloatLabel = (
+    <ProgressBarFloatLabel
+      disableAnimateOnMount={disableAnimateOnMount}
+      disabled={disabled}
+      label={label}
+      labelPlacement={labelPlacement}
+      progress={progress}
+      styles={styles}
+    />
+  );
 
-    return (
-      <VStack style={rootStyle} testID={testID}>
-        {labelPlacement === 'above' && progressBarFloatLabel}
-        {children}
-        {labelPlacement === 'below' && progressBarFloatLabel}
-      </VStack>
-    );
-  },
-);
+  return (
+    <VStack style={rootStyle} testID={testID}>
+      {labelPlacement === 'above' && progressBarFloatLabel}
+      {children}
+      {labelPlacement === 'below' && progressBarFloatLabel}
+    </VStack>
+  );
+});

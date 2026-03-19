@@ -4,6 +4,7 @@ import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { FixedValue, FlexStyles, SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { getSpacerStyle } from '../utils/getSpacerStyle';
 
@@ -31,19 +32,21 @@ export type SpacerProps = SpacerBaseProps & Omit<ViewProps, 'style'>;
  * Spacer component is for adding spacing gap between two dom nodes. If no horizontal or vertical
  * spacing size is provided, Spacer will stretch to fill up available space left in the parent container.
  */
-export const Spacer = memo(function Spacer({
-  flexGrow,
-  flexShrink,
-  flexBasis,
-  horizontal,
-  vertical,
-  maxHorizontal,
-  maxVertical,
-  minHorizontal,
-  minVertical,
-  animated,
-  ...viewProps
-}: SpacerProps) {
+export const Spacer = memo(function Spacer(_props: SpacerProps) {
+  const mergedProps = useComponentConfig('Spacer', _props);
+  const {
+    flexGrow,
+    flexShrink,
+    flexBasis,
+    horizontal,
+    vertical,
+    maxHorizontal,
+    maxVertical,
+    minHorizontal,
+    minVertical,
+    animated,
+    ...viewProps
+  } = mergedProps;
   const theme = useTheme();
   const Component = animated ? Animated.View : View;
 

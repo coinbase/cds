@@ -7,7 +7,7 @@ import {
   type IllustrationDimensionsMap,
 } from './createIllustration';
 
-export const Pictogram = createIllustration('pictogram', pictogramVersionMap);
+export const Pictogram = createIllustration('pictogram', pictogramVersionMap, 'Pictogram');
 
 export type PictogramBaseProps = IllustrationBaseProps<'pictogram'> &
   IllustrationA11yProps & {

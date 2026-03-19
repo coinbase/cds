@@ -63,7 +63,10 @@ type TabbedChipsFC = <TabId extends string = string>(
 
 const TabbedChipsComponent = memo(
   forwardRef(function TabbedChips<TabId extends string = string>(
-    {
+    _props: TabbedChipsProps<TabId>,
+    ref: React.ForwardedRef<HTMLElement | null>,
+  ) {
+    const {
       tabs,
       value,
       onChange,
@@ -77,9 +80,7 @@ const TabbedChipsComponent = memo(
       nextArrowAccessibilityLabel = 'Next',
       width = '100%',
       ...props
-    }: TabbedChipsProps<TabId>,
-    ref: React.ForwardedRef<HTMLElement | null>,
-  ) {
+    } = _props;
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
       useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset: 50 });

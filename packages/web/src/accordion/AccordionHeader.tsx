@@ -10,6 +10,7 @@ import { css } from '@linaria/core';
 
 import type { CollapsibleBaseProps } from '../collapsible';
 import { useCellSpacing } from '../hooks/useCellSpacing';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, HStack, VStack } from '../layout';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 import { Pressable } from '../system/Pressable';
@@ -71,39 +72,49 @@ const titleCss = css`
 
 type AccordionMediaProps = AccordionMediaBaseProps;
 
-export const AccordionMedia = memo(({ media }: AccordionMediaProps) => (
-  <Box flexGrow={0} flexShrink={0}>
-    {media}
-  </Box>
-));
+export const AccordionMedia = memo((_props: AccordionMediaProps) => {
+  const mergedProps = useComponentConfig('AccordionMedia', _props);
+  const { media } = mergedProps;
+  return (
+    <Box flexGrow={0} flexShrink={0}>
+      {media}
+    </Box>
+  );
+});
 
 type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) => (
-  <Box className={titleCss} flexGrow={1} flexShrink={1} justifyContent="flex-start">
-    <VStack>
-      <Text as="div" display="block" font="headline" overflow="wrap">
-        {title}
-      </Text>
-      {!!subtitle && (
-        <Text
-          as="div"
-          className={subtitleCss}
-          color="fgMuted"
-          display="block"
-          font="body"
-          overflow="wrap"
-        >
-          {subtitle}
+export const AccordionTitle = memo((_props: AccordionTitleProps) => {
+  const mergedProps = useComponentConfig('AccordionTitle', _props);
+  const { title, subtitle } = mergedProps;
+  return (
+    <Box className={titleCss} flexGrow={1} flexShrink={1} justifyContent="flex-start">
+      <VStack>
+        <Text as="div" display="block" font="headline" overflow="wrap">
+          {title}
         </Text>
-      )}
-    </VStack>
-  </Box>
-));
+        {!!subtitle && (
+          <Text
+            as="div"
+            className={subtitleCss}
+            color="fgMuted"
+            display="block"
+            font="body"
+            overflow="wrap"
+          >
+            {subtitle}
+          </Text>
+        )}
+      </VStack>
+    </Box>
+  );
+});
 
 type AccordionIconProps = AccordionIconBaseProps;
 
-export const AccordionIcon = memo(({ collapsed }: AccordionIconProps) => {
+export const AccordionIcon = memo((_props: AccordionIconProps) => {
+  const mergedProps = useComponentConfig('AccordionIcon', _props);
+  const { collapsed } = mergedProps;
   return (
     <Box justifyContent="flex-end">
       <AnimatedCaret rotate={collapsed ? accordionIconHiddenRotate : accordionIconVisibleRotate} />
@@ -119,10 +130,9 @@ type AccordionHeaderProps = AccordionHeaderBaseProps;
  */
 export const AccordionHeader = memo(
   forwardRef(
-    (
-      { itemKey, title, subtitle, onClick, media, collapsed = false, testID }: AccordionHeaderProps,
-      forwardedRef: React.ForwardedRef<HTMLButtonElement>,
-    ) => {
+    (_props: AccordionHeaderProps, forwardedRef: React.ForwardedRef<HTMLButtonElement>) => {
+      const mergedProps = useComponentConfig('AccordionHeader', _props);
+      const { itemKey, title, subtitle, onClick, media, collapsed = false, testID } = mergedProps;
       const { setActiveKey, activeKey } = useAccordionContext();
       const spacing = useCellSpacing();
 

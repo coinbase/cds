@@ -27,6 +27,7 @@ import {
 } from '@floating-ui/react-native';
 import { animated, config as springConfig, useSpring } from '@react-spring/native';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 import { DefaultTourMask } from './DefaultTourMask';
@@ -54,7 +55,7 @@ export type TourMaskComponentProps = {
 
 export type TourMaskComponent = React.FC<TourMaskComponentProps>;
 
-export type TourProps<TourStepId extends string = string> = TourOptions<TourStepId> & {
+export type TourBaseProps<TourStepId extends string = string> = TourOptions<TourStepId> & {
   children?: React.ReactNode;
   /**
    * The Component to render as a tour overlay and mask.
@@ -96,25 +97,29 @@ export type TourProps<TourStepId extends string = string> = TourOptions<TourStep
 } & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy' | 'id'> &
   SharedProps;
 
+export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId>;
+
 type TourFC = <TourStepId extends string = string>(props: TourProps<TourStepId>) => React.ReactNode;
 
-const TourComponent = <TourStepId extends string = string>({
-  steps,
-  activeTourStep,
-  tourStepOffset = 24,
-  tourStepShift,
-  onChange,
-  TourMaskComponent = DefaultTourMask,
-  TourStepArrowComponent = DefaultTourStepArrow,
-  children,
-  hideOverlay,
-  tourMaskPadding,
-  tourMaskBorderRadius,
-  accessibilityLabel,
-  accessibilityLabelledBy,
-  id,
-  testID,
-}: TourProps<TourStepId>) => {
+const TourComponent = <TourStepId extends string = string>(_props: TourProps<TourStepId>) => {
+  const mergedProps = useComponentConfig('Tour', _props);
+  const {
+    steps,
+    activeTourStep,
+    tourStepOffset = 24,
+    tourStepShift,
+    onChange,
+    TourMaskComponent = DefaultTourMask,
+    TourStepArrowComponent = DefaultTourStepArrow,
+    children,
+    hideOverlay,
+    tourMaskPadding,
+    tourMaskBorderRadius,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    id,
+    testID,
+  } = mergedProps;
   const theme = useTheme();
   const defaultTourStepOffset = theme.space[3];
   const defaultTourStepShiftPadding = theme.space[4];

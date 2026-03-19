@@ -3,6 +3,7 @@ import { handleBarHeight } from '@coinbase/cds-common/tokens/drawer';
 import { css } from '@linaria/core';
 
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../layout';
 import { Pressable } from '../../system/Pressable';
 
@@ -65,8 +66,9 @@ export type HandleBarProps = Omit<BoxProps<BoxDefaultElement>, 'children' | 'bac
     };
   };
 
-export const HandleBar = memo(
-  ({
+export const HandleBar = memo((_props: HandleBarProps) => {
+  const mergedProps = useComponentConfig('HandleBar', _props);
+  const {
     testID = 'handleBar',
     onClose,
     accessibilityLabel,
@@ -76,45 +78,44 @@ export const HandleBar = memo(
     className,
     style,
     ...props
-  }: HandleBarProps) => {
-    const rootStyle = useMemo(
-      () => (style || styles?.root ? { ...style, ...styles?.root } : undefined),
-      [style, styles?.root],
-    );
+  } = mergedProps;
+  const rootStyle = useMemo(
+    () => (style || styles?.root ? { ...style, ...styles?.root } : undefined),
+    [style, styles?.root],
+  );
 
-    const handleClassName = cx(handleCss, classNames?.handle);
-    return (
-      <Box
-        className={cx(
-          containerBaseCss,
-          onClose && containerPressableCss,
-          classNames?.root ?? className,
-        )}
-        data-testid={testID}
-        style={rootStyle}
-        {...props}
-      >
-        {onClose ? (
-          <Pressable
-            noScaleOnPress
-            accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
-            background="bgInverse"
-            borderColor="transparent"
-            className={handleClassName}
-            onClick={onClose}
-            style={styles?.handle}
-          />
-        ) : (
-          <Box
-            accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
-            background="bgInverse"
-            className={handleClassName}
-            style={styles?.handle}
-          />
-        )}
-      </Box>
-    );
-  },
-);
+  const handleClassName = cx(handleCss, classNames?.handle);
+  return (
+    <Box
+      className={cx(
+        containerBaseCss,
+        onClose && containerPressableCss,
+        classNames?.root ?? className,
+      )}
+      data-testid={testID}
+      style={rootStyle}
+      {...props}
+    >
+      {onClose ? (
+        <Pressable
+          noScaleOnPress
+          accessibilityHint={accessibilityHint}
+          accessibilityLabel={accessibilityLabel}
+          background="bgInverse"
+          borderColor="transparent"
+          className={handleClassName}
+          onClick={onClose}
+          style={styles?.handle}
+        />
+      ) : (
+        <Box
+          accessibilityHint={accessibilityHint}
+          accessibilityLabel={accessibilityLabel}
+          background="bgInverse"
+          className={handleClassName}
+          style={styles?.handle}
+        />
+      )}
+    </Box>
+  );
+});

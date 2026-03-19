@@ -5,6 +5,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import type { DropdownProps } from '../dropdown';
 import { Dropdown } from '../dropdown';
 import { useA11yControlledVisibility } from '../hooks/useA11yControlledVisibility';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { PopoverContentPositionConfig } from '../overlays/popover/PopoverProps';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 
@@ -12,7 +13,7 @@ import { useSidebarContext } from './SidebarContext';
 import type { SidebarItemProps } from './SidebarItem';
 import { SidebarItem } from './SidebarItem';
 
-export type SidebarMoreMenuProps = {
+export type SidebarMoreMenuBaseProps = {
   children: React.ReactNode;
   /**
    * Title of the menu trigger. Use this prop to localize the trigger title.
@@ -23,23 +24,27 @@ export type SidebarMoreMenuProps = {
   Pick<SidebarItemProps, 'active' | 'tooltipContent' | 'onClick' | 'Component' | 'borderRadius'> &
   SharedProps;
 
+export type SidebarMoreMenuProps = SidebarMoreMenuBaseProps;
+
 const defaultContentPosition: PopoverContentPositionConfig = {
   gap: 3,
   placement: 'right-start',
 };
 
-export const SidebarMoreMenu = memo(function SidebarMoreMenu({
-  children,
-  active,
-  onClick,
-  value,
-  tooltipContent,
-  disablePortal,
-  triggerTitle = 'More',
-  Component,
-  borderRadius,
-  ...props
-}: SidebarMoreMenuProps) {
+export const SidebarMoreMenu = memo(function SidebarMoreMenu(_props: SidebarMoreMenuProps) {
+  const mergedProps = useComponentConfig('SidebarMoreMenu', _props);
+  const {
+    children,
+    active,
+    onClick,
+    value,
+    tooltipContent,
+    disablePortal,
+    triggerTitle = 'More',
+    Component,
+    borderRadius,
+    ...props
+  } = mergedProps;
   const [visible, setVisible] = useState(false);
   const { collapsed } = useSidebarContext();
   const triggerRef = useRef<HTMLButtonElement>(null);

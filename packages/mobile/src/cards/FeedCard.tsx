@@ -41,26 +41,27 @@ export type FeedCardBaseProps = CardBaseProps &
 export type FeedCardProps = FeedCardBaseProps;
 
 /** @deprecated Use the ContentCard component instead. */
-export const FeedCard = memo(function FeedCard({
-  testID = 'feed-card',
-  avatar,
-  author,
-  metadata,
-  pictogram,
-  spotSquare,
-  image,
-  mediaPlacement = 'above',
-  title,
-  description,
-  headerAction,
-  like,
-  comment,
-  share,
-  cta,
-  borderRadius = 0,
-  elevation = 0,
-  ...cardProps
-}: FeedCardProps) {
+export const FeedCard = memo(function FeedCard(_props: FeedCardProps) {
+  const {
+    testID = 'feed-card',
+    avatar,
+    author,
+    metadata,
+    pictogram,
+    spotSquare,
+    image,
+    mediaPlacement = 'above',
+    title,
+    description,
+    headerAction,
+    like,
+    comment,
+    share,
+    cta,
+    borderRadius = 0,
+    elevation = 0,
+    ...cardProps
+  } = _props;
   const footer = useMemo(() => {
     const hasFooterActions = Boolean(like ?? comment ?? share ?? cta);
     const hasFooter = hasFooterActions || Boolean(cta);

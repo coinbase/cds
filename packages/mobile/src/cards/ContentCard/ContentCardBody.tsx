@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import { type SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import type { VStackProps } from '../../layout';
 import { Box, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
@@ -63,8 +64,9 @@ export type ContentCardBodyBaseProps = SharedProps & {
 export type ContentCardBodyProps = ContentCardBodyBaseProps & VStackProps;
 
 export const ContentCardBody = memo(
-  forwardRef(function ContentCardBody(
-    {
+  forwardRef(function ContentCardBody(_props: ContentCardBodyProps, ref: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('ContentCardBody', _props);
+    const {
       body,
       label,
       media,
@@ -78,9 +80,7 @@ export const ContentCardBody = memo(
       style,
       styles,
       ...props
-    }: ContentCardBodyProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const hasMedia = !!media;
     const isHorizontal = mediaPlacement === 'start' || mediaPlacement === 'end';
     const isMediaFirst = hasMedia && (mediaPlacement === 'top' || mediaPlacement === 'start');

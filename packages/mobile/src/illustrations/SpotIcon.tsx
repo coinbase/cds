@@ -7,7 +7,7 @@ import {
   type IllustrationDimensionsMap,
 } from './createIllustration';
 
-export const SpotIcon = createIllustration('spotIcon', svgJsMap);
+export const SpotIcon = createIllustration('spotIcon', svgJsMap, 'SpotIcon');
 
 export type SpotIconBaseProps = IllustrationBaseProps<'spotIcon'> &
   IllustrationA11yProps & {

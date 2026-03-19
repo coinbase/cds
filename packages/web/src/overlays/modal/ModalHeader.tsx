@@ -8,6 +8,7 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons/IconButton';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { Text } from '../../typography/Text';
@@ -55,18 +56,20 @@ export type ModalHeaderBaseProps = {
 
 export type ModalHeaderProps = ModalHeaderBaseProps & BoxProps<BoxDefaultElement>;
 
-export const ModalHeader = ({
-  alignItems = 'center',
-  paddingX = 3,
-  paddingY = 2,
-  title,
-  onBackButtonClick,
-  backAccessibilityLabel,
-  backAccessibilityHint,
-  closeAccessibilityLabel,
-  closeAccessibilityHint,
-  ...props
-}: ModalHeaderProps) => {
+export const ModalHeader = (_props: ModalHeaderProps) => {
+  const mergedProps = useComponentConfig('ModalHeader', _props);
+  const {
+    alignItems = 'center',
+    paddingX = 3,
+    paddingY = 2,
+    title,
+    onBackButtonClick,
+    backAccessibilityLabel,
+    backAccessibilityHint,
+    closeAccessibilityLabel,
+    closeAccessibilityHint,
+    ...props
+  } = mergedProps;
   const { onRequestClose, accessibilityLabelledBy, hideCloseButton, hideDividers } =
     useModalContext();
 

@@ -5,6 +5,7 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useTheme } from '../../hooks/useTheme';
 import type { VStackProps } from '../../layout/VStack';
 import { VStack } from '../../layout/VStack';
@@ -18,7 +19,11 @@ export type OverlayProps = {
   opacity: Animated.Value;
 } & Omit<VStackProps, 'opacity'>;
 
-export const Overlay = memo(function Overlay({ opacity, ...props }: OverlayProps) {
+export type OverlayBaseProps = OverlayProps;
+
+export const Overlay = memo((_props: OverlayProps) => {
+  const mergedProps = useComponentConfig('Overlay', _props);
+  const { opacity, ...props } = mergedProps;
   const theme = useTheme();
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>

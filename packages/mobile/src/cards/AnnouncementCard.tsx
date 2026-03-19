@@ -8,19 +8,20 @@ export type AnnouncementCardBaseProps = CardBaseProps & CardBodyBaseProps;
 export type AnnouncementCardProps = AnnouncementCardBaseProps;
 
 /** @deprecated Use MessagingCard instead. AnnouncementCard will be removed in a future major release. */
-export const AnnouncementCard = memo(function AnnouncementCard({
-  onPress,
-  width,
-  title,
-  description,
-  testID,
-  accessibilityLabel,
-  accessibilityHint,
-  elevation = 0,
-  borderRadius = 0,
-  onActionPress,
-  ...props
-}: AnnouncementCardProps) {
+export const AnnouncementCard = memo(function AnnouncementCard(_props: AnnouncementCardProps) {
+  const {
+    onPress,
+    width,
+    title,
+    description,
+    testID,
+    accessibilityLabel,
+    accessibilityHint,
+    elevation = 0,
+    borderRadius = 0,
+    onActionPress,
+    ...props
+  } = _props;
   const accessibilityLabelValue =
     typeof title === 'string' && accessibilityLabel === undefined ? title : accessibilityLabel;
 
