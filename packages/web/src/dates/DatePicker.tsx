@@ -106,11 +106,21 @@ export type DatePickerProps = DatePickerBaseProps & {
   classNames?: {
     dateInput?: string;
     calendar?: string;
+    calendarHeader?: string;
+    calendarTitle?: string;
+    calendarNavigation?: string;
+    calendarContent?: string;
+    calendarDay?: string;
   };
   /** Custom styles for the DateInput and Calendar subcomponents. */
   styles?: {
     dateInput?: React.CSSProperties;
     calendar?: React.CSSProperties;
+    calendarHeader?: React.CSSProperties;
+    calendarTitle?: React.CSSProperties;
+    calendarNavigation?: React.CSSProperties;
+    calendarContent?: React.CSSProperties;
+    calendarDay?: React.CSSProperties;
   };
 } & Omit<
     DateInputProps,
@@ -341,7 +351,14 @@ export const DatePicker = memo(
             <Calendar
               ref={calendarRef}
               className={calendarClassName}
-              classNames={{ root: classNames?.calendar }}
+              classNames={{
+                root: classNames?.calendar,
+                header: classNames?.calendarHeader,
+                title: classNames?.calendarTitle,
+                navigation: classNames?.calendarNavigation,
+                content: classNames?.calendarContent,
+                day: classNames?.calendarDay,
+              }}
               disabled={disabled}
               disabledDateError={disabledDateError}
               disabledDates={disabledDates}
@@ -355,7 +372,14 @@ export const DatePicker = memo(
               seedDate={seedDate}
               selectedDate={date}
               style={calendarStyle}
-              styles={{ root: styles?.calendar }}
+              styles={{
+                root: styles?.calendar,
+                header: styles?.calendarHeader,
+                title: styles?.calendarTitle,
+                navigation: styles?.calendarNavigation,
+                content: styles?.calendarContent,
+                day: styles?.calendarDay,
+              }}
             />
           </MotionVStack>
         ),

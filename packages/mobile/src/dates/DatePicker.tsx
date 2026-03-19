@@ -4,6 +4,7 @@ import {
   type StyleProp,
   type TextInput,
   type TextInputChangeEventData,
+  type TextStyle,
   type View,
   type ViewStyle,
 } from 'react-native';
@@ -85,6 +86,11 @@ export type DatePickerProps = DatePickerBaseProps & {
   styles?: {
     dateInput?: DateInputProps['style'];
     calendar?: StyleProp<ViewStyle>;
+    calendarHeader?: StyleProp<ViewStyle>;
+    calendarTitle?: StyleProp<TextStyle>;
+    calendarNavigation?: StyleProp<ViewStyle>;
+    calendarContent?: StyleProp<ViewStyle>;
+    calendarDay?: StyleProp<ViewStyle>;
   };
 } & Omit<
     DateInputProps,
@@ -289,7 +295,14 @@ export const DatePicker = memo(
                 previousArrowAccessibilityLabel={previousArrowAccessibilityLabel}
                 seedDate={seedDate}
                 selectedDate={calendarSelectedDate}
-                styles={{ root: styles?.calendar }}
+                styles={{
+                  root: styles?.calendar,
+                  header: styles?.calendarHeader,
+                  title: styles?.calendarTitle,
+                  navigation: styles?.calendarNavigation,
+                  content: styles?.calendarContent,
+                  day: styles?.calendarDay,
+                }}
               />
             </Tray>
           )}
