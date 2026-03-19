@@ -182,6 +182,44 @@ export const PortalModal = () => {
   );
 };
 
+export const CustomContainerPropsModal = () => {
+  const { triggerRef } = useTriggerFocus();
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button ref={triggerRef} onClick={() => setVisible(true)}>
+        Open Modal
+      </Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          background="bgSecondary"
+          closeAccessibilityLabel="Close"
+          paddingX={4}
+          paddingY={3}
+          title="Custom Container Props"
+        />
+        <ModalBody tabIndex={0}>
+          <LoremIpsum />
+        </ModalBody>
+        <ModalFooter
+          background="bgSecondary"
+          gap={1}
+          justifyContent="space-between"
+          paddingX={4}
+          paddingY={3}
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+};
+
 export const ChainedModals = () => {
   const { triggerRef } = useTriggerFocus();
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(true);
