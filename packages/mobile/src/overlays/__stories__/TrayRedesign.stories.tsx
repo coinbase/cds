@@ -11,7 +11,7 @@ import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 import { useTheme } from '../../hooks/useTheme';
 import { Pictogram } from '../../illustrations';
-import { Box, HStack, VStack } from '../../layout';
+import { Box, VStack } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { Text } from '../../typography/Text';
 import type { DrawerRefBaseProps } from '../drawer/Drawer';
@@ -189,6 +189,7 @@ const TrayWithListCells = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          disableSafeAreaPaddingBottom
           handleBarVariant="inside"
           headerElevation={isScrolled ? 2 : 0}
           onCloseComplete={setIsTrayVisibleOff}
@@ -219,7 +220,6 @@ const TrayWithListCells = () => {
 };
 
 const TrayWithListCellsStickyFooter = () => {
-  const safeBottomPadding = useSafeBottomPadding();
   const [isTrayVisible, setIsTrayVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
@@ -242,12 +242,7 @@ const TrayWithListCellsStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter
-              background="bgElevation2"
-              elevation={isScrolled ? 2 : 0}
-              paddingX={3}
-              style={{ paddingBottom: safeBottomPadding }}
-            >
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -361,6 +356,7 @@ const IllustrationTrayWithListCells = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          disableSafeAreaPaddingBottom
           handleBarVariant="inside"
           headerElevation={isScrolled ? 2 : 0}
           onCloseComplete={setIsTrayVisibleOff}
@@ -441,7 +437,6 @@ const IllustrationTrayWithStickyFooter = () => {
 };
 
 const IllustrationTrayWithListCellsStickyFooter = () => {
-  const safeBottomPadding = useSafeBottomPadding();
   const [isTrayVisible, setIsTrayVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
@@ -464,12 +459,7 @@ const IllustrationTrayWithListCellsStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter
-              background="bgElevation2"
-              elevation={isScrolled ? 2 : 0}
-              paddingX={3}
-              style={{ paddingBottom: safeBottomPadding }}
-            >
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -604,6 +594,7 @@ const FullBleedImageTrayWithListCells = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          disableSafeAreaPaddingBottom
           handleBarVariant="inside"
           header={
             <Text font="title3" paddingBottom={0.75} paddingTop={2} paddingX={3}>
@@ -624,7 +615,6 @@ const FullBleedImageTrayWithListCells = () => {
               paddingHorizontal: 0,
               paddingBottom: 0,
             },
-            drawer: scrollContentStyle,
           }}
           title={
             <Box background="bgAlternate" height={180} marginX={-3}>
@@ -953,7 +943,7 @@ const MultiScreenTrayExample = () => {
       {
         title: 'Settings',
         render: ({ onNavigate }) => (
-          <ScrollView scrollEventThrottle={16}>
+          <VStack>
             <ListCell
               accessory="arrow"
               description="Manage your account settings"
@@ -975,7 +965,7 @@ const MultiScreenTrayExample = () => {
               spacingVariant="condensed"
               title="Privacy"
             />
-          </ScrollView>
+          </VStack>
         ),
       },
       {
