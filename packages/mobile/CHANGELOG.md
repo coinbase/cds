@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.55.0 (3/19/2026 PST)
+
+#### 🚀 Updates
+
+- Add `disableSafeAreaPaddingBottom` prop to drawer. [[#522](https://github.com/coinbase/cds/pull/522)]
+
+#### 🐞 Fixes
+
+- Fix padding collapsing on tray with handle bar inside. [[#522](https://github.com/coinbase/cds/pull/522)]
+
 ## 8.54.0 (3/18/2026 PST)
 
 #### 🚀 Updates
