@@ -308,7 +308,6 @@ export const Calendar = memo(
         previousArrowAccessibilityLabel = 'Go to previous month',
         todayAccessibilityHint = 'Today',
         highlightedDateAccessibilityHint = 'Highlighted',
-        testID,
         style,
         styles,
         ...props
