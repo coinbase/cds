@@ -78,7 +78,9 @@
     "react-helmet-async": "^2.0.5",
     "ajv@^6.0.0": "^6.14.0",
     "elliptic": "^6.6.0",
-    "ip": "^2.0.1"
+    "ip": "^2.0.1",
+    "minimatch": "10.2.4",
+    "glob@7.1.6": "patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
@@ -92,7 +94,9 @@
     "react-helmet-async": "Working around Nx graph resolution issue",
     "ajv": "Request from Coinbase Security team to fix security vulnerability",
     "elliptic": "Request from Coinbase Security team to fix security vulnerability",
-    "ip": "Request from Coinbase Security team to fix security vulnerability"
+    "ip": "Request from Coinbase Security team to fix security vulnerability",
+    "minimatch": "Request from Coinbase Security team to fix security vulnerability",
+    "glob@7.1.6": "Handle minimatch@10's Symbol(GLOBSTAR) in pattern arrays (used by @expo/config). Avoids 'Cannot convert a Symbol value to a string' when starting Expo."
   },
   "workspaces": [
     "actions/*",
@@ -163,7 +167,7 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-replace-ts-export-assignment": "^0.0.2",
     "chalk": "^4.1.2",
-    "depcheck": "^1.4.7",
+    "depcheck": "patch:depcheck@npm%3A1.4.7#.yarn/patches/depcheck-npm-1.4.7-d4cc813cc3.patch",
     "detox": "^20.14.8",
     "diff": "^5.1.0",
     "dotenv-webpack": "7.0.3",

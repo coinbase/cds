@@ -122,6 +122,10 @@ export const routes = [
       require('@coinbase/cds-mobile/buttons/__stories__/ButtonGroup.stories').default,
   },
   {
+    key: 'Calendar',
+    getComponent: () => require('@coinbase/cds-mobile/dates/__stories__/Calendar.stories').default,
+  },
+  {
     key: 'Card',
     getComponent: () => require('@coinbase/cds-mobile/cards/__stories__/Card.stories').default,
   },

@@ -1,21 +1,28 @@
-### Placement
+### Basic usage
+
+A basic Tooltip that displays additional information when the trigger element is pressed.
 
 ```jsx
-function DefaultSelect() {
-  const content = 'This is the tooltip Content';
+function Example() {
   return (
-    <HStack spacingHorizontal={2} gap={2} justifyContent="space-around">
-      <Tooltip content={content}>
-        <Button>Default</Button>
-      </Tooltip>
+    <Tooltip content="This is helpful information">
+      <Button>Show tooltip</Button>
+    </Tooltip>
+  );
+}
+```
+
+### Placement
+
+Control the tooltip position using the `placement` prop. Available options are `top` and `bottom`.
+
+```jsx
+function Example() {
+  const content = 'This is the tooltip content';
+  return (
+    <HStack gap={2} justifyContent="space-around">
       <Tooltip content={content} placement="top">
         <Button>Top</Button>
-      </Tooltip>
-      <Tooltip content={content} placement="left">
-        <Button>Left</Button>
-      </Tooltip>
-      <Tooltip content={content} placement="right">
-        <Button>Right</Button>
       </Tooltip>
       <Tooltip content={content} placement="bottom">
         <Button>Bottom</Button>
@@ -59,6 +66,37 @@ function TooltipVisibilityDelay() {
         <Button>Open 400 / Close 150</Button>
       </Tooltip>
     </HStack>
+```
+
+### Accessibility
+
+Always provide appropriate accessibility labels when the tooltip trigger is not a simple text string.
+
+```jsx
+function Example() {
+  return (
+    <Tooltip
+      content="Additional information about this icon"
+      accessibilityLabel="Info icon"
+      accessibilityHint="Tap to show more information"
+      accessibilityLabelForContent="Additional information about this icon"
+    >
+      <Icon name="info" size="m" />
+    </Tooltip>
+  );
+}
+```
+
+### Color scheme
+
+By default, tooltips use an inverted color scheme. You can disable this with `invertColorScheme={false}`.
+
+```jsx
+function Example() {
+  return (
+    <Tooltip content="This tooltip uses the regular color scheme" invertColorScheme={false}>
+      <Button>Show tooltip</Button>
+    </Tooltip>
   );
 }
 ```

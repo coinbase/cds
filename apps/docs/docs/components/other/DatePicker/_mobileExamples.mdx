@@ -147,12 +147,16 @@ function Example() {
       error={error}
       onChangeDate={setDate}
       onErrorDate={setError}
-      disabledDates={[new Date()]}
       label="Birthdate"
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
-      nextArrowAccessibilityLabel="Next month"
-      previousArrowAccessibilityLabel="Previous month"
-      helperTextErrorIconAccessibilityLabel="Error"
+      accessibilityLabel="Birthdate"
+      accessibilityHint="Enter date or select from calendar using the calendar button."
+      openCalendarAccessibilityLabel="Open calendar to select birthdate"
+      closeCalendarAccessibilityLabel="Close calendar without selecting a date"
+      confirmText="Confirm birthdate selection"
+      confirmButtonAccessibilityHint="Confirms the selected birthdate"
+      nextArrowAccessibilityLabel="Go to next month"
+      previousArrowAccessibilityLabel="Go to previous month"
+      highlightedDateAccessibilityHint="Highlighted"
       invalidDateError="Please enter a valid date"
       disabledDateError="Date unavailable"
       requiredError="This field is required"
@@ -187,7 +191,7 @@ function Example() {
 
 ## Styling
 
-DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/) and [Calendar](/components/other/Calendar/).
 
 ### Compact
 
@@ -385,7 +389,7 @@ function Example() {
 
 Defaults to today when undefined.
 
-On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
+The `seedDate` prop is used to generate the Calendar month when there is no selected date value.
 
 ```jsx
 function Example() {
@@ -410,6 +414,122 @@ function Example() {
 
 ## Composed Examples
 
+Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+### Highlighted dates
+
+The `highlightedDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+  const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  const highlightedDates = [[oneWeekAgo, twoDaysAgo], oneWeekLater];
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      highlightedDates={highlightedDates}
+      label="Select a date"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Minimum and maximum dates
+
+Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+  const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      minDate={lastMonth15th}
+      maxDate={nextMonth15th}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+### Disabled dates
+
+The `disabledDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
+
+Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const startOfNextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+  const endOfNextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 13);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      disabledDates={[
+        today,
+        tomorrow,
+        [startOfNextWeek, endOfNextWeek], // Disable entire range
+      ]}
+      label="Appointment date"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="This date is not available"
+    />
+  );
+}
+```
+
 ### Date range selector
 
 This is a complex example using many different props. We use multiple DatePickers together to allow a user to select a date range.
@@ -425,10 +545,7 @@ function Example() {
 
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const firstDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const seventhDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 7);
   const lastDayThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
-  const disabledDates = [[firstDayThisMonth, seventhDayThisMonth]];
 
   const updateEndDate = (endDate, startDate) => {
     setEndDate(endDate);
@@ -468,12 +585,10 @@ function Example() {
   };
 
   return (
-    <HStack gap={2}>
+    <VStack gap={2}>
       <DatePicker
         required
         date={startDate}
-        disabledDateError="Date unavailable"
-        disabledDates={disabledDates}
         error={startError}
         highlightedDates={startDate && endDate ? [[startDate, endDate]] : undefined}
         invalidDateError="Please enter a valid date"
@@ -488,8 +603,7 @@ function Example() {
         required
         date={endDate}
         disabled={!startDate}
-        disabledDateError="Date unavailable"
-        disabledDates={startDate ? [...disabledDates, startDate] : disabledDates}
+        disabledDates={startDate ? [startDate] : undefined}
         error={endError}
         highlightedDates={
           startDate && endDate && startDate < endDate
@@ -507,18 +621,18 @@ function Example() {
         requiredError="This field is required"
         variant={endError ? 'negative' : undefined}
       />
-    </HStack>
+    </VStack>
   );
 }
 ```
 
 ## Event Lifecycle
 
-- Selecting a date with the native picker (mobile) or Calendar (web):
+- Selecting a date with the Calendar:
 
   `onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose`
 
-- Closing the native picker (mobile) or Calendar (web) without selecting a date:
+- Closing the Calendar without selecting a date:
 
   `onOpen -> onCancel -> onClose`
 
@@ -529,6 +643,10 @@ function Example() {
 - Typing a date in a DateInput that already had a date:
 
   `onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+:::note
+The Calendar picker requires pressing the confirm button to select a date.
+:::
 
 ```jsx
 function Example() {

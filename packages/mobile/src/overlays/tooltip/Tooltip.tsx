@@ -1,14 +1,19 @@
 import React, { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Modal as RNModal, TouchableOpacity, View } from 'react-native';
+import { type AccessibilityState, Modal as RNModal, TouchableOpacity, View } from 'react-native';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { InvertedThemeProvider } from '../../system/ThemeProvider';
 
 import { InternalTooltip } from './InternalTooltip';
-import type { SubjectLayout, TooltipProps } from './TooltipProps';
+import type { SubjectLayout, TooltipBaseProps } from './TooltipProps';
 import { useTooltipAnimation } from './useTooltipAnimation';
 
-export type TooltipBaseProps = TooltipProps;
+export type TooltipProps = TooltipBaseProps & {
+  /**
+   * Accessibility state for the trigger.
+   */
+  accessibilityState?: AccessibilityState;
+};
 
 export const Tooltip = memo((_props: TooltipProps) => {
   const mergedProps = useComponentConfig('Tooltip', _props);
@@ -25,6 +30,7 @@ export const Tooltip = memo((_props: TooltipProps) => {
     accessibilityHint,
     accessibilityLabelForContent,
     accessibilityHintForContent,
+    accessibilityState,
     visible,
     invertColorScheme = true,
     elevation,
@@ -109,8 +115,12 @@ export const Tooltip = memo((_props: TooltipProps) => {
         typeof children === 'string' && accessibilityHint === undefined
           ? children
           : accessibilityHint,
+      // accessibilityState is applied to the trigger regardless of screen reader usage.
+      // Only set it when you need screen reader behavior.
+      // e.g. disabled = true: state is announced and the trigger cannot activate
+      accessibilityState,
     }),
-    [children, accessibilityLabel, accessibilityHint],
+    [children, accessibilityLabel, accessibilityHint, accessibilityState],
   );
 
   const accessibilityPropsForContent = useMemo(
