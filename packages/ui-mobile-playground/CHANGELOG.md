@@ -8,9 +8,9 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 4.13.1 (3/18/2026 PST)
+## 4.14.0 (3/18/2026 PST)
 
-#### 🐞 Fixes
+#### 🚀 Updates
 
 - Add a route for new Calendar component. [[#139](https://github.com/coinbase/cds/pull/139)]
 
