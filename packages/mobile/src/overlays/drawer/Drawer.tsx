@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Keyboard, Modal, Platform, useWindowDimensions, View } from 'react-native';
+import { Animated, Keyboard, Modal, Platform, useWindowDimensions } from 'react-native';
 import type { ModalProps, PressableProps, StyleProp, ViewStyle } from 'react-native';
 import {
   drawerAnimationDefaultDuration,
@@ -107,6 +107,10 @@ export type DrawerBaseProps = SharedProps &
     reduceMotion?: boolean;
     /** Callback fired when the open animation completes. */
     onOpenComplete?: () => void;
+    /**
+     * disable safe area padding for bottom of drawer when true
+     */
+    disableSafeAreaPaddingBottom?: boolean;
   };
 
 export type DrawerProps = DrawerBaseProps & {
@@ -130,8 +134,6 @@ const overlayContentContextValue: OverlayContentContextValue = {
   isDrawer: true,
 };
 
-const overflowStyle: ViewStyle = { overflow: 'hidden', maxHeight: '100%' };
-
 export const Drawer = memo(
   forwardRef<DrawerRefBaseProps, DrawerProps>(function Drawer(
     {
@@ -154,6 +156,7 @@ export const Drawer = memo(
       styles,
       accessibilityRole = 'alert',
       animationType = 'none',
+      disableSafeAreaPaddingBottom,
       ...props
     },
     ref,
@@ -173,7 +176,7 @@ export const Drawer = memo(
     const [opacityAnimation, animateOverlayIn, animateOverlayOut] = useOverlayAnimation(
       drawerAnimationDefaultDuration,
     );
-    const paddingStyles = useDrawerSpacing(pin);
+    const paddingStyles = useDrawerSpacing(pin, disableSafeAreaPaddingBottom);
     const isMounted = useRef(false);
 
     const handleClose = useCallback(() => {
@@ -346,7 +349,7 @@ export const Drawer = memo(
               style={drawerStyle}
             >
               {showHandleBarInside && handleBar}
-              {showHandleBarInside ? <View style={overflowStyle}>{content}</View> : content}
+              {content}
             </Box>
           </Box>
         </OverlayContentContext.Provider>
