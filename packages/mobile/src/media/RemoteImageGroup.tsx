@@ -122,7 +122,7 @@ export const RemoteImageGroup = (_props: RemoteImageGroupProps) => {
       })}
       {excess > 0 && (
         <Box
-          background="bgOverlay"
+          background="bgSecondary"
           borderColor={borderColor}
           borderWidth={borderWidth}
           marginStart={overlapSpacing}
