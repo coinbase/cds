@@ -2478,7 +2478,6 @@ __metadata:
     lodash: "npm:^4.17.21"
     lottie-react-native: "npm:6.7.0"
     react-native-accessibility-engine: "npm:^3.2.0"
-    react-native-date-picker: "npm:4.4.2"
     react-native-gesture-handler: "npm:2.16.2"
     react-native-inappbrowser-reborn: "npm:3.7.0"
     react-native-linear-gradient: "npm:2.8.3"
@@ -2496,7 +2495,6 @@ __metadata:
     lottie-react-native: ^6.7.0
     react: ^18.3.1
     react-native: ^0.74.5
-    react-native-date-picker: ^4.4.2
     react-native-gesture-handler: ^2.16.2
     react-native-inappbrowser-reborn: ^3.7.0
     react-native-linear-gradient: ^2.8.3
@@ -29168,7 +29166,6 @@ __metadata:
     react: "npm:^18.3.1"
     react-native: "npm:0.74.5"
     react-native-bundle-visualizer: "npm:^3.1.3"
-    react-native-date-picker: "npm:4.4.2"
     react-native-gesture-handler: "npm:2.16.2"
     react-native-inappbrowser-reborn: "npm:3.7.0"
     react-native-navigation-bar-color: "npm:2.0.2"
@@ -33143,16 +33140,6 @@ __metadata:
   bin:
     react-native-bundle-visualizer: src/react-native-bundle-visualizer.js
   checksum: 10c0/b1f159f865cf8ac1b2c0bc9504d33dbc598878eba305c720966714a4c0fa746bb5ca9b2e066223a09b6f37e2c50e22724df8e139f974f365e1a5553f3b82b66d
-  languageName: node
-  linkType: hard
-
-"react-native-date-picker@npm:4.4.2":
-  version: 4.4.2
-  resolution: "react-native-date-picker@npm:4.4.2"
-  peerDependencies:
-    react: ">= 17.0.1"
-    react-native: ">= 0.64.3"
-  checksum: 10c0/d7cab97a574b2f3c85bef92686cba65a32a75823260cfabca2c19467ee9296bbd55bdcd937e4a90264823c76cb5a2fa3c058639528c308c6e8bb94ffc1a28179
   languageName: node
   linkType: hard
 

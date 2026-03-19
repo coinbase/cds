@@ -16,7 +16,8 @@ function Example() {
       onChangeDate={setDate}
       onErrorDate={setError}
       label="Birthdate"
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      openCalendarAccessibilityLabel="Open calendar"
+      closeCalendarAccessibilityLabel="Close calendar"
       nextArrowAccessibilityLabel="Next month"
       previousArrowAccessibilityLabel="Previous month"
       helperTextErrorIconAccessibilityLabel="Error"
@@ -82,8 +83,6 @@ function Example() {
 #### Disabled dates
 
 The `disabledDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
-
-The `disabledDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
 
 Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props.
 
@@ -184,9 +183,12 @@ function Example() {
       onErrorDate={setError}
       disabledDates={[new Date()]}
       label="Birthdate"
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      accessibilityLabel="Birthdate"
+      openCalendarAccessibilityLabel="Open calendar to select birthdate"
+      closeCalendarAccessibilityLabel="Close calendar"
       nextArrowAccessibilityLabel="Next month"
       previousArrowAccessibilityLabel="Previous month"
+      highlightedDateAccessibilityHint="Highlighted"
       helperTextErrorIconAccessibilityLabel="Error"
       invalidDateError="Please enter a valid date"
       disabledDateError="Date unavailable"
@@ -222,7 +224,7 @@ function Example() {
 
 ## Styling
 
-DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/) and [Calendar](/components/other/Calendar/).
 
 ### Compact
 
@@ -314,7 +316,8 @@ function Example() {
     <VStack gap={2}>
       <DatePicker
         accessibilityLabel="Birthdate"
-        calendarIconButtonAccessibilityLabel="Birthdate calendar"
+        openCalendarAccessibilityLabel="Open birthdate calendar"
+        closeCalendarAccessibilityLabel="Close calendar"
         date={date}
         error={error}
         helperTextErrorIconAccessibilityLabel="Error"
@@ -426,9 +429,7 @@ function Example() {
 
 Defaults to today when undefined.
 
-On web the `seedDate` prop is used to generate the Calendar month when there is no selected date value.
-
-On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
+The `seedDate` prop is used to generate the Calendar month when there is no selected date value.
 
 ```jsx live
 function Example() {
@@ -454,8 +455,6 @@ function Example() {
 ### Highlighted dates
 
 The `highlightedDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
-
-The `highlightedDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
 
 ```jsx live
 function Example() {
@@ -591,11 +590,11 @@ function Example() {
 
 ## Event Lifecycle
 
-- Selecting a date with the native picker (mobile) or Calendar (web):
+- Selecting a date with the Calendar:
 
   `onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose`
 
-- Closing the native picker (mobile) or Calendar (web) without selecting a date:
+- Closing the Calendar without selecting a date:
 
   `onOpen -> onCancel -> onClose`
 

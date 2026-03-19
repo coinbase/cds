@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.54.0 (3/18/2026 PST)
+
+#### 🚀 Updates
+
+- Added Calendar component and included new Calendar in DatePicker. [[#139](https://github.com/coinbase/cds/pull/139)]
+
+#### 🐞 Fixes
+
+- Removed react-native-date-picker dependency. [[#139](https://github.com/coinbase/cds/pull/139)]
+
 ## 8.53.1 (3/17/2026 PST)
 
 #### 🐞 Fixes

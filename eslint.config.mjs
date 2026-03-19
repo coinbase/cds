@@ -36,7 +36,6 @@ const ignores = [
   '**/getAffectedRoutes.mjs',
   '**/getBuildInfo.mjs',
   'apps/mobile-app/prebuilds',
-  'apps/mobile-app/prebuilds',
   // within their NX project, these files are not included by the Typescript config
   // when linting with TS types (e.g. internal/safely-spread-props) this will raise an error
   'packages/web/optimize-css.ts',

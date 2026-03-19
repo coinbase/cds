@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.2.2 (3/18/2026 PST)
+
+#### 🐞 Fixes
+
+- Update a11y rules for DatePicker open/close calendar labels. [[#139](https://github.com/coinbase/cds/pull/139)]
+
 ## 3.2.1 (10/1/2025 PST)
 
 #### 🐞 Fixes

@@ -1,7 +1,7 @@
 ---
 id: calendar
 title: Calendar
-platform_switcher_options: { web: true, mobile: false }
+platform_switcher_options: { web: true, mobile: true }
 hide_title: true
 ---
 
@@ -10,16 +10,32 @@ import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
 
 import webPropsToc from ':docgen/web/dates/Calendar/toc-props';
+import mobilePropsToc from ':docgen/mobile/dates/Calendar/toc-props';
+
 import WebPropsTable from './_webPropsTable.mdx';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+
 import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader title="Calendar" webMetadata={webMetadata} />
+  <ComponentHeader title="Calendar" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
+    mobileExamples={<MobileExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
     webExamples={<WebExamples />}
+    webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
+    mobileExamplesToc={mobileExamplesToc}
+    mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
     webExamplesToc={webExamplesToc}
     webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
   />
 </VStack>
