@@ -1,7 +1,9 @@
 import type { TSESTree } from '@typescript-eslint/utils';
-import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
+import { ESLintUtils } from '@typescript-eslint/utils';
 
+import { getAttribute } from '../utils/getAttribute';
 import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
+import { isTruthyJSXBooleanAttribute } from '../utils/isTruthyJSXBooleanAttribute';
 
 const ruleCreator = ESLintUtils.RuleCreator(
   (name) =>
@@ -17,32 +19,6 @@ const config = {
     '@coinbase/cds-mobile-visualization',
   ],
   chartComponents: ['LineChart', 'BarChart', 'CartesianChart', 'AreaChart'],
-};
-
-const getAttribute = (attributes: TSESTree.JSXOpeningElement['attributes'], name: string) => {
-  return attributes.find(
-    (attribute): attribute is TSESTree.JSXAttribute =>
-      attribute.type === AST_NODE_TYPES.JSXAttribute && attribute.name.name === name,
-  );
-};
-
-const isTruthyJSXBooleanAttribute = (attribute: TSESTree.JSXAttribute) => {
-  if (attribute.value === null) {
-    return true;
-  }
-
-  if (attribute.value.type === AST_NODE_TYPES.Literal) {
-    return attribute.value.value === true;
-  }
-
-  if (
-    attribute.value.type === AST_NODE_TYPES.JSXExpressionContainer &&
-    attribute.value.expression.type === AST_NODE_TYPES.Literal
-  ) {
-    return attribute.value.expression.value === true;
-  }
-
-  return true;
 };
 
 export const mobileChartScrubbingAccessibility = ruleCreator({

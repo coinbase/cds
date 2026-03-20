@@ -1,45 +1,20 @@
-import { AST_NODE_TYPES, ESLintUtils, TSESTree } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
+import { getAttribute } from '../utils/getAttribute';
 import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
+import { isTruthyJSXBooleanAttribute } from '../utils/isTruthyJSXBooleanAttribute';
 
 const ruleCreator = ESLintUtils.RuleCreator(
   (name) =>
     `https://github.com/coinbase/cds/blob/master/packages/eslint-plugin-cds/README.md#${name}`,
 );
 
-type MessageIds =
-  | 'missingChartAccessibleName'
-  | 'missingScrubberAccessibilityLabel';
+type MessageIds = 'missingChartAccessibleName' | 'missingScrubberAccessibilityLabel';
 
 const config = {
   allowedPackages: ['@coinbase/cds-common', '@coinbase/cds-web-visualization', '@coinbase/cds-web'],
   chartComponents: ['LineChart', 'BarChart', 'CartesianChart', 'AreaChart'],
-};
-
-const getAttribute = (attributes: TSESTree.JSXOpeningElement['attributes'], name: string) => {
-  return attributes.find(
-    (attribute): attribute is TSESTree.JSXAttribute =>
-      attribute.type === AST_NODE_TYPES.JSXAttribute && attribute.name.name === name,
-  );
-};
-
-const isTruthyJSXBooleanAttribute = (attribute: TSESTree.JSXAttribute) => {
-  if (attribute.value === null) {
-    return true;
-  }
-
-  if (attribute.value.type === AST_NODE_TYPES.Literal) {
-    return attribute.value.value === true;
-  }
-
-  if (
-    attribute.value.type === AST_NODE_TYPES.JSXExpressionContainer &&
-    attribute.value.expression.type === AST_NODE_TYPES.Literal
-  ) {
-    return attribute.value.expression.value === true;
-  }
-
-  return true;
 };
 
 const hasScrubberWithAccessibilityLabel = (node: TSESTree.JSXElement) => {
@@ -88,7 +63,9 @@ export const webChartScrubbingAccessibility = ruleCreator({
 
         if (
           typeof packageName === 'string' &&
-          config.allowedPackages.some((pkg) => packageName === pkg || packageName.startsWith(`${pkg}/`))
+          config.allowedPackages.some(
+            (pkg) => packageName === pkg || packageName.startsWith(`${pkg}/`),
+          )
         ) {
           node.specifiers.forEach((specifier) => {
             importedComponents[specifier.local.name] = packageName;
