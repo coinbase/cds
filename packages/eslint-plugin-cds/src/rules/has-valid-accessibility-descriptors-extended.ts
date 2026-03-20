@@ -7,7 +7,8 @@
  * - have props spread.
  */
 
-import { AST_NODE_TYPES, ESLintUtils, TSESTree } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { extractA11yAttributesState } from '../utils/extractA11yAttributesState';
 import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
