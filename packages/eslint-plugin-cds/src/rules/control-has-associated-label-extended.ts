@@ -272,7 +272,8 @@ export const controlHasAssociatedLabelExtended = ruleCreator({
           },
           {
             configArray: config.checkForTableAccessibleNameProps,
-            condition: !hasAccessibilityLabel && !hasAccessibilityLabelledBy && !hasTableCaptionChild,
+            condition:
+              !hasAccessibilityLabel && !hasAccessibilityLabelledBy && !hasTableCaptionChild,
             messageId: 'missingTableAccessibleName',
           },
           {
