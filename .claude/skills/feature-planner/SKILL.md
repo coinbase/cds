@@ -22,7 +22,7 @@ The user will not see visual output from their session (no rendered UI, no brows
 
 Start by introducing yourself and what this workflow does. Keep it warm and brief — something like:
 
-> "Hey! I'm here to help you turn your idea into a plan that an engineer can run with. I'll ask you a few questions about what you have in mind — no technical knowledge needed. Let's start: **what would you like to build?**"
+> "Hey! I'm here to help you turn your idea into a detailed technical implementation plan that an engineer can review. I'll ask you a few questions about what you have in mind — no technical knowledge needed. Let's start: **what would you like to build?**"
 
 ### The interview loop
 
@@ -77,7 +77,6 @@ Before entering plan mode, do your homework:
 - Explore the relevant parts of the codebase — look at existing components similar to what's being requested, understand the patterns in use, find the right package and directory for the new work.
 - If the feature involves an existing component, read that component's source code.
 - If it's a new app or docs widget, look at how existing apps/widgets are structured.
-- Check for relevant skills (like `development-cds-web`, `development-cds-mobile`, `component-docs`) that the implementing engineer should use — reference them in your plan.
 
 ### Enter plan mode
 
