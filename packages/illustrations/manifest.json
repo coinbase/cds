@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-03-17T14:10:06.376Z",
+  "lastUpdated": "2026-03-20T18:18:39.734Z",
   "colors": {
     "light": [
       {
@@ -29336,7 +29336,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, circle, square, blue, wallet, security",
       "createdAt": "2026-03-16T14:55:20.730Z",
-      "lastUpdated": "2026-03-16T14:55:20.730Z",
+      "lastUpdated": "2026-03-19T18:42:00.221Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoWalletSecurity-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoWalletSecurity-0.svg",
@@ -29356,7 +29356,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.814Z",
-      "lastUpdated": "2026-03-16T14:55:20.814Z",
+      "lastUpdated": "2026-03-19T18:42:00.242Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoAddBankAccount-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoAddBankAccount-0.svg",
@@ -29376,7 +29376,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, 2FA, Secure, security, two, factor, authentication, safe, safety, add, plus, lock, combination, password",
       "createdAt": "2026-03-16T14:55:21.034Z",
-      "lastUpdated": "2026-03-16T14:55:21.034Z",
+      "lastUpdated": "2026-03-19T18:41:59.983Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoAdd2Fa-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoAdd2Fa-0.svg",
@@ -29396,7 +29396,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, phone, unknown, question mark, ❓ , ❔",
       "createdAt": "2026-03-16T14:55:20.772Z",
-      "lastUpdated": "2026-03-16T14:55:20.772Z",
+      "lastUpdated": "2026-03-19T18:42:00.071Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoPhoneUnknown-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoPhoneUnknown-0.svg",
@@ -29416,7 +29416,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbaseone, one, shield, protect, protected",
       "createdAt": "2026-03-16T14:55:20.793Z",
-      "lastUpdated": "2026-03-16T14:55:20.793Z",
+      "lastUpdated": "2026-03-19T18:42:00.188Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoCoinbaseOneProtectedCrypto-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoCoinbaseOneProtectedCrypto-0.svg",
@@ -29436,7 +29436,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Documents, reviewed, success, checkmark, confirm, complete, ✅, success state",
       "createdAt": "2026-03-16T14:55:20.800Z",
-      "lastUpdated": "2026-03-16T14:55:20.800Z",
+      "lastUpdated": "2026-03-19T18:42:00.282Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoDocumentSuccess-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoDocumentSuccess-0.svg",
@@ -29456,7 +29456,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, private, key, network, access, secure, encryption, encrypted, acces",
       "createdAt": "2026-03-16T14:55:20.875Z",
-      "lastUpdated": "2026-03-16T14:55:20.875Z",
+      "lastUpdated": "2026-03-19T18:42:00.027Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoPrivateKey-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoPrivateKey-0.svg",
@@ -29476,7 +29476,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, governance, vote, staking, proposal, ballot, box, yes, no, maybe, so, coin",
       "createdAt": "2026-03-16T14:55:20.705Z",
-      "lastUpdated": "2026-03-16T14:55:20.705Z",
+      "lastUpdated": "2026-03-19T18:42:00.011Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoGovernance-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoGovernance-0.svg",
@@ -29496,7 +29496,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, ethereum, upsell, hand, earn, interest, eth2, 2.0, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.711Z",
-      "lastUpdated": "2026-03-16T14:55:20.711Z",
+      "lastUpdated": "2026-03-19T18:41:59.924Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoEthStakingUpsell-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoEthStakingUpsell-0.svg",
@@ -29516,7 +29516,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, trade, coins, stars, eth2, stacks of coins, graph",
       "createdAt": "2026-03-16T14:55:20.855Z",
-      "lastUpdated": "2026-03-16T14:55:20.855Z",
+      "lastUpdated": "2026-03-19T18:42:00.247Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoEthStakingRewards-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoEthStakingRewards-0.svg",
@@ -29536,7 +29536,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, circles, coins, yellow, blue, graph, staking",
       "createdAt": "2026-03-16T14:55:20.889Z",
-      "lastUpdated": "2026-03-16T14:55:20.889Z",
+      "lastUpdated": "2026-03-19T18:42:00.405Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoStaking-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoStaking-0.svg",
@@ -29556,7 +29556,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, open, email, envelope, letter, 📧 📥 📤 ✉ 📩 📨",
       "createdAt": "2026-03-16T14:55:20.896Z",
-      "lastUpdated": "2026-03-16T14:55:20.896Z",
+      "lastUpdated": "2026-03-19T18:42:00.399Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoOpenEmail-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoOpenEmail-0.svg",
@@ -29576,7 +29576,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Prime, Staking, Stake, Crypto, Interest, Earn, Coins, Assets, Circles, Universe, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.882Z",
-      "lastUpdated": "2026-03-16T14:55:20.882Z",
+      "lastUpdated": "2026-03-19T18:42:00.156Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoPrimeStaking-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoPrimeStaking-0.svg",
@@ -29596,7 +29596,7 @@
       "height": 239.99951171875,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, earn, globe, coin, percent, staking, yield, assets, circle, international",
       "createdAt": "2026-03-16T14:55:20.684Z",
-      "lastUpdated": "2026-03-16T14:55:20.684Z",
+      "lastUpdated": "2026-03-19T18:42:00.097Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoEarnGlobe-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoEarnGlobe-0.svg",
@@ -29616,7 +29616,7 @@
       "height": 240.00021362304688,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, staking, earn, yield, interest, would, have, missed, out, on, coins, clock, time, money, grow",
       "createdAt": "2026-03-16T14:55:20.737Z",
-      "lastUpdated": "2026-03-16T14:55:20.737Z",
+      "lastUpdated": "2026-03-19T18:41:59.988Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoStakingMissedReturns-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoStakingMissedReturns-0.svg",
@@ -29628,26 +29628,6 @@
       },
       "version": 0
     },
-    "28806:48": {
-      "type": "heroSquare",
-      "name": "instoOnChain",
-      "hash": "7iq6N8/tbDvXfQJP6ReHTjr5ZLlQjquTNQzTj5nhpQ4=",
-      "width": 240,
-      "height": 240,
-      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
-      "createdAt": "2026-03-16T14:55:20.765Z",
-      "lastUpdated": "2026-03-16T14:55:20.765Z",
-      "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoOnChain-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoOnChain-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoOnChain-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoOnChain-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoOnChain-0.js",
-        "pngLight": "./heroSquare/png/light/instoOnChain-0.png",
-        "pngDark": "./heroSquare/png/dark/instoOnChain-0.png"
-      },
-      "version": 0
-    },
     "28806:49": {
       "type": "heroSquare",
       "name": "instoSecurityKeyAuth",
@@ -29656,7 +29636,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.518Z",
-      "lastUpdated": "2026-03-16T14:55:20.518Z",
+      "lastUpdated": "2026-03-19T18:42:00.362Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoSecurityKeyAuth-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoSecurityKeyAuth-0.svg",
@@ -29668,6 +29648,26 @@
       },
       "version": 0
     },
+    "28806:50": {
+      "type": "heroSquare",
+      "name": "instoOnChain",
+      "hash": "E2tS181QS2c/K0IRqNzr1EgfLXuYgfaH2a2hI8sBAGk=",
+      "width": 240,
+      "height": 240,
+      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+      "createdAt": "2026-03-16T14:55:20.765Z",
+      "lastUpdated": "2026-03-19T18:42:00.136Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/instoOnChain-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoOnChain-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoOnChain-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoOnChain-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoOnChain-1.js",
+        "pngLight": "./heroSquare/png/light/instoOnChain-1.png",
+        "pngDark": "./heroSquare/png/dark/instoOnChain-1.png"
+      },
+      "version": 1
+    },
     "28806:51": {
       "type": "heroSquare",
       "name": "instoWeb3MobileSetupStart",
@@ -29676,7 +29676,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.807Z",
-      "lastUpdated": "2026-03-16T14:55:20.807Z",
+      "lastUpdated": "2026-03-19T18:42:00.237Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoWeb3MobileSetupStart-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoWeb3MobileSetupStart-0.svg",
@@ -29696,7 +29696,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.745Z",
-      "lastUpdated": "2026-03-16T14:55:20.745Z",
+      "lastUpdated": "2026-03-19T18:41:59.967Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoRequestSent-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoRequestSent-0.svg",
@@ -29716,7 +29716,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.057Z",
-      "lastUpdated": "2026-03-16T14:55:21.057Z",
+      "lastUpdated": "2026-03-19T18:42:00.226Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoEnableBiometrics-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoEnableBiometrics-0.svg",
@@ -29736,7 +29736,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.848Z",
-      "lastUpdated": "2026-03-16T14:55:20.848Z",
+      "lastUpdated": "2026-03-19T18:42:00.415Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoKeyGenerationPending-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoKeyGenerationPending-0.svg",
@@ -29756,7 +29756,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.834Z",
-      "lastUpdated": "2026-03-16T14:55:20.834Z",
+      "lastUpdated": "2026-03-19T18:42:00.119Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoWallet-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoWallet-0.svg",
@@ -29776,7 +29776,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.996Z",
-      "lastUpdated": "2026-03-16T14:55:20.996Z",
+      "lastUpdated": "2026-03-19T18:42:00.065Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/instoKeyGenerationComplete-0.svg",
         "svgDark": "./heroSquare/svg/dark/instoKeyGenerationComplete-0.svg",
@@ -29796,7 +29796,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.981Z",
-      "lastUpdated": "2026-03-16T14:55:20.981Z",
+      "lastUpdated": "2026-03-19T18:42:00.018Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/insto-0.svg",
         "svgDark": "./spotRectangle/svg/dark/insto-0.svg",
@@ -29816,7 +29816,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Prime, Staking, Stake, Crypto, Interest, Earn, Coins, Assets, Circles, Universe, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.758Z",
-      "lastUpdated": "2026-03-16T14:55:20.758Z",
+      "lastUpdated": "2026-03-19T18:41:59.946Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoPrimeStaking-0.svg",
         "svgDark": "./spotRectangle/svg/dark/instoPrimeStaking-0.svg",
@@ -29836,7 +29836,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coins, chart, stake, staking, liquid, earn, more, finance, graph, bar",
       "createdAt": "2026-03-16T14:55:20.988Z",
-      "lastUpdated": "2026-03-16T14:55:20.988Z",
+      "lastUpdated": "2026-03-19T18:41:59.951Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoStaking-0.svg",
         "svgDark": "./spotRectangle/svg/dark/instoStaking-0.svg",
@@ -29851,22 +29851,22 @@
     "28806:60": {
       "type": "spotRectangle",
       "name": "instoEthStakingMovement",
-      "hash": "mUbKijsYHPzhAveFccVdQ9fQZutxVgYbQ6lNCUAaNvg=",
+      "hash": "VAZD4NmMZrn4LJ3ArZADUy0gS9PIdBspb+oG994avZU=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, send, transfer, circles, movement, forward, exciting, 🟣, 🟢, 🔵",
       "createdAt": "2026-03-16T14:55:20.932Z",
-      "lastUpdated": "2026-03-16T14:55:20.932Z",
+      "lastUpdated": "2026-03-19T18:42:00.076Z",
       "outputs": {
-        "svgLight": "./spotRectangle/svg/light/instoEthStakingMovement-0.svg",
-        "svgDark": "./spotRectangle/svg/dark/instoEthStakingMovement-0.svg",
-        "svgThemed": "./spotRectangle/svg/themeable/instoEthStakingMovement-0.svg",
-        "svgJsLight": "./spotRectangle/svgJs/light/instoEthStakingMovement-0.js",
-        "svgJsDark": "./spotRectangle/svgJs/dark/instoEthStakingMovement-0.js",
-        "pngLight": "./spotRectangle/png/light/instoEthStakingMovement-0.png",
-        "pngDark": "./spotRectangle/png/dark/instoEthStakingMovement-0.png"
+        "svgLight": "./spotRectangle/svg/light/instoEthStakingMovement-1.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoEthStakingMovement-1.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoEthStakingMovement-1.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoEthStakingMovement-1.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoEthStakingMovement-1.js",
+        "pngLight": "./spotRectangle/png/light/instoEthStakingMovement-1.png",
+        "pngDark": "./spotRectangle/png/dark/instoEthStakingMovement-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:61": {
       "type": "spotRectangle",
@@ -29876,7 +29876,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, get, started, stopwatch, clock, time, fast, get, going, please",
       "createdAt": "2026-03-16T14:55:20.967Z",
-      "lastUpdated": "2026-03-16T14:55:20.967Z",
+      "lastUpdated": "2026-03-19T18:41:59.957Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoGetStartedInMinutes-0.svg",
         "svgDark": "./spotRectangle/svg/dark/instoGetStartedInMinutes-0.svg",
@@ -29896,7 +29896,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.004Z",
-      "lastUpdated": "2026-03-16T14:55:21.004Z",
+      "lastUpdated": "2026-03-19T18:42:00.232Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoCurrency-0.svg",
         "svgDark": "./spotRectangle/svg/dark/instoCurrency-0.svg",
@@ -29916,7 +29916,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, semi, custodial, semi custodial, bank, user, avatar, coin",
       "createdAt": "2026-03-16T14:55:20.717Z",
-      "lastUpdated": "2026-03-16T14:55:20.717Z",
+      "lastUpdated": "2026-03-19T18:41:59.962Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoSemiCustodial-0.svg",
         "svgDark": "./spotRectangle/svg/dark/instoSemiCustodial-0.svg",
@@ -29931,22 +29931,22 @@
     "28806:64": {
       "type": "spotRectangle",
       "name": "instoCryptoAndMore",
-      "hash": "fiHJCILLI8vvsObqEKmhUUFDDzfOHLjVDJHyl5xiB2c=",
+      "hash": "uaT1hrtZhN81d0vd/ZXF03LmVLSf3P+JxkfEk49OGZY=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coin, coins, moon, more, empty state",
       "createdAt": "2026-03-16T14:55:20.724Z",
-      "lastUpdated": "2026-03-16T14:55:20.724Z",
+      "lastUpdated": "2026-03-19T18:42:00.420Z",
       "outputs": {
-        "svgLight": "./spotRectangle/svg/light/instoCryptoAndMore-0.svg",
-        "svgDark": "./spotRectangle/svg/dark/instoCryptoAndMore-0.svg",
-        "svgThemed": "./spotRectangle/svg/themeable/instoCryptoAndMore-0.svg",
-        "svgJsLight": "./spotRectangle/svgJs/light/instoCryptoAndMore-0.js",
-        "svgJsDark": "./spotRectangle/svgJs/dark/instoCryptoAndMore-0.js",
-        "pngLight": "./spotRectangle/png/light/instoCryptoAndMore-0.png",
-        "pngDark": "./spotRectangle/png/dark/instoCryptoAndMore-0.png"
+        "svgLight": "./spotRectangle/svg/light/instoCryptoAndMore-1.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoCryptoAndMore-1.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoCryptoAndMore-1.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoCryptoAndMore-1.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoCryptoAndMore-1.js",
+        "pngLight": "./spotRectangle/png/light/instoCryptoAndMore-1.png",
+        "pngDark": "./spotRectangle/png/dark/instoCryptoAndMore-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:65": {
       "type": "spotRectangle",
@@ -29956,7 +29956,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, empty state, trading, exchange",
       "createdAt": "2026-03-16T14:55:20.652Z",
-      "lastUpdated": "2026-03-16T14:55:20.652Z",
+      "lastUpdated": "2026-03-19T18:42:00.037Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoEmptyTrading-0.svg",
         "svgDark": "./spotRectangle/svg/dark/instoEmptyTrading-0.svg",
@@ -29976,7 +29976,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, ethereum, 2.0, staking, crypto, currency, earn, yield, interest, growth, make, money, asset, increase, reward",
       "createdAt": "2026-03-16T14:55:20.669Z",
-      "lastUpdated": "2026-03-16T14:55:20.669Z",
+      "lastUpdated": "2026-03-19T18:42:00.277Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoEthStaking-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoEthStaking-0.svg",
@@ -29996,7 +29996,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coins, chart, stake, staking, liquid, earn, more, finance, graph, bar",
       "createdAt": "2026-03-16T14:55:20.659Z",
-      "lastUpdated": "2026-03-16T14:55:20.659Z",
+      "lastUpdated": "2026-03-19T18:42:00.174Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoStaking-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoStaking-0.svg",
@@ -30016,7 +30016,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Prime, Staking, Stake, Crypto, Interest, Earn, Coins, Assets, Circles, Universe, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.623Z",
-      "lastUpdated": "2026-03-16T14:55:20.623Z",
+      "lastUpdated": "2026-03-19T18:42:00.168Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoPrimeStaking-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoPrimeStaking-0.svg",
@@ -30036,7 +30036,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, trade, coins, stars, eth2, stacks of coins, graph",
       "createdAt": "2026-03-16T14:55:20.638Z",
-      "lastUpdated": "2026-03-16T14:55:20.638Z",
+      "lastUpdated": "2026-03-19T18:42:00.378Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoEthStakingRewards-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoEthStakingRewards-0.svg",
@@ -30056,7 +30056,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, PIX, Deposits, bank, coin, brazil, south, america, latam, arrow",
       "createdAt": "2026-03-16T14:55:21.087Z",
-      "lastUpdated": "2026-03-16T14:55:21.087Z",
+      "lastUpdated": "2026-03-19T18:42:00.389Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoPixDeposits-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoPixDeposits-0.svg",
@@ -30071,62 +30071,62 @@
     "28806:71": {
       "type": "spotSquare",
       "name": "instoDappWallet",
-      "hash": "S+O99O3RxzPwaOuDMyMmhs3WY31Ct3zUYhSejnJcr0A=",
+      "hash": "+apiUyU3wOQZfYLScv6zr3dpxCTZnUakmoiI7pwhGyE=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, dappwallet, wallet, 🌐, web3",
       "createdAt": "2026-03-16T14:55:21.079Z",
-      "lastUpdated": "2026-03-16T14:55:21.079Z",
+      "lastUpdated": "2026-03-19T18:42:00.092Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoDappWallet-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoDappWallet-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoDappWallet-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoDappWallet-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoDappWallet-0.js",
-        "pngLight": "./spotSquare/png/light/instoDappWallet-0.png",
-        "pngDark": "./spotSquare/png/dark/instoDappWallet-0.png"
+        "svgLight": "./spotSquare/svg/light/instoDappWallet-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoDappWallet-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoDappWallet-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoDappWallet-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoDappWallet-1.js",
+        "pngLight": "./spotSquare/png/light/instoDappWallet-1.png",
+        "pngDark": "./spotSquare/png/dark/instoDappWallet-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:72": {
       "type": "spotSquare",
       "name": "instoWaiting",
-      "hash": "7omJ1lvdNjzzcYGuz5a1m6XlDeyduv1HUJbkF1HOeoU=",
+      "hash": "g7BbgRXDiUKhaDO6LdXrWBBU9eZuoTIBFNUPm2c2mBw=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.072Z",
-      "lastUpdated": "2026-03-16T14:55:21.072Z",
+      "lastUpdated": "2026-03-19T18:42:00.047Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoWaiting-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoWaiting-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoWaiting-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoWaiting-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoWaiting-0.js",
-        "pngLight": "./spotSquare/png/light/instoWaiting-0.png",
-        "pngDark": "./spotSquare/png/dark/instoWaiting-0.png"
+        "svgLight": "./spotSquare/svg/light/instoWaiting-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoWaiting-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoWaiting-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoWaiting-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoWaiting-1.js",
+        "pngLight": "./spotSquare/png/light/instoWaiting-1.png",
+        "pngDark": "./spotSquare/png/dark/instoWaiting-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:73": {
       "type": "spotSquare",
       "name": "instoSecurityKey",
-      "hash": "0aw4IYz0Z2bOxiFLrrNVmr+kIEPauSG1zCb9duKw1UI=",
+      "hash": "SYHcII9Vbgo/0YnOmoGvqT7IL4EeLSzLdx+oiMsgrFo=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.065Z",
-      "lastUpdated": "2026-03-16T14:55:21.065Z",
+      "lastUpdated": "2026-03-19T18:41:59.941Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoSecurityKey-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoSecurityKey-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoSecurityKey-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoSecurityKey-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoSecurityKey-0.js",
-        "pngLight": "./spotSquare/png/light/instoSecurityKey-0.png",
-        "pngDark": "./spotSquare/png/dark/instoSecurityKey-0.png"
+        "svgLight": "./spotSquare/svg/light/instoSecurityKey-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoSecurityKey-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoSecurityKey-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoSecurityKey-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoSecurityKey-1.js",
+        "pngLight": "./spotSquare/png/light/instoSecurityKey-1.png",
+        "pngDark": "./spotSquare/png/dark/instoSecurityKey-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:74": {
       "type": "spotSquare",
@@ -30136,7 +30136,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, chain, hexagon, connections, blue",
       "createdAt": "2026-03-16T14:55:21.027Z",
-      "lastUpdated": "2026-03-16T14:55:21.027Z",
+      "lastUpdated": "2026-03-19T18:42:00.162Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoSideChainSide-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoSideChainSide-0.svg",
@@ -30156,7 +30156,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.019Z",
-      "lastUpdated": "2026-03-16T14:55:21.019Z",
+      "lastUpdated": "2026-03-19T18:42:00.001Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/instoUbiKey-0.svg",
         "svgDark": "./spotSquare/svg/dark/instoUbiKey-0.svg",
@@ -30168,26 +30168,6 @@
       },
       "version": 0
     },
-    "28806:76": {
-      "type": "spotSquare",
-      "name": "instoAuthenticatorProgress",
-      "hash": "K9gp7G+Zrws07ccpQWOmd2hVJEcE6LBo91efVyVawco=",
-      "width": 96,
-      "height": 96,
-      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
-      "createdAt": "2026-03-16T14:55:20.778Z",
-      "lastUpdated": "2026-03-16T14:55:20.778Z",
-      "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoAuthenticatorProgress-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoAuthenticatorProgress-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoAuthenticatorProgress-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoAuthenticatorProgress-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoAuthenticatorProgress-0.js",
-        "pngLight": "./spotSquare/png/light/instoAuthenticatorProgress-0.png",
-        "pngDark": "./spotSquare/png/dark/instoAuthenticatorProgress-0.png"
-      },
-      "version": 0
-    },
     "28806:77": {
       "type": "pictogram",
       "name": "instoAuthenticatorProgress",
@@ -30196,7 +30176,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, trust, true, genuine, actual, verification",
       "createdAt": "2026-03-16T14:55:20.974Z",
-      "lastUpdated": "2026-03-16T14:55:20.974Z",
+      "lastUpdated": "2026-03-19T18:42:00.142Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoAuthenticatorProgress-0.svg",
         "svgDark": "./pictogram/svg/dark/instoAuthenticatorProgress-0.svg",
@@ -30216,7 +30196,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.698Z",
-      "lastUpdated": "2026-03-16T14:55:20.698Z",
+      "lastUpdated": "2026-03-19T18:42:00.348Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoEarnGraph-0.svg",
         "svgDark": "./pictogram/svg/dark/instoEarnGraph-0.svg",
@@ -30236,7 +30216,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, circle, square, blue",
       "createdAt": "2026-03-16T14:55:20.841Z",
-      "lastUpdated": "2026-03-16T14:55:20.841Z",
+      "lastUpdated": "2026-03-19T18:42:00.353Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoPasswordWalletLocked-0.svg",
         "svgDark": "./pictogram/svg/dark/instoPasswordWalletLocked-0.svg",
@@ -30251,62 +30231,62 @@
     "28806:80": {
       "type": "pictogram",
       "name": "instoDecentralizedWeb3",
-      "hash": "ySkzrFymBBmu7UFtJzoUPR7Tw+GS/uryct28tgQxEmQ=",
+      "hash": "rZJ2ip8gPmh3XSH0eCIaL6I6jba5irVHSMBgTCZDTK4=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.945Z",
-      "lastUpdated": "2026-03-16T14:55:20.945Z",
+      "lastUpdated": "2026-03-19T18:42:00.054Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoDecentralizedWeb3-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoDecentralizedWeb3-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoDecentralizedWeb3-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoDecentralizedWeb3-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoDecentralizedWeb3-0.js",
-        "pngLight": "./pictogram/png/light/instoDecentralizedWeb3-0.png",
-        "pngDark": "./pictogram/png/dark/instoDecentralizedWeb3-0.png"
+        "svgLight": "./pictogram/svg/light/instoDecentralizedWeb3-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoDecentralizedWeb3-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoDecentralizedWeb3-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoDecentralizedWeb3-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoDecentralizedWeb3-1.js",
+        "pngLight": "./pictogram/png/light/instoDecentralizedWeb3-1.png",
+        "pngDark": "./pictogram/png/dark/instoDecentralizedWeb3-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:81": {
       "type": "pictogram",
       "name": "instoApyInterest",
-      "hash": "UPbBmB7INSfMHBCoAbxR5NTNWQSo1qEPLKA+gpGRsZ8=",
+      "hash": "Q8IwWnyrsHpA/+Z0xLlli1HBBR55WXyI9KFXfdyuubM=",
       "width": 40,
       "height": 40,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, APY, interest, growth, graph, chart, yield, coin, arrow, trending, value, increase, growing, 📈",
       "createdAt": "2026-03-16T14:55:20.960Z",
-      "lastUpdated": "2026-03-16T14:55:20.960Z",
+      "lastUpdated": "2026-03-19T18:42:00.258Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoApyInterest-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoApyInterest-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoApyInterest-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoApyInterest-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoApyInterest-0.js",
-        "pngLight": "./pictogram/png/light/instoApyInterest-0.png",
-        "pngDark": "./pictogram/png/dark/instoApyInterest-0.png"
+        "svgLight": "./pictogram/svg/light/instoApyInterest-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoApyInterest-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoApyInterest-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoApyInterest-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoApyInterest-1.js",
+        "pngLight": "./pictogram/png/light/instoApyInterest-1.png",
+        "pngDark": "./pictogram/png/dark/instoApyInterest-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:82": {
       "type": "pictogram",
       "name": "instoRestaking",
-      "hash": "/MiCtuz+wdmuYG8QnVLACkUIEC+pUTKoRXg2jrLVugc=",
+      "hash": "tl6bu5MpcpWHGi5QYV7C30yM6pXRWebH+bR+0tFnZSQ=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbase, one, cb1, refresh, restore, refill, 🔄, staking",
       "createdAt": "2026-03-16T14:55:20.827Z",
-      "lastUpdated": "2026-03-16T14:55:20.827Z",
+      "lastUpdated": "2026-03-19T18:42:00.059Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoRestaking-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoRestaking-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoRestaking-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoRestaking-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoRestaking-0.js",
-        "pngLight": "./pictogram/png/light/instoRestaking-0.png",
-        "pngDark": "./pictogram/png/dark/instoRestaking-0.png"
+        "svgLight": "./pictogram/svg/light/instoRestaking-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoRestaking-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoRestaking-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoRestaking-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoRestaking-1.js",
+        "pngLight": "./pictogram/png/light/instoRestaking-1.png",
+        "pngDark": "./pictogram/png/dark/instoRestaking-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:83": {
       "type": "pictogram",
@@ -30316,7 +30296,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, circle, blue, yellow, monitor, multiplatform, browser, app, mobile, extension",
       "createdAt": "2022-08-05T05:36:58.593Z",
-      "lastUpdated": "2026-03-16T14:55:21.011Z",
+      "lastUpdated": "2026-03-19T18:42:00.042Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/browserMultiPlatform-7.svg",
         "svgDark": "./pictogram/svg/dark/browserMultiPlatform-7.svg",
@@ -30336,7 +30316,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbase, one, cb1, shield, protection, guard, defense, cover, safety, security",
       "createdAt": "2026-03-16T14:55:20.952Z",
-      "lastUpdated": "2026-03-16T14:55:20.952Z",
+      "lastUpdated": "2026-03-19T18:41:59.930Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoCoinbaseOneShield-0.svg",
         "svgDark": "./pictogram/svg/dark/instoCoinbaseOneShield-0.svg",
@@ -30356,7 +30336,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.691Z",
-      "lastUpdated": "2026-03-16T14:55:20.691Z",
+      "lastUpdated": "2026-03-19T18:42:00.299Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoBorrowingLending-0.svg",
         "svgDark": "./pictogram/svg/dark/instoBorrowingLending-0.svg",
@@ -30376,7 +30356,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, return, exchange, rebate, crypto",
       "createdAt": "2026-03-16T14:55:20.542Z",
-      "lastUpdated": "2026-03-16T14:55:20.542Z",
+      "lastUpdated": "2026-03-19T18:42:00.081Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoAdvancedTradingRebates-0.svg",
         "svgDark": "./pictogram/svg/dark/instoAdvancedTradingRebates-0.svg",
@@ -30396,7 +30376,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, crypto, beginner, coin, circle, book, yellow, blue",
       "createdAt": "2026-03-16T14:55:20.938Z",
-      "lastUpdated": "2026-03-16T14:55:20.938Z",
+      "lastUpdated": "2026-03-19T18:42:00.006Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoCrypto101-0.svg",
         "svgDark": "./pictogram/svg/dark/instoCrypto101-0.svg",
@@ -30416,7 +30396,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, represent, envoy, agent, assign, entrust, give, person, check, checkmark, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
       "createdAt": "2026-03-16T14:55:20.924Z",
-      "lastUpdated": "2026-03-16T14:55:20.924Z",
+      "lastUpdated": "2026-03-19T18:41:59.916Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoDelegate-0.svg",
         "svgDark": "./pictogram/svg/dark/instoDelegate-0.svg",
@@ -30436,7 +30416,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, circles, coins, yellow, blue, graph, staking",
       "createdAt": "2026-03-16T14:55:20.600Z",
-      "lastUpdated": "2026-03-16T14:55:20.600Z",
+      "lastUpdated": "2026-03-19T18:42:00.205Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoStakingGraph-0.svg",
         "svgDark": "./pictogram/svg/dark/instoStakingGraph-0.svg",
@@ -30456,7 +30436,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, diamond, reward, sparkle, earn, crystal, 💎, 💍, ✨, ❇️",
       "createdAt": "2026-03-16T14:55:20.579Z",
-      "lastUpdated": "2026-03-16T14:55:20.579Z",
+      "lastUpdated": "2026-03-19T18:42:00.372Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoGem-0.svg",
         "svgDark": "./pictogram/svg/dark/instoGem-0.svg",
@@ -30476,7 +30456,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.042Z",
-      "lastUpdated": "2026-03-16T14:55:21.042Z",
+      "lastUpdated": "2026-03-19T18:42:00.200Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoprimeMobileApp-0.svg",
         "svgDark": "./pictogram/svg/dark/instoprimeMobileApp-0.svg",
@@ -30496,7 +30476,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, pictogram, ribbon, star, learning, rewards, eth, ethereum, asset, staking, l2",
       "createdAt": "2026-03-16T14:55:20.910Z",
-      "lastUpdated": "2026-03-16T14:55:20.910Z",
+      "lastUpdated": "2026-03-19T18:42:00.087Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoEthRewards-0.svg",
         "svgDark": "./pictogram/svg/dark/instoEthRewards-0.svg",
@@ -30516,7 +30496,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.903Z",
-      "lastUpdated": "2026-03-17T14:07:08.733Z",
+      "lastUpdated": "2026-03-19T18:42:00.193Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoEth-0.svg",
         "svgDark": "./pictogram/svg/dark/instoEth-0.svg",
@@ -30536,7 +30516,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.607Z",
-      "lastUpdated": "2026-03-16T14:55:20.607Z",
+      "lastUpdated": "2026-03-19T18:42:00.216Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoAccount-0.svg",
         "svgDark": "./pictogram/svg/dark/instoAccount-0.svg",
@@ -30556,7 +30536,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, address, contacts, book, people, phone numbers, names, 📕, 📗, 📘, 📙, 📖, 📚, 📓, 📒, 📔, 📇, 📲, 📱, 🤳, 📳, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
       "createdAt": "2026-03-16T14:55:20.917Z",
-      "lastUpdated": "2026-03-16T14:55:20.917Z",
+      "lastUpdated": "2026-03-19T18:42:00.102Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoAddressBook-0.svg",
         "svgDark": "./pictogram/svg/dark/instoAddressBook-0.svg",
@@ -30576,7 +30556,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, ethereum, asset, staking, l2, returns, gains, interest",
       "createdAt": "2026-03-16T14:55:20.594Z",
-      "lastUpdated": "2026-03-16T14:55:20.594Z",
+      "lastUpdated": "2026-03-19T18:42:00.253Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoEthStakingChart-0.svg",
         "svgDark": "./pictogram/svg/dark/instoEthStakingChart-0.svg",
@@ -30596,7 +30576,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, square, blue, music, music note, user, play, document, digital, collectibles, nfts",
       "createdAt": "2026-03-16T14:55:20.571Z",
-      "lastUpdated": "2026-03-16T14:55:20.571Z",
+      "lastUpdated": "2026-03-19T18:42:00.148Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoNftLibrary-0.svg",
         "svgDark": "./pictogram/svg/dark/instoNftLibrary-0.svg",
@@ -30616,7 +30596,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.563Z",
-      "lastUpdated": "2026-03-16T14:55:20.563Z",
+      "lastUpdated": "2026-03-19T18:42:00.271Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoDecentralizationEverything-0.svg",
         "svgDark": "./pictogram/svg/dark/instoDecentralizationEverything-0.svg",
@@ -30636,7 +30616,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, wallet, storage, crypto transactions, pay, retrieve, digital assets, exclamation mark, warning, alert, help, crucial, indication, yellow, 💰, 💵, 💸, ⚠️",
       "createdAt": "2026-03-16T14:55:20.556Z",
-      "lastUpdated": "2026-03-16T14:55:20.556Z",
+      "lastUpdated": "2026-03-19T18:42:00.107Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoWalletWarning-0.svg",
         "svgDark": "./pictogram/svg/dark/instoWalletWarning-0.svg",
@@ -30651,22 +30631,22 @@
     "28806:100": {
       "type": "pictogram",
       "name": "instoKey",
-      "hash": "Z7uKWGYPc5N0vbXP6V9NK/zUlXQsydv1kxkHopDfw1U=",
+      "hash": "wSV5vH2dMbYY2BTIg4vexzYhVMDDymAyh1i6SQdXovM=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, secure, security, protect, shield, key, protection, guard, defense, cover, safety, 🔑, 🗝, 🔐, 🔒",
       "createdAt": "2026-03-16T14:55:20.677Z",
-      "lastUpdated": "2026-03-16T14:55:20.677Z",
+      "lastUpdated": "2026-03-19T18:42:00.293Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoKey-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoKey-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoKey-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoKey-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoKey-0.js",
-        "pngLight": "./pictogram/png/light/instoKey-0.png",
-        "pngDark": "./pictogram/png/dark/instoKey-0.png"
+        "svgLight": "./pictogram/svg/light/instoKey-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoKey-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoKey-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoKey-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoKey-1.js",
+        "pngLight": "./pictogram/png/light/instoKey-1.png",
+        "pngDark": "./pictogram/png/dark/instoKey-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:101": {
       "type": "pictogram",
@@ -30676,7 +30656,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, exclamation, risk, caution, wrapping, ETH, staking, graph, growth, chart, value, market",
       "createdAt": "2026-03-16T14:55:20.548Z",
-      "lastUpdated": "2026-03-16T14:55:20.548Z",
+      "lastUpdated": "2026-03-19T18:42:00.131Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoRiskStaking-0.svg",
         "svgDark": "./pictogram/svg/dark/instoRiskStaking-0.svg",
@@ -30696,7 +30676,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, product, icons, staking",
       "createdAt": "2026-03-16T14:55:20.527Z",
-      "lastUpdated": "2026-03-16T14:55:20.527Z",
+      "lastUpdated": "2026-03-19T18:42:00.367Z",
       "outputs": {
         "svgLight": "./spotIcon/svg/light/instoStakingProduct-0.svg",
         "svgDark": "./spotIcon/svg/dark/instoStakingProduct-0.svg",
@@ -30716,7 +30696,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, add, more, plus, coin, additional, crypto, 🪙, ➕",
       "createdAt": "2026-03-16T14:55:20.535Z",
-      "lastUpdated": "2026-03-16T14:55:20.535Z",
+      "lastUpdated": "2026-03-19T18:42:00.410Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoEarnCoins-0.svg",
         "svgDark": "./pictogram/svg/dark/instoEarnCoins-0.svg",
@@ -30736,7 +30716,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, bank, fund, stock, currency, money, building, institution, 💵, 💸, 🏦, 🏧, 💴, 💶, 💷",
       "createdAt": "2026-03-16T14:55:21.050Z",
-      "lastUpdated": "2026-03-17T14:09:28.701Z",
+      "lastUpdated": "2026-03-19T18:42:00.263Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoFiat-0.svg",
         "svgDark": "./pictogram/svg/dark/instoFiat-0.svg",
@@ -30756,7 +30736,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, chart, trading, candles, graph, numbers, data, visualization, 📈, 📉, 📊, 🕯, 🪔,",
       "createdAt": "2026-03-16T14:55:20.645Z",
-      "lastUpdated": "2026-03-17T14:02:04.864Z",
+      "lastUpdated": "2026-03-19T18:42:00.125Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoTrading-0.svg",
         "svgDark": "./pictogram/svg/dark/instoTrading-0.svg",
@@ -30768,26 +30748,6 @@
       },
       "version": 0
     },
-    "28806:106": {
-      "type": "pictogram",
-      "name": "instoDecentralizedExchange",
-      "hash": "UbYkR2D8uEWh1bwEfVwrs/y7RSPwqQiXbh2PI24G28c=",
-      "width": 48,
-      "height": 48,
-      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
-      "createdAt": "2026-03-16T14:55:20.615Z",
-      "lastUpdated": "2026-03-16T14:55:20.615Z",
-      "outputs": {
-        "svgLight": "./pictogram/svg/light/instoDecentralizedExchange-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoDecentralizedExchange-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoDecentralizedExchange-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoDecentralizedExchange-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoDecentralizedExchange-0.js",
-        "pngLight": "./pictogram/png/light/instoDecentralizedExchange-0.png",
-        "pngDark": "./pictogram/png/dark/instoDecentralizedExchange-0.png"
-      },
-      "version": 0
-    },
     "28806:107": {
       "type": "pictogram",
       "name": "instoSelfCustodyWallet",
@@ -30796,7 +30756,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, wallet, user, blue, circle, self custody",
       "createdAt": "2026-03-16T14:55:20.630Z",
-      "lastUpdated": "2026-03-16T14:55:20.630Z",
+      "lastUpdated": "2026-03-19T18:41:59.935Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/instoSelfCustodyWallet-0.svg",
         "svgDark": "./pictogram/svg/dark/instoSelfCustodyWallet-0.svg",
@@ -30805,6 +30765,1026 @@
         "svgJsDark": "./pictogram/svgJs/dark/instoSelfCustodyWallet-0.js",
         "pngLight": "./pictogram/png/light/instoSelfCustodyWallet-0.png",
         "pngDark": "./pictogram/png/dark/instoSelfCustodyWallet-0.png"
+      },
+      "version": 0
+    },
+    "28897:135": {
+      "type": "pictogram",
+      "name": "instoSecuredAssets",
+      "hash": "EYSVx2WR7xVeb2tLuCJdroF9HUsRVjz3OT/Ys/zNDqw=",
+      "width": 48,
+      "height": 48,
+      "description": "circle, yellow, blue, coin, secure, storage",
+      "createdAt": "2026-03-18T17:25:34.687Z",
+      "lastUpdated": "2026-03-19T18:42:00.288Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoSecuredAssets-0.svg",
+        "svgDark": "./pictogram/svg/dark/instoSecuredAssets-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoSecuredAssets-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoSecuredAssets-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoSecuredAssets-0.js",
+        "pngLight": "./pictogram/png/light/instoSecuredAssets-0.png",
+        "pngDark": "./pictogram/png/dark/instoSecuredAssets-0.png"
+      },
+      "version": 0
+    },
+    "28897:153": {
+      "type": "pictogram",
+      "name": "instoBorrowCoins",
+      "hash": "hNr0gqJp9a5bwtrymPqivsOK8r1UEdFquXRU46M9jlM=",
+      "width": 48,
+      "height": 48,
+      "description": "borrow, coins, blue, yellow",
+      "createdAt": "2026-03-18T17:25:34.692Z",
+      "lastUpdated": "2026-03-19T18:42:00.113Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoBorrowCoins-0.svg",
+        "svgDark": "./pictogram/svg/dark/instoBorrowCoins-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoBorrowCoins-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoBorrowCoins-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoBorrowCoins-0.js",
+        "pngLight": "./pictogram/png/light/instoBorrowCoins-0.png",
+        "pngDark": "./pictogram/png/dark/instoBorrowCoins-0.png"
+      },
+      "version": 0
+    },
+    "28897:159": {
+      "type": "pictogram",
+      "name": "instoEasyToUse",
+      "hash": "6KwoD0pi1wrigmj/XcvU2aBbSV7Ok2KDIjMeAYz1bFc=",
+      "width": 48,
+      "height": 48,
+      "description": "diamond, reward, sparkle, earn, crystal, 💎, 💍, ✨,  ❇️",
+      "createdAt": "2026-03-18T17:25:34.682Z",
+      "lastUpdated": "2026-03-19T18:42:00.384Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoEasyToUse-0.svg",
+        "svgDark": "./pictogram/svg/dark/instoEasyToUse-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoEasyToUse-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoEasyToUse-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoEasyToUse-0.js",
+        "pngLight": "./pictogram/png/light/instoEasyToUse-0.png",
+        "pngDark": "./pictogram/png/dark/instoEasyToUse-0.png"
+      },
+      "version": 0
+    },
+    "28897:172": {
+      "type": "spotSquare",
+      "name": "instoAuthenticatorProgress",
+      "hash": "RMcuuy3b2ChqE9M3I7SDbrNAFNxEVSyRfaeXr/rP6Io=",
+      "width": 48,
+      "height": 48,
+      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+      "createdAt": "2026-03-16T14:55:20.778Z",
+      "lastUpdated": "2026-03-19T18:41:59.972Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/instoAuthenticatorProgress-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoAuthenticatorProgress-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoAuthenticatorProgress-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoAuthenticatorProgress-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoAuthenticatorProgress-1.js",
+        "pngLight": "./spotSquare/png/light/instoAuthenticatorProgress-1.png",
+        "pngDark": "./spotSquare/png/dark/instoAuthenticatorProgress-1.png"
+      },
+      "version": 1
+    },
+    "28897:183": {
+      "type": "pictogram",
+      "name": "instoCoinFocus",
+      "hash": "1c5wUogaIJTmN7Wdr8gBI0B5Gwxtp1DXaGVZ2r0FWkc=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-03-18T17:25:34.672Z",
+      "lastUpdated": "2026-03-19T18:42:00.032Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoCoinFocus-0.svg",
+        "svgDark": "./pictogram/svg/dark/instoCoinFocus-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoCoinFocus-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoCoinFocus-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoCoinFocus-0.js",
+        "pngLight": "./pictogram/png/light/instoCoinFocus-0.png",
+        "pngDark": "./pictogram/png/dark/instoCoinFocus-0.png"
+      },
+      "version": 0
+    },
+    "28897:191": {
+      "type": "pictogram",
+      "name": "instoGlobalConnections",
+      "hash": "fJbBWuJzttLPDJo/Pz7BLgS7ZEcmTu1TZkCHXLxcW9c=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-03-18T17:25:34.667Z",
+      "lastUpdated": "2026-03-19T18:41:59.978Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoGlobalConnections-0.svg",
+        "svgDark": "./pictogram/svg/dark/instoGlobalConnections-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoGlobalConnections-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoGlobalConnections-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoGlobalConnections-0.js",
+        "pngLight": "./pictogram/png/light/instoGlobalConnections-0.png",
+        "pngDark": "./pictogram/png/dark/instoGlobalConnections-0.png"
+      },
+      "version": 0
+    },
+    "28897:202": {
+      "type": "pictogram",
+      "name": "instoMonitoringPerformance",
+      "hash": "zcRcwNRlOYnCexVpjB/7txgotED7qH9d0JUdD7my/Ms=",
+      "width": 48,
+      "height": 48,
+      "description": "arrow, coins, up, gain, blue, circle, portfolio",
+      "createdAt": "2026-03-18T17:25:34.661Z",
+      "lastUpdated": "2026-03-19T18:42:00.425Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoMonitoringPerformance-0.svg",
+        "svgDark": "./pictogram/svg/dark/instoMonitoringPerformance-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoMonitoringPerformance-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoMonitoringPerformance-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoMonitoringPerformance-0.js",
+        "pngLight": "./pictogram/png/light/instoMonitoringPerformance-0.png",
+        "pngDark": "./pictogram/png/dark/instoMonitoringPerformance-0.png"
+      },
+      "version": 0
+    },
+    "28897:213": {
+      "type": "pictogram",
+      "name": "instoDecentralizedExchange",
+      "hash": "j8q+ChwIfvT5KEwY6oYWkmJwWD0npCKFeAE0zqLX1rk=",
+      "width": 48,
+      "height": 48,
+      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+      "createdAt": "2026-03-16T14:55:20.615Z",
+      "lastUpdated": "2026-03-19T18:41:59.994Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/instoDecentralizedExchange-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoDecentralizedExchange-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoDecentralizedExchange-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoDecentralizedExchange-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoDecentralizedExchange-1.js",
+        "pngLight": "./pictogram/png/light/instoDecentralizedExchange-1.png",
+        "pngDark": "./pictogram/png/dark/instoDecentralizedExchange-1.png"
+      },
+      "version": 1
+    },
+    "28932:405": {
+      "type": "spotIcon",
+      "name": "instoDelegate",
+      "hash": "hpN4dcAoBVcBEXx0MUEY+qChD6Uu9X8WqowNytlN+w4=",
+      "width": 32,
+      "height": 32,
+      "description": "represent, envoy, agent, assign, entrust, give, person, check, checkmark, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
+      "createdAt": "2026-03-19T18:41:59.421Z",
+      "lastUpdated": "2026-03-19T18:41:59.421Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoDelegate-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoDelegate-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoDelegate-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoDelegate-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoDelegate-0.js",
+        "pngLight": "./spotIcon/png/light/instoDelegate-0.png",
+        "pngDark": "./spotIcon/png/dark/instoDelegate-0.png"
+      },
+      "version": 0
+    },
+    "28932:406": {
+      "type": "spotIcon",
+      "name": "instoMultiCoin",
+      "hash": "d59PaS1TU15uCidJ3/LnRthDgwRi9ryx5WkpyHbFKnI=",
+      "width": 32,
+      "height": 32,
+      "description": "",
+      "createdAt": "2026-03-19T18:41:59.446Z",
+      "lastUpdated": "2026-03-19T18:41:59.446Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoMultiCoin-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoMultiCoin-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoMultiCoin-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoMultiCoin-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoMultiCoin-0.js",
+        "pngLight": "./spotIcon/png/light/instoMultiCoin-0.png",
+        "pngDark": "./spotIcon/png/dark/instoMultiCoin-0.png"
+      },
+      "version": 0
+    },
+    "28932:407": {
+      "type": "spotIcon",
+      "name": "instoShield",
+      "hash": "HqqVuSMtw/DPQmNO7Xlyw4cIhR6wWYUND0tmN2+GQlY=",
+      "width": 32,
+      "height": 32,
+      "description": "shield, protection, guard, defense, cover, safety, security",
+      "createdAt": "2026-03-19T18:41:59.440Z",
+      "lastUpdated": "2026-03-19T18:41:59.440Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoShield-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoShield-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoShield-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoShield-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoShield-0.js",
+        "pngLight": "./spotIcon/png/light/instoShield-0.png",
+        "pngDark": "./spotIcon/png/dark/instoShield-0.png"
+      },
+      "version": 0
+    },
+    "28932:413": {
+      "type": "spotIcon",
+      "name": "instoAuthenticator",
+      "hash": "wb3d6Wh6eZ8pwKoUslc7XD520dteggI6NEonJhjvbEE=",
+      "width": 32,
+      "height": 32,
+      "description": "trust, true, genuine, actual, verification",
+      "createdAt": "2026-03-19T18:41:59.458Z",
+      "lastUpdated": "2026-03-19T18:41:59.458Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoAuthenticator-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoAuthenticator-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoAuthenticator-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoAuthenticator-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoAuthenticator-0.js",
+        "pngLight": "./spotIcon/png/light/instoAuthenticator-0.png",
+        "pngDark": "./spotIcon/png/dark/instoAuthenticator-0.png"
+      },
+      "version": 0
+    },
+    "28932:419": {
+      "type": "spotIcon",
+      "name": "instoPieChart",
+      "hash": "2ujmpvzNNUgIKwwnFCm398HNADxoyKQzAYCntC3GvB4=",
+      "width": 32,
+      "height": 32,
+      "description": "chart pie, data, visualization, numbers, graph, 📊, 📉, 📈, 🥧",
+      "createdAt": "2026-03-19T18:41:59.507Z",
+      "lastUpdated": "2026-03-19T18:41:59.507Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoPieChart-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoPieChart-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoPieChart-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoPieChart-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoPieChart-0.js",
+        "pngLight": "./spotIcon/png/light/instoPieChart-0.png",
+        "pngDark": "./spotIcon/png/dark/instoPieChart-0.png"
+      },
+      "version": 0
+    },
+    "28932:426": {
+      "type": "spotIcon",
+      "name": "instoFast",
+      "hash": "0PZaxt4Gk2fMJvJ8xttHnLpWvS/VQ718W1xt7quoC1w=",
+      "width": 32,
+      "height": 32,
+      "description": "quick, time, clock, speed, lightning, 🕦, 🕐, 🕚, 🕥, 🕧, 🕙, 🕣, 🕠, 🕝, 🕢, 🕟, 🕜, 🕤, 🕡, 🕞, 🕘, 🕒, 🕗, 🕔, 🕑, 🕖, 🕓, 🕛, ⏰, ⏱, 🕰, 🔄, ⏳, ⌛️",
+      "createdAt": "2026-03-19T18:41:59.476Z",
+      "lastUpdated": "2026-03-19T18:41:59.476Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoFast-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoFast-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoFast-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoFast-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoFast-0.js",
+        "pngLight": "./spotIcon/png/light/instoFast-0.png",
+        "pngDark": "./spotIcon/png/dark/instoFast-0.png"
+      },
+      "version": 0
+    },
+    "28932:434": {
+      "type": "spotIcon",
+      "name": "instoRecurringPurchases",
+      "hash": "BY+mwy47+1UNq6zRqqXW2KsvPrAuCj4wSG5vvJjCHqk=",
+      "width": 32,
+      "height": 32,
+      "description": "reoccur, regular, schedule, calendar, organize, date, year, month, week, book, refresh, 📆, 📅, 🗓",
+      "createdAt": "2026-03-19T18:41:59.483Z",
+      "lastUpdated": "2026-03-19T18:41:59.483Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoRecurringPurchases-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoRecurringPurchases-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoRecurringPurchases-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoRecurringPurchases-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoRecurringPurchases-0.js",
+        "pngLight": "./spotIcon/png/light/instoRecurringPurchases-0.png",
+        "pngDark": "./spotIcon/png/dark/instoRecurringPurchases-0.png"
+      },
+      "version": 0
+    },
+    "28932:440": {
+      "type": "spotIcon",
+      "name": "instoChat",
+      "hash": "XZugJGVEn+2RwcyF3RkvdlPLwKcomex1wDO/gcsXkJY=",
+      "width": 32,
+      "height": 32,
+      "description": "chat bubble, speech, communication, social, interaction, message, 💬",
+      "createdAt": "2026-03-19T18:41:59.470Z",
+      "lastUpdated": "2026-03-19T18:41:59.470Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoChat-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoChat-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoChat-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoChat-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoChat-0.js",
+        "pngLight": "./spotIcon/png/light/instoChat-0.png",
+        "pngDark": "./spotIcon/png/dark/instoChat-0.png"
+      },
+      "version": 0
+    },
+    "28932:456": {
+      "type": "spotIcon",
+      "name": "instoAdvancedTradeProduct",
+      "hash": "UVCI06VeRHdr0Kkn5pE99uKOJuiyTBkSYmW0qCBdr78=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, advanced, trade",
+      "createdAt": "2026-03-19T18:41:59.409Z",
+      "lastUpdated": "2026-03-19T18:41:59.409Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoAdvancedTradeProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoAdvancedTradeProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoAdvancedTradeProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoAdvancedTradeProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoAdvancedTradeProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoAdvancedTradeProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoAdvancedTradeProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:463": {
+      "type": "spotIcon",
+      "name": "instoPaySDKProduct",
+      "hash": "erk6n8tJDtA0n8rgYpjGa+JDtmszirD/oD/p+n1YlV8=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, pay, SDK",
+      "createdAt": "2026-03-19T18:41:59.415Z",
+      "lastUpdated": "2026-03-19T18:41:59.415Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoPaySDKProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoPaySDKProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoPaySDKProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoPaySDKProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoPaySDKProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoPaySDKProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoPaySDKProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:470": {
+      "type": "spotIcon",
+      "name": "instoDataMarketplace",
+      "hash": "ppzm8vuR+RmGbJtEPRH/e8yP8075Enh3J7dbdIOAhqI=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, data, marketplace",
+      "createdAt": "2026-03-19T18:41:59.403Z",
+      "lastUpdated": "2026-03-19T18:41:59.403Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoDataMarketplace-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoDataMarketplace-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoDataMarketplace-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoDataMarketplace-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoDataMarketplace-0.js",
+        "pngLight": "./spotIcon/png/light/instoDataMarketplace-0.png",
+        "pngDark": "./spotIcon/png/dark/instoDataMarketplace-0.png"
+      },
+      "version": 0
+    },
+    "28932:471": {
+      "type": "spotIcon",
+      "name": "instoRewardsProduct",
+      "hash": "P11sYawkz+4ymtNx0OHfGjGG1H1uUlQSv/LYKxt9AbQ=",
+      "width": 32,
+      "height": 32,
+      "description": "",
+      "createdAt": "2026-03-19T18:41:59.397Z",
+      "lastUpdated": "2026-03-19T18:41:59.397Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoRewardsProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoRewardsProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoRewardsProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoRewardsProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoRewardsProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoRewardsProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoRewardsProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:472": {
+      "type": "spotIcon",
+      "name": "instoWalletAsAServiceProduct",
+      "hash": "4Xy9WBlZMIfR3gVyhUg4Us6cZHxLhzDdgc91UrzjIKU=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, wallet, as, a, service",
+      "createdAt": "2026-03-19T18:41:59.433Z",
+      "lastUpdated": "2026-03-19T18:41:59.433Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoWalletAsAServiceProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoWalletAsAServiceProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoWalletAsAServiceProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoWalletAsAServiceProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoWalletAsAServiceProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoWalletAsAServiceProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoWalletAsAServiceProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:473": {
+      "type": "spotIcon",
+      "name": "instoBorrowProduct",
+      "hash": "61VX6q+/BbgtZ/SyLBqABMJhv+yUbx3MmRu3n1xHwCo=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, borrow",
+      "createdAt": "2026-03-19T18:41:59.495Z",
+      "lastUpdated": "2026-03-19T18:41:59.495Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoBorrowProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoBorrowProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoBorrowProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoBorrowProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoBorrowProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoBorrowProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoBorrowProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:474": {
+      "type": "spotIcon",
+      "name": "instoLearningRewardsProduct",
+      "hash": "t66gTlSTO9jY/lenl9yW4C8L8RgPkn8D5Q2UTauMBNM=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, learning, rewards",
+      "createdAt": "2026-03-19T18:41:59.501Z",
+      "lastUpdated": "2026-03-19T18:41:59.501Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoLearningRewardsProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoLearningRewardsProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoLearningRewardsProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoLearningRewardsProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoLearningRewardsProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoLearningRewardsProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoLearningRewardsProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:475": {
+      "type": "spotIcon",
+      "name": "instoCommerceProduct",
+      "hash": "BlW26SDFvmHDmqv0RD7cRz62R1wGmD63seuNNk1DjSw=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, commerce",
+      "createdAt": "2026-03-19T18:41:59.489Z",
+      "lastUpdated": "2026-03-19T18:41:59.489Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoCommerceProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoCommerceProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoCommerceProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoCommerceProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoCommerceProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoCommerceProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoCommerceProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:476": {
+      "type": "spotIcon",
+      "name": "instoPrivateClientProduct",
+      "hash": "1AHtK1c9Kvo78AYT0DafVHAvdYDXYZtyRdQW31fS0hI=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, private, client",
+      "createdAt": "2026-03-19T18:41:59.452Z",
+      "lastUpdated": "2026-03-19T18:41:59.452Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoPrivateClientProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoPrivateClientProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoPrivateClientProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoPrivateClientProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoPrivateClientProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoPrivateClientProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoPrivateClientProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:477": {
+      "type": "spotIcon",
+      "name": "instoCustodyProduct",
+      "hash": "y9FBN+kUphztjH1yFWKjX64Ne8BFfjIfvNFspIGWnUw=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, custody",
+      "createdAt": "2026-03-19T18:41:59.427Z",
+      "lastUpdated": "2026-03-19T18:41:59.427Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoCustodyProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoCustodyProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoCustodyProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoCustodyProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoCustodyProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoCustodyProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoCustodyProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:478": {
+      "type": "spotIcon",
+      "name": "instoPrimeProduct",
+      "hash": "0zo4ZV/RfNNPMNJGkb6miPTH/jqU2K0bUVDpe3ttAZU=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, prime",
+      "createdAt": "2026-03-19T18:41:59.391Z",
+      "lastUpdated": "2026-03-19T18:41:59.391Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoPrimeProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoPrimeProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoPrimeProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoPrimeProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoPrimeProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoPrimeProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoPrimeProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:479": {
+      "type": "spotIcon",
+      "name": "instoHelpCenterProduct",
+      "hash": "htJHL5wFVVUY9BrSZmgBL5/yhmbScpt1GFZb+psQcmU=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, help, center",
+      "createdAt": "2026-03-19T18:41:59.384Z",
+      "lastUpdated": "2026-03-19T18:41:59.384Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoHelpCenterProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoHelpCenterProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoHelpCenterProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoHelpCenterProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoHelpCenterProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoHelpCenterProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoHelpCenterProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:480": {
+      "type": "spotIcon",
+      "name": "instoDerivativesProduct",
+      "hash": "FwSHAyFcOzdRfyyKASxfpKAqv209oqGgA0/t9NVKuHc=",
+      "width": 32,
+      "height": 32,
+      "description": "derivatives, pictogram, leverage, invest, prime, advanced, derive, arrow, triangles",
+      "createdAt": "2026-03-19T18:41:59.512Z",
+      "lastUpdated": "2026-03-19T18:41:59.512Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoDerivativesProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoDerivativesProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoDerivativesProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoDerivativesProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoDerivativesProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoDerivativesProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoDerivativesProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:489": {
+      "type": "spotIcon",
+      "name": "instoBusinessProduct",
+      "hash": "FZxWx6V2lmHUWNqATsWiFonwA9MOes1JA2VHSOSWy+w=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, advanced, trade, coinbaseone, One,",
+      "createdAt": "2026-03-19T18:41:59.378Z",
+      "lastUpdated": "2026-03-19T18:41:59.378Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoBusinessProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoBusinessProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoBusinessProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoBusinessProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoBusinessProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoBusinessProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoBusinessProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:496": {
+      "type": "spotIcon",
+      "name": "instoProductPro",
+      "hash": "NVxovXdlEbwQtBlNB4cofL/NhFIYIxbDZJiaov59uY0=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, icon, small, coinbase, 32x32, pro",
+      "createdAt": "2026-03-19T18:41:59.371Z",
+      "lastUpdated": "2026-03-19T18:41:59.371Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoProductPro-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoProductPro-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoProductPro-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoProductPro-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoProductPro-0.js",
+        "pngLight": "./spotIcon/png/light/instoProductPro-0.png",
+        "pngDark": "./spotIcon/png/dark/instoProductPro-0.png"
+      },
+      "version": 0
+    },
+    "28932:503": {
+      "type": "spotIcon",
+      "name": "instoProductCompliance",
+      "hash": "Js2rPui2bIN4NDniw00HSSWds5RFLXYPG4/AtghHueE=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, icon, small, coinbase, 32x32, compliance",
+      "createdAt": "2026-03-19T18:41:59.365Z",
+      "lastUpdated": "2026-03-19T18:41:59.365Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoProductCompliance-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoProductCompliance-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoProductCompliance-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoProductCompliance-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoProductCompliance-0.js",
+        "pngLight": "./spotIcon/png/light/instoProductCompliance-0.png",
+        "pngDark": "./spotIcon/png/dark/instoProductCompliance-0.png"
+      },
+      "version": 0
+    },
+    "28932:513": {
+      "type": "spotIcon",
+      "name": "instoProductCoinbaseCard",
+      "hash": "y4tc/Dh9hUvPOVsiX3XzE3eoArPSiRJ2mGF/QpxEYO0=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, icon, small, coinbase, 32x32, card",
+      "createdAt": "2026-03-19T18:41:59.359Z",
+      "lastUpdated": "2026-03-19T18:41:59.359Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoProductCoinbaseCard-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoProductCoinbaseCard-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoProductCoinbaseCard-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoProductCoinbaseCard-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoProductCoinbaseCard-0.js",
+        "pngLight": "./spotIcon/png/light/instoProductCoinbaseCard-0.png",
+        "pngDark": "./spotIcon/png/dark/instoProductCoinbaseCard-0.png"
+      },
+      "version": 0
+    },
+    "28932:514": {
+      "type": "spotIcon",
+      "name": "instoIdVerification",
+      "hash": "d+8TzuZNlY1iQElnHapb+GM+s7x7QRKYGsDuvK/jIuA=",
+      "width": 32,
+      "height": 32,
+      "description": "check, checkmark, secure, 2fa, protection, identity card, profile, personal, ID, human, card, 🆔, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️, success state",
+      "createdAt": "2026-03-19T18:41:59.353Z",
+      "lastUpdated": "2026-03-19T18:41:59.353Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoIdVerification-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoIdVerification-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoIdVerification-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoIdVerification-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoIdVerification-0.js",
+        "pngLight": "./spotIcon/png/light/instoIdVerification-0.png",
+        "pngDark": "./spotIcon/png/dark/instoIdVerification-0.png"
+      },
+      "version": 0
+    },
+    "28932:515": {
+      "type": "spotIcon",
+      "name": "instoCoinbaseOneEarn",
+      "hash": "0U0QNXnP9+dsBIIILrMznDPNm7zcKBUU2n6U7Dn9c1w=",
+      "width": 32,
+      "height": 32,
+      "description": "Coinbase, One, Concierge, person, attendant",
+      "createdAt": "2026-03-19T18:41:59.464Z",
+      "lastUpdated": "2026-03-19T18:41:59.464Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoCoinbaseOneEarn-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoCoinbaseOneEarn-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoCoinbaseOneEarn-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoCoinbaseOneEarn-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoCoinbaseOneEarn-0.js",
+        "pngLight": "./spotIcon/png/light/instoCoinbaseOneEarn-0.png",
+        "pngDark": "./spotIcon/png/dark/instoCoinbaseOneEarn-0.png"
+      },
+      "version": 0
+    },
+    "28932:516": {
+      "type": "spotIcon",
+      "name": "instoLayeredNetworks",
+      "hash": "moXeAjJjJmryfuVjmrxrK7DnilvzT4KuGoTy78Ytous=",
+      "width": 31.999969482421875,
+      "height": 32,
+      "description": "layers, layer three, three, isometric, networks, base, blue, yellow",
+      "createdAt": "2026-03-19T18:41:59.347Z",
+      "lastUpdated": "2026-03-19T18:41:59.347Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoLayeredNetworks-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoLayeredNetworks-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoLayeredNetworks-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoLayeredNetworks-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoLayeredNetworks-0.js",
+        "pngLight": "./spotIcon/png/light/instoLayeredNetworks-0.png",
+        "pngDark": "./spotIcon/png/dark/instoLayeredNetworks-0.png"
+      },
+      "version": 0
+    },
+    "28932:517": {
+      "type": "spotIcon",
+      "name": "instoSignInProduct",
+      "hash": "AA24VCrRu+IcyrgtIJxqLXHtQTHjMEdpN/3Z2X3nb3U=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, sign, in, with, coinbase",
+      "createdAt": "2026-03-19T18:41:59.340Z",
+      "lastUpdated": "2026-03-19T18:41:59.340Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoSignInProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoSignInProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoSignInProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoSignInProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoSignInProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoSignInProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoSignInProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:518": {
+      "type": "spotIcon",
+      "name": "instoCloudProduct",
+      "hash": "bKIL9yTh29Uw5Li/0qFV8OOc5S6Xwp0m2E2+FwtNvO0=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, cloud, developer, portal",
+      "createdAt": "2026-03-19T18:41:59.334Z",
+      "lastUpdated": "2026-03-19T18:41:59.334Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoCloudProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoCloudProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoCloudProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoCloudProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoCloudProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoCloudProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoCloudProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:531": {
+      "type": "spotIcon",
+      "name": "instoAssetHubProduct",
+      "hash": "M93ddJbknrGNQPv533yYsXudfuG00QJ6Rly8A5mC2yc=",
+      "width": 32,
+      "height": 32,
+      "description": "",
+      "createdAt": "2026-03-19T18:41:59.327Z",
+      "lastUpdated": "2026-03-19T18:41:59.327Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoAssetHubProduct-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoAssetHubProduct-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoAssetHubProduct-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoAssetHubProduct-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoAssetHubProduct-0.js",
+        "pngLight": "./spotIcon/png/light/instoAssetHubProduct-0.png",
+        "pngDark": "./spotIcon/png/dark/instoAssetHubProduct-0.png"
+      },
+      "version": 0
+    },
+    "28932:536": {
+      "type": "spotIcon",
+      "name": "instoProductWallet",
+      "hash": "GPEgRiiwQhv2Y17RGxI7+YyuaFtjFonmxIblzgqPjOM=",
+      "width": 32,
+      "height": 32,
+      "description": "product, icons, icon, small, coinbase, 32x32, wallet",
+      "createdAt": "2026-03-19T18:41:59.311Z",
+      "lastUpdated": "2026-03-19T18:41:59.311Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/instoProductWallet-0.svg",
+        "svgDark": "./spotIcon/svg/dark/instoProductWallet-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoProductWallet-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoProductWallet-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoProductWallet-0.js",
+        "pngLight": "./spotIcon/png/light/instoProductWallet-0.png",
+        "pngDark": "./spotIcon/png/dark/instoProductWallet-0.png"
+      },
+      "version": 0
+    },
+    "28955:90": {
+      "type": "spotRectangle",
+      "name": "instoMargin",
+      "hash": "toHN4t43CJ2PTc/MOKmTW7mCAIxyQjvsQxk5qNb6hoM=",
+      "width": 240,
+      "height": 120,
+      "description": "margin, trading, add, stack, more, lever, up, buy, sell, put, options, trade, risk",
+      "createdAt": "2026-03-20T17:10:13.579Z",
+      "lastUpdated": "2026-03-20T17:10:13.579Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoMargin-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoMargin-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoMargin-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoMargin-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoMargin-0.js",
+        "pngLight": "./spotRectangle/png/light/instoMargin-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoMargin-0.png"
+      },
+      "version": 0
+    },
+    "28955:91": {
+      "type": "spotRectangle",
+      "name": "instoApiKey",
+      "hash": "Xn5cZASJItYJNJ4Tu2Q62xCSvXGj/2HqnersoNlOotQ=",
+      "width": 240,
+      "height": 120,
+      "description": "API, key, access, account, connect, unlock, gain, trust",
+      "createdAt": "2026-03-20T17:10:13.588Z",
+      "lastUpdated": "2026-03-20T17:10:13.588Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoApiKey-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoApiKey-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoApiKey-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoApiKey-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoApiKey-0.js",
+        "pngLight": "./spotRectangle/png/light/instoApiKey-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoApiKey-0.png"
+      },
+      "version": 0
+    },
+    "28956:112": {
+      "type": "spotRectangle",
+      "name": "instoRefreshKey",
+      "hash": "4mQkdXQASFAqdwOek6T0YMDneh6uKy08a2RxtT+lgu4=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.592Z",
+      "lastUpdated": "2026-03-20T17:10:13.592Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoRefreshKey-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoRefreshKey-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoRefreshKey-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoRefreshKey-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoRefreshKey-0.js",
+        "pngLight": "./spotRectangle/png/light/instoRefreshKey-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoRefreshKey-0.png"
+      },
+      "version": 0
+    },
+    "28956:134": {
+      "type": "spotRectangle",
+      "name": "instoKey",
+      "hash": "6JVOaU9Ek4ecKM8AIJmX4vb5UbXhWO8EmIwSOBBy6hY=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.601Z",
+      "lastUpdated": "2026-03-20T17:10:13.601Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoKey-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoKey-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoKey-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoKey-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoKey-0.js",
+        "pngLight": "./spotRectangle/png/light/instoKey-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoKey-0.png"
+      },
+      "version": 0
+    },
+    "28957:289": {
+      "type": "spotRectangle",
+      "name": "instoSetupComplete",
+      "hash": "KNVeELUPPKjNxz0mmAhMlcQmQOvSkkE2fHgo5AI+bUk=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.584Z",
+      "lastUpdated": "2026-03-20T17:10:13.584Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoSetupComplete-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoSetupComplete-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoSetupComplete-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoSetupComplete-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoSetupComplete-0.js",
+        "pngLight": "./spotRectangle/png/light/instoSetupComplete-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoSetupComplete-0.png"
+      },
+      "version": 0
+    },
+    "28957:1807": {
+      "type": "spotRectangle",
+      "name": "instoDesignateSigner",
+      "hash": "yNcY0FqnckkEgHkNL+esE7gp/rRrgLGF8neY18FRr4g=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.605Z",
+      "lastUpdated": "2026-03-20T17:10:13.605Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoDesignateSigner-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoDesignateSigner-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoDesignateSigner-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoDesignateSigner-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoDesignateSigner-0.js",
+        "pngLight": "./spotRectangle/png/light/instoDesignateSigner-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoDesignateSigner-0.png"
+      },
+      "version": 0
+    },
+    "28957:1856": {
+      "type": "spotRectangle",
+      "name": "instoAboutOnchain",
+      "hash": "cgKEGcAkqXoiWlSNfZpo7Td20dAQHMhFPZQ9pFyZWYU=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.574Z",
+      "lastUpdated": "2026-03-20T17:10:13.574Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoAboutOnchain-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoAboutOnchain-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoAboutOnchain-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoAboutOnchain-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoAboutOnchain-0.js",
+        "pngLight": "./spotRectangle/png/light/instoAboutOnchain-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoAboutOnchain-0.png"
+      },
+      "version": 0
+    },
+    "28958:42": {
+      "type": "spotRectangle",
+      "name": "instoSetupOnchain",
+      "hash": "hxdFYLCTKOSt9xLjV7gYslu4uiRSeAuEuiMetTLCYnI=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.569Z",
+      "lastUpdated": "2026-03-20T17:10:13.569Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoSetupOnchain-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoSetupOnchain-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoSetupOnchain-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoSetupOnchain-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoSetupOnchain-0.js",
+        "pngLight": "./spotRectangle/png/light/instoSetupOnchain-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoSetupOnchain-0.png"
+      },
+      "version": 0
+    },
+    "28958:231": {
+      "type": "spotRectangle",
+      "name": "instoOnchainSetupInProgress",
+      "hash": "6iNT/h9jr8Sdpg2YyAu/rKUf7Q2eFFueuNkjd+LOXhs=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.610Z",
+      "lastUpdated": "2026-03-20T17:10:13.610Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoOnchainSetupInProgress-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoOnchainSetupInProgress-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoOnchainSetupInProgress-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoOnchainSetupInProgress-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoOnchainSetupInProgress-0.js",
+        "pngLight": "./spotRectangle/png/light/instoOnchainSetupInProgress-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoOnchainSetupInProgress-0.png"
+      },
+      "version": 0
+    },
+    "28958:422": {
+      "type": "spotRectangle",
+      "name": "instoConsensusWaitingForApprovals",
+      "hash": "rP3Rn3cTnwFipOomleMUPX8XPYsq+dW+pfuOUa2Z8gc=",
+      "width": 240,
+      "height": 120,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.597Z",
+      "lastUpdated": "2026-03-20T17:10:13.597Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoConsensusWaitingForApprovals-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoConsensusWaitingForApprovals-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoConsensusWaitingForApprovals-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoConsensusWaitingForApprovals-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoConsensusWaitingForApprovals-0.js",
+        "pngLight": "./spotRectangle/png/light/instoConsensusWaitingForApprovals-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoConsensusWaitingForApprovals-0.png"
+      },
+      "version": 0
+    },
+    "28958:490": {
+      "type": "spotRectangle",
+      "name": "instoQRCode",
+      "hash": "kT/9HEzDWcRD/b1CGSV3J8lFBXYCV29/G73/6BF5gvg=",
+      "width": 240,
+      "height": 119.9998550415039,
+      "description": "",
+      "createdAt": "2026-03-20T17:10:13.559Z",
+      "lastUpdated": "2026-03-20T18:18:19.319Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/instoQRCode-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoQRCode-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoQRCode-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoQRCode-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoQRCode-0.js",
+        "pngLight": "./spotRectangle/png/light/instoQRCode-0.png",
+        "pngDark": "./spotRectangle/png/dark/instoQRCode-0.png"
       },
       "version": 0
     }

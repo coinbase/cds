@@ -1331,12 +1331,16 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoAdvancedTradingRebates-0.js').content,
   },
   instoApyInterest: {
-    light: () => require('../svgJs/light/instoApyInterest-0.js').content,
-    dark: () => require('../svgJs/dark/instoApyInterest-0.js').content,
+    light: () => require('../svgJs/light/instoApyInterest-1.js').content,
+    dark: () => require('../svgJs/dark/instoApyInterest-1.js').content,
   },
   instoAuthenticatorProgress: {
     light: () => require('../svgJs/light/instoAuthenticatorProgress-0.js').content,
     dark: () => require('../svgJs/dark/instoAuthenticatorProgress-0.js').content,
+  },
+  instoBorrowCoins: {
+    light: () => require('../svgJs/light/instoBorrowCoins-0.js').content,
+    dark: () => require('../svgJs/dark/instoBorrowCoins-0.js').content,
   },
   instoBorrowingLending: {
     light: () => require('../svgJs/light/instoBorrowingLending-0.js').content,
@@ -1345,6 +1349,10 @@ const svgJsMap = {
   instoCoinbaseOneShield: {
     light: () => require('../svgJs/light/instoCoinbaseOneShield-0.js').content,
     dark: () => require('../svgJs/dark/instoCoinbaseOneShield-0.js').content,
+  },
+  instoCoinFocus: {
+    light: () => require('../svgJs/light/instoCoinFocus-0.js').content,
+    dark: () => require('../svgJs/dark/instoCoinFocus-0.js').content,
   },
   instoCrypto101: {
     light: () => require('../svgJs/light/instoCrypto101-0.js').content,
@@ -1355,12 +1363,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoDecentralizationEverything-0.js').content,
   },
   instoDecentralizedExchange: {
-    light: () => require('../svgJs/light/instoDecentralizedExchange-0.js').content,
-    dark: () => require('../svgJs/dark/instoDecentralizedExchange-0.js').content,
+    light: () => require('../svgJs/light/instoDecentralizedExchange-1.js').content,
+    dark: () => require('../svgJs/dark/instoDecentralizedExchange-1.js').content,
   },
   instoDecentralizedWeb3: {
-    light: () => require('../svgJs/light/instoDecentralizedWeb3-0.js').content,
-    dark: () => require('../svgJs/dark/instoDecentralizedWeb3-0.js').content,
+    light: () => require('../svgJs/light/instoDecentralizedWeb3-1.js').content,
+    dark: () => require('../svgJs/dark/instoDecentralizedWeb3-1.js').content,
   },
   instoDelegate: {
     light: () => require('../svgJs/light/instoDelegate-0.js').content,
@@ -1373,6 +1381,10 @@ const svgJsMap = {
   instoEarnGraph: {
     light: () => require('../svgJs/light/instoEarnGraph-0.js').content,
     dark: () => require('../svgJs/dark/instoEarnGraph-0.js').content,
+  },
+  instoEasyToUse: {
+    light: () => require('../svgJs/light/instoEasyToUse-0.js').content,
+    dark: () => require('../svgJs/dark/instoEasyToUse-0.js').content,
   },
   instoEth: {
     light: () => require('../svgJs/light/instoEth-0.js').content,
@@ -1394,9 +1406,17 @@ const svgJsMap = {
     light: () => require('../svgJs/light/instoGem-0.js').content,
     dark: () => require('../svgJs/dark/instoGem-0.js').content,
   },
+  instoGlobalConnections: {
+    light: () => require('../svgJs/light/instoGlobalConnections-0.js').content,
+    dark: () => require('../svgJs/dark/instoGlobalConnections-0.js').content,
+  },
   instoKey: {
-    light: () => require('../svgJs/light/instoKey-0.js').content,
-    dark: () => require('../svgJs/dark/instoKey-0.js').content,
+    light: () => require('../svgJs/light/instoKey-1.js').content,
+    dark: () => require('../svgJs/dark/instoKey-1.js').content,
+  },
+  instoMonitoringPerformance: {
+    light: () => require('../svgJs/light/instoMonitoringPerformance-0.js').content,
+    dark: () => require('../svgJs/dark/instoMonitoringPerformance-0.js').content,
   },
   instoNftLibrary: {
     light: () => require('../svgJs/light/instoNftLibrary-0.js').content,
@@ -1411,12 +1431,16 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoprimeMobileApp-0.js').content,
   },
   instoRestaking: {
-    light: () => require('../svgJs/light/instoRestaking-0.js').content,
-    dark: () => require('../svgJs/dark/instoRestaking-0.js').content,
+    light: () => require('../svgJs/light/instoRestaking-1.js').content,
+    dark: () => require('../svgJs/dark/instoRestaking-1.js').content,
   },
   instoRiskStaking: {
     light: () => require('../svgJs/light/instoRiskStaking-0.js').content,
     dark: () => require('../svgJs/dark/instoRiskStaking-0.js').content,
+  },
+  instoSecuredAssets: {
+    light: () => require('../svgJs/light/instoSecuredAssets-0.js').content,
+    dark: () => require('../svgJs/dark/instoSecuredAssets-0.js').content,
   },
   instoSelfCustodyWallet: {
     light: () => require('../svgJs/light/instoSelfCustodyWallet-0.js').content,
