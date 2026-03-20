@@ -2,6 +2,7 @@ import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
+import { isTruthyJSXBooleanAttribute } from '../utils/isTruthyJSXBooleanAttribute';
 
 const ruleCreator = ESLintUtils.RuleCreator(
   (name) =>
@@ -25,25 +26,6 @@ const config = {
     'Link',
     'Text',
   ],
-};
-
-const isTruthyJSXBooleanAttribute = (attribute: TSESTree.JSXAttribute) => {
-  if (attribute.value === null) {
-    return true;
-  }
-
-  if (attribute.value.type === AST_NODE_TYPES.Literal) {
-    return attribute.value.value === true;
-  }
-
-  if (
-    attribute.value.type === AST_NODE_TYPES.JSXExpressionContainer &&
-    attribute.value.expression.type === AST_NODE_TYPES.Literal
-  ) {
-    return attribute.value.expression.value === true;
-  }
-
-  return true;
 };
 
 const hasInteractiveAttributes = (attributes: TSESTree.JSXOpeningElement['attributes']) => {
