@@ -1,4 +1,5 @@
-import { AST_NODE_TYPES, ESLintUtils, TSESTree } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
 
@@ -70,7 +71,9 @@ export const mobileChartScrubbingAccessibility = ruleCreator({
 
         if (
           typeof packageName === 'string' &&
-          config.allowedPackages.some((pkg) => packageName === pkg || packageName.startsWith(`${pkg}/`))
+          config.allowedPackages.some(
+            (pkg) => packageName === pkg || packageName.startsWith(`${pkg}/`),
+          )
         ) {
           node.specifiers.forEach((specifier) => {
             importedComponents[specifier.local.name] = packageName;
