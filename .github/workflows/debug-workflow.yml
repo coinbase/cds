@@ -37,10 +37,6 @@ jobs:
     name: Visreg iOS
     runs-on: macos-latest
     environment: production
-    if: >
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch' ||
-      contains(github.event.pull_request.labels.*.name, 'visreg-mobile')
     outputs:
       percy_url: ${{ steps.percy-upload.outputs.percy_url }}
     steps:
