@@ -103,11 +103,14 @@ async function updateChangelog(pkgPath: string, highestVersion: string) {
 
 async function updatePkgsForGenericBump() {
   // Find package.json paths for cds-web, cds-mobile, and cds-common
-  const pkgJsonPaths = await glob(`packages/(${PACKAGES_TO_SYNC_VERSION.join('|')})/package.json`, {
-    absolute: true,
-    cwd: MONOREPO_ROOT,
-    onlyFiles: true,
-  });
+  const pkgJsonPaths = await glob(
+    `packages/(${PACKAGES_TO_SYNC_VERSION.join('|')})/package.json`,
+    {
+      absolute: true,
+      cwd: MONOREPO_ROOT,
+      onlyFiles: true,
+    },
+  );
 
   // Get the highest version number among the specified packages
   const highestVersion = await getHighestVersion(pkgJsonPaths);
@@ -115,14 +118,14 @@ async function updatePkgsForGenericBump() {
   console.info(chalk.blue(`Updating all versions to ${highestVersion}`));
 
   // Update versions in package.json and CHANGELOG for each package
-  pkgJsonPaths.forEach(async (pkgPath) => {
+  for (const pkgPath of pkgJsonPaths) {
     const packageVersion = await getPkgVersion(pkgPath);
 
     if (semver.lt(packageVersion, highestVersion)) {
       await updatePkgVersion(pkgPath, highestVersion);
       await updateChangelog(pkgPath, highestVersion);
     }
-  });
+  }
 
   // Write updated package.json
   console.info(chalk.green(`Versions updated successfully!`));
