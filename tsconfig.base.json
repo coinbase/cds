@@ -108,13 +108,7 @@
       "@coinbase/ui-mobile-playground/*": [
         "packages/ui-mobile-playground/src/*"
       ],
-      "@coinbase/ui-mobile-visreg": [
-        "packages/ui-mobile-visreg/src"
-      ],
-      "@coinbase/ui-mobile-visreg/*": [
-        "packages/ui-mobile-visreg/src/*"
-      ],
-      "@site/*": [
+"@site/*": [
         "apps/docs/*"
       ]
     }

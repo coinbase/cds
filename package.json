@@ -172,7 +172,6 @@
     "babel-plugin-replace-ts-export-assignment": "^0.0.2",
     "chalk": "^4.1.2",
     "depcheck": "patch:depcheck@npm%3A1.4.7#.yarn/patches/depcheck-npm-1.4.7-d4cc813cc3.patch",
-    "detox": "^20.14.8",
     "diff": "^5.1.0",
     "dotenv-webpack": "7.0.3",
     "eslint": "^9.22.0",
