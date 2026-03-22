@@ -57,7 +57,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
         </Box>
       ) : showBackButton ? (
         <Box marginX={-1}>
-          <IconButton transparent name="backArrow" onPress={goBack} />
+          <IconButton transparent name="backArrow" onPress={goBack} testID="nav-back-button" />
         </Box>
       ) : (
         iconButtonPlaceholder
