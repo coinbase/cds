@@ -28,7 +28,7 @@ appId: \${APP_ID}
 - launchApp:
     appId: \${APP_ID}
 - assertVisible:
-    text: Accordion
+    text: 'CDS'
 ${routeSteps}
 `;
 
