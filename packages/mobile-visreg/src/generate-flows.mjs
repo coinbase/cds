@@ -9,28 +9,28 @@ const outputPath = resolve(__dirname, '../flows/capture-all.yaml');
 const platform = process.argv[2] ?? 'ios';
 const sorted = getVisregRoutes({ platform }).sort().slice(0, 2);
 
-const DIALOG_TEXT = 'Open in \\"CDS\\"';
+const DIALOG_TEXT = 'Open in';
+
+// iOS shows an "Open in CDS?" permission dialog the first time openLink is called
+// in a simulator session. After tapping "Open", iOS remembers the choice for the
+// rest of the session — so we only need to handle the dialog on the first route.
+const iosDialogCheck = `
+# waitForAnimationToEnd gives the iOS "Open in CDS?" dialog time to render
+# before the conditional check runs. The dialog appears asynchronously after
+# openLink returns, so checking immediately would always miss it.
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      visible: '${DIALOG_TEXT}'
+    commands:
+      - tapOn: Open
+      - assertNotVisible: '${DIALOG_TEXT}'`;
 
 const routeSteps = sorted
   .map(
-    (route) => `
+    (route, index) => `
 # Route: ${route}
-- openLink: \${SCHEME}:///Debug${route}
-# The iOS "Open in CDS?" dialog appears asynchronously after openLink returns.
-# Run the conditional twice: the first pass gives the dialog time to render,
-# the second pass catches it if the first evaluated too early.
-- runFlow:
-    when:
-      visible: '${DIALOG_TEXT}'
-    commands:
-      - tapOn: Open
-      - assertNotVisible: '${DIALOG_TEXT}'
-- runFlow:
-    when:
-      visible: '${DIALOG_TEXT}'
-    commands:
-      - tapOn: Open
-      - assertNotVisible: '${DIALOG_TEXT}'
+- openLink: \${SCHEME}:///Debug${route}${index === 0 ? iosDialogCheck : ''}
 - waitForAnimationToEnd
 - takeScreenshot: ${route}\${PLATFORM_SUFFIX}`,
   )
