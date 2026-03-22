@@ -86,7 +86,7 @@ jobs:
         id: percy-upload
         if: always()
         run: |
-          OUTPUT=$(yarn nx run mobile-visreg:visreg-upload 2>&1)
+          OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
           EXIT_CODE=$?
           echo "$OUTPUT"
           PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
@@ -96,7 +96,7 @@ jobs:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
           PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
           PERCY_PARALLEL_NONCE: ${{ github.run_id }}
-          PERCY_PARALLEL_TOTAL: 2
+          PERCY_PARALLEL_TOTAL: 1
 
   # android:
   #   name: Visreg Android
