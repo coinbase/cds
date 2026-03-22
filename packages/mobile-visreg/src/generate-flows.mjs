@@ -7,20 +7,27 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const outputPath = resolve(__dirname, '../flows/capture-all.yaml');
 
 const platform = process.argv[2] ?? 'ios';
-const sorted = getVisregRoutes({ platform }).sort();
+const sorted = getVisregRoutes({ platform }).sort().slice(0, 2);
 
 const routeSteps = sorted
   .map(
-    (route) => `
+    (route, index) => `
 # Route: ${route}
-- openLink: \${SCHEME}:///Debug${route}
-# iOS may show an "Open in CDS?" confirmation dialog on first openLink per simulator session.
-# This conditional dismisses it automatically; it is a no-op once the choice has been accepted.
-- runFlow:
-    when:
-      visible: 'Open in "CDS"'
-    commands:
-      - tapOn: Open
+- openLink: \${SCHEME}:///Debug${route}${
+      index === 0
+        ? `
+# iOS shows an "Open in CDS?" dialog on the first openLink per simulator session.
+# extendedWaitUntil polls until the dialog appears, then we dismiss it.
+# iOS remembers the choice — subsequent routes won't show the dialog.
+- extendedWaitUntil:
+    visible: Cancel
+    timeout: 5000
+- tapOn: Open
+# First waitForAnimationToEnd covers the dialog dismissal animation.
+# Second covers the deep link navigation transition that starts asynchronously after dismissal.
+- waitForAnimationToEnd`
+        : ''
+    }
 # waitForAnimationToEnd covers both the navigation transition and any modal animations,
 # so routes that auto-open a modal (e.g. AlertBasic) are captured in their designed state.
 - waitForAnimationToEnd
