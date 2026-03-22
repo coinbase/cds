@@ -108,7 +108,7 @@
       "@coinbase/ui-mobile-playground/*": [
         "packages/ui-mobile-playground/src/*"
       ],
-"@site/*": [
+      "@site/*": [
         "apps/docs/*"
       ]
     }
