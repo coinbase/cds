@@ -14,6 +14,13 @@ const routeSteps = sorted
     (route) => `
 # Route: ${route}
 - openLink: \${SCHEME}:///Debug${route}
+# iOS may show an "Open in CDS?" confirmation dialog on first openLink per simulator session.
+# This conditional dismisses it automatically; it is a no-op once the choice has been accepted.
+- runFlow:
+    when:
+      visible: 'Open in "CDS"'
+    commands:
+      - tapOn: Open
 # waitForAnimationToEnd covers both the navigation transition and any modal animations,
 # so routes that auto-open a modal (e.g. AlertBasic) are captured in their designed state.
 - waitForAnimationToEnd
