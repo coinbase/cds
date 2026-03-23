@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.14.0 (3/23/2026 PST)
+
+#### 🚀 Updates
+
+- Add custom modal padding route. [[#534](https://github.com/coinbase/cds/pull/534)]
+
 ## 4.13.0 (3/17/2026 PST)
 
 #### 🚀 Updates
