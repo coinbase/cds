@@ -79,10 +79,10 @@
     "ajv@^6.0.0": "^6.14.0",
     "elliptic": "^6.6.0",
     "ip": "^2.0.1",
-    "minimatch": "10.2.4",
+    "minimatch": "^10.2.4",
     "glob@7.1.6": "patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch",
-    "koa": "3.1.2",
-    "tar": "7.5.12"
+    "koa": "^3.1.2",
+    "tar": "^7.5.12"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",

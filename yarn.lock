@@ -26233,7 +26233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"koa@npm:3.1.2":
+"koa@npm:^3.1.2":
   version: 3.1.2
   resolution: "koa@npm:3.1.2"
   dependencies:
@@ -28921,7 +28921,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:10.2.4":
+"minimatch@npm:^10.2.4":
   version: 10.2.4
   resolution: "minimatch@npm:10.2.4"
   dependencies:
@@ -37095,7 +37095,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar@npm:7.5.12":
+"tar@npm:^7.5.12":
   version: 7.5.12
   resolution: "tar@npm:7.5.12"
   dependencies:
