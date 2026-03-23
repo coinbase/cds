@@ -8,31 +8,28 @@ import { ModalBody } from '../modal/ModalBody';
 import { ModalFooter } from '../modal/ModalFooter';
 import { ModalHeader } from '../modal/ModalHeader';
 
-const ModalCustomContainerPropsScreen = () => {
+export default function ModalCustomPaddingScreen() {
   const [visible, setVisible] = useState(true);
   const handleClose = useCallback(() => setVisible(false), []);
   const handleOpen = useCallback(() => setVisible(true), []);
 
   return (
     <ExampleScreen>
-      <Example title="Modal with custom container props">
+      <Example title="Modal with custom padding">
         <Button onPress={handleOpen}>Open Modal</Button>
         <Modal onRequestClose={handleClose} visible={visible}>
           <ModalHeader
-            background="bgSecondary"
             closeAccessibilityLabel="Close"
-            paddingX={4}
-            paddingY={3}
-            title="Custom Container Props"
+            paddingX={0}
+            paddingY={0}
+            title="Custom Padding Modal"
           />
-          <ModalBody>
+          <ModalBody paddingX={0} paddingY={0}>
             <LoremIpsum />
           </ModalBody>
           <ModalFooter
-            background="bgSecondary"
-            direction="vertical"
-            paddingX={4}
-            paddingY={3}
+            paddingX={0}
+            paddingY={0}
             primaryAction={<Button onPress={handleClose}>Save</Button>}
             secondaryAction={
               <Button onPress={handleClose} variant="secondary">
@@ -44,6 +41,4 @@ const ModalCustomContainerPropsScreen = () => {
       </Example>
     </ExampleScreen>
   );
-};
-
-export default ModalCustomContainerPropsScreen;
+}

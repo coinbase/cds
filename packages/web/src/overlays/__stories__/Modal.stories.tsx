@@ -182,32 +182,25 @@ export const PortalModal = () => {
   );
 };
 
-export const CustomContainerPropsModal = () => {
-  const { triggerRef } = useTriggerFocus();
+export const CustomPaddingModal = () => {
   const [visible, setVisible] = useState(true);
 
   return (
     <>
-      <Button ref={triggerRef} onClick={() => setVisible(true)}>
-        Open Modal
-      </Button>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
       <Modal onRequestClose={() => setVisible(false)} visible={visible}>
         <ModalHeader
-          background="bgSecondary"
           closeAccessibilityLabel="Close"
-          paddingX={4}
-          paddingY={3}
-          title="Custom Container Props"
+          paddingX={0}
+          paddingY={0}
+          title="Custom Padding Modal"
         />
-        <ModalBody tabIndex={0}>
+        <ModalBody paddingX={0} paddingY={0} tabIndex={0} testID="modal-body">
           <LoremIpsum />
         </ModalBody>
         <ModalFooter
-          background="bgSecondary"
-          gap={1}
-          justifyContent="space-between"
-          paddingX={4}
-          paddingY={3}
+          paddingX={0}
+          paddingY={0}
           primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
           secondaryAction={
             <Button onClick={() => setVisible(false)} variant="secondary">
