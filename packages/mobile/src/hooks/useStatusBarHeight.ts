@@ -9,7 +9,7 @@ type StatusBarNativeModule = {
 } & NativeModule;
 
 /**
- * @deprecated Use `useSafeAreaInsets().top` from `react-native-safe-area-context` instead.
+ * @deprecated Use `useSafeAreaInsets().top` from `react-native-safe-area-context` instead. Targeting removal in v9.
  * This approach is recommended by Expo and provides more reliable values across platforms.
  * @see https://docs.expo.dev/versions/latest/sdk/safe-area-context/
  *

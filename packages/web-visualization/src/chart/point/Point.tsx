@@ -245,7 +245,7 @@ export type PointProps = PointBaseProps &
     };
     /**
      * Transition for updates.
-     * @deprecated Use `transitions.update` instead.
+     * @deprecated Use `transitions.update` instead. Targeting removal in v4.
      */
     transition?: Transition;
   };

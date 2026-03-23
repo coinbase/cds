@@ -4,7 +4,7 @@ import { coinbaseTheme } from './coinbaseTheme';
 
 export const coinbaseDenseThemeId = 'coinbase-dense';
 
-/** @deprecated This theme was created to test backwards compatibility, it is not officially supported by CDS. Please copy it into your own repo and modify it as needed. Do not import it directly from CDS. */
+/** @deprecated This theme was created to test backwards compatibility, it is not officially supported by CDS. Please copy it into your own repo and modify it as needed. Do not import it directly from CDS. Targeting removal in v9. */
 export const coinbaseDenseTheme = {
   ...coinbaseTheme,
   id: coinbaseDenseThemeId,

@@ -66,7 +66,7 @@ const focusRingCss = css`
 `;
 
 /**
- * @deprecated Use `MediaCard` instead. ContainedAssetCard will be removed in a future major release.
+ * @deprecated Use `MediaCard` instead. ContainedAssetCard will be removed in a future major release. Targeting removal in v9.
  *
  * Migration guide:
  * ```tsx

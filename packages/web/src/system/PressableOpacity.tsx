@@ -8,13 +8,13 @@ export const pressableOpacityDefaultElement = 'button';
 
 export type PressableOpacityDefaultElement = typeof pressableOpacityDefaultElement;
 
-/** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. */
+/** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. Targeting removal in v9. */
 export type PressableOpacityBaseProps = Omit<
   PressableBaseProps,
   'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'transparentWhileInactive'
 >;
 
-/** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. */
+/** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. Targeting removal in v8. */
 export type PressableOpacityProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   PressableOpacityBaseProps
@@ -27,7 +27,7 @@ type PressableOpacityComponent = (<
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
-/** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. */
+/** @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. Targeting removal in v8. */
 export const PressableOpacity: PressableOpacityComponent = forwardRef<
   React.ReactElement<PressableOpacityBaseProps>,
   PressableOpacityBaseProps

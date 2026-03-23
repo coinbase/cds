@@ -514,7 +514,7 @@ function SparklineInteractiveWithGeneric<Period extends string>({
 }
 
 /**
- * @deprecated Use LineChart instead.
+ * @deprecated Use LineChart instead. Targeting removal in v4.
  */
 export const SparklineInteractive = memo(
   SparklineInteractiveWithGeneric,

@@ -6,6 +6,35 @@ For simplicity there is no build process since the repo root depends on this lib
 
 The plugin encapsulates the following rules:
 
+## deprecated-jsdoc-has-removal-version
+
+Enforces that every JSDoc `@deprecated` tag also contains a sentence of the form `Targeting removal in vX`, where `X` is either a full semver (`7.0.0`) or a major version number (`7`).
+
+This ensures that consumers of deprecated APIs always know when the removal is planned, making upgrade timelines predictable.
+
+**Invalid** — missing removal target:
+
+```ts
+/** @deprecated Use React.useState instead. */
+function useToggler() {}
+```
+
+**Valid** — removal version present:
+
+```ts
+/** @deprecated Use React.useState instead. Targeting removal in v7.0.0. */
+function useToggler() {}
+```
+
+The rule catches deprecation markers on the same node types as `no-deprecated-jsdoc`:
+
+- Function declarations
+- Variable/const declarations
+- Type alias declarations (including properties within object types)
+- Interface declarations (including properties)
+- Class declarations (including members)
+- Export declarations
+
 ## no-deprecated-jsdoc
 
 Detects JSDoc comments containing `@deprecated` tags. This rule helps identify deprecated code that should be migrated or removed in later, breaking version releases.

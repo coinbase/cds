@@ -9,7 +9,7 @@ import { useCartesianChartContext } from './ChartProvider';
 
 /**
  * Duration in seconds for path enter transition.
- * @deprecated Use `transitions.enter` on the Path component instead.
+ * @deprecated Use `transitions.enter` on the Path component instead. Targeting removal in v4.
  */
 export const pathEnterTransitionDuration = 0.5;
 
@@ -81,7 +81,7 @@ export type PathProps = PathBaseProps &
     };
     /**
      * Transition for updates.
-     * @deprecated Use `transitions.update` instead.
+     * @deprecated Use `transitions.update` instead. Targeting removal in v4.
      */
     transition?: Transition;
     /**

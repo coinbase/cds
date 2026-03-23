@@ -1,6 +1,6 @@
 import type { AnyObject, StringKey } from './types';
 
-/** @deprecated Do not use */
+/** @deprecated Do not use. Targeting removal in v2. */
 export const emptyObject = {};
 
 export function entries<T extends Record<string, unknown>>(item: T) {

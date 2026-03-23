@@ -19,7 +19,7 @@ export type MaterialSpinnerProp = {
 } & SharedProps;
 
 /**
- * @deprecated Use Spinner component instead
+ * @deprecated Use Spinner component instead. Targeting removal in v7.
  */
 export const MaterialSpinner = memo(({ size, color, testID }: MaterialSpinnerProp) => {
   const svgMotionProps = useMotionProps({

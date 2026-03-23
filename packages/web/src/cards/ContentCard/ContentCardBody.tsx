@@ -15,21 +15,21 @@ export type ContentCardBodyBaseProps = Polymorphic.ExtendableProps<
     /** Text or React node to display as the card title. Use a Text component to override default color and font. */
     title?: React.ReactNode;
     /**
-     * @deprecated Use description instead
+     * @deprecated Use description instead. Targeting removal in v9.
      * Main body copy
      */
     body?: React.ReactNode;
     /** Text or React node to display as the card description. Use a Text component to override default color and font. */
     description?: React.ReactNode;
     /**
-     * @deprecated Use a ReactNode as `description` instead if you need to display content below the description.
+     * @deprecated Use a ReactNode as `description` instead if you need to display content below the description. Targeting removal in v9.
      * Use for supplemental data.
      */
     label?: React.ReactNode;
     /** React node to display as media content (e.g., Image or RemoteImage). */
     media?: React.ReactNode;
     /**
-     * @deprecated Use mediaPlacement instead
+     * @deprecated Use mediaPlacement instead. Targeting removal in v9.
      * The position of the media within the card.
      * Can be one of: 'top', 'bottom', 'right' or 'left'.
      */

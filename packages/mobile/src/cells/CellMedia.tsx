@@ -27,7 +27,7 @@ export type CellMediaPictogramProps = {
 type CellMediaOtherProps = {
   type: Exclude<CellMediaType, 'icon' | 'pictogram'>;
   /**
-   * @deprecated This prop will be removed in v6.0.0
+   * @deprecated This prop will be removed in v6.0.0. Targeting removal in v9.
    * If required, use `accessibilityLabel` and `accessibilityHint` instead to set accessible labels.
    * Refer to https://cds.coinbase.com/components/cell-media/ for updated accessibility guidance.
    */
@@ -48,7 +48,7 @@ export type CellMediaProps = SharedProps &
   };
 
 /**
- * @deprecated This component will be removed in a future release. Pass media directly via the `media` prop.
+ * @deprecated This component will be removed in a future release. Pass media directly via the `media` prop. Targeting removal in v9.
  * For example: `<Avatar src={...} />`, `<Icon name={...} />`, `<RemoteImage source={...} />`, or a Pictogram.
  */
 export const CellMedia = memo(function CellMedia(props: CellMediaProps) {

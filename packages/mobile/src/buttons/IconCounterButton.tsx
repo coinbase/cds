@@ -14,7 +14,7 @@ import { Text } from '../typography/Text';
 export type IconCounterButtonBaseProps = {
   /** Name of the icon or a ReactNode */
   icon: Exclude<React.ReactNode, 'string'> | IconName;
-  /** @deprecated Use `size` instead. */
+  /** @deprecated Use `size` instead. Targeting removal in v8. */
   iconSize?: IconSize;
   /** Size for given icon. */
   size?: IconSize;

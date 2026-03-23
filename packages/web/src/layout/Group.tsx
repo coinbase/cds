@@ -57,7 +57,7 @@ const fallbackRenderItem: RenderGroupItem = ({
 };
 
 /**
- * @deprecated Use `Box`, `HStack` or `VStack` instead.
+ * @deprecated Use `Box`, `HStack` or `VStack` instead. Targeting removal in v8.
  * @danger Make sure to add a `key` prop to each item.
  */
 export const Group = memo(

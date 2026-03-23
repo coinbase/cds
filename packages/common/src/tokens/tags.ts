@@ -93,7 +93,7 @@ type TagColorMap = Record<
 >;
 
 /**
- * @deprecated Use tagEmphasisColorMap instead
+ * @deprecated Use tagEmphasisColorMap instead. Targeting removal in v9.
  */
 export const tagColorMap: TagColorMap = {
   informational: tagEmphasisColorMap.low,

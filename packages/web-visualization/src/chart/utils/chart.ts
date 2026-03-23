@@ -350,7 +350,7 @@ export const defaultHorizontalLayoutChartInset: ChartInset = {
 };
 
 /**
- * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or
+ * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or. Targeting removal in v4.
  * `defaultHorizontalLayoutChartInset` for horizontal layout charts.
  */
 export const defaultChartInset: ChartInset = defaultVerticalLayoutChartInset;

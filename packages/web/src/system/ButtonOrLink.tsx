@@ -35,7 +35,7 @@ const accessibilityCss = css`
   pointer-events: none;
 `;
 
-/** @deprecated This component will be removed in a future version. Use Pressable instead. */
+/** @deprecated This component will be removed in a future version. Use Pressable instead. Targeting removal in v9. */
 export const ButtonOrLink = memo(
   forwardRef<HTMLElement, ButtonOrLinkProps>(
     (

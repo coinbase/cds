@@ -37,10 +37,10 @@ export type FeedCardBaseProps = Pick<CardBodyBaseProps, 'image' | 'pictogram' | 
     cta?: ButtonBaseProps;
   };
 
-/** @deprecated Use the ContentCard component instead. */
+/** @deprecated Use the ContentCard component instead. Targeting removal in v8. */
 export type FeedCardProps = FeedCardBaseProps;
 
-/** @deprecated Use the ContentCard component instead. */
+/** @deprecated Use the ContentCard component instead. Targeting removal in v8. */
 export const FeedCard = memo(function FeedCard({
   testID = 'feed-card',
   avatar,

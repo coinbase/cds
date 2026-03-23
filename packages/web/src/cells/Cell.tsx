@@ -77,7 +77,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   Pick<PressableProps<'a'>, 'href' | 'target'> & {
     /**
-     * @deprecated Use `classNames.contentContainer` instead. `contentClassName` will be removed in a future major release.
+     * @deprecated Use `classNames.contentContainer` instead. `contentClassName` will be removed in a future major release. Targeting removal in v9.
      */
     contentClassName?: string;
     /** Key down handler for keyboard interaction. */
@@ -98,7 +98,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
      */
     end?: React.ReactNode;
     /**
-     * @deprecated Use `end` instead. `detail` will be removed in a future major release.
+     * @deprecated Use `end` instead. `detail` will be removed in a future major release. Targeting removal in v9.
      */
     detail?: React.ReactNode;
     /** Middle content between main content and detail. */
@@ -106,7 +106,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     /** Media rendered at the start of the cell (icon, avatar, image, etc). */
     media?: React.ReactElement;
     /**
-     * @deprecated Use `shouldTruncate` instead. `shouldOverflow` will be removed in a future release.
+     * @deprecated Use `shouldTruncate` instead. `shouldOverflow` will be removed in a future release. Targeting removal in v9.
      */
     shouldOverflow?: boolean;
     /**
@@ -116,7 +116,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
      */
     shouldTruncate?: boolean;
     /**
-     * @deprecated Use `styles.end` instead. `detailWidth` will be removed in a future major release.
+     * @deprecated Use `styles.end` instead. `detailWidth` will be removed in a future major release. Targeting removal in v9.
      */
     detailWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */

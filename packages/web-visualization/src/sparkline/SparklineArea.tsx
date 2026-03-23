@@ -7,7 +7,7 @@ export type SparklineAreaBaseProps = {
 };
 
 /**
- * @deprecated Use AreaChart instead.
+ * @deprecated Use AreaChart instead. Targeting removal in v4.
  */
 export const SparklineArea = memo(
   forwardRef<SVGPathElement | null, SparklineAreaBaseProps>(

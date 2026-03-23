@@ -160,7 +160,7 @@ type TabNavigationFC = <TabId extends string | undefined = string>(
 /**
  * TabNavigation renders a horizontal, tab-based navigation bar.
  * This component has a opinionated default style, but allows for customization through custom Component props.
- * @deprecated Use Tabs instead.
+ * @deprecated Use Tabs instead. Targeting removal in v8.
  */
 const TabNavigationComponent = memo(
   forwardRef(
