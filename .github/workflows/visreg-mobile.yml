@@ -188,23 +188,23 @@ jobs:
   #         PERCY_PARALLEL_NONCE: ${{ github.run_id }}
   #         PERCY_PARALLEL_TOTAL: 2
 
-  # comment-pr:
-  #   name: Comment Percy Link
-  #   needs: [ios, android]
-  #   if: always() && github.event_name == 'pull_request'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Post Percy link on PR
-  #       env:
-  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         PERCY_URL: ${{ needs.ios.outputs.percy_url }}
-  #       run: |
-  #         BODY="${PERCY_URL:-Percy build URL unavailable}"
+  comment-pr:
+    name: Comment Percy Link
+    needs: [ios]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post Percy link on PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERCY_URL: ${{ needs.ios.outputs.percy_url }}
+        run: |
+          BODY="${PERCY_URL:-Percy build URL unavailable}"
 
-  #         gh pr comment ${{ github.event.pull_request.number }} \
-  #           --repo ${{ github.repository }} \
-  #           --body "$BODY" \
-  #           --edit-last 2>/dev/null || \
-  #         gh pr comment ${{ github.event.pull_request.number }} \
-  #           --repo ${{ github.repository }} \
-  #           --body "$BODY"
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body "$BODY" \
+            --edit-last 2>/dev/null || \
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body "$BODY"
