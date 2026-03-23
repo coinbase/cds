@@ -11,8 +11,8 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
 
 import { InputIconButton } from '../controls/InputIconButton';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, VStack } from '../layout';
 import { getMotionProps } from '../motion/useMotionProps';
 import { Popover } from '../overlays/popover/Popover';
