@@ -24,7 +24,7 @@ export type ModalBodyProps = ModalBodyBaseProps;
 export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
   children,
   padding,
-  paddingX,
+  paddingX = 3,
   paddingY: paddingYProp,
   paddingTop,
   paddingBottom,
