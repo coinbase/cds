@@ -5,13 +5,32 @@ import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 
 import { useContentSize } from '../../hooks/useContentSize';
 import { useLayout } from '../../hooks/useLayout';
-import { Box } from '../../layout';
+import { Box, type BoxBaseProps } from '../../layout/Box';
 
-type ModalBodyProps = ScrollViewProps;
+export type ModalBodyBaseProps = ScrollViewProps &
+  Pick<
+    BoxBaseProps,
+    | 'padding'
+    | 'paddingX'
+    | 'paddingY'
+    | 'paddingTop'
+    | 'paddingBottom'
+    | 'paddingStart'
+    | 'paddingEnd'
+  >;
+
+export type ModalBodyProps = ModalBodyBaseProps;
 
 export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
   children,
-  ...props
+  padding,
+  paddingX,
+  paddingY,
+  paddingTop,
+  paddingBottom,
+  paddingStart,
+  paddingEnd,
+  ...scrollViewProps
 }) => {
   const [{ height: contentHeight }, onContentSizeChange] = useContentSize();
   const [{ height: scrollHeight }, onLayout] = useLayout();
@@ -29,13 +48,18 @@ export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
         onContentSizeChange={onContentSizeChange}
         onLayout={onLayout}
         scrollEnabled={shouldEnableScroll}
-        {...props}
+        {...scrollViewProps}
       >
         <Box
           flexGrow={1}
-          paddingX={3}
+          padding={padding}
+          paddingBottom={paddingBottom}
+          paddingEnd={paddingEnd}
+          paddingStart={paddingStart}
+          paddingTop={paddingTop}
+          paddingX={paddingX ?? (padding === undefined ? 3 : undefined)}
           // remove vertical padding when dividers hidden
-          paddingY={hideDividers ? 0 : 3}
+          paddingY={paddingY ?? (padding === undefined ? (hideDividers ? 0 : 3) : undefined)}
         >
           {children}
         </Box>
