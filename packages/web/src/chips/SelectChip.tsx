@@ -21,7 +21,7 @@ export type SelectChipProps = {
   /** Indicates that the control is being used to manipulate data elsewhere */
   active?: boolean;
   /**
-   * @deprecated The prop will be removed in a future version. This will be removed in a future major release.
+   * @deprecated This will be removed in a future major release.
    * @deprecationExpectedRemoval v7
    */
   children?: React.ReactNode;

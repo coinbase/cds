@@ -36,7 +36,7 @@ const accessibilityCss = css`
 `;
 
 /**
- * @deprecated This component will be removed in a future version. Use Pressable instead. This will be removed in a future major release.
+ * @deprecated Use Pressable instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v9
  */
 export const ButtonOrLink = memo(
