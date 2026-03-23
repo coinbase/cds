@@ -46,7 +46,7 @@ export type CellBaseProps = SharedProps &
      */
     end?: React.ReactNode;
     /**
-     * @deprecated Use `end` instead. `detail` will be removed in a release. This will be removed in a future major release.
+     * @deprecated Use `end` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v9
      */
     detail?: React.ReactNode;
@@ -56,7 +56,7 @@ export type CellBaseProps = SharedProps &
     media?: React.ReactElement;
     borderRadius?: ThemeVars.BorderRadius;
     /**
-     * @deprecated Use `styles.end` instead. `detailWidth` will be removed in a release. This will be removed in a future major release.
+     * @deprecated Use `styles.end` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v9
      */
     detailWidth?: number | string;

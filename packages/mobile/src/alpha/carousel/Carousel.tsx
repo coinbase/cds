@@ -64,7 +64,7 @@ export type CarouselProps = {
   SharedProps;
 
 /**
- * @deprecated This component will be removed in a future version. Use new Carousel component instead. This will be removed in a future major release.
+ * @deprecated Use new Carousel component instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v8
  */
 export const Carousel = memo(

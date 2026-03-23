@@ -4,7 +4,7 @@ import type { PressableProps } from './Pressable';
 import { Pressable } from './Pressable';
 
 /**
- * @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. This will be removed in a future major release.
+ * @deprecated Use `<Pressable background="transparent">` instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v8
  */
 export type PressableOpacityProps = Omit<
@@ -13,7 +13,7 @@ export type PressableOpacityProps = Omit<
 >;
 
 /**
- * @deprecated This component will be removed in a future version. Use `<Pressable background="transparent">` instead. This will be removed in a future major release.
+ * @deprecated Use `<Pressable background="transparent">` instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v8
  */
 export const PressableOpacity = ({ children, ...props }: PressableOpacityProps) => {
