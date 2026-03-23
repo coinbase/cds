@@ -25,12 +25,12 @@ export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
   children,
   padding,
   paddingX,
-  paddingY,
+  paddingY: paddingYProp,
   paddingTop,
   paddingBottom,
   paddingStart,
   paddingEnd,
-  ...scrollViewProps
+  ...props
 }) => {
   const [{ height: contentHeight }, onContentSizeChange] = useContentSize();
   const [{ height: scrollHeight }, onLayout] = useLayout();
@@ -42,13 +42,18 @@ export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
     [contentHeight, scrollHeight],
   );
 
+  const paddingY = useMemo(() => {
+    if (paddingYProp !== undefined) return paddingYProp;
+    return hideDividers ? 0 : 3;
+  }, [paddingYProp, hideDividers]);
+
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <ScrollView
         onContentSizeChange={onContentSizeChange}
         onLayout={onLayout}
         scrollEnabled={shouldEnableScroll}
-        {...scrollViewProps}
+        {...props}
       >
         <Box
           flexGrow={1}
@@ -57,9 +62,9 @@ export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
           paddingEnd={paddingEnd}
           paddingStart={paddingStart}
           paddingTop={paddingTop}
-          paddingX={paddingX ?? (padding === undefined ? 3 : undefined)}
+          paddingX={paddingX}
           // remove vertical padding when dividers hidden
-          paddingY={paddingY ?? (padding === undefined ? (hideDividers ? 0 : 3) : undefined)}
+          paddingY={paddingY}
         >
           {children}
         </Box>
