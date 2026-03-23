@@ -237,13 +237,12 @@ export const TextInput = memo(
 
       return (
         <InputStack
-          borderWidth={bordered ? 100 : 0}
           borderFocusedStyle={borderFocusedStyle}
           borderRadius={borderRadius}
           borderStyle={borderUnfocusedStyle}
+          borderWidth={bordered ? 100 : 0}
           disabled={disabled}
           enableColorSurge={enableColorSurge}
-          focusedBorderWidth={focusedBorderWidth}
           endNode={
             (suffix !== '' || !!end) && (
               <HStack
@@ -271,6 +270,7 @@ export const TextInput = memo(
             )
           }
           focused={focused}
+          focusedBorderWidth={focusedBorderWidth}
           helperTextNode={
             !!helperText &&
             (typeof helperText === 'string' ? (
