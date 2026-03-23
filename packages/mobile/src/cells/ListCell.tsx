@@ -35,11 +35,13 @@ export type ListCellBaseProps = CellDetailProps &
      */
     end?: React.ReactNode;
     /**
-     * @deprecated Use `end` instead. `action` will be removed in a release.
+     * @deprecated Use `end` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `spacingVariant="condensed"`. `compact` will be removed in a release.
+     * @deprecated Use `spacingVariant="condensed"`. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     compact?: boolean;
     /**

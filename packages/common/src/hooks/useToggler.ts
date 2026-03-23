@@ -1,6 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 
-/** @deprecated Use React.useState instead. */
+/**
+ * @deprecated Use React.useState instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
+ */
 export function useToggler(initial = false): [
   boolean,
   {

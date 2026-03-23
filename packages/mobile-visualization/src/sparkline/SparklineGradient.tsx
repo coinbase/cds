@@ -12,7 +12,8 @@ import type { SparklineBaseProps } from './Sparkline';
 import { SparklineAreaPattern } from './SparklineAreaPattern';
 
 /**
- * @deprecated Use LineChart instead.
+ * @deprecated Use LineChart instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const SparklineGradient = memo(
   forwardRef<Path | null, SparklineBaseProps>(

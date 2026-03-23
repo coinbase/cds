@@ -56,7 +56,8 @@ export type DatePickerBaseProps = Pick<
   onCancel?: () => void;
   /**
    * Accessibility label describing the calendar IconButton, which opens the calendar when pressed.
-   * @deprecated Use openCalendarAccessibilityLabel/closeCalendarAccessibilityLabel instead
+   * @deprecated Use openCalendarAccessibilityLabel/closeCalendarAccessibilityLabel instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
    */
   calendarIconButtonAccessibilityLabel?: string;
   /**
@@ -98,22 +99,26 @@ export type DatePickerProps = DatePickerBaseProps &
     restoreFocusOnUnmount?: boolean;
     /**
      * Custom style to apply to the Calendar container.
-     * @deprecated Use `styles.calendar` instead.
+     * @deprecated Use `styles.calendar` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     calendarStyle?: React.CSSProperties;
     /**
      * Custom class name to apply to the Calendar container.
-     * @deprecated Use `classNames.calendar` instead.
+     * @deprecated Use `classNames.calendar` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     calendarClassName?: string;
     /**
      * Custom style to apply to the DateInput.
-     * @deprecated Use `styles.dateInput` instead.
+     * @deprecated Use `styles.dateInput` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     dateInputStyle?: React.CSSProperties;
     /**
      * Custom class name to apply to the DateInput.
-     * @deprecated Use `classNames.dateInput` instead.
+     * @deprecated Use `classNames.dateInput` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     dateInputClassName?: string;
     /** Custom class names for the DateInput and Calendar subcomponents. */

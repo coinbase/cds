@@ -40,7 +40,8 @@ export type CounterBaseProps = {
 export type CounterProps = CounterBaseProps;
 
 /**
- * @deprecated This component will be removed from CDS in a future version. It has been moved to cds-web-sparkline.
+ * @deprecated Moved to cds-web-sparkline. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v6
  */
 export const Counter = ({ startNum, endNum, renderNum, durationInMillis }: CounterBaseProps) => {
   const count = useCounter({ startNum, endNum, durationInMillis });

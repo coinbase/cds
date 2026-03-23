@@ -239,7 +239,8 @@ export type ScrubberProps = ScrubberBaseProps & {
   transitions?: ScrubberBeaconProps['transitions'];
   /**
    * Transition configuration for the scrubber beacon.
-   * @deprecated Use `transitions` instead.
+   * @deprecated Use `transitions` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v4
    */
   beaconTransitions?: ScrubberBeaconProps['transitions'];
 };

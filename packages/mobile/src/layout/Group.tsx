@@ -44,7 +44,8 @@ export type RenderGroupItem = GroupBaseProps<BoxProps>['renderItem'];
 export type GroupProps = GroupBaseProps<BoxProps>;
 
 /**
- * @deprecated Use `Box`, `HStack` or `VStack` instead.
+ * @deprecated Use `Box`, `HStack` or `VStack` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  * @danger Make sure to add a `key` prop to each item.
  */
 export const Group = memo(

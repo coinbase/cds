@@ -3,7 +3,8 @@ import type { SharedProps } from './SharedProps';
 import type { PaddingProps } from './SpacingProps';
 
 /**
- * @deprecated Use StickyFooterProps from @coinbase/cds-mobile instead.
+ * @deprecated Use StickyFooterProps from @coinbase/cds-mobile instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  */
 export type StickyFooterProps = {
   /**
