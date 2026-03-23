@@ -10,10 +10,7 @@ import React, {
 } from 'react';
 import { Animated, Keyboard, Modal, Platform, useWindowDimensions } from 'react-native';
 import type { ModalProps, PressableProps, StyleProp, ViewStyle } from 'react-native';
-import {
-  drawerAnimationDefaultDuration,
-  MAX_OVER_DRAG,
-} from '@cbhq/cds-common/animation/drawer';
+import { drawerAnimationDefaultDuration, MAX_OVER_DRAG } from '@cbhq/cds-common/animation/drawer';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,

@@ -5,13 +5,11 @@
 export const routes = [
   {
     key: 'Accordion',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/accordion/__stories__/Accordion.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/accordion/__stories__/Accordion.stories').default,
   },
   {
     key: 'AlertBasic',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/AlertBasic.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/AlertBasic.stories').default,
   },
   {
     key: 'AlertLongTitle',
@@ -51,8 +49,7 @@ export const routes = [
   {
     key: 'AlphaTabbedChips',
     getComponent: () =>
-      require('@cbhq/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChips.stories')
-        .default,
+      require('@cbhq/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChips.stories').default,
   },
   {
     key: 'AnimatedCaret',
@@ -62,8 +59,7 @@ export const routes = [
   {
     key: 'AreaChart',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/area/__stories__/AreaChart.stories')
-        .default,
+      require('@cbhq/cds-mobile-visualization/chart/area/__stories__/AreaChart.stories').default,
   },
   {
     key: 'Avatar',
@@ -90,8 +86,7 @@ export const routes = [
   },
   {
     key: 'BannerLayout',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/banner/__stories__/BannerLayout.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/banner/__stories__/BannerLayout.stories').default,
   },
   {
     key: 'BarChart',
@@ -118,8 +113,7 @@ export const routes = [
   },
   {
     key: 'ButtonGroup',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/buttons/__stories__/ButtonGroup.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/buttons/__stories__/ButtonGroup.stories').default,
   },
   {
     key: 'Calendar',
@@ -131,19 +125,16 @@ export const routes = [
   },
   {
     key: 'Carousel',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/carousel/__stories__/Carousel.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/carousel/__stories__/Carousel.stories').default,
   },
   {
     key: 'CarouselMedia',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/media/__stories__/CarouselMedia.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/media/__stories__/CarouselMedia.stories').default,
   },
   {
     key: 'CartesianChart',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/__stories__/CartesianChart.stories')
-        .default,
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/CartesianChart.stories').default,
   },
   {
     key: 'ChartAccessibility',
@@ -154,13 +145,11 @@ export const routes = [
   {
     key: 'ChartTransitions',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')
-        .default,
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories').default,
   },
   {
     key: 'Checkbox',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/controls/__stories__/Checkbox.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/Checkbox.stories').default,
   },
   {
     key: 'CheckboxCell',
@@ -173,8 +162,7 @@ export const routes = [
   },
   {
     key: 'Coachmark',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/coachmark/__stories__/Coachmark.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/coachmark/__stories__/Coachmark.stories').default,
   },
   {
     key: 'Collapsible',
@@ -193,13 +181,11 @@ export const routes = [
   },
   {
     key: 'ContentCard',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/cards/__stories__/ContentCard.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/cards/__stories__/ContentCard.stories').default,
   },
   {
     key: 'ContentCell',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/cells/__stories__/ContentCell.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/cells/__stories__/ContentCell.stories').default,
   },
   {
     key: 'ContentCellFallback',
@@ -222,8 +208,7 @@ export const routes = [
   },
   {
     key: 'DatePicker',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/dates/__stories__/DatePicker.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/dates/__stories__/DatePicker.stories').default,
   },
   {
     key: 'Divider',
@@ -249,13 +234,11 @@ export const routes = [
   },
   {
     key: 'DrawerLeft',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/DrawerLeft.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/DrawerLeft.stories').default,
   },
   {
     key: 'DrawerMisc',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/DrawerMisc.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/DrawerMisc.stories').default,
   },
   {
     key: 'DrawerReduceMotion',
@@ -274,8 +257,7 @@ export const routes = [
   },
   {
     key: 'DrawerTop',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/DrawerTop.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/DrawerTop.stories').default,
   },
   {
     key: 'Fallback',
@@ -301,13 +283,11 @@ export const routes = [
   },
   {
     key: 'HintMotion',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/motion/__stories__/HintMotion.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/motion/__stories__/HintMotion.stories').default,
   },
   {
     key: 'IconButton',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/buttons/__stories__/IconButton.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/buttons/__stories__/IconButton.stories').default,
   },
   {
     key: 'IconCounterButton',
@@ -320,8 +300,7 @@ export const routes = [
   },
   {
     key: 'InputIcon',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/controls/__stories__/InputIcon.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/InputIcon.stories').default,
   },
   {
     key: 'InputIconButton',
@@ -330,8 +309,7 @@ export const routes = [
   },
   {
     key: 'InputStack',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/controls/__stories__/InputStack.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/InputStack.stories').default,
   },
   {
     key: 'Legend',
@@ -346,8 +324,7 @@ export const routes = [
   {
     key: 'LineChart',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/line/__stories__/LineChart.stories')
-        .default,
+      require('@cbhq/cds-mobile-visualization/chart/line/__stories__/LineChart.stories').default,
   },
   {
     key: 'Link',
@@ -368,8 +345,7 @@ export const routes = [
   },
   {
     key: 'Lottie',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/animation/__stories__/Lottie.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/animation/__stories__/Lottie.stories').default,
   },
   {
     key: 'LottieStatusAnimation',
@@ -386,8 +362,7 @@ export const routes = [
   },
   {
     key: 'MessagingCard',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/cards/__stories__/MessagingCard.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/cards/__stories__/MessagingCard.stories').default,
   },
   {
     key: 'ModalBackButton',
@@ -396,13 +371,11 @@ export const routes = [
   },
   {
     key: 'ModalBasic',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
     key: 'ModalLong',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/ModalLong.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/ModalLong.stories').default,
   },
   {
     key: 'ModalPortal',
@@ -445,8 +418,7 @@ export const routes = [
   },
   {
     key: 'Overlay',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/Overlay.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/Overlay.stories').default,
   },
   {
     key: 'PageFooter',
@@ -490,25 +462,21 @@ export const routes = [
   {
     key: 'PatternDisclosureLowFriction',
     getComponent: () =>
-      require('@cbhq/cds-mobile/system/__stories__/PatternDisclosureLowFriction.stories')
-        .default,
+      require('@cbhq/cds-mobile/system/__stories__/PatternDisclosureLowFriction.stories').default,
   },
   {
     key: 'PatternDisclosureMedFriction',
     getComponent: () =>
-      require('@cbhq/cds-mobile/system/__stories__/PatternDisclosureMedFriction.stories')
-        .default,
+      require('@cbhq/cds-mobile/system/__stories__/PatternDisclosureMedFriction.stories').default,
   },
   {
     key: 'PatternError',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/system/__stories__/PatternError.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/system/__stories__/PatternError.stories').default,
   },
   {
     key: 'PeriodSelector',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/__stories__/PeriodSelector.stories')
-        .default,
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/PeriodSelector.stories').default,
   },
   {
     key: 'Pictogram',
@@ -517,8 +485,7 @@ export const routes = [
   },
   {
     key: 'Pressable',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/system/__stories__/Pressable.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/system/__stories__/Pressable.stories').default,
   },
   {
     key: 'PressableOpacity',
@@ -537,13 +504,11 @@ export const routes = [
   },
   {
     key: 'RadioCell',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/controls/__stories__/RadioCell.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/RadioCell.stories').default,
   },
   {
     key: 'RadioGroup',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/controls/__stories__/RadioGroup.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/RadioGroup.stories').default,
   },
   {
     key: 'ReferenceLine',
@@ -553,8 +518,7 @@ export const routes = [
   },
   {
     key: 'RemoteImage',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/media/__stories__/RemoteImage.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/media/__stories__/RemoteImage.stories').default,
   },
   {
     key: 'RemoteImageGroup',
@@ -569,8 +533,7 @@ export const routes = [
   {
     key: 'Scrubber',
     getComponent: () =>
-      require('@cbhq/cds-mobile-visualization/chart/scrubber/__stories__/Scrubber.stories')
-        .default,
+      require('@cbhq/cds-mobile-visualization/chart/scrubber/__stories__/Scrubber.stories').default,
   },
   {
     key: 'SearchInput',
@@ -584,8 +547,7 @@ export const routes = [
   },
   {
     key: 'SegmentedTabs',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/tabs/__stories__/SegmentedTabs.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/tabs/__stories__/SegmentedTabs.stories').default,
   },
   {
     key: 'Select',
@@ -593,8 +555,7 @@ export const routes = [
   },
   {
     key: 'SelectChip',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/chips/__stories__/SelectChip.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/chips/__stories__/SelectChip.stories').default,
   },
   {
     key: 'SelectOption',
@@ -603,8 +564,7 @@ export const routes = [
   },
   {
     key: 'SlideButton',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/buttons/__stories__/SlideButton.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/buttons/__stories__/SlideButton.stories').default,
   },
   {
     key: 'Spacer',
@@ -674,8 +634,7 @@ export const routes = [
   {
     key: 'StickyFooterWithTray',
     getComponent: () =>
-      require('@cbhq/cds-mobile/sticky-footer/__stories__/StickyFooterWithTray.stories')
-        .default,
+      require('@cbhq/cds-mobile/sticky-footer/__stories__/StickyFooterWithTray.stories').default,
   },
   {
     key: 'Switch',
@@ -683,13 +642,11 @@ export const routes = [
   },
   {
     key: 'TabbedChips',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/chips/__stories__/TabbedChips.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/chips/__stories__/TabbedChips.stories').default,
   },
   {
     key: 'TabIndicator',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/tabs/__stories__/TabIndicator.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/tabs/__stories__/TabIndicator.stories').default,
   },
   {
     key: 'TabLabel',
@@ -697,8 +654,7 @@ export const routes = [
   },
   {
     key: 'TabNavigation',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/tabs/__stories__/TabNavigation.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/tabs/__stories__/TabNavigation.stories').default,
   },
   {
     key: 'Tabs',
@@ -714,8 +670,7 @@ export const routes = [
   },
   {
     key: 'TextBody',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/typography/__stories__/TextBody.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/typography/__stories__/TextBody.stories').default,
   },
   {
     key: 'TextCaption',
@@ -724,8 +679,7 @@ export const routes = [
   },
   {
     key: 'TextCore',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/typography/__stories__/TextCore.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/typography/__stories__/TextCore.stories').default,
   },
   {
     key: 'TextDisplay1',
@@ -749,8 +703,7 @@ export const routes = [
   },
   {
     key: 'TextInput',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/controls/__stories__/TextInput.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/TextInput.stories').default,
   },
   {
     key: 'TextLabel1',
@@ -798,8 +751,7 @@ export const routes = [
   },
   {
     key: 'TooltipV2',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/TooltipV2.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/TooltipV2.stories').default,
   },
   {
     key: 'TopNavBar',
@@ -812,13 +764,11 @@ export const routes = [
   },
   {
     key: 'TrayAction',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/TrayAction.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/TrayAction.stories').default,
   },
   {
     key: 'TrayBasic',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/TrayBasic.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/TrayBasic.stories').default,
   },
   {
     key: 'TrayFallback',
@@ -842,8 +792,7 @@ export const routes = [
   },
   {
     key: 'TrayMisc',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/TrayMisc.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/TrayMisc.stories').default,
   },
   {
     key: 'TrayNavigation',
@@ -872,8 +821,7 @@ export const routes = [
   },
   {
     key: 'TrayTall',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/overlays/__stories__/TrayTall.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/TrayTall.stories').default,
   },
   {
     key: 'TrayWithTitle',
@@ -882,7 +830,6 @@ export const routes = [
   },
   {
     key: 'UpsellCard',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/cards/__stories__/UpsellCard.stories').default,
+    getComponent: () => require('@cbhq/cds-mobile/cards/__stories__/UpsellCard.stories').default,
   },
 ];

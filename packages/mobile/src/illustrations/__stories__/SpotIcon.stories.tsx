@@ -1,10 +1,7 @@
 import React from 'react';
 import type { SpotIconDimension } from '@cbhq/cds-common';
 import type { ColorScheme } from '@cbhq/cds-common/core/theme';
-import {
-  illustrationDimensions,
-  illustrationSizes,
-} from '@cbhq/cds-common/tokens/illustrations';
+import { illustrationDimensions, illustrationSizes } from '@cbhq/cds-common/tokens/illustrations';
 import spotIconVersionMap from '@cbhq/cds-illustrations/__generated__/spotIcon/data/versionMap';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

@@ -58,11 +58,7 @@ const config = {
   checkForCardDismissAccessibilityLabelProps: ['NudgeCard', 'UpsellCard'],
   checkForSearchInputAccessibilityLabelProps: ['SearchInput'],
 
-  allowedPackages: [
-    '@cbhq/cds-common',
-    '@cbhq/cds-mobile',
-    '@cbhq/cds-mobile-visualization',
-  ],
+  allowedPackages: ['@cbhq/cds-common', '@cbhq/cds-mobile', '@cbhq/cds-mobile-visualization'],
 };
 
 export const hasValidA11yDescriptorsExtended = ruleCreator({

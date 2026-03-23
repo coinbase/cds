@@ -7,12 +7,7 @@ import {
 } from 'react-native';
 import { transparentVariants, variants } from '@cbhq/cds-common/tokens/button';
 import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
-import type {
-  IconButtonVariant,
-  IconName,
-  IconSize,
-  SharedProps,
-} from '@cbhq/cds-common/types';
+import type { IconButtonVariant, IconName, IconSize, SharedProps } from '@cbhq/cds-common/types';
 import { getButtonSpacingProps } from '@cbhq/cds-common/utils/getButtonSpacingProps';
 
 import { useTheme } from '../hooks/useTheme';

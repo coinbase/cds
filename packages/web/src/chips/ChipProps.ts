@@ -1,8 +1,4 @@
-import type {
-  DimensionValue,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@cbhq/cds-common/types';
+import type { DimensionValue, SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
 
 import type {
   PressableBaseProps,
