@@ -27,7 +27,7 @@ type MessageIds =
   | 'missingControlledElementAccessibilityProps'
   | 'missingControlledElementAccessibilityPropsDropdown'
   | 'missingHelperTextErrorIconAccessibilityLabel'
-  | 'missingCalendarIconButtonAccessibilityLabel'
+  | 'missingCalendarOpenCloseAccessibilityLabels'
   | 'missingNextArrowAccessibilityLabel'
   | 'missingPreviousArrowAccessibilityLabel'
   | 'missingCardDismissAccessibilityLabel'
@@ -61,7 +61,7 @@ const config = {
   collapsibleCheckForControlledElementAccessibilityProps: ['Collapsible'],
   dropdownCheckForControlledElementAccessibilityProps: ['Dropdown'],
   checkForHelperTextErrorIconAccessibilityLabelProps: ['TextInput', 'SelectStack'],
-  checkForCalendarIconButtonAccessibilityLabelProps: ['DatePicker'],
+  checkForCalendarOpenCloseAccessibilityLabelProps: ['DatePicker'],
   checkForArrowAccessibilityProps: ['DatePicker', 'Calendar', 'TabNavigation'],
   checkForCardDismissAccessibilityLabelProps: ['NudgeCard', 'UpsellCard'],
   checkForSearchInputAccessibilityLabelProps: ['SearchInput'],
@@ -84,7 +84,7 @@ export const controlHasAssociatedLabelExtended = ruleCreator({
       missingControlledElementAccessibilityProps: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.coinbase.com/components/collapsible#[object%20Object],Accessibility%20tip%20(web)`,
       missingControlledElementAccessibilityPropsDropdown: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.coinbase.com/components/dropdown#page=implementation`,
       missingHelperTextErrorIconAccessibilityLabel: `Missing 'helperTextErrorIconAccessibilityLabel' on <{{componentName}}>.`,
-      missingCalendarIconButtonAccessibilityLabel: `Missing 'calendarIconButtonAccessibilityLabel' on <{{componentName}}>.`,
+      missingCalendarOpenCloseAccessibilityLabels: `Missing calendar open/close accessibility label on <{{componentName}}>. Provide both 'openCalendarAccessibilityLabel' and 'closeCalendarAccessibilityLabel' (or deprecated 'calendarIconButtonAccessibilityLabel').`,
       missingNextArrowAccessibilityLabel: `Missing 'nextArrowAccessibilityLabel' on <{{componentName}}>.`,
       missingPreviousArrowAccessibilityLabel: `Missing 'previousArrowAccessibilityLabel' on <{{componentName}}>.`,
       missingCardDismissAccessibilityLabel: `Missing 'accessibilityLabel' on <{{componentName}}> for dismiss button.`,
@@ -130,7 +130,9 @@ export const controlHasAssociatedLabelExtended = ruleCreator({
           componentName,
           hasInnerText,
           hasHelperTextErrorIconAccessibilityLabel,
-          hasCalendarIconButtonAccessibilityLabel,
+          hasOpenCalendarAccessibilityLabel,
+          hasCloseCalendarAccessibilityLabel,
+          hasDeprecatedCalendarIconButtonAccessibilityLabel,
           hasMissingNextArrowAccessibilityLabel,
           hasMissingPreviousArrowAccessibilityLabel,
           hasOnDismissPressProp,
@@ -175,10 +177,13 @@ export const controlHasAssociatedLabelExtended = ruleCreator({
             suggestedPropToAdd: 'helperTextErrorIconAccessibilityLabel',
           },
           {
-            configArray: config.checkForCalendarIconButtonAccessibilityLabelProps,
-            condition: !hasCalendarIconButtonAccessibilityLabel,
-            messageId: 'missingCalendarIconButtonAccessibilityLabel',
-            suggestedPropToAdd: 'calendarIconButtonAccessibilityLabel',
+            configArray: config.checkForCalendarOpenCloseAccessibilityLabelProps,
+            condition: !(
+              (hasOpenCalendarAccessibilityLabel && hasCloseCalendarAccessibilityLabel) ||
+              hasDeprecatedCalendarIconButtonAccessibilityLabel
+            ),
+            messageId: 'missingCalendarOpenCloseAccessibilityLabels',
+            suggestedPropToAdd: 'openCalendarAccessibilityLabel',
           },
           {
             configArray: config.checkForArrowAccessibilityProps,

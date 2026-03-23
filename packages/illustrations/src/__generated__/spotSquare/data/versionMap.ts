@@ -271,12 +271,12 @@ const versionMap: Record<SpotSquareName, number> = {
   instoEthStakingRewards: 0,
   instoStaking: 0,
   instoEthStaking: 0,
-  instoAuthenticatorProgress: 0,
+  instoAuthenticatorProgress: 1,
   instoUbiKey: 0,
   instoSideChainSide: 0,
-  instoSecurityKey: 0,
-  instoWaiting: 0,
-  instoDappWallet: 0,
+  instoSecurityKey: 1,
+  instoWaiting: 1,
+  instoDappWallet: 1,
   instoPixDeposits: 0,
 };
 

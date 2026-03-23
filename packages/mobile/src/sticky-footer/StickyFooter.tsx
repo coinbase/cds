@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { View } from 'react-native';
 
+import { useSafeBottomPadding } from '../hooks/useSafeBottomPadding';
 import { Box, type BoxProps } from '../layout';
 
 export type StickyFooterProps = BoxProps & {
@@ -22,6 +23,7 @@ export const StickyFooter = memo(
         role = 'toolbar',
         accessibilityLabel = 'footer',
         padding = 2,
+        flexShrink = 0,
         ...props
       }: StickyFooterProps,
       forwardedRef: React.ForwardedRef<View>,
@@ -31,6 +33,7 @@ export const StickyFooter = memo(
           ref={forwardedRef}
           accessibilityLabel={accessibilityLabel}
           elevation={elevation}
+          flexShrink={flexShrink}
           padding={padding}
           role={role}
           testID={testID}

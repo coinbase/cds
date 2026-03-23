@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common';
 import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 
 import { InputLabel } from '../../controls/InputLabel';
@@ -10,39 +9,34 @@ import { HStack } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { Tooltip } from '../../overlays/tooltip/Tooltip';
 import { Text } from '../../typography/Text';
-import { DatePicker } from '../DatePicker';
+import { DatePicker, type DatePickerProps } from '../DatePicker';
 
-const today = new Date(new Date(2024, 7, 18).setHours(0, 0, 0, 0));
+const today = new Date(new Date().setHours(0, 0, 0, 0));
 const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
-const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
 const exampleProps = {
-  maxDate: nextMonth15th,
-  minDate: lastMonth15th,
   invalidDateError: 'Please enter a valid date',
   disabledDateError: 'Date unavailable',
   requiredError: 'This field is required',
 };
 
-const ExampleDatePicker = (props: {
-  labelNode?: React.ReactNode;
-  required?: boolean;
-  calendarIconButtonAccessibilityLabel?: string;
-  label?: string;
-  accessibilityLabel?: string;
-  width?: DimensionValue;
-  compact?: boolean;
-  labelVariant?: 'outside' | 'inside';
-}) => {
-  const [date, setDate] = useState<Date | null>(null);
+const ExampleDatePicker = ({
+  date,
+  ...props
+}: { date?: Date | null } & Omit<
+  DatePickerProps,
+  'date' | 'error' | 'onChangeDate' | 'onErrorDate'
+>) => {
+  const [dateValue, setDateValue] = useState<Date | null>(date ?? null);
   const [error, setError] = useState<DateInputValidationError | null>(null);
   return (
     <DatePicker
       {...exampleProps}
       {...props}
-      date={date}
+      date={dateValue}
       error={error}
-      onChangeDate={setDate}
+      onChangeDate={setDateValue}
       onErrorDate={setError}
     />
   );
@@ -54,20 +48,20 @@ export const FullExample = () => {
       <Example title="Default">
         <ExampleDatePicker
           required
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
           label="Birthdate"
+          openCalendarAccessibilityLabel="Birthdate calendar"
         />
       </Example>
       <Example title="Multiple pickers">
         <HStack gap={2}>
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example 1 calendar"
             label="Example 1"
+            openCalendarAccessibilityLabel="Example 1 calendar"
             width="auto"
           />
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example 2 calendar"
             label="Example 2"
+            openCalendarAccessibilityLabel="Example 2 calendar"
             width="auto"
           />
         </HStack>
@@ -76,8 +70,8 @@ export const FullExample = () => {
         <HStack gap={2}>
           <TextInput label="Example Text" placeholder="1" width="auto" />
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example calendar"
             label="Example Date"
+            openCalendarAccessibilityLabel="Example calendar"
             width="auto"
           />
         </HStack>
@@ -86,8 +80,8 @@ export const FullExample = () => {
         <HStack gap={2}>
           <TextInput label="Example Text" placeholder="1" width="50%" />
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example calendar"
             label="Example Date"
+            openCalendarAccessibilityLabel="Example calendar"
             width="auto"
           />
         </HStack>
@@ -95,7 +89,6 @@ export const FullExample = () => {
       <Example title="DatePicker with labelNode">
         <ExampleDatePicker
           accessibilityLabel="Birthdate"
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
           labelNode={
             <HStack alignItems="center">
               <InputLabel>Birthdate</InputLabel>
@@ -104,26 +97,49 @@ export const FullExample = () => {
               </Tooltip>
             </HStack>
           }
+          openCalendarAccessibilityLabel="Birthdate calendar"
         />
       </Example>
       <Example title="DatePicker fit-content width">
         <HStack flexWrap="wrap" gap={2}>
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example calendar"
             label="Example Date"
+            openCalendarAccessibilityLabel="Example calendar"
             width="fit-content"
           />
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example calendar 2"
             label="Example Date 2"
+            openCalendarAccessibilityLabel="Example calendar 2"
             width="fit-content"
           />
           <ExampleDatePicker
-            calendarIconButtonAccessibilityLabel="Example calendar 3"
             label="Example Date 3"
+            openCalendarAccessibilityLabel="Example calendar 3"
             width="fit-content"
           />
         </HStack>
+      </Example>
+      <Example title="DatePicker with seed date (next month)">
+        <ExampleDatePicker
+          label="Event date"
+          openCalendarAccessibilityLabel="Seed date calendar"
+          seedDate={nextMonth15th}
+        />
+      </Example>
+      <Example title="DatePicker with pre-selected date (next month)">
+        <ExampleDatePicker
+          date={nextMonth15th}
+          label="Event date"
+          openCalendarAccessibilityLabel="Seed date calendar"
+        />
+      </Example>
+      <Example title="DatePicker with minimum date of tomorrow">
+        <ExampleDatePicker
+          disabledDateError="Future dates only"
+          invalidDateError="Future dates only"
+          label="Future date"
+          minDate={tomorrow}
+        />
       </Example>
     </ExampleScreen>
   );
@@ -137,7 +153,6 @@ export const CustomLabel = () => {
           {/* Default with tooltip */}
           <ExampleDatePicker
             accessibilityLabel="Date of birth"
-            calendarIconButtonAccessibilityLabel="Date of birth calendar"
             labelNode={
               <HStack alignItems="center">
                 <InputLabel>Date of birth</InputLabel>
@@ -146,12 +161,12 @@ export const CustomLabel = () => {
                 </Tooltip>
               </HStack>
             }
+            openCalendarAccessibilityLabel="Date of birth calendar"
           />
           {/* Compact with required indicator */}
           <ExampleDatePicker
             compact
             accessibilityLabel="Start date"
-            calendarIconButtonAccessibilityLabel="Start date calendar"
             labelNode={
               <HStack alignItems="center" gap={0.5}>
                 <InputLabel>Start date</InputLabel>
@@ -160,11 +175,11 @@ export const CustomLabel = () => {
                 </Text>
               </HStack>
             }
+            openCalendarAccessibilityLabel="Start date calendar"
           />
           {/* Inside variant with optional indicator */}
           <ExampleDatePicker
             accessibilityLabel="End date"
-            calendarIconButtonAccessibilityLabel="End date calendar"
             labelNode={
               <HStack alignItems="center" gap={1}>
                 <InputLabel paddingY={0}>End date</InputLabel>
@@ -174,6 +189,7 @@ export const CustomLabel = () => {
               </HStack>
             }
             labelVariant="inside"
+            openCalendarAccessibilityLabel="End date calendar"
           />
         </VStack>
       </Example>

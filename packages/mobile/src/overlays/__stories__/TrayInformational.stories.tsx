@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import { Button } from '../../buttons/Button';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
@@ -8,7 +8,7 @@ import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { Text } from '../../typography/Text';
 import { ProgressBar } from '../../visualizations/ProgressBar';
 import type { DrawerRefBaseProps } from '../drawer/Drawer';
-import { Tray, TrayStickyFooter } from '../tray/Tray';
+import { Tray } from '../tray/Tray';
 
 export const Default = () => {
   const [isTrayVisible, setIsTrayVisible] = useState(false);
@@ -26,35 +26,33 @@ export const Default = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          footer={({ handleClose }) => (
+            <StickyFooter paddingX={3}>
+              <Button block onPress={handleClose} variant="secondary">
+                Got it
+              </Button>
+            </StickyFooter>
+          )}
           handleBarAccessibilityLabel="Dismiss"
+          handleBarVariant="inside"
           onCloseComplete={setIsTrayVisibleToFalse}
           onVisibilityChange={handleTrayVisibilityChange}
-          title={<SectionHeader paddingX={3} title="Trading activity" />}
+          title="Trading activity"
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
-              <VStack paddingBottom={1} paddingX={3}>
-                <Text color="fgMuted" font="body" paddingBottom={3}>
-                  The percentage of Coinbase customers who increased or decreased their net position
-                  in 00 over the past 24 hours through trading. What this means: Increased buying
-                  activity can signal that the asset is gaining popularity. Last updated on May 2,
-                  2023.
-                </Text>
-                <Text font="headline">What this means:</Text>
-                <Text color="fgMuted" font="body" paddingBottom={3}>
-                  Increased buying activity can signal that the asset is gaining popularity.
-                </Text>
-                <Text color="fgMuted" font="legal">
-                  Last updated on May 2, 2023.
-                </Text>
-              </VStack>
-              <StickyFooter paddingX={3}>
-                <Button block onPress={handleClose} variant="secondary">
-                  Got it
-                </Button>
-              </StickyFooter>
-            </TrayStickyFooter>
-          )}
+          <VStack paddingBottom={1} paddingX={3}>
+            <Text color="fgMuted" font="body" paddingBottom={3}>
+              The percentage of Coinbase customers who increased or decreased their net position in
+              00 over the past 24 hours through trading. What this means: Increased buying activity
+              can signal that the asset is gaining popularity. Last updated on May 2, 2023.
+            </Text>
+            <Text font="headline">What this means:</Text>
+            <Text color="fgMuted" font="body" paddingBottom={3}>
+              Increased buying activity can signal that the asset is gaining popularity.
+            </Text>
+            <Text color="fgMuted" font="legal">
+              Last updated on May 2, 2023.
+            </Text>
+          </VStack>
         </Tray>
       )}
     </>
@@ -83,7 +81,7 @@ export const WithProgressBar = () => {
           title={<SectionHeader paddingX={3} title="Section header" />}
         >
           {({ handleClose }) => (
-            <TrayStickyFooter>
+            <>
               <VStack paddingBottom={1} paddingX={3}>
                 <Text color="fgMuted" font="body" paddingBottom={3}>
                   The percentage of this asset currently being held in cold storage. In order to
@@ -115,7 +113,7 @@ export const WithProgressBar = () => {
                   Got it
                 </Button>
               </StickyFooter>
-            </TrayStickyFooter>
+            </>
           )}
         </Tray>
       )}

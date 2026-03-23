@@ -1,12 +1,10 @@
-import React, { memo, useCallback, useRef, useState } from 'react';
-import { Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { memo, useCallback, useRef, useState } from 'react';
 import type { IconName } from '@coinbase/cds-common/types';
 
 import { Button } from '../../buttons/Button';
 import { ListCell } from '../../cells/ListCell';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
-import { useDimensions } from '../../hooks/useDimensions';
+import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 import { Icon } from '../../icons';
 import { SpotRectangle } from '../../illustrations';
 import { Box, HStack, VStack } from '../../layout';
@@ -17,7 +15,7 @@ import { Text } from '../../typography/Text';
 import { TextBody } from '../../typography/TextBody';
 import { TextTitle1 } from '../../typography/TextTitle1';
 import type { DrawerRefBaseProps } from '../drawer/Drawer';
-import { Tray, TrayStickyFooter } from '../tray/Tray';
+import { Tray } from '../tray/Tray';
 
 export const Default = () => {
   const [isTrayVisible, setIsTrayVisible] = useState(false);
@@ -35,31 +33,29 @@ export const Default = () => {
       {isTrayVisible && (
         <Tray
           ref={trayRef}
+          footer={({ handleClose }) => (
+            <StickyFooter paddingX={3}>
+              <Button block onPress={handleClose}>
+                Explore Dapps
+              </Button>
+            </StickyFooter>
+          )}
           handleBarAccessibilityLabel="Dismiss"
           onCloseComplete={setIsTrayVisibleToFalse}
           onVisibilityChange={handleTrayVisibilityChange}
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
-              <VStack paddingBottom={1} paddingTop={1} paddingX={3}>
-                <Box alignItems="center" paddingBottom={3}>
-                  <SpotRectangle name="exploreDecentralizedApps" />
-                </Box>
-                <Text align="center" font="title1" paddingBottom={2}>
-                  Earn crypto by lending, staking, and more
-                </Text>
-                <Text align="center" color="fgMuted" font="body">
-                  Many decentralized apps (“dapps”) let you earn yield on your crypto. Check out
-                  trusted dapps like Aave and Compound without leaving Coinbaes.
-                </Text>
-              </VStack>
-              <StickyFooter paddingX={3}>
-                <Button block onPress={handleClose}>
-                  Explore Dapps
-                </Button>
-              </StickyFooter>
-            </TrayStickyFooter>
-          )}
+          <VStack paddingBottom={1} paddingTop={1} paddingX={3}>
+            <Box alignItems="center" paddingBottom={3}>
+              <SpotRectangle name="exploreDecentralizedApps" />
+            </Box>
+            <Text align="center" font="title1" paddingBottom={2}>
+              Earn crypto by lending, staking, and more
+            </Text>
+            <Text align="center" color="fgMuted" font="body">
+              Many decentralized apps (“dapps”) let you earn yield on your crypto. Check out trusted
+              dapps like Aave and Compound without leaving Coinbaes.
+            </Text>
+          </VStack>
         </Tray>
       )}
     </>
@@ -128,13 +124,7 @@ const CreditCardAddAssetsTrayExample = () => {
         <Tray
           handleBarAccessibilityLabel="Information about rewards details"
           onCloseComplete={setIsTrayVisibleOff}
-          title={
-            trayContentType === 'addFundsInfo' ? (
-              <VStack gap={0.5} paddingTop={3} paddingX={3}>
-                <Text font="title3">Lifetime rewards details</Text>
-              </VStack>
-            ) : null
-          }
+          title={trayContentType === 'addFundsInfo' ? 'Lifetime rewards details' : null}
         >
           {trayContentType === 'addFundsInfo' ? (
             <VStack paddingX={3}>
@@ -168,8 +158,6 @@ const CreditCardAddAssetsTrayExample = () => {
   );
 };
 
-const TOP_TRAY_OFFSET = 20;
-const SAFE_AREA_OVERFLOW_MULTIPLIER = 2;
 const BACKGROUND_COLOR = '#011C92';
 
 type UpsellBenefit = {
@@ -205,14 +193,23 @@ const ProductUpsellTrayExample = () => {
   const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), []);
   const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), []);
-
+  const safeBottomPadding = useSafeBottomPadding();
   return (
     <>
       <Button onPress={setIsTrayVisibleOn}>Open</Button>
       {isTrayVisible && (
         <Tray
+          disableSafeAreaPaddingBottom
           handleBarAccessibilityLabel="Product upsell details"
           onCloseComplete={setIsTrayVisibleOff}
+          styles={{
+            drawer: {
+              backgroundColor: BACKGROUND_COLOR,
+            },
+            content: {
+              paddingBottom: safeBottomPadding,
+            },
+          }}
           verticalDrawerPercentageOfView={0.95}
         >
           {({ handleClose }) => (
@@ -231,10 +228,6 @@ const ProductUpsellTrayContent = memo(function ProductUpsellTrayContent({
   benefits: UpsellBenefit[];
   dismiss: () => void;
 }) {
-  const { screenWidth } = useDimensions();
-  const insets = useSafeAreaInsets();
-  const bottom = Platform.OS === 'android' ? Math.max(insets.bottom, 24) : insets.bottom;
-
   const handlePrimaryCtaPress = useCallback(() => {
     alert('Primary CTA pressed');
     dismiss();
@@ -243,23 +236,6 @@ const ProductUpsellTrayContent = memo(function ProductUpsellTrayContent({
   return (
     <ThemeProvider activeColorScheme="dark" theme={defaultTheme}>
       <VStack position="relative">
-        <Box
-          bottom={-bottom * SAFE_AREA_OVERFLOW_MULTIPLIER}
-          dangerouslySetBackground={BACKGROUND_COLOR}
-          height={bottom * SAFE_AREA_OVERFLOW_MULTIPLIER}
-          left={0}
-          position="absolute"
-          right={0}
-          width="100%"
-        />
-        <Box
-          dangerouslySetBackground={BACKGROUND_COLOR}
-          height={TOP_TRAY_OFFSET}
-          left={0}
-          position="absolute"
-          right={0}
-          top={-TOP_TRAY_OFFSET}
-        />
         <VStack dangerouslySetBackground={BACKGROUND_COLOR} gap={4} paddingTop={5} paddingX={3}>
           <Box alignItems="center" justifyContent="center">
             <SpotRectangle name="creditCardExcitement" />

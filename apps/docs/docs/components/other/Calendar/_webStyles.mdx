@@ -1,0 +1,23 @@
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Calendar } from '@coinbase/cds-web/dates/Calendar';
+
+import webStylesData from ':docgen/web/dates/Calendar/styles-data';
+
+export const CalendarStylesExample = ({ classNames }) => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  return (
+    <Calendar classNames={classNames} onPressDate={setSelectedDate} selectedDate={selectedDate} />
+  );
+};
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <CalendarStylesExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Calendar" styles={webStylesData} />

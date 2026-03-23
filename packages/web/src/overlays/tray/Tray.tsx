@@ -152,6 +152,8 @@ export type TrayBaseProps = Pick<
   onClose?: () => void;
   /** Action that will happen when tray is dismissed */
   onCloseComplete: () => void;
+  /** Callback fired when the open animation completes. */
+  onOpenComplete?: () => void;
   /**
    * Optional callback that, if provided, will be triggered when the Tray is toggled open/ closed
    * If used for analytics, context ('visible' | 'hidden') can be bundled with the event info to track whether the
@@ -255,6 +257,7 @@ export const Tray = memo(
       onBlur,
       onClose,
       onCloseComplete,
+      onOpenComplete,
       preventDismiss,
       id,
       role = 'dialog',
@@ -282,6 +285,7 @@ export const Tray = memo(
     const trayRef = useRef<HTMLDivElement>(null);
     const { observe: observeTraySize, height: trayHeight } = useDimensions<HTMLDivElement>();
     const contentRef = useRef<HTMLDivElement>(null);
+    const hasCalledOnOpenComplete = useRef(false);
     const [scope, animate] = useAnimate();
     const dragControls = useDragControls();
 
@@ -361,6 +365,12 @@ export const Tray = memo(
       },
       [trayHeight, handleSwipeClose, animate, scope],
     );
+
+    const handleOpenComplete = useCallback(() => {
+      if (hasCalledOnOpenComplete.current) return;
+      hasCalledOnOpenComplete.current = true;
+      onOpenComplete?.();
+    }, [onOpenComplete]);
 
     const initialAnimationValue = useMemo(() => {
       if (reduceMotion) {
@@ -476,6 +486,7 @@ export const Tray = memo(
                     elevation={2}
                     id={id}
                     initial={initialAnimationValue}
+                    onAnimationComplete={handleOpenComplete}
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
                     onDragEnd={!preventDismiss ? handleDragEnd : undefined}
                     pin={pin}
