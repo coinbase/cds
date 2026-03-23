@@ -2,7 +2,6 @@ import globals from 'globals';
 import * as tseslint from 'typescript-eslint';
 import eslintJs from '@eslint/js';
 import eslintImport from 'eslint-plugin-import';
-import eslintSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import eslintReact from 'eslint-plugin-react';
 import eslintReactHooks from 'eslint-plugin-react-hooks';
 import eslintReactPerf from 'eslint-plugin-react-perf';
@@ -14,6 +13,7 @@ import eslintReactNativeA11y from 'eslint-plugin-react-native-a11y';
 import eslintReactNative from 'eslint-plugin-react-native';
 import eslintCodegen from 'eslint-plugin-codegen';
 import internalPlugin from '@coinbase/eslint-plugin-internal';
+import eslintSimpleImportSort from 'eslint-plugin-simple-import-sort';
 
 const ignores = [
   '*.md',
