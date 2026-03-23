@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const outputPath = resolve(__dirname, '../flows/capture-all.yaml');
 
 const platform = process.argv[2] ?? 'ios';
-const sorted = getVisregRoutes({ platform }).sort().slice(0, 2);
+const sorted = getVisregRoutes({ platform }).sort();
 
 const routeSteps = sorted
   .map(
