@@ -104,7 +104,13 @@ async function main() {
   const filePatterns = packages.map((pkg) => `${PACKAGES_DIR}/${pkg}/src/**/*.{ts,tsx}`);
   const files = filePatterns.flatMap((pattern) =>
     globSync(pattern, {
-      ignore: ['**/node_modules/**', '**/dist/**', '**/*.test.*', '**/*.stories.*', '**/__tests__/**'],
+      ignore: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/*.test.*',
+        '**/*.stories.*',
+        '**/__tests__/**',
+      ],
     }),
   );
 
