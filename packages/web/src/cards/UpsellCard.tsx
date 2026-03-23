@@ -45,7 +45,8 @@ export type UpsellCardBaseProps = SharedProps &
 export type UpsellCardProps = UpsellCardBaseProps;
 
 /**
- * @deprecated Use `MessagingCard` with `type="upsell"` instead. UpsellCard will be removed in a future major release. Targeting removal in v9.
+ * @deprecated Use `MessagingCard` with `type="upsell"` instead. UpsellCard will be removed in a future major release. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  *
  * Migration guide:
  * ```tsx

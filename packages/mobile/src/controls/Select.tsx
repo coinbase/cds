@@ -65,7 +65,8 @@ export type SelectBaseProps = SharedProps &
 export type SelectProps = SelectBaseProps;
 
 /**
- * @deprecated Please use the new Select alpha component instead. Targeting removal in v9.
+ * @deprecated Please use the new Select alpha component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const Select = memo(
   forwardRef(

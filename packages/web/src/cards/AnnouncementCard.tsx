@@ -5,7 +5,10 @@ import { CardBody, type CardBodyBaseProps } from './CardBody';
 
 export type AnnouncementCardBaseProps = CardBaseProps & CardBodyBaseProps;
 export type AnnouncementCardProps = AnnouncementCardBaseProps;
-/** @deprecated Use MessagingCard instead. AnnouncementCard will be removed in a future major release. Targeting removal in v6. */
+/**
+ * @deprecated Use MessagingCard instead. AnnouncementCard will be removed in a future major release. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v6
+ */
 export const AnnouncementCard = memo(function AnnouncementCard({
   width,
   title,

@@ -2,62 +2,89 @@ import { ESLintUtils } from '@typescript-eslint/utils';
 
 const createRule = ESLintUtils.RuleCreator(() => null);
 
-const REMOVAL_VERSION_PATTERN = /Targeting removal in v(\d+\.\d+\.\d+|\d+)/;
+const EXPECTED_REMOVAL_TAG_PATTERN = /@deprecationExpectedRemoval\s+v(\d+(?:\.\d+\.\d+)?)/;
+const FUTURE_MAJOR_RELEASE_SUFFIX = 'This will be removed in a future major release.';
 
 /**
  * Rule: deprecated-jsdoc-has-removal-version
  *
- * Enforces that any JSDoc @deprecated tag also contains a sentence of the form
- * "Targeting removal in vX" where X is a semver (e.g. 7.0.0) or integer (e.g. 7).
+ * Enforces that any JSDoc @deprecated tag:
+ *   1. Has its text end with "This will be removed in a future major release."
+ *   2. Is accompanied by a @deprecationExpectedRemoval vX[.Y.Z] tag in the same block.
  */
 const rule = createRule({
   name: 'deprecated-jsdoc-has-removal-version',
   meta: {
     type: 'problem',
     docs: {
-      description: 'Require JSDoc @deprecated tags to include a "Targeting removal in vX" sentence',
+      description:
+        'Require JSDoc @deprecated tags to end with the standard removal prose and include a @deprecationExpectedRemoval tag',
       recommended: 'error',
     },
     schema: [],
     messages: {
-      missingRemovalVersion:
-        '@deprecated tag must include a removal target, e.g. "Targeting removal in v7.0.0".',
+      missingRemovalProse:
+        '@deprecated tag text must end with "This will be removed in a future major release."',
+      missingRemovalTag:
+        'JSDoc with @deprecated must include a @deprecationExpectedRemoval vX[.Y.Z] tag.',
     },
   },
   defaultOptions: [],
   create(context) {
     const sourceCode = context.sourceCode ?? context.getSourceCode?.();
 
-    /**
-     * If the comment has @deprecated but no removal version sentence, report at
-     * the @deprecated token location.
-     */
     function checkComment(comment) {
       if (comment.type !== 'Block' || !comment.value.startsWith('*')) return;
       if (!comment.value.includes('@deprecated')) return;
-      if (REMOVAL_VERSION_PATTERN.test(comment.value)) return;
 
-      // Point the error at the @deprecated token itself
+      const hasRemovalTag = EXPECTED_REMOVAL_TAG_PATTERN.test(comment.value);
+
+      // Extract the @deprecated line(s) to check the prose ending.
+      // The @deprecated tag text runs from @deprecated to the next @ tag or end of comment.
       const deprecatedIndex = comment.value.indexOf('@deprecated');
-      const textBefore = comment.value.slice(0, deprecatedIndex);
-      const linesBeforeDeprecated = textBefore.split('\n').length - 1;
-      const deprecatedLine = comment.loc.start.line + linesBeforeDeprecated;
+      const afterDeprecated = comment.value.slice(deprecatedIndex + '@deprecated'.length);
 
-      const lastNewlineIndex = textBefore.lastIndexOf('\n');
-      let deprecatedColumn;
-      if (lastNewlineIndex === -1) {
-        deprecatedColumn = comment.loc.start.column + 2 + deprecatedIndex;
-      } else {
-        deprecatedColumn = deprecatedIndex - lastNewlineIndex - 1;
-      }
+      // Find where the @deprecated tag content ends (at the next @ tag or end of comment body)
+      const nextTagMatch = afterDeprecated.match(/\n\s*\*\s*@/);
+      const deprecatedContent = nextTagMatch
+        ? afterDeprecated.slice(0, nextTagMatch.index)
+        : afterDeprecated;
 
-      context.report({
-        loc: {
+      // Strip leading/trailing whitespace and asterisks from each line, then join
+      const deprecatedText = deprecatedContent
+        .split('\n')
+        .map((l) => l.replace(/^\s*\*?\s?/, '').trimEnd())
+        .join(' ')
+        .trim();
+
+      const hasProse = deprecatedText.endsWith(FUTURE_MAJOR_RELEASE_SUFFIX);
+
+      if (!hasProse || !hasRemovalTag) {
+        // Point the error at the @deprecated token itself
+        const textBefore = comment.value.slice(0, deprecatedIndex);
+        const linesBeforeDeprecated = textBefore.split('\n').length - 1;
+        const deprecatedLine = comment.loc.start.line + linesBeforeDeprecated;
+
+        const lastNewlineIndex = textBefore.lastIndexOf('\n');
+        let deprecatedColumn;
+        if (lastNewlineIndex === -1) {
+          deprecatedColumn = comment.loc.start.column + 2 + deprecatedIndex;
+        } else {
+          deprecatedColumn = deprecatedIndex - lastNewlineIndex - 1;
+        }
+
+        const loc = {
           start: { line: deprecatedLine, column: deprecatedColumn },
           end: { line: deprecatedLine, column: deprecatedColumn + '@deprecated'.length },
-        },
-        messageId: 'missingRemovalVersion',
-      });
+        };
+
+        if (!hasProse) {
+          context.report({ loc, messageId: 'missingRemovalProse' });
+        }
+        if (!hasRemovalTag) {
+          context.report({ loc, messageId: 'missingRemovalTag' });
+        }
+      }
     }
 
     function getJsDocComment(node) {

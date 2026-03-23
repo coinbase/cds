@@ -64,7 +64,10 @@ export type TextBaseProps = StyleProps & {
   dangerouslySetColor?: TextStyle['color'];
   /** @danger This is a migration escape hatch. It is not intended to be used normally. */
   dangerouslySetBackground?: TextStyle['backgroundColor'];
-  /** @deprecated Do not use this prop. This is a migration escape hatch and will be removed in the next major version of CDS. Targeting removal in v9. */
+  /**
+   * @deprecated Do not use this prop. This is a migration escape hatch and will be removed in the next major version of CDS. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
+   */
   renderEmptyNode?: boolean;
   /** Used to locate this element in unit and end-to-end tests. */
   testID?: string;

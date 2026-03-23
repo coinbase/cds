@@ -24,7 +24,7 @@ import noDeprecatedJsdocRule from '../libs/eslint-plugin-internal/src/no-depreca
 const REPO_ROOT = process.env.PROJECT_CWD || process.cwd();
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
 
-const REMOVAL_VERSION_PATTERN = /Targeting removal in v(\d+\.\d+\.\d+|\d+)/;
+const REMOVAL_VERSION_PATTERN = /@deprecationExpectedRemoval\s+(v\d+(?:\.\d+\.\d+)?)/;
 
 function getAvailablePackages() {
   const entries = fs.readdirSync(PACKAGES_DIR, { withFileTypes: true });
@@ -79,16 +79,20 @@ function getRemovalVersion(filePath, line) {
     const lines = src.split('\n');
 
     // Walk backwards from the reported line to find the start of the JSDoc block
-    let blockEnd = line - 1; // line is 1-based
-    // If the reported line is inside a comment, expand to capture the whole block
-    let blockStart = blockEnd;
+    let blockStart = line - 1; // line is 1-based, convert to 0-indexed
     while (blockStart > 0 && !lines[blockStart].includes('/**')) {
       blockStart--;
     }
 
+    // Walk forwards from blockStart to find the closing */ of the JSDoc block
+    let blockEnd = blockStart;
+    while (blockEnd < lines.length && !lines[blockEnd].includes('*/')) {
+      blockEnd++;
+    }
+
     const commentBlock = lines.slice(blockStart, blockEnd + 1).join('\n');
     const match = commentBlock.match(REMOVAL_VERSION_PATTERN);
-    return match ? `v${match[1]}` : 'unknown';
+    return match ? match[1] : 'unknown'; // match[1] already includes the 'v' prefix
   } catch {
     return 'unknown';
   }

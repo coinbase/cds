@@ -245,7 +245,8 @@ function SegmentedControlInternal(
 }
 
 /**
- * @deprecated SegmentedControl is deprecated and will be removed in a future version. Please use Tabs or SegmentedTabs instead. Targeting removal in v9.
+ * @deprecated SegmentedControl is deprecated and will be removed in a future version. Please use Tabs or SegmentedTabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const SegmentedControl = memo(forwardRef(SegmentedControlInternal));
 

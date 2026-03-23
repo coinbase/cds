@@ -126,7 +126,8 @@ export type NudgeCardBaseProps = {
 export type NudgeCardProps = NudgeCardBaseProps & Omit<BoxProps<BoxDefaultElement>, 'title'>;
 
 /**
- * @deprecated Use `MessagingCard` with `type="nudge"` instead. NudgeCard will be removed in a future major release. Targeting removal in v9.
+ * @deprecated Use `MessagingCard` with `type="nudge"` instead. NudgeCard will be removed in a future major release. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  *
  * Migration guide:
  * ```tsx

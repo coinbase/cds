@@ -8,7 +8,8 @@ export type SparklineAreaBaseProps = {
 };
 
 /**
- * @deprecated Use AreaChart instead. Targeting removal in v4.
+ * @deprecated Use AreaChart instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const SparklineArea = memo(
   forwardRef<Path | null, SparklineAreaBaseProps>(

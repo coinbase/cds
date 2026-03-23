@@ -33,7 +33,8 @@ export const contentCellDefaultElement = 'div';
 export type ContentCellDefaultElement = typeof contentCellDefaultElement;
 
 /**
- * @deprecated this component will be removed in a future version. Use ListCell instead. Targeting removal in v9.
+ * @deprecated this component will be removed in a future version. Use ListCell instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export type ContentCellBaseProps = Polymorphic.ExtendableProps<
   Omit<CellBaseProps, 'children'>,
@@ -41,7 +42,8 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
     /**
-     * @deprecated Use `spacingVariant="compact"` instead. `compact` will be removed in a future major release. Targeting removal in v9.
+     * @deprecated Use `spacingVariant="compact"` instead. `compact` will be removed in a future major release. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     compact?: boolean;
     /**
@@ -165,7 +167,8 @@ type ContentCellComponent = (<AsComponent extends React.ElementType = ContentCel
   Polymorphic.ReactNamed;
 
 /**
- * @deprecated this component will be removed in a future version. Use ListCell instead. Targeting removal in v9.
+ * @deprecated this component will be removed in a future version. Use ListCell instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const ContentCell: ContentCellComponent = memo(
   forwardRef<React.ReactElement<ContentCellBaseProps>, ContentCellBaseProps>(

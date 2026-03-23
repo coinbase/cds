@@ -30,38 +30,48 @@ describe("'deprecated-jsdoc-has-removal-version' rule", () => {
         filename: 'valid.ts',
       },
       {
-        // @deprecated with full semver removal target
+        // Single-line @deprecated with both required elements
         code: `
-          /** @deprecated Use React.useState instead. Targeting removal in v7.0.0. */
+          /**
+           * @deprecated Use React.useState instead. This will be removed in a future major release.
+           * @deprecationExpectedRemoval v7
+           */
           function useToggler() {}
         `,
         filename: 'valid.ts',
       },
       {
-        // @deprecated with single-number removal target
+        // Full semver in removal tag
         code: `
-          /** @deprecated Targeting removal in v7. */
+          /**
+           * @deprecated Use React.useState instead. This will be removed in a future major release.
+           * @deprecationExpectedRemoval v7.0.0
+           */
           const useGroupToggler = () => {};
         `,
         filename: 'valid.ts',
       },
       {
-        // Multiline JSDoc with removal version on a separate line
+        // Multi-line JSDoc with additional content after @deprecated
         code: `
           /**
-           * @deprecated Use the visible and onRequestClose props instead.
-           * Targeting removal in v8.0.0.
+           * @deprecated Use the visible and onRequestClose props instead. This will be removed in a future major release.
+           * @deprecationExpectedRemoval v8.0.0
+           * @see SomeOtherComponent
            */
           export const useModal = () => ({});
         `,
         filename: 'valid.ts',
       },
       {
-        // Deprecated property in type with removal version
+        // Deprecated property in type
         code: `
           export type IconCounterButtonBaseProps = {
             icon: string;
-            /** @deprecated Use \`size\` instead. Targeting removal in v7.0.0. */
+            /**
+             * @deprecated Use \`size\` instead. This will be removed in a future major release.
+             * @deprecationExpectedRemoval v7.0.0
+             */
             iconSize?: number;
             size?: number;
           };
@@ -87,25 +97,48 @@ describe("'deprecated-jsdoc-has-removal-version' rule", () => {
     ],
     invalid: [
       {
-        // @deprecated with no removal version
+        // @deprecated with no prose and no removal tag
         code: `
           /** @deprecated Use React.useState instead. */
           function useToggler() {}
         `,
         filename: 'useToggler.ts',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalProse' }, { messageId: 'missingRemovalTag' }],
       },
       {
-        // @deprecated with no removal version (const)
+        // @deprecated with correct prose but missing removal tag
         code: `
-          /** @deprecated Do not use this. */
+          /**
+           * @deprecated Use React.useState instead. This will be removed in a future major release.
+           */
+          function useToggler() {}
+        `,
+        filename: 'useToggler.ts',
+        errors: [{ messageId: 'missingRemovalTag' }],
+      },
+      {
+        // @deprecated with removal tag but missing standard prose
+        code: `
+          /**
+           * @deprecated Use React.useState instead.
+           * @deprecationExpectedRemoval v7
+           */
+          function useToggler() {}
+        `,
+        filename: 'useToggler.ts',
+        errors: [{ messageId: 'missingRemovalProse' }],
+      },
+      {
+        // Old "Targeting removal in vX" sentence — no longer valid
+        code: `
+          /** @deprecated Targeting removal in v7. */
           const useGroupToggler = () => {};
         `,
         filename: 'useGroupToggler.ts',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalProse' }, { messageId: 'missingRemovalTag' }],
       },
       {
-        // @deprecated on export with no removal version
+        // @deprecated on export — missing both
         code: `
           /**
            * @deprecated Use the visible and onRequestClose props instead.
@@ -113,19 +146,19 @@ describe("'deprecated-jsdoc-has-removal-version' rule", () => {
           export const useModal = () => ({});
         `,
         filename: 'useModal.ts',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalProse' }, { messageId: 'missingRemovalTag' }],
       },
       {
-        // @deprecated on exported type with no removal version
+        // @deprecated on exported type — missing both
         code: `
           /** @deprecated Use NudgeCard instead */
           export type FeatureEntryCardProps = { name: string };
         `,
         filename: 'FeatureEntryCard.tsx',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalProse' }, { messageId: 'missingRemovalTag' }],
       },
       {
-        // @deprecated property in type with no removal version
+        // @deprecated property in type — missing both
         code: `
           export type IconCounterButtonBaseProps = {
             icon: string;
@@ -135,19 +168,22 @@ describe("'deprecated-jsdoc-has-removal-version' rule", () => {
           };
         `,
         filename: 'IconCounterButton.tsx',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalProse' }, { messageId: 'missingRemovalTag' }],
       },
       {
-        // Partial text that does not match pattern
+        // removal tag present but version format is invalid (missing v prefix)
         code: `
-          /** @deprecated Will be removed eventually in some future version. */
+          /**
+           * @deprecated Use X instead. This will be removed in a future major release.
+           * @deprecationExpectedRemoval 7
+           */
           const oldThing = () => {};
         `,
         filename: 'oldThing.ts',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalTag' }],
       },
       {
-        // Multiple @deprecated annotations — each missing removal version
+        // Multiple @deprecated annotations — each missing both elements
         code: `
           /**
            * @deprecated Please use SelectChip alpha instead.
@@ -167,13 +203,16 @@ describe("'deprecated-jsdoc-has-removal-version' rule", () => {
         `,
         filename: 'SelectChip.tsx',
         errors: [
-          { messageId: 'missingRemovalVersion' },
-          { messageId: 'missingRemovalVersion' },
-          { messageId: 'missingRemovalVersion' },
+          { messageId: 'missingRemovalProse' },
+          { messageId: 'missingRemovalTag' },
+          { messageId: 'missingRemovalProse' },
+          { messageId: 'missingRemovalTag' },
+          { messageId: 'missingRemovalProse' },
+          { messageId: 'missingRemovalTag' },
         ],
       },
       {
-        // Deprecated property inside intersection type — no removal version
+        // Deprecated property inside intersection type — missing both
         code: `
           type BaseProps = { name: string };
           export type SelectChipProps = {
@@ -184,7 +223,7 @@ describe("'deprecated-jsdoc-has-removal-version' rule", () => {
           } & BaseProps;
         `,
         filename: 'intersection-deprecated-prop.tsx',
-        errors: [{ messageId: 'missingRemovalVersion' }],
+        errors: [{ messageId: 'missingRemovalProse' }, { messageId: 'missingRemovalTag' }],
       },
     ],
   });
