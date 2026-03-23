@@ -19,7 +19,7 @@ export type DateInputProps = {
   /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
   separator?: string;
   style?: StyleProp<ViewStyle>;
-} & Omit<DateInputOptions, 'disabledDates' | 'intlDateFormat'> &
+} & Omit<DateInputOptions, 'intlDateFormat'> &
   Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'>;
 
 export const DateInput = memo(
@@ -32,6 +32,7 @@ export const DateInput = memo(
         onErrorDate,
         required,
         separator = '/',
+        disabledDates,
         minDate,
         maxDate,
         requiredError,
@@ -70,6 +71,7 @@ export const DateInput = memo(
         onErrorDate,
         intlDateFormat,
         required,
+        disabledDates,
         minDate,
         maxDate,
         requiredError,

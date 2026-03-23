@@ -49,7 +49,8 @@ export type SparklineBaseProps = SharedProps & {
 export type SparklineProps = SparklineBaseProps;
 
 /**
- * @deprecated Use LineChart instead.
+ * @deprecated Use LineChart instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const Sparkline = memo(
   forwardRef<Path | null, SparklineProps>(

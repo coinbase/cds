@@ -6,6 +6,63 @@ For simplicity there is no build process since the repo root depends on this lib
 
 The plugin encapsulates the following rules:
 
+## deprecated-jsdoc-has-removal-version
+
+Enforces that every JSDoc `@deprecated` tag meets two requirements:
+
+1. The `@deprecated` text ends with the standard prose: `This will be removed in a future major release.`
+2. The same JSDoc block includes a `@deprecationExpectedRemoval vX[.Y.Z]` tag specifying the planned removal version.
+
+Together these rules:
+
+1. ensure consumers see a consistent removal notice in their IDE tooltips
+2. gives us a way to track and be held accountable for older deprecations
+
+**Invalid** — missing both:
+
+```ts
+/** @deprecated Use React.useState instead. */
+function useToggler() {}
+```
+
+**Invalid** — prose present but tag missing:
+
+```ts
+/**
+ * @deprecated Use React.useState instead. This will be removed in a future major release.
+ */
+function useToggler() {}
+```
+
+**Invalid** — tag present but prose missing or not at end of `@deprecated` text:
+
+```ts
+/**
+ * @deprecated Use React.useState instead.
+ * @deprecationExpectedRemoval v7
+ */
+function useToggler() {}
+```
+
+**Valid:**
+
+```ts
+/**
+ * @deprecated Use React.useState instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v7.0.0
+ */
+function useToggler() {}
+```
+
+The rule catches deprecation markers on the same node types as `no-deprecated-jsdoc`:
+
+- Function declarations
+- Variable/const declarations
+- Type alias declarations (including properties within object types)
+- Interface declarations (including properties)
+- Class declarations (including members)
+- Export declarations
+
 ## no-deprecated-jsdoc
 
 Detects JSDoc comments containing `@deprecated` tags. This rule helps identify deprecated code that should be migrated or removed in later, breaking version releases.

@@ -1,20 +1,18 @@
 /**
- * This script uses ESLint's programmatic API to find deprecated entities.
- *
- * Note: If the ESLint rule is no longer needed, this could be refactored to use
- * direct AST parsing with @typescript-eslint/typescript-estree, reusing the
- * pure helper functions from libs/eslint-plugin-internal/src/no-deprecated-jsdoc/.
+ * Finds all deprecated entities across CDS packages by running the
+ * no-deprecated-jsdoc ESLint rule programmatically.
  *
  * Usage:
- *   yarn node scripts/findDeprecations.mjs [packages...]
+ *   yarn node scripts/findDeprecations.mjs [--json] [packages...]
  *
  * Examples:
  *   yarn node scripts/findDeprecations.mjs web mobile
  *   yarn node scripts/findDeprecations.mjs common
- *   yarn node scripts/findDeprecations.mjs          # all packages
+ *   yarn node scripts/findDeprecations.mjs --json
+ *   yarn node scripts/findDeprecations.mjs --json web
+ *   yarn node scripts/findDeprecations.mjs          # all packages, text output
  */
 
-import { execSync } from 'node:child_process';
 import { ESLint } from 'eslint';
 import { globSync } from 'glob';
 import fs from 'node:fs';
@@ -26,105 +24,88 @@ import noDeprecatedJsdocRule from '../libs/eslint-plugin-internal/src/no-depreca
 const REPO_ROOT = process.env.PROJECT_CWD || process.cwd();
 const PACKAGES_DIR = path.join(REPO_ROOT, 'packages');
 
-// Get available packages from the packages directory
+const REMOVAL_VERSION_PATTERN = /@deprecationExpectedRemoval\s+(v\d+(?:\.\d+\.\d+)?)/;
+
 function getAvailablePackages() {
   const entries = fs.readdirSync(PACKAGES_DIR, { withFileTypes: true });
   return entries.filter((e) => e.isDirectory()).map((e) => e.name);
 }
 
-// Parse CLI arguments (positional package names)
 function parseArgs() {
   const args = process.argv.slice(2);
+  const jsonFlag = args.includes('--json');
+  const packageArgs = args.filter((a) => a !== '--json');
+
   const availablePackages = getAvailablePackages();
+  let packages;
 
-  if (args.length === 0) {
-    return availablePackages;
+  if (packageArgs.length === 0) {
+    packages = availablePackages;
+  } else {
+    const invalid = packageArgs.filter((p) => !availablePackages.includes(p));
+    if (invalid.length > 0) {
+      console.error(`Invalid package(s): ${invalid.join(', ')}`);
+      console.error(`Available packages: ${availablePackages.join(', ')}`);
+      process.exit(1);
+    }
+    packages = packageArgs;
   }
 
-  // Validate provided package names
-  const invalidPackages = args.filter((p) => !availablePackages.includes(p));
-  if (invalidPackages.length > 0) {
-    console.error(`Invalid package(s): ${invalidPackages.join(', ')}`);
-    console.error(`Available packages: ${availablePackages.join(', ')}`);
-    process.exit(1);
-  }
-
-  return args;
+  return { packages, jsonFlag };
 }
 
-// Parse the ESLint message to extract name and reason
 function parseDeprecationMessage(message) {
   const match = message.match(/^(.+) is marked as deprecated(: .+)?\.$/);
-  if (!match) {
-    return { name: message, reason: '' };
-  }
+  if (!match) return { name: message, reason: '' };
   return {
     name: match[1],
-    reason: match[2] ? match[2].slice(2) : '', // Remove ": " prefix
+    reason: match[2] ? match[2].slice(2) : '',
   };
 }
 
-// Extract package name from file path
 function getPackageFromPath(filePath) {
-  const relativePath = path.relative(PACKAGES_DIR, filePath);
-  return relativePath.split(path.sep)[0];
+  return path.relative(PACKAGES_DIR, filePath).split(path.sep)[0];
 }
 
-// Get relative path within the package
 function getRelativeFilePath(filePath) {
-  const relativePath = path.relative(PACKAGES_DIR, filePath);
-  const parts = relativePath.split(path.sep);
-  return parts.slice(1).join(path.sep); // Remove package name prefix
+  const parts = path.relative(PACKAGES_DIR, filePath).split(path.sep);
+  return parts.slice(1).join(path.sep);
 }
 
-// Get the date when @deprecated was first introduced using git log -L
-function getDeprecationDate(filePath, line) {
+/** Reads the source file and extracts the removal version from the @deprecated comment block. */
+function getRemovalVersion(filePath, line) {
   try {
-    // Use git log -L to track line history, oldest first
-    const output = execSync(
-      `git log -L${line},${line}:"${filePath}" --reverse --format="COMMIT:%ct" -p`,
-      { encoding: 'utf8', cwd: REPO_ROOT, maxBuffer: 10 * 1024 * 1024 },
-    );
+    const src = fs.readFileSync(filePath, 'utf8');
+    const lines = src.split('\n');
 
-    // Split by commits and find the first one where @deprecated was added
-    const commits = output.split(/^COMMIT:/m).filter(Boolean);
-
-    for (const commitBlock of commits) {
-      const lines = commitBlock.split('\n');
-      const timestamp = parseInt(lines[0], 10);
-
-      // Look for added lines (starting with +) containing @deprecated
-      const hasDeprecatedAddition = lines.some(
-        (l) => l.startsWith('+') && l.includes('@deprecated'),
-      );
-
-      if (hasDeprecatedAddition && !isNaN(timestamp)) {
-        const date = new Date(timestamp * 1000);
-        return date.toISOString().split('T')[0]; // YYYY-MM-DD
-      }
+    // Walk backwards from the reported line to find the start of the JSDoc block
+    let blockStart = line - 1; // line is 1-based, convert to 0-indexed
+    while (blockStart > 0 && !lines[blockStart].includes('/**')) {
+      blockStart--;
     }
 
-    // Fallback: if no addition found, use the first commit's date
-    // (the line existed from the start of tracked history)
-    const firstTimestamp = parseInt(commits[0]?.split('\n')[0], 10);
-    if (!isNaN(firstTimestamp)) {
-      const date = new Date(firstTimestamp * 1000);
-      return date.toISOString().split('T')[0];
+    // Walk forwards from blockStart to find the closing */ of the JSDoc block
+    let blockEnd = blockStart;
+    while (blockEnd < lines.length && !lines[blockEnd].includes('*/')) {
+      blockEnd++;
     }
+
+    const commentBlock = lines.slice(blockStart, blockEnd + 1).join('\n');
+    const match = commentBlock.match(REMOVAL_VERSION_PATTERN);
+    return match ? match[1] : 'unknown'; // match[1] already includes the 'v' prefix
   } catch {
-    // Git log failed (new file, uncommitted, etc.)
+    return 'unknown';
   }
-  return 'unknown';
 }
 
 async function main() {
-  const packages = parseArgs();
-  console.log(`Scanning packages: ${packages.join(', ')}\n`);
+  const { packages, jsonFlag } = parseArgs();
 
-  // Build file patterns for the specified packages
+  if (!jsonFlag) {
+    console.log(`Scanning packages: ${packages.join(', ')}\n`);
+  }
+
   const filePatterns = packages.map((pkg) => `${PACKAGES_DIR}/${pkg}/src/**/*.{ts,tsx}`);
-
-  // Get all matching files
   const files = filePatterns.flatMap((pattern) =>
     globSync(pattern, {
       ignore: [
@@ -138,11 +119,14 @@ async function main() {
   );
 
   if (files.length === 0) {
-    console.log('No files found to scan.');
+    if (jsonFlag) {
+      console.log(JSON.stringify([]));
+    } else {
+      console.log('No files found to scan.');
+    }
     return;
   }
 
-  // Create ESLint instance with minimal config - only our deprecation rule
   const eslint = new ESLint({
     overrideConfigFile: true,
     overrideConfig: [
@@ -157,11 +141,7 @@ async function main() {
           },
         },
         plugins: {
-          internal: {
-            rules: {
-              'no-deprecated-jsdoc': noDeprecatedJsdocRule,
-            },
-          },
+          internal: { rules: { 'no-deprecated-jsdoc': noDeprecatedJsdocRule } },
         },
         rules: {
           'internal/no-deprecated-jsdoc': 'warn',
@@ -170,36 +150,37 @@ async function main() {
     ],
   });
 
-  // Lint all files
   const results = await eslint.lintFiles(files);
 
-  // Collect deprecation entries
   const deprecations = [];
 
   for (const result of results) {
     for (const msg of result.messages) {
-      if (msg.ruleId === 'internal/no-deprecated-jsdoc') {
-        const { name } = parseDeprecationMessage(msg.message);
-        deprecations.push({
-          name,
-          file: getRelativeFilePath(result.filePath),
-          package: getPackageFromPath(result.filePath),
-          date: getDeprecationDate(result.filePath, msg.line),
-        });
-      }
+      if (msg.ruleId !== 'internal/no-deprecated-jsdoc') continue;
+      const { name } = parseDeprecationMessage(msg.message);
+      deprecations.push({
+        name,
+        package: getPackageFromPath(result.filePath),
+        file: getRelativeFilePath(result.filePath),
+        targetRemoval: getRemovalVersion(result.filePath, msg.line),
+      });
     }
+  }
+
+  deprecations.sort((a, b) => {
+    if (a.package !== b.package) return a.package.localeCompare(b.package);
+    return a.file.localeCompare(b.file);
+  });
+
+  if (jsonFlag) {
+    console.log(JSON.stringify(deprecations, null, 2));
+    return;
   }
 
   if (deprecations.length === 0) {
     console.log('No deprecated entities found.');
     return;
   }
-
-  // Sort by package, then by file
-  deprecations.sort((a, b) => {
-    if (a.package !== b.package) return a.package.localeCompare(b.package);
-    return a.file.localeCompare(b.file);
-  });
 
   console.log(`Found ${deprecations.length} deprecated entities:\n`);
   console.table(deprecations);

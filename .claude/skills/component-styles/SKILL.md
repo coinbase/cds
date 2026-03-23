@@ -70,6 +70,7 @@ Review the component's JSX to identify elements that should be targetable via st
 | `content`             | Main content area                                     |
 | `contentContainer`    | Container wrapping content                            |
 | `description`         | Description text element                              |
+| `day`                 | Date cell in a calendar grid                          |
 | `end`                 | End slot content (e.g., actions, icons)               |
 | `fill`                | Fill/progress indicator within a track                |
 | `header`              | Header section                                        |

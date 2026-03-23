@@ -1,0 +1,101 @@
+{
+  "skill_name": "feature-planner",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The user has invoked /feature-planner. Simulate a conversation where the user is a designer who wants to build a color matcher widget for the docs site.",
+      "expected_output": "Warm greeting, non-technical interview, summary for confirmation, detailed technical plan referencing apps/docs/ and theme tokens, visual design noted as out-of-scope.",
+      "assertions": [
+        {
+          "id": "no-jargon-in-conversation",
+          "text": "The conversation/interview portion (Phase 1) does not contain technical jargon like 'props', 'hooks', 'useState', 'CSS variables', 'component API', code snippets, or file paths. Terms should be translated to plain language.",
+          "type": "content"
+        },
+        {
+          "id": "summary-before-plan",
+          "text": "A clear plain-language summary of the feature is presented for the user to confirm BEFORE any technical implementation planning begins.",
+          "type": "structure"
+        },
+        {
+          "id": "plan-references-codebase",
+          "text": "The technical implementation plan references specific real files, directories, or packages from the CDS codebase (not generic advice).",
+          "type": "content"
+        },
+        {
+          "id": "visual-assumptions-avoided",
+          "text": "The plan explicitly notes that specific visual design details (colors, spacing, exact layout) are out of scope or to be finalized in a follow-up session with the engineer.",
+          "type": "content"
+        },
+        {
+          "id": "references-docs-app",
+          "text": "The plan specifically references apps/docs/ as the location for the widget and references the theme/token source files (e.g. packages/common/src/core/theme.ts or similar) as the source of color token data.",
+          "type": "content"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The user has invoked /feature-planner. Simulate a conversation where the user is a designer who wants a new Rating component for both web and mobile.",
+      "expected_output": "Non-technical interview, handles 'I'll share it later' screenshot gracefully, summary without visual prescriptions, plan covering both web and mobile packages.",
+      "assertions": [
+        {
+          "id": "no-jargon-in-conversation",
+          "text": "The conversation/interview portion (Phase 1) does not contain technical jargon like 'props', 'hooks', 'useState', 'CSS variables', 'component API', code snippets, or file paths. Terms should be translated to plain language.",
+          "type": "content"
+        },
+        {
+          "id": "summary-before-plan",
+          "text": "A clear plain-language summary of the feature is presented for the user to confirm BEFORE any technical implementation planning begins.",
+          "type": "structure"
+        },
+        {
+          "id": "plan-references-codebase",
+          "text": "The technical implementation plan references specific real files, directories, or packages from the CDS codebase (not generic advice).",
+          "type": "content"
+        },
+        {
+          "id": "visual-assumptions-avoided",
+          "text": "The plan explicitly notes that specific visual design details (colors, spacing, exact layout) are out of scope or to be finalized in a follow-up session with the engineer.",
+          "type": "content"
+        },
+        {
+          "id": "covers-both-platforms",
+          "text": "The implementation plan addresses both packages/web/ and packages/mobile/ with platform-specific considerations for each.",
+          "type": "content"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The user has invoked /feature-planner. Simulate a conversation where the user is a designer proposing a new interactive playground app.",
+      "expected_output": "Not intimidated by scope, asks smart questions, handles Figma link, notes visual details as out-of-scope, plans a new app in apps/, flags technical open questions.",
+      "assertions": [
+        {
+          "id": "no-jargon-in-conversation",
+          "text": "The conversation/interview portion (Phase 1) does not contain technical jargon like 'props', 'hooks', 'useState', 'CSS variables', 'component API', code snippets, or file paths. Terms should be translated to plain language.",
+          "type": "content"
+        },
+        {
+          "id": "summary-before-plan",
+          "text": "A clear plain-language summary of the feature is presented for the user to confirm BEFORE any technical implementation planning begins.",
+          "type": "structure"
+        },
+        {
+          "id": "plan-references-codebase",
+          "text": "The technical implementation plan references specific real files, directories, or packages from the CDS codebase (not generic advice).",
+          "type": "content"
+        },
+        {
+          "id": "visual-assumptions-avoided",
+          "text": "The plan explicitly notes that specific visual design details (colors, spacing, exact layout) are out of scope or to be finalized in a follow-up session with the engineer.",
+          "type": "content"
+        },
+        {
+          "id": "plans-new-app",
+          "text": "The plan describes creating a new application in the apps/ directory, with steps for scaffolding, build configuration, and integration with the monorepo tooling.",
+          "type": "content"
+        }
+      ]
+    }
+  ]
+}

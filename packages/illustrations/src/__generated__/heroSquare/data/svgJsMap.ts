@@ -963,8 +963,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoKeyGenerationPending-0.js').content,
   },
   instoOnChain: {
-    light: () => require('../svgJs/light/instoOnChain-0.js').content,
-    dark: () => require('../svgJs/dark/instoOnChain-0.js').content,
+    light: () => require('../svgJs/light/instoOnChain-1.js').content,
+    dark: () => require('../svgJs/dark/instoOnChain-1.js').content,
   },
   instoOpenEmail: {
     light: () => require('../svgJs/light/instoOpenEmail-0.js').content,

@@ -450,33 +450,77 @@ const svgJsMap = {
     light: () => require('../svgJs/light/insto-0.js').content,
     dark: () => require('../svgJs/dark/insto-0.js').content,
   },
+  instoAboutOnchain: {
+    light: () => require('../svgJs/light/instoAboutOnchain-0.js').content,
+    dark: () => require('../svgJs/dark/instoAboutOnchain-0.js').content,
+  },
+  instoApiKey: {
+    light: () => require('../svgJs/light/instoApiKey-0.js').content,
+    dark: () => require('../svgJs/dark/instoApiKey-0.js').content,
+  },
+  instoConsensusWaitingForApprovals: {
+    light: () => require('../svgJs/light/instoConsensusWaitingForApprovals-0.js').content,
+    dark: () => require('../svgJs/dark/instoConsensusWaitingForApprovals-0.js').content,
+  },
   instoCryptoAndMore: {
-    light: () => require('../svgJs/light/instoCryptoAndMore-0.js').content,
-    dark: () => require('../svgJs/dark/instoCryptoAndMore-0.js').content,
+    light: () => require('../svgJs/light/instoCryptoAndMore-1.js').content,
+    dark: () => require('../svgJs/dark/instoCryptoAndMore-1.js').content,
   },
   instoCurrency: {
     light: () => require('../svgJs/light/instoCurrency-0.js').content,
     dark: () => require('../svgJs/dark/instoCurrency-0.js').content,
+  },
+  instoDesignateSigner: {
+    light: () => require('../svgJs/light/instoDesignateSigner-0.js').content,
+    dark: () => require('../svgJs/dark/instoDesignateSigner-0.js').content,
   },
   instoEmptyTrading: {
     light: () => require('../svgJs/light/instoEmptyTrading-0.js').content,
     dark: () => require('../svgJs/dark/instoEmptyTrading-0.js').content,
   },
   instoEthStakingMovement: {
-    light: () => require('../svgJs/light/instoEthStakingMovement-0.js').content,
-    dark: () => require('../svgJs/dark/instoEthStakingMovement-0.js').content,
+    light: () => require('../svgJs/light/instoEthStakingMovement-1.js').content,
+    dark: () => require('../svgJs/dark/instoEthStakingMovement-1.js').content,
   },
   instoGetStartedInMinutes: {
     light: () => require('../svgJs/light/instoGetStartedInMinutes-0.js').content,
     dark: () => require('../svgJs/dark/instoGetStartedInMinutes-0.js').content,
   },
+  instoKey: {
+    light: () => require('../svgJs/light/instoKey-0.js').content,
+    dark: () => require('../svgJs/dark/instoKey-0.js').content,
+  },
+  instoMargin: {
+    light: () => require('../svgJs/light/instoMargin-0.js').content,
+    dark: () => require('../svgJs/dark/instoMargin-0.js').content,
+  },
+  instoOnchainSetupInProgress: {
+    light: () => require('../svgJs/light/instoOnchainSetupInProgress-0.js').content,
+    dark: () => require('../svgJs/dark/instoOnchainSetupInProgress-0.js').content,
+  },
   instoPrimeStaking: {
     light: () => require('../svgJs/light/instoPrimeStaking-0.js').content,
     dark: () => require('../svgJs/dark/instoPrimeStaking-0.js').content,
   },
+  instoQRCode: {
+    light: () => require('../svgJs/light/instoQRCode-0.js').content,
+    dark: () => require('../svgJs/dark/instoQRCode-0.js').content,
+  },
+  instoRefreshKey: {
+    light: () => require('../svgJs/light/instoRefreshKey-0.js').content,
+    dark: () => require('../svgJs/dark/instoRefreshKey-0.js').content,
+  },
   instoSemiCustodial: {
     light: () => require('../svgJs/light/instoSemiCustodial-0.js').content,
     dark: () => require('../svgJs/dark/instoSemiCustodial-0.js').content,
+  },
+  instoSetupComplete: {
+    light: () => require('../svgJs/light/instoSetupComplete-0.js').content,
+    dark: () => require('../svgJs/dark/instoSetupComplete-0.js').content,
+  },
+  instoSetupOnchain: {
+    light: () => require('../svgJs/light/instoSetupOnchain-0.js').content,
+    dark: () => require('../svgJs/dark/instoSetupOnchain-0.js').content,
   },
   instoStaking: {
     light: () => require('../svgJs/light/instoStaking-0.js').content,

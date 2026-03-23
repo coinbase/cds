@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Keyboard, Modal, Platform, useWindowDimensions, View } from 'react-native';
+import { Animated, Keyboard, Modal, Platform, useWindowDimensions } from 'react-native';
 import type { ModalProps, PressableProps, StyleProp, ViewStyle } from 'react-native';
 import {
   drawerAnimationDefaultDuration,
@@ -96,7 +96,8 @@ export type DrawerBaseProps = SharedProps &
     handleBarAccessibilityLabel?: string;
     /**
      * StickyFooter to be rendered at bottom of Drawer
-     * @deprecated Use TrayStickyFooter as a Tray child instead.
+     * @deprecated Use TrayStickyFooter as a Tray child instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     stickyFooter?: DrawerRenderChildren | React.ReactNode;
     /**
@@ -105,6 +106,12 @@ export type DrawerBaseProps = SharedProps &
      * the slide transform so the drawer follows the user's finger naturally.
      */
     reduceMotion?: boolean;
+    /** Callback fired when the open animation completes. */
+    onOpenComplete?: () => void;
+    /**
+     * disable safe area padding for bottom of drawer when true
+     */
+    disableSafeAreaPaddingBottom?: boolean;
   };
 
 export type DrawerProps = DrawerBaseProps & {
@@ -128,8 +135,6 @@ const overlayContentContextValue: OverlayContentContextValue = {
   isDrawer: true,
 };
 
-const overflowStyle: ViewStyle = { overflow: 'hidden', maxHeight: '100%' };
-
 export const Drawer = memo(
   forwardRef<DrawerRefBaseProps, DrawerProps>(function Drawer(
     {
@@ -147,10 +152,12 @@ export const Drawer = memo(
       accessibilityLabel,
       accessibilityLabelledBy,
       reduceMotion,
+      onOpenComplete,
       style,
       styles,
       accessibilityRole = 'alert',
       animationType = 'none',
+      disableSafeAreaPaddingBottom,
       ...props
     },
     ref,
@@ -170,7 +177,7 @@ export const Drawer = memo(
     const [opacityAnimation, animateOverlayIn, animateOverlayOut] = useOverlayAnimation(
       drawerAnimationDefaultDuration,
     );
-    const paddingStyles = useDrawerSpacing(pin);
+    const paddingStyles = useDrawerSpacing(pin, disableSafeAreaPaddingBottom);
     const isMounted = useRef(false);
 
     const handleClose = useCallback(() => {
@@ -203,10 +210,11 @@ export const Drawer = memo(
         Animated.parallel([animateOverlayIn, animateDrawerIn]).start(({ finished }) => {
           if (finished) {
             isMounted.current = true;
+            onOpenComplete?.();
           }
         });
       }
-    }, [drawerAnimation, animateDrawerIn, animateOverlayIn]);
+    }, [drawerAnimation, animateDrawerIn, animateOverlayIn, onOpenComplete]);
 
     const panGestureHandlers = useDrawerPanResponder({
       pin,
@@ -342,7 +350,7 @@ export const Drawer = memo(
               style={drawerStyle}
             >
               {showHandleBarInside && handleBar}
-              {showHandleBarInside ? <View style={overflowStyle}>{content}</View> : content}
+              {content}
             </Box>
           </Box>
         </OverlayContentContext.Provider>
