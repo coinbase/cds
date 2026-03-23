@@ -400,6 +400,11 @@ export const routes = [
       require('@cbhq/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
+    key: 'ModalCustomPadding',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/ModalCustomPadding.stories').default,
+  },
+  {
     key: 'ModalLong',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/ModalLong.stories').default,

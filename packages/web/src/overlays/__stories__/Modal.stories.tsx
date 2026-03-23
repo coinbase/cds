@@ -182,6 +182,37 @@ export const PortalModal = () => {
   );
 };
 
+export const CustomPaddingModal = () => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          paddingX={0}
+          paddingY={0}
+          title="Custom Padding Modal"
+        />
+        <ModalBody paddingX={0} paddingY={0} tabIndex={0} testID="modal-body">
+          <LoremIpsum />
+        </ModalBody>
+        <ModalFooter
+          paddingX={0}
+          paddingY={0}
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+};
+
 export const ChainedModals = () => {
   const { triggerRef } = useTriggerFocus();
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(true);

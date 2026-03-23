@@ -4,8 +4,12 @@ import { css } from '@linaria/core';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { Button } from '../../buttons/Button';
-import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
-import { HStack } from '../../layout/HStack';
+import {
+  HStack,
+  type HStackBaseProps,
+  type HStackDefaultElement,
+  type HStackProps,
+} from '../../layout/HStack';
 import { breakpoints } from '../../styles/media';
 
 const baseCss = css`
@@ -32,7 +36,7 @@ const baseCss = css`
   }
 `;
 
-type ModalFooterBaseProps = {
+export type ModalFooterBaseProps = Omit<HStackBaseProps, 'children'> & {
   /** Primary action button */
   primaryAction: NonNullable<
     React.ReactElement<ButtonBaseProps & { onClick?: React.MouseEventHandler }>
@@ -40,7 +44,8 @@ type ModalFooterBaseProps = {
   /** Secondary action button */
   secondaryAction?: React.ReactElement<ButtonBaseProps & { onClick?: React.MouseEventHandler }>;
 };
-export type ModalFooterProps = ModalFooterBaseProps & BoxProps<BoxDefaultElement>;
+export type ModalFooterProps = ModalFooterBaseProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children'>;
 
 export const ModalFooter = ({
   gap = 2,
