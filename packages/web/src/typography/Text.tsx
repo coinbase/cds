@@ -114,7 +114,10 @@ export type TextBaseProps = Polymorphic.ExtendableProps<
     overflow?: 'truncate' | 'clip' | 'wrap' | 'break';
     /** @danger This is a migration escape hatch. It is not intended to be used normally. */
     dangerouslySetColor?: string;
-    /** @deprecated Do not use this prop. This is a migration escape hatch and will be removed in the next major version of CDS. */
+    /**
+     * @deprecated Do not use this prop, it is a migration escape hatch. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
+     */
     renderEmptyNode?: boolean;
   }
 >;

@@ -24,7 +24,8 @@ const checkboxCss = css`
 `;
 
 /**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead.
+ * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  *
  * @example
  * // Instead of:
@@ -59,7 +60,8 @@ export type CheckboxGroupBaseProps<CheckboxValue extends string | number> = Filt
   };
 
 /**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead.
+ * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  */
 export type CheckboxGroupProps<CheckboxValue extends string> =
   CheckboxGroupBaseProps<CheckboxValue>;

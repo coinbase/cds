@@ -48,6 +48,7 @@ const ignores = [
 // These rules apply to all files
 const sharedRules = {
   'internal/no-object-rest-spread-in-worklet': 'error',
+  'internal/deprecated-jsdoc-has-removal-version': 'error',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',

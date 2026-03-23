@@ -48,11 +48,13 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      */
     end?: React.ReactNode;
     /**
-     * @deprecated Use `end` instead. `action` will be removed in a future major release.
+     * @deprecated Use `end` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `spacingVariant="condensed"` instead. `compact` will be removed in a future major release.
+     * @deprecated Use `spacingVariant="condensed"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     compact?: boolean;
     /**

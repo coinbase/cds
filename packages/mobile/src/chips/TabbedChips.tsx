@@ -112,6 +112,7 @@ const TabbedChipsComponent = memo(
 TabbedChipsComponent.displayName = 'TabbedChips';
 
 /**
- * @deprecated Use `TabbedChips(Alpha)` instead.
+ * @deprecated Use `TabbedChips(Alpha)` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const TabbedChips = TabbedChipsComponent as TabbedChipsFC;
