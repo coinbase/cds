@@ -8,6 +8,8 @@ import { InternalTooltip } from './InternalTooltip';
 import type { SubjectLayout, TooltipBaseProps } from './TooltipProps';
 import { useTooltipAnimation } from './useTooltipAnimation';
 
+export type { TooltipBaseProps };
+
 export type TooltipProps = TooltipBaseProps & {
   /**
    * Accessibility state for the trigger.
