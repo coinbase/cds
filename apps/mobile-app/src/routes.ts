@@ -122,6 +122,10 @@ export const routes = [
       require('@coinbase/cds-mobile/buttons/__stories__/ButtonGroup.stories').default,
   },
   {
+    key: 'Calendar',
+    getComponent: () => require('@coinbase/cds-mobile/dates/__stories__/Calendar.stories').default,
+  },
+  {
     key: 'Card',
     getComponent: () => require('@coinbase/cds-mobile/cards/__stories__/Card.stories').default,
   },
@@ -142,9 +146,16 @@ export const routes = [
         .default,
   },
   {
-    key: 'Chart',
+    key: 'ChartAccessibility',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/Chart.stories').default,
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/ChartAccessibility.stories')
+        .default,
+  },
+  {
+    key: 'ChartTransitions',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')
+        .default,
   },
   {
     key: 'Checkbox',
@@ -201,6 +212,11 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/ControlGroup.stories').default,
   },
   {
+    key: 'DataCard',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/data-card/__stories__/DataCard.stories').default,
+  },
+  {
     key: 'DateInput',
     getComponent: () => require('@coinbase/cds-mobile/dates/__stories__/DateInput.stories').default,
   },
@@ -242,6 +258,11 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/DrawerMisc.stories').default,
   },
   {
+    key: 'DrawerReduceMotion',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/DrawerReduceMotion.stories').default,
+  },
+  {
     key: 'DrawerRight',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/DrawerRight.stories').default,
@@ -255,6 +276,10 @@ export const routes = [
     key: 'DrawerTop',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/DrawerTop.stories').default,
+  },
+  {
+    key: 'Fallback',
+    getComponent: () => require('@coinbase/cds-mobile/layout/__stories__/Fallback.stories').default,
   },
   {
     key: 'FloatingAssetCard',
@@ -309,6 +334,11 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/InputStack.stories').default,
   },
   {
+    key: 'Legend',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/legend/__stories__/Legend.stories').default,
+  },
+  {
     key: 'LinearGradient',
     getComponent: () =>
       require('@coinbase/cds-mobile/gradients/__stories__/LinearGradient.stories').default,
@@ -347,8 +377,17 @@ export const routes = [
       require('@coinbase/cds-mobile/animation/__stories__/LottieStatusAnimation.stories').default,
   },
   {
+    key: 'MediaCard',
+    getComponent: () => require('@coinbase/cds-mobile/cards/__stories__/MediaCard.stories').default,
+  },
+  {
     key: 'MediaChip',
     getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/MediaChip.stories').default,
+  },
+  {
+    key: 'MessagingCard',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/cards/__stories__/MessagingCard.stories').default,
   },
   {
     key: 'ModalBackButton',
@@ -526,6 +565,12 @@ export const routes = [
     key: 'RollingNumber',
     getComponent: () =>
       require('@coinbase/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
+  },
+  {
+    key: 'Scrubber',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/scrubber/__stories__/Scrubber.stories')
+        .default,
   },
   {
     key: 'SearchInput',
@@ -809,6 +854,16 @@ export const routes = [
     key: 'TrayPromotional',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/TrayPromotional.stories').default,
+  },
+  {
+    key: 'TrayRedesign',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayRedesign.stories').default,
+  },
+  {
+    key: 'TrayReduceMotion',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/TrayReduceMotion.stories').default,
   },
   {
     key: 'TrayScrollable',

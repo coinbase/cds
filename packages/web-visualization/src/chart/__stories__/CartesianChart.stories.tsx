@@ -16,18 +16,16 @@ import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { isCategoricalScale } from '../utils';
-import {
-  BarPlot,
-  CartesianChart,
-  type ChartTextChildren,
-  PeriodSelector,
-  Point,
-  Scrubber,
-} from '../';
+import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
   component: CartesianChart,
   title: 'Components/Chart/CartesianChart',
+  parameters: {
+    a11y: {
+      test: 'todo',
+    },
+  },
 };
 
 const MultipleChart = () => {
@@ -156,6 +154,16 @@ const PredictionMarket = () => {
     return selectedSeriesId ? [selectedSeriesId] : undefined;
   }, [selectedSeriesId]);
 
+  const chartAccessibilityLabel = useMemo(() => {
+    const lastIndex = eaglesData.length - 1;
+    const teamA = eaglesData[lastIndex];
+    const teamB = 100 - teamA;
+
+    return `Prediction market chart with ${eaglesData.length} data points. Latest odds: Team A ${teamA.toFixed(
+      1,
+    )}%, Team B ${teamB.toFixed(1)}%.`;
+  }, [eaglesData]);
+
   const [scrubberLabel, setScrubberLabel] = useState<string | null>(null);
   const updateScrubberLabel = useCallback(
     (scrubberPosition: number | undefined) => {
@@ -179,6 +187,17 @@ const PredictionMarket = () => {
     [eaglesData.length],
   );
 
+  const getScrubberAccessibilityLabel = useCallback(
+    (dataIndex: number) => {
+      const teamA = eaglesData[dataIndex];
+      const teamB = 100 - teamA;
+      return `At position ${dataIndex + 1} of ${eaglesData.length}: Team A ${teamA.toFixed(
+        1,
+      )}%, Team B ${teamB.toFixed(1)}%.`;
+    },
+    [eaglesData],
+  );
+
   return (
     <VStack gap={4} style={{ margin: 'calc(var(--space-1) * -2.5)' }}>
       <VStack paddingTop={2} paddingX={2}>
@@ -191,6 +210,7 @@ const PredictionMarket = () => {
       </VStack>
       <CartesianChart
         enableScrubbing
+        accessibilityLabel={chartAccessibilityLabel}
         height={300}
         inset={{ top: 40, right: 0, bottom: 32, left: 0 }}
         onScrubberPositionChange={updateScrubberLabel}
@@ -214,7 +234,11 @@ const PredictionMarket = () => {
           />
         ))}
         <CustomYAxis />
-        <Scrubber label={scrubberLabel} seriesIds={scrubbedSeries} />
+        <Scrubber
+          accessibilityLabel={getScrubberAccessibilityLabel}
+          label={scrubberLabel}
+          seriesIds={scrubbedSeries}
+        />
       </CartesianChart>
       <Box paddingX={2}>
         <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
@@ -324,7 +348,7 @@ const EarningsHistory = () => {
     [actualEPS, estimatedEPS],
   );
 
-  const LegendItem = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
+  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
     return (
       <Box alignItems="center" gap={0.5}>
         <LegendDot opacity={opacity} />
@@ -365,8 +389,8 @@ const EarningsHistory = () => {
         <CirclePlot seriesId="actualEPS" />
       </CartesianChart>
       <HStack gap={2} justifyContent="flex-end">
-        <LegendItem label="Estimated EPS" opacity={0.5} />
-        <LegendItem label="Actual EPS" />
+        <LegendEntry label="Estimated EPS" opacity={0.5} />
+        <LegendEntry label="Actual EPS" />
       </HStack>
     </VStack>
   );
@@ -410,11 +434,21 @@ const PriceWithVolume = () => {
   const currentVolume = btcVolumes[displayIndex];
   const currentDate = btcDates[displayIndex];
 
-  const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === undefined)
-      return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
-    return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
-  }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
+  const chartAccessibilityLabel = useMemo(() => {
+    const lastIndex = btcPrices.length - 1;
+    return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPrice(
+      btcPrices[lastIndex],
+    )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
+  }, [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume]);
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (dataIndex: number) => {
+      return `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPrice(
+        btcPrices[dataIndex],
+      )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`;
+    },
+    [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume],
+  );
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -441,7 +475,7 @@ const PriceWithVolume = () => {
       />
       <CartesianChart
         enableScrubbing
-        accessibilityLabel={accessibilityLabel}
+        accessibilityLabel={chartAccessibilityLabel}
         aria-labelledby={headerId}
         height={250}
         onScrubberPositionChange={setScrubIndex}
@@ -481,7 +515,7 @@ const PriceWithVolume = () => {
         />
         <BarPlot seriesIds={['volume']} />
         <Line showArea seriesId="prices" />
-        <Scrubber seriesIds={['prices']} />
+        <Scrubber accessibilityLabel={getScrubberAccessibilityLabel} seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
   );

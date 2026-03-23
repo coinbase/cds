@@ -33,8 +33,22 @@
         "cwd": "apps/docs"
       }
     },
+    "serve": {
+      "command": "docusaurus serve --dir dist --port 3000",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
+      "dependsOn": [
+        "^build",
+        "^typecheck",
+        "peer-dependencies-check"
+      ],
       "options": {
         "commands": [
           "docusaurus build --out-dir dist",
@@ -43,6 +57,12 @@
         ],
         "cwd": "apps/docs",
         "parallel": false
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js"
       }
     },
     "lint": {
@@ -75,6 +95,18 @@
       "dependsOn": [
         "build-llm-docs"
       ],
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies-check": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts --fail-on-changes",
       "options": {
         "cwd": "{workspaceRoot}"
       }

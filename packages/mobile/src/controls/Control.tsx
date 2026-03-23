@@ -7,7 +7,7 @@ import type {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { ElevationLevels, SharedProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   accessibleOpacityDisabled,
@@ -33,12 +33,13 @@ export type ControlIconProps = SharedProps & {
   borderColor?: ThemeVars.Color;
   borderRadius?: ThemeVars.BorderRadius;
   borderWidth?: ThemeVars.BorderWidth;
+  elevation?: ElevationLevels;
   animatedScaleValue: Animated.Value;
   animatedOpacityValue: Animated.Value;
   accessible?: boolean;
 };
 
-export type ControlBaseProps<T extends string> = Omit<
+export type ControlBaseProps<ControlValue extends string> = Omit<
   PressableProps,
   'disabled' | 'children' | 'style'
 > &
@@ -57,21 +58,26 @@ export type ControlBaseProps<T extends string> = Omit<
     /** Set the control to ready-only. Similar effect as disabled. */
     readOnly?: boolean;
     /** Value of the option. Useful for multiple choice. */
-    value?: T;
+    value?: ControlValue;
     /** Accessibility label describing the element. */
     accessibilityLabel?: string;
     /** Enable indeterminate state. Useful when you want to indicate that sub-items of a control are partially filled. */
     indeterminate?: boolean;
     /** Toggle control selected state. */
-    onChange?: (value: T | undefined, checked?: boolean) => void;
+    onChange?: (value: ControlValue | undefined, checked?: boolean) => void;
     /** Sets the checked/active color of the control.
      * @default bgPrimary
      */
     controlColor?: ThemeVars.Color;
+    /** Sets the elevation/drop shadow of the control. */
+    elevation?: ElevationLevels;
     style?: ViewStyle;
   };
 
-export type ControlProps<T extends string> = Omit<ControlBaseProps<T>, 'children'> & {
+export type ControlProps<ControlValue extends string> = Omit<
+  ControlBaseProps<ControlValue>,
+  'children'
+> & {
   /** Control icon to show. */
   children: React.ComponentType<React.PropsWithChildren<ControlIconProps>>;
   /** Label associated with the multiple choice option control. */
@@ -80,7 +86,7 @@ export type ControlProps<T extends string> = Omit<ControlBaseProps<T>, 'children
   shouldUseSwitchTransition?: boolean;
 };
 
-const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
+const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
   {
     testID,
     label,
@@ -92,6 +98,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     hitSlop = 4,
     value,
     controlColor,
+    elevation,
     accessibilityRole,
     accessibilityLabel,
     accessibilityHint,
@@ -105,7 +112,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     borderRadius,
     borderWidth,
     ...props
-  }: ControlProps<T>,
+  }: ControlProps<ControlValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const theme = useTheme();
@@ -224,6 +231,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
           checked={checked}
           controlColor={controlColor}
           disabled={pressDisabled}
+          elevation={elevation}
           indeterminate={indeterminate}
           pressed={pressed}
           testID={testID}
@@ -257,6 +265,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
       checked,
       controlColor,
       disabled,
+      elevation,
       getLabelStyle,
       iconWrapperStyles,
       indeterminate,
@@ -283,7 +292,9 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     </Pressable>
   );
   // Make forwardRef result function stay generic function type
-}) as <T extends string>(props: ControlProps<T> & { ref?: React.Ref<View> }) => React.ReactElement;
+}) as <ControlValue extends string>(
+  props: ControlProps<ControlValue> & { ref?: React.Ref<View> },
+) => React.ReactElement;
 
 // Make memoized function stay generic function type
 export const Control = memo(ControlWithRef) as typeof ControlWithRef &

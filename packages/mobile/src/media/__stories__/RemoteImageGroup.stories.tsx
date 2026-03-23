@@ -82,7 +82,7 @@ const CircleMax = () => {
 
 const CircleMaxDefaultCustomSize = () => (
   <VStack>
-    <Text font="body">
+    <Text font="label1">
       RemoteImageGroup excess element defaults to m of AvatarSize when size is not specified
     </Text>
     <RemoteImageGroup max={2} shape="circle">
@@ -96,7 +96,7 @@ const CircleMaxDefaultCustomSize = () => (
 
 const MixAndMatchShapes = () => (
   <VStack>
-    <Text font="body">RemoteImage child shape takes precedence over RemoteImageGroup shape</Text>
+    <Text font="label1">RemoteImage child shape takes precedence over RemoteImageGroup shape</Text>
     <RemoteImageGroup shape="circle" size="xxl">
       <RemoteImage shape="squircle" source={squareAssets.human1} />
       <RemoteImage source={assets.sushi.imageUrl} />
@@ -171,7 +171,7 @@ const SquircleMax = () => {
 
 const SquircleMaxDefaultCustomSize = () => (
   <VStack>
-    <Text font="body">
+    <Text font="label1">
       RemoteImageGroup excess element defaults to m of AvatarSize when size is not specified
     </Text>
     <RemoteImageGroup max={2} shape="squircle">
@@ -185,7 +185,7 @@ const SquircleMaxDefaultCustomSize = () => (
 
 const SquircleMaxSetCustomMaxSize = () => (
   <VStack>
-    <Text font="body">Set a custom size of 36 for RemoteImageGroup excess component</Text>
+    <Text font="label1">Set a custom size of 36 for RemoteImageGroup excess component</Text>
     <RemoteImageGroup max={2} shape="squircle" size={36}>
       <RemoteImage source={squareAssets.human1} />
       <RemoteImage source={squareAssets.human2} />
@@ -197,12 +197,48 @@ const SquircleMaxSetCustomMaxSize = () => (
 
 const HideExcessWhenExceedThreshold = () => (
   <VStack>
-    <Text font="body">Excess component when size is smaller than a certain size looks funky</Text>
+    <Text font="label1">Excess component when size is smaller than a certain size looks funky</Text>
     <RemoteImageGroup max={2} shape="squircle" size={19}>
       <RemoteImage source={squareAssets.human1} />
       <RemoteImage source={squareAssets.human2} />
       <RemoteImage source={squareAssets.human1} />
       <RemoteImage source={squareAssets.human2} />
+    </RemoteImageGroup>
+  </VStack>
+);
+
+const ShapeWithBorderWidth = () => (
+  <VStack>
+    <Text font="label1">Circle with border width</Text>
+    <RemoteImageGroup borderWidth={300} shape="circle" size={32}>
+      <RemoteImage source={assets.eth.imageUrl} />
+      <RemoteImage source={assets.btc.imageUrl} />
+      <RemoteImage source={assets.dai.imageUrl} />
+      <RemoteImage source={assets.hbar.imageUrl} />
+      <RemoteImage source={assets.ltc.imageUrl} />
+      <RemoteImage source={assets.uni.imageUrl} />
+    </RemoteImageGroup>
+    <Text font="label1">Circle with border color and border width</Text>
+    <RemoteImageGroup borderColor="bgPositive" borderWidth={300} shape="circle" size={32}>
+      <RemoteImage source={assets.eth.imageUrl} />
+      <RemoteImage source={assets.btc.imageUrl} />
+      <RemoteImage source={assets.dai.imageUrl} />
+      <RemoteImage source={assets.hbar.imageUrl} />
+      <RemoteImage source={assets.ltc.imageUrl} />
+      <RemoteImage source={assets.uni.imageUrl} />
+    </RemoteImageGroup>
+    <Text font="label1">Squircle with border width</Text>
+    <RemoteImageGroup borderWidth={300} shape="squircle" size={32}>
+      <RemoteImage source={squareAssets.human1} />
+      <RemoteImage source={squareAssets.human2} />
+      <RemoteImage source={squareAssets.human1} />
+    </RemoteImageGroup>
+    <Text font="label1">Mixed shape with border width</Text>
+    <RemoteImageGroup borderWidth={300} shape="circle" size="xxl">
+      <RemoteImage shape="squircle" source={squareAssets.human1} />
+      <RemoteImage source={assets.sushi.imageUrl} />
+      <RemoteImage shape="squircle" source={squareAssets.human2} />
+      <RemoteImage source={assets.ltc.imageUrl} />
     </RemoteImageGroup>
   </VStack>
 );
@@ -222,6 +258,7 @@ const All = () => (
     <SquircleMaxSetCustomMaxSize />
     <HideExcessWhenExceedThreshold />
     <MixAndMatchShapes />
+    <ShapeWithBorderWidth />
   </VStack>
 );
 

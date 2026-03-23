@@ -1,12 +1,13 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { ReactElement, RefObject } from 'react';
+import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { FOCUSABLE_ELEMENTS } from '@coinbase/cds-common/tokens/overlays';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 
 import { getBrowserGlobals } from '../utils/browser';
 
 export type FocusTrapProps = {
-  children: ReactElement;
+  children: ReactElement & { ref?: React.Ref<HTMLElement> };
   onEscPress?: () => void;
   /**
    * Use for editable Search Input components to ensure focus is correctly applied
@@ -17,20 +18,26 @@ export type FocusTrapProps = {
    */
   disableFocusTrap?: boolean;
   /**
-   * If `true`, the focus trap will include the trigger in the focus trap.
-   */
-  includeTriggerInFocusTrap?: boolean;
-  /**
    * If `true`, the focus trap will not automatically shift focus to itself when it opens, and
    * replace it to the last focused element when it closes.
    * @default false
    */
   disableAutoFocus?: boolean;
   /**
+   * If `true`, the focus trap will not allow arrow key navigation.
+   * @default false
+   */
+  disableArrowKeyNavigation?: boolean;
+  /**
    * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
    * @default false
    */
   restoreFocusOnUnmount?: boolean;
+  /**
+   * If `true`, the focus trap will include the trigger in the focus trap.
+   * @default false
+   */
+  includeTriggerInFocusTrap?: boolean;
   /**
    * If `true`, the focus trap will respect negative `tabIndex` values, removing them from the list of focusable elements.
    * @default false
@@ -85,8 +92,9 @@ export const FocusTrap = memo(function FocusTrap({
   onEscPress,
   disableTypeFocus,
   disableFocusTrap,
-  includeTriggerInFocusTrap,
   disableAutoFocus,
+  disableArrowKeyNavigation,
+  includeTriggerInFocusTrap,
   respectNegativeTabIndex,
   focusTabIndexElements,
   autoFocusDelay,
@@ -133,10 +141,15 @@ export const FocusTrap = memo(function FocusTrap({
   // trap focus for accessibility
   const handleKeyboardNavigation = useCallback(
     (event: KeyboardEvent, element: RefObject<HTMLElement>['current']) => {
+      if (event.defaultPrevented) return;
       const document = getBrowserGlobals()?.document;
       const activeElement = document?.activeElement as HTMLElement;
 
       if (!element || !document) return;
+
+      if (disableArrowKeyNavigation && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        return;
+      }
 
       let focusableElements = Array.from(
         element.querySelectorAll(
@@ -170,7 +183,7 @@ export const FocusTrap = memo(function FocusTrap({
         : undefined;
 
       const secondElementIsMenuItemOrOption =
-        secondElement.role === 'menuitem' || secondElement.role === 'option';
+        secondElement?.role === 'menuitem' || secondElement?.role === 'option';
 
       // bring focus inside modal
       if (
@@ -239,7 +252,7 @@ export const FocusTrap = memo(function FocusTrap({
           (event.key === 'ArrowDown' &&
             (activeElementIsMenuItemOrOption || secondElementIsMenuItemOrOption))
         ) {
-          secondElement.focus();
+          secondElement?.focus();
         }
       };
 
@@ -300,7 +313,13 @@ export const FocusTrap = memo(function FocusTrap({
         focusPrevElement();
       }
     },
-    [focusTabIndexElements, disableTypeFocus, respectNegativeTabIndex, includeTriggerInFocusTrap],
+    [
+      focusTabIndexElements,
+      disableTypeFocus,
+      disableArrowKeyNavigation,
+      respectNegativeTabIndex,
+      includeTriggerInFocusTrap,
+    ],
   );
 
   const handleKeyDown = useCallback(
@@ -348,7 +367,10 @@ export const FocusTrap = memo(function FocusTrap({
       return;
     }
 
-    const focusableElements = elements.querySelectorAll(FOCUSABLE_ELEMENTS);
+    let focusableElements = Array.from(elements.querySelectorAll(FOCUSABLE_ELEMENTS));
+    if (includeTriggerInFocusTrap && previouslyFocusedElement.current) {
+      focusableElements = [previouslyFocusedElement.current, ...focusableElements];
+    }
 
     if (focusableElements?.length) {
       const elementToAutoFocus = focusableElements[0] as HTMLElement;
@@ -360,9 +382,11 @@ export const FocusTrap = memo(function FocusTrap({
   // only works for single child
   const onlyChild = React.Children.only(children);
 
+  const mergedRef = useMergeRefs(childrenRef, children?.ref);
+
   if (!onlyChild) {
     return <>{children}</>;
   }
 
-  return React.cloneElement(children, { ref: childrenRef });
+  return React.cloneElement(children, { ref: mergedRef });
 });

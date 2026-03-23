@@ -1,0 +1,21 @@
+{
+  "import": "import { SegmentedControl } from '@coinbase/cds-web/controls/SegmentedControl'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/SegmentedControl.tsx",
+  "description": "A horizontal control composed of mutually exclusive segments, used to switch between related options.",
+  "warning": "SegmentedControl is deprecated and will be removed in a future version. Please use Tabs or SegmentedTabs instead.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-segmented-control--normal",
+  "relatedComponents": [
+    {
+      "label": "SegmentedTabs",
+      "url": "/components/navigation/SegmentedTabs/"
+    },
+    {
+      "label": "RadioGroup",
+      "url": "/components/inputs/RadioGroup/"
+    },
+    {
+      "label": "ControlGroup",
+      "url": "/components/inputs/ControlGroup/"
+    }
+  ]
+}

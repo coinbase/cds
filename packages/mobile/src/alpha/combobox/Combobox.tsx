@@ -179,7 +179,8 @@ const ComboboxBase = memo(
         variant,
         startNode,
         endNode,
-        accessibilityLabel = 'Combobox control',
+        align,
+        accessibilityLabel = typeof label === 'string' ? label : 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
         onSearch: onSearchProp,
@@ -273,7 +274,7 @@ const ComboboxBase = memo(
             label={label}
             minHeight={500}
             {...props}
-            footer={
+            footer={({ handleClose }) => (
               <KeyboardAvoidingView
                 behavior="padding"
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 86 : 0}
@@ -284,20 +285,22 @@ const ComboboxBase = memo(
                   }
                 >
                   <StickyFooter
-                    background="bg"
+                    background="bgElevation2"
                     elevation={2}
                     style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
                   >
-                    <Button compact onPress={() => setOpen(false)}>
+                    <Button compact onPress={handleClose}>
                       {closeButtonLabel}
                     </Button>
                   </StickyFooter>
                 </View>
               </KeyboardAvoidingView>
-            }
+            )}
             header={
               <Box paddingX={3}>
                 <ComboboxControl
+                  accessibilityLabel={accessibilityLabel}
+                  align={align}
                   endNode={endNode}
                   placeholder={placeholder}
                   startNode={startNode}
@@ -314,12 +317,13 @@ const ComboboxBase = memo(
         [
           ComboboxControl,
           SelectDropdownComponent,
+          accessibilityLabel,
+          align,
           closeButtonLabel,
           endNode,
           handleTrayVisibilityChange,
           label,
           placeholder,
-          setOpen,
           startNode,
           variant,
         ],
@@ -339,6 +343,7 @@ const ComboboxBase = memo(
             SelectControlComponent={ComboboxControl}
             SelectDropdownComponent={ComboboxDropdown}
             accessibilityLabel={accessibilityLabel}
+            align={align}
             defaultOpen={defaultOpen}
             disabled={disabled}
             endNode={endNode}

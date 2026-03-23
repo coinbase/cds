@@ -1,0 +1,41 @@
+{
+  "import": "import { AreaChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/area/AreaChart.tsx",
+  "description": "A chart component that displays data as filled areas beneath lines. Ideal for showing cumulative values, stacked data, or emphasizing volume over time.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/charts/CartesianChart/"
+    },
+    {
+      "label": "ReferenceLine",
+      "url": "/components/charts/ReferenceLine/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/charts/Scrubber/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/charts/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/charts/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
+}

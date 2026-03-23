@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { PathBaseProps, PathProps } from '../Path';
 import { type ChartPathCurveType, getAreaPath, type GradientDefinition } from '../utils';
 
 import { DottedArea } from './DottedArea';
@@ -37,13 +37,13 @@ export type AreaBaseProps = {
    * The color of the area.
    * @default color of the series or 'var(--color-fgPrimary)'
    */
-  fill?: string;
+  fill?: PathBaseProps['fill'];
   /**
    * Opacity of the area
    * @note when combined with gradient, both will be applied
    * @default 1
    */
-  fillOpacity?: number;
+  fillOpacity?: PathBaseProps['fillOpacity'];
   /**
    * Baseline value for the gradient.
    * When set, overrides the default baseline.
@@ -58,27 +58,29 @@ export type AreaBaseProps = {
    * Whether to animate the area.
    * Overrides the animate value from the chart context.
    */
-  animate?: boolean;
+  animate?: PathBaseProps['animate'];
 };
 
-export type AreaProps = AreaBaseProps & {
-  /**
-   * Transition configuration for path animations.
-   */
-  transition?: Transition;
-};
+export type AreaProps = AreaBaseProps & Pick<PathProps, 'transitions' | 'transition'>;
 
 export type AreaComponentProps = Pick<
   AreaProps,
-  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transition'
+  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transitions' | 'transition'
 > & {
   /**
    * Path of the area
    */
   d: SVGProps<SVGPathElement>['d'];
   /**
+   * ID of the x-axis to use.
+   * If not provided, defaults to the default x-axis.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
    * ID of the y-axis to use.
    * If not provided, defaults to the default y-axis.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
 };
@@ -96,10 +98,12 @@ export const Area = memo<AreaProps>(
     baseline,
     connectNulls,
     gradient: gradientProp,
+    transitions,
     transition,
     animate,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
+    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+      useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
     const gradient = useMemo(
@@ -110,17 +114,27 @@ export const Area = memo<AreaProps>(
 
     const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
 
-    const xAxis = getXAxis();
-    const xScale = getXScale();
+    const xAxis = getXAxis(matchedSeries?.xAxisId);
+    const xScale = getXScale(matchedSeries?.xAxisId);
     const yScale = getYScale(matchedSeries?.yAxisId);
+    const yAxis = getYAxis(matchedSeries?.yAxisId);
+
+    const categoryAxisIsX = useMemo(() => {
+      return layout !== 'horizontal';
+    }, [layout]);
+
+    const categoryAxis = useMemo(() => {
+      return categoryAxisIsX ? xAxis : yAxis;
+    }, [categoryAxisIsX, xAxis, yAxis]);
 
     const area = useMemo(() => {
       if (!sourceData || sourceData.length === 0 || !xScale || !yScale) return '';
 
-      // Get numeric x-axis data if available
-      const xData =
-        xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
-          ? (xAxis.data as number[])
+      const indexData =
+        categoryAxis?.data &&
+        Array.isArray(categoryAxis.data) &&
+        typeof categoryAxis.data[0] === 'number'
+          ? (categoryAxis.data as number[])
           : undefined;
 
       return getAreaPath({
@@ -128,10 +142,12 @@ export const Area = memo<AreaProps>(
         xScale,
         yScale,
         curve,
-        xData,
+        xData: categoryAxisIsX ? indexData : undefined,
+        yData: !categoryAxisIsX ? indexData : undefined,
         connectNulls,
+        layout,
       });
-    }, [sourceData, xScale, yScale, curve, xAxis?.data, connectNulls]);
+    }, [sourceData, xScale, yScale, curve, categoryAxis, categoryAxisIsX, connectNulls, layout]);
 
     const AreaComponent = useMemo((): AreaComponent => {
       if (AreaComponentProp) {
@@ -160,6 +176,8 @@ export const Area = memo<AreaProps>(
         fillOpacity={fillOpacity}
         gradient={gradient}
         transition={transition}
+        transitions={transitions}
+        xAxisId={matchedSeries?.xAxisId}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

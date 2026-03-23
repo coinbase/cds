@@ -7,7 +7,7 @@ figma.connect(
   SearchInput,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=252-12575&m=dev',
   {
-    imports: ["import { SearchInput } from '@coinbase/cds-mobile/controls/SearchInput';"],
+    imports: ["import { SearchInput } from '@coinbase/cds-mobile/controls/SearchInput'"],
     props: {
       compact: figma.boolean('compact'),
       disabled: figma.boolean('disabled'),

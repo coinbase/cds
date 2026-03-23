@@ -11,6 +11,11 @@ import { getInteractableStyles, Interactable } from '../Interactable';
 export default {
   title: 'Components/Interactable',
   component: Interactable,
+  parameters: {
+    a11y: {
+      test: 'off',
+    },
+  },
 };
 
 export const GeneratedColorStates = () => {

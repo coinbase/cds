@@ -8,6 +8,230 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.55.1 ((3/22/2026, 01:43 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.55.0 ((3/19/2026, 01:41 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.54.0 ((3/18/2026, 02:27 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.53.1 ((3/17/2026, 10:58 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.53.0 ((3/16/2026, 01:45 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.52.2 ((3/11/2026, 10:02 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.52.1 ((3/11/2026, 09:52 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.52.0 ((3/10/2026, 08:50 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.51.0 ((3/9/2026, 06:39 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.50.0 ((3/6/2026, 09:36 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.49.2 ((3/6/2026, 09:04 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.49.1 ((3/5/2026, 03:13 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.49.0 ((2/26/2026, 04:03 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.3 ((2/25/2026, 08:36 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.2 ((2/25/2026, 04:21 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.1 ((2/25/2026, 01:30 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.0 ((2/24/2026, 10:33 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.4 ((2/23/2026, 03:04 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.3 ((2/20/2026, 09:16 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.2 ((2/19/2026, 03:18 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.1 ((2/19/2026, 01:18 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.0 ((2/19/2026, 08:05 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.46.1 ((2/12/2026, 01:01 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.46.0 ((2/12/2026, 11:34 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.45.0 ((2/12/2026, 07:33 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.44.2 ((2/10/2026, 08:38 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.44.1 ((2/10/2026, 12:05 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.44.0 ((2/9/2026, 07:07 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.2 ((2/9/2026, 09:05 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.1 ((2/6/2026, 02:15 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.0 ((2/6/2026, 9:00 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.42.0 ((2/4/2026, 01:51 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.41.0 ((2/4/2026, 09:22 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.2 ((2/2/2026, 11:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.1 ((1/30/2026, 04:58 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.0 ((1/28/2026, 11:12 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.1 ((1/28/2026, 06:48 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.0 ((1/27/2026, 11:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.7 ((1/26/2026, 10:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.6 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: align version with web package.
+
+## 8.38.5 ((1/23/2026, 06:35 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.4 ((1/22/2026, 01:55 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.3 ((1/22/2026, 01:42 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.2 ((1/22/2026, 09:16 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.1 ((1/15/2026, 10:22 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.38.0 ((1/14/2026, 01:30 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.37.1 ((1/14/2026, 12:37 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.37.0 ((1/12/2026, 02:16 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.36.3 ((1/9/2026, 01:51 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.36.2 ((1/7/2026, 10:19 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.36.1 ((1/6/2026, 01:32 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.36.0 (1/6/2026 PST)
+
+#### 🚀 Updates
+
+- Update MCP Serer setup script to follow latest Claude Code and Cursor guidelines.
+
+## 8.35.1 ((1/5/2026, 03:28 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.35.0 ((1/5/2026, 10:03 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.34.2 ((1/2/2026, 09:41 AM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.34.1 ((12/23/2025, 11:31 AM PST))
 
 This is an artificial version bump with no new change.

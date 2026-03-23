@@ -27,7 +27,18 @@ export type SolidAreaProps = Pick<
  * Otherwise, renders with solid fill.
  */
 export const SolidArea = memo<SolidAreaProps>(
-  ({ d, fill, fillOpacity = 1, yAxisId, animate, transition, gradient, ...pathProps }) => {
+  ({
+    d,
+    fill,
+    fillOpacity = 1,
+    xAxisId,
+    yAxisId,
+    animate,
+    transitions,
+    transition,
+    gradient,
+    ...pathProps
+  }) => {
     const theme = useTheme();
 
     return (
@@ -37,9 +48,10 @@ export const SolidArea = memo<SolidAreaProps>(
         fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}
         transition={transition}
+        transitions={transitions}
         {...pathProps}
       >
-        {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+        {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
       </Path>
     );
   },

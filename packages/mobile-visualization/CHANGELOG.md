@@ -8,6 +8,110 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.24 (3/12/2026 PST)
+
+#### 🚀 Updates
+
+- Improve chart accessibility. [[#492](https://github.com/coinbase/cds/pull/492)]
+
+## 3.4.0-beta.23 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- Add layout prop on CartesianChart. [[#483](https://github.com/coinbase/cds/pull/483)]
+
+## 3.4.0-beta.22 (3/4/2026 PST)
+
+#### 🚀 Updates
+
+- Improve PeriodSelector types. [[#464](https://github.com/coinbase/cds/pull/464)]
+- Skip null path transitions. [[#464](https://github.com/coinbase/cds/pull/464)]
+- Fix path transition on incompatible paths. [[#464](https://github.com/coinbase/cds/pull/464)]
+
+## 3.4.0-beta.21 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Fix issues with animations that spread props. [[#463](https://github.com/coinbase/cds/pull/463)]
+
+## 3.4.0-beta.20 (2/27/2026 PST)
+
+#### 🚀 Updates
+
+- Add styles props to PeriodSelector. [[#438](https://github.com/coinbase/cds/pull/438/)]
+
+#### 📘 Misc
+
+- Update outdated doc links. [[#440](https://github.com/coinbase/cds/pull/440)]
+
+## 3.4.0-beta.19 (2/20/2026 PST)
+
+#### 🚀 Updates
+
+- Support custom enter transitions [[#400](https://github.com/coinbase/cds/pull/400/)]
+
+## 3.4.0-beta.18 (2/6/2026 PST)
+
+#### 🚀 Updates
+
+- Fix line chart enter animations not properly syncing with scrubber. [[#374](https://github.com/coinbase/cds/pull/374)]
+
+## 3.4.0-beta.17 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Add support preferred side for scrubber beacon label group. [[#366](https://github.com/coinbase/cds/pull/366)]
+
+## 3.4.0-beta.16 (1/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix every context rendering a second time in CDS Chart for performance. [[#339](https://github.com/avocado-cb/cds/pull/339)] [DEX2-874]
+
+## 3.4.0-beta.15 (1/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix padding on PeriodSelector. [[#330](https://github.com/coinbase/cds/pull/330)]
+
+## 3.4.0-beta.14 (1/22/2026 PST)
+
+#### 🚀 Updates
+
+- Add chart Legend component. [[#302](https://github.com/coinbase/cds/pull/302)]
+- Add support for hideBeaconLabels in Scrubber. [[#302](https://github.com/coinbase/cds/pull/302)]
+- Add support for custom bar components. [[#302](https://github.com/coinbase/cds/pull/302)]
+
+## 3.4.0-beta.13 (1/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support styling default scrubber beacon. [[#315](https://github.com/coinbase/cds/pull/315)]
+- Fix: idlePulse works on mobile even when Chart animation is off, matching web. [[#315](https://github.com/coinbase/cds/pull/315)]
+
+#### 📘 Misc
+
+- Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
+- Internal: update figma code connect config and some mapping files. [[#304](https://github.com/coinbase/cds/pull/304)]
+
+## 3.4.0-beta.12 (1/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix pulse with spread operator broken on new react-native architecture. [[#296](https://github.com/coinbase/cds/pull/296)]
+
+## 3.4.0-beta.11 (1/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Allow customization of axis tick mark and grid line alignment in band scale. [[#291](https://github.com/coinbase/cds/pull/291)]
+
+## 3.4.0-beta.10 (1/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix axis clip line issues when multiple axes are present on one side. [[#285](https://github.com/coinbase/cds/pull/285)]
+
 ## 3.4.0-beta.9 (12/18/2025 PST)
 
 #### 🐞 Fixes

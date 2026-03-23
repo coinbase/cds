@@ -75,6 +75,7 @@ const webpackPlugin = () => {
               }
             : {
                 test: /\.(js|ts)x?$/,
+                exclude: /node_modules/,
                 loader: '@linaria/webpack-loader',
                 options: {
                   displayName: true,
@@ -250,6 +251,17 @@ const config: Config = {
 
   plugins: [
     ['@docusaurus/plugin-sitemap', { id: 'sitemap' }],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [],
+        createRedirects(existingPath: string) {
+          if (existingPath.includes('/components/charts/')) {
+            return [existingPath.replace('/components/charts/', '/components/graphs/')];
+          }
+        },
+      },
+    ],
     [
       '@docusaurus/theme-live-codeblock',
       {

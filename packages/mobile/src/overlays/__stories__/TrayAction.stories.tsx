@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 
@@ -13,7 +13,7 @@ import { Link } from '../../typography/Link';
 import { Text } from '../../typography/Text';
 import type { DrawerRefBaseProps } from '../drawer/Drawer';
 import type { TrayBaseProps } from '../tray/Tray';
-import { Tray, TrayStickyFooter } from '../tray/Tray';
+import { Tray } from '../tray/Tray';
 
 type Option = {
   title: string;
@@ -145,21 +145,19 @@ export const WithStickyFooter = () => {
         <Tray
           ref={trayRef}
           disableCapturePanGestureToDismiss
+          footer={({ handleClose }) => (
+            <StickyFooter paddingX={3}>
+              <Button block onPress={handleClose}>
+                Button
+              </Button>
+            </StickyFooter>
+          )}
           handleBarAccessibilityLabel="Dismiss"
           onCloseComplete={setIsTrayVisibleToFalse}
           onVisibilityChange={handleTrayVisibilityChange}
           title={<SectionHeader paddingX={3} title="Section header" />}
         >
-          {({ handleClose }) => (
-            <TrayStickyFooter>
-              <FlatList data={items} keyExtractor={handleKeyExtractor} renderItem={renderItem} />
-              <StickyFooter paddingX={3}>
-                <Button block onPress={handleClose}>
-                  Button
-                </Button>
-              </StickyFooter>
-            </TrayStickyFooter>
-          )}
+          <FlatList data={items} keyExtractor={handleKeyExtractor} renderItem={renderItem} />
         </Tray>
       )}
     </>

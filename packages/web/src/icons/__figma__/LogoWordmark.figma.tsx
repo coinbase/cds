@@ -8,7 +8,7 @@ figma.connect(
   LogoWordmark,
   'https://www.figma.com/design/46lNmiV1z8I888My5kNq7R/%E2%9C%A8-Logos?node-id=1269-502',
   {
-    imports: ["import { LogoWordmark } from '@coinbase/cds-web/icons/LogoWordmark';"],
+    imports: ["import { LogoWordmark } from '@coinbase/cds-web/icons/LogoWordmark'"],
     props: {
       foreground: figma.enum('color', {
         primary: undefined,
@@ -25,8 +25,8 @@ figma.connect(
   'https://www.figma.com/design/46lNmiV1z8I888My5kNq7R/%E2%9C%A8-Logos?node-id=1269-502',
   {
     imports: [
-      "import { LogoWordmark } from '@coinbase/cds-web/icons/LogoWordmark';",
-      "import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';",
+      "import { LogoWordmark } from '@coinbase/cds-web/icons/LogoWordmark'",
+      "import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme'",
     ],
     variant: { color: 'primary Foreground' },
     props: {},

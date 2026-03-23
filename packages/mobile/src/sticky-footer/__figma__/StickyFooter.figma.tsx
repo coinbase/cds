@@ -7,7 +7,7 @@ figma.connect(
   StickyFooter,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10340-69579&m=dev',
   {
-    imports: ["import {StickyFooter} from '@coinbase/cds-mobile/sticky-footer/StickyFooter';"],
+    imports: ["import {StickyFooter} from '@coinbase/cds-mobile/sticky-footer/StickyFooter'"],
     props: {
       // showlegaltext1391921: figma.boolean('show legal text'),
       // buttons: figma.enum('buttons', {

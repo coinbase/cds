@@ -1,4 +1,9 @@
-import { formatAxisTick, getAxisTicksData } from '../axis';
+import {
+  formatAxisTick,
+  getAxisTicksData,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
+} from '../axis';
 import {
   type CategoricalScale,
   getCategoricalScale,
@@ -237,6 +242,88 @@ describe('getAxisTicksData', () => {
       expect(result.length).toBe(3);
       expect(result.map((r) => r.tick)).toEqual([0, 1, 2]);
     });
+
+    it('should use middle anchor by default', () => {
+      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const result = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+      });
+
+      const bandwidth = bandScale.bandwidth();
+      expect(result[0].position).toBe(bandScale(0)! + bandwidth / 2);
+    });
+
+    it('should respect anchor option for band scale positioning', () => {
+      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const bandwidth = bandScale.bandwidth();
+      const step = bandScale.step();
+      const paddingOffset = (step - bandwidth) / 2;
+
+      // Test stepStart anchor - should be at the start of the step (before band padding)
+      const stepStartResult = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+        options: { anchor: 'stepStart' },
+      });
+      const expectedStepStart = bandScale(0)! - paddingOffset;
+      expect(stepStartResult[0].position).toBeCloseTo(expectedStepStart, 5);
+
+      // Test middle anchor (explicit)
+      const middleResult = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+        options: { anchor: 'middle' },
+      });
+      expect(middleResult[0].position).toBe(bandScale(0)! + bandwidth / 2);
+
+      // Test stepEnd anchor - should be at the end of the step
+      const stepEndResult = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+        options: { anchor: 'stepEnd' },
+      });
+      const expectedStepEnd = bandScale(0)! - paddingOffset + step;
+      expect(stepEndResult[0].position).toBeCloseTo(expectedStepEnd, 5);
+    });
+
+    it('should apply anchor option with tick filter function', () => {
+      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const bandwidth = bandScale.bandwidth();
+      const step = bandScale.step();
+      const paddingOffset = (step - bandwidth) / 2;
+      const expectedStepStart = bandScale(0)! - paddingOffset;
+
+      const result = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: (index) => index === 0,
+        options: { anchor: 'stepStart' },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].position).toBeCloseTo(expectedStepStart, 5);
+    });
+
+    it('should apply anchor option when showing all categories', () => {
+      const categories = ['Jan', 'Feb'];
+      const bandwidth = bandScale.bandwidth();
+      const step = bandScale.step();
+      const paddingOffset = (step - bandwidth) / 2;
+
+      const result = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        options: { anchor: 'stepStart' },
+      });
+
+      expect(result[0].position).toBeCloseTo(bandScale(0)! - paddingOffset, 5);
+      expect(result[1].position).toBeCloseTo(bandScale(1)! - paddingOffset, 5);
+    });
   });
 
   describe('tick generation options', () => {
@@ -427,5 +514,60 @@ describe('formatAxisTick', () => {
   it('should handle null/undefined values', () => {
     expect(formatAxisTick(null)).toBe(null);
     expect(formatAxisTick(undefined)).toBe(undefined);
+  });
+});
+
+describe('cartesian layout helpers', () => {
+  it('should invert y-axis range only for vertical layout', () => {
+    const verticalScale = getCartesianAxisScale({
+      type: 'y',
+      range: { min: 0, max: 100 },
+      dataDomain: { min: 0, max: 10 },
+      layout: 'vertical',
+    });
+    const horizontalScale = getCartesianAxisScale({
+      type: 'y',
+      range: { min: 0, max: 100 },
+      dataDomain: { min: 0, max: 10 },
+      layout: 'horizontal',
+    });
+
+    expect(verticalScale(0)).toBe(100);
+    expect(verticalScale(10)).toBe(0);
+    expect(horizontalScale(0)).toBe(0);
+    expect(horizontalScale(10)).toBe(100);
+  });
+
+  it('should treat y-axis as category axis in horizontal layout', () => {
+    const domain = getCartesianAxisDomain(
+      {
+        id: 'DEFAULT_AXIS_ID',
+        scaleType: 'band',
+        domainLimit: 'strict',
+      },
+      [{ id: 'series1', data: [10, 20, 30] }],
+      'y',
+      'horizontal',
+    );
+
+    expect(domain).toEqual({ min: 0, max: 2 });
+  });
+
+  it('should compute horizontal x-axis domain from provided series', () => {
+    const domain = getCartesianAxisDomain(
+      {
+        id: 'left',
+        scaleType: 'linear',
+        domainLimit: 'strict',
+      },
+      [
+        { id: 'series1', data: [1, 2, 3], xAxisId: 'left' },
+        { id: 'series2', data: [100, 200, 300], xAxisId: 'right' },
+      ],
+      'x',
+      'horizontal',
+    );
+
+    expect(domain).toEqual({ min: 1, max: 300 });
   });
 });

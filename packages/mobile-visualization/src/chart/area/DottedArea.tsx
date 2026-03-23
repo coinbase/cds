@@ -7,7 +7,7 @@ import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { createGradient, getBaseline } from '../utils';
 import { getDottedAreaPath } from '../utils/path';
-import { usePathTransition } from '../utils/transition';
+import { defaultTransition, usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -63,21 +63,34 @@ export const DottedArea = memo<DottedAreaProps>(
     peakOpacity = 1,
     baselineOpacity = 0,
     baseline,
+    xAxisId,
     yAxisId,
     gradient: gradientProp,
     animate: animateProp,
+    transitions,
     transition,
     ...pathProps
   }) => {
     const theme = useTheme();
-    const { drawingArea, animate, getYAxis } = useCartesianChartContext();
+    const { drawingArea, animate, layout, getXAxis, getYAxis } = useCartesianChartContext();
 
-    const yAxisConfig = getYAxis(yAxisId);
+    const shouldAnimate = animateProp ?? animate;
+
+    const valueAxisConfig = layout !== 'horizontal' ? getYAxis(yAxisId) : getXAxis(xAxisId);
+    const gradientAxis = layout !== 'horizontal' ? 'y' : 'x';
 
     const fill = useMemo(
       () => fillProp ?? theme.color.fgPrimary,
       [fillProp, theme.color.fgPrimary],
     );
+
+    const updateTransition = useMemo(() => {
+      return transitions?.update !== undefined
+        ? transitions.update
+        : transition !== undefined
+          ? transition
+          : defaultTransition;
+    }, [transitions?.update, transition]);
 
     const dottedPath = useMemo(() => {
       if (!drawingArea) return '';
@@ -94,34 +107,38 @@ export const DottedArea = memo<DottedAreaProps>(
       );
     }, [drawingArea, patternSize, dotSize]);
 
-    const animatedClipPath = usePathTransition({
+    const clipPath = usePathTransition({
       currentPath: d,
-      transition,
+      transitions: { update: shouldAnimate ? updateTransition : null },
     });
-
-    const staticClipPath = useMemo(() => {
-      if (!d) return;
-      return Skia.Path.MakeFromSVGString(d) ?? undefined;
-    }, [d]);
 
     const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
-      if (!yAxisConfig) return;
+      if (!valueAxisConfig) return;
 
-      const baselineValue = getBaseline(yAxisConfig.domain, baseline);
-      return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
-    }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
+      const baselineValue = getBaseline(valueAxisConfig.domain, baseline);
+      return createGradient(
+        valueAxisConfig.domain,
+        baselineValue,
+        fill,
+        peakOpacity,
+        baselineOpacity,
+        gradientAxis,
+      );
+    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity, gradientAxis]);
 
+    // Update transition is used for clip path, we skip update animation on Path itself
     return (
-      <Group clip={animate ? animatedClipPath : staticClipPath}>
+      <Group clip={clipPath}>
         <Path
-          animate={animateProp ?? animate}
+          animate={shouldAnimate}
           d={dottedPath}
           fill={fill}
           transition={transition}
+          transitions={transitions}
           {...pathProps}
         >
-          {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+          {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
         </Path>
       </Group>
     );

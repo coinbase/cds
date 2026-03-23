@@ -1,14 +1,12 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
+import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -108,32 +106,53 @@ export type LineBaseProps = SharedProps & {
   animate?: boolean;
 };
 
-export type LineProps = LineBaseProps & {
-  /**
-   * Transition configuration for line animations.
-   */
-  transition?: Transition;
-  /**
-   * Handler for when a point is clicked.
-   * Passed through to Point components rendered via points.
-   */
-  onPointClick?: PointProps['onClick'];
-};
+export type LineProps = LineBaseProps &
+  Pick<PathProps, 'transitions' | 'transition'> & {
+    /**
+     * Handler for when a point is clicked.
+     * Passed through to Point components rendered via points.
+     */
+    onPointClick?: PointProps['onClick'];
+    /**
+     * Custom style for the line.
+     */
+    style?: React.CSSProperties;
+    /**
+     * Custom className for the line.
+     */
+    className?: string;
+  };
 
 export type LineComponentProps = Pick<
   LineProps,
-  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
-> & {
-  /**
-   * Path of the line
-   */
-  d: SVGProps<SVGPathElement>['d'];
-  /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-};
+  | 'stroke'
+  | 'strokeOpacity'
+  | 'strokeWidth'
+  | 'gradient'
+  | 'animate'
+  | 'transitions'
+  | 'transition'
+  | 'style'
+  | 'className'
+> &
+  Pick<PathProps, 'clipRect' | 'strokeLinecap'> & {
+    /**
+     * Path of the line.
+     */
+    d: SVGProps<SVGPathElement>['d'];
+    /**
+     * ID of the x-axis to use.
+     * If not provided, defaults to the default x-axis.
+     * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+     */
+    xAxisId?: string;
+    /**
+     * ID of the y-axis to use.
+     * If not provided, defaults to the default y-axis.
+     * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
+     */
+    yAxisId?: string;
+  };
 
 export type LineComponent = React.FC<LineComponentProps>;
 
@@ -153,11 +172,12 @@ export const Line = memo<LineProps>(
     opacity = 1,
     points,
     connectNulls,
+    transitions,
     transition,
     gradient: gradientProp,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
+    const { layout, animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
@@ -167,23 +187,42 @@ export const Line = memo<LineProps>(
     );
     const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
-    const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-    const xScale = useMemo(() => getXScale(), [getXScale]);
+    const xAxis = useMemo(
+      () => getXAxis(matchedSeries?.xAxisId),
+      [getXAxis, matchedSeries?.xAxisId],
+    );
+    const xScale = useMemo(
+      () => getXScale(matchedSeries?.xAxisId),
+      [getXScale, matchedSeries?.xAxisId],
+    );
     const yScale = useMemo(
       () => getYScale(matchedSeries?.yAxisId),
       [getYScale, matchedSeries?.yAxisId],
+    );
+    const yAxis = useMemo(
+      () => getYAxis(matchedSeries?.yAxisId),
+      [getYAxis, matchedSeries?.yAxisId],
     );
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
     const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
 
+    const categoryAxisIsX = useMemo(() => {
+      return layout !== 'horizontal';
+    }, [layout]);
+
+    const categoryAxis = useMemo(() => {
+      return categoryAxisIsX ? xAxis : yAxis;
+    }, [categoryAxisIsX, xAxis, yAxis]);
+
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
 
-      // Get numeric x-axis data if available
-      const xData =
-        xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
-          ? (xAxis.data as number[])
+      // Get numeric category-axis data if available
+      const indexAxis = categoryAxis;
+      const indexData =
+        indexAxis?.data && Array.isArray(indexAxis.data) && typeof indexAxis.data[0] === 'number'
+          ? (indexAxis.data as number[])
           : undefined;
 
       return getLinePath({
@@ -191,10 +230,12 @@ export const Line = memo<LineProps>(
         xScale,
         yScale,
         curve,
-        xData,
+        xData: categoryAxisIsX ? indexData : undefined,
+        yData: !categoryAxisIsX ? indexData : undefined,
         connectNulls,
+        layout,
       });
-    }, [chartData, xScale, yScale, curve, xAxis?.data, connectNulls]);
+    }, [xScale, yScale, chartData, categoryAxis, curve, categoryAxisIsX, connectNulls, layout]);
 
     const LineComponent = useMemo((): LineComponent => {
       if (SelectedLineComponent) {
@@ -212,12 +253,13 @@ export const Line = memo<LineProps>(
     // Get series color for stroke
     const stroke = strokeProp ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
 
-    const xData = useMemo(() => {
-      const data = xAxis?.data;
+    const categoryData = useMemo(() => {
+      const data = categoryAxis?.data;
+
       return data && Array.isArray(data) && data.length > 0 && typeof data[0] === 'number'
         ? (data as number[])
         : null;
-    }, [xAxis?.data]);
+    }, [categoryAxis]);
 
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
@@ -247,6 +289,7 @@ export const Line = memo<LineProps>(
             gradient={gradient}
             seriesId={seriesId}
             transition={transition}
+            transitions={transitions}
             type={areaType}
           />
         )}
@@ -256,37 +299,32 @@ export const Line = memo<LineProps>(
           stroke={stroke}
           strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
+          transitions={transitions}
+          xAxisId={matchedSeries?.xAxisId}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
         {points && (
-          <motion.g
-            data-component="line-points-group"
-            {...(animate
-              ? {
-                  animate: {
-                    opacity: 1,
-                    transition: {
-                      duration: accessoryFadeTransitionDuration,
-                      delay: accessoryFadeTransitionDelay,
-                    },
-                  },
-                  exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
-                  initial: { opacity: 0 },
-                }
-              : {})}
-          >
+          <g data-component="line-points-group">
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
 
-              const xValue = xData && xData[index] !== undefined ? xData[index] : index;
+              const indexValue =
+                categoryData && categoryData[index] !== undefined ? categoryData[index] : index;
 
               let pointFill = stroke;
 
               if (gradientConfig && gradient) {
-                // Use the appropriate data value based on gradient axis
-                const axis = gradient.axis ?? 'y';
-                const dataValue = axis === 'x' ? xValue : value;
+                // Match gradient sampling to the chart axis roles for each layout.
+                const gradientAxis = gradient.axis ?? 'y';
+                const dataValue =
+                  gradientAxis === 'x'
+                    ? categoryAxisIsX
+                      ? indexValue
+                      : value
+                    : categoryAxisIsX
+                      ? value
+                      : indexValue;
 
                 const evaluatedColor = evaluateGradientAtValue(
                   gradientConfig.stops,
@@ -301,9 +339,10 @@ export const Line = memo<LineProps>(
 
               // Build defaults that would be passed to Point
               const defaults: PointBaseProps = {
-                dataX: xValue,
-                dataY: value,
+                dataX: categoryAxisIsX ? indexValue : value,
+                dataY: categoryAxisIsX ? value : indexValue,
                 fill: pointFill,
+                xAxisId: matchedSeries?.xAxisId,
                 yAxisId: matchedSeries?.yAxisId,
                 opacity,
                 testID: undefined,
@@ -316,6 +355,7 @@ export const Line = memo<LineProps>(
                     key={`${seriesId}-${index}`}
                     onClick={onPointClick}
                     transition={transition}
+                    transitions={transitions}
                     {...defaults}
                   />
                 );
@@ -333,12 +373,13 @@ export const Line = memo<LineProps>(
                   key={`${seriesId}-${index}`}
                   onClick={pointConfig.onClick ?? onPointClick}
                   transition={transition}
+                  transitions={transitions}
                   {...defaults}
                   {...pointConfig}
                 />
               );
             })}
-          </motion.g>
+          </g>
         )}
       </>
     );

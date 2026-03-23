@@ -1,6 +1,10 @@
-### Basic Example
+SegmentedTabs is a controlled component that uses `activeTab` and `onChange` to manage selection state.
 
-Use the `onChange` prop to listen and make changes to the `activeTab` state.
+## Basics
+
+### Initial Value
+
+You can set any tab as the initial active tab by passing it to the `activeTab` state.
 
 ```jsx
 function Example() {
@@ -22,9 +26,7 @@ function Example() {
 }
 ```
 
-### With Initial Value
-
-You can set any tab as the initial active tab.
+SegmentedTabs can also start with no active selection by passing `null`.
 
 ```jsx
 function Example() {
@@ -33,7 +35,7 @@ function Example() {
     { id: 'sell', label: 'Sell' },
     { id: 'convert', label: 'Convert' },
   ];
-  const [activeTab, updateActiveTab] = useState(tabs[1]); // Start with 'Sell'
+  const [activeTab, updateActiveTab] = useState(null);
   const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
   return (
     <SegmentedTabs
@@ -46,33 +48,9 @@ function Example() {
 }
 ```
 
-### No Initial Value
+### Disabled
 
-SegmentedTabs can start with no active selection.
-
-```jsx
-function Example() {
-  const tabs = [
-    { id: 'buy', label: 'Buy' },
-    { id: 'sell', label: 'Sell' },
-    { id: 'convert', label: 'Convert' },
-  ];
-  const [activeTab, updateActiveTab] = useState(null); // No initial selection
-  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
-  return (
-    <SegmentedTabs
-      accessibilityLabel="Switch token action views"
-      activeTab={activeTab}
-      onChange={handleChange}
-      tabs={tabs}
-    />
-  );
-}
-```
-
-### Disabled State
-
-You can disable the entire SegmentedTabs component.
+The entire component can be disabled with the `disabled` prop.
 
 ```jsx
 function Example() {
@@ -95,9 +73,7 @@ function Example() {
 }
 ```
 
-### Disabled Individual Tab
-
-Individual tabs can be disabled while keeping others interactive.
+Individual tabs can also be disabled while keeping others interactive.
 
 ```jsx
 function Example() {
@@ -119,26 +95,18 @@ function Example() {
 }
 ```
 
-### Custom Tab Component
+## Styling
 
-You can customize individual tabs by providing a custom `Component` for specific tabs.
+### Border Radius
+
+Set `borderRadius` to change the shape of both the container and the active indicator.
 
 ```jsx
 function Example() {
-  const CustomSegmentedTabColor = useCallback(
-    (props) => <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" font="label2" />,
-    [],
-  );
-
-  const CustomSegmentedTabFont = useCallback(
-    (props) => <SegmentedTab {...props} font="label2" />,
-    [],
-  );
-
   const tabs = [
-    { id: 'buy', label: 'Buy', Component: CustomSegmentedTabColor },
-    { id: 'sell', label: 'Sell', Component: CustomSegmentedTabFont },
-    { id: 'convert', label: 'Convert', Component: CustomSegmentedTabColor },
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
   ];
   const [activeTab, updateActiveTab] = useState(tabs[0]);
   const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
@@ -146,6 +114,7 @@ function Example() {
     <SegmentedTabs
       accessibilityLabel="Switch token action views"
       activeTab={activeTab}
+      borderRadius={300}
       onChange={handleChange}
       tabs={tabs}
     />
@@ -153,9 +122,100 @@ function Example() {
 }
 ```
 
-### Custom Active Indicator
+Use the `styles` prop to set a different `borderRadius` on the active indicator than the outer container, with `padding` to create an inset effect.
 
-You can customize the active indicator component and overall styling.
+```jsx
+function Example() {
+  const theme = useTheme();
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={300}
+      onChange={handleChange}
+      padding={0.5}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Labels
+
+Labels can be customized with any `ReactNode`, including instances of `Icon`.
+
+```jsx
+import {
+  interpolateColor,
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { tabsSpringConfig } from '@coinbase/cds-mobile/tabs/Tabs';
+
+function ColoredIcon({ tabId, name }) {
+  const { activeTab } = useTabsContext();
+  const isActive = activeTab?.id === tabId;
+  const theme = useTheme();
+
+  const progress = useSharedValue(isActive ? 1 : 0);
+  const [color, setColor] = useState(isActive ? theme.color.fgInverse : theme.color.fg);
+
+  useEffect(() => {
+    progress.value = withSpring(isActive ? 1 : 0, tabsSpringConfig);
+  }, [isActive, progress]);
+
+  useAnimatedReaction(
+    () => interpolateColor(progress.value, [0, 1], [theme.color.fg, theme.color.fgInverse]),
+    (newColor) => {
+      runOnJS(setColor)(newColor);
+    },
+  );
+
+  return <Icon active name={name} size="s" styles={{ icon: { color } }} />;
+}
+
+function Example() {
+  const theme = useTheme();
+  const tabs = [
+    { id: 'buy', label: <ColoredIcon name="chartLine" tabId="buy" /> },
+    { id: 'sell', label: <ColoredIcon name="chartCandles" tabId="sell" /> },
+    { id: 'convert', label: <ColoredIcon name="chartBar" tabId="convert" /> },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={300}
+      gap={0.5}
+      onChange={handleChange}
+      padding={0.5}
+      styles={{
+        activeIndicator: { borderRadius: theme.borderRadius[200] },
+      }}
+      tabs={tabs}
+      width="fit-content"
+    />
+  );
+}
+```
+
+## Custom Components
+
+Use `TabComponent` and `TabsActiveIndicatorComponent` to fully customize the tabs and active indicator. Individual tabs can also be customized by providing a `Component` in the tab definition.
 
 ```jsx
 function Example() {
@@ -163,7 +223,7 @@ function Example() {
     <TabsActiveIndicator activeTabRect={activeTabRect} background="bgOverlay" />
   );
 
-  const AnotherCustomSegmentedTab = ({ id, label, disabled }) => {
+  const CustomTab = ({ id, label, disabled }) => {
     const { activeTab } = useTabsContext();
     const isActive = activeTab?.id === id;
     const renderedLabel = (
@@ -189,7 +249,7 @@ function Example() {
       borderRadius={0}
       onChange={handleChange}
       tabs={tabs}
-      TabComponent={AnotherCustomSegmentedTab}
+      TabComponent={CustomTab}
       TabsActiveIndicatorComponent={CustomActiveIndicator}
     />
   );

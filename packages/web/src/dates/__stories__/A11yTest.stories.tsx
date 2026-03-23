@@ -15,14 +15,11 @@ export default {
   component: Calendar,
   parameters: {
     a11y: {
-      config: {
-        rules: [
-          { id: 'color-contrast', enabled: false },
-          {
-            id: 'aria-required-children',
-            enabled: false,
-          },
-        ],
+      options: {
+        rules: {
+          'color-contrast': { enabled: false },
+          'aria-required-children': { enabled: false },
+        },
       },
     },
   },
@@ -40,7 +37,6 @@ const dateInputSharedProps = {
   disabledDateError: 'Date unavailable',
   requiredError: 'This field is required',
   label: 'Birthdate',
-  calendarIconButtonAccessibilityLabel: 'Birthdate calendar',
   helperTextErrorIconAccessibilityLabel: 'Error',
 };
 
@@ -52,14 +48,17 @@ const calendarSharedProps = {
   highlightedDates: [[oneWeekAgo, twoDaysAgo] as [Date, Date], oneWeekLater],
   nextArrowAccessibilityLabel: 'Next month',
   previousArrowAccessibilityLabel: 'Previous month',
+  highlightedDateAccessibilityHint: 'Highlighted',
 };
 
 const datePickerSharedProps = {
   label: 'Birthdate',
-  calendarIconButtonAccessibilityLabel: 'Birthdate calendar',
+  openCalendarAccessibilityLabel: 'Open calendar',
+  closeCalendarAccessibilityLabel: 'Close calendar',
   helperTextErrorIconAccessibilityLabel: 'Error',
   nextArrowAccessibilityLabel: 'Next month',
   previousArrowAccessibilityLabel: 'Previous month',
+  highlightedDateAccessibilityHint: 'Highlighted',
   invalidDateError: 'Please enter a valid date',
   disabledDateError: 'Date unavailable',
   requiredError: 'This field is required',

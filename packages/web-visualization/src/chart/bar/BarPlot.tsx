@@ -1,9 +1,9 @@
 import { memo, useId, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { Series } from '../utils';
 import { defaultAxisId } from '../utils';
 
+import type { BarSeries } from './BarStack';
 import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
 
@@ -28,7 +28,8 @@ export type BarPlotBaseProps = Pick<
   seriesIds?: string[];
 };
 
-export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transition'>;
+export type BarPlotProps = BarPlotBaseProps &
+  Pick<BarStackGroupProps, 'transitions' | 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.
@@ -50,6 +51,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackGap,
     barMinSize,
     stackMinSize,
+    transitions,
     transition,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
@@ -69,27 +71,30 @@ export const BarPlot = memo<BarPlotProps>(
         string,
         {
           stackId: string;
-          series: Series[];
+          series: BarSeries[];
+          xAxisId?: string;
           yAxisId?: string;
         }
       >();
 
-      // Group series into stacks based on stackId + yAxisId combination
+      // Group series into stacks based on stackId + axis ID combination
       targetSeries.forEach((series) => {
+        const xAxisId = series.xAxisId ?? defaultAxisId;
         const yAxisId = series.yAxisId ?? defaultAxisId;
         const stackId = series.stackId || `individual-${series.id}`;
-        const stackKey = `${stackId}:${yAxisId}`;
+        const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
 
         if (!groups.has(stackKey)) {
           groups.set(stackKey, {
             stackId: stackKey,
             series: [],
+            xAxisId: series.xAxisId,
             yAxisId: series.yAxisId,
           });
         }
 
         const group = groups.get(stackKey)!;
-        group.series.push(series);
+        group.series.push(series as BarSeries);
       });
 
       return Array.from(groups.values());
@@ -130,6 +135,8 @@ export const BarPlot = memo<BarPlotProps>(
               strokeWidth={defaultStrokeWidth}
               totalStacks={stackGroups.length}
               transition={transition}
+              transitions={transitions}
+              xAxisId={group.xAxisId}
               yAxisId={group.yAxisId}
             />
           ))}

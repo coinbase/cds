@@ -17,10 +17,17 @@ const createClassName = (hash: string, title: string) => {
 
 const isAnalyze = process.env.ANALYZE === 'true';
 const isAnalyzeModeJson = process.env.ANALYZE_MODE_JSON === 'true';
+const isPercyBuild = process.env.STORYBOOK_PERCY === 'true';
 const bundleStatsFilename = path.resolve(
   MONOREPO_ROOT,
   process.env.ANALYZE_REPORT_PATH || 'bundle-stats.json',
 );
+const addons = [
+  // '@chromatic-com/storybook',
+  '@storybook/addon-storysource',
+  '@storybook-community/storybook-dark-mode',
+  ...(!isPercyBuild ? ['@storybook/addon-a11y', '@storybook/addon-vitest'] : []),
+];
 
 if (isAnalyze) {
   console.log('Bundle analyzer enabled because process.env.ANALYZE === "true"');
@@ -38,14 +45,10 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
-  addons: [
-    // '@chromatic-com/storybook',
-    '@storybook/addon-storysource',
-    '@storybook-community/storybook-dark-mode',
-  ],
+  addons,
   stories: [
-    path.resolve(MONOREPO_ROOT, 'packages/web/**/*.stories.@(tsx|mdx)'),
-    path.resolve(MONOREPO_ROOT, 'packages/web-visualization/**/*.stories.@(tsx|mdx)'),
+    '../../../packages/web/**/*.stories.@(tsx|mdx)',
+    '../../../packages/web-visualization/**/*.stories.@(tsx|mdx)',
   ],
   staticDirs: [
     {

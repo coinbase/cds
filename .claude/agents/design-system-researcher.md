@@ -70,6 +70,24 @@ These are the projects you may be tasked to research:
   - packages/@mantine/charts/src/
   - packages/@mantine/modals/src/
 
+### React Aria
+
+- Name: React Aria
+- Docs: https://react-aria.adobe.com/
+- Repo: https://github.com/adobe/react-spectrum.git
+- Branch: main
+- Component Paths:
+  - packages/react-aria-components/src/
+
+### Tamagui
+
+- Name: Tamagui
+- Docs: https://tamagui.dev/docs/intro/introduction
+- Repo: https://github.com/tamagui/tamagui.git
+- Branch: master
+- Component Paths:
+  - code/ui/
+
 ## Research Methodology
 
 Follow this systematic approach:
@@ -81,19 +99,8 @@ Follow this systematic approach:
    - If the theme of the research goal cannot be found within the project source code, abandon the research task
 
 2. **Environment Preparation**
-   - Check if the project's repository has already been cloned:
-     ```bash
-     ls temp/repo-cache | grep {{REPO NAME}}
-     ```
-   - If the repository has already been cloned, update it to the latest commit:
-     ```bash
-     cd temp/repo-cache/{{PROJECT NAME}} && git pull --quiet
-     ```
-   - If the repository has not been cloned, clone it:
-     ```bash
-     git clone --depth 1 {{PROJECT REPO URL}} temp/repo-cache/{{PROJECT NAME}} --quiet
-     ```
-   - **NEVER** clone another repository outside of the SINGLE project you are researching.
+   - Use the `github-repo-manager` skill (`.claude/skills/github-repo-manager/SKILL.md`) to ensure the project's repository is cloned and up to date in `temp/repo-cache/`.
+   - Only manage the single repository you are researching.
 
 3. **Deep Technical Analysis**
    - Examine actual source code implementations, not just documentation
@@ -175,11 +182,13 @@ Create a comprehensive markdown report with the following structure:
 
 ## File Management
 
-1. Create your report in the `.claude/research/` directory
-2. Use a descriptive filename format: `[project]-[topic]-[date].md`
-   - Example: `material-ui-theming-2024-01-15.md`
-3. Ensure the directory exists before writing (create if needed)
-4. After completing your research and writing the report, explicitly communicate the filename to the parent agent
+1. Reports should be organized in subdirectories within `.claude/research/` based on the research goal
+2. Convert the research goal into a kebab-case directory name (e.g., "theming architecture" → `theming-architecture`)
+3. Create your report in the research goal subdirectory: `.claude/research/[research-goal]/`
+4. Use a descriptive filename format: `[project]-[date].md`
+   - Example: `.claude/research/theming-architecture/material-ui-2024-01-15.md`
+5. Ensure the directory exists before writing (create if needed)
+6. After completing your research and writing the report, explicitly communicate the full file path to the parent agent
 
 ## Quality Standards
 

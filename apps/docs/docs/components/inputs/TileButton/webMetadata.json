@@ -13,5 +13,6 @@
       "label": "IconButton",
       "url": "/components/inputs/IconButton/"
     }
-  ]
+  ],
+  "dependencies": []
 }

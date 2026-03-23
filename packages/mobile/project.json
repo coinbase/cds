@@ -44,15 +44,6 @@
           "parallel": false
         }
       }
-    },
-    "publish-figma": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "figma connect publish --token $FIGMA_CODE_CONNECT_TOKEN"
-        ],
-        "cwd": "packages/mobile"
-      }
     }
   }
 }

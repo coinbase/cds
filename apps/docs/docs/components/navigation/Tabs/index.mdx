@@ -11,28 +11,30 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 
 import webPropsToc from ':docgen/web/tabs/Tabs/toc-props';
 import mobilePropsToc from ':docgen/mobile/tabs/Tabs/toc-props';
+
 import WebPropsTable from './_webPropsTable.mdx';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader
-    title="Tabs"
-    description="Tabs is a flexible, accessible tab navigation component for React Native, supporting animated indicators, custom tab components, and full accessibility."
-    webMetadata={webMetadata}
-    mobileMetadata={mobileMetadata}
-  />
+  <ComponentHeader title="Tabs" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
-    webPropsTable={<WebPropsTable />}
-    webExamples={<WebExamples />}
-    mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
-    webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
-    webPropsToc={webPropsToc}
+    mobilePropsTable={<MobilePropsTable />}
     mobilePropsToc={mobilePropsToc}
+    mobileStyles={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
+    webPropsToc={webPropsToc}
+    webStyles={<WebStyles />}
+    webStylesToc={webStylesToc}
   />
 </VStack>

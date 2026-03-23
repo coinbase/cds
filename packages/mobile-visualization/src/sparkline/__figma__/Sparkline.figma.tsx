@@ -9,8 +9,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=320%3A15040',
   {
     imports: [
-      "import { Sparkline } from '@coinbase/cds-mobile-visualization';",
-      "import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';",
+      "import { Sparkline } from '@coinbase/cds-mobile-visualization'",
+      "import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath'",
     ],
     example: function Example() {
       const data = [20, 30, 5, 45, 0];

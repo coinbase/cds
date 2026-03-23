@@ -1,4 +1,5 @@
-import React, { memo, useContext } from 'react';
+import React, { forwardRef, memo, useContext } from 'react';
+import type { View } from 'react-native';
 import type { IconButtonVariant, InputVariant } from '@coinbase/cds-common/types';
 
 import { IconButton, type IconButtonProps } from '../buttons/IconButton';
@@ -23,26 +24,32 @@ export type InputIconButtonProps = IconButtonProps & {
   disableInheritFocusStyle?: boolean;
 };
 
-export const InputIconButton = memo(function InputIconButton({
-  disableInheritFocusStyle = false,
-  testID,
-  variant = 'primary',
-  accessibilityLabel,
-  accessibilityHint,
-  ...props
-}: InputIconButtonProps) {
-  const contextVariant = useContext(TextInputFocusVariantContext);
-  const transformedVariant = contextVariant ? variantTransformMap[contextVariant] : variant;
+export const InputIconButton = memo(
+  forwardRef<View, InputIconButtonProps>(function InputIconButton(
+    {
+      disableInheritFocusStyle = false,
+      testID,
+      variant = 'primary',
+      accessibilityLabel,
+      accessibilityHint,
+      ...props
+    },
+    ref,
+  ) {
+    const contextVariant = useContext(TextInputFocusVariantContext);
+    const transformedVariant = contextVariant ? variantTransformMap[contextVariant] : variant;
 
-  return (
-    <Box paddingEnd={0.5} paddingStart={1} testID={testID}>
-      <IconButton
-        transparent
-        accessibilityHint={accessibilityHint ?? props.name}
-        accessibilityLabel={accessibilityLabel ?? props.name}
-        variant={disableInheritFocusStyle ? variant : transformedVariant}
-        {...props}
-      />
-    </Box>
-  );
-});
+    return (
+      <Box paddingEnd={0.5} paddingStart={1} testID={testID}>
+        <IconButton
+          ref={ref}
+          transparent
+          accessibilityHint={accessibilityHint ?? props.name}
+          accessibilityLabel={accessibilityLabel ?? props.name}
+          variant={disableInheritFocusStyle ? variant : transformedVariant}
+          {...props}
+        />
+      </Box>
+    );
+  }),
+);

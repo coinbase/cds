@@ -7,20 +7,24 @@ import { css } from '@linaria/core';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { CartesianChartProvider } from './ChartProvider';
+import { Legend } from './legend';
 import {
   type AxisConfig,
-  type AxisConfigProps,
+  type CartesianAxisConfigProps,
   type CartesianChartContextValue,
+  type CartesianChartLayout,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
-  defaultChartInset,
+  defaultHorizontalLayoutChartInset,
+  defaultVerticalLayoutChartInset,
   getAxisConfig,
-  getAxisDomain,
   getAxisRange,
-  getAxisScale,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
+  type LegendPosition,
   type Series,
   useTotalAxisPadding,
 } from './utils';
@@ -43,22 +47,52 @@ export type CartesianChartBaseProps = BoxBaseProps &
      */
     series?: Array<Series>;
     /**
+     * Chart layout - describes the direction bars/areas grow.
+     * - 'vertical' (default): Bars grow vertically. X is category axis, Y is value axis.
+     * - 'horizontal': Bars grow horizontally. Y is category axis, X is value axis.
+     * @default 'vertical'
+     */
+    layout?: CartesianChartLayout;
+    /**
      * Whether to animate the chart.
      * @default true
      */
     animate?: boolean;
     /**
-     * Configuration for x-axis.
+     * Configuration for x-axis(es). Can be a single config or array of configs.
+     *
+     * @note Multiple x-axis configs are only supported when `layout="horizontal"`.
      */
-    xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
+    xAxis?: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[];
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
+     *
+     * @note `layout="horizontal"` supports only one y-axis config.
      */
-    yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
+    yAxis?:
+      | Partial<Omit<CartesianAxisConfigProps, 'data'>>
+      | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
     /**
      * Inset around the entire chart (outside the axes).
      */
     inset?: number | Partial<ChartInset>;
+    /**
+     * Whether to show the legend or a custom legend element.
+     * - `true` renders the default Legend component
+     * - A React element renders that element as the legend
+     * - `false` or omitted hides the legend
+     */
+    legend?: boolean | React.ReactNode;
+    /**
+     * Position of the legend relative to the chart.
+     * @default 'bottom'
+     */
+    legendPosition?: LegendPosition;
+    /**
+     * Accessibility label for the legend group.
+     * @default 'Legend'
+     */
+    legendAccessibilityLabel?: string;
   };
 
 export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
@@ -105,18 +139,23 @@ export const CartesianChart = memo(
       {
         series,
         children,
+        layout = 'vertical',
         animate = true,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
         enableScrubbing,
         onScrubberPositionChange,
+        legend,
+        legendPosition = 'bottom',
+        legendAccessibilityLabel,
         width = '100%',
         height = '100%',
         className,
         classNames,
         style,
         styles,
+        accessibilityLabel,
         ...props
       },
       ref,
@@ -124,12 +163,34 @@ export const CartesianChart = memo(
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
       const svgRef = useRef<SVGSVGElement | null>(null);
 
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
+      const calculatedInset = useMemo(
+        () =>
+          getChartInset(
+            inset,
+            layout === 'horizontal'
+              ? defaultHorizontalLayoutChartInset
+              : defaultVerticalLayoutChartInset,
+          ),
+        [inset, layout],
+      );
 
       // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
-      // We only support 1 x axis but allow for multiple y axes.
-      const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp)[0], [xAxisConfigProp]);
+      const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp), [xAxisConfigProp]);
       const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigProp), [yAxisConfigProp]);
+
+      // Horizontal layout supports multiple value axes on x, but only a single category axis on y.
+      // Vertical layout keeps a single x-axis to preserve existing behavior.
+      if (layout === 'horizontal' && yAxisConfig.length > 1) {
+        throw new Error(
+          'When layout="horizontal", only one y-axis is supported. See https://cds.coinbase.com/components/charts/CartesianChart.',
+        );
+      }
+
+      if (layout !== 'horizontal' && xAxisConfig.length > 1) {
+        throw new Error(
+          'Multiple x-axes are only supported when layout="horizontal". See https://cds.coinbase.com/components/charts/CartesianChart.',
+        );
+      }
 
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
@@ -154,46 +215,62 @@ export const CartesianChart = memo(
         };
       }, [chartHeight, chartWidth, calculatedInset, axisPadding]);
 
-      const { xAxis, xScale } = useMemo(() => {
+      const { xAxes, xScales } = useMemo(() => {
+        const axes = new Map<string, AxisConfig>();
+        const scales = new Map<string, ChartScaleFunction>();
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
-          return { xAxis: undefined, xScale: undefined };
+          return { xAxes: axes, xScales: scales };
 
-        const domain = getAxisDomain(xAxisConfig, series ?? [], 'x');
-        const range = getAxisRange(xAxisConfig, chartRect, 'x');
+        xAxisConfig.forEach((axisParam) => {
+          const axisId = axisParam.id ?? defaultAxisId;
 
-        const axisConfig: AxisConfig = {
-          scaleType: xAxisConfig.scaleType,
-          domain,
-          range,
-          data: xAxisConfig.data,
-          categoryPadding: xAxisConfig.categoryPadding,
-          domainLimit: xAxisConfig.domainLimit,
-        };
+          // Get relevant series data
+          const relevantSeries =
+            xAxisConfig.length > 1
+              ? (series?.filter((s) => (s.xAxisId ?? defaultAxisId) === axisId) ?? [])
+              : (series ?? []);
 
-        // Create the scale
-        const scale = getAxisScale({
-          config: axisConfig,
-          type: 'x',
-          range: axisConfig.range,
-          dataDomain: axisConfig.domain,
+          // Calculate domain and range
+          const dataDomain = getCartesianAxisDomain(axisParam, relevantSeries, 'x', layout);
+          const range = getAxisRange(axisParam, chartRect, 'x');
+
+          const axisConfig: AxisConfig = {
+            scaleType: axisParam.scaleType,
+            domain: dataDomain,
+            range,
+            data: axisParam.data,
+            categoryPadding: axisParam.categoryPadding,
+            domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'nice' : 'strict'),
+          };
+
+          // Create the scale
+          const scale = getCartesianAxisScale({
+            config: axisConfig,
+            type: 'x',
+            range: axisConfig.range,
+            dataDomain: axisConfig.domain,
+            layout,
+          });
+
+          if (scale) {
+            scales.set(axisId, scale);
+
+            // Update axis config with actual scale domain (after .nice() or other adjustments)
+            const scaleDomain = scale.domain();
+            const actualDomain =
+              Array.isArray(scaleDomain) && scaleDomain.length === 2
+                ? { min: scaleDomain[0] as number, max: scaleDomain[1] as number }
+                : axisConfig.domain;
+
+            axes.set(axisId, {
+              ...axisConfig,
+              domain: actualDomain,
+            });
+          }
         });
 
-        if (!scale) return { xAxis: undefined, xScale: undefined };
-
-        // Update axis config with actual scale domain (after .nice() or other adjustments)
-        const scaleDomain = scale.domain();
-        const actualDomain =
-          Array.isArray(scaleDomain) && scaleDomain.length === 2
-            ? { min: scaleDomain[0] as number, max: scaleDomain[1] as number }
-            : axisConfig.domain;
-
-        const finalAxisConfig = {
-          ...axisConfig,
-          domain: actualDomain,
-        };
-
-        return { xAxis: finalAxisConfig, xScale: scale };
-      }, [xAxisConfig, series, chartRect]);
+        return { xAxes: axes, xScales: scales };
+      }, [xAxisConfig, series, chartRect, layout]);
 
       const { yAxes, yScales } = useMemo(() => {
         const axes = new Map<string, AxisConfig>();
@@ -206,10 +283,12 @@ export const CartesianChart = memo(
 
           // Get relevant series data
           const relevantSeries =
-            series?.filter((s) => (s.yAxisId ?? defaultAxisId) === axisId) ?? [];
+            yAxisConfig.length > 1
+              ? (series?.filter((s) => (s.yAxisId ?? defaultAxisId) === axisId) ?? [])
+              : (series ?? []);
 
           // Calculate domain and range
-          const dataDomain = getAxisDomain(axisParam, relevantSeries, 'y');
+          const dataDomain = getCartesianAxisDomain(axisParam, relevantSeries, 'y', layout);
           const range = getAxisRange(axisParam, chartRect, 'y');
 
           const axisConfig: AxisConfig = {
@@ -218,15 +297,16 @@ export const CartesianChart = memo(
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
-            domainLimit: axisParam.domainLimit ?? 'nice',
+            domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'strict' : 'nice'),
           };
 
           // Create the scale
-          const scale = getAxisScale({
+          const scale = getCartesianAxisScale({
             config: axisConfig,
             type: 'y',
             range: axisConfig.range,
             dataDomain: axisConfig.domain,
+            layout,
           });
 
           if (scale) {
@@ -247,11 +327,11 @@ export const CartesianChart = memo(
         });
 
         return { yAxes: axes, yScales: scales };
-      }, [yAxisConfig, series, chartRect]);
+      }, [yAxisConfig, series, chartRect, layout]);
 
-      const getXAxis = useCallback(() => xAxis, [xAxis]);
+      const getXAxis = useCallback((id?: string) => xAxes.get(id ?? defaultAxisId), [xAxes]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
-      const getXScale = useCallback(() => xScale, [xScale]);
+      const getXScale = useCallback((id?: string) => xScales.get(id ?? defaultAxisId), [xScales]);
       const getYScale = useCallback((id?: string) => yScales.get(id ?? defaultAxisId), [yScales]);
       const getSeries = useCallback(
         (seriesId?: string) => series?.find((s) => s.id === seriesId),
@@ -271,10 +351,20 @@ export const CartesianChart = memo(
         [stackedDataMap],
       );
 
+      const categoryAxisIsX = useMemo(() => {
+        return layout !== 'horizontal';
+      }, [layout]);
+
+      const categoryAxisConfig = useMemo(() => {
+        return categoryAxisIsX
+          ? (xAxisConfig[0] ?? yAxisConfig[0])
+          : (yAxisConfig[0] ?? xAxisConfig[0]);
+      }, [categoryAxisIsX, xAxisConfig, yAxisConfig]);
+
       const dataLength = useMemo(() => {
-        // If xAxis has categorical data, use that length
-        if (xAxisConfig.data && xAxisConfig.data.length > 0) {
-          return xAxisConfig.data.length;
+        // If category axis has categorical data, use that length
+        if (categoryAxisConfig.data && categoryAxisConfig.data.length > 0) {
+          return categoryAxisConfig.data.length;
         }
 
         // Otherwise, find the longest series
@@ -283,7 +373,7 @@ export const CartesianChart = memo(
           const seriesData = getStackedSeriesData(s.id);
           return Math.max(max, seriesData?.length ?? 0);
         }, 0);
-      }, [xAxisConfig.data, series, getStackedSeriesData]);
+      }, [categoryAxisConfig, series, getStackedSeriesData]);
 
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {
@@ -345,6 +435,7 @@ export const CartesianChart = memo(
 
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
+          layout,
           series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,
@@ -362,6 +453,7 @@ export const CartesianChart = memo(
           getAxisBounds,
         }),
         [
+          layout,
           series,
           getSeries,
           getStackedSeriesData,
@@ -386,6 +478,68 @@ export const CartesianChart = memo(
       );
       const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
 
+      const legendElement = useMemo(() => {
+        if (!legend) return;
+
+        if (legend === true) {
+          const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
+          const flexDirection = isHorizontal ? 'row' : 'column';
+
+          return (
+            <Legend accessibilityLabel={legendAccessibilityLabel} flexDirection={flexDirection} />
+          );
+        }
+
+        return legend;
+      }, [legend, legendAccessibilityLabel, legendPosition]);
+
+      const rootBoxProps: BoxProps<'div'> = useMemo(
+        () => ({
+          className: rootClassNames,
+          height,
+          style: rootStyles,
+          width,
+          ...props,
+        }),
+        [rootClassNames, height, rootStyles, width, props],
+      );
+
+      const chartContent = (
+        <Box
+          ref={(node) => {
+            observe(node as unknown as HTMLElement);
+          }}
+          height={legend ? undefined : height}
+          style={{ flex: 1, minHeight: 0, minWidth: 0 }}
+          width={legend ? undefined : width}
+        >
+          <Box
+            ref={(node) => {
+              const svgElement = node as unknown as SVGSVGElement;
+              svgRef.current = svgElement;
+              // Forward the ref to the user
+              if (ref) {
+                if (typeof ref === 'function') {
+                  ref(svgElement);
+                } else {
+                  (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                }
+              }
+            }}
+            accessibilityLabel={accessibilityLabel}
+            aria-live="polite"
+            as="svg"
+            className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
+            height="100%"
+            style={styles?.chart}
+            tabIndex={enableScrubbing ? 0 : undefined}
+            width="100%"
+          >
+            {children}
+          </Box>
+        </Box>
+      );
+
       return (
         <CartesianChartProvider value={contextValue}>
           <ScrubberProvider
@@ -393,40 +547,20 @@ export const CartesianChart = memo(
             onScrubberPositionChange={onScrubberPositionChange}
             svgRef={svgRef}
           >
-            <Box
-              ref={(node) => {
-                observe(node as unknown as HTMLElement);
-              }}
-              className={rootClassNames}
-              height={height}
-              style={rootStyles}
-              width={width}
-              {...props}
-            >
+            {legend ? (
               <Box
-                ref={(node) => {
-                  const svgElement = node as unknown as SVGSVGElement;
-                  svgRef.current = svgElement;
-                  // Forward the ref to the user
-                  if (ref) {
-                    if (typeof ref === 'function') {
-                      ref(svgElement);
-                    } else {
-                      (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
-                    }
-                  }
-                }}
-                aria-live="polite"
-                as="svg"
-                className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
-                height="100%"
-                style={styles?.chart}
-                tabIndex={enableScrubbing ? 0 : undefined}
-                width="100%"
+                {...rootBoxProps}
+                flexDirection={
+                  legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
+                }
               >
-                {children}
+                {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
+                {chartContent}
+                {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
-            </Box>
+            ) : (
+              <Box {...rootBoxProps}>{chartContent}</Box>
+            )}
           </ScrubberProvider>
         </CartesianChartProvider>
       );

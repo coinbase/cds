@@ -7,7 +7,7 @@ figma.connect(
   Fallback,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=731-14951&m=dev',
   {
-    imports: ["import { Fallback } from '@coinbase/cds-web/layout/Fallback';"],
+    imports: ["import { Fallback } from '@coinbase/cds-web/layout/Fallback'"],
     props: {
       shape: figma.enum('shape', {
         circle: 'circle',

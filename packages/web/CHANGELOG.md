@@ -8,6 +8,343 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.55.1 (3/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix icon inconsistent rendering. [[#527](https://github.com/coinbase/cds/pull/527)]
+
+## 8.55.0 ((3/19/2026, 01:41 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.54.0 (3/18/2026 PST)
+
+#### 🚀 Updates
+
+- Add component styling, improve a11y for Calendar and DatePicker. [[#139](https://github.com/coinbase/cds/pull/139)]
+
+## 8.53.1 (3/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: update RemoteImageGroup excess bg color. [[#512](https://github.com/coinbase/cds/pull/512)]
+
+## 8.53.0 (3/16/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update Checkbox borderRadius to match design. [[#509](https://github.com/coinbase/cds/pull/509)]
+
+#### 📘 Misc
+
+- Deprecate SegmentedControl. [[#493](https://github.com/coinbase/cds/pull/493)]
+
+## 8.52.2 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Configure control borderWidth and controlColor. [[#457](https://github.com/coinbase/cds/pull/457)]
+
+## 8.52.1 (3/11/2026 PST)
+
+#### 🐞 Fixes
+
+- Add keyboard scroll support to FocusTrap, Tray, and Modal. [[#481](https://github.com/coinbase/cds/pull/481)]
+
+## 8.52.0 (3/10/2026 PST)
+
+#### 🚀 Updates
+
+- A11y improvements to Fallback, Spinner, and LottieStatusAnimation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Simplify the ProgressBar component implementation. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Use shapeBorderRadius tokens in RemoteImage/RemoteImageGroup. [[#388](https://github.com/coinbase/cds/pull/388)]
+- Removed useFallbackShape implementation from web and reuse the same hook defined in common. [[#388](https://github.com/coinbase/cds/pull/388)]
+
+## 8.51.0 (3/9/2026 PST)
+
+#### 🚀 Updates
+
+- Added hasInteractiveContent prop to Tooltip to correctly handle keyboard navigation when content includes interactive elements. [[#469](https://github.com/coinbase/cds/pull/469)] [DX-5097]
+
+#### 🐞 Fixes
+
+- Fixed issue when tooltip does not announce its content when content is a React Node instead of a string. [[#469](https://github.com/coinbase/cds/pull/469)]
+
+## 8.50.0 (3/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: iconSize customization for IconButton. [[#474](https://github.com/coinbase/cds/pull/474)]
+
+## 8.49.2 (3/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Feat: improve deprecation notice in ListCell. [[#411](https://github.com/coinbase/cds/pull/411)]
+
+## 8.49.1 (3/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: spread tabs props at end for Tabs. [[#472](https://github.com/coinbase/cds/pull/472)]
+
+## 8.49.0 (2/26/2026 PST)
+
+#### 🚀 Updates
+
+- Add styles and classnames props to Tab components. [[#438](https://github.com/coinbase/cds/pull/438)]
+
+## 8.48.3 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: allow arrow up/down keys within focus trapped text area. [[#417](https://github.com/coinbase/cds/pull/417)]
+
+## 8.48.2 ((2/25/2026, 04:21 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.48.1 (2/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Truncate text mid-word in multi-select chips. [[#412](https://github.com/coinbase/cds/pull/412)]
+
+## 8.48.0 (2/24/2026 PST)
+
+#### 🚀 Updates
+
+- Add start/end icon/node support to Tag. [[#421](https://github.com/coinbase/cds/pull/421)]
+
+## 8.47.4 ((2/23/2026, 03:04 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.3 (2/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove behavior of scrolling inside TextInput updating numeric values. [[#413](https://github.com/coinbase/cds/pull/413)]
+
+## 8.47.2 ((2/19/2026, 03:18 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.1 ((2/19/2026, 01:18 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.47.0 (2/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: enable Button text customization via font props. [[#408](https://github.com/coinbase/cds/pull/408)]
+
+## 8.46.1 (2/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: (DX-5052) use previous active step value for calculating remaining steps to animate to for a completed stepper. [[#397](https://github.com/coinbase/cds/pull/397)] [DX-5052]
+
+## 8.46.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add open/close visibility delays to Tooltip. [[#234](https://github.com/coinbase/cds/pull/234)]
+
+## 8.45.0 (2/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add reduce motion support for Tray. [[#386](https://github.com/coinbase/cds/pull/386)]
+
+## 8.44.2 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Tray drag elastic. [[#385](https://github.com/coinbase/cds/pull/385)]
+
+## 8.44.1 (2/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Enabled customer to override the width prop in Banner so they can explicitly pass in a width for any bleed effect. [[#383](https://github.com/coinbase/cds/pull/383)]
+
+#### 📘 Misc
+
+- Update jsdocs for styles props. [[#384](https://github.com/coinbase/cds/pull/384)]
+
+## 8.44.0 (2/9/2026 PST)
+
+#### 🚀 Updates
+
+- Add new tray design. [[#349](https://github.com/coinbase/cds/pull/349)]
+
+## 8.43.2 ((2/9/2026, 09:05 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.43.1 (2/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Update chpi prop export. [[#328](https://github.com/coinbase/cds/pull/328)]
+- Add NavigationBar classNames. [[#328](https://github.com/coinbase/cds/pull/328)]
+
+## 8.43.0 (2/6/2026 PST)
+
+#### 🚀 Updates
+
+- Carousel autoplay. [[#361](https://github.com/coinbase/cds/pull/361)]
+
+## 8.42.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Added MediaCard, MessagingCard, and alpha DataCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+- Updated ContentCard. [[#329](https://github.com/coinbase/cds/pull/329)]
+
+## 8.41.0 (2/4/2026 PST)
+
+#### 🚀 Updates
+
+- Add align prop to Select and Combobox. [[#348](https://github.com/coinbase/cds/pull/348)]
+
+## 8.40.2 ((2/2/2026, 11:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.40.1 ((1/30/2026, 04:58 PM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Add descriptive names for generic types. [[#341](https://github.com/coinbase/cds/pull/341)] [DX-5037]
+
+## 8.40.0 ((1/28/2026, 11:12 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.39.1 (1/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix padding on Tab components. [[#330](https://github.com/coinbase/cds/pull/330)]
+
+## 8.39.0 (1/27/2026 PST)
+
+#### 🚀 Updates
+
+- Support Carousel looping. [[#327](https://github.com/coinbase/cds/pull/327)]
+
+## 8.38.7 (1/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Switch rendering with an unintended drop shadow. Add optional `elevation` prop to Control components (Switch, Checkbox, Radio). [[#325](https://github.com/coinbase/cds/pull/325)]
+
+## 8.38.6 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix(RadioCell): Adjusted Pressable to have a tabindex="-1" instead of 0. [CDS-1170]
+
+## 8.38.5 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Improve keyboard navigation and ARIA labels on Select and Combobox. [[#250](https://github.com/coinbase/cds/pull/250)]
+
+## 8.38.4 (1/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fixed spacing props not working on web Button.
+
+## 8.38.3 (1/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: destructure unused props from default horizontal stepper components to prevent dev mode React warnings. [[#324](https://github.com/coinbase/cds/pull/324)]
+
+## 8.38.2 (1/22/2026 PST)
+
+#### 🐞 Fixes
+
+- FocusTrap supports single focusable child and updates to its tests. [[#306](https://github.com/coinbase/cds/pull/306)]
+
+## 8.38.1 (1/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Support TextInput labelNode on compact and inside labelVariant. [[#293](https://github.com/coinbase/cds/pull/293)]
+
+#### 📘 Misc
+
+- Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
+
+#### 📘 Misc
+
+- Internal: update figma code connect config and some mapping files. [[#304](https://github.com/coinbase/cds/pull/304)]
+
+## 8.38.0 (1/14/2026 PST)
+
+#### 🚀 Updates
+
+- Add bordered prop to Select. [[#298](https://github.com/coinbase/cds/pull/298)]
+
+## 8.37.1 (1/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix focus shift bug for includeTriggerInFocusTrap prop being true in FocusTrap. [[#258](https://github.com/coinbase/cds/pull/258)]
+
+## 8.37.0 (1/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add state data attributes to Button and IconButton on web.
+
+## 8.36.3 (1/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove focus ring from inside label for Select. [[#299](https://github.com/coinbase/cds/pull/299)]
+
+## 8.36.2 ((1/7/2026, 10:19 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.36.1 (1/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Added customization for ListCell `titleStack`. [[#288](https://github.com/coinbase/cds/pull/288)] [DX-5075]
+
+## 8.36.0 ((1/6/2026, 01:00 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.35.1 (1/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix disableAnimateOnMount for progress bar label components. [[#284](https://github.com/coinbase/cds/pull/284)]
+
+## 8.35.0 (1/5/2026 PST)
+
+#### 🚀 Updates
+
+- Add border props to RemoteImageGroup.
+
+## 8.34.2 (1/2/2026 PST)
+
+#### 🐞 Fixes
+
+- Handle disableAnimateOnMount prop for web ProgressCircle. [[#280](https://github.com/coinbase/cds/pull/280)]
+
 ## 8.34.1 (12/23/2025 PST)
 
 #### 🐞 Fixes
@@ -167,7 +504,7 @@ This is an artificial version bump with no new change.
 
 #### 🐞 Fixes
 
-- Improve keyboard navigation for Tabs components and upadate ARIA roles. [[#96](https://github.com/coinbase/cds/pull/96)]
+- Improve keyboard navigation for Tabs components and update ARIA roles. [[#96](https://github.com/coinbase/cds/pull/96)]
 
 ## 8.25.0 (12/1/2025 PST)
 
@@ -249,7 +586,7 @@ This is an artificial version bump with no new change.
 
 - Fixed select alpha dropdown zIndex. [[#161](https://github.com/coinbase/cds/pull/161)]
 - Corrected ListCell spacingVariant jsdoc. [[#161](https://github.com/coinbase/cds/pull/161)]
-- Updated docs of FullscreenMoal and FullscreenModalLayout to show a more precise 3-column layout example. [[#161](https://github.com/coinbase/cds/pull/161)]
+- Updated docs of FullscreenModal and FullscreenModalLayout to show a more precise 3-column layout example. [[#161](https://github.com/coinbase/cds/pull/161)]
 
 ## 8.21.0 (11/12/2025 PST)
 

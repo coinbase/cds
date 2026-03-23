@@ -9,7 +9,7 @@ figma.connect(
   Coachmark,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=24997-8568',
   {
-    imports: ["import { Coachmark } from '@coinbase/cds-web/tour/Coachmark';"],
+    imports: ["import { Coachmark } from '@coinbase/cds-web/tour/Coachmark'"],
     props: {
       // onClose: figma.boolean('dismissable', {
       //   true: () => {},

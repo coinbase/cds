@@ -52,12 +52,22 @@ yarn nx run docs:dev
 ### Mobile App
 
 ```sh
-yarn nx run mobile-app:start
+# Launch local debug builds
+yarn nx run mobile-app:launch:ios-debug
+yarn nx run mobile-app:launch:android-debug
 ```
 
 ## Contributing
 
 We welcome contributions to the Coinbase Design System! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our development process, coding standards, and how to submit pull requests.
+
+## Versioning
+
+CDS generally follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+We aim to preserve type/public API compatibility across minor and patch releases.
+Visual changes are allowed in minor releases.
+Review changelog entries and validate UI when upgrading.
 
 ## Security
 

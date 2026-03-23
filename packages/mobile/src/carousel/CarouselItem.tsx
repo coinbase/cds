@@ -3,7 +3,8 @@ import React, { memo, useCallback, useEffect } from 'react';
 import { useLayout } from '../hooks/useLayout';
 import { Box } from '../layout/Box';
 
-import { type CarouselItemProps, useCarouselContext } from './Carousel';
+import type { CarouselItemProps } from './Carousel';
+import { useCarouselContext } from './CarouselContext';
 
 export const CarouselItem = memo(({ children, id, style, ...props }: CarouselItemProps) => {
   const { registerItem, unregisterItem, visibleCarouselItems } = useCarouselContext();

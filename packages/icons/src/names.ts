@@ -533,5 +533,11 @@ export const names: IconName[] = [
   'politicsCandidate',
   'ballot',
   'rain',
-  'airdropParachute'
+  'airdropParachute',
+  'birthcertificate',
+  'autoCar',
+  'webhooks',
+  'usdc',
+  'pieChartWithArrow',
+  'filterLineStack'
 ];

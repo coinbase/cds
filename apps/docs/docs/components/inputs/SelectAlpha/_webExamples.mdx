@@ -161,6 +161,66 @@ function MultiSelectWithGroupsExample() {
 }
 ```
 
+## Alignment
+
+The Select component supports aligning the selected value(s) using the `align` prop.
+
+::::note
+Left / right alignment is preferred for styling.
+::::
+
+```jsx live
+function AlignmentExample() {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [value, setValue] = useState('1');
+  const { value: multiValue, onChange: onMultiChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <VStack gap={2}>
+      <Select
+        label="Default align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        align="end"
+        label="End align"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        label="Default align - start"
+        onChange={onMultiChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+      <Select
+        align="end"
+        label="End align"
+        onChange={onMultiChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+}
+```
+
 ## Accessibility Props
 
 The Select component supports comprehensive accessibility features including custom labels and roles.
@@ -181,7 +241,8 @@ function AccessibilityExample() {
       value={value}
       onChange={setValue}
       options={options}
-      accessibilityLabel="Select task priority level"
+      accessibilityLabel="Task priority level options"
+      controlAccessibilityLabel="Select task priority level"
       accessibilityRoles={{
         dropdown: 'listbox',
         option: 'option',
@@ -1171,7 +1232,7 @@ function CustomClassNamesExamples() {
 
 ## Custom Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can pass a React Node to the `label` prop.
+You can pass a ReactNode to `label` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
 ```jsx live
 function CustomLabelExample() {
@@ -1186,10 +1247,11 @@ function CustomLabelExample() {
   return (
     <Select
       label={
-        <HStack alignItems="center" gap={1}>
-          Custom Label
+        <HStack alignItems="center">
+          <InputLabel>Custom Label</InputLabel>
+          {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
           <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+            <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
           </Tooltip>
         </HStack>
       }
@@ -1198,6 +1260,49 @@ function CustomLabelExample() {
       options={options}
       placeholder="Select an option"
     />
+  );
+}
+```
+
+## Borderless
+
+You can remove the border from the select control by setting `bordered` to `false`. Now Select will only show a border when focused.
+
+```jsx live
+function BorderlessExample() {
+  const [singleValue, setSingleValue] = useState('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered={false}
+        label="Borderless single select"
+        value={singleValue}
+        onChange={setSingleValue}
+        options={options}
+        placeholder="Select an option"
+      />
+
+      <Select
+        bordered={false}
+        type="multi"
+        label="Borderless multi select"
+        value={multiValue}
+        onChange={multiOnChange}
+        options={options}
+        placeholder="Select options"
+      />
+    </VStack>
   );
 }
 ```

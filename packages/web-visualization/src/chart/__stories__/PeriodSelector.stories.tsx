@@ -67,6 +67,25 @@ const MinWidthPeriodSelectorExample = () => {
   );
 };
 
+const PaddedPeriodSelectorExample = () => {
+  const tabs = [
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: 'YTD', label: 'YTD' },
+  ];
+  const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
+  return (
+    <PeriodSelector
+      activeTab={activeTab}
+      gap={2}
+      onChange={(tab) => setActiveTab(tab)}
+      padding={3}
+      tabs={tabs}
+      width="fit-content"
+    />
+  );
+};
+
 const LivePeriodSelectorExample = () => {
   const tabs = useMemo(
     () => [
@@ -299,6 +318,9 @@ export const All = () => {
       </Example>
       <Example title="Colored Excluding Live Period Selector">
         <ColoredExcludingLivePeriodSelectorExample />
+      </Example>
+      <Example title="With Padding">
+        <PaddedPeriodSelectorExample />
       </Example>
     </VStack>
   );

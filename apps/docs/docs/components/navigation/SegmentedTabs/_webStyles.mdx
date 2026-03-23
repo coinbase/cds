@@ -1,0 +1,35 @@
+import { useState, useCallback } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { SegmentedTabs } from '@coinbase/cds-web/tabs/SegmentedTabs';
+
+import webStylesData from ':docgen/web/tabs/SegmentedTabs/styles-data';
+
+export const SegmentedTabsExample = ({ classNames }) => {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      classNames={classNames}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+};
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <SegmentedTabsExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="SegmentedTabs" styles={webStylesData} />

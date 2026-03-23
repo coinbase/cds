@@ -121,6 +121,7 @@ export const ScrollableTray = ({
         <Tray
           ref={trayRef}
           disableCapturePanGestureToDismiss
+          disableSafeAreaPaddingBottom
           onCloseComplete={setIsTrayVisibleOff}
           title={title}
           verticalDrawerPercentageOfView={verticalDrawerPercentageOfView}

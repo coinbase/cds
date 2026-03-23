@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import { css } from '@linaria/core';
 
 import { Box } from '../layout/Box';
 import { Fallback } from '../layout/Fallback';
@@ -13,13 +15,26 @@ import type { ContentCellBaseProps } from './ContentCell';
 import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 import { MediaFallback } from './MediaFallback';
 
+const visuallyHiddenCss = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`;
+
 type ContentCellFallbackSpacingProps = Pick<
   ContentCellBaseProps,
   'innerSpacing' | 'outerSpacing' | 'spacingVariant'
 >;
 
 export type ContentCellFallbackProps = FallbackRectWidthProps &
-  ContentCellFallbackSpacingProps & {
+  ContentCellFallbackSpacingProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
     /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
@@ -53,6 +68,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
   spacingVariant = 'normal',
   innerSpacing,
   outerSpacing,
+  accessibilityLabel = 'Loading',
 }: ContentCellFallbackProps) {
   // We can't use ContentCell here as we need to account for percentage based widths.
   // Flexbox collides with percentages also, so we need to wrap in normal divs.
@@ -72,7 +88,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
       innerSpacing={
         innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
       }
-      media={media && <MediaFallback type={media} />}
+      media={media && <MediaFallback aria-hidden type={media} />}
       minHeight={minHeight}
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
@@ -87,10 +103,12 @@ export const ContentCellFallback = memo(function ContentCellFallback({
       }}
     >
       <Box paddingTop={spacingVariant === 'condensed' ? 0.5 : 0} style={fullWidthStyle}>
+        {accessibilityLabel && <span className={visuallyHiddenCss}>{accessibilityLabel}</span>}
         {meta && (
           <div style={floatStyle}>
             <Box flexShrink={0} justifyContent="flex-end">
               <Fallback
+                aria-hidden
                 percentage
                 disableRandomRectWidth={disableRandomRectWidth}
                 height={18}
@@ -103,6 +121,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
 
         {title && (
           <Fallback
+            aria-hidden
             percentage
             disableRandomRectWidth={disableRandomRectWidth}
             height={18}
@@ -112,6 +131,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
         )}
         {subtitle && (
           <Fallback
+            aria-hidden
             percentage
             disableRandomRectWidth={disableRandomRectWidth}
             height={subtitleHeight}
@@ -122,6 +142,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
         )}
         {description && (
           <Fallback
+            aria-hidden
             percentage
             disableRandomRectWidth={disableRandomRectWidth}
             height={24}

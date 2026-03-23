@@ -9,6 +9,8 @@ import {
   isValidBounds,
   type Series,
 } from './chart';
+import type { CartesianChartLayout } from './context';
+import { getPointOnScale } from './point';
 import {
   type ChartAxisScaleType,
   type ChartScaleFunction,
@@ -17,10 +19,42 @@ import {
   isCategoricalScale,
   isNumericScale,
   type NumericScale,
+  type PointAnchor,
 } from './scale';
 
 export const defaultAxisId = 'DEFAULT_AXIS_ID';
 export const defaultAxisScaleType = 'linear';
+
+/**
+ * Position options for band scale axis elements.
+ *
+ * - `'start'` - At the start of each step (before bar padding)
+ * - `'middle'` - At the center of each band
+ * - `'end'` - At the end of each step (after bar padding)
+ * - `'edges'` - At start of each tick, plus end for the last tick (encloses the chart)
+ *
+ * @note These properties only apply when using a band scale (`scaleType: 'band'`).
+ */
+export type AxisBandPlacement = 'start' | 'middle' | 'end' | 'edges';
+
+/**
+ * Converts an AxisBandPlacement to the corresponding PointAnchor for use with getPointOnScale.
+ *
+ * @param placement - The axis placement value
+ * @returns The corresponding PointAnchor for scale calculations
+ */
+export const toPointAnchor = (placement: AxisBandPlacement): PointAnchor => {
+  switch (placement) {
+    case 'edges': // edges uses stepStart for each tick, stepEnd handled separately
+    case 'start':
+      return 'stepStart';
+    case 'end':
+      return 'stepEnd';
+    case 'middle':
+    default:
+      return 'middle';
+  }
+};
 
 /**
  * Axis configuration with computed bounds
@@ -57,7 +91,7 @@ export type AxisConfig = {
 /**
  * Axis configuration without computed bounds (used for input)
  */
-export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
+export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
   /**
    * Unique identifier for this axis.
    */
@@ -86,6 +120,13 @@ export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
 };
 
+export type CartesianAxisConfig = AxisConfig & {
+  /**
+   * Domain limit type for numeric scales
+   */
+  domainLimit?: 'nice' | 'strict';
+};
+
 /**
  * Gets a D3 scale based on the axis configuration.
  * Handles both numeric (linear/log) and categorical (band) scales.
@@ -93,27 +134,42 @@ export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
  * For numeric scales, the domain limit controls whether bounds are "nice" (human-friendly)
  * or "strict" (exact min/max). Range can be customized using function-based configuration.
  *
+ * Range inversion is determined by axis role (category vs value) and layout:
+ * - Vertical layout: Y axis (value) is inverted for SVG coordinate system
+ * - Horizontal layout: Y axis (category) is inverted (first category at top)
+ *
  * @param params - Scale parameters
  * @returns The D3 scale function
  * @throws An Error if bounds are invalid
  */
-export const getAxisScale = ({
+export const getCartesianAxisScale = ({
   config,
   type,
   range,
   dataDomain,
+  layout = 'vertical',
 }: {
-  config?: AxisConfig;
+  config?: CartesianAxisConfig;
   type: 'x' | 'y';
   range: AxisBounds;
   dataDomain: AxisBounds;
+  layout?: CartesianChartLayout;
 }): ChartScaleFunction => {
   const scaleType = config?.scaleType ?? 'linear';
 
   let adjustedRange = range;
 
-  // Invert range for Y axis for SVG coordinate system
-  if (type === 'y') {
+  // Determine if this axis needs range inversion for SVG coordinate system.
+  // SVG Y coordinates increase downward, so we need to invert for value axes
+  // where we want higher values at the top.
+  //
+  // For vertical layout: Y axis is the value axis → invert (higher values at top)
+  // For horizontal layout: Y axis is the category axis → don't invert (first category at top is natural)
+  // X axis never needs inversion (left-to-right is natural for both layouts)
+
+  const shouldInvertRange = type === 'y' && layout !== 'horizontal';
+
+  if (shouldInvertRange) {
     adjustedRange = { min: adjustedRange.max, max: adjustedRange.min };
   }
 
@@ -128,7 +184,7 @@ export const getAxisScale = ({
 
   if (!isValidBounds(adjustedDomain))
     throw new Error(
-      'Invalid domain bounds. See https://cds.coinbase.com/http://localhost:3000/components/graphs/XAxis/#domain',
+      'Invalid domain bounds. See https://cds.coinbase.com/components/charts/XAxis/#domain',
     );
 
   if (scaleType === 'band') {
@@ -163,11 +219,16 @@ export const getAxisScale = ({
  */
 export const getAxisConfig = (
   type: 'x' | 'y',
-  axes: Partial<AxisConfigProps> | Partial<AxisConfigProps>[] | undefined,
+  axes: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[] | undefined,
   defaultId: string = defaultAxisId,
   defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
-): AxisConfigProps[] => {
+): CartesianAxisConfigProps[] => {
   const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
+  const axisName = type === 'x' ? 'x-axis' : 'y-axis';
+  const axisDocUrl =
+    type === 'x'
+      ? 'https://cds.coinbase.com/components/charts/XAxis'
+      : 'https://cds.coinbase.com/components/charts/YAxis';
   if (!axes) {
     return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
   }
@@ -177,21 +238,37 @@ export const getAxisConfig = (
     // forces id to be defined on every input config when there are multiple axes
     if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
       throw new Error(
-        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/graphs/YAxis/#multiple-y-axes.',
+        `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
       );
+    }
+
+    if (axesLength > 1) {
+      const ids = axes.map(({ id }) => id).filter((id): id is string => id !== undefined);
+      if (new Set(ids).size !== ids.length) {
+        throw new Error(
+          `When defining multiple ${axisName}, each must have a unique id. See ${axisDocUrl}.`,
+        );
+      }
     }
 
     return axes.map(({ id, ...axis }) => ({
       // defaults the axis id if only a single axis is provided
-      id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
+      id: axesLength > 1 ? (id ?? defaultAxisId) : (id ?? defaultId),
       scaleType: defaultScaleType,
       domainLimit: defaultDomainLimit,
       ...axis,
-    }));
+    })) as CartesianAxisConfigProps[];
   }
 
   // Single axis config
-  return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit, ...axes }];
+  return [
+    {
+      id: defaultId,
+      scaleType: defaultScaleType,
+      domainLimit: defaultDomainLimit,
+      ...axes,
+    } as CartesianAxisConfigProps,
+  ];
 };
 
 /**
@@ -201,12 +278,14 @@ export const getAxisConfig = (
  * @param axisParam - The axis configuration
  * @param series - Array of series objects (for stacking support)
  * @param axisType - Whether this is an 'x' or 'y' axis
+ * @param layout - Chart layout ('horizontal' or 'vertical')
  * @returns The calculated axis bounds
  */
-export const getAxisDomain = (
-  axisParam: AxisConfigProps,
+export const getCartesianAxisDomain = (
+  axisParam: CartesianAxisConfigProps,
   series: Series[],
   axisType: 'x' | 'y',
+  layout: CartesianChartLayout = 'vertical',
 ): AxisBounds => {
   let dataDomain: AxisBounds | null = null;
   if (axisParam.data && Array.isArray(axisParam.data) && axisParam.data.length > 0) {
@@ -230,7 +309,11 @@ export const getAxisDomain = (
   }
 
   // Calculate domain from series data
-  const seriesDomain = axisType === 'x' ? getChartDomain(series) : getChartRange(series);
+  // In vertical layout: X is category (index), Y is value (value)
+  // In horizontal layout: Y is category (index), X is value (value)
+  const isCategoryAxis =
+    (layout !== 'horizontal' && axisType === 'x') || (layout === 'horizontal' && axisType === 'y');
+  const seriesDomain = isCategoryAxis ? getChartDomain(series) : getChartRange(series);
 
   // If data sets the domain, use that instead of the series domain
   const preferredDataDomain = dataDomain ?? seriesDomain;
@@ -273,7 +356,7 @@ export const getAxisDomain = (
  * @returns The calculated axis range bounds
  */
 export const getAxisRange = (
-  axisParam: AxisConfigProps,
+  axisParam: CartesianAxisConfigProps,
   chartRect: Rect,
   axisType: 'x' | 'y',
 ): AxisBounds => {
@@ -324,6 +407,12 @@ type TickGenerationOptions = {
    * @default 4
    */
   minTickCount?: number;
+  /**
+   * Anchor position for band/categorical scales.
+   * Controls where tick labels are positioned within each band.
+   * @default 'middle'
+   */
+  anchor?: PointAnchor;
 };
 
 export type GetAxisTicksDataProps = {
@@ -623,23 +712,20 @@ export const getAxisTicksData = ({
   tickInterval,
   options,
 }: GetAxisTicksDataProps): Array<{ tick: number; position: number }> => {
+  const anchor = options?.anchor ?? 'middle';
+
   // Handle band scales
   if (isCategoricalScale(scaleFunction)) {
+    const bandScale = scaleFunction;
+
     // If explicit ticks are provided as array, use them
     if (Array.isArray(ticks)) {
       return ticks
         .filter((index) => index >= 0 && index < categories.length)
-        .map((index) => {
-          // Band scales expect numeric indices, not category strings
-          const position = scaleFunction(index);
-          if (position === undefined) return null;
-
-          return {
-            tick: index,
-            position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
-          };
-        })
-        .filter(Boolean) as Array<{ tick: number; position: number }>;
+        .map((index) => ({
+          tick: index,
+          position: getPointOnScale(index, bandScale, anchor),
+        }));
     }
 
     // If a tick function is provided, use it to filter
@@ -648,36 +734,20 @@ export const getAxisTicksData = ({
         .map((category, index) => {
           if (!ticks(index)) return null;
 
-          // Band scales expect numeric indices, not category strings
-          const position = scaleFunction(index);
-          if (position === undefined) return null;
-
           return {
             tick: index,
-            position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
+            position: getPointOnScale(index, bandScale, anchor),
           };
         })
         .filter(Boolean) as Array<{ tick: number; position: number }>;
     }
 
-    if (typeof ticks === 'boolean' && !ticks) {
-      return [];
-    }
-
     // For band scales without explicit ticks, show all categories
     // requestedTickCount is ignored for categorical scales - use ticks parameter to control visibility
-    return categories
-      .map((category, index) => {
-        // Band scales expect numeric indices, not category strings
-        const position = scaleFunction(index);
-        if (position === undefined) return null;
-
-        return {
-          tick: index,
-          position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
-        };
-      })
-      .filter(Boolean) as Array<{ tick: number; position: number }>;
+    return categories.map((_, index) => ({
+      tick: index,
+      position: getPointOnScale(index, bandScale, anchor),
+    }));
   }
 
   // Handle numeric scales

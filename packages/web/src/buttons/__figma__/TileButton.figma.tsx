@@ -7,7 +7,7 @@ figma.connect(
   TileButton,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=286%3A18370',
   {
-    imports: ["import { TileButton } from '@coinbase/cds-web/buttons/TileButton';"],
+    imports: ["import { TileButton } from '@coinbase/cds-web/buttons/TileButton'"],
     props: {
       title: figma.string('product text'),
       children: figma.instance('product logo'),

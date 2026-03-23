@@ -1,12 +1,21 @@
-import { memo, useEffect, useState } from 'react';
-import { Button } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { useDerivedValue } from 'react-native-reanimated';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { VStack } from '@coinbase/cds-mobile/layout';
+import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography';
+import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 
 import { XAxis, YAxis } from '../../axis';
-import { CartesianChart } from '../../CartesianChart';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
+import { useCartesianChartContext } from '../../ChartProvider';
+import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { Scrubber } from '../../scrubber';
+import { getPointOnSerializableScale, unwrapAnimatedValue, useScrubberContext } from '../../utils';
+import type { BarComponentProps } from '../Bar';
 import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
@@ -102,7 +111,7 @@ const CustomBarStackComponent = memo(({ children, ...props }: BarStackComponentP
         borderRadius={1000}
         fill={theme.color.bgTertiary}
         height={diameter}
-        originY={props.y}
+        origin={props.y}
         width={diameter}
         x={props.x}
         y={props.y - diameter}
@@ -595,50 +604,638 @@ const ColorMapWithOpacity = () => {
   );
 };
 
-const BarChartStories = () => {
+const BandGridPositionExample = ({
+  position,
+}: {
+  position: 'start' | 'middle' | 'end' | 'edges';
+}) => (
+  <CartesianChart
+    height={180}
+    inset={4}
+    series={[{ id: 'data', data: [30, 50, 40, 60, 35] }]}
+    xAxis={{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }}
+    yAxis={{ domain: { min: 0 } }}
+  >
+    <XAxis showGrid showLine bandGridLinePlacement={position} label={position} />
+    <BarPlot />
+  </CartesianChart>
+);
+
+// --- Composed Examples ---
+
+const candlestickStockData = btcCandles.slice(0, 90).reverse();
+
+const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
+  const formatPrice = useCallback((price: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(parseFloat(price));
+  }, []);
+
+  const formatThousandsPriceNumber = useCallback((price: number) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const currentText = useMemo(() => {
+    if (currentIndex !== undefined) {
+      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
+        parseFloat(candlestickStockData[currentIndex].close),
+      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
+    }
+    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
+  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
+
   return (
-    <ExampleScreen>
-      <Example title="Basic">
-        <UpdatingChartValues />
-      </Example>
-      <Example title="Animated Auto-Updating">
-        <AnimatedUpdatingChartValues />
-      </Example>
-      <Example title="Negative Values with Top Axis">
-        <NegativeValuesWithTopAxis />
-      </Example>
-      <Example title="Positive and Negative Cash Flow">
-        <PositiveAndNegativeCashFlow />
-      </Example>
-      <Example title="Fiat & Stablecoin Balance">
-        <FiatAndStablecoinBalance />
-      </Example>
-      <Example title="Monthly Rewards">
-        <MonthlyRewards />
-      </Example>
-      <Example title="Multiple Y Axes">
-        <MultipleYAxes />
-      </Example>
-      <Example title="Y-Axis Continuous ColorMap">
-        <YAxisContinuousColorMap />
-      </Example>
-      <Example title="Y-Axis Discrete ColorMap">
-        <YAxisDiscreteColorMap />
-      </Example>
-      <Example title="X-Axis Continuous ColorMap">
-        <XAxisContinuousColorMap />
-      </Example>
-      <Example title="X-Axis Discrete ColorMap">
-        <XAxisDiscreteColorMap />
-      </Example>
-      <Example title="X-Axis Multi-Segment ColorMap">
-        <XAxisMultiSegmentColorMap />
-      </Example>
-      <Example title="ColorMap with Opacity">
-        <ColorMapWithOpacity />
-      </Example>
-    </ExampleScreen>
+    <Text aria-live="polite" font="headline">
+      {currentText}
+    </Text>
+  );
+});
+
+const CandlesticksChart = memo(
+  ({
+    infoTextId,
+    onScrubberPositionChange,
+  }: {
+    infoTextId: string;
+    onScrubberPositionChange: (index: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
+    const min = useMemo(
+      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
+      [],
+    );
+
+    const CandleThinSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={1} />
+    ));
+
+    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
+      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+
+      const rectWidth = useMemo(() => {
+        if (xScale !== undefined && xScale.type === 'band') {
+          return xScale.bandwidth;
+        }
+        return 0;
+      }, [xScale]);
+
+      const xPos = useDerivedValue(() => {
+        const position = unwrapAnimatedValue(scrubberPosition);
+        const xPos =
+          position !== undefined && xScale
+            ? getPointOnSerializableScale(position, xScale)
+            : undefined;
+        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
+      }, [scrubberPosition, xScale]);
+
+      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
+
+      return (
+        <Rect
+          color={stroke}
+          height={drawingArea.height}
+          opacity={opacity}
+          width={rectWidth}
+          x={xPos}
+          y={drawingArea.y}
+        />
+      );
+    });
+
+    const candlesData = useMemo(
+      () =>
+        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
+          number,
+          number,
+        ][],
+      [],
+    );
+
+    const CandlestickBarComponent = memo<BarComponentProps>(
+      ({ x, y, width, height, dataX, ...props }) => {
+        const { getYScale } = useCartesianChartContext();
+        const yScale = getYScale();
+
+        const wickX = x + width / 2;
+
+        const timePeriodValue = candlestickStockData[dataX as number];
+
+        const open = parseFloat(timePeriodValue.open);
+        const close = parseFloat(timePeriodValue.close);
+
+        const bullish = open < close;
+        const theme = useTheme();
+        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
+        const openY = yScale?.(open) ?? 0;
+        const closeY = yScale?.(close) ?? 0;
+
+        const bodyHeight = Math.abs(openY - closeY);
+        const bodyY = openY < closeY ? openY : closeY;
+
+        return (
+          <>
+            <SkiaLine
+              color={color}
+              p1={{ x: wickX, y }}
+              p2={{ x: wickX, y: y + height }}
+              strokeWidth={1}
+            />
+            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+          </>
+        );
+      },
+    );
+
+    const formatThousandsPriceNumber = useCallback((price: number) => {
+      const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000);
+
+      return `${formattedPrice}k`;
+    }, []);
+
+    const formatTime = useCallback((index: number | null) => {
+      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
+      const ts = parseInt(candlestickStockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    }, []);
+
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const candle = candlestickStockData[index];
+        return `${formatTime(index)}: O ${formatThousandsPriceNumber(parseFloat(candle.open))} H ${formatThousandsPriceNumber(parseFloat(candle.high))} L ${formatThousandsPriceNumber(parseFloat(candle.low))} C ${formatThousandsPriceNumber(parseFloat(candle.close))}`;
+      },
+      [formatTime, formatThousandsPriceNumber],
+    );
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        accessibilityLabel={`Candlestick chart with ${candlesData.length} data points. Swipe to navigate.`}
+        animate={false}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={onScrubberPositionChange}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+        }}
+        yAxis={{
+          domain: { min },
+        }}
+      >
+        <XAxis tickLabelFormatter={formatTime} />
+        <YAxis
+          showGrid
+          GridLineComponent={CandleThinSolidLine}
+          tickLabelFormatter={formatThousandsPriceNumber}
+          width={40}
+        />
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke={theme.color.fgMuted}
+          seriesIds={[]}
+        />
+        <BarPlot
+          BarComponent={CandlestickBarComponent}
+          BarStackComponent={({ children }) => <>{children}</>}
+        />
+      </CartesianChart>
+    );
+  },
+);
+
+const Candlesticks = () => {
+  const infoTextId = useId();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <CandlesticksHeader currentIndex={currentIndex} />
+      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
+    </VStack>
   );
 };
 
-export default BarChartStories;
+const DAY_LENGTH_MINUTES = 1440;
+
+type SunlightChartData = Array<{
+  label: string;
+  value: number;
+}>;
+
+const sunlightData: SunlightChartData = [
+  { label: 'Jan', value: 598 },
+  { label: 'Feb', value: 635 },
+  { label: 'Mar', value: 688 },
+  { label: 'Apr', value: 753 },
+  { label: 'May', value: 812 },
+  { label: 'Jun', value: 855 },
+  { label: 'Jul', value: 861 },
+  { label: 'Aug', value: 828 },
+  { label: 'Sep', value: 772 },
+  { label: 'Oct', value: 710 },
+  { label: 'Nov', value: 648 },
+  { label: 'Dec', value: 605 },
+];
+
+const SunlightChartInner = memo(
+  ({
+    data,
+    height = 300,
+    ...props
+  }: Omit<CartesianChartProps, 'series' | 'children'> & { data: SunlightChartData }) => {
+    const theme = useTheme();
+
+    const SunlightThinSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={1} />
+    ));
+
+    return (
+      <CartesianChart
+        {...props}
+        height={height}
+        series={[
+          {
+            id: 'sunlight',
+            data: data.map(({ value }) => value),
+            yAxisId: 'sunlight',
+            color: `rgb(${theme.spectrum.yellow40})`,
+          },
+          {
+            id: 'day',
+            data: data.map(() => DAY_LENGTH_MINUTES),
+            yAxisId: 'day',
+            color: `rgb(${theme.spectrum.blue100})`,
+          },
+        ]}
+        xAxis={{
+          ...props.xAxis,
+          scaleType: 'band',
+          data: data.map(({ label }) => label),
+        }}
+        yAxis={[
+          {
+            id: 'day',
+            domain: { min: 0, max: DAY_LENGTH_MINUTES },
+            domainLimit: 'strict',
+          },
+          {
+            id: 'sunlight',
+            domain: { min: 0, max: DAY_LENGTH_MINUTES },
+            domainLimit: 'strict',
+          },
+        ]}
+      >
+        <YAxis
+          showGrid
+          showLine
+          GridLineComponent={SunlightThinSolidLine}
+          axisId="day"
+          position="left"
+        />
+        <XAxis showLine />
+        <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+        <BarPlot
+          borderRadius={0}
+          seriesIds={['sunlight']}
+          transitions={{
+            enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1000 },
+          }}
+        />
+      </CartesianChart>
+    );
+  },
+);
+
+const SunlightChart = () => {
+  return (
+    <VStack gap={2}>
+      <SunlightChartInner data={sunlightData} />
+      <Text color="fgMuted" font="caption" textAlign="center">
+        2026 Sunlight data for the first day of each month in Atlanta, Georgia, provided by NOAA.
+      </Text>
+    </VStack>
+  );
+};
+
+const PriceRange = () => {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data: [number, number][] = useMemo(
+    () => candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]),
+    [candles],
+  );
+
+  const min = useMemo(() => Math.min(...data.map(([low]) => low)), [data]);
+  const max = useMemo(() => Math.max(...data.map(([, high]) => high)), [data]);
+
+  const tickFormatter = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      showYAxis
+      height={150}
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+    />
+  );
+};
+
+const HorizontalBarChart = () => {
+  const labels = ['BTC', 'ETH', 'SOL', 'ADA'];
+  const allocation = [42, 28, 18, 12];
+
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={220}
+      layout="horizontal"
+      series={[{ id: 'allocation', data: allocation, color: assets.btc.color }]}
+      xAxis={{ domain: { min: 0, max: 50 }, tickLabelFormatter: (value) => `${value}%` }}
+      yAxis={{ data: labels, scaleType: 'band' }}
+    />
+  );
+};
+
+const PopulationPyramid = () => {
+  const theme = useTheme();
+
+  const ageGroups = [
+    '100+ yrs',
+    '95-99 yrs',
+    '90-94 yrs',
+    '85-89 yrs',
+    '80-84 yrs',
+    '75-79 yrs',
+    '70-74 yrs',
+    '65-69 yrs',
+    '60-64 yrs',
+    '55-59 yrs',
+    '50-54 yrs',
+    '45-49 yrs',
+    '40-44 yrs',
+    '35-39 yrs',
+    '30-34 yrs',
+    '25-29 yrs',
+    '20-24 yrs',
+    '15-19 yrs',
+    '10-14 yrs',
+    '5-9 yrs',
+    '0-4 yrs',
+  ];
+
+  const malePopulation = [
+    14587, 48604, 83560, 128957, 184152, 248505, 498683, 706420, 852333, 939629, 1002195, 1001264,
+    960282, 1161371, 1105023, 1061755, 1019343, 1023264, 1026330, 984773, 944071,
+  ];
+
+  const femalePopulation = [
+    14122, 46974, 80768, 124663, 178043, 240293, 482271, 683270, 824525, 909115, 969807, 969070,
+    929571, 1122380, 1068050, 1026356, 985483, 989404, 992505, 952453, 913222,
+  ];
+
+  const numberWithSuffixFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+      }),
+    [],
+  );
+
+  const tickLabelFormatter = useCallback(
+    (value: number) => numberWithSuffixFormatter.format(Math.abs(value)),
+    [numberWithSuffixFormatter],
+  );
+
+  const domainSymmetric = useCallback((bounds: { min: number; max: number }) => {
+    const extremum = Math.max(-bounds.min, bounds.max);
+    const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
+    return { min: -roundedExtremum, max: roundedExtremum };
+  }, []);
+
+  const series = [
+    {
+      id: 'male',
+      label: 'Male',
+      data: malePopulation.map((population) => -population),
+      color: `rgb(${theme.spectrum.blue40})`,
+      stackId: 'population',
+    },
+    {
+      id: 'female',
+      label: 'Female',
+      data: femalePopulation,
+      color: `rgb(${theme.spectrum.pink40})`,
+      stackId: 'population',
+    },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showXAxis
+        showYAxis
+        stacked
+        borderRadius={2}
+        height={550}
+        inset={0}
+        layout="horizontal"
+        series={series}
+        xAxis={{
+          domain: domainSymmetric,
+          GridLineComponent: ThinSolidLine,
+          showGrid: true,
+          showLine: true,
+          showTickMarks: true,
+          tickLabelFormatter,
+        }}
+        yAxis={{
+          bandTickMarkPlacement: 'edges',
+          data: ageGroups,
+          position: 'left',
+          showLine: true,
+          showTickMarks: true,
+          width: 80,
+        }}
+      >
+        <ReferenceLine LineComponent={SolidLine} dataX={0} />
+      </BarChart>
+    </VStack>
+  );
+};
+
+type ExampleItem = {
+  title: string;
+  component: React.ReactNode;
+};
+
+function ExampleNavigator() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const examples = useMemo<ExampleItem[]>(
+    () => [
+      {
+        title: 'Basic',
+        component: <UpdatingChartValues />,
+      },
+      {
+        title: 'Animated Auto-Updating',
+        component: <AnimatedUpdatingChartValues />,
+      },
+      {
+        title: 'Negative Values with Top Axis',
+        component: <NegativeValuesWithTopAxis />,
+      },
+      {
+        title: 'Positive and Negative Cash Flow',
+        component: <PositiveAndNegativeCashFlow />,
+      },
+      {
+        title: 'Fiat & Stablecoin Balance',
+        component: <FiatAndStablecoinBalance />,
+      },
+      {
+        title: 'Monthly Rewards',
+        component: <MonthlyRewards />,
+      },
+      {
+        title: 'Multiple Y Axes',
+        component: <MultipleYAxes />,
+      },
+      {
+        title: 'Y-Axis Continuous ColorMap',
+        component: <YAxisContinuousColorMap />,
+      },
+      {
+        title: 'Y-Axis Discrete ColorMap',
+        component: <YAxisDiscreteColorMap />,
+      },
+      {
+        title: 'X-Axis Continuous ColorMap',
+        component: <XAxisContinuousColorMap />,
+      },
+      {
+        title: 'X-Axis Discrete ColorMap',
+        component: <XAxisDiscreteColorMap />,
+      },
+      {
+        title: 'X-Axis Multi-Segment ColorMap',
+        component: <XAxisMultiSegmentColorMap />,
+      },
+      {
+        title: 'ColorMap with Opacity',
+        component: <ColorMapWithOpacity />,
+      },
+      {
+        title: 'Band Grid Position',
+        component: (
+          <VStack gap={2}>
+            <BandGridPositionExample position="edges" />
+            <BandGridPositionExample position="start" />
+            <BandGridPositionExample position="middle" />
+            <BandGridPositionExample position="end" />
+          </VStack>
+        ),
+      },
+      {
+        title: 'Candlesticks',
+        component: <Candlesticks />,
+      },
+      {
+        title: 'Monthly Sunlight',
+        component: <SunlightChart />,
+      },
+      {
+        title: 'Price Range',
+        component: <PriceRange />,
+      },
+      {
+        title: 'Horizontal Layout',
+        component: <HorizontalBarChart />,
+      },
+      {
+        title: 'Population Pyramid',
+        component: <PopulationPyramid />,
+      },
+    ],
+    [],
+  );
+
+  const currentExample = examples[currentIndex];
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
+  }, [examples.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1 + examples.length) % examples.length);
+  }, [examples.length]);
+
+  return (
+    <ExampleScreen paddingX={0}>
+      <VStack gap={4}>
+        <HStack alignItems="center" justifyContent="space-between" padding={2}>
+          <IconButton
+            accessibilityHint="Navigate to previous example"
+            accessibilityLabel="Previous"
+            name="arrowLeft"
+            onPress={handlePrevious}
+            variant="secondary"
+          />
+          <VStack alignItems="center">
+            <Text font="title3">{currentExample.title}</Text>
+            <Text color="fgMuted" font="label1">
+              {currentIndex + 1} / {examples.length}
+            </Text>
+          </VStack>
+          <IconButton
+            accessibilityHint="Navigate to next example"
+            accessibilityLabel="Next"
+            name="arrowRight"
+            onPress={handleNext}
+            variant="secondary"
+          />
+        </HStack>
+        <Box padding={1}>{currentExample.component}</Box>
+      </VStack>
+    </ExampleScreen>
+  );
+}
+
+export default ExampleNavigator;

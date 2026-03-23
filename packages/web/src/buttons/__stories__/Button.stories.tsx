@@ -37,6 +37,15 @@ const buttonStories: Omit<ButtonBaseProps, 'children'>[] = [
   { startIcon: 'backArrow', endIcon: 'forwardArrow', compact: true },
   { startIcon: 'backArrow', compact: true },
   { endIcon: 'forwardArrow', compact: true },
+  { padding: 5 },
+  { paddingX: 5, padding: 4 },
+  { paddingY: 4 },
+  { paddingStart: 6, paddingEnd: 6 },
+  { paddingTop: 6, paddingBottom: 6 },
+  { marginStart: -2 },
+  { font: 'body' },
+  { font: 'title3' },
+  { fontSize: 'title3', fontWeight: 'body' },
 ];
 
 const onClickConsole = () => console.log('clicked');

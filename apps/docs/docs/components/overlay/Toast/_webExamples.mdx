@@ -1,78 +1,342 @@
-### Get Started
-
-1. Add `PortalProvider` to the root of your app if it doesn't exist.
-2. Import the `useToast` hook: `import { useToast } from '@coinbase/cds-web/overlays/useToast'`;
-3. Show a toast
-
-```jsx
-const toast = useToast();
-toast.show('Copied to clipboard');
-```
-
-### Basic Example
+Use the `useToast` hook to show toasts. Call `toast.show()` with a message to display a temporary notification.
 
 ```jsx live
-function ToastExample() {
-  function BasicToast() {
-    const toast = useToast();
-    const [toastText, setToastText] = useState('Copied to clipboard');
+function BasicToastExample() {
+  const toast = useToast();
 
-    const handleShowToast = useCallback(() => {
-      toast.show(toastText, {
-        action: { label: 'Action', onClick: () => console.log('action pressed') },
-        onWillHide: () => {
-          console.log('toast hiding');
-        },
-        onDidHide: () => {
-          console.log('toast hidden');
-        },
-      });
-    }, [toast, toastText]);
+  return <Button onClick={() => toast.show('Copied to clipboard')}>Show Toast</Button>;
+}
+```
 
-    const handleNoAction = () => toast.show(toastText);
+## Actions
 
-    const handleNoClose = () =>
-      toast.show(toastText, {
-        action: { label: 'Action', onPress: () => console.log('action pressed') },
-        hideCloseButton: true,
-      });
+Add an action button to the toast for quick user actions like "Undo" or "View".
 
-    const handleTextOnly = () => toast.show(toastText, { hideCloseButton: true });
+```jsx live
+function ToastWithActionExample() {
+  const toast = useToast();
 
-    const handleBottomOffset = () => {
-      toast.show('Toast copy', {
-        bottomOffset: 100,
-      });
-    };
+  const handleAction = useCallback(() => {
+    toast.show('Message sent', {
+      action: {
+        label: 'Undo',
+        onPress: () => console.log('Undo pressed'),
+      },
+    });
+  }, [toast]);
 
-    const handleVariant = () => {
-      toast.show('Toast copy', {
+  return <Button onClick={handleAction}>Send Message</Button>;
+}
+```
+
+### Without Close Button
+
+Hide the close button when you want a cleaner appearance or when the toast should only be dismissed via the action or timeout.
+
+```jsx live
+function ToastWithoutCloseExample() {
+  const toast = useToast();
+
+  const handleAction = useCallback(() => {
+    toast.show('Item deleted', {
+      action: {
+        label: 'Undo',
+        onPress: () => console.log('Restored'),
+      },
+      hideCloseButton: true,
+    });
+  }, [toast]);
+
+  return <Button onClick={handleAction}>Delete Item</Button>;
+}
+```
+
+## Duration
+
+Toast duration is automatically calculated based on content length:
+
+- Base duration: 5 seconds
+- With action: +2 seconds
+- Long text (>50 characters): +0.3s per 10 additional characters
+
+You can override the automatic calculation by providing a custom `duration` in milliseconds.
+
+```jsx live
+function CustomDurationExample() {
+  const toast = useToast();
+
+  return (
+    <HStack gap={2}>
+      <Button onClick={() => toast.show('Quick message', { duration: 2000 })}>Short (2s)</Button>
+      <Button onClick={() => toast.show('This message stays longer', { duration: 10000 })}>
+        Long (10s)
+      </Button>
+    </HStack>
+  );
+}
+```
+
+## Positioning
+
+Use `bottomOffset` to adjust the vertical position of the toast. This is useful when you have bottom navigation or other fixed elements.
+
+```jsx live
+function BottomOffsetExample() {
+  const toast = useToast();
+
+  return (
+    <HStack gap={2}>
+      <Button onClick={() => toast.show('Default position')}>Default</Button>
+      <Button onClick={() => toast.show('Higher position', { bottomOffset: 100 })}>
+        With Offset (100px)
+      </Button>
+    </HStack>
+  );
+}
+```
+
+## Styling
+
+### Variants
+
+Use the `variant` prop to change the color surge effect on the toast background. This helps communicate the nature of the notification.
+
+```jsx live
+function VariantExample() {
+  const toast = useToast();
+
+  return (
+    <HStack gap={2} flexWrap="wrap">
+      <Button onClick={() => toast.show('Default toast')}>Default</Button>
+      <Button onClick={() => toast.show('Success!', { variant: 'bgPositive' })}>Positive</Button>
+      <Button onClick={() => toast.show('Error occurred', { variant: 'bgNegative' })}>
+        Negative
+      </Button>
+      <Button onClick={() => toast.show('Warning', { variant: 'bgWarning' })}>Warning</Button>
+    </HStack>
+  );
+}
+```
+
+## Lifecycle Callbacks
+
+Use `onWillHide` and `onDidHide` to respond to toast dismissal. This is useful for cleanup or triggering subsequent actions.
+
+```jsx live
+function LifecycleCallbacksExample() {
+  const toast = useToast();
+  const [status, setStatus] = useState('Ready');
+
+  const handleShow = useCallback(() => {
+    setStatus('Toast visible');
+    toast.show('Saving changes...', {
+      onWillHide: () => setStatus('Toast hiding...'),
+      onDidHide: () => setStatus('Toast hidden'),
+    });
+  }, [toast]);
+
+  return (
+    <VStack gap={2} alignItems="flex-start">
+      <Text font="label2">Status: {status}</Text>
+      <Button onClick={handleShow}>Show Toast</Button>
+    </VStack>
+  );
+}
+```
+
+## Programmatic Control
+
+### Hiding Toasts
+
+Use `toast.hide()` to programmatically dismiss the current toast.
+
+```jsx live
+function HideToastExample() {
+  const toast = useToast();
+
+  const showLongToast = useCallback(() => {
+    toast.show('This toast will stay until dismissed', { duration: 30000 });
+  }, [toast]);
+
+  return (
+    <HStack gap={2}>
+      <Button onClick={showLongToast}>Show Long Toast</Button>
+      <Button variant="secondary" onClick={() => toast.hide()}>
+        Hide Toast
+      </Button>
+    </HStack>
+  );
+}
+```
+
+### Clearing the Queue
+
+When multiple toasts are triggered, they queue up. Use `toast.clearQueue()` to remove all pending toasts.
+
+```jsx live
+function ClearQueueExample() {
+  const toast = useToast();
+
+  const showMultiple = useCallback(() => {
+    toast.show('First toast');
+    toast.show('Second toast');
+    toast.show('Third toast');
+  }, [toast]);
+
+  return (
+    <HStack gap={2}>
+      <Button onClick={showMultiple}>Queue 3 Toasts</Button>
+      <Button variant="secondary" onClick={() => toast.clearQueue()}>
+        Clear Queue
+      </Button>
+    </HStack>
+  );
+}
+```
+
+## Accessibility
+
+Toast uses `role="alert"` for screen reader announcements. On web, the toast persists when the user hovers over it, giving them time to read the content.
+
+For internationalization, you can customize the close button's accessibility label:
+
+```jsx live
+function AccessibilityExample() {
+  const toast = useToast();
+
+  const handleShow = useCallback(() => {
+    toast.show('Configuración guardada', {
+      closeButtonAccessibilityProps: {
+        accessibilityLabel: 'cerrar',
+      },
+    });
+  }, [toast]);
+
+  return <Button onClick={handleShow}>Mostrar Toast (Spanish)</Button>;
+}
+```
+
+## Composed Examples
+
+### Form Submission Feedback
+
+A common pattern is showing toast feedback after form actions.
+
+```jsx live
+function FormSubmissionExample() {
+  const toast = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setIsSubmitting(false);
+    toast.show('Profile updated successfully', {
+      variant: 'bgPositive',
+      action: {
+        label: 'View',
+        onPress: () => console.log('Navigate to profile'),
+      },
+    });
+  }, [toast]);
+
+  return (
+    <VStack gap={3} alignItems="flex-start">
+      <TextInput label="Display name" placeholder="Enter your name" />
+      <Button onClick={handleSubmit} disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save Changes'}
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Clipboard Copy
+
+Provide feedback when copying content to the clipboard.
+
+```jsx live
+function ClipboardCopyExample() {
+  const toast = useToast();
+  const walletAddress = '0x1234...5678';
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText('0x1234567890abcdef1234567890abcdef12345678');
+      toast.show('Address copied to clipboard');
+    } catch (err) {
+      toast.show('Failed to copy', { variant: 'bgNegative' });
+    }
+  }, [toast]);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Text font="mono">{walletAddress}</Text>
+      <IconButton name="copy" onClick={handleCopy} accessibilityLabel="Copy address" />
+    </HStack>
+  );
+}
+```
+
+### Undo Delete Action
+
+Implement an undo pattern for destructive actions.
+
+```jsx live
+function UndoDeleteExample() {
+  const toast = useToast();
+  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+  const deletedItemRef = useRef(null);
+
+  const handleDelete = useCallback(
+    (index) => {
+      const deletedItem = items[index];
+      deletedItemRef.current = { item: deletedItem, index };
+
+      setItems((prev) => prev.filter((_, i) => i !== index));
+
+      toast.show(`"${deletedItem}" deleted`, {
         variant: 'bgNegative',
+        action: {
+          label: 'Undo',
+          onPress: () => {
+            if (deletedItemRef.current) {
+              setItems((prev) => {
+                const newItems = [...prev];
+                newItems.splice(deletedItemRef.current.index, 0, deletedItemRef.current.item);
+                return newItems;
+              });
+              deletedItemRef.current = null;
+            }
+          },
+        },
       });
-    };
+    },
+    [items, toast],
+  );
 
-    return (
-      <>
-        <Box paddingBottom={3}>
-          <TextInput
-            label="Toast text"
-            placeholder="Type anything to show in toast"
-            value={toastText}
-            onChange={(e) => setToastText(e.target.value)}
+  return (
+    <VStack gap={2} alignItems="flex-start">
+      {items.map((item, index) => (
+        <HStack key={item} gap={2} alignItems="center">
+          <Text font="body">{item}</Text>
+          <IconButton
+            name="trashCan"
+            variant="foregroundMuted"
+            onClick={() => handleDelete(index)}
+            accessibilityLabel={`Delete ${item}`}
           />
-        </Box>
-        <HStack gap={1} flexWrap="wrap">
-          <Button onClick={handleShowToast}>Show Toast</Button>
-          <Button onClick={handleNoAction}>No Action</Button>
-          <Button onClick={handleNoClose}>No Close</Button>
-          <Button onClick={handleTextOnly}>Text Only</Button>
-          <Button onClick={handleBottomOffset}>Bottom Offset</Button>
-          <Button onClick={handleVariant}>Variant</Button>
         </HStack>
-      </>
-    );
-  }
-
-  return <BasicToast />;
+      ))}
+      {items.length === 0 && (
+        <Text font="body" color="foregroundMuted">
+          No items
+        </Text>
+      )}
+    </VStack>
+  );
 }
 ```

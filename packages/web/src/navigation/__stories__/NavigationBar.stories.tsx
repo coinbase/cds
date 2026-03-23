@@ -2,8 +2,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { AvatarButton, Button, IconButton } from '../../buttons';
 import { SearchInput } from '../../controls';
+import { useBreakpoints } from '../../hooks/useBreakpoints';
 import { LogoMark } from '../../icons';
 import { HStack, VStack } from '../../layout';
+import { Avatar } from '../../media';
 import { TabNavigation } from '../../tabs';
 import { Text } from '../../typography/Text';
 import { NavigationBar } from '../NavigationBar';
@@ -16,13 +18,15 @@ export default {
 };
 
 const a11ySkipConfig = {
-  config: {
+  options: {
     /**
      * The TabNavigation docs explain the proper way to setup the tabpanel.
      * Disabled because CDS TabNavigation doesn't have associated panels.
      * @link https://cds.coinbase.com/components/tab-navigation#accessibility
      * */
-    rules: [{ id: 'aria-valid-attr-value', enabled: false }],
+    rules: {
+      'aria-valid-attr-value': { enabled: false },
+    },
   },
 };
 
@@ -63,15 +67,15 @@ export const NavigationBarFullExampleDefault = () => {
         bottom={<TabNavigation onChange={handleTabChange} tabs={tabs} value={value} />}
         end={
           <HStack alignItems="center" gap={1}>
-            <IconButton name="helpCenterQuestionMark" />
+            <IconButton accessibilityLabel="Help Center" name="helpCenterQuestionMark" />
             <IconButton
               active
               accessibilityLabel="Notifications"
               name="bell"
               onClick={() => handlePress('Notifications')}
             />
-            <IconButton name="appSwitcher" />
-            <IconButton active name="profile" />
+            <IconButton accessibilityLabel="App Switcher" name="appSwitcher" />
+            <IconButton active accessibilityLabel="Profile" name="profile" />
           </HStack>
         }
         start={
@@ -105,12 +109,17 @@ export const NavigationBarMobileExample = () => {
       <NavigationBar
         end={
           <HStack alignItems="center" gap={1}>
-            <IconButton compact name="search" variant="secondary" />
-            <IconButton compact name="appSwitcher" variant="secondary" />
+            <IconButton compact accessibilityLabel="Search" name="search" variant="secondary" />
+            <IconButton
+              compact
+              accessibilityLabel="App Switcher"
+              name="appSwitcher"
+              variant="secondary"
+            />
             <AvatarButton compact alt="User" name="Sam Smith" />
           </HStack>
         }
-        start={<IconButton compact transparent name="hamburger" />}
+        start={<IconButton compact transparent accessibilityLabel="Hamburger" name="hamburger" />}
       >
         <LogoMark size={32} />
       </NavigationBar>
@@ -143,13 +152,27 @@ export const NavigationBarWithSearch = () => {
               </Button>
             </HStack>
             <HStack gap={1}>
-              <IconButton active compact name="search" variant="secondary" />
-              <IconButton active compact name="appSwitcher" variant="secondary" />
+              <IconButton
+                active
+                compact
+                accessibilityLabel="Search"
+                name="search"
+                variant="secondary"
+              />
+              <IconButton
+                active
+                compact
+                accessibilityLabel="App Switcher"
+                name="appSwitcher"
+                variant="secondary"
+              />
               <AvatarButton compact alt="User" name="Sam Smith" />
             </HStack>
           </HStack>
         }
-        start={<IconButton compact name="backArrow" variant="secondary" />}
+        start={
+          <IconButton compact accessibilityLabel="Back" name="backArrow" variant="secondary" />
+        }
       >
         <NavigationTitle>Page Title</NavigationTitle>
       </NavigationBar>
@@ -240,6 +263,230 @@ export const NavigationBarWithCustomPadding = () => {
       </Text>
       <NavigationBar paddingBottom={4} paddingTop={4} paddingX={6}>
         <NavigationTitle>Extended Padding Example</NavigationTitle>
+      </NavigationBar>
+    </VStack>
+  );
+};
+
+export const NavigationBarBasic = () => {
+  return (
+    <VStack alignItems="flex-start">
+      <Text as="h1" display="block" font="title1">
+        Basic NavigationBar
+      </Text>
+      <NavigationBar
+        end={
+          <HStack alignItems="center" gap={1}>
+            <IconButton accessibilityLabel="Notifications" name="bell" />
+            <Avatar size="xl" />
+          </HStack>
+        }
+        start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+      >
+        <NavigationTitle>Dashboard</NavigationTitle>
+      </NavigationBar>
+    </VStack>
+  );
+};
+
+export const NavigationBarWithTabs = () => {
+  const tabItems = [
+    { id: 'all', label: 'All' },
+    { id: 'watchlist', label: 'Watchlist' },
+    { id: 'tradable', label: 'Tradable' },
+    { id: 'gainers', label: 'Gainers' },
+  ];
+  const [value, setValue] = useState(tabItems[0].id);
+
+  return (
+    <VStack alignItems="flex-start">
+      <Text as="h1" display="block" font="title1">
+        NavigationBar with Tab Navigation
+      </Text>
+      <NavigationBar
+        bottom={<TabNavigation onChange={setValue} tabs={tabItems} value={value} />}
+        end={
+          <HStack alignItems="center" gap={1}>
+            <IconButton accessibilityLabel="Notifications" name="bell" />
+            <Avatar size="xl" />
+          </HStack>
+        }
+      >
+        <NavigationTitle>Portfolio</NavigationTitle>
+      </NavigationBar>
+    </VStack>
+  );
+};
+
+NavigationBarWithTabs.parameters = {
+  a11y: a11ySkipConfig,
+};
+
+export const NavigationBarWithCustomBackground = () => {
+  return (
+    <VStack alignItems="flex-start" gap={4}>
+      <Text as="h1" display="block" font="title1">
+        NavigationBar with custom backgrounds
+      </Text>
+      <VStack gap={2} width="100%">
+        <Text font="body">Default background (bg)</Text>
+        <NavigationBar
+          end={<IconButton accessibilityLabel="Settings" name="settings" />}
+          start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+        >
+          <NavigationTitle>Default Background</NavigationTitle>
+        </NavigationBar>
+      </VStack>
+      <VStack gap={2} width="100%">
+        <Text font="body">Secondary background (bgSecondary)</Text>
+        <NavigationBar
+          background="bgSecondary"
+          end={<IconButton accessibilityLabel="Settings" name="settings" />}
+          start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+        >
+          <NavigationTitle>Secondary Background</NavigationTitle>
+        </NavigationBar>
+      </VStack>
+      <VStack gap={2} width="100%">
+        <Text font="body">Tertiary background (bgTertiary)</Text>
+        <NavigationBar
+          background="bgTertiary"
+          end={<IconButton accessibilityLabel="Settings" name="settings" />}
+          start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+        >
+          <NavigationTitle>Tertiary Background</NavigationTitle>
+        </NavigationBar>
+      </VStack>
+    </VStack>
+  );
+};
+
+export const NavigationBarResponsive = () => {
+  const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { isPhone } = useBreakpoints();
+
+  const handleSearchToggle = useCallback(() => {
+    setSearchOpen((prev) => !prev);
+    if (searchOpen) {
+      setSearch('');
+    }
+  }, [searchOpen]);
+
+  return (
+    <VStack alignItems="flex-start">
+      <Text as="h1" display="block" font="title1">
+        Responsive NavigationBar
+      </Text>
+      <Text as="p" display="block" font="body">
+        Resize the window to see the search input collapse to an icon button on smaller screens.
+      </Text>
+      <NavigationBar
+        background="bgSecondary"
+        end={
+          <HStack alignItems="center" gap={1}>
+            {isPhone && (
+              <IconButton
+                accessibilityLabel="Search"
+                active={searchOpen}
+                name="search"
+                onClick={handleSearchToggle}
+              />
+            )}
+            <IconButton accessibilityLabel="Notifications" name="bell" />
+            <Avatar size="xl" />
+          </HStack>
+        }
+        start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+      >
+        {isPhone ? (
+          searchOpen && (
+            <SearchInput
+              compact
+              accessibilityLabel="Search"
+              onChangeText={setSearch}
+              placeholder="Search..."
+              value={search}
+            />
+          )
+        ) : (
+          <SearchInput
+            compact
+            accessibilityLabel="Search"
+            onChangeText={setSearch}
+            placeholder="Search assets..."
+            value={search}
+          />
+        )}
+        {!isPhone && !searchOpen && <NavigationTitle>Trading</NavigationTitle>}
+      </NavigationBar>
+    </VStack>
+  );
+};
+
+export const NavigationBarWithCustomGap = () => {
+  return (
+    <VStack alignItems="flex-start" gap={4}>
+      <Text as="h1" display="block" font="title1">
+        NavigationBar with custom gap
+      </Text>
+      <VStack gap={2} width="100%">
+        <Text font="body">Custom column gap (4)</Text>
+        <NavigationBar
+          columnGap={4}
+          end={<IconButton accessibilityLabel="Settings" name="settings" />}
+          start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+        >
+          <NavigationTitle>Wide Column Gap</NavigationTitle>
+        </NavigationBar>
+      </VStack>
+      <VStack gap={2} width="100%">
+        <Text font="body">Custom row gap with tabs (4)</Text>
+        <NavigationBar
+          bottom={
+            <TabNavigation
+              onChange={() => {}}
+              tabs={[
+                { id: 'tab1', label: 'Tab 1' },
+                { id: 'tab2', label: 'Tab 2' },
+              ]}
+              value="tab1"
+            />
+          }
+          end={<IconButton accessibilityLabel="Settings" name="settings" />}
+          rowGap={4}
+        >
+          <NavigationTitle>Wide Row Gap</NavigationTitle>
+        </NavigationBar>
+      </VStack>
+    </VStack>
+  );
+};
+
+NavigationBarWithCustomGap.parameters = {
+  a11y: a11ySkipConfig,
+};
+
+export const NavigationBarWithCustomStyles = () => {
+  return (
+    <VStack alignItems="flex-start" gap={4}>
+      <Text as="h1" display="block" font="title1">
+        NavigationBar with custom styles and classNames
+      </Text>
+      <NavigationBar
+        end={
+          <HStack alignItems="center" gap={1}>
+            <IconButton accessibilityLabel="Notifications" name="bell" />
+            <Avatar size="xl" />
+          </HStack>
+        }
+        start={<IconButton accessibilityLabel="Back" name="backArrow" />}
+        styles={{
+          root: { borderBottomWidth: 2 },
+          content: { justifyContent: 'center' },
+        }}
+      >
+        <NavigationTitle>Centered Title</NavigationTitle>
       </NavigationBar>
     </VStack>
   );

@@ -11,6 +11,11 @@
     {
       "label": "TextInput",
       "url": "/components/inputs/TextInput/"
+    },
+    {
+      "label": "Calendar",
+      "url": "/components/other/Calendar/"
     }
-  ]
+  ],
+  "dependencies": []
 }

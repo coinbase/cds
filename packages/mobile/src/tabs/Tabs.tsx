@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { type StyleProp, View, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -48,32 +48,46 @@ export type TabsActiveIndicatorProps = {
   activeTabRect: Rect;
 } & BoxProps;
 
-export type TabComponent<T extends string = string> = React.FC<TabValue<T>>;
+export type TabComponentProps<TabId extends string = string> = TabValue<TabId> & {
+  style?: StyleProp<ViewStyle>;
+};
+
+export type TabComponent<TabId extends string = string> = React.FC<TabComponentProps<TabId>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-export type TabsBaseProps<T extends string = string> = {
+export type TabsBaseProps<TabId extends string = string> = {
   /** The array of tabs data. Each tab may optionally define a custom Component to render. */
-  tabs: (TabValue<T> & { Component?: TabComponent<T> })[];
+  tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
   /** The default Component to render each tab. */
-  TabComponent: TabComponent<T>;
+  TabComponent: TabComponent<TabId>;
   /** The default Component to render the tabs active indicator. */
   TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
   /** Background color passed to the TabsActiveIndicatorComponent. */
   activeBackground?: ThemeVars.Color;
   /** Optional callback to receive the active tab element. */
   onActiveTabElementChange?: (element: View | null) => void;
-} & Omit<TabsOptions<T>, 'tabs'>;
+  /** Custom styles for individual elements of the Tabs component */
+  styles?: {
+    /** Root container element */
+    root?: StyleProp<ViewStyle>;
+    /** Tab element */
+    tab?: StyleProp<ViewStyle>;
+    /** Active indicator element */
+    activeIndicator?: StyleProp<ViewStyle>;
+  };
+} & Omit<TabsOptions<TabId>, 'tabs'>;
 
-export type TabsProps<T extends string = string> = TabsBaseProps<T> & Omit<HStackProps, 'onChange'>;
+export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
+  Omit<HStackProps, 'onChange'>;
 
-type TabsFC = <T extends string = string>(
-  props: TabsProps<T> & { ref?: React.ForwardedRef<View> },
+type TabsFC = <TabId extends string = string>(
+  props: TabsProps<TabId> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 const TabsComponent = memo(
   forwardRef(
-    <T extends string>(
+    <TabId extends string>(
       {
         tabs,
         TabComponent,
@@ -82,20 +96,27 @@ const TabsComponent = memo(
         activeTab,
         disabled,
         onChange,
+        styles,
+        style,
         role = 'tablist',
         position = 'relative',
         alignSelf = 'flex-start',
         opacity,
         onActiveTabElementChange,
+        borderRadius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         ...props
-      }: TabsProps<T>,
+      }: TabsProps<TabId>,
       ref: React.ForwardedRef<View>,
     ) => {
       const tabsContainerRef = useRef<View>(null);
       useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
 
       const refMap = useRefMap<View>();
-      const api = useTabs({ tabs, activeTab, disabled, onChange });
+      const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
 
       const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
       const previousActiveRef = useRef(activeTab);
@@ -127,22 +148,34 @@ const TabsComponent = memo(
         <HStack
           ref={tabsContainerRef}
           alignSelf={alignSelf}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderRadius={borderRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
           onLayout={updateActiveTabRect}
           opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
           position={position}
           role={role}
+          style={styles?.root ? [style, styles.root] : style}
           {...props}
         >
           <TabsContext.Provider value={api as TabsApi<string>}>
             <TabsActiveIndicatorComponent
               activeTabRect={activeTabRect}
               background={activeBackground}
+              borderBottomLeftRadius={borderBottomLeftRadius}
+              borderBottomRightRadius={borderBottomRightRadius}
+              borderRadius={borderRadius}
+              borderTopLeftRadius={borderTopLeftRadius}
+              borderTopRightRadius={borderTopRightRadius}
+              style={styles?.activeIndicator}
             />
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab disabled={tabDisabled} id={id} {...props} />
+                  <RenderedTab disabled={tabDisabled} id={id} style={styles?.tab} {...props} />
                 </TabContainer>
               );
             })}
@@ -160,10 +193,11 @@ export const Tabs = TabsComponent as TabsFC;
 export const TabsActiveIndicator = ({
   activeTabRect,
   position = 'absolute',
+  style,
   ...props
 }: TabsActiveIndicatorProps) => {
   const previousActiveTabRect = useRef(activeTabRect);
-  const newActiveTabRect = { x: activeTabRect.x, width: activeTabRect.width };
+  const newActiveTabRect = { x: activeTabRect.x, y: activeTabRect.y, width: activeTabRect.width };
   const animatedTabRect = useSharedValue(newActiveTabRect);
   const isFirstRenderWithWidth =
     previousActiveTabRect.current.width === 0 && activeTabRect.width > 0;
@@ -177,7 +211,7 @@ export const TabsActiveIndicator = ({
 
   const animatedBoxStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateX: animatedTabRect.value.x }],
+      transform: [{ translateX: animatedTabRect.value.x }, { translateY: animatedTabRect.value.y }],
       width: animatedTabRect.value.width,
     }),
     [animatedTabRect],
@@ -189,7 +223,7 @@ export const TabsActiveIndicator = ({
       height={activeTabRect.height}
       position={position}
       role="none"
-      style={animatedBoxStyle}
+      style={[animatedBoxStyle, style]}
       testID="tabs-active-indicator"
       {...props}
     />

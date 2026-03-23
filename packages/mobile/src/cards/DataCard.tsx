@@ -1,3 +1,38 @@
+/**
+ * @deprecated This component is deprecated. Please use the alpha `DataCard` from `@coinbase/cds-mobile/alpha/data-card` instead.
+ *
+ * ### Migration Guide
+ *
+ * The new `DataCard` provides more flexibility with custom layouts and visualization components.
+ *
+ * **Before:**
+ * ```jsx
+ * <DataCard
+ *   title="Progress"
+ *   description="45% complete"
+ *   progress={0.45}
+ *   progressVariant="bar"
+ *   startLabel="0"
+ *   endLabel="45"
+ * />
+ * ```
+ *
+ * **After:**
+ * ```jsx
+ * import { DataCard } from '@coinbase/cds-mobile/alpha/data-card';
+ *
+ * <DataCard
+ *   title="Progress"
+ *   subtitle="45% complete"
+ *   layout="vertical"
+ *   thumbnail={<RemoteImage source={{ uri: assetUrl }} shape="circle" size="l" />}
+ * >
+ *   <ProgressBarWithFixedLabels startLabel={0} endLabel={45} labelPlacement="below">
+ *     <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+ *   </ProgressBarWithFixedLabels>
+ * </DataCard>
+ * ```
+ */
 import { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { defaultMediaSize } from '@coinbase/cds-common/tokens/card';

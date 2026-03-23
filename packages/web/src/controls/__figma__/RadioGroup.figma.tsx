@@ -10,8 +10,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=355-14414&m=dev',
   {
     imports: [
-      "import { ControlGroup } from '@coinbase/cds-web/controls/ControlGroup';",
-      "import { Radio } from '@coinbase/cds-web/controls/Radio';",
+      "import { ControlGroup } from '@coinbase/cds-web/controls/ControlGroup'",
+      "import { Radio } from '@coinbase/cds-web/controls/Radio'",
     ],
     props: {
       options: figma.enum('quantity', {

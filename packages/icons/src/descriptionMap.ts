@@ -307,7 +307,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'smartContract',
     'paperclip',
     'list',
-    'document'
+    'document',
+    'birthcertificate'
   ],
   '📄': [
     'taxes',
@@ -706,7 +707,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'sortDownCenter',
     'sortDown',
     'more',
-    'sortDoubleArrow'
+    'sortDoubleArrow',
+    'filterLineStack'
   ],
   '🍡': [
     'moreVertical'
@@ -1016,7 +1018,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'briefcaseAlt',
     'pillCapsule',
     'singlecloud',
-    'rain'
+    'rain',
+    'autoCar'
   ],
   'profile': [
     'account',
@@ -1275,7 +1278,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'doubleChevronRight',
     'directDepositIcon',
     'sendReceive',
-    'distribution'
+    'distribution',
+    'pieChartWithArrow'
   ],
   'payment': [
     'directDeposit',
@@ -1832,7 +1836,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'creatorCoin',
     'distribution',
     'baseQuickBuy',
-    'stableCoin'
+    'stableCoin',
+    'usdc'
   ],
   'defi': [
     'defi'
@@ -2446,7 +2451,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'horizontalLine',
     'chartLine',
     'chartLine',
-    'lineChartCrypto'
+    'lineChartCrypto',
+    'filterLineStack'
   ],
   'calendar': [
     'calendar',
@@ -4994,7 +5000,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'gasFees'
   ],
   'cost': [
-    'gasFees'
+    'gasFees',
+    'usdc'
   ],
   'pump': [
     'gasFees',
@@ -5008,7 +5015,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'car': [
     'gasFees',
-    'car'
+    'car',
+    'autoCar'
   ],
   '⛽️': [
     'gasFees'
@@ -5559,7 +5567,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'dataStack'
   ],
   'stack': [
-    'dataStack'
+    'dataStack',
+    'filterLineStack'
   ],
   '✖️': [
     'plusMinus'
@@ -5698,7 +5707,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'instantUnstakingClock'
   ],
   'auto': [
-    'auto'
+    'auto',
+    'autoCar'
   ],
   'creator': [
     'creatorCoin'
@@ -5708,7 +5718,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'piechart': [
     'allocation',
-    'pieChartData'
+    'pieChartData',
+    'pieChartWithArrow'
   ],
   'Verification': [
     'baseVerification'
@@ -6501,5 +6512,38 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'candidate': [
     'politicsCandidate'
+  ],
+  'birthcertificate': [
+    'birthcertificate'
+  ],
+  'birth': [
+    'birthcertificate'
+  ],
+  'certificate': [
+    'birthcertificate'
+  ],
+  'doc': [
+    'birthcertificate'
+  ],
+  'webhooks': [
+    'webhooks'
+  ],
+  'web': [
+    'webhooks'
+  ],
+  'hooks': [
+    'webhooks'
+  ],
+  'usdc': [
+    'usdc'
+  ],
+  'fixed': [
+    'usdc'
+  ],
+  'transferStocks': [
+    'pieChartWithArrow'
+  ],
+  'stocks': [
+    'pieChartWithArrow'
   ]
 };

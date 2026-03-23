@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-// timer for single execution
+// Timer for single execution
 export const useTimer = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
   const startTimeRef = useRef<number>(0);
@@ -12,13 +12,13 @@ export const useTimer = () => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = undefined;
-      isPausedRef.current = false;
     }
+    isPausedRef.current = false;
   }, []);
 
   const start = useCallback(
     (callback: () => void, duration: number) => {
-      // clear existing timer
+      // Clear existing timer
       clear();
 
       timerRef.current = setTimeout(callback, duration);
@@ -46,6 +46,24 @@ export const useTimer = () => {
     }
   }, [start]);
 
+  const getRemainingTime = useCallback(() => {
+    if (isPausedRef.current) {
+      return remainingTimeRef.current;
+    }
+    if (!timerRef.current) {
+      return 0;
+    }
+    const elapsed = Date.now() - startTimeRef.current;
+    return Math.max(0, remainingTimeRef.current - elapsed);
+  }, []);
+
+  const reset = useCallback(() => {
+    clear();
+    remainingTimeRef.current = 0;
+    callbackRef.current = undefined;
+    isPausedRef.current = false;
+  }, [clear]);
+
   useEffect(() => {
     return () => {
       clear();
@@ -58,7 +76,9 @@ export const useTimer = () => {
       clear,
       pause,
       resume,
+      getRemainingTime,
+      reset,
     }),
-    [start, clear, pause, resume],
+    [start, clear, pause, resume, getRemainingTime, reset],
   );
 };

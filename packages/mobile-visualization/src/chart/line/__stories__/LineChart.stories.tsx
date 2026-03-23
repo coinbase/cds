@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { View } from 'react-native';
 import {
   useAnimatedReaction,
@@ -8,18 +8,20 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { useTheme } from '@coinbase/cds-mobile';
+import { DataCard } from '@coinbase/cds-mobile/alpha/data-card/DataCard';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
+import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-mobile/system';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
@@ -29,8 +31,6 @@ import {
   Circle,
   FontWeight,
   Group,
-  Line as SkiaLine,
-  Rect,
   Skia,
   type SkTextStyle,
   TextAlign,
@@ -38,27 +38,20 @@ import {
 
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
-import { BarChart, type BarComponentProps, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../point';
 import {
   DefaultScrubberBeacon,
-  DefaultScrubberBeaconLabel,
-  DefaultScrubberLabel,
   Scrubber,
-  type ScrubberBeaconLabelProps,
   type ScrubberBeaconProps,
-  type ScrubberLabelProps,
   type ScrubberRef,
 } from '../../scrubber';
 import {
   type AxisBounds,
   buildTransition,
   defaultTransition,
-  getLineData,
-  getPointOnSerializableScale,
   projectPointWithSerializableScale,
   type Transition,
   unwrapAnimatedValue,
@@ -69,7 +62,6 @@ import {
   type DottedLineProps,
   Line,
   LineChart,
-  type LineComponentProps,
   ReferenceLine,
   SolidLine,
   type SolidLineProps,
@@ -77,7 +69,6 @@ import {
 
 function MultipleLine() {
   const theme = useTheme();
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const pages = useMemo(
     () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
     [],
@@ -86,11 +77,11 @@ function MultipleLine() {
   const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
+  const chartAccessibilityHint = 'Swipe left or right to hear details for each page.';
 
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
-    },
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`,
     [pages, pageViews, uniqueVisitors],
   );
 
@@ -99,22 +90,16 @@ function MultipleLine() {
     [],
   );
 
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
-
   return (
     <LineChart
       enableScrubbing
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={chartAccessibilityHint}
+      accessibilityLabel={`${chartAccessibilityLabel} ${chartAccessibilityHint}`}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'pageViews',
@@ -147,25 +132,15 @@ function MultipleLine() {
 }
 
 function DataFormat() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
   const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
-    },
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`,
     [xData, yData],
   );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
     <LineChart
@@ -174,11 +149,11 @@ function DataFormat() {
       showArea
       showXAxis
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={chartAccessibilityLabel}
       curve="natural"
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'line',
@@ -207,6 +182,12 @@ function LiveUpdates() {
   }, []);
 
   const [priceData, setPriceData] = useState(initialData);
+
+  const chartAccessibilityLabel = `Live price chart with ${priceData.length} data points.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${priceData[index]}`,
+    [priceData],
+  );
 
   const lastDataPointTimeRef = useRef(Date.now());
   const updateCountRef = useRef(0);
@@ -257,6 +238,8 @@ function LiveUpdates() {
     <LineChart
       enableScrubbing
       showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ right: 64 }}
       series={[
@@ -274,9 +257,24 @@ function LiveUpdates() {
 
 function MissingData() {
   const theme = useTheme();
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-  const pageViews = [2400, 1398, null, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, null, 2780, 1890, 2390, 3490];
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, null, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, null, 2780, 1890, 2390, 3490], []);
+
+  const chartAccessibilityLabel = `Website visitors across ${pages.length} pages. Some data points are missing.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      const pv = pageViews[index];
+      const uv = uniqueVisitors[index];
+      const pvStr = pv != null ? pv : 'no data';
+      const uvStr = uv != null ? uv : 'no data';
+      return `${pages[index]}: ${pvStr} views, ${uvStr} unique visitors.`;
+    },
+    [pages, pageViews, uniqueVisitors],
+  );
 
   const numberFormatter = useCallback(
     (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
@@ -290,6 +288,8 @@ function MissingData() {
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -324,6 +324,13 @@ function MissingData() {
 
 function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${data[index]}`,
+    [data],
+  );
 
   return (
     <VStack gap={2}>
@@ -335,14 +342,11 @@ function Interaction() {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         onScrubberPositionChange={setScrubberPosition}
-        series={[
-          {
-            id: 'prices',
-            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-          },
-        ]}
+        series={[{ id: 'prices', data }]}
       >
         <Scrubber />
       </LineChart>
@@ -489,9 +493,17 @@ function Transitions() {
       ],
     };
 
+    const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => `Point ${index + 1}: ${valueAtIndexFormatter(index)}`,
+      [valueAtIndexFormatter],
+    );
+
     return (
       <CartesianChart
         enableScrubbing
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
         inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
         series={[
@@ -524,7 +536,6 @@ function Transitions() {
 }
 
 function BasicAccessible() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
   // Chart-level accessibility label provides overview
@@ -533,29 +544,19 @@ function BasicAccessible() {
     return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
   }, [data]);
 
-  // Scrubber-level accessibility label provides specific position info
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
-    },
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Price at position ${index + 1} of ${data.length}: ${data[index]}`,
     [data],
   );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
     <LineChart
       enableScrubbing
       showArea
       showYAxis
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
-      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
           id: 'prices',
@@ -722,9 +723,17 @@ function GainLossChart() {
     />
   ));
 
+  const chartAccessibilityLabel = `Price chart with ${data.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${tickLabelFormatter(data[index])}`,
+    [data, tickLabelFormatter],
+  );
+
   return (
     <CartesianChart
       enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -785,9 +794,19 @@ function HighLowPrice() {
 
 function StylingScrubber() {
   const theme = useTheme();
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
+
+  const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `${pages[index]}: ${pageViews[index]} views, ${uniqueVisitors[index]} unique visitors.`,
+    [pages, pageViews, uniqueVisitors],
+  );
 
   const numberFormatter = useCallback(
     (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
@@ -800,6 +819,8 @@ function StylingScrubber() {
       showArea
       showXAxis
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -1041,6 +1062,16 @@ function AssetPriceWithDottedArea() {
       return `${dayOfWeek}, ${monthDay}, ${time}`;
     }, []);
 
+    const chartAccessibilityLabel = `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}.`;
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const price = formatPrice(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `${price} ${date}`;
+      },
+      [formatDate, formatPrice, sparklineTimePeriodDataTimestamps, sparklineTimePeriodDataValues],
+    );
+
     return (
       <VStack gap={2}>
         <SectionHeader
@@ -1055,7 +1086,9 @@ function AssetPriceWithDottedArea() {
         <LineChart
           enableScrubbing
           showArea
+          accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
+          getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
           height={200}
           inset={{ top: 52 }}
           series={[
@@ -1128,7 +1161,7 @@ const LegendDot = memo((props: BoxBaseProps) => {
   return <Box borderRadius={1000} height={10} width={10} {...props} />;
 });
 
-const LegendItem = memo(
+const LegendEntry = memo(
   ({
     color = assets.btc.color,
     label,
@@ -1176,17 +1209,17 @@ const PerformanceHeader = memo(
 
     return (
       <HStack gap={1} paddingX={1}>
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgPositive}
           label="High Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
         />
-        <LegendItem
+        <LegendEntry
           color={assets.btc.color}
           label="Actual Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
         />
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgNegative}
           label="Low Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
@@ -1249,12 +1282,29 @@ const PerformanceChart = memo(
       [formatDate, sparklineTimePeriodDataTimestamps],
     );
 
+    const chartAccessibilityLabel = `Bitcoin price chart with high, actual, and low series. ${sparklineTimePeriodDataValues.length} data points. Swipe to navigate.`;
+    const getScrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const price = formatPriceThousands(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `Point ${index + 1}: ${price}, ${date}`;
+      },
+      [
+        formatDate,
+        formatPriceThousands,
+        sparklineTimePeriodDataTimestamps,
+        sparklineTimePeriodDataValues,
+      ],
+    );
+
     return (
       <LineChart
         enableScrubbing
         showArea
         showYAxis
+        accessibilityLabel={chartAccessibilityLabel}
         areaType="dotted"
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
@@ -1324,215 +1374,6 @@ function Performance() {
       />
       <PerformanceChart onScrubberPositionChange={setScrubberPosition} timePeriod={timePeriod} />
       <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
-    </VStack>
-  );
-}
-
-const candlestickStockData = btcCandles.slice(0, 90).reverse();
-
-const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
-  const formatPrice = useCallback((price: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(parseFloat(price));
-  }, []);
-
-  const formatThousandsPriceNumber = useCallback((price: number) => {
-    const formattedPrice = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price / 1000);
-
-    return `${formattedPrice}k`;
-  }, []);
-
-  const currentText = useMemo(() => {
-    if (currentIndex !== undefined) {
-      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
-        parseFloat(candlestickStockData[currentIndex].close),
-      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
-    }
-    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
-  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
-
-  return (
-    <Text aria-live="polite" font="headline">
-      {currentText}
-    </Text>
-  );
-});
-
-const CandlesticksChart = memo(
-  ({
-    infoTextId,
-    onScrubberPositionChange,
-  }: {
-    infoTextId: string;
-    onScrubberPositionChange: (index: number | undefined) => void;
-  }) => {
-    const theme = useTheme();
-    const min = useMemo(
-      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
-      [],
-    );
-
-    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-    // Custom line component that renders a rect to highlight the entire bandwidth
-    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
-      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-
-      const rectWidth = useMemo(() => {
-        if (xScale !== undefined && xScale.type === 'band') {
-          return xScale.bandwidth;
-        }
-        return 0;
-      }, [xScale]);
-
-      const xPos = useDerivedValue(() => {
-        const position = unwrapAnimatedValue(scrubberPosition);
-        const xPos =
-          position !== undefined && xScale
-            ? getPointOnSerializableScale(position, xScale)
-            : undefined;
-        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
-      }, [scrubberPosition, xScale]);
-
-      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
-
-      return (
-        <Rect
-          color={stroke}
-          height={drawingArea.height}
-          opacity={opacity}
-          width={rectWidth}
-          x={xPos}
-          y={drawingArea.y}
-        />
-      );
-    });
-
-    const candlesData = useMemo(
-      () =>
-        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
-          number,
-          number,
-        ][],
-      [],
-    );
-
-    const CandlestickBarComponent = memo<BarComponentProps>(
-      ({ x, y, width, height, originY, dataX, ...props }) => {
-        const { getYScale } = useCartesianChartContext();
-        const yScale = getYScale();
-
-        const wickX = x + width / 2;
-
-        const timePeriodValue = candlestickStockData[dataX as number];
-
-        const open = parseFloat(timePeriodValue.open);
-        const close = parseFloat(timePeriodValue.close);
-
-        const bullish = open < close;
-        const theme = useTheme();
-        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
-        const openY = yScale?.(open) ?? 0;
-        const closeY = yScale?.(close) ?? 0;
-
-        const bodyHeight = Math.abs(openY - closeY);
-        const bodyY = openY < closeY ? openY : closeY;
-
-        return (
-          <>
-            <SkiaLine
-              color={color}
-              p1={{ x: wickX, y }}
-              p2={{ x: wickX, y: y + height }}
-              strokeWidth={1}
-            />
-            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-          </>
-        );
-      },
-    );
-
-    const formatThousandsPriceNumber = useCallback((price: number) => {
-      const formattedPrice = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(price / 1000);
-
-      return `${formattedPrice}k`;
-    }, []);
-
-    const formatTime = useCallback((index: number | null) => {
-      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
-      const ts = parseInt(candlestickStockData[index].start);
-      return new Date(ts * 1000).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      });
-    }, []);
-
-    return (
-      <CartesianChart
-        enableScrubbing
-        animate={false}
-        aria-labelledby={infoTextId}
-        borderRadius={0}
-        height={150}
-        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
-        series={[
-          {
-            id: 'stock-prices',
-            data: candlesData,
-          },
-        ]}
-        xAxis={{
-          scaleType: 'band',
-        }}
-        yAxis={{
-          domain: { min },
-        }}
-      >
-        <XAxis tickLabelFormatter={formatTime} />
-        <YAxis
-          showGrid
-          GridLineComponent={ThinSolidLine}
-          tickLabelFormatter={formatThousandsPriceNumber}
-          width={40}
-        />
-        <Scrubber
-          hideOverlay
-          LineComponent={BandwidthHighlight}
-          lineStroke={theme.color.fgMuted}
-          seriesIds={[]}
-        />
-        <BarPlot
-          BarComponent={CandlestickBarComponent}
-          BarStackComponent={({ children }) => <g>{children}</g>}
-        />
-      </CartesianChart>
-    );
-  },
-);
-
-function Candlesticks() {
-  const infoTextId = useId();
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
-
-  return (
-    <VStack gap={2}>
-      <CandlesticksHeader currentIndex={currentIndex} />
-      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
     </VStack>
   );
 }
@@ -1644,6 +1485,16 @@ function MonotoneAssetPrice() {
     [],
   );
 
+  const chartAccessibilityLabel = `Price chart with ${prices.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+      return `${price} USD ${date}`;
+    },
+    [formatDate, prices, scrubberPriceFormatter],
+  );
+
   const CustomScrubberBeacon = memo(
     ({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps) => {
       const { getSeries, getXSerializableScale, getYSerializableScale } =
@@ -1707,6 +1558,8 @@ function MonotoneAssetPrice() {
     <LineChart
       enableScrubbing
       showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       inset={{ top: 64 }}
       series={[
@@ -1759,9 +1612,18 @@ function ServiceAvailability() {
     [],
   );
 
+  const chartAccessibilityLabel = `Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) =>
+      `Point ${index + 1}: ${availabilityEvents[index].availability}% availability on ${availabilityEvents[index].date.toLocaleDateString()}`,
+    [availabilityEvents],
+  );
+
   return (
     <CartesianChart
       enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -1815,7 +1677,7 @@ function ServiceAvailability() {
 
 function ForecastAssetPrice() {
   const startYear = 2020;
-  const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
+  const data = useMemo(() => [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70], []);
   const currentIndex = 6;
 
   const strokeWidth = 3;
@@ -1928,9 +1790,17 @@ function ForecastAssetPrice() {
     );
   });
 
+  const chartAccessibilityLabel = `Forecast chart with ${data.length} data points. Swipe to navigate.`;
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `Point ${index + 1}: ${axisFormatter(index)}, value ${data[index]}`,
+    [axisFormatter, data],
+  );
+
   return (
     <CartesianChart
       enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[{ id: 'price', data, color: assets.btc.color }]}
     >
@@ -1942,343 +1812,151 @@ function ForecastAssetPrice() {
   );
 }
 
-function ImperativeHandle() {
-  const theme = useTheme();
-  const scrubberRef = useRef<ScrubberRef>(null);
+function DataCardWithLineChart() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="xl"
+      source={ethBackground}
+      testID="thumbnail"
+    />
+  );
+
+  const getLineChartSeries = useCallback(
+    () => [
+      {
+        id: 'price',
+        data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
+        color: `rgb(${spectrum.green70})`,
+      },
+    ],
+    [spectrum.green70],
+  );
+
+  const lineChartSeries = useMemo(() => getLineChartSeries(), [getLineChartSeries]);
+  const lineChartSeries2 = useMemo(() => getLineChartSeries(), [getLineChartSeries]);
+  const ref = useRef<View>(null);
 
   return (
     <VStack gap={2}>
-      <LineChart
-        enableScrubbing
-        showYAxis
-        height={250}
-        series={[
-          {
-            id: 'priceA',
-            data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
-            label: 'Price A',
-            color: theme.color.accentBoldBlue,
-          },
-          {
-            id: 'priceB',
-            data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
-            label: 'Price B',
-            color: theme.color.accentBoldGreen,
-          },
-          {
-            id: 'priceC',
-            data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
-            label: 'Price C',
-            color: theme.color.accentBoldPurple,
-          },
-          {
-            id: 'priceD',
-            data: [4810, 2030, 5810, 3940, 2940, 1940, 940],
-            label: 'Price D',
-            color: theme.color.accentBoldYellow,
-          },
-        ]}
-        xAxis={{
-          // Give space for pulse animation
-          range: ({ min, max }) => ({ min, max: max - 8 }),
-        }}
-        yAxis={{
-          domain: {
-            min: 0,
-          },
-          showGrid: true,
-          tickLabelFormatter: (value) => value.toLocaleString(),
-        }}
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart Card"
       >
-        <Scrubber ref={scrubberRef} />
-      </LineChart>
-      <Button onPress={() => scrubberRef.current?.pulse()}>Pulse</Button>
-    </VStack>
-  );
-}
-
-function CustomBeaconLabel() {
-  const theme = useTheme();
-  // This custom component label shows the percentage value of the data at the scrubber position.
-  const MyScrubberBeaconLabel = memo(
-    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, series } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
-
-      const seriesData = useMemo(
-        () => getLineData(getSeriesData(seriesId)),
-        [getSeriesData, seriesId],
-      );
-
-      const dataLength = useMemo(
-        () =>
-          series?.reduce((max, s) => {
-            const seriesData = getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0,
-        [series, getSeriesData],
-      );
-
-      const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
-      }, [scrubberPosition, dataLength]);
-
-      const percentageLabel = useDerivedValue(() => {
-        if (seriesData !== undefined) {
-          const dataAtPosition = seriesData[dataIndex.value];
-          return `${unwrapAnimatedValue(label)} · ${dataAtPosition}%`;
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={exampleThumbnail}
+        title="Line Chart with Tag"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 25.25%
+          </Text>
         }
-        return unwrapAnimatedValue(label);
-      }, [label, seriesData, dataIndex]);
-
-      return (
-        <DefaultScrubberBeaconLabel
-          {...props}
-          background={color}
-          color={theme.color.bg}
-          label={percentageLabel}
-          seriesId={seriesId}
-        />
-      );
-    },
-  );
-
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      showYAxis
-      areaType="dotted"
-      height={200}
-      series={[
-        {
-          id: 'Boston',
-          data: [25, 30, 35, 45, 60, 100],
-          color: `rgb(${theme.spectrum.green40})`,
-          label: 'Boston',
-        },
-        {
-          id: 'Miami',
-          data: [20, 25, 30, 35, 20, 0],
-          color: `rgb(${theme.spectrum.blue40})`,
-          label: 'Miami',
-        },
-        {
-          id: 'Denver',
-          data: [10, 15, 20, 25, 40, 0],
-          color: `rgb(${theme.spectrum.orange40})`,
-          label: 'Denver',
-        },
-        {
-          id: 'Phoenix',
-          data: [15, 10, 5, 0, 0, 0],
-          color: `rgb(${theme.spectrum.red40})`,
-          label: 'Phoenix',
-        },
-      ]}
-      yAxis={{
-        showGrid: true,
-      }}
-    >
-      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
-    </LineChart>
-  );
-}
-
-function CustomLabelComponent() {
-  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
-    const theme = useTheme();
-    const { drawingArea } = useCartesianChartContext();
-
-    if (!drawingArea) return;
-
-    return (
-      <DefaultScrubberLabel
-        {...props}
-        elevated
-        background={theme.color.bgPrimary}
-        color={theme.color.bgPrimaryWash}
-        dy={32}
-        fontWeight={FontWeight.Bold}
-        y={drawingArea.y + drawingArea.height}
-      />
-    );
-  });
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      height={200}
-      inset={{ top: 16, bottom: 64 }}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-    >
-      <Scrubber
-        LabelComponent={CustomLabelComponent}
-        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-      />
-    </LineChart>
-  );
-}
-
-function HiddenScrubberWhenIdle() {
-  const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
-    const { scrubberPosition } = useScrubberContext();
-    const beaconOpacity = useDerivedValue(
-      () => (scrubberPosition.value !== undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-
-    return <DefaultScrubberBeacon {...props} opacity={beaconOpacity} />;
-  });
-
-  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
-    const { scrubberPosition } = useScrubberContext();
-    const labelOpacity = useDerivedValue(
-      () => (scrubberPosition.value !== undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-
-    return <DefaultScrubberBeaconLabel {...props} opacity={labelOpacity} />;
-  });
-
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      height={150}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-          label: 'hello',
-        },
-      ]}
-    >
-      <Scrubber BeaconComponent={MyScrubberBeacon} BeaconLabelComponent={MyScrubberBeaconLabel} />
-    </LineChart>
-  );
-}
-
-function TwoLineScrubberLabel() {
-  const theme = useTheme();
-  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
-  const [alignment, setAlignment] = useState<TextAlign>(TextAlign.Center);
-
-  const fontMgr = useMemo(() => {
-    const fontProvider = Skia.TypefaceFontProvider.Make();
-    return fontProvider;
-  }, []);
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(price);
-  }, []);
-
-  const scrubberLabel = useCallback(
-    (index: number) => {
-      const price = formatPrice(data[index] * 100);
-      const day = `Day ${index + 100}`;
-
-      const priceStyle: SkTextStyle = {
-        fontFamilies: ['Inter'],
-        fontSize: 16,
-        fontStyle: {
-          weight: FontWeight.Bold,
-        },
-        color: Skia.Color(theme.color.fg),
-      };
-
-      const dayStyle: SkTextStyle = {
-        fontFamilies: ['Inter'],
-        fontSize: 14,
-        fontStyle: {
-          weight: FontWeight.Normal,
-        },
-        color: Skia.Color(theme.color.fgMuted),
-      };
-
-      const builder = Skia.ParagraphBuilder.Make(
-        {
-          textAlign: alignment,
-        },
-        fontMgr,
-      );
-
-      builder.pushStyle(priceStyle);
-      builder.addText(price);
-      builder.addText('\n');
-
-      builder.pushStyle(dayStyle);
-      builder.addText(day);
-
-      const para = builder.build();
-      // First layout with large width to get intrinsic size
-      para.layout(384);
-      return para;
-    },
-    [data, formatPrice, theme.color.fg, theme.color.fgMuted, fontMgr, alignment],
-  );
-
-  // Custom scrubber label component that uses the selected alignment
-  const AlignedScrubberLabel = memo((props: ScrubberLabelProps) => (
-    <DefaultScrubberLabel {...props} paragraphAlignment={alignment} />
-  ));
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={1}>
-        <Button
-          compact
-          onPress={() => setAlignment(TextAlign.Left)}
-          variant={alignment === TextAlign.Left ? 'primary' : 'secondary'}
-        >
-          Left
-        </Button>
-        <Button
-          compact
-          onPress={() => setAlignment(TextAlign.Center)}
-          variant={alignment === TextAlign.Center ? 'primary' : 'secondary'}
-        >
-          Center
-        </Button>
-        <Button
-          compact
-          onPress={() => setAlignment(TextAlign.Right)}
-          variant={alignment === TextAlign.Right ? 'primary' : 'secondary'}
-        >
-          Right
-        </Button>
-      </HStack>
-      <LineChart
-        enableScrubbing
-        showArea
-        height={200}
-        inset={{ top: 64 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            color: theme.color.accentBoldBlue,
-          },
-        ]}
       >
-        <Scrubber
-          idlePulse
-          labelElevated
-          LabelComponent={AlignedScrubberLabel}
-          label={scrubberLabel}
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries}
         />
-      </LineChart>
+      </DataCard>
+      <DataCard
+        ref={ref}
+        renderAsPressable
+        layout="vertical"
+        onPress={NoopFn}
+        subtitle="Clickable line chart card"
+        thumbnail={exampleThumbnail}
+        title="Actionable Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Ethereum price chart"
+          areaType="dotted"
+          height={120}
+          inset={0}
+          series={lineChartSeries}
+          showXAxis={false}
+          showYAxis={false}
+        />
+      </DataCard>
+      <DataCard
+        layout="vertical"
+        subtitle="Price trend"
+        thumbnail={
+          <RemoteImage
+            accessibilityLabel="Bitcoin"
+            shape="circle"
+            size="xl"
+            source={assets.btc.imageUrl}
+            testID="thumbnail"
+          />
+        }
+        title="Card with Line Chart"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <LineChart
+          showArea
+          accessibilityLabel="Price chart"
+          areaType="dotted"
+          height={100}
+          inset={0}
+          series={lineChartSeries2}
+          showXAxis={false}
+          showYAxis={false}
+        />
+      </DataCard>
     </VStack>
+  );
+}
+
+function HorizontalLayoutLineChart() {
+  const symbols = ['BTC', 'ETH', 'SOL', 'DOGE', 'ADA'];
+  const allocations = [72, 46, 33, 21, 14];
+
+  return (
+    <LineChart
+      points
+      showArea
+      showXAxis
+      showYAxis
+      height={240}
+      layout="horizontal"
+      series={[
+        {
+          id: 'allocations',
+          data: allocations,
+          color: assets.btc.color,
+        },
+      ]}
+      xAxis={{ domain: { min: 0, max: 80 }, tickLabelFormatter: (value) => `${value}%` }}
+      yAxis={{ data: symbols, scaleType: 'band' }}
+    />
   );
 }
 
@@ -2309,8 +1987,8 @@ function ExampleNavigator() {
         ),
       },
       {
-        title: 'Imperative Handle',
-        component: <ImperativeHandle />,
+        title: 'Horizontal Layout',
+        component: <HorizontalLayoutLineChart />,
       },
       {
         title: 'Multiple Lines',
@@ -2466,6 +2144,8 @@ function ExampleNavigator() {
           <LineChart
             enableScrubbing
             showArea
+            accessibilityLabel="Price chart with reference line. 14 data points. Swipe to navigate."
+            getScrubberAccessibilityLabel={(index: number) => `Point ${index + 1}`}
             height={200}
             series={[
               {
@@ -2511,10 +2191,6 @@ function ExampleNavigator() {
         component: <Performance />,
       },
       {
-        title: 'Candlesticks',
-        component: <Candlesticks />,
-      },
-      {
         title: 'Monotone Asset Price',
         component: <MonotoneAssetPrice />,
       },
@@ -2527,50 +2203,35 @@ function ExampleNavigator() {
         component: <ForecastAssetPrice />,
       },
       {
-        title: 'Custom Beacon Label',
-        component: <CustomBeaconLabel />,
-      },
-      {
-        title: 'Custom Label Component',
-        component: <CustomLabelComponent />,
-      },
-      {
-        title: 'Hidden Scrubber When Idle',
-        component: <HiddenScrubberWhenIdle />,
-      },
-      {
-        title: 'Two-Line Scrubber Label',
-        component: <TwoLineScrubberLabel />,
+        title: 'In DataCard',
+        component: <DataCardWithLineChart />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],
   );
 
   const currentExample = examples[currentIndex];
-  const isFirstExample = currentIndex === 0;
-  const isLastExample = currentIndex === examples.length - 1;
 
   const handlePrevious = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
-  }, []);
+    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
+  }, [examples.length]);
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(examples.length - 1, prev + 1));
+    setCurrentIndex((prev) => (prev + 1 + examples.length) % examples.length);
   }, [examples.length]);
 
   return (
-    <ExampleScreen>
+    <ExampleScreen paddingX={0}>
       <VStack gap={4}>
         <HStack alignItems="center" justifyContent="space-between" padding={2}>
           <IconButton
             accessibilityHint="Navigate to previous example"
             accessibilityLabel="Previous"
-            disabled={isFirstExample}
             name="arrowLeft"
             onPress={handlePrevious}
             variant="secondary"
           />
-          <VStack alignItems="center" gap={1}>
+          <VStack alignItems="center">
             <Text font="title3">{currentExample.title}</Text>
             <Text color="fgMuted" font="label1">
               {currentIndex + 1} / {examples.length}
@@ -2579,7 +2240,6 @@ function ExampleNavigator() {
           <IconButton
             accessibilityHint="Navigate to next example"
             accessibilityLabel="Next"
-            disabled={isLastExample}
             name="arrowRight"
             onPress={handleNext}
             variant="secondary"

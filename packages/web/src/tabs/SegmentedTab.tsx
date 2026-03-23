@@ -2,7 +2,6 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
@@ -13,7 +12,7 @@ import { Text } from '../typography/Text';
 
 import { tabsTransitionConfig } from './Tabs';
 
-const MotionText = motion(Text);
+const MotionBox = motion(Box);
 
 const insetFocusRingCss = css`
   &:focus {
@@ -42,8 +41,8 @@ const buttonDisabledCss = css`
   touch-action: none;
 `;
 
-export type SegmentedTabProps<T extends string = string> = PressableBaseProps &
-  TabValue<T> & {
+export type SegmentedTabProps<TabId extends string = string> = PressableBaseProps &
+  TabValue<TabId> & {
     /**
      * Text color when the SegmentedTab is active.
      * @default negativeForeground
@@ -55,20 +54,20 @@ export type SegmentedTabProps<T extends string = string> = PressableBaseProps &
      */
     color?: ThemeVars.Color;
     /** Callback that is fired when the SegmentedTab is clicked. */
-    onClick?: (id: T, event: React.MouseEvent) => void;
+    onClick?: (id: TabId, event: React.MouseEvent) => void;
   };
 
 const disabledCss = css`
   opacity: 0.5;
 `;
 
-type SegmentedTabComponent = <T extends string = string>(
-  props: SegmentedTabProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> },
+type SegmentedTabComponent = <TabId extends string = string>(
+  props: SegmentedTabProps<TabId> & { ref?: React.ForwardedRef<HTMLButtonElement> },
 ) => React.ReactElement;
 
 const SegmentedTabComponent = memo(
   forwardRef(
-    <T extends string>(
+    <TabId extends string>(
       {
         id,
         label,
@@ -86,10 +85,10 @@ const SegmentedTabComponent = memo(
         textAlign,
         textTransform,
         ...props
-      }: SegmentedTabProps<T>,
+      }: SegmentedTabProps<TabId>,
       ref: React.ForwardedRef<HTMLButtonElement>,
     ) => {
-      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<T>();
+      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
       const isActive = activeTab?.id === id;
       const isDisabled = disabledProp || allTabsDisabled;
 
@@ -136,9 +135,10 @@ const SegmentedTabComponent = memo(
           type="button"
           {...props}
         >
-          <Box as="span" justifyContent="center" paddingX={2} paddingY={1}>
+          <MotionBox as="span" justifyContent="center" paddingX={2} paddingY={1} {...motionProps}>
             {typeof label === 'string' ? (
-              <MotionText
+              <Text
+                color="currentColor"
                 font={font}
                 fontFamily={fontFamily}
                 fontSize={fontSize}
@@ -146,14 +146,13 @@ const SegmentedTabComponent = memo(
                 lineHeight={lineHeight}
                 textAlign={textAlign}
                 textTransform={textTransform}
-                {...motionProps}
               >
                 {label}
-              </MotionText>
+              </Text>
             ) : (
               label
             )}
-          </Box>
+          </MotionBox>
         </Pressable>
       );
     },

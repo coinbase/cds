@@ -57,6 +57,14 @@ const exampleOptionsWithNoLabelOrDescription = [
   { value: '4' },
 ];
 
+const exampleOptionsWithLongLabels = [
+  { value: null, label: 'Remove selection' },
+  { value: '1', label: 'Fraction fraction fraction fraction fraction' },
+  { value: '2', label: 'Truncation truncation truncation truncation truncation' },
+  { value: '3', label: 'A A A A A A A A A A A A A A A A' },
+  { value: '4', label: 'Bee Bee Bee Bee Bee Bee Bee Bee Bee Bee' },
+];
+
 const exampleOptionsWithSomeDisabled = [
   { value: null, label: 'Remove selection' },
   { value: '1', label: 'Option 1', disabled: true },
@@ -271,7 +279,7 @@ const AccessibilityLabelExample = () => {
 
   return (
     <Select
-      accessibilityLabel="Accessibility label"
+      accessibilityLabel="Custom accessibility label"
       label="Single select - accessibility label"
       onChange={setValue}
       options={exampleOptions}
@@ -293,6 +301,130 @@ const CustomAccessibilityRoleExample = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+const SingleAlignExample = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={1}>
+      <Select
+        label="Default align - left"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        align="center"
+        label="Center align"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        align="end"
+        label="Right align"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        compact
+        label="Compact align - left"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - right"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+    </VStack>
+  );
+};
+
+const MultiAlignExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <VStack gap={1}>
+      <Select
+        label="Default align - left"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        align="center"
+        label="Center align"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        align="end"
+        label="Right align"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        label="Compact align - left"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - right"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+    </VStack>
   );
 };
 
@@ -762,6 +894,23 @@ const MultiSelectCustomSelectAllOptionExample = () => {
   );
 };
 
+const MultiSelectLongLabelOptionsExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select"
+      onChange={onChange}
+      options={exampleOptionsWithLongLabels}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const MultiSelectDisabledExample = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -1134,6 +1283,36 @@ const RefImperativeHandleExample = () => {
   );
 };
 
+const BorderlessExample = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        accessibilityLabel="Borderless multi select"
+        bordered={false}
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+};
+
 const SelectV3Screen = () => {
   return (
     <ExampleScreen>
@@ -1166,6 +1345,12 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Custom Accessibility Role">
         <CustomAccessibilityRoleExample />
+      </Example>
+      <Example title="Single-select Alignments">
+        <SingleAlignExample />
+      </Example>
+      <Example title="Multi-select Alignments">
+        <MultiAlignExample />
       </Example>
       <Example title="No Label">
         <NoLabelExample />
@@ -1245,6 +1430,9 @@ const SelectV3Screen = () => {
       <Example title="Multi Select Custom Select All Option">
         <MultiSelectCustomSelectAllOptionExample />
       </Example>
+      <Example title="Multi Select Long Label Options">
+        <MultiSelectLongLabelOptionsExample />
+      </Example>
       <Example title="Multi Select Disabled">
         <MultiSelectDisabledExample />
       </Example>
@@ -1295,6 +1483,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Ref Imperative Handle">
         <RefImperativeHandleExample />
+      </Example>
+      <Example title="Borderless">
+        <BorderlessExample />
       </Example>
     </ExampleScreen>
   );

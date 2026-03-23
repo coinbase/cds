@@ -3,9 +3,13 @@ name: CI
 on:
   workflow_dispatch: # Allow manual triggering to refresh cached baseline results
   push:
-    branches: master
+    branches:
+      - master
+      - 'cds-v[0-9]*'
   pull_request:
-    branches: master
+    branches:
+      - master
+      - 'cds-v[0-9]*'
 
 concurrency:
   group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -89,6 +93,26 @@ jobs:
       - name: Test
         run: yarn nx affected --target=test --base=$NX_BASE --head=$NX_HEAD
 
+  test-storybook:
+    name: Storybook A11y Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Install Playwright
+        run: |
+          cd apps/storybook
+          yarn playwright install
+          cd ../../
+      - name: Test Storybook
+        run: yarn nx run storybook:test-a11y
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
@@ -122,6 +146,8 @@ jobs:
   depcheck:
     name: Depcheck
     runs-on: ubuntu-latest
+    # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
+    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -217,6 +243,8 @@ jobs:
   bundle-stats:
     name: Bundle Stats
     runs-on: ubuntu-latest
+    # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
+    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0

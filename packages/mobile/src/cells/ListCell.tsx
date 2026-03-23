@@ -39,12 +39,12 @@ export type ListCellBaseProps = CellDetailProps &
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `spacingVariant="compact"`. `compact` will be removed in a release.
+     * @deprecated Use `spacingVariant="condensed"`. `compact` will be removed in a release.
      */
     compact?: boolean;
     /**
      * Spacing variant configuration.
-     * Deprecated value: 'compact'. Prefer 'condensed'.
+     * Deprecated values: 'normal' and 'compact'. Prefer 'condensed'.
      *
      * When `spacingVariant="normal"`:
      * 1. `min-height` is `80px`
@@ -65,7 +65,8 @@ export type ListCellBaseProps = CellDetailProps &
      *
      * @default 'normal'
      */
-    spacingVariant?: 'normal' | 'compact' | 'condensed';
+    spacingVariant?: /** @deprecated Use 'condensed' instead. */
+    'normal' | /** @deprecated Use 'condensed' instead. */ 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
     /**
@@ -107,21 +108,35 @@ export type ListCellBaseProps = CellDetailProps &
      * When provided, `styles.subtitle` is not applied.
      */
     subtitleNode?: React.ReactNode;
-    /**
-     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
-     */
+    /** Styles for subcomponents, ignored when the corresponding `xxNode` prop is used */
     styles?: {
+      /** Root element */
       root?: StyleProp<ViewStyle>;
+      /** Media element */
       media?: StyleProp<ViewStyle>;
+      /** Intermediary element */
       intermediary?: StyleProp<ViewStyle>;
+      /** End element */
       end?: StyleProp<ViewStyle>;
+      /** Accessory element */
       accessory?: StyleProp<ViewStyle>;
+      /** Content container element */
       contentContainer?: StyleProp<ViewStyle>;
+      /** Pressable wrapper element */
       pressable?: StyleProp<ViewStyle>;
+      /** Main content element */
       mainContent?: StyleProp<ViewStyle>;
+      /** Title stack element (title/subtitle/description VStack) */
+      titleStack?: StyleProp<ViewStyle>;
+      /** Title stack container wrapper, controls flex behavior */
+      titleStackContainer?: StyleProp<ViewStyle>;
+      /** Helper text element */
       helperText?: StyleProp<ViewStyle>;
+      /** Title text element */
       title?: StyleProp<TextStyle>;
+      /** Subtitle text element */
       subtitle?: StyleProp<TextStyle>;
+      /** Description text element */
       description?: StyleProp<TextStyle>;
     };
   };
@@ -226,6 +241,7 @@ export const ListCell = memo(function ListCell({
       styles={{
         accessory: styles?.accessory,
         bottomContent: styles?.helperText,
+        childrenContainer: styles?.titleStackContainer,
         contentContainer: styles?.contentContainer,
         end: styles?.end,
         intermediary: styles?.intermediary,
@@ -239,7 +255,7 @@ export const ListCell = memo(function ListCell({
       }}
       {...props}
     >
-      <VStack justifyContent="center">
+      <VStack justifyContent="center" style={styles?.titleStack}>
         {titleNode ? (
           titleNode
         ) : title ? (

@@ -27,9 +27,11 @@ export const SolidLine = memo<SolidLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
+    xAxisId,
     yAxisId,
     d,
     animate,
+    transitions,
     transition,
     ...props
   }) => {
@@ -47,9 +49,10 @@ export const SolidLine = memo<SolidLineProps>(
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         {...props}
       >
-        {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+        {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
       </Path>
     );
   },

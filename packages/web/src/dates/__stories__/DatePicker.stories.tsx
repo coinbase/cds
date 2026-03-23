@@ -71,16 +71,14 @@ export const Examples = () => {
         <DatePicker
           {...exampleProps}
           {...props}
-          label="Date of birth"
+          accessibilityLabel="Date of birth"
           labelNode={
-            <InputLabel>
-              <HStack alignItems="center" gap={1}>
-                Date of birth
-                <Tooltip content="This will be visible to other users.">
-                  <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-                </Tooltip>
-              </HStack>
-            </InputLabel>
+            <HStack alignItems="center">
+              <InputLabel>Date of birth</InputLabel>
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+              </Tooltip>
+            </HStack>
           }
         />
       </VStack>
@@ -97,6 +95,28 @@ export const Examples = () => {
           <TextInput placeholder="1" width="30%" />
           <DatePicker {...exampleProps} {...props} />
         </HStack>
+      </VStack>
+      <VStack>
+        <Note>DatePicker with custom calendar classNames and styles</Note>
+        <style>{`
+          .custom-calendar {
+            border-color: var(--color-bgLineHeavy);
+            border-width: medium;
+          }
+          .cds-Calendar-day {
+            border-radius: var(--borderRadius-0);
+          }
+        `}</style>
+        <DatePicker
+          {...exampleProps}
+          {...props}
+          classNames={{
+            calendar: 'custom-calendar',
+          }}
+          styles={{
+            calendar: { backgroundColor: 'var(--color-bgAlternate)' },
+          }}
+        />
       </VStack>
       <Box height={100} />
     </VStack>
@@ -124,7 +144,7 @@ export const AccessibilityLabels = () => {
           required
           {...exampleProps}
           {...props}
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          closeCalendarAccessibilityLabel="Close calendar"
           disabledDates={[[oneWeekAgo, twoDaysAgo], today, oneWeekLater]}
           highlightedDates={[
             [fourDaysAgo, twoDaysAgo],
@@ -132,6 +152,7 @@ export const AccessibilityLabels = () => {
           ]}
           label="Birthdate"
           nextArrowAccessibilityLabel="Next month"
+          openCalendarAccessibilityLabel="Open calendar"
           previousArrowAccessibilityLabel="Previous month"
         />
       </VStack>
@@ -148,7 +169,7 @@ export const AccessibilityLabels = () => {
           required
           {...exampleProps}
           {...props}
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          closeCalendarAccessibilityLabel="Close calendar"
           disabledDates={[[oneWeekAgo, twoDaysAgo], today, oneWeekLater]}
           highlightedDates={[
             [fourDaysAgo, twoDaysAgo],
@@ -158,6 +179,7 @@ export const AccessibilityLabels = () => {
           maxDate={lastDayThisMonth}
           minDate={firstDayThisMonth}
           nextArrowAccessibilityLabel="Next month"
+          openCalendarAccessibilityLabel="Open calendar"
           previousArrowAccessibilityLabel="Previous month"
         />
       </VStack>
@@ -339,3 +361,66 @@ export const CustomErrors = () => {
 };
 
 CustomErrors.parameters = { a11y: { disable: true } };
+
+export const CustomLabel = () => {
+  const [date, setDate] = useState<Date | null>(null);
+  const [error, setError] = useState<DateInputValidationError | null>(null);
+  const props = { date, onChangeDate: setDate, error, onErrorDate: setError };
+  return (
+    <VStack gap={2}>
+      {/* Default with tooltip */}
+      <DatePicker
+        {...exampleProps}
+        {...props}
+        accessibilityLabel="Date of birth"
+        id="dob-tooltip"
+        labelNode={
+          <InputLabel htmlFor="dob-tooltip">
+            <HStack alignItems="center">
+              Date of birth
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+              </Tooltip>
+            </HStack>
+          </InputLabel>
+        }
+      />
+      {/* Compact with required indicator */}
+      <DatePicker
+        compact
+        {...exampleProps}
+        {...props}
+        accessibilityLabel="Start date"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Start date
+              <span style={{ color: 'var(--color-fgNegative)' }}>*</span>
+            </HStack>
+          </InputLabel>
+        }
+      />
+      {/* Inside variant with optional indicator */}
+      <DatePicker
+        {...exampleProps}
+        {...props}
+        accessibilityLabel="End date"
+        id="end-date-inside"
+        labelNode={
+          <InputLabel htmlFor="end-date-inside" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              End date
+              <span style={{ color: 'var(--color-fgMuted)', fontSize: 'var(--font-legal)' }}>
+                (optional)
+              </span>
+            </HStack>
+          </InputLabel>
+        }
+        labelVariant="inside"
+      />
+      <Box height={300} />
+    </VStack>
+  );
+};
+
+CustomLabel.parameters = { a11y: { disable: true } };

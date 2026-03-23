@@ -1,7 +1,7 @@
 import React, { Children, isValidElement, useMemo } from 'react';
+import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
 import type {
   AvatarSize,
-  MarginProps,
   NegativeSpace,
   Shape,
   SharedAccessibilityProps,
@@ -9,14 +9,16 @@ import type {
 } from '@coinbase/cds-common/types';
 import { css, type LinariaClassName } from '@linaria/core';
 
+import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout/Box';
+import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 import type { RemoteImageProps } from './RemoteImage';
 
 export type RemoteImageGroupBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Pick<BoxProps<BoxDefaultElement>, 'borderWidth' | 'borderColor'> & {
     /**
      * Indicates the number of remote image before it collapses
      * @default 4
@@ -43,21 +45,25 @@ const borderRadiusCss: Record<Shape, LinariaClassName> = {
     border-radius: 100%;
   `,
   square: css`
-    border-radius: 4px;
+    border-radius: ${shapeBorderRadius.square}px;
   `,
   hexagon: css`
-    border-radius: 0;
+    border-radius: ${shapeBorderRadius.hexagon}px;
   `,
   squircle: css`
-    border-radius: 8px;
+    border-radius: ${shapeBorderRadius.squircle}px;
   `,
   rectangle: css`
-    border-radius: 0;
+    border-radius: ${shapeBorderRadius.rectangle}px;
   `,
 };
 
 const isolateCss = css`
   isolation: isolate;
+`;
+
+const excessContainerCss = css`
+  box-sizing: content-box;
 `;
 
 export const RemoteImageGroup = ({
@@ -66,11 +72,12 @@ export const RemoteImageGroup = ({
   max = 4,
   shape = 'circle',
   testID,
+  borderWidth,
+  borderColor = borderWidth ? 'bg' : undefined,
   ...props
 }: RemoteImageGroupProps) => {
   const { avatarSize } = useTheme();
 
-  const borderRadius = borderRadiusCss[shape];
   const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
   const overlapSpacing: NegativeSpace = sizeAsNumber <= 40 ? -1 : -2;
 
@@ -100,19 +107,26 @@ export const RemoteImageGroup = ({
           return null;
         }
 
+        const childShape: RemoteImageProps['shape'] = child.props.shape;
+
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement(child as React.ReactElement<RemoteImageProps>, {
           width: sizeAsNumber,
           height: sizeAsNumber,
-          ...(child.props.shape ? undefined : { shape }),
+          ...(childShape ? undefined : { shape }),
         });
 
         // zIndex is progressively lower so that each child is stacked below the previous one
         const zIndex = -index;
 
+        const childContainerCss = borderWidth ? borderRadiusCss[childShape ?? shape] : undefined;
+
         return (
           <Box
             key={index}
+            borderColor={borderColor}
+            borderWidth={borderWidth}
+            className={childContainerCss}
             marginStart={index === 0 ? undefined : overlapSpacing}
             position="relative"
             testID={`${testID ? `${testID}-` : ''}inner-box-${index}`}
@@ -125,8 +139,10 @@ export const RemoteImageGroup = ({
       {excess > 0 && (
         <Box
           alignItems="center"
-          background="bgOverlay"
-          className={borderRadius}
+          background="bgSecondary"
+          borderColor={borderColor}
+          borderWidth={borderWidth}
+          className={cx(excessContainerCss, borderRadiusCss[shape])}
           height={sizeAsNumber}
           justifyContent="center"
           marginStart={overlapSpacing}

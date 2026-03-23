@@ -43,7 +43,7 @@ describe('DefaultSelectControl', () => {
 
       const button = screen.getByRole('button');
       expect(button).toHaveAttribute('aria-haspopup', 'listbox');
-      expect(button).toHaveAttribute('aria-label', 'Custom accessibility label');
+      expect(button).toHaveAttribute('aria-label', 'Custom accessibility label, Option 1');
     });
 
     it('renders with proper focus management', async () => {

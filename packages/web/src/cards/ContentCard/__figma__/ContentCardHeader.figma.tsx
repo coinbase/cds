@@ -7,7 +7,7 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14705%3A24320',
   {
     imports: [
-      "import { ContentCardHeader } from '@coinbase/cds-web/cards/ContentCard/ContentCardHeader';",
+      "import { ContentCardHeader } from '@coinbase/cds-web/cards/ContentCard/ContentCardHeader'",
     ],
     props: {
       title: figma.string('metadata label'),

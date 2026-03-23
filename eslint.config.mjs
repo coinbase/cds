@@ -36,7 +36,6 @@ const ignores = [
   '**/getAffectedRoutes.mjs',
   '**/getBuildInfo.mjs',
   'apps/mobile-app/prebuilds',
-  'apps/mobile-app/prebuilds',
   // within their NX project, these files are not included by the Typescript config
   // when linting with TS types (e.g. internal/safely-spread-props) this will raise an error
   'packages/web/optimize-css.ts',
@@ -48,6 +47,7 @@ const ignores = [
 
 // These rules apply to all files
 const sharedRules = {
+  'internal/no-object-rest-spread-in-worklet': 'error',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',
@@ -180,6 +180,7 @@ const testRules = {
 
 // These plugins apply to all files
 const sharedPlugins = {
+  internal: internalPlugin,
   'simple-import-sort': eslintSimpleImportSort,
 };
 
@@ -304,6 +305,15 @@ export default tseslint.config(
   {
     files: ['packages/mobile/**/*.stories.tsx'],
     extends: [internalPlugin.configs.mobileStoryRules],
+  },
+  // Rules specific to Figma Code Connect files
+  {
+    files: ['**/*.figma.tsx'],
+    extends: [internalPlugin.configs.figmaConnectRules],
+  },
+  {
+    files: ['**/*.mdx'],
+    processor: internalPlugin.processors.mdx,
   },
   {
     files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/setup.js'],

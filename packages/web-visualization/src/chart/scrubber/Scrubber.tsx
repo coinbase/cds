@@ -8,13 +8,13 @@ import {
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
 } from '../line';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartInset,
   type ChartScaleFunction,
+  defaultAccessoryEnterTransition,
   getPointOnScale,
+  getTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
@@ -41,7 +41,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = SharedProps & {
+export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
@@ -52,10 +52,14 @@ export type ScrubberBeaconProps = SharedProps & {
   color?: string;
   /**
    * X coordinate in data space.
+   * In vertical layout this is the scrubber index-axis value.
+   * In horizontal layout this is the series value.
    */
   dataX: number;
   /**
    * Y coordinate in data space.
+   * In vertical layout this is the series value.
+   * In horizontal layout this is the scrubber index-axis value.
    */
   dataY: number;
   /**
@@ -64,43 +68,65 @@ export type ScrubberBeaconProps = SharedProps & {
   isIdle?: boolean;
   /**
    * Pulse the beacon while it is at rest.
+   *
+   * @note Only has an effect when `isIdle` is `true`. Pulse animations work
+   * regardless of the chart's `animate` prop.
    */
   idlePulse?: boolean;
   /**
-   * Transition configuration for beacon animations.
+   * Whether position animations are enabled.
+   * @default to ChartContext's animate value
    */
-  transitions?: {
-    /**
-     * Transition used for beacon position updates.
-     * @default defaultTransition
-     */
-    update?: Transition;
-    /**
-     * Transition used for the pulse animation.
-     * @default { duration: 1.6, ease: 'easeInOut' }
-     */
-    pulse?: Transition;
-    /**
-     * Delay, in seconds between pulse transitions
-     * when `idlePulse` is enabled.
-     * @default 0.4
-     */
-    pulseRepeatDelay?: number;
-  };
+  animate?: boolean;
   /**
    * Opacity of the beacon.
    * @default 1
    */
   opacity?: number;
   /**
-   * Custom className for styling.
+   * Stroke color of the beacon circle.
+   * @default 'var(--color-bg)'
    */
-  className?: string;
-  /**
-   * Custom inline styles.
-   */
-  style?: React.CSSProperties;
+  stroke?: string;
 };
+
+export type ScrubberBeaconProps = SharedProps &
+  ScrubberBeaconBaseProps & {
+    /**
+     * Transition configuration for beacon animations.
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+      /**
+       * Transition used for the pulse animation.
+       * @default transition { duration: 1.6, ease: 'easeInOut' }
+       */
+      pulse?: Transition;
+      /**
+       * Delay, in seconds between pulse transitions
+       * when `idlePulse` is enabled.
+       * @default 0.4
+       */
+      pulseRepeatDelay?: number;
+    };
+    /**
+     * Custom className for styling.
+     */
+    className?: string;
+    /**
+     * Custom inline styles.
+     */
+    style?: React.CSSProperties;
+  };
 
 export type ScrubberBeaconComponent = React.FC<
   ScrubberBeaconProps & { ref?: React.Ref<ScrubberBeaconRef> }
@@ -109,16 +135,29 @@ export type ScrubberBeaconComponent = React.FC<
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   Pick<
     ChartTextProps,
-    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity' | 'font'
+    | 'x'
+    | 'y'
+    | 'dx'
+    | 'horizontalAlignment'
+    | 'onDimensionsChange'
+    | 'opacity'
+    | 'font'
+    | 'className'
+    | 'style'
   > & {
     /**
      * Label for the series.
      */
-    label: string;
+    label: ChartTextChildren;
     /**
      * Id of the series.
      */
     seriesId: Series['id'];
+    /**
+     * Transition configuration for position animations.
+     * When provided, the label component should animate its y position using this transition.
+     */
+    transition?: Transition;
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
@@ -135,6 +174,12 @@ export type ScrubberBaseProps = SharedProps &
      * By default, all series will be highlighted.
      */
     seriesIds?: string[];
+    /**
+     * Hides the beacon labels while keeping the line label visible (if provided).
+     * @default true in horizontal layout, false in vertical layout.
+     * @note Beacon labels are always hidden in horizontal layout, and cannot be overridden.
+     */
+    hideBeaconLabels?: boolean;
     /**
      * Hides the scrubber line.
      * @note This hides Scrubber's ReferenceLine including the label.
@@ -161,6 +206,12 @@ export type ScrubberBaseProps = SharedProps &
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
     /**
+     * Preferred side for beacon labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
+    /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
      */
@@ -173,7 +224,7 @@ export type ScrubberBaseProps = SharedProps &
     labelFont?: ChartTextProps['font'];
     /**
      * Bounds inset for the scrubber line label to prevent cutoff at chart edges.
-     * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+     * @default inset { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
      */
     labelBoundsInset?: number | ChartInset;
     /**
@@ -185,33 +236,52 @@ export type ScrubberBaseProps = SharedProps &
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Transition configuration for the scrubber beacon.
+     * Stroke color of the scrubber beacon circle.
+     * @default 'var(--color-bg)'
      */
-    beaconTransitions?: ScrubberBeaconProps['transitions'];
+    beaconStroke?: string;
   };
 
 export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Transition configuration for the scrubber.
+   * Controls enter, update, and pulse animations for beacons and beacon labels.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Transition configuration for the scrubber beacon.
+   * @deprecated Use `transitions` instead.
+   */
+  beaconTransitions?: ScrubberBeaconProps['transitions'];
   /**
    * Accessibility label for the scrubber. Can be a static string or a function that receives the current dataIndex.
    * If not provided, label will be used if it resolves to a string.
    */
   accessibilityLabel?: string | ((dataIndex: number) => string);
-  /**
-   * Custom styles for scrubber elements.
-   */
+  /** Custom styles for individual elements of the Scrubber component */
   styles?: {
+    /** Overlay element */
     overlay?: React.CSSProperties;
+    /** Beacon circle element */
     beacon?: React.CSSProperties;
+    /** Scrubber line element */
     line?: React.CSSProperties;
+    /** Scrubber line label element */
+    label?: React.CSSProperties;
+    /** Beacon label element */
     beaconLabel?: React.CSSProperties;
   };
-  /**
-   * Custom class names for scrubber elements.
-   */
+  /** Custom class names for individual elements of the Scrubber component */
   classNames?: {
+    /** Overlay element */
     overlay?: string;
+    /** Beacon circle element */
     beacon?: string;
+    /** Scrubber line element */
     line?: string;
+    /** Scrubber line label element */
+    label?: string;
+    /** Beacon label element */
     beaconLabel?: string;
   };
 };
@@ -226,6 +296,7 @@ export const Scrubber = memo(
     (
       {
         seriesIds,
+        hideBeaconLabels,
         hideLine,
         label,
         accessibilityLabel,
@@ -239,12 +310,15 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        beaconLabelPreferredSide,
         labelFont,
         labelBoundsInset,
         beaconLabelFont,
         testID,
         idlePulse,
         beaconTransitions,
+        transitions = beaconTransitions,
+        beaconStroke,
         styles,
         classNames,
       },
@@ -253,8 +327,17 @@ export const Scrubber = memo(
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXScale, getXAxis, animate, series, drawingArea, dataLength } =
-        useCartesianChartContext();
+      const {
+        layout,
+        getXScale,
+        getYScale,
+        getXAxis,
+        getYAxis,
+        animate,
+        series,
+        drawingArea,
+        dataLength,
+      } = useCartesianChartContext();
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -270,24 +353,29 @@ export const Scrubber = memo(
         return seriesIds;
       }, [series, seriesIds]);
 
-      const { dataX, dataIndex } = useMemo(() => {
-        const xScale = getXScale() as ChartScaleFunction;
-        const xAxis = getXAxis();
-        if (!xScale) return { dataX: undefined, dataIndex: undefined };
+      const { dataValue, dataIndex } = useMemo(() => {
+        const categoryAxisIsX = layout !== 'horizontal';
+        const indexScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+        const indexAxis = categoryAxisIsX ? getXAxis() : getYAxis();
+        if (!indexScale) return { dataValue: undefined, dataIndex: undefined };
 
         const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
-        // Convert index to actual x value if axis has data
-        let dataX: number;
-        if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex] !== undefined) {
-          const dataValue = xAxis.data[dataIndex];
-          dataX = typeof dataValue === 'string' ? dataIndex : dataValue;
+        // Convert index to actual data value if axis has data
+        let dataValue: number;
+        if (
+          indexAxis?.data &&
+          Array.isArray(indexAxis.data) &&
+          indexAxis.data[dataIndex] !== undefined
+        ) {
+          const val = indexAxis.data[dataIndex];
+          dataValue = typeof val === 'string' ? dataIndex : val;
         } else {
-          dataX = dataIndex;
+          dataValue = dataIndex;
         }
 
-        return { dataX, dataIndex };
-      }, [getXScale, getXAxis, scrubberPosition, dataLength]);
+        return { dataValue, dataIndex };
+      }, [getXScale, getYScale, getXAxis, getYAxis, scrubberPosition, dataLength, layout]);
 
       // Compute resolved accessibility label
       const resolvedAccessibilityLabel = useMemo(() => {
@@ -318,12 +406,19 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      // Check if we have at least the default X scale
-      const defaultXScale = getXScale();
-      if (!defaultXScale) return null;
+      const groupEnterTransition = useMemo(
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
+      );
+      const shouldAnimateGroup = animate && groupEnterTransition !== null;
 
-      const pixelX =
-        dataX !== undefined && defaultXScale ? getPointOnScale(dataX, defaultXScale) : undefined;
+      const categoryAxisIsX = layout !== 'horizontal';
+      const showBeaconLabels = !hideBeaconLabels && categoryAxisIsX && beaconLabels.length > 0;
+      const indexScale = categoryAxisIsX ? getXScale() : getYScale();
+      if (!indexScale) return null;
+
+      const pixelPos =
+        dataValue !== undefined && indexScale ? getPointOnScale(dataValue, indexScale) : undefined;
 
       return (
         <motion.g
@@ -333,63 +428,75 @@ export const Scrubber = memo(
           data-component="scrubber-group"
           data-testid={testID}
           role="status"
-          {...(animate
+          {...(shouldAnimateGroup
             ? {
                 animate: {
                   opacity: 1,
-                  transition: {
-                    duration: accessoryFadeTransitionDuration,
-                    delay: accessoryFadeTransitionDelay,
-                  },
+                  transition: groupEnterTransition,
                 },
-                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
                 initial: { opacity: 0 },
               }
             : {})}
         >
-          {!hideOverlay && scrubberPosition !== undefined && pixelX !== undefined && (
+          {!hideOverlay && scrubberPosition !== undefined && pixelPos !== undefined && (
             <rect
               className={classNames?.overlay}
               fill="var(--color-bg)"
-              height={drawingArea.height + overlayOffset * 2}
+              height={
+                categoryAxisIsX
+                  ? drawingArea.height + overlayOffset * 2
+                  : drawingArea.y + drawingArea.height - pixelPos + overlayOffset
+              }
               opacity={0.8}
               style={styles?.overlay}
-              width={drawingArea.x + drawingArea.width - pixelX + overlayOffset}
-              x={pixelX}
-              y={drawingArea.y - overlayOffset}
+              width={
+                categoryAxisIsX
+                  ? drawingArea.x + drawingArea.width - pixelPos + overlayOffset
+                  : drawingArea.width + overlayOffset * 2
+              }
+              x={categoryAxisIsX ? pixelPos : drawingArea.x - overlayOffset}
+              y={categoryAxisIsX ? drawingArea.y - overlayOffset : pixelPos}
             />
           )}
-          {!hideLine && scrubberPosition !== undefined && dataX !== undefined && (
-            <ReferenceLine
-              LabelComponent={LabelComponent}
-              LineComponent={LineComponent}
-              classNames={{ label: classNames?.line }}
-              dataX={dataX}
-              label={typeof label === 'function' ? label(dataIndex) : label}
-              labelBoundsInset={labelBoundsInset}
-              labelElevated={labelElevated}
-              labelFont={labelFont}
-              stroke={lineStroke}
-              styles={{ label: styles?.line }}
-            />
-          )}
+          {!hideLine &&
+            scrubberPosition !== undefined &&
+            dataValue !== undefined &&
+            dataIndex !== undefined && (
+              <ReferenceLine
+                LabelComponent={LabelComponent}
+                LineComponent={LineComponent}
+                classNames={{ label: classNames?.label, line: classNames?.line }}
+                label={typeof label === 'function' ? label(dataIndex) : label}
+                labelBoundsInset={labelBoundsInset}
+                labelElevated={labelElevated}
+                labelFont={labelFont}
+                stroke={lineStroke}
+                styles={{ label: styles?.label, line: styles?.line }}
+                {...(categoryAxisIsX ? { dataX: dataValue } : { dataY: dataValue })}
+              />
+            )}
           <ScrubberBeaconGroup
             ref={beaconGroupRef}
             BeaconComponent={BeaconComponent}
             className={classNames?.beacon}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
+            stroke={beaconStroke}
             style={styles?.beacon}
             testID={testID}
-            transitions={beaconTransitions}
+            transitions={transitions}
           />
-          {beaconLabels.length > 0 && (
+          {showBeaconLabels && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              className={classNames?.beaconLabel}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
+              labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              style={styles?.beaconLabel}
+              transitions={transitions}
             />
           )}
         </motion.g>

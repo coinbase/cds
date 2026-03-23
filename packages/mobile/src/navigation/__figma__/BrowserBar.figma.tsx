@@ -9,11 +9,11 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4224',
   {
     imports: [
-      "import { BrowserBar } from '@coinbase/cds-mobile/navigation/BrowserBar';",
-      "import { BrowserBarSearchInput } from '@coinbase/cds-mobile/navigation/BrowserBarSearchInput';",
-      "import { Divider } from '@coinbase/cds-mobile/layout/Divider';",
-      "import { VStack } from '@coinbase/cds-mobile/layout/VStack';",
-      "import { HStack } from '@coinbase/cds-mobile/layout/HStack';",
+      "import { BrowserBar } from '@coinbase/cds-mobile/navigation/BrowserBar'",
+      "import { BrowserBarSearchInput } from '@coinbase/cds-mobile/navigation/BrowserBarSearchInput'",
+      "import { Divider } from '@coinbase/cds-mobile/layout/Divider'",
+      "import { VStack } from '@coinbase/cds-mobile/layout/VStack'",
+      "import { HStack } from '@coinbase/cds-mobile/layout/HStack'",
     ],
     props: {
       leftAction: figma.boolean('show left action', {

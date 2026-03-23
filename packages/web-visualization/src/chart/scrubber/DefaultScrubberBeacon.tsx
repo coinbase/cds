@@ -1,4 +1,5 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import {
   m as motion,
   type Transition,
@@ -7,17 +8,18 @@ import {
 } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, projectPoint } from '../utils';
+import { defaultTransition, getTransition, instantTransition, projectPoint } from '../utils';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
-const radius = 5;
-const strokeWidth = 2;
+const defaultRadius = 5;
+const defaultStrokeWidth = 2;
+const defaultStroke = 'var(--color-bg)';
 
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
-const pulseRadiusStart = 10;
-const pulseRadiusEnd = 15;
+const pulseRadiusStartMultiplier = 2;
+const pulseRadiusEndMultiplier = 3;
 
 const defaultPulseTransition: Transition = {
   duration: 1.6,
@@ -26,7 +28,18 @@ const defaultPulseTransition: Transition = {
 
 const defaultPulseRepeatDelay = 0.4;
 
-export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
+export type DefaultScrubberBeaconProps = ScrubberBeaconProps & {
+  /**
+   * Radius of the beacon circle.
+   * @default 5
+   */
+  radius?: number;
+  /**
+   * Stroke width of the beacon circle.
+   * @default 2
+   */
+  strokeWidth?: number;
+};
 
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
@@ -38,19 +51,30 @@ export const DefaultScrubberBeacon = memo(
         dataY,
         isIdle,
         idlePulse,
+        animate: animateProp,
         transitions,
         opacity = 1,
+        radius = defaultRadius,
+        stroke = defaultStroke,
+        strokeWidth = defaultStrokeWidth,
         className,
         style,
-        testID,
+        testID = `${seriesId}-beacon`,
       },
       ref,
     ) => {
-      const [scope, animate] = useAnimate();
-      const { getSeries, getXScale, getYScale, drawingArea } = useCartesianChartContext();
+      const [scope, animateFn] = useAnimate();
+      const {
+        animate: animateContext,
+        getSeries,
+        getXScale,
+        getYScale,
+        drawingArea,
+      } = useCartesianChartContext();
+      const animate = animateProp ?? animateContext;
 
       const targetSeries = getSeries(seriesId);
-      const xScale = getXScale();
+      const xScale = getXScale(targetSeries?.xAxisId);
       const yScale = getYScale(targetSeries?.yAxisId);
 
       const color = useMemo(
@@ -58,10 +82,14 @@ export const DefaultScrubberBeacon = memo(
         [colorProp, targetSeries],
       );
 
-      const updateTransition = useMemo(
-        () => transitions?.update ?? defaultTransition,
-        [transitions?.update],
-      );
+      const prevIsIdle = usePreviousValue(isIdle);
+      const isIdleTransition = prevIsIdle !== undefined && isIdle !== prevIsIdle;
+
+      const updateTransition = useMemo(() => {
+        if (isIdleTransition) return instantTransition;
+        if (!isIdle) return instantTransition;
+        return getTransition(transitions?.update, animate, defaultTransition);
+      }, [transitions?.update, isIdle, animate, isIdleTransition]);
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
@@ -76,13 +104,16 @@ export const DefaultScrubberBeacon = memo(
         return projectPoint({ x: dataX, y: dataY, xScale, yScale });
       }, [dataX, dataY, xScale, yScale]);
 
+      const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
+      const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
+
       useImperativeHandle(
         ref,
         () => ({
           pulse: () => {
             // Only pulse when idle and idlePulse is not enabled
             if (isIdle && !idlePulse && scope.current) {
-              animate(
+              animateFn(
                 scope.current,
                 {
                   opacity: [pulseOpacityStart, pulseOpacityEnd],
@@ -93,7 +124,7 @@ export const DefaultScrubberBeacon = memo(
             }
           },
         }),
-        [isIdle, idlePulse, scope, animate, pulseTransition],
+        [isIdle, idlePulse, scope, animateFn, pulseTransition, pulseRadiusStart, pulseRadiusEnd],
       );
 
       // Create continuous pulse transition by repeating the base pulse transition with delay
@@ -120,68 +151,52 @@ export const DefaultScrubberBeacon = memo(
 
       if (!pixelCoordinate) return;
 
-      if (isIdle) {
-        return (
-          <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
-            <motion.g
-              animate={{
-                x: pixelCoordinate.x,
-                y: pixelCoordinate.y,
-              }}
-              initial={false}
-              transition={updateTransition}
-            >
-              <motion.circle
-                ref={scope}
-                animate={
-                  shouldPulse
-                    ? {
-                        opacity: [pulseOpacityStart, pulseOpacityEnd],
-                        r: [pulseRadiusStart, pulseRadiusEnd],
-                        transition: continuousPulseTransition,
-                      }
-                    : { opacity: pulseOpacityEnd, r: pulseRadiusStart }
+      const pulseCircle = (
+        <motion.circle
+          ref={scope}
+          animate={
+            shouldPulse
+              ? {
+                  opacity: [pulseOpacityStart, pulseOpacityEnd],
+                  r: [pulseRadiusStart, pulseRadiusEnd],
+                  transition: continuousPulseTransition,
                 }
-                cx={0}
-                cy={0}
-                fill={color}
-                initial={{
-                  opacity: shouldPulse ? pulseOpacityStart : pulseOpacityEnd,
-                  r: pulseRadiusStart,
-                }}
-              />
-            </motion.g>
-            <motion.circle
-              animate={{
-                cx: pixelCoordinate.x,
-                cy: pixelCoordinate.y,
-              }}
-              className={className}
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={color}
-              initial={false}
-              r={radius}
-              stroke="var(--color-bg)"
-              strokeWidth={strokeWidth}
-              style={style}
-              transition={updateTransition}
-            />
-          </g>
-        );
-      }
+              : { opacity: pulseOpacityEnd, r: pulseRadiusStart }
+          }
+          cx={0}
+          cy={0}
+          data-testid={`${testID}-pulse`}
+          fill={color}
+          initial={{
+            opacity: shouldPulse ? pulseOpacityStart : pulseOpacityEnd,
+            r: pulseRadiusStart,
+          }}
+        />
+      );
 
       return (
         <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
-          <circle
+          {isIdle && (
+            <motion.g
+              animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              initial={false}
+              transition={updateTransition ?? instantTransition}
+            >
+              {pulseCircle}
+            </motion.g>
+          )}
+          <motion.circle
+            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
             className={className}
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
             fill={color}
+            initial={false}
             r={radius}
-            stroke="var(--color-bg)"
+            stroke={stroke}
             strokeWidth={strokeWidth}
             style={style}
+            transition={updateTransition ?? instantTransition}
           />
         </g>
       );

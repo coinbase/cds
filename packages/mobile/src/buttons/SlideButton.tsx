@@ -17,7 +17,16 @@ export const slideButtonTestID = 'slide-button';
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
-  'borderRadius' | 'checked' | 'compact' | 'disabled' | 'uncheckedLabel' | 'variant'
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'checked'
+  | 'compact'
+  | 'disabled'
+  | 'uncheckedLabel'
+  | 'variant'
 > & {
   progress: SpringValue<number>;
   style?: StyleProp<ViewStyle>;
@@ -121,21 +130,13 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
    * If false, the user must release to complete the action.
    */
   autoCompleteSlideOnThresholdMet?: boolean;
-  /**
-   * Custom styles for the slide button.
-   */
+  /** Custom styles for individual elements of the SlideButton component */
   styles?: {
-    /**
-     * Custom style for the slide button container.
-     */
+    /** Container element */
     container?: StyleProp<ViewStyle>;
-    /**
-     * Custom style for the background area of the slide button.
-     */
+    /** Background element */
     background?: StyleProp<ViewStyle>;
-    /**
-     * Custom style for the handle area of the slide button.
-     */
+    /** Handle element */
     handle?: StyleProp<ViewStyle>;
   };
   /**
@@ -159,6 +160,10 @@ export const SlideButton = memo(
         checked,
         compact,
         borderRadius = compact ? 700 : 900,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
         uncheckedLabel,
         checkedLabel,
         onSlideStart,
@@ -292,7 +297,11 @@ export const SlideButton = memo(
       return (
         <View ref={ref} id={labelId} onLayout={onLayout} style={containerStyle} testID={testID}>
           <SlideButtonBackgroundComponent
+            borderBottomLeftRadius={borderBottomLeftRadius}
+            borderBottomRightRadius={borderBottomRightRadius}
             borderRadius={borderRadius}
+            borderTopLeftRadius={borderTopLeftRadius}
+            borderTopRightRadius={borderTopRightRadius}
             checked={checked}
             compact={compact}
             disabled={disabled}
@@ -309,7 +318,11 @@ export const SlideButton = memo(
                 {...(typeof accessibilityLabel === 'string'
                   ? { accessibilityLabel }
                   : { accessibilityLabelledBy: labelId })}
+                borderBottomLeftRadius={borderBottomLeftRadius}
+                borderBottomRightRadius={borderBottomRightRadius}
                 borderRadius={borderRadius}
+                borderTopLeftRadius={borderTopLeftRadius}
+                borderTopRightRadius={borderTopRightRadius}
                 checked={checked}
                 checkedLabel={checkedLabel}
                 compact={compact}

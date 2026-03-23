@@ -34,9 +34,11 @@ export const DottedLine = memo<DottedLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
+    xAxisId,
     yAxisId,
     d,
     animate,
+    transitions,
     transition,
     ...props
   }) => {
@@ -54,10 +56,11 @@ export const DottedLine = memo<DottedLineProps>(
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
         transition={transition}
+        transitions={transitions}
         {...props}
       >
         <DashPathEffect intervals={dashIntervals} />
-        {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+        {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
       </Path>
     );
   },

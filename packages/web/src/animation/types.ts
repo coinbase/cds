@@ -1,7 +1,7 @@
 import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 import type { AnimationEventName, AnimationItem, SVGRendererConfig } from 'lottie-web';
 
-import type { BoxBaseProps } from '../layout';
+import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout';
 
 export type LottieEventHandlersMap = {
   [key in LottieListener['name']]?: LottieListener['handler'];
@@ -19,12 +19,10 @@ export type LottieBaseProps<T extends string, Source extends LottieSource<T>> = 
   /**
    * A boolean flag indicating whether or not the animation should start automatically when
    * mounted. This only affects the imperative API.
-   * @default false
    */
   autoplay?: boolean;
   /**
    * A boolean flag indicating whether or not the animation should loop.
-   * @default false
    */
   loop?: boolean;
   /**
@@ -55,6 +53,7 @@ export type LottieBaseProps<T extends string, Source extends LottieSource<T>> = 
 export type LottieProps<T extends string, Source extends LottieSource<T>> = LottieBaseProps<
   T,
   Source
->;
+> &
+  BoxProps<BoxDefaultElement>;
 
 export type LottieAnimationRef = React.MutableRefObject<AnimationItem | undefined>;

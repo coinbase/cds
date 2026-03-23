@@ -1,4 +1,4 @@
-<!-- Please ensure your pull request title adheres to our [Commit Message Conventions](https://github.com/coinbase/cds/blob/develop/docs/misc.md#commit-message-conventions). -->
+<!-- Please ensure your pull request title adheres to our [PR Title Convention](https://github.com/coinbase/cds/blob/master/CONTRIBUTING.md#pr-title-convention). -->
 
 ## What changed? Why?
 

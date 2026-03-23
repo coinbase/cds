@@ -1,0 +1,10 @@
+.highlight {
+  box-shadow: inset 0 0 0 2px rgb(var(--red40));
+  background-color: rgba(var(--red40), 0.1);
+}
+
+/* SVG elements: use stroke since box-shadow doesn't work */
+:global(svg) .highlight {
+  stroke: rgb(var(--red40)) !important;
+  stroke-width: 2;
+}

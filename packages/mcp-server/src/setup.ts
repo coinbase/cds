@@ -76,15 +76,24 @@ const findRepoRoot = (startPath: string) => {
   }
 };
 
-const installRules = (agentRoot: string) => {
+const CURSOR_MDC_HEADER = `---
+description: Apply when working with React components, UI implementations, or Coinbase Design System usage. This rule ensures proper use of CDS components.
+---
+`;
+
+const installCursorRules = (agentRoot: string) => {
   try {
-    const sourceFile = path.join(__dirname, 'cds.mdc');
+    const sourceFile = path.join(__dirname, 'cds.md');
     const outputDirectory = path.join(agentRoot, 'rules');
     const outputFile = path.join(outputDirectory, 'cds.mdc');
 
     if (!fs.existsSync(outputDirectory)) fs.mkdirSync(outputDirectory, { recursive: true });
 
-    fs.cpSync(sourceFile, outputFile);
+    // Read the plain markdown source and prepend the Cursor MDC header
+    const sourceContent = fs.readFileSync(sourceFile, 'utf8');
+    const mdcContent = CURSOR_MDC_HEADER + sourceContent;
+
+    fs.writeFileSync(outputFile, mdcContent);
     console.log(`✅ Copied CDS rules to ${outputFile}`);
   } catch (error: unknown) {
     console.error(
@@ -94,7 +103,46 @@ const installRules = (agentRoot: string) => {
   }
 };
 
-const installMcpServer = (repoRoot: string, cursorRoot: string) => {
+const installClaudeRules = (repoRoot: string, agentRoot: string) => {
+  try {
+    const sourceFile = path.join(__dirname, 'cds.md');
+    const outputDirectory = path.join(agentRoot, 'rules');
+    const outputFile = path.join(outputDirectory, 'cds.md');
+
+    if (!fs.existsSync(outputDirectory)) fs.mkdirSync(outputDirectory, { recursive: true });
+
+    // Simply copy the plain markdown file for Claude Code
+    fs.cpSync(sourceFile, outputFile);
+    console.log(`✅ Copied CDS rules to ${outputFile}`);
+
+    // Update or create CLAUDE.md with reference to the rules file
+    const claudeMdPath = path.join(repoRoot, 'CLAUDE.md');
+    const claudeRulesReference = '@.claude/rules/cds.md';
+
+    if (fs.existsSync(claudeMdPath)) {
+      const claudeMdContent = fs.readFileSync(claudeMdPath, 'utf8');
+      if (!claudeMdContent.includes(claudeRulesReference)) {
+        // Add the reference at the beginning of the file
+        const updatedContent = `${claudeRulesReference}\n\n${claudeMdContent}`;
+        fs.writeFileSync(claudeMdPath, updatedContent);
+        console.log(`✅ Added CDS rules reference to ${claudeMdPath}`);
+      } else {
+        console.log(`✅ CDS rules reference already exists in ${claudeMdPath}`);
+      }
+    } else {
+      // Create CLAUDE.md with the reference
+      fs.writeFileSync(claudeMdPath, `${claudeRulesReference}\n`);
+      console.log(`✅ Created ${claudeMdPath} with CDS rules reference`);
+    }
+  } catch (error: unknown) {
+    console.error(
+      '❌ Failed to copy CDS rules:',
+      error instanceof Error ? error.message : String(error),
+    );
+  }
+};
+
+const installCursorMcpServer = (repoRoot: string, cursorRoot: string) => {
   const mcpServerConfigPath = path.join(cursorRoot, 'mcp.json');
   let newMcpServerConfig: { mcpServers: Record<string, { command: string; args: string[] }> } = {
     mcpServers: {},
@@ -140,6 +188,41 @@ const installMcpServer = (repoRoot: string, cursorRoot: string) => {
   console.log(`✅ Updated MCP server config in ${mcpServerConfigPath}`);
 };
 
+const installClaudeMcpServer = (repoRoot: string) => {
+  const mcpServerConfigPath = path.join(repoRoot, '.mcp.json');
+  let newMcpServerConfig: { mcpServers: Record<string, { command: string; args: string[] }> } = {
+    mcpServers: {},
+  };
+
+  // Claude Code doesn't need --prefix args
+  const mcpServerArgs = ['-y', '@coinbase/cds-mcp-server'];
+
+  if (args.noTelemetry) mcpServerArgs.unshift('DISABLE_CDS_MCP_TELEMETRY=1');
+
+  const cdsMcpServerConfig = {
+    cds: {
+      command: 'npx',
+      args: mcpServerArgs,
+    },
+  };
+
+  try {
+    const currentMcpServerConfig = JSON.parse(fs.readFileSync(mcpServerConfigPath, 'utf8'));
+    newMcpServerConfig = {
+      ...currentMcpServerConfig,
+      mcpServers: {
+        ...currentMcpServerConfig.mcpServers,
+        ...cdsMcpServerConfig,
+      },
+    };
+  } catch {
+    newMcpServerConfig = { mcpServers: cdsMcpServerConfig };
+  }
+
+  fs.writeFileSync(mcpServerConfigPath, JSON.stringify(newMcpServerConfig, null, 2));
+  console.log(`✅ Updated MCP server config in ${mcpServerConfigPath}`);
+};
+
 for (const agentValue of selectedAgents) {
   const agent = agentOptions.find((agent) => agent.value === agentValue);
   if (!agent) {
@@ -154,6 +237,11 @@ for (const agentValue of selectedAgents) {
   const repoRoot = findRepoRoot(process.cwd());
   const agentRoot = path.join(repoRoot, agent.directory);
 
-  installRules(agentRoot);
-  installMcpServer(repoRoot, agentRoot);
+  if (agent.value === 'cursor') {
+    installCursorRules(agentRoot);
+    installCursorMcpServer(repoRoot, agentRoot);
+  } else if (agent.value === 'claude') {
+    installClaudeRules(repoRoot, agentRoot);
+    installClaudeMcpServer(repoRoot);
+  }
 }

@@ -2,51 +2,14 @@ import type React from 'react';
 
 import { type LineComponent } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { accessoryFadeTransitionDuration, type AxisBandPlacement } from '../utils';
 
 /**
- * Animation variants for grouped axis tick labels - initial mount
- * Note: Mobile currently doesn't use these variants. Axes render immediately without animation.
- * Web uses similar variants with delay to match path enter animation timing.
+ * Animation transition for axis elements (grid lines, tick marks, tick labels).
+ * Matches web's axisUpdateAnimationTransition timing.
  */
-export const axisTickLabelsInitialAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0,
-      delay: 0,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.15,
-    },
-  },
-};
-
-/**
- * Animation variants for axis elements - updates (used for both grid lines and tick labels)
- */
-export const axisUpdateAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.15,
-      delay: 0.15, // For updates: fade out 150ms, then fade in 150ms
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.15,
-    },
-  },
+export const axisUpdateAnimationTransition = {
+  duration: accessoryFadeTransitionDuration,
 };
 
 export type AxisTickLabelComponentProps = Pick<
@@ -71,6 +34,20 @@ export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
 export type AxisBaseProps = {
   /**
+   * Placement of grid lines relative to each band.
+   * Options: 'start', 'middle', 'end', 'edges'
+   * @note This property only applies to band scales.
+   * @default 'edges'
+   */
+  bandGridLinePlacement?: AxisBandPlacement;
+  /**
+   * Placement of tick marks relative to each band.
+   * Options: 'start', 'middle', 'end', 'edges'
+   * @note This property only applies to band scales.
+   * @default 'middle'
+   */
+  bandTickMarkPlacement?: AxisBandPlacement;
+  /**
    * Label text to display for the axis.
    */
   label?: string;
@@ -90,7 +67,9 @@ export type AxisBaseProps = {
    * This value is passed into d3 and may not be respected.
    * @note This property is overridden when `ticks` is provided.
    * @note this property overrides the `tickInterval` property.
-   * @default 5 (for y-axis)
+   * @default 5 for value axes by layout:
+   * - X axis when chart layout is horizontal
+   * - Y axis when chart layout is vertical
    */
   requestedTickCount?: number;
   /**

@@ -5,21 +5,14 @@ import { SidebarItem } from '../SidebarItem';
 
 figma.connect(
   SidebarItem,
-  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=252%3A12892',
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=252-12892',
   {
     imports: ["import { SidebarItem } from '@coinbase/cds-web/navigation/SidebarItem';"],
+    variant: { type: 'default', state: 'default', active: 'true' },
     props: {
-      active: figma.boolean('active'),
-      title: figma.boolean('show label', {
-        true: figma.string('label text'),
-        false: undefined,
-      }),
-      icon: figma.boolean('show start icon', {
-        true: 'heart',
-        false: undefined,
-      }),
+      title: figma.textContent('Label'),
     },
-    // @ts-expect-error not typed
-    example: (props) => <SidebarItem {...props} />,
+
+    example: (props) => <SidebarItem active icon="home" {...props} />,
   },
 );

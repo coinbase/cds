@@ -1,9 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Meta } from '@storybook/react';
 
 import { Button } from '../../../buttons/Button';
+import { ListCell } from '../../../cells/ListCell';
+import { useBreakpoints } from '../../../hooks/useBreakpoints';
+import { Pictogram } from '../../../illustrations/Pictogram';
+import { Box } from '../../../layout/Box';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
+import { PageFooter } from '../../../page/PageFooter';
 import { Text } from '../../../typography/Text';
 import type { TrayRefProps } from '../Tray';
 import { Tray } from '../Tray';
@@ -173,8 +178,13 @@ export const Default = () => {
         <Text font="headline">Tray with Long Content</Text>
         <Button onClick={() => setShowLongContentTray(true)}>Open Long Content Tray</Button>
         {showLongContentTray && (
-          <Tray onCloseComplete={() => setShowLongContentTray(false)} title="Long Content Example">
-            <VStack gap={1}>
+          <Tray
+            disableArrowKeyNavigation
+            focusTabIndexElements
+            onCloseComplete={() => setShowLongContentTray(false)}
+            title="Long Content Example"
+          >
+            <VStack gap={1} tabIndex={0}>
               <Text font="body">
                 This example demonstrates how the tray handles a large amount of content. The tray
                 should expand appropriately and enable scrolling when needed.
@@ -194,6 +204,426 @@ export const Default = () => {
           </Tray>
         )}
       </VStack>
+    </VStack>
+  );
+};
+
+export const ResponsiveBasic = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          title="Section header"
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveIllustration = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          title={
+            <VStack gap={isPhone ? 1.5 : 2}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Welcome aboard</Text>
+            </VStack>
+          }
+        >
+          <Text color="fgMuted" font="body" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveFullBleedImage = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          classNames={{
+            closeButton: 'tray-close-button-inverted',
+          }}
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Close
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          header={
+            <Text
+              font="title3"
+              paddingBottom={0.75}
+              paddingTop={2}
+              paddingX={{ base: 4, phone: 3 }}
+            >
+              Header
+            </Text>
+          }
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+          }}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+        >
+          <VStack gap={2} paddingBottom={2}>
+            <Text font="body">This is the content of the tray.</Text>
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveBasicListCells = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            header: { paddingBottom: 'var(--space-1)' },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          title="Section header"
+        >
+          <VStack tabIndex={0}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveIllustrationListCells = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
+          footer={({ handleClose }) => (
+            <PageFooter
+              borderedTop
+              action={
+                <Button block={isPhone} onClick={handleClose}>
+                  Button
+                </Button>
+              }
+              justifyContent={isPhone ? 'center' : 'flex-end'}
+            />
+          )}
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            header: { paddingBottom: 'var(--space-1)' },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          title={
+            <VStack gap={isPhone ? 1.5 : 2}>
+              <Pictogram name="addWallet" />
+              <Text font="title3">Welcome aboard</Text>
+            </VStack>
+          }
+        >
+          <VStack tabIndex={0}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ResponsiveFullBleedImageListCells = () => {
+  const { isPhone } = useBreakpoints();
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open after initial load to properly configure scroll ref in StrictMode
+  useEffect(() => setIsOpen(true), []);
+
+  return (
+    <>
+      <style>{`
+        .tray-close-button-inverted {
+          color: white;
+        }
+        .tray-close-button-inverted:hover,
+        .tray-close-button-inverted:focus-visible {
+          background-color: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+      <Button onClick={() => setIsOpen(true)}>Open Tray</Button>
+      {isOpen && (
+        <Tray
+          disableArrowKeyNavigation
+          focusTabIndexElements
+          classNames={{
+            closeButton: 'tray-close-button-inverted',
+          }}
+          header={
+            <Text
+              font="title3"
+              paddingBottom={0.75}
+              paddingTop={2}
+              paddingX={{ base: 4, phone: 3 }}
+            >
+              Header
+            </Text>
+          }
+          hideCloseButton={isPhone}
+          onCloseComplete={() => setIsOpen(false)}
+          pin={isPhone ? 'bottom' : 'right'}
+          showHandleBar={isPhone}
+          styles={{
+            handleBar: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            },
+            handleBarHandle: {
+              backgroundColor: 'white',
+              opacity: 1,
+            },
+            closeButton: {
+              position: 'absolute',
+              top: 'var(--space-4)',
+              right: 'var(--space-4)',
+              zIndex: 1,
+            },
+            header: {
+              paddingTop: 0,
+            },
+            content: { paddingBottom: 'var(--space-3)' },
+          }}
+          title={
+            <Box flexGrow={1} marginX={{ base: -4, phone: -3 }}>
+              <img
+                alt="Full Bleed"
+                height={180}
+                src="https://static-assets.coinbase.com/design-system/placeholder/coinbaseHeader.jpg"
+                style={{ objectFit: 'cover', pointerEvents: 'none' }}
+                width="100%"
+              />
+            </Box>
+          }
+        >
+          <VStack tabIndex={0}>
+            {Array.from({ length: 20 }, (_, i) => (
+              <ListCell
+                key={i}
+                accessory="arrow"
+                description="Description"
+                innerSpacing={{
+                  marginX: -4,
+                  paddingX: 4,
+                  paddingY: 1,
+                }}
+                spacingVariant="condensed"
+                title="Title"
+              />
+            ))}
+          </VStack>
+        </Tray>
+      )}
+    </>
+  );
+};
+
+export const ReduceMotion = () => {
+  const [showBasicTray, setShowBasicTray] = useState(false);
+
+  return (
+    <VStack alignItems="flex-start" gap={2}>
+      <Text font="headline">Basic Tray with String Title</Text>
+      <Button onClick={() => setShowBasicTray(true)}>Open Basic Tray</Button>
+      {showBasicTray && (
+        <Tray
+          reduceMotion
+          onCloseComplete={() => setShowBasicTray(false)}
+          title="Basic Tray Example"
+        >
+          <VStack gap={1}>
+            <Text font="body">
+              This is a basic tray with a simple string title. Clicking outside or pressing ESC will
+              close it.
+            </Text>
+            <Text font="body">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget
+              aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nunc nisl eu nunc.
+            </Text>
+          </VStack>
+        </Tray>
+      )}
     </VStack>
   );
 };

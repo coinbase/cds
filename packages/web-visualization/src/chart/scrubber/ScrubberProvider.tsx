@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from '../utils';
+import {
+  type ChartScaleFunction,
+  isCategoricalScale,
+  ScrubberContext,
+  type ScrubberContextValue,
+} from '../utils';
 
 export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
@@ -29,25 +34,26 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     throw new Error('ScrubberProvider must be used within a ChartContext');
   }
 
-  const { getXScale, getXAxis, series } = chartContext;
+  const { layout, getXScale, getYScale, getXAxis, getYAxis, series } = chartContext;
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
 
-  const getDataIndexFromX = useCallback(
-    (mouseX: number): number => {
-      const xScale = getXScale();
-      const xAxis = getXAxis();
+  const getDataIndexFromPosition = useCallback(
+    (mousePosition: number): number => {
+      const categoryAxisIsX = layout !== 'horizontal';
+      const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+      const categoryAxis = categoryAxisIsX ? getXAxis() : getYAxis();
 
-      if (!xScale || !xAxis) return 0;
+      if (!categoryScale || !categoryAxis) return 0;
 
-      if (isCategoricalScale(xScale)) {
-        const categories = xScale.domain?.() ?? xAxis.data ?? [];
-        const bandwidth = xScale.bandwidth?.() ?? 0;
+      if (isCategoricalScale(categoryScale)) {
+        const categories = categoryScale.domain?.() ?? categoryAxis.data ?? [];
+        const bandwidth = categoryScale.bandwidth?.() ?? 0;
         let closestIndex = 0;
         let closestDistance = Infinity;
         for (let i = 0; i < categories.length; i++) {
-          const xPos = xScale(i);
-          if (xPos !== undefined) {
-            const distance = Math.abs(mouseX - (xPos + bandwidth / 2));
+          const pos = categoryScale(i);
+          if (pos !== undefined) {
+            const distance = Math.abs(mousePosition - (pos + bandwidth / 2));
             if (distance < closestDistance) {
               closestDistance = distance;
               closestIndex = i;
@@ -57,7 +63,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         return closestIndex;
       } else {
         // For numeric scales with axis data, find the nearest data point
-        const axisData = xAxis.data;
+        const axisData = categoryAxis.data;
         if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
           // We have numeric axis data - find the closest data point
           const numericData = axisData as number[];
@@ -65,10 +71,10 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           let closestDistance = Infinity;
 
           for (let i = 0; i < numericData.length; i++) {
-            const xValue = numericData[i];
-            const xPos = xScale(xValue);
-            if (xPos !== undefined) {
-              const distance = Math.abs(mouseX - xPos);
+            const dataValue = numericData[i];
+            const pos = categoryScale(dataValue);
+            if (pos !== undefined) {
+              const distance = Math.abs(mousePosition - pos);
               if (distance < closestDistance) {
                 closestDistance = distance;
                 closestIndex = i;
@@ -77,37 +83,44 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           }
           return closestIndex;
         } else {
-          const xValue = xScale.invert(mouseX);
-          const dataIndex = Math.round(xValue);
-          const domain = xAxis.domain;
-          return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
+          const dataValue = (categoryScale as any).invert(mousePosition);
+          const dataIndexVal = Math.round(dataValue);
+          const domain = categoryAxis.domain;
+          return Math.max(domain.min ?? 0, Math.min(dataIndexVal, domain.max ?? 0));
         }
       }
     },
-    [getXScale, getXAxis],
+    [layout, getXScale, getYScale, getXAxis, getYAxis],
   );
 
   const handlePointerMove = useCallback(
-    (clientX: number, target: SVGSVGElement) => {
+    (clientX: number, clientY: number, target: SVGSVGElement) => {
       if (!enableScrubbing || !series || series.length === 0) return;
 
       const rect = target.getBoundingClientRect();
-      const x = clientX - rect.left;
+      const position = layout === 'horizontal' ? clientY - rect.top : clientX - rect.left;
 
-      const dataIndex = getDataIndexFromX(x);
+      const dataIndex = getDataIndexFromPosition(position);
 
       if (dataIndex !== scrubberPosition) {
         setScrubberPosition(dataIndex);
         onScrubberPositionChange?.(dataIndex);
       }
     },
-    [enableScrubbing, series, getDataIndexFromX, scrubberPosition, onScrubberPositionChange],
+    [
+      enableScrubbing,
+      series,
+      layout,
+      getDataIndexFromPosition,
+      scrubberPosition,
+      onScrubberPositionChange,
+    ],
   );
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       const target = event.currentTarget as SVGSVGElement;
-      handlePointerMove(event.clientX, target);
+      handlePointerMove(event.clientX, event.clientY, target);
     },
     [handlePointerMove],
   );
@@ -119,7 +132,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       event.preventDefault();
       const touch = event.touches[0];
       const target = event.currentTarget as SVGSVGElement;
-      handlePointerMove(touch.clientX, target);
+      handlePointerMove(touch.clientX, touch.clientY, target);
     },
     [handlePointerMove],
   );
@@ -130,7 +143,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       // Handle initial touch
       const touch = event.touches[0];
       const target = event.currentTarget as SVGSVGElement;
-      handlePointerMove(touch.clientX, target);
+      handlePointerMove(touch.clientX, touch.clientY, target);
     },
     [enableScrubbing, handlePointerMove],
   );
@@ -148,12 +161,13 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     (event: KeyboardEvent) => {
       if (!enableScrubbing) return;
 
-      const xScale = getXScale();
-      const xAxis = getXAxis();
+      const categoryAxisIsX = layout !== 'horizontal';
+      const categoryScale = (categoryAxisIsX ? getXScale() : getYScale()) as ChartScaleFunction;
+      const categoryAxis = categoryAxisIsX ? getXAxis() : getYAxis();
 
-      if (!xScale || !xAxis) return;
+      if (!categoryScale || !categoryAxis) return;
 
-      const isBand = isCategoricalScale(xScale);
+      const isBand = isCategoricalScale(categoryScale);
 
       // Determine the actual data indices we can navigate to
       let minIndex: number;
@@ -162,13 +176,13 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
       if (isBand) {
         // For categorical scales, use the categories
-        const categories = xScale.domain?.() ?? xAxis.data ?? [];
+        const categories = categoryScale.domain?.() ?? categoryAxis.data ?? [];
         minIndex = 0;
         maxIndex = Math.max(0, categories.length - 1);
         dataPoints = categories.length;
       } else {
         // For numeric scales, check if we have specific data points
-        const axisData = xAxis.data;
+        const axisData = categoryAxis.data;
         if (axisData && Array.isArray(axisData)) {
           // We have specific data points - use their indices
           minIndex = 0;
@@ -176,7 +190,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           dataPoints = axisData.length;
         } else {
           // Fall back to domain-based navigation for continuous scales without specific data
-          const domain = xAxis.domain;
+          const domain = categoryAxis.domain;
           minIndex = domain.min ?? 0;
           maxIndex = domain.max ?? 0;
           dataPoints = maxIndex - minIndex + 1;
@@ -193,11 +207,11 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       let newIndex: number | undefined;
 
       switch (event.key) {
-        case 'ArrowLeft':
+        case categoryAxisIsX ? 'ArrowLeft' : 'ArrowUp':
           event.preventDefault();
           newIndex = Math.max(minIndex, currentIndex - stepSize);
           break;
-        case 'ArrowRight':
+        case categoryAxisIsX ? 'ArrowRight' : 'ArrowDown':
           event.preventDefault();
           newIndex = Math.min(maxIndex, currentIndex + stepSize);
           break;
@@ -222,7 +236,16 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         onScrubberPositionChange?.(newIndex);
       }
     },
-    [enableScrubbing, getXScale, getXAxis, scrubberPosition, onScrubberPositionChange],
+    [
+      enableScrubbing,
+      layout,
+      getXScale,
+      getYScale,
+      getXAxis,
+      getYAxis,
+      scrubberPosition,
+      onScrubberPositionChange,
+    ],
   );
 
   const handleBlur = useCallback(() => {

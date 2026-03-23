@@ -8,19 +8,21 @@ figma.connect(
   {
     imports: ["import { InputChip } from '@coinbase/cds-web/chips/InputChip'"],
     props: {
-      children: figma.string('value'),
+      children: figma.textContent('value'),
       start: figma.boolean('show start', {
         true: figma.instance('start'),
         false: undefined,
       }),
-      // state: figma.enum('state', {
-      //   default: 'default',
-      //   focused: 'focused',
-      //   hovered: 'hovered',
-      //   pressed: 'pressed',
-      // }),
-      disabled: figma.boolean('disabled'),
+      disabled: figma.enum('state', {
+        disabled: true,
+        default: false,
+        focused: false,
+        hovered: false,
+        pressed: false,
+      }),
       compact: figma.boolean('compact'),
+      // NOTE: The Figma 'show label' property doesn't have a direct mapping.
+      // To hide the label in React, omit the `children` prop or pass undefined.
     },
     example: (props) => <InputChip onClick={() => {}} {...props} />,
   },

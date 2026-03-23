@@ -1,8 +1,8 @@
 {
   "import": "import { ContentCardFooter } from '@coinbase/cds-web/cards/ContentCard'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/cards/ContentCard/ContentCardFooter.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-cards-contentcard--default",
-  "figma": "https://www.figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-Normal-CDS-Components?type=design&node-id=61%3A589&mode=design&t=VY6cW5sQK2K2giAk-1",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-cards-contentcard--basic",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=72941-17343&t=gV06AckLZnxpAsOk-4",
   "description": "A footer component for ContentCard.",
   "relatedComponents": [
     {

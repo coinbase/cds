@@ -176,7 +176,7 @@ const EarningsHistory = () => {
     },
   });
 
-  const LegendItem = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
+  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
     return (
       <Box alignItems="center" flexDirection="row" gap={0.5}>
         <Box style={[styles.legendDot, { opacity }]} />
@@ -212,8 +212,8 @@ const EarningsHistory = () => {
         <CirclePlot seriesId="actualEPS" />
       </CartesianChart>
       <HStack gap={2} justifyContent="flex-end">
-        <LegendItem label="Estimated EPS" opacity={0.5} />
-        <LegendItem label="Actual EPS" />
+        <LegendEntry label="Estimated EPS" opacity={0.5} />
+        <LegendEntry label="Actual EPS" />
       </HStack>
     </VStack>
   );
@@ -251,6 +251,10 @@ const PriceWithVolumeChart = memo(
       });
     }, []);
 
+    const formatVolume = useCallback((volume: number) => {
+      return `${(volume / 1000).toFixed(2)}K`;
+    }, []);
+
     const scrubberLabel = useCallback(
       (dataIndex: number) => {
         return formatDate(btcDates[dataIndex]);
@@ -258,9 +262,26 @@ const PriceWithVolumeChart = memo(
       [formatDate],
     );
 
+    const chartAccessibilityLabel = useMemo(() => {
+      const lastIndex = btcPrices.length - 1;
+      return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPriceInThousands(
+        btcPrices[lastIndex],
+      )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
+    }, [formatDate, formatPriceInThousands, formatVolume]);
+
+    const getScrubberAccessibilityLabel = useCallback(
+      (dataIndex: number) =>
+        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
+          btcPrices[dataIndex],
+        )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
+      [formatDate, formatPriceInThousands, formatVolume],
+    );
+
     return (
       <CartesianChart
         enableScrubbing
+        accessibilityLabel={chartAccessibilityLabel}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
         series={[
@@ -424,83 +445,6 @@ function TradingTrends() {
     </CartesianChart>
   );
 }
-
-const UVGradient: GradientDefinition = {
-  axis: 'y',
-  stops: [
-    { offset: 0, color: 'green' },
-    { offset: 3, color: 'yellow' },
-    { offset: 5, color: 'orange' },
-    { offset: 8, color: 'red' },
-    { offset: 10, color: 'purple' },
-  ],
-};
-
-const PreviousData = memo(
-  ({
-    children,
-    currentHour,
-    clipOffset = 0,
-  }: {
-    children: React.ReactNode;
-    currentHour: number;
-    clipOffset?: number;
-  }) => {
-    // we will clip the data to the current hour
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    const currentHourX = xScale?.(currentHour);
-
-    const clipPath = useMemo(() => {
-      if (!xScale || currentHourX === undefined) return null;
-
-      // Create a rectangle from top-left of drawing area to currentHourX on the right
-      // Apply clipOffset to left, top, and bottom edges only (NOT to currentHourX)
-      const pathString = `M ${drawingArea.x - clipOffset} ${drawingArea.y - clipOffset} L ${currentHourX} ${drawingArea.y - clipOffset} L ${currentHourX} ${drawingArea.y + drawingArea.height + clipOffset} L ${drawingArea.x - clipOffset} ${drawingArea.y + drawingArea.height + clipOffset} Z`;
-      return Skia.Path.MakeFromSVGString(pathString);
-    }, [xScale, currentHourX, drawingArea, clipOffset]);
-
-    if (!clipPath) return null;
-
-    return (
-      <Group clip={clipPath} opacity={0.75}>
-        {children}
-      </Group>
-    );
-  },
-);
-
-const FutureData = memo(
-  ({
-    children,
-    currentHour,
-    clipOffset = 0,
-  }: {
-    children: React.ReactNode;
-    currentHour: number;
-    clipOffset?: number;
-  }) => {
-    // we will clip the data from the current hour to the right edge
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    const currentHourX = xScale?.(currentHour);
-
-    const clipPath = useMemo(() => {
-      if (!xScale || currentHourX === undefined) return null;
-
-      // Create a rectangle from currentHourX to right edge of drawing area
-      // Apply clipOffset to top, bottom, and right, but NOT left (currentHourX)
-      const pathString = `M ${currentHourX} ${drawingArea.y - clipOffset} L ${drawingArea.x + drawingArea.width + clipOffset} ${drawingArea.y - clipOffset} L ${drawingArea.x + drawingArea.width + clipOffset} ${drawingArea.y + drawingArea.height + clipOffset} L ${currentHourX} ${drawingArea.y + drawingArea.height + clipOffset} Z`;
-      return Skia.Path.MakeFromSVGString(pathString);
-    }, [xScale, currentHourX, drawingArea, clipOffset]);
-
-    if (!clipPath) return null;
-
-    return <Group clip={clipPath}>{children}</Group>;
-  },
-);
 
 const ScatterplotWithCustomLabels = memo(() => {
   const theme = useTheme();

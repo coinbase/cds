@@ -95,7 +95,15 @@ const SeeAllComponent = () => (
   </Text>
 );
 
-const SquareAssetCard = ({ imageUrl, name }: { imageUrl: string; name: string }) => (
+const SquareAssetCard = ({
+  imageUrl,
+  name,
+  onPress,
+}: {
+  imageUrl: string;
+  name: string;
+  onPress?: () => void;
+}) => (
   <ContainedAssetCard
     description={
       <Text color="fgPositive" font="label2" numberOfLines={2}>
@@ -103,6 +111,7 @@ const SquareAssetCard = ({ imageUrl, name }: { imageUrl: string; name: string })
       </Text>
     }
     header={<RemoteImage height={32} source={imageUrl} style={styles.assetImage} width={32} />}
+    onPress={onPress}
     subtitle={name}
     title="$0.87"
   />
@@ -116,7 +125,7 @@ const BasicExamples = () => {
   const windowWidth = Dimensions.get('window').width;
   const carouselSizing = windowWidth - horizontalPadding * 2;
 
-  const horizontalGap = theme.space[1];
+  const horizontalGap = theme.space[2];
 
   const twoItemsWidth = (carouselSizing - horizontalGap) / 2;
   const threeItemsWidth = (carouselSizing - horizontalGap * 2) / 3;
@@ -125,6 +134,8 @@ const BasicExamples = () => {
     <>
       <Example paddingX={0}>
         <Carousel
+          autoplay
+          paginationVariant="dot"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -141,6 +152,7 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="snap"
+          paginationVariant="dot"
           snapMode="item"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -158,8 +170,10 @@ const BasicExamples = () => {
       </Example>
       <Example paddingX={0}>
         <Carousel
+          loop
           NavigationComponent={SeeAllComponent}
           drag="free"
+          paginationVariant="dot"
           snapMode="item"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
@@ -168,8 +182,12 @@ const BasicExamples = () => {
           title="Square Items Carousel"
         >
           {Object.values(assets).map((asset) => (
-            <CarouselItem key={asset.symbol} id={asset.symbol}>
-              <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onPress={() => console.log(`${asset.symbol} clicked`)}
+              />
             </CarouselItem>
           ))}
         </Carousel>
@@ -177,10 +195,11 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="snap"
+          paginationVariant="dot"
           snapMode="page"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
-            carousel: { gap: theme.space[1] },
+            carousel: { gap: theme.space[2] },
           }}
           title="Full Width Cards"
         >
@@ -204,6 +223,7 @@ const BasicExamples = () => {
       <Example paddingX={0}>
         <Carousel
           drag="none"
+          paginationVariant="dot"
           styles={{
             root: { paddingHorizontal: horizontalPadding },
             carousel: { gap: horizontalGap },
@@ -343,6 +363,35 @@ const CustomComponentsExample = () => {
   );
 };
 
+const AutoplayExample = () => {
+  const theme = useTheme();
+
+  return (
+    <Example paddingX={0}>
+      <Carousel
+        autoplay
+        loop
+        paginationVariant="dot"
+        styles={{
+          root: { paddingHorizontal: theme.space[2] },
+          carousel: { gap: theme.space[2] },
+        }}
+        title="Autoplay Carousel"
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+            <SquareAssetCard
+              imageUrl={asset.imageUrl}
+              name={asset.symbol}
+              onPress={() => console.log(`${asset.symbol} clicked`)}
+            />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Example>
+  );
+};
+
 const DynamicContentExample = () => {
   const theme = useTheme();
   const [items, setItems] = useState(Object.values(assets).slice(0, 3));
@@ -362,15 +411,20 @@ const DynamicContentExample = () => {
         </Button>
       </HStack>
       <Carousel
+        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
-          carousel: { gap: theme.space[1], height: 156 },
+          carousel: { gap: theme.space[2], height: 156 },
         }}
         title="Explore Assets"
       >
         {items.map((asset) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+            <SquareAssetCard
+              imageUrl={asset.imageUrl}
+              name={asset.symbol}
+              onPress={() => console.log(`${asset.symbol} clicked`)}
+            />
           </CarouselItem>
         ))}
       </Carousel>
@@ -381,7 +435,7 @@ const DynamicContentExample = () => {
 const AnimatedExample = () => {
   const theme = useTheme();
 
-  const SquareAssetCard = memo(({ imageUrl, name }: { imageUrl: string; name: string }) => {
+  const AnimatedSquareAssetCard = memo(({ imageUrl, name }: { imageUrl: string; name: string }) => {
     const theme = useTheme();
     const squareSize = 156;
     const largeSize = 327;
@@ -433,15 +487,16 @@ const AnimatedExample = () => {
   return (
     <Example paddingX={0}>
       <Carousel
+        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: theme.space[3] },
-          carousel: { gap: theme.space[1] },
+          carousel: { gap: theme.space[2] },
         }}
-        title="Explore Assets"
+        title="Animated Selection"
       >
         {Object.values(assets).map((asset) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+            <AnimatedSquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
           </CarouselItem>
         ))}
       </Carousel>
@@ -541,18 +596,114 @@ const ImperativeApiExample = () => {
           snapMode="item"
           styles={{
             root: { paddingHorizontal: theme.space[3] },
-            carousel: { gap: theme.space[1] },
+            carousel: { gap: theme.space[2] },
           }}
-          title="Explore Assets"
+          title="Imperative API"
         >
           {Object.values(assets).map((asset) => (
             <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
-              <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onPress={() => console.log(`${asset.symbol} clicked`)}
+              />
             </CarouselItem>
           ))}
         </Carousel>
       </VStack>
     </Example>
+  );
+};
+
+const LoopingExamples = () => {
+  const theme = useTheme();
+
+  const horizontalPadding = theme.space[2];
+
+  const windowWidth = Dimensions.get('window').width;
+  const carouselSizing = windowWidth - horizontalPadding * 2;
+
+  const horizontalGap = theme.space[2];
+
+  const threeItemsWidth = (carouselSizing - horizontalGap * 2) / 3;
+
+  return (
+    <>
+      {/* Looping - Snap Page */}
+      <Example paddingX={0}>
+        <Carousel
+          loop
+          drag="snap"
+          paginationVariant="dot"
+          snapMode="page"
+          styles={{
+            root: { paddingHorizontal: horizontalPadding },
+            carousel: { gap: horizontalGap },
+          }}
+          title="Looping - Snap Page"
+        >
+          {sampleItems.map((item, index) => (
+            <CarouselItem
+              key={`loop-page-${index}`}
+              id={`loop-page-${index}`}
+              width={threeItemsWidth}
+            >
+              {item}
+            </CarouselItem>
+          ))}
+        </Carousel>
+      </Example>
+
+      {/* Looping with Autoplay - Snap Item */}
+      <Example paddingX={0}>
+        <Carousel
+          autoplay
+          loop
+          drag="snap"
+          paginationVariant="dot"
+          snapMode="item"
+          styles={{
+            root: { paddingHorizontal: horizontalPadding },
+            carousel: { gap: horizontalGap },
+          }}
+          title="Looping with Autoplay - Snap Item"
+        >
+          {sampleItems.map((item, index) => (
+            <CarouselItem
+              key={`loop-item-${index}`}
+              id={`loop-item-${index}`}
+              width={threeItemsWidth}
+            >
+              {item}
+            </CarouselItem>
+          ))}
+        </Carousel>
+      </Example>
+
+      {/* Looping - Free Drag (visreg - no pagination) */}
+      <Example paddingX={0}>
+        <Carousel
+          loop
+          drag="free"
+          snapMode="item"
+          styles={{
+            root: { paddingHorizontal: horizontalPadding },
+            carousel: { gap: horizontalGap },
+          }}
+          title="Looping - Free Drag (visreg)"
+        >
+          {sampleItems.map((item, index) => (
+            <CarouselItem
+              key={`loop-free-${index}`}
+              id={`loop-free-${index}`}
+              width={threeItemsWidth}
+            >
+              {item}
+            </CarouselItem>
+          ))}
+        </Carousel>
+      </Example>
+    </>
   );
 };
 
@@ -685,13 +836,15 @@ const AnimatedPaginationExample = () => {
 
 export default function CarouselScreen() {
   return (
-    <ExampleScreen>
+    <ExampleScreen paddingX={0}>
       <BasicExamples />
       <CustomComponentsExample />
       <DynamicContentExample />
       <AnimatedExample />
       <ImperativeApiExample />
       <AnimatedPaginationExample />
+      <LoopingExamples />
+      <AutoplayExample />
     </ExampleScreen>
   );
 }

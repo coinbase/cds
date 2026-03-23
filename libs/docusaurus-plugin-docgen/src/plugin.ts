@@ -4,31 +4,14 @@ import path from 'node:path';
 
 import { docgenRunner } from './scripts/docgenRunner';
 import { docgenWriter } from './scripts/docgenWriter';
-import { getMinutesBetweenDates } from './utils/getMinutesBetweenDates';
 import { logger } from './utils/logger';
 import type { PluginContent, PluginOptions } from './types';
 
 const PLUGIN_ID = '@coinbase/docusaurus-plugin-docgen';
 
-/**
- * Persist build state as a global, since the plugin is re-evaluated every hot reload.
- * Because of this, we can't use state in the plugin or module scope.
- */
-declare module global {
-  export let docgenBuild: {
-    lastRun: Date | undefined;
-    isRunning: boolean;
-    count: number;
-  };
-}
-
-if (!global.docgenBuild) {
-  global.docgenBuild = { lastRun: undefined, isRunning: false, count: 0 };
-}
-
 export default function plugin(
   { generatedFilesDir }: LoadContext,
-  { enabled = true, watchInterval = 5, ...options }: PluginOptions,
+  { enabled = true, ...options }: PluginOptions,
 ): Plugin<PluginContent | undefined> {
   /**
    * The directory where we want to output docgen data and components.
@@ -38,25 +21,20 @@ export default function plugin(
 
   return {
     name: PLUGIN_ID,
+    getPathsToWatch() {
+      if (!enabled) return [];
+      // Watch the src/ directory of each entry point package so that changes
+      // to component source files trigger a reload
+      return options.entryPoints.map(
+        (tsconfigPath) => `${path.dirname(tsconfigPath)}/src/**/*.{ts,tsx}`,
+      );
+    },
     async loadContent() {
       if (enabled) {
         logger.init();
-
-        const { isRunning, lastRun } = global.docgenBuild;
-        const isFirstRun = lastRun === undefined;
-        const lastUpdate = getMinutesBetweenDates(lastRun, new Date());
-
-        if (!isFirstRun) logger.lastUpdate(lastUpdate);
-
-        const shouldUpdate = !isRunning && (isFirstRun || lastUpdate >= watchInterval);
-        logger.initStatus(shouldUpdate);
-
-        if (shouldUpdate) {
-          return docgenRunner({ ...options, pluginDir });
-        }
-      } else {
-        logger.enabledOff();
+        return docgenRunner({ ...options, pluginDir });
       }
+      logger.enabledOff();
       return undefined;
     },
     configureWebpack(_webpackConfig, _isServer, _utils, content) {
@@ -94,11 +72,36 @@ export default function plugin(
         );
       }
 
+      // Styles API aliases - only create for docs that have styles data
+      const stylesDataAliases = content
+        ? Object.fromEntries(
+            content.parsedDocs
+              .filter((item) => item.styles && item.styles.selectors.length > 0)
+              .map((item) => [
+                path.join(':docgen', path.relative(pluginDir, item.cacheDirectory), 'styles-data'),
+                path.join(item.cacheDirectory, 'styles-data.js'),
+              ]),
+          )
+        : {};
+
+      const tocStylesAliases = content
+        ? Object.fromEntries(
+            content.parsedDocs
+              .filter((item) => item.styles && item.styles.selectors.length > 0)
+              .map((item) => [
+                path.join(':docgen', path.relative(pluginDir, item.cacheDirectory), 'toc-styles'),
+                path.join(item.cacheDirectory, 'toc-styles.js'),
+              ]),
+          )
+        : {};
+
       const aliases = {
         ...apiAliases,
         ...metadataAliases,
         ...dataAliases,
         ...tocPropsAliases,
+        ...stylesDataAliases,
+        ...tocStylesAliases,
         [`:docgen/_types/sharedTypeAliases`]: path.join(pluginDir, '_types/sharedTypeAliases'),
         [`:docgen/_types/sharedParentTypes`]: path.join(pluginDir, '_types/sharedParentTypes'),
       };
@@ -115,12 +118,6 @@ export default function plugin(
         await docgenWriter(filesToWrite);
         actions.setGlobalData({ enabled: true, projects });
         logger.pluginComplete();
-
-        global.docgenBuild = {
-          count: (global.docgenBuild.count += 1),
-          lastRun: new Date(),
-          isRunning: false,
-        };
       } else {
         actions.setGlobalData({ enabled: false, projects: [] });
       }

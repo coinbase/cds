@@ -1,0 +1,105 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { TemplateCard } from '@site/src/components/page/TemplateCard';
+import { HStack } from '@coinbase/cds-web/layout';
+import ThemedImage from '@theme/ThemedImage';
+
+<MDXSection>
+<MDXArticle>
+
+## Get started
+
+The easiest way to get started with CDS on mobile is with a template. The Expo template includes the required CDS packages, dependencies, and pre-configured settings with a working example application to help you start building.
+
+<HStack gap={2} style={{ marginTop: '1.5rem', flexWrap: 'wrap', alignItems: 'stretch' }}>
+  <TemplateCard
+    name="Expo"
+    description="Built for cross-platform mobile applications with React Native"
+    href="https://github.com/coinbase/cds/tree/master/templates/expo-app"
+    icon={
+      <ThemedImage
+        sources={{
+          light: '/img/logos/frameworks/expo_light.png',
+          dark: '/img/logos/frameworks/expo_dark.png',
+        }}
+        alt="Expo"
+        style={{ paddingTop: 'var(--space-0_75)', paddingBottom: 'var(--space-0_75)' }}
+        height="100%"
+      />
+    }
+  />
+</HStack>
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Installation
+
+To create a new project from the template, use `gitpick` to bootstrap your application:
+
+### Expo
+
+```bash
+npx -y gitpick coinbase/cds/tree/master/templates/expo-app cds-expo
+cd cds-expo
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Setup
+
+After creating your project, install dependencies and start developing:
+
+```bash
+# We suggest using nvm to manage Node.js versions
+nvm install
+nvm use
+
+# Enable corepack for package manager setup
+corepack enable
+
+# Install dependencies
+yarn
+
+# Start development server
+yarn start
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## What's included
+
+All templates come pre-configured with:
+
+- Latest CDS packages (`@coinbase/cds-mobile`, `@coinbase/cds-icons`, etc.)
+- TypeScript configuration
+- Example components demonstrating common UI patterns
+- Theme setup with CDS default theme
+- Navigation with React Navigation
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Next steps
+
+After setting up your template, learn how to customize and extend CDS:
+
+- [Theming](/getting-started/theming) - Customize colors, spacing, and typography
+- [Installation](/getting-started/installation) - Manual installation and setup options
+
+</MDXArticle>
+</MDXSection>

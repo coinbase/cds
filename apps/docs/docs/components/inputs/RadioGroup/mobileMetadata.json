@@ -14,5 +14,11 @@
       "url": "/components/inputs/ControlGroup/",
       "description": "ControlGroup is a component that allows users to group related controls together."
     }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    }
   ]
 }

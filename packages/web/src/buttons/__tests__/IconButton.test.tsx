@@ -1,3 +1,4 @@
+import { glyphMap } from '@coinbase/cds-icons/glyphMap';
 import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
@@ -171,5 +172,55 @@ describe('IconButton', () => {
     expect(spinner).toBeInTheDocument();
     expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.m}px`);
     expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.m}px`);
+  });
+
+  it('renders Icon with overridden iconSize', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton iconSize="xs" name={name} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(
+      glyphMap[`${name}-12-inactive`],
+    );
+  });
+
+  it('renders Spinner with overridden iconSize when loading', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton loading iconSize="xs" name={name} testID="icon-button" />
+      </DefaultThemeProvider>,
+    );
+
+    const spinner = screen.getByTestId('icon-button-spinner');
+    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.xs}px`);
+    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.xs}px`);
+  });
+
+  it('sets data attributes for style variants', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton compact transparent flush="end" name={name} variant="secondary" />
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('data-compact', 'true');
+    expect(button).toHaveAttribute('data-flush', 'end');
+    expect(button).toHaveAttribute('data-transparent', 'true');
+    expect(button).toHaveAttribute('data-variant', 'secondary');
+  });
+  it('omits optional data attributes for default icon button', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton name={name} />
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+    expect(button).not.toHaveAttribute('data-flush');
+    expect(button).not.toHaveAttribute('data-transparent');
+    expect(button).toHaveAttribute('data-variant', 'secondary');
+    expect(button).toHaveAttribute('data-compact', 'true');
   });
 });

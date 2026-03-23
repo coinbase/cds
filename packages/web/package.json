@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-web",
-  "version": "8.34.1",
+  "version": "8.55.1",
   "description": "Coinbase Design System - Web",
   "repository": {
     "type": "git",
@@ -31,6 +31,10 @@
     "./alpha/combobox": {
       "types": "./dts/alpha/combobox/index.d.ts",
       "default": "./esm/alpha/combobox/index.js"
+    },
+    "./alpha/data-card": {
+      "types": "./dts/alpha/data-card/index.d.ts",
+      "default": "./esm/alpha/data-card/index.js"
     },
     "./alpha/select": {
       "types": "./dts/alpha/select/index.d.ts",
@@ -226,7 +230,6 @@
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@coinbase/cds-web-utils": "workspace:^",
-    "@figma/code-connect": "^1.3.4",
     "@linaria/core": "^3.0.0-beta.22",
     "@linaria/shaker": "^3.0.0-beta.22",
     "@storybook/jest": "^0.2.3",

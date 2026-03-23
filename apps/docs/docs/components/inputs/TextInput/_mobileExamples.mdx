@@ -91,10 +91,11 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 <TextInput label="Label" placeholder="Placeholder" />
 ```
 
-### Borderless TextInput (web)
+### Borderless
 
-A borderless TextInput SHOULD NOT be used alone. It should be used
-with a TypeAhead component.
+:::warning
+You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
+:::
 
 ```jsx
 <HStack padding={2}>
@@ -312,28 +313,65 @@ When using the `inside` label variant, you should always include a `placeholder`
   label="Password"
   labelVariant="inside"
   secureTextEntry
-  end={<InputIconButton name="visibleInactive" />}
+  end={<InputIconButton name="visible" />}
   placeholder="Enter your password"
 />
 ```
 
 ### Custom Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
 ```jsx
-<TextInput
-  label="Display name"
-  labelNode={
-    <HStack alignItems="center" gap={1}>
-      <InputLabel>Display name</InputLabel>
-      <Tooltip content="This will be visible to other users.">
-        <Icon active color="fg" name="info" size="xs" />
-      </Tooltip>
-    </HStack>
-  }
-  placeholder="Satoshi Nakamoto"
-/>
+<VStack gap={2}>
+  <TextInput
+    accessibilityLabel="Display name"
+    labelNode={
+      <HStack alignItems="center">
+        <InputLabel>Display name</InputLabel>
+        {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
+        <Tooltip content="This will be visible to other users.">
+          <Icon active color="fg" name="info" padding={0.75} size="xs" />
+        </Tooltip>
+      </HStack>
+    }
+    placeholder="Satoshi Nakamoto"
+  />
+  <TextInput
+    accessibilityLabel="Amount"
+    compact
+    labelNode={
+      <HStack alignItems="center" gap={0.5}>
+        <InputLabel>Amount</InputLabel>
+        <Text color="fgNegative" font="label1">
+          *
+        </Text>
+      </HStack>
+    }
+    placeholder="0.00"
+    suffix="USD"
+  />
+  <TextInput
+    accessibilityLabel="Bio"
+    labelVariant="inside"
+    labelNode={
+      <HStack alignItems="center" gap={1}>
+        <InputLabel paddingY={0}>Bio</InputLabel>
+        <Text color="fgMuted" font="legal">
+          (optional)
+        </Text>
+      </HStack>
+    }
+    placeholder="Tell us about yourself"
+  />
+  <TextInput
+    accessibilityLabel="Notes"
+    labelVariant="inside"
+    labelNode={<InputLabel paddingY={0}>Notes</InputLabel>}
+    placeholder="Add a note"
+    start={<InputIcon name="pencil" />}
+  />
+</VStack>
 ```
 
 ## Example of Input Objects placed at the End
@@ -397,6 +435,7 @@ Password Input - Use Icon Buttons at the end for actions like showing a password
 function PasswordInput() {
   const [isVisible, setIsVisible] = useState(false);
   const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
+  const iconName = useMemo(() => (isVisible ? 'visible' : 'invisible'), [isVisible]);
 
   return (
     <TextInput
@@ -404,8 +443,8 @@ function PasswordInput() {
       type={type}
       end={
         <InputIconButton
-          name={isVisible ? 'visibleActive' : 'visibleInactive'}
-          onPress={() => setIsVisible((isVisible) => !setIsVisible)}
+          name={iconName}
+          onPress={() => setIsVisible((isVisible) => !isVisible)}
           accessibilityLabel={isVisible ? 'Hide password' : 'Show password'}
         />
       }
@@ -592,16 +631,6 @@ function testExample() {
       end={<InputIcon active color="primary" name="visible" />}
     />
   );
-}
-```
-
-## Date Picker Example
-
-You can construct a DatePicker using TextInput
-
-```jsx
-function DatePicker() {
-  return <TextInput label="Pick a date" type="date" />;
 }
 ```
 

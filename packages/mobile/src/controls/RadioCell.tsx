@@ -20,27 +20,32 @@ import { Text } from '../typography/Text';
 import type { ControlBaseProps } from './Control';
 import { Radio } from './Radio';
 
-export type RadioCellBaseProps<T extends string> = {
+export type RadioCellBaseProps<RadioValue extends string> = {
   title: React.ReactNode;
   description?: React.ReactNode;
   columnGap?: ThemeVars.Space;
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<T>, 'style' | 'children' | 'title'> &
+} & Omit<ControlBaseProps<RadioValue>, 'style' | 'children' | 'title'> &
   Omit<PressableProps, 'children' | 'noScaleOnPress'>;
 
-export type RadioCellProps<T extends string> = RadioCellBaseProps<T> & {
+export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {
   styles?: {
+    /** Root element */
     root?: StyleProp<ViewStyle>;
+    /** Radio input container element */
     radioContainer?: StyleProp<ViewStyle>;
+    /** Content container element */
     contentContainer?: StyleProp<ViewStyle>;
+    /** Title text element */
     title?: StyleProp<TextStyle>;
+    /** Description text element */
     description?: StyleProp<TextStyle>;
   };
 };
 
-const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
+const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string>(
   {
     title,
     description,
@@ -55,6 +60,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
     borderRadius = 200,
     background = 'bg',
     borderColor = 'bgLine',
+    controlColor,
     accessibilityLabel,
     accessibilityHint,
     testID,
@@ -69,7 +75,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
     pressedBorderWidth = 200,
     styles,
     ...props
-  }: RadioCellProps<T>,
+  }: RadioCellProps<RadioValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const theme = useTheme();
@@ -211,6 +217,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
           <Radio
             accessible={false}
             checked={!!checked}
+            controlColor={controlColor}
             disabled={disabled}
             pointerEvents="none"
             readOnly={readOnly}
@@ -238,8 +245,8 @@ const RadioCellWithRef = forwardRef(function RadioCell<T extends string>(
       {pressed && <Animated.View style={mergedFocusRingStyle} />}
     </Box>
   );
-}) as <T extends string>(
-  props: RadioCellProps<T> & { ref?: React.ForwardedRef<View> },
+}) as <RadioValue extends string>(
+  props: RadioCellProps<RadioValue> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 export const RadioCell = memo(RadioCellWithRef) as typeof RadioCellWithRef &

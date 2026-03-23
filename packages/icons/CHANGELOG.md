@@ -8,6 +8,54 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.13.0 (3/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-03-11. [[#496](https://github.com/coinbase/cds/pull/496)]
+
+##### ⭐️ Updated (1)
+
+- ideal
+
+## 5.12.0 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-03-03.
+
+##### ⭐️ Added (3)
+
+- usdc
+- filterLineStack
+- pieChartWithArrow
+
+## 5.11.0 (2/5/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026/02/025. [[#367](https://github.com/coinbase/cds/pull/367)]
+
+##### ⭐️ Added (2)
+
+- autoCar
+- webhooks
+
+## 5.10.0 (1/29/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-01-29. [[#342](https://github.com/coinbase/cds/pull/342)]
+
+##### ⭐️ Added (1)
+
+- birthcertificate
+
+##### ⭐️ Updated (1)
+
+- smartContract
+- pencil
+
 ## 5.9.0 (12/22/2025 PST)
 
 #### 🚀 Updates

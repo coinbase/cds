@@ -7,7 +7,7 @@ figma.connect(
   ListCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=236-27897&m=dev',
   {
-    imports: ["import { ListCell } from '@coinbase/cds-web/cells/ListCell';"],
+    imports: ["import { ListCell } from '@coinbase/cds-web/cells/ListCell'"],
     props: {
       selected: figma.enum('state', {
         selected: true,
@@ -43,7 +43,7 @@ figma.connect(
   ListCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=236-28162&m=dev',
   {
-    imports: ["import { ListCell } from '@coinbase/cds-web/cells/ListCell';"],
+    imports: ["import { ListCell } from '@coinbase/cds-web/cells/ListCell'"],
     props: {
       selected: figma.enum('state', {
         selected: true,

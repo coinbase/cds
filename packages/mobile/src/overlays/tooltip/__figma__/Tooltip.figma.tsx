@@ -10,8 +10,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=715%3A14162',
   {
     imports: [
-      "import { Tooltip } from '@coinbase/cds-mobile/overlays';",
-      "import { Button } from '@coinbase/cds-mobile/buttons/Button';",
+      "import { Tooltip } from '@coinbase/cds-mobile/overlays'",
+      "import { Button } from '@coinbase/cds-mobile/buttons/Button'",
     ],
     variant: { type: 'body' },
     props: {
@@ -43,8 +43,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=715%3A14162',
   {
     imports: [
-      "import { Tooltip } from '@coinbase/cds-mobile/overlays';",
-      "import { Button } from '@coinbase/cds-mobile/buttons/Button';",
+      "import { Tooltip } from '@coinbase/cds-mobile/overlays'",
+      "import { Button } from '@coinbase/cds-mobile/buttons/Button'",
     ],
     variant: { type: 'title + body' },
     props: {

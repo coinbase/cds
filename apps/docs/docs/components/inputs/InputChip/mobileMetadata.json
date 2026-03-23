@@ -1,7 +1,7 @@
 {
   "import": "import { InputChip } from '@coinbase/cds-mobile/chips/InputChip'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/chips/InputChip.tsx",
-  "description": "A Chip used for removable selections.",
+  "description": "A Chip used for removing selected values.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=10177-4850&t=YbvYrnHXUU8AZpH5-4",
   "relatedComponents": [
     {

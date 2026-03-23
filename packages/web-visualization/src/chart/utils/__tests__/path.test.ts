@@ -1,10 +1,5 @@
-import {
-  type ChartPathCurveType,
-  getAreaPath,
-  getBarPath,
-  getLinePath,
-  getPathCurveFunction,
-} from '../path';
+import type { ChartPathCurveType } from '../path';
+import { getAreaPath, getBarPath, getLinePath, getPathCurveFunction } from '../path';
 import { getCategoricalScale, getNumericScale } from '../scale';
 
 describe('getPathCurveFunction', () => {
@@ -44,6 +39,18 @@ describe('getPathCurveFunction', () => {
     const curveFunction = getPathCurveFunction('unknown' as ChartPathCurveType);
     expect(curveFunction).toBeDefined();
     expect(typeof curveFunction).toBe('function');
+  });
+
+  it('should return layout-specific curve functions for monotone and bump', () => {
+    // Monotone
+    const monotoneHorizontal = getPathCurveFunction('monotone', 'horizontal');
+    const monotoneVertical = getPathCurveFunction('monotone', 'vertical');
+    expect(monotoneHorizontal).not.toBe(monotoneVertical);
+
+    // Bump
+    const bumpHorizontal = getPathCurveFunction('bump', 'horizontal');
+    const bumpVertical = getPathCurveFunction('bump', 'vertical');
+    expect(bumpHorizontal).not.toBe(bumpVertical);
   });
 });
 
@@ -178,6 +185,23 @@ describe('getLinePath', () => {
       yScale,
     });
     expect(result).toBe('M0,50Z');
+  });
+
+  it('should generate horizontal layout path correctly', () => {
+    const result = getLinePath({
+      data: [1, 2, 3],
+      xScale,
+      yScale,
+      curve: 'linear',
+      layout: 'horizontal',
+    });
+    // In horizontal layout (bars grow horizontally):
+    // x is value axis (xScale: 0->10 -> 0->100)
+    // y is index axis (yScale: 0->10 -> 100->0)
+    // Point 0: data[0]=1 -> value 1 -> x=xScale(1)=10, index 0 -> y=yScale(0)=100
+    // Point 1: data[1]=2 -> value 2 -> x=xScale(2)=20, index 1 -> y=yScale(1)=90
+    // Point 2: data[2]=3 -> value 3 -> x=xScale(3)=30, index 2 -> y=yScale(2)=80
+    expect(result).toBe('M10,100L20,90L30,80');
   });
 });
 
@@ -317,6 +341,24 @@ describe('getAreaPath', () => {
     });
     expect(result).toBe('M0,50L0,100Z');
   });
+
+  it('should generate horizontal layout area path correctly', () => {
+    const result = getAreaPath({
+      data: [1, 2],
+      curve: 'linear',
+      xScale,
+      yScale,
+      layout: 'horizontal',
+    });
+    // In horizontal layout (areas grow horizontally):
+    // indexScale = yScale (0->10 -> 100->0)
+    // valueScale = xScale (0->10 -> 0->100)
+    // min = 0
+    // Point 0: index 0 (y=100), low 0 (x=0), high 1 (x=10)
+    // Point 1: index 1 (y=90), low 0 (x=0), high 2 (x=20)
+    // Path: M10,100L20,90L0,90L0,100Z
+    expect(result).toBe('M10,100L20,90L0,90L0,100Z');
+  });
 });
 
 describe('getBarPath', () => {
@@ -373,5 +415,31 @@ describe('getBarPath', () => {
     expect(topRounding).not.toBe(bottomRounding);
     expect(bottomRounding).not.toBe(bothRounding);
     expect(noRounding).not.toBe(bothRounding);
+  });
+
+  it('should generate horizontal layout bar path correctly', () => {
+    // In horizontal layout (bars grow sideways):
+    // roundTop rounds the right face (max X)
+    // roundBottom rounds the left face (min X)
+    const x = 10,
+      y = 20,
+      width = 50,
+      height = 30,
+      radius = 5;
+
+    const rightRounded = getBarPath(x, y, width, height, radius, true, false, 'horizontal');
+    const leftRounded = getBarPath(x, y, width, height, radius, false, true, 'horizontal');
+
+    // Right face rounded: max X (x+width) corners
+    // Corners are: (x+width, y) and (x+width, y+height)
+    expect(rightRounded).toContain(`A ${radius} ${radius} 0 0 1 ${x + width} ${y + radius}`);
+    expect(rightRounded).toContain(
+      `A ${radius} ${radius} 0 0 1 ${x + width - radius} ${y + height}`,
+    );
+
+    // Left face rounded: min X (x) corners
+    // Corners are: (x, y) and (x, y+height)
+    expect(leftRounded).toContain(`A ${radius} ${radius} 0 0 1 ${x + radius} ${y}`);
+    expect(leftRounded).toContain(`A ${radius} ${radius} 0 0 1 ${x} ${y + height - radius}`);
   });
 });

@@ -253,6 +253,7 @@ export const Interactable: InteractableComponent = forwardRef<
           transparentWhilePressed && transparentActiveCss,
           className,
         )}
+        data-disabled={disabled}
         disabled={disabled}
         style={interactableStyle}
         {...props}

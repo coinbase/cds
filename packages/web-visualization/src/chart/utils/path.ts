@@ -1,19 +1,32 @@
 import {
   area as d3Area,
   curveBumpX,
+  curveBumpY,
   curveCatmullRom,
   curveLinear,
   curveLinearClosed,
   curveMonotoneX,
+  curveMonotoneY,
   curveNatural,
   curveStep,
   curveStepAfter,
   curveStepBefore,
   line as d3Line,
 } from 'd3-shape';
+import type { Transition } from 'framer-motion';
 
-import { projectPoint, projectPoints } from './point';
+import type { CartesianChartLayout } from './context';
+import { getPointOnScale, projectPoint, projectPoints } from './point';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
+
+/**
+ * Default enter transition for path-based components (Line, Area).
+ * `{ type: 'tween', duration: 0.5 }`
+ */
+export const defaultPathEnterTransition: Transition = {
+  type: 'tween',
+  duration: 0.5,
+};
 
 export type ChartPathCurveType =
   | 'bump'
@@ -30,14 +43,20 @@ export type ChartPathCurveType =
  * Get the d3 curve function for a path.
  * See https://d3js.org/d3-shape/curve
  * @param curve - The curve type. Defaults to 'linear'.
+ * @param layout - The chart layout. Defaults to 'vertical'.
  * @returns The d3 curve function.
  */
-export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
+export const getPathCurveFunction = (
+  curve: ChartPathCurveType = 'linear',
+  layout: CartesianChartLayout = 'vertical',
+) => {
   switch (curve) {
     case 'catmullRom':
       return curveCatmullRom;
-    case 'monotone': // When we support layout="vertical" this should dynamically switch to curveMonotoneY
-      return curveMonotoneX;
+    case 'monotone':
+      // For vertical layout, X is the independent axis (category/index), so use MonotoneX
+      // For horizontal layout, Y is the independent axis (category/index), so use MonotoneY
+      return layout !== 'horizontal' ? curveMonotoneX : curveMonotoneY;
     case 'natural':
       return curveNatural;
     case 'step':
@@ -46,8 +65,10 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
       return curveStepBefore;
     case 'stepAfter':
       return curveStepAfter;
-    case 'bump': // When we support layout="vertical" this should dynamically switch to curveBumpY
-      return curveBumpX;
+    case 'bump':
+      // For vertical layout, X is the independent axis (category/index), so use BumpX
+      // For horizontal layout, Y is the independent axis (category/index), so use BumpY
+      return layout !== 'horizontal' ? curveBumpX : curveBumpY;
     case 'linearClosed':
       return curveLinearClosed;
     case 'linear':
@@ -71,26 +92,34 @@ export const getLinePath = ({
   xScale,
   yScale,
   xData,
+  yData,
   connectNulls,
+  layout = 'vertical',
 }: {
   data: (number | null | { x: number; y: number })[];
   curve?: ChartPathCurveType;
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
   xData?: number[];
+  yData?: number[];
   /**
    * When true, null values are skipped and the line connects across gaps.
    * By default, null values create gaps in the line.
    */
   connectNulls?: boolean;
+  /**
+   * Chart layout.
+   * @default 'horizontal'
+   */
+  layout?: CartesianChartLayout;
 }): string => {
   if (data.length === 0) {
     return '';
   }
 
-  const curveFunction = getPathCurveFunction(curve);
+  const curveFunction = getPathCurveFunction(curve, layout);
 
-  const dataPoints = projectPoints({ data, xScale, yScale, xData });
+  const dataPoints = projectPoints({ data, xScale, yScale, xData, yData, layout });
 
   // When connectNulls is true, filter out null values before rendering
   // When false, use defined() to create gaps in the line
@@ -133,29 +162,40 @@ export const getAreaPath = ({
   xScale,
   yScale,
   xData,
+  yData,
   connectNulls,
+  layout = 'vertical',
 }: {
   data: (number | null)[] | Array<[number, number] | null>;
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
   curve: ChartPathCurveType;
   xData?: number[];
+  yData?: number[];
   /**
    * When true, null values are skipped and the area connects across gaps.
    * By default null values create gaps in the area.
    */
   connectNulls?: boolean;
+  /**
+   * Chart layout.
+   * @default 'horizontal'
+   */
+  layout?: CartesianChartLayout;
 }): string => {
   if (data.length === 0) {
     return '';
   }
 
-  const curveFunction = getPathCurveFunction(curve);
+  const curveFunction = getPathCurveFunction(curve, layout);
+  const categoryAxisIsX = layout !== 'horizontal';
 
-  const yDomain = yScale.domain();
-  const yMin = Math.min(...yDomain);
+  // Determine baseline from the value scale
+  const valueScale = categoryAxisIsX ? yScale : xScale;
+  const domain = valueScale.domain();
+  const min = Math.min(...domain);
 
-  const normalizedData: Array<[number, number] | null> = data.map((item, index) => {
+  const normalizedData: Array<[number, number] | null> = data.map((item) => {
     if (item === null) {
       return null;
     }
@@ -168,7 +208,7 @@ export const getAreaPath = ({
     }
 
     if (typeof item === 'number') {
-      return [yMin, item];
+      return [min, item];
     }
 
     return null;
@@ -178,35 +218,31 @@ export const getAreaPath = ({
     if (range === null) {
       return {
         x: 0,
+        y: 0,
         low: null,
         high: null,
         isValid: false,
       };
     }
 
-    let xValue: number = index;
-    if (!isCategoricalScale(xScale) && xData && xData[index] !== undefined) {
-      xValue = xData[index];
+    // Determine the position along the independent (index) axis
+    let indexValue: number = index;
+    const indexScale = categoryAxisIsX ? xScale : yScale;
+    const indexData = categoryAxisIsX ? xData : yData;
+
+    if (!isCategoricalScale(indexScale) && indexData && indexData[index] !== undefined) {
+      indexValue = indexData[index];
     }
 
-    const xPoint = projectPoint({ x: xValue, y: 0, xScale, yScale });
-    const lowPoint = projectPoint({
-      x: xValue,
-      y: range[0],
-      xScale,
-      yScale,
-    });
-    const highPoint = projectPoint({
-      x: xValue,
-      y: range[1],
-      xScale,
-      yScale,
-    });
+    const pos = getPointOnScale(indexValue, indexScale);
+    const low = getPointOnScale(range[0], valueScale);
+    const high = getPointOnScale(range[1], valueScale);
 
     return {
-      x: xPoint.x,
-      low: lowPoint.y,
-      high: highPoint.y,
+      x: categoryAxisIsX ? pos : 0,
+      y: !categoryAxisIsX ? pos : 0,
+      low,
+      high,
       isValid: true,
     };
   });
@@ -217,15 +253,27 @@ export const getAreaPath = ({
 
   const areaGenerator = d3Area<{
     x: number;
+    y: number;
     low: number | null;
     high: number | null;
     isValid: boolean;
-  }>()
-    .x((d) => d.x)
-    .y0((d) => d.low ?? 0) // Bottom boundary (low values), fallback to 0
-    .y1((d) => d.high ?? 0) // Top boundary (high values), fallback to 0
+  }>();
+
+  if (categoryAxisIsX) {
+    areaGenerator
+      .x((d) => d.x)
+      .y0((d) => d.low ?? 0)
+      .y1((d) => d.high ?? 0);
+  } else {
+    areaGenerator
+      .y((d) => d.y)
+      .x0((d) => d.low ?? 0)
+      .x1((d) => d.high ?? 0);
+  }
+
+  areaGenerator
     .curve(curveFunction)
-    .defined((d) => connectNulls || (d.isValid && d.low != null && d.high != null)); // Only draw where both values exist
+    .defined((d) => connectNulls || (d.isValid && d.low != null && d.high != null));
 
   const result = areaGenerator(filteredPoints);
   return result ?? '';
@@ -266,29 +314,37 @@ export const getBarPath = (
   radius: number,
   roundTop: boolean,
   roundBottom: boolean,
+  layout: CartesianChartLayout = 'vertical',
 ): string => {
   const roundBothSides = roundTop && roundBottom;
+  const barsGrowVertically = layout !== 'horizontal';
   const r = Math.min(radius, width / 2, roundBothSides ? height / 2 : height);
-  const topR = roundTop ? r : 0;
-  const bottomR = roundBottom ? r : 0;
+
+  // In vertical layout (bars grow up/down):
+  // - roundTop rounds the top face (min Y)
+  // - roundBottom rounds the bottom face (max Y)
+  // In horizontal layout (bars grow left/right):
+  // - roundTop rounds the right face (max X)
+  // - roundBottom rounds the left face (min X)
+
+  const rTL = barsGrowVertically ? (roundTop ? r : 0) : roundBottom ? r : 0;
+  const rTR = barsGrowVertically ? (roundTop ? r : 0) : roundTop ? r : 0;
+  const rBR = barsGrowVertically ? (roundBottom ? r : 0) : roundTop ? r : 0;
+  const rBL = barsGrowVertically ? (roundBottom ? r : 0) : roundBottom ? r : 0;
 
   // Build path with selective rounding
-  let path = `M ${x + (roundTop ? r : 0)} ${y}`;
-  path += ` L ${x + width - topR} ${y}`;
+  let path = `M ${x + rTL} ${y}`;
+  path += ` L ${x + width - rTR} ${y}`;
+  path += ` A ${rTR} ${rTR} 0 0 1 ${x + width} ${y + rTR}`;
 
-  path += ` A ${topR} ${topR} 0 0 1 ${x + width} ${y + topR}`;
+  path += ` L ${x + width} ${y + height - rBR}`;
+  path += ` A ${rBR} ${rBR} 0 0 1 ${x + width - rBR} ${y + height}`;
 
-  path += ` L ${x + width} ${y + height - bottomR}`;
+  path += ` L ${x + rBL} ${y + height}`;
+  path += ` A ${rBL} ${rBL} 0 0 1 ${x} ${y + height - rBL}`;
 
-  path += ` A ${bottomR} ${bottomR} 0 0 1 ${x + width - bottomR} ${y + height}`;
-
-  path += ` L ${x + bottomR} ${y + height}`;
-
-  path += ` A ${bottomR} ${bottomR} 0 0 1 ${x} ${y + height - bottomR}`;
-
-  path += ` L ${x} ${y + topR}`;
-
-  path += ` A ${topR} ${topR} 0 0 1 ${x + topR} ${y}`;
+  path += ` L ${x} ${y + rTL}`;
+  path += ` A ${rTL} ${rTL} 0 0 1 ${x + rTL} ${y}`;
 
   path += ' Z';
   return path;

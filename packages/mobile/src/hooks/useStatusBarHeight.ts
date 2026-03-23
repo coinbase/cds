@@ -9,8 +9,18 @@ type StatusBarNativeModule = {
 } & NativeModule;
 
 /**
- * StatusBar api returns weird incorrect values for iOS.
- * This implementation is based off of the implementation identified in this article. https://blog.expo.dev/the-status-bar-manager-in-react-native-6226058ecba
+ * @deprecated Use `useSafeAreaInsets().top` from `react-native-safe-area-context` instead.
+ * This approach is recommended by Expo and provides more reliable values across platforms.
+ * @see https://docs.expo.dev/versions/latest/sdk/safe-area-context/
+ *
+ * @example
+ * // Before (deprecated)
+ * const statusBarHeight = useStatusBarHeight();
+ *
+ * // After (recommended)
+ * import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ * const insets = useSafeAreaInsets();
+ * const statusBarHeight = insets.top;
  */
 export const useStatusBarHeight = () => {
   const [statusBarHeight, setStatusBarHeight] = useState<number>();

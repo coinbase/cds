@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { NativeInput } from '../../controls/NativeInput';
 import { HStack } from '../../layout';
@@ -25,8 +25,10 @@ export const DefaultComboboxControl = memo(
     open,
     setOpen,
     compact,
+    align,
     searchText,
     onSearch,
+    accessibilityLabel,
     ...props
   }: ComboboxControlProps<Type, SelectOptionValue>) => {
     const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -54,9 +56,19 @@ export const DefaultComboboxControl = memo(
       [setOpen],
     );
 
+    const computedAccessibilityLabel = useMemo(() => {
+      let label = accessibilityLabel;
+      if (!hasValue && typeof placeholder === 'string') {
+        label = `${label}, ${placeholder}`;
+      }
+      return label;
+    }, [hasValue, accessibilityLabel, placeholder]);
+
     return (
       <SelectControlComponent
         ref={controlRef.current?.refs.setReference}
+        accessibilityLabel={computedAccessibilityLabel}
+        align={align}
         compact={compact}
         open={open}
         options={options}
@@ -92,6 +104,7 @@ export const DefaultComboboxControl = memo(
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
+                  textAlign: align,
                 }}
                 tabIndex={0}
                 value={searchText}
@@ -107,6 +120,7 @@ export const DefaultComboboxControl = memo(
                   font="body"
                   overflow="truncate"
                   paddingY={0}
+                  textAlign={align}
                 >
                   {placeholder}
                 </Text>
@@ -114,7 +128,6 @@ export const DefaultComboboxControl = memo(
             </>
           )
         }
-        placeholder={null}
         styles={{
           ...props.styles,
           controlEndNode: {

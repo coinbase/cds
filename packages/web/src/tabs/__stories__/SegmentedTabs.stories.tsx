@@ -3,6 +3,7 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
 
+import { Icon } from '../../icons/Icon';
 import { Box, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { SegmentedTab } from '../SegmentedTab';
@@ -13,6 +14,14 @@ import { TabsActiveIndicator } from '../Tabs';
 export default {
   title: 'Components/Tabs/Segmented Tabs',
   component: SegmentedTabs,
+  parameters: {
+    a11y: {
+      context: {
+        include: ['body'],
+        exclude: ['.no-a11y-checks'],
+      },
+    },
+  },
 };
 
 const CustomActiveIndicator = ({
@@ -77,6 +86,21 @@ const typedSegments: TabValue<TradingAction>[] = [
   { id: 'convert', label: 'Convert' },
 ];
 
+const iconSegments = [
+  {
+    id: 'buy',
+    label: <Icon accessibilityLabel="Buy" color="currentColor" name="chartLine" size="s" />,
+  },
+  {
+    id: 'sell',
+    label: <Icon accessibilityLabel="Sell" color="currentColor" name="chartCandles" size="s" />,
+  },
+  {
+    id: 'convert',
+    label: <Icon accessibilityLabel="Convert" color="currentColor" name="chartBar" size="s" />,
+  },
+];
+
 const customSegments = [
   { id: 'buy', label: 'Buy', Component: CustomSegmentedTab },
   { id: 'sell', label: 'Sell' },
@@ -89,19 +113,19 @@ const mixedCustomSegments = [
   { id: 'convert', label: 'Convert', Component: CustomSegmentedTabColor },
 ];
 
-type SegmentedTabsExampleProps<T extends string> = {
+type SegmentedTabsExampleProps<TabId extends string> = {
   title: string;
-  defaultActiveTab: TabValue<T> | null;
-} & Omit<SegmentedTabsProps<T>, 'activeTab' | 'onChange'>;
+  defaultActiveTab: TabValue<TabId> | null;
+} & Omit<SegmentedTabsProps<TabId>, 'activeTab' | 'onChange'>;
 
-const SegmentedTabsExample = <T extends string>({
+const SegmentedTabsExample = <TabId extends string>({
   title,
   defaultActiveTab,
   ...props
-}: SegmentedTabsExampleProps<T>) => {
-  const [activeTab, updateActiveTab] = useState<TabValue<T> | null>(defaultActiveTab);
+}: SegmentedTabsExampleProps<TabId>) => {
+  const [activeTab, updateActiveTab] = useState<TabValue<TabId> | null>(defaultActiveTab);
   const handleChange = useCallback(
-    (activeTab: TabValue<T> | null) => updateActiveTab(activeTab),
+    (activeTab: TabValue<TabId> | null) => updateActiveTab(activeTab),
     [],
   );
 
@@ -151,24 +175,28 @@ export const All = () => {
         tabs={basicSegmentsWithDisabled}
         title="Disabled Segment"
       />
-      <SegmentedTabsExample
-        defaultActiveTab={customSegments[0]}
-        tabs={customSegments}
-        title="Custom Single Segment"
-      />
-      <SegmentedTabsExample
-        defaultActiveTab={mixedCustomSegments[0]}
-        tabs={mixedCustomSegments}
-        title="Mixed Custom Segments"
-      />
-      <SegmentedTabsExample
-        TabComponent={AnotherCustomSegmentedTab}
-        TabsActiveIndicatorComponent={CustomActiveIndicator}
-        borderRadius={0}
-        defaultActiveTab={basicSegments[0]}
-        tabs={basicSegments}
-        title="Custom Segment & Active Indicator"
-      />
+      {/* Custom styles result in various color contrast violations but this isn't in the default component
+          so it's a violation that's safe to avoid */}
+      <VStack className="no-a11y-checks">
+        <SegmentedTabsExample
+          defaultActiveTab={customSegments[0]}
+          tabs={customSegments}
+          title="Custom Single Segment"
+        />
+        <SegmentedTabsExample
+          defaultActiveTab={mixedCustomSegments[0]}
+          tabs={mixedCustomSegments}
+          title="Mixed Custom Segments"
+        />
+        <SegmentedTabsExample
+          TabComponent={AnotherCustomSegmentedTab}
+          TabsActiveIndicatorComponent={CustomActiveIndicator}
+          borderRadius={0}
+          defaultActiveTab={basicSegments[0]}
+          tabs={basicSegments}
+          title="Custom Segment & Active Indicator"
+        />
+      </VStack>
       <Box maxWidth={300} overflow="auto">
         <SegmentedTabsExample
           defaultActiveTab={longSegments[4]}
@@ -188,18 +216,44 @@ export const All = () => {
         tabs={typedSegments}
         title="Typed Tabs"
       />
+      <SegmentedTabsExample
+        borderRadius={300}
+        defaultActiveTab={basicSegments[0]}
+        tabs={basicSegments}
+        title="Border Radius"
+      />
+      <SegmentedTabsExample
+        borderRadius={300}
+        defaultActiveTab={basicSegments[0]}
+        padding={0.5}
+        styles={{
+          activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+        }}
+        tabs={basicSegments}
+        title="Custom Padding with Inner Border Radius"
+      />
+      <SegmentedTabsExample
+        borderRadius={300}
+        defaultActiveTab={iconSegments[0]}
+        gap={0.5}
+        padding={0.5}
+        styles={{
+          activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+        }}
+        tabs={iconSegments}
+        title="Icon Labels"
+        width="fit-content"
+      />
     </VStack>
   );
 };
 
 const disableA11yCheck = {
   a11y: {
-    config: {
-      /**
-       * Disabled Color contrast ratio rule since the activated tab has an animated indicator which didn't catch by the a11y runner
-       * @link https://dequeuniversity.com/rules/axe/4.6/color-contrast?application=axeAPI
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
     },
   },
 };

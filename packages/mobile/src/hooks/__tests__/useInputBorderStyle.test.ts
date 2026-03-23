@@ -1,6 +1,7 @@
-import { inputBorderWidth } from '@coinbase/cds-common/tokens/input';
+import { focusedInputBorderWidth, inputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { renderHook } from '@testing-library/react-hooks';
 
+import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { useInputBorderAnimation } from '../useInputBorderAnimation';
 import { useInputBorderStyle } from '../useInputBorderStyle';
 
@@ -28,21 +29,26 @@ describe('useInputBorderStyle', () => {
   });
 
   it('should return correct border styles when input is not focused', () => {
-    const { result } = renderHook(() => useInputBorderStyle(false, 'primary', 'secondary'));
+    const { result } = renderHook(() => useInputBorderStyle(false, 'primary', 'secondary'), {
+      wrapper: DefaultThemeProvider,
+    });
 
     expect(result.current.borderUnfocusedStyle).toEqual({
       borderColor: mockUnFocusedBorderRgba,
       borderWidth: inputBorderWidth,
     });
+    // borderFocusedStyle.borderWidth is additive (borderWidth + focusedBorderWidth)
     expect(result.current.borderFocusedStyle).toEqual({
       opacity: mockFocusedBorderOpacity,
       borderColor: mockFocusedBorderRgba,
-      borderWidth: inputBorderWidth,
+      borderWidth: inputBorderWidth + inputBorderWidth,
     });
   });
 
   it('should handle bordered parameter correctly', () => {
-    const { result } = renderHook(() => useInputBorderStyle(false, 'primary', 'secondary', false));
+    const { result } = renderHook(() => useInputBorderStyle(false, 'primary', 'secondary', false), {
+      wrapper: DefaultThemeProvider,
+    });
 
     expect(result.current.borderUnfocusedStyle).toEqual({
       borderColor: mockUnFocusedBorderRgba,
@@ -52,6 +58,26 @@ describe('useInputBorderStyle', () => {
       opacity: mockFocusedBorderOpacity,
       borderColor: mockFocusedBorderRgba,
       borderWidth: 0,
+    });
+  });
+
+  it('should handle borderless Select with explicit focusedBorderWidth', () => {
+    // AlphaSelect passes bordered=false, borderWidth=0, focusedBorderWidth=200
+    // to show a focus ring even when borderless
+    const { result } = renderHook(
+      () => useInputBorderStyle(false, 'primary', 'secondary', false, 0, 200),
+      { wrapper: DefaultThemeProvider },
+    );
+
+    expect(result.current.borderUnfocusedStyle).toEqual({
+      borderColor: mockUnFocusedBorderRgba,
+      borderWidth: 0,
+    });
+    // borderFocusedStyle.borderWidth = 0 + 2px = 2px (shows focus ring)
+    expect(result.current.borderFocusedStyle).toEqual({
+      opacity: mockFocusedBorderOpacity,
+      borderColor: mockFocusedBorderRgba,
+      borderWidth: focusedInputBorderWidth,
     });
   });
 });

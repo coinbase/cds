@@ -7,9 +7,12 @@ import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
 
-export type SwitchBaseProps<T extends string> = Omit<ControlBaseProps<T>, 'style'>;
+export type SwitchBaseProps<SwitchValue extends string> = Omit<
+  ControlBaseProps<SwitchValue>,
+  'style'
+>;
 
-export type SwitchProps<T extends string> = SwitchBaseProps<T>;
+export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValue>;
 
 const SwitchIcon = ({
   pressed,
@@ -22,6 +25,7 @@ const SwitchIcon = ({
   borderWidth = 0,
   animatedScaleValue,
   testID,
+  elevation,
 }: ControlIconProps) => {
   const theme = useTheme();
 
@@ -81,6 +85,7 @@ const SwitchIcon = ({
         borderRadius={borderRadius}
         borderWidth={100}
         disabled={disabled}
+        elevation={elevation}
         pressed={pressed}
         style={thumbStyle}
         testID="switch-thumb"
@@ -89,8 +94,8 @@ const SwitchIcon = ({
   );
 };
 
-const SwitchWithRef = forwardRef(function SwitchWithRef<T extends string>(
-  { children, ...props }: SwitchProps<T>,
+const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends string>(
+  { children, ...props }: SwitchProps<SwitchValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const theme = useTheme();

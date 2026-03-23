@@ -8,6 +8,290 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.35.0 (3/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026/03/20. [[#526](https://github.com/coinbase/cds/pull/526)]
+
+##### ⭐️ Added (52)
+
+###### Pictogram (7)
+
+- instoBorrowCoins
+- instoGlobalConnections
+- instoEasyToUse
+- instoCoinFocus
+- instoDecentralizedExchange
+- instoSecuredAssets
+- instoMonitoringPerformance
+
+###### HeroSquare (1)
+
+- instoOnChain
+
+###### SpotIcon (32)
+
+- instoProductWallet
+- instoSignInProduct
+- instoProductCompliance
+- instoProductPro
+- instoBusinessProduct
+- instoIdVerification
+- instoCloudProduct
+- instoProductCoinbaseCard
+- instoLayeredNetworks
+- instoAssetHubProduct
+- instoPrimeProduct
+- instoDataMarketplace
+- instoRewardsProduct
+- instoCustodyProduct
+- instoDelegate
+- instoPaySDKProduct
+- instoAdvancedTradeProduct
+- instoPrivateClientProduct
+- instoFast
+- instoChat
+- instoAuthenticator
+- instoCoinbaseOneEarn
+- instoWalletAsAServiceProduct
+- instoHelpCenterProduct
+- instoMultiCoin
+- instoShield
+- instoLearningRewardsProduct
+- instoRecurringPurchases
+- instoBorrowProduct
+- instoCommerceProduct
+- instoPieChart
+- instoDerivativesProduct
+
+###### SpotRectangle (11)
+
+- instoDesignateSigner
+- instoApiKey
+- instoConsensusWaitingForApprovals
+- instoKey
+- instoRefreshKey
+- instoSetupComplete
+- instoQRCode
+- instoSetupOnchain
+- instoMargin
+- instoAboutOnchain
+- instoOnchainSetupInProgress
+
+###### SpotSquare (1)
+
+- instoAuthenticatorProgress
+
+##### ⭐️ Updated (12)
+
+###### Pictogram (5)
+
+- instoDecentralizedExchange
+- instoDecentralizedWeb3
+- instoRestaking
+- instoApyInterest
+- instoKey
+
+###### HeroSquare (1)
+
+- instoOnChain
+
+###### SpotRectangle (2)
+
+- instoEthStakingMovement
+- instoCryptoAndMore
+
+###### SpotSquare (4)
+
+- instoSecurityKey
+- instoAuthenticatorProgress
+- instoWaiting
+- instoDappWallet
+
+## 4.34.0 (3/17/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026/03/17. [[#511](https://github.com/coinbase/cds/pull/511)]
+
+##### ⭐️ Added (79)
+
+###### Pictogram (29)
+
+- instoEarnCoins
+- instoNftLibrary
+- instoWalletWarning
+- instoEthRewards
+- instoAdvancedTradingRebates
+- instoDecentralizationEverything
+- instoRiskStaking
+- instoGem
+- instoStakingGraph
+- instoKey
+- instoDecentralizedExchange
+- instoSelfCustodyWallet
+- instoBorrowingLending
+- instoAccount
+- instoEthStakingChart
+- instoEarnGraph
+- instoPasswordWalletLocked
+- instoRestaking
+- instoAddressBook
+- instoDelegate
+- instoCrypto101
+- instoDecentralizedWeb3
+- instoApyInterest
+- instoAuthenticatorProgress
+- instoCoinbaseOneShield
+- instoTrading
+- instoFiat
+- instoprimeMobileApp
+- instoEth
+
+###### HeroSquare (26)
+
+- instoSecurityKeyAuth
+- instoWalletSecurity
+- instoGovernance
+- instoEarnGlobe
+- instoStakingMissedReturns
+- instoRequestSent
+- instoEthStakingUpsell
+- instoWeb3MobileSetupStart
+- tradingPerpetualsUsdc
+- instoCoinbaseOneProtectedCrypto
+- instoOnChain
+- instoDocumentSuccess
+- instoOnChain
+- cryptoPortfolioUsdc
+- instoWallet
+- instoPhoneUnknown
+- instoKeyGenerationPending
+- instoAddBankAccount
+- instoEthStakingRewards
+- instoStaking
+- instoPrimeStaking
+- instoOpenEmail
+- instoPrivateKey
+- instoKeyGenerationComplete
+- instoAdd2Fa
+- instoEnableBiometrics
+
+###### SpotIcon (2)
+
+- instoStakingProduct
+- instantAccess
+
+###### SpotRectangle (10)
+
+- instoSemiCustodial
+- instoEmptyTrading
+- instoCryptoAndMore
+- instoPrimeStaking
+- instoEthStakingMovement
+- stakingUpgrade
+- insto
+- instoStaking
+- instoGetStartedInMinutes
+- instoCurrency
+
+###### SpotSquare (12)
+
+- instantUnstaking
+- instoEthStakingRewards
+- instoStaking
+- instoPrimeStaking
+- instoEthStaking
+- instoAuthenticatorProgress
+- instoSideChainSide
+- instoUbiKey
+- instoSecurityKey
+- instoWaiting
+- instoDappWallet
+- instoPixDeposits
+
+##### ⭐️ Updated (1)
+
+###### Pictogram (1)
+
+- browserMultiPlatform
+
+## 4.33.0 (3/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-03-11. [[#495](https://github.com/coinbase/cds/pull/495)]
+
+##### ⭐️ Added (1)
+
+###### Pictogram (1)
+
+- download
+
+## 4.32.0 (3/3/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-03-03. [[#466](https://github.com/coinbase/cds/pull/466)]
+
+##### ⭐️ Added (4)
+
+###### Pictogram (2)
+
+- pieChartWithArrow
+- pieChartWithArrowBlue
+
+###### SpotSquare (2)
+
+- pieChartWithArrow
+- pieChartWithArrowBlue
+
+## 4.31.0 (2/3/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026/02/03. [[#364](https://github.com/coinbase/cds/pull/364)]
+
+##### ⭐️ Added (1)
+
+###### Pictogram (1)
+
+- arrowsUpDown
+
+##### ⭐️ Updated (1)
+
+###### Pictogram (1)
+
+- baseCheckSmall
+
+## 4.30.1 (2/3/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 4.30.0 (1/29/2026 PST)
+
+##### ⭐️ Added (4)
+
+###### Pictogram (1)
+
+- commodities
+
+###### HeroSquare (2)
+
+- test
+- borrowCoinsBtc
+
+###### SpotSquare (1)
+
+- goldSilverFutures
+
+##### ⭐️ Updated (1)
+
+###### SpotSquare (1)
+
+- cryptoEconomyArrows
+
 ## 4.29.0 (12/5/2025 PST)
 
 #### 🚀 Updates

@@ -11,8 +11,6 @@ import {
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-  withDelay,
-  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
@@ -23,16 +21,17 @@ import {
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
 } from '../line';
-import type { ChartTextProps } from '../text';
+import type { ChartTextChildren, ChartTextProps } from '../text';
 import {
-  accessoryFadeTransitionDelay,
-  accessoryFadeTransitionDuration,
   type ChartInset,
+  defaultAccessoryEnterTransition,
   getPointOnSerializableScale,
+  getTransition,
   type Series,
   useScrubberContext,
 } from '../utils';
 import type { Transition } from '../utils/transition';
+import { buildTransition } from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import { DefaultScrubberLabel } from './DefaultScrubberLabel';
@@ -56,7 +55,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = {
+export type ScrubberBeaconBaseProps = {
   /**
    * Id of the series.
    */
@@ -67,10 +66,14 @@ export type ScrubberBeaconProps = {
   color?: AnimatedProp<string>;
   /**
    * X coordinate in data space.
+   * In vertical layout this is the scrubber index-axis value.
+   * In horizontal layout this is the series value.
    */
   dataX: AnimatedProp<number>;
   /**
    * Y coordinate in data space.
+   * In vertical layout this is the series value.
+   * In horizontal layout this is the scrubber index-axis value.
    */
   dataY: AnimatedProp<number>;
   /**
@@ -79,25 +82,46 @@ export type ScrubberBeaconProps = {
   isIdle: AnimatedProp<boolean>;
   /**
    * Pulse the beacon while it is at rest.
+   *
+   * @note Only has an effect when `isIdle` is `true`. Pulse animations work
+   * regardless of the chart's `animate` prop.
    */
   idlePulse?: boolean;
   /**
-   * Whether animations are enabled.
-   * @default true
+   * Whether position animations are enabled.
+   * @default to ChartContext's animate value
    */
   animate?: boolean;
+  /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: AnimatedProp<number>;
+  /**
+   * Stroke color of the beacon circle.
+   * @default theme.color.bg
+   */
+  stroke?: string;
+};
+
+export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
   /**
    * Transition configuration for beacon animations.
    */
   transitions?: {
     /**
-     * Transition used for beacon position updates.
-     * @default defaultTransition
+     * Transition for the initial enter/reveal animation.
+     * Set to `null` to disable.
      */
-    update?: Transition;
+    enter?: Transition | null;
+    /**
+     * Transition for subsequent data update animations.
+     * Set to `null` to disable.
+     */
+    update?: Transition | null;
     /**
      * Transition used for the pulse animation.
-     * @default { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
+     * @default transition { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
      */
     pulse?: Transition;
     /**
@@ -107,11 +131,6 @@ export type ScrubberBeaconProps = {
      */
     pulseRepeatDelay?: number;
   };
-  /**
-   * Opacity of the beacon.
-   * @default 1
-   */
-  opacity?: AnimatedProp<number>;
 };
 
 export type ScrubberBeaconComponent = React.FC<
@@ -126,7 +145,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Label for the series.
      */
-    label: AnimatedProp<string>;
+    label: ChartTextChildren;
     /**
      * Id of the series.
      */
@@ -146,6 +165,12 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      * By default, all series will be highlighted.
      */
     seriesIds?: string[];
+    /**
+     * Hides the beacon labels while keeping the line label visible (if provided).
+     * @default true in horizontal layout, false in vertical layout.
+     * @note Beacon labels are always hidden in horizontal layout, and cannot be overridden.
+     */
+    hideBeaconLabels?: boolean;
     /**
      * Hides the scrubber line.
      * @note This hides Scrubber's ReferenceLine including the label.
@@ -172,6 +197,12 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
     /**
+     * Preferred side for beacon labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    beaconLabelPreferredSide?: ScrubberBeaconLabelGroupBaseProps['labelPreferredSide'];
+    /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
      */
@@ -194,12 +225,24 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Transition configuration for the scrubber beacon.
+     * Stroke color of the scrubber beacon circle.
+     * @default theme.color.bg
      */
-    beaconTransitions?: ScrubberBeaconProps['transitions'];
+    beaconStroke?: string;
   };
 
-export type ScrubberProps = ScrubberBaseProps;
+export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Transition configuration for the scrubber.
+   * Controls enter, update, and pulse animations for beacons and beacon labels.
+   */
+  transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Transition configuration for the scrubber beacon.
+   * @deprecated Use `transitions` instead.
+   */
+  beaconTransitions?: ScrubberBeaconProps['transitions'];
+};
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
 
@@ -211,6 +254,7 @@ export const Scrubber = memo(
     (
       {
         seriesIds,
+        hideBeaconLabels,
         hideLine,
         label,
         lineStroke,
@@ -223,11 +267,14 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        beaconLabelPreferredSide,
         labelFont,
         labelBoundsInset,
         beaconLabelFont,
         idlePulse,
         beaconTransitions,
+        transitions = beaconTransitions,
+        beaconStroke,
       },
       ref,
     ) => {
@@ -235,24 +282,30 @@ export const Scrubber = memo(
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXSerializableScale, getXAxis, series, drawingArea, animate, dataLength } =
-        useCartesianChartContext();
+      const {
+        layout,
+        getXSerializableScale,
+        getYSerializableScale,
+        getXAxis,
+        getYAxis,
+        series,
+        drawingArea,
+        animate,
+        dataLength,
+      } = useCartesianChartContext();
 
-      const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
+      const indexAxis = useMemo(
+        () => (categoryAxisIsX ? getXAxis() : getYAxis()),
+        [categoryAxisIsX, getXAxis, getYAxis],
+      );
+      const indexScale = useMemo(
+        () => (categoryAxisIsX ? getXSerializableScale() : getYSerializableScale()),
+        [categoryAxisIsX, getXSerializableScale, getYSerializableScale],
+      );
 
       // Animation state for delayed scrubber rendering (matches web timing)
       const scrubberOpacity = useSharedValue(animate ? 0 : 1);
-
-      // Delay scrubber appearance until after path enter animation completes
-      useEffect(() => {
-        if (animate) {
-          scrubberOpacity.value = withDelay(
-            accessoryFadeTransitionDelay,
-            withTiming(1, { duration: accessoryFadeTransitionDuration }),
-          );
-        }
-      }, [animate, scrubberOpacity]);
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -272,13 +325,17 @@ export const Scrubber = memo(
         return scrubberPosition.value ?? Math.max(0, dataLength - 1);
       }, [scrubberPosition, dataLength]);
 
-      const dataX = useDerivedValue(() => {
-        if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {
-          const dataValue = xAxis.data[dataIndex.value];
-          return typeof dataValue === 'string' ? dataIndex.value : dataValue;
+      const dataValue = useDerivedValue(() => {
+        if (
+          indexAxis?.data &&
+          Array.isArray(indexAxis.data) &&
+          indexAxis.data[dataIndex.value] !== undefined
+        ) {
+          const axisValue = indexAxis.data[dataIndex.value];
+          return typeof axisValue === 'string' ? dataIndex.value : axisValue;
         }
         return dataIndex.value;
-      }, [xAxis, dataIndex]);
+      }, [indexAxis, dataIndex]);
 
       const lineOpacity = useDerivedValue(() => {
         return scrubberPosition.value !== undefined ? 1 : 0;
@@ -288,21 +345,34 @@ export const Scrubber = memo(
         return scrubberPosition.value !== undefined ? 0.8 : 0;
       }, [scrubberPosition]);
 
+      const pixelPosition = useDerivedValue(() => {
+        if (dataValue.value === undefined || !indexScale) return undefined;
+        return getPointOnSerializableScale(dataValue.value, indexScale);
+      }, [dataValue, indexScale]);
+
       const overlayWidth = useDerivedValue(() => {
-        const pixelX =
-          dataX.value !== undefined && xScale
-            ? getPointOnSerializableScale(dataX.value, xScale)
-            : 0;
-        return drawingArea.x + drawingArea.width - pixelX + overlayOffset;
-      }, [dataX, xScale]);
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX
+          ? drawingArea.x + drawingArea.width - pixel + overlayOffset
+          : drawingArea.width + overlayOffset * 2;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+      const overlayHeight = useDerivedValue(() => {
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX
+          ? drawingArea.height + overlayOffset * 2
+          : drawingArea.y + drawingArea.height - pixel + overlayOffset;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
 
       const overlayX = useDerivedValue(() => {
-        const xValue =
-          dataX.value !== undefined && xScale
-            ? getPointOnSerializableScale(dataX.value, xScale)
-            : 0;
-        return xValue;
-      }, [dataX, xScale]);
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX ? pixel : drawingArea.x - overlayOffset;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+      const overlayY = useDerivedValue(() => {
+        const pixel = pixelPosition.value ?? 0;
+        return categoryAxisIsX ? drawingArea.y - overlayOffset : pixel;
+      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
 
       const resolvedLabelValue = useSharedValue<SkParagraph | string>('');
 
@@ -346,25 +416,39 @@ export const Scrubber = memo(
         [series, filteredSeriesIds],
       );
 
-      if (!xScale) return;
+      const showBeaconLabels = !hideBeaconLabels && categoryAxisIsX && beaconLabels.length > 0;
+      const isReady = !!indexScale;
+
+      const groupEnterTransition = useMemo(
+        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+        [transitions?.enter, animate],
+      );
+
+      useEffect(() => {
+        if (animate && isReady) {
+          scrubberOpacity.value = buildTransition(1, groupEnterTransition);
+        }
+      }, [animate, isReady, scrubberOpacity, groupEnterTransition]);
+
+      if (!isReady) return;
 
       return (
         <Group opacity={scrubberOpacity}>
           {!hideOverlay && (
             <Rect
               color={theme.color.bg}
-              height={drawingArea.height + overlayOffset * 2}
+              height={overlayHeight}
               opacity={overlayOpacity}
               width={overlayWidth}
               x={overlayX}
-              y={drawingArea.y - overlayOffset}
+              y={overlayY}
             />
           )}
           {!hideLine && (
             <ReferenceLine
               LabelComponent={LabelComponent}
               LineComponent={LineComponent}
-              dataX={dataX}
+              {...(categoryAxisIsX ? { dataX: dataValue } : { dataY: dataValue })}
               label={resolvedLabelValue}
               labelBoundsInset={labelBoundsInset}
               labelElevated={labelElevated}
@@ -378,15 +462,18 @@ export const Scrubber = memo(
             BeaconComponent={BeaconComponent}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
-            transitions={beaconTransitions}
+            stroke={beaconStroke}
+            transitions={transitions}
           />
-          {beaconLabels.length > 0 && (
+          {showBeaconLabels && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
               labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
+              labelPreferredSide={beaconLabelPreferredSide}
               labels={beaconLabels}
+              transitions={transitions}
             />
           )}
         </Group>

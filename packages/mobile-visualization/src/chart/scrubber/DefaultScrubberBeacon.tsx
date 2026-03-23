@@ -1,12 +1,14 @@
-import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
 import {
   cancelAnimation,
   Easing,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
+  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
@@ -14,17 +16,22 @@ import { Circle, Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { unwrapAnimatedValue } from '../utils';
 import { projectPointWithSerializableScale } from '../utils/point';
-import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
-const radius = 5;
-const strokeWidth = 2;
+const defaultRadius = 5;
+const defaultStrokeWidth = 2;
 
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
-const pulseRadiusStart = 10;
-const pulseRadiusEnd = 15;
+const pulseRadiusStartMultiplier = 2;
+const pulseRadiusEndMultiplier = 3;
 
 const defaultPulseTransition: Transition = {
   type: 'timing',
@@ -34,7 +41,18 @@ const defaultPulseTransition: Transition = {
 
 const defaultPulseRepeatDelay = 400;
 
-export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
+export type DefaultScrubberBeaconProps = ScrubberBeaconProps & {
+  /**
+   * Radius of the beacon circle.
+   * @default 5
+   */
+  radius?: number;
+  /**
+   * Stroke width of the beacon circle.
+   * @default 2
+   */
+  strokeWidth?: number;
+};
 
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
@@ -49,6 +67,9 @@ export const DefaultScrubberBeacon = memo(
         animate = true,
         transitions,
         opacity: opacityProp = 1,
+        radius = defaultRadius,
+        stroke,
+        strokeWidth = defaultStrokeWidth,
       },
       ref,
     ) => {
@@ -57,7 +78,10 @@ export const DefaultScrubberBeacon = memo(
         useCartesianChartContext();
 
       const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const xScale = useMemo(
+        () => getXSerializableScale(targetSeries?.xAxisId),
+        [getXSerializableScale, targetSeries?.xAxisId],
+      );
       const yScale = useMemo(
         () => getYSerializableScale(targetSeries?.yAxisId),
         [getYSerializableScale, targetSeries?.yAxisId],
@@ -69,8 +93,8 @@ export const DefaultScrubberBeacon = memo(
       );
 
       const updateTransition = useMemo(
-        () => transitions?.update ?? defaultTransition,
-        [transitions?.update],
+        () => getTransition(transitions?.update, animate, defaultTransition),
+        [transitions?.update, animate],
       );
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
@@ -81,8 +105,19 @@ export const DefaultScrubberBeacon = memo(
         [transitions?.pulseRepeatDelay],
       );
 
+      const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
+      const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
+
       const pulseOpacity = useSharedValue(0);
       const pulseRadius = useSharedValue(pulseRadiusStart);
+
+      // Convert idlePulse prop to SharedValue so useAnimatedReaction can detect changes.
+      // In the new React Native architecture, regular JS props are captured by value in worklets
+      // and won't update when the prop changes.
+      const idlePulseShared = useSharedValue(idlePulse ?? false);
+      useEffect(() => {
+        idlePulseShared.value = idlePulse ?? false;
+      }, [idlePulse, idlePulseShared]);
 
       const animatedX = useSharedValue(0);
       const animatedY = useSharedValue(0);
@@ -127,41 +162,41 @@ export const DefaultScrubberBeacon = memo(
         () => ({
           pulse: () => {
             // Only trigger manual pulse when idlePulse is not enabled
-            if (!idlePulse) {
+            if (!idlePulseShared.value) {
               cancelAnimation(pulseOpacity);
               cancelAnimation(pulseRadius);
 
               // Manual pulse without delay
-              const immediatePulseTransition = { ...pulseTransition, delay: 0 };
               pulseOpacity.value = pulseOpacityStart;
               pulseRadius.value = pulseRadiusStart;
-              pulseOpacity.value = buildTransition(pulseOpacityEnd, immediatePulseTransition);
-              pulseRadius.value = buildTransition(pulseRadiusEnd, immediatePulseTransition);
+              pulseOpacity.value = buildTransition(pulseOpacityEnd, pulseTransition);
+              pulseRadius.value = buildTransition(pulseRadiusEnd, pulseTransition);
             }
           },
         }),
-        [idlePulse, pulseOpacity, pulseRadius, pulseTransition],
+        [
+          idlePulseShared,
+          pulseOpacity,
+          pulseRadius,
+          pulseTransition,
+          pulseRadiusStart,
+          pulseRadiusEnd,
+        ],
       );
 
       // Watch idlePulse changes and control continuous pulse
       useAnimatedReaction(
-        () => idlePulse,
-        (current, previous) => {
-          if (!animate) return;
-
+        () => idlePulseShared.value,
+        (current) => {
           if (current) {
             // Start continuous pulse when idlePulse is enabled
-            // Create instant transition to reset pulse after delay
-            const instantTransition: Transition = { type: 'timing', duration: 0 };
-            const resetWithDelay = { ...instantTransition, delay: pulseRepeatDelay };
-
             pulseOpacity.value = pulseOpacityStart;
             pulseRadius.value = pulseRadiusStart;
 
             pulseOpacity.value = withRepeat(
               withSequence(
                 buildTransition(pulseOpacityEnd, pulseTransition),
-                buildTransition(pulseOpacityStart, resetWithDelay),
+                withDelay(pulseRepeatDelay, withTiming(pulseOpacityStart, { duration: 0 })),
               ),
               -1, // infinite loop
               false,
@@ -170,7 +205,7 @@ export const DefaultScrubberBeacon = memo(
             pulseRadius.value = withRepeat(
               withSequence(
                 buildTransition(pulseRadiusEnd, pulseTransition),
-                buildTransition(pulseRadiusStart, resetWithDelay),
+                withDelay(pulseRepeatDelay, withTiming(pulseRadiusStart, { duration: 0 })),
               ),
               -1, // infinite loop
               false,
@@ -183,7 +218,7 @@ export const DefaultScrubberBeacon = memo(
             pulseRadius.value = pulseRadiusStart;
           }
         },
-        [animate, pulseTransition, pulseRepeatDelay],
+        [pulseTransition, pulseRepeatDelay, pulseRadiusStart, pulseRadiusEnd],
       );
 
       const pulseVisibility = useDerivedValue(() => {
@@ -206,7 +241,7 @@ export const DefaultScrubberBeacon = memo(
       return (
         <Group opacity={beaconOpacity}>
           <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
-          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
+          <Circle c={animatedPoint} color={stroke ?? theme.color.bg} r={radius + strokeWidth / 2} />
           <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
         </Group>
       );

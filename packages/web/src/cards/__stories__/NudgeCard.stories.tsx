@@ -4,6 +4,7 @@ import { squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import { Button } from '../../buttons/Button';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
+import { RemoteImage } from '../../media';
 import { Text } from '../../typography/Text';
 import type { NudgeCardProps } from '../NudgeCard';
 import { NudgeCard } from '../NudgeCard';
@@ -38,7 +39,7 @@ const exampleMediaProps: NudgeCardProps = {
   description: 'Stand with crypto and mint your NFT. ',
   action: 'Join the movement',
   onActionPress: () => {},
-  media: <img alt="placeholder" src={squareAssets.human2} width={60} />,
+  media: <RemoteImage alt="Person illustration" source={squareAssets.human2} width={60} />,
 };
 
 const compactMediaProps: NudgeCardProps = {
@@ -46,7 +47,7 @@ const compactMediaProps: NudgeCardProps = {
   description: 'It will take you to the moon, I promise. WAGMI!',
   action: undefined,
   onActionPress: undefined,
-  media: <img alt="placeholder" src={squareAssets.human3} width={60} />,
+  media: <RemoteImage alt="Person illustration" source={squareAssets.human3} width={60} />,
 };
 
 export const Default = () => (

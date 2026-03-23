@@ -1,7 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
 import type { SharedAccessibilityProps, SharedProps, Weight } from '@coinbase/cds-common/types';
 import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgressSize';
 import { css } from '@linaria/core';
@@ -24,7 +23,6 @@ export type ProgressBaseProps = SharedProps &
     weight?: Weight;
     /**
      * Toggle used to show a disabled progress visualization
-     * @default false
      */
     disabled?: boolean;
     /**
@@ -43,38 +41,20 @@ export type ProgressBaseProps = SharedProps &
   };
 
 export type ProgressBarProps = ProgressBaseProps & {
-  /**
-   * Custom styles for the progress bar root.
-   */
   style?: React.CSSProperties;
-  /**
-   * Custom class name for the progress bar root.
-   */
   className?: string;
-  /**
-   * Custom styles for the progress bar.
-   */
+  /** Custom styles for individual elements of the ProgressBar component */
   styles?: {
-    /**
-     * Custom styles for the progress bar root.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the progress.
-     */
+    /** Progress fill element */
     progress?: React.CSSProperties;
   };
-  /**
-   * Custom class names for the progress bar.
-   */
+  /** Custom class names for individual elements of the ProgressBar component */
   classNames?: {
-    /**
-     * Class name for the progress bar root.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Class name for the progress.
-     */
+    /** Progress fill element */
     progress?: string;
   };
 };
@@ -92,8 +72,8 @@ export const ProgressBar = memo(
         weight = 'normal',
         progress,
         color = 'bgPrimary',
-        disabled = false,
-        disableAnimateOnMount = false,
+        disabled,
+        disableAnimateOnMount,
         testID,
         accessibilityLabel,
         style,
@@ -107,24 +87,21 @@ export const ProgressBar = memo(
     ) => {
       const height = useProgressSize(weight);
 
-      const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
-        usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
+      // start position of the progress bar on mount
+      const initialTranslateX = isRtl() ? 100 : -100;
 
-      addPreviousPercent(progress);
-      const previousPercent = getPreviousPercent() ?? 0;
-      const translateXStart = isRtl() ? 100 - previousPercent * 100 : -100 + previousPercent * 100;
-      const translateXEnd = isRtl() ? 100 - progress * 100 : -100 + progress * 100;
+      const translateX = isRtl() ? 100 - progress * 100 : -100 + progress * 100;
 
       const motionProps = useMotionProps({
         style: {
           originX: isRtl() ? 'right' : 'left',
         },
         animate: {
-          x: [`${translateXStart}%`, `${translateXEnd}%`],
+          x: `${translateX}%`,
           opacity: 1,
         },
         transition: animateProgressBaseSpec,
-        initial: !progress ? false : { x: `${translateXStart}%` }, // skip initial animation if no progress
+        initial: !progress || disableAnimateOnMount ? false : { x: `${initialTranslateX}%` }, // skip initial animation if no progress or disableAnimateOnMount is true
       });
 
       return (

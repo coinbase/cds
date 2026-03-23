@@ -127,6 +127,7 @@ export type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
   /**
    * The ID of the y-axis to use for positioning.
    * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
   /**
@@ -169,6 +170,10 @@ export type ReferenceLineProps = (HorizontalReferenceLineProps | VerticalReferen
      */
     root?: string;
     /**
+     * Custom class name for the line path.
+     */
+    line?: string;
+    /**
      * Custom class name for the text label.
      */
     label?: string;
@@ -181,6 +186,10 @@ export type ReferenceLineProps = (HorizontalReferenceLineProps | VerticalReferen
      * Custom styles for the root element.
      */
     root?: React.CSSProperties;
+    /**
+     * Custom styles for the line path.
+     */
+    line?: React.CSSProperties;
     /**
      * Custom styles for the text label.
      */
@@ -245,9 +254,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <g className={rootClassName} data-testid={testID} style={rootStyle}>
           <LineComponent
             animate={false}
+            className={classNames?.line}
             d={`M${drawingArea.x},${yPixel} L${drawingArea.x + drawingArea.width},${yPixel}`}
             stroke={stroke}
             strokeOpacity={opacity}
+            style={styles?.line}
           />
           {label && (
             <LabelComponent
@@ -298,9 +309,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <g className={rootClassName} data-testid={testID} style={rootStyle}>
           <LineComponent
             animate={false}
+            className={classNames?.line}
             d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
             stroke={stroke}
             strokeOpacity={opacity}
+            style={styles?.line}
           />
           {label && (
             <LabelComponent

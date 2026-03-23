@@ -1,11 +1,30 @@
 {
   "import": "import { NavigationTitleSelect } from '@coinbase/cds-web/navigation/NavigationTitleSelect'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/NavigationTitleSelect.tsx",
-  "description": "A select component styled as a navigation title, allowing users to switch between different views or contexts from the header.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-navigationtitleselect--default",
+  "description": "A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It uses a Dropdown to display options.",
   "relatedComponents": [
     {
       "label": "NavigationTitle",
-      "url": "/components/navigation/NavigationTitle/"
+      "url": "/components/navigation/NavigationTitle"
+    },
+    {
+      "label": "Dropdown",
+      "url": "/components/layout/Dropdown"
+    },
+    {
+      "label": "SelectOption",
+      "url": "/components/inputs/SelectOption"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    },
+    {
+      "name": "react-dom",
+      "version": "^18.3.1"
     }
   ]
 }

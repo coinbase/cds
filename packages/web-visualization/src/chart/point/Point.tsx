@@ -6,7 +6,13 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { type PointLabelPosition, projectPoint } from '../utils';
+import {
+  defaultAccessoryEnterTransition,
+  defaultTransition,
+  getTransition,
+  type PointLabelPosition,
+  projectPoint,
+} from '../utils';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
@@ -45,8 +51,15 @@ export type PointBaseProps = SharedProps & {
   /**
    * Optional Y-axis id to specify which axis to plot along.
    * @default first y-axis defined in chart props.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
    */
   yAxisId?: string;
+  /**
+   * Optional X-axis id to specify which axis to plot along.
+   * @default first x-axis defined in chart props.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
   /**
    * Radius of the point.
    * @default 5
@@ -215,8 +228,24 @@ export type PointProps = PointBaseProps &
      */
     accessibilityLabel?: string;
     /**
-     * Transition configuration for animation.
-     * @default defaultTransition
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead.
      */
     transition?: Transition;
   };
@@ -225,6 +254,7 @@ export const Point = memo<PointProps>(
   ({
     dataX,
     dataY,
+    xAxisId,
     yAxisId,
     fill = 'var(--color-fgPrimary)',
     radius = 5,
@@ -244,6 +274,7 @@ export const Point = memo<PointProps>(
     labelFont,
     testID,
     animate: animateProp,
+    transitions,
     transition,
     ...svgProps
   }) => {
@@ -255,7 +286,22 @@ export const Point = memo<PointProps>(
     } = useCartesianChartContext();
     const animate = animateProp ?? animationEnabled;
 
-    const xScale = getXScale();
+    const enterTransition = useMemo(
+      () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      [animate, transitions?.enter],
+    );
+
+    const updateTransition = useMemo(
+      () =>
+        getTransition(
+          transitions?.update !== undefined ? transitions.update : transition,
+          animate,
+          defaultTransition,
+        ),
+      [animate, transitions?.update, transition],
+    );
+
+    const xScale = getXScale(xAxisId);
     const yScale = getYScale(yAxisId);
 
     const pixelCoordinate = useMemo(() => {
@@ -347,7 +393,6 @@ export const Point = memo<PointProps>(
           cx={pixelCoordinate.x}
           cy={pixelCoordinate.y}
           fill={fill}
-          initial={false}
           onClick={
             onClick
               ? (event: any) =>
@@ -361,7 +406,10 @@ export const Point = memo<PointProps>(
           strokeWidth={strokeWidth}
           style={mergedStyles}
           tabIndex={onClick ? 0 : -1}
-          transition={transition}
+          transition={{
+            cx: updateTransition,
+            cy: updateTransition,
+          }}
           variants={variants}
           whileHover={onClick ? 'hovered' : 'default'}
           whileTap={onClick ? 'pressed' : 'default'}
@@ -385,7 +433,7 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
-      transition,
+      updateTransition,
     ]);
 
     if (!xScale || !yScale) {
@@ -394,28 +442,34 @@ export const Point = memo<PointProps>(
 
     return (
       <g opacity={isWithinDrawingArea ? 1 : 0}>
-        <g
-          className={cx(containerCss, classNames?.root)}
-          data-testid={testID}
-          opacity={opacity}
-          style={styles?.root}
+        <motion.g
+          animate={{ opacity: 1 }}
+          initial={animate ? { opacity: 0 } : false}
+          transition={{ opacity: enterTransition }}
         >
-          {innerPoint}
-        </g>
-        {label && (
-          <LabelComponent
-            dataX={dataX}
-            dataY={dataY}
-            fill={fill}
-            font={labelFont}
-            offset={labelOffset}
-            position={labelPosition}
-            x={pixelCoordinate.x}
-            y={pixelCoordinate.y}
+          <g
+            className={cx(containerCss, classNames?.root)}
+            data-testid={testID}
+            opacity={opacity}
+            style={styles?.root}
           >
-            {label}
-          </LabelComponent>
-        )}
+            {innerPoint}
+          </g>
+          {label && (
+            <LabelComponent
+              dataX={dataX}
+              dataY={dataY}
+              fill={fill}
+              font={labelFont}
+              offset={labelOffset}
+              position={labelPosition}
+              x={pixelCoordinate.x}
+              y={pixelCoordinate.y}
+            >
+              {label}
+            </LabelComponent>
+          )}
+        </motion.g>
       </g>
     );
   },

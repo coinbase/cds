@@ -8,7 +8,7 @@ figma.connect(
   TabNavigation,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=240-8930&m=dev',
   {
-    imports: ["import { TabNavigation } from '@coinbase/cds-mobile/tabs/TabNavigation';"],
+    imports: ["import { TabNavigation } from '@coinbase/cds-mobile/tabs/TabNavigation'"],
     props: {
       tab1: figma.nestedProps('1 Primary Tab', {
         count: figma.boolean('dot count', {

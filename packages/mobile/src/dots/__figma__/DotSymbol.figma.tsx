@@ -7,7 +7,7 @@ figma.connect(
   DotSymbol,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=155%3A12033',
   {
-    imports: ["import { DotSymbol } from'@coinbase/cds-mobile/dots/DotSymbol';"],
+    imports: ["import { DotSymbol } from'@coinbase/cds-mobile/dots/DotSymbol'"],
     props: {
       children: figma.enum('symbol size', {
         l: figma.instance('48 media'),

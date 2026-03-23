@@ -91,10 +91,11 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 <TextInput label="Label" placeholder="Placeholder" />
 ```
 
-### Borderless TextInput (web)
+### Borderless
 
-A borderless TextInput SHOULD NOT be used alone. It should be used
-with a TypeAhead component.
+:::warning
+You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
+:::
 
 ```jsx live
 <HStack padding={2}>
@@ -253,7 +254,7 @@ When using the `inside` label variant, you should always include a `placeholder`
       label="Password"
       labelVariant="inside"
       type="password"
-      end={<InputIconButton name="visibleInactive" />}
+      end={<InputIconButton name="visible" />}
       placeholder="Enter your password"
     />
   </VStack>
@@ -262,24 +263,69 @@ When using the `inside` label variant, you should always include a `placeholder`
 
 ### Custom Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
 
 ```jsx live
-<TextInput
-  id="display-name-tooltip"
-  label="Display name"
-  labelNode={
-    <InputLabel htmlFor="display-name-tooltip">
-      <HStack alignItems="center" gap={1}>
-        Display name
+<VStack gap={2}>
+  <TextInput
+    accessibilityLabel="Display name"
+    id="display-name-input"
+    labelNode={
+      <HStack alignItems="center">
+        <InputLabel htmlFor="display-name-input">Display name</InputLabel>
+        {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
         <Tooltip content="This will be visible to other users.">
-          <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+          <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
         </Tooltip>
       </HStack>
-    </InputLabel>
-  }
-  placeholder="Satoshi Nakamoto"
-/>
+    }
+    placeholder="Satoshi Nakamoto"
+  />
+  <TextInput
+    accessibilityLabel="Amount"
+    compact
+    labelNode={
+      <InputLabel>
+        <HStack alignItems="center" gap={0.5}>
+          Amount
+          <Text color="fgNegative" font="label1">
+            *
+          </Text>
+        </HStack>
+      </InputLabel>
+    }
+    placeholder="0.00"
+    suffix="USD"
+  />
+  <TextInput
+    accessibilityLabel="Bio"
+    id="bio-input"
+    labelVariant="inside"
+    labelNode={
+      <InputLabel htmlFor="bio-input" paddingY={0}>
+        <HStack alignItems="center" gap={1}>
+          Bio
+          <Text color="fgMuted" font="legal">
+            (optional)
+          </Text>
+        </HStack>
+      </InputLabel>
+    }
+    placeholder="Tell us about yourself"
+  />
+  <TextInput
+    accessibilityLabel="Notes"
+    id="notes-input"
+    labelVariant="inside"
+    labelNode={
+      <InputLabel htmlFor="notes-input" paddingY={0}>
+        Notes
+      </InputLabel>
+    }
+    placeholder="Add a note"
+    start={<InputIcon name="pencil" />}
+  />
+</VStack>
 ```
 
 ### StartContent & EndContent
@@ -410,6 +456,7 @@ Password Input - Use Icon Buttons at the end for actions like showing a password
 function PasswordInput() {
   const [isVisible, setIsVisible] = useState(false);
   const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
+  const iconName = useMemo(() => (isVisible ? 'visible' : 'invisible'), [isVisible]);
 
   return (
     <TextInput
@@ -417,8 +464,8 @@ function PasswordInput() {
       type={type}
       end={
         <InputIconButton
-          name={isVisible ? 'visibleActive' : 'visibleInactive'}
-          onClick={() => setIsVisible((isVisible) => !setIsVisible)}
+          name={iconName}
+          onClick={() => setIsVisible((isVisible) => !isVisible)}
           accessibilityLabel={isVisible ? 'Hide password' : 'Show password'}
         />
       }
@@ -479,38 +526,6 @@ function CopyTextField() {
   <TextInput label="Label" disabled />
   <TextInput label="Label" compact disabled />
 </VStack>
-```
-
-### TextArea Example (mobile)
-
-On mobile, TextInput is versatile enough to support
-a "TextArea" as well. You just need to add multiline prop.
-Here is an example
-
-```jsx
-const [text, onChangeText] = useState('');
-
-<MockTextInput
-  onChangeText={onChangeText}
-  value={text}
-  label="Textarea"
-  helperText="Write about yourself"
-  variant="foregroundMuted"
-  multiline
-  value="
-      A really really really really
-      long piece 
-      of text
-      displayed. A really really really really
-      long piece 
-      of text
-      displayed. 
-      A really really really really
-      long piece 
-      of text
-      displayed
-    "
-/>;
 ```
 
 ### Example of a Form
@@ -604,32 +619,6 @@ function testExample() {
       }
       end={<InputIcon active color="primary" name="visible" />}
     />
-  );
-}
-```
-
-## Date Picker Example
-
-You can construct a DatePicker using TextInput
-
-```jsx live
-function DatePicker() {
-  return <TextInput label="Pick a date" type="date" />;
-}
-```
-
-## TextInput While Keyboard Is Open (mobile)
-
-If you have the keyboard open, then closing the keyboard and interacting with the text input requires 2 taps, which isn't a great user experience.
-
-To fix this issue, you can wrap the TextInput in a ScrollView, and set keyboardShouldPersistTaps="always".
-
-```jsx
-function TextInputKeyboardExample() {
-  return (
-    <ScrollView style={{ height: '100%' }} keyboardShouldPersistTaps="always">
-      <TextInput label="Amount" type="number" compact placeholder="98329.23" suffix="USD" />
-    </ScrollView>
   );
 }
 ```

@@ -38,8 +38,10 @@ export const DottedLine = memo<DottedLineProps>(
     strokeWidth = 2,
     vectorEffect = 'non-scaling-stroke',
     gradient,
+    xAxisId,
     yAxisId,
     animate,
+    transitions,
     transition,
     d,
     ...props
@@ -54,7 +56,8 @@ export const DottedLine = memo<DottedLineProps>(
               animate={animate}
               gradient={gradient}
               id={gradientId}
-              transition={transition}
+              transition={transitions?.update ?? transition}
+              xAxisId={xAxisId}
               yAxisId={yAxisId}
             />
           </defs>
@@ -71,6 +74,7 @@ export const DottedLine = memo<DottedLineProps>(
           strokeOpacity={strokeOpacity}
           strokeWidth={strokeWidth}
           transition={transition}
+          transitions={transitions}
           vectorEffect={vectorEffect}
           {...props}
         />

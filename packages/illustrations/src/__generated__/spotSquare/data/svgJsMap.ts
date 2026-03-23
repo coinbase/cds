@@ -427,8 +427,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/cryptoEconomy-4.js').content,
   },
   cryptoEconomyArrows: {
-    light: () => require('../svgJs/light/cryptoEconomyArrows-1.js').content,
-    dark: () => require('../svgJs/dark/cryptoEconomyArrows-1.js').content,
+    light: () => require('../svgJs/light/cryptoEconomyArrows-2.js').content,
+    dark: () => require('../svgJs/dark/cryptoEconomyArrows-2.js').content,
   },
   cryptoForBeginners: {
     light: () => require('../svgJs/light/cryptoForBeginners-5.js').content,
@@ -598,6 +598,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/globalTransactions-6.js').content,
     dark: () => require('../svgJs/dark/globalTransactions-6.js').content,
   },
+  goldSilverFutures: {
+    light: () => require('../svgJs/light/goldSilverFutures-0.js').content,
+    dark: () => require('../svgJs/dark/goldSilverFutures-0.js').content,
+  },
   guideBullCase: {
     light: () => require('../svgJs/light/guideBullCase-4.js').content,
     dark: () => require('../svgJs/dark/guideBullCase-4.js').content,
@@ -633,6 +637,54 @@ const svgJsMap = {
   idError: {
     light: () => require('../svgJs/light/idError-2.js').content,
     dark: () => require('../svgJs/dark/idError-2.js').content,
+  },
+  instantUnstaking: {
+    light: () => require('../svgJs/light/instantUnstaking-0.js').content,
+    dark: () => require('../svgJs/dark/instantUnstaking-0.js').content,
+  },
+  instoAuthenticatorProgress: {
+    light: () => require('../svgJs/light/instoAuthenticatorProgress-1.js').content,
+    dark: () => require('../svgJs/dark/instoAuthenticatorProgress-1.js').content,
+  },
+  instoDappWallet: {
+    light: () => require('../svgJs/light/instoDappWallet-1.js').content,
+    dark: () => require('../svgJs/dark/instoDappWallet-1.js').content,
+  },
+  instoEthStaking: {
+    light: () => require('../svgJs/light/instoEthStaking-0.js').content,
+    dark: () => require('../svgJs/dark/instoEthStaking-0.js').content,
+  },
+  instoEthStakingRewards: {
+    light: () => require('../svgJs/light/instoEthStakingRewards-0.js').content,
+    dark: () => require('../svgJs/dark/instoEthStakingRewards-0.js').content,
+  },
+  instoPixDeposits: {
+    light: () => require('../svgJs/light/instoPixDeposits-0.js').content,
+    dark: () => require('../svgJs/dark/instoPixDeposits-0.js').content,
+  },
+  instoPrimeStaking: {
+    light: () => require('../svgJs/light/instoPrimeStaking-0.js').content,
+    dark: () => require('../svgJs/dark/instoPrimeStaking-0.js').content,
+  },
+  instoSecurityKey: {
+    light: () => require('../svgJs/light/instoSecurityKey-1.js').content,
+    dark: () => require('../svgJs/dark/instoSecurityKey-1.js').content,
+  },
+  instoSideChainSide: {
+    light: () => require('../svgJs/light/instoSideChainSide-0.js').content,
+    dark: () => require('../svgJs/dark/instoSideChainSide-0.js').content,
+  },
+  instoStaking: {
+    light: () => require('../svgJs/light/instoStaking-0.js').content,
+    dark: () => require('../svgJs/dark/instoStaking-0.js').content,
+  },
+  instoUbiKey: {
+    light: () => require('../svgJs/light/instoUbiKey-0.js').content,
+    dark: () => require('../svgJs/dark/instoUbiKey-0.js').content,
+  },
+  instoWaiting: {
+    light: () => require('../svgJs/light/instoWaiting-1.js').content,
+    dark: () => require('../svgJs/dark/instoWaiting-1.js').content,
   },
   insuranceProtection: {
     light: () => require('../svgJs/light/insuranceProtection-4.js').content,
@@ -773,6 +825,14 @@ const svgJsMap = {
   phoneNumber: {
     light: () => require('../svgJs/light/phoneNumber-2.js').content,
     dark: () => require('../svgJs/dark/phoneNumber-2.js').content,
+  },
+  pieChartWithArrow: {
+    light: () => require('../svgJs/light/pieChartWithArrow-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrow-0.js').content,
+  },
+  pieChartWithArrowBlue: {
+    light: () => require('../svgJs/light/pieChartWithArrowBlue-0.js').content,
+    dark: () => require('../svgJs/dark/pieChartWithArrowBlue-0.js').content,
   },
   pixBankDeposits: {
     light: () => require('../svgJs/light/pixBankDeposits-5.js').content,

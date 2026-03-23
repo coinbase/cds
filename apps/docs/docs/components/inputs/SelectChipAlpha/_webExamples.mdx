@@ -1,8 +1,10 @@
-SelectChip is built on top of the [Alpha Select](/components/inputs/SelectAlpha/) component. It provides a chip-styled interface while maintaining all the functionality of Select, including support for single and multi-selection, option groups, and custom components.
+SelectChip is a chip-styled control built on top of the [Alpha Select](/components/inputs/SelectAlpha/). It supports single and multi-selection, option groups, custom start/end nodes, and shares the same `classNames` and `styles` API for targeting internal elements (see the Styles tab).
 
 :::note Duplicate Values
 Avoid using options with duplicate values. Each option's `value` should be unique within the options array to ensure proper selection behavior.
 :::
+
+## Basics
 
 ### Basic usage
 
@@ -28,7 +30,9 @@ function ExampleDefault() {
 }
 ```
 
-### Single select with groups
+## Single select
+
+### With groups
 
 ```jsx live
 function ExampleSingleGroups() {
@@ -66,7 +70,7 @@ function ExampleSingleGroups() {
 }
 ```
 
-### With disabled option group
+### With disabled group
 
 ```jsx live
 function ExampleDisabledGroup() {
@@ -105,7 +109,9 @@ function ExampleDisabledGroup() {
 }
 ```
 
-### Multi-select
+## Multi-select
+
+### Basic
 
 :::note Disabled Options and Select All
 Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
@@ -134,7 +140,7 @@ function ExampleMulti() {
 }
 ```
 
-### Multi-select with groups
+### With groups
 
 ```jsx live
 function ExampleMultiGroups() {
@@ -173,11 +179,11 @@ function ExampleMultiGroups() {
 }
 ```
 
-### Multi-select with assets
+### With assets
 
 ```jsx live
 function ExampleMultiAssets() {
-  const assetImageMap: Record<string, string> = {
+  const assetImageMap = {
     btc: assets.btc.imageUrl,
     eth: assets.eth.imageUrl,
     dai: assets.dai.imageUrl,
@@ -227,6 +233,8 @@ function ExampleMultiAssets() {
 }
 ```
 
+## Customization
+
 ### Compact
 
 ```jsx live
@@ -250,7 +258,33 @@ function ExampleCompact() {
 }
 ```
 
-### With start and end nodes
+### Inverted
+
+```jsx live
+function ExampleInverted() {
+  const exampleOptions = [
+    { value: null, label: 'Clear selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState(null);
+  const hasValue = value !== null;
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      invertColorScheme={!hasValue}
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Start and end nodes
 
 ```jsx live
 function ExampleWithNodes() {
@@ -283,7 +317,7 @@ function ExampleWithNodes() {
 }
 ```
 
-### Empty options
+### Empty state
 
 ```jsx live
 function ExampleEmptyOptions() {
@@ -315,7 +349,7 @@ function ExampleDescriptions() {
 }
 ```
 
-### With display value
+### Display value override
 
 Use the `displayValue` prop to override the displayed value and avoid truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
 
@@ -347,7 +381,7 @@ function ExampleDisplayValue() {
 }
 ```
 
-### With max width
+### Max width
 
 ```jsx live
 function ExampleMaxWidth() {
@@ -397,7 +431,7 @@ function ExampleMaxWidth() {
 }
 ```
 
-### Disabled
+### Disabled state
 
 ```jsx live
 function ExampleDisabled() {

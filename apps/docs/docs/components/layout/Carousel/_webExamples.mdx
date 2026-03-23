@@ -1,4 +1,4 @@
-## Basic Example
+## Basics
 
 Carousels are a great way to showcase a list of items in a compact and engaging way.
 By default, Carousels have navigation and pagination enabled.
@@ -16,7 +16,9 @@ Images inside of the carousel have `pointer-events` disabled by default.
 
 ```jsx live
 function MyCarousel() {
-  function SquareAssetCard({ imageUrl, name }) {
+  const toast = useToast();
+
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -25,6 +27,7 @@ function MyCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -33,16 +36,23 @@ function MyCarousel() {
   return (
     <Box marginX={-3}>
       <Carousel
-        hidePagination
+        loop
+        paginationVariant="dot"
         title="Explore Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
           <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
           </CarouselItem>
         ))}
       </Carousel>
@@ -63,8 +73,8 @@ Items can be given a width proportional to the carousel width.
 :::tip Tip
 
 If you have a gap between items, you should account for that in the width.
-For example, if you have a gap of 8px, and you want to show 2 items per page,
-you should give each item a width of `calc(50% - 4px)`.
+For example, if you have a gap of 16px, and you want to show 2 items per page,
+you should give each item a width of `calc(50% - 8px)`.
 
 :::
 
@@ -78,22 +88,15 @@ function DynamicSizingCarousel() {
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(itemsPerPage[0]);
   const itemWidths = {
     one: '100%',
-    two: 'calc((100% - var(--space-1)) / 2)',
-    three: 'calc((100% - (2 * var(--space-1))) / 3)',
+    two: 'calc((100% - var(--space-2)) / 2)',
+    three: 'calc((100% - (2 * var(--space-2))) / 3)',
   };
   function NoopFn() {
     console.log('pressed');
   }
   function ActionButton({ isVisible, children }) {
     return (
-      <Button
-        compact
-        flush="start"
-        numberOfLines={1}
-        onClick={NoopFn}
-        tabIndex={isVisible ? undefined : -1}
-        variant="secondary"
-      >
+      <Button compact flush="start" numberOfLines={1} onClick={NoopFn} variant="secondary">
         {children}
       </Button>
     );
@@ -116,7 +119,7 @@ function DynamicSizingCarousel() {
           title="Learn more"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           key={selectedItemsPerPage.id}
         >
@@ -276,8 +279,8 @@ The carousel below will show per page 1 item on mobile, 2 items on tablet, and 3
 function ResponsiveSizingCarousel() {
   const itemWidth = {
     phone: '100%',
-    tablet: 'calc((100% - var(--space-1)) / 2)',
-    desktop: 'calc((100% - (2 * var(--space-1))) / 3)',
+    tablet: 'calc((100% - var(--space-2)) / 2)',
+    desktop: 'calc((100% - (2 * var(--space-2))) / 3)',
   };
   function NoopFn() {
     console.log('pressed');
@@ -302,7 +305,7 @@ function ResponsiveSizingCarousel() {
       <Carousel
         hidePagination
         title="Learn more"
-        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-1)' } }}
+        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-2)' } }}
         drag="free"
       >
         <CarouselItem id="earn-more-crypto" width={itemWidth}>
@@ -387,15 +390,15 @@ function VariedSizingCarousel() {
   }
   const itemWidth = {
     phone: '100%',
-    tablet: 'calc((100% - var(--space-1)) / 2)',
-    desktop: 'calc((100% - var(--space-1)) / 2)',
+    tablet: 'calc((100% - var(--space-2)) / 2)',
+    desktop: 'calc((100% - var(--space-2)) / 2)',
   };
   return (
     <Box marginX={-3}>
       <Carousel
         hidePagination
         title="Varied Sizing"
-        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-1)' } }}
+        styles={{ root: { paddingInline: 'var(--space-3)' }, carousel: { gap: 'var(--space-2)' } }}
       >
         <CarouselItem id="earn-more-crypto" width={itemWidth}>
           {({ isVisible }) => (
@@ -455,13 +458,14 @@ When set to `snap`, upon release the carousel will snap to either the nearest it
 
 ```jsx live
 function DragCarousel() {
+  const toast = useToast();
   const dragOptions = [
     { id: 'snap', label: 'Snap' },
     { id: 'free', label: 'Free' },
     { id: 'none', label: 'None' },
   ];
   const [drag, setDrag] = useState(dragOptions[0]);
-  function SquareAssetCard({ imageUrl, name }) {
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -470,6 +474,7 @@ function DragCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -490,14 +495,20 @@ function DragCarousel() {
           drag={drag.id}
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           snapMode="item"
           key={drag.id}
         >
           {Object.values(assets).map((asset, index) => (
-            <CarouselItem key={asset.symbol} id={asset.symbol}>
-              <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+              {({ isVisible }) => (
+                <SquareAssetCard
+                  imageUrl={asset.imageUrl}
+                  name={asset.symbol}
+                  onClick={() => toast.show(`${asset.symbol} clicked`)}
+                />
+              )}
             </CarouselItem>
           ))}
         </Carousel>
@@ -515,12 +526,13 @@ When set to `item`, the carousel will snap to the nearest item.
 
 ```jsx live
 function SnapModeCarousel() {
+  const toast = useToast();
   const snapModeOptions = [
     { id: 'page', label: 'Page' },
     { id: 'item', label: 'Item' },
   ];
   const [snapMode, setSnapMode] = useState(snapModeOptions[0]);
-  function SquareAssetCard({ imageUrl, name }) {
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -529,6 +541,7 @@ function SnapModeCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -545,16 +558,23 @@ function SnapModeCarousel() {
       <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
+          paginationVariant="dot"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           snapMode={snapMode.id}
           key={snapMode.id}
         >
           {Object.values(assets).map((asset, index) => (
-            <CarouselItem key={asset.symbol} id={asset.symbol}>
-              <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+              {({ isVisible }) => (
+                <SquareAssetCard
+                  imageUrl={asset.imageUrl}
+                  name={asset.symbol}
+                  onClick={() => toast.show(`${asset.symbol} clicked`)}
+                />
+              )}
             </CarouselItem>
           ))}
         </Carousel>
@@ -581,7 +601,8 @@ If you want to have the next item be shown at the edge of the screen, make sure 
 
 ```jsx live
 function OverflowCarousel() {
-  function SquareAssetCard({ isVisible, imageUrl, name }) {
+  const toast = useToast();
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -590,7 +611,7 @@ function OverflowCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
-        onClick={isVisible ? () => console.log('clicked') : undefined}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -600,19 +621,126 @@ function OverflowCarousel() {
     <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
+        paginationVariant="dot"
         snapMode="item"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
             {({ isVisible }) => (
               <SquareAssetCard
-                isVisible={isVisible}
                 imageUrl={asset.imageUrl}
                 name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+## Autoplay
+
+Use `autoplay` to allow for automatic page advancement. The default interval is 3 seconds but can be changed with `autoplayInterval`.
+
+It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
+
+```jsx live
+function AutoplayCarousel() {
+  const toast = useToast();
+
+  function SquareAssetCard({ imageUrl, name, onClick }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        loop
+        paginationVariant="dot"
+        title="Trending Assets"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-2)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </Box>
+  );
+}
+```
+
+## Looping
+
+Use `loop` to allow for infinite scrolling.
+
+```jsx live
+function LoopingCarousel() {
+  const toast = useToast();
+  function SquareAssetCard({ imageUrl, name, onClick }) {
+    return (
+      <ContainedAssetCard
+        description={
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+            ↗6.37%
+          </Text>
+        }
+        header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
+        subtitle={name}
+        title="$0.87"
+      />
+    );
+  }
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        autoplay
+        loop
+        paginationVariant="dot"
+        snapMode="item"
+        title="Infinite Scroll"
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-2)' },
+        }}
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
               />
             )}
           </CarouselItem>
@@ -625,14 +753,14 @@ function OverflowCarousel() {
 
 ## Accessibility
 
-The carousel is accessible by default.
+The carousel is accessible by default, and works best with interactive elements that can be focused. Users can navigate via keyboard or voiceover and will switch pages as they navigate through the carousel.
 
-You need to use `accessibilityLabel` or `accessibilityLabelledBy` props to provide a label for the carousel items.
+Each carousel item should have proper text within the focusable element or you use `accessibilityLabel` or `accessibilityLabelledBy` props to provide a label.
 
-If you have elements that are focusable, you can use `isVisible` render prop to disable focus when the item is not visible.
+While not recommended, if your carousel has disabled drag, you can use `isVisible` render prop to prevent users from focusing on carousel items that are not visible.
 
 ```jsx
-<Carousel>
+<Carousel paginationVariant="dot" drag="none">
   <CarouselItem id="btc" accessibilityLabel="Bitcoin">
     <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
   </CarouselItem>
@@ -667,6 +795,28 @@ If you have elements that are focusable, you can use `isVisible` render prop to 
       />
     )}
   </CarouselItem>
+</Carousel>
+```
+
+### Autoplay
+
+You should note use `hideNavigation` and `autoplay` together, unless you provide an alternative pause mechanism. See [this example](#custom-autoplay-controls) with custom autoplay controls as an example.
+
+### Accessibility Labels
+
+The Carousel provides several props to customize accessibility labels for screen reader users
+
+```jsx
+<Carousel
+  nextPageAccessibilityLabel="Go to next slide"
+  previousPageAccessibilityLabel="Go to previous slide"
+  paginationAccessibilityLabel={(pageIndex) => `Go to page ${pageIndex + 1}`}
+  autoplayAccessibilityLabel="Play/pause carousel"
+  pageChangeAccessibilityLabel={(activePageIndex, totalPages) =>
+    `Showing page ${activePageIndex + 1} of ${totalPages}`
+  }
+>
+  ...
 </Carousel>
 ```
 
@@ -754,8 +904,8 @@ function CustomComponentsCarousel() {
   }
   const itemWidth = {
     phone: '100%',
-    tablet: 'round(down, calc((100% - var(--space-1)) / 2), 1px)',
-    desktop: 'round(down, calc((100% - var(--space-1)) / 2), 1px)',
+    tablet: 'round(down, calc((100% - var(--space-2)) / 2), 1px)',
+    desktop: 'round(down, calc((100% - var(--space-2)) / 2), 1px)',
   };
   return (
     <Box marginX={-3}>
@@ -764,7 +914,7 @@ function CustomComponentsCarousel() {
         PaginationComponent={PaginationComponent}
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
         title={
           <Text as="h3" font="headline">
@@ -845,7 +995,7 @@ function CustomComponentsCarousel() {
               dangerouslySetBackground="rgb(var(--blue80))"
               description={
                 <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
-                  Use code NOV60 when you  sign up for Coinbase One
+                  Use code NOV60 when you sign up for Coinbase One
                 </Text>
               }
               media={
@@ -903,6 +1053,7 @@ function CustomStylesCarousel() {
   return (
     <Box marginX={-3}>
       <Carousel
+        paginationVariant="dot"
         styles={{
           root: { position: 'relative', paddingInline: 'var(--space-6)' },
           carousel: { gap: 'var(--space-6)' },
@@ -984,15 +1135,190 @@ function CustomStylesCarousel() {
 }
 ```
 
+### Custom Autoplay Controls
+
+You can use `useCarouselAutoplayContext` inside a custom `PaginationComponent` to build your own controls. This example shows a composed layout with pagination and play/pause on the left, and navigation arrows on the right.
+
+```jsx live
+function ComposedAutoplayCarousel() {
+  const carouselRef = useRef(null);
+
+  function CustomPaginationDots({ totalPages, activePageIndex, onClickPage }) {
+    const autoplay = useCarouselAutoplayContext();
+
+    return (
+      <HStack
+        alignItems="center"
+        background="bgSecondary"
+        borderRadius={1000}
+        gap={0.5}
+        paddingX={1.5}
+        style={{ height: 40 }}
+      >
+        {Array.from({ length: totalPages }, (_, index) => {
+          const isActive = index === activePageIndex;
+          const showProgress = isActive && autoplay.isEnabled;
+
+          // Calculate progress from timing info
+          const remainingTime = autoplay.getRemainingTime();
+          const progress = 1 - remainingTime / autoplay.totalTime;
+          const progressDuration = autoplay.isPlaying ? remainingTime / 1000 : 0;
+
+          return (
+            <Pressable
+              key={index}
+              accessibilityLabel={`Go to page ${index + 1}`}
+              background={isActive && !showProgress ? 'fgPrimary' : 'bgTertiary'}
+              borderRadius={1000}
+              borderWidth={0}
+              onClick={() => onClickPage?.(index)}
+              style={{
+                height: 8,
+                width: isActive ? 24 : 8,
+                transition: 'width 0.2s ease',
+                overflow: 'hidden',
+              }}
+            >
+              {showProgress && (
+                <m.div
+                  animate={{ width: autoplay.isPlaying ? '100%' : `${progress * 100}%` }}
+                  initial={{ width: '0%' }}
+                  transition={{ duration: progressDuration, ease: 'linear' }}
+                  style={{
+                    height: '100%',
+                    background: 'var(--color-fgPrimary)',
+                    borderRadius: 'var(--borderRadius-1000)',
+                  }}
+                />
+              )}
+            </Pressable>
+          );
+        })}
+      </HStack>
+    );
+  }
+
+  function CustomControls({ totalPages, activePageIndex, onClickPage }) {
+    const autoplay = useCarouselAutoplayContext();
+
+    return (
+      <HStack justifyContent="space-between" paddingY={1}>
+        <HStack gap={1} alignItems="center">
+          <CustomPaginationDots
+            totalPages={totalPages}
+            activePageIndex={activePageIndex}
+            onClickPage={onClickPage}
+          />
+          <IconButton
+            accessibilityLabel={'Play/Pause Carousel'}
+            name={autoplay.isStopped ? 'play' : 'pause'}
+            onClick={autoplay.toggle}
+            variant="secondary"
+          />
+        </HStack>
+        <HStack gap={1}>
+          <IconButton
+            accessibilityLabel="Previous"
+            disabled={activePageIndex <= 0}
+            name="caretLeft"
+            onClick={() => carouselRef.current?.goToPage(activePageIndex - 1)}
+            variant="secondary"
+          />
+          <IconButton
+            accessibilityLabel="Next"
+            disabled={activePageIndex >= totalPages - 1}
+            name="caretRight"
+            onClick={() => carouselRef.current?.goToPage(activePageIndex + 1)}
+            variant="secondary"
+          />
+        </HStack>
+      </HStack>
+    );
+  }
+
+  return (
+    <Box marginX={-3}>
+      <Carousel
+        ref={carouselRef}
+        autoplay
+        loop
+        hideNavigation
+        PaginationComponent={CustomControls}
+        styles={{
+          root: { paddingInline: 'var(--space-3)' },
+          carousel: { gap: 'var(--space-2)' },
+        }}
+      >
+        <CarouselItem id="innovation-1" width="calc((100% - 2 * var(--space-2)) / 3)">
+          <NudgeCard
+            title="Innovation"
+            description="Cards are a great way to showcase content."
+            pictogram="shield"
+            width="100%"
+            minWidth="0"
+          />
+        </CarouselItem>
+        <CarouselItem id="innovation-2" width="calc((100% - 2 * var(--space-2)) / 3)">
+          <NudgeCard
+            title="Innovation"
+            description="Cards are a great way to showcase content."
+            pictogram="security"
+            width="100%"
+            minWidth="0"
+          />
+        </CarouselItem>
+        <CarouselItem id="innovation-3" width="calc((100% - 2 * var(--space-2)) / 3)">
+          <NudgeCard
+            title="Innovation"
+            description="Cards are a great way to showcase content."
+            pictogram="institutions"
+            width="100%"
+            minWidth="0"
+          />
+        </CarouselItem>
+        <CarouselItem id="innovation-4" width="calc((100% - 2 * var(--space-2)) / 3)">
+          <NudgeCard
+            title="Innovation"
+            description="Cards are a great way to showcase content."
+            pictogram="key"
+            width="100%"
+            minWidth="0"
+          />
+        </CarouselItem>
+        <CarouselItem id="innovation-5" width="calc((100% - 2 * var(--space-2)) / 3)">
+          <NudgeCard
+            title="Innovation"
+            description="Cards are a great way to showcase content."
+            pictogram="receipt"
+            width="100%"
+            minWidth="0"
+          />
+        </CarouselItem>
+        <CarouselItem id="innovation-6" width="calc((100% - 2 * var(--space-2)) / 3)">
+          <NudgeCard
+            title="Innovation"
+            description="Cards are a great way to showcase content."
+            pictogram="worldwide"
+            width="100%"
+            minWidth="0"
+          />
+        </CarouselItem>
+      </Carousel>
+    </Box>
+  );
+}
+```
+
 ### Dynamic Content
 
 You can dynamically add and remove items from the carousel.
 
 ```jsx live
 function DynamicContentCarousel() {
+  const toast = useToast();
   const [items, setItems] = useState(Object.values(assets).slice(0, 3));
 
-  function SquareAssetCard({ imageUrl, name }) {
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -1001,6 +1327,7 @@ function DynamicContentCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -1024,14 +1351,21 @@ function DynamicContentCarousel() {
       <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
+          paginationVariant="dot"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)', height: '156px' },
+            carousel: { gap: 'var(--space-2)', height: '156px' },
           }}
         >
           {items.map((asset, index) => (
-            <CarouselItem key={asset.symbol} id={asset.symbol}>
-              <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+              {({ isVisible }) => (
+                <SquareAssetCard
+                  imageUrl={asset.imageUrl}
+                  name={asset.symbol}
+                  onClick={() => toast.show(`${asset.symbol} clicked`)}
+                />
+              )}
             </CarouselItem>
           ))}
         </Carousel>
@@ -1045,7 +1379,8 @@ You can also animate items as they enter or leave the viewport.
 
 ```jsx live
 function AnimatedCarousel() {
-  function SquareAssetCard({ imageUrl, name }) {
+  const toast = useToast();
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     const ref = useRef(null);
     // useInView is a framer motion hook that detects when an element is in the viewport
     const isInView = useInView(ref, {
@@ -1068,6 +1403,7 @@ function AnimatedCarousel() {
             </Text>
           }
           header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+          onClick={onClick}
           subtitle={name}
           title="$0.87"
         />
@@ -1080,14 +1416,20 @@ function AnimatedCarousel() {
         title="Explore Assets"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
         snapMode="item"
         hidePagination
       >
         {Object.values(assets).map((asset, index) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
           </CarouselItem>
         ))}
       </Carousel>
@@ -1162,9 +1504,10 @@ function AnimatedSelectionCarousel() {
     <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
+        paginationVariant="dot"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
@@ -1189,13 +1532,14 @@ function AnimatedSelectionCarousel() {
 
 You can hide the navigation and pagination components of the carousel if desired (using `hideNavigation` and `hidePagination` props).
 
-Note that this can prevent proper accessibility for the carousel. If hiding pagination, it's recommended instead to
+Note that this can prevent proper accessibility for the carousel, if carousel items are not focusable. If hiding pagination, it's recommended instead to
 pass in `DefaultCarouselNavigation` with `hideUnlessFocused` prop. Alternatively, you can ensure that the carousel is
 navigable by keyboard through other means.
 
 ```jsx live
 function HideNavigationAndPaginationCarousel() {
-  function SquareAssetCard({ imageUrl, name }) {
+  const toast = useToast();
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -1204,6 +1548,7 @@ function HideNavigationAndPaginationCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -1219,12 +1564,18 @@ function HideNavigationAndPaginationCarousel() {
         snapMode="item"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
       >
         {Object.values(assets).map((asset, index) => (
-          <CarouselItem key={asset.symbol} id={asset.symbol}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
           </CarouselItem>
         ))}
       </Carousel>
@@ -1239,6 +1590,7 @@ You can create smooth pagination animations by customizing the pagination dots. 
 
 ```jsx live
 function AnimatedPaginationCarousel() {
+  const toast = useToast();
   const AnimatedPagination = memo((props) => {
     const { totalPages, activePageIndex, onClickPage, style } = props;
 
@@ -1272,7 +1624,7 @@ function AnimatedPaginationCarousel() {
     );
   });
 
-  function SquareAssetCard({ imageUrl, name }) {
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -1281,6 +1633,7 @@ function AnimatedPaginationCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -1295,13 +1648,19 @@ function AnimatedPaginationCarousel() {
         snapMode="page"
         styles={{
           root: { paddingInline: 'var(--space-3)' },
-          carousel: { gap: 'var(--space-1)' },
+          carousel: { gap: 'var(--space-2)' },
         }}
         title="Explore Assets"
       >
         {Object.values(assets).map((asset, index) => (
           <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+            {({ isVisible }) => (
+              <SquareAssetCard
+                imageUrl={asset.imageUrl}
+                name={asset.symbol}
+                onClick={() => toast.show(`${asset.symbol} clicked`)}
+              />
+            )}
           </CarouselItem>
         ))}
       </Carousel>
@@ -1316,10 +1675,11 @@ You can control the carousel programmatically using a ref. The carousel exposes 
 
 ```jsx live
 function ImperativeApiCarousel() {
+  const toast = useToast();
   const carouselRef = useRef(null);
   const [currentPageInfo, setCurrentPageInfo] = useState('Page 1');
 
-  function handleGoToPage(pageIndex: number) {
+  function handleGoToPage(pageIndex) {
     if (carouselRef.current) {
       const clampedPageIndex = Math.max(0, Math.min(carouselRef.current.totalPages - 1, pageIndex));
       carouselRef.current.goToPage(clampedPageIndex);
@@ -1349,7 +1709,7 @@ function ImperativeApiCarousel() {
     }
   }
 
-  function SquareAssetCard({ imageUrl, name }) {
+  function SquareAssetCard({ imageUrl, name, onClick }) {
     return (
       <ContainedAssetCard
         description={
@@ -1358,6 +1718,7 @@ function ImperativeApiCarousel() {
           </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
+        onClick={onClick}
         subtitle={name}
         title="$0.87"
       />
@@ -1421,13 +1782,19 @@ function ImperativeApiCarousel() {
           snapMode="item"
           styles={{
             root: { paddingInline: 'var(--space-3)' },
-            carousel: { gap: 'var(--space-1)' },
+            carousel: { gap: 'var(--space-2)' },
           }}
           title="Explore Assets"
         >
           {Object.values(assets).map((asset, index) => (
             <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
-              <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+              {({ isVisible }) => (
+                <SquareAssetCard
+                  imageUrl={asset.imageUrl}
+                  name={asset.symbol}
+                  onClick={() => toast.show(`${asset.symbol} clicked`)}
+                />
+              )}
             </CarouselItem>
           ))}
         </Carousel>
@@ -1443,6 +1810,7 @@ You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to list
 
 ```tsx
 <Carousel
+  paginationVariant="dot"
   onChangePage={(pageIndex: number) => console.log('Page changed', activePageIndex)}
   onDragStart={() => console.log('Drag started')}
   onDragEnd={() => console.log('Drag ended')}

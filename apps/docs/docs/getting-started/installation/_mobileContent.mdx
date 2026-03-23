@@ -5,6 +5,10 @@ import { MDXArticle } from '@site/src/components/page/MDXArticle';
 <MDXArticle>
 ## Installation
 
+:::tip Starting a new project?
+Check out our [templates](/getting-started/templates) for pre-configured starter apps with CDS already set up.
+:::
+
 To install the CDS library for React Native applications, run the following command:
 
 ```bash
@@ -34,7 +38,7 @@ For React Native projects, ensure you have set up your environment for React Nat
 Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
 
 ```tsx
-import { ThemeProvider } from '@coinbase/cds-mobile';
+import { ThemeProvider } from '@coinbase/cds-mobile/system';
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
 import App from './App';
 

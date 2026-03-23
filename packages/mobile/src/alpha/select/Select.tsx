@@ -62,7 +62,7 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel = type === 'multi' ? 'Multi select control' : undefined,
+        accessibilityLabel = typeof label === 'string' ? label : 'Select control',
         accessibilityHint,
         accessibilityRoles = defaultAccessibilityRoles,
         selectAllLabel,
@@ -79,6 +79,8 @@ const SelectBase = memo(
         accessory,
         media,
         end,
+        align,
+        bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -170,7 +172,9 @@ const SelectBase = memo(
           <SelectControlComponent
             accessibilityHint={accessibilityHint}
             accessibilityLabel={accessibilityLabel}
+            align={align}
             blendStyles={styles?.controlBlendStyles}
+            bordered={bordered}
             compact={compact}
             disabled={disabled}
             endNode={endNode}

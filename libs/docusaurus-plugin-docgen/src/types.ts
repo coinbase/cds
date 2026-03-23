@@ -15,8 +15,7 @@ export type PluginOptions = {
    */
   docsDir?: string;
   /**
-   * Determines if plugin should run. If plugin is too slow in development,
-   * you can either increase watchInterval or set this to false.
+   * Determines if plugin should run. Set to false to disable docgen entirely.
    * @default true
    */
   enabled?: boolean;
@@ -46,12 +45,6 @@ export type PluginOptions = {
    * An array of source files you want docgen to parse.
    */
   sourceFiles: string[];
-  /**
-   * How frequently (in minutes) should plugin run after it was last run.
-   * This is typically triggered via on save of project file.
-   * @default 5
-   */
-  watchInterval?: number;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -133,6 +126,8 @@ export type PreProcessedPropItem = Omit<PropItem, 'defaultValue' | 'parent' | 't
 export type ProcessedDoc = Omit<PreProcessedDoc, 'props' | 'expression'> & {
   props: ProcessedPropItem[];
   parentTypes: Record<string, string[]>;
+  /** Styles API data extracted from *ClassNames exports */
+  styles?: StylesData;
 };
 
 export type ProcessedPropItem = Omit<PreProcessedPropItem, 'type'> & {
@@ -220,6 +215,30 @@ export type OnProcessDoc = (
 export type SharedTypeAliases = Record<string, string>;
 export type SharedParentTypes = Record<string, Record<string, ProcessedPropItem>>;
 export type Projects = DocgenProjectMetadata[];
+
+/* -------------------------------------------------------------------------- */
+/*                              Styles API Types                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Represents a style selector extracted from a component's *ClassNames export.
+ */
+export type StyleSelector = {
+  /** The selector key (e.g., "root", "start", "content") */
+  selector: string;
+  /** The static CSS class name (e.g., "cds-NavigationBar", "cds-NavigationBar-start") */
+  className: string;
+  /** Description from JSDoc comment */
+  description: string;
+};
+
+/**
+ * Styles API data extracted from a component.
+ */
+export type StylesData = {
+  /** Array of style selectors for the component */
+  selectors: StyleSelector[];
+};
 
 export type DocgenProjectMetadata = {
   label: string;

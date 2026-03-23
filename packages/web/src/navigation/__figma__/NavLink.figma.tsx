@@ -8,7 +8,7 @@ figma.connect(
   NavLink,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=240-16872&m=dev',
   {
-    imports: ["import { NavLink } from '@coinbase/cds-web/navigation/NavLink';"],
+    imports: ["import { NavLink } from '@coinbase/cds-web/navigation/NavLink'"],
     props: {
       children: figma.string('navLink string'),
       active: figma.enum('state', {
@@ -31,8 +31,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=283-19790&m=dev',
   {
     imports: [
-      "import { NavLink } from '@coinbase/cds-web/navigation/NavLink';",
-      "import { HStack } from '@coinbase/cds-web/layout/HStack';",
+      "import { NavLink } from '@coinbase/cds-web/navigation/NavLink'",
+      "import { HStack } from '@coinbase/cds-web/layout/HStack'",
     ],
     example: () => (
       <HStack gap={4}>

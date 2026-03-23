@@ -1,11 +1,10 @@
-import { Skia } from '@shopify/react-native-skia';
 import { renderHook } from '@testing-library/react-hooks';
 
 import {
   buildTransition,
   defaultTransition,
+  getTransition,
   type Transition,
-  useD3PathInterpolation,
   usePathTransition,
 } from '../transition';
 
@@ -79,6 +78,16 @@ describe('accessory transition constants', () => {
     expect(accessoryFadeTransitionDelay).toBeDefined();
     expect(typeof accessoryFadeTransitionDelay).toBe('number');
     expect(accessoryFadeTransitionDelay).toBeGreaterThan(0);
+  });
+});
+
+describe('getTransition', () => {
+  it('should return null when animate is false', () => {
+    expect(getTransition(defaultTransition, false, defaultTransition)).toBeNull();
+  });
+
+  it('should return null when value is null', () => {
+    expect(getTransition(null, true, defaultTransition)).toBeNull();
   });
 });
 
@@ -162,68 +171,6 @@ describe('buildTransition', () => {
       restDisplacementThreshold: 0.01,
       restSpeedThreshold: 0.01,
     });
-  });
-});
-
-describe('useD3PathInterpolation', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should create interpolated path', () => {
-    const progress = { value: 0 };
-    const fromPath = 'M0,0L10,10';
-    const toPath = 'M0,0L20,20';
-
-    const { result } = renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
-
-    expect(result.current).toBeDefined();
-    expect(result.current).toHaveProperty('value');
-  });
-
-  it('should handle path changes', () => {
-    const progress = { value: 0.5 };
-    const fromPath1 = 'M0,0L10,10';
-    const toPath1 = 'M0,0L20,20';
-
-    const { result, rerender } = renderHook(
-      ({ from, to }) => useD3PathInterpolation(progress as any, from, to),
-      {
-        initialProps: { from: fromPath1, to: toPath1 },
-      },
-    );
-
-    const firstResult = result.current;
-    expect(firstResult).toBeDefined();
-
-    // Update paths
-    const fromPath2 = 'M0,0L15,15';
-    const toPath2 = 'M0,0L25,25';
-    rerender({ from: fromPath2, to: toPath2 });
-
-    // Result should be updated
-    expect(result.current).toBeDefined();
-  });
-
-  it('should call d3 interpolatePath', () => {
-    const { interpolatePath } = require('d3-interpolate-path');
-    const progress = { value: 0 };
-    const fromPath = 'M0,0L10,10';
-    const toPath = 'M0,0L20,20';
-
-    renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
-
-    expect(interpolatePath).toHaveBeenCalledWith(fromPath, toPath);
-  });
-
-  it('should create Skia paths from SVG strings', () => {
-    const progress = { value: 0 };
-    const fromPath = 'M0,0L10,10';
-    const toPath = 'M0,0L20,20';
-
-    renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
-
-    expect(Skia.Path.MakeFromSVGString).toHaveBeenCalled();
   });
 });
 
@@ -362,11 +309,33 @@ describe('usePathTransition', () => {
     const { result } = renderHook(() =>
       usePathTransition({
         currentPath,
-        transition,
+        transitions: { update: transition },
       }),
     );
 
     expect(result.current).toBeDefined();
+  });
+
+  it('should short-circuit interpolation when update transition is null', () => {
+    const { interpolatePath } = require('d3-interpolate-path');
+    const nextPath = 'M0,0L30,30';
+
+    const { result, rerender } = renderHook(
+      ({ path }) =>
+        usePathTransition({
+          currentPath: path,
+          transitions: { update: null },
+        }),
+      {
+        initialProps: { path: 'M0,0L10,10' },
+      },
+    );
+
+    interpolatePath.mockClear();
+    rerender({ path: nextPath });
+
+    expect(interpolatePath).not.toHaveBeenCalled();
+    expect((result.current.value as any).svgString).toBe(nextPath);
   });
 
   it('should handle empty paths', () => {

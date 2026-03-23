@@ -1,322 +1,86 @@
-import useMeasure from 'react-use-measure';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { Default as Dropdown } from '../../dropdown/__stories__/Dropdown.stories';
-import { MediaQueryProvider } from '../../system/MediaQueryProvider';
 import { DefaultThemeProvider } from '../../utils/test';
 import { LongModal } from '../__stories__/Modal.stories';
 import { FocusTrap } from '../FocusTrap';
 
-jest.mock('react-use-measure');
-const mockUseMeasure = (mocks: Partial<ReturnType<typeof useMeasure>>) => {
-  (useMeasure as jest.Mock).mockReturnValue(mocks);
-};
-const mockDimensions: Partial<ReturnType<typeof useMeasure>> = [
-  jest.fn(),
-  {
-    width: 230,
-    x: 20,
-    y: 64,
-    height: 40,
-    top: 0,
-    right: 0,
-    left: 0,
-    bottom: 0,
-  },
-];
-
-const subjectTestID = 'subject-test';
-
-const fruitOptions = ['Blueberry', 'Tomato', 'Apple', 'Banana', 'Pear', 'Guava', 'Pomegranate'];
-
 describe('FocusTrap', () => {
-  beforeEach(() => {
-    mockUseMeasure(mockDimensions);
-  });
-  // menu item interactions
-  it('focuses on the next menu item when ArrowDown is typed', async () => {
+  it('focuses on the first focusable element when the trap is opened', () => {
     render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
+      <DefaultThemeProvider>
+        <FocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+  });
+
+  it('handles only one focusable child', () => {
+    render(
+      <DefaultThemeProvider>
+        <FocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+    fireEvent.keyDown(screen.getByTestId('focus-element'), {
+      key: 'Tab',
+      code: 'Tab',
+    });
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+  });
+
+  it('keeps focus inside the focusable children when the trap is opened', () => {
+    render(
+      <DefaultThemeProvider>
+        <button data-testid="outside-element">Outside</button>
+        <FocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+    fireEvent.keyDown(screen.getByTestId('outside-element'), {
+      key: 'Tab',
+      code: 'Tab',
+    });
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByTestId('focus-element'), {
+      key: 'Tab',
+      code: 'Tab',
+    });
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+  });
+
+  it('allows focus to escape when the trap is disabled', async () => {
+    render(
+      <DefaultThemeProvider>
+        <button data-testid="outside-element">Outside</button>
+        <FocusTrap disableAutoFocus disableFocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
     );
 
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
+    screen.getByTestId('outside-element').focus();
+    await userEvent.tab();
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
 
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0], { timeout: 2000 });
-    const secondOption = screen.getAllByRole('menuitem')[1];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'ArrowDown',
-      code: 'ArrowDown',
-    });
-
-    // expect second option to be focused
-    expect(secondOption).toHaveFocus();
-  });
-  it('focuses on the previous menu item when ArrowUp is typed', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-    const secondOption = screen.getAllByRole('menuitem')[1];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'ArrowDown',
-      code: 'ArrowDown',
-    });
-
-    fireEvent.keyDown(secondOption, {
-      key: 'ArrowUp',
-      code: 'ArrowUp',
-    });
-
-    // expect first option to be focused
-    expect(firstOption).toHaveFocus();
-  });
-  it('focuses on the first menu item when Home is typed', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-    const secondOption = screen.getAllByRole('menuitem')[1];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'ArrowDown',
-      code: 'ArrowDown',
-    });
-
-    fireEvent.keyDown(secondOption, {
-      key: 'Home',
-      code: 'Home',
-    });
-
-    // expect second option to be focused
-    expect(firstOption).toHaveFocus();
+    await userEvent.tab({ shift: true });
+    expect(screen.getByTestId('outside-element')).toHaveFocus();
   });
 
-  it('focuses on the first matching element after a US character is typed', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown options={fruitOptions} subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const menuItems = screen.getAllByRole('menuitem');
-
-    const firstOption = await waitFor(() => menuItems[0]);
-    const optionStartsWithA = menuItems[2];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'a',
-      code: '65',
-    });
-
-    // expect the option "Apple" option to be focused
-    expect(optionStartsWithA).toHaveFocus();
-  });
-
-  it('keeps focus on the previous element when no matching element for typed US character', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown options={fruitOptions} subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const menuItems = screen.getAllByRole('menuitem');
-
-    const firstOption = await waitFor(() => menuItems[0]);
-
-    expect(firstOption).toHaveFocus();
-
-    fireEvent.keyDown(firstOption, {
-      key: 'c',
-      code: '67',
-    });
-
-    expect(firstOption).toHaveFocus();
-  });
-  it('focuses on the last menu item when End is typed', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-    const secondOption = screen.getAllByRole('menuitem')[1];
-    const lastOption = screen.getAllByRole('menuitem')[screen.getAllByRole('menuitem').length - 1];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'ArrowDown',
-      code: 'ArrowDown',
-    });
-    fireEvent.keyDown(secondOption, {
-      key: 'End',
-      code: 'End',
-    });
-
-    // expect last option to be focused
-    expect(lastOption).toHaveFocus();
-  });
-
-  // initial focus
-  it('focuses on the first option when the menu is opened by a keyboard interaction', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    // open the menu
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-
-    // expect first option to be focused
-    expect(firstOption).toHaveFocus();
-  });
-
-  it('focuses on the first option when the menu is opened', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    // open the menu
-    fireEvent.click(screen.getByTestId(subjectTestID));
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-
-    // expect first option to be focused
-    expect(firstOption).toHaveFocus();
-  });
-
-  it('does not auto focus on the first option when disableAutoFocus is true', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} value="Option 2" />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    // open the menu
-    fireEvent.click(screen.getByTestId(subjectTestID));
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-
-    // expect first option to be focused
-    expect(firstOption).not.toHaveFocus();
-  });
-
-  it('when the first option is focused and ArrowUp is typed it focuses on the last option', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-    const lastOption = screen.getAllByRole('menuitem')[screen.getAllByRole('menuitem').length - 1];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'ArrowUp',
-      code: 'ArrowUp',
-    });
-
-    expect(lastOption).toHaveFocus();
-  });
-  it('when the last option is focused and ArrowDown is typed it focuses on the first option', async () => {
-    render(
-      <MediaQueryProvider>
-        <DefaultThemeProvider>
-          <Dropdown subjectTestID={subjectTestID} />
-        </DefaultThemeProvider>
-      </MediaQueryProvider>,
-    );
-
-    fireEvent.keyDown(screen.getByTestId(subjectTestID), {
-      key: 'Enter',
-      code: 'Enter',
-    });
-
-    const firstOption = await waitFor(() => screen.getAllByRole('menuitem')[0]);
-    const lastOption = screen.getAllByRole('menuitem')[screen.getAllByRole('menuitem').length - 1];
-
-    fireEvent.keyDown(firstOption, {
-      key: 'End',
-      code: 'End',
-    });
-
-    fireEvent.keyDown(lastOption, {
-      key: 'ArrowDown',
-      code: 'ArrowDown',
-    });
-
-    expect(firstOption).toHaveFocus();
-  });
   it('focuses on the next interactive element in Modal when Tab is typed', async () => {
     render(
       <DefaultThemeProvider>
@@ -383,5 +147,68 @@ describe('FocusTrap', () => {
     expect(initialFocusElement).toHaveFocus();
 
     document.body.removeChild(initialFocusElement);
+  });
+
+  it('includes the trigger in the focus trap when includeTriggerInFocusTrap is true', () => {
+    const TestComponent = () => {
+      const [open, setOpen] = useState(false);
+
+      return (
+        <div>
+          <button data-testid="trigger" onClick={() => setOpen(true)}>
+            Open
+          </button>
+          {open && (
+            <FocusTrap includeTriggerInFocusTrap>
+              <div>
+                <button data-testid="first">First</button>
+                <button data-testid="second">Second</button>
+              </div>
+            </FocusTrap>
+          )}
+        </div>
+      );
+    };
+
+    render(<TestComponent />);
+
+    const trigger = screen.getByTestId('trigger');
+    trigger.focus();
+    fireEvent.click(trigger);
+
+    // Trigger should stay in the focusable set once the trap is active
+    expect(trigger).toHaveFocus();
+    fireEvent.keyDown(trigger, { key: 'Tab', code: 'Tab' });
+    expect(screen.getByTestId('first')).toHaveFocus();
+    fireEvent.keyDown(screen.getByTestId('first'), { key: 'Tab', code: 'Tab', shiftKey: true });
+    expect(trigger).toHaveFocus();
+  });
+
+  it('allows up/down arrow key scrolling', async () => {
+    const user = userEvent.setup();
+    render(
+      <DefaultThemeProvider>
+        <FocusTrap disableArrowKeyNavigation>
+          <div>
+            <textarea data-testid="textarea" />
+            <button data-testid="button">Button</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+
+    const textarea = screen.getByTestId('textarea');
+    await user.click(textarea);
+
+    const events: KeyboardEvent[] = [];
+    textarea.addEventListener('keydown', (e) => events.push(e));
+
+    await user.keyboard('{ArrowDown}');
+    expect(events).toHaveLength(1);
+    expect(events[0].defaultPrevented).toBe(false);
+
+    await user.keyboard('{ArrowUp}');
+    expect(events).toHaveLength(2);
+    expect(events[1].defaultPrevented).toBe(false);
   });
 });

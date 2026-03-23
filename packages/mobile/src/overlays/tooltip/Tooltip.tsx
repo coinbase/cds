@@ -1,11 +1,18 @@
-import React, { Fragment, memo, useCallback, useMemo, useRef, useState } from 'react';
-import { Modal as RNModal, TouchableOpacity, View } from 'react-native';
+import React, { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type AccessibilityState, Modal as RNModal, TouchableOpacity, View } from 'react-native';
 
 import { InvertedThemeProvider } from '../../system/ThemeProvider';
 
 import { InternalTooltip } from './InternalTooltip';
-import type { SubjectLayout, TooltipProps } from './TooltipProps';
+import type { SubjectLayout, TooltipBaseProps } from './TooltipProps';
 import { useTooltipAnimation } from './useTooltipAnimation';
+
+export type TooltipProps = TooltipBaseProps & {
+  /**
+   * Accessibility state for the trigger.
+   */
+  accessibilityState?: AccessibilityState;
+};
 
 export const Tooltip = memo(
   ({
@@ -21,27 +28,58 @@ export const Tooltip = memo(
     accessibilityHint,
     accessibilityLabelForContent,
     accessibilityHintForContent,
+    accessibilityState,
     visible,
     invertColorScheme = true,
     elevation,
+    openDelay,
+    closeDelay,
   }: TooltipProps) => {
     const subjectRef = useRef<View | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const isVisible = visible !== false && isOpen;
     const [subjectLayout, setSubjectLayout] = useState<SubjectLayout>();
+    const openTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const WrapperComponent = invertColorScheme ? InvertedThemeProvider : Fragment;
 
     const { opacity, translateY, animateIn, animateOut } = useTooltipAnimation(placement);
 
+    const clearOpenTimeout = useCallback(() => {
+      if (openTimeoutRef.current) {
+        clearTimeout(openTimeoutRef.current);
+        openTimeoutRef.current = null;
+      }
+    }, []);
+
+    const clearCloseTimeout = useCallback(() => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+    }, []);
+
     const handleRequestClose = useCallback(() => {
-      animateOut.start(() => {
-        setIsOpen(false);
-        onCloseTooltip?.();
-      });
-    }, [animateOut, onCloseTooltip]);
+      clearOpenTimeout();
+      clearCloseTimeout();
+
+      const closeTooltip = () => {
+        animateOut.start(() => {
+          setIsOpen(false);
+          onCloseTooltip?.();
+        });
+      };
+
+      if (closeDelay && closeDelay > 0) {
+        closeTimeoutRef.current = setTimeout(closeTooltip, closeDelay);
+      } else {
+        closeTooltip();
+      }
+    }, [animateOut, clearCloseTimeout, clearOpenTimeout, closeDelay, onCloseTooltip]);
 
     const handlePressSubject = useCallback(() => {
+      clearCloseTimeout();
       subjectRef.current?.measure((x, y, width, height, pageOffsetX, pageOffsetY) => {
         setSubjectLayout({
           width,
@@ -50,9 +88,18 @@ export const Tooltip = memo(
           pageOffsetY,
         });
       });
-      setIsOpen(true);
-      onOpenTooltip?.();
-    }, [onOpenTooltip]);
+      const openTooltip = () => {
+        setIsOpen(true);
+        onOpenTooltip?.();
+      };
+
+      clearOpenTimeout();
+      if (openDelay && openDelay > 0) {
+        openTimeoutRef.current = setTimeout(openTooltip, openDelay);
+      } else {
+        openTooltip();
+      }
+    }, [clearCloseTimeout, clearOpenTimeout, onOpenTooltip, openDelay]);
 
     // The accessibility props for the trigger component. Trigger component
     // equals the component where when you click on it, it will show the tooltip
@@ -66,8 +113,12 @@ export const Tooltip = memo(
           typeof children === 'string' && accessibilityHint === undefined
             ? children
             : accessibilityHint,
+        // accessibilityState is applied to the trigger regardless of screen reader usage.
+        // Only set it when you need screen reader behavior.
+        // e.g. disabled = true: state is announced and the trigger cannot activate
+        accessibilityState,
       }),
-      [children, accessibilityLabel, accessibilityHint],
+      [children, accessibilityLabel, accessibilityHint, accessibilityState],
     );
 
     const accessibilityPropsForContent = useMemo(
@@ -85,6 +136,13 @@ export const Tooltip = memo(
       }),
       [content, accessibilityLabelForContent, accessibilityHintForContent, handleRequestClose],
     );
+
+    useEffect(() => {
+      return () => {
+        clearOpenTimeout();
+        clearCloseTimeout();
+      };
+    }, [clearCloseTimeout, clearOpenTimeout]);
 
     return (
       <View ref={subjectRef} collapsable={false}>

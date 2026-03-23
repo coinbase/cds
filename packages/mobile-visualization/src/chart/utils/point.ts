@@ -1,11 +1,15 @@
 import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
 
+import type { CartesianChartLayout } from './context';
 import {
+  applyBandScale,
   applySerializableScale,
+  type CategoricalScale,
   type ChartScaleFunction,
   isCategoricalScale,
   isLogScale,
-  isNumericScale,
+  type PointAnchor,
+  type SerializableBandScale,
   type SerializableScale,
 } from './scale';
 
@@ -20,17 +24,39 @@ export type PointLabelPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 /**
  * Get a point from a data value and a scale.
- * @note for categorical scales, the point will be centered within the band.
- * @note for log scales, zero and negative values are clamped to a small positive value.
- * @param data - the data value.
- * @param scale - the scale function.
- * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ *
+ * @param dataValue - The data value to convert to a pixel position.
+ * @param scale - The scale function.
+ * @param anchor (@default 'middle') - For band scales, where to anchor the point within the band.
+ * @returns The pixel value (@default 0 if data value is not defined in scale).
  */
-export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): number => {
+export const getPointOnScale = (
+  dataValue: number,
+  scale: ChartScaleFunction,
+  anchor: PointAnchor = 'middle',
+): number => {
   if (isCategoricalScale(scale)) {
-    const bandStart = scale(dataValue) ?? 0;
-    const bandwidth = scale.bandwidth() ?? 0;
-    return bandStart + bandwidth / 2;
+    const bandScale = scale as CategoricalScale;
+    const bandStart = bandScale(dataValue);
+    if (bandStart === undefined) return 0;
+
+    const bandwidth = bandScale.bandwidth?.() ?? 0;
+    const step = bandScale.step?.() ?? bandwidth;
+    const paddingOffset = (step - bandwidth) / 2;
+    const stepStart = bandStart - paddingOffset;
+
+    switch (anchor) {
+      case 'stepStart':
+        return stepStart;
+      case 'bandStart':
+        return bandStart;
+      case 'middle':
+        return bandStart + bandwidth / 2;
+      case 'bandEnd':
+        return bandStart + bandwidth;
+      case 'stepEnd':
+        return stepStart + step;
+    }
   }
 
   // For log scales, ensure the value is positive
@@ -44,18 +70,47 @@ export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): n
 
 /**
  * Get a point from a data value and a serializable scale (worklet-compatible).
- * @note for categorical scales, the point will be centered within the band.
- * @note for log scales, zero and negative values are clamped to a small positive value.
- * @param dataValue - the data value.
- * @param scale - the serializable scale object.
- * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ *
+ * @param dataValue - The data value to convert to a pixel position.
+ * @param scale - The serializable scale function.
+ * @param anchor (@default 'middle') - For band scales, where to anchor the point within the band.
+ * @returns The pixel value (@default 0 if data value is not defined in scale).
  */
-export function getPointOnSerializableScale(dataValue: number, scale: SerializableScale): number {
+export function getPointOnSerializableScale(
+  dataValue: number,
+  scale: SerializableScale,
+  anchor: PointAnchor = 'middle',
+): number {
   'worklet';
 
+  // Handle band scales with the specified position
   if (scale.type === 'band') {
-    const bandStart = applySerializableScale(dataValue, scale);
-    return bandStart + scale.bandwidth / 2;
+    const bandScale = scale as SerializableBandScale;
+    const [domainMin, domainMax] = bandScale.domain;
+    const index = dataValue - domainMin;
+    const n = domainMax - domainMin + 1;
+
+    if (index < 0 || index >= n) {
+      return 0;
+    }
+
+    const bandStart = applyBandScale(dataValue, bandScale);
+
+    const paddingOffset = (bandScale.step - bandScale.bandwidth) / 2;
+    const stepStart = bandStart - paddingOffset;
+
+    switch (anchor) {
+      case 'stepStart':
+        return stepStart;
+      case 'bandStart':
+        return bandStart;
+      case 'middle':
+        return bandStart + bandScale.bandwidth / 2;
+      case 'bandEnd':
+        return bandStart + bandScale.bandwidth;
+      case 'stepEnd':
+        return stepStart + bandScale.step;
+    }
   }
 
   // For log scales, ensure the value is positive
@@ -135,12 +190,18 @@ export const projectPoints = ({
   yScale,
   xData,
   yData,
+  layout = 'vertical',
 }: {
   data: (number | null | { x: number; y: number })[];
   xData?: number[];
   yData?: number[];
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
+  /**
+   * Chart layout.
+   * @default 'vertical'
+   */
+  layout?: CartesianChartLayout;
 }): Array<{ x: number; y: number } | null> => {
   if (data.length === 0) {
     return [];
@@ -160,39 +221,30 @@ export const projectPoints = ({
       });
     }
 
-    // For scales with axis data, determine the correct x value
-    let xValue: number = index;
+    // Determine values/scales based on role (index vs value) and layout.
+    const categoryAxisIsX = layout !== 'horizontal';
+    const indexScale = categoryAxisIsX ? xScale : yScale;
+    const indexData = categoryAxisIsX ? xData : yData;
 
-    // For band scales, always use the index
-    if (!isCategoricalScale(xScale)) {
-      // For numeric scales with axis data, use the axis data values instead of indices
-      if (xData && Array.isArray(xData) && xData.length > 0) {
-        // Check if it's numeric data
-        if (typeof xData[0] === 'number') {
-          const numericXData = xData as number[];
-          xValue = numericXData[index] ?? index;
+    // 1. Calculate position along the index axis (categorical or numeric domain).
+    let indexValue: number = index;
+    if (!isCategoricalScale(indexScale)) {
+      if (indexData && Array.isArray(indexData) && indexData.length > 0) {
+        if (typeof indexData[0] === 'number') {
+          indexValue = indexData[index] ?? index;
         }
       }
     }
 
-    let yValue: number = value as number;
-    if (
-      isNumericScale(yScale) &&
-      yData &&
-      Array.isArray(yData) &&
-      yData.length > 0 &&
-      typeof yData[0] === 'number' &&
-      typeof value === 'number'
-    ) {
-      yValue = value as number;
+    // 2. Calculate position along the value axis (measured magnitude).
+    const valueAsNumber = value as number;
+
+    // 3. Project final coordinates based on layout.
+    if (categoryAxisIsX) {
+      return projectPoint({ x: indexValue, y: valueAsNumber, xScale, yScale });
     }
 
-    return projectPoint({
-      x: xValue,
-      y: yValue,
-      xScale,
-      yScale,
-    });
+    return projectPoint({ x: valueAsNumber, y: indexValue, xScale, yScale });
   });
 };
 

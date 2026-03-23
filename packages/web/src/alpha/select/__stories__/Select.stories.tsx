@@ -24,6 +24,15 @@ import {
 export default {
   title: 'Components/Alpha/Select/SingleSelect',
   component: Select,
+  parameters: {
+    a11y: {
+      options: {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      },
+    },
+  },
 };
 
 const paddingCss = css`
@@ -282,7 +291,7 @@ export const AccessibilityLabel = () => {
 
   return (
     <Select
-      accessibilityLabel="Custom accessibility label"
+      accessibilityLabel="Custom dropdown accessibility label"
       controlAccessibilityLabel="Custom control accessibility label"
       label="Single select - accessibility label"
       onChange={setValue}
@@ -317,6 +326,70 @@ export const AccessibilityRoles = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+export const Alignments = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={2}>
+      <Select
+        label="Default align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        align="center"
+        label="Center align"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        align="end"
+        label="End align"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        label="Compact align - start"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        align="center"
+        label="Compact align - center"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        align="end"
+        label="Compact align - end"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+    </VStack>
   );
 };
 
@@ -370,6 +443,21 @@ export const Disabled = () => {
       value={value}
     />
   );
+};
+
+Disabled.parameters = {
+  a11y: {
+    options: {
+      /**
+       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled.
+       * Use axe run options (instead of config.rules) to reliably disable this rule.
+       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
+       */
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
 };
 
 export const DisabledOptions = () => {
@@ -852,6 +940,15 @@ export const DefaultOpen = () => {
   );
 };
 
+DefaultOpen.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
+};
 export const DisabledClickOutsideClose = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -893,7 +990,7 @@ export const ControlledOpen = () => {
     { value: '9', label: 'Option 9' },
   ];
   const [value, setValue] = useState<string | null>('1');
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
@@ -1202,6 +1299,16 @@ export const DisabledWithVariants = () => {
       />
     </div>
   );
+};
+
+DisabledWithVariants.parameters = {
+  a11y: {
+    options: {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    },
+  },
 };
 
 export const StartNodeWithVariants = () => {
@@ -1627,6 +1734,30 @@ export const RefImperativeHandle = () => {
         options={exampleOptions}
         placeholder="Empty value"
         value={value}
+      />
+    </VStack>
+  );
+};
+
+export const Borderless = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
       />
     </VStack>
   );

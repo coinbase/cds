@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { Animated, type ColorValue, StyleSheet, type View } from 'react-native';
 import { Circle, Svg } from 'react-native-svg';
+import type { ThemeVars } from '@coinbase/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
@@ -15,9 +16,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export type RadioBaseProps<T extends string> = ControlBaseProps<T>;
+export type RadioBaseProps<RadioValue extends string> = Omit<
+  ControlBaseProps<RadioValue>,
+  'controlColor'
+> & {
+  /**
+   * Sets the checked/active color of the radio.
+   * @default bgPrimary
+   */
+  controlColor?: ThemeVars.Color;
+  /**
+   * Sets the border width of the radio.
+   * @default 100
+   */
+  borderWidth?: ThemeVars.BorderWidth;
+};
 
-export type RadioProps<T extends string> = RadioBaseProps<T>;
+export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
 const DotSvg = ({ color = 'black', width = 20 }: { color?: ColorValue; width?: number }) => {
   return (
@@ -33,6 +48,8 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   checked,
   background = 'bg',
   borderRadius = 1000,
+  borderWidth = 100,
+  elevation,
   animatedScaleValue,
   animatedOpacityValue,
   controlColor = 'bgPrimary',
@@ -47,8 +64,9 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
       background={background}
       borderColor={borderColor}
       borderRadius={borderRadius}
-      borderWidth={100}
+      borderWidth={borderWidth}
       disabled={disabled}
+      elevation={elevation}
       pressed={pressed}
       style={[
         styles.circle,
@@ -70,8 +88,8 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   );
 };
 
-const RadioWithRef = forwardRef(function Radio<T extends string>(
-  { children, accessibilityHint, accessibilityLabel, ...props }: RadioProps<T>,
+const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
+  { children, accessibilityHint, accessibilityLabel, ...props }: RadioProps<RadioValue>,
   ref: React.ForwardedRef<View>,
 ) {
   const accessibilityLabelValue =
@@ -80,7 +98,7 @@ const RadioWithRef = forwardRef(function Radio<T extends string>(
       : accessibilityLabel;
 
   return (
-    <Control<T>
+    <Control<RadioValue>
       {...props}
       ref={ref}
       accessibilityHint={accessibilityHint}
@@ -93,7 +111,9 @@ const RadioWithRef = forwardRef(function Radio<T extends string>(
     </Control>
   );
   // Make forwardRef result function stay generic function type
-}) as <T extends string>(props: RadioProps<T> & { ref?: React.Ref<View> }) => React.ReactElement;
+}) as <RadioValue extends string>(
+  props: RadioProps<RadioValue> & { ref?: React.Ref<View> },
+) => React.ReactElement;
 
 // Make memoized function stay generic function type
 export const Radio = memo(RadioWithRef) as typeof RadioWithRef &
