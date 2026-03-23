@@ -79,8 +79,10 @@
     "ajv@^6.0.0": "^6.14.0",
     "elliptic": "^6.6.0",
     "ip": "^2.0.1",
-    "minimatch": "10.2.4",
-    "glob@7.1.6": "patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch"
+    "minimatch": "^10.2.4",
+    "glob@7.1.6": "patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch",
+    "koa": "^3.1.2",
+    "tar": "^7.5.12"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
@@ -96,7 +98,9 @@
     "elliptic": "Request from Coinbase Security team to fix security vulnerability",
     "ip": "Request from Coinbase Security team to fix security vulnerability",
     "minimatch": "Request from Coinbase Security team to fix security vulnerability",
-    "glob@7.1.6": "Handle minimatch@10's Symbol(GLOBSTAR) in pattern arrays (used by @expo/config). Avoids 'Cannot convert a Symbol value to a string' when starting Expo."
+    "glob@7.1.6": "Handle minimatch@10's Symbol(GLOBSTAR) in pattern arrays (used by @expo/config). Avoids 'Cannot convert a Symbol value to a string' when starting Expo.",
+    "koa": "Request from Coinbase Security team to fix security vulnerability",
+    "tar": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
