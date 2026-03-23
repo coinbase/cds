@@ -8,6 +8,107 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.35.0 (3/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026/03/20. [[#526](https://github.com/coinbase/cds/pull/526)]
+
+##### ⭐️ Added (52)
+
+###### Pictogram (7)
+
+- instoBorrowCoins
+- instoGlobalConnections
+- instoEasyToUse
+- instoCoinFocus
+- instoDecentralizedExchange
+- instoSecuredAssets
+- instoMonitoringPerformance
+
+###### HeroSquare (1)
+
+- instoOnChain
+
+###### SpotIcon (32)
+
+- instoProductWallet
+- instoSignInProduct
+- instoProductCompliance
+- instoProductPro
+- instoBusinessProduct
+- instoIdVerification
+- instoCloudProduct
+- instoProductCoinbaseCard
+- instoLayeredNetworks
+- instoAssetHubProduct
+- instoPrimeProduct
+- instoDataMarketplace
+- instoRewardsProduct
+- instoCustodyProduct
+- instoDelegate
+- instoPaySDKProduct
+- instoAdvancedTradeProduct
+- instoPrivateClientProduct
+- instoFast
+- instoChat
+- instoAuthenticator
+- instoCoinbaseOneEarn
+- instoWalletAsAServiceProduct
+- instoHelpCenterProduct
+- instoMultiCoin
+- instoShield
+- instoLearningRewardsProduct
+- instoRecurringPurchases
+- instoBorrowProduct
+- instoCommerceProduct
+- instoPieChart
+- instoDerivativesProduct
+
+###### SpotRectangle (11)
+
+- instoDesignateSigner
+- instoApiKey
+- instoConsensusWaitingForApprovals
+- instoKey
+- instoRefreshKey
+- instoSetupComplete
+- instoQRCode
+- instoSetupOnchain
+- instoMargin
+- instoAboutOnchain
+- instoOnchainSetupInProgress
+
+###### SpotSquare (1)
+
+- instoAuthenticatorProgress
+
+##### ⭐️ Updated (12)
+
+###### Pictogram (5)
+
+- instoDecentralizedExchange
+- instoDecentralizedWeb3
+- instoRestaking
+- instoApyInterest
+- instoKey
+
+###### HeroSquare (1)
+
+- instoOnChain
+
+###### SpotRectangle (2)
+
+- instoEthStakingMovement
+- instoCryptoAndMore
+
+###### SpotSquare (4)
+
+- instoSecurityKey
+- instoAuthenticatorProgress
+- instoWaiting
+- instoDappWallet
+
 ## 4.34.0 (3/17/2026 PST)
 
 #### 🚀 Updates
