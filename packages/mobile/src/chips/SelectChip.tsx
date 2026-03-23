@@ -17,7 +17,8 @@ import type { ChipProps } from './ChipProps';
 import { MediaChip } from './MediaChip';
 
 /**
- * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  * @see {@link @coinbase/cds-mobile/alpha/select-chip/SelectChip}
  */
 export type SelectChipProps = Pick<
@@ -32,7 +33,8 @@ export type SelectChipProps = Pick<
   };
 
 /**
- * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  * @see {@link @coinbase/cds-mobile/alpha/select-chip/SelectChip}
  */
 export const SelectChip = memo(

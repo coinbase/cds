@@ -478,7 +478,8 @@ function SparklineInteractiveWithGeneric<Period extends string>({
 }
 
 /**
- * @deprecated Use LineChart instead.
+ * @deprecated Use LineChart instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const SparklineInteractive = memo(
   SparklineInteractiveWithGeneric,

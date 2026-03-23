@@ -38,7 +38,8 @@ export type ChipBaseProps = SharedProps &
      * Invert the foreground and background colors to emphasize the Chip.
      * Depending on your theme, it may be dangerous to use this prop in conjunction with `transparentWhileInactive`.
      * @default false
-     * @deprecated Use the invertColorScheme prop instead
+     * @deprecated Use the invertColorScheme prop instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     inverted?: boolean;
     /**
@@ -55,7 +56,8 @@ export type ChipBaseProps = SharedProps &
      */
     numberOfLines?: number;
     /**
-     * @deprecated Use `styles.content` instead.
+     * @deprecated Use `styles.content` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      * Apply styles to Chip content.
      */
     contentStyle?: React.CSSProperties;
@@ -80,7 +82,8 @@ export type ChipProps = ChipBaseProps;
 export type InputChipProps = ChipProps & {
   /**
    * Value indicates what is currently selected
-   * @deprecated Use the `children` prop instead
+   * @deprecated Use the `children` prop instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
    */
   value?: string;
 };
