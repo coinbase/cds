@@ -3,24 +3,14 @@
   "description": "Migration from CDS v8 to v9",
   "transforms": [
     {
-      "name": "input-size-values",
-      "description": "Update Input size prop values from sm/md/lg to small/medium/large (@coinbase/cds-web)",
-      "file": "example-transform"
-    },
-    {
-      "name": "use-theme-return-type",
-      "description": "Update useTheme hook destructured return values (@coinbase/cds-common)",
-      "file": "example-transform"
-    },
-    {
-      "name": "format-currency-options",
-      "description": "Update formatCurrency options parameter (@coinbase/cds-utils)",
-      "file": "example-transform"
-    },
-    {
       "name": "button-variant-values",
       "description": "Remap Button/IconButton variant values: tertiary -> inverse, foregroundMuted -> secondary",
       "file": "button-variant-values"
+    },
+    {
+      "name": "migrate-use-merge-refs-import",
+      "description": "Migrate useMergeRefs: @coinbase/cds-common/hooks/useMergeRefs → utils/mergeRefs, rename binding to mergeRefs, merge duplicate imports",
+      "file": "v9/migrate-use-merge-refs"
     }
   ]
 }
