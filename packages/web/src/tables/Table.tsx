@@ -1,5 +1,4 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css, type LinariaClassName } from '@linaria/core';
@@ -50,9 +49,9 @@ export type TableProps = SharedProps &
     /** Use compact cell spacing. If set, cellSpacing will override these defaults */
     compact?: boolean;
     /** Set a fixed height. */
-    height?: DimensionValue;
+    height?: React.CSSProperties['height'];
     /** Set a maximum height. */
-    maxHeight?: DimensionValue;
+    maxHeight?: React.CSSProperties['maxHeight'];
     /**
      * @danger This is an escape hatch. It is not intended to be used normally.
      */

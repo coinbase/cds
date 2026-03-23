@@ -11,6 +11,7 @@ import React, {
 import { Pressable } from 'react-native';
 import type { ForwardedRef } from 'react';
 import type {
+  DimensionValue,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
   ViewStyle,
@@ -24,7 +25,6 @@ import type {
   SharedProps,
   TextAlignProps,
 } from '@coinbase/cds-common/types';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 
 import { useInputBorderStyle } from '../hooks/useInputBorderStyle';

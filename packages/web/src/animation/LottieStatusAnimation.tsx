@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { lottieStatusToAccessibilityLabel } from '@coinbase/cds-common/lottie/statusToAccessibilityLabel';
 import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusAnimationPoller';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { LottiePlayer } from '@coinbase/cds-common/types/LottiePlayer';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -19,11 +18,11 @@ type LottieStatusAnimationBaseProps = {
 };
 
 type LottieStatusAnimationPropsWithWidth = {
-  width: DimensionValue;
+  width: React.CSSProperties['width'];
 } & LottieStatusAnimationBaseProps;
 
 type LottieStatusAnimationPropsWithHeight = {
-  height: DimensionValue;
+  height: React.CSSProperties['height'];
 } & LottieStatusAnimationBaseProps;
 
 export type LottieStatusAnimationProps = (

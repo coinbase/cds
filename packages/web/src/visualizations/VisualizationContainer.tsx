@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common/types';
 import { useVisualizationDimensions } from '@coinbase/cds-common/visualizations/useVisualizationDimensions';
 
 import { useDimensions } from '../hooks/useDimensions';

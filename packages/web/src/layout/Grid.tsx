@@ -1,5 +1,4 @@
 import React, { forwardRef, useMemo } from 'react';
-import { type DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 
 import type { Polymorphic } from '../core/polymorphism';
 
@@ -44,7 +43,7 @@ export type GridBaseProps = Polymorphic.ExtendableProps<
      * @default 1fr
      * @note `columnMax` cannot be used in conjunction with `columns` or `templateColumns`
      */
-    columnMax?: DimensionValue;
+    columnMax?: React.CSSProperties['maxWidth'];
   }
 >;
 
