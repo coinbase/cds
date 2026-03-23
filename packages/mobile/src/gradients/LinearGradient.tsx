@@ -46,7 +46,8 @@ type LinearGradientProps = {
    */
   colors: NonNullable<string>[];
   /**
-   * @deprecated This prop will be removed in a future version. Please use the elevated prop instead.
+   * @deprecated Please use the elevated prop instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v6
    * Sets layout position between SVG and children. Set it to false when gradient should overlay children content.
    * @default true
    */

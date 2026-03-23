@@ -39,7 +39,8 @@ export const HexagonAvatarClipPath = () => {
 HexagonAvatarClipPath.displayName = 'HexagonAvatarClipPath';
 
 /**
- * @deprecated will be removed in a future version
+ * @deprecated This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const hexagonSvgTransformStyles = {
   standard: {

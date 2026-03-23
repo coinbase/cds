@@ -15,7 +15,8 @@ type CheckboxGroupStateHandlerParams = Partial<React.ChangeEvent<HTMLInputElemen
  *
  * @param values - An array of all possible options. Make sure the array doesn't change if it's the same values so that the handlers will also stay the same.
  * @param initialState - Initial checked option values.
- * @deprecated Do not use this.
+ * @deprecated Do not use this. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  * @returns [
  *  state,
     {

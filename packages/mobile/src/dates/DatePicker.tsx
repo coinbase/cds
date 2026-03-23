@@ -50,7 +50,8 @@ export type DatePickerBaseProps = Pick<
   onCancel?: () => void;
   /**
    * Accessibility label describing the calendar IconButton, which opens the calendar when pressed.
-   * @deprecated Use openCalendarAccessibilityLabel/closeCalendarAccessibilityLabel instead
+   * @deprecated Use openCalendarAccessibilityLabel/closeCalendarAccessibilityLabel instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
    */
   calendarIconButtonAccessibilityLabel?: string;
   /**
@@ -81,7 +82,8 @@ export type DatePickerProps = DatePickerBaseProps &
     onChange?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
     /**
      * Custom style to apply to the DateInput.
-     * @deprecated Use `styles.dateInput` instead.
+     * @deprecated Use `styles.dateInput` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
      */
     dateInputStyle?: StyleProp<ViewStyle>;
     /**

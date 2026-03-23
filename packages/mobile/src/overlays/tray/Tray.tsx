@@ -195,7 +195,8 @@ export const Tray = memo(
 );
 
 /**
- * @deprecated Redundant component.
+ * @deprecated Redundant component. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const TrayStickyFooter = ({ children }: { children: ReactNode }) => {
   const { verticalDrawerPercentageOfView, titleHeight } = useContext(TrayContext);

@@ -153,7 +153,8 @@ export type PointProps = PointBaseProps & {
   };
   /**
    * Transition for updates.
-   * @deprecated Use `transitions.update` instead.
+   * @deprecated Use `transitions.update` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v4
    */
   transition?: Transition;
 };

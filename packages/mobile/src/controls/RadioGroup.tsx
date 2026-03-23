@@ -13,7 +13,8 @@ import { Radio, type RadioBaseProps, type RadioProps } from './Radio';
 export { Radio, type RadioBaseProps, type RadioProps };
 
 /**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.
+ * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  *
  * @example
  * // Instead of:
@@ -54,7 +55,8 @@ export type RadioGroupBaseProps<RadioValue extends string> = Omit<
   };
 
 /**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.
+ * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  */
 export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
@@ -142,7 +144,8 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends stri
 
 // Make memoized function stay generic function type
 /**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.
+ * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  */
 export const RadioGroup = memo(RadioGroupWithRef) as typeof RadioGroupWithRef &
   React.MemoExoticComponent<typeof RadioGroupWithRef>;

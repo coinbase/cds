@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Chore: Updated numerous deprecation annotation messages.
+
 ## 8.55.1 (3/22/2026 PST)
 
 #### 🐞 Fixes

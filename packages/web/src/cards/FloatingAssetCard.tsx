@@ -74,7 +74,8 @@ const focusRingCss = css`
 `;
 
 /**
- * @deprecated Use `MediaCard` instead. FloatingAssetCard will be removed in a future major release.
+ * @deprecated Use `MediaCard` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  *
  * Migration guide:
  * ```tsx
