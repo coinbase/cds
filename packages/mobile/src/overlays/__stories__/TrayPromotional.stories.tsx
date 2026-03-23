@@ -236,7 +236,7 @@ const ProductUpsellTrayContent = memo(function ProductUpsellTrayContent({
   return (
     <ThemeProvider activeColorScheme="dark" theme={defaultTheme}>
       <VStack position="relative">
-        <VStack style={{ backgroundColor: BACKGROUND_COLOR }} gap={4} paddingTop={5} paddingX={3}>
+        <VStack gap={4} paddingTop={5} paddingX={3} style={{ backgroundColor: BACKGROUND_COLOR }}>
           <Box alignItems="center" justifyContent="center">
             <SpotRectangle name="creditCardExcitement" />
           </Box>

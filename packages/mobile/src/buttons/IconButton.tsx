@@ -1,5 +1,5 @@
 import { forwardRef, memo } from 'react';
-import { type View, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, type View } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type {
   IconButtonVariant,

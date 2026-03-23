@@ -1,8 +1,8 @@
 import depcheck from 'depcheck';
+import { diffLines } from 'diff';
 import { globSync } from 'glob';
 import fs from 'node:fs';
 import path from 'node:path';
-import { diffLines } from 'diff';
 
 // See the depcheck docs for info about ignoring files and deps https://www.npmjs.com/package/depcheck
 const ignorePatterns = [];

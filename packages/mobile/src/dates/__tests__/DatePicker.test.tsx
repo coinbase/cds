@@ -75,10 +75,7 @@ describe('DatePicker', () => {
 
     expect(mockOnOpen).toHaveBeenCalledTimes(1);
 
-    // Calendar should be visible
-    await waitFor(() => {
-      expect(screen.getByText('Confirm')).toBeTruthy();
-    });
+    screen.getByText('Confirm');
   });
 
   it('closes calendar when handle bar is pressed', async () => {
@@ -90,9 +87,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Confirm')).toBeTruthy();
-    });
+    screen.getByText('Confirm');
 
     // Close calendar via handle bar using testID
     const handleBar = screen.getByTestId('handleBar');
@@ -119,9 +114,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('Custom close label')).toBeTruthy();
-    });
+    expect(screen.getByLabelText('Custom close label')).toBeTruthy();
   });
 
   it('displays confirm button with custom text', async () => {
@@ -131,9 +124,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Done')).toBeTruthy();
-    });
+    expect(screen.getByText('Done')).toBeTruthy();
   });
 
   it('confirm button is disabled when no date is selected', async () => {
@@ -143,10 +134,8 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      const confirmButton = screen.getByRole('button', { name: 'Confirm' });
-      expect(confirmButton).toBeDisabled();
-    });
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
+    expect(confirmButton).toBeDisabled();
   });
 
   it('confirm button has custom accessibility hint', async () => {
@@ -161,10 +150,8 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      const confirmButton = screen.getByRole('button', { name: 'Confirm' });
-      expect(confirmButton).toHaveProp('accessibilityHint', 'Custom confirm button hint');
-    });
+    const confirmButton = screen.getByRole('button', { name: 'Confirm' });
+    expect(confirmButton).toHaveProp('accessibilityHint', 'Custom confirm button hint');
   });
 
   it('confirm button is enabled after selecting a date from calendar', async () => {
@@ -175,9 +162,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Select a date
     const july15Button = screen.getByLabelText(/15.*July.*2024/);
@@ -212,9 +197,7 @@ describe('DatePicker', () => {
 
     expect(mockOnOpen).toHaveBeenCalledTimes(1);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Select a date
     const july15Button = screen.getByLabelText(/15.*July.*2024/);
@@ -268,9 +251,7 @@ describe('DatePicker', () => {
 
     expect(mockOnOpen).toHaveBeenCalledTimes(1);
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Confirm' })).toBeTruthy();
-    });
+    screen.getByRole('button', { name: 'Confirm' });
 
     // Close calendar using testID
     const handleBar = screen.getByTestId('handleBar');
@@ -301,10 +282,8 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      // Should show June 2024 (the month of the current date)
-      expect(screen.getByText('June 2024')).toBeTruthy();
-    });
+    // Should show June 2024 (the month of the current date)
+    expect(screen.getByText('June 2024')).toBeTruthy();
   });
 
   it('passes disabled state to DateInput and Calendar', () => {
@@ -324,9 +303,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Previous month arrow should be disabled since minDate is in current month
     const prevArrow = screen.getByLabelText('Go to previous month');
@@ -342,9 +319,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Next month arrow should be disabled since maxDate is in current month
     const nextArrow = screen.getByLabelText('Go to next month');
@@ -360,9 +335,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Check that the calendar is rendered (specific dates being disabled is tested in Calendar.test.tsx)
     const allButtons = screen.getAllByRole('button');
@@ -447,9 +420,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Select a date
     const july15Button = screen.getByLabelText(/15.*July.*2024/);
@@ -483,9 +454,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Select a date
     const july15Button = screen.getByLabelText(/15.*July.*2024/);
@@ -512,9 +481,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    expect(screen.getByText('July 2024')).toBeTruthy();
   });
 
   it('passes navigation accessibility labels to Calendar', async () => {
@@ -530,9 +497,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('Next month custom')).toBeTruthy();
-    });
+    expect(screen.getByLabelText('Next month custom')).toBeTruthy();
     expect(screen.getByLabelText('Previous month custom')).toBeTruthy();
   });
 
@@ -552,9 +517,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('July 2024')).toBeTruthy();
-    });
+    screen.getByText('July 2024');
 
     // Select a date
     const july15Button = screen.getByLabelText(/15.*July.*2024/);
@@ -589,9 +552,7 @@ describe('DatePicker', () => {
     const calendarButton = screen.getByLabelText('Open calendar');
     fireEvent.press(calendarButton);
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Confirm' })).toBeTruthy();
-    });
+    screen.getByRole('button', { name: 'Confirm' });
 
     // Try to press disabled confirm button
     const confirmButton = screen.getByRole('button', { name: 'Confirm' });

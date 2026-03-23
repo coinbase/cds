@@ -86,13 +86,14 @@ describe('Calendar', () => {
   it('renders days of the week', () => {
     render(<CalendarExample />);
 
-    // Check for first letter of each day
-    const sLetters = screen.getAllByText('S');
+    // Weekday header row uses aria-hidden; include hidden elements to assert visual labels exist.
+    const hidden = { includeHiddenElements: true } as const;
+    const sLetters = screen.getAllByText('S', hidden);
     expect(sLetters.length).toBeGreaterThanOrEqual(2); // Sunday and Saturday (plus potentially dates)
-    expect(screen.getByText('M')).toBeTruthy();
-    expect(screen.getAllByText('T').length).toBeGreaterThanOrEqual(1); // Tuesday and Thursday
-    expect(screen.getByText('W')).toBeTruthy();
-    expect(screen.getByText('F')).toBeTruthy();
+    expect(screen.getByText('M', hidden)).toBeTruthy();
+    expect(screen.getAllByText('T', hidden).length).toBeGreaterThanOrEqual(1); // Tuesday and Thursday
+    expect(screen.getByText('W', hidden)).toBeTruthy();
+    expect(screen.getByText('F', hidden)).toBeTruthy();
   });
 
   it('handles disabled state correctly', () => {
@@ -249,14 +250,15 @@ describe('Calendar', () => {
   it('days of week header is not accessible to screen readers', () => {
     render(<CalendarExample />);
 
-    // The days of week header HStack should have accessible={false}
-    // This is tested indirectly by checking the structure
     const calendar = screen.getByTestId(testID);
     expect(calendar).toBeTruthy();
 
-    // Days of week letters should still be present in the DOM
-    expect(screen.getAllByText('S').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('M').length).toBeGreaterThan(0);
+    // Header row is aria-hidden: excluded from default queries (a11y tree) but still rendered.
+    expect(screen.queryAllByText('S')).toHaveLength(0);
+    expect(screen.queryAllByText('M')).toHaveLength(0);
+    const hidden = { includeHiddenElements: true } as const;
+    expect(screen.getAllByText('S', hidden).length).toBeGreaterThan(0);
+    expect(screen.getAllByText('M', hidden).length).toBeGreaterThan(0);
   });
 
   it('respects minDate and disables dates before it', () => {
