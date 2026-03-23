@@ -8,21 +8,49 @@ The plugin encapsulates the following rules:
 
 ## deprecated-jsdoc-has-removal-version
 
-Enforces that every JSDoc `@deprecated` tag also contains a sentence of the form `Targeting removal in vX`, where `X` is either a full semver (`7.0.0`) or a major version number (`7`).
+Enforces that every JSDoc `@deprecated` tag meets two requirements:
 
-This ensures that consumers of deprecated APIs always know when the removal is planned, making upgrade timelines predictable.
+1. The `@deprecated` text ends with the standard prose: `This will be removed in a future major release.`
+2. The same JSDoc block includes a `@deprecationExpectedRemoval vX[.Y.Z]` tag specifying the planned removal version.
 
-**Invalid** — missing removal target:
+Together these rules:
+
+1. ensure consumers see a consistent removal notice in their IDE tooltips
+2. gives us a way to track and be held accountable for older deprecations
+
+**Invalid** — missing both:
 
 ```ts
 /** @deprecated Use React.useState instead. */
 function useToggler() {}
 ```
 
-**Valid** — removal version present:
+**Invalid** — prose present but tag missing:
 
 ```ts
-/** @deprecated Use React.useState instead. Targeting removal in v7.0.0. */
+/**
+ * @deprecated Use React.useState instead. This will be removed in a future major release.
+ */
+function useToggler() {}
+```
+
+**Invalid** — tag present but prose missing or not at end of `@deprecated` text:
+
+```ts
+/**
+ * @deprecated Use React.useState instead.
+ * @deprecationExpectedRemoval v7
+ */
+function useToggler() {}
+```
+
+**Valid:**
+
+```ts
+/**
+ * @deprecated Use React.useState instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v7.0.0
+ */
 function useToggler() {}
 ```
 
