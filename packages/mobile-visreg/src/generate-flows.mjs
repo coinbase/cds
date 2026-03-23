@@ -6,15 +6,14 @@ import { getVisregRoutes } from './config.mjs';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outputPath = resolve(__dirname, '../flows/capture-all.yaml');
 
-const platform = process.argv[2] ?? 'ios';
-const sorted = getVisregRoutes({ platform }).sort();
+const sorted = getVisregRoutes().sort();
 
 const routeSteps = sorted
   .map(
     (route) => `
-# Route: ${route}
 - runFlow:
     file: ./capture-route-steps.yaml
+    label: "Route: ${route}"
     env:
       ROUTE_NAME: ${route}`,
   )
@@ -34,5 +33,5 @@ ${routeSteps}
 
 writeFileSync(outputPath, yaml, 'utf8');
 console.log(
-  `Generated flows/capture-all.yaml with ${sorted.length} routes (platform: ${platform})`,
+  `Generated flows/capture-all.yaml with ${sorted.length} routes`,
 );
