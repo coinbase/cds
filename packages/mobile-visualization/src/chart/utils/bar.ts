@@ -388,10 +388,6 @@ function getInitialBarMinSizes(
 
 /**
  * Computes the initial clip rect used for stack enter animations.
- *
- * If `origin` is a tuple, this returns the exact initial clip bounding box so clip and bar
- * animations start in sync. Otherwise, the clip starts as a 1px rect at the baseline so it
- * aligns with bars' initial animation positions (which also start at the baseline).
  */
 export function getStackInitialClipRect(
   stackRect: Rect,
@@ -791,6 +787,23 @@ type SeriesGradientEntry =
     }
   | undefined;
 
+function getStackBoundsForLayout(
+  layout: CartesianChartLayout,
+  indexPos: number,
+  thickness: number,
+  minValuePos: number,
+  stackSize: number,
+): Rect {
+  if (layout === 'vertical') {
+    return { x: indexPos, y: minValuePos, width: thickness, height: stackSize };
+  }
+  return { x: minValuePos, y: indexPos, width: stackSize, height: thickness };
+}
+
+function getStackSizeForLayout(layout: CartesianChartLayout, stackRect: Rect): number {
+  return layout === 'vertical' ? stackRect.height : stackRect.width;
+}
+
 /**
  * Computes the positioned bar entries and bounding rect for a single stack at one category index.
  *
@@ -952,12 +965,13 @@ export function getBars(params: {
     const minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
     const maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
     const stackSize = maxValuePos - minValuePos;
-    const stackBounds: Rect = {
-      x: layout === 'vertical' ? indexPos : minValuePos,
-      y: layout === 'vertical' ? minValuePos : indexPos,
-      width: layout === 'vertical' ? thickness : stackSize,
-      height: layout === 'vertical' ? stackSize : thickness,
-    };
+    const stackBounds = getStackBoundsForLayout(
+      layout,
+      indexPos,
+      thickness,
+      minValuePos,
+      stackSize,
+    );
 
     const result = applyStackMinSize(
       allBars,
@@ -972,8 +986,7 @@ export function getBars(params: {
     allBars = result.bars;
 
     // Reapply border radius logic only if we actually scaled
-    const newStackSize =
-      layout === 'vertical' ? result.stackBounds.height : result.stackBounds.width;
+    const newStackSize = getStackSizeForLayout(layout, result.stackBounds);
     if (newStackSize < stackMinSize) {
       allBars = applyBorderRadiusLogic(allBars, layout, stackGap);
     }
