@@ -15,8 +15,6 @@ jest.mock('@shopify/react-native-skia', () => ({
 const VERTICAL_BASELINE = 300;
 const HORIZONTAL_BASELINE = 0;
 
-// ─── getBarSizeAdjustment ─────────────────────────────────────────────────────
-
 describe('getBarSizeAdjustment', () => {
   it('returns 0 when barCount is 0', () => {
     expect(getBarSizeAdjustment(0, 10)).toBe(0);
@@ -125,8 +123,6 @@ describe('getStackBaseline', () => {
     expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(rect.x);
   });
 });
-
-// ─── getStackOrigin ───────────────────────────────────────────────────────────
 
 describe('getStackOrigin', () => {
   it('returns undefined when barMinSize is 0', () => {

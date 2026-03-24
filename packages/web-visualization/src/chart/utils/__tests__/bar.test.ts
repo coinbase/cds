@@ -6,8 +6,6 @@ import {
   getStackOrigin,
 } from '../bar';
 
-// ─── getBarSizeAdjustment ─────────────────────────────────────────────────────
-
 describe('getBarSizeAdjustment', () => {
   it('returns 0 when barCount is 0', () => {
     expect(getBarSizeAdjustment(0, 10)).toBe(0);
@@ -48,8 +46,6 @@ describe('getBarSizeAdjustment', () => {
     expect(getBarSizeAdjustment(100, 1000)).toBe(990);
   });
 });
-
-// ─── getStackGroups ────────────────────────────────────────────────────────────
 
 describe('getStackGroups', () => {
   it('groups series by stackId and axis IDs', () => {
@@ -121,8 +117,6 @@ describe('getStackBaseline', () => {
     expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(rect.x);
   });
 });
-
-// ─── getStackOrigin ───────────────────────────────────────────────────────────
 
 describe('getStackOrigin', () => {
   it('returns undefined when barMinSize is 0', () => {
