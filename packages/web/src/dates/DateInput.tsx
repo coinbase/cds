@@ -3,16 +3,20 @@ import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
 import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/useDateInput';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 
-import { TextInput, type TextInputProps } from '../controls/TextInput';
+import { TextInput, type TextInputBaseProps, type TextInputProps } from '../controls/TextInput';
 import { VStack } from '../layout/VStack';
 
-export type DateInputProps = {
-  /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
-  separator?: string;
-  className?: string;
-  style?: React.CSSProperties;
-} & Omit<DateInputOptions, 'intlDateFormat'> &
-  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue'>;
+export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
+  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+    /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
+    separator?: string;
+  };
+
+export type DateInputProps = DateInputBaseProps &
+  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+    className?: string;
+    style?: React.CSSProperties;
+  };
 
 export const DateInput = memo(
   forwardRef<HTMLInputElement, DateInputProps>(

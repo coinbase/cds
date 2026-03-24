@@ -22,11 +22,15 @@ function BasicSearchInput() {
 
 ### Variants
 
+When `bordered={false}`, SearchInput keeps focused border styling disabled by default. Set
+`focusedBorderWidth` to opt into a focus border style.
+
 ```tsx live
 function SearchInputVariants() {
   const [value1, setValue1] = useState('');
   const [value2, setValue2] = useState('');
   const [value3, setValue3] = useState('');
+  const [value4, setValue4] = useState('');
 
   return (
     <VStack gap={2}>
@@ -41,13 +45,21 @@ function SearchInputVariants() {
         value={value2}
         onChangeText={setValue2}
         onClear={() => setValue2('')}
-        placeholder="Borderless search..."
+        placeholder="Borderless search (default focus behavior)..."
         bordered={false}
       />
       <SearchInput
         value={value3}
         onChangeText={setValue3}
         onClear={() => setValue3('')}
+        placeholder="Borderless search (with focus border)..."
+        bordered={false}
+        focusedBorderWidth={200}
+      />
+      <SearchInput
+        value={value4}
+        onChangeText={setValue4}
+        onClear={() => setValue4('')}
         placeholder="No icons..."
         hideStartIcon
         hideEndIcon
