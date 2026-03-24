@@ -12,12 +12,13 @@ import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
+import { DefaultLegendEntry } from '../../legend';
 import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { Scrubber } from '../../scrubber';
 import { getPointOnSerializableScale, unwrapAnimatedValue, useScrubberContext } from '../../utils';
 import type { BarComponentProps } from '../Bar';
 import { Bar } from '../Bar';
-import { BarChart } from '../BarChart';
+import { BarChart, type BarChartProps } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
 import { DefaultBarStack } from '../DefaultBarStack';
@@ -994,6 +995,86 @@ const HorizontalBarChart = () => {
   );
 };
 
+function BuyVsSellExample() {
+  function BuyVsSellLegend({ buy, sell }: { buy: number; sell: number }) {
+    return (
+      <HStack gap={1} justifyContent="space-between">
+        <DefaultLegendEntry
+          color="var(--color-fgPositive)"
+          label={
+            <Text color="fgMuted" font="legal">
+              {buy}% bought
+            </Text>
+          }
+          seriesId="buy"
+        />
+        <DefaultLegendEntry
+          color="var(--color-fgNegative)"
+          label={
+            <Text color="fgMuted" font="legal">
+              {sell}% sold
+            </Text>
+          }
+          seriesId="sell"
+        />
+      </HStack>
+    );
+  }
+
+  function BuyVsSellChart({
+    buy,
+    sell,
+    animate = true,
+    borderRadius = 3,
+    height = 6,
+    inset = 0,
+    layout = 'horizontal',
+    stackGap = 4,
+    xAxis,
+    yAxis,
+    barMinSize = height,
+    ...props
+  }: Omit<BarChartProps, 'series' | 'height'> & { buy: number; sell: number; height?: number }) {
+    const theme = useTheme();
+    return (
+      <VStack gap={1.5}>
+        <BarChart
+          roundBaseline
+          stacked
+          animate={animate}
+          barMinSize={barMinSize}
+          borderRadius={borderRadius}
+          height={height}
+          inset={inset}
+          layout={layout}
+          series={[
+            {
+              id: 'buy',
+              data: [buy],
+              color: theme.color.fgPositive,
+              legendShape: 'circle',
+            },
+            {
+              id: 'sell',
+              data: [sell],
+              color: theme.color.fgNegative,
+              legendShape: 'circle',
+            },
+          ]}
+          stackGap={stackGap}
+          transitions={{ enter: { type: 'timing', duration: 5000, delay: 2000 } }}
+          xAxis={{ domainLimit: 'strict', ...xAxis }}
+          yAxis={{ categoryPadding: 0, ...yAxis }}
+          {...props}
+        />
+        <BuyVsSellLegend buy={buy} sell={sell} />
+      </VStack>
+    );
+  }
+
+  return <BuyVsSellChart buy={76} sell={24} />;
+}
+
 const PopulationPyramid = () => {
   const theme = useTheme();
 
@@ -1189,6 +1270,10 @@ function ExampleNavigator() {
       {
         title: 'Horizontal Layout',
         component: <HorizontalBarChart />,
+      },
+      {
+        title: 'Buy vs Sell',
+        component: <BuyVsSellExample />,
       },
       {
         title: 'Population Pyramid',
