@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.57.0 (3/24/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support focusedBorderWidth on TextInput. [[#537](https://github.com/coinbase/cds/pull/537)]
+
 ## 8.56.1 (3/24/2026 PST)
 
 #### 🐞 Fixes
