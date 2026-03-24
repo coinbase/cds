@@ -2,7 +2,7 @@ import { memo, useId, useMemo } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultAxisId, instantTransition } from '../utils';
+import { getStackGroups, instantTransition } from '../utils';
 
 import type { BarSeries } from './BarStack';
 import type { BarStackGroupProps } from './BarStackGroup';
@@ -58,7 +58,7 @@ export const BarPlot = memo<BarPlotProps>(
     const { animate, series: allSeries, drawingArea } = useCartesianChartContext();
     const clipPathId = useId();
 
-    const targetSeries = useMemo(() => {
+    const targetSeries: BarSeries[] = useMemo(() => {
       // Then filter by seriesIds if provided
       if (seriesIds !== undefined) {
         return allSeries.filter((s: any) => seriesIds.includes(s.id));
@@ -67,39 +67,7 @@ export const BarPlot = memo<BarPlotProps>(
       return allSeries;
     }, [allSeries, seriesIds]);
 
-    const stackGroups = useMemo(() => {
-      const groups = new Map<
-        string,
-        {
-          stackId: string;
-          series: BarSeries[];
-          xAxisId?: string;
-          yAxisId?: string;
-        }
-      >();
-
-      // Group series into stacks based on stackId + axis ID combination
-      targetSeries.forEach((series) => {
-        const xAxisId = series.xAxisId ?? defaultAxisId;
-        const yAxisId = series.yAxisId ?? defaultAxisId;
-        const stackId = series.stackId || `individual-${series.id}`;
-        const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
-
-        if (!groups.has(stackKey)) {
-          groups.set(stackKey, {
-            stackId: stackKey,
-            series: [],
-            xAxisId: series.xAxisId,
-            yAxisId: series.yAxisId,
-          });
-        }
-
-        const group = groups.get(stackKey)!;
-        group.series.push(series as BarSeries);
-      });
-
-      return Array.from(groups.values());
-    }, [targetSeries]);
+    const stackGroups = useMemo(() => getStackGroups(targetSeries), [targetSeries]);
 
     if (!drawingArea) return;
 

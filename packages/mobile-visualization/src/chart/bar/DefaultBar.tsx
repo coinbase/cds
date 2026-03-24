@@ -65,7 +65,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     );
 
     const initialPath = useMemo(() => {
-      if (!animate) return undefined;
+      if (!animate) return;
       const isHorizontalLayout = layout === 'horizontal';
       const baseline = origin ?? (isHorizontalLayout ? x : y + height);
 

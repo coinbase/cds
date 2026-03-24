@@ -1,10 +1,10 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { usePathInterpolation, Group, Skia } from '@shopify/react-native-skia';
 import { useSharedValue } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
+import { Group, Skia, usePathInterpolation } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultAxisId } from '../utils';
+import { getStackGroups } from '../utils';
 import { buildTransition, instantTransition } from '../utils/transition';
 
 import type { BarSeries } from './BarStack';
@@ -66,7 +66,7 @@ export const BarPlot = memo<BarPlotProps>(
   }) => {
     const { animate, series: allSeries, drawingArea } = useCartesianChartContext();
 
-    const targetSeries = useMemo(() => {
+    const targetSeries: BarSeries[] = useMemo(() => {
       // Then filter by seriesIds if provided
       if (seriesIds !== undefined) {
         return allSeries.filter((s: any) => seriesIds.includes(s.id));
@@ -75,43 +75,10 @@ export const BarPlot = memo<BarPlotProps>(
       return allSeries;
     }, [allSeries, seriesIds]);
 
-    const stackGroups = useMemo(() => {
-      const groups = new Map<
-        string,
-        {
-          stackId: string;
-          series: BarSeries[];
-          xAxisId?: string;
-          yAxisId?: string;
-        }
-      >();
-
-      // Group series into stacks based on stackId + axis ID combination
-      targetSeries.forEach((series) => {
-        const xAxisId = series.xAxisId ?? defaultAxisId;
-        const yAxisId = series.yAxisId ?? defaultAxisId;
-        const stackId = series.stackId || `individual-${series.id}`;
-        const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
-
-        if (!groups.has(stackKey)) {
-          groups.set(stackKey, {
-            stackId: stackKey,
-            series: [],
-            xAxisId: series.xAxisId,
-            yAxisId: series.yAxisId,
-          });
-        }
-
-        const group = groups.get(stackKey)!;
-        group.series.push(series as BarSeries);
-      });
-
-      return Array.from(groups.values());
-    }, [targetSeries]);
+    const stackGroups = useMemo(() => getStackGroups(targetSeries), [targetSeries]);
 
     const clipUpdateTransition = useMemo(
       () => (transitions?.update !== undefined ? transitions.update : instantTransition),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [transitions?.update],
     );
 
@@ -135,9 +102,13 @@ export const BarPlot = memo<BarPlotProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [drawingArea, animate, clipUpdateTransition]);
 
-    const animatedClipPath = usePathInterpolation(clipProgress, [0, 1], [clipPaths.from, clipPaths.to]);
+    const animatedClipPath = usePathInterpolation(
+      clipProgress,
+      [0, 1],
+      [clipPaths.from, clipPaths.to],
+    );
 
-    if (!drawingArea) return null;
+    if (!drawingArea) return;
 
     return (
       <Group clip={animatedClipPath}>

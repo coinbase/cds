@@ -1,6 +1,9 @@
 import type { Rect } from '@coinbase/cds-common/types';
 import type { Transition } from 'framer-motion';
 
+import type { BarSeries } from '../bar/BarStack';
+
+import { defaultAxisId as fallbackAxisId } from './axis';
 import type { Series } from './chart';
 import type { CartesianChartLayout } from './context';
 import type { GradientDefinition, GradientStop } from './gradient';
@@ -103,6 +106,48 @@ export function getBarSizeAdjustment(barCount: number, gapSize: number): number 
   }
 
   return (gapSize * (barCount - 1)) / barCount;
+}
+
+export type StackGroupSeriesInput = Pick<Series, 'id' | 'stackId' | 'xAxisId' | 'yAxisId'>;
+
+export type StackGroup<TSeries extends StackGroupSeriesInput = StackGroupSeriesInput> = {
+  stackId: string;
+  series: TSeries[];
+  xAxisId?: string;
+  yAxisId?: string;
+};
+
+/**
+ * Groups bar series into stack groups scoped by stackId + axis IDs.
+ *
+ * Series with no `stackId` are treated as independent stacks keyed by series id.
+ * Axis IDs are included in the group key so series on different axes never stack together.
+ */
+export function getStackGroups(
+  series: BarSeries[],
+  defaultAxisId: string = fallbackAxisId,
+): StackGroup<BarSeries>[] {
+  const groups: Record<string, StackGroup<BarSeries>> = Object.create(null);
+
+  series.forEach((entry) => {
+    const xAxisId = entry.xAxisId ?? defaultAxisId;
+    const yAxisId = entry.yAxisId ?? defaultAxisId;
+    const stackId = entry.stackId || `individual-${entry.id}`;
+    const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
+
+    if (!groups[stackKey]) {
+      groups[stackKey] = {
+        stackId: stackKey,
+        series: [],
+        xAxisId: entry.xAxisId,
+        yAxisId: entry.yAxisId,
+      };
+    }
+
+    groups[stackKey].series.push(entry);
+  });
+
+  return Object.values(groups);
 }
 
 /**

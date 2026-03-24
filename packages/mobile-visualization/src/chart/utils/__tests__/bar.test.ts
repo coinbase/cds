@@ -5,8 +5,9 @@ import {
   applyStackMinSize,
   getBarOrigins,
   getBarSizeAdjustment,
-  getStackOrigin,
   getNormalizedStagger,
+  getStackGroups,
+  getStackOrigin,
 } from '../bar';
 
 jest.mock('@shopify/react-native-skia', () => ({
@@ -87,6 +88,43 @@ describe('getBarSizeAdjustment', () => {
 
   it('handles large numbers', () => {
     expect(getBarSizeAdjustment(100, 1000)).toBe(990);
+  });
+});
+
+describe('getStackGroups', () => {
+  it('groups series by stackId and axis IDs', () => {
+    const groups = getStackGroups([
+      { id: 'a', stackId: 'price', xAxisId: 'x1', yAxisId: 'y1' },
+      { id: 'b', stackId: 'price', xAxisId: 'x1', yAxisId: 'y1' },
+      { id: 'c', stackId: 'price', xAxisId: 'x1', yAxisId: 'y2' },
+    ]);
+
+    expect(groups).toHaveLength(2);
+    expect(groups[0].stackId).toBe('price:x1:y1');
+    expect(groups[0].series.map((s) => s.id)).toEqual(['a', 'b']);
+    expect(groups[1].stackId).toBe('price:x1:y2');
+    expect(groups[1].series.map((s) => s.id)).toEqual(['c']);
+  });
+
+  it('falls back to individual stackId when missing', () => {
+    const groups = getStackGroups([{ id: 'a' }, { id: 'b' }]);
+
+    expect(groups).toHaveLength(2);
+    expect(groups[0].stackId).toContain('individual-a');
+    expect(groups[1].stackId).toContain('individual-b');
+  });
+
+  it('uses provided default axis id for missing axis values', () => {
+    const groups = getStackGroups(
+      [
+        { id: 'a', stackId: 's1' },
+        { id: 'b', stackId: 's1' },
+      ],
+      'custom-default',
+    );
+
+    expect(groups).toHaveLength(1);
+    expect(groups[0].stackId).toBe('s1:custom-default:custom-default');
   });
 });
 
