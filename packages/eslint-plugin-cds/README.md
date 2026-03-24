@@ -53,18 +53,44 @@ yarn nx run eslint-plugin-cds:build
 
 ## Creating New Rules
 
-To create a new ESLint rule, you can add your rule from the `packages/eslint-plugin-cds/src/rules/` directory.
+You can scaffold a new rule using the generator script:
 
-[This tutorial](https://eslint.org/docs/latest/extend/custom-rule-tutorial) from ESLint provides guidance for writing custom lint rules. The [ESLint Explorer](https://explorer.eslint.org/#eslint-explorer=IntcInN0YXRlXCI6e1widG9vbFwiOlwiYXN0XCIsXCJjb2RlXCI6e1wiamF2YXNjcmlwdFwiOlwiPEJ1dHRvbiBsYWJlbD0nSGVsbG8nIHsuLi5wcm9wc30gLz5cIixcImpzb25cIjpcIi8qKlxcbiAqIFR5cGUgb3IgcGFzdGUgc29tZSBKU09OIGhlcmUgdG8gbGVhcm4gbW9yZSBhYm91dFxcbiAqIHRoZSBzdGF0aWMgYW5hbHlzaXMgdGhhdCBFU0xpbnQgY2FuIGRvIGZvciB5b3UuXFxuICpcXG4gKiBUaGUgdGFicyBhcmU6XFxuICpcXG4gKiAtIEFTVCAtIFRoZSBBYnN0cmFjdCBTeW50YXggVHJlZSBvZiB0aGUgY29kZSwgd2hpY2ggY2FuXFxuICogICBiZSB1c2VmdWwgdG8gdW5kZXJzdGFuZCB0aGUgc3RydWN0dXJlIG9mIHRoZSBjb2RlLiBZb3VcXG4gKiAgIGNhbiB2aWV3IHRoaXMgc3RydWN0dXJlIGFzIEpTT04gb3IgaW4gYSB0cmVlIGZvcm1hdC5cXG4gKlxcbiAqIFlvdSBjYW4gY2hhbmdlIHRoZSB3YXkgdGhhdCB0aGUgSlNPTiBjb2RlIGlzIGludGVycHJldGVkXFxuICogYnkgY2xpY2tpbmcgXFxcIkpTT05cXFwiIGluIHRoZSBoZWFkZXIgYW5kIHNlbGVjdGluZyBkaWZmZXJlbnRcXG4gKiBvcHRpb25zLlxcbiAqXFxuICogVGhpcyBleGFtcGxlIGlzIGluIEpTT05DIG1vZGUsIHdoaWNoIGFsbG93cyBjb21tZW50cy5cXG4gKi9cXG5cXG57XFxuICAgIFxcXCJrZXkxXFxcIjogW3RydWUsIGZhbHNlLCBudWxsXSxcXG4gICAgXFxcImtleTJcXFwiOiB7XFxuICAgICAgICBcXFwia2V5M1xcXCI6IFsxLCAyLCBcXFwiM1xcXCIsIDFlMTAsIDFlLTNdXFxuICAgIH1cXG59XCIsXCJtYXJrZG93blwiOlwiPCEtLVxcblR5cGUgb3IgcGFzdGUgc29tZSBNYXJrZG93biBoZXJlIHRvIGxlYXJuIG1vcmUgYWJvdXRcXG50aGUgc3RhdGljIGFuYWx5c2lzIHRoYXQgRVNMaW50IGNhbiBkbyBmb3IgeW91LlxcblxcblRoZSB0YWJzIGFyZTpcXG5cXG4tIEFTVCAtIFRoZSBBYnN0cmFjdCBTeW50YXggVHJlZSBvZiB0aGUgY29kZSwgd2hpY2ggY2FuXFxuYmUgdXNlZnVsIHRvIHVuZGVyc3RhbmQgdGhlIHN0cnVjdHVyZSBvZiB0aGUgY29kZS4gWW91XFxuY2FuIHZpZXcgdGhpcyBzdHJ1Y3R1cmUgYXMgSlNPTiBvciBpbiBhIHRyZWUgZm9ybWF0LlxcblxcbllvdSBjYW4gY2hhbmdlIHRoZSB3YXkgdGhhdCB0aGUgTWFya2Rvd24gY29kZSBpcyBpbnRlcnByZXRlZFxcbmJ5IGNsaWNraW5nIFxcXCJNYXJrZG93blxcXCIgaW4gdGhlIGhlYWRlciBhbmQgc2VsZWN0aW5nIGRpZmZlcmVudFxcbm9wdGlvbnMuXFxuXFxuVGhpcyBleGFtcGxlIGlzIGluIENvbW1vbk1hcmsgbW9kZS5cXG4tLT5cXG5cXG4jIEVTTGludCBNYXJrZG93biBFeGFtcGxlXFxuXFxuVGhpcyBpcyBhbiBleGFtcGxlIG9mIGEgTWFya2Rvd24gZmlsZSB0aGF0IGNhbiBiZSBwYXJzZWRcXG5ieSBFU0xpbnQuIE1hcmtkb3duIGlzIGEgc2ltcGxlIG1hcmt1cCBsYW5ndWFnZSB0aGF0IGlzXFxub2Z0ZW4gdXNlZCBmb3IgZG9jdW1lbnRhdGlvbi5cXG5cXG4jIyBGZWF0dXJlc1xcblxcbi0gTWFrZSB0aGluZ3MgKml0YWxpYyosICoqYm9sZCoqLCBvciBgY29kZWBcXG4tIENyZWF0ZSBbbGlua3NdKGh0dHBzOi8vZXNsaW50Lm9yZylcXG4tIFN1cHBvcnRzIEhUTUwgPHNwYW4gc3R5bGU9XFxcImNvbG9yOiByZWQ7XFxcIj5lbGVtZW50czwvc3Bhbj5cXG4tIExpc3RzXFxuICAtIE5lc3RlZCBsaXN0c1wiLFwiY3NzXCI6XCIvKipcXG4gKiBUeXBlIG9yIHBhc3RlIHNvbWUgQ1NTIGhlcmUgdG8gbGVhcm4gbW9yZSBhYm91dFxcbiAqIHRoZSBzdGF0aWMgYW5hbHlzaXMgdGhhdCBFU0xpbnQgY2FuIGRvIGZvciB5b3UuXFxuICpcXG4gKiBUaGUgdGFicyBhcmU6XFxuICpcXG4gKiAtIEFTVCAtIFRoZSBBYnN0cmFjdCBTeW50YXggVHJlZSBvZiB0aGUgY29kZSwgd2hpY2ggY2FuXFxuICogICBiZSB1c2VmdWwgdG8gdW5kZXJzdGFuZCB0aGUgc3RydWN0dXJlIG9mIHRoZSBjb2RlLiBZb3VcXG4gKiAgIGNhbiB2aWV3IHRoaXMgc3RydWN0dXJlIGFzIEpTT04gb3IgaW4gYSB0cmVlIGZvcm1hdC5cXG4gKlxcbiAqIFlvdSBjYW4gY2hhbmdlIHRoZSB3YXkgdGhhdCB0aGUgQ1NTIGNvZGUgaXMgaW50ZXJwcmV0ZWRcXG4gKiBieSBjbGlja2luZyBcXFwiQ1NTXFxcIiBpbiB0aGUgaGVhZGVyIGFuZCBzZWxlY3RpbmcgZGlmZmVyZW50XFxuICogb3B0aW9ucy5cXG4gKi9cXG5cXG5AaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3MyP2ZhbWlseT1Sb2JvdG86d2dodEA0MDA7NzAwJmRpc3BsYXk9c3dhcCcpO1xcblxcbmJvZHkge1xcblxcdGZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmO1xcbn1cXG5cXG5oMSB7XFxuXFx0Y29sb3I6ICMzMzM7XFxufVxcblxcbnAge1xcblxcdG1hcmdpbjogMWVtIDA7XFxufVwiLFwiaHRtbFwiOlwiPCFET0NUWVBFIGh0bWw%2BXFxuPCEtLVxcblR5cGUgb3IgcGFzdGUgc29tZSBIVE1MIGhlcmUgdG8gbGVhcm4gbW9yZSBhYm91dFxcbnRoZSBzdGF0aWMgYW5hbHlzaXMgdGhhdCBFU0xpbnQgY2FuIGRvIGZvciB5b3UuXFxuXFxuVGhlIHRhYnMgYXJlOlxcblxcbi0gQVNUIC0gVGhlIEFic3RyYWN0IFN5bnRheCBUcmVlIG9mIHRoZSBjb2RlLCB3aGljaCBjYW5cXG5iZSB1c2VmdWwgdG8gdW5kZXJzdGFuZCB0aGUgc3RydWN0dXJlIG9mIHRoZSBjb2RlLiBZb3VcXG5jYW4gdmlldyB0aGlzIHN0cnVjdHVyZSBhcyBKU09OIG9yIGluIGEgdHJlZSBmb3JtYXQuXFxuLS0%2BXFxuXFxuPGh0bWwgbGFuZz1cXFwiZW5cXFwiPlxcbiAgICA8aGVhZD5cXG4gICAgICAgIDxtZXRhIGNoYXJzZXQ9XFxcIlVURi04XFxcIj5cXG4gICAgICAgIDx0aXRsZT5IVE1MPC90aXRsZT5cXG4gICAgPC9oZWFkPlxcbiAgICA8Ym9keT5cXG4gICAgICAgIDxwPlRleHQ8L3A%2BXFxuICAgIDwvYm9keT5cXG48L2h0bWw%2BXCJ9LFwibGFuZ3VhZ2VcIjpcImphdmFzY3JpcHRcIixcImpzT3B0aW9uc1wiOntcInBhcnNlclwiOlwiZXNwcmVlXCIsXCJzb3VyY2VUeXBlXCI6XCJtb2R1bGVcIixcImVzVmVyc2lvblwiOlwibGF0ZXN0XCIsXCJpc0pTWFwiOnRydWV9LFwianNvbk9wdGlvbnNcIjp7XCJqc29uTW9kZVwiOlwianNvbmNcIn0sXCJjc3NPcHRpb25zXCI6e1wiY3NzTW9kZVwiOlwiY3NzXCIsXCJ0b2xlcmFudFwiOmZhbHNlfSxcIm1hcmtkb3duT3B0aW9uc1wiOntcIm1hcmtkb3duTW9kZVwiOlwiY29tbW9ubWFya1wifSxcImh0bWxPcHRpb25zXCI6e1widGVtcGxhdGVFbmdpbmVTeW50YXhcIjpcIm5vbmVcIixcImZyb250bWF0dGVyXCI6ZmFsc2V9LFwid3JhcFwiOnRydWUsXCJ2aWV3TW9kZXNcIjp7XCJhc3RWaWV3XCI6XCJ0cmVlXCIsXCJzY29wZVZpZXdcIjpcImZsYXRcIixcInBhdGhWaWV3XCI6XCJncmFwaFwifSxcInBhdGhJbmRleFwiOntcImluZGV4XCI6MCxcImluZGV4ZXNcIjoxfSxcImVzcXVlcnlTZWxlY3RvclwiOntcInNlbGVjdG9yXCI6XCJcIn19LFwidmVyc2lvblwiOjB9Ig%3D%3D) is useful for investigating the AST tree.
+```
+yarn node packages/eslint-plugin-cds/scripts/create-rule.mjs <rule-name>
+```
 
-We have two configs:
+This creates the rule source file and a matching test file with boilerplate already in place.
 
-- `web`: config containing rules targeting web / react
-- `mobile`: config containing rules targeting mobile / react-native
+To create a rule manually, follow the steps below.
 
-After creating a rule, be sure to add it to the appropriate config.
+### Step-by-step checklist
 
-Note: Use [AST Explorer](https://astexplorer.net/) with parser set to `@typescript-eslint/parser` to determine AST node types.
+1. **Create the rule file** in `src/rules/`. Use `src/rules/custom-rule.ts` as a starting point, or copy an existing rule.
+2. **Register the rule** by adding an import and entry in `src/rules.ts`.
+3. **Add the rule to a config** in `src/configs/`. Choose the config that matches the rule's platform:
+   - `web` -- rules targeting web / React codebases
+   - `mobile` -- rules targeting mobile / React Native codebases
+4. **Write tests** in `tests/`. Each rule should have a corresponding `<rule-name>.test.ts` file using `@typescript-eslint/rule-tester`.
+5. **Document the rule** in this README under the appropriate category in the [CDS Rules](#cds-rules) section.
+6. **Update the rules summary table** at the top of the [CDS Rules](#cds-rules) section.
+
+### Authoring patterns
+
+There are two patterns for defining a rule:
+
+- **`TSESLint.RuleModule`** -- a plain rule module, good for simple rules (see `no-v7-imports.ts` for an example).
+- **`ESLintUtils.RuleCreator`** -- a factory that generates documentation URLs from the rule name. Preferred for rules that benefit from linked documentation (see `control-has-associated-label-extended.ts` for an example).
+
+### Useful resources
+
+- [ESLint custom rule tutorial](https://eslint.org/docs/latest/extend/custom-rule-tutorial)
+- [AST Explorer](https://astexplorer.net/) (set parser to `@typescript-eslint/parser`)
+- [ESLint Explorer](https://explorer.eslint.org/)
+
+### Available configs
+
+- `web`: rules targeting web / React codebases (includes CDS web rules + `jsx-a11y`)
+- `mobile`: rules targeting mobile / React Native codebases (includes CDS mobile rules + `react-native-a11y`)
 
 ## Testing on External Repos Locally
 
@@ -96,7 +122,18 @@ To test on consumer repos locally, you will need to build your `eslint-plugin-cd
 
 # CDS Rules
 
-## ♿ Accessibility Rules
+## Rules Overview
+
+| Rule                                                                              | Category      | Platform | Included in Config |
+| --------------------------------------------------------------------------------- | ------------- | -------- | ------------------ |
+| [`controlHasAssociatedLabelExtended`](#-controlhasassociatedlabelextended-web)    | Accessibility | Web      | `web`              |
+| [`hasValidA11yDescriptorsExtended`](#-hasvalida11ydescriptorsextended-mobile)     | Accessibility | Mobile   | `mobile`           |
+| [`webChartScrubbingAccessibility`](#-webchartscrubbingaccessibility-web)          | Accessibility | Web      | `web`              |
+| [`mobileChartScrubbingAccessibility`](#-mobilechartscrubbingaccessibility-mobile) | Accessibility | Mobile   | `mobile`           |
+| [`webTooltipInteractiveContent`](#-webtooltipinteractivecontent-web)              | Accessibility | Web      | `web`              |
+| [`noV7Imports`](#-nov7imports-web)                                                | Migration     | Web      | `web`              |
+
+## Accessibility Rules
 
 ### 🔍 controlHasAssociatedLabelExtended (Web)
 
