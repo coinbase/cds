@@ -4,6 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
 import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';
+import { getBarInitialRect, getNormalizedStagger } from '../utils/bar';
 import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
@@ -28,6 +29,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     origin,
+    minSize = 1,
     transitions,
     transition,
   }) => {
@@ -36,14 +38,10 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const defaultFill = fill || theme.color.fgPrimary;
 
-    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
-    const normalizedStagger = useMemo(() => {
-      const barsGrowVertically = layout !== 'horizontal';
-      if (barsGrowVertically) {
-        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-      }
-      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout !== 'horizontal', x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>
@@ -68,27 +66,31 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
-
-      const minSize = 1;
       const barsGrowVertically = layout !== 'horizontal';
-      const baseline = origin ?? (barsGrowVertically ? y + height : x);
-
-      const initialX = barsGrowVertically ? x : baseline;
-      const initialY = barsGrowVertically ? baseline : y;
-      const initialWidth = barsGrowVertically ? width : minSize;
-      const initialHeight = barsGrowVertically ? minSize : height;
-
+      const rect = getBarInitialRect(x, y, width, height, origin, minSize, barsGrowVertically);
       return getBarPath(
-        initialX,
-        initialY,
-        initialWidth,
-        initialHeight,
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height,
         borderRadius,
         !!roundTop,
         !!roundBottom,
         layout,
       );
-    }, [animate, layout, x, y, origin, width, height, borderRadius, roundTop, roundBottom]);
+    }, [
+      animate,
+      layout,
+      x,
+      y,
+      origin,
+      width,
+      height,
+      borderRadius,
+      roundTop,
+      roundBottom,
+      minSize,
+    ]);
 
     return (
       <Path

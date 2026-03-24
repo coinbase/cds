@@ -9,6 +9,7 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
+import { getNormalizedStagger } from '../utils/bar';
 import { usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
@@ -40,20 +41,18 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     roundTop = true,
     roundBottom = true,
     yOrigin,
+    minSize,
+    initialValueRange,
     transitions,
     transition,
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
     const clipPathId = useId();
 
-    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
-    const normalizedStagger = useMemo(() => {
-      const barsGrowVertically = layout !== 'horizontal';
-      if (barsGrowVertically) {
-        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-      }
-      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout !== 'horizontal', x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>
@@ -83,10 +82,46 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     const initialClipPathData = useMemo(() => {
       if (!animate) return undefined;
       const barsGrowVertically = layout !== 'horizontal';
-      const initialX = barsGrowVertically ? x : (yOrigin ?? x);
-      const initialY = barsGrowVertically ? (yOrigin ?? y + height) : y;
-      const initialWidth = barsGrowVertically ? width : 1;
-      const initialHeight = barsGrowVertically ? 1 : height;
+
+      let initialX: number;
+      let initialY: number;
+      let initialWidth: number;
+      let initialHeight: number;
+
+      if (initialValueRange) {
+        // When minSize is set, the initial clip covers the bounding box of all bars at their
+        // stacked starting positions so the clip and the individual bar animations are in sync.
+        const [rangeStart, rangeEnd] = initialValueRange;
+        if (barsGrowVertically) {
+          initialX = x;
+          initialY = rangeStart;
+          initialWidth = width;
+          initialHeight = rangeEnd - rangeStart;
+        } else {
+          initialX = rangeStart;
+          initialY = y;
+          initialWidth = rangeEnd - rangeStart;
+          initialHeight = height;
+        }
+      } else {
+        // Default: clip starts at 1px from the baseline and grows to full size.
+        const initialSize = 1;
+        if (barsGrowVertically) {
+          const baseline = yOrigin ?? y + height;
+          const isPositive = Math.abs(y + height - baseline) <= Math.abs(y - baseline);
+          initialX = x;
+          initialY = isPositive ? baseline - initialSize : baseline;
+          initialWidth = width;
+          initialHeight = initialSize;
+        } else {
+          const baseline = yOrigin ?? x;
+          const isPositive = Math.abs(x - baseline) <= Math.abs(x + width - baseline);
+          initialX = isPositive ? baseline : baseline - initialSize;
+          initialY = y;
+          initialWidth = initialSize;
+          initialHeight = height;
+        }
+      }
 
       return getBarPath(
         initialX,
@@ -98,7 +133,19 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
         roundBottom,
         layout,
       );
-    }, [animate, layout, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+    }, [
+      animate,
+      layout,
+      x,
+      yOrigin,
+      y,
+      height,
+      width,
+      borderRadius,
+      roundTop,
+      roundBottom,
+      initialValueRange,
+    ]);
 
     const animatedClipPath = usePathTransition({
       currentPath: clipPathData,

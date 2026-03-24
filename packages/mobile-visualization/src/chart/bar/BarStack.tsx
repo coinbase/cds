@@ -4,6 +4,15 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
+import {
+  applyBarMinSize,
+  applyBorderRadiusLogic,
+  applyStackGap,
+  applyStackMinSize,
+  getBarInitialOrigins,
+  getInitialValueRange,
+  type StackBounds,
+} from '../utils/bar';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
@@ -130,6 +139,16 @@ export type BarStackComponentProps = Pick<
    * For horizontal layout (bars grow sideways), this is the x-origin.
    */
   yOrigin?: number;
+  /**
+   * Minimum bar size in pixels. Used as the initial clip size when animating.
+   */
+  minSize?: number;
+  /**
+   * Initial value-axis range [start, end] for the clip animation when minSize is set.
+   * Covers the bounding box of all bars at their stacked initial positions, so the clip
+   * and the individual bar animations start in sync with no overlap or leaking.
+   */
+  initialValueRange?: [number, number];
 };
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;
@@ -212,17 +231,13 @@ export const BarStack = memo<BarStackProps>(
 
     // Calculate bars for this specific category
     const { bars, stackRect } = useMemo(() => {
-      const x = indexPos;
-      const width = thickness;
-      const yScale = valueScale;
-
       let allBars: Array<{
         seriesId: string;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        dataY?: number | [number, number] | null;
+        indexPos: number;
+        valuePos: number;
+        thickness: number;
+        length: number;
+        dataValue?: number | [number, number] | null;
         BarComponent?: BarComponent;
         fill?: string;
         roundTop?: boolean;
@@ -230,174 +245,12 @@ export const BarStack = memo<BarStackProps>(
         shouldApplyGap?: boolean;
       }> = [];
 
-      if (!barsGrowVertically) {
-        let minX = Infinity;
-        let maxX = -Infinity;
-
-        series.forEach((s) => {
-          const data = getSeriesData(s.id);
-          if (!data) return;
-
-          const value = data[categoryIndex];
-          if (value === null || value === undefined) return;
-
-          const originalData = s.data;
-          const originalValue = originalData?.[categoryIndex];
-          const shouldApplyGap = !Array.isArray(originalValue);
-
-          const [bottom, top] = (value as [number, number]).sort((a, b) => a - b);
-          const edgeBottom = yScale(bottom) ?? baseline;
-          const edgeTop = yScale(top) ?? baseline;
-
-          const length = Math.abs(edgeBottom - edgeTop);
-          const barX = Math.min(edgeBottom, edgeTop);
-          if (length <= 0) return;
-
-          minX = Math.min(minX, barX);
-          maxX = Math.max(maxX, barX + length);
-
-          let barFill = s.color || theme.color.fgPrimary;
-          const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
-          if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
-            const axis = seriesGradientConfig.gradient.axis ?? 'y';
-            const evalValue =
-              axis === 'x'
-                ? Array.isArray(originalValue)
-                  ? originalValue[1]
-                  : originalValue
-                : categoryIndex;
-            const evaluatedColor = evaluateGradientAtValue(
-              seriesGradientConfig.stops,
-              evalValue,
-              seriesGradientConfig.scale,
-            );
-            if (evaluatedColor) {
-              barFill = evaluatedColor;
-            }
-          }
-
-          const roundTop = roundBaseline || Math.abs(edgeTop - baseline) >= EPSILON;
-          const roundBottom = roundBaseline || Math.abs(edgeBottom - baseline) >= EPSILON;
-
-          allBars.push({
-            seriesId: s.id,
-            x: barX,
-            y: x,
-            width: length,
-            height: width,
-            dataY: value,
-            fill: barFill,
-            roundTop,
-            roundBottom,
-            BarComponent: s.BarComponent,
-            shouldApplyGap,
-          });
-        });
-
-        if (stackGap && allBars.length > 1) {
-          const barsAboveBaseline = allBars.filter((bar) => {
-            const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-            return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
-          });
-          const barsBelowBaseline = allBars.filter((bar) => {
-            const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-            return bottom <= 0 && bottom !== top && bar.shouldApplyGap;
-          });
-
-          if (barsAboveBaseline.length > 1) {
-            const totalGapSpace = stackGap * (barsAboveBaseline.length - 1);
-            const totalDataLength = barsAboveBaseline.reduce((sum, bar) => sum + bar.width, 0);
-            const lengthReduction = totalGapSpace / totalDataLength;
-            const sortedBars = barsAboveBaseline.sort((a, b) => a.x - b.x);
-
-            let currentEdge = baseline;
-            sortedBars.forEach((bar, index) => {
-              const newLength = bar.width * (1 - lengthReduction);
-              const newX = currentEdge;
-              currentEdge = newX + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
-
-              const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
-              if (barIndex !== -1) {
-                allBars[barIndex] = {
-                  ...allBars[barIndex],
-                  width: newLength,
-                  x: newX,
-                };
-              }
-            });
-          }
-
-          if (barsBelowBaseline.length > 1) {
-            const totalGapSpace = stackGap * (barsBelowBaseline.length - 1);
-            const totalDataLength = barsBelowBaseline.reduce((sum, bar) => sum + bar.width, 0);
-            const lengthReduction = totalGapSpace / totalDataLength;
-            const sortedBars = barsBelowBaseline.sort((a, b) => b.x - a.x);
-
-            let currentEdge = baseline;
-            sortedBars.forEach((bar, index) => {
-              const newLength = bar.width * (1 - lengthReduction);
-              const newX = currentEdge - newLength;
-              currentEdge = newX - (index < sortedBars.length - 1 ? stackGap : 0);
-
-              const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
-              if (barIndex !== -1) {
-                allBars[barIndex] = {
-                  ...allBars[barIndex],
-                  width: newLength,
-                  x: newX,
-                };
-              }
-            });
-          }
-
-          if (allBars.length > 0) {
-            minX = Math.min(...allBars.map((bar) => bar.x));
-            maxX = Math.max(...allBars.map((bar) => bar.x + bar.width));
-          }
-        }
-
-        // Horizontal border radius logic: left-to-right sorting.
-        const sortedBars = [...allBars].sort((a, b) => a.x - b.x);
-        const roundedBars = sortedBars.map((bar, index) => {
-          const barBefore = index > 0 ? sortedBars[index - 1] : null;
-          const barAfter = index < sortedBars.length - 1 ? sortedBars[index + 1] : null;
-
-          const shouldRoundLower =
-            index === 0 ||
-            (bar.shouldApplyGap && stackGap) ||
-            (!bar.shouldApplyGap && barAfter && barAfter.x + barAfter.width !== bar.x);
-
-          const shouldRoundHigher =
-            index === sortedBars.length - 1 ||
-            (bar.shouldApplyGap && stackGap) ||
-            (!bar.shouldApplyGap && barBefore && barBefore.x !== bar.x + bar.width);
-
-          return {
-            ...bar,
-            roundTop: Boolean(bar.roundTop && shouldRoundHigher),
-            roundBottom: Boolean(bar.roundBottom && shouldRoundLower),
-          };
-        });
-
-        const stackBounds = {
-          x: minX === Infinity ? baseline : minX,
-          y: x,
-          width: maxX === -Infinity ? 0 : maxX - minX,
-          height: width,
-        };
-
-        return { bars: roundedBars, stackRect: stackBounds };
-      }
-
-      // Track how many bars we've stacked in each direction for gap calculation
       let positiveBarCount = 0;
       let negativeBarCount = 0;
 
-      // Track stack bounds for clipping
-      let minY = Infinity;
-      let maxY = -Infinity;
+      let minValuePos = Infinity;
+      let maxValuePos = -Infinity;
 
-      // Process each series in the stack
       series.forEach((s) => {
         const data = getSeriesData(s.id);
         if (!data) return;
@@ -407,19 +260,22 @@ export const BarStack = memo<BarStackProps>(
 
         const originalData = s.data;
         const originalValue = originalData?.[categoryIndex];
-        // Only apply gap logic if the original data wasn't tuple format
         const shouldApplyGap = !Array.isArray(originalValue);
 
-        // Sort to be in ascending order
         const [bottom, top] = (value as [number, number]).sort((a, b) => a - b);
 
         const isAboveBaseline = bottom >= 0 && top !== bottom;
         const isBelowBaseline = bottom <= 0 && bottom !== top;
 
-        const barBottom = yScale(bottom) ?? baseline;
-        const barTop = yScale(top) ?? baseline;
+        const edgeBottom = valueScale(bottom) ?? baseline;
+        const edgeTop = valueScale(top) ?? baseline;
 
-        // Track bar counts for later gap calculations
+        const roundingEndA = roundBaseline || Math.abs(edgeTop - baseline) >= EPSILON;
+        const roundingEndB = roundBaseline || Math.abs(edgeBottom - baseline) >= EPSILON;
+
+        const roundTop = roundingEndA;
+        const roundBottom = roundingEndB;
+
         if (shouldApplyGap) {
           if (isAboveBaseline) {
             positiveBarCount++;
@@ -428,423 +284,110 @@ export const BarStack = memo<BarStackProps>(
           }
         }
 
-        // Calculate height (remember SVG y coordinates are inverted)
-        const height = Math.abs(barBottom - barTop);
-        const y = Math.min(barBottom, barTop);
+        const length = Math.abs(edgeBottom - edgeTop);
+        const valuePos = Math.min(edgeBottom, edgeTop);
 
-        // Skip bars that would have zero or negative height
-        if (height <= 0) {
-          return;
-        }
+        if (length <= 0) return;
 
-        // Update stack bounds
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y + height);
+        minValuePos = Math.min(minValuePos, valuePos);
+        maxValuePos = Math.max(maxValuePos, valuePos + length);
 
-        // Determine fill color, respecting gradient if present
         let barFill = s.color || theme.color.fgPrimary;
 
-        // Evaluate gradient if provided (using precomputed stops)
         const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
-        if (seriesGradientConfig) {
+        if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
           const axis = seriesGradientConfig.gradient.axis ?? 'y';
-          // For x-axis gradient, use the categoryIndex
-          // For y-axis gradient, use the actual data value
-          const dataValue = axis === 'x' ? categoryIndex : top;
+
+          let evalValue: number;
+          if (axis === 'x') {
+            evalValue = barsGrowVertically
+              ? categoryIndex
+              : Array.isArray(originalValue)
+                ? originalValue[1]
+                : originalValue;
+          } else {
+            evalValue = barsGrowVertically
+              ? Array.isArray(originalValue)
+                ? originalValue[1]
+                : originalValue
+              : categoryIndex;
+          }
+
           const evaluatedColor = evaluateGradientAtValue(
             seriesGradientConfig.stops,
-            dataValue,
+            evalValue,
             seriesGradientConfig.scale,
           );
           if (evaluatedColor) {
-            // Only apply gradient color if fill is not explicitly set
             barFill = evaluatedColor;
           }
         }
 
         allBars.push({
           seriesId: s.id,
-          x,
-          y,
-          width,
-          height,
-          dataY: value, // Store the actual data value
+          indexPos,
+          valuePos,
+          thickness,
+          length,
+          dataValue: value,
           fill: barFill,
-          // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
-          roundTop: roundBaseline || Math.abs(barTop - baseline) >= EPSILON,
-          roundBottom: roundBaseline || Math.abs(barBottom - baseline) >= EPSILON,
-          BarComponent: s.BarComponent,
+          roundTop,
+          roundBottom,
           shouldApplyGap,
+          BarComponent: s.BarComponent,
         });
       });
 
-      // Apply proportional gap distribution to maintain total stack height
+      // Apply proportional gap distribution to maintain total stack length
       if (stackGap && allBars.length > 1) {
-        // Separate bars by baseline side
-        const barsAboveBaseline = allBars.filter((bar) => {
-          const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-          return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
-        });
-        const barsBelowBaseline = allBars.filter((bar) => {
-          const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-          return bottom <= 0 && bottom !== top && bar.shouldApplyGap;
-        });
-
-        // Apply proportional gaps to bars above baseline
-        if (barsAboveBaseline.length > 1) {
-          const totalGapSpace = stackGap * (barsAboveBaseline.length - 1);
-          const totalDataHeight = barsAboveBaseline.reduce((sum, bar) => sum + bar.height, 0);
-          const heightReduction = totalGapSpace / totalDataHeight;
-
-          // Sort bars by position (from baseline upward)
-          const sortedBars = barsAboveBaseline.sort((a, b) => b.y - a.y);
-
-          let currentY = baseline;
-          sortedBars.forEach((bar, index) => {
-            // Reduce bar height proportionally
-            const newHeight = bar.height * (1 - heightReduction);
-            const newY = currentY - newHeight;
-
-            // Update the bar in allBars array
-            const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
-            if (barIndex !== -1) {
-              allBars[barIndex] = {
-                ...allBars[barIndex],
-                height: newHeight,
-                y: newY,
-              };
-            }
-
-            // Move to next position (include gap for next bar)
-            currentY = newY - (index < sortedBars.length - 1 ? stackGap : 0);
-          });
-        }
-
-        // Apply proportional gaps to bars below baseline
-        if (barsBelowBaseline.length > 1) {
-          const totalGapSpace = stackGap * (barsBelowBaseline.length - 1);
-          const totalDataHeight = barsBelowBaseline.reduce((sum, bar) => sum + bar.height, 0);
-          const heightReduction = totalGapSpace / totalDataHeight;
-
-          // Sort bars by position (from baseline downward)
-          const sortedBars = barsBelowBaseline.sort((a, b) => a.y - b.y);
-
-          let currentY = baseline;
-          sortedBars.forEach((bar, index) => {
-            // Reduce bar height proportionally
-            const newHeight = bar.height * (1 - heightReduction);
-
-            // Update the bar in allBars array
-            const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
-            if (barIndex !== -1) {
-              allBars[barIndex] = {
-                ...allBars[barIndex],
-                height: newHeight,
-                y: currentY,
-              };
-            }
-
-            // Move to next position (include gap for next bar)
-            currentY = currentY + newHeight + (index < sortedBars.length - 1 ? stackGap : 0);
-          });
-        }
-
-        // Recalculate stack bounds after gap adjustments
+        allBars = applyStackGap(allBars, stackGap, barsGrowVertically, baseline);
         if (allBars.length > 0) {
-          minY = Math.min(...allBars.map((bar) => bar.y));
-          maxY = Math.max(...allBars.map((bar) => bar.y + bar.height));
+          minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
+          maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
         }
       }
 
       // Apply barMinSize constraints
       if (barMinSize) {
-        // First, expand bars that need it and track the expansion
-        const expandedBars = allBars.map((bar, index) => {
-          if (bar.height < barMinSize) {
-            const heightIncrease = barMinSize - bar.height;
-
-            const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-
-            // Determine how to expand the bar
-            let newBottom = bottom;
-            let newTop = top;
-
-            const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
-
-            if (bottom === 0) {
-              // Expand away from baseline (upward for positive)
-              newTop = top + heightIncrease / scaleUnit;
-            } else if (top === 0) {
-              // Expand away from baseline (downward for negative)
-              newBottom = bottom - heightIncrease / scaleUnit;
-            } else {
-              // Expand in both directions
-              const halfIncrease = heightIncrease / scaleUnit / 2;
-              newBottom = bottom - halfIncrease;
-              newTop = top + halfIncrease;
-            }
-
-            // Recalculate bar position with new data values
-            const newBarBottom = yScale(newBottom) ?? baseline;
-            const newBarTop = yScale(newTop) ?? baseline;
-            const newHeight = Math.abs(newBarBottom - newBarTop);
-            const newY = Math.min(newBarBottom, newBarTop);
-
-            return {
-              ...bar,
-              height: newHeight,
-              y: newY,
-              wasExpanded: true,
-            };
-          }
-          return { ...bar, wasExpanded: false };
-        });
-
-        // Now reposition all bars to avoid overlaps, similar to stackMinSize logic
-
-        // Sort bars by position to maintain order
-        const sortedExpandedBars = [...expandedBars].sort((a, b) => a.y - b.y);
-
-        // Determine if we have bars above and below baseline
-        const barsAboveBaseline = sortedExpandedBars.filter(
-          (bar) => bar.y + bar.height <= baseline,
-        );
-        const barsBelowBaseline = sortedExpandedBars.filter((bar) => bar.y >= baseline);
-
-        // Create a map of new positions
-        const newPositions = new Map<string, { y: number; height: number }>();
-
-        // Start positioning from the baseline and work outward
-        let currentYAbove = baseline; // Start at baseline, work upward (decreasing Y)
-        let currentYBelow = baseline; // Start at baseline, work downward (increasing Y)
-
-        // Position bars above baseline (positive values, decreasing Y)
-        for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
-          const bar = barsAboveBaseline[i];
-          const newY = currentYAbove - bar.height;
-
-          newPositions.set(bar.seriesId, { y: newY, height: bar.height });
-
-          // Update currentYAbove for next bar (preserve gaps)
-          if (i > 0) {
-            const currentBar = barsAboveBaseline[i];
-            const nextBar = barsAboveBaseline[i - 1];
-            // Find original bars to get original gap
-            const originalCurrent = allBars.find((b) => b.seriesId === currentBar.seriesId)!;
-            const originalNext = allBars.find((b) => b.seriesId === nextBar.seriesId)!;
-            const originalGap = originalCurrent.y - (originalNext.y + originalNext.height);
-            currentYAbove = newY - originalGap;
-          }
-        }
-
-        // Position bars below baseline (negative values, increasing Y)
-        for (let i = 0; i < barsBelowBaseline.length; i++) {
-          const bar = barsBelowBaseline[i];
-          const newY = currentYBelow;
-
-          newPositions.set(bar.seriesId, { y: newY, height: bar.height });
-
-          // Update currentYBelow for next bar (preserve gaps)
-          if (i < barsBelowBaseline.length - 1) {
-            const currentBar = barsBelowBaseline[i];
-            const nextBar = barsBelowBaseline[i + 1];
-            // Find original bars to get original gap
-            const originalCurrent = allBars.find((b) => b.seriesId === currentBar.seriesId)!;
-            const originalNext = allBars.find((b) => b.seriesId === nextBar.seriesId)!;
-            const originalGap = originalNext.y - (originalCurrent.y + originalCurrent.height);
-            currentYBelow = newY + bar.height + originalGap;
-          }
-        }
-
-        // Apply new positions to all bars
-        allBars = expandedBars.map((bar) => {
-          const newPos = newPositions.get(bar.seriesId);
-          if (newPos) {
-            return {
-              ...bar,
-              y: newPos.y,
-              height: newPos.height,
-            };
-          }
-          return bar;
-        });
-
-        // Recalculate stack bounds after barMinSize expansion and repositioning
+        allBars = applyBarMinSize(allBars, barMinSize, barsGrowVertically, baseline);
         if (allBars.length > 0) {
-          minY = Math.min(...allBars.map((bar) => bar.y));
-          maxY = Math.max(...allBars.map((bar) => bar.y + bar.height));
+          minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
+          maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
         }
       }
 
-      // Apply border radius logic (will be reapplied after stackMinSize if needed)
-      const applyBorderRadiusLogic = (bars: typeof allBars) => {
-        return bars
-          .sort((a, b) => b.y - a.y)
-          .map((a, index) => {
-            const barBefore = index > 0 ? bars[index - 1] : null;
-            const barAfter = index < bars.length - 1 ? bars[index + 1] : null;
-
-            const shouldRoundTop =
-              index === bars.length - 1 ||
-              (a.shouldApplyGap && stackGap) ||
-              (!a.shouldApplyGap && barAfter && barAfter.y + barAfter.height !== a.y);
-
-            const shouldRoundBottom =
-              index === 0 ||
-              (a.shouldApplyGap && stackGap) ||
-              (!a.shouldApplyGap && barBefore && barBefore.y !== a.y + a.height);
-
-            return {
-              ...a,
-              roundTop: Boolean(a.roundTop && shouldRoundTop),
-              roundBottom: Boolean(a.roundBottom && shouldRoundBottom),
-            };
-          });
-      };
-
-      allBars = applyBorderRadiusLogic(allBars);
+      allBars = applyBorderRadiusLogic(allBars, barsGrowVertically, stackGap);
 
       // Calculate the bounding rect for the entire stack
+      // stackSize is the extent along the value axis, used for stackMinSize checks
+      const stackSize =
+        maxValuePos === -Infinity || minValuePos === Infinity ? 0 : maxValuePos - minValuePos;
       let stackBounds = {
-        x,
-        y: minY === Infinity ? baseline : minY,
-        width,
-        height: maxY === -Infinity ? 0 : maxY - minY,
+        x: barsGrowVertically ? indexPos : minValuePos === Infinity ? baseline : minValuePos,
+        y: barsGrowVertically ? (minValuePos === Infinity ? baseline : minValuePos) : indexPos,
+        width: barsGrowVertically ? thickness : stackSize,
+        height: barsGrowVertically ? stackSize : thickness,
       };
 
       // Apply stackMinSize constraints
       if (stackMinSize) {
-        if (allBars.length === 1 && stackBounds.height < stackMinSize) {
-          // For single bars (non-stacked), treat stackMinSize like barMinSize
-
-          const bar = allBars[0];
-          const heightIncrease = stackMinSize - bar.height;
-
-          const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
-
-          // Determine how to expand the bar (same logic as barMinSize)
-          let newBottom = bottom;
-          let newTop = top;
-
-          const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
-
-          if (bottom === 0) {
-            // Expand away from baseline (upward for positive)
-            newTop = top + heightIncrease / scaleUnit;
-          } else if (top === 0) {
-            // Expand away from baseline (downward for negative)
-            newBottom = bottom - heightIncrease / scaleUnit;
-          } else {
-            // Expand in both directions
-            const halfIncrease = heightIncrease / scaleUnit / 2;
-            newBottom = bottom - halfIncrease;
-            newTop = top + halfIncrease;
-          }
-
-          // Recalculate bar position with new data values
-          const newBarBottom = yScale(newBottom) ?? baseline;
-          const newBarTop = yScale(newTop) ?? baseline;
-          const newHeight = Math.abs(newBarBottom - newBarTop);
-          const newY = Math.min(newBarBottom, newBarTop);
-
-          allBars[0] = {
-            ...bar,
-            height: newHeight,
-            y: newY,
-          };
-
-          // Recalculate stack bounds
-          stackBounds = {
-            x,
-            y: newY,
-            width,
-            height: newHeight,
-          };
-        } else if (allBars.length > 1 && stackBounds.height < stackMinSize) {
-          // For multiple bars (stacked), scale heights while preserving gaps
-
-          // Calculate total bar height (excluding gaps)
-          const totalBarHeight = allBars.reduce((sum, bar) => sum + bar.height, 0);
-          const totalGapHeight = stackBounds.height - totalBarHeight;
-
-          // Calculate how much we need to increase bar heights
-          const requiredBarHeight = stackMinSize - totalGapHeight;
-          const barScaleFactor = requiredBarHeight / totalBarHeight;
-
-          // Sort bars by position to maintain order
-          const sortedBars = [...allBars].sort((a, b) => a.y - b.y);
-
-          // Determine if we have bars above and below baseline
-          const barsAboveBaseline = sortedBars.filter((bar) => bar.y + bar.height <= baseline);
-          const barsBelowBaseline = sortedBars.filter((bar) => bar.y >= baseline);
-
-          // Create a map of new positions
-          const newPositions = new Map<string, { y: number; height: number }>();
-
-          // Start positioning from the baseline and work outward
-          let currentYAbove = baseline; // Start at baseline, work upward (decreasing Y)
-          let currentYBelow = baseline; // Start at baseline, work downward (increasing Y)
-
-          // Position bars above baseline (positive values, decreasing Y)
-          for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
-            const bar = barsAboveBaseline[i];
-            const newHeight = bar.height * barScaleFactor;
-            const newY = currentYAbove - newHeight;
-
-            newPositions.set(bar.seriesId, { y: newY, height: newHeight });
-
-            // Update currentYAbove for next bar (preserve gaps)
-            if (i > 0) {
-              const currentBar = barsAboveBaseline[i];
-              const nextBar = barsAboveBaseline[i - 1];
-              const originalGap = currentBar.y - (nextBar.y + nextBar.height);
-              currentYAbove = newY - originalGap;
-            }
-          }
-
-          // Position bars below baseline (negative values, increasing Y)
-          for (let i = 0; i < barsBelowBaseline.length; i++) {
-            const bar = barsBelowBaseline[i];
-            const newHeight = bar.height * barScaleFactor;
-            const newY = currentYBelow;
-
-            newPositions.set(bar.seriesId, { y: newY, height: newHeight });
-
-            // Update currentYBelow for next bar (preserve gaps)
-            if (i < barsBelowBaseline.length - 1) {
-              const currentBar = barsBelowBaseline[i];
-              const nextBar = barsBelowBaseline[i + 1];
-              const originalGap = nextBar.y - (currentBar.y + currentBar.height);
-              currentYBelow = newY + newHeight + originalGap;
-            }
-          }
-
-          // Apply new positions to all bars
-          allBars = allBars.map((bar) => {
-            const newPos = newPositions.get(bar.seriesId);
-            if (!newPos) return bar;
-            return {
-              ...bar,
-              height: newPos.height,
-              y: newPos.y,
-            };
-          });
-
-          // Recalculate stack bounds
-          const newMinY = Math.min(...allBars.map((bar) => bar.y));
-          const newMaxY = Math.max(...allBars.map((bar) => bar.y + bar.height));
-
-          stackBounds = {
-            x,
-            y: newMinY,
-            width,
-            height: newMaxY - newMinY,
-          };
-        }
+        const result = applyStackMinSize(
+          allBars,
+          stackMinSize,
+          stackSize,
+          stackBounds as StackBounds,
+          barsGrowVertically,
+          indexPos,
+          thickness,
+          baseline,
+        );
+        allBars = result.bars;
+        stackBounds = result.stackBounds;
 
         // Reapply border radius logic only if we actually scaled
-        if (stackBounds.height < stackMinSize) {
-          allBars = applyBorderRadiusLogic(allBars);
+        const newStackSize = barsGrowVertically ? stackBounds.height : stackBounds.width;
+        if (newStackSize < stackMinSize) {
+          allBars = applyBorderRadiusLogic(allBars, barsGrowVertically, stackGap);
         }
       }
 
@@ -866,6 +409,14 @@ export const BarStack = memo<BarStackProps>(
       barsGrowVertically,
     ]);
 
+    // Per-bar initial animation origins: bars start stacked from the baseline (with gaps)
+    // rather than all overlapping at the same position.
+    const barInitialOrigins = useMemo(
+      () =>
+        getBarInitialOrigins(bars, barMinSize ?? 0, stackGap ?? 0, baseline, barsGrowVertically),
+      [bars, barMinSize, stackGap, baseline, barsGrowVertically],
+    );
+
     const categoryAxis = barsGrowVertically ? xAxis : yAxis;
     const categoryData =
       categoryAxis?.data &&
@@ -880,12 +431,13 @@ export const BarStack = memo<BarStackProps>(
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
         BarComponent={bar.BarComponent || defaultBarComponent}
         borderRadius={borderRadius}
-        dataX={barsGrowVertically ? categoryValue : (bar.dataY as any)}
-        dataY={barsGrowVertically ? bar.dataY : categoryValue}
+        dataX={barsGrowVertically ? categoryValue : (bar.dataValue as any)}
+        dataY={barsGrowVertically ? bar.dataValue : categoryValue}
         fill={bar.fill}
         fillOpacity={defaultFillOpacity}
-        height={bar.height}
-        origin={baseline}
+        height={barsGrowVertically ? bar.length : thickness}
+        minSize={barMinSize}
+        origin={barInitialOrigins[index]}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
         seriesId={bar.seriesId}
@@ -893,9 +445,9 @@ export const BarStack = memo<BarStackProps>(
         strokeWidth={defaultStrokeWidth}
         transition={transition}
         transitions={transitions}
-        width={bar.width}
-        x={bar.x}
-        y={bar.y}
+        width={barsGrowVertically ? thickness : bar.length}
+        x={barsGrowVertically ? indexPos : bar.valuePos}
+        y={barsGrowVertically ? bar.valuePos : indexPos}
       />
     ));
 
@@ -907,11 +459,18 @@ export const BarStack = memo<BarStackProps>(
     const stackRoundTop = barsGrowVertically ? stackRoundLower : stackRoundHigher;
     const stackRoundBottom = barsGrowVertically ? stackRoundHigher : stackRoundLower;
 
+    const initialValueRange = useMemo(
+      () => getInitialValueRange(barInitialOrigins, barMinSize ?? 0),
+      [barInitialOrigins, barMinSize],
+    );
+
     return (
       <BarStackComponent
         borderRadius={borderRadius}
         categoryIndex={categoryIndex}
         height={stackRect.height}
+        initialValueRange={initialValueRange}
+        minSize={barMinSize}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}

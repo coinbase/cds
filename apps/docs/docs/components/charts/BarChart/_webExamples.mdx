@@ -1328,7 +1328,7 @@ function BuyVsSellExample() {
   function BuyVsSellChart({
     buy,
     sell,
-    animate = false,
+    animate = true,
     borderRadius = 3,
     height = 6,
     inset = 0,
@@ -1336,6 +1336,7 @@ function BuyVsSellExample() {
     stackGap = 4,
     xAxis,
     yAxis,
+    barMinSize = height,
     ...props
   }: Omit<BarChartProps, 'series'> & { buy: number; sell: number }) {
     return (
@@ -1344,6 +1345,7 @@ function BuyVsSellExample() {
           animate={animate}
           roundBaseline
           stacked
+          barMinSize={barMinSize}
           borderRadius={borderRadius}
           height={height}
           inset={inset}

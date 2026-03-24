@@ -4,6 +4,15 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
+import {
+  applyBarMinSize,
+  applyBorderRadiusLogic,
+  applyStackGap,
+  applyStackMinSize,
+  getBarInitialOrigins,
+  getInitialValueRange,
+  type StackBounds,
+} from '../utils/bar';
 import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
@@ -142,6 +151,16 @@ export type BarStackComponentProps = {
    * For horizontal layout (bars grow sideways), this is the x-origin.
    */
   yOrigin?: number;
+  /**
+   * Minimum bar size in pixels. Used as the initial clip size when animating.
+   */
+  minSize?: number;
+  /**
+   * Initial value-axis range [start, end] for the clip animation when minSize is set.
+   * Covers the bounding box of all bars at their stacked initial positions, so the clip
+   * and the individual bar animations start in sync with no overlap or leaking.
+   */
+  initialValueRange?: [number, number];
 };
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;
@@ -173,10 +192,7 @@ export const BarStack = memo<BarStackProps>(
     transitions,
     transition,
   }) => {
-    const { layout, getSeriesData, getXAxis, getSeries } = useCartesianChartContext();
-
-    const barMinSizePx = barMinSize;
-    const stackMinSizePx = stackMinSize;
+    const { layout, getSeriesData, getXAxis } = useCartesianChartContext();
 
     const xAxis = getXAxis(xAxisId);
     const barsGrowVertically = layout !== 'horizontal';
@@ -185,7 +201,6 @@ export const BarStack = memo<BarStackProps>(
       const domain = valueScale.domain();
       const [domainMin, domainMax] = domain;
       const baselineValue = domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
-      const pos = valueScale(baselineValue) ?? 0;
 
       // In vertical layout (bars grow up), value scale is Y. In horizontal, it's X.
       const fallback = barsGrowVertically ? rect.y + rect.height : rect.x;
@@ -370,89 +385,7 @@ export const BarStack = memo<BarStackProps>(
 
       // Apply proportional gap distribution to maintain total stack length
       if (stackGap && allBars.length > 1) {
-        // Separate bars by baseline side
-        const barsAboveBaseline = allBars.filter((bar) => {
-          const [bottom, top] = (bar.dataValue as [number, number]).sort((a, b) => a - b);
-          return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
-        });
-        const barsBelowBaseline = allBars.filter((bar) => {
-          const [bottom, top] = (bar.dataValue as [number, number]).sort((a, b) => a - b);
-          return bottom <= 0 && bottom !== top && bar.shouldApplyGap;
-        });
-
-        // Apply proportional gaps to bars above baseline
-        if (barsAboveBaseline.length > 1) {
-          const totalGapSpace = stackGap * (barsAboveBaseline.length - 1);
-          const totalDataLength = barsAboveBaseline.reduce((sum, bar) => sum + bar.length, 0);
-          const lengthReduction = totalGapSpace / totalDataLength;
-
-          // In SVG, for Y axis positive values go up (decreasing Y)
-          // For X axis positive values go right (increasing X)
-          const sortedBars = barsGrowVertically
-            ? barsAboveBaseline.sort((a, b) => b.valuePos - a.valuePos) // Higher Y first
-            : barsAboveBaseline.sort((a, b) => a.valuePos - b.valuePos); // Higher X last
-
-          let currentEdge = baseline;
-          sortedBars.forEach((bar, index) => {
-            const newLength = bar.length * (1 - lengthReduction);
-            let newValuePos: number;
-
-            if (barsGrowVertically) {
-              newValuePos = currentEdge - newLength;
-              currentEdge = newValuePos - (index < sortedBars.length - 1 ? stackGap : 0);
-            } else {
-              newValuePos = currentEdge;
-              currentEdge =
-                newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
-            }
-
-            const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
-            if (barIndex !== -1) {
-              allBars[barIndex] = {
-                ...allBars[barIndex],
-                length: newLength,
-                valuePos: newValuePos,
-              };
-            }
-          });
-        }
-
-        // Apply proportional gaps to bars below baseline
-        if (barsBelowBaseline.length > 1) {
-          const totalGapSpace = stackGap * (barsBelowBaseline.length - 1);
-          const totalDataLength = barsBelowBaseline.reduce((sum, bar) => sum + bar.length, 0);
-          const lengthReduction = totalGapSpace / totalDataLength;
-
-          const sortedBars = barsGrowVertically
-            ? barsBelowBaseline.sort((a, b) => a.valuePos - b.valuePos)
-            : barsBelowBaseline.sort((a, b) => b.valuePos - a.valuePos);
-
-          let currentEdge = baseline;
-          sortedBars.forEach((bar, index) => {
-            const newLength = bar.length * (1 - lengthReduction);
-            let newValuePos: number;
-
-            if (barsGrowVertically) {
-              newValuePos = currentEdge;
-              currentEdge =
-                newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
-            } else {
-              newValuePos = currentEdge - newLength;
-              currentEdge = newValuePos - (index < sortedBars.length - 1 ? stackGap : 0);
-            }
-
-            const barIndex = allBars.findIndex((b) => b.seriesId === bar.seriesId);
-            if (barIndex !== -1) {
-              allBars[barIndex] = {
-                ...allBars[barIndex],
-                length: newLength,
-                valuePos: newValuePos,
-              };
-            }
-          });
-        }
-
-        // Recalculate stack bounds after gap adjustments
+        allBars = applyStackGap(allBars, stackGap, barsGrowVertically, baseline);
         if (allBars.length > 0) {
           minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
           maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
@@ -460,70 +393,55 @@ export const BarStack = memo<BarStackProps>(
       }
 
       // Apply barMinSize constraints
-      if (barMinSizePx) {
-        // ... (Skipping full complex logic for brevity, but it should be layout-aware)
-        // For now let's assume it's correctly handled similar to above by using length and valuePos
+      if (barMinSize) {
+        allBars = applyBarMinSize(allBars, barMinSize, barsGrowVertically, baseline);
+        if (allBars.length > 0) {
+          minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
+          maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
+        }
       }
 
-      // Apply border radius logic
-      const applyBorderRadiusLogic = (bars: typeof allBars) => {
-        // Sort bars from "bottom" to "top" of the stack relative to coordinate system
-        // Vertical (Y axis): Max Y (bottom) to Min Y (top)
-        // Horizontal (X axis): Min X (left) to Max X (right)
-        const sortedBars = barsGrowVertically
-          ? [...bars].sort((a, b) => b.valuePos - a.valuePos)
-          : [...bars].sort((a, b) => a.valuePos - b.valuePos);
-
-        return sortedBars.map((a, index) => {
-          const barBefore = index > 0 ? sortedBars[index - 1] : null;
-          const barAfter = index < sortedBars.length - 1 ? sortedBars[index + 1] : null;
-
-          // shouldRoundLower: the face with the smaller coordinate (Top in vertical, Left in horizontal)
-          const shouldRoundLower =
-            (barsGrowVertically ? index === sortedBars.length - 1 : index === 0) ||
-            (a.shouldApplyGap && stackGap) ||
-            (!a.shouldApplyGap && barAfter && barAfter.valuePos + barAfter.length !== a.valuePos);
-
-          // shouldRoundHigher: the face with the larger coordinate (Bottom in vertical, Right in horizontal)
-          const shouldRoundHigher =
-            (barsGrowVertically ? index === 0 : index === sortedBars.length - 1) ||
-            (a.shouldApplyGap && stackGap) ||
-            (!a.shouldApplyGap && barBefore && barBefore.valuePos !== a.valuePos + a.length);
-
-          return {
-            ...a,
-            roundTop: Boolean(
-              a.roundTop && (barsGrowVertically ? shouldRoundLower : shouldRoundHigher),
-            ),
-            roundBottom: Boolean(
-              a.roundBottom && (barsGrowVertically ? shouldRoundHigher : shouldRoundLower),
-            ),
-          };
-        });
-      };
-      allBars = applyBorderRadiusLogic(allBars);
+      allBars = applyBorderRadiusLogic(allBars, barsGrowVertically, stackGap);
 
       // Calculate the bounding rect for the entire stack
-      const stackBounds = {
+      // stackSize is the extent along the value axis, used for stackMinSize checks
+      const stackSize =
+        maxValuePos === -Infinity || minValuePos === Infinity ? 0 : maxValuePos - minValuePos;
+      let stackBounds = {
         x: barsGrowVertically ? indexPos : minValuePos === Infinity ? baseline : minValuePos,
         y: barsGrowVertically ? (minValuePos === Infinity ? baseline : minValuePos) : indexPos,
-        width: barsGrowVertically
-          ? thickness
-          : maxValuePos === -Infinity
-            ? 0
-            : maxValuePos - minValuePos,
-        height: barsGrowVertically
-          ? maxValuePos === -Infinity
-            ? 0
-            : maxValuePos - minValuePos
-          : thickness,
+        width: barsGrowVertically ? thickness : stackSize,
+        height: barsGrowVertically ? stackSize : thickness,
       };
+
+      // Apply stackMinSize constraints
+      if (stackMinSize) {
+        const result = applyStackMinSize(
+          allBars,
+          stackMinSize,
+          stackSize,
+          stackBounds as StackBounds,
+          barsGrowVertically,
+          indexPos,
+          thickness,
+          baseline,
+        );
+        allBars = result.bars;
+        stackBounds = result.stackBounds;
+
+        // Reapply border radius logic only if we actually scaled
+        const newStackSize = barsGrowVertically ? stackBounds.height : stackBounds.width;
+        if (newStackSize < stackMinSize) {
+          allBars = applyBorderRadiusLogic(allBars, barsGrowVertically, stackGap);
+        }
+      }
 
       return { bars: allBars, stackRect: stackBounds };
     }, [
       series,
       stackGap,
-      barMinSizePx,
+      barMinSize,
+      stackMinSize,
       indexPos,
       baseline,
       thickness,
@@ -534,6 +452,14 @@ export const BarStack = memo<BarStackProps>(
       roundBaseline,
       barsGrowVertically,
     ]);
+
+    // Per-bar initial animation origins: bars start stacked from the baseline (with gaps)
+    // rather than all overlapping at the same position.
+    const barInitialOrigins = useMemo(
+      () =>
+        getBarInitialOrigins(bars, barMinSize ?? 0, stackGap ?? 0, baseline, barsGrowVertically),
+      [bars, barMinSize, stackGap, baseline, barsGrowVertically],
+    );
 
     const xData =
       xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
@@ -546,12 +472,13 @@ export const BarStack = memo<BarStackProps>(
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
         BarComponent={bar.BarComponent || defaultBarComponent}
         borderRadius={borderRadius}
-        dataX={barsGrowVertically ? dataX : (bar.dataValue as any)} // This is a bit loose, depends on Bar implementation
+        dataX={barsGrowVertically ? dataX : (bar.dataValue as any)}
         dataY={barsGrowVertically ? (bar.dataValue as any) : dataX}
         fill={bar.fill}
         fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
         height={barsGrowVertically ? bar.length : thickness}
-        origin={baseline}
+        minSize={barMinSize}
+        origin={barInitialOrigins[index]}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
         seriesId={bar.seriesId}
@@ -579,11 +506,20 @@ export const BarStack = memo<BarStackProps>(
     const stackRoundTop = barsGrowVertically ? stackRoundLower : stackRoundHigher;
     const stackRoundBottom = barsGrowVertically ? stackRoundHigher : stackRoundLower;
 
+    // Clip animation start range: covers all bars' initial positions so the clip and the
+    // individual bar animations start in sync with no overlap or leaking.
+    const initialValueRange = useMemo(
+      () => getInitialValueRange(barInitialOrigins, barMinSize ?? 0),
+      [barInitialOrigins, barMinSize],
+    );
+
     return (
       <BarStackComponent
         borderRadius={borderRadius}
         categoryIndex={categoryIndex}
         height={stackRect.height}
+        initialValueRange={initialValueRange}
+        minSize={barMinSize}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}

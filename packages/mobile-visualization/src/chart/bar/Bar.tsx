@@ -74,6 +74,11 @@ export type BarBaseProps = {
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
+  /**
+   * Minimum bar size in pixels. When set, bars shorter than this value are expanded.
+   * Also used as the initial animation size when `animate` is enabled.
+   */
+  minSize?: number;
 };
 
 export type BarProps = BarBaseProps & {
@@ -153,6 +158,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    minSize,
     transitions,
     transition,
   }) => {
@@ -184,6 +190,7 @@ export const Bar = memo<BarProps>(
         fill={effectiveFill}
         fillOpacity={fillOpacity}
         height={height}
+        minSize={minSize}
         origin={effectiveOrigin}
         roundBottom={roundBottom}
         roundTop={roundTop}
