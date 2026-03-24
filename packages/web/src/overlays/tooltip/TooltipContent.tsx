@@ -61,6 +61,8 @@ export const TooltipContent = memo(
         <motion.div {...motionProps} data-testid={`${testID}-motion`}>
           <Box
             ref={ref}
+            id={tooltipId}
+            role="tooltip"
             background="bg"
             borderRadius={200}
             data-testid={testID}
@@ -70,11 +72,11 @@ export const TooltipContent = memo(
             paddingY={tooltipPaddingY}
           >
             {typeof content === 'string' ? (
-              <Text className={textCss} color="fg" font="label2" id={tooltipId}>
+              <Text className={textCss} color="fg" font="label2">
                 {content}
               </Text>
             ) : (
-              <div id={tooltipId}>{content}</div>
+              <div>{content}</div>
             )}
           </Box>
         </motion.div>
