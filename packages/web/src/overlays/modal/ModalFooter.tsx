@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import { css } from '@linaria/core';
 
