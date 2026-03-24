@@ -1,7 +1,8 @@
 import { memo, useId, useMemo } from 'react';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultAxisId } from '../utils';
+import { defaultAxisId, instantTransition } from '../utils';
 
 import type { BarSeries } from './BarStack';
 import type { BarStackGroupProps } from './BarStackGroup';
@@ -54,7 +55,7 @@ export const BarPlot = memo<BarPlotProps>(
     transitions,
     transition,
   }) => {
-    const { series: allSeries, drawingArea } = useCartesianChartContext();
+    const { animate, series: allSeries, drawingArea } = useCartesianChartContext();
     const clipPathId = useId();
 
     const targetSeries = useMemo(() => {
@@ -100,20 +101,32 @@ export const BarPlot = memo<BarPlotProps>(
       return Array.from(groups.values());
     }, [targetSeries]);
 
-    if (!drawingArea) {
-      return null;
-    }
+    if (!drawingArea) return;
+
+    // Clip path animation for bar is just for chart size changes, not for
+    // enter transition. One caveat, bar update transitions are staggered
+    // but clip path is not, so some bars could be clipped in rare cases
 
     return (
       <>
         <defs>
           <clipPath id={clipPathId}>
-            <rect
-              height={drawingArea.height}
-              width={drawingArea.width}
-              x={drawingArea.x}
-              y={drawingArea.y}
-            />
+            {animate ? (
+              <motion.rect
+                height={drawingArea.height}
+                transition={transitions?.update ?? instantTransition}
+                width={drawingArea.width}
+                x={drawingArea.x}
+                y={drawingArea.y}
+              />
+            ) : (
+              <rect
+                height={drawingArea.height}
+                width={drawingArea.width}
+                x={drawingArea.x}
+                y={drawingArea.y}
+              />
+            )}
           </clipPath>
         </defs>
         <g clipPath={`url(#${clipPathId})`}>

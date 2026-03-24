@@ -76,7 +76,6 @@ export type BarBaseProps = {
   BarComponent?: BarComponent;
   /**
    * Minimum bar size in pixels. When set, bars shorter than this value are expanded.
-   * Also used as the initial animation size when `animate` is enabled.
    */
   minSize?: number;
 };
@@ -165,33 +164,26 @@ export const Bar = memo<BarProps>(
     const theme = useTheme();
     const { layout } = useCartesianChartContext();
 
-    // Use theme color as default if no fill is provided
-    const effectiveFill = fill ?? theme.color.fgPrimary;
-
-    const borderRadiusPixels = useMemo(() => borderRadius ?? 0, [borderRadius]);
-
     const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadiusPixels, roundTop, roundBottom, layout);
-    }, [x, y, width, height, borderRadiusPixels, roundTop, roundBottom, layout]);
+      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom, layout);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
-    const effectiveOrigin = originProp ?? (layout === 'horizontal' ? x : y + height);
+    const origin = useMemo(() => {
+      return originProp ?? (layout === 'horizontal' ? x : y + height);
+    }, [originProp, layout, x, y, height]);
+    if (!barPath) return;
 
-    if (!barPath) {
-      return null;
-    }
-
-    // Always use the BarComponent for rendering
     return (
       <BarComponent
         borderRadius={borderRadius}
         d={barPath}
         dataX={dataX}
         dataY={dataY}
-        fill={effectiveFill}
+        fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}
         height={height}
         minSize={minSize}
-        origin={effectiveOrigin}
+        origin={origin}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}

@@ -9,7 +9,7 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
-import { getBarInitialRect, getNormalizedStagger } from '../utils/bar';
+import { getBarInitialRect } from '../utils/bar';
 
 import type { BarComponentProps } from './Bar';
 
@@ -50,10 +50,12 @@ export const DefaultBar = memo<DefaultBarProps>(
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
 
-    const normalizedStagger = useMemo(
-      () => getNormalizedStagger(layout !== 'horizontal', x, y, drawingArea),
-      [layout, x, y, drawingArea],
-    );
+    const normalizedStagger = useMemo(() => {
+      if (layout === 'horizontal') {
+        return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
+      }
+      return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
+    }, [layout, x, y, drawingArea]);
 
     const enterTransition = useMemo(
       () =>
@@ -78,14 +80,20 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
-      const barsGrowVertically = layout !== 'horizontal';
-      const rect = getBarInitialRect(x, y, width, height, origin, minSize, barsGrowVertically);
+      const isHorizontalLayout = layout === 'horizontal';
+      const baseline = origin ?? (isHorizontalLayout ? x : y + height);
+
+      const initialX = isHorizontalLayout ? baseline : x;
+      const initialY = isHorizontalLayout ? y : baseline;
+      const initialWidth = isHorizontalLayout ? minSize : width;
+      const initialHeight = isHorizontalLayout ? height : minSize;
+
       return getBarPath(
-        rect.x,
-        rect.y,
-        rect.width,
-        rect.height,
-        borderRadius ?? 0,
+        initialX,
+        initialY,
+        initialWidth,
+        initialHeight,
+        borderRadius,
         !!roundTop,
         !!roundBottom,
         layout,

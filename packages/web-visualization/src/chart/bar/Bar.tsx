@@ -77,7 +77,6 @@ export type BarBaseProps = {
   BarComponent?: BarComponent;
   /**
    * Minimum bar size in pixels. When set, bars shorter than this value are expanded.
-   * Also used as the initial animation size when `animate` is enabled.
    */
   minSize?: number;
 };
@@ -173,9 +172,7 @@ export const Bar = memo<BarProps>(
       return originProp ?? (layout === 'horizontal' ? x : y + height);
     }, [originProp, layout, x, y, height]);
 
-    if (!barPath) {
-      return null;
-    }
+    if (!barPath) return;
 
     return (
       <BarComponent

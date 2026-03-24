@@ -9,7 +9,6 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
-import { getNormalizedStagger } from '../utils/bar';
 import { usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
@@ -41,7 +40,6 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     roundTop = true,
     roundBottom = true,
     yOrigin,
-    minSize,
     initialValueRange,
     transitions,
     transition,
@@ -49,10 +47,12 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     const { animate, drawingArea, layout } = useCartesianChartContext();
     const clipPathId = useId();
 
-    const normalizedStagger = useMemo(
-      () => getNormalizedStagger(layout !== 'horizontal', x, y, drawingArea),
-      [layout, x, y, drawingArea],
-    );
+    const normalizedStagger = useMemo(() => {
+      if (layout === 'horizontal') {
+        return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
+      }
+      return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
+    }, [layout, x, y, drawingArea]);
 
     const enterTransition = useMemo(
       () =>
