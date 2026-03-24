@@ -369,7 +369,14 @@ export const TooltipWithInteractiveContent = () => (
           </Text>
         }
       >
-        <Icon active color="fg" name="info" paddingStart={1} tabIndex={0} />
+        <Icon
+          active
+          accessibilityLabel="Info"
+          color="fg"
+          name="info"
+          paddingStart={1}
+          tabIndex={0}
+        />
       </Tooltip>
       <Text as="span" color="fgMuted" font="body">
         Set your default display currency.{' '}
