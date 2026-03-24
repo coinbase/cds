@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Meta, Story } from '@storybook/react';
 
 import { VStack } from '../../layout/VStack';
@@ -65,7 +64,7 @@ export const LoadingStateExample: Story = () => {
       </TableHeader>
       <TableBody>
         <VStack alignItems="center" justifyContent="center" minHeight={500}>
-          <ProgressCircle indeterminate color="bgPrimary" size={40} />
+          <ProgressCircle indeterminate accessibilityLabel="Loading" color="bgPrimary" size={40} />
           <Text as="p" color="fgMuted" display="block" font="headline" paddingTop={2}>
             Loading content...
           </Text>

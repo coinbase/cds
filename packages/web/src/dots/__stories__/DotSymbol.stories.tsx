@@ -1,4 +1,3 @@
-import React from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
 import { iconSizes } from '@coinbase/cds-common/internal/data/iconData';
@@ -176,7 +175,10 @@ export const AllDotSymbol = () => {
 
 export const CustomSymbol = () => {
   return (
-    <DotSymbol pin="bottom-end" symbol={<ProgressCircle indeterminate size={10} />}>
+    <DotSymbol
+      pin="bottom-end"
+      symbol={<ProgressCircle indeterminate accessibilityLabel="Loading" size={10} />}
+    >
       <Icon active name="airdrop" size="l" />
     </DotSymbol>
   );

@@ -46,32 +46,42 @@ export const Indeterminate = () => {
         <HStack gap={2}>
           <ProgressCircle
             indeterminate
+            accessibilityLabel="Loading"
             color="bgPositive"
             contentNode={<Text>Positive</Text>}
             progress={calculateProgress(0.75)}
             size={100}
           />
-          <ProgressCircle indeterminate progress={calculateProgress(0.75)} size={100} />
           <ProgressCircle
             indeterminate
+            accessibilityLabel="Loading"
+            progress={calculateProgress(0.75)}
+            size={100}
+          />
+          <ProgressCircle
+            indeterminate
+            accessibilityLabel="Loading"
             progress={calculateProgress(0.75)}
             size={100}
             weight="thin"
           />
           <ProgressCircle
             indeterminate
+            accessibilityLabel="Loading"
             progress={calculateProgress(0.75)}
             size={100}
             weight="normal"
           />
           <ProgressCircle
             indeterminate
+            accessibilityLabel="Loading"
             progress={calculateProgress(0.75)}
             size={100}
             weight="semiheavy"
           />
           <ProgressCircle
             indeterminate
+            accessibilityLabel="Loading"
             progress={calculateProgress(0.75)}
             size={100}
             weight="heavy"
