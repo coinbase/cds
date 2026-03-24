@@ -4,7 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
 import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';
-import { getBarInitialRect } from '../utils/bar';
+import { getNormalizedStagger } from '../utils/bar';
 import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
@@ -38,12 +38,10 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const defaultFill = fill || theme.color.fgPrimary;
 
-    const normalizedStagger = useMemo(() => {
-      if (layout === 'horizontal') {
-        return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-      }
-      return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-    }, [layout, x, y, drawingArea]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout, x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>

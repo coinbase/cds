@@ -385,7 +385,9 @@ const Candlesticks = () => {
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
-        BarStackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
+        BarStackComponent={({ children, origin: _origin, ...props }) => (
+          <g {...props}>{children}</g>
+        )}
         aria-labelledby={infoTextId}
         borderRadius={0}
         height={400}

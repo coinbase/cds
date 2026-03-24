@@ -3,10 +3,9 @@ import {
   applyBorderRadiusLogic,
   applyStackGap,
   applyStackMinSize,
-  getBarInitialOrigins,
-  getBarInitialRect,
+  getBarOrigins,
   getBarSizeAdjustment,
-  getInitialValueRange,
+  getStackOrigin,
   getNormalizedStagger,
 } from '../bar';
 
@@ -640,30 +639,30 @@ describe('applyStackMinSize', () => {
   });
 });
 
-// ─── getBarInitialOrigins ─────────────────────────────────────────────────────
+// ─── getBarOrigins ─────────────────────────────────────────────────────
 
-describe('getBarInitialOrigins', () => {
+describe('getBarOrigins', () => {
   describe('no-op cases', () => {
     it('returns all baseline when barMinSize is 0', () => {
       const bars = [bar('a', 0, 100, [0, 10]), bar('b', 100, 50, [10, 15])];
-      const result = getBarInitialOrigins(bars, 0, 4, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins(bars, 0, 4, HORIZONTAL_BASELINE, false);
       expect(result).toEqual([HORIZONTAL_BASELINE, HORIZONTAL_BASELINE]);
     });
 
     it('returns all baseline when bars array is empty', () => {
-      const result = getBarInitialOrigins([], 6, 4, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins([], 6, 4, HORIZONTAL_BASELINE, false);
       expect(result).toEqual([]);
     });
 
     it('single positive horizontal bar starts at baseline', () => {
       const bars = [bar('a', 0, 100, [0, 10])];
-      const result = getBarInitialOrigins(bars, 6, 4, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins(bars, 6, 4, HORIZONTAL_BASELINE, false);
       expect(result[0]).toBe(HORIZONTAL_BASELINE);
     });
 
     it('single positive vertical bar starts at baseline - minSize (one step up)', () => {
       const bars = [bar('a', 200, 100, [0, 10])];
-      const result = getBarInitialOrigins(bars, 6, 4, VERTICAL_BASELINE, true);
+      const result = getBarOrigins(bars, 6, 4, VERTICAL_BASELINE, true);
       expect(result[0]).toBe(VERTICAL_BASELINE - 6);
     });
   });
@@ -673,12 +672,12 @@ describe('getBarInitialOrigins', () => {
     const sellBar = bar('sell', 290, 10, [7600, 7624]);
 
     it('buy (closest to baseline) starts at baseline', () => {
-      const result = getBarInitialOrigins([buyBar, sellBar], 6, 4, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins([buyBar, sellBar], 6, 4, HORIZONTAL_BASELINE, false);
       expect(result[0]).toBe(HORIZONTAL_BASELINE);
     });
 
     it('sell (further from baseline) starts at baseline + minSize + gap', () => {
-      const result = getBarInitialOrigins([buyBar, sellBar], 6, 4, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins([buyBar, sellBar], 6, 4, HORIZONTAL_BASELINE, false);
       expect(result[1]).toBe(0 + 6 + 4);
     });
 
@@ -688,7 +687,7 @@ describe('getBarInitialOrigins', () => {
         bar('b', 100, 100, [5, 10]),
         bar('c', 200, 100, [10, 15]),
       ];
-      const result = getBarInitialOrigins(bars, 6, 4, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins(bars, 6, 4, HORIZONTAL_BASELINE, false);
       expect(result[0]).toBe(0);
       expect(result[1]).toBe(10);
       expect(result[2]).toBe(20);
@@ -696,7 +695,7 @@ describe('getBarInitialOrigins', () => {
 
     it('zero gap — bars start adjacent to each other', () => {
       const bars = [bar('a', 0, 100, [0, 5]), bar('b', 100, 100, [5, 10])];
-      const result = getBarInitialOrigins(bars, 6, 0, HORIZONTAL_BASELINE, false);
+      const result = getBarOrigins(bars, 6, 0, HORIZONTAL_BASELINE, false);
       expect(result[0]).toBe(0);
       expect(result[1]).toBe(6);
     });
@@ -708,12 +707,12 @@ describe('getBarInitialOrigins', () => {
     const farBar = bar('far', 130, 12, [-20, -8]);
 
     it('nearest bar starts at baseline - minSize', () => {
-      const result = getBarInitialOrigins([nearBar, farBar], 6, 4, BASELINE, false);
+      const result = getBarOrigins([nearBar, farBar], 6, 4, BASELINE, false);
       expect(result[0]).toBe(BASELINE - 6);
     });
 
     it('further bar starts at baseline - 2*minSize - gap', () => {
-      const result = getBarInitialOrigins([nearBar, farBar], 6, 4, BASELINE, false);
+      const result = getBarOrigins([nearBar, farBar], 6, 4, BASELINE, false);
       expect(result[1]).toBe(BASELINE - 2 * 6 - 4);
     });
   });
@@ -723,17 +722,17 @@ describe('getBarInitialOrigins', () => {
     const bBar = bar('b', 200, 50, [5, 10]);
 
     it('bar closest to baseline (largest valuePos) starts at baseline - minSize', () => {
-      const result = getBarInitialOrigins([aBar, bBar], 6, 4, VERTICAL_BASELINE, true);
+      const result = getBarOrigins([aBar, bBar], 6, 4, VERTICAL_BASELINE, true);
       expect(result[0]).toBe(VERTICAL_BASELINE - 6);
     });
 
     it('bar further from baseline starts at baseline - 2*minSize - gap', () => {
-      const result = getBarInitialOrigins([aBar, bBar], 6, 4, VERTICAL_BASELINE, true);
+      const result = getBarOrigins([aBar, bBar], 6, 4, VERTICAL_BASELINE, true);
       expect(result[1]).toBe(VERTICAL_BASELINE - 2 * 6 - 4);
     });
 
     it('initialY + minSize for bar-0 equals baseline', () => {
-      const result = getBarInitialOrigins([aBar, bBar], 6, 4, VERTICAL_BASELINE, true);
+      const result = getBarOrigins([aBar, bBar], 6, 4, VERTICAL_BASELINE, true);
       expect(result[0] + 6).toBe(VERTICAL_BASELINE);
     });
   });
@@ -743,12 +742,12 @@ describe('getBarInitialOrigins', () => {
     const farBar = bar('far', 350, 50, [-10, -5]);
 
     it('bar closest to baseline (smallest valuePos) starts at baseline', () => {
-      const result = getBarInitialOrigins([nearBar, farBar], 6, 4, VERTICAL_BASELINE, true);
+      const result = getBarOrigins([nearBar, farBar], 6, 4, VERTICAL_BASELINE, true);
       expect(result[0]).toBe(VERTICAL_BASELINE);
     });
 
     it('bar further down starts at baseline + (minSize + gap)', () => {
-      const result = getBarInitialOrigins([nearBar, farBar], 6, 4, VERTICAL_BASELINE, true);
+      const result = getBarOrigins([nearBar, farBar], 6, 4, VERTICAL_BASELINE, true);
       expect(result[1]).toBe(VERTICAL_BASELINE + 6 + 4);
     });
   });
@@ -757,86 +756,71 @@ describe('getBarInitialOrigins', () => {
     it('positive and negative bars get independent origins', () => {
       const posBar = bar('pos', 0, 100, [0, 5]);
       const negBar = bar('neg', 100, 50, [-5, 0]);
-      const result = getBarInitialOrigins([posBar, negBar], 6, 4, 100, false);
+      const result = getBarOrigins([posBar, negBar], 6, 4, 100, false);
       expect(result[0]).toBe(100); // pos: baseline
       expect(result[1]).toBe(100 - 6); // neg: baseline - minSize
     });
   });
 });
 
-// ─── getInitialValueRange ─────────────────────────────────────────────────────
+// ─── getStackOrigin ───────────────────────────────────────────────────────────
 
-describe('getInitialValueRange', () => {
+describe('getStackOrigin', () => {
   it('returns undefined when barMinSize is 0', () => {
-    expect(getInitialValueRange([0, 10], 0)).toBeUndefined();
+    expect(getStackOrigin([0, 10], 0)).toBeUndefined();
   });
 
   it('returns undefined when origins array is empty', () => {
-    expect(getInitialValueRange([], 6)).toBeUndefined();
+    expect(getStackOrigin([], 6)).toBeUndefined();
   });
 
   describe('horizontal positive: buy+sell with minSize=6, gap=4', () => {
     it('rangeStart is min origin (0)', () => {
-      const [start] = getInitialValueRange([0, 10], 6)!;
+      const [start] = getStackOrigin([0, 10], 6)!;
       expect(start).toBe(0);
     });
 
     it('rangeEnd is max origin + minSize (16)', () => {
-      const [, end] = getInitialValueRange([0, 10], 6)!;
+      const [, end] = getStackOrigin([0, 10], 6)!;
       expect(end).toBe(16);
     });
   });
 
   describe('single bar', () => {
     it('single positive horizontal bar → [baseline, baseline + minSize]', () => {
-      const origins = getBarInitialOrigins(
-        [bar('a', 0, 100, [0, 10])],
-        6,
-        4,
-        HORIZONTAL_BASELINE,
-        false,
-      );
-      expect(getInitialValueRange(origins, 6)).toEqual([
-        HORIZONTAL_BASELINE,
-        HORIZONTAL_BASELINE + 6,
-      ]);
+      const origins = getBarOrigins([bar('a', 0, 100, [0, 10])], 6, 4, HORIZONTAL_BASELINE, false);
+      expect(getStackOrigin(origins, 6)).toEqual([HORIZONTAL_BASELINE, HORIZONTAL_BASELINE + 6]);
     });
 
     it('single positive vertical bar → [baseline - minSize, baseline]', () => {
-      const origins = getBarInitialOrigins(
-        [bar('a', 200, 100, [0, 10])],
-        6,
-        4,
-        VERTICAL_BASELINE,
-        true,
-      );
-      expect(getInitialValueRange(origins, 6)).toEqual([VERTICAL_BASELINE - 6, VERTICAL_BASELINE]);
+      const origins = getBarOrigins([bar('a', 200, 100, [0, 10])], 6, 4, VERTICAL_BASELINE, true);
+      expect(getStackOrigin(origins, 6)).toEqual([VERTICAL_BASELINE - 6, VERTICAL_BASELINE]);
     });
   });
 
   describe('two positive horizontal bars (minSize=6, gap=4)', () => {
     it('range covers [0, 16] — both initial bar positions', () => {
-      const origins = getBarInitialOrigins(
+      const origins = getBarOrigins(
         [bar('buy', 0, 290, [0, 7600]), bar('sell', 290, 10, [7600, 7624])],
         6,
         4,
         HORIZONTAL_BASELINE,
         false,
       );
-      expect(getInitialValueRange(origins, 6)).toEqual([0, 16]);
+      expect(getStackOrigin(origins, 6)).toEqual([0, 16]);
     });
   });
 
   describe('two positive vertical bars (minSize=6, gap=4)', () => {
     it('range covers from furthest bar top to baseline', () => {
-      const origins = getBarInitialOrigins(
+      const origins = getBarOrigins(
         [bar('a', 250, 50, [0, 5]), bar('b', 200, 50, [5, 10])],
         6,
         4,
         VERTICAL_BASELINE,
         true,
       );
-      expect(getInitialValueRange(origins, 6)).toEqual([284, VERTICAL_BASELINE]);
+      expect(getStackOrigin(origins, 6)).toEqual([284, VERTICAL_BASELINE]);
     });
   });
 
@@ -845,14 +829,14 @@ describe('getInitialValueRange', () => {
     // far  gets idx=1: origin = 150 - 2*6 - 1*4 = 134
     // range = [134, 144+6] = [134, 150]
     it('range covers from furthest bar to baseline', () => {
-      const origins = getBarInitialOrigins(
+      const origins = getBarOrigins(
         [bar('near', 142, 8, [-8, 0]), bar('far', 130, 12, [-20, -8])],
         6,
         4,
         150,
         false,
       );
-      expect(getInitialValueRange(origins, 6)).toEqual([134, 150]);
+      expect(getStackOrigin(origins, 6)).toEqual([134, 150]);
     });
   });
 });
@@ -1041,84 +1025,42 @@ describe('applyBorderRadiusLogic', () => {
   });
 });
 
-// ─── getNormalizedStagger ─────────────────────────────────────────────────────
-
-const DRAWING_AREA = { x: 10, y: 20, width: 200, height: 100 };
-
 describe('getNormalizedStagger', () => {
-  describe('vertical layout (barsGrowVertically=true)', () => {
-    it('returns 0 for a bar at the left edge', () => {
-      expect(getNormalizedStagger(true, 10, 50, DRAWING_AREA)).toBe(0);
+  const drawingArea = { x: 10, y: 20, width: 200, height: 100 };
+
+  describe('vertical layout (stagger along x axis)', () => {
+    it('returns 0 at the left edge of the drawing area', () => {
+      expect(getNormalizedStagger('vertical', 10, 0, drawingArea)).toBe(0);
     });
 
-    it('returns 1 for a bar at the right edge', () => {
-      expect(getNormalizedStagger(true, 210, 50, DRAWING_AREA)).toBe(1);
+    it('returns 1 at the right edge of the drawing area', () => {
+      expect(getNormalizedStagger('vertical', 210, 0, drawingArea)).toBe(1);
     });
 
-    it('returns 0.5 for a bar at the center', () => {
-      expect(getNormalizedStagger(true, 110, 50, DRAWING_AREA)).toBe(0.5);
+    it('returns 0.5 at the midpoint of the drawing area', () => {
+      expect(getNormalizedStagger('vertical', 110, 0, drawingArea)).toBe(0.5);
     });
 
-    it('returns 0 when drawing area has no width', () => {
-      expect(getNormalizedStagger(true, 50, 50, { ...DRAWING_AREA, width: 0 })).toBe(0);
-    });
-  });
-
-  describe('horizontal layout (barsGrowVertically=false)', () => {
-    it('returns 0 for a bar at the top edge', () => {
-      expect(getNormalizedStagger(false, 50, 20, DRAWING_AREA)).toBe(0);
-    });
-
-    it('returns 1 for a bar at the bottom edge', () => {
-      expect(getNormalizedStagger(false, 50, 120, DRAWING_AREA)).toBe(1);
-    });
-
-    it('returns 0.5 for a bar at the vertical center', () => {
-      expect(getNormalizedStagger(false, 50, 70, DRAWING_AREA)).toBe(0.5);
-    });
-
-    it('returns 0 when drawing area has no height', () => {
-      expect(getNormalizedStagger(false, 50, 50, { ...DRAWING_AREA, height: 0 })).toBe(0);
-    });
-  });
-});
-
-// ─── getBarInitialRect ────────────────────────────────────────────────────────
-
-describe('getBarInitialRect', () => {
-  describe('vertical layout (bars grow upward)', () => {
-    it('uses bottom edge (y+height) as baseline when no origin provided', () => {
-      // Bar at y=200, height=100: natural baseline is y+height=300
-      const rect = getBarInitialRect(50, 200, 80, 100, undefined, 6, true);
-      expect(rect).toEqual({ x: 50, y: 300, width: 80, height: 6 });
-    });
-
-    it('uses explicit origin as baseline', () => {
-      const rect = getBarInitialRect(50, 200, 80, 100, 320, 6, true);
-      expect(rect).toEqual({ x: 50, y: 320, width: 80, height: 6 });
-    });
-
-    it('preserves x and width, minSize becomes height', () => {
-      const rect = getBarInitialRect(30, 150, 60, 80, undefined, 4, true);
-      expect(rect).toMatchObject({ x: 30, width: 60, height: 4 });
+    it('returns 0 when drawing area width is 0', () => {
+      expect(getNormalizedStagger('vertical', 50, 0, { ...drawingArea, width: 0 })).toBe(0);
     });
   });
 
-  describe('horizontal layout (bars grow rightward)', () => {
-    it('uses left edge (x) as baseline when no origin provided', () => {
-      // Bar at x=0, width=100: natural baseline is x=0
-      const rect = getBarInitialRect(0, 30, 100, 20, undefined, 6, false);
-      expect(rect).toEqual({ x: 0, y: 30, width: 6, height: 20 });
+  describe('horizontal layout (stagger along y axis)', () => {
+    it('returns 0 at the top edge of the drawing area', () => {
+      expect(getNormalizedStagger('horizontal', 0, 20, drawingArea)).toBe(0);
     });
 
-    it('uses explicit origin as baseline', () => {
-      const rect = getBarInitialRect(50, 30, 100, 20, 10, 6, false);
-      expect(rect).toEqual({ x: 10, y: 30, width: 6, height: 20 });
+    it('returns 1 at the bottom edge of the drawing area', () => {
+      expect(getNormalizedStagger('horizontal', 0, 120, drawingArea)).toBe(1);
     });
 
-    it('preserves y and height, minSize becomes width', () => {
-      const rect = getBarInitialRect(0, 40, 80, 25, undefined, 8, false);
-      expect(rect).toMatchObject({ y: 40, height: 25, width: 8 });
+    it('returns 0.5 at the midpoint of the drawing area', () => {
+      expect(getNormalizedStagger('horizontal', 0, 70, drawingArea)).toBe(0.5);
+    });
+
+    it('returns 0 when drawing area height is 0', () => {
+      expect(getNormalizedStagger('horizontal', 0, 50, { ...drawingArea, height: 0 })).toBe(0);
     });
   });
 });

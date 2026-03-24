@@ -1,5 +1,11 @@
+import type { Rect } from '@coinbase/cds-common/types';
 import type { Transition } from 'framer-motion';
 
+import type { Series } from './chart';
+import type { CartesianChartLayout } from './context';
+import type { GradientDefinition, GradientStop } from './gradient';
+import { evaluateGradientAtValue } from './gradient';
+import type { ChartScaleFunction } from './scale';
 import { defaultTransition } from './transition';
 
 /**
@@ -18,6 +24,29 @@ export type BarTransition = Transition & {
    * Leftmost bar starts immediately, rightmost starts after this delay.
    */
   staggerDelay?: number;
+};
+
+/**
+ * Computes a bar's normalized [0, 1] position along the category axis, used for
+ * stagger-delay calculations.
+ *
+ * Vertical charts stagger left-to-right (x axis); horizontal charts stagger
+ * top-to-bottom (y axis). Returns 0 when the drawing area has no extent.
+ *
+ * @param layout - The layout of the chart
+ * @param x - Bar's left edge in pixels
+ * @param y - Bar's top edge in pixels
+ */
+export const getNormalizedStagger = (
+  layout: CartesianChartLayout,
+  x: number,
+  y: number,
+  drawingArea: Rect,
+): number => {
+  if (layout === 'horizontal') {
+    return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
+  }
+  return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
 };
 
 /**
@@ -85,16 +114,6 @@ export type StackBarItem = {
   length: number;
   dataValue?: number | [number, number] | null;
   shouldApplyGap?: boolean;
-};
-
-/**
- * Axis-aligned bounding rect for a bar stack.
- */
-export type StackBounds = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 };
 
 /**
@@ -306,7 +325,7 @@ export function applyBarMinSize<T extends StackBarItem>(
  * @param barsGrowVertically - True for vertical layout, false for horizontal
  * @returns Array of origin positions (one per bar, parallel to input), all defaulting to baseline
  */
-export function getBarInitialOrigins<T extends StackBarItem>(
+export function getBarOrigins<T extends StackBarItem>(
   bars: T[],
   barMinSize: number,
   stackGap: number,
@@ -363,24 +382,83 @@ export function getBarInitialOrigins<T extends StackBarItem>(
 }
 
 /**
- * Computes the initial clip value-axis range [start, end] that covers the bounding box
- * of all bars at their stacked starting positions (as computed by `getBarInitialOrigins`).
+ * Computes stack clip origin [start, end] that covers the bounding box
+ * of all bars at their stacked starting positions (as computed by `getBarOrigins`).
  *
  * This is passed to `DefaultBarStack` so the clip animation starts in sync with the
  * individual bar animations — no bars leak outside the clip on frame 0.
  *
- * @param barInitialOrigins - Per-bar initial origins from `getBarInitialOrigins`
+ * @param barOrigins - Per-bar initial origins from `getBarOrigins`
  * @param barMinSize - Minimum bar size in pixels
- * @returns [rangeStart, rangeEnd] or undefined when barMinSize is 0 / no bars
+ * @returns [originStart, originEnd] or undefined when barMinSize is 0 / no bars
  */
-export function getInitialValueRange(
-  barInitialOrigins: number[],
+export function getStackOrigin(
+  barOrigins: number[],
   barMinSize: number,
 ): [number, number] | undefined {
-  if (!barMinSize || barInitialOrigins.length === 0) return undefined;
-  const rangeStart = Math.min(...barInitialOrigins);
-  const rangeEnd = Math.max(...barInitialOrigins) + barMinSize;
+  if (!barMinSize || barOrigins.length === 0) return undefined;
+  const rangeStart = Math.min(...barOrigins);
+  const rangeEnd = Math.max(...barOrigins) + barMinSize;
   return [rangeStart, rangeEnd];
+}
+
+/**
+ * Computes the initial clip rect used for stack enter animations.
+ *
+ * If `origin` is provided, this returns the exact initial clip bounding box so clip and bar
+ * animations start in sync. Otherwise, the clip starts at 1px from baseline and grows.
+ */
+export function getStackInitialClipRect(params: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  barsGrowVertically: boolean;
+  origin?: number | [number, number];
+}): Rect {
+  const { x, y, width, height, barsGrowVertically, origin } = params;
+
+  if (Array.isArray(origin)) {
+    const [originStart, originEnd] = origin;
+    if (barsGrowVertically) {
+      return {
+        x,
+        y: originStart,
+        width,
+        height: originEnd - originStart,
+      };
+    }
+
+    return {
+      x: originStart,
+      y,
+      width: originEnd - originStart,
+      height,
+    };
+  }
+
+  const initialSize = 1;
+  if (barsGrowVertically) {
+    const valueBaseline = origin ?? y + height;
+    const isPositive = Math.abs(y + height - valueBaseline) <= Math.abs(y - valueBaseline);
+
+    return {
+      x,
+      y: isPositive ? valueBaseline - initialSize : valueBaseline,
+      width,
+      height: initialSize,
+    };
+  }
+
+  const valueBaseline = origin ?? x;
+  const isPositive = Math.abs(x - valueBaseline) <= Math.abs(x + width - valueBaseline);
+
+  return {
+    x: isPositive ? valueBaseline : valueBaseline - initialSize,
+    y,
+    width: initialSize,
+    height,
+  };
 }
 
 /**
@@ -402,12 +480,12 @@ export function applyStackMinSize<T extends StackBarItem>(
   bars: T[],
   stackMinSize: number,
   stackSize: number,
-  stackBounds: StackBounds,
+  stackBounds: Rect,
   barsGrowVertically: boolean,
   indexPos: number,
   thickness: number,
   baseline: number,
-): { bars: T[]; stackBounds: StackBounds } {
+): { bars: T[]; stackBounds: Rect } {
   if (!stackMinSize || stackSize >= stackMinSize) return { bars, stackBounds };
   if (bars.length === 0) return { bars, stackBounds };
 
@@ -534,65 +612,6 @@ export function applyStackMinSize<T extends StackBarItem>(
 }
 
 /**
- * Computes a bar's normalized [0, 1] position along the category axis, used for
- * stagger-delay calculations.
- *
- * Vertical charts stagger left-to-right (x axis); horizontal charts stagger
- * top-to-bottom (y axis). Returns 0 when the drawing area has no extent.
- *
- * @param barsGrowVertically - `true` for vertical layout, `false` for horizontal
- * @param x - Bar's left edge in pixels
- * @param y - Bar's top edge in pixels
- * @param drawingArea - Bounding box of the chart drawing area
- * @returns Normalized position in [0, 1]
- */
-export function getNormalizedStagger(
-  barsGrowVertically: boolean,
-  x: number,
-  y: number,
-  drawingArea: { x: number; y: number; width: number; height: number },
-): number {
-  if (barsGrowVertically) {
-    return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-  }
-  return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-}
-
-/**
- * Computes the starting rectangle for a bar's enter animation.
- *
- * The bar animates from a minimal size at the baseline toward its final dimensions.
- * `minSize` controls the initial extent along the value axis (the direction the bar grows).
- * `origin` overrides the default baseline (bottom edge for vertical, left edge for horizontal).
- *
- * @param x - Bar's final left edge in pixels
- * @param y - Bar's final top edge in pixels
- * @param width - Bar's final width in pixels
- * @param height - Bar's final height in pixels
- * @param origin - Explicit baseline coordinate, or `undefined` to use the natural baseline
- * @param minSize - Initial size along the value axis in pixels
- * @param barsGrowVertically - `true` for vertical layout, `false` for horizontal
- * @returns Initial `{ x, y, width, height }` for the bar path
- */
-export function getBarInitialRect(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  origin: number | undefined,
-  minSize: number,
-  barsGrowVertically: boolean,
-): { x: number; y: number; width: number; height: number } {
-  const baseline = origin ?? (barsGrowVertically ? y + height : x);
-  return {
-    x: barsGrowVertically ? x : baseline,
-    y: barsGrowVertically ? baseline : y,
-    width: barsGrowVertically ? width : minSize,
-    height: barsGrowVertically ? minSize : height,
-  };
-}
-
-/**
  * Applies border-radius flags to a sorted stack of bars.
  *
  * Faces at the outer edges of the stack remain rounded; faces where two bars
@@ -642,4 +661,263 @@ export function applyBorderRadiusLogic<
       ),
     };
   });
+}
+
+/**
+ * Threshold for treating a position as touching the baseline.
+ * Positions within this distance are considered at the baseline for rounding purposes.
+ */
+export const EPSILON = 1e-4;
+
+/**
+ * A series input with only the fields required by `computeStackBars`.
+ */
+export type StackBarSeriesInput<TBarComponent = unknown> = Pick<
+  Series,
+  'id' | 'data' | 'color' | 'gradient'
+> & {
+  BarComponent?: TBarComponent;
+};
+
+/**
+ * A single computed bar entry produced by `computeStackBars`.
+ */
+export type ComputedStackBar<TBarComponent = unknown> = StackBarItem & {
+  indexPos: number;
+  thickness: number;
+  dataValue?: number | [number, number] | null;
+  BarComponent?: TBarComponent;
+  fill?: string;
+  fillOpacity?: number;
+  stroke?: string;
+  strokeWidth?: number;
+  roundTop?: boolean;
+  roundBottom?: boolean;
+};
+
+type SeriesGradientEntry = {
+  seriesId: string;
+  gradient: GradientDefinition;
+  scale: ChartScaleFunction;
+  stops: GradientStop[];
+} | null;
+
+/**
+ * Computes the positioned bar entries and bounding rect for a single stack at one category index.
+ *
+ * This is the pure computation extracted from `BarStack`'s `useMemo` so it can be tested
+ * independently and reused across contexts.
+ *
+ * @param params.series - Series configs for this stack
+ * @param params.getSeriesData - Function to retrieve stacked data for a series by id
+ * @param params.categoryIndex - Index of the category being rendered
+ * @param params.indexPos - Pixel position along the categorical axis
+ * @param params.thickness - Bar thickness in pixels
+ * @param params.valueScale - Scale function for the value axis
+ * @param params.seriesGradients - Precomputed gradient configs per series (null entries are skipped)
+ * @param params.roundBaseline - Whether to round the face touching the baseline
+ * @param params.barsGrowVertically - True for vertical layout, false for horizontal
+ * @param params.baseline - Pixel position of the zero value on the value axis
+ * @param params.stackGap - Gap between adjacent bars in pixels
+ * @param params.barMinSize - Minimum individual bar size in pixels
+ * @param params.stackMinSize - Minimum total stack size in pixels
+ * @param params.defaultFill - Fallback fill color when a series has no color or gradient
+ * @returns Positioned bar entries and the stack's bounding rect
+ */
+export function computeStackBars<TBarComponent>(params: {
+  series: StackBarSeriesInput<TBarComponent>[];
+  getSeriesData: (id: string) => (number | [number, number] | null)[] | undefined;
+  categoryIndex: number;
+  indexPos: number;
+  thickness: number;
+  valueScale: ChartScaleFunction;
+  seriesGradients: SeriesGradientEntry[];
+  roundBaseline: boolean | undefined;
+  barsGrowVertically: boolean;
+  baseline: number;
+  stackGap: number | undefined;
+  barMinSize: number | undefined;
+  stackMinSize: number | undefined;
+  defaultFill: string;
+}): ComputedStackBar<TBarComponent>[] {
+  const {
+    series,
+    getSeriesData,
+    categoryIndex,
+    indexPos,
+    thickness,
+    valueScale,
+    seriesGradients,
+    roundBaseline,
+    barsGrowVertically,
+    baseline,
+    stackGap,
+    barMinSize,
+    stackMinSize,
+    defaultFill,
+  } = params;
+
+  let allBars: ComputedStackBar<TBarComponent>[] = [];
+
+  series.forEach((s) => {
+    const data = getSeriesData(s.id);
+    if (!data) return;
+
+    const value = data[categoryIndex];
+    if (value === null || value === undefined) return;
+
+    const originalData = s.data;
+    const originalValue = originalData?.[categoryIndex];
+    // Only apply gap logic if the original data wasn't tuple format
+    const shouldApplyGap = !Array.isArray(originalValue);
+
+    // Sort to be in ascending order
+    const [bottom, top] = (value as [number, number]).sort((a, b) => a - b);
+
+    const edgeBottom = valueScale(bottom) ?? baseline;
+    const edgeTop = valueScale(top) ?? baseline;
+
+    // In horizontal layout: roundTop is Right (edgeTop), roundBottom is Left (edgeBottom)
+    // getBarPath already handles the mapping of roundTop/roundBottom to coordinates.
+    const roundTop = roundBaseline || Math.abs(edgeTop - baseline) >= EPSILON;
+    const roundBottom = roundBaseline || Math.abs(edgeBottom - baseline) >= EPSILON;
+
+    // Calculate length (measured along the value axis)
+    const length = Math.abs(edgeBottom - edgeTop);
+    const valuePos = Math.min(edgeBottom, edgeTop);
+
+    // Skip bars that would have zero or negative height
+    if (length <= 0) return;
+
+    let barFill = s.color ?? defaultFill;
+
+    // Evaluate gradient if provided (using precomputed stops)
+    const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
+    if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
+      const axis = seriesGradientConfig.gradient.axis ?? 'y';
+
+      let evalValue: number;
+      if (axis === 'x') {
+        // X-axis gradient: In vertical it's the index, in horizontal it's the value.
+        evalValue = barsGrowVertically
+          ? categoryIndex
+          : Array.isArray(originalValue)
+            ? originalValue[1]
+            : originalValue;
+      } else {
+        // Y-axis gradient: In vertical it's the value, in horizontal it's the index.
+        evalValue = barsGrowVertically
+          ? Array.isArray(originalValue)
+            ? originalValue[1]
+            : originalValue
+          : categoryIndex;
+      }
+
+      const evaluatedColor = evaluateGradientAtValue(
+        seriesGradientConfig.stops,
+        evalValue,
+        seriesGradientConfig.scale,
+      );
+      if (evaluatedColor) {
+        barFill = evaluatedColor;
+      }
+    }
+
+    allBars.push({
+      seriesId: s.id,
+      indexPos,
+      valuePos,
+      thickness,
+      length,
+      dataValue: value,
+      fill: barFill,
+      roundTop,
+      roundBottom,
+      shouldApplyGap,
+      BarComponent: s.BarComponent,
+    });
+  });
+
+  // Apply proportional gap distribution to maintain total stack length
+  if (stackGap && allBars.length > 1) {
+    allBars = applyStackGap(allBars, stackGap, barsGrowVertically, baseline);
+  }
+
+  // Apply barMinSize constraints
+  if (barMinSize) {
+    allBars = applyBarMinSize(allBars, barMinSize, barsGrowVertically, baseline);
+  }
+
+  allBars = applyBorderRadiusLogic(allBars, barsGrowVertically, stackGap);
+
+  // Apply stackMinSize constraints
+  if (stackMinSize && allBars.length > 0) {
+    const minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
+    const maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
+    const stackSize = maxValuePos - minValuePos;
+    const stackBounds: Rect = {
+      x: barsGrowVertically ? indexPos : minValuePos,
+      y: barsGrowVertically ? minValuePos : indexPos,
+      width: barsGrowVertically ? thickness : stackSize,
+      height: barsGrowVertically ? stackSize : thickness,
+    };
+
+    const result = applyStackMinSize(
+      allBars,
+      stackMinSize,
+      stackSize,
+      stackBounds,
+      barsGrowVertically,
+      indexPos,
+      thickness,
+      baseline,
+    );
+    allBars = result.bars;
+
+    // Reapply border radius logic only if we actually scaled
+    const newStackSize = barsGrowVertically ? result.stackBounds.height : result.stackBounds.width;
+    if (newStackSize < stackMinSize) {
+      allBars = applyBorderRadiusLogic(allBars, barsGrowVertically, stackGap);
+    }
+  }
+
+  return allBars;
+}
+
+/**
+ * Computes the bounding rect for a stack of bars.
+ *
+ * The rect spans from the outermost edge of all bars along the value axis
+ * to their shared position along the index axis.
+ */
+export function getStackRect<TBarComponent>(
+  bars: ComputedStackBar<TBarComponent>[],
+  params: {
+    indexPos: number;
+    thickness: number;
+    barsGrowVertically: boolean;
+    baseline: number;
+  },
+): Rect {
+  const { indexPos, thickness, barsGrowVertically, baseline } = params;
+
+  if (bars.length === 0) {
+    return {
+      x: barsGrowVertically ? indexPos : baseline,
+      y: barsGrowVertically ? baseline : indexPos,
+      width: barsGrowVertically ? thickness : 0,
+      height: barsGrowVertically ? 0 : thickness,
+    };
+  }
+
+  const minValuePos = Math.min(...bars.map((bar) => bar.valuePos));
+  const maxValuePos = Math.max(...bars.map((bar) => bar.valuePos + bar.length));
+  const stackSize = maxValuePos - minValuePos;
+
+  return {
+    x: barsGrowVertically ? indexPos : minValuePos,
+    y: barsGrowVertically ? minValuePos : indexPos,
+    width: barsGrowVertically ? thickness : stackSize,
+    height: barsGrowVertically ? stackSize : thickness,
+  };
 }
