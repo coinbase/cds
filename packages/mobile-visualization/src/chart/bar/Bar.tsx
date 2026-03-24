@@ -45,7 +45,7 @@ export type BarBaseProps = {
   /**
    * The x-axis data value for this bar.
    */
-  dataX?: number | string;
+  dataX?: number | [number, number] | null;
   /**
    * The y-axis data value for this bar.
    */

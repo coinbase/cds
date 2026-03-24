@@ -109,9 +109,9 @@ export function getBarSizeAdjustment(barCount: number, gapSize: number): number 
 
 export type StackGroupSeriesInput = Pick<Series, 'id' | 'stackId' | 'xAxisId' | 'yAxisId'>;
 
-export type StackGroup<TSeries extends StackGroupSeriesInput = StackGroupSeriesInput> = {
+export type StackGroup = {
   stackId: string;
-  series: TSeries[];
+  series: BarSeries[];
   xAxisId?: string;
   yAxisId?: string;
 };
@@ -125,8 +125,8 @@ export type StackGroup<TSeries extends StackGroupSeriesInput = StackGroupSeriesI
 export function getStackGroups(
   series: BarSeries[],
   defaultAxisId: string = fallbackAxisId,
-): StackGroup<BarSeries>[] {
-  const groups: Record<string, StackGroup<BarSeries>> = Object.create(null);
+): StackGroup[] {
+  const groups: Record<string, StackGroup> = {};
 
   series.forEach((entry) => {
     const xAxisId = entry.xAxisId ?? defaultAxisId;
@@ -707,7 +707,33 @@ export function applyBorderRadiusLogic<
 export const EPSILON = 1e-4;
 
 /**
- * A series input with only the fields required by `computeStackBars`.
+ * Computes and clamps the stack baseline position on the value axis.
+ *
+ * - If the full domain is positive, baseline is domain min.
+ * - If the full domain is negative, baseline is domain max.
+ * - If the domain crosses zero, baseline is 0.
+ */
+export function getStackBaseline(
+  valueScale: ChartScaleFunction,
+  stackRect: Rect,
+  layout: CartesianChartLayout,
+): number {
+  const [domainMin, domainMax] = valueScale.domain();
+  const baselineValue = domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
+  const baselinePos = valueScale(baselineValue);
+
+  if (layout === 'vertical') {
+    return Math.max(
+      stackRect.y,
+      Math.min(baselinePos ?? stackRect.y + stackRect.height, stackRect.y + stackRect.height),
+    );
+  }
+
+  return Math.max(stackRect.x, Math.min(baselinePos ?? stackRect.x, stackRect.x + stackRect.width));
+}
+
+/**
+ * A series input with only the fields required by `getBars`.
  */
 export type StackBarSeriesInput<TBarComponent = unknown> = Pick<
   Series,
@@ -717,7 +743,7 @@ export type StackBarSeriesInput<TBarComponent = unknown> = Pick<
 };
 
 /**
- * A single computed bar entry produced by `computeStackBars`.
+ * A single computed bar entry produced by `getBars`.
  */
 export type ComputedStackBar<TBarComponent = unknown> = StackBarItem & {
   indexPos: number;
@@ -760,7 +786,7 @@ type SeriesGradientEntry =
  * @param params.defaultFill - Fallback fill color when a series has no color or gradient
  * @returns Positioned bar entries and the stack's bounding rect
  */
-export function computeStackBars<TBarComponent>(params: {
+export function getBars<TBarComponent>(params: {
   series: StackBarSeriesInput<TBarComponent>[];
   getSeriesData: (id: string) => (number | [number, number] | null)[] | undefined;
   categoryIndex: number;
@@ -909,42 +935,4 @@ export function computeStackBars<TBarComponent>(params: {
   }
 
   return allBars;
-}
-
-/**
- * Computes the bounding rect for a stack of bars.
- *
- * The rect spans from the outermost edge of all bars along the value axis
- * to their shared position along the index axis.
- */
-export function getStackRect<TBarComponent>(
-  bars: ComputedStackBar<TBarComponent>[],
-  params: {
-    indexPos: number;
-    thickness: number;
-    barsGrowVertically: boolean;
-    baseline: number;
-  },
-): Rect {
-  const { indexPos, thickness, barsGrowVertically, baseline } = params;
-
-  if (bars.length === 0) {
-    return {
-      x: barsGrowVertically ? indexPos : baseline,
-      y: barsGrowVertically ? baseline : indexPos,
-      width: barsGrowVertically ? thickness : 0,
-      height: barsGrowVertically ? 0 : thickness,
-    };
-  }
-
-  const minValuePos = Math.min(...bars.map((bar) => bar.valuePos));
-  const maxValuePos = Math.max(...bars.map((bar) => bar.valuePos + bar.length));
-  const stackSize = maxValuePos - minValuePos;
-
-  return {
-    x: barsGrowVertically ? indexPos : minValuePos,
-    y: barsGrowVertically ? minValuePos : indexPos,
-    width: barsGrowVertically ? thickness : stackSize,
-    height: barsGrowVertically ? stackSize : thickness,
-  };
 }

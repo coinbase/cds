@@ -6,6 +6,7 @@ import {
   getBarOrigins,
   getBarSizeAdjustment,
   getNormalizedStagger,
+  getStackBaseline,
   getStackGroups,
   getStackOrigin,
 } from '../bar';
@@ -125,6 +126,40 @@ describe('getStackGroups', () => {
 
     expect(groups).toHaveLength(1);
     expect(groups[0].stackId).toBe('s1:custom-default:custom-default');
+  });
+});
+
+describe('getStackBaseline', () => {
+  const rect = { x: 10, y: 20, width: 100, height: 200 };
+
+  function createValueScale(domain: [number, number], map: (value: number) => number | undefined) {
+    return Object.assign((value: number) => map(value), { domain: () => domain }) as any;
+  }
+
+  it('uses domain min for fully positive vertical domains', () => {
+    const valueScale = createValueScale([5, 15], (value) => 220 - value * 10);
+    expect(getStackBaseline(valueScale, rect, 'vertical')).toBe(170);
+  });
+
+  it('uses domain max for fully negative horizontal domains', () => {
+    const valueScale = createValueScale([-20, -5], (value) => 60 + value);
+    expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(55);
+  });
+
+  it('uses zero for domains that cross zero', () => {
+    const valueScale = createValueScale([-10, 10], (value) => 120 + value * 5);
+    expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(110);
+  });
+
+  it('clamps vertical baseline to chart bounds when scale output is outside rect', () => {
+    const valueScale = createValueScale([-5, 5], () => -1000);
+    expect(getStackBaseline(valueScale, rect, 'vertical')).toBe(rect.y);
+  });
+
+  it('uses orientation-aware fallback when scale returns undefined', () => {
+    const valueScale = createValueScale([-5, 5], () => undefined);
+    expect(getStackBaseline(valueScale, rect, 'vertical')).toBe(rect.y + rect.height);
+    expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(rect.x);
   });
 });
 
