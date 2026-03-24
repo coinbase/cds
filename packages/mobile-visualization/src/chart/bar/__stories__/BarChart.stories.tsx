@@ -997,10 +997,11 @@ const HorizontalBarChart = () => {
 
 function BuyVsSellExample() {
   function BuyVsSellLegend({ buy, sell }: { buy: number; sell: number }) {
+    const theme = useTheme();
     return (
       <HStack gap={1} justifyContent="space-between">
         <DefaultLegendEntry
-          color="var(--color-fgPositive)"
+          color={theme.color.fgPositive}
           label={
             <Text color="fgMuted" font="legal">
               {buy}% bought
@@ -1009,7 +1010,7 @@ function BuyVsSellExample() {
           seriesId="buy"
         />
         <DefaultLegendEntry
-          color="var(--color-fgNegative)"
+          color={theme.color.fgNegative}
           label={
             <Text color="fgMuted" font="legal">
               {sell}% sold
