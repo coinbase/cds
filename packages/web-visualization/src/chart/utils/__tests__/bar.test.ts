@@ -1,4 +1,5 @@
 import {
+  getBars,
   getBarSizeAdjustment,
   getNormalizedStagger,
   getStackBaseline,
@@ -179,6 +180,60 @@ describe('getStackOrigin', () => {
       const origins = [144, 134];
       expect(getStackOrigin(origins, 6)).toEqual([134, 150]);
     });
+  });
+
+  it('supports per-bar min sizes', () => {
+    expect(getStackOrigin([0, 10], [4, 8])).toEqual([0, 18]);
+  });
+});
+
+describe('getBars stackMinSize entrance behavior', () => {
+  const valueScale = Object.assign((value: number) => value, {
+    domain: () => [0, 10] as [number, number],
+  });
+
+  const series = [
+    { id: 'buy', data: [2], stackId: 'orders' },
+    { id: 'sell', data: [4], stackId: 'orders' },
+  ];
+
+  const seriesData: Record<string, [number, number][]> = {
+    buy: [[0, 2]],
+    sell: [[2, 6]],
+  };
+
+  const getBarsResult = (barMinSize?: number, stackMinSize?: number) =>
+    getBars({
+      series: series as any,
+      seriesData,
+      categoryIndex: 0,
+      categoryValue: 0,
+      indexPos: 0,
+      thickness: 8,
+      valueScale: valueScale as any,
+      seriesGradients: [],
+      roundBaseline: false,
+      layout: 'horizontal',
+      baseline: 0,
+      stackGap: 0,
+      barMinSize,
+      stackMinSize,
+      defaultFill: '#000',
+      borderRadius: 0,
+      defaultFillOpacity: 1,
+      defaultStroke: undefined,
+      defaultStrokeWidth: undefined,
+      defaultBarComponent: undefined,
+    });
+
+  it('distributes stackMinSize proportionally to segment entrance min sizes', () => {
+    const bars = getBarsResult(undefined, 12);
+    expect(bars.map((bar) => bar.minSize)).toEqual([4, 8]);
+  });
+
+  it('uses max of barMinSize and stackMinSize-derived min size', () => {
+    const bars = getBarsResult(6, 12);
+    expect(bars.map((bar) => bar.minSize)).toEqual([6, 6]);
   });
 });
 

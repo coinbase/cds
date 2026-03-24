@@ -207,12 +207,16 @@ export const BarStack = memo<BarStackProps>(
         ? (categoryAxis.data as number[])
         : undefined;
     const categoryValue = categoryData ? categoryData[categoryIndex] : categoryIndex;
+    const seriesData = useMemo(
+      () => Object.fromEntries(series.map((s) => [s.id, getSeriesData(s.id) ?? []])),
+      [series, getSeriesData],
+    );
 
     const bars = useMemo(
       () =>
         getBars({
           series,
-          getSeriesData,
+          seriesData,
           categoryIndex,
           categoryValue,
           indexPos,
@@ -220,7 +224,7 @@ export const BarStack = memo<BarStackProps>(
           valueScale,
           seriesGradients,
           roundBaseline,
-          barsGrowVertically: layout === 'vertical',
+          layout,
           baseline,
           stackGap,
           barMinSize,
@@ -234,9 +238,9 @@ export const BarStack = memo<BarStackProps>(
         }),
       [
         series,
+        seriesData,
         indexPos,
         thickness,
-        getSeriesData,
         categoryIndex,
         categoryValue,
         roundBaseline,
@@ -276,9 +280,9 @@ export const BarStack = memo<BarStackProps>(
       () =>
         getStackOrigin(
           bars.map((b) => b.origin),
-          barMinSize ?? 0,
+          bars.map((b) => b.minSize ?? 0),
         ) ?? baseline,
-      [bars, barMinSize, baseline],
+      [bars, baseline],
     );
 
     const barElements = bars.map((bar, index) => (
