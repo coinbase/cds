@@ -61,15 +61,15 @@ export const TooltipContent = memo(
         <motion.div {...motionProps} data-testid={`${testID}-motion`}>
           <Box
             ref={ref}
-            id={tooltipId}
-            role="tooltip"
             background="bg"
             borderRadius={200}
             data-testid={testID}
             elevation={elevation}
+            id={tooltipId}
             maxWidth={tooltipMaxWidth}
             paddingX={tooltipPaddingX}
             paddingY={tooltipPaddingY}
+            role="tooltip"
           >
             {typeof content === 'string' ? (
               <Text className={textCss} color="fg" font="label2">
