@@ -32,6 +32,10 @@ const Example: React.FC<
   );
 };
 
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
+
 const CustomBaseline = () => {
   const candles = [...btcCandles].reverse().slice(0, 180);
   const prices = candles.map((candle) => parseFloat(candle.close));
@@ -200,6 +204,57 @@ export const All = () => {
         >
           <Scrubber />
         </AreaChart>
+      </Example>
+      <Example title="Axis Baseline Threshold">
+        <VStack gap={2}>
+          <AreaChart
+            height={200}
+            inset={0}
+            series={[
+              {
+                id: 'axis-baseline-threshold-vertical',
+                data: baselineThresholdData,
+                gradient: {
+                  stops: [
+                    { offset: 30, color: 'var(--color-fgNegative)' },
+                    { offset: 30, color: 'var(--color-fgPositive)' },
+                  ],
+                },
+              },
+            ]}
+            type="dotted"
+            showLines
+            showYAxis
+            yAxis={{
+              showGrid: true,
+              baseline: 30,
+            }}
+          />
+          <AreaChart
+            height={200}
+            inset={0}
+            layout="horizontal"
+            series={[
+              {
+                id: 'axis-baseline-threshold-horizontal',
+                data: baselineThresholdData,
+                gradient: {
+                  stops: [
+                    { offset: 30, color: 'var(--color-fgNegative)' },
+                    { offset: 30, color: 'var(--color-fgPositive)' },
+                  ],
+                },
+              },
+            ]}
+            type="dotted"
+            showLines
+            showXAxis
+            xAxis={{
+              showGrid: true,
+              baseline: 30,
+            }}
+          />
+        </VStack>
       </Example>
       <Example title="Styles">
         <AreaChart

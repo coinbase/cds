@@ -89,7 +89,9 @@ export type Series = {
 
 type GetStackedSeriesDataOptions = {
   /**
-   * Optional per-series baseline values used when normalizing non-stacked numeric series.
+   * Optional per-series baseline values used when normalizing numeric series.
+   * - Non-stacked numeric series use this as their tuple origin `[baseline, value]`.
+   * - Multi-series numeric stacks use this as their shared stacking origin.
    * Series not present in this map fall back to baseline 0.
    */
   seriesBaselineById?: ReadonlyMap<string, number>;
@@ -154,6 +156,25 @@ export const getStackedSeriesData = (
   const numericStackGroups = new Map<string, typeof series>();
   const individualSeries: typeof series = [];
 
+  const normalizeSeriesData = (seriesItem: Series): Array<[number, number] | null> | undefined => {
+    if (!seriesItem.data) return;
+
+    return seriesItem.data.map((val) => {
+      if (val === null) return null;
+
+      if (Array.isArray(val)) {
+        return val as [number, number];
+      }
+
+      if (typeof val === 'number') {
+        const baseline = options?.seriesBaselineById?.get(seriesItem.id) ?? 0;
+        return [baseline, val];
+      }
+
+      return null;
+    });
+  };
+
   series.forEach((s) => {
     const stackKey = createStackKey(s);
     const hasTupleData = s.data?.some((val) => Array.isArray(val));
@@ -169,30 +190,27 @@ export const getStackedSeriesData = (
   });
 
   individualSeries.forEach((s) => {
-    if (!s.data) return;
-
-    const normalizedData: Array<[number, number] | null> = s.data.map((val) => {
-      if (val === null) return null;
-
-      if (Array.isArray(val)) {
-        return val as [number, number];
-      }
-
-      if (typeof val === 'number') {
-        const baseline = options?.seriesBaselineById?.get(s.id) ?? 0;
-        return [baseline, val];
-      }
-
-      return null;
-    });
-
+    const normalizedData = normalizeSeriesData(s);
+    if (!normalizedData) return;
     stackedDataMap.set(s.id, normalizedData);
   });
 
-  numericStackGroups.forEach((groupSeries, stackKey) => {
+  numericStackGroups.forEach((groupSeries) => {
+    // A lone series with stackId should still behave like a non-stacked series.
+    if (groupSeries.length < 2) {
+      groupSeries.forEach((singleSeries) => {
+        const normalizedData = normalizeSeriesData(singleSeries);
+        if (!normalizedData) return;
+        stackedDataMap.set(singleSeries.id, normalizedData);
+      });
+      return;
+    }
+
     const maxLength = Math.max(...groupSeries.map((s) => s.data?.length || 0));
 
     if (maxLength === 0) return;
+
+    const groupBaseline = options?.seriesBaselineById?.get(groupSeries[0].id) ?? 0;
 
     const dataset: Array<Record<string, number>> = new Array(maxLength)
       .fill(undefined)
@@ -200,7 +218,8 @@ export const getStackedSeriesData = (
         const row: Record<string, number> = {};
         for (const s of groupSeries) {
           const val = s.data?.[i];
-          const num = typeof val === 'number' ? val : 0;
+          // Stack around baseline by translating values into baseline-relative deltas.
+          const num = typeof val === 'number' ? val - groupBaseline : 0;
           row[s.id] = num;
         }
         return row;
@@ -215,8 +234,8 @@ export const getStackedSeriesData = (
     stackedSeries.forEach((layer, layerIndex) => {
       const seriesId = keys[layerIndex];
       const stackedData: Array<[number, number] | null> = layer.map(([bottom, top]) => [
-        bottom,
-        top,
+        bottom + groupBaseline,
+        top + groupBaseline,
       ]);
       stackedDataMap.set(seriesId, stackedData);
     });
@@ -261,6 +280,7 @@ export const getChartRange = (
   series: Series[],
   min?: number,
   max?: number,
+  options?: GetStackedSeriesDataOptions,
 ): Partial<AxisBounds> => {
   const range = {
     min,
@@ -290,11 +310,11 @@ export const getChartRange = (
 
   if (hasStacks) {
     // Get stacked data using the shared function
-    const stackedDataMap = getStackedSeriesData(series);
+    const stackedDataMap = getStackedSeriesData(series, options);
 
     // Find the extreme values from the stacked data
-    let stackedMax = 0;
-    let stackedMin = 0;
+    let stackedMax = -Infinity;
+    let stackedMin = Infinity;
 
     stackedDataMap.forEach((stackedData) => {
       stackedData.forEach((point) => {
@@ -307,8 +327,8 @@ export const getChartRange = (
     });
 
     // Don't add padding - let D3's nice() function handle axis padding
-    if (range.min === undefined) range.min = Math.min(0, stackedMin);
-    if (range.max === undefined) range.max = Math.max(0, stackedMax);
+    if (range.min === undefined) range.min = stackedMin === Infinity ? 0 : stackedMin;
+    if (range.max === undefined) range.max = stackedMax === -Infinity ? 0 : stackedMax;
   } else {
     // No stacking, calculate range from raw values
     const allValues: number[] = [];

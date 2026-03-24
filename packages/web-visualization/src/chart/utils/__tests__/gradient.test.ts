@@ -22,6 +22,22 @@ describe('gradient utilities', () => {
         expect(result?.[1]).toEqual({ offset: 1, color: '#00ff00', opacity: 1 });
       });
 
+      it('should use caller-provided default axis when gradient axis is omitted', () => {
+        const localXScale: ChartScaleFunction = scaleLinear().domain([0, 4]).range([0, 400]);
+        const localYScale: ChartScaleFunction = scaleLinear().domain([0, 100]).range([400, 0]);
+        const gradient: GradientDefinition = {
+          stops: [
+            { offset: 0, color: '#ff0000' },
+            { offset: 4, color: '#00ff00' },
+          ],
+        };
+
+        const result = getGradientConfig(gradient, localXScale, localYScale, 'x');
+        expect(result).toHaveLength(2);
+        expect(result?.[0]).toEqual({ offset: 0, color: '#ff0000', opacity: 1 });
+        expect(result?.[1]).toEqual({ offset: 1, color: '#00ff00', opacity: 1 });
+      });
+
       it('should handle CSS variables in gradient config', () => {
         const gradient: GradientDefinition = {
           stops: [

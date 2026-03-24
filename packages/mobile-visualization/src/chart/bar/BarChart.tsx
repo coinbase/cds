@@ -7,7 +7,11 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type CartesianAxisConfigProps, defaultStackId } from '../utils';
+import {
+  type CartesianAxisConfigProps,
+  defaultStackId,
+  getDomainIncludingBaseline,
+} from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';
@@ -65,12 +69,20 @@ export type BarChartBaseProps = Omit<
      * Configuration for x-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
+     *
+     * @note In horizontal layout, this is the value axis. BarChart expands the value-axis domain
+     * to include `xAxis.baseline` (or `0` when baseline is not provided) unless that side is
+     * explicitly fixed via `domain`.
      */
     xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
+     *
+     * @note In vertical layout, this is the value axis. BarChart expands the value-axis domain
+     * to include `yAxis.baseline` (or `0` when baseline is not provided) unless that side is
+     * explicitly fixed via `domain`.
      */
     yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
@@ -151,23 +163,14 @@ export const BarChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const hasNegativeValues = useMemo(() => {
-        if (!series) return false;
-        return series.some((s) =>
-          s.data?.some(
-            (value: number | null | [number, number]) =>
-              (typeof value === 'number' && value < 0) ||
-              (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
-          ),
-        );
-      }, [series]);
+      const valueAxisBaseline = (isHorizontal ? xBaseline : yBaseline) ?? 0;
 
       const xAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
         () => ({
           scaleType: xScaleType ?? defaultXScaleType,
           data: xData,
           categoryPadding: xCategoryPadding,
-          domain: isHorizontal && !hasNegativeValues ? { min: 0, ...xDomain } : xDomain,
+          domain: isHorizontal ? getDomainIncludingBaseline(xDomain, valueAxisBaseline) : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
           baseline: xBaseline,
@@ -178,21 +181,20 @@ export const BarChart = memo(
           xData,
           xCategoryPadding,
           isHorizontal,
-          hasNegativeValues,
           xDomain,
           xDomainLimit,
           xRange,
           xBaseline,
+          valueAxisBaseline,
         ],
       );
 
-      // Set default min domain to 0 for bar chart, but only if there are no negative values.
       const yAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
         () => ({
           scaleType: yScaleType ?? defaultYScaleType,
           data: yData,
           categoryPadding: yCategoryPadding,
-          domain: !isHorizontal && !hasNegativeValues ? { min: 0, ...yDomain } : yDomain,
+          domain: !isHorizontal ? getDomainIncludingBaseline(yDomain, valueAxisBaseline) : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
           baseline: yBaseline,
@@ -203,11 +205,11 @@ export const BarChart = memo(
           yData,
           yCategoryPadding,
           isHorizontal,
-          hasNegativeValues,
           yDomain,
           yDomainLimit,
           yRange,
           yBaseline,
+          valueAxisBaseline,
         ],
       );
 

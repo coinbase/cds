@@ -2,6 +2,7 @@ import { memo, useCallback } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { VStack } from '@coinbase/cds-mobile/layout';
 
 import {
   DefaultReferenceLineLabel,
@@ -13,6 +14,9 @@ import { Scrubber } from '../../scrubber/Scrubber';
 import { AreaChart } from '..';
 
 const basicData = [24, 13, 98, 39, 48, 38, 43];
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
 
 const BasicExample = () => {
   const getScrubberAccessibilityLabel = useCallback(
@@ -180,6 +184,76 @@ const CustomBaselineExample = () => {
   );
 };
 
+const AxisBaselineThresholdExample = () => {
+  const theme = useTheme();
+
+  return (
+    <VStack gap={2}>
+      <AreaChart
+        enableScrubbing
+        showLines
+        showYAxis
+        accessibilityLabel="Area chart with threshold baseline at 30."
+        getScrubberAccessibilityLabel={(index: number) =>
+          `Point ${index + 1}: ${baselineThresholdData[index]}`
+        }
+        height={220}
+        inset={0}
+        series={[
+          {
+            id: 'axis-baseline-threshold-vertical',
+            data: baselineThresholdData,
+            gradient: {
+              stops: [
+                { offset: 30, color: theme.color.fgNegative },
+                { offset: 30, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        type="dotted"
+        yAxis={{
+          showGrid: true,
+          baseline: 30,
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+      <AreaChart
+        enableScrubbing
+        showLines
+        showXAxis
+        accessibilityLabel="Horizontal area chart with threshold baseline at 30."
+        getScrubberAccessibilityLabel={(index: number) =>
+          `Point ${index + 1}: ${baselineThresholdData[index]}`
+        }
+        height={220}
+        inset={0}
+        layout="horizontal"
+        series={[
+          {
+            id: 'axis-baseline-threshold-horizontal',
+            data: baselineThresholdData,
+            gradient: {
+              stops: [
+                { offset: 30, color: theme.color.fgNegative },
+                { offset: 30, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        type="dotted"
+        xAxis={{
+          showGrid: true,
+          baseline: 30,
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+};
+
 const AreaChartStories = () => {
   return (
     <ExampleScreen>
@@ -238,6 +312,9 @@ const AreaChartStories = () => {
         >
           <Scrubber />
         </AreaChart>
+      </Example>
+      <Example title="Axis Baseline Threshold">
+        <AxisBaselineThresholdExample />
       </Example>
       <Example title="Custom Baseline">
         <CustomBaselineExample />

@@ -9,6 +9,7 @@ import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   type ChartPathCurveType,
   evaluateGradientAtValue,
+  getGradientAxis,
   getGradientConfig,
   getLineData,
   getLinePath,
@@ -210,6 +211,7 @@ export const Line = memo<LineProps>(
     const categoryAxisIsX = useMemo(() => {
       return layout !== 'horizontal';
     }, [layout]);
+    const defaultGradientAxis: 'x' | 'y' = categoryAxisIsX ? 'y' : 'x';
 
     const categoryAxis = useMemo(() => {
       return categoryAxisIsX ? xAxis : yAxis;
@@ -264,15 +266,17 @@ export const Line = memo<LineProps>(
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
 
-      const gradientScale = gradient.axis === 'x' ? xScale : yScale;
-      const stops = getGradientConfig(gradient, xScale, yScale);
+      const gradientAxis = getGradientAxis(gradient, defaultGradientAxis);
+      const gradientScale = gradientAxis === 'x' ? xScale : yScale;
+      const stops = getGradientConfig(gradient, xScale, yScale, defaultGradientAxis);
       if (!stops) return;
 
       return {
+        axis: gradientAxis,
         scale: gradientScale,
         stops,
       };
-    }, [gradient, xScale, yScale]);
+    }, [gradient, xScale, yScale, defaultGradientAxis]);
 
     if (!xScale || !yScale || !path) return;
 
@@ -314,9 +318,9 @@ export const Line = memo<LineProps>(
 
               let pointFill = stroke;
 
-              if (gradientConfig && gradient) {
+              if (gradientConfig) {
                 // Match gradient sampling to the chart axis roles for each layout.
-                const gradientAxis = gradient.axis ?? 'y';
+                const gradientAxis = gradientConfig.axis;
                 const dataValue =
                   gradientAxis === 'x'
                     ? categoryAxisIsX

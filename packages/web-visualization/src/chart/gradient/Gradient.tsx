@@ -3,9 +3,13 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { defaultTransition, type GradientDefinition, instantTransition } from '../utils';
-import { getGradientConfig } from '../utils/gradient';
+import { getGradientAxis, getGradientConfig } from '../utils/gradient';
 
 export type GradientBaseProps = {
+  /**
+   * Whether to animate gradient changes.
+   */
+  animate?: boolean;
   /**
    * Gradient definition with stops, axis, and other configuration.
    */
@@ -32,10 +36,6 @@ export type GradientProps = GradientBaseProps & {
    */
   id: string;
   /**
-   * Whether to animate gradient changes.
-   */
-  animate?: boolean;
-  /**
    * Transition configuration for animation.
    * @default defaultTransition
    */
@@ -50,6 +50,7 @@ export const Gradient = memo<GradientProps>(
   ({ id, gradient, xAxisId, yAxisId, animate: animateProp, transition: transitionProp }) => {
     const context = useCartesianChartContext();
     const animate = animateProp ?? context.animate;
+    const defaultGradientAxis = context.layout === 'horizontal' ? 'x' : 'y';
 
     const transition = useMemo(() => {
       if (!animate) return instantTransition;
@@ -62,8 +63,8 @@ export const Gradient = memo<GradientProps>(
     // Process gradient definition into stops
     const stops = useMemo(() => {
       if (!xScale || !yScale) return;
-      return getGradientConfig(gradient, xScale, yScale);
-    }, [gradient, xScale, yScale]);
+      return getGradientConfig(gradient, xScale, yScale, defaultGradientAxis);
+    }, [gradient, xScale, yScale, defaultGradientAxis]);
 
     const drawingArea = context.drawingArea;
     const yAxis = context.getYAxis(yAxisId);
@@ -72,7 +73,7 @@ export const Gradient = memo<GradientProps>(
     // If gradient processing failed, don't render
     if (!stops) return null;
 
-    const axis = gradient.axis ?? 'y';
+    const axis = getGradientAxis(gradient, defaultGradientAxis);
 
     let coordinates: Record<string, number>;
 
@@ -117,6 +118,7 @@ export const Gradient = memo<GradientProps>(
         animate={coordinates}
         gradientUnits="userSpaceOnUse"
         id={id}
+        initial={coordinates}
         transition={transition}
       >
         {stops.map((stop, index) => {

@@ -7829,7 +7829,7 @@ export const asset = {
                 timestamp: '2017-04-21T00:00:00Z',
               },
               {
-                price: '0.06',
+                price: '1173.74',
                 timestamp: '2017-04-15T00:00:00Z',
               },
               {

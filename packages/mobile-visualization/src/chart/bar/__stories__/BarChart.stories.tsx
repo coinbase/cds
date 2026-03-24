@@ -25,6 +25,9 @@ import { DefaultBarStack } from '../DefaultBarStack';
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
 const defaultChartHeight = 250;
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
 
 const PositiveAndNegativeCashFlow = () => {
   const theme = useTheme();
@@ -1018,6 +1021,60 @@ const AxisBaselineExample = () => {
   );
 };
 
+const AxisBaselineThresholdExample = () => {
+  const theme = useTheme();
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showYAxis
+        accessibilityLabel="Bar chart with threshold baseline at 30."
+        height={220}
+        inset={0}
+        series={[
+          {
+            id: 'axis-baseline-threshold-vertical',
+            data: baselineThresholdData,
+            gradient: {
+              stops: [
+                { offset: 30, color: theme.color.fgNegative },
+                { offset: 30, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+          baseline: 30,
+        }}
+      />
+      <BarChart
+        showXAxis
+        accessibilityLabel="Horizontal bar chart with threshold baseline at 30."
+        height={220}
+        inset={0}
+        layout="horizontal"
+        series={[
+          {
+            id: 'axis-baseline-threshold-horizontal',
+            data: baselineThresholdData,
+            gradient: {
+              stops: [
+                { offset: 30, color: theme.color.fgNegative },
+                { offset: 30, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        xAxis={{
+          showGrid: true,
+          baseline: 30,
+        }}
+      />
+    </VStack>
+  );
+};
+
 const PopulationPyramid = () => {
   const theme = useTheme();
 
@@ -1150,6 +1207,10 @@ function ExampleNavigator() {
       {
         title: 'Axis Baseline',
         component: <AxisBaselineExample />,
+      },
+      {
+        title: 'Axis Baseline Threshold',
+        component: <AxisBaselineThresholdExample />,
       },
       {
         title: 'Positive and Negative Cash Flow',

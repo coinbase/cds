@@ -148,22 +148,36 @@ describe('getStackedSeriesData', () => {
     ]);
   });
 
-  it('should not apply axis baseline map to stacked series', () => {
+  it('should stack numeric series around axis baseline values', () => {
     const series: Series[] = [
-      { id: 'series1', data: [1, 2], stackId: 'stack1' },
-      { id: 'series2', data: [3, 4], stackId: 'stack1' },
+      { id: 'series1', data: [20], stackId: 'stack1' },
+      { id: 'series2', data: [40], stackId: 'stack1' },
+      { id: 'series3', data: [60], stackId: 'stack1' },
     ];
 
     const result = getStackedSeriesData(series, {
       seriesBaselineById: new Map([
-        ['series1', 10],
-        ['series2', 20],
+        ['series1', 30],
+        ['series2', 30],
+        ['series3', 30],
       ]),
     });
 
+    expect(result.get('series1')).toEqual([[20, 30]]);
+    expect(result.get('series2')).toEqual([[30, 40]]);
+    expect(result.get('series3')).toEqual([[40, 70]]);
+  });
+
+  it('should apply axis baseline map to single-series stack groups', () => {
+    const series: Series[] = [{ id: 'series1', data: [1, 2], stackId: 'stack1' }];
+
+    const result = getStackedSeriesData(series, {
+      seriesBaselineById: new Map([['series1', 10]]),
+    });
+
     expect(result.get('series1')).toEqual([
-      [0, 1],
-      [0, 2],
+      [10, 1],
+      [10, 2],
     ]);
   });
 
@@ -343,6 +357,24 @@ describe('getChartRange', () => {
     expect(result.max).toBeDefined();
     expect(result.min).toBeLessThanOrEqual(0);
     expect(result.max).toBeGreaterThanOrEqual(9); // 3 + 6 = 9 at minimum
+  });
+
+  it('should calculate range from baseline-centered stacked data', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [20], stackId: 'stack1' },
+      { id: 'series2', data: [40], stackId: 'stack1' },
+      { id: 'series3', data: [60], stackId: 'stack1' },
+    ];
+
+    const result = getChartRange(series, undefined, undefined, {
+      seriesBaselineById: new Map([
+        ['series1', 30],
+        ['series2', 30],
+        ['series3', 30],
+      ]),
+    });
+
+    expect(result).toEqual({ min: 20, max: 70 });
   });
 
   it('should handle negative values', () => {

@@ -42,6 +42,10 @@ const Example: React.FC<
   );
 };
 
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
+
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
 const PositiveAndNegativeCashFlow = () => {
@@ -734,6 +738,53 @@ export const All = () => {
             showGrid: true,
           }}
         />
+      </Example>
+      <Example title="Axis Baseline Threshold">
+        <VStack gap={2}>
+          <BarChart
+            showYAxis
+            height={200}
+            inset={0}
+            series={[
+              {
+                id: 'axis-baseline-threshold-vertical',
+                data: baselineThresholdData,
+                gradient: {
+                  stops: [
+                    { offset: 30, color: 'var(--color-fgNegative)' },
+                    { offset: 30, color: 'var(--color-fgPositive)' },
+                  ],
+                },
+              },
+            ]}
+            yAxis={{
+              showGrid: true,
+              baseline: 30,
+            }}
+          />
+          <BarChart
+            showXAxis
+            height={200}
+            inset={0}
+            layout="horizontal"
+            series={[
+              {
+                id: 'axis-baseline-threshold-horizontal',
+                data: baselineThresholdData,
+                gradient: {
+                  stops: [
+                    { offset: 30, color: 'var(--color-fgNegative)' },
+                    { offset: 30, color: 'var(--color-fgPositive)' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              showGrid: true,
+              baseline: 30,
+            }}
+          />
+        </VStack>
       </Example>
       <Example title="Positive and Negative Cash Flow">
         <PositiveAndNegativeCashFlow />

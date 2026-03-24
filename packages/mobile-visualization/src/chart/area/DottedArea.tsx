@@ -138,7 +138,15 @@ export const DottedArea = memo<DottedAreaProps>(
           transitions={transitions}
           {...pathProps}
         >
-          {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
+          {gradient && (
+            <Gradient
+              animate={shouldAnimate}
+              gradient={gradient}
+              transition={transitions?.update ?? transition}
+              xAxisId={xAxisId}
+              yAxisId={yAxisId}
+            />
+          )}
         </Path>
       </Group>
     );

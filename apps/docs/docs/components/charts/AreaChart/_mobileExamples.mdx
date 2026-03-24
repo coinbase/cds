@@ -1,4 +1,4 @@
-AreaChart is a cartesian chart variant that allows for easy visualization of stacked data.
+AreaChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) that has some unique features over [LineChart](/components/charts/LineChart), such as the ability to stack areas on top of each other and a default value-axis minimum that follows the baseline (`0` when baseline is not set). Charts are built using SVGs.
 
 ## Basic Example
 
@@ -79,7 +79,7 @@ function StackingExample() {
 
 ## Negative Values
 
-When an area chart contains negative values, the baseline automatically adjusts to zero instead of the bottom of the chart. The area fills from the data line to the zero baseline, properly showing both positive and negative regions.
+AreaChart uses the value-axis baseline as the default minimum when `domain.min` is not set (baseline defaults to `0`). If your data crosses below that baseline, the domain expands to include those values so both positive and negative regions render correctly.
 
 ```jsx
 <AreaChart

@@ -97,8 +97,10 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
    */
   id: string;
   /**
-   * Baseline value used as the origin for non-stacked numeric series on this axis.
+   * Baseline value used as the origin for numeric series on this axis.
    * Only applies when this axis is the value axis for the current chart layout.
+   * - Non-stacked numeric series render from `[baseline, value]`.
+   * - Multi-series stacks are normalized around this baseline before stacking.
    *
    * - Vertical layout: `yAxis.baseline`
    * - Horizontal layout: `xAxis.baseline`
@@ -135,6 +137,45 @@ export type CartesianAxisConfig = AxisConfig & {
    * Domain limit type for numeric scales
    */
   domainLimit?: 'nice' | 'strict';
+};
+
+type AxisDomainConfig = CartesianAxisConfigProps['domain'];
+
+const includeBaselineInBounds = (bounds: AxisBounds, baseline: number): AxisBounds => {
+  if (baseline < bounds.min) return { ...bounds, min: baseline };
+  if (baseline > bounds.max) return { ...bounds, max: baseline };
+  return bounds;
+};
+
+/**
+ * Returns an axis domain config that guarantees the baseline is included in the computed bounds,
+ * unless that side was explicitly fixed by the consumer.
+ *
+ * For fully explicit domains (`min` and `max`) and function domains, the original domain config
+ * is preserved.
+ */
+export const getDomainIncludingBaseline = (
+  domain: AxisDomainConfig,
+  baseline: number,
+): AxisDomainConfig => {
+  if (typeof domain === 'function') return domain;
+  if (domain?.min !== undefined && domain?.max !== undefined) return domain;
+
+  const hasExplicitMin = domain?.min !== undefined;
+  const hasExplicitMax = domain?.max !== undefined;
+
+  return (bounds: AxisBounds): AxisBounds => {
+    const resolvedBounds: AxisBounds = {
+      min: hasExplicitMin ? (domain?.min as number) : bounds.min,
+      max: hasExplicitMax ? (domain?.max as number) : bounds.max,
+    };
+    const baselineAdjustedBounds = includeBaselineInBounds(resolvedBounds, baseline);
+
+    return {
+      min: hasExplicitMin ? resolvedBounds.min : baselineAdjustedBounds.min,
+      max: hasExplicitMax ? resolvedBounds.max : baselineAdjustedBounds.max,
+    };
+  };
 };
 
 /**
@@ -318,7 +359,13 @@ export const getCartesianAxisDomain = (
   // In horizontal layout: Y is category (index), X is value (value)
   const isCategoryAxis =
     (layout !== 'horizontal' && axisType === 'x') || (layout === 'horizontal' && axisType === 'y');
-  const seriesDomain = isCategoryAxis ? getChartDomain(series) : getChartRange(series);
+  const seriesBaselineById =
+    !isCategoryAxis && axisParam.baseline !== undefined
+      ? new Map(series.map((s) => [s.id, axisParam.baseline as number]))
+      : undefined;
+  const seriesDomain = isCategoryAxis
+    ? getChartDomain(series)
+    : getChartRange(series, undefined, undefined, { seriesBaselineById });
 
   // If data sets the domain, use that instead of the series domain
   const preferredDataDomain = dataDomain ?? seriesDomain;

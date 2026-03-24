@@ -93,7 +93,15 @@ export const GradientArea = memo<GradientAreaProps>(
         transitions={transitions}
         {...pathProps}
       >
-        {gradient && <Gradient gradient={gradient} xAxisId={xAxisId} yAxisId={yAxisId} />}
+        {gradient && (
+          <Gradient
+            animate={animate}
+            gradient={gradient}
+            transition={transitions?.update ?? transition}
+            xAxisId={xAxisId}
+            yAxisId={yAxisId}
+          />
+        )}
       </Path>
     );
   },

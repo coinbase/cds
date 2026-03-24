@@ -1,14 +1,13 @@
 import React, { memo, useCallback, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { IconButton } from '@coinbase/cds-web/buttons';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
 import { Icon } from '@coinbase/cds-web/icons';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
-import { Pressable } from '@coinbase/cds-web/system';
 import { SegmentedTabs } from '@coinbase/cds-web/tabs';
 import { Text } from '@coinbase/cds-web/typography';
 import { AnimatePresence, m as motion } from 'framer-motion';
@@ -28,7 +27,7 @@ import {
 import { Line, type LineComponentProps } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { defaultTransition, isCategoricalScale } from '../utils';
-import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
+import { BarPlot, CartesianChart, type ChartTextChildren, Scrubber } from '../';
 
 export default {
   component: CartesianChart,
@@ -402,21 +401,23 @@ function TradingTrends() {
   );
 }
 
-const advancedTabs = [
+type AdvancedPeriod = keyof typeof sparklineInteractiveData;
+
+const advancedTabs: TabValue[] = [
   { id: 'hour', label: '1H' },
   { id: 'day', label: '1D' },
   { id: 'week', label: '1W' },
   { id: 'month', label: '1M' },
-  { id: 'year', label: 'YTD' },
+  { id: 'year', label: '1Y' },
+  { id: 'all', label: 'All' },
 ];
 
-type ChartType = 'area' | 'line' | 'candlestick';
+type ChartType = 'area' | 'line';
 type ChartScaleType = 'linear' | 'log';
 
 const chartTypeTabs: TabValue<ChartType>[] = [
   { id: 'area', label: <Icon active color="currentColor" name="lineChartCrypto" size="s" /> },
   { id: 'line', label: <Icon active color="currentColor" name="chartLine" size="s" /> },
-  { id: 'candlestick', label: <Icon active color="currentColor" name="chartCandles" size="s" /> },
 ];
 
 const chartScaleTypeTabs: TabValue<ChartScaleType>[] = [
@@ -424,7 +425,7 @@ const chartScaleTypeTabs: TabValue<ChartScaleType>[] = [
   { id: 'log', label: 'Log' },
 ];
 
-const getFormattingConfigForPeriod = (period: string): DateTimeFormatOptions => {
+const getFormattingConfigForPeriod = (period: AdvancedPeriod): DateTimeFormatOptions => {
   switch (period) {
     case 'hour':
     case 'day':
@@ -462,18 +463,25 @@ const DottedReferenceLine = memo((props: LineComponentProps) => (
 ));
 
 export const Advanced = () => {
-  const [activeTab, setActiveTab] = useState(advancedTabs[3]);
+  const [activeTab, setActiveTab] = useState<TabValue>(advancedTabs[3]);
   const [chartType, setChartType] = useState<TabValue<ChartType>>(chartTypeTabs[0]);
   const [scaleType, setScaleType] = useState<TabValue<ChartScaleType>>(chartScaleTypeTabs[0]);
-  const [showVolume, setShowVolume] = useState(true);
 
-  const candles = useMemo(() => [...btcCandles].reverse(), []);
+  const sparklineTimePeriodData = useMemo(
+    () => sparklineInteractiveData[activeTab.id as AdvancedPeriod],
+    [activeTab.id],
+  );
 
-  const prices = candles.map((candle) => parseFloat(candle.close));
-  const dates = candles.map((candle) => new Date(parseInt(candle.start, 10) * 1000));
-  const volumes = candles.map((candle) => parseFloat(candle.volume));
+  const prices = useMemo(
+    () => sparklineTimePeriodData.map((point) => point.value),
+    [sparklineTimePeriodData],
+  );
+  const dates = useMemo(
+    () => sparklineTimePeriodData.map((point) => point.date),
+    [sparklineTimePeriodData],
+  );
 
-  const startingPrice = prices[0];
+  const startingPrice = prices[0] ?? 0;
 
   const formatPrice = useCallback((price: number) => {
     return `$${price.toLocaleString('en-US', {
@@ -490,6 +498,7 @@ export const Advanced = () => {
     (dataIndex: number) => {
       const price = prices[dataIndex];
       const date = dates[dataIndex];
+      if (price === undefined || date === undefined) return '';
 
       return (
         <>
@@ -520,9 +529,9 @@ export const Advanced = () => {
 
   const formatXAxisDate = useCallback(
     (index: number) => {
-      if (!candles[index]) return '';
+      if (!dates[index]) return '';
       const date = dates[index];
-      const formatConfig = getFormattingConfigForPeriod(activeTab.id);
+      const formatConfig = getFormattingConfigForPeriod(activeTab.id as AdvancedPeriod);
 
       if (activeTab.id === 'hour' || activeTab.id === 'day') {
         return date.toLocaleTimeString('en-US', formatConfig);
@@ -530,11 +539,15 @@ export const Advanced = () => {
         return date.toLocaleDateString('en-US', formatConfig);
       }
     },
-    [candles, dates, activeTab.id],
+    [dates, activeTab.id],
   );
 
   const handleChartTypeChange = useCallback((chartType: TabValue<ChartType> | null) => {
     setChartType(chartType ?? chartTypeTabs[0]);
+  }, []);
+
+  const handlePeriodChange = useCallback((period: TabValue | null) => {
+    setActiveTab(period ?? advancedTabs[0]);
   }, []);
 
   const handleScaleTypeChange = useCallback((scaleType: TabValue<ChartScaleType> | null) => {
@@ -561,14 +574,8 @@ export const Advanced = () => {
         color: assets.btc.color,
         yAxisId: 'pricesLine',
       },
-      {
-        id: 'volume',
-        data: volumes,
-        color: 'var(--color-fgMuted)',
-        yAxisId: 'volume',
-      },
     ],
-    [prices, startingPrice, volumes],
+    [prices, startingPrice],
   );
 
   return (
@@ -586,15 +593,14 @@ export const Advanced = () => {
             baseline: startingPrice,
             scaleType: scaleType.id,
             domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
-            range: ({ min, max }) => ({ min: min, max: showVolume ? max - 32 : max }),
+            range: ({ min, max }) => ({ min: min, max }),
           },
           {
             id: 'pricesLine',
             scaleType: scaleType.id,
             domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
-            range: ({ min, max }) => ({ min: min, max: showVolume ? max - 32 : max }),
+            range: ({ min, max }) => ({ min: min, max }),
           },
-          { id: 'volume', range: ({ max }) => ({ min: max - 32, max }) },
         ]}
       >
         <XAxis tickLabelFormatter={formatXAxisDate} />
@@ -628,16 +634,6 @@ export const Advanced = () => {
               />
             </motion.g>
           )}
-          {showVolume && (
-            <motion.g
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              transition={defaultTransition}
-            >
-              <BarPlot seriesIds={['volume']} transitions={chartTransition} />
-            </motion.g>
-          )}
         </AnimatePresence>
         <ReferenceLine
           LabelComponent={PriceLabel}
@@ -669,11 +665,6 @@ export const Advanced = () => {
           tabs={chartTypeTabs}
           width="fit-content"
         />
-        <IconButton
-          active={showVolume}
-          name="chartVolume"
-          onClick={() => setShowVolume(!showVolume)}
-        />
         <SegmentedTabs
           accessibilityLabel="Switch chart scale type"
           activeTab={scaleType}
@@ -685,6 +676,19 @@ export const Advanced = () => {
             activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
           }}
           tabs={chartScaleTypeTabs}
+          width="fit-content"
+        />
+        <SegmentedTabs
+          accessibilityLabel="Switch chart time period"
+          activeTab={activeTab}
+          borderRadius={300}
+          gap={0.5}
+          onChange={handlePeriodChange}
+          padding={0.5}
+          styles={{
+            activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
+          }}
+          tabs={advancedTabs}
           width="fit-content"
         />
       </HStack>

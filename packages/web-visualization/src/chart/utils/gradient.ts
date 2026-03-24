@@ -22,7 +22,7 @@ export type GradientStop = {
 export type GradientDefinition = {
   /**
    * Axis that the gradient maps to.
-   * @default 'y'
+   * @default 'y' for vertical layout, 'x' for horizontal layout
    */
   axis?: 'x' | 'y';
   /**
@@ -30,6 +30,17 @@ export type GradientDefinition = {
    * Can be an array of stop objects or a function that receives domain bounds.
    */
   stops: GradientStop[] | ((domain: AxisBounds) => GradientStop[]);
+};
+
+/**
+ * Resolves the axis used for gradient processing.
+ * Falls back to the caller-provided default when the gradient axis is omitted.
+ */
+export const getGradientAxis = (
+  gradient: Pick<GradientDefinition, 'axis'>,
+  defaultAxis: 'x' | 'y' = 'y',
+): 'x' | 'y' => {
+  return gradient.axis ?? defaultAxis;
 };
 
 /**
@@ -178,6 +189,7 @@ export const evaluateGradientAtValue = (
  * @param gradient - GradientDefinition configuration (required)
  * @param xScale - X-axis scale (required)
  * @param yScale - Y-axis scale (required)
+ * @param defaultAxis - Fallback axis when gradient.axis is omitted
  * @returns GradientConfig or null if gradient processing fails
  *
  * @example
@@ -202,11 +214,13 @@ export const getGradientConfig = (
   gradient: GradientDefinition,
   xScale: ChartScaleFunction,
   yScale: ChartScaleFunction,
+  defaultAxis: 'x' | 'y' = 'y',
 ): GradientStop[] | undefined => {
   if (!gradient) return;
 
   // Get the scale based on axis
-  const scale = gradient.axis === 'x' ? xScale : yScale;
+  const axis = getGradientAxis(gradient, defaultAxis);
+  const scale = axis === 'x' ? xScale : yScale;
   if (!scale) return;
 
   // Extract domain from scale

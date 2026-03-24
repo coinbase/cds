@@ -170,23 +170,16 @@ export const BarStack = memo<BarStackProps>(
     const yAxis = getYAxis(yAxisId);
     const barsGrowVertically = layout !== 'horizontal';
 
-    const usesStackedSemantics = useMemo(
-      () => series.some((s) => s.stackId !== undefined),
-      [series],
-    );
-
     const baselineValue = useMemo(() => {
-      if (!usesStackedSemantics) {
-        const axisBaseline = getSeriesBaseline(series[0]?.id);
-        if (axisBaseline !== undefined) {
-          return axisBaseline;
-        }
+      const axisBaseline = getSeriesBaseline(series[0]?.id);
+      if (axisBaseline !== undefined) {
+        return axisBaseline;
       }
 
       const domain = valueScale.domain();
       const [domainMin, domainMax] = domain;
       return domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
-    }, [usesStackedSemantics, getSeriesBaseline, series, valueScale]);
+    }, [getSeriesBaseline, series, valueScale]);
 
     const baseline = useMemo(() => {
       const fallback = barsGrowVertically ? rect.y + rect.height : rect.x;

@@ -207,6 +207,32 @@ describe('getGradientConfig with numeric scale', () => {
     expect(result?.[2].offset).toBe(1);
   });
 
+  it('should use caller-provided default axis when gradient axis is omitted', () => {
+    const localXScale = getNumericScale({
+      scaleType: 'linear',
+      domain: { min: 0, max: 4 },
+      range: { min: 0, max: 400 },
+    });
+    const localYScale = getNumericScale({
+      scaleType: 'linear',
+      domain: { min: 0, max: 100 },
+      range: { min: 400, max: 0 },
+    });
+
+    const gradient: GradientDefinition = {
+      stops: [
+        { offset: 0, color: 'red' },
+        { offset: 4, color: 'green' },
+      ],
+    };
+
+    const result = getGradientConfig(gradient, localXScale, localYScale, 'x');
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(2);
+    expect(result?.[0].offset).toBe(0);
+    expect(result?.[1].offset).toBe(1);
+  });
+
   it('should handle gradient with custom stops', () => {
     const gradient: GradientDefinition = {
       stops: [

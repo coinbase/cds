@@ -4,7 +4,7 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
-import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
+import { evaluateGradientAtValue, getGradientAxis, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
@@ -181,24 +181,18 @@ export const BarStack = memo<BarStackProps>(
 
     const xAxis = getXAxis(xAxisId);
     const barsGrowVertically = layout !== 'horizontal';
-
-    const usesStackedSemantics = useMemo(
-      () => series.some((s) => s.stackId !== undefined),
-      [series],
-    );
+    const defaultGradientAxis: 'x' | 'y' = barsGrowVertically ? 'y' : 'x';
 
     const baselineValue = useMemo(() => {
-      if (!usesStackedSemantics) {
-        const axisBaseline = getSeriesBaseline(series[0]?.id);
-        if (axisBaseline !== undefined) {
-          return axisBaseline;
-        }
+      const axisBaseline = getSeriesBaseline(series[0]?.id);
+      if (axisBaseline !== undefined) {
+        return axisBaseline;
       }
 
       const domain = valueScale.domain();
       const [domainMin, domainMax] = domain;
       return domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
-    }, [usesStackedSemantics, getSeriesBaseline, series, valueScale]);
+    }, [getSeriesBaseline, series, valueScale]);
 
     const baseline = useMemo(() => {
       // In vertical layout (bars grow up), value scale is Y. In horizontal, it's X.
@@ -216,8 +210,9 @@ export const BarStack = memo<BarStackProps>(
       return series.map((s) => {
         if (!s.gradient) return null;
 
+        const axis = getGradientAxis(s.gradient, defaultGradientAxis);
         const evalScale =
-          s.gradient.axis === 'x'
+          axis === 'x'
             ? barsGrowVertically
               ? indexScale
               : valueScale
@@ -231,17 +226,19 @@ export const BarStack = memo<BarStackProps>(
           s.gradient,
           barsGrowVertically ? indexScale : valueScale,
           barsGrowVertically ? valueScale : indexScale,
+          defaultGradientAxis,
         );
         if (!stops) return null;
 
         return {
           seriesId: s.id,
           gradient: s.gradient,
+          axis,
           scale: evalScale,
           stops,
         };
       });
-    }, [series, indexScale, valueScale, barsGrowVertically]);
+    }, [series, indexScale, valueScale, barsGrowVertically, defaultGradientAxis]);
 
     // Calculate bars for this specific category
     const { bars, stackRect } = useMemo(() => {
@@ -338,7 +335,7 @@ export const BarStack = memo<BarStackProps>(
         // Evaluate gradient if provided (using precomputed stops)
         const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
         if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
-          const axis = seriesGradientConfig.gradient.axis ?? 'y';
+          const axis = seriesGradientConfig.axis;
 
           let evalValue: number;
           if (axis === 'x') {

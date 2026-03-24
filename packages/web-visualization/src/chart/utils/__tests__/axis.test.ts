@@ -3,6 +3,7 @@ import {
   getAxisTicksData,
   getCartesianAxisDomain,
   getCartesianAxisScale,
+  getDomainIncludingBaseline,
 } from '../axis';
 import {
   type CategoricalScale,
@@ -546,6 +547,52 @@ describe('getCartesianAxisDomain', () => {
     );
     // For y in horizontal, it's the index domain: 0 to dataLength - 1
     expect(domain).toEqual({ min: 0, max: 2 });
+  });
+});
+
+describe('getDomainIncludingBaseline', () => {
+  it('extends max when baseline is above computed bounds', () => {
+    const domain = getDomainIncludingBaseline(undefined, 30);
+    expect(typeof domain).toBe('function');
+    if (typeof domain !== 'function') throw new Error('Expected function domain');
+
+    expect(domain({ min: -100, max: -50 })).toEqual({ min: -100, max: 30 });
+  });
+
+  it('extends min when baseline is below computed bounds', () => {
+    const domain = getDomainIncludingBaseline(undefined, 0);
+    expect(typeof domain).toBe('function');
+    if (typeof domain !== 'function') throw new Error('Expected function domain');
+
+    expect(domain({ min: 25, max: 80 })).toEqual({ min: 0, max: 80 });
+  });
+
+  it('does not change bounds when baseline is already in range', () => {
+    const domain = getDomainIncludingBaseline(undefined, 30);
+    expect(typeof domain).toBe('function');
+    if (typeof domain !== 'function') throw new Error('Expected function domain');
+
+    expect(domain({ min: 20, max: 55 })).toEqual({ min: 20, max: 55 });
+  });
+
+  it('preserves explicit max while extending only implicit side', () => {
+    const domain = getDomainIncludingBaseline({ max: -50 }, 30);
+    expect(typeof domain).toBe('function');
+    if (typeof domain !== 'function') throw new Error('Expected function domain');
+
+    expect(domain({ min: -100, max: -80 })).toEqual({ min: -100, max: -50 });
+  });
+
+  it('preserves fully explicit bounds', () => {
+    expect(getDomainIncludingBaseline({ min: -100, max: -50 }, 30)).toEqual({
+      min: -100,
+      max: -50,
+    });
+  });
+
+  it('preserves function domain identity', () => {
+    const domainFn = (bounds: { min: number; max: number }) => bounds;
+    expect(getDomainIncludingBaseline(domainFn, 30)).toBe(domainFn);
   });
 });
 

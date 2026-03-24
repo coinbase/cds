@@ -41,6 +41,17 @@ export type GradientDefinition = {
 };
 
 /**
+ * Resolves the axis used for gradient processing.
+ * Falls back to the caller-provided default when the gradient axis is omitted.
+ */
+export const getGradientAxis = (
+  gradient: Pick<GradientDefinition, 'axis'>,
+  defaultAxis: 'x' | 'y' = 'y',
+): 'x' | 'y' => {
+  return gradient.axis ?? defaultAxis;
+};
+
+/**
  * Resolves gradient stops, handling both static arrays and function forms.
  * When stops is a function, calls it with the domain bounds.
  */
@@ -158,11 +169,13 @@ export const getGradientConfig = (
   gradient: GradientDefinition,
   xScale: ChartScaleFunction,
   yScale: ChartScaleFunction,
+  defaultAxis: 'x' | 'y' = 'y',
 ): GradientStop[] | undefined => {
   if (!gradient) return;
 
   // Get the scale based on axis
-  const scale = gradient.axis === 'x' ? xScale : yScale;
+  const axis = getGradientAxis(gradient, defaultAxis);
+  const scale = axis === 'x' ? xScale : yScale;
   if (!scale) return;
 
   // Extract domain from scale
