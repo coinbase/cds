@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.56.0 (3/23/2026 PST)
+
+#### 🚀 Updates
+
+- Support modal subcomponent props. [[#534](https://github.com/coinbase/cds/pull/534)]
 
 #### 📘 Misc
 
