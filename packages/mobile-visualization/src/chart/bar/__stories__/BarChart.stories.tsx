@@ -123,6 +123,7 @@ const CustomBarStackComponent = memo(({ children, ...props }: BarStackComponentP
 });
 
 const MonthlyRewards = () => {
+  const theme = useTheme();
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
   const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
@@ -132,10 +133,10 @@ const MonthlyRewards = () => {
   const [roundBaseline, setRoundBaseline] = useState(true);
 
   const series = [
-    { id: 'purple', data: purple, color: '#b399ff' },
-    { id: 'blue', data: blue, color: '#4f7cff' },
-    { id: 'cyan', data: cyan, color: '#00c2df' },
-    { id: 'green', data: green, color: '#33c481' },
+    { id: 'purple', data: purple, color: `rgb(${theme.spectrum.purple30})` },
+    { id: 'blue', data: blue, color: `rgb(${theme.spectrum.blue30})` },
+    { id: 'cyan', data: cyan, color: `rgb(${theme.spectrum.teal30})` },
+    { id: 'green', data: green, color: `rgb(${theme.spectrum.green30})` },
   ];
 
   return (
@@ -155,7 +156,7 @@ const MonthlyRewards = () => {
           tickLabelFormatter: (index) => {
             return months[index];
           },
-          categoryPadding: 0.27,
+          categoryPadding: 0.25,
         }}
       />
       <Button onPress={() => setRoundBaseline(!roundBaseline)}>Toggle Round Baseline</Button>
