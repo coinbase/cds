@@ -11,13 +11,15 @@ import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 
 /**
- * @deprecated this component will be removed in a future version. Use ListCell instead.
+ * @deprecated Use ListCell instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export type ContentCellBaseProps = {
   /** Accessory to display at the end of the cell. */
   accessory?: CellAccessoryType;
   /**
-   * @deprecated Use `spacingVariant="compact"` instead. `compact` will be removed in a future major release.
+   * @deprecated Use `spacingVariant="compact"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
    */
   compact?: boolean;
   /**
@@ -121,7 +123,8 @@ function generateAccessibilityLabels(
 }
 
 /**
- * @deprecated this component will be removed in a future version. Use ListCell instead.
+ * @deprecated Use ListCell instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export const ContentCell = memo(function ContentCell({
   accessory,

@@ -27,7 +27,6 @@
     "metro": "0.80.12",
     "react": "18.2.0",
     "react-native": "0.74.5",
-    "react-native-date-picker": "5.0.13",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-inappbrowser-reborn": "3.7.0",
     "react-native-linear-gradient": "2.8.3",

@@ -13,17 +13,26 @@ export type ContentCardHeaderDefaultElement = typeof contentCardHeaderDefaultEle
 export type ContentCardHeaderBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   SharedProps & {
-    /** @deprecated Use `thumbnail` instead. `avatar` will be removed in a future major release. */
+    /**
+     * @deprecated Use `thumbnail` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
+     */
     avatar?: React.ReactNode;
     /** A media object like an image, avatar, illustration, or cryptocurrency asset. */
     thumbnail?: React.ReactNode;
     /** Text or React node to display as the header title. Use a Text component to override default color and font. */
     title: React.ReactNode;
-    /** @deprecated Use `subtitle` instead. `meta` will be removed in a future major release. */
+    /**
+     * @deprecated Use `subtitle` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
+     */
     meta?: React.ReactNode;
     /** Text or React node to display as the header subtitle. Use a Text component to override default color and font. */
     subtitle?: React.ReactNode;
-    /** @deprecated Use `actions` instead. `end` will be removed in a future major release. */
+    /**
+     * @deprecated Use `actions` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
+     */
     end?: React.ReactNode;
     /** Slot for action buttons. */
     actions?: React.ReactNode;

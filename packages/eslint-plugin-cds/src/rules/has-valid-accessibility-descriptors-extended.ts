@@ -22,7 +22,7 @@ type MessageIds =
   | 'missingAccessibilityLabelSuggestion'
   | 'missingHandleBarAccessibilityLabel'
   | 'missingHelperTextErrorIconAccessibilityLabel'
-  | 'missingCalendarIconButtonAccessibilityLabel'
+  | 'missingCalendarOpenCloseAccessibilityLabels'
   | 'missingCardDismissAccessibilityLabel'
   | 'missingStartIconAccessibilityLabel'
   | 'missingClearIconAccessibilityLabel';
@@ -54,15 +54,11 @@ const config = {
   ],
   checkForMissingHandleBarAccessibilityLabel: ['Drawer', 'SelectChip', 'Tray'],
   checkForHelperTextErrorIconAccessibilityLabelProps: ['TextInput'],
-  checkForCalendarIconButtonAccessibilityLabelProps: ['DatePicker'],
+  checkForCalendarOpenCloseAccessibilityLabelProps: ['DatePicker'],
   checkForCardDismissAccessibilityLabelProps: ['NudgeCard', 'UpsellCard'],
   checkForSearchInputAccessibilityLabelProps: ['SearchInput'],
 
-  allowedPackages: [
-    '@cbhq/cds-common',
-    '@cbhq/cds-mobile',
-    '@cbhq/cds-mobile-visualization',
-  ],
+  allowedPackages: ['@cbhq/cds-common', '@cbhq/cds-mobile', '@cbhq/cds-mobile-visualization'],
 };
 
 export const hasValidA11yDescriptorsExtended = ruleCreator({
@@ -79,7 +75,7 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
       missingAccessibilityLabelSuggestion: `Add missing accessibility label`,
       missingHandleBarAccessibilityLabel: `Missing 'handleBarAccessibilityLabel' on <{{componentName}}>.`,
       missingHelperTextErrorIconAccessibilityLabel: `Missing 'helperTextErrorIconAccessibilityLabel' on <{{componentName}}>.`,
-      missingCalendarIconButtonAccessibilityLabel: `Missing 'calendarIconButtonAccessibilityLabel' on <{{componentName}}>.`,
+      missingCalendarOpenCloseAccessibilityLabels: `Missing calendar open/close accessibility label on <{{componentName}}>. Provide both 'openCalendarAccessibilityLabel' and 'closeCalendarAccessibilityLabel' (or deprecated 'calendarIconButtonAccessibilityLabel').`,
       missingCardDismissAccessibilityLabel: `Missing 'accessibilityLabel' on <{{componentName}}> for dismiss button.`,
       missingStartIconAccessibilityLabel: `Missing 'startIconAccessibilityLabel' on <{{componentName}}>.`,
       missingClearIconAccessibilityLabel: `Missing 'clearIconAccessibilityLabel' on <{{componentName}}>.`,
@@ -123,7 +119,9 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
           hasInnerText,
           hasHandleBarAccessibilityLabelProps,
           hasHelperTextErrorIconAccessibilityLabel,
-          hasCalendarIconButtonAccessibilityLabel,
+          hasOpenCalendarAccessibilityLabel,
+          hasCloseCalendarAccessibilityLabel,
+          hasDeprecatedCalendarIconButtonAccessibilityLabel,
           hasOnDismissPressProp,
           hasMissingStartIconAccessibilityLabel,
           hasMissingClearIconAccessibilityLabel,
@@ -167,9 +165,12 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
             suggestedPropToAdd: 'helperTextErrorIconAccessibilityLabel',
           },
           {
-            configArray: config.checkForCalendarIconButtonAccessibilityLabelProps,
-            condition: !hasCalendarIconButtonAccessibilityLabel,
-            messageId: 'missingCalendarIconButtonAccessibilityLabel',
+            configArray: config.checkForCalendarOpenCloseAccessibilityLabelProps,
+            condition: !(
+              (hasOpenCalendarAccessibilityLabel && hasCloseCalendarAccessibilityLabel) ||
+              hasDeprecatedCalendarIconButtonAccessibilityLabel
+            ),
+            messageId: 'missingCalendarOpenCloseAccessibilityLabels',
           },
           {
             // Check for presence of onDismissPress prop and absence of accessibilityLabel

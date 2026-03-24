@@ -39,7 +39,8 @@ export type ContainedAssetCardProps = ContainedAssetCardBaseProps &
   Pick<HStackProps, 'minWidth' | 'maxWidth'>;
 
 /**
- * @deprecated Use `MediaCard` instead. ContainedAssetCard will be removed in a future major release.
+ * @deprecated Use `MediaCard` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  *
  * Migration guide:
  * ```tsx

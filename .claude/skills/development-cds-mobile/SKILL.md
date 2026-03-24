@@ -162,23 +162,6 @@ const [size, onLayout] = useLayout();
 </Text>
 ```
 
-## Native Module Integration
-
-Example with date picker:
-
-```tsx
-import NativeDatePicker from 'react-native-date-picker';
-
-<NativeDatePicker
-  modal
-  open={showPicker}
-  date={selectedDate}
-  mode="date"
-  onConfirm={handleConfirm}
-  onCancel={handleCancel}
-/>;
-```
-
 ## Reference Components
 
 - **SlideButton**: gesture handling, spring animations, accessibility actions
@@ -186,4 +169,4 @@ import NativeDatePicker from 'react-native-date-picker';
 - **Select** (alpha/): controlled/uncontrolled, Drawer integration
 - **Stepper**: direction-based defaults, shared logic from cds-common
 - **Tour**: animations, complexity
-- **DatePicker**: complexity, native modules
+- **DatePicker**: complexity

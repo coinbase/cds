@@ -7,9 +7,7 @@ figma.connect(
   ProgressCircle,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=64-917&m=dev',
   {
-    imports: [
-      "import { ProgressCircle } from '@cbhq/cds-mobile/visualizations/ProgressCircle'",
-    ],
+    imports: ["import { ProgressCircle } from '@cbhq/cds-mobile/visualizations/ProgressCircle'"],
     props: {
       hideText: figma.boolean('progress label', {
         true: undefined,

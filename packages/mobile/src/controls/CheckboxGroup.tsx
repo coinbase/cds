@@ -7,7 +7,8 @@ import { Checkbox, type CheckboxProps } from './Checkbox';
 import { ControlGroup } from './ControlGroup';
 
 /**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead.
+ * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  *
  * @example
  * // Instead of:
@@ -40,7 +41,8 @@ export type CheckboxGroupBaseProps<CheckboxValue extends string | number> = Omit
   };
 
 /**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead.
+ * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  */
 export type CheckboxGroupProps<CheckboxValue extends string> =
   CheckboxGroupBaseProps<CheckboxValue>;
@@ -121,7 +123,8 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxVa
 
 // Make memoized function stay generic function type
 /**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead.
+ * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
  */
 export const CheckboxGroup = memo(CheckboxGroupWithRef) as typeof CheckboxGroupWithRef &
   React.MemoExoticComponent<typeof CheckboxGroupWithRef>;

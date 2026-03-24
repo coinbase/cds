@@ -424,7 +424,7 @@ const versionMap: Record<HeroSquareName, number> = {
   instoWalletSecurity: 0,
   instoStakingMissedReturns: 0,
   instoRequestSent: 0,
-  instoOnChain: 0,
+  instoOnChain: 1,
   instoPhoneUnknown: 0,
   cryptoPortfolioUsdc: 0,
   instoCoinbaseOneProtectedCrypto: 0,

@@ -1,10 +1,7 @@
 import { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import { curves, durations } from '@cbhq/cds-common/motion/tokens';
-import {
-  IntlNumberFormat,
-  type KeyedNumberPart,
-} from '@cbhq/cds-common/numbers/IntlNumberFormat';
+import { IntlNumberFormat, type KeyedNumberPart } from '@cbhq/cds-common/numbers/IntlNumberFormat';
 import {
   type SingleDirection,
   useValueChangeDirection,

@@ -13,6 +13,7 @@ import eslintReactNativeA11y from 'eslint-plugin-react-native-a11y';
 import eslintReactNative from 'eslint-plugin-react-native';
 import eslintCodegen from 'eslint-plugin-codegen';
 import internalPlugin from '@cbhq/eslint-plugin-internal';
+import eslintSimpleImportSort from 'eslint-plugin-simple-import-sort';
 
 const ignores = [
   '*.md',
@@ -35,7 +36,6 @@ const ignores = [
   '**/getAffectedRoutes.mjs',
   '**/getBuildInfo.mjs',
   'apps/mobile-app/prebuilds',
-  'apps/mobile-app/prebuilds',
   // within their NX project, these files are not included by the Typescript config
   // when linting with TS types (e.g. internal/safely-spread-props) this will raise an error
   'packages/web/optimize-css.ts',
@@ -48,6 +48,7 @@ const ignores = [
 // These rules apply to all files
 const sharedRules = {
   'internal/no-object-rest-spread-in-worklet': 'error',
+  'internal/deprecated-jsdoc-has-removal-version': 'error',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',

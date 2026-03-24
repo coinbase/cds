@@ -1,9 +1,6 @@
 import React from 'react';
 import type { ColorScheme } from '@cbhq/cds-common/core/theme';
-import {
-  illustrationDimensions,
-  illustrationSizes,
-} from '@cbhq/cds-common/tokens/illustrations';
+import { illustrationDimensions, illustrationSizes } from '@cbhq/cds-common/tokens/illustrations';
 import spotRectangleVersionMap from '@cbhq/cds-illustrations/__generated__/spotRectangle/data/versionMap';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

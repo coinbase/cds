@@ -1,0 +1,13 @@
+diff --git a/dist/check.js b/dist/check.js
+index 2d506595069bb495af834ce2e9985330ef44ecae..01f4f43433bd080850bcc19090c2c3cf31c11d06 100644
+--- a/dist/check.js
++++ b/dist/check.js
+@@ -143,7 +143,7 @@ function checkFile({
+   parsers
+ }) {
+   (0, _debug.default)('depcheck:checkFile')(filename);
+-  const targets = (0, _lodash.default)(parsers).keys().filter(glob => (0, _minimatch.default)(filename, glob, {
++  const targets = (0, _lodash.default)(parsers).keys().filter(glob => (0, (_minimatch.default && typeof _minimatch.default === "function" ? _minimatch.default : _minimatch.minimatch))(filename, glob, {
+     dot: true
+   })).map(key => parsers[key]).flatten().value();
+   return targets.map(parser => getDependencies({

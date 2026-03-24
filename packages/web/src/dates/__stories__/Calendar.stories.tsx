@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { Box } from '../../layout/Box';
-import { Group } from '../../layout/Group';
 import { VStack } from '../../layout/VStack';
 import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
@@ -15,6 +14,7 @@ export default {
 };
 
 const today = new Date(new Date(2024, 7, 18).setHours(0, 0, 0, 0));
+const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
 const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
 const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
@@ -31,7 +31,7 @@ export const Examples = () => {
   const [selectedDate1, setSelectedDate1] = useState<Date | null>(today);
   const [selectedDate2, setSelectedDate2] = useState<Date | null>(today);
   return (
-    <Group gap={8}>
+    <VStack gap={8}>
       <VStack>
         <Note>Calendar</Note>
         <Calendar {...exampleProps} onPressDate={setSelectedDate1} selectedDate={selectedDate1} />
@@ -43,14 +43,14 @@ export const Examples = () => {
         </ThemeProvider>
       </VStack>
       <Box height={100} />
-    </Group>
+    </VStack>
   );
 };
 
 Examples.parameters = { a11y: { disable: true } };
 
 export const Props = () => (
-  <Group gap={8}>
+  <VStack gap={8}>
     <VStack>
       <Note>Calendar with no props</Note>
       <Calendar selectedDate={today} />
@@ -105,7 +105,65 @@ export const Props = () => (
       <Calendar disabled selectedDate={today} />
     </VStack>
     <Box height={100} />
-  </Group>
+  </VStack>
 );
 
 Props.parameters = { a11y: { disable: true } };
+
+export const SlotStyling = () => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
+  return (
+    <>
+      <style>{`
+        .cds-Calendar-day[aria-pressed="true"] {
+          background-color: var(--color-bgWarning);
+          border-color: var(--color-bgWarning);
+        }
+        .cds-Calendar-day[aria-current="date"] {
+          border-color: var(--color-accentBoldYellow);
+        }
+        .cds-Calendar-day[aria-disabled="true"] {
+          background-color: var(--color-bgDisabled);
+          border-color: var(--color-bgDisabled);
+        }
+        .cds-Calendar-day[aria-disabled="true"] span {
+          color: var(--color-bgPositive);
+        }
+        .cds-Calendar-day[data-highlight="true"] {
+          background-color: var(--color-bgPositiveWash);
+          border-color: var(--color-bgPositive);
+        }
+        .cds-Calendar-day[data-highlight="true"] span {
+          color: var(--color-fg);
+        }
+      `}</style>
+      <VStack>
+        <Note>Calendar with classNames and styles</Note>
+        <Calendar
+          {...exampleProps}
+          disabledDates={[twoDaysAgo]}
+          highlightedDates={[tomorrow]}
+          onPressDate={setSelectedDate}
+          selectedDate={selectedDate}
+          styles={{
+            root: {
+              backgroundColor: 'var(--color-bgAlternate)',
+              borderRadius: 16,
+              borderColor: 'var(--color-bgLinePrimary)',
+              borderWidth: 'medium',
+            },
+            header: {
+              paddingBottom: 0,
+              backgroundColor: 'var(--color-bgPositiveWash)',
+              borderRadius: 16,
+            },
+            content: { paddingBottom: 8, paddingTop: 8 },
+            day: { borderRadius: 8 },
+          }}
+        />
+      </VStack>
+    </>
+  );
+};
+
+SlotStyling.parameters = { a11y: { disable: true } };

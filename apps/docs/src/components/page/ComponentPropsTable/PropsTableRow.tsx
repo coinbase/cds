@@ -4,10 +4,7 @@ import { VStack } from '@cbhq/cds-web/layout';
 import { Divider } from '@cbhq/cds-web/layout/Divider';
 import { Text } from '@cbhq/cds-web/typography';
 import { Link } from '@cbhq/cds-web/typography/Link';
-import type {
-  ProcessedPropItem,
-  SharedTypeAliases,
-} from '@cbhq/docusaurus-plugin-docgen/types';
+import type { ProcessedPropItem, SharedTypeAliases } from '@cbhq/docusaurus-plugin-docgen/types';
 import DocusaurusLink from '@docusaurus/Link';
 
 import ModalLink from './ModalLink';

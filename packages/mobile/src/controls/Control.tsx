@@ -9,10 +9,7 @@ import type {
 } from 'react-native';
 import type { ElevationLevels, SharedProps } from '@cbhq/cds-common';
 import type { ThemeVars } from '@cbhq/cds-common/core/theme';
-import {
-  accessibleOpacityDisabled,
-  opacityPressed,
-} from '@cbhq/cds-common/tokens/interactable';
+import { accessibleOpacityDisabled, opacityPressed } from '@cbhq/cds-common/tokens/interactable';
 import { isDevelopment } from '@cbhq/cds-utils';
 
 import { useTheme } from '../hooks/useTheme';
