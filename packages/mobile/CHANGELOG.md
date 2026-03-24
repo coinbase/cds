@@ -8,6 +8,26 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.57.0 (3/24/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support focusedBorderWidth on TextInput. [[#537](https://github.com/coinbase/cds/pull/537)]
+
+## 8.56.1 ((3/24/2026, 08:39 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.56.0 (3/23/2026 PST)
+
+#### 🚀 Updates
+
+- Support modal subcomponent props. [[#534](https://github.com/coinbase/cds/pull/534)]
+
+#### 📘 Misc
+
+- Chore: Updated numerous deprecation annotation messages.
+
 ## 8.55.1 ((3/22/2026, 01:43 PM PST))
 
 This is an artificial version bump with no new change.

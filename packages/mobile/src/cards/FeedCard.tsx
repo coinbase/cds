@@ -11,7 +11,10 @@ import { CardFooter } from './CardFooter';
 import { CardHeader } from './CardHeader';
 import { LikeButton, type LikeButtonBaseProps } from './LikeButton';
 
-/** @deprecated Use the ContentCard component instead. */
+/**
+ * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
+ */
 export type FeedCardBaseProps = CardBaseProps &
   SharedProps &
   Pick<CardBodyBaseProps, 'image' | 'pictogram' | 'spotSquare'> & {
@@ -37,31 +40,36 @@ export type FeedCardBaseProps = CardBaseProps &
     cta?: ButtonBaseProps;
   };
 
-/** @deprecated Use the ContentCard component instead. */
+/**
+ * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
+ */
 export type FeedCardProps = FeedCardBaseProps;
 
-/** @deprecated Use the ContentCard component instead. */
-export const FeedCard = memo(function FeedCard(_props: FeedCardProps) {
-  const {
-    testID = 'feed-card',
-    avatar,
-    author,
-    metadata,
-    pictogram,
-    spotSquare,
-    image,
-    mediaPlacement = 'above',
-    title,
-    description,
-    headerAction,
-    like,
-    comment,
-    share,
-    cta,
-    borderRadius = 0,
-    elevation = 0,
-    ...cardProps
-  } = _props;
+/**
+ * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
+ */
+export const FeedCard = memo(function FeedCard({
+  testID = 'feed-card',
+  avatar,
+  author,
+  metadata,
+  pictogram,
+  spotSquare,
+  image,
+  mediaPlacement = 'above',
+  title,
+  description,
+  headerAction,
+  like,
+  comment,
+  share,
+  cta,
+  borderRadius = 0,
+  elevation = 0,
+  ...cardProps
+}: FeedCardProps) {
   const footer = useMemo(() => {
     const hasFooterActions = Boolean(like ?? comment ?? share ?? cta);
     const hasFooter = hasFooterActions || Boolean(cta);

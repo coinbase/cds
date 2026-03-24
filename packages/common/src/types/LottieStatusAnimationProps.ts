@@ -3,12 +3,14 @@ import type { LottieStatus } from './LottieStatus';
 import type { SharedProps } from './SharedProps';
 
 /**
- * @deprecated Use LottieStatus directly from @coinbase/cds-common/types/LottieStatus instead
+ * @deprecated Use LottieStatus directly from @coinbase/cds-common/types/LottieStatus instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export type { LottieStatus as LottieStatusAnimationType };
 
 /**
- * @deprecated Use LottieStatusAnimationBaseProps from cds-web or cds-mobile instead
+ * @deprecated Use LottieStatusAnimationBaseProps from cds-web or cds-mobile instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 type BaseStatusAnimationProps = {
   status?: LottieStatus;
@@ -16,7 +18,8 @@ type BaseStatusAnimationProps = {
 };
 
 /**
- * @deprecated Use LottieStatusAnimationPropsWithWidth from cds-web or cds-mobile instead
+ * @deprecated Use LottieStatusAnimationPropsWithWidth from cds-web or cds-mobile instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 type LottieStatusAnimationPropsWithWidth = {
   /**
@@ -27,7 +30,8 @@ type LottieStatusAnimationPropsWithWidth = {
 } & BaseStatusAnimationProps;
 
 /**
- * @deprecated Use LottieStatusAnimationPropsWithHeight from cds-web or cds-mobile instead
+ * @deprecated Use LottieStatusAnimationPropsWithHeight from cds-web or cds-mobile instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 type LottieStatusAnimationPropsWithHeight = {
   /**
@@ -38,7 +42,8 @@ type LottieStatusAnimationPropsWithHeight = {
 } & BaseStatusAnimationProps;
 
 /**
- * @deprecated Use LottieStatusAnimationProps from cds-web or cds-mobile instead
+ * @deprecated Use LottieStatusAnimationProps from cds-web or cds-mobile instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  */
 export type LottieStatusAnimationProps = (
   | LottieStatusAnimationPropsWithWidth

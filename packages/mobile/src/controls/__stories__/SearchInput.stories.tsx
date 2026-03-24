@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 import { InputIconButton } from '../InputIconButton';
 import { SearchInput } from '../SearchInput';
@@ -14,6 +15,31 @@ const Basic = () => {
 const Compact = () => {
   const [text, setText] = useState('');
   return <SearchInput compact editable={__DEV__} onChangeText={setText} value={text} />;
+};
+
+const BorderlessVariants = () => {
+  const [defaultBorderlessText, setDefaultBorderlessText] = useState('');
+  const [focusBorderText, setFocusBorderText] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        bordered={false}
+        editable={__DEV__}
+        onChangeText={setDefaultBorderlessText}
+        placeholder="Borderless (no focus border)"
+        value={defaultBorderlessText}
+      />
+      <SearchInput
+        bordered={false}
+        editable={__DEV__}
+        focusedBorderWidth={200}
+        onChangeText={setFocusBorderText}
+        placeholder="Borderless (with focus border)"
+        value={focusBorderText}
+      />
+    </VStack>
+  );
 };
 
 const HideStartIcon = () => {
@@ -162,6 +188,9 @@ const SearchInputScreen = () => {
       </Example>
       <Example title="Compact">
         <Compact />
+      </Example>
+      <Example title="Borderless variants">
+        <BorderlessVariants />
       </Example>
       <Example title="Custom Start Icon - Search">
         <SetCustomSearchStartIcon />

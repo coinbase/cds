@@ -1,27 +1,34 @@
 import React, { Fragment, memo } from 'react';
 import type { PressableProps } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import type { SharedProps } from '@coinbase/cds-common/types';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { ButtonGroup, type ButtonGroupProps } from '../../buttons/ButtonGroup';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { Box } from '../../layout/Box';
+import { Box, type BoxBaseProps, type BoxProps } from '../../layout/Box';
 
-export type ModalFooterBaseProps = {
-  /** Primary action button */
-  primaryAction: NonNullable<
-    React.ReactElement<ButtonBaseProps & { onPress?: PressableProps['onPress'] }>
-  >;
-  /** Secondary action button */
-  secondaryAction?: React.ReactElement<ButtonBaseProps & { onPress?: PressableProps['onPress'] }>;
-} & Pick<ButtonGroupProps, 'direction'> &
-  SharedProps;
-export type ModalFooterProps = ModalFooterBaseProps;
+export type ModalFooterBaseProps = Omit<BoxBaseProps, 'children'> &
+  Pick<ButtonGroupProps, 'direction'> & {
+    /** Primary action button */
+    primaryAction: NonNullable<
+      React.ReactElement<ButtonBaseProps & { onPress?: PressableProps['onPress'] }>
+    >;
+    /** Secondary action button */
+    secondaryAction?: React.ReactElement<ButtonBaseProps & { onPress?: PressableProps['onPress'] }>;
+  };
+
+export type ModalFooterProps = ModalFooterBaseProps & Omit<BoxProps, 'children'>;
 
 export const ModalFooter = memo((_props: ModalFooterProps) => {
   const mergedProps = useComponentConfig('ModalFooter', _props);
-  const { primaryAction, secondaryAction, direction = 'horizontal', testID } = mergedProps;
+  const {
+    primaryAction,
+    secondaryAction,
+    direction = 'horizontal',
+    paddingX = 3,
+    paddingY = 2,
+    ...props
+  } = mergedProps;
   const { hideDividers = false } = useModalContext();
   const actions = [secondaryAction, primaryAction].filter(Boolean);
   const isVertical = direction === 'vertical';
@@ -32,7 +39,7 @@ export const ModalFooter = memo((_props: ModalFooterProps) => {
   }
 
   return (
-    <Box borderedTop={!hideDividers} paddingX={3} paddingY={2} testID={testID}>
+    <Box borderedTop={!hideDividers} paddingX={paddingX} paddingY={paddingY} {...props}>
       <ButtonGroup block={!isVertical} direction={direction}>
         {actions.map((action, i) => (
           // actions are stable so should be fine to use index as key

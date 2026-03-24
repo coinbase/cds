@@ -13,14 +13,16 @@ import { MediaChip } from './MediaChip';
 export const SELECT_CHIP_DEFAULT_TEST_ID = 'select-chip';
 
 /**
- * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  * @see {@link @coinbase/cds-web/alpha/select-chip/SelectChip}
  */
 export type SelectChipProps = {
   /** Indicates that the control is being used to manipulate data elsewhere */
   active?: boolean;
   /**
-   * @deprecated The prop will be removed in a future version.
+   * @deprecated This will be removed in a future major release.
+   * @deprecationExpectedRemoval v7
    */
   children?: React.ReactNode;
 } & Omit<ChipProps, 'inverted' | 'children' | 'onBlur' | 'noScaleOnPress' | 'content'> &
@@ -28,7 +30,8 @@ export type SelectChipProps = {
   Omit<DropdownProps, 'onChange' | 'children'>;
 
 /**
- * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
  * @see {@link @coinbase/cds-web/alpha/select-chip/SelectChip}
  */
 export const SelectChip = memo(

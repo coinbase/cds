@@ -5,21 +5,23 @@ import { CardBody, type CardBodyBaseProps } from './CardBody';
 
 export type AnnouncementCardBaseProps = CardBaseProps & CardBodyBaseProps;
 export type AnnouncementCardProps = AnnouncementCardBaseProps;
-/** @deprecated Use MessagingCard instead. AnnouncementCard will be removed in a future major release. */
-export const AnnouncementCard = memo(function AnnouncementCard(_props: AnnouncementCardProps) {
-  const {
-    width,
-    title,
-    description,
-    testID,
-    accessibilityLabel,
-    accessibilityHint,
-    elevation = 0,
-    borderRadius = 0,
-    onClick,
-    // TODO this is only spread on the CardBody - are we sure that there are no CardBaseProps trapped in here that never make it to that element?
-    ...props
-  } = _props;
+/**
+ * @deprecated Use MessagingCard instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v6
+ */
+export const AnnouncementCard = memo(function AnnouncementCard({
+  width,
+  title,
+  description,
+  testID,
+  accessibilityLabel,
+  accessibilityHint,
+  elevation = 0,
+  borderRadius = 0,
+  onClick,
+  // TODO this is only spread on the CardBody - are we sure that there are no CardBaseProps trapped in here that never make it to that element?
+  ...props
+}: AnnouncementCardProps) {
   const accessibilityLabelValue =
     typeof title === 'string' && accessibilityLabel === undefined ? title : accessibilityLabel;
 

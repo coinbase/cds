@@ -62,6 +62,8 @@ export const Examples = () => {
             start={<Icon name="blockchain" padding={2} size="m" />}
           />
           <DateInput disabled {...sharedProps} {...props} />
+          <DateInput bordered={false} {...sharedProps} {...props} />
+          <DateInput bordered={false} focusedBorderWidth={200} {...sharedProps} {...props} />
           <DateInput required {...sharedProps} {...props} />
         </Group>
       </Example>

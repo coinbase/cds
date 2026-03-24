@@ -1,12 +1,16 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import { css } from '@linaria/core';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { Button } from '../../buttons/Button';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
-import { HStack } from '../../layout/HStack';
+import {
+  HStack,
+  type HStackBaseProps,
+  type HStackDefaultElement,
+  type HStackProps,
+} from '../../layout/HStack';
 import { breakpoints } from '../../styles/media';
 
 const baseCss = css`
@@ -33,7 +37,7 @@ const baseCss = css`
   }
 `;
 
-export type ModalFooterBaseProps = {
+export type ModalFooterBaseProps = Omit<HStackBaseProps, 'children'> & {
   /** Primary action button */
   primaryAction: NonNullable<
     React.ReactElement<ButtonBaseProps & { onClick?: React.MouseEventHandler }>
@@ -41,7 +45,8 @@ export type ModalFooterBaseProps = {
   /** Secondary action button */
   secondaryAction?: React.ReactElement<ButtonBaseProps & { onClick?: React.MouseEventHandler }>;
 };
-export type ModalFooterProps = ModalFooterBaseProps & BoxProps<BoxDefaultElement>;
+export type ModalFooterProps = ModalFooterBaseProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children'>;
 
 export const ModalFooter = memo((_props: ModalFooterProps) => {
   const mergedProps = useComponentConfig('ModalFooter', _props);
@@ -73,5 +78,3 @@ export const ModalFooter = memo((_props: ModalFooterProps) => {
     </HStack>
   );
 });
-
-ModalFooter.displayName = 'ModalFooter';

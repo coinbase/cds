@@ -1,19 +1,20 @@
 import React from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type {
-  SharedAccessibilityProps,
-  SharedProps,
-  ValidateProps,
-} from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons/IconButton';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
-import { HStack } from '../../layout/HStack';
+import { Box } from '../../layout/Box';
+import {
+  HStack,
+  type HStackBaseProps,
+  type HStackDefaultElement,
+  type HStackProps,
+} from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 
-export type ModalHeaderBaseProps = {
+export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
   /** Handles back button press */
   onBackButtonClick?: React.MouseEventHandler;
   /** Title of the Modal */
@@ -52,9 +53,10 @@ export type ModalHeaderBaseProps = {
    * @link https://reactnative.dev/docs/accessibility#accessibilityhint
    */
   closeAccessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
-} & SharedProps;
+};
 
-export type ModalHeaderProps = ModalHeaderBaseProps & BoxProps<BoxDefaultElement>;
+export type ModalHeaderProps = ModalHeaderBaseProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children'>;
 
 export const ModalHeader = (_props: ModalHeaderProps) => {
   const mergedProps = useComponentConfig('ModalHeader', _props);
@@ -86,10 +88,7 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
       borderedBottom={!hideDividers}
       paddingX={paddingX}
       paddingY={paddingY}
-      {...(props satisfies ValidateProps<
-        typeof props,
-        Omit<ModalHeaderProps, keyof BoxProps<BoxDefaultElement>>
-      >)}
+      {...props}
     >
       {onBackButtonClick ? (
         <Box>
