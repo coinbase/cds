@@ -4,7 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
-import { EPSILON, getBarOrigins, getBars, getStackBaseline, getStackOrigin } from '../utils/bar';
+import { EPSILON, getBars, getStackBaseline, getStackOrigin } from '../utils/bar';
 import { getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
@@ -199,12 +199,22 @@ export const BarStack = memo<BarStackProps>(
       });
     }, [series, indexScale, valueScale, layout]);
 
+    const categoryAxis = layout === 'vertical' ? xAxis : yAxis;
+    const categoryData =
+      categoryAxis?.data &&
+      Array.isArray(categoryAxis.data) &&
+      typeof categoryAxis.data[0] === 'number'
+        ? (categoryAxis.data as number[])
+        : undefined;
+    const categoryValue = categoryData ? categoryData[categoryIndex] : categoryIndex;
+
     const bars = useMemo(
       () =>
         getBars({
           series,
           getSeriesData,
           categoryIndex,
+          categoryValue,
           indexPos,
           thickness,
           valueScale,
@@ -216,6 +226,11 @@ export const BarStack = memo<BarStackProps>(
           barMinSize,
           stackMinSize,
           defaultFill: theme.color.fgPrimary,
+          borderRadius,
+          defaultFillOpacity,
+          defaultStroke,
+          defaultStrokeWidth,
+          defaultBarComponent,
         }),
       [
         series,
@@ -223,6 +238,7 @@ export const BarStack = memo<BarStackProps>(
         thickness,
         getSeriesData,
         categoryIndex,
+        categoryValue,
         roundBaseline,
         baseline,
         stackGap,
@@ -232,6 +248,11 @@ export const BarStack = memo<BarStackProps>(
         seriesGradients,
         theme.color.fgPrimary,
         layout,
+        borderRadius,
+        defaultFillOpacity,
+        defaultStroke,
+        defaultStrokeWidth,
+        defaultBarComponent,
       ],
     );
 
@@ -244,64 +265,47 @@ export const BarStack = memo<BarStackProps>(
           height: layout === 'vertical' ? 0 : thickness,
         };
       }
-      const valueRange = [
-        Math.min(...bars.map((bar) => bar.valuePos)),
-        Math.max(...bars.map((bar) => bar.valuePos + bar.length)),
-      ];
-
-      const [minValuePos, maxValuePos] = valueRange;
-      const stackSize = maxValuePos - minValuePos;
-
-      return {
-        x: layout === 'vertical' ? indexPos : minValuePos,
-        y: layout === 'vertical' ? minValuePos : indexPos,
-        width: layout === 'vertical' ? thickness : stackSize,
-        height: layout === 'vertical' ? stackSize : thickness,
-      };
+      const minX = Math.min(...bars.map((b) => b.x));
+      const minY = Math.min(...bars.map((b) => b.y));
+      const maxX = Math.max(...bars.map((b) => b.x + b.width));
+      const maxY = Math.max(...bars.map((b) => b.y + b.height));
+      return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
     }, [bars, baseline, indexPos, layout, thickness]);
 
-    // Per-bar initial animation origins: bars start stacked from the baseline (with gaps)
-    // rather than all overlapping at the same position.
-    const barOrigins = useMemo(
-      () => getBarOrigins(bars, barMinSize ?? 0, stackGap ?? 0, baseline, layout === 'vertical'),
-      [bars, barMinSize, stackGap, baseline, layout],
+    const stackOrigin = useMemo(
+      () =>
+        getStackOrigin(
+          bars.map((b) => b.origin),
+          barMinSize ?? 0,
+        ) ?? baseline,
+      [bars, barMinSize, baseline],
     );
-
-    const categoryAxis = layout === 'vertical' ? xAxis : yAxis;
-    const categoryData =
-      categoryAxis?.data &&
-      Array.isArray(categoryAxis.data) &&
-      typeof categoryAxis.data[0] === 'number'
-        ? (categoryAxis.data as number[])
-        : undefined;
-    const categoryValue = categoryData ? categoryData[categoryIndex] : categoryIndex;
 
     const barElements = bars.map((bar, index) => (
       <Bar
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
-        BarComponent={bar.BarComponent || defaultBarComponent}
-        borderRadius={borderRadius}
-        dataX={layout === 'vertical' ? categoryValue : bar.dataValue}
-        dataY={layout === 'vertical' ? bar.dataValue : categoryValue}
+        BarComponent={bar.BarComponent}
+        borderRadius={bar.borderRadius}
+        dataX={bar.dataX}
+        dataY={bar.dataY}
         fill={bar.fill}
-        fillOpacity={defaultFillOpacity}
-        height={layout === 'vertical' ? bar.length : thickness}
-        minSize={barMinSize}
-        origin={barOrigins[index]}
+        fillOpacity={bar.fillOpacity}
+        height={bar.height}
+        minSize={bar.minSize}
+        origin={bar.origin}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
         seriesId={bar.seriesId}
-        stroke={defaultStroke}
-        strokeWidth={defaultStrokeWidth}
+        stroke={bar.stroke}
+        strokeWidth={bar.strokeWidth}
         transition={transition}
         transitions={transitions}
-        width={layout === 'vertical' ? thickness : bar.length}
-        x={layout === 'vertical' ? indexPos : bar.valuePos}
-        y={layout === 'vertical' ? bar.valuePos : indexPos}
+        width={bar.width}
+        x={bar.x}
+        y={bar.y}
       />
     ));
 
-    // Check if the stack should be rounded based on baseline, across both orientations.
     const edge = layout === 'vertical' ? stackRect.y : stackRect.x;
     const size = layout === 'vertical' ? stackRect.height : stackRect.width;
     const stackRoundLower = roundBaseline || Math.abs(edge - baseline) >= EPSILON;
@@ -309,17 +313,12 @@ export const BarStack = memo<BarStackProps>(
     const stackRoundTop = layout === 'vertical' ? stackRoundLower : stackRoundHigher;
     const stackRoundBottom = layout === 'vertical' ? stackRoundHigher : stackRoundLower;
 
-    const origin = useMemo(
-      () => getStackOrigin(barOrigins, barMinSize ?? 0) ?? baseline,
-      [barOrigins, barMinSize, baseline],
-    );
-
     return (
       <BarStackComponent
         borderRadius={borderRadius}
         categoryIndex={categoryIndex}
         height={stackRect.height}
-        origin={origin}
+        origin={stackOrigin}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
         transition={transition}

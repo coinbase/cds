@@ -1,5 +1,6 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
+import type { BarBaseProps, BarComponent } from '../bar/Bar';
 import type { BarSeries } from '../bar/BarStack';
 
 import { defaultAxisId as fallbackAxisId } from './axis';
@@ -149,14 +150,18 @@ export function getStackGroups(
   return Object.values(groups);
 }
 
-/**
- * Minimum bar data required for stack layout computations.
- */
-export type StackBarItem = {
+type BarData = BarBaseProps & {
+  /** The ID of the series this bar belongs to. */
   seriesId: string;
+  /** Coordinate of the baseline/origin for animations. */
+  origin: number;
+  /** Position along the value axis in pixels (axis-agnostic, used by layout helpers). */
   valuePos: number;
+  /** Size along the value axis in pixels (axis-agnostic, used by layout helpers). */
   length: number;
+  /** The raw data value, used by layout helpers for gap/rounding logic. */
   dataValue?: number | [number, number] | null;
+  /** Whether gap distribution should be applied to this bar in a stack. */
   shouldApplyGap?: boolean;
 };
 
@@ -171,12 +176,12 @@ export type StackBarItem = {
  * @param baseline - Pixel position of the zero value on the value axis
  * @returns New array of bars with adjusted valuePos and length
  */
-export function applyStackGap<T extends StackBarItem>(
-  bars: T[],
+function applyStackGap(
+  bars: BarData[],
   stackGap: number,
   barsGrowVertically: boolean,
   baseline: number,
-): T[] {
+): BarData[] {
   if (!stackGap || bars.length <= 1) return bars;
 
   const result = [...bars];
@@ -190,7 +195,7 @@ export function applyStackGap<T extends StackBarItem>(
     return top <= 0 && bottom !== top && bar.shouldApplyGap;
   });
 
-  const applyGapGroup = (group: T[], growing: boolean) => {
+  const applyGapGroup = (group: BarData[], growing: boolean) => {
     if (group.length <= 1) return;
 
     const totalGapSpace = stackGap * (group.length - 1);
@@ -246,8 +251,8 @@ export function applyStackGap<T extends StackBarItem>(
  * @param barsGrowVertically - True for vertical layout, false for horizontal
  * @returns Array of origin positions (one per bar, parallel to input), all defaulting to baseline
  */
-export function getBarOrigins<T extends StackBarItem>(
-  bars: T[],
+function getBarOrigins(
+  bars: BarData[],
   barMinSize: number,
   stackGap: number,
   baseline: number,
@@ -256,12 +261,12 @@ export function getBarOrigins<T extends StackBarItem>(
   const result = bars.map(() => baseline);
   if (!barMinSize || bars.length === 0) return result;
 
-  const isPositive = (bar: T) => {
+  const isPositive = (bar: BarData) => {
     const [lo, hi] = (bar.dataValue as [number, number]).sort((a, b) => a - b);
     return lo >= 0 && hi !== lo;
   };
 
-  const isNegative = (bar: T) => {
+  const isNegative = (bar: BarData) => {
     const [lo, hi] = (bar.dataValue as [number, number]).sort((a, b) => a - b);
     return hi <= 0 && hi !== lo;
   };
@@ -388,12 +393,12 @@ export function getStackInitialClipRect(params: {
  * @param baseline - Pixel position of the zero value on the value axis
  * @returns New array of bars with adjusted valuePos and length
  */
-export function applyBarMinSize<T extends StackBarItem>(
-  bars: T[],
+function applyBarMinSize(
+  bars: BarData[],
   barMinSize: number,
   barsGrowVertically: boolean,
   baseline: number,
-): T[] {
+): BarData[] {
   if (!barMinSize || bars.length === 0) return bars;
 
   const originalTotalLength = bars.reduce((sum, bar) => sum + bar.length, 0);
@@ -513,8 +518,8 @@ export function applyBarMinSize<T extends StackBarItem>(
  * @param baseline - Pixel position of the zero value on the value axis
  * @returns Updated bars and stackBounds; unchanged if stackSize >= stackMinSize
  */
-export function applyStackMinSize<T extends StackBarItem>(
-  bars: T[],
+function applyStackMinSize(
+  bars: BarData[],
   stackMinSize: number,
   stackSize: number,
   stackBounds: Rect,
@@ -522,7 +527,7 @@ export function applyStackMinSize<T extends StackBarItem>(
   indexPos: number,
   thickness: number,
   baseline: number,
-): { bars: T[]; stackBounds: Rect } {
+): { bars: BarData[]; stackBounds: Rect } {
   if (!stackMinSize || stackSize >= stackMinSize) return { bars, stackBounds };
   if (bars.length === 0) return { bars, stackBounds };
 
@@ -660,9 +665,11 @@ export function applyStackMinSize<T extends StackBarItem>(
  * @param stackGap - Pixel gap between adjacent bars (non-zero ⇒ all faces stay rounded)
  * @returns New array of bars with corrected `roundTop`/`roundBottom` flags
  */
-export function applyBorderRadiusLogic<
-  T extends StackBarItem & { roundTop?: boolean; roundBottom?: boolean },
->(bars: T[], barsGrowVertically: boolean, stackGap: number | undefined): T[] {
+function applyBorderRadiusLogic(
+  bars: BarData[],
+  barsGrowVertically: boolean,
+  stackGap: number | undefined,
+): BarData[] {
   if (bars.length === 0) return bars;
 
   // Sort from "lower coordinate" face to "higher coordinate" face along the value axis:
@@ -732,29 +739,6 @@ export function getStackBaseline(
   return Math.max(stackRect.x, Math.min(baselinePos ?? stackRect.x, stackRect.x + stackRect.width));
 }
 
-/**
- * A series input with only the fields required by `getBars`.
- */
-export type StackBarSeriesInput<TBarComponent = unknown> = Pick<
-  Series,
-  'id' | 'data' | 'color' | 'gradient'
-> & {
-  BarComponent?: TBarComponent;
-};
-
-/**
- * A single computed bar entry produced by `getBars`.
- */
-export type ComputedStackBar<TBarComponent = unknown> = StackBarItem & {
-  indexPos: number;
-  thickness: number;
-  dataValue?: number | [number, number] | null;
-  BarComponent?: TBarComponent;
-  fill?: string;
-  roundTop?: boolean;
-  roundBottom?: boolean;
-};
-
 type SeriesGradientEntry =
   | {
       seriesId: string;
@@ -786,10 +770,11 @@ type SeriesGradientEntry =
  * @param params.defaultFill - Fallback fill color when a series has no color or gradient
  * @returns Positioned bar entries and the stack's bounding rect
  */
-export function getBars<TBarComponent>(params: {
-  series: StackBarSeriesInput<TBarComponent>[];
+export function getBars(params: {
+  series: BarSeries[];
   getSeriesData: (id: string) => (number | [number, number] | null)[] | undefined;
   categoryIndex: number;
+  categoryValue: number;
   indexPos: number;
   thickness: number;
   valueScale: ChartScaleFunction;
@@ -801,11 +786,17 @@ export function getBars<TBarComponent>(params: {
   barMinSize: number | undefined;
   stackMinSize: number | undefined;
   defaultFill: string;
-}): ComputedStackBar<TBarComponent>[] {
+  borderRadius: number | undefined;
+  defaultFillOpacity: number | undefined;
+  defaultStroke: string | undefined;
+  defaultStrokeWidth: number | undefined;
+  defaultBarComponent: BarComponent | undefined;
+}) {
   const {
     series,
     getSeriesData,
     categoryIndex,
+    categoryValue,
     indexPos,
     thickness,
     valueScale,
@@ -817,9 +808,14 @@ export function getBars<TBarComponent>(params: {
     barMinSize,
     stackMinSize,
     defaultFill,
+    borderRadius,
+    defaultFillOpacity,
+    defaultStroke,
+    defaultStrokeWidth,
+    defaultBarComponent,
   } = params;
 
-  let allBars: ComputedStackBar<TBarComponent>[] = [];
+  let allBars: BarData[] = [];
 
   series.forEach((s) => {
     const data = getSeriesData(s.id);
@@ -878,9 +874,7 @@ export function getBars<TBarComponent>(params: {
 
     allBars.push({
       seriesId: s.id,
-      indexPos,
       valuePos,
-      thickness,
       length,
       dataValue: value,
       fill: barFill,
@@ -888,6 +882,11 @@ export function getBars<TBarComponent>(params: {
       roundBottom,
       shouldApplyGap,
       BarComponent: s.BarComponent,
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      origin: 0,
     });
   });
 
@@ -934,5 +933,28 @@ export function getBars<TBarComponent>(params: {
     }
   }
 
-  return allBars;
+  const barOrigins = getBarOrigins(
+    allBars,
+    barMinSize ?? 0,
+    stackGap ?? 0,
+    baseline,
+    barsGrowVertically,
+  );
+
+  return allBars.map((bar, i) => ({
+    ...bar,
+    x: barsGrowVertically ? indexPos : bar.valuePos,
+    y: barsGrowVertically ? bar.valuePos : indexPos,
+    width: barsGrowVertically ? thickness : bar.length,
+    height: barsGrowVertically ? bar.length : thickness,
+    dataX: barsGrowVertically ? categoryValue : bar.dataValue,
+    dataY: barsGrowVertically ? bar.dataValue : categoryValue,
+    origin: barOrigins[i],
+    borderRadius,
+    fillOpacity: defaultFillOpacity,
+    stroke: defaultStroke,
+    strokeWidth: defaultStrokeWidth,
+    minSize: barMinSize,
+    BarComponent: bar.BarComponent || defaultBarComponent,
+  }));
 }
