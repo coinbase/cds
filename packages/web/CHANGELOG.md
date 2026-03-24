@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.57.1 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Use aria-describedby for all tooltip's triggers. [[#541](https://github.com/coinbase/cds/pull/541)]
+
 ## 8.57.0 (3/24/2026 PST)
 
 #### 🚀 Updates
