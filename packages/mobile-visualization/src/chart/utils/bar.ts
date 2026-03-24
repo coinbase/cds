@@ -108,9 +108,7 @@ export function getBarSizeAdjustment(barCount: number, gapSize: number): number 
   return (gapSize * (barCount - 1)) / barCount;
 }
 
-export type StackGroupSeriesInput = Pick<Series, 'id' | 'stackId' | 'xAxisId' | 'yAxisId'>;
-
-export type StackGroup = {
+type StackGroup = {
   stackId: string;
   series: BarSeries[];
   xAxisId?: string;
@@ -824,18 +822,18 @@ export function getBars(params: {
   thickness: number;
   valueScale: ChartScaleFunction;
   seriesGradients: SeriesGradientEntry[];
-  roundBaseline: boolean | undefined;
+  roundBaseline?: boolean;
   layout: CartesianChartLayout;
   baseline: number;
-  stackGap: number | undefined;
-  barMinSize: number | undefined;
-  stackMinSize: number | undefined;
+  stackGap?: number;
+  barMinSize?: number;
+  stackMinSize?: number;
   defaultFill: string;
-  borderRadius: number | undefined;
-  defaultFillOpacity: number | undefined;
-  defaultStroke: string | undefined;
-  defaultStrokeWidth: number | undefined;
-  defaultBarComponent: BarComponent | undefined;
+  borderRadius?: number;
+  defaultFillOpacity?: number;
+  defaultStroke?: string;
+  defaultStrokeWidth?: number;
+  defaultBarComponent?: BarComponent;
 }) {
   const {
     series,

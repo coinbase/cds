@@ -127,9 +127,10 @@ export const Bar = memo<BarProps>(
       return getBarPath(x, y, width, height, borderRadius, !!roundTop, !!roundBottom, layout);
     }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
-    const origin = useMemo(() => {
-      return originProp ?? (layout === 'horizontal' ? x : y + height);
-    }, [originProp, layout, x, y, height]);
+    const origin = useMemo(
+      () => originProp ?? (layout === 'horizontal' ? x : y + height),
+      [originProp, layout, x, y, height],
+    );
 
     if (!barPath) return;
 
