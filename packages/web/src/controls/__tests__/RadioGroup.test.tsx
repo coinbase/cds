@@ -81,6 +81,50 @@ describe('RadioGroup.test', () => {
     });
   });
 
+  it('applies controlSize to radio container', () => {
+    render(
+      <DefaultThemeProvider>
+        <Radio checked controlSize={60} onChange={jest.fn()} testID="test-radio" />
+      </DefaultThemeProvider>,
+    );
+
+    const radio = screen.getByTestId('test-radio-parent');
+    const outlineElement = within(radio).getByRole('presentation');
+
+    expect(outlineElement).toHaveStyle({
+      width: '60px',
+      height: '60px',
+    });
+  });
+
+  it('defaults dotSize to two thirds of controlSize', () => {
+    render(
+      <DefaultThemeProvider>
+        <Radio checked controlSize={60} onChange={jest.fn()} testID="test-radio" />
+      </DefaultThemeProvider>,
+    );
+
+    const radio = screen.getByTestId('test-radio-parent');
+    const dotElement = within(radio).getByTestId('radio-icon');
+    const circle = dotElement.querySelector('circle');
+
+    expect(circle).toHaveAttribute('r', '20');
+  });
+
+  it('uses explicit dotSize when provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <Radio checked controlSize={60} dotSize={30} onChange={jest.fn()} testID="test-radio" />
+      </DefaultThemeProvider>,
+    );
+
+    const radio = screen.getByTestId('test-radio-parent');
+    const dotElement = within(radio).getByTestId('radio-icon');
+    const circle = dotElement.querySelector('circle');
+
+    expect(circle).toHaveAttribute('r', '15');
+  });
+
   it('renders options', () => {
     render(
       <DefaultThemeProvider>
