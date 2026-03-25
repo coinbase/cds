@@ -59,6 +59,25 @@ describe('Tooltip', () => {
     expect(screen.queryByTestId(tooltipTestID)).not.toBeInTheDocument();
   });
 
+  it('does not override the button accessible name with tooltip content', () => {
+    render(<StoryExample />);
+
+    const button = screen.getByRole('button', { name: 'Button' });
+    expect(button).toBeInTheDocument();
+    expect(button).not.toHaveAccessibleName('This is the content in the tooltip!');
+  });
+
+  it('associates the trigger with the tooltip via aria-describedby when open', async () => {
+    render(<StoryExample />);
+    const button = screen.getByRole('button');
+
+    fireEvent.mouseEnter(button);
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveAttribute('role', 'tooltip');
+    expect(button).toHaveAttribute('aria-describedby', tooltip.id);
+  });
+
   it('shows tooltip content on hover', async () => {
     render(<StoryExample />);
     const button = screen.getByRole('button');
