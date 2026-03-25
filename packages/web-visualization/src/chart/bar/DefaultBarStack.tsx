@@ -6,6 +6,8 @@ import {
   defaultBarEnterTransition,
   defaultTransition,
   getBarPath,
+  getNormalizedStagger,
+  getStackInitialClipRect,
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
@@ -39,21 +41,17 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
-    yOrigin,
+    origin,
     transitions,
     transition,
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
     const clipPathId = useId();
 
-    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
-    const normalizedStagger = useMemo(() => {
-      const barsGrowVertically = layout !== 'horizontal';
-      if (barsGrowVertically) {
-        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-      }
-      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout, x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>
@@ -81,24 +79,20 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
     const initialClipPathData = useMemo(() => {
-      if (!animate) return undefined;
-      const barsGrowVertically = layout !== 'horizontal';
-      const initialX = barsGrowVertically ? x : (yOrigin ?? x);
-      const initialY = barsGrowVertically ? (yOrigin ?? y + height) : y;
-      const initialWidth = barsGrowVertically ? width : 1;
-      const initialHeight = barsGrowVertically ? 1 : height;
+      if (!animate) return;
+      const initialClipRect = getStackInitialClipRect({ x, y, width, height }, layout, origin);
 
       return getBarPath(
-        initialX,
-        initialY,
-        initialWidth,
-        initialHeight,
+        initialClipRect.x,
+        initialClipRect.y,
+        initialClipRect.width,
+        initialClipRect.height,
         borderRadius,
         roundTop,
         roundBottom,
         layout,
       );
-    }, [animate, layout, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+    }, [animate, layout, x, y, height, width, borderRadius, roundTop, roundBottom, origin]);
 
     const animatedClipPath = usePathTransition({
       currentPath: clipPathData,

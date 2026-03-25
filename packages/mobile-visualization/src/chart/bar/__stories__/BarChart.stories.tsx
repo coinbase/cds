@@ -12,12 +12,13 @@ import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
+import { DefaultLegendEntry } from '../../legend';
 import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { Scrubber } from '../../scrubber';
 import { getPointOnSerializableScale, unwrapAnimatedValue, useScrubberContext } from '../../utils';
 import type { BarComponentProps } from '../Bar';
 import { Bar } from '../Bar';
-import { BarChart } from '../BarChart';
+import { BarChart, type BarChartProps } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
 import { DefaultBarStack } from '../DefaultBarStack';
@@ -123,6 +124,7 @@ const CustomBarStackComponent = memo(({ children, ...props }: BarStackComponentP
 });
 
 const MonthlyRewards = () => {
+  const theme = useTheme();
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
   const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
@@ -132,10 +134,10 @@ const MonthlyRewards = () => {
   const [roundBaseline, setRoundBaseline] = useState(true);
 
   const series = [
-    { id: 'purple', data: purple, color: '#b399ff' },
-    { id: 'blue', data: blue, color: '#4f7cff' },
-    { id: 'cyan', data: cyan, color: '#00c2df' },
-    { id: 'green', data: green, color: '#33c481' },
+    { id: 'purple', data: purple, color: `rgb(${theme.spectrum.purple30})` },
+    { id: 'blue', data: blue, color: `rgb(${theme.spectrum.blue30})` },
+    { id: 'cyan', data: cyan, color: `rgb(${theme.spectrum.teal30})` },
+    { id: 'green', data: green, color: `rgb(${theme.spectrum.green30})` },
   ];
 
   return (
@@ -155,7 +157,7 @@ const MonthlyRewards = () => {
           tickLabelFormatter: (index) => {
             return months[index];
           },
-          categoryPadding: 0.27,
+          categoryPadding: 0.25,
         }}
       />
       <Button onPress={() => setRoundBaseline(!roundBaseline)}>Toggle Round Baseline</Button>
@@ -993,6 +995,87 @@ const HorizontalBarChart = () => {
   );
 };
 
+function BuyVsSellExample() {
+  function BuyVsSellLegend({ buy, sell }: { buy: number; sell: number }) {
+    const theme = useTheme();
+    return (
+      <HStack gap={1} justifyContent="space-between">
+        <DefaultLegendEntry
+          color={theme.color.fgPositive}
+          label={
+            <Text color="fgMuted" font="legal">
+              {buy}% bought
+            </Text>
+          }
+          seriesId="buy"
+        />
+        <DefaultLegendEntry
+          color={theme.color.fgNegative}
+          label={
+            <Text color="fgMuted" font="legal">
+              {sell}% sold
+            </Text>
+          }
+          seriesId="sell"
+        />
+      </HStack>
+    );
+  }
+
+  function BuyVsSellChart({
+    buy,
+    sell,
+    animate = true,
+    borderRadius = 3,
+    height = 6,
+    inset = 0,
+    layout = 'horizontal',
+    stackGap = 4,
+    xAxis,
+    yAxis,
+    barMinSize = height,
+    ...props
+  }: Omit<BarChartProps, 'series' | 'height'> & { buy: number; sell: number; height?: number }) {
+    const theme = useTheme();
+    return (
+      <VStack gap={1.5}>
+        <BarChart
+          roundBaseline
+          stacked
+          animate={animate}
+          barMinSize={barMinSize}
+          borderRadius={borderRadius}
+          height={height}
+          inset={inset}
+          layout={layout}
+          series={[
+            {
+              id: 'buy',
+              data: [buy],
+              color: theme.color.fgPositive,
+              legendShape: 'circle',
+            },
+            {
+              id: 'sell',
+              data: [sell],
+              color: theme.color.fgNegative,
+              legendShape: 'circle',
+            },
+          ]}
+          stackGap={stackGap}
+          transitions={{ enter: { type: 'timing', duration: 5000, delay: 2000 } }}
+          xAxis={{ domainLimit: 'strict', ...xAxis }}
+          yAxis={{ categoryPadding: 0, ...yAxis }}
+          {...props}
+        />
+        <BuyVsSellLegend buy={buy} sell={sell} />
+      </VStack>
+    );
+  }
+
+  return <BuyVsSellChart buy={76} sell={24} />;
+}
+
 const PopulationPyramid = () => {
   const theme = useTheme();
 
@@ -1188,6 +1271,10 @@ function ExampleNavigator() {
       {
         title: 'Horizontal Layout',
         component: <HorizontalBarChart />,
+      },
+      {
+        title: 'Buy vs Sell',
+        component: <BuyVsSellExample />,
       },
       {
         title: 'Population Pyramid',
