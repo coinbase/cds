@@ -111,7 +111,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
             style={styles?.substepContainer}
             visited={visited}
           >
-            {step.subSteps.map((subStep, index) => {
+            {step.subSteps.map((subStep) => {
               const RenderedStepComponent = subStep.Component ?? StepperStepComponent;
               const isDescendentActive = activeStepId
                 ? containsStep({

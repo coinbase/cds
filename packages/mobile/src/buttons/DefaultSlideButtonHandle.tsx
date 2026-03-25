@@ -9,6 +9,7 @@ import Animated, {
   type WithSpringConfig,
 } from 'react-native-reanimated';
 import { variants } from '@coinbase/cds-common/tokens/button';
+import type { SpringConfig } from '@react-spring/core';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
@@ -25,6 +26,12 @@ export const slideButtonSpringConfig = {
   mass: 1,
   overshootClamping: true,
 } as const satisfies WithSpringConfig;
+
+/**
+ * @deprecated SlideButton no longer uses react-spring; this value no longer used by {@link DefaultSlideButtonHandle} but retained for migration only. Use {@link slideButtonSpringConfig} with Reanimated `withSpring` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
+export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
 
 export type SlideButtonHandleCheckedProps = Pick<SlideButtonBaseProps, 'variant' | 'compact'> & {
   label?: React.ReactNode;

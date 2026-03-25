@@ -5,6 +5,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { durations } from '@coinbase/cds-common/motion/tokens';
 import { containsStep, flattenSteps, isStepVisited } from '@coinbase/cds-common/stepper/utils';
 import type { IconName } from '@coinbase/cds-common/types';
+import type { SpringConfig } from '@react-spring/core';
 
 import type { IconProps } from '../icons/Icon';
 import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
@@ -214,6 +215,11 @@ export type StepperBaseProps<Metadata extends Record<string, unknown> = Record<s
     StepperHeaderComponent?: StepperHeaderComponent<Metadata> | null;
     /** The timing config to use for the progress animation. */
     progressTimingConfig?: WithTimingConfig;
+    /**
+     * @deprecated Stepper no longer uses react-spring for progress; this value is ignored but retained for migration only. Use {@link progressTimingConfig} instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    progressSpringConfig?: SpringConfig;
     /** Whether to animate the progress bar.
      * @default true
      */
@@ -250,6 +256,16 @@ const cascadeStaggerMs = durations.slow2;
 export const defaultProgressTimingConfig: WithTimingConfig = {
   duration: durations.slow2,
   easing: mobileCurves.global,
+};
+
+/**
+ * @deprecated Use {@link defaultProgressTimingConfig}. Retained for migration only; Stepper no longer uses react-spring for progress. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
+export const defaultProgressSpringConfig: SpringConfig = {
+  friction: 0,
+  tension: 100,
+  clamp: true,
 };
 
 type StepperComponent = <Metadata extends Record<string, unknown> = Record<string, unknown>>(
