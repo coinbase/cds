@@ -31,9 +31,11 @@ export type SearchInputBaseProps = Pick<
   | 'accessibilityHint'
   | 'accessibilityLabel'
   | 'accessibilityLabelledBy'
+  | 'bordered'
   | 'compact'
   | 'disabled'
   | 'enableColorSurge'
+  | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
   | 'placeholder'
   | 'testID'
@@ -87,11 +89,6 @@ export type SearchInputProps = SearchInputBaseProps &
      * Callback fired when pressed/clicked
      */
     onClick?: React.MouseEventHandler;
-    /**
-     * Adds border to input
-     * @default true
-     */
-    bordered?: boolean;
   };
 
 export const SearchInput = memo(
@@ -105,7 +102,6 @@ export const SearchInput = memo(
       value,
       compact,
       hideStartIcon = false,
-      bordered = true,
       hideEndIcon,
       startIcon,
       end,
@@ -154,7 +150,6 @@ export const SearchInput = memo(
       <TextInput
         ref={refs}
         borderRadius={1000}
-        bordered={bordered}
         className={cx(baseCss, compact && compactCss)}
         end={
           end ??

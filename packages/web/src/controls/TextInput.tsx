@@ -85,10 +85,16 @@ export type TextInputBaseProps = {
    * */
   inputNode?: React.ReactElement;
   /**
-   * Adds border to input
+   * Adds border to input.
+   * When set to `false`, focus border styling is disabled by default.
    * @default true
    */
   bordered?: boolean;
+  /**
+   * Additional border width when focused.
+   * Set this when `bordered={false}` to opt into a focus border style.
+   */
+  focusedBorderWidth?: InputStackBaseProps['focusedBorderWidth'];
   /**
    * Aligns text inside input and helperText
    * @default start
@@ -180,6 +186,7 @@ export const TextInput = memo(
       height,
       inputNode,
       bordered = true,
+      focusedBorderWidth,
       enableColorSurge = false,
       helperTextErrorIconAccessibilityLabel = 'error',
       labelVariant = 'outside',
@@ -306,9 +313,7 @@ export const TextInput = memo(
         <InputStack
           borderRadius={borderRadius}
           borderWidth={bordered ? 100 : 0}
-          // If bordered is true, we want disableFocusedStyle = false
-          // If bordered is false, we want disableFocusedStyle = true
-          disableFocusedStyle={!bordered}
+          disableFocusedStyle={!bordered && typeof focusedBorderWidth === 'undefined'}
           disabled={disabled}
           enableColorSurge={enableColorSurge}
           endNode={
@@ -331,6 +336,7 @@ export const TextInput = memo(
             )
           }
           focused={focused}
+          focusedBorderWidth={focusedBorderWidth}
           height={height}
           helperTextNode={
             !!helperText &&

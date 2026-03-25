@@ -262,6 +262,7 @@ export const CustomLabel = function CustomLabel() {
             <Tooltip content="This will be visible to other users.">
               <Icon
                 active
+                accessibilityLabel="Info"
                 color="fg"
                 name="info"
                 padding={0.75}

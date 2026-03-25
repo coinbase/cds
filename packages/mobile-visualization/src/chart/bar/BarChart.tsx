@@ -123,9 +123,9 @@ export const BarChart = memo(
       }, [seriesProp, stacked]);
 
       const seriesIds = useMemo(() => series?.map((s) => s.id), [series]);
-      const isHorizontal = chartProps.layout === 'horizontal';
-      const defaultXScaleType = isHorizontal ? 'linear' : 'band';
-      const defaultYScaleType = isHorizontal ? 'band' : 'linear';
+      const isHorizontalLayout = chartProps.layout === 'horizontal';
+      const defaultXScaleType = isHorizontalLayout ? 'linear' : 'band';
+      const defaultYScaleType = isHorizontalLayout ? 'band' : 'linear';
 
       // Split axis props into config props for Chart and visual props for axis components
       const {
@@ -165,7 +165,7 @@ export const BarChart = memo(
           scaleType: xScaleType ?? defaultXScaleType,
           data: xData,
           categoryPadding: xCategoryPadding,
-          domain: isHorizontal && !hasNegativeValues ? { min: 0, ...xDomain } : xDomain,
+          domain: isHorizontalLayout && !hasNegativeValues ? { min: 0, ...xDomain } : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
         }),
@@ -174,7 +174,7 @@ export const BarChart = memo(
           defaultXScaleType,
           xData,
           xCategoryPadding,
-          isHorizontal,
+          isHorizontalLayout,
           hasNegativeValues,
           xDomain,
           xDomainLimit,
@@ -188,7 +188,7 @@ export const BarChart = memo(
           scaleType: yScaleType ?? defaultYScaleType,
           data: yData,
           categoryPadding: yCategoryPadding,
-          domain: !isHorizontal && !hasNegativeValues ? { min: 0, ...yDomain } : yDomain,
+          domain: !isHorizontalLayout && !hasNegativeValues ? { min: 0, ...yDomain } : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
         }),
@@ -197,7 +197,7 @@ export const BarChart = memo(
           defaultYScaleType,
           yData,
           yCategoryPadding,
-          isHorizontal,
+          isHorizontalLayout,
           hasNegativeValues,
           yDomain,
           yDomainLimit,
