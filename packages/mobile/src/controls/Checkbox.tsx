@@ -11,7 +11,7 @@ import { Control, type ControlBaseProps, type ControlIconProps } from './Control
 
 export type CheckboxBaseProps<CheckboxValue extends string> = Omit<
   ControlBaseProps<CheckboxValue>,
-  'controlColor'
+  'controlColor' | 'controlSize' | 'dotSize'
 > & {
   /**
    * Sets the checked/active color of the checkbox.

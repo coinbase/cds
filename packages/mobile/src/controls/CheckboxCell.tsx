@@ -27,7 +27,10 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title'> &
+} & Omit<
+  ControlBaseProps<CheckboxValue>,
+  'style' | 'children' | 'title' | 'controlSize' | 'dotSize'
+> &
   Omit<PressableBaseProps, 'children' | 'noScaleOnPress'>;
 
 export type CheckboxCellProps<CheckboxValue extends string> =
