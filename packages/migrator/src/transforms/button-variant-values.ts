@@ -1,3 +1,13 @@
+/**
+ * Button Variant Values Transform (v8 → v9)
+ *
+ * Remaps Button/IconButton `variant` prop values to reflect v9 naming:
+ *   - "tertiary"        → "inverse"   (old tertiary used bgInverse; v9 gives tertiary new semantics)
+ *   - "foregroundMuted"  → "secondary" (foregroundMuted deprecated per design)
+ *
+ * Only targets components imported from @coinbase/cds-web or @coinbase/cds-mobile.
+ * Adds TODO comments for dynamic variant expressions that need manual review.
+ */
 import type { API, FileInfo } from 'jscodeshift';
 
 import { addTodoComment, hasMigrationTodo, transformLogger } from '../utils/transform-utils';
