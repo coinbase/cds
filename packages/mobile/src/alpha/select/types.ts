@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { AccessibilityRole, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import type { CellBaseProps } from '../../cells/Cell';
@@ -251,6 +252,11 @@ export type SelectControlProps<
      */
     align?: 'start' | 'center' | 'end';
     /**
+     * Typography font token used for typed search input text in select controls that render inputs.
+     * @default body
+     */
+    inputFont?: ThemeVars.Font;
+    /**
      * Determines if the control should have a default border.
      * @note focusedBorderWidth on the control still shows a border when focused by default.
      * @default true
@@ -414,6 +420,7 @@ export type SelectBaseProps<
     | 'labelVariant'
     | 'endNode'
     | 'align'
+    | 'inputFont'
     | 'bordered'
   > &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &
