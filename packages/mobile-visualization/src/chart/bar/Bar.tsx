@@ -1,4 +1,5 @@
 import React, { memo, useMemo } from 'react';
+import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -6,74 +7,36 @@ import { type BarTransition, getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
-export type BarBaseProps = {
-  /**
-   * X coordinate of the bar (left edge).
-   */
-  x: number;
-  /**
-   * Y coordinate of the bar (top edge).
-   */
-  y: number;
-  /**
-   * Width of the bar.
-   */
-  width: number;
-  /**
-   * Height of the bar.
-   */
-  height: number;
+export type BarBaseProps = Rect & {
   /**
    * Border radius for the bar.
    * @default 4
    */
   borderRadius?: number;
-  /**
-   * Whether to round the top of the bar.
-   */
+  /** Whether to round the top of the bar. */
   roundTop?: boolean;
-  /**
-   * Whether to round the bottom of the bar.
-   */
+  /** Whether to round the bottom of the bar. */
   roundBottom?: boolean;
-  /**
-   * Coordinate of the baseline/origin for animations.
-   * For vertical layout (bars grow up), this is the Y coordinate.
-   * For horizontal layout (bars grow sideways), this is the X coordinate.
-   */
+  /** Origin of the bar. */
   origin?: number;
-  /**
-   * The x-axis data value for this bar.
-   */
-  dataX?: number | string;
-  /**
-   * The y-axis data value for this bar.
-   */
+  /** The x-axis data value for this bar. */
+  dataX?: number | [number, number] | null;
+  /** The y-axis data value for this bar. */
   dataY?: number | [number, number] | null;
-  /**
-   * The ID of the series this bar belongs to.
-   */
+  /** The ID of the series this bar belongs to. */
   seriesId?: string;
-  /**
-   * Fill color for the bar.
-   */
+  /** Fill color for the bar. */
   fill?: string;
-  /**
-   * Fill opacity for the bar.
-   */
+  /** Fill opacity for the bar. */
   fillOpacity?: number;
-  /**
-   * Stroke color for the bar outline.
-   */
+  /** Stroke color for the bar outline. */
   stroke?: string;
-  /**
-   * Stroke width for the bar outline.
-   */
+  /** Stroke width for the bar outline. */
   strokeWidth?: number;
-  /**
-   * Component to render the bar.
-   */
+  /** Component to render the bar. */
   BarComponent?: BarComponent;
+  /** Minimum bar size in pixels. When set, bars shorter than this value are expanded. */
+  minSize?: number;
 };
 
 export type BarProps = BarBaseProps & {
@@ -153,38 +116,34 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    minSize,
     transitions,
     transition,
   }) => {
     const theme = useTheme();
     const { layout } = useCartesianChartContext();
 
-    // Use theme color as default if no fill is provided
-    const effectiveFill = fill ?? theme.color.fgPrimary;
-
-    const borderRadiusPixels = useMemo(() => borderRadius ?? 0, [borderRadius]);
-
     const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadiusPixels, roundTop, roundBottom, layout);
-    }, [x, y, width, height, borderRadiusPixels, roundTop, roundBottom, layout]);
+      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom, layout);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
-    const effectiveOrigin = originProp ?? (layout === 'horizontal' ? x : y + height);
+    const origin = useMemo(
+      () => originProp ?? (layout === 'horizontal' ? x : y + height),
+      [originProp, layout, x, y, height],
+    );
+    if (!barPath) return;
 
-    if (!barPath) {
-      return null;
-    }
-
-    // Always use the BarComponent for rendering
     return (
       <BarComponent
         borderRadius={borderRadius}
         d={barPath}
         dataX={dataX}
         dataY={dataY}
-        fill={effectiveFill}
+        fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}
         height={height}
-        origin={effectiveOrigin}
+        minSize={minSize}
+        origin={origin}
         roundBottom={roundBottom}
         roundTop={roundTop}
         seriesId={seriesId}

@@ -1,3 +1,14 @@
+import type { Rect } from '@coinbase/cds-common/types';
+
+import type { BarBaseProps, BarComponent } from '../bar/Bar';
+import type { BarSeries } from '../bar/BarStack';
+
+import { defaultAxisId as fallbackAxisId } from './axis';
+import type { Series } from './chart';
+import type { CartesianChartLayout } from './context';
+import type { GradientDefinition, GradientStop } from './gradient';
+import { evaluateGradientAtValue } from './gradient';
+import type { ChartScaleFunction, SerializableScale } from './scale';
 import { defaultTransition, type Transition } from './transition';
 
 /**
@@ -16,6 +27,29 @@ export type BarTransition = Transition & {
    * Leftmost bar starts immediately, rightmost starts after this delay.
    */
   staggerDelay?: number;
+};
+
+/**
+ * Computes a bar's normalized [0, 1] position along the category axis, used for
+ * stagger-delay calculations.
+ *
+ * Vertical charts stagger left-to-right (x axis); horizontal charts stagger
+ * top-to-bottom (y axis). Returns 0 when the drawing area has no extent.
+ *
+ * @param layout - The layout of the chart
+ * @param x - Bar's left edge in pixels
+ * @param y - Bar's top edge in pixels
+ */
+export const getNormalizedStagger = (
+  layout: CartesianChartLayout,
+  x: number,
+  y: number,
+  drawingArea: Rect,
+): number => {
+  if (layout === 'horizontal') {
+    return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
+  }
+  return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
 };
 
 /**
@@ -72,4 +106,909 @@ export function getBarSizeAdjustment(barCount: number, gapSize: number): number 
   }
 
   return (gapSize * (barCount - 1)) / barCount;
+}
+
+type StackGroup = {
+  stackId: string;
+  series: BarSeries[];
+  xAxisId?: string;
+  yAxisId?: string;
+};
+
+/**
+ * Groups bar series into stack groups scoped by stackId + axis IDs.
+ *
+ * Series with no `stackId` are treated as independent stacks keyed by series id.
+ * Axis IDs are included in the group key so series on different axes never stack together.
+ */
+export function getStackGroups(
+  series: BarSeries[],
+  defaultAxisId: string = fallbackAxisId,
+): StackGroup[] {
+  const groups: Record<string, StackGroup> = {};
+
+  series.forEach((entry) => {
+    const xAxisId = entry.xAxisId ?? defaultAxisId;
+    const yAxisId = entry.yAxisId ?? defaultAxisId;
+    const stackId = entry.stackId || `individual-${entry.id}`;
+    const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
+
+    if (!groups[stackKey]) {
+      groups[stackKey] = {
+        stackId: stackKey,
+        series: [],
+        xAxisId: entry.xAxisId,
+        yAxisId: entry.yAxisId,
+      };
+    }
+
+    groups[stackKey].series.push(entry);
+  });
+
+  return Object.values(groups);
+}
+
+type BarData = BarBaseProps & {
+  /** The ID of the series this bar belongs to. */
+  seriesId: string;
+  /** Coordinate of the baseline/origin for animations. */
+  origin: number;
+  /** Position along the value axis in pixels (axis-agnostic, used by layout helpers). */
+  valuePos: number;
+  /** Size along the value axis in pixels (axis-agnostic, used by layout helpers). */
+  length: number;
+  /** The raw data value as [baseline, value], used by layout helpers for gap/rounding logic. */
+  dataValue: [number, number];
+  /** Whether gap distribution should be applied to this bar in a stack. */
+  shouldApplyGap?: boolean;
+};
+
+/**
+ * Applies proportional gap distribution to a stack of bars, maintaining total stack length.
+ * Gaps are only inserted between bars that have `shouldApplyGap = true`.
+ * Positive (above-baseline) and negative (below-baseline) groups are gapped independently.
+ *
+ * @param bars - Array of bar items with current valuePos and length
+ * @param stackGap - Gap size in pixels between adjacent bars
+ * @param layout - The layout of the chart
+ * @param baseline - Pixel position of the zero value on the value axis
+ * @returns New array of bars with adjusted valuePos and length
+ */
+function applyStackGap(
+  bars: BarData[],
+  stackGap: number,
+  layout: CartesianChartLayout,
+  baseline: number,
+): BarData[] {
+  if (!stackGap || bars.length <= 1) return bars;
+
+  const result = [...bars];
+
+  const barsAboveBaseline = bars.filter((bar) => {
+    const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
+    return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
+  });
+  const barsBelowBaseline = bars.filter((bar) => {
+    const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
+    return top <= 0 && bottom !== top && bar.shouldApplyGap;
+  });
+
+  const applyGapGroup = (group: BarData[], growing: boolean) => {
+    if (group.length <= 1) return;
+
+    const totalGapSpace = stackGap * (group.length - 1);
+    const totalDataLength = group.reduce((sum, bar) => sum + bar.length, 0);
+    const lengthReduction = totalGapSpace / totalDataLength;
+
+    const sortedBars = growing
+      ? [...group].sort((a, b) => b.valuePos - a.valuePos)
+      : [...group].sort((a, b) => a.valuePos - b.valuePos);
+
+    let currentEdge = baseline;
+    sortedBars.forEach((bar, index) => {
+      const newLength = bar.length * (1 - lengthReduction);
+      let newValuePos: number;
+
+      if (growing) {
+        newValuePos = currentEdge - newLength;
+        currentEdge = newValuePos - (index < sortedBars.length - 1 ? stackGap : 0);
+      } else {
+        newValuePos = currentEdge;
+        currentEdge = newValuePos + newLength + (index < sortedBars.length - 1 ? stackGap : 0);
+      }
+
+      const barIndex = result.findIndex((b) => b.seriesId === bar.seriesId);
+      if (barIndex !== -1) {
+        result[barIndex] = { ...result[barIndex], length: newLength, valuePos: newValuePos };
+      }
+    });
+  };
+
+  // Positive bars: grow up in vertical (decreasing Y), grow right in horizontal (increasing X)
+  applyGapGroup(barsAboveBaseline, layout === 'vertical');
+  // Negative bars: grow down in vertical (increasing Y), grow left in horizontal (decreasing X)
+  applyGapGroup(barsBelowBaseline, layout !== 'vertical');
+
+  return result;
+}
+
+/**
+ * Computes per-bar initial animation origin positions for bar entrance animations.
+ *
+ * Bars are stacked from the baseline in their respective directions so they start at
+ * distinct, non-overlapping positions with the gap already applied:
+ * - Positive bars: stack rightward (horizontal) / upward (vertical) from the baseline.
+ * - Negative bars: stack leftward (horizontal) / downward (vertical) from the baseline.
+ *
+ * The bar closest to the baseline always gets index 0 and starts exactly at the baseline.
+ *
+ * @param bars - Array of bar items with final valuePos, length, and dataValue
+ * @param initialBarMinSizes - Per-bar initial sizes in pixels for entrance animation
+ * @param stackGap - Gap between adjacent bars in pixels
+ * @param baseline - Pixel position of the zero value on the value axis
+ * @param layout - The layout of the chart
+ * @returns Array of origin positions (one per bar, parallel to input), all defaulting to baseline
+ */
+function getBarOrigins(
+  bars: BarData[],
+  initialBarMinSizes: number[],
+  stackGap: number,
+  baseline: number,
+  layout: CartesianChartLayout,
+): number[] {
+  const result = bars.map(() => baseline);
+  if (bars.length === 0 || initialBarMinSizes.every((size) => !size)) return result;
+
+  const isPositive = (bar: BarData) => {
+    const [lo, hi] = [...bar.dataValue].sort((a, b) => a - b);
+    return lo >= 0 && hi !== lo;
+  };
+
+  const isNegative = (bar: BarData) => {
+    const [lo, hi] = [...bar.dataValue].sort((a, b) => a - b);
+    return hi <= 0 && hi !== lo;
+  };
+
+  const positiveBars = bars
+    .map((bar, i) => ({ bar, i }))
+    .filter(({ bar }) => isPositive(bar))
+    .sort((a, b) =>
+      layout === 'vertical' ? b.bar.valuePos - a.bar.valuePos : a.bar.valuePos - b.bar.valuePos,
+    );
+
+  if (layout === 'vertical') {
+    let currentPositive = baseline;
+    positiveBars.forEach(({ i }, idx) => {
+      const initialSize = initialBarMinSizes[i] ?? 0;
+      currentPositive -= initialSize;
+      result[i] = currentPositive;
+      if (idx < positiveBars.length - 1) {
+        currentPositive -= stackGap;
+      }
+    });
+  } else {
+    let currentPositive = baseline;
+    positiveBars.forEach(({ i }, idx) => {
+      const initialSize = initialBarMinSizes[i] ?? 0;
+      result[i] = currentPositive;
+      currentPositive += initialSize;
+      if (idx < positiveBars.length - 1) {
+        currentPositive += stackGap;
+      }
+    });
+  }
+
+  const negativeBars = bars
+    .map((bar, i) => ({ bar, i }))
+    .filter(({ bar }) => isNegative(bar))
+    .sort((a, b) =>
+      layout === 'vertical'
+        ? a.bar.valuePos - b.bar.valuePos
+        : b.bar.valuePos + b.bar.length - (a.bar.valuePos + a.bar.length),
+    );
+
+  if (layout === 'vertical') {
+    let currentNegative = baseline;
+    negativeBars.forEach(({ i }, idx) => {
+      const initialSize = initialBarMinSizes[i] ?? 0;
+      result[i] = currentNegative;
+      currentNegative += initialSize;
+      if (idx < negativeBars.length - 1) {
+        currentNegative += stackGap;
+      }
+    });
+  } else {
+    let currentNegative = baseline;
+    negativeBars.forEach(({ i }, idx) => {
+      const initialSize = initialBarMinSizes[i] ?? 0;
+      currentNegative -= initialSize;
+      result[i] = currentNegative;
+      if (idx < negativeBars.length - 1) {
+        currentNegative -= stackGap;
+      }
+    });
+  }
+
+  return result;
+}
+
+/**
+ * Computes stack clip origin [start, end] that covers the bounding box
+ * of all bars at their stacked starting positions (as computed by `getBarOrigins`).
+ *
+ * This is passed to `DefaultBarStack` so the clip animation starts in sync with the
+ * individual bar animations — no bars leak outside the clip on frame 0.
+ *
+ * @param barOrigins - Per-bar initial origins from `getBarOrigins`
+ * @param barMinSizes - Per-bar minimum sizes in pixels (or a uniform value)
+ * @returns [originStart, originEnd] or undefined when barMinSize is 0 / no bars
+ */
+export function getStackOrigin(
+  barOrigins: number[],
+  barMinSizes: number[] | number,
+): [number, number] | undefined {
+  if (barOrigins.length === 0) return undefined;
+  const minSizes = Array.isArray(barMinSizes) ? barMinSizes : barOrigins.map(() => barMinSizes);
+
+  let rangeStart = Number.POSITIVE_INFINITY;
+  let rangeEnd = Number.NEGATIVE_INFINITY;
+
+  for (let i = 0; i < barOrigins.length; i++) {
+    const minSize = minSizes[i] ?? 0;
+    if (minSize <= 0) continue;
+
+    const barStart = barOrigins[i];
+    const barEnd = barStart + minSize;
+    rangeStart = Math.min(rangeStart, barStart, barEnd);
+    rangeEnd = Math.max(rangeEnd, barStart, barEnd);
+  }
+
+  if (!Number.isFinite(rangeStart) || !Number.isFinite(rangeEnd)) return undefined;
+  return [rangeStart, rangeEnd];
+}
+
+function getInitialBarMinSizes(
+  bars: BarData[],
+  barMinSize: number | undefined,
+  stackMinSize: number | undefined,
+): number[] {
+  const perBarMinFromBarMinSize = barMinSize ?? 0;
+  if (bars.length === 0) return [];
+  if (!stackMinSize) {
+    return bars.map(() => perBarMinFromBarMinSize);
+  }
+
+  const totalBarLength = bars.reduce((sum, bar) => sum + bar.length, 0);
+  const perBarMinFromStack = totalBarLength
+    ? bars.map((bar) => (stackMinSize * bar.length) / totalBarLength)
+    : bars.map(() => stackMinSize / bars.length);
+
+  return perBarMinFromStack.map((stackMin) => Math.max(perBarMinFromBarMinSize, stackMin));
+}
+
+/**
+ * Computes the initial clip rect used for stack enter animations.
+ */
+export function getStackInitialClipRect(
+  stackRect: Rect,
+  layout: CartesianChartLayout,
+  origin?: number | [number, number],
+): Rect {
+  const { x, y, width, height } = stackRect;
+
+  if (Array.isArray(origin)) {
+    const [originStart, originEnd] = origin;
+    if (layout === 'vertical') {
+      return { x, y: originStart, width, height: originEnd - originStart };
+    }
+    return { x: originStart, y, width: originEnd - originStart, height };
+  }
+
+  const initialSize = 1;
+  if (layout === 'vertical') {
+    const valueBaseline = origin ?? y + height;
+    return { x, y: valueBaseline, width, height: initialSize };
+  }
+
+  const valueBaseline = origin ?? x;
+  return { x: valueBaseline, y, width: initialSize, height };
+}
+
+/**
+ * Expands bars that are shorter than `barMinSize` to the minimum size.
+ * Non-expanded bars are scaled down proportionally to keep the total bar length constant,
+ * preventing stacked bars from overflowing the chart area.
+ *
+ * Bars are then repositioned from the baseline, preserving original gaps between them.
+ *
+ * @param bars - Array of bar items with current valuePos and length
+ * @param barMinSize - Minimum bar size in pixels
+ * @param layout - The layout of the chart
+ * @param baseline - Pixel position of the zero value on the value axis
+ * @returns New array of bars with adjusted valuePos and length
+ */
+function applyBarMinSize(
+  bars: BarData[],
+  barMinSize: number,
+  layout: CartesianChartLayout,
+  baseline: number,
+): BarData[] {
+  if (!barMinSize || bars.length === 0) return bars;
+
+  const originalTotalLength = bars.reduce((sum, bar) => sum + bar.length, 0);
+  const needsExpansion = bars.map((bar) => bar.length < barMinSize);
+  const expandedTotalLength = bars.reduce(
+    (sum, bar, i) => sum + (needsExpansion[i] ? barMinSize : bar.length),
+    0,
+  );
+
+  let finalLengths: number[];
+  if (expandedTotalLength > originalTotalLength) {
+    // Scale down non-expanded bars to keep total bar length constant
+    const spaceForExpanded = needsExpansion.filter(Boolean).length * barMinSize;
+    const spaceForNonExpanded = Math.max(0, originalTotalLength - spaceForExpanded);
+    const nonExpandedOrigTotal = bars.reduce(
+      (sum, bar, i) => (!needsExpansion[i] ? sum + bar.length : sum),
+      0,
+    );
+    const scaleFactor = nonExpandedOrigTotal > 0 ? spaceForNonExpanded / nonExpandedOrigTotal : 0;
+    finalLengths = bars.map((bar, i) =>
+      needsExpansion[i] ? barMinSize : bar.length * scaleFactor,
+    );
+  } else {
+    finalLengths = bars.map((bar, i) => (needsExpansion[i] ? barMinSize : bar.length));
+  }
+
+  const expandedBars = bars.map((bar, i) => ({
+    ...bar,
+    length: finalLengths[i],
+  }));
+
+  const newPositions = new Map<string, { valuePos: number; length: number }>();
+
+  // Range bars (shouldApplyGap=false) float at data-defined coordinates independent of the
+  // baseline. Restacking them from the zero baseline would place them off-screen when the
+  // y-axis domain doesn't include 0 (e.g., a price chart with domain [28000, 37000]).
+  // Instead, expand them in-place, centered on their original midpoint.
+  for (let i = 0; i < bars.length; i++) {
+    if (bars[i].shouldApplyGap === false) {
+      const originalMid = bars[i].valuePos + bars[i].length / 2;
+      newPositions.set(bars[i].seriesId, {
+        valuePos: originalMid - expandedBars[i].length / 2,
+        length: expandedBars[i].length,
+      });
+    }
+  }
+
+  // Stacked bars (shouldApplyGap=true/undefined): classify by which side of the baseline
+  // they're on and restack from the baseline outward.
+  const stackedSortedBars = [...expandedBars]
+    .filter((bar) => bar.shouldApplyGap !== false)
+    .sort((a, b) => a.valuePos - b.valuePos);
+
+  if (stackedSortedBars.length > 0) {
+    // Classify using dataValue to correctly identify which side of the baseline each bar is on,
+    // independent of the current valuePos (which hasn't been repositioned yet).
+    const barsAboveBaseline = stackedSortedBars.filter((bar) => {
+      const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
+      return layout === 'vertical' ? bottom >= 0 && top !== bottom : top <= 0 && top !== bottom;
+    });
+    const barsBelowBaseline = stackedSortedBars.filter((bar) => {
+      const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
+      return layout === 'vertical' ? top <= 0 && top !== bottom : bottom >= 0 && top !== bottom;
+    });
+
+    // Restack bars above baseline (growing away from it in the positive direction)
+    let currentAbove = baseline;
+    for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
+      const bar = barsAboveBaseline[i];
+      const newValuePos = currentAbove - bar.length;
+      newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
+      if (i > 0) {
+        const nextBar = barsAboveBaseline[i - 1];
+        const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+        const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+        const originalGap =
+          originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
+        currentAbove = newValuePos - originalGap;
+      }
+    }
+
+    // Restack bars below baseline (growing away from it in the negative direction)
+    let currentBelow = baseline;
+    for (let i = 0; i < barsBelowBaseline.length; i++) {
+      const bar = barsBelowBaseline[i];
+      newPositions.set(bar.seriesId, { valuePos: currentBelow, length: bar.length });
+      if (i < barsBelowBaseline.length - 1) {
+        const nextBar = barsBelowBaseline[i + 1];
+        const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+        const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+        const originalGap =
+          originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
+        currentBelow = currentBelow + bar.length + originalGap;
+      }
+    }
+  }
+
+  return expandedBars.map((bar) => {
+    const newPos = newPositions.get(bar.seriesId);
+    if (newPos) return { ...bar, valuePos: newPos.valuePos, length: newPos.length };
+    return bar;
+  });
+}
+
+/**
+ * Scales a stack of bars up so the total stack extent meets `stackMinSize`.
+ * For a single bar, the bar is expanded away from the baseline.
+ * For multiple bars, all bars are scaled proportionally, preserving relative gaps.
+ *
+ * @param bars - Array of bar items with current valuePos and length
+ * @param stackMinSize - Minimum stack size in pixels
+ * @param stackSize - Current total pixel extent of the stack
+ * @param stackBounds - Current bounding rect of the stack
+ * @param layout - The layout of the chart
+ * @param indexPos - Pixel position along the categorical (index) axis
+ * @param thickness - Bar thickness in pixels
+ * @param baseline - Pixel position of the zero value on the value axis
+ * @returns Updated bars and stackBounds; unchanged if stackSize >= stackMinSize
+ */
+function applyStackMinSize(
+  bars: BarData[],
+  stackMinSize: number,
+  stackSize: number,
+  stackBounds: Rect,
+  layout: CartesianChartLayout,
+  indexPos: number,
+  thickness: number,
+  baseline: number,
+): { bars: BarData[]; stackBounds: Rect } {
+  if (!stackMinSize || stackSize >= stackMinSize) return { bars, stackBounds };
+  if (bars.length === 0) return { bars, stackBounds };
+
+  let updatedBars = [...bars];
+  let updatedBounds = { ...stackBounds };
+
+  if (bars.length === 1) {
+    const bar = bars[0];
+    const sizeIncrease = stackMinSize - bar.length;
+    const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
+
+    let newValuePos: number;
+    const newLength = stackMinSize;
+
+    if (bottom >= 0 && top !== bottom) {
+      // Bar is on the positive side: vertical→expands upward (↑), horizontal→expands rightward (→)
+      newValuePos = layout === 'vertical' ? bar.valuePos - sizeIncrease : bar.valuePos;
+    } else if (top <= 0 && top !== bottom) {
+      // Bar is on the negative side: vertical→expands downward (↓), horizontal→expands leftward (←)
+      newValuePos = layout === 'vertical' ? bar.valuePos : bar.valuePos - sizeIncrease;
+    } else {
+      // Bar spans baseline or is zero: expand equally in both directions
+      newValuePos = bar.valuePos - sizeIncrease / 2;
+    }
+
+    updatedBars = [{ ...bar, valuePos: newValuePos, length: newLength }];
+    updatedBounds = {
+      x: layout === 'vertical' ? indexPos : newValuePos,
+      y: layout === 'vertical' ? newValuePos : indexPos,
+      width: layout === 'vertical' ? thickness : newLength,
+      height: layout === 'vertical' ? newLength : thickness,
+    };
+  } else {
+    const totalBarLength = bars.reduce((sum, bar) => sum + bar.length, 0);
+    const totalGapLength = stackSize - totalBarLength;
+    const requiredBarLength = stackMinSize - totalGapLength;
+    const barScaleFactor = requiredBarLength / totalBarLength;
+
+    const sortedBars = [...bars].sort((a, b) => a.valuePos - b.valuePos);
+
+    // For vertical: positive bars are above baseline (smaller Y), negative bars are below (larger Y)
+    // For horizontal: positive bars are right of baseline (larger X), negative bars are left (smaller X)
+    const barsOnPositiveSide =
+      layout === 'vertical'
+        ? sortedBars.filter((bar) => bar.valuePos + bar.length <= baseline)
+        : sortedBars.filter((bar) => bar.valuePos >= baseline);
+    const barsOnNegativeSide =
+      layout === 'vertical'
+        ? sortedBars.filter((bar) => bar.valuePos >= baseline)
+        : sortedBars.filter((bar) => bar.valuePos + bar.length <= baseline);
+
+    const newPositions = new Map<string, { valuePos: number; length: number }>();
+
+    if (layout === 'vertical') {
+      // Stack from baseline upward (decreasing valuePos) for positive bars
+      let currentPos = baseline;
+      for (let i = barsOnPositiveSide.length - 1; i >= 0; i--) {
+        const bar = barsOnPositiveSide[i];
+        const newLength = bar.length * barScaleFactor;
+        const newValuePos = currentPos - newLength;
+        newPositions.set(bar.seriesId, { valuePos: newValuePos, length: newLength });
+        if (i > 0) {
+          const nextBar = barsOnPositiveSide[i - 1];
+          const originalGap = bar.valuePos - (nextBar.valuePos + nextBar.length);
+          currentPos = newValuePos - originalGap;
+        }
+      }
+      // Stack from baseline downward (increasing valuePos) for negative bars
+      let currentPosBelow = baseline;
+      for (let i = 0; i < barsOnNegativeSide.length; i++) {
+        const bar = barsOnNegativeSide[i];
+        const newLength = bar.length * barScaleFactor;
+        newPositions.set(bar.seriesId, { valuePos: currentPosBelow, length: newLength });
+        if (i < barsOnNegativeSide.length - 1) {
+          const nextBar = barsOnNegativeSide[i + 1];
+          const originalGap = nextBar.valuePos - (bar.valuePos + bar.length);
+          currentPosBelow = currentPosBelow + newLength + originalGap;
+        }
+      }
+    } else {
+      // Stack from baseline rightward (increasing valuePos) for positive bars
+      let currentPos = baseline;
+      for (let i = 0; i < barsOnPositiveSide.length; i++) {
+        const bar = barsOnPositiveSide[i];
+        const newLength = bar.length * barScaleFactor;
+        newPositions.set(bar.seriesId, { valuePos: currentPos, length: newLength });
+        if (i < barsOnPositiveSide.length - 1) {
+          const nextBar = barsOnPositiveSide[i + 1];
+          const originalGap = nextBar.valuePos - (bar.valuePos + bar.length);
+          currentPos = currentPos + newLength + originalGap;
+        }
+      }
+      // Stack from baseline leftward (decreasing valuePos) for negative bars
+      let currentPosLeft = baseline;
+      for (let i = barsOnNegativeSide.length - 1; i >= 0; i--) {
+        const bar = barsOnNegativeSide[i];
+        const newLength = bar.length * barScaleFactor;
+        const newValuePos = currentPosLeft - newLength;
+        newPositions.set(bar.seriesId, { valuePos: newValuePos, length: newLength });
+        if (i > 0) {
+          const nextBar = barsOnNegativeSide[i - 1];
+          const originalGap = bar.valuePos - (nextBar.valuePos + nextBar.length);
+          currentPosLeft = newValuePos - originalGap;
+        }
+      }
+    }
+
+    updatedBars = bars.map((bar) => {
+      const newPos = newPositions.get(bar.seriesId);
+      if (!newPos) return bar;
+      return { ...bar, length: newPos.length, valuePos: newPos.valuePos };
+    });
+
+    const newMinValuePos = Math.min(...updatedBars.map((bar) => bar.valuePos));
+    const newMaxValuePos = Math.max(...updatedBars.map((bar) => bar.valuePos + bar.length));
+
+    updatedBounds = {
+      x: layout === 'vertical' ? indexPos : newMinValuePos,
+      y: layout === 'vertical' ? newMinValuePos : indexPos,
+      width: layout === 'vertical' ? thickness : newMaxValuePos - newMinValuePos,
+      height: layout === 'vertical' ? newMaxValuePos - newMinValuePos : thickness,
+    };
+  }
+
+  return { bars: updatedBars, stackBounds: updatedBounds };
+}
+
+/**
+ * Applies border-radius flags to a sorted stack of bars.
+ *
+ * Faces at the outer edges of the stack remain rounded; faces where two bars
+ * touch internally are squared. When `stackGap` is non-zero every face keeps
+ * its rounded corner because all bars are visually separated.
+ *
+ * @param bars - Bars with `roundTop`/`roundBottom` flags and position data
+ * @param layout - The layout of the chart
+ * @param stackGap - Pixel gap between adjacent bars (non-zero ⇒ all faces stay rounded)
+ * @returns New array of bars with corrected `roundTop`/`roundBottom` flags
+ */
+function applyBorderRadiusLogic(
+  bars: BarData[],
+  layout: CartesianChartLayout,
+  stackGap: number | undefined,
+): BarData[] {
+  if (bars.length === 0) return bars;
+
+  // Sort from "lower coordinate" face to "higher coordinate" face along the value axis:
+  // Vertical  → descending valuePos (largest Y first = closest to baseline)
+  // Horizontal → ascending valuePos (smallest X first = closest to baseline)
+  const sortedBars =
+    layout === 'vertical'
+      ? [...bars].sort((a, b) => b.valuePos - a.valuePos)
+      : [...bars].sort((a, b) => a.valuePos - b.valuePos);
+
+  return sortedBars.map((a, index) => {
+    const barBefore = index > 0 ? sortedBars[index - 1] : null;
+    const barAfter = index < sortedBars.length - 1 ? sortedBars[index + 1] : null;
+
+    // shouldRoundLower: face with the smaller coordinate (top in vertical, left in horizontal)
+    const shouldRoundLower =
+      (layout === 'vertical' ? index === sortedBars.length - 1 : index === 0) ||
+      Boolean(a.shouldApplyGap && stackGap) ||
+      (!a.shouldApplyGap &&
+        barAfter !== null &&
+        barAfter.valuePos + barAfter.length !== a.valuePos);
+
+    // shouldRoundHigher: face with the larger coordinate (bottom in vertical, right in horizontal)
+    const shouldRoundHigher =
+      (layout === 'vertical' ? index === 0 : index === sortedBars.length - 1) ||
+      Boolean(a.shouldApplyGap && stackGap) ||
+      (!a.shouldApplyGap && barBefore !== null && barBefore.valuePos !== a.valuePos + a.length);
+
+    return {
+      ...a,
+      roundTop: Boolean(
+        a.roundTop && (layout === 'vertical' ? shouldRoundLower : shouldRoundHigher),
+      ),
+      roundBottom: Boolean(
+        a.roundBottom && (layout === 'vertical' ? shouldRoundHigher : shouldRoundLower),
+      ),
+    };
+  });
+}
+
+/**
+ * Threshold for treating a position as touching the baseline.
+ * Positions within this distance are considered at the baseline for rounding purposes.
+ */
+export const EPSILON = 1e-4;
+
+/**
+ * Computes and clamps the stack baseline position on the value axis.
+ *
+ * - If the full domain is positive, baseline is domain min.
+ * - If the full domain is negative, baseline is domain max.
+ * - If the domain crosses zero, baseline is 0.
+ */
+export function getStackBaseline(
+  valueScale: ChartScaleFunction,
+  stackRect: Rect,
+  layout: CartesianChartLayout,
+): number {
+  const [domainMin, domainMax] = valueScale.domain();
+  const baselineValue = domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
+  const baselinePos = valueScale(baselineValue);
+
+  if (layout === 'vertical') {
+    return Math.max(
+      stackRect.y,
+      Math.min(baselinePos ?? stackRect.y + stackRect.height, stackRect.y + stackRect.height),
+    );
+  }
+
+  return Math.max(stackRect.x, Math.min(baselinePos ?? stackRect.x, stackRect.x + stackRect.width));
+}
+
+type SeriesGradientEntry =
+  | {
+      seriesId: string;
+      gradient: GradientDefinition;
+      scale: SerializableScale | ChartScaleFunction;
+      stops: GradientStop[];
+    }
+  | undefined;
+
+function getStackBoundsForLayout(
+  layout: CartesianChartLayout,
+  indexPos: number,
+  thickness: number,
+  minValuePos: number,
+  stackSize: number,
+): Rect {
+  if (layout === 'vertical') {
+    return { x: indexPos, y: minValuePos, width: thickness, height: stackSize };
+  }
+  return { x: minValuePos, y: indexPos, width: stackSize, height: thickness };
+}
+
+function getStackSizeForLayout(layout: CartesianChartLayout, stackRect: Rect): number {
+  return layout === 'vertical' ? stackRect.height : stackRect.width;
+}
+
+/**
+ * Computes the positioned bar entries and bounding rect for a single stack at one category index.
+ *
+ * This is the pure computation extracted from `BarStack`'s `useMemo` so it can be tested
+ * independently and reused across contexts.
+ *
+ * @param params.series - Series configs for this stack
+ * @param params.seriesData - Stacked data for each series, keyed by series id
+ * @param params.categoryIndex - Index of the category being rendered
+ * @param params.indexPos - Pixel position along the categorical axis
+ * @param params.thickness - Bar thickness in pixels
+ * @param params.valueScale - Scale function for the value axis
+ * @param params.seriesGradients - Precomputed gradient configs per series (undefined entries are skipped)
+ * @param params.roundBaseline - Whether to round the face touching the baseline
+ * @param params.layout - The layout of the chart
+ * @param params.baseline - Pixel position of the zero value on the value axis
+ * @param params.stackGap - Gap between adjacent bars in pixels
+ * @param params.barMinSize - Minimum individual bar size in pixels
+ * @param params.stackMinSize - Minimum total stack size in pixels
+ * @param params.defaultFill - Fallback fill color when a series has no color or gradient
+ * @returns Positioned bar entries and the stack's bounding rect
+ */
+export function getBars(params: {
+  series: BarSeries[];
+  seriesData: Record<string, ([number, number] | null)[]>;
+  categoryIndex: number;
+  categoryValue: number;
+  indexPos: number;
+  thickness: number;
+  valueScale: ChartScaleFunction;
+  seriesGradients: SeriesGradientEntry[];
+  roundBaseline?: boolean;
+  layout: CartesianChartLayout;
+  baseline: number;
+  stackGap?: number;
+  barMinSize?: number;
+  stackMinSize?: number;
+  defaultFill: string;
+  borderRadius?: number;
+  defaultFillOpacity?: number;
+  defaultStroke?: string;
+  defaultStrokeWidth?: number;
+  defaultBarComponent?: BarComponent;
+}) {
+  const {
+    series,
+    seriesData,
+    categoryIndex,
+    categoryValue,
+    indexPos,
+    thickness,
+    valueScale,
+    seriesGradients,
+    roundBaseline,
+    layout,
+    baseline,
+    stackGap,
+    barMinSize,
+    stackMinSize,
+    defaultFill,
+    borderRadius,
+    defaultFillOpacity,
+    defaultStroke,
+    defaultStrokeWidth,
+    defaultBarComponent,
+  } = params;
+
+  let allBars: BarData[] = [];
+
+  series.forEach((s) => {
+    const data = seriesData[s.id];
+    if (!data) return;
+
+    const value = data[categoryIndex];
+    if (value === null || value === undefined) return;
+
+    const originalData = s.data;
+    const originalValue = originalData?.[categoryIndex];
+    const shouldApplyGap = !Array.isArray(originalValue);
+
+    const [bottom, top] = [...value].sort((a, b) => a - b);
+
+    const edgeBottom = valueScale(bottom) ?? baseline;
+    const edgeTop = valueScale(top) ?? baseline;
+
+    const roundTop = roundBaseline || Math.abs(edgeTop - baseline) >= EPSILON;
+    const roundBottom = roundBaseline || Math.abs(edgeBottom - baseline) >= EPSILON;
+
+    const length = Math.abs(edgeBottom - edgeTop);
+    const valuePos = Math.min(edgeBottom, edgeTop);
+
+    if (length <= 0) return;
+
+    let barFill = s.color || defaultFill;
+
+    const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
+    if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
+      const axis = seriesGradientConfig.gradient.axis ?? 'y';
+
+      let evalValue: number;
+      if (axis === 'x') {
+        evalValue =
+          layout === 'vertical'
+            ? categoryIndex
+            : Array.isArray(originalValue)
+              ? originalValue[1]
+              : originalValue;
+      } else {
+        evalValue =
+          layout === 'vertical'
+            ? Array.isArray(originalValue)
+              ? originalValue[1]
+              : originalValue
+            : categoryIndex;
+      }
+
+      const evaluatedColor = evaluateGradientAtValue(
+        seriesGradientConfig.stops,
+        evalValue,
+        seriesGradientConfig.scale,
+      );
+      if (evaluatedColor) {
+        barFill = evaluatedColor;
+      }
+    }
+
+    allBars.push({
+      seriesId: s.id,
+      valuePos,
+      length,
+      dataValue: value,
+      fill: barFill,
+      roundTop,
+      roundBottom,
+      shouldApplyGap,
+      BarComponent: s.BarComponent,
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      origin: 0,
+    });
+  });
+
+  // Apply proportional gap distribution to maintain total stack length
+  if (stackGap && allBars.length > 1) {
+    allBars = applyStackGap(allBars, stackGap, layout, baseline);
+  }
+
+  // Apply barMinSize constraints
+  if (barMinSize) {
+    allBars = applyBarMinSize(allBars, barMinSize, layout, baseline);
+  }
+
+  allBars = applyBorderRadiusLogic(allBars, layout, stackGap);
+
+  // Apply stackMinSize constraints
+  if (stackMinSize && allBars.length > 0) {
+    const minValuePos = Math.min(...allBars.map((bar) => bar.valuePos));
+    const maxValuePos = Math.max(...allBars.map((bar) => bar.valuePos + bar.length));
+    const stackSize = maxValuePos - minValuePos;
+    const stackBounds = getStackBoundsForLayout(
+      layout,
+      indexPos,
+      thickness,
+      minValuePos,
+      stackSize,
+    );
+
+    const result = applyStackMinSize(
+      allBars,
+      stackMinSize,
+      stackSize,
+      stackBounds,
+      layout,
+      indexPos,
+      thickness,
+      baseline,
+    );
+    allBars = result.bars;
+
+    // Reapply border radius logic only if we actually scaled
+    const newStackSize = getStackSizeForLayout(layout, result.stackBounds);
+    if (newStackSize < stackMinSize) {
+      allBars = applyBorderRadiusLogic(allBars, layout, stackGap);
+    }
+  }
+
+  const initialBarMinSizes = getInitialBarMinSizes(allBars, barMinSize, stackMinSize);
+  const barOrigins = getBarOrigins(allBars, initialBarMinSizes, stackGap ?? 0, baseline, layout);
+
+  return allBars.map((bar, i) => ({
+    ...bar,
+    x: layout === 'vertical' ? indexPos : bar.valuePos,
+    y: layout === 'vertical' ? bar.valuePos : indexPos,
+    width: layout === 'vertical' ? thickness : bar.length,
+    height: layout === 'vertical' ? bar.length : thickness,
+    dataX: layout === 'vertical' ? categoryValue : bar.dataValue,
+    dataY: layout === 'vertical' ? bar.dataValue : categoryValue,
+    origin: barOrigins[i],
+    borderRadius,
+    fillOpacity: defaultFillOpacity,
+    stroke: defaultStroke,
+    strokeWidth: defaultStrokeWidth,
+    minSize: initialBarMinSizes[i],
+    BarComponent: bar.BarComponent || defaultBarComponent,
+  }));
 }

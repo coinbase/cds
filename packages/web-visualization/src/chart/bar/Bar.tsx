@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
+import type { Rect } from '@coinbase/cds-common';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -7,74 +8,36 @@ import { type BarTransition, getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 
-export type BarBaseProps = {
-  /**
-   * X coordinate of the bar (left edge).
-   */
-  x: number;
-  /**
-   * Y coordinate of the bar (top edge).
-   */
-  y: number;
-  /**
-   * Width of the bar.
-   */
-  width: number;
-  /**
-   * Height of the bar.
-   */
-  height: number;
+export type BarBaseProps = Rect & {
   /**
    * Border radius for the bar.
    * @default 4
    */
   borderRadius?: number;
-  /**
-   * Whether to round the top of the bar.
-   */
+  /** Whether to round the top of the bar. */
   roundTop?: boolean;
-  /**
-   * Whether to round the bottom of the bar.
-   */
+  /** Whether to round the bottom of the bar. */
   roundBottom?: boolean;
-  /**
-   * Coordinate of the baseline/origin for animations.
-   * For vertical layout (bars grow up), this is the Y coordinate.
-   * For horizontal layout (bars grow sideways), this is the X coordinate.
-   */
+  /** Origin of the bar. */
   origin?: number;
-  /**
-   * The x-axis data value for this bar.
-   */
-  dataX?: number | string;
-  /**
-   * The y-axis data value for this bar.
-   */
+  /** The x-axis data value for this bar. */
+  dataX?: number | [number, number] | null;
+  /** The y-axis data value for this bar. */
   dataY?: number | [number, number] | null;
-  /**
-   * The ID of the series this bar belongs to.
-   */
+  /** The ID of the series this bar belongs to. */
   seriesId?: string;
-  /**
-   * Fill color for the bar.
-   */
+  /** Fill color for the bar. */
   fill?: string;
-  /**
-   * Fill opacity for the bar.
-   */
+  /** Fill opacity for the bar. */
   fillOpacity?: number;
-  /**
-   * Stroke color for the bar outline.
-   */
+  /** Stroke color for the bar outline. */
   stroke?: string;
-  /**
-   * Stroke width for the bar outline.
-   */
+  /** Stroke width for the bar outline. */
   strokeWidth?: number;
-  /**
-   * Component to render the bar.
-   */
+  /** Component to render the bar. */
   BarComponent?: BarComponent;
+  /** Minimum bar size in pixels. When set, bars shorter than this value are expanded. */
+  minSize?: number;
 };
 
 export type BarProps = BarBaseProps & {
@@ -154,6 +117,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    minSize,
     transitions,
     transition,
   }) => {
@@ -163,13 +127,12 @@ export const Bar = memo<BarProps>(
       return getBarPath(x, y, width, height, borderRadius, !!roundTop, !!roundBottom, layout);
     }, [x, y, width, height, borderRadius, roundTop, roundBottom, layout]);
 
-    const origin = useMemo(() => {
-      return originProp ?? (layout === 'horizontal' ? x : y + height);
-    }, [originProp, layout, x, y, height]);
+    const origin = useMemo(
+      () => originProp ?? (layout === 'horizontal' ? x : y + height),
+      [originProp, layout, x, y, height],
+    );
 
-    if (!barPath) {
-      return null;
-    }
+    if (!barPath) return;
 
     return (
       <BarComponent
@@ -180,6 +143,7 @@ export const Bar = memo<BarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}
+        minSize={minSize}
         origin={origin}
         roundBottom={roundBottom}
         roundTop={roundTop}
