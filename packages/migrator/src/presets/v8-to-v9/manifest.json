@@ -3,11 +3,6 @@
   "description": "Migration from CDS v8 to v9",
   "transforms": [
     {
-      "name": "button-variant-to-appearance",
-      "description": "Rename Button 'variant' prop to 'appearance' (@coinbase/cds-web)",
-      "file": "example-transform"
-    },
-    {
       "name": "input-size-values",
       "description": "Update Input size prop values from sm/md/lg to small/medium/large (@coinbase/cds-web)",
       "file": "example-transform"
@@ -21,6 +16,11 @@
       "name": "format-currency-options",
       "description": "Update formatCurrency options parameter (@coinbase/cds-utils)",
       "file": "example-transform"
+    },
+    {
+      "name": "button-variant-values",
+      "description": "Remap Button/IconButton variant values: tertiary -> inverse, foregroundMuted -> secondary",
+      "file": "button-variant-values"
     }
   ]
 }

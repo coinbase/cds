@@ -31,6 +31,7 @@ const ignores = [
   '**/esm/**',
   '**/lib/**',
   '**/templates/**',
+  '**/__testfixtures__/**',
   '**/.next/**',
   // These files use assert { type: 'json' } syntax that breaks eslint and must be fully ignored
   '**/getAffectedRoutes.mjs',

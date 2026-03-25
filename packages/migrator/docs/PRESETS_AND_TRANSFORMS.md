@@ -11,7 +11,7 @@ Guide to creating presets, transforms, and using the migrator APIs.
 Create a file in `src/transforms/`:
 
 ```typescript
-// src/transforms/button-variant-to-appearance.ts
+// src/transforms/my-transform.ts
 import type { API, FileInfo } from 'jscodeshift';
 import { addTodoComment, hasMigrationTodo, transformLogger } from '../utils/transform-utils';
 
@@ -35,7 +35,7 @@ export default function transformer(file: FileInfo, api: API) {
 yarn nx run migrator:build
 
 # Run directly (no preset needed!)
-npx @coinbase/cds-migrator ./test -t button-variant-to-appearance --dry-run
+npx @coinbase/cds-migrator ./test -t my-transform --dry-run
 ```
 
 ### 3. (Optional) Add to Preset
@@ -47,9 +47,9 @@ If you want to include it in a preset:
   "preset": "v8-to-v9",
   "transforms": [
     {
-      "name": "button-variant-to-appearance",
-      "description": "Rename Button 'variant' prop to 'appearance' (@coinbase/cds-web)",
-      "file": "button-variant-to-appearance"
+      "name": "my-transform",
+      "description": "What it does (@coinbase/cds-web)",
+      "file": "my-transform"
     }
   ]
 }

@@ -10,7 +10,7 @@ Detailed information about migration history tracking, team collaboration, and a
 {
   "entries": [
     {
-      "transform": "button-variant-to-appearance",
+      "transform": "button-variant-values",
       "timestamp": "2026-03-05T14:00:00.000Z"
     }
   ],

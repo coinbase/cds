@@ -65,7 +65,7 @@ npx @coinbase/cds-migrator ./src -p v8-to-v9
 **One Transform:**
 
 ```bash
-npx @coinbase/cds-migrator ./src -t button-variant-to-appearance --dry-run
+npx @coinbase/cds-migrator ./src -t button-variant-values --dry-run
 ```
 
 **Multiple Transforms:**
@@ -113,10 +113,10 @@ Run transforms directly without a preset:
 
 ```bash
 # Single transform
-npx @coinbase/cds-migrator ./src -t button-variant-to-appearance
+npx @coinbase/cds-migrator ./src -t button-variant-values
 
 # Multiple transforms
-npx @coinbase/cds-migrator ./src -t button-variant-to-appearance -t input-size-values
+npx @coinbase/cds-migrator ./src -t button-variant-values -t input-size-values
 
 # Transform in subdirectory
 npx @coinbase/cds-migrator ./src -t components/button-variant
@@ -176,7 +176,7 @@ If you try to run already-applied transforms:
 
 ```
 ⚠️  Warning: Some transforms have already been run on this path:
-  • button-variant-to-appearance
+  • button-variant-values
 
 ? How would you like to proceed?
   ❯ Skip already-run transforms (recommended)

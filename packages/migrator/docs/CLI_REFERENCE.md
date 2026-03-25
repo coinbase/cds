@@ -30,7 +30,7 @@ npx @coinbase/cds-migrator ./src -p v8-to-v9
 npx @coinbase/cds-migrator ./src -p v8-to-v9 --partial
 
 # Run transforms directly (no preset!)
-npx @coinbase/cds-migrator ./src -t button-variant-to-appearance
+npx @coinbase/cds-migrator ./src -t button-variant-values
 
 # Multiple transforms
 npx @coinbase/cds-migrator ./src -t button-variant -t input-size
@@ -90,7 +90,7 @@ npx @coinbase/cds-migrator ./src -p v8-to-v9 --partial
 
 ```
 ? Which transforms do you want to run? (spacebar to select)
-  ◯ button-variant-to-appearance
+  ◯ button-variant-values
   ◉ input-size-values
   ◯ use-theme-return-type
 ```
@@ -101,7 +101,7 @@ Run transforms directly - no preset needed:
 
 ```bash
 # Single transform
-npx @coinbase/cds-migrator ./src -t button-variant-to-appearance
+npx @coinbase/cds-migrator ./src -t button-variant-values
 
 # Multiple transforms
 npx @coinbase/cds-migrator ./src -t button-variant -t input-size

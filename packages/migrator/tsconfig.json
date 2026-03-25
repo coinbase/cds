@@ -7,6 +7,8 @@
   "include": [
     "src/**/*"
   ],
-  "exclude": [],
+  "exclude": [
+    "**/__testfixtures__/**"
+  ],
   "references": []
 }

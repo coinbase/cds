@@ -6,6 +6,9 @@
 **/persisted_queries.json
 **/__generated__
 
+# Test fixtures (must match exact transform output)
+**/__testfixtures__/
+
 # Builds
 dist/
 lib/
