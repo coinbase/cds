@@ -248,6 +248,47 @@ function Example() {
 }
 ```
 
+### Borderless
+
+For borderless DateInput usage, prefer adding a focus border with `focusedBorderWidth`.
+If you need a fully borderless input (including focus), use that pattern with a TypeAhead
+composition.
+
+```jsx
+function Example() {
+  const [defaultBorderlessDate, setDefaultBorderlessDate] = useState(null);
+  const [defaultBorderlessError, setDefaultBorderlessError] = useState(null);
+  const [focusBorderDate, setFocusBorderDate] = useState(null);
+  const [focusBorderError, setFocusBorderError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DateInput
+        bordered={false}
+        date={defaultBorderlessDate}
+        error={defaultBorderlessError}
+        helperText="Default borderless behavior with no focus border."
+        invalidDateError="Please enter a valid date"
+        label="Borderless date input"
+        onChangeDate={setDefaultBorderlessDate}
+        onErrorDate={setDefaultBorderlessError}
+      />
+      <DateInput
+        bordered={false}
+        date={focusBorderDate}
+        error={focusBorderError}
+        focusedBorderWidth={200}
+        helperText="Set focusedBorderWidth to opt into a focus border."
+        invalidDateError="Please enter a valid date"
+        label="Borderless date input with focus border"
+        onChangeDate={setFocusBorderDate}
+        onErrorDate={setFocusBorderError}
+      />
+    </VStack>
+  );
+}
+```
+
 ### Helper text
 
 ```jsx

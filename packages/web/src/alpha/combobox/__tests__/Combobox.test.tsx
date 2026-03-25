@@ -56,7 +56,7 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
     });
 
     it('displays placeholder in search input when no value is selected', () => {
@@ -67,8 +67,8 @@ describe('Combobox', () => {
       );
 
       // The placeholder is shown in the input, not as text
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      fireEvent.click(combobox);
 
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('placeholder', 'Search and select...');
@@ -97,8 +97,8 @@ describe('Combobox', () => {
       );
 
       expect(screen.getByLabelText('Custom combobox, Search and select...')).toBeTruthy();
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      fireEvent.click(combobox);
       expect(screen.getByLabelText('Combobox menu')).toBeTruthy();
     });
   });
@@ -243,8 +243,8 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      const button = screen.getByRole('button');
-      await userEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      await userEvent.click(combobox);
 
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
@@ -258,8 +258,8 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      const button = screen.getByRole('button');
-      await userEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      await userEvent.click(combobox);
 
       const input = screen.getByRole('textbox');
 
@@ -278,8 +278,8 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      const button = screen.getByRole('button');
-      await userEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      await userEvent.click(combobox);
 
       const input = screen.getByRole('textbox');
       fireEvent.keyDown(input, { key: 'Enter' });
@@ -297,8 +297,8 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      const button = screen.getByRole('button');
-      await userEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      await userEvent.click(combobox);
 
       expect(setOpenMock).toHaveBeenCalled();
     });
@@ -436,8 +436,8 @@ describe('Combobox', () => {
 
       expect(ref.current?.open).toBe(false);
 
-      const button = screen.getByRole('button');
-      await userEvent.click(button);
+      const combobox = screen.getByRole('combobox');
+      await userEvent.click(combobox);
 
       await waitFor(() => {
         expect(ref.current?.open).toBe(true);
@@ -468,8 +468,8 @@ describe('Combobox', () => {
       );
 
       // Verify basic accessibility - has a button that can be focused
-      const button = screen.getByRole('button');
-      expect(button).toBeInTheDocument();
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toBeInTheDocument();
     });
 
     it('has appropriate ARIA attributes', () => {
@@ -499,8 +499,8 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      const button = screen.getByRole('button');
-      expect(button).toBeEnabled();
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toBeEnabled();
     });
 
     it('uses custom SelectControlComponent when provided', () => {

@@ -72,6 +72,7 @@ export const DefaultComboboxControl = memo(
         compact={compact}
         open={open}
         options={options}
+        role="combobox"
         setOpen={setOpen}
         value={value}
         {...props}

@@ -125,10 +125,10 @@ const MonthlyRewards = () => {
   const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
 
   const series = [
-    { id: 'purple', data: purple, color: '#b399ff' },
-    { id: 'blue', data: blue, color: '#4f7cff' },
-    { id: 'cyan', data: cyan, color: '#00c2df' },
-    { id: 'green', data: green, color: '#33c481' },
+    { id: 'purple', data: purple, color: 'rgb(var(--purple30))' },
+    { id: 'blue', data: blue, color: 'rgb(var(--blue30))' },
+    { id: 'cyan', data: cyan, color: 'rgb(var(--teal30))' },
+    { id: 'green', data: green, color: 'rgb(var(--green30))' },
   ];
 
   const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
@@ -163,7 +163,7 @@ const MonthlyRewards = () => {
       series={series}
       showYAxis={false}
       stackMinSize={24}
-      width={403}
+      width={384}
       xAxis={{
         tickLabelFormatter: (index) => {
           if (index == currentMonth) {
@@ -171,7 +171,7 @@ const MonthlyRewards = () => {
           }
           return months[index];
         },
-        categoryPadding: 0.27,
+        categoryPadding: 0.25,
       }}
     />
   );
@@ -385,7 +385,7 @@ const Candlesticks = () => {
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
-        BarStackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
+        BarStackComponent={({ children, origin, ...props }) => <g {...props}>{children}</g>}
         aria-labelledby={infoTextId}
         borderRadius={0}
         height={400}

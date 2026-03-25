@@ -93,19 +93,26 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 
 ### Borderless
 
-:::warning
-You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
-:::
+For borderless TextInput usage, prefer adding a focus border with `focusedBorderWidth`.
+If you need a fully borderless input (including focus), use that pattern with a TypeAhead
+composition.
 
 ```jsx
-<HStack padding={2}>
+<VStack gap={2} padding={2}>
   <TextInput
     label="Borderless TextInput"
     placeholder="placeholder"
-    helperText="helperText"
+    helperText="When bordered is false, focus border styling is disabled by default."
     bordered={false}
   />
-</HStack>
+  <TextInput
+    label="Borderless TextInput (with focus border)"
+    placeholder="placeholder"
+    helperText="Set focusedBorderWidth to opt into a focus border style."
+    bordered={false}
+    focusedBorderWidth={200}
+  />
+</VStack>
 ```
 
 ### Helper Text
