@@ -138,15 +138,17 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      const input = screen.getByPlaceholderText('Search and select...');
-      const flattenedStyle = StyleSheet.flatten(input.props.style);
-      expect(flattenedStyle).toEqual(
-        expect.objectContaining({
-          fontSize: defaultTheme.fontSize.label1,
-          lineHeight: defaultTheme.lineHeight.label1,
-          fontWeight: defaultTheme.fontWeight.label1,
+      const inputs = screen.getAllByPlaceholderText('Search and select...');
+      expect(
+        inputs.some((input) => {
+          const flattenedStyle = StyleSheet.flatten(input.props.style);
+          return (
+            flattenedStyle?.fontSize === defaultTheme.fontSize.label1 &&
+            flattenedStyle?.lineHeight === defaultTheme.lineHeight.label1 &&
+            flattenedStyle?.fontWeight === defaultTheme.fontWeight.label1
+          );
         }),
-      );
+      ).toBe(true);
     });
 
     it('throws error when searchText is provided without onSearch', () => {

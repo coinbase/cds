@@ -46,7 +46,12 @@ describe('Search', () => {
   it('passes inputFont through to the text input', () => {
     render(
       <DefaultThemeProvider>
-        <SearchInput inputFont="label1" onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+        <SearchInput
+          inputFont="label1"
+          onChangeText={onChangeTextSpy}
+          testID={TEST_ID}
+          value="value"
+        />
       </DefaultThemeProvider>,
     );
 

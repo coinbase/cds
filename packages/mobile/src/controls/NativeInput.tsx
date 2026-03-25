@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { TextInput } from 'react-native';
-import type { TextInputProps, ViewStyle } from 'react-native';
+import type { StyleProp, TextInputProps, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
@@ -63,18 +63,25 @@ export const NativeInput = memo(
       const theme = useTheme();
       const textAlignInputTransformed = useTextAlign(align).textAlign;
 
-      const inputTextStyle = useMemo(
+      const inputTextStyle: TextStyle = useMemo(
         () => ({
           fontSize: theme.fontSize[inputFont],
           fontFamily: theme.fontFamily[inputFont],
           lineHeight: theme.lineHeight[inputFont],
           minHeight: theme.lineHeight[inputFont],
-          fontWeight: `${theme.fontWeight[inputFont]}`,
+          fontWeight: theme.fontWeight[inputFont] as TextStyle['fontWeight'],
           padding: 0,
           margin: 0,
           color: theme.color.fg,
         }),
-        [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.fontWeight, theme.color.fg, inputFont],
+        [
+          theme.fontSize,
+          theme.fontFamily,
+          theme.lineHeight,
+          theme.fontWeight,
+          theme.color.fg,
+          inputFont,
+        ],
       );
 
       const containerStyle: ViewStyle = useMemo(() => {
@@ -96,7 +103,7 @@ export const NativeInput = memo(
         disabled,
       ]);
 
-      const inputRootStyles = useMemo(() => {
+      const inputRootStyles: StyleProp<TextStyle> = useMemo(() => {
         return [
           inputTextStyle,
           containerStyle,
