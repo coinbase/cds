@@ -32,11 +32,13 @@ export type SearchInputBaseProps = Pick<
   | 'accessibilityLabel'
   | 'accessibilityLabelledBy'
   | 'bordered'
+  | 'borderRadius'
   | 'compact'
   | 'disabled'
   | 'enableColorSurge'
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
+  | 'inputFont'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'
@@ -107,6 +109,7 @@ export const SearchInput = memo(
       end,
       startIconAccessibilityLabel = 'Back',
       clearIconAccessibilityLabel = 'Clear search query',
+      borderRadius = 1000,
       ...props
     }: SearchInputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
@@ -149,7 +152,7 @@ export const SearchInput = memo(
     return (
       <TextInput
         ref={refs}
-        borderRadius={1000}
+        borderRadius={borderRadius}
         className={cx(baseCss, compact && compactCss)}
         end={
           end ??

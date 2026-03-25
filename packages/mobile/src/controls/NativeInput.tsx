@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { TextInput } from 'react-native';
 import type { TextInputProps, ViewStyle } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
@@ -29,6 +30,11 @@ export type NativeInputProps = {
    * @warning Setting this to unset will break alignment for RTL languages.
    */
   textAlign?: TextInputProps['textAlign'] | 'unset';
+  /**
+   * Typography font token used for typed input text.
+   * @default body
+   */
+  inputFont?: ThemeVars.Font;
 } & SharedProps &
   Pick<TextInputBaseProps, 'compact'> &
   Pick<
@@ -46,6 +52,7 @@ export const NativeInput = memo(
         align = 'start',
         disabled,
         textAlign,
+        inputFont = 'body',
         accessibilityLabel,
         compact,
         style,
@@ -58,14 +65,16 @@ export const NativeInput = memo(
 
       const inputTextStyle = useMemo(
         () => ({
-          fontSize: theme.fontSize.body,
-          fontFamily: theme.fontFamily.body,
-          minHeight: theme.lineHeight.body,
+          fontSize: theme.fontSize[inputFont],
+          fontFamily: theme.fontFamily[inputFont],
+          lineHeight: theme.lineHeight[inputFont],
+          minHeight: theme.lineHeight[inputFont],
+          fontWeight: `${theme.fontWeight[inputFont]}`,
           padding: 0,
           margin: 0,
           color: theme.color.fg,
         }),
-        [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.color.fg],
+        [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.fontWeight, theme.color.fg, inputFont],
       );
 
       const containerStyle: ViewStyle = useMemo(() => {

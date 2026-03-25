@@ -1,4 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
@@ -8,10 +9,10 @@ import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 
 const baseCss = css`
-  font-size: var(--fontSize-body);
-  line-height: var(--lineHeight-body);
-  font-weight: var(--fontWeight-body);
-  font-family: var(--fontFamily-body);
+  font-size: var(--nativeInput-fontSize, var(--fontSize-body));
+  line-height: var(--nativeInput-lineHeight, var(--lineHeight-body));
+  font-weight: var(--nativeInput-fontWeight, var(--fontWeight-body));
+  font-family: var(--nativeInput-fontFamily, var(--fontFamily-body));
   min-width: 0;
   flex-grow: 2;
   background-color: transparent;
@@ -92,6 +93,11 @@ export type NativeInputProps = {
    * */
   align?: TextAlignProps['align'];
   /**
+   * Typography font token used for typed input text.
+   * @default body
+   */
+  inputFont?: ThemeVars.Font;
+  /**
    * Callback fired when pressed/clicked
    */
   onClick?: React.MouseEventHandler;
@@ -108,6 +114,7 @@ export const NativeInput = memo(
       containerSpacing,
       testID,
       align = 'start',
+      inputFont = 'body',
       onFocus,
       onClick,
       onBlur,
@@ -129,12 +136,17 @@ export const NativeInput = memo(
       : originalContainerPaddingCss;
 
     const dynamicStyles = useMemo(
-      () => ({
-        textAlign: align,
-        colorScheme: activeColorScheme,
-        ...style,
-      }),
-      [align, activeColorScheme, style],
+      () =>
+        ({
+          '--nativeInput-fontSize': `var(--fontSize-${inputFont})`,
+          '--nativeInput-lineHeight': `var(--lineHeight-${inputFont})`,
+          '--nativeInput-fontWeight': `var(--fontWeight-${inputFont})`,
+          '--nativeInput-fontFamily': `var(--fontFamily-${inputFont})`,
+          textAlign: align,
+          colorScheme: activeColorScheme,
+          ...style,
+        }) as React.CSSProperties,
+      [align, activeColorScheme, inputFont, style],
     );
 
     return (

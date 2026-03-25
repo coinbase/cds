@@ -24,6 +24,7 @@ const BorderlessVariants = () => {
   return (
     <VStack gap={2}>
       <SearchInput
+        borderRadius={200}
         bordered={false}
         editable={__DEV__}
         onChangeText={setDefaultBorderlessText}

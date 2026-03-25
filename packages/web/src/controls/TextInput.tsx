@@ -101,6 +101,11 @@ export type TextInputBaseProps = {
    */
   align?: TextAlignProps['align'];
   /**
+   * Typography font token used for typed input text.
+   * @default body
+   */
+  inputFont?: ThemeVars.Font;
+  /**
    * Adds suffix text to the end of input
    */
   suffix?: string;
@@ -178,6 +183,7 @@ export const TextInput = memo(
       width = '100%',
       disabled = false,
       align = 'start',
+      inputFont = 'body',
       compact = false,
       suffix = '',
       onFocus,
@@ -280,6 +286,7 @@ export const TextInput = memo(
           data-start={!!start || compact}
           disabled={disabled}
           id={shouldSetLabelId ? labelId : undefined}
+          inputFont={inputFont}
           onBlur={handleOnBlur}
           onFocus={handleOnFocus}
           testID={testID}
@@ -295,6 +302,7 @@ export const TextInput = memo(
       label,
       hasLabel,
       align,
+      inputFont,
       variant,
       compact,
       labelVariant,

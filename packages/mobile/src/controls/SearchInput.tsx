@@ -21,11 +21,13 @@ export type SearchInputBaseProps = Pick<
   | 'accessibilityLabel'
   | 'accessibilityLabelledBy'
   | 'bordered'
+  | 'borderRadius'
   | 'compact'
   | 'disabled'
   | 'enableColorSurge'
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
+  | 'inputFont'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'
@@ -107,6 +109,7 @@ export const SearchInput = memo(
         end,
         startIconAccessibilityLabel = 'Back',
         clearIconAccessibilityLabel = 'Clear text',
+        borderRadius = 1000,
         ...props
       }: SearchInputProps,
       ref: ForwardedRef<RNTextInput>,
@@ -174,7 +177,7 @@ export const SearchInput = memo(
         <TextInput
           ref={refs}
           accessibilityRole="search"
-          borderRadius={1000}
+          borderRadius={borderRadius}
           disabled={disabled}
           end={
             end ??

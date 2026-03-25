@@ -67,6 +67,11 @@ export type TextInputBaseProps = SharedProps &
      */
     align?: TextAlignProps['align'];
     /**
+     * Typography font token used for typed input text.
+     * @default body
+     */
+    inputFont?: ThemeVars.Font;
+    /**
      * Adds suffix text to the end of input
      */
     suffix?: string;
@@ -141,6 +146,7 @@ export const TextInput = memo(
         width = '100%',
         disabled = false,
         align = 'start',
+        inputFont = 'body',
         compact,
         suffix = '',
         accessibilityLabel,
@@ -297,6 +303,7 @@ export const TextInput = memo(
               compact={compact}
               containerSpacing={containerSpacing}
               disabled={disabled}
+              inputFont={inputFont}
               testID={testID}
               {...editableInputAddonProps}
             />
