@@ -157,12 +157,6 @@ type TabNavigationFC = <TabId extends string | undefined = string>(
   props: TabNavigationProps<TabId> & { ref?: ForwardedRef<HTMLElement | null> },
 ) => React.ReactElement;
 
-/**
- * TabNavigation renders a horizontal, tab-based navigation bar.
- * This component has a opinionated default style, but allows for customization through custom Component props.
- * @deprecated Use Tabs instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
 const TabNavigationComponent = memo(
   forwardRef(
     <TabId extends string>(
@@ -461,4 +455,10 @@ const TabNavigationComponent = memo(
 
 TabNavigationComponent.displayName = 'TabNavigation';
 
+/**
+ * TabNavigation renders a horizontal, tab-based navigation bar.
+ * This component has a opinionated default style, but allows for customization through custom Component props.
+ * @deprecated Use Tabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
+ */
 export const TabNavigation = TabNavigationComponent as TabNavigationFC;
