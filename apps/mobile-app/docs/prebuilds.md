@@ -63,10 +63,10 @@ When running the debug app after a rebuild or restart, you'll most likely need t
 
 Before running visreg, ensure the release build is installed (step 2 above). Then:
 
-| Platform | Command                              |
-| -------- | ------------------------------------ |
-| ios      | `yarn nx run mobile-visreg:ios`      |
-| android  | `yarn nx run mobile-visreg:android`  |
+| Platform | Command                             |
+| -------- | ----------------------------------- |
+| ios      | `yarn nx run mobile-visreg:ios`     |
+| android  | `yarn nx run mobile-visreg:android` |
 
 See the [mobile-visreg README](/packages/mobile-visreg/README.md) for full setup, single-route iteration, and Percy upload instructions.
 

@@ -42,12 +42,12 @@ packages/mobile-visreg/
 
 All targets are run from the repo root via `yarn nx run mobile-visreg:<target>`.
 
-| Target  | Command | Description |
-| ------- | ------- | ----------- |
-| `setup` | `yarn nx run mobile-visreg:setup` | Install Maestro CLI (one-time) |
-| `ios` | `yarn nx run mobile-visreg:ios` | Capture screenshots from the CDS mobile app on iOS |
+| Target    | Command                             | Description                                            |
+| --------- | ----------------------------------- | ------------------------------------------------------ |
+| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                         |
+| `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS mobile app on iOS     |
 | `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS mobile app on Android |
-| `upload` | `yarn nx run mobile-visreg:upload` | Upload screenshots to BrowserStack App Percy |
+| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy           |
 
 ## Prerequisites
 
@@ -179,13 +179,13 @@ Visit the project dashboard at percy.io. The first upload establishes the baseli
 
 ### Useful environment variables
 
-| Variable               | Purpose                                                   |
-| ---------------------- | --------------------------------------------------------- |
-| `PERCY_TOKEN`          | Required. Project write-only API token                    |
-| `PERCY_BRANCH`         | Branch name for this build (default: current git branch)  |
-| `PERCY_TARGET_BRANCH`  | Baseline branch to compare against (default: `master`)    |
-| `PERCY_COMMIT`         | Git commit SHA to associate with the build                |
-| `PERCY_PARALLEL_TOTAL` | Number of parallel shards (for parallel uploads)          |
+| Variable               | Purpose                                                  |
+| ---------------------- | -------------------------------------------------------- |
+| `PERCY_TOKEN`          | Required. Project write-only API token                   |
+| `PERCY_BRANCH`         | Branch name for this build (default: current git branch) |
+| `PERCY_TARGET_BRANCH`  | Baseline branch to compare against (default: `master`)   |
+| `PERCY_COMMIT`         | Git commit SHA to associate with the build               |
+| `PERCY_PARALLEL_TOTAL` | Number of parallel shards (for parallel uploads)         |
 
 ## Verification checklist
 

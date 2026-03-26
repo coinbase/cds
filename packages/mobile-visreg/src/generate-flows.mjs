@@ -32,6 +32,4 @@ ${routeSteps}
 `;
 
 writeFileSync(outputPath, yaml, 'utf8');
-console.log(
-  `Generated flows/capture-all.yaml with ${sorted.length} routes`,
-);
+console.log(`Generated flows/capture-all.yaml with ${sorted.length} routes`);
