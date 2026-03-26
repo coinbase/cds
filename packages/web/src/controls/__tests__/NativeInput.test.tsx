@@ -58,8 +58,10 @@ describe('NativeInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const input = screen.getByTestId(TEST_ID);
-    expect(input).toHaveStyle({ textAlign: 'start', colorScheme: 'dark' });
+    expect(screen.getByTestId(TEST_ID)).toHaveAttribute(
+      'style',
+      'text-align: start; color-scheme: dark;',
+    );
   });
 
   it('changes align style if override passed as align prop', () => {
@@ -69,8 +71,10 @@ describe('NativeInput', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('text-align: center;');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('color-scheme: light;');
+    expect(screen.getByTestId(TEST_ID)).toHaveAttribute(
+      'style',
+      'text-align: center; color-scheme: light;',
+    );
   });
 });
 

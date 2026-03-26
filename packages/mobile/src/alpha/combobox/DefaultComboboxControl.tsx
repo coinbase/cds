@@ -80,7 +80,7 @@ export const DefaultComboboxControl = <
                 flexShrink: 1,
                 minWidth: 0,
                 padding: 0,
-                height: !hasValue ? 48 : 24,
+                height: !hasValue ? 48 : undefined,
                 marginTop: hasValue ? 0 : -24,
                 marginBottom: hasValue ? -12 : -24,
                 paddingTop: hasValue ? 8 : 0,
