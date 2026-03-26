@@ -63,15 +63,10 @@ describe('Search', () => {
     expect(screen.getByRole('search').props.value).toBe('value');
   });
 
-  it('passes inputFont to the text input', () => {
+  it('passes font to the text input', () => {
     render(
       <DefaultThemeProvider>
-        <SearchInput
-          inputFont="label1"
-          onChangeText={onChangeTextSpy}
-          testID={TEST_ID}
-          value="value"
-        />
+        <SearchInput font="label1" onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 

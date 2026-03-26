@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { NativeInput } from '../../controls/NativeInput';
 import { useTheme } from '../../hooks/useTheme';
@@ -15,6 +16,11 @@ const hasSelectedValue = (currentValue: unknown): boolean =>
   typeof currentValue !== 'undefined' &&
   !(Array.isArray(currentValue) && currentValue.length === 0);
 
+/** `Box` `font` allows `inherit`; `NativeInput` / line-height map need a concrete token. */
+function toNativeFontToken(font: ThemeVars.FontFamily | 'inherit' | undefined): ThemeVars.Font {
+  return font && font !== 'inherit' ? (font as ThemeVars.Font) : 'body';
+}
+
 export const DefaultComboboxControl = <
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
@@ -29,13 +35,14 @@ export const DefaultComboboxControl = <
   options,
   searchText,
   onSearch,
-  inputFont = 'body',
+  font = 'body',
   searchInputRef,
   hideSearchInput,
   accessibilityLabel,
   ...props
 }: ComboboxControlProps<Type, SelectOptionValue>) => {
   const theme = useTheme();
+  const nativeFont = useMemo(() => toNativeFontToken(font), [font]);
   const hasValue = hasSelectedValue(value);
   const shouldRenderSearchInput = !hideSearchInput && (!hasValue || open);
 
@@ -57,7 +64,7 @@ export const DefaultComboboxControl = <
       accessibilityLabel={computedAccessibilityLabel}
       align={align}
       disabled={disabled}
-      inputFont={inputFont}
+      font={font}
       open={open}
       options={options}
       setOpen={setOpen}
@@ -69,7 +76,7 @@ export const DefaultComboboxControl = <
             <NativeInput
               ref={searchInputRef}
               disabled={disabled || !open}
-              inputFont={inputFont}
+              font={nativeFont}
               onChangeText={onSearch}
               onPress={() => !disabled && setOpen(true)}
               placeholder={typeof placeholder === 'string' ? placeholder : undefined}
@@ -79,7 +86,7 @@ export const DefaultComboboxControl = <
                 flexShrink: 1,
                 minWidth: 0,
                 padding: 0,
-                height: hasValue ? theme.lineHeight[inputFont] : 48,
+                height: hasValue ? theme.lineHeight[nativeFont] : 48,
                 marginTop: hasValue ? 0 : -24,
                 marginBottom: hasValue ? -12 : -24,
                 paddingTop: hasValue ? 8 : 0,
@@ -94,7 +101,7 @@ export const DefaultComboboxControl = <
         ) : (
           <>
             {hasValue ? null : (
-              <Text color="fgMuted" font={inputFont} paddingY={0} textAlign={valueAlignment}>
+              <Text color="fgMuted" font={font} paddingY={0} textAlign={valueAlignment}>
                 {typeof placeholder === 'string' ? placeholder : ''}
               </Text>
             )}

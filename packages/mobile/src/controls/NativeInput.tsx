@@ -34,7 +34,7 @@ export type NativeInputProps = {
    * Typography font token used for typed input text.
    * @default body
    */
-  inputFont?: ThemeVars.Font;
+  font?: ThemeVars.Font;
 } & SharedProps &
   Pick<TextInputBaseProps, 'compact'> &
   Pick<
@@ -52,7 +52,7 @@ export const NativeInput = memo(
         align = 'start',
         disabled,
         textAlign,
-        inputFont = 'body',
+        font = 'body',
         accessibilityLabel,
         compact,
         style,
@@ -65,11 +65,11 @@ export const NativeInput = memo(
 
       const inputTextStyle: TextStyle = useMemo(
         () => ({
-          fontSize: theme.fontSize[inputFont],
-          fontFamily: theme.fontFamily[inputFont],
-          lineHeight: theme.lineHeight[inputFont],
-          minHeight: theme.lineHeight[inputFont],
-          fontWeight: theme.fontWeight[inputFont] as TextStyle['fontWeight'],
+          fontSize: theme.fontSize[font],
+          fontFamily: theme.fontFamily[font],
+          lineHeight: theme.lineHeight[font],
+          minHeight: theme.lineHeight[font],
+          fontWeight: theme.fontWeight[font],
           padding: 0,
           margin: 0,
           color: theme.color.fg,
@@ -80,7 +80,7 @@ export const NativeInput = memo(
           theme.lineHeight,
           theme.fontWeight,
           theme.color.fg,
-          inputFont,
+          font,
         ],
       );
 

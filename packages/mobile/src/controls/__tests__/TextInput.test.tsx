@@ -70,11 +70,11 @@ describe('TextInput', () => {
     expect(screen.getByTestId(testID).props.value).toBe(value);
   });
 
-  it('passes inputFont to native input', () => {
+  it('passes font to native input', () => {
     const testID = 'textinput-id';
     render(
       <DefaultThemeProvider>
-        <TextInput inputFont="label1" testID={testID} />
+        <TextInput font="label1" testID={testID} />
       </DefaultThemeProvider>,
     );
 

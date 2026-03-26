@@ -59,7 +59,7 @@ export const DefaultSelectControlComponent = memo(
         endNode: customEndNode,
         compact,
         align = 'start',
-        inputFont = 'body',
+        font = 'body',
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
@@ -265,7 +265,7 @@ export const DefaultSelectControlComponent = memo(
         }
 
         return typeof singleValueContent === 'string' ? (
-          <Text align={align} color={hasValue ? 'fg' : 'fgMuted'} ellipsize="tail" font={inputFont}>
+          <Text align={align} color={hasValue ? 'fg' : 'fgMuted'} ellipsize="tail" font={font}>
             {singleValueContent}
           </Text>
         ) : (
@@ -275,7 +275,7 @@ export const DefaultSelectControlComponent = memo(
         hasValue,
         isMultiSelect,
         singleValueContent,
-        inputFont,
+        font,
         align,
         value,
         maxSelectedOptionsToShow,

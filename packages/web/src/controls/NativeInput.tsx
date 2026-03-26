@@ -7,12 +7,9 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout';
 
 const baseCss = css`
-  font-size: var(--nativeInput-fontSize, var(--fontSize-body));
-  line-height: var(--nativeInput-lineHeight, var(--lineHeight-body));
-  font-weight: var(--nativeInput-fontWeight, var(--fontWeight-body));
-  font-family: var(--nativeInput-fontFamily, var(--fontFamily-body));
   min-width: 0;
   flex-grow: 2;
   background-color: transparent;
@@ -83,7 +80,7 @@ const compactContainerPaddingCss = css`
   padding: var(--space-1);
 `;
 
-export type NativeInputProps = {
+export type NativeInputBaseProps = BoxBaseProps & {
   compact?: boolean;
   /** Custom container spacing if needed. This will add to the existing spacing */
   containerSpacing?: string;
@@ -92,21 +89,20 @@ export type NativeInputProps = {
    * @default start
    * */
   align?: TextAlignProps['align'];
-  /**
-   * Typography font token used for typed input text.
-   * @default body
-   */
-  inputFont?: ThemeVars.Font;
-  /**
-   * Callback fired when pressed/clicked
-   */
-  onClick?: React.MouseEventHandler;
-} & SharedProps &
+};
+
+export type NativeInputProps = NativeInputBaseProps &
+  BoxProps<'input'> &
+  SharedProps &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
-  > &
-  React.InputHTMLAttributes<HTMLInputElement>;
+  > & {
+    /**
+     * Callback fired when pressed/clicked
+     */
+    onClick?: React.MouseEventHandler;
+  };
 
 export const NativeInput = memo(
   forwardRef(function NativeInput(
@@ -114,7 +110,7 @@ export const NativeInput = memo(
       containerSpacing,
       testID,
       align = 'start',
-      inputFont = 'body',
+      font = 'body',
       onFocus,
       onClick,
       onBlur,
@@ -138,29 +134,23 @@ export const NativeInput = memo(
     const dynamicStyles = useMemo(
       () =>
         ({
-          '--nativeInput-fontSize': `var(--fontSize-${inputFont})`,
-          '--nativeInput-lineHeight': `var(--lineHeight-${inputFont})`,
-          '--nativeInput-fontWeight': `var(--fontWeight-${inputFont})`,
-          '--nativeInput-fontFamily': `var(--fontFamily-${inputFont})`,
-          fontSize: `var(--fontSize-${inputFont})`,
-          lineHeight: `var(--lineHeight-${inputFont})`,
-          fontWeight: `var(--fontWeight-${inputFont})`,
-          fontFamily: `var(--fontFamily-${inputFont})`,
           textAlign: align,
           colorScheme: activeColorScheme,
           ...style,
         }) as React.CSSProperties,
-      [align, activeColorScheme, inputFont, style],
+      [align, activeColorScheme, style],
     );
 
     return (
-      <input
+      <Box
         ref={ref}
         aria-describedby={accessibilityHint}
         aria-label={accessibilityLabel}
         aria-labelledby={accessibilityLabelledBy}
+        as="input"
         className={cx(baseCss, containerSpacing ?? defaultContainerPadding, className)}
         data-testid={testID}
+        font={font}
         onBlur={onBlur}
         onChange={onChange}
         onClick={onClick}

@@ -85,7 +85,7 @@ const DefaultSelectControlComponent = memo(
         compact,
         blendStyles,
         align = 'start',
-        inputFont = 'body',
+        font = 'body',
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
@@ -318,7 +318,7 @@ const DefaultSelectControlComponent = memo(
             as="p"
             color={hasValue ? 'fg' : 'fgMuted'}
             display="block"
-            font={inputFont}
+            font={font}
             overflow="truncate"
             textAlign={align}
             width="100%"
@@ -332,7 +332,7 @@ const DefaultSelectControlComponent = memo(
         hasValue,
         isMultiSelect,
         singleValueContent,
-        inputFont,
+        font,
         align,
         value,
         maxSelectedOptionsToShow,

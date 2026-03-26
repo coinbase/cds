@@ -115,10 +115,10 @@ describe('Combobox', () => {
       expect(input).toBeInTheDocument();
     });
 
-    it('passes inputFont to the search input', () => {
+    it('passes font to the search input', () => {
       render(
         <DefaultThemeProvider>
-          <Combobox {...defaultProps} defaultOpen inputFont="label1" />
+          <Combobox {...defaultProps} defaultOpen font="label1" />
         </DefaultThemeProvider>,
       );
 

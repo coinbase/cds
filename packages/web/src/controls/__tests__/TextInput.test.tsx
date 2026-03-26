@@ -45,10 +45,10 @@ describe('TextInput', () => {
     expect(screen.getByRole('textbox')).toHaveValue(value);
   });
 
-  it('passes inputFont to native input', () => {
+  it('passes font to native input', () => {
     render(
       <DefaultThemeProvider>
-        <TextInput inputFont="label1" />
+        <TextInput font="label1" />
       </DefaultThemeProvider>,
     );
 

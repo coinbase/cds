@@ -43,15 +43,10 @@ describe('Search', () => {
     expect(screen.getByRole('searchbox')).toHaveValue('value');
   });
 
-  it('passes inputFont through to the text input', () => {
+  it('passes font through to the text input', () => {
     render(
       <DefaultThemeProvider>
-        <SearchInput
-          inputFont="label1"
-          onChangeText={onChangeTextSpy}
-          testID={TEST_ID}
-          value="value"
-        />
+        <SearchInput font="label1" onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 

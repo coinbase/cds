@@ -60,7 +60,7 @@ export type ComboboxControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = SelectControlProps<Type, SelectOptionValue> &
-  Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput' | 'inputFont'> & {
+  Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput' | 'font'> & {
     /** Search text value */
     searchText: string;
     /** Search text change handler */
@@ -173,7 +173,7 @@ const ComboboxBase = memo(
         SelectControlComponent = DefaultSelectControl,
         ComboboxControlComponent = DefaultComboboxControl,
         hideSearchInput,
-        inputFont,
+        font,
         ...props
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
@@ -236,10 +236,10 @@ const ComboboxBase = memo(
             ComboboxControlComponent={ComboboxControlComponent}
             SelectControlComponent={SelectControlComponent}
             controlRef={controlRef}
-            inputFont={inputFont}
+            font={font}
           />
         ),
-        [SelectControlComponent, ComboboxControlComponent, inputFont],
+        [SelectControlComponent, ComboboxControlComponent, font],
       );
 
       return (

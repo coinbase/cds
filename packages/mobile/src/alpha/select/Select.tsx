@@ -80,7 +80,7 @@ const SelectBase = memo(
         media,
         end,
         align,
-        inputFont,
+        font,
         bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
@@ -181,7 +181,7 @@ const SelectBase = memo(
             endNode={endNode}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
-            inputFont={inputFont}
+            font={font}
             label={label}
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}

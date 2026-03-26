@@ -28,7 +28,7 @@ export const DefaultComboboxControl = memo(
     align,
     searchText,
     onSearch,
-    inputFont = 'body',
+    font = 'body',
     accessibilityLabel,
     ...props
   }: ComboboxControlProps<Type, SelectOptionValue>) => {
@@ -71,7 +71,7 @@ export const DefaultComboboxControl = memo(
         accessibilityLabel={computedAccessibilityLabel}
         align={align}
         compact={compact}
-        inputFont={inputFont}
+        font={font}
         open={open}
         options={options}
         role="combobox"
@@ -83,7 +83,7 @@ export const DefaultComboboxControl = memo(
             <HStack flexGrow={1} flexWrap="wrap" width="100%">
               <NativeInput
                 ref={searchInputRef}
-                inputFont={inputFont}
+                font={font}
                 onChange={handleSearchChange}
                 onClick={handleSearchClick}
                 onKeyDown={(event) => {
@@ -101,7 +101,7 @@ export const DefaultComboboxControl = memo(
                 style={{
                   paddingLeft: 0,
                   paddingRight: 0,
-                  height: hasValue ? `var(--lineHeight-${inputFont})` : compact ? 40 : 48,
+                  height: hasValue ? `var(--lineHeight-${font})` : compact ? 40 : 48,
                   minWidth: 0,
                   flexGrow: 1,
                   width: '100%',
@@ -121,7 +121,7 @@ export const DefaultComboboxControl = memo(
                   as="p"
                   color="fgMuted"
                   display="block"
-                  font={inputFont}
+                  font={font}
                   overflow="truncate"
                   paddingY={0}
                   textAlign={align}

@@ -77,10 +77,10 @@ describe('NativeInput', () => {
     expect(screen.getByTestId(TEST_ID)).toHaveStyle('color-scheme: light;');
   });
 
-  it('changes typography token when inputFont is provided', () => {
+  it('changes typography token when font is provided', () => {
     render(
       <DefaultThemeProvider>
-        <NativeInput inputFont="label1" testID={TEST_ID} />
+        <NativeInput font="label1" testID={TEST_ID} />
       </DefaultThemeProvider>,
     );
 

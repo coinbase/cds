@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🚀 Updates
 
-- Feat: support inputFont on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
+- Feat: support font prop on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
 - Feat: support borderRadius on SearchInput. [[#545](https://github.com/coinbase/cds/pull/545)]
 
 ## 8.57.1 ((3/24/2026, 01:14 PM PST))
