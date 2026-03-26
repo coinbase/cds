@@ -1,0 +1,11 @@
+{
+  "import": "import { PercentageBarChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/bar/PercentageBarChart.tsx",
+  "description": "A horizontal stacked bar chart where the data series represents parts of a whole (like a pie chart). Values are normalized to 100%.",
+  "relatedComponents": [
+    {
+      "label": "BarChart",
+      "url": "/components/charts/BarChart/"
+    }
+  ]
+}

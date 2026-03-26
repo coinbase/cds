@@ -108,4 +108,37 @@ describe('Legend', () => {
     expect(screen.getByText('Series A')).toBeInTheDocument();
     expect(screen.queryByText('Series B')).not.toBeInTheDocument();
   });
+
+  it('deduplicates legend entries that share the same legendKey', () => {
+    render(
+      <DefaultThemeProvider>
+        <CartesianChart
+          animate={false}
+          height={400}
+          series={[
+            {
+              id: 'series-a',
+              data: [10, 20, 30, 40, 50],
+              label: 'Shared',
+              legendKey: 'shared',
+            },
+            {
+              id: 'series-b',
+              data: [5, 10, 15, 20, 25],
+              label: 'Shared',
+              legendKey: 'shared',
+            },
+          ]}
+          testID="cartesian-legend-dedupe"
+          width={600}
+        >
+          <Legend />
+          <Line seriesId="series-a" />
+          <Line seriesId="series-b" />
+        </CartesianChart>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getAllByText('Shared')).toHaveLength(1);
+  });
 });

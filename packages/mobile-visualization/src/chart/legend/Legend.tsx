@@ -150,8 +150,17 @@ export const Legend = memo(
       const { series } = useCartesianChartContext();
 
       const filteredSeries = useMemo(() => {
-        if (seriesIds === undefined) return series.filter((s) => s.label !== undefined);
-        return series.filter((s) => seriesIds.includes(s.id) && s.label !== undefined);
+        const base =
+          seriesIds === undefined
+            ? series.filter((s) => s.label !== undefined)
+            : series.filter((s) => seriesIds.includes(s.id) && s.label !== undefined);
+        const seen = new Set<string>();
+        return base.filter((s) => {
+          const key = s.legendKey ?? s.id;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
       }, [series, seriesIds]);
 
       if (filteredSeries.length === 0) return;
