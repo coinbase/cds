@@ -132,12 +132,11 @@ export const NativeInput = memo(
       : originalContainerPaddingCss;
 
     const dynamicStyles = useMemo(
-      () =>
-        ({
-          textAlign: align,
-          colorScheme: activeColorScheme,
-          ...style,
-        }) as React.CSSProperties,
+      () => ({
+        textAlign: align,
+        colorScheme: activeColorScheme,
+        ...style,
+      }),
       [align, activeColorScheme, style],
     );
 

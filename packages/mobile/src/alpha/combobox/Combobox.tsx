@@ -308,6 +308,7 @@ const ComboboxBase = memo(
                   startNode={startNode}
                   variant={variant}
                   {...props}
+                  font={font}
                   label={null}
                   styles={undefined}
                 />
@@ -323,6 +324,7 @@ const ComboboxBase = memo(
           align,
           closeButtonLabel,
           endNode,
+          font,
           handleTrayVisibilityChange,
           label,
           placeholder,

@@ -101,7 +101,7 @@ export const DefaultComboboxControl = memo(
                 style={{
                   paddingLeft: 0,
                   paddingRight: 0,
-                  height: hasValue ? `var(--lineHeight-${font})` : compact ? 40 : 48,
+                  height: !hasValue ? (compact ? 40 : 48) : undefined,
                   minWidth: 0,
                   flexGrow: 1,
                   width: '100%',

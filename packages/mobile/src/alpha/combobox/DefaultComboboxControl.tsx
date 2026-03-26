@@ -16,11 +16,6 @@ const hasSelectedValue = (currentValue: unknown): boolean =>
   typeof currentValue !== 'undefined' &&
   !(Array.isArray(currentValue) && currentValue.length === 0);
 
-/** `Box` `font` allows `inherit`; `NativeInput` / line-height map need a concrete token. */
-function toNativeFontToken(font: ThemeVars.FontFamily | 'inherit' | undefined): ThemeVars.Font {
-  return font && font !== 'inherit' ? (font as ThemeVars.Font) : 'body';
-}
-
 export const DefaultComboboxControl = <
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
@@ -42,7 +37,6 @@ export const DefaultComboboxControl = <
   ...props
 }: ComboboxControlProps<Type, SelectOptionValue>) => {
   const theme = useTheme();
-  const nativeFont = useMemo(() => toNativeFontToken(font), [font]);
   const hasValue = hasSelectedValue(value);
   const shouldRenderSearchInput = !hideSearchInput && (!hasValue || open);
 
@@ -76,7 +70,7 @@ export const DefaultComboboxControl = <
             <NativeInput
               ref={searchInputRef}
               disabled={disabled || !open}
-              font={nativeFont}
+              font={font}
               onChangeText={onSearch}
               onPress={() => !disabled && setOpen(true)}
               placeholder={typeof placeholder === 'string' ? placeholder : undefined}
@@ -86,7 +80,7 @@ export const DefaultComboboxControl = <
                 flexShrink: 1,
                 minWidth: 0,
                 padding: 0,
-                height: hasValue ? theme.lineHeight[nativeFont] : 48,
+                height: !hasValue ? 48 : 24,
                 marginTop: hasValue ? 0 : -24,
                 marginBottom: hasValue ? -12 : -24,
                 paddingTop: hasValue ? 8 : 0,

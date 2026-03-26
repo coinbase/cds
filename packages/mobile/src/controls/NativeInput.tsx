@@ -103,7 +103,7 @@ export const NativeInput = memo(
         disabled,
       ]);
 
-      const inputRootStyles: StyleProp<TextStyle> = useMemo(() => {
+      const inputRootStyles = useMemo(() => {
         return [
           inputTextStyle,
           containerStyle,
