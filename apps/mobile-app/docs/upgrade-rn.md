@@ -14,7 +14,7 @@ yarn workspace mobile-app add expo@^<version on npm>
 cd apps/mobile-app && npx expo install --fix
 ```
 
-3. Upgrade all native dependencies within our repo (cds-mobile, ui-mobile-playground, ui-mobile-visreg, etc) to match the versions provided by expo.
+3. Upgrade all native dependencies within our repo (cds-mobile, etc) to match the versions provided by expo.
 
 **This is super important because that native versions must match for the mobile-app build to be successful**
 
