@@ -103,6 +103,28 @@ const generateRoutesContent = (platform, siteDir) => {
     sections.push({ name: 'Hooks', routes: hookRoutes });
   }
 
+  const guideRoutes = [];
+  const guides = globSync('guides/*', { cwd: docsDir });
+
+  for (const guidePath of guides) {
+    const fullPath = path.join(docsDir, guidePath);
+    const content = generateDoc(platform, fullPath);
+    if (!content) continue;
+
+    const name = path.basename(guidePath, '.mdx');
+    const metadata = getMetadata(fullPath, platform);
+
+    guideRoutes.push({
+      name,
+      description: metadata?.description,
+      url: `/llms/${platform}/guides/${name}.txt`,
+    });
+  }
+
+  if (guideRoutes.length > 0) {
+    sections.push({ name: 'Guides', routes: guideRoutes });
+  }
+
   const content = `# CDS Routes
 
 ${sections

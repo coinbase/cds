@@ -50,17 +50,11 @@ export const Tooltip = ({
   );
 
   const clonedChild = useMemo(() => {
-    const isStringContent = typeof content === 'string';
-    return cloneElement(
-      children,
-      // String content: Use only aria-label so the trigger is announced on focus without
-      // double announcement (aria-describedby would point to the same text when the tooltip is open).
-      // Non-string content: Use only aria-describedby to associate the visible tooltip (id=tooltipId).
-      // We cannot use aria-label here (it accepts only strings). May not announce on focus for
-      // non-button triggers due to timing (describedby target mounts when tooltip opens).
-      isStringContent ? { 'aria-label': content } : { 'aria-describedby': tooltipId },
-    );
-  }, [children, content, tooltipId]);
+    // Use aria-describedby to associate the tooltip (role="tooltip") with the trigger.
+    // This preserves the trigger's own accessible name (e.g. button text) while the tooltip
+    // provides supplemental description, per the ARIA tooltip pattern.
+    return cloneElement(children, { 'aria-describedby': tooltipId });
+  }, [children, tooltipId]);
 
   const contentPosition = useMemo(
     () => ({

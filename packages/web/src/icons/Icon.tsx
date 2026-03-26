@@ -67,7 +67,7 @@ const iconCss = css`
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
-  text-rendering: auto;
+  text-rendering: geometricPrecision;
   line-height: 1;
   flex-shrink: 0;
   display: block;

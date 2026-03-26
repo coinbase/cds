@@ -1,8 +1,11 @@
-import { memo, useMemo } from 'react';
-import { Group, Skia } from '@shopify/react-native-skia';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
+import type { Rect } from '@coinbase/cds-common/types';
+import { Group, Skia, usePathInterpolation } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultAxisId } from '../utils';
+import { getStackGroups } from '../utils';
+import { buildTransition, instantTransition } from '../utils/transition';
 
 import type { BarSeries } from './BarStack';
 import type { BarStackGroupProps } from './BarStackGroup';
@@ -32,6 +35,12 @@ export type BarPlotBaseProps = Pick<
 export type BarPlotProps = BarPlotBaseProps &
   Pick<BarStackGroupProps, 'transitions' | 'transition'>;
 
+const makeClipPath = (area: Rect) => {
+  const path = Skia.Path.Make();
+  path.addRect(area);
+  return path;
+};
+
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.
  * Groups series by stack ID + y-axis ID combination and renders BarStackGroup for each group.
@@ -55,9 +64,9 @@ export const BarPlot = memo<BarPlotProps>(
     transitions,
     transition,
   }) => {
-    const { series: allSeries, drawingArea } = useCartesianChartContext();
+    const { animate, series: allSeries, drawingArea } = useCartesianChartContext();
 
-    const targetSeries = useMemo(() => {
+    const targetSeries: BarSeries[] = useMemo(() => {
       // Then filter by seriesIds if provided
       if (seriesIds !== undefined) {
         return allSeries.filter((s: any) => seriesIds.includes(s.id));
@@ -66,61 +75,43 @@ export const BarPlot = memo<BarPlotProps>(
       return allSeries;
     }, [allSeries, seriesIds]);
 
-    const stackGroups = useMemo(() => {
-      const groups = new Map<
-        string,
-        {
-          stackId: string;
-          series: BarSeries[];
-          xAxisId?: string;
-          yAxisId?: string;
-        }
-      >();
+    const stackGroups = useMemo(() => getStackGroups(targetSeries), [targetSeries]);
 
-      // Group series into stacks based on stackId + axis ID combination
-      targetSeries.forEach((series) => {
-        const xAxisId = series.xAxisId ?? defaultAxisId;
-        const yAxisId = series.yAxisId ?? defaultAxisId;
-        const stackId = series.stackId || `individual-${series.id}`;
-        const stackKey = `${stackId}:${xAxisId}:${yAxisId}`;
+    const clipUpdateTransition = useMemo(
+      () => (transitions?.update !== undefined ? transitions.update : instantTransition),
+      [transitions?.update],
+    );
 
-        if (!groups.has(stackKey)) {
-          groups.set(stackKey, {
-            stackId: stackKey,
-            series: [],
-            xAxisId: series.xAxisId,
-            yAxisId: series.yAxisId,
-          });
-        }
+    const emptyPath = useMemo(() => Skia.Path.Make(), []);
 
-        const group = groups.get(stackKey)!;
-        group.series.push(series as BarSeries);
-      });
+    const initialPath = useMemo(
+      () => (drawingArea ? makeClipPath(drawingArea) : emptyPath),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    );
 
-      return Array.from(groups.values());
-    }, [targetSeries]);
+    const [clipPaths, setClipPaths] = useState({ from: initialPath, to: initialPath });
+    const clipProgress = useSharedValue(0);
 
-    // Create clip path for the entire chart area (shared by all bars)
-    const clipPath = useMemo(() => {
-      if (!drawingArea) return null;
-      const clip = Skia.Path.Make();
-      clip.addRect({
-        x: drawingArea.x,
-        y: drawingArea.y,
-        width: drawingArea.width,
-        height: drawingArea.height,
-      });
-      return clip;
-    }, [drawingArea]);
+    useEffect(() => {
+      if (!drawingArea) return;
+      const nextPath = makeClipPath(drawingArea);
+      setClipPaths((prev) => ({ from: prev.to, to: nextPath }));
+      clipProgress.value = 0;
+      clipProgress.value = buildTransition(1, animate ? clipUpdateTransition : null);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [drawingArea, animate, clipUpdateTransition]);
 
-    if (!clipPath) {
-      return null;
-    }
+    const animatedClipPath = usePathInterpolation(
+      clipProgress,
+      [0, 1],
+      [clipPaths.from, clipPaths.to],
+    );
 
-    // Note: Clipping is now handled here at the BarPlot level (one clip path for all bars!)
-    // This is much more efficient than creating a clip path for each individual bar
+    if (!drawingArea) return;
+
     return (
-      <Group clip={clipPath}>
+      <Group clip={animatedClipPath}>
         {stackGroups.map((group, stackIndex) => (
           <BarStackGroup
             key={group.stackId}

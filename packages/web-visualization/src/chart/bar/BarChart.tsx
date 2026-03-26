@@ -135,9 +135,9 @@ export const BarChart = memo(
       }, [seriesProp, stacked]);
 
       const seriesIds = useMemo(() => series?.map((s) => s.id), [series]);
-      const isHorizontal = chartProps.layout === 'horizontal';
-      const defaultXScaleType = isHorizontal ? 'linear' : 'band';
-      const defaultYScaleType = isHorizontal ? 'band' : 'linear';
+      const isHorizontalLayout = chartProps.layout === 'horizontal';
+      const defaultXScaleType = isHorizontalLayout ? 'linear' : 'band';
+      const defaultYScaleType = isHorizontalLayout ? 'band' : 'linear';
 
       // Split axis props into config props for Chart and visual props for axis components
       const {
@@ -170,14 +170,16 @@ export const BarChart = memo(
           scaleType: xScaleType ?? defaultXScaleType,
           data: xData,
           categoryPadding: xCategoryPadding,
-          domain: isHorizontal ? getDomainIncludingBaseline(xDomain, valueAxisBaseline) : xDomain,
+          domain: isHorizontalLayout
+            ? getDomainIncludingBaseline(xDomain, valueAxisBaseline)
+            : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
           baseline: xBaseline,
         }),
         [
           xScaleType,
-          isHorizontal,
+          isHorizontalLayout,
           xData,
           xCategoryPadding,
           xDomain,
@@ -194,14 +196,16 @@ export const BarChart = memo(
           scaleType: yScaleType ?? defaultYScaleType,
           data: yData,
           categoryPadding: yCategoryPadding,
-          domain: !isHorizontal ? getDomainIncludingBaseline(yDomain, valueAxisBaseline) : yDomain,
+          domain: !isHorizontalLayout
+            ? getDomainIncludingBaseline(yDomain, valueAxisBaseline)
+            : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
           baseline: yBaseline,
         }),
         [
           yScaleType,
-          isHorizontal,
+          isHorizontalLayout,
           yData,
           yCategoryPadding,
           yDomain,

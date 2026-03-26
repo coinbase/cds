@@ -1,13 +1,14 @@
 import React from 'react';
 import { type GestureResponderEvent } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons';
-import { Box, HStack } from '../../layout';
+import { Box, type BoxBaseProps } from '../../layout/Box';
+import { HStack, type HStackProps } from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 
-export type ModalHeaderBaseProps = SharedProps & {
+export type ModalHeaderBaseProps = Omit<BoxBaseProps, 'children'> & {
   /** Handles back button press */
   onBackButtonClick?: (event: GestureResponderEvent) => void;
   /** Title of the Modal */
@@ -48,26 +49,29 @@ export type ModalHeaderBaseProps = SharedProps & {
   closeAccessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
 };
 
-export type ModalHeaderProps = ModalHeaderBaseProps;
+export type ModalHeaderProps = ModalHeaderBaseProps & Omit<HStackProps, 'children'>;
 
 export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = ({
+  alignItems = 'center',
+  paddingX = 3,
+  paddingY = 2,
   title,
   onBackButtonClick,
   backAccessibilityLabel,
   backAccessibilityHint,
   closeAccessibilityLabel,
   closeAccessibilityHint,
-  testID,
+  ...props
 }) => {
   const { onRequestClose, hideCloseButton, hideDividers } = useModalContext();
 
   return (
     <HStack
-      alignItems="center"
+      alignItems={alignItems}
       borderedBottom={!hideDividers}
-      paddingX={3}
-      paddingY={2}
-      testID={testID}
+      paddingX={paddingX}
+      paddingY={paddingY}
+      {...props}
     >
       <Box flexBasis={0} flexGrow={1}>
         {!!onBackButtonClick && (

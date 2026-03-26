@@ -321,7 +321,7 @@ export const TooltipOnIcon = () => (
   <PortalProvider>
     <HStack alignItems="center" gap={2}>
       <Tooltip content="This will be visible to other users.">
-        <Icon active color="fg" name="info" role="button" tabIndex={0} />
+        <Icon active accessibilityLabel="Info" color="fg" name="info" role="button" tabIndex={0} />
       </Tooltip>
       <Text as="span" color="fgMuted" font="body">
         Focus the icon to hear the tooltip announced.
@@ -369,7 +369,14 @@ export const TooltipWithInteractiveContent = () => (
           </Text>
         }
       >
-        <Icon active color="fg" name="info" paddingStart={1} tabIndex={0} />
+        <Icon
+          active
+          accessibilityLabel="Info"
+          color="fg"
+          name="info"
+          paddingStart={1}
+          tabIndex={0}
+        />
       </Tooltip>
       <Text as="span" color="fgMuted" font="body">
         Set your default display currency.{' '}

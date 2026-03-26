@@ -96,6 +96,28 @@ export const Examples = () => {
           <DatePicker {...exampleProps} {...props} />
         </HStack>
       </VStack>
+      <VStack>
+        <Note>DatePicker with custom calendar classNames and styles</Note>
+        <style>{`
+          .custom-calendar {
+            border-color: var(--color-bgLineHeavy);
+            border-width: medium;
+          }
+          .cds-Calendar-day {
+            border-radius: var(--borderRadius-0);
+          }
+        `}</style>
+        <DatePicker
+          {...exampleProps}
+          {...props}
+          classNames={{
+            calendar: 'custom-calendar',
+          }}
+          styles={{
+            calendar: { backgroundColor: 'var(--color-bgAlternate)' },
+          }}
+        />
+      </VStack>
       <Box height={100} />
     </VStack>
   );
@@ -122,7 +144,7 @@ export const AccessibilityLabels = () => {
           required
           {...exampleProps}
           {...props}
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          closeCalendarAccessibilityLabel="Close calendar"
           disabledDates={[[oneWeekAgo, twoDaysAgo], today, oneWeekLater]}
           highlightedDates={[
             [fourDaysAgo, twoDaysAgo],
@@ -130,6 +152,7 @@ export const AccessibilityLabels = () => {
           ]}
           label="Birthdate"
           nextArrowAccessibilityLabel="Next month"
+          openCalendarAccessibilityLabel="Open calendar"
           previousArrowAccessibilityLabel="Previous month"
         />
       </VStack>
@@ -146,7 +169,7 @@ export const AccessibilityLabels = () => {
           required
           {...exampleProps}
           {...props}
-          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          closeCalendarAccessibilityLabel="Close calendar"
           disabledDates={[[oneWeekAgo, twoDaysAgo], today, oneWeekLater]}
           highlightedDates={[
             [fourDaysAgo, twoDaysAgo],
@@ -156,6 +179,7 @@ export const AccessibilityLabels = () => {
           maxDate={lastDayThisMonth}
           minDate={firstDayThisMonth}
           nextArrowAccessibilityLabel="Next month"
+          openCalendarAccessibilityLabel="Open calendar"
           previousArrowAccessibilityLabel="Previous month"
         />
       </VStack>

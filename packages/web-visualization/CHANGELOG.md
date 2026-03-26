@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.25 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix bar enter and update animation. [[#540](https://github.com/coinbase/cds/pull/540)]
+
+#### 📘 Misc
+
+- Chore: Updated numerous deprecation annotation messages.
+
 ## 3.4.0-beta.24 (3/12/2026 PST)
 
 This is an artificial version bump with no new change.

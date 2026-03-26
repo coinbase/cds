@@ -12,15 +12,19 @@ import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
 import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/useDateInput';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 
-import { TextInput, type TextInputProps } from '../controls/TextInput';
+import { TextInput, type TextInputBaseProps, type TextInputProps } from '../controls/TextInput';
 import { VStack } from '../layout/VStack';
 
-export type DateInputProps = {
-  /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
-  separator?: string;
-  style?: StyleProp<ViewStyle>;
-} & Omit<DateInputOptions, 'disabledDates' | 'intlDateFormat'> &
-  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'>;
+export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
+  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue'> & {
+    /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
+    separator?: string;
+  };
+
+export type DateInputProps = DateInputBaseProps &
+  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+    style?: StyleProp<ViewStyle>;
+  };
 
 export const DateInput = memo(
   forwardRef<NativeTextInput, DateInputProps>(
@@ -32,6 +36,7 @@ export const DateInput = memo(
         onErrorDate,
         required,
         separator = '/',
+        disabledDates,
         minDate,
         maxDate,
         requiredError,
@@ -70,6 +75,7 @@ export const DateInput = memo(
         onErrorDate,
         intlDateFormat,
         required,
+        disabledDates,
         minDate,
         maxDate,
         requiredError,

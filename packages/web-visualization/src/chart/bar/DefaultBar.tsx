@@ -9,6 +9,7 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
+import { getNormalizedStagger } from '../utils/bar';
 
 import type { BarComponentProps } from './Bar';
 
@@ -42,20 +43,17 @@ export const DefaultBar = memo<DefaultBarProps>(
     dataX,
     dataY,
     seriesId,
+    minSize = 1,
     transitions,
     transition,
     ...props
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
 
-    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
-    const normalizedStagger = useMemo(() => {
-      const barsGrowVertically = layout !== 'horizontal';
-      if (barsGrowVertically) {
-        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-      }
-      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout, x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>
@@ -79,27 +77,38 @@ export const DefaultBar = memo<DefaultBarProps>(
     );
 
     const initialPath = useMemo(() => {
-      if (!animate) return undefined;
+      if (!animate) return;
+      const isHorizontalLayout = layout === 'horizontal';
+      const baseline = origin ?? (isHorizontalLayout ? x : y + height);
 
-      const minSize = 1;
-      const barsGrowVertically = layout !== 'horizontal';
-
-      const initialX = barsGrowVertically ? x : (origin ?? x);
-      const initialY = barsGrowVertically ? (origin ?? y + height) : y;
-      const initialWidth = barsGrowVertically ? width : minSize;
-      const initialHeight = barsGrowVertically ? minSize : height;
+      const initialX = isHorizontalLayout ? baseline : x;
+      const initialY = isHorizontalLayout ? y : baseline;
+      const initialWidth = isHorizontalLayout ? minSize : width;
+      const initialHeight = isHorizontalLayout ? height : minSize;
 
       return getBarPath(
         initialX,
         initialY,
         initialWidth,
         initialHeight,
-        borderRadius ?? 0,
+        borderRadius,
         !!roundTop,
         !!roundBottom,
         layout,
       );
-    }, [animate, layout, x, y, origin, width, height, borderRadius, roundTop, roundBottom]);
+    }, [
+      animate,
+      layout,
+      x,
+      y,
+      origin,
+      width,
+      height,
+      borderRadius,
+      roundTop,
+      roundBottom,
+      minSize,
+    ]);
 
     return (
       <Path

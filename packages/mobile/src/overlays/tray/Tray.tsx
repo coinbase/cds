@@ -118,6 +118,7 @@ export const Tray = memo(
             flexGrow={1}
             flexShrink={1}
             minHeight={0}
+            overflow="hidden"
             paddingTop={title ? 0 : 2}
             style={contentStyle}
           >
@@ -193,6 +194,10 @@ export const Tray = memo(
   }),
 );
 
+/**
+ * @deprecated Redundant component. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
+ */
 export const TrayStickyFooter = ({ children }: { children: ReactNode }) => {
   const { verticalDrawerPercentageOfView, titleHeight } = useContext(TrayContext);
   const { height } = useWindowDimensions();

@@ -311,20 +311,14 @@ export const getBarPath = (
   roundBottom: boolean,
   layout: CartesianChartLayout = 'vertical',
 ): string => {
-  const barsGrowVertically = layout !== 'horizontal';
+  const isVerticalLayout = layout === 'vertical';
   const roundBothSides = roundTop && roundBottom;
   const r = Math.min(radius, width / 2, roundBothSides ? height / 2 : height);
 
-  // In vertical layout (bars grow up/down):
-  // - roundTop rounds the top face (min Y)
-  // - roundBottom rounds the bottom face (max Y)
-  // In horizontal layout (bars grow left/right):
-  // - roundTop rounds the right face (max X)
-  // - roundBottom rounds the left face (min X)
-  const rTL = barsGrowVertically ? (roundTop ? r : 0) : roundBottom ? r : 0;
-  const rTR = barsGrowVertically ? (roundTop ? r : 0) : roundTop ? r : 0;
-  const rBR = barsGrowVertically ? (roundBottom ? r : 0) : roundTop ? r : 0;
-  const rBL = barsGrowVertically ? (roundBottom ? r : 0) : roundBottom ? r : 0;
+  const rTL = isVerticalLayout ? (roundTop ? r : 0) : roundBottom ? r : 0;
+  const rTR = isVerticalLayout ? (roundTop ? r : 0) : roundTop ? r : 0;
+  const rBR = isVerticalLayout ? (roundBottom ? r : 0) : roundTop ? r : 0;
+  const rBL = isVerticalLayout ? (roundBottom ? r : 0) : roundBottom ? r : 0;
 
   // Build path with selective rounding
   let path = `M ${x + rTL} ${y}`;

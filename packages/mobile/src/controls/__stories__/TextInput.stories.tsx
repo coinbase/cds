@@ -383,8 +383,20 @@ const InputScreen = () => {
       <Example inline title="TextInput Custom Background">
         <MockTextInput label="Username" placeholder="john.doe@coinbase.com" style={customStyle} />
       </Example>
-      <Example inline title="TextInput without border">
-        <MockTextInput bordered={false} label="Username" placeholder="john.doe@coinbase.com" />
+      <Example inline title="TextInput borderless variants">
+        <MockTextInput
+          bordered={false}
+          helperText="Default borderless behavior with no focus border."
+          label="Username"
+          placeholder="john.doe@coinbase.com"
+        />
+        <MockTextInput
+          bordered={false}
+          focusedBorderWidth={200}
+          helperText="Set focusedBorderWidth to opt into a focus border."
+          label="Username with focus border"
+          placeholder="john.doe@coinbase.com"
+        />
       </Example>
       <Example inline title="Read-Only TextInput">
         <MockTextInput readOnly label="Read-Only" placeholder="Placeholder" value="Some text" />

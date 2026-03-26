@@ -5,7 +5,8 @@ import { Sparkline } from './Sparkline';
 import type { SparklinePathRef } from './SparklinePath';
 
 /**
- * @deprecated Use LineChart instead.
+ * @deprecated Use LineChart instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const SparklineGradient = memo(
   forwardRef<SparklinePathRef, SparklineBaseProps>(

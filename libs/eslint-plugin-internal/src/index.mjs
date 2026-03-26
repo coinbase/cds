@@ -1,3 +1,4 @@
+import deprecatedJsdocHasRemovalVersionRule from './deprecated-jsdoc-has-removal-version/index.mjs';
 import exampleScreenContainsExampleRule from './example-screen-contains-example/index.mjs';
 import exampleScreenDefaultRule from './example-screen-default/index.mjs';
 import figmaConnectImportsPackageMatchRule from './figma-connect-imports-package-match/index.mjs';
@@ -13,6 +14,7 @@ const plugin = {
     'safely-spread-props': safelySpreadPropsRule,
     'example-screen-default': exampleScreenDefaultRule,
     'example-screen-contains-example': exampleScreenContainsExampleRule,
+    'deprecated-jsdoc-has-removal-version': deprecatedJsdocHasRemovalVersionRule,
     'no-deprecated-jsdoc': noDeprecatedJsdocRule,
     'no-object-rest-spread-in-worklet': noObjectRestSpreadInWorkletRule,
     'figma-connect-imports-required': figmaConnectImportsRequiredRule,

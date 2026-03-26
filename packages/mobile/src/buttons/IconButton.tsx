@@ -1,5 +1,10 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import { ActivityIndicator, type PressableStateCallbackType, type ViewStyle } from 'react-native';
+import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import {
+  ActivityIndicator,
+  type PressableStateCallbackType,
+  type View,
+  type ViewStyle,
+} from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
@@ -37,87 +42,99 @@ export type IconButtonBaseProps = SharedProps &
 
 export type IconButtonProps = IconButtonBaseProps;
 
-export const IconButton = memo(function IconButton({
-  name,
-  active,
-  variant = 'secondary',
-  transparent,
-  compact = true,
-  background,
-  color,
-  borderColor,
-  iconSize = compact ? 's' : 'm',
-  borderWidth = 100,
-  borderRadius = 1000,
-  feedback = compact ? 'light' : 'normal',
-  flush,
-  loading,
-  style,
-  accessibilityHint,
-  accessibilityLabel,
-  ...props
-}: IconButtonProps) {
-  const theme = useTheme();
+export const IconButton = memo(
+  forwardRef<View, IconButtonProps>(function IconButton(
+    {
+      name,
+      active,
+      variant = 'secondary',
+      transparent,
+      compact = true,
+      background,
+      color,
+      borderColor,
+      iconSize = compact ? 's' : 'm',
+      borderWidth = 100,
+      borderRadius = 1000,
+      feedback = compact ? 'light' : 'normal',
+      flush,
+      loading,
+      style,
+      accessibilityHint,
+      accessibilityLabel,
+      ...props
+    },
+    ref,
+  ) {
+    const theme = useTheme();
 
-  const variantMap = transparent ? transparentVariants : variants;
-  const variantStyle = variantMap[variant];
+    const variantMap = transparent ? transparentVariants : variants;
+    const variantStyle = variantMap[variant];
 
-  const colorValue = color ?? variantStyle.color;
-  const backgroundValue = background ?? variantStyle.background;
-  const borderColorValue = borderColor ?? variantStyle.borderColor;
+    const colorValue = color ?? variantStyle.color;
+    const backgroundValue = background ?? variantStyle.background;
+    const borderColorValue = borderColor ?? variantStyle.borderColor;
 
-  const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
+    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
 
-  const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
+    const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
 
-  const sizingStyle = useMemo<ViewStyle>(
-    () => ({
-      height: minHeight,
-      width: minHeight,
-      alignItems: 'center',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    }),
-    [minHeight],
-  );
+    const sizingStyle = useMemo<ViewStyle>(
+      () => ({
+        height: minHeight,
+        width: minHeight,
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }),
+      [minHeight],
+    );
 
-  const pressableStyle = useCallback(
-    (state: PressableStateCallbackType) => [
-      sizingStyle,
-      typeof style === 'function' ? style(state) : style,
-    ],
-    [sizingStyle, style],
-  );
+    const pressableStyle = useCallback(
+      (state: PressableStateCallbackType) => [
+        sizingStyle,
+        typeof style === 'function' ? style(state) : style,
+      ],
+      [sizingStyle, style],
+    );
 
-  return (
-    <Pressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={loading ? `${accessibilityLabel ?? ''}, loading` : accessibilityLabel}
-      background={backgroundValue}
-      borderColor={borderColorValue}
-      borderRadius={borderRadius}
-      borderWidth={borderWidth}
-      feedback={feedback}
-      loading={loading}
-      marginEnd={marginEnd}
-      marginStart={marginStart}
-      style={pressableStyle}
-      transparentWhileInactive={transparent}
-      {...props}
-    >
-      {loading ? (
-        <ActivityIndicator
-          color={theme.color[colorValue]}
-          size="small"
-          style={sizingStyle}
-          testID={props.testID ? `${props.testID}-activity-indicator` : undefined}
-        />
-      ) : (
-        /* TO DO: test using currentColor like web does on Icon here */
-        <Icon active={active} color={colorValue} name={name} size={iconSize} style={sizingStyle} />
-      )}
-    </Pressable>
-  );
-});
+    return (
+      <Pressable
+        ref={ref}
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={loading ? `${accessibilityLabel ?? ''}, loading` : accessibilityLabel}
+        background={backgroundValue}
+        borderColor={borderColorValue}
+        borderRadius={borderRadius}
+        borderWidth={borderWidth}
+        feedback={feedback}
+        loading={loading}
+        marginEnd={marginEnd}
+        marginStart={marginStart}
+        style={pressableStyle}
+        transparentWhileInactive={transparent}
+        {...props}
+      >
+        {loading ? (
+          <ActivityIndicator
+            color={theme.color[colorValue]}
+            size="small"
+            style={sizingStyle}
+            testID={props.testID ? `${props.testID}-activity-indicator` : undefined}
+          />
+        ) : (
+          /* TO DO: test using currentColor like web does on Icon here */
+          <Icon
+            active={active}
+            color={colorValue}
+            name={name}
+            size={iconSize}
+            style={sizingStyle}
+          />
+        )}
+      </Pressable>
+    );
+  }),
+);
 
 IconButton.displayName = 'IconButton';

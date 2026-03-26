@@ -1,3 +1,5 @@
+import { Animated, StyleSheet } from 'react-native';
+import { focusedInputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Text } from '../../typography/Text';
@@ -5,6 +7,14 @@ import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { TextInput } from '../TextInput';
 
 describe('TextInput', () => {
+  const getFocusedBorderOverlayStyle = () => {
+    const focusedBorderOverlay = screen
+      .UNSAFE_getAllByType(Animated.View)
+      .find((view) => StyleSheet.flatten(view.props.style)?.position === 'absolute');
+
+    return focusedBorderOverlay ? StyleSheet.flatten(focusedBorderOverlay.props.style) : undefined;
+  };
+
   it('passes a11y', () => {
     const testID = 'textinput-id';
     render(
@@ -266,6 +276,45 @@ describe('TextInput', () => {
     fireEvent(screen.getByTestId(testID), 'blur');
     expect(onFocus).toHaveBeenCalledTimes(1);
     expect(onBlur).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps focused border width at 0 by default when bordered is false', () => {
+    const testID = 'input-testid';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          bordered={false}
+          testID={testID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent(screen.getByTestId(testID), 'focus');
+    const focusedBorderOverlayStyle = getFocusedBorderOverlayStyle();
+    expect(focusedBorderOverlayStyle).toEqual(expect.objectContaining({ borderWidth: 0 }));
+  });
+
+  it('applies focusedBorderWidth when bordered is false', () => {
+    const testID = 'input-testid';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          bordered={false}
+          focusedBorderWidth={200}
+          testID={testID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent(screen.getByTestId(testID), 'focus');
+    const focusedBorderOverlayStyle = getFocusedBorderOverlayStyle();
+    expect(focusedBorderOverlayStyle).toEqual(
+      expect.objectContaining({ borderWidth: focusedInputBorderWidth }),
+    );
   });
 
   it('renders label outside by default', () => {

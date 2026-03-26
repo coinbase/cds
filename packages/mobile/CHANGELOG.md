@@ -8,6 +8,66 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.57.1 ((3/24/2026, 01:14 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.57.0 (3/24/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support focusedBorderWidth on TextInput. [[#537](https://github.com/coinbase/cds/pull/537)]
+
+## 8.56.1 ((3/24/2026, 08:39 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.56.0 (3/23/2026 PST)
+
+#### 🚀 Updates
+
+- Support modal subcomponent props. [[#534](https://github.com/coinbase/cds/pull/534)]
+
+#### 📘 Misc
+
+- Chore: Updated numerous deprecation annotation messages.
+
+## 8.55.1 ((3/22/2026, 01:43 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.55.0 (3/19/2026 PST)
+
+#### 🚀 Updates
+
+- Add `disableSafeAreaPaddingBottom` prop to drawer. [[#522](https://github.com/coinbase/cds/pull/522)]
+
+#### 🐞 Fixes
+
+- Fix padding collapsing on tray with handle bar inside. [[#522](https://github.com/coinbase/cds/pull/522)]
+
+## 8.54.0 (3/18/2026 PST)
+
+#### 🚀 Updates
+
+- Added Calendar component and included new Calendar in DatePicker. [[#139](https://github.com/coinbase/cds/pull/139)]
+
+#### 🐞 Fixes
+
+- Removed react-native-date-picker dependency. [[#139](https://github.com/coinbase/cds/pull/139)]
+
+## 8.53.1 (3/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: update RemoteImageGroup excess bg color. [[#512](https://github.com/coinbase/cds/pull/512)]
+
+## 8.53.0 (3/16/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update Checkbox borderRadius to match design. [[#509](https://github.com/coinbase/cds/pull/509)]
+
 ## 8.52.2 (3/11/2026 PST)
 
 #### 🐞 Fixes
