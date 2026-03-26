@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Circle } from 'react-native-svg';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
