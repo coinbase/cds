@@ -183,7 +183,7 @@ export const ProgressCircle = memo(
         hideContent,
         hideText,
         size,
-        accessibilityLabel,
+        accessibilityLabel = indeterminate ? 'Loading' : undefined,
         contentNode,
         style,
         styles,
@@ -206,9 +206,13 @@ export const ProgressCircle = memo(
                 ref={forwardedRef}
                 accessibilityLabel={accessibilityLabel}
                 alignItems="center"
-                aria-valuemax={100}
-                aria-valuemin={0}
-                aria-valuenow={Math.round(progress * 100)}
+                {...(indeterminate
+                  ? {}
+                  : {
+                      'aria-valuemax': 100,
+                      'aria-valuemin': 0,
+                      'aria-valuenow': Math.round(progress * 100),
+                    })}
                 className={cx(className, classNames?.root)}
                 height={height}
                 justifyContent="center"

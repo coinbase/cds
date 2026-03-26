@@ -160,7 +160,7 @@ export const ProgressCircle = memo(
         progress = indeterminate ? 0.75 : 0,
         // Default is empty string due to iOS VoiceOver repeating percentage multiple times when
         // a11y label isn't specified
-        accessibilityLabel = '',
+        accessibilityLabel = indeterminate ? 'Loading' : '',
         color = indeterminate ? 'fgMuted' : 'bgPrimary',
         disabled,
         disableAnimateOnMount = indeterminate ? true : false,
@@ -218,11 +218,15 @@ export const ProgressCircle = memo(
                 accessible
                 accessibilityLabel={accessibilityLabel}
                 accessibilityRole="progressbar"
-                accessibilityValue={{
-                  min: 0,
-                  max: 100,
-                  now: Math.round(progress * 100),
-                }}
+                accessibilityValue={
+                  indeterminate
+                    ? undefined
+                    : {
+                        min: 0,
+                        max: 100,
+                        now: Math.round(progress * 100),
+                      }
+                }
                 alignItems="center"
                 height={height}
                 justifyContent="center"
