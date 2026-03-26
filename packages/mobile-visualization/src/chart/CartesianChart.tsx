@@ -288,6 +288,7 @@ export const CartesianChart = memo(
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
             domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'nice' : 'strict'),
+            baseline: axisParam.baseline,
           };
 
           // Create the scale.
@@ -357,6 +358,7 @@ export const CartesianChart = memo(
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
             domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'strict' : 'nice'),
+            baseline: axisParam.baseline,
           };
 
           // Create the scale.
@@ -461,14 +463,6 @@ export const CartesianChart = memo(
         [stackedDataMap],
       );
 
-      const getSeriesBaseline = useCallback(
-        (seriesId?: string) => {
-          if (!seriesId) return undefined;
-          return seriesBaselineById.get(seriesId);
-        },
-        [seriesBaselineById],
-      );
-
       const categoryAxisIsX = useMemo(() => {
         return layout !== 'horizontal';
       }, [layout]);
@@ -562,7 +556,6 @@ export const CartesianChart = memo(
           series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,
-          getSeriesBaseline,
           animate,
           width: chartWidth,
           height: chartHeight,
@@ -585,7 +578,6 @@ export const CartesianChart = memo(
           series,
           getSeries,
           getStackedSeriesData,
-          getSeriesBaseline,
           animate,
           chartWidth,
           chartHeight,

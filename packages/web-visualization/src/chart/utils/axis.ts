@@ -86,6 +86,11 @@ export type AxisConfig = {
    * - 'strict': Uses the exact min/max values from the data
    */
   domainLimit: 'nice' | 'strict';
+  /**
+   * When this axis is the value axis for the current chart layout, the data-space baseline
+   * from props (same as `CartesianAxisConfigProps.baseline`). Omitted when unset.
+   */
+  baseline?: number;
 };
 
 /**

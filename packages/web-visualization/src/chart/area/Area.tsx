@@ -45,11 +45,6 @@ export type AreaBaseProps = {
    */
   fillOpacity?: PathBaseProps['fillOpacity'];
   /**
-   * Baseline value for the gradient.
-   * When set, overrides the default baseline.
-   */
-  baseline?: number;
-  /**
    * Gradient configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
@@ -65,7 +60,7 @@ export type AreaProps = AreaBaseProps & Pick<PathProps, 'transitions' | 'transit
 
 export type AreaComponentProps = Pick<
   AreaProps,
-  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transitions' | 'transition'
+  'fill' | 'fillOpacity' | 'gradient' | 'animate' | 'transitions' | 'transition'
 > & {
   /**
    * Path of the area
@@ -95,23 +90,13 @@ export const Area = memo<AreaProps>(
     AreaComponent: AreaComponentProp,
     fill: fillProp,
     fillOpacity = 1,
-    baseline,
     connectNulls,
     gradient: gradientProp,
     transitions,
     transition,
     animate,
   }) => {
-    const {
-      layout,
-      getSeries,
-      getSeriesData,
-      getSeriesBaseline,
-      getXScale,
-      getYScale,
-      getXAxis,
-      getYAxis,
-    } =
+    const { layout, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
@@ -122,15 +107,13 @@ export const Area = memo<AreaProps>(
     const fill = useMemo(() => fillProp ?? matchedSeries?.color, [fillProp, matchedSeries?.color]);
 
     const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
-    const resolvedBaseline = useMemo(
-      () => baseline ?? getSeriesBaseline(seriesId),
-      [baseline, getSeriesBaseline, seriesId],
-    );
 
-    const xAxis = getXAxis(matchedSeries?.xAxisId);
-    const xScale = getXScale(matchedSeries?.xAxisId);
-    const yScale = getYScale(matchedSeries?.yAxisId);
-    const yAxis = getYAxis(matchedSeries?.yAxisId);
+    const xAxisId = matchedSeries?.xAxisId;
+    const yAxisId = matchedSeries?.yAxisId;
+    const xAxis = getXAxis(xAxisId);
+    const xScale = getXScale(xAxisId);
+    const yScale = getYScale(yAxisId);
+    const yAxis = getYAxis(yAxisId);
 
     const categoryAxisIsX = useMemo(() => {
       return layout !== 'horizontal';
@@ -183,7 +166,6 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         animate={animate}
-        baseline={resolvedBaseline}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

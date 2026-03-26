@@ -41,12 +41,6 @@ export type CartesianChartContextValue = {
    */
   getSeriesData: (seriesId?: string) => Array<[number, number] | null> | undefined;
   /**
-   * Returns the resolved baseline for a series.
-   * For numeric series this comes from the value-axis baseline.
-   * @param seriesId - A series' id
-   */
-  getSeriesBaseline: (seriesId?: string) => number | undefined;
-  /**
    * Whether to animate the chart.
    */
   animate: boolean;

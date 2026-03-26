@@ -49,7 +49,6 @@ export const GradientArea = memo<GradientAreaProps>(
     gradient: gradientProp,
     peakOpacity = 0.3,
     baselineOpacity = 0,
-    baseline,
     xAxisId,
     yAxisId,
     animate,
@@ -72,6 +71,7 @@ export const GradientArea = memo<GradientAreaProps>(
       if (gradientProp) return gradientProp;
       if (!valueAxisConfig) return;
 
+      const baseline = valueAxisConfig.baseline ?? 0;
       const baselineValue = getBaseline(valueAxisConfig.domain, baseline);
       return createGradient(
         valueAxisConfig.domain,
@@ -81,7 +81,7 @@ export const GradientArea = memo<GradientAreaProps>(
         baselineOpacity,
         gradientAxis,
       );
-    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity, gradientAxis]);
+    }, [gradientProp, valueAxisConfig, fill, peakOpacity, baselineOpacity, gradientAxis]);
 
     return (
       <Path

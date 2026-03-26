@@ -163,7 +163,7 @@ export const BarChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const valueAxisBaseline = (isHorizontal ? xBaseline : yBaseline) ?? 0;
+      const valueAxisBaseline = (isHorizontalLayout ? xBaseline : yBaseline) ?? 0;
 
       const xAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
         () => ({

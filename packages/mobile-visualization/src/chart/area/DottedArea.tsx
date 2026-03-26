@@ -62,7 +62,6 @@ export const DottedArea = memo<DottedAreaProps>(
     dotSize = 1,
     peakOpacity = 1,
     baselineOpacity = 0,
-    baseline,
     xAxisId,
     yAxisId,
     gradient: gradientProp,
@@ -116,6 +115,7 @@ export const DottedArea = memo<DottedAreaProps>(
       if (gradientProp) return gradientProp;
       if (!valueAxisConfig) return;
 
+      const baseline = valueAxisConfig.baseline ?? 0;
       const baselineValue = getBaseline(valueAxisConfig.domain, baseline);
       return createGradient(
         valueAxisConfig.domain,
@@ -125,7 +125,7 @@ export const DottedArea = memo<DottedAreaProps>(
         baselineOpacity,
         gradientAxis,
       );
-    }, [gradientProp, valueAxisConfig, fill, baseline, peakOpacity, baselineOpacity, gradientAxis]);
+    }, [gradientProp, valueAxisConfig, fill, peakOpacity, baselineOpacity, gradientAxis]);
 
     // Update transition is used for clip path, we skip update animation on Path itself
     return (

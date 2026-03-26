@@ -269,7 +269,7 @@ describe('AreaChart', () => {
     expect(screen.getByText('A')).toBeInTheDocument();
   });
 
-  it('uses value-axis baseline as the default area baseline', () => {
+  it('does not pass baseline to AreaComponent (value-axis baseline is read from context in subcomponents)', () => {
     const CustomArea = jest.fn((props: AreaComponentProps) => <path d={props.d} />);
 
     render(
@@ -286,6 +286,6 @@ describe('AreaChart', () => {
     );
 
     expect(CustomArea).toHaveBeenCalled();
-    expect(CustomArea.mock.calls[0][0].baseline).toBe(10);
+    expect(CustomArea.mock.calls[0][0]).not.toHaveProperty('baseline');
   });
 });
