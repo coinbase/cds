@@ -74,7 +74,7 @@ describe('Search', () => {
     expect(flattenedStyle).toEqual(
       expect.objectContaining({
         fontSize: defaultTheme.fontSize.label1,
-        lineHeight: defaultTheme.lineHeight.label1,
+        minHeight: defaultTheme.lineHeight.label1,
         fontWeight: defaultTheme.fontWeight.label1,
       }),
     );

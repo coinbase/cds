@@ -58,12 +58,8 @@ describe('NativeInput', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('text-align: start;');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('color-scheme: dark;');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('font-size: var(--fontSize-body);');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('line-height: var(--lineHeight-body);');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('font-weight: var(--fontWeight-body);');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('font-family: var(--fontFamily-body);');
+    const input = screen.getByTestId(TEST_ID);
+    expect(input).toHaveStyle({ textAlign: 'start', colorScheme: 'dark' });
   });
 
   it('changes align style if override passed as align prop', () => {
@@ -75,19 +71,6 @@ describe('NativeInput', () => {
 
     expect(screen.getByTestId(TEST_ID)).toHaveStyle('text-align: center;');
     expect(screen.getByTestId(TEST_ID)).toHaveStyle('color-scheme: light;');
-  });
-
-  it('changes typography token when font is provided', () => {
-    render(
-      <DefaultThemeProvider>
-        <NativeInput font="label1" testID={TEST_ID} />
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('font-size: var(--fontSize-label1);');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('line-height: var(--lineHeight-label1);');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('font-weight: var(--fontWeight-label1);');
-    expect(screen.getByTestId(TEST_ID)).toHaveStyle('font-family: var(--fontFamily-label1);');
   });
 });
 

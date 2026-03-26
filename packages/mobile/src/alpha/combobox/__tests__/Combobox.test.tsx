@@ -144,7 +144,7 @@ describe('Combobox', () => {
           const flattenedStyle = StyleSheet.flatten(input.props.style);
           return (
             flattenedStyle?.fontSize === defaultTheme.fontSize.label1 &&
-            flattenedStyle?.lineHeight === defaultTheme.lineHeight.label1 &&
+            flattenedStyle?.minHeight === defaultTheme.lineHeight.label1 &&
             flattenedStyle?.fontWeight === defaultTheme.fontWeight.label1
           );
         }),

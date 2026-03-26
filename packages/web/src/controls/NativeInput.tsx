@@ -1,5 +1,4 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
