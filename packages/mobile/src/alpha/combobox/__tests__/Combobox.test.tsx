@@ -1,6 +1,8 @@
 import { createRef } from 'react';
+import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import type { SelectOption } from '../../select/Select';
 import { Combobox, type ComboboxProps, type ComboboxRef } from '../Combobox';
@@ -127,6 +129,26 @@ describe('Combobox', () => {
 
       const input = screen.getAllByDisplayValue('initial');
       expect(input).toBeTruthy();
+    });
+
+    it('passes font to the search input', () => {
+      render(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} defaultOpen font="label1" />
+        </DefaultThemeProvider>,
+      );
+
+      const inputs = screen.getAllByPlaceholderText('Search and select...');
+      expect(
+        inputs.some((input) => {
+          const flattenedStyle = StyleSheet.flatten(input.props.style);
+          return (
+            flattenedStyle?.fontSize === defaultTheme.fontSize.label1 &&
+            flattenedStyle?.minHeight === defaultTheme.lineHeight.label1 &&
+            flattenedStyle?.fontWeight === defaultTheme.fontWeight.label1
+          );
+        }),
+      ).toBe(true);
     });
 
     it('throws error when searchText is provided without onSearch', () => {

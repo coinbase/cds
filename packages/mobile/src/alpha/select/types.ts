@@ -4,6 +4,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
+import type { TextInputBaseProps } from '../../controls/TextInput';
 import type { BoxProps } from '../../layout';
 import type { DrawerRefBaseProps, TrayProps } from '../../overlays';
 import type { InteractableBlendStyles } from '../../system/Interactable';
@@ -232,7 +233,7 @@ export type SelectControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
-  Omit<BoxProps, 'borderWidth' | 'onChange'> &
+  Omit<BoxProps, 'borderWidth' | 'onChange' | 'font'> &
   Pick<
     InputStackBaseProps,
     | 'disabled'
@@ -244,6 +245,7 @@ export type SelectControlProps<
     | 'borderWidth'
     | 'focusedBorderWidth'
   > &
+  Pick<TextInputBaseProps, 'font'> &
   SelectState<Type, SelectOptionValue> & {
     /**
      * Alignment of the value node.
@@ -318,7 +320,7 @@ export type SelectDropdownProps<
   SelectOptionValue extends string = string,
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Omit<BoxProps, 'onChange'> &
+  Omit<BoxProps, 'onChange' | 'font'> &
   Pick<TrayProps, 'header' | 'footer' | 'onVisibilityChange'> &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> & {
     /** Whether this is for single or multi-select */
@@ -414,6 +416,7 @@ export type SelectBaseProps<
     | 'labelVariant'
     | 'endNode'
     | 'align'
+    | 'font'
     | 'bordered'
   > &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &

@@ -8,7 +8,7 @@ import { Box } from '../layout/Box';
 
 import { InputIcon } from './InputIcon';
 import { InputIconButton } from './InputIconButton';
-import { TextInput, type TextInputBaseProps } from './TextInput';
+import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
 
 export const scales = {
   regular: 56,
@@ -23,20 +23,19 @@ const compactCss = css`
   height: ${scales.compact}px;
 `;
 
-type HTMLElementProps = React.InputHTMLAttributes<HTMLInputElement> &
-  Required<Pick<HTMLInputElement, 'value'>>;
-
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
   | 'accessibilityHint'
   | 'accessibilityLabel'
   | 'accessibilityLabelledBy'
   | 'bordered'
+  | 'borderRadius'
   | 'compact'
   | 'disabled'
   | 'enableColorSurge'
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
+  | 'font'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'
@@ -63,12 +62,10 @@ export type SearchInputBaseProps = Pick<
   startIcon?: Extract<IconName, 'search' | 'backArrow'>;
   /**
    * hide the end icon
-   * @default undefined
    */
   hideEndIcon?: boolean;
   /**
    * Set the end node
-   * @default undefined
    */
   end?: React.ReactNode;
   /**
@@ -82,7 +79,7 @@ export type SearchInputBaseProps = Pick<
 };
 
 export type SearchInputProps = SearchInputBaseProps &
-  HTMLElementProps & {
+  TextInputProps & {
     onClear?: React.MouseEventHandler;
     onChangeText: (text: string) => void;
     /**
@@ -107,6 +104,7 @@ export const SearchInput = memo(
       end,
       startIconAccessibilityLabel = 'Back',
       clearIconAccessibilityLabel = 'Clear search query',
+      borderRadius = 1000,
       ...props
     }: SearchInputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
@@ -149,7 +147,7 @@ export const SearchInput = memo(
     return (
       <TextInput
         ref={refs}
-        borderRadius={1000}
+        borderRadius={borderRadius}
         className={cx(baseCss, compact && compactCss)}
         end={
           end ??

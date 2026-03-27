@@ -5,7 +5,6 @@ import type {
   NativeSyntheticEvent,
   TextInput as RNTextInput,
   TextInputFocusEventData,
-  TextInputProps as RNTextInputProps,
 } from 'react-native';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import type { IconName } from '@coinbase/cds-common/types';
@@ -13,7 +12,7 @@ import type { IconName } from '@coinbase/cds-common/types';
 import { Box } from '../layout/Box';
 
 import { InputIconButton } from './InputIconButton';
-import { TextInput, type TextInputBaseProps } from './TextInput';
+import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -21,11 +20,13 @@ export type SearchInputBaseProps = Pick<
   | 'accessibilityLabel'
   | 'accessibilityLabelledBy'
   | 'bordered'
+  | 'borderRadius'
   | 'compact'
   | 'disabled'
   | 'enableColorSurge'
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
+  | 'font'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'
@@ -71,21 +72,20 @@ export type SearchInputBaseProps = Pick<
 };
 
 export type SearchInputProps = SearchInputBaseProps &
-  RNTextInputProps & {
+  TextInputProps & {
     /** Callback is fired when the clear icon is pressed */
     onClear?: (event: GestureResponderEvent) => void;
     /**
      * Callback is fired when backArrow is pressed.
      * If disableBackArrow is true, this will do nothing
-     * */
+     */
     onBack?: (event: GestureResponderEvent) => void;
     /**
      * If this is set to true, the start icon won't toggle between backArrow and Search.
      * The start icon will always be a search icon
-     * @default false
-     * */
+     */
     disableBackArrow?: boolean;
-  } & Required<Pick<RNTextInputProps, 'onChangeText' | 'value'>>;
+  };
 
 export const SearchInput = memo(
   forwardRef(
@@ -100,13 +100,14 @@ export const SearchInput = memo(
         onFocus,
         onBlur,
         disabled,
-        disableBackArrow = false,
-        hideStartIcon = false,
+        disableBackArrow,
+        hideStartIcon,
         hideEndIcon,
         startIcon,
         end,
         startIconAccessibilityLabel = 'Back',
         clearIconAccessibilityLabel = 'Clear text',
+        borderRadius = 1000,
         ...props
       }: SearchInputProps,
       ref: ForwardedRef<RNTextInput>,
@@ -174,7 +175,7 @@ export const SearchInput = memo(
         <TextInput
           ref={refs}
           accessibilityRole="search"
-          borderRadius={1000}
+          borderRadius={borderRadius}
           disabled={disabled}
           end={
             end ??

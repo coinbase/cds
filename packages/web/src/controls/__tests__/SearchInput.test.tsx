@@ -43,6 +43,16 @@ describe('Search', () => {
     expect(screen.getByRole('searchbox')).toHaveValue('value');
   });
 
+  it('passes font through to the text input', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput font="label1" onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('searchbox')).toHaveStyle('font-size: var(--fontSize-label1);');
+  });
+
   /** Testing for existence of components */
   it('renders a search', () => {
     render(

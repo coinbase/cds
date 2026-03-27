@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { TextInput } from 'react-native';
-import type { TextInputProps, ViewStyle } from 'react-native';
+import type { StyleProp, TextInputProps, TextStyle, ViewStyle } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
@@ -29,6 +30,11 @@ export type NativeInputProps = {
    * @warning Setting this to unset will break alignment for RTL languages.
    */
   textAlign?: TextInputProps['textAlign'] | 'unset';
+  /**
+   * Typography font token used for typed input text.
+   * @default body
+   */
+  font?: ThemeVars.Font;
 } & SharedProps &
   Pick<TextInputBaseProps, 'compact'> &
   Pick<
@@ -46,6 +52,7 @@ export const NativeInput = memo(
         align = 'start',
         disabled,
         textAlign,
+        font = 'body',
         accessibilityLabel,
         compact,
         style,
@@ -56,16 +63,24 @@ export const NativeInput = memo(
       const theme = useTheme();
       const textAlignInputTransformed = useTextAlign(align).textAlign;
 
-      const inputTextStyle = useMemo(
+      const inputTextStyle: TextStyle = useMemo(
         () => ({
-          fontSize: theme.fontSize.body,
-          fontFamily: theme.fontFamily.body,
-          minHeight: theme.lineHeight.body,
+          fontSize: theme.fontSize[font],
+          fontFamily: theme.fontFamily[font],
+          minHeight: theme.lineHeight[font],
+          fontWeight: theme.fontWeight[font],
           padding: 0,
           margin: 0,
           color: theme.color.fg,
         }),
-        [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.color.fg],
+        [
+          theme.fontSize,
+          theme.fontFamily,
+          theme.lineHeight,
+          theme.fontWeight,
+          theme.color.fg,
+          font,
+        ],
       );
 
       const containerStyle: ViewStyle = useMemo(() => {
