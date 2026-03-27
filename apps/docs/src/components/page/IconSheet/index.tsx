@@ -87,7 +87,11 @@ export const IconSheet = ({ title }: { title?: React.ReactNode }) => {
             <Text color="fgMuted" font="body">
               active prop:
             </Text>
-            <Switch accessibilityLabel="Toggle icon active state" checked={showIconActive} onChange={handleActiveCheck} />
+            <Switch
+              accessibilityLabel="Toggle icon active state"
+              checked={showIconActive}
+              onChange={handleActiveCheck}
+            />
           </Box>
           <Box gap={1}>
             <Text color="fgMuted" font="body">

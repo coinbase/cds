@@ -99,7 +99,12 @@
     },
     "lint": {
       "dependsOn": [
-        { "projects": ["eslint-plugin-cds"], "target": "build" }
+        {
+          "projects": [
+            "eslint-plugin-cds"
+          ],
+          "target": "build"
+        }
       ],
       "inputs": [
         "default",
