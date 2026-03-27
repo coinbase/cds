@@ -16,12 +16,12 @@ When `indeterminate` is true, the default color is `fgMuted`; you can override `
 
 ### Thickness (weight)
 
-By default, the indeterminate variant uses a **stroke width of 11% of the circle size**—so thickness scales with `size` and matches the legacy Spinner look. To use a fixed stroke width instead, pass the `weight` prop: `"thin"` (2px), `"normal"` (4px), `"semiheavy"` (8px), or `"heavy"` (12px).
+Indeterminate uses the same `weight` prop as determinate progress. The default is **`"normal"`** (4px stroke). Use `"thin"` (2px), `"semiheavy"` (8px), or `"heavy"` (12px) to change thickness.
 
 ```jsx live
 <HStack gap={2} flexWrap="wrap" alignItems="center">
   <VStack gap={1} alignItems="center">
-    <Text variant="label2">Default (11% of size)</Text>
+    <Text variant="label2">Default (normal)</Text>
     <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} />
   </VStack>
   <VStack gap={1} alignItems="center">

@@ -279,17 +279,4 @@ describe('ProgressCircle tests and passes a11y', () => {
     expect(screen.queryByText('75%')).toBeNull();
     expect(root).toBeAccessible();
   });
-
-  it('indeterminate progress circle uses resolved stroke width when weight is not set', () => {
-    const size = 100;
-    render(
-      <DefaultThemeProvider>
-        <ProgressCircle indeterminate size={size} testID="indeterminate-progress-circle" />
-      </DefaultThemeProvider>,
-    );
-
-    const innerCircle = screen.getByTestId('cds-progress-circle-inner');
-    expect(innerCircle).toBeTruthy();
-    expect(innerCircle.props.strokeWidth).toBe(0.11 * 100);
-  });
 });

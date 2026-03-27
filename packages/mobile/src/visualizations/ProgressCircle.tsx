@@ -154,9 +154,7 @@ export const ProgressCircle = memo(
     (
       {
         indeterminate,
-        // when indeterminate, we use a stroke width of 0.11 * circleSize to carry over the web Spinner behavior
-        // unless a weight is explicitly provided
-        weight = indeterminate ? undefined : 'normal',
+        weight = 'normal',
         progress = indeterminate ? 0.75 : 0,
         // Default is empty string due to iOS VoiceOver repeating percentage multiple times when
         // a11y label isn't specified
@@ -177,7 +175,7 @@ export const ProgressCircle = memo(
       forwardedRef: React.ForwardedRef<View>,
     ) => {
       const theme = useTheme();
-      const strokeWidth = weight ? getProgressSize(weight) : undefined;
+      const strokeWidth = getProgressSize(weight);
 
       const visSize = size ?? '100%';
 
@@ -211,7 +209,6 @@ export const ProgressCircle = memo(
       return (
         <VisualizationContainer height={visSize} width={visSize}>
           {({ width, height, circleSize }: VisualizationContainerDimension) => {
-            const resolvedStrokeWidth = strokeWidth ?? 0.11 * circleSize;
             return (
               <Box
                 ref={forwardedRef}
@@ -258,7 +255,7 @@ export const ProgressCircle = memo(
                     <Circle
                       {...getProgressCircleParams({
                         size: circleSize,
-                        strokeWidth: resolvedStrokeWidth,
+                        strokeWidth,
                         stroke: theme.color.bgLine,
                       })}
                       {...(styles?.circle || {})}
@@ -271,7 +268,7 @@ export const ProgressCircle = memo(
                       onAnimationStart={onAnimationStart}
                       progress={progress}
                       size={circleSize}
-                      strokeWidth={resolvedStrokeWidth}
+                      strokeWidth={strokeWidth}
                       style={styles?.progress}
                       visuallyDisabled={disabled}
                     />

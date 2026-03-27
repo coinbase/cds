@@ -90,8 +90,6 @@ export type ProgressCircleContentProps = Pick<
   color?: ThemeVars.Color;
 };
 
-const strokeWidthToCircleSizeRatio = 0.11;
-
 type ProgressInnerCircleProps = Pick<
   ProgressCircleBaseProps,
   'progress' | 'onAnimationEnd' | 'onAnimationStart' | 'disableAnimateOnMount' | 'indeterminate'
@@ -172,9 +170,7 @@ export const ProgressCircle = memo(
     (
       {
         indeterminate,
-        // when indeterminate, we use a stroke width of 0.11 * circleSize to carry over the deprecated Spinner behavior
-        // unless a weight is explicitly provided
-        weight = indeterminate ? undefined : 'normal',
+        weight = 'normal',
         progress = indeterminate ? 0.75 : 0,
         color = indeterminate ? 'fgMuted' : 'bgPrimary',
         disabled,
@@ -195,12 +191,11 @@ export const ProgressCircle = memo(
       forwardedRef: React.ForwardedRef<HTMLDivElement>,
     ) => {
       const visSize = size ?? '100%';
-      const strokeWidth = weight ? getProgressSize(weight) : undefined;
+      const strokeWidth = getProgressSize(weight);
 
       return (
         <VisualizationContainer height={visSize} width={visSize}>
           {({ width, height, circleSize }: VisualizationContainerDimension) => {
-            const resolvedStrokeWidth = strokeWidth ?? strokeWidthToCircleSizeRatio * circleSize;
             return (
               <Box
                 ref={forwardedRef}
@@ -238,7 +233,7 @@ export const ProgressCircle = memo(
                   <circle
                     {...getProgressCircleParams({
                       size: circleSize,
-                      strokeWidth: resolvedStrokeWidth,
+                      strokeWidth,
                       stroke: 'var(--color-bgLine)',
                     })}
                     className={classNames?.circle}
@@ -253,7 +248,7 @@ export const ProgressCircle = memo(
                     onAnimationStart={onAnimationStart}
                     progress={progress}
                     size={circleSize}
-                    strokeWidth={resolvedStrokeWidth}
+                    strokeWidth={strokeWidth}
                     style={styles?.progress}
                     visuallyDisabled={disabled}
                   />
@@ -262,7 +257,7 @@ export const ProgressCircle = memo(
                   <Box
                     height="100%"
                     position="absolute"
-                    style={{ padding: resolvedStrokeWidth }}
+                    style={{ padding: strokeWidth }}
                     width="100%"
                   >
                     {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
