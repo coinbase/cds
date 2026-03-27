@@ -1019,15 +1019,53 @@ export const All = () => {
           }}
         />
       </Example>
-      <Example
-        description={
-          <Text color="fgMuted" font="body">
-            Stacked bars with gradient. Each series can have its own gradient configuration,
-            allowing for complex color compositions.
-          </Text>
-        }
-        title="Gradient - Stacked Bars"
-      >
+      <Example title="Band Grid Position">
+        <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+          <BandGridPositionExample position="edges" />
+          <BandGridPositionExample position="start" />
+          <BandGridPositionExample position="middle" />
+          <BandGridPositionExample position="end" />
+        </HStack>
+      </Example>
+      <Example title="Monthly Sunlight">
+        <MonthlySunlight />
+      </Example>
+      <Example title="Price Range">
+        <PriceRange />
+      </Example>
+      <Example title="Basic">
+        <BarChart
+          showXAxis
+          showYAxis
+          height={400}
+          layout="horizontal"
+          series={[
+            {
+              id: 'weekly-data',
+              data: [45, 52, 38, 45, 19, 23, 32],
+            },
+          ]}
+          xAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `$${value}k`,
+            showGrid: true,
+            showTickMarks: true,
+            showLine: true,
+            tickMarkSize: 12,
+            domain: { max: 50 },
+          }}
+          yAxis={{
+            position: 'left',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            showTickMarks: true,
+            showLine: true,
+          }}
+        />
+      </Example>
+      <Example title="Population Pyramid">
+        <PopulationPyramid />
+      </Example>
+      <Example title="Gradient - Stacked Bars">
         <BarChart
           showXAxis
           showYAxis
@@ -1103,52 +1141,6 @@ export const All = () => {
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           }}
         />
-      </Example>
-      <Example title="Band Grid Position">
-        <HStack gap={2} style={{ flexWrap: 'wrap' }}>
-          <BandGridPositionExample position="edges" />
-          <BandGridPositionExample position="start" />
-          <BandGridPositionExample position="middle" />
-          <BandGridPositionExample position="end" />
-        </HStack>
-      </Example>
-      <Example title="Monthly Sunlight">
-        <MonthlySunlight />
-      </Example>
-      <Example title="Price Range">
-        <PriceRange />
-      </Example>
-      <Example title="Basic">
-        <BarChart
-          showXAxis
-          showYAxis
-          height={400}
-          layout="horizontal"
-          series={[
-            {
-              id: 'weekly-data',
-              data: [45, 52, 38, 45, 19, 23, 32],
-            },
-          ]}
-          xAxis={{
-            requestedTickCount: 5,
-            tickLabelFormatter: (value) => `$${value}k`,
-            showGrid: true,
-            showTickMarks: true,
-            showLine: true,
-            tickMarkSize: 12,
-            domain: { max: 50 },
-          }}
-          yAxis={{
-            position: 'left',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            showTickMarks: true,
-            showLine: true,
-          }}
-        />
-      </Example>
-      <Example title="Population Pyramid">
-        <PopulationPyramid />
       </Example>
     </VStack>
   );

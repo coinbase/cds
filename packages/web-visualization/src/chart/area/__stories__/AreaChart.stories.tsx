@@ -177,7 +177,6 @@ export const All = () => {
               ],
               color: 'var(--color-fgPositive)',
               type: 'dotted',
-              LineComponent: (props) => <DottedLine {...props} strokeDasharray="6 6" />,
             },
           ]}
           type="dotted"
@@ -204,57 +203,6 @@ export const All = () => {
         >
           <Scrubber />
         </AreaChart>
-      </Example>
-      <Example title="Axis Baseline Threshold">
-        <VStack gap={2}>
-          <AreaChart
-            showLines
-            showYAxis
-            height={200}
-            inset={0}
-            series={[
-              {
-                id: 'axis-baseline-threshold-vertical',
-                data: baselineThresholdData,
-                gradient: {
-                  stops: [
-                    { offset: 30, color: 'var(--color-fgNegative)' },
-                    { offset: 30, color: 'var(--color-fgPositive)' },
-                  ],
-                },
-              },
-            ]}
-            type="dotted"
-            yAxis={{
-              showGrid: true,
-              baseline: 30,
-            }}
-          />
-          <AreaChart
-            showLines
-            showXAxis
-            height={200}
-            inset={0}
-            layout="horizontal"
-            series={[
-              {
-                id: 'axis-baseline-threshold-horizontal',
-                data: baselineThresholdData,
-                gradient: {
-                  stops: [
-                    { offset: 30, color: 'var(--color-fgNegative)' },
-                    { offset: 30, color: 'var(--color-fgPositive)' },
-                  ],
-                },
-              },
-            ]}
-            type="dotted"
-            xAxis={{
-              showGrid: true,
-              baseline: 30,
-            }}
-          />
-        </VStack>
       </Example>
       <Example title="Styles">
         <AreaChart
