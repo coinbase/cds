@@ -85,6 +85,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
         <Box marginX={-1}>
           <IconButton
             transparent
+            accessibilityLabel="Toggle dark mode"
             name={theme.activeColorScheme === 'dark' ? 'moon' : 'light'}
             onPress={toggleDark}
           />
@@ -109,7 +110,14 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
                   label=""
                   onChange={handleSearch}
                   placeholder="Search"
-                  start={<IconButton transparent name="backArrow" onPress={goBackFromSearch} />}
+                  start={
+                    <IconButton
+                      transparent
+                      accessibilityLabel="Go back from search"
+                      name="backArrow"
+                      onPress={goBackFromSearch}
+                    />
+                  }
                   value={searchFilter}
                 />
               ) : (
