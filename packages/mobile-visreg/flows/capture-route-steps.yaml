@@ -5,5 +5,8 @@ appId: ${APP_ID}
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX, SCHEME (inherited from capture-all.yaml env)
 
 - openLink: ${SCHEME}:///Debug${ROUTE_NAME}
+- tapOn:
+    text: 'Open'
+    optional: true
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
