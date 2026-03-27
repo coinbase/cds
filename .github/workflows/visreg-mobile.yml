@@ -197,7 +197,7 @@ jobs:
   comment-pr:
     name: Comment Percy Link
     needs: [ios]
-    if: always() && github.event_name == 'pull_request'
+    if: always() && github.event_name == 'pull_request' && needs.ios.outputs.percy_url != ''
     runs-on: ubuntu-latest
     steps:
       - name: Post Percy link on PR
@@ -205,12 +205,19 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERCY_URL: ${{ needs.ios.outputs.percy_url }}
         run: |
-          BODY="${PERCY_URL:-Percy build URL unavailable}"
+          EXISTING=$(gh api \
+            repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("https://percy.io")))] | last | .body // ""')
+
+          if [ "$EXISTING" = "$PERCY_URL" ]; then
+            echo "Percy URL unchanged, skipping comment."
+            exit 0
+          fi
 
           gh pr comment ${{ github.event.pull_request.number }} \
             --repo ${{ github.repository }} \
-            --body "$BODY" \
+            --body "$PERCY_URL" \
             --edit-last 2>/dev/null || \
           gh pr comment ${{ github.event.pull_request.number }} \
             --repo ${{ github.repository }} \
-            --body "$BODY"
+            --body "$PERCY_URL"
