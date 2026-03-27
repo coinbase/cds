@@ -7,11 +7,7 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import {
-  type CartesianAxisConfigProps,
-  defaultStackId,
-  getDomainIncludingBaseline,
-} from '../utils';
+import { type CartesianAxisConfigProps, defaultStackId, withBaselineDomain } from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';
@@ -154,17 +150,14 @@ export const BarChart = memo(
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
-
-      const valueAxisBaseline = (isHorizontalLayout ? xBaseline : yBaseline) ?? 0;
+      const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
 
       const xAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
         () => ({
           scaleType: xScaleType ?? defaultXScaleType,
           data: xData,
           categoryPadding: xCategoryPadding,
-          domain: isHorizontalLayout
-            ? getDomainIncludingBaseline(xDomain, valueAxisBaseline)
-            : xDomain,
+          domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
           baseline: xBaseline,
@@ -188,9 +181,7 @@ export const BarChart = memo(
           scaleType: yScaleType ?? defaultYScaleType,
           data: yData,
           categoryPadding: yCategoryPadding,
-          domain: !isHorizontalLayout
-            ? getDomainIncludingBaseline(yDomain, valueAxisBaseline)
-            : yDomain,
+          domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
           baseline: yBaseline,

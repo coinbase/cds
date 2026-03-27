@@ -1,6 +1,6 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
-import { type CartesianAxisConfigProps,defaultAxisId } from './axis';
+import { type CartesianAxisConfigProps, defaultAxisId } from './axis';
 import type { CartesianChartLayout } from './context';
 import type { GradientDefinition } from './gradient';
 
@@ -133,6 +133,24 @@ const createStackKey = (series: Series): string | undefined => {
 };
 
 /**
+ * Get the baseline for a series on the value axis for a series (stacking and plain numeric points).
+ * @returns The baseline for the series on the value axis, or `0` if none.
+ */
+const getValueAxisBaselineForSeries = (
+  layout: CartesianChartLayout,
+  series: Series,
+  xAxisConfigs: CartesianAxisConfigProps[],
+  yAxisConfigs: CartesianAxisConfigProps[],
+): number => {
+  if (layout === 'horizontal') {
+    const seriesAxisId = series.xAxisId ?? defaultAxisId;
+    return xAxisConfigs.find((a) => a.id === seriesAxisId)?.baseline ?? 0;
+  }
+  const seriesAxisId = series.yAxisId ?? defaultAxisId;
+  return yAxisConfigs.find((a) => a.id === seriesAxisId)?.baseline ?? 0;
+};
+
+/**
  * Transforms series data into stacked data using D3's stack algorithm.
  * Returns a map of series ID to transformed [baseline, value] tuples.
  *
@@ -154,14 +172,7 @@ export const getStackedSeriesData = (
   const normalizeSeriesData = (seriesItem: Series): Array<[number, number] | null> | undefined => {
     if (!seriesItem.data) return;
 
-    const baseline =
-      (layout === 'horizontal'
-        ? xAxisConfigs.find(
-            (a) => (a.id ?? defaultAxisId) === (seriesItem.xAxisId ?? defaultAxisId),
-          )?.baseline
-        : yAxisConfigs.find(
-            (a) => (a.id ?? defaultAxisId) === (seriesItem.yAxisId ?? defaultAxisId),
-          )?.baseline) ?? 0;
+    const baseline = getValueAxisBaselineForSeries(layout, seriesItem, xAxisConfigs, yAxisConfigs);
 
     return seriesItem.data.map((val) => {
       if (val === null) return null;
@@ -212,12 +223,7 @@ export const getStackedSeriesData = (
     if (maxLength === 0) return;
 
     const first = groupSeries[0];
-    const groupBaseline =
-      (layout === 'horizontal'
-        ? xAxisConfigs.find((a) => (a.id ?? defaultAxisId) === (first.xAxisId ?? defaultAxisId))
-            ?.baseline
-        : yAxisConfigs.find((a) => (a.id ?? defaultAxisId) === (first.yAxisId ?? defaultAxisId))
-            ?.baseline) ?? 0;
+    const groupBaseline = getValueAxisBaselineForSeries(layout, first, xAxisConfigs, yAxisConfigs);
 
     const dataset: Array<Record<string, number>> = new Array(maxLength)
       .fill(undefined)

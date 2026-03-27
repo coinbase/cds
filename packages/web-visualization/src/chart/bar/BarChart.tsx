@@ -9,8 +9,8 @@ import {
 import {
   type CartesianAxisConfigProps,
   defaultStackId,
-  getDomainIncludingBaseline,
   type Series,
+  withBaselineDomain,
 } from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
@@ -154,27 +154,24 @@ export const BarChart = memo(
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
-
-      const valueAxisBaseline = (isHorizontalLayout ? xBaseline : yBaseline) ?? 0;
+      const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
 
       const xAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
         () => ({
           scaleType: xScaleType ?? defaultXScaleType,
           data: xData,
           categoryPadding: xCategoryPadding,
-          domain: isHorizontalLayout
-            ? getDomainIncludingBaseline(xDomain, valueAxisBaseline)
-            : xDomain,
+          domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
           baseline: xBaseline,
         }),
         [
           xScaleType,
-          isHorizontalLayout,
           xData,
           xCategoryPadding,
           xDomain,
+          isHorizontalLayout,
           xDomainLimit,
           xRange,
           xBaseline,
@@ -188,19 +185,17 @@ export const BarChart = memo(
           scaleType: yScaleType ?? defaultYScaleType,
           data: yData,
           categoryPadding: yCategoryPadding,
-          domain: !isHorizontalLayout
-            ? getDomainIncludingBaseline(yDomain, valueAxisBaseline)
-            : yDomain,
+          domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
           baseline: yBaseline,
         }),
         [
           yScaleType,
-          isHorizontalLayout,
           yData,
           yCategoryPadding,
           yDomain,
+          isHorizontalLayout,
           yDomainLimit,
           yRange,
           yBaseline,

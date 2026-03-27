@@ -102,9 +102,6 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
    * - Non-stacked numeric series render from `[baseline, value]`.
    * - Multi-series stacks are normalized around this baseline before stacking.
    *
-   * - Vertical layout: `yAxis.baseline`
-   * - Horizontal layout: `xAxis.baseline`
-   *
    * @default 0 for value axes, undefined for category axes
    */
   baseline?: number;
@@ -147,16 +144,9 @@ const includeBaselineInBounds = (bounds: AxisBounds, baseline: number): AxisBoun
   return bounds;
 };
 
-/**
- * Returns an axis domain config that guarantees the baseline is included in the computed bounds,
- * unless that side was explicitly fixed by the consumer.
- *
- * For fully explicit domains (`min` and `max`) and function domains, the original domain config
- * is preserved.
- */
-export const getDomainIncludingBaseline = (
+export const withBaselineDomain = (
   domain: AxisDomainConfig,
-  baseline: number,
+  baseline: number = 0,
 ): AxisDomainConfig => {
   if (typeof domain === 'function') return domain;
   if (domain?.min !== undefined && domain?.max !== undefined) return domain;
@@ -397,7 +387,6 @@ export const getCartesianAxisDomain = (
     finalDomain = preferredDataDomain;
   }
 
-  // Ensure we always return valid bounds with no undefined values
   return {
     min: finalDomain.min ?? 0,
     max: finalDomain.max ?? 0,

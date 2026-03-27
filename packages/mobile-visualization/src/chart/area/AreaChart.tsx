@@ -11,8 +11,8 @@ import { Line, type LineProps } from '../line/Line';
 import {
   type CartesianAxisConfigProps,
   defaultStackId,
-  getDomainIncludingBaseline,
   type Series,
+  withBaselineDomain,
 } from '../utils';
 
 import { Area, type AreaProps } from './Area';
@@ -180,17 +180,14 @@ export const AreaChart = memo(
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
-
       const isHorizontalLayout = chartProps.layout === 'horizontal';
-      const valueAxisBaseline = (isHorizontalLayout ? xBaseline : yBaseline) ?? 0;
+      const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
 
       const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
-        domain: isHorizontalLayout
-          ? getDomainIncludingBaseline(xDomain, valueAxisBaseline)
-          : xDomain,
+        domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
         baseline: xBaseline,
@@ -200,9 +197,7 @@ export const AreaChart = memo(
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,
-        domain: !isHorizontalLayout
-          ? getDomainIncludingBaseline(yDomain, valueAxisBaseline)
-          : yDomain,
+        domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
         baseline: yBaseline,

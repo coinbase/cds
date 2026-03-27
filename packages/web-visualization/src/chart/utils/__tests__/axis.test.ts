@@ -3,7 +3,7 @@ import {
   getAxisTicksData,
   getCartesianAxisDomain,
   getCartesianAxisScale,
-  getDomainIncludingBaseline,
+  withBaselineDomain,
 } from '../axis';
 import {
   type CategoricalScale,
@@ -548,11 +548,21 @@ describe('getCartesianAxisDomain', () => {
     // For y in horizontal, it's the index domain: 0 to dataLength - 1
     expect(domain).toEqual({ min: 0, max: 2 });
   });
+
+  it('does not apply baseline adjustments by default', () => {
+    const domain = getCartesianAxisDomain(
+      { id: 'y', scaleType: 'linear', domainLimit: 'strict', baseline: 30 },
+      [{ id: 's1', data: [-100, -50] }],
+      'y',
+      'vertical',
+    );
+    expect(domain).toEqual({ min: -100, max: -50 });
+  });
 });
 
-describe('getDomainIncludingBaseline', () => {
+describe('withBaselineDomain', () => {
   it('extends max when baseline is above computed bounds', () => {
-    const domain = getDomainIncludingBaseline(undefined, 30);
+    const domain = withBaselineDomain(undefined, 30);
     expect(typeof domain).toBe('function');
     if (typeof domain !== 'function') throw new Error('Expected function domain');
 
@@ -560,7 +570,7 @@ describe('getDomainIncludingBaseline', () => {
   });
 
   it('extends min when baseline is below computed bounds', () => {
-    const domain = getDomainIncludingBaseline(undefined, 0);
+    const domain = withBaselineDomain(undefined, 0);
     expect(typeof domain).toBe('function');
     if (typeof domain !== 'function') throw new Error('Expected function domain');
 
@@ -568,7 +578,7 @@ describe('getDomainIncludingBaseline', () => {
   });
 
   it('does not change bounds when baseline is already in range', () => {
-    const domain = getDomainIncludingBaseline(undefined, 30);
+    const domain = withBaselineDomain(undefined, 30);
     expect(typeof domain).toBe('function');
     if (typeof domain !== 'function') throw new Error('Expected function domain');
 
@@ -576,7 +586,7 @@ describe('getDomainIncludingBaseline', () => {
   });
 
   it('preserves explicit max while extending only implicit side', () => {
-    const domain = getDomainIncludingBaseline({ max: -50 }, 30);
+    const domain = withBaselineDomain({ max: -50 }, 30);
     expect(typeof domain).toBe('function');
     if (typeof domain !== 'function') throw new Error('Expected function domain');
 
@@ -584,7 +594,7 @@ describe('getDomainIncludingBaseline', () => {
   });
 
   it('preserves fully explicit bounds', () => {
-    expect(getDomainIncludingBaseline({ min: -100, max: -50 }, 30)).toEqual({
+    expect(withBaselineDomain({ min: -100, max: -50 }, 30)).toEqual({
       min: -100,
       max: -50,
     });
@@ -592,7 +602,7 @@ describe('getDomainIncludingBaseline', () => {
 
   it('preserves function domain identity', () => {
     const domainFn = (bounds: { min: number; max: number }) => bounds;
-    expect(getDomainIncludingBaseline(domainFn, 30)).toBe(domainFn);
+    expect(withBaselineDomain(domainFn, 30)).toBe(domainFn);
   });
 });
 

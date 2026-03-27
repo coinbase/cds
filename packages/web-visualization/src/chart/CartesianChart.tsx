@@ -67,11 +67,9 @@ export type CartesianChartBaseProps = BoxBaseProps &
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
      *
-     * @note `layout="horizontal"` supports only one y-axis config.
+     * @note Multiple y-axis configs are only supported when `layout="vertical"`.
      */
-    yAxis?:
-      | Partial<Omit<CartesianAxisConfigProps, 'data'>>
-      | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
+    yAxis?: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[];
     /**
      * Inset around the entire chart (outside the axes).
      */
