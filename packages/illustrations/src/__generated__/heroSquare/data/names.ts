@@ -209,6 +209,7 @@ const names: HeroSquareName[] = [
   'fiat',
   'fileYourCryptoTaxes',
   'fileYourCryptoTaxesCheck',
+  'flipStable',
   'focusLimitOrders',
   'freeBtc',
   'futures',

@@ -335,6 +335,7 @@ const names: PictogramName[] = [
   'idVerification',
   'identityCard',
   'increaseLimits',
+  'inrTrade',
   'instantUnstakingClock',
   'institutionalNavigation',
   'institutions',
