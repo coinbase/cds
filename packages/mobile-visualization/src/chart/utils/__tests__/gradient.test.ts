@@ -1,3 +1,4 @@
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
 import {
   evaluateGradientAtValue,
   getGradientConfig,
@@ -208,6 +209,8 @@ describe('getGradientConfig with numeric scale', () => {
   });
 
   it('should use horizontal layout default (x axis) when gradient axis is omitted', () => {
+    const stopColorStart = defaultTheme.lightColor.fgNegative;
+    const stopColorEnd = defaultTheme.lightColor.fgPositive;
     const localXScale = getNumericScale({
       scaleType: 'linear',
       domain: { min: 0, max: 4 },
@@ -221,8 +224,8 @@ describe('getGradientConfig with numeric scale', () => {
 
     const gradient: GradientDefinition = {
       stops: [
-        { offset: 0, color: 'red' },
-        { offset: 4, color: 'green' },
+        { offset: 0, color: stopColorStart },
+        { offset: 4, color: stopColorEnd },
       ],
     };
 
