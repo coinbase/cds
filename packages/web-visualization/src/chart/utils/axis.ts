@@ -111,7 +111,7 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
    * - Vertical layout: `yAxis.baseline`
    * - Horizontal layout: `xAxis.baseline`
    *
-   * @default 0
+   * @default 0 for value axes, undefined for category axes
    */
   baseline?: number;
   /**
@@ -138,10 +138,6 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
 };
 
-/**
- * Resolved axis configuration for a Cartesian chart: computed bounds and scale fields from {@link AxisConfig},
- * plus authoring fields carried from {@link CartesianAxisConfigProps} (for example `baseline`).
- */
 export type CartesianAxisConfig = AxisConfig & {
   /**
    * From axis props when set. Meaningful when this axis is the chart’s value axis for the current layout.
