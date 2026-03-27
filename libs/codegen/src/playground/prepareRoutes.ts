@@ -85,13 +85,6 @@ export async function prepare() {
       dest: `packages/ui-mobile-playground/src/routes.ts`,
     });
 
-    // Write to ui-mobile-visreg package. The keys are required for usage in the jest context to direct visreg tests.
-    await writeFile({
-      data: { routes: consumerRoutes },
-      template: 'mobileRoutes.ejs',
-      dest: `packages/ui-mobile-visreg/src/routes.ts`,
-    });
-
     // Write to mobile-app. This is required for hot reload - internal packages need src in path for hot reload, while consumers do not.
     await writeFile({
       data: { routes: hotReloadRoutes },

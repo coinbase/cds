@@ -147,8 +147,8 @@ npm-debug.*
 web-build/
 ios
 android
-# percy screenshots. defined in ui-mobile-visreg
-artifacts/playground-screenshots 
+# maestro visreg screenshots
+visreg-screenshots/
 # failed detox test screenshots
 apps/mobile-app/artifacts
 apps/mobile-app/prebuilds/android-*

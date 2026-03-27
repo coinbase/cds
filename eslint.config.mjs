@@ -267,7 +267,6 @@ export default tseslint.config(
     ignores: [
       'packages/illustrations/src/__generated__/**',
       'packages/ui-mobile-playground/**',
-      'packages/ui-mobile-visreg/**',
       'packages/**/__stories__/**',
       'packages/**/__tests__/**',
       'packages/**/__mocks__/**',

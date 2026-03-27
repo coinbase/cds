@@ -1,0 +1,32 @@
+# HOW TO USE THIS WORKFLOW FOR BRANCH TESTING
+#
+# GitHub only shows workflow_dispatch workflows that exist on the default branch
+# (master), but when you trigger them manually you can choose which branch to
+# run against — GitHub will use the workflow file from that branch.
+#
+# Steps to test a workflow on your feature branch:
+#   1. In your branch, replace the contents of this file with the workflow you
+#      want to test (keep the `workflow_dispatch` trigger so it stays triggerable).
+#   2. Push your branch.
+#   3. Go to Actions → "Debug Workflow (replace me in your branch)" → "Run workflow".
+#   4. Select your branch from the dropdown and click "Run workflow".
+#
+# The contents of this file on master are intentionally left as a no-op stub.
+# Do NOT merge your debug changes back to master.
+
+name: Debug Workflow (replace me in your branch)
+
+on:
+  # Manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  test-local:
+    runs-on: [small, default-config]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Test the published action
+      # - name: New CDS Action
+      #   uses: [fill this in on new branch]
+      #   with: [fill this in on new branch]
