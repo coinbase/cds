@@ -1066,6 +1066,44 @@ export const All = () => {
           }}
         />
       </Example>
+      <Example title="Horizontal stacked">
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          layout="horizontal"
+          stacked
+          series={[
+            {
+              id: 'category-a',
+              data: [20, 30, 25, 35, 28, 32, 27],
+              gradient: {
+                stops: ({ min, max }: { min: number; max: number }) => [
+                  { offset: min, color: '#3b82f6' },
+                  { offset: max, color: '#8b5cf6' },
+                ],
+              },
+            },
+            {
+              id: 'category-b',
+              data: [15, 25, 20, 30, 22, 28, 23],
+              gradient: {
+                stops: ({ min, max }: { min: number; max: number }) => [
+                  { offset: min, color: '#10b981' },
+                  { offset: max, color: '#059669' },
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            requestedTickCount: 5,
+            showGrid: true,
+          }}
+          yAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+        />
+      </Example>
       <Example title="Band Grid Position">
         <HStack gap={2} style={{ flexWrap: 'wrap' }}>
           <BandGridPositionExample position="edges" />

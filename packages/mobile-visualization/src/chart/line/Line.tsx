@@ -43,11 +43,6 @@ export type LineBaseProps = {
    */
   areaType?: 'gradient' | 'solid' | 'dotted';
   /**
-   * Baseline value for the area.
-   * When set, overrides the default baseline.
-   */
-  areaBaseline?: number;
-  /**
    * Component to render the line.
    * Takes precedence over the type prop if provided.
    */
@@ -139,7 +134,6 @@ export const Line = memo<LineProps>(
     curve = 'bump',
     type = 'solid',
     areaType = 'gradient',
-    areaBaseline,
     stroke: strokeProp,
     strokeOpacity,
     showArea,
@@ -261,7 +255,6 @@ export const Line = memo<LineProps>(
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
-            baseline={areaBaseline}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}

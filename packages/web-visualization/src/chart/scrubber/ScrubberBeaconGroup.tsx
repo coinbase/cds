@@ -76,10 +76,9 @@ const BeaconWithData = memo<BeaconWithDataProps>(
 
         if (xScale && yScale) {
           const categoryAxisIsX = layout !== 'horizontal';
-          const defaultGradientAxis: 'x' | 'y' = categoryAxisIsX ? 'y' : 'x';
-          const gradientAxis = getGradientAxis(gradient, defaultGradientAxis);
+          const gradientAxis = getGradientAxis(gradient, layout);
           const gradientScale = gradientAxis === 'x' ? xScale : yScale;
-          const stops = getGradientConfig(gradient, xScale, yScale, defaultGradientAxis);
+          const stops = getGradientConfig(gradient, xScale, yScale, layout);
 
           if (stops) {
             // Determine the correct data value to evaluate against based on gradient axis and layout

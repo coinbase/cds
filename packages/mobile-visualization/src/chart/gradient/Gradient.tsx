@@ -52,32 +52,34 @@ export type GradientProps = GradientBaseProps & {
  */
 export const Gradient = memo<GradientProps>(
   ({ gradient, xAxisId, yAxisId, animate: animateProp, transition: transitionProp }) => {
-    const context = useCartesianChartContext();
-    const animate = animateProp ?? context.animate;
-    const defaultGradientAxis = context.layout === 'horizontal' ? 'x' : 'y';
-
+    const {
+      animate: animateContext,
+      getXScale,
+      getYScale,
+      drawingArea,
+      layout,
+    } = useCartesianChartContext();
+    const animate = animateProp ?? animateContext;
     const transition = useMemo(() => {
       if (!animate) return instantTransition;
       return transitionProp ?? defaultTransition;
     }, [transitionProp, animate]);
 
-    const xScale = context.getXScale(xAxisId);
-    const yScale = context.getYScale(yAxisId);
+    const xScale = getXScale(xAxisId);
+    const yScale = getYScale(yAxisId);
 
     // Process gradient definition into stops
     const stops = useMemo(() => {
       if (!xScale || !yScale) return;
-      return getGradientConfig(gradient, xScale, yScale, defaultGradientAxis);
-    }, [gradient, xScale, yScale, defaultGradientAxis]);
+      return getGradientConfig(gradient, xScale, yScale, layout);
+    }, [gradient, xScale, yScale, layout]);
 
-    const axis = getGradientAxis(gradient, defaultGradientAxis);
+    const axis = getGradientAxis(gradient, layout);
     const scale = axis === 'x' ? xScale : yScale;
     const shouldRender = !!stops && !!scale;
 
     const range = scale?.range() ?? [0, 0];
     const [rangeStart = 0, rangeEnd = 0] = range;
-    const drawingArea = context.drawingArea;
-
     const targetStart =
       axis === 'x' ? { x: rangeStart, y: drawingArea.y } : { x: drawingArea.x, y: rangeStart };
     const targetEnd =

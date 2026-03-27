@@ -804,8 +804,7 @@ export function getBaselinePx(
   baseline?: number,
 ): number {
   const [domainMin, domainMax] = valueScale.domain();
-  const baselineInData =
-    baseline ?? (domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0);
+  const baselineInData = baseline ?? (domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0);
   const baselinePos = valueScale(baselineInData);
 
   if (layout === 'vertical') {
@@ -943,8 +942,7 @@ export function getBars(params: {
       (Math.abs(top - baseline) >= EPSILON && Math.abs(edgeTop - baselinePx) >= EPSILON);
     const roundBottom =
       roundBaseline ||
-      (Math.abs(bottom - baseline) >= EPSILON &&
-        Math.abs(edgeBottom - baselinePx) >= EPSILON);
+      (Math.abs(bottom - baseline) >= EPSILON && Math.abs(edgeBottom - baselinePx) >= EPSILON);
 
     // Calculate length (measured along the value axis)
     const length = Math.abs(edgeBottom - edgeTop);

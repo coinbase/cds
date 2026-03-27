@@ -207,7 +207,7 @@ describe('getGradientConfig with numeric scale', () => {
     expect(result?.[2].offset).toBe(1);
   });
 
-  it('should use caller-provided default axis when gradient axis is omitted', () => {
+  it('should use horizontal layout default (x axis) when gradient axis is omitted', () => {
     const localXScale = getNumericScale({
       scaleType: 'linear',
       domain: { min: 0, max: 4 },
@@ -226,7 +226,7 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, localXScale, localYScale, 'x');
+    const result = getGradientConfig(gradient, localXScale, localYScale, 'horizontal');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(2);
     expect(result?.[0].offset).toBe(0);

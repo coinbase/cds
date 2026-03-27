@@ -5,7 +5,7 @@ import type { Transition } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
 import { EPSILON, getBars, getBaselinePx, getStackOrigin } from '../utils/bar';
-import { getGradientConfig } from '../utils/gradient';
+import { getGradientAxis, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
@@ -173,10 +173,13 @@ export const BarStack = memo<BarStackProps>(
     transitions,
     transition,
   }) => {
-    const { layout, getSeriesData, getXAxis, getYAxis } = useCartesianChartContext();
+    const { layout, getSeriesData, getXAxis, getYAxis, getXScale, getYScale } =
+      useCartesianChartContext();
 
     const xAxis = getXAxis(xAxisId);
     const yAxis = getYAxis(yAxisId);
+    const xScale = getXScale(xAxisId);
+    const yScale = getYScale(yAxisId);
 
     const valueAxisBaseline = useMemo(
       () => (layout === 'vertical' ? yAxis?.baseline : xAxis?.baseline),
@@ -190,23 +193,12 @@ export const BarStack = memo<BarStackProps>(
     const seriesGradients = useMemo(() => {
       return series.map((s) => {
         if (!s.gradient) return null;
+        if (!xScale || !yScale) return null;
 
-        const evalScale =
-          s.gradient.axis === 'x'
-            ? layout === 'vertical'
-              ? indexScale
-              : valueScale
-            : layout === 'vertical'
-              ? valueScale
-              : indexScale;
+        const gradientAxis = getGradientAxis(s.gradient, layout);
+        const evalScale = gradientAxis === 'x' ? xScale : yScale;
 
-        // We need to pass original xScale/yScale to getGradientConfig for legacy reasons
-        // For now let's assume getGradientConfig can handle these scales if we pass them correctly.
-        const stops = getGradientConfig(
-          s.gradient,
-          layout === 'vertical' ? indexScale : valueScale,
-          layout === 'vertical' ? valueScale : indexScale,
-        );
+        const stops = getGradientConfig(s.gradient, xScale, yScale, layout);
         if (!stops) return null;
 
         return {
@@ -216,7 +208,7 @@ export const BarStack = memo<BarStackProps>(
           stops,
         };
       });
-    }, [series, indexScale, valueScale, layout]);
+    }, [series, xScale, yScale, layout]);
 
     const categoryAxis = layout === 'vertical' ? xAxis : yAxis;
     const categoryData =

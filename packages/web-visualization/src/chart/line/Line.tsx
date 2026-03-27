@@ -44,11 +44,6 @@ export type LineBaseProps = SharedProps & {
    */
   areaType?: 'gradient' | 'solid' | 'dotted';
   /**
-   * Baseline value for the area.
-   * When set, overrides the default baseline.
-   */
-  areaBaseline?: number;
-  /**
    * Component to render the line.
    * Takes precedence over the type prop if provided.
    */
@@ -163,7 +158,6 @@ export const Line = memo<LineProps>(
     curve = 'bump',
     type = 'solid',
     areaType = 'gradient',
-    areaBaseline,
     stroke: strokeProp,
     strokeOpacity,
     onPointClick,
@@ -211,7 +205,6 @@ export const Line = memo<LineProps>(
     const categoryAxisIsX = useMemo(() => {
       return layout !== 'horizontal';
     }, [layout]);
-    const defaultGradientAxis: 'x' | 'y' = categoryAxisIsX ? 'y' : 'x';
 
     const categoryAxis = useMemo(() => {
       return categoryAxisIsX ? xAxis : yAxis;
@@ -266,9 +259,9 @@ export const Line = memo<LineProps>(
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
 
-      const gradientAxis = getGradientAxis(gradient, defaultGradientAxis);
+      const gradientAxis = getGradientAxis(gradient, layout);
       const gradientScale = gradientAxis === 'x' ? xScale : yScale;
-      const stops = getGradientConfig(gradient, xScale, yScale, defaultGradientAxis);
+      const stops = getGradientConfig(gradient, xScale, yScale, layout);
       if (!stops) return;
 
       return {
@@ -276,7 +269,7 @@ export const Line = memo<LineProps>(
         scale: gradientScale,
         stops,
       };
-    }, [gradient, xScale, yScale, defaultGradientAxis]);
+    }, [gradient, xScale, yScale, layout]);
 
     if (!xScale || !yScale || !path) return;
 
@@ -285,7 +278,6 @@ export const Line = memo<LineProps>(
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
-            baseline={areaBaseline}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}

@@ -27,7 +27,6 @@ export type LineSeries = Series &
       | 'curve'
       | 'showArea'
       | 'areaType'
-      | 'areaBaseline'
       | 'type'
       | 'LineComponent'
       | 'AreaComponent'

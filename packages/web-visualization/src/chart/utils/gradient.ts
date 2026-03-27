@@ -1,4 +1,5 @@
 import type { AxisBounds } from './chart';
+import type { CartesianChartLayout } from './context';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
 
 /**
@@ -34,13 +35,12 @@ export type GradientDefinition = {
 
 /**
  * Resolves the axis used for gradient processing.
- * Falls back to the caller-provided default when the gradient axis is omitted.
  */
 export const getGradientAxis = (
   gradient: Pick<GradientDefinition, 'axis'>,
-  defaultAxis: 'x' | 'y' = 'y',
+  layout: CartesianChartLayout,
 ): 'x' | 'y' => {
-  return gradient.axis ?? defaultAxis;
+  return gradient.axis ?? (layout === 'horizontal' ? 'x' : 'y');
 };
 
 /**
@@ -186,10 +186,10 @@ export const evaluateGradientAtValue = (
  * Processes a GradientDefinition into a renderable GradientConfig.
  * Supports both numeric scales (linear, log) and categorical scales (band).
  *
- * @param gradient - GradientDefinition configuration (required)
- * @param xScale - X-axis scale (required)
- * @param yScale - Y-axis scale (required)
- * @param defaultAxis - Fallback axis when gradient.axis is omitted
+ * @param gradient - GradientDefinition configuration
+ * @param xScale - X-axis scale
+ * @param yScale - Y-axis scale
+ * @param layout - Chart layout
  * @returns GradientConfig or null if gradient processing fails
  *
  * @example
@@ -214,12 +214,12 @@ export const getGradientConfig = (
   gradient: GradientDefinition,
   xScale: ChartScaleFunction,
   yScale: ChartScaleFunction,
-  defaultAxis: 'x' | 'y' = 'y',
+  layout: CartesianChartLayout = 'vertical',
 ): GradientStop[] | undefined => {
   if (!gradient) return;
 
   // Get the scale based on axis
-  const axis = getGradientAxis(gradient, defaultAxis);
+  const axis = getGradientAxis(gradient, layout);
   const scale = axis === 'x' ? xScale : yScale;
   if (!scale) return;
 

@@ -48,32 +48,36 @@ export type GradientProps = GradientBaseProps & {
  */
 export const Gradient = memo<GradientProps>(
   ({ id, gradient, xAxisId, yAxisId, animate: animateProp, transition: transitionProp }) => {
-    const context = useCartesianChartContext();
-    const animate = animateProp ?? context.animate;
-    const defaultGradientAxis = context.layout === 'horizontal' ? 'x' : 'y';
-
+    const {
+      animate: animateContext,
+      getXScale,
+      getYScale,
+      drawingArea,
+      getYAxis,
+      getXAxis,
+      layout,
+    } = useCartesianChartContext();
+    const animate = animateProp ?? animateContext;
     const transition = useMemo(() => {
       if (!animate) return instantTransition;
       return transitionProp ?? defaultTransition;
     }, [transitionProp, animate]);
 
-    const xScale = context.getXScale(xAxisId);
-    const yScale = context.getYScale(yAxisId);
+    const xScale = getXScale(xAxisId);
+    const yScale = getYScale(yAxisId);
+    const xAxis = getXAxis(xAxisId);
+    const yAxis = getYAxis(yAxisId);
 
     // Process gradient definition into stops
     const stops = useMemo(() => {
       if (!xScale || !yScale) return;
-      return getGradientConfig(gradient, xScale, yScale, defaultGradientAxis);
-    }, [gradient, xScale, yScale, defaultGradientAxis]);
-
-    const drawingArea = context.drawingArea;
-    const yAxis = context.getYAxis(yAxisId);
-    const xAxis = context.getXAxis(xAxisId);
+      return getGradientConfig(gradient, xScale, yScale, layout);
+    }, [gradient, xScale, yScale, layout]);
 
     // If gradient processing failed, don't render
     if (!stops) return null;
 
-    const axis = getGradientAxis(gradient, defaultGradientAxis);
+    const axis = getGradientAxis(gradient, layout);
 
     let coordinates: Record<string, number>;
 
