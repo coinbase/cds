@@ -53,11 +53,22 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
 
       const leftHeaderButton = showSearch ? (
         <Box marginX={-1}>
-          <IconButton transparent name="search" onPress={goToSearch} />
+          <IconButton
+            transparent
+            accessibilityLabel="Search for component"
+            name="search"
+            onPress={goToSearch}
+          />
         </Box>
       ) : showBackButton ? (
         <Box marginX={-1}>
-          <IconButton transparent name="backArrow" onPress={goBack} testID="nav-back-button" />
+          <IconButton
+            transparent
+            accessibilityLabel="Go back"
+            name="backArrow"
+            onPress={goBack}
+            testID="nav-back-button"
+          />
         </Box>
       ) : (
         iconButtonPlaceholder

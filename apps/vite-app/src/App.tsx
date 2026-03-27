@@ -79,8 +79,10 @@ export const App = () => {
                   <SearchInput
                     compact
                     accessibilityLabel="Search"
+                    clearIconAccessibilityLabel="Clear search"
                     onChangeText={setSearch}
                     placeholder="Search"
+                    startIconAccessibilityLabel="Search"
                     value={search}
                   />
                 </Box>

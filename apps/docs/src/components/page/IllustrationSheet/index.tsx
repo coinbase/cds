@@ -198,8 +198,10 @@ export const IllustrationSheet = ({ variant }: { variant: IllustrationVariant })
       <SearchInput
         compact
         accessibilityLabel="Filter illustrations by name"
+        clearIconAccessibilityLabel="Clear search"
         onChangeText={searchOnChange}
         placeholder="Search by name or description"
+        startIconAccessibilityLabel="Search"
         type="text"
         value={query}
       />

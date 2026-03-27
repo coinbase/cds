@@ -521,8 +521,21 @@ const SparklineInteractiveHeaderScreen = () => {
   const trailing = useMemo(() => {
     return (
       <HStack gap={1}>
-        <IconButton active feedback="heavy" name="star" onPress={handlePress} variant="secondary" />
-        <IconButton feedback="heavy" name="share" onPress={handlePress} variant="secondary" />
+        <IconButton
+          active
+          accessibilityLabel="Star"
+          feedback="heavy"
+          name="star"
+          onPress={handlePress}
+          variant="secondary"
+        />
+        <IconButton
+          accessibilityLabel="Share"
+          feedback="heavy"
+          name="share"
+          onPress={handlePress}
+          variant="secondary"
+        />
       </HStack>
     );
   }, []);

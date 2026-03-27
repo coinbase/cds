@@ -8,12 +8,12 @@ export default function MobileSidebarToggle(): JSX.Element {
   return (
     <IconButton
       transparent
-      aria-expanded={shown}
-      aria-label={translate({
+      accessibilityLabel={translate({
         id: 'theme.docs.sidebar.toggleSidebarButtonAriaLabel',
         message: 'Navigation bar',
         description: 'The ARIA label for hamburger menu button of mobile navigation',
       })}
+      aria-expanded={shown}
       name="hamburger"
       onClick={toggle}
     />
