@@ -40,6 +40,7 @@ export const PlatformSwitcher = () => {
   return (
     <SegmentedTabs
       ref={segmentedTabsRef}
+      accessibilityLabel="Select platform"
       activeTab={activeTab}
       borderRadius={300}
       onChange={handlePlatformChange}

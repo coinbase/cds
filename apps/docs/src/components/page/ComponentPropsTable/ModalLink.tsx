@@ -36,7 +36,7 @@ function ModalLink({
       </Link>
       <ModalChildContext.Provider value>
         <Modal onRequestClose={toggleOff} visible={visible}>
-          <ModalHeader title={title ?? children} />
+          <ModalHeader closeAccessibilityLabel="Close modal" title={title ?? children} />
           <ModalBody ref={modalBodyRef} {...modalBodyProps}>
             {content}
           </ModalBody>

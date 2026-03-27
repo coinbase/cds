@@ -51,11 +51,50 @@ const validButtonWithNestedExpression = `
   }
 `;
 
+const validModalHeaderWithTitle = `
+  import { ModalHeader } from '@coinbase/cds-web';
+  const Component = () => {
+    return (
+      <ModalHeader backAccessibilityLabel="Back" closeAccessibilityLabel="Close" onBackButtonClick={() => {}} title="Title" />
+    );
+  }
+`;
+
+const validComboboxWithRequiredA11yProps = `
+  import { Combobox } from '@coinbase/cds-web';
+  const options = [{ value: 'a', label: 'A' }];
+  const Component = () => {
+    return (
+      <Combobox
+        accessibilityLabel="Priority"
+        controlAccessibilityLabel="Priority control"
+        onChange={() => {}}
+        options={options}
+      />
+    );
+  }
+`;
+
+const validTableWithCaption = `
+  import { Table, TableCaption } from '@coinbase/cds-web';
+  const Component = () => {
+    return (
+      <Table>
+        <TableCaption>Accounts table</TableCaption>
+        <tbody />
+      </Table>
+    );
+  }
+`;
+
 const valid = [
   validButtonWithInnerText,
   validButtonWithCorrectLabel,
   validButtonWithNestedInnerText,
   validButtonWithNestedExpression,
+  validModalHeaderWithTitle,
+  validComboboxWithRequiredA11yProps,
+  validTableWithCaption,
 ];
 
 // @ts-expect-error - not sure why the rule type is not matching up with the rule tester
@@ -74,7 +113,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
       `,
       errors: [
         {
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -103,7 +142,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
       `,
       errors: [
         {
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -135,7 +174,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
       errors: [
         {
           // error on Button element
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -154,7 +193,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
         },
         {
           // error on IconButton element
-          messageId: 'missingAccessibilityLabel' as const,
+          messageId: 'missingAccessibilityLabel',
           suggestions: [
             {
               messageId: 'missingAccessibilityLabelSuggestion',
@@ -172,6 +211,118 @@ ruleTester.run('control-has-associated-label-extended', rule, {
           ],
         },
       ],
+    },
+    // SegmentedTabs requires accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { SegmentedTabs } from '@coinbase/cds-web';
+        const tabs = [{ id: 'buy', label: 'Buy' }];
+        const Component = () => {
+          return <SegmentedTabs activeTab={tabs[0]} onChange={() => {}} tabs={tabs} />;
+        }
+      `,
+      errors: [
+        {
+          messageId: 'missingAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { SegmentedTabs } from '@coinbase/cds-web';
+                const tabs = [{ id: 'buy', label: 'Buy' }];
+                const Component = () => {
+                  return <SegmentedTabs accessibilityLabel="" activeTab={tabs[0]} onChange={() => {}} tabs={tabs} />;
+                }
+              `,
+            },
+          ],
+        },
+      ],
+    },
+    // ModalHeader with back action requires backAccessibilityLabel
+    {
+      code: normalizeIndent`
+  import { ModalHeader } from '@coinbase/cds-web';
+  const Component = () => {
+    return (
+      <ModalHeader closeAccessibilityLabel="Close" onBackButtonClick={() => {}} title="Title" />
+    );
+  }
+`,
+      errors: [
+        {
+          messageId: 'missingBackAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { ModalHeader } from '@coinbase/cds-web';
+                const Component = () => {
+                  return (
+                    <ModalHeader backAccessibilityLabel="" closeAccessibilityLabel="Close" onBackButtonClick={() => {}} title="Title" />
+                  );
+                }
+              `,
+            },
+          ],
+        },
+      ],
+    },
+    // Combobox requires accessible name and controlAccessibilityLabel
+    {
+      code: normalizeIndent`
+        import { Combobox } from '@coinbase/cds-web';
+        const options = [{ value: 'a', label: 'A' }];
+        const Component = () => {
+          return <Combobox onChange={() => {}} options={options} />;
+        }
+      `,
+      errors: [
+        {
+          messageId: 'missingAccessibleName',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { Combobox } from '@coinbase/cds-web';
+                const options = [{ value: 'a', label: 'A' }];
+                const Component = () => {
+                  return <Combobox accessibilityLabel="" onChange={() => {}} options={options} />;
+                }
+              `,
+            },
+          ],
+        },
+        {
+          messageId: 'missingControlAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { Combobox } from '@coinbase/cds-web';
+                const options = [{ value: 'a', label: 'A' }];
+                const Component = () => {
+                  return <Combobox controlAccessibilityLabel="" onChange={() => {}} options={options} />;
+                }
+              `,
+            },
+          ],
+        },
+      ],
+    },
+    // Table requires caption or accessible name props
+    {
+      code: normalizeIndent`
+        import { Table } from '@coinbase/cds-web';
+        const Component = () => {
+          return (
+            <Table>
+              <tbody />
+            </Table>
+          );
+        }
+      `,
+      errors: [{ messageId: 'missingTableAccessibleName' }],
     },
   ],
 });

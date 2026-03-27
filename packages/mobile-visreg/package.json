@@ -1,0 +1,15 @@
+{
+  "name": "@coinbase/mobile-visreg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable Maestro + Percy visual regression testing for CDS mobile apps",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/mobile-visreg"
+  },
+  "type": "module",
+  "dependencies": {
+    "@percy/cli": "^1.31.1"
+  }
+}

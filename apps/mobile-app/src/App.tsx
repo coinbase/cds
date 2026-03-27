@@ -9,7 +9,7 @@ import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
 import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization/chart';
 import { Playground } from '@coinbase/ui-mobile-playground';
-import { NavigationContainer } from '@react-navigation/native';
+import { CommonActions, NavigationContainer } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -18,6 +18,18 @@ import { routes as codegenRoutes } from './routes';
 
 const linking = {
   prefixes: [Linking.createURL('/')],
+  getStateFromPath: (path: string) => ({
+    routes: [{ name: path.replace(/^\//, '') }],
+  }),
+  // Reset the navigation stack on every deep link so that any modals or overlays
+  // open on the previous screen are fully unmounted before the new route mounts.
+  // Without this, React Navigation's default getActionFromState dispatches a
+  // `navigate` (push) action, leaving the previous screen mounted and its modal
+  // state intact.
+  // The home screen (DebugExamples) is always prepended so there is always a
+  // route to go back to, keeping the back button visible.
+  getActionFromState: (state: { routes: { name: string }[] }) =>
+    CommonActions.reset({ index: 1, routes: [{ name: 'DebugExamples' }, ...state.routes] }),
 };
 
 // this code allows the use of toLocaleString() on Android

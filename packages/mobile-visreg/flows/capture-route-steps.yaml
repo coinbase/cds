@@ -1,0 +1,23 @@
+appId: ${APP_ID}
+---
+# Sub-flow: navigate to a single route, capture a screenshot, and return to the list.
+# Called from capture-all.yaml for each route via runFlow.
+# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml env)
+
+- scrollUntilVisible:
+    element: '${ROUTE_NAME}.*'
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    text: '${ROUTE_NAME}.*'
+- waitForAnimationToEnd
+- takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
+# Some routes automatically open a modal (e.g. Alert variants, Tray variants) — we need
+# to dismiss it before tapping the nav back button so the stack returns cleanly to the list.
+# For routes that don't hvae the cancel button, this does add latency to the flow which needs to be addressed.
+- tapOn:
+    text: Cancel
+    optional: true
+- tapOn:
+    id: nav-back-button
+- waitForAnimationToEnd
