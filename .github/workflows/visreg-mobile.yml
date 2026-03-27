@@ -66,11 +66,12 @@ jobs:
 
       - name: Boot iOS simulator
         run: |
-          xcrun simctl boot "iPhone 16" || true
-          # Open Simulator.app — Maestro's iOS driver requires the GUI process to be running,
-          # not just the simctl daemon. Without this, the driver times out waiting for XCUITest.
-          open -a Simulator
+          STATE=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 16") | .state' | head -n 1)
+          if [ "$STATE" != "Booted" ]; then
+            xcrun simctl boot "iPhone 16"
+          fi
           xcrun simctl bootstatus booted
+          sleep 30
 
       - name: Install app on simulator
         run: xcrun simctl install booted apps/mobile-app/prebuilds/ios-release-hermes.app
@@ -79,7 +80,7 @@ jobs:
         run: yarn nx run mobile-visreg:ios
         env:
           # Give the XCUITest driver extra time to attach on cold CI runners.
-          MAESTRO_DRIVER_STARTUP_TIMEOUT: 120000
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 180000
 
       - name: Upload to Percy
         id: percy-upload
