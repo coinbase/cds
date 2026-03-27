@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.58.0 (3/25/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support font prop on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
+- Feat: support borderRadius on SearchInput. [[#545](https://github.com/coinbase/cds/pull/545)]
+
 ## 8.57.1 ((3/24/2026, 01:14 PM PST))
 
 This is an artificial version bump with no new change.
