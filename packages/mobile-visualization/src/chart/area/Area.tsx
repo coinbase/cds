@@ -108,12 +108,10 @@ export const Area = memo<AreaProps>(
 
     const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
 
-    const xAxisId = matchedSeries?.xAxisId;
-    const yAxisId = matchedSeries?.yAxisId;
-    const xAxis = getXAxis(xAxisId);
-    const xScale = getXScale(xAxisId);
-    const yScale = getYScale(yAxisId);
-    const yAxis = getYAxis(yAxisId);
+    const xAxis = getXAxis(matchedSeries?.xAxisId);
+    const xScale = getXScale(matchedSeries?.xAxisId);
+    const yScale = getYScale(matchedSeries?.yAxisId);
+    const yAxis = getYAxis(matchedSeries?.yAxisId);
 
     const categoryAxisIsX = useMemo(() => {
       return layout !== 'horizontal';

@@ -93,20 +93,12 @@ export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Configuration for x-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
-     *
-     * @note In horizontal layout, this is the value axis. AreaChart expands the value-axis domain
-     * to include `xAxis.baseline` (or `0` when baseline is not provided) unless that side is
-     * explicitly fixed via `domain`.
      */
     xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
-     *
-     * @note In vertical layout, this is the value axis. AreaChart expands the value-axis domain
-     * to include `yAxis.baseline` (or `0` when baseline is not provided) unless that side is
-     * explicitly fixed via `domain`.
      */
     yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };

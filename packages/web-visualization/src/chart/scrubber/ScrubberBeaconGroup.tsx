@@ -8,7 +8,6 @@ import {
   evaluateGradientAtValue,
   getGradientAxis,
   getGradientConfig,
-  type Series,
   useScrubberContext,
 } from '../utils';
 
