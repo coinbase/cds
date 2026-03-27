@@ -1,0 +1,20 @@
+name: Guard Debug Workflow
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - .github/workflows/debug-workflow.yml
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Block changes to debug-workflow.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if debug-workflow.yml was modified
+        run: |
+          echo "Changes to .github/workflows/debug-workflow.yml are not allowed on pull requests to master."
+          exit 1
