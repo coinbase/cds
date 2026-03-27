@@ -86,12 +86,13 @@ export type AxisConfig = {
    * - 'strict': Uses the exact min/max values from the data
    */
   domainLimit: 'nice' | 'strict';
-  /**
-   * When this axis is the value axis for the current chart layout, the data-space baseline
-   * from props (same as `CartesianAxisConfigProps.baseline`). Omitted when unset.
-   */
-  baseline?: number;
 };
+
+/**
+ * Whether `axisType` is the value axis for this layout (vs the category / band axis).
+ */
+export const isValueAxis = (axisType: 'x' | 'y', layout: CartesianChartLayout): boolean =>
+  layout === 'horizontal' ? axisType === 'x' : axisType === 'y';
 
 /**
  * Axis configuration without computed bounds (used for input)
@@ -137,11 +138,15 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
 };
 
+/**
+ * Resolved axis configuration for a Cartesian chart: computed bounds and scale fields from {@link AxisConfig},
+ * plus authoring fields carried from {@link CartesianAxisConfigProps} (for example `baseline`).
+ */
 export type CartesianAxisConfig = AxisConfig & {
   /**
-   * Domain limit type for numeric scales
+   * From axis props when set. Meaningful when this axis is the chart’s value axis for the current layout.
    */
-  domainLimit?: 'nice' | 'strict';
+  baseline?: number;
 };
 
 type AxisDomainConfig = CartesianAxisConfigProps['domain'];
@@ -369,10 +374,9 @@ export const getCartesianAxisDomain = (
   // In horizontal layout: Y is category (index), X is value (value)
   const isCategoryAxis =
     (layout !== 'horizontal' && axisType === 'x') || (layout === 'horizontal' && axisType === 'y');
-  const seriesBaselineById =
-    !isCategoryAxis && axisParam.baseline !== undefined
-      ? new Map(series.map((s) => [s.id, axisParam.baseline as number]))
-      : undefined;
+  const seriesBaselineById = !isCategoryAxis
+    ? new Map(series.map((s) => [s.id, axisParam.baseline ?? 0]))
+    : undefined;
   const seriesDomain = isCategoryAxis
     ? getChartDomain(series)
     : getChartRange(series, undefined, undefined, { seriesBaselineById });

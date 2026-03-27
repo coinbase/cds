@@ -69,7 +69,7 @@ describe('getGradientConfig with band scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(2);
   });
@@ -89,7 +89,7 @@ describe('evaluateGradientAtValue with band scale', () => {
       ],
     };
 
-    const stops = getGradientConfig(gradient, bandScale, bandScale) ?? [];
+    const stops = getGradientConfig(gradient, bandScale, bandScale, 'vertical') ?? [];
 
     // First index should be closer to red
     const color0 = evaluateGradientAtValue(stops, 0, bandScale);
@@ -199,7 +199,7 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(3);
     expect(result?.[0].offset).toBe(0);
@@ -242,7 +242,7 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result?.[0].offset).toBe(0);
     expect(result?.[1].offset).toBeCloseTo(0.3);
@@ -257,7 +257,7 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(2);
     expect(result?.[0].offset).toBe(0);

@@ -181,14 +181,14 @@ export const BarStack = memo<BarStackProps>(
     const xScale = getXScale(xAxisId);
     const yScale = getYScale(yAxisId);
 
-    const valueAxisBaseline = useMemo(
-      () => (layout === 'vertical' ? yAxis?.baseline : xAxis?.baseline),
-      [layout, xAxis, yAxis],
+    const baseline = useMemo(
+      () => (layout === 'vertical' ? yAxis : xAxis)?.baseline ?? 0,
+      [layout, yAxis, xAxis],
     );
 
     const baselinePx = useMemo(() => {
-      return getBaselinePx(valueScale, rect, layout, valueAxisBaseline);
-    }, [rect, valueScale, layout, valueAxisBaseline]);
+      return getBaselinePx(valueScale, rect, layout, baseline);
+    }, [rect, valueScale, layout, baseline]);
 
     const seriesGradients = useMemo(() => {
       return series.map((s) => {
@@ -238,7 +238,7 @@ export const BarStack = memo<BarStackProps>(
           roundBaseline,
           layout,
           baselinePx,
-          baseline: valueAxisBaseline ?? 0,
+          baseline,
           stackGap,
           barMinSize,
           stackMinSize,
@@ -252,19 +252,19 @@ export const BarStack = memo<BarStackProps>(
       [
         series,
         seriesData,
-        stackGap,
-        barMinSize,
-        stackMinSize,
-        indexPos,
-        baselinePx,
-        valueAxisBaseline,
-        thickness,
         categoryIndex,
         categoryValue,
+        indexPos,
+        thickness,
         valueScale,
         seriesGradients,
         roundBaseline,
         layout,
+        baselinePx,
+        baseline,
+        stackGap,
+        barMinSize,
+        stackMinSize,
         borderRadius,
         defaultFillOpacity,
         defaultStroke,
