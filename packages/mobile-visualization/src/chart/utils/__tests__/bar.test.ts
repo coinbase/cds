@@ -1,8 +1,8 @@
 import {
   getBars,
   getBarSizeAdjustment,
-  getNormalizedStagger,
   getBaselinePx,
+  getNormalizedStagger,
   getStackGroups,
   getStackOrigin,
 } from '../bar';

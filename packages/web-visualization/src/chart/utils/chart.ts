@@ -1,6 +1,6 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
-import { defaultAxisId, type CartesianAxisConfigProps } from './axis';
+import { type CartesianAxisConfigProps,defaultAxisId } from './axis';
 import type { CartesianChartLayout } from './context';
 import type { GradientDefinition } from './gradient';
 

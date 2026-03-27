@@ -1,4 +1,5 @@
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+
 import {
   evaluateGradientAtValue,
   getGradientConfig,

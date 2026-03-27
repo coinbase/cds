@@ -1070,9 +1070,9 @@ export const All = () => {
         <BarChart
           showXAxis
           showYAxis
+          stacked
           height={300}
           layout="horizontal"
-          stacked
           series={[
             {
               id: 'category-a',

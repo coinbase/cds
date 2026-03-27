@@ -208,6 +208,8 @@ export const All = () => {
       <Example title="Axis Baseline Threshold">
         <VStack gap={2}>
           <AreaChart
+            showLines
+            showYAxis
             height={200}
             inset={0}
             series={[
@@ -223,14 +225,14 @@ export const All = () => {
               },
             ]}
             type="dotted"
-            showLines
-            showYAxis
             yAxis={{
               showGrid: true,
               baseline: 30,
             }}
           />
           <AreaChart
+            showLines
+            showXAxis
             height={200}
             inset={0}
             layout="horizontal"
@@ -247,8 +249,6 @@ export const All = () => {
               },
             ]}
             type="dotted"
-            showLines
-            showXAxis
             xAxis={{
               showGrid: true,
               baseline: 30,
