@@ -89,12 +89,6 @@ export type AxisConfig = {
 };
 
 /**
- * Whether `axisType` is the value axis for this layout (vs the category / band axis).
- */
-export const isValueAxis = (axisType: 'x' | 'y', layout: CartesianChartLayout): boolean =>
-  layout === 'horizontal' ? axisType === 'x' : axisType === 'y';
-
-/**
  * Axis configuration without computed bounds (used for input)
  */
 export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
@@ -370,12 +364,14 @@ export const getCartesianAxisDomain = (
   // In horizontal layout: Y is category (index), X is value (value)
   const isCategoryAxis =
     (layout !== 'horizontal' && axisType === 'x') || (layout === 'horizontal' && axisType === 'y');
-  const seriesBaselineById = !isCategoryAxis
-    ? new Map(series.map((s) => [s.id, axisParam.baseline ?? 0]))
-    : undefined;
   const seriesDomain = isCategoryAxis
     ? getChartDomain(series)
-    : getChartRange(series, undefined, undefined, { seriesBaselineById });
+    : getChartRange(
+        series,
+        layout,
+        axisType === 'x' ? [axisParam] : [],
+        axisType === 'y' ? [axisParam] : [],
+      );
 
   // If data sets the domain, use that instead of the series domain
   const preferredDataDomain = dataDomain ?? seriesDomain;

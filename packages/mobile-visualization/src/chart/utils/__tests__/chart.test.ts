@@ -1,3 +1,4 @@
+import type { CartesianAxisConfigProps } from '../axis';
 import {
   type AxisBounds,
   type ChartInset,
@@ -87,7 +88,7 @@ describe('getStackedSeriesData', () => {
       { id: 'series2', data: [4, 5, 6] },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.size).toBe(2);
     expect(result.get('series1')).toEqual([
@@ -104,16 +105,14 @@ describe('getStackedSeriesData', () => {
 
   it('should apply axis baseline map to non-stacked numeric series', () => {
     const series: Series[] = [
-      { id: 'series1', data: [11, 12, 13] },
-      { id: 'series2', data: [4, 5, 6] },
+      { id: 'series1', data: [11, 12, 13], yAxisId: 'yA' },
+      { id: 'series2', data: [4, 5, 6], yAxisId: 'yB' },
     ];
 
-    const result = getStackedSeriesData(series, {
-      seriesBaselineById: new Map([
-        ['series1', 10],
-        ['series2', 3],
-      ]),
-    });
+    const result = getStackedSeriesData(series, 'vertical', [], [
+      { id: 'yA', baseline: 10 },
+      { id: 'yB', baseline: 3 },
+    ] as CartesianAxisConfigProps[]);
 
     expect(result.get('series1')).toEqual([
       [10, 11],
@@ -138,9 +137,7 @@ describe('getStackedSeriesData', () => {
       },
     ];
 
-    const result = getStackedSeriesData(series, {
-      seriesBaselineById: new Map([['series1', 99]]),
-    });
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.get('series1')).toEqual([
       [8, 11],
@@ -155,13 +152,9 @@ describe('getStackedSeriesData', () => {
       { id: 'series3', data: [60], stackId: 'stack1' },
     ];
 
-    const result = getStackedSeriesData(series, {
-      seriesBaselineById: new Map([
-        ['series1', 30],
-        ['series2', 30],
-        ['series3', 30],
-      ]),
-    });
+    const result = getStackedSeriesData(series, 'vertical', [], [
+      { id: 'DEFAULT_AXIS_ID', baseline: 30 },
+    ] as CartesianAxisConfigProps[]);
 
     expect(result.get('series1')).toEqual([[20, 30]]);
     expect(result.get('series2')).toEqual([[30, 40]]);
@@ -171,9 +164,9 @@ describe('getStackedSeriesData', () => {
   it('should apply axis baseline map to single-series stack groups', () => {
     const series: Series[] = [{ id: 'series1', data: [1, 2], stackId: 'stack1' }];
 
-    const result = getStackedSeriesData(series, {
-      seriesBaselineById: new Map([['series1', 10]]),
-    });
+    const result = getStackedSeriesData(series, 'vertical', [], [
+      { id: 'DEFAULT_AXIS_ID', baseline: 10 },
+    ] as CartesianAxisConfigProps[]);
 
     expect(result.get('series1')).toEqual([
       [10, 1],
@@ -193,7 +186,7 @@ describe('getStackedSeriesData', () => {
       },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.size).toBe(1);
     expect(result.get('series1')).toEqual([
@@ -209,7 +202,7 @@ describe('getStackedSeriesData', () => {
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1' },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.size).toBe(2);
     // D3 stack will create cumulative values
@@ -228,7 +221,7 @@ describe('getStackedSeriesData', () => {
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1', yAxisId: 'right' },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.size).toBe(2);
     // Should be treated as individual series since they have different y-axes
@@ -250,7 +243,7 @@ describe('getStackedSeriesData', () => {
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1', xAxisId: 'bottom' },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.size).toBe(2);
     expect(result.get('series1')).toEqual([
@@ -268,20 +261,20 @@ describe('getStackedSeriesData', () => {
   it('should handle null values in data', () => {
     const series: Series[] = [{ id: 'series1', data: [1, null, 3] }];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.get('series1')).toEqual([[0, 1], null, [0, 3]]);
   });
 
   it('should handle empty series array', () => {
-    const result = getStackedSeriesData([]);
+    const result = getStackedSeriesData([], 'vertical', [], []);
     expect(result.size).toBe(0);
   });
 
   it('should handle series without data', () => {
     const series: Series[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
     expect(result.size).toBe(0);
   });
 
@@ -292,7 +285,7 @@ describe('getStackedSeriesData', () => {
       { id: 'series3', data: [7, 8, 9] }, // No stackId
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getStackedSeriesData(series, 'vertical', [], []);
 
     expect(result.size).toBe(3);
     expect(result.get('series3')).toEqual([
@@ -307,7 +300,7 @@ describe('getChartRange', () => {
   it('should return provided min and max when both are specified', () => {
     const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartRange(series, -10, 20);
+    const result = getChartRange(series, 'vertical', [], [], -10, 20);
     expect(result).toEqual({ min: -10, max: 20 });
   });
 
@@ -317,7 +310,7 @@ describe('getChartRange', () => {
       { id: 'series2', data: [2, 4, 6] },
     ];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
     expect(result).toEqual({ min: 1, max: 6 });
   });
 
@@ -340,7 +333,7 @@ describe('getChartRange', () => {
       },
     ];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
     expect(result).toEqual({ min: -1, max: 7 });
   });
 
@@ -350,7 +343,7 @@ describe('getChartRange', () => {
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1' },
     ];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
 
     // Stacked values should be cumulative
     expect(result.min).toBeDefined();
@@ -366,13 +359,9 @@ describe('getChartRange', () => {
       { id: 'series3', data: [60], stackId: 'stack1' },
     ];
 
-    const result = getChartRange(series, undefined, undefined, {
-      seriesBaselineById: new Map([
-        ['series1', 30],
-        ['series2', 30],
-        ['series3', 30],
-      ]),
-    });
+    const result = getChartRange(series, 'vertical', [], [
+      { id: 'DEFAULT_AXIS_ID', baseline: 30 },
+    ] as CartesianAxisConfigProps[]);
 
     expect(result).toEqual({ min: 20, max: 70 });
   });
@@ -380,7 +369,7 @@ describe('getChartRange', () => {
   it('should handle negative values', () => {
     const series: Series[] = [{ id: 'series1', data: [-5, -2, 1, 3] }];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
     expect(result).toEqual({ min: -5, max: 3 });
   });
 
@@ -390,7 +379,7 @@ describe('getChartRange', () => {
       { id: 'series2', data: [-3, 4, -2], stackId: 'stack1' },
     ];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
 
     expect(result.min).toBeDefined();
     expect(result.max).toBeDefined();
@@ -399,35 +388,35 @@ describe('getChartRange', () => {
   });
 
   it('should handle empty series array', () => {
-    const result = getChartRange([]);
+    const result = getChartRange([], 'vertical', [], []);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle series with no data', () => {
     const series: Series[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle null values in data', () => {
     const series: Series[] = [{ id: 'series1', data: [1, null, 5, null, 3] }];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
     expect(result).toEqual({ min: 1, max: 5 });
   });
 
   it('should use provided min with calculated max', () => {
     const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartRange(series, -5);
+    const result = getChartRange(series, 'vertical', [], [], -5);
     expect(result).toEqual({ min: -5, max: 3 });
   });
 
   it('should use calculated min with provided max', () => {
     const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartRange(series, undefined, 10);
+    const result = getChartRange(series, 'vertical', [], [], undefined, 10);
     expect(result).toEqual({ min: 1, max: 10 });
   });
 
@@ -437,7 +426,7 @@ describe('getChartRange', () => {
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1', yAxisId: 'right' },
     ];
 
-    const result = getChartRange(series);
+    const result = getChartRange(series, 'vertical', [], []);
 
     // Should treat as individual series, not stacked
     expect(result).toEqual({ min: 0, max: 6 });

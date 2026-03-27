@@ -1,5 +1,7 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
+import { defaultAxisId, type CartesianAxisConfigProps } from './axis';
+import type { CartesianChartLayout } from './context';
 import type { GradientDefinition } from './gradient';
 
 export const defaultStackId = 'DEFAULT_STACK_ID';
@@ -87,16 +89,6 @@ export type Series = {
   legendShape?: LegendShape;
 };
 
-type GetStackedSeriesDataOptions = {
-  /**
-   * Optional per-series baseline values used when normalizing numeric series.
-   * - Non-stacked numeric series use this as their tuple origin `[baseline, value]`.
-   * - Multi-series numeric stacks use this as their shared stacking origin.
-   * Series not present in this map fall back to baseline 0.
-   */
-  seriesBaselineById?: ReadonlyMap<string, number>;
-};
-
 /**
  * Calculates the domain of a chart from series data.
  * Domain represents the range of x-values from the data.
@@ -145,11 +137,14 @@ const createStackKey = (series: Series): string | undefined => {
  * Returns a map of series ID to transformed [baseline, value] tuples.
  *
  * @param series - Array of series with potential stack properties
+ * @param layout - When set with axis configs, value-axis baselines are resolved for stacking
  * @returns Map of series ID to stacked data arrays
  */
 export const getStackedSeriesData = (
   series: Series[],
-  options?: GetStackedSeriesDataOptions,
+  layout: CartesianChartLayout,
+  xAxisConfigs: CartesianAxisConfigProps[],
+  yAxisConfigs: CartesianAxisConfigProps[],
 ): Map<string, Array<[number, number] | null>> => {
   const stackedDataMap = new Map<string, Array<[number, number] | null>>();
 
@@ -159,6 +154,15 @@ export const getStackedSeriesData = (
   const normalizeSeriesData = (seriesItem: Series): Array<[number, number] | null> | undefined => {
     if (!seriesItem.data) return;
 
+    const baseline =
+      (layout === 'horizontal'
+        ? xAxisConfigs.find(
+            (a) => (a.id ?? defaultAxisId) === (seriesItem.xAxisId ?? defaultAxisId),
+          )?.baseline
+        : yAxisConfigs.find(
+            (a) => (a.id ?? defaultAxisId) === (seriesItem.yAxisId ?? defaultAxisId),
+          )?.baseline) ?? 0;
+
     return seriesItem.data.map((val) => {
       if (val === null) return null;
 
@@ -166,10 +170,7 @@ export const getStackedSeriesData = (
         return val as [number, number];
       }
 
-      if (typeof val === 'number') {
-        const baseline = options?.seriesBaselineById?.get(seriesItem.id) ?? 0;
-        return [baseline, val];
-      }
+      if (typeof val === 'number') return [baseline, val];
 
       return null;
     });
@@ -210,7 +211,13 @@ export const getStackedSeriesData = (
 
     if (maxLength === 0) return;
 
-    const groupBaseline = options?.seriesBaselineById?.get(groupSeries[0].id) ?? 0;
+    const first = groupSeries[0];
+    const groupBaseline =
+      (layout === 'horizontal'
+        ? xAxisConfigs.find((a) => (a.id ?? defaultAxisId) === (first.xAxisId ?? defaultAxisId))
+            ?.baseline
+        : yAxisConfigs.find((a) => (a.id ?? defaultAxisId) === (first.yAxisId ?? defaultAxisId))
+            ?.baseline) ?? 0;
 
     const dataset: Array<Record<string, number>> = new Array(maxLength)
       .fill(undefined)
@@ -278,9 +285,11 @@ export const getLineData = (
  */
 export const getChartRange = (
   series: Series[],
+  layout: CartesianChartLayout,
+  xAxisConfigs: CartesianAxisConfigProps[],
+  yAxisConfigs: CartesianAxisConfigProps[],
   min?: number,
   max?: number,
-  options?: GetStackedSeriesDataOptions,
 ): Partial<AxisBounds> => {
   const range = {
     min,
@@ -310,7 +319,7 @@ export const getChartRange = (
 
   if (hasStacks) {
     // Get stacked data using the shared function
-    const stackedDataMap = getStackedSeriesData(series, options);
+    const stackedDataMap = getStackedSeriesData(series, layout, xAxisConfigs, yAxisConfigs);
 
     // Find the extreme values from the stacked data
     let stackedMax = -Infinity;
