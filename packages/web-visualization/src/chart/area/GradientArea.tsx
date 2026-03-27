@@ -68,8 +68,7 @@ export const GradientArea = memo<GradientAreaProps>(
       if (gradientProp) return gradientProp;
       if (!valueAxisConfig) return;
 
-      const baseline = valueAxisConfig.baseline ?? 0;
-      const baselineValue = getBaseline(valueAxisConfig.domain, baseline);
+      const baselineValue = getBaseline(valueAxisConfig.domain, valueAxisConfig.baseline);
       return createGradient(
         valueAxisConfig.domain,
         baselineValue,
