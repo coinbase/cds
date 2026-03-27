@@ -1,27 +1,23 @@
-export const toc = [
-  { id: 'basics', title: 'Basics' },
-  { id: 'with-legend', title: 'With legend' },
-  { id: 'custom-colors', title: 'Custom colors' },
-];
-
 ## Basics
 
-PercentageBarChart renders one or more horizontal stacked bars where each segment is a part of a whole. Pass a `series` of segments with `id`, `value`, and optional `label`, `color`, and `category`. Values are normalized to 100% within each category.
+PercentageBarChart renders stacked bars whose segments always sum to 100% at each group index. Pass a `series` array where each item has `id`, `data` (array of numbers), and optional `label` and `color`. Values are normalized per group so any set of non-negative numbers can be used.
 
 ```jsx live
 <PercentageBarChart
   height={24}
   series={[
-    { id: 'confirmed', value: 93, label: 'Confirmed', color: 'var(--color-fgPositive)' },
-    { id: 'review', value: 7, label: 'Need review', color: 'var(--color-fgCaution)' },
+    { id: 'confirmed', data: [93], label: 'Confirmed', color: 'var(--color-fgPositive)' },
+    { id: 'review', data: [7], label: 'Need review', color: 'var(--color-fgCaution)' },
   ]}
   width={400}
 />
 ```
 
-## With legend
+## Legend, axes, and multiple groups
 
-Use the built-in legend by setting `legend` and `legendPosition`. The legend shows each segment's label and color from the series.
+Use `legend` and `legendPosition` for the built-in legend. Axes, `layout`, stacked segments, and category labels follow the same patterns as [BarChart](/components/charts/BarChart/). Here the value axis is always **0–100%** by default, and each group’s segments are normalized to a full bar.
+
+### Single group with legend
 
 ```jsx live
 <PercentageBarChart
@@ -30,26 +26,29 @@ Use the built-in legend by setting `legend` and `legendPosition`. The legend sho
   legend
   legendPosition="bottom"
   series={[
-    { id: 'buy', value: 76, label: 'Bought', color: 'var(--color-fgPositive)' },
-    { id: 'sell', value: 24, label: 'Sold', color: 'var(--color-fgNegative)' },
+    { id: 'buy', data: [76], label: 'Bought', color: 'var(--color-fgPositive)' },
+    { id: 'sell', data: [24], label: 'Sold', color: 'var(--color-fgNegative)' },
   ]}
   width={400}
 />
 ```
 
-## Custom colors
-
-Use design tokens or custom colors for each segment.
+### Multiple groups with axes and legend
 
 ```jsx live
 <PercentageBarChart
-  animate={false}
-  height={32}
+  legend
+  showXAxis
+  showYAxis
+  borderRadius={6}
+  height={200}
   series={[
-    { id: 'a', value: 40, color: 'var(--color-accentBoldBlue)' },
-    { id: 'b', value: 35, color: 'var(--color-accentBoldGreen)' },
-    { id: 'c', value: 25, color: 'var(--color-accentBoldOrange)' },
+    { id: 'btc', data: [55, 40], label: 'BTC', color: 'var(--color-fgWarning)' },
+    { id: 'eth', data: [30, 45], label: 'ETH', color: 'var(--color-accentBoldPurple)' },
+    { id: 'other', data: [15, 15], label: 'Other', color: 'var(--color-fgMuted)' },
   ]}
+  stackGap={4}
   width={400}
+  yAxis={{ data: ['Q1', 'Q2'], position: 'left', categoryPadding: 0.1 }}
 />
 ```

@@ -1,18 +1,17 @@
-import React, { memo, useEffect, useId, useMemo, useState } from 'react';
-import { Button } from '@coinbase/cds-web/buttons';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { RollingNumber } from '@coinbase/cds-web/numbers';
 import { Text } from '@coinbase/cds-web/typography';
-import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../../ChartProvider';
-import { DefaultLegendEntry, Legend, type LegendEntryProps } from '../../legend';
-import { Path } from '../../Path';
-import { defaultBarEnterTransition, defaultTransition, getTransition } from '../../utils';
-import { Bar, type BarComponentProps } from '../Bar';
-import type { BarStackComponentProps } from '../BarStack';
-import { DefaultBarStack } from '../DefaultBarStack';
-import { PercentageBarChart, type PercentageBarChartSegment } from '../PercentageBarChart';
+import {
+  DefaultLegendEntry,
+  DefaultLegendShape,
+  Legend,
+  type LegendEntryProps,
+} from '../../legend';
+import { PercentageBarChart, type PercentageBarSeries } from '../PercentageBarChart';
 
 export default {
   title: 'Components/Chart/PercentageBarChart',
@@ -38,95 +37,44 @@ const Example: React.FC<
   );
 };
 
-const defaultSeries: PercentageBarChartSegment[] = [
-  { id: 'a', value: 99.999, label: 'Segment A', color: 'var(--color-fgPositive)' },
-  { id: 'b', value: 0.001, label: 'Segment B', color: 'var(--color-fgWarning)' },
+const defaultSeries: PercentageBarSeries[] = [
+  { id: 'a', data: [99.999], label: 'Segment A', color: 'var(--color-fgPositive)' },
+  { id: 'b', data: [0.001], label: 'Segment B', color: 'var(--color-fgWarning)' },
 ];
 
-const ClipRevealBar = memo<BarComponentProps>(
-  ({ x, y, width, height, d, fill, fillOpacity, transitions, transition, ...props }) => {
-    const clipId = useId();
-    const { animate } = useCartesianChartContext();
-    const [hasEntered, setHasEntered] = useState(!animate);
+const multiGroupCategoryLabels = ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025'];
 
-    const enterTransition = getTransition(transitions?.enter, animate, defaultBarEnterTransition);
-    const updateTransition = getTransition(
-      transitions?.update !== undefined ? transitions.update : transition,
-      animate,
-      defaultTransition,
-    );
-
-    useEffect(() => {
-      if (hasEntered) return;
-      const delay = (transitions?.enter as Record<string, number>)?.delay ?? 0;
-      const duration = (transitions?.enter as Record<string, number>)?.duration ?? 0.5;
-      const timer = setTimeout(() => setHasEntered(true), (delay + duration) * 1000);
-      return () => clearTimeout(timer);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const needsClip = !hasEntered && enterTransition != null;
-
-    return (
-      <>
-        {needsClip && (
-          <defs>
-            <clipPath id={clipId}>
-              <motion.rect
-                animate={{ width, height }}
-                initial={{ width: 0, height }}
-                transition={enterTransition}
-                x={x}
-                y={y}
-              />
-            </clipPath>
-          </defs>
-        )}
-        <g clipPath={needsClip ? `url(#${clipId})` : undefined}>
-          <Path
-            {...props}
-            animate={animate}
-            clipRect={null}
-            d={d}
-            fill={fill}
-            fillOpacity={fillOpacity}
-            transitions={{ enter: null, update: updateTransition }}
-          />
-        </g>
-      </>
-    );
+const multiGroupPercentageSeries: PercentageBarSeries[] = [
+  {
+    id: 'btc',
+    data: [55, 40, 35],
+    label: 'BTC',
+    color: 'var(--color-fgWarning)',
   },
-);
-
-const SEQUENTIAL_BAR_DURATION = 0.4;
-
-const SequentialGrowStack = ({ children, ...props }: BarStackComponentProps) => {
-  const modifiedChildren = React.Children.map(children, (child, index) => {
-    if (!React.isValidElement(child)) return child;
-    const delay = index * SEQUENTIAL_BAR_DURATION;
-    return React.cloneElement(child as React.ReactElement<any>, {
-      transitions: {
-        enter: {
-          type: 'tween',
-          duration: SEQUENTIAL_BAR_DURATION,
-          ease: 'easeOut',
-          delay,
-        },
-      },
-    });
-  });
-
-  return (
-    <DefaultBarStack {...props} transitions={{ enter: null }}>
-      {modifiedChildren}
-    </DefaultBarStack>
-  );
-};
+  {
+    id: 'eth',
+    data: [30, 45, null, 100],
+    label: 'ETH',
+    color: 'var(--color-accentBoldPurple)',
+  },
+  {
+    id: 'other',
+    data: [15, null, 65],
+    label: 'Other',
+    color: 'var(--color-fgMuted)',
+  },
+];
 
 const BuyVsSell = () => {
   const series = useMemo(
     () => [
-      { id: 'buy', value: 50, color: 'var(--color-fgPositive)', legendShape: 'circle' as const },
-      { id: 'sell', value: 50, color: 'var(--color-fgNegative)', legendShape: 'square' as const },
+      { id: 'buy', data: [50], color: 'var(--color-fgPositive)', legendShape: 'circle' as const },
+      {
+        id: 'sell',
+        data: [50],
+        color: 'var(--color-fgNegative)',
+        legendShape: 'square' as const,
+      },
     ],
     [],
   );
@@ -139,7 +87,7 @@ const BuyVsSell = () => {
           color={buy.color}
           label={
             <Text color="fgMuted" font="legal">
-              {buy.value}% bought
+              {buy.data[0]}% bought
             </Text>
           }
           seriesId={buy.id}
@@ -149,7 +97,7 @@ const BuyVsSell = () => {
           color={sell.color}
           label={
             <Text color="fgMuted" font="legal">
-              {sell.value}% sold
+              {sell.data[0]}% sold
             </Text>
           }
           seriesId={sell.id}
@@ -162,12 +110,13 @@ const BuyVsSell = () => {
   return (
     <VStack gap={1.5} padding={4}>
       <PercentageBarChart
-        barMinSize={6}
-        borderRadius={3}
-        height={6}
+        barMinSize={8}
+        borderRadius={24}
+        height={8}
+        inset={0}
         series={series}
         stackGap={4}
-        transitions={{ enter: { type: 'tween', duration: 5 } }}
+        transitions={{ enter: { type: 'tween', duration: 5, delay: 1 } }}
       />
       <BuyVsSellLegend />
     </VStack>
@@ -175,44 +124,107 @@ const BuyVsSell = () => {
 };
 
 const TaxesStyleConfirmedVsNeedReview = () => {
-  const series: PercentageBarChartSegment[] = [
+  const series: PercentageBarSeries[] = [
     {
       id: 'confirmed',
-      value: 28,
+      data: [28],
       label: 'Confirmed',
       color: 'var(--color-fgPositive)',
     },
     {
       id: 'needs-review',
-      value: 2,
+      data: [2],
       label: 'Needs review',
       color: 'var(--color-fgWarning)',
     },
   ];
 
   return (
-    <VStack gap={1.5}>
-      <Text color="fgMuted" font="body">
-        Estimated gain: +$30,000
-      </Text>
-      <PercentageBarChart
-        legend
-        borderRadius={3}
-        height={24}
-        legendPosition="bottom"
-        series={series}
-        stackGap={0}
-        testID="percentage-bar-taxes"
-        width={400}
-      />
+    <VStack gap={2} paddingX={2}>
+      <VStack gap={0.5}>
+        <Text color="fgMuted" font="label2">
+          Estimated gain
+        </Text>
+        <Text font="title2">+$30,000</Text>
+      </VStack>
+      <PercentageBarChart height={24} series={series} stackGap={4} testID="percentage-bar-taxes" />
+      <VStack>
+        <HStack alignItems="center" gap={1} justifyContent="space-between">
+          <HStack alignItems="center" gap={1}>
+            <DefaultLegendShape color="var(--color-fgPositive)" shape="squircle" />
+            <Text font="label1">Confirmed</Text>
+          </HStack>
+          <HStack alignItems="center" gap={1}>
+            <Text font="body">+$28,000</Text>
+            <IconButton
+              compact
+              transparent
+              accessibilityLabel="Confirmed details"
+              name="caretRight"
+              variant="foregroundMuted"
+            />
+          </HStack>
+        </HStack>
+        <HStack alignItems="center" gap={1} justifyContent="space-between">
+          <HStack alignItems="center" gap={1}>
+            <DefaultLegendShape color="var(--color-fgWarning)" shape="squircle" />
+            <Text font="label1">Needs review</Text>
+          </HStack>
+          <HStack alignItems="center" gap={1}>
+            <VStack alignItems="flex-end" gap={0}>
+              <Text font="body">Up to $2,000</Text>
+              <Text color="fgMuted" font="body">
+                11 transfers
+              </Text>
+            </VStack>
+            <IconButton
+              compact
+              transparent
+              accessibilityLabel="Needs review details"
+              name="caretRight"
+              variant="foregroundMuted"
+            />
+          </HStack>
+        </HStack>
+      </VStack>
     </VStack>
   );
 };
 
+const VerticalLayoutExample = () => (
+  <PercentageBarChart
+    legend
+    showXAxis
+    showYAxis
+    barMinSize={13}
+    borderRadius={48}
+    height={200}
+    layout="vertical"
+    legendPosition="right"
+    series={multiGroupPercentageSeries}
+    stackGap={1}
+    testID="percentage-bar-vertical"
+    width={360}
+    xAxis={{
+      categoryPadding: 0.8,
+      data: multiGroupCategoryLabels,
+      position: 'bottom',
+      showTickMarks: true,
+    }}
+    yAxis={{
+      position: 'left',
+      requestedTickCount: 5,
+      showGrid: true,
+      showLine: true,
+      showTickMarks: true,
+    }}
+  />
+);
+
 const WithCTALegend = () => {
-  const series: PercentageBarChartSegment[] = [
-    { id: 'usc', value: 67, label: 'USC', color: 'var(--color-fgNegative)' },
-    { id: 'washington', value: 33, label: 'WASH', color: 'var(--color-accentBoldPurple)' },
+  const series: PercentageBarSeries[] = [
+    { id: 'usc', data: [67], label: 'USC', color: 'var(--color-fgNegative)' },
+    { id: 'washington', data: [33], label: 'WASH', color: 'var(--color-accentBoldPurple)' },
   ];
 
   const subtitles: Record<string, string> = {
@@ -262,8 +274,6 @@ const WithCTALegend = () => {
   return (
     <VStack gap={2} width={400}>
       <PercentageBarChart
-        BarComponent={ClipRevealBar}
-        BarStackComponent={SequentialGrowStack}
         borderRadius={6}
         height={80}
         legend={<Legend EntryComponent={CTALegendEntry} columnGap={2} paddingTop={1} />}
@@ -275,82 +285,107 @@ const WithCTALegend = () => {
   );
 };
 
-const WithCTALegendLiveFeed = () => {
-  const [tick, setTick] = useState(0);
+/** Fake "projected value" copy: scales with live % so subtitles stay in sync with the bar. */
+const liveFeedSubtitleBase = 100;
+const liveFeedYesDollarsPerPercentPoint = (182 - liveFeedSubtitleBase) / 50;
+const liveFeedNoDollarsPerPercentPoint = (222 - liveFeedSubtitleBase) / 50;
 
-  const yesValue = 55 + Math.sin(tick * 0.05) * 20;
-  const noValue = 45 - Math.sin(tick * 0.05) * 20;
+function getLiveFeedProjectedValue(seriesId: string, percentage: number): number | undefined {
+  if (seriesId === 'yes') {
+    return Math.round(liveFeedSubtitleBase + percentage * liveFeedYesDollarsPerPercentPoint);
+  }
+  if (seriesId === 'no') {
+    return Math.round(liveFeedSubtitleBase + percentage * liveFeedNoDollarsPerPercentPoint);
+  }
+  return undefined;
+}
 
-  const series: PercentageBarChartSegment[] = [
-    { id: 'yes', value: yesValue, label: 'Yes', color: 'var(--color-fgPositive)' },
-    { id: 'no', value: noValue, label: 'No', color: 'var(--color-fgNegative)' },
-  ];
+const liveFeedCurrencyFormat = {
+  style: 'currency' as const,
+  currency: 'USD',
+  maximumFractionDigits: 0,
+};
 
-  const subtitles: Record<string, string> = {
-    yes: '$100 → $182',
-    no: '$100 → $222',
-  };
+const LiveFeedCTALegendEntry = memo(function LiveFeedCTALegendEntry({
+  seriesId,
+  label,
+  color,
+}: LegendEntryProps) {
+  const { series } = useCartesianChartContext();
+  const seriesData = series.find((s) => s.id === seriesId);
+  const percentage = (seriesData?.data as number[])?.[0] ?? 0;
+  const projectedValue = getLiveFeedProjectedValue(seriesId, percentage);
 
-  useEffect(() => {
-    const id = setInterval(() => setTick((t) => t + 1), 200);
-    return () => clearInterval(id);
-  }, []);
-
-  const CTALegendEntry = memo(function CTALegendEntry({
-    seriesId,
-    label,
-    color,
-  }: LegendEntryProps) {
-    const { series } = useCartesianChartContext();
-    const seriesData = series.find((s) => s.id === seriesId);
-    const percentage = (seriesData?.data as number[])?.[0] ?? 0;
-
-    return (
-      <Button
-        compact
-        borderRadius={200}
-        flexGrow={1}
-        style={{ backgroundColor: color, borderColor: color }}
-      >
-        <VStack alignItems="center" gap={0.25}>
+  return (
+    <Button
+      compact
+      borderRadius={200}
+      style={{ backgroundColor: color, borderColor: color }}
+      width="25%"
+    >
+      <VStack alignItems="center" gap={0.25}>
+        <HStack alignItems="center" gap={0.5}>
+          <Text color="fgInverse" font="label1">
+            {label} {'· '}
+          </Text>
+          <RollingNumber
+            color="fgInverse"
+            font="label1"
+            format={{ style: 'percent', maximumFractionDigits: 0 }}
+            value={percentage / 100}
+          />
+        </HStack>
+        {projectedValue != null && (
           <HStack alignItems="center" gap={0.5}>
-            <Text color="fgInverse" font="label1">
-              {label} {'· '}
+            <Text color="fgInverse" font="legal">
+              ${liveFeedSubtitleBase} →
             </Text>
             <RollingNumber
               color="fgInverse"
-              font="label1"
-              format={{ style: 'percent', maximumFractionDigits: 0 }}
-              value={percentage / 100}
+              font="legal"
+              format={liveFeedCurrencyFormat}
+              value={projectedValue}
             />
           </HStack>
-          {subtitles[seriesId] != null && (
-            <Text color="fgInverse" font="legal">
-              {subtitles[seriesId]}
-            </Text>
-          )}
-        </VStack>
-      </Button>
-    );
-  });
+        )}
+      </VStack>
+    </Button>
+  );
+});
+
+const WithCTALegendLiveFeed = () => {
+  const [tick, setTick] = useState(0);
+
+  const yesValue = 50 + Math.sin(tick * 0.05) * 49;
+  const noValue = 50 - Math.sin(tick * 0.05) * 49;
+
+  const series: PercentageBarSeries[] = [
+    { id: 'yes', data: [yesValue], label: 'Yes', color: 'var(--color-fgPositive)' },
+    { id: 'no', data: [noValue], label: 'No', color: 'var(--color-fgNegative)' },
+  ];
+
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 4), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
-    <VStack gap={2}>
-      <Text color="fgMuted" font="label2">
-        Simulated live feed (bar and CTAs reanimate)
-      </Text>
-      <PercentageBarChart
-        BarComponent={ClipRevealBar}
-        BarStackComponent={SequentialGrowStack}
-        borderRadius={1000}
-        height={80}
-        legend={<Legend EntryComponent={CTALegendEntry} columnGap={2} paddingTop={1} />}
-        legendPosition="bottom"
-        series={series}
-        stackGap={2}
-        testID="percentage-bar-cta-legend-live"
-      />
-    </VStack>
+    <PercentageBarChart
+      barMinSize={16}
+      borderRadius={1000}
+      height={64}
+      legend={
+        <Legend
+          EntryComponent={LiveFeedCTALegendEntry}
+          justifyContent="space-evenly"
+          paddingTop={1}
+        />
+      }
+      legendPosition="bottom"
+      series={series}
+      stackGap={2}
+      testID="percentage-bar-cta-legend-live"
+    />
   );
 };
 
@@ -359,17 +394,24 @@ export const All = () => {
     <VStack gap={2}>
       <Example title="Basic">
         <PercentageBarChart
-          height={28}
-          barMinSize={20}
-          transitions={{ enter: { type: 'tween', duration: 5, delay: 1 } }}
+          barMinSize={16}
           borderRadius={20}
-          inset={4}
+          height={16}
+          inset={0}
           series={defaultSeries}
           stackGap={2}
           testID="percentage-bar-basic"
+          transitions={{ enter: { type: 'tween', duration: 5, delay: 1 } }}
         />
       </Example>
-      <Example title="Buy vs sell (thin bar + custom legend)">
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            The legend is rendered outside of the chart area.
+          </Text>
+        }
+        title="Buy vs sell"
+      >
         <BuyVsSell />
       </Example>
       <Example
@@ -382,165 +424,82 @@ export const All = () => {
       >
         <TaxesStyleConfirmedVsNeedReview />
       </Example>
-      <Example title="Custom colors">
-        <PercentageBarChart
-          height={32}
-          series={[
-            { id: 'blue', value: 40, color: 'var(--color-accentBoldBlue)' },
-            { id: 'green', value: 35, color: 'var(--color-accentBoldGreen)' },
-            { id: 'orange', value: 25, color: 'var(--color-accentBoldOrange)' },
-          ]}
-          testID="percentage-bar-custom-colors"
-          width={400}
-        />
-      </Example>
       <Example title="Single segment">
         <PercentageBarChart
-          animate={false}
           height={24}
-          series={[{ id: 'full', value: 100, color: 'var(--color-fgPrimary)' }]}
+          series={[{ id: 'full', data: [97], color: 'var(--color-fgPrimary)' }]}
           testID="percentage-bar-single"
           width={400}
-        />
-      </Example>
-      <Example title="With legend">
-        <PercentageBarChart
-          legend
-          borderRadius={3}
-          height={26}
-          series={[
-            { id: 'buy', value: 76, label: 'Bought', color: 'var(--color-fgPositive)' },
-            { id: 'sell', value: 24, label: 'Sold', color: 'var(--color-fgNegative)' },
-          ]}
-          testID="percentage-bar-with-legend"
-          width={400}
-        />
-      </Example>
-      <Example title="No animation">
-        <PercentageBarChart
-          animate={false}
-          height={24}
-          series={defaultSeries}
-          testID="percentage-bar-no-animation"
-          width={400}
-        />
-      </Example>
-      <Example title="With percentage axis">
-        <PercentageBarChart
-          showXAxis
-          borderRadius={6}
-          height={48}
-          series={[
-            { id: 'btc', value: 55, label: 'BTC', color: 'var(--color-accentBoldOrange)' },
-            { id: 'eth', value: 30, label: 'ETH', color: 'var(--color-accentBoldBlue)' },
-            { id: 'other', value: 15, label: 'Other', color: 'var(--color-fgMuted)' },
-          ]}
-          testID="percentage-bar-with-axis"
-          width={500}
-          xAxis={{ requestedTickCount: 5 }}
         />
       </Example>
       <Example title="With percentage axis and legend">
         <PercentageBarChart
           legend
           showXAxis
-          borderRadius={6}
+          barMinSize={24}
+          borderRadius={24}
           height={80}
           legendPosition="bottom"
           series={[
-            { id: 'segment-a', value: 28, label: 'Segment A', color: 'rgb(var(--teal60))' },
-            { id: 'segment-b', value: 2, label: 'Segment B', color: 'rgb(var(--chartreuse50))' },
-            { id: 'segment-c', value: 10, label: 'Segment C', color: 'rgb(var(--indigo40))' },
-            { id: 'segment-d', value: 21, label: 'Segment D', color: 'rgb(var(--pink20))' },
+            { id: 'segment-a', data: [28], label: 'Segment A', color: 'rgb(var(--teal60))' },
+            {
+              id: 'segment-b',
+              data: [2],
+              label: 'Segment B',
+              color: 'rgb(var(--chartreuse50))',
+            },
+            { id: 'segment-c', data: [10], label: 'Segment C', color: 'rgb(var(--indigo40))' },
+            { id: 'segment-d', data: [21], label: 'Segment D', color: 'rgb(var(--pink20))' },
           ]}
           stackGap={1}
           testID="percentage-bar-axis-legend"
           width={500}
         />
       </Example>
-      <Example
-        description={
-          <Text color="fgMuted" font="body">
-            Each row is one category; segment values are normalized to 100% within that category.
-          </Text>
-        }
-        title="Multi-group"
-      >
-        <VStack gap={1.5} padding={4} width={520}>
-          <PercentageBarChart
-            legend
-            showXAxis
-            showYAxis
-            height={200}
-            barMinSize={36}
-            borderRadius={48}
-            inset={{ left: 16, right: 0, top: 0, bottom: 0 }}
-            yAxis={{
-              position: 'left',
-              categoryPadding: 0.1,
-            }}
-            series={[
-              {
-                id: 'q1-btc',
-                value: 55,
-                label: 'BTC',
-                color: 'var(--color-fgWarning)',
-                category: 'Q1 2025',
-              },
-              {
-                id: 'q1-eth',
-                value: 30,
-                label: 'ETH',
-                color: 'var(--color-accentBoldPurple)',
-                category: 'Q1 2025',
-              },
-              {
-                id: 'q1-other',
-                value: 15,
-                label: 'Other',
-                color: 'var(--color-fgMuted)',
-                category: 'Q1 2025',
-              },
-              {
-                id: 'q2-btc',
-                value: 40,
-                label: 'BTC',
-                color: 'var(--color-fgWarning)',
-                category: 'Q2 2025',
-              },
-              {
-                id: 'q2-eth',
-                value: 45,
-                label: 'ETH',
-                color: 'var(--color-accentBoldPurple)',
-                category: 'Q2 2025',
-              },
-              {
-                id: 'q2-other',
-                value: 15,
-                label: 'Other',
-                color: 'var(--color-fgMuted)',
-                category: 'Q2 2025',
-              },
-            ]}
-            stackGap={4}
-            testID="percentage-bar-multi-group"
-            width={500}
-          />
-        </VStack>
+      <Example title="Multi-group">
+        <PercentageBarChart
+          legend
+          showXAxis
+          showYAxis
+          barMinSize={13}
+          borderRadius={48}
+          height={160}
+          inset={{ left: 24, right: 0, top: 0, bottom: 0 }}
+          series={multiGroupPercentageSeries}
+          stackGap={4}
+          testID="percentage-bar-multi-group"
+          width={600}
+          xAxis={{
+            showTickMarks: true,
+          }}
+          yAxis={{
+            data: multiGroupCategoryLabels,
+            position: 'left',
+            categoryPadding: 0.5,
+          }}
+        />
+      </Example>
+      <Example title="Multi-group (vertical layout)">
+        <VerticalLayoutExample />
       </Example>
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Custom <code>Legend</code> with <code>EntryComponent</code> as CTAs; percentages read
-            from chart context via <code>useCartesianChartContext()</code>.
+            The legend is rendered inside of the chart area.
           </Text>
         }
         title="CTA legend pattern"
       >
         <WithCTALegend />
       </Example>
-      <Example title="CTA legend — simulated live feed">
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Bars and legend reanimate when data changes
+          </Text>
+        }
+        title="CTA legend — simulated live feed"
+      >
         <WithCTALegendLiveFeed />
       </Example>
     </VStack>

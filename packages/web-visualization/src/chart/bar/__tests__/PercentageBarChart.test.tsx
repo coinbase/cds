@@ -38,8 +38,8 @@ describe('PercentageBarChart', () => {
         <PercentageBarChart
           height={24}
           series={[
-            { id: 'a', value: 70, color: 'green' },
-            { id: 'b', value: 30, color: 'orange' },
+            { id: 'a', data: [70], color: 'green' },
+            { id: 'b', data: [30], color: 'orange' },
           ]}
           testID="percentage-bar-chart"
           width={400}
@@ -62,8 +62,8 @@ describe('PercentageBarChart', () => {
           animate={false}
           height={24}
           series={[
-            { id: 'confirmed', value: 28, color: 'var(--color-fgPositive)' },
-            { id: 'review', value: 2, color: 'var(--color-fgCaution)' },
+            { id: 'confirmed', data: [28], color: 'var(--color-fgPositive)' },
+            { id: 'review', data: [2], color: 'var(--color-fgCaution)' },
           ]}
           testID="percentage-bar-normalized"
           width={400}
@@ -73,46 +73,47 @@ describe('PercentageBarChart', () => {
 
     const svg = screen.getByTestId('percentage-bar-normalized');
     expect(svg).toBeInTheDocument();
-    // 28/30 and 2/30 => ~93.3% and ~6.7%; bar should render
     const paths = Array.from(svg.querySelectorAll('path')).filter((p) =>
       Boolean(p.getAttribute('d')),
     );
     expect(paths.length).toBeGreaterThan(0);
   });
 
-  it('returns null when series is empty', () => {
+  it('renders chart shell when series is empty', () => {
     render(
       <DefaultThemeProvider>
-        <PercentageBarChart series={[]} testID="percentage-bar-empty" />
+        <PercentageBarChart height={24} series={[]} testID="percentage-bar-empty" width={400} />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryByTestId('percentage-bar-empty')).not.toBeInTheDocument();
+    expect(screen.getByTestId('percentage-bar-empty')).toBeInTheDocument();
   });
 
-  it('returns null when all segment values are zero', () => {
+  it('renders chart shell when all values are zero', () => {
     render(
       <DefaultThemeProvider>
         <PercentageBarChart
+          height={24}
           series={[
-            { id: 'a', value: 0 },
-            { id: 'b', value: 0 },
+            { id: 'a', data: [0] },
+            { id: 'b', data: [0] },
           ]}
           testID="percentage-bar-zeros"
+          width={400}
         />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryByTestId('percentage-bar-zeros')).not.toBeInTheDocument();
+    expect(screen.getByTestId('percentage-bar-zeros')).toBeInTheDocument();
   });
 
-  it('renders single segment as full bar', () => {
+  it('renders single series as full bar', () => {
     render(
       <DefaultThemeProvider>
         <PercentageBarChart
           animate={false}
           height={24}
-          series={[{ id: 'full', value: 100, color: 'blue' }]}
+          series={[{ id: 'full', data: [100], color: 'blue' }]}
           testID="percentage-bar-single"
           width={400}
         />
@@ -134,8 +135,8 @@ describe('PercentageBarChart', () => {
           animate={false}
           height={24}
           series={[
-            { id: 'pos', value: 80 },
-            { id: 'neg', value: -10 },
+            { id: 'pos', data: [80] },
+            { id: 'neg', data: [-10] },
           ]}
           testID="percentage-bar-clamped"
           width={400}
@@ -158,13 +159,12 @@ describe('PercentageBarChart', () => {
           animate={false}
           height={80}
           series={[
-            { id: 'a1', value: 60, color: 'green', category: 'Q1' },
-            { id: 'a2', value: 40, color: 'orange', category: 'Q1' },
-            { id: 'b1', value: 50, color: 'blue', category: 'Q2' },
-            { id: 'b2', value: 50, color: 'red', category: 'Q2' },
+            { id: 'a', data: [60, 50], color: 'green' },
+            { id: 'b', data: [40, 50], color: 'orange' },
           ]}
           testID="percentage-bar-multi-group"
           width={400}
+          yAxis={{ data: ['Q1', 'Q2'] }}
         />
       </DefaultThemeProvider>,
     );
@@ -177,7 +177,7 @@ describe('PercentageBarChart', () => {
     expect(barPaths.length).toBeGreaterThanOrEqual(4);
   });
 
-  it('deduplicates legend entries for multi-group segments with the same label', () => {
+  it('renders legend entries for each series', () => {
     render(
       <DefaultThemeProvider>
         <PercentageBarChart
@@ -185,18 +185,17 @@ describe('PercentageBarChart', () => {
           animate={false}
           height={80}
           series={[
-            { id: 'g1-a', value: 60, label: 'A', color: 'green', category: 'G1' },
-            { id: 'g1-b', value: 40, label: 'B', color: 'orange', category: 'G1' },
-            { id: 'g2-a', value: 50, label: 'A', color: 'green', category: 'G2' },
-            { id: 'g2-b', value: 50, label: 'B', color: 'orange', category: 'G2' },
+            { id: 'a', data: [60, 50], label: 'A', color: 'green' },
+            { id: 'b', data: [40, 50], label: 'B', color: 'orange' },
           ]}
-          testID="percentage-bar-legend-dedupe"
+          testID="percentage-bar-legend"
           width={400}
+          yAxis={{ data: ['G1', 'G2'] }}
         />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId('percentage-bar-legend-dedupe')).toBeInTheDocument();
+    expect(screen.getByTestId('percentage-bar-legend')).toBeInTheDocument();
     const legend = screen.getByLabelText('Legend');
     expect(within(legend).getAllByText('A', { exact: true })).toHaveLength(1);
     expect(within(legend).getAllByText('B', { exact: true })).toHaveLength(1);

@@ -1,29 +1,23 @@
-export const toc = [
-  { id: 'basics', title: 'Basics' },
-  { id: 'with-legend', title: 'With legend' },
-  { id: 'custom-colors', title: 'Custom colors' },
-  { id: 'percentage-axis', title: 'Percentage axis' },
-  { id: 'multiple-groups', title: 'Multiple groups' },
-];
-
 ## Basics
 
-PercentageBarChart renders one or more horizontal stacked bars where each segment is a part of a whole. Pass a `series` of segments with `id`, `value`, and optional `label`, `color`, and `category`. Values are normalized to 100% within each category.
+PercentageBarChart renders stacked bars whose segments always sum to 100% at each group index. Pass a `series` array where each item has `id`, `data` (array of numbers), and optional `label` and `color`. Values are normalized per group so any set of non-negative numbers can be used.
 
 ```jsx
 <PercentageBarChart
   height={24}
   series={[
-    { id: 'confirmed', value: 93, label: 'Confirmed', color: 'var(--color-fgPositive)' },
-    { id: 'review', value: 7, label: 'Need review', color: 'var(--color-fgCaution)' },
+    { id: 'confirmed', data: [93], label: 'Confirmed', color: 'var(--color-fgPositive)' },
+    { id: 'review', data: [7], label: 'Need review', color: 'var(--color-fgCaution)' },
   ]}
   width={400}
 />
 ```
 
-## With legend
+## Legend, axes, and multiple groups
 
-Use the built-in legend by setting `legend` and `legendPosition`. The legend shows each segment's label and color from the series.
+Use `legend` and `legendPosition` for the built-in legend. Axes, `layout`, stacked segments, and category labels follow the same patterns as [BarChart](/components/charts/BarChart/). Here the value axis is always **0–100%** by default, and each group’s segments are normalized to a full bar.
+
+### Single group with legend
 
 ```jsx
 <PercentageBarChart
@@ -32,52 +26,14 @@ Use the built-in legend by setting `legend` and `legendPosition`. The legend sho
   legend
   legendPosition="bottom"
   series={[
-    { id: 'buy', value: 76, label: 'Bought', color: 'var(--color-fgPositive)' },
-    { id: 'sell', value: 24, label: 'Sold', color: 'var(--color-fgNegative)' },
+    { id: 'buy', data: [76], label: 'Bought', color: 'var(--color-fgPositive)' },
+    { id: 'sell', data: [24], label: 'Sold', color: 'var(--color-fgNegative)' },
   ]}
   width={400}
 />
 ```
 
-## Custom colors
-
-Use design tokens or custom colors for each segment.
-
-```jsx
-<PercentageBarChart
-  animate={false}
-  height={32}
-  series={[
-    { id: 'a', value: 40, color: 'var(--color-accentBoldBlue)' },
-    { id: 'b', value: 35, color: 'var(--color-accentBoldGreen)' },
-    { id: 'c', value: 25, color: 'var(--color-accentBoldOrange)' },
-  ]}
-  width={400}
-/>
-```
-
-## Percentage axis
-
-Set `showXAxis` to display a percentage axis along the value dimension. Use `xAxis` to customize tick count and other axis visual props. The domain is locked to 0–100%.
-
-```jsx
-<PercentageBarChart
-  showXAxis
-  borderRadius={6}
-  height={48}
-  series={[
-    { id: 'btc', value: 55, label: 'BTC', color: 'var(--color-accentBoldOrange)' },
-    { id: 'eth', value: 30, label: 'ETH', color: 'var(--color-accentBoldBlue)' },
-    { id: 'other', value: 15, label: 'Other', color: 'var(--color-fgMuted)' },
-  ]}
-  width={400}
-  xAxis={{ requestedTickCount: 5 }}
-/>
-```
-
-## Multiple groups
-
-Use the `category` field on segments to create multiple independently-normalized 100% bars. Each category forms its own row. Segments with the same `label` across categories are deduplicated in the legend.
+### Multiple groups with axes and legend
 
 ```jsx
 <PercentageBarChart
@@ -87,27 +43,12 @@ Use the `category` field on segments to create multiple independently-normalized
   borderRadius={6}
   height={200}
   series={[
-    { id: 'q1-btc', value: 55, label: 'BTC', color: 'var(--color-fgWarning)', category: 'Q1' },
-    {
-      id: 'q1-eth',
-      value: 30,
-      label: 'ETH',
-      color: 'var(--color-accentBoldPurple)',
-      category: 'Q1',
-    },
-    { id: 'q1-other', value: 15, label: 'Other', color: 'var(--color-fgMuted)', category: 'Q1' },
-    { id: 'q2-btc', value: 40, label: 'BTC', color: 'var(--color-fgWarning)', category: 'Q2' },
-    {
-      id: 'q2-eth',
-      value: 45,
-      label: 'ETH',
-      color: 'var(--color-accentBoldPurple)',
-      category: 'Q2',
-    },
-    { id: 'q2-other', value: 15, label: 'Other', color: 'var(--color-fgMuted)', category: 'Q2' },
+    { id: 'btc', data: [55, 40], label: 'BTC', color: 'var(--color-fgWarning)' },
+    { id: 'eth', data: [30, 45], label: 'ETH', color: 'var(--color-accentBoldPurple)' },
+    { id: 'other', data: [15, 15], label: 'Other', color: 'var(--color-fgMuted)' },
   ]}
   stackGap={4}
   width={400}
-  yAxis={{ position: 'left', categoryPadding: 0.1 }}
+  yAxis={{ data: ['Q1', 'Q2'], position: 'left', categoryPadding: 0.1 }}
 />
 ```

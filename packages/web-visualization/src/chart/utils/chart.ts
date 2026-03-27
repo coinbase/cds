@@ -85,12 +85,6 @@ export type Series = {
    * @default 'circle'
    */
   legendShape?: LegendShape;
-  /**
-   * Stable key for legend entries. Multiple series with the same `legendKey`
-   * render as a single legend item (first series wins for color/shape/label).
-   * When omitted, each series uses its own `id` (no deduplication).
-   */
-  legendKey?: string;
 };
 
 /**

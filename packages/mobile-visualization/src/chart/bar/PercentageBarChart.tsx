@@ -1,6 +1,8 @@
 import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
+import type { CartesianChartLayout } from '../utils';
+
 import type { BarChartProps } from './BarChart';
 import { BarChart } from './BarChart';
 import type { BarSeries } from './BarStack';
@@ -10,117 +12,80 @@ const PERCENTAGE_BAR_STACK_ID = 'percentage-bar';
 const percentTickFormatter = (value: number) => `${value}%`;
 
 /**
- * Segment representing one part of the whole in a PercentageBarChart.
- * Inherits styling and customization fields from `BarSeries` (e.g. `gradient`,
- * `legendShape`, `BarComponent`). Fields that are managed internally
- * (`data`, `stackId`, `xAxisId`, `yAxisId`) are excluded.
+ * Series configuration for PercentageBarChart.
+ * Each series represents one segment type across all groups (determined by array index).
+ * Values at each index are normalized so all series at that index sum to 100%.
  *
  * @see PercentageBarChart
  */
-export type PercentageBarChartSegment = Omit<
-  BarSeries,
-  'data' | 'stackId' | 'xAxisId' | 'yAxisId'
-> & {
-  /** Numeric value (raw or percentage). Normalized so all segments in the same category sum to 100%. Non-negative. */
-  value: number;
-  /**
-   * Optional category identifier. Segments sharing the same category form one
-   * independently-normalized 100% bar. Omit for a single bar.
-   */
-  category?: string;
+export type PercentageBarSeries = Omit<BarSeries, 'data' | 'stackId' | 'xAxisId' | 'yAxisId'> & {
+  /** Array of non-negative numeric values, one per group. Normalized per-group so all series at each index sum to 100%. */
+  data: Array<number | null>;
 };
 
-/**
- * Overrides for the value (X) axis. `domain` and `domainLimit` are fixed to
- * [0, 100] and 'strict' respectively and cannot be overridden.
- */
-type PercentageBarXAxisOverrides = Omit<
-  NonNullable<BarChartProps['xAxis']>,
-  'domain' | 'domainLimit'
->;
-
-/**
- * Overrides for the category (Y) axis. `data` is derived from segment `category`
- * values.
- */
-type PercentageBarYAxisOverrides = Omit<NonNullable<BarChartProps['yAxis']>, 'data'>;
+// Backward-compatible alias.
+export type PercentageBarChartSeries = PercentageBarSeries;
 
 /**
  * Props for PercentageBarChart.
  *
- * Renders one or more horizontal bars whose segments always sum to 100%.
- * Segment values are normalized internally so any set of non-negative numbers
- * can be passed. Use the `category` field on segments to create multiple
- * independently-normalized bars in a single chart. The default legend deduplicates
- * by `legendKey` (from each segment's `legendKey`, `label`, or `id`).
- * The value axis (X) is fixed to a 0–100% scale.
+ * Renders stacked bars whose segments always sum to 100% at each group index.
+ * Values are normalized internally so any set of non-negative numbers can be passed.
+ * Groups are determined by array index — category labels are provided via
+ * `yAxis.data` (horizontal layout, default) or `xAxis.data` (vertical layout).
+ * The value axis is fixed to a 0–100% scale.
  */
 export type PercentageBarChartProps = Omit<
   BarChartProps,
-  'series' | 'xAxis' | 'yAxis' | 'stacked' | 'layout'
+  'series' | 'stacked' | 'layout' | 'roundBaseline' | 'enableScrubbing' | 'onScrubberPositionChange'
 > & {
   /**
-   * Segments representing parts of a whole. Values are normalized to 100%.
+   * Series representing segment types across groups. Each series' `data` array
+   * contains one value per group (by index). Values are normalized to 100% per group.
    * Use non-negative values only.
    */
-  series: PercentageBarChartSegment[];
+  series: PercentageBarSeries[];
   /**
-   * Optional overrides for the value (X) axis visual and config props.
-   * `domain` and `domainLimit` are locked to [0, 100] / 'strict'.
-   * Defaults to percentage tick labels (e.g. "0%", "25%", "100%").
+   * Chart layout - describes the direction bars/areas grow.
+   * - 'vertical': Bars grow vertically. X is category axis, Y is value axis.
+   * - 'horizontal' (default): Bars grow horizontally. Y is category axis, X is value axis.
+   * @default 'horizontal'
    */
-  xAxis?: PercentageBarXAxisOverrides;
+  layout?: CartesianChartLayout;
   /**
-   * Optional overrides for the category (Y) axis visual and config props.
-   * `data` and `categoryPadding` are derived from segment categories (no padding).
+   * Whether to round the baseline of a bar (where the value is 0).
+   * @default true
    */
-  yAxis?: PercentageBarYAxisOverrides;
+  roundBaseline?: boolean;
 };
 
-const DEFAULT_CATEGORY = '';
+function nonNegativeCell(data: Array<number | null>, groupIndex: number): number {
+  return Math.max(0, data[groupIndex] ?? 0);
+}
 
-function normalizeSegments(segments: PercentageBarChartSegment[]): {
-  series: BarSeries[];
-  categories: string[];
-} {
-  if (segments.length === 0) {
-    return { series: [], categories: [] };
-  }
+function normalizePercentageSeries(series: PercentageBarSeries[]): BarSeries[] {
+  if (series.length === 0) return [];
 
-  const clamped = segments.map((s) => ({ ...s, value: Math.max(0, s.value) }));
+  const groupCount = Math.max(...series.map((s) => s.data.length));
 
-  const categoryOrder: string[] = [];
-  for (const s of clamped) {
-    const category = s.category ?? DEFAULT_CATEGORY;
-    if (!categoryOrder.includes(category)) categoryOrder.push(category);
-  }
-
-  const categories = new Map<string, typeof clamped>();
-  for (const s of clamped) {
-    const category = s.category ?? DEFAULT_CATEGORY;
-    if (!categories.has(category)) categories.set(category, []);
-    categories.get(category)!.push(s);
-  }
-
-  const allSeries: BarSeries[] = [];
-
-  for (const [categoryKey, categorySegments] of categories) {
-    const total = categorySegments.reduce((sum, s) => sum + s.value, 0);
-    if (total === 0) continue;
-
-    const categoryIndex = categoryOrder.indexOf(categoryKey);
-
-    for (const segment of categorySegments) {
-      const { value, category: _category, ...rest } = segment;
-      const data: (number | null)[] = categoryOrder.map((_, i) =>
-        i === categoryIndex ? (value / total) * 100 : null,
-      );
-      const legendKey = segment.legendKey ?? segment.label ?? segment.id;
-      allSeries.push({ ...rest, stackId: PERCENTAGE_BAR_STACK_ID, data, legendKey });
+  const groupTotals: number[] = Array(groupCount).fill(0);
+  for (const s of series) {
+    for (let g = 0; g < groupCount; g++) {
+      groupTotals[g] += nonNegativeCell(s.data, g);
     }
   }
 
-  return { series: allSeries, categories: categoryOrder };
+  if (groupTotals.every((t) => t === 0)) return [];
+
+  return series.map((s) => {
+    const { data: rawData, ...rest } = s;
+    const normalized = Array.from({ length: groupCount }, (_, g) => {
+      const total = groupTotals[g];
+      const raw = nonNegativeCell(rawData, g);
+      return total > 0 ? (raw / total) * 100 : null;
+    });
+    return { ...rest, stackId: PERCENTAGE_BAR_STACK_ID, data: normalized };
+  });
 }
 
 export const PercentageBarChart = memo(
@@ -128,49 +93,53 @@ export const PercentageBarChart = memo(
     (
       {
         series,
-        borderRadius = 3,
+        layout = 'horizontal',
         roundBaseline = true,
-        stackGap = 0,
         inset = 0,
         transitions,
         xAxis,
         yAxis,
         testID,
         children,
-        ...rest
+        ...props
       },
       ref,
     ) => {
-      const { series: barSeries, categories } = useMemo(() => normalizeSegments(series), [series]);
+      const barSeries = useMemo(() => normalizePercentageSeries(series), [series]);
 
-      if (barSeries.length === 0) {
-        return null;
-      }
+      const isHorizontalLayout = layout === 'horizontal';
 
       return (
         <BarChart
           ref={ref}
           stacked
-          borderRadius={borderRadius}
           inset={inset}
-          layout="horizontal"
+          layout={layout}
           roundBaseline={roundBaseline}
           series={barSeries}
-          stackGap={stackGap}
           testID={testID}
           transitions={transitions}
-          xAxis={{
-            tickLabelFormatter: percentTickFormatter,
-            ...xAxis,
-            domain: { min: 0, max: 100 },
-            domainLimit: 'strict',
-          }}
-          yAxis={{
-            categoryPadding: 0,
-            ...yAxis,
-            data: categories,
-          }}
-          {...rest}
+          xAxis={
+            isHorizontalLayout
+              ? {
+                  tickLabelFormatter: percentTickFormatter,
+                  domain: { min: 0, max: 100 },
+                  domainLimit: 'strict',
+                  ...xAxis,
+                }
+              : { categoryPadding: 0, ...xAxis }
+          }
+          yAxis={
+            isHorizontalLayout
+              ? { categoryPadding: 0, ...yAxis }
+              : {
+                  tickLabelFormatter: percentTickFormatter,
+                  domain: { min: 0, max: 100 },
+                  domainLimit: 'strict',
+                  ...yAxis,
+                }
+          }
+          {...props}
         >
           {children}
         </BarChart>
