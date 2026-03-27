@@ -11,7 +11,7 @@
  */
 import { RuleTester } from '@typescript-eslint/rule-tester';
 
-import { customRule } from '../src/rules/custom-rule';
+import { customRule } from './custom-rule';
 
 const ruleTester = new RuleTester({
   languageOptions: {

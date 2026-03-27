@@ -10,7 +10,7 @@
  * 6. Document the rule in the README.
  *
  * Alternatively, run the generator script:
- *   yarn node packages/eslint-plugin-cds/scripts/create-rule.mjs <rule-name>
+ *   yarn node packages/eslint-plugin-cds/scripts/scaffold-new-rule.mjs <rule-name>
  */
 import { type TSESLint } from '@typescript-eslint/utils';
 

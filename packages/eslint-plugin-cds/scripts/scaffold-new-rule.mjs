@@ -4,10 +4,10 @@
  * Scaffolds a new ESLint rule with a matching test file.
  *
  * Usage:
- *   yarn node packages/eslint-plugin-cds/scripts/create-rule.mjs <rule-name>
+ *   yarn node packages/eslint-plugin-cds/scripts/scaffold-new-rule.mjs <rule-name>
  *
  * Example:
- *   yarn node packages/eslint-plugin-cds/scripts/create-rule.mjs no-deprecated-tokens
+ *   yarn node packages/eslint-plugin-cds/scripts/scaffold-new-rule.mjs no-deprecated-tokens
  *
  * This will create:
  *   - src/rules/no-deprecated-tokens.ts
@@ -16,7 +16,7 @@
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

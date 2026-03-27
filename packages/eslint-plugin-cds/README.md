@@ -56,7 +56,7 @@ yarn nx run eslint-plugin-cds:build
 You can scaffold a new rule using the generator script:
 
 ```
-yarn node packages/eslint-plugin-cds/scripts/create-rule.mjs <rule-name>
+yarn node packages/eslint-plugin-cds/scripts/scaffold-new-rule.mjs <rule-name>
 ```
 
 This creates the rule source file and a matching test file with boilerplate already in place.
@@ -65,7 +65,7 @@ To create a rule manually, follow the steps below.
 
 ### Step-by-step checklist
 
-1. **Create the rule file** in `src/rules/`. Use `src/rules/custom-rule.ts` as a starting point, or copy an existing rule.
+1. **Create the rule file** in `src/rules/`. Use `src/templates/custom-rule.ts` as a starting point, or copy an existing rule.
 2. **Register the rule** by adding an import and entry in `src/rules.ts`.
 3. **Add the rule to a config** in `src/configs/`. Choose the config that matches the rule's platform:
    - `web` -- rules targeting web / React codebases
