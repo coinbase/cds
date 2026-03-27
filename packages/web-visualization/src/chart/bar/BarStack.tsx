@@ -182,7 +182,7 @@ export const BarStack = memo<BarStackProps>(
     const yScale = getYScale(yAxisId);
 
     const baseline = useMemo(
-      () => (layout === 'vertical' ? yAxis : xAxis)?.baseline ?? 0,
+      () => (layout === 'vertical' ? yAxis : xAxis)?.baseline,
       [layout, yAxis, xAxis],
     );
 
@@ -237,8 +237,8 @@ export const BarStack = memo<BarStackProps>(
           seriesGradients,
           roundBaseline,
           layout,
-          baselinePx,
           baseline,
+          baselinePx,
           stackGap,
           barMinSize,
           stackMinSize,
@@ -260,8 +260,8 @@ export const BarStack = memo<BarStackProps>(
         seriesGradients,
         roundBaseline,
         layout,
-        baselinePx,
         baseline,
+        baselinePx,
         stackGap,
         barMinSize,
         stackMinSize,

@@ -219,6 +219,7 @@ describe('getBars stackMinSize entrance behavior', () => {
       seriesGradients: [],
       roundBaseline: false,
       layout: 'horizontal',
+      baseline: 0,
       baselinePx: 0,
       stackGap: 0,
       barMinSize,

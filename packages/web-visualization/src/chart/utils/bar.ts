@@ -192,16 +192,16 @@ type BarData = BarBaseProps & {
  * @param bars - Array of bar items with current valuePos and length
  * @param stackGap - Gap size in pixels between adjacent bars
  * @param layout - The layout of the chart
- * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @returns New array of bars with adjusted valuePos and length
  */
 function applyStackGap(
   bars: BarData[],
   stackGap: number,
   layout: CartesianChartLayout,
-  baselinePx: number,
   baseline: number,
+  baselinePx: number,
 ): BarData[] {
   if (!stackGap || bars.length <= 1) return bars;
 
@@ -264,15 +264,15 @@ function applyStackGap(
  *
  * @param bars - Array of bar items with current valuePos and length
  * @param barMinSize - Minimum bar size in pixels
- * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @returns New array of bars with adjusted valuePos and length
  */
 function applyBarMinSize(
   bars: BarData[],
   barMinSize: number,
-  baselinePx: number,
   baseline: number,
+  baselinePx: number,
 ): BarData[] {
   if (!barMinSize || bars.length === 0) return bars;
 
@@ -391,18 +391,18 @@ function applyBarMinSize(
  * @param bars - Array of bar items with final valuePos, length, and dataValue
  * @param initialBarMinSizes - Per-bar initial sizes in pixels for entrance animation
  * @param stackGap - Gap between adjacent bars in pixels
+ * @param baseline - Value-axis baseline in data space
  * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param layout - The layout of the chart
- * @param baseline - Value-axis baseline in data space
  * @returns Array of origin positions (one per bar, parallel to input), all defaulting to baselinePx
  */
 function getBarOrigins(
   bars: BarData[],
   initialBarMinSizes: number[],
   stackGap: number,
+  baseline: number,
   baselinePx: number,
   layout: CartesianChartLayout,
-  baseline: number,
 ): number[] {
   const result = bars.map(() => baselinePx);
   if (bars.length === 0 || initialBarMinSizes.every((size) => !size)) return result;
@@ -578,8 +578,8 @@ export function getStackInitialClipRect(
  * @param layout - The layout of the chart
  * @param indexPos - Pixel position along the categorical (index) axis
  * @param thickness - Bar thickness in pixels
- * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @returns Updated bars and stackBounds; unchanged if stackSize >= stackMinSize
  */
 function applyStackMinSize(
@@ -590,8 +590,8 @@ function applyStackMinSize(
   layout: CartesianChartLayout,
   indexPos: number,
   thickness: number,
-  baselinePx: number,
   baseline: number,
+  baselinePx: number,
 ): { bars: BarData[]; stackBounds: Rect } {
   if (!stackMinSize || stackSize >= stackMinSize) return { bars, stackBounds };
   if (bars.length === 0) return { bars, stackBounds };
@@ -856,8 +856,8 @@ function getStackSizeForLayout(layout: CartesianChartLayout, stackRect: Rect): n
  * @param params.seriesGradients - Precomputed gradient configs per series (null entries are skipped)
  * @param params.roundBaseline - Whether to round the face touching the baseline
  * @param params.layout - The layout of the chart
- * @param params.baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param params.baseline - Value-axis baseline in data space
+ * @param params.baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param params.stackGap - Gap between adjacent bars in pixels
  * @param params.barMinSize - Minimum individual bar size in pixels
  * @param params.stackMinSize - Minimum total stack size in pixels
@@ -875,8 +875,8 @@ export function getBars(params: {
   seriesGradients: SeriesGradientEntry[];
   roundBaseline?: boolean;
   layout: CartesianChartLayout;
-  baselinePx: number;
   baseline?: number;
+  baselinePx: number;
   stackGap?: number;
   barMinSize?: number;
   stackMinSize?: number;
@@ -898,8 +898,8 @@ export function getBars(params: {
     seriesGradients,
     roundBaseline,
     layout,
-    baselinePx,
     baseline: baselineParam,
+    baselinePx,
     stackGap,
     barMinSize,
     stackMinSize,
@@ -1007,12 +1007,12 @@ export function getBars(params: {
 
   // Apply proportional gap distribution to maintain total stack length
   if (stackGap && allBars.length > 1) {
-    allBars = applyStackGap(allBars, stackGap, layout, baselinePx, baseline);
+    allBars = applyStackGap(allBars, stackGap, layout, baseline, baselinePx);
   }
 
   // Apply barMinSize constraints
   if (barMinSize) {
-    allBars = applyBarMinSize(allBars, barMinSize, baselinePx, baseline);
+    allBars = applyBarMinSize(allBars, barMinSize, baseline, baselinePx);
   }
 
   allBars = applyBorderRadiusLogic(allBars, layout, stackGap);
@@ -1038,8 +1038,8 @@ export function getBars(params: {
       layout,
       indexPos,
       thickness,
-      baselinePx,
       baseline,
+      baselinePx,
     );
     allBars = result.bars;
 
@@ -1055,9 +1055,9 @@ export function getBars(params: {
     allBars,
     initialBarMinSizes,
     stackGap ?? 0,
+    baseline,
     baselinePx,
     layout,
-    baseline,
   );
 
   return allBars.map((bar, i) => ({
