@@ -14,6 +14,7 @@ import eslintReactNative from 'eslint-plugin-react-native';
 import eslintCodegen from 'eslint-plugin-codegen';
 import internalPlugin from '@cbhq/eslint-plugin-internal';
 import eslintSimpleImportSort from 'eslint-plugin-simple-import-sort';
+import cds from '@cbhq/eslint-plugin-cds';
 
 const ignores = [
   '*.md',
@@ -165,6 +166,12 @@ const typescriptRules = {
   '@typescript-eslint/no-unsafe-function-type': 'error',
   '@typescript-eslint/no-unused-vars': 'off',
   '@typescript-eslint/prefer-namespace-keyword': 'off',
+  '@cbhq/cds/control-has-associated-label-extended': 'warn',
+  '@cbhq/cds/has-valid-accessibility-descriptors-extended': 'warn',
+  '@cbhq/cds/web-tooltip-interactive-content': 'warn',
+  '@cbhq/cds/web-chart-scrubbing-accessibility': 'warn',
+  '@cbhq/cds/mobile-chart-scrubbing-accessibility': 'warn',
+  '@cbhq/cds/no-v7-imports': 'warn',
 };
 
 // These rules only apply to test files
@@ -188,6 +195,7 @@ const sharedPlugins = {
 // These plugins only apply to TS/TSX files
 const typescriptPlugins = {
   codegen: eslintCodegen,
+  '@cbhq/cds': cds,
 };
 
 // These plugins only apply to React Native files

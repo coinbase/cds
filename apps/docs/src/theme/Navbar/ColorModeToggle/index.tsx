@@ -27,6 +27,7 @@ export default function NavbarColorModeToggle({ className }: Props): ReactNode {
 
   return (
     <IconButton
+      accessibilityLabel={label}
       aria-label={label}
       className={className}
       name={isDarkMode ? 'moon' : 'light'}

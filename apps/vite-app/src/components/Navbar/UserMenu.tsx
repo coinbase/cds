@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { SelectOption } from '@cbhq/cds-web/controls';
 import { Dropdown } from '@cbhq/cds-web/dropdown';
+import { useA11yControlledVisibility } from '@cbhq/cds-web/hooks/useA11yControlledVisibility';
 import { Pictogram } from '@cbhq/cds-web/illustrations';
 import { Box, HStack } from '@cbhq/cds-web/layout';
 import { Avatar } from '@cbhq/cds-web/media';
@@ -24,6 +25,21 @@ const userMenuOptions = [
 
 export const UserMenu = () => {
   const [value, setValue] = useState<string>(userMenuOptions[0].value);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const { controlledElementAccessibilityProps } = useA11yControlledVisibility(dropdownVisible, {
+    accessibilityLabel: 'User menu',
+    hasPopupType: 'menu',
+  });
+
+  const handleOpenMenu = useCallback(() => {
+    setDropdownVisible(true);
+  }, []);
+
+  const handleCloseMenu = useCallback(() => {
+    setDropdownVisible(false);
+  }, []);
+
   const userMenuContent = (
     <>
       <Box padding={2}>
@@ -42,8 +58,17 @@ export const UserMenu = () => {
       ))}
     </>
   );
+
   return (
-    <Dropdown content={userMenuContent} onChange={setValue} value={value} width={350}>
+    <Dropdown
+      {...controlledElementAccessibilityProps}
+      content={userMenuContent}
+      onChange={setValue}
+      onCloseMenu={handleCloseMenu}
+      onOpenMenu={handleOpenMenu}
+      value={value}
+      width={350}
+    >
       <Pressable background="transparent">
         <HStack alignItems="center" gap={1}>
           <Avatar alt="User" src="https://avatars.githubusercontent.com/u/6711590" />

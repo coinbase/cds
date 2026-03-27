@@ -1,4 +1,5 @@
-import { AST_NODE_TYPES, TSESTree } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 import { checkForInnerText } from './checkForInnerText';
 
@@ -18,6 +19,16 @@ export const extractA11yAttributesState = (
   const a11yJSXAttributes = {
     hasLabel: false,
     hasAccessibilityLabel: false,
+    hasAccessibilityLabelledBy: false,
+    hasControlAccessibilityLabel: false,
+    hasRemoveSelectedOptionAccessibilityLabel: false,
+    hasHiddenSelectedOptionsLabel: false,
+    hasAccessibilityHint: false,
+    hasBackAccessibilityLabel: false,
+    hasCloseAccessibilityLabel: false,
+    hasOnBackButtonClickProp: false,
+    hasOnClickProp: false,
+    hasOnPressProp: false,
     hasHandleBarAccessibilityLabelProps: false,
     hasHelperTextErrorIconAccessibilityLabel: false,
     hasOpenCalendarAccessibilityLabel: false,
@@ -38,6 +49,16 @@ export const extractA11yAttributesState = (
   const a11yAttributeMap: Record<string, keyof typeof a11yJSXAttributes> = {
     label: 'hasLabel',
     accessibilityLabel: 'hasAccessibilityLabel',
+    accessibilityLabelledBy: 'hasAccessibilityLabelledBy',
+    controlAccessibilityLabel: 'hasControlAccessibilityLabel',
+    removeSelectedOptionAccessibilityLabel: 'hasRemoveSelectedOptionAccessibilityLabel',
+    hiddenSelectedOptionsLabel: 'hasHiddenSelectedOptionsLabel',
+    accessibilityHint: 'hasAccessibilityHint',
+    backAccessibilityLabel: 'hasBackAccessibilityLabel',
+    closeAccessibilityLabel: 'hasCloseAccessibilityLabel',
+    onBackButtonClick: 'hasOnBackButtonClickProp',
+    onClick: 'hasOnClickProp',
+    onPress: 'hasOnPressProp',
     handleBarAccessibilityLabel: 'hasHandleBarAccessibilityLabelProps',
     helperTextErrorIconAccessibilityLabel: 'hasHelperTextErrorIconAccessibilityLabel',
     calendarIconButtonAccessibilityLabel: 'hasDeprecatedCalendarIconButtonAccessibilityLabel',

@@ -163,7 +163,11 @@ export const InteractiveChartText = () => {
           <label style={{ minWidth: '120px', fontWeight: 'bold', flexShrink: 0 }}>
             Show Debug Overlays:
           </label>
-          <Switch checked={showDebug} onChange={(e) => setShowDebug(e.target.checked)} />
+          <Switch
+            accessibilityLabel="Show Debug Overlays"
+            checked={showDebug}
+            onChange={(e) => setShowDebug(e.target.checked)}
+          />
         </div>
 
         {/* Hide via display:none */}
@@ -172,6 +176,7 @@ export const InteractiveChartText = () => {
             Hide Text (display:none):
           </label>
           <Switch
+            accessibilityLabel="Hide Text (display:none)"
             checked={hideWithDisplayNone}
             onChange={(e) => setHideWithDisplayNone(e.target.checked)}
           />
@@ -585,7 +590,11 @@ export const InteractiveChartTextGroup = () => {
         {/* Debug Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <label style={{ minWidth: '150px', fontWeight: 'bold' }}>Show Debug Overlays:</label>
-          <Switch checked={showDebug} onChange={(e) => setShowDebug(e.target.checked)} />
+          <Switch
+            accessibilityLabel="Show Debug Overlays"
+            checked={showDebug}
+            onChange={(e) => setShowDebug(e.target.checked)}
+          />
         </div>
 
         {/* Instructions */}

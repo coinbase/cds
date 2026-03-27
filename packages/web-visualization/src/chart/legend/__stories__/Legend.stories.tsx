@@ -488,7 +488,7 @@ const Interactive = () => {
       <Chip
         ref={chipRef}
         compact
-        aria-label={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
+        accessibilityLabel={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
         aria-pressed={isEmphasized}
         invertColorScheme={isEmphasized}
         onClick={() => handleToggle(seriesId)}

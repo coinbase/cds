@@ -45,7 +45,7 @@ export default function CopyButton({ code }: Props): ReactNode {
       <IconButton
         compact
         transparent
-        aria-label={translate({
+        accessibilityLabel={translate({
           id: 'theme.CodeBlock.copyButtonAriaLabel',
           message: 'Copy code to clipboard',
           description: 'The ARIA label for copy code blocks button',

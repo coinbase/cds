@@ -909,6 +909,7 @@ function Compact() {
     }: CompactChartProps & { subdetail: string }) => {
       return (
         <ListCell
+          accessibilityLabel="Compact chart cell"
           detail={formatPrice(parseFloat(prices[0]))}
           intermediary={
             <CompactChart color={color} data={data} referenceY={referenceY} showArea={showArea} />

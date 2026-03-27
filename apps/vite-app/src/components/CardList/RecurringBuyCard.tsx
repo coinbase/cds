@@ -6,6 +6,7 @@ import { Box } from '@cbhq/cds-web/layout';
 export const RecurringBuyCard = () => {
   return (
     <UpsellCard
+      accessibilityLabel="Dismiss recurring buy promotion"
       action={
         <Button compact flush="start">
           Get started
