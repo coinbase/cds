@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (3)
+
+###### Pictogram (1)
+
+- inrTrade
+
+###### HeroSquare (1)
+
+- flipStable
+
+###### SpotSquare (1)
+
+- inrTrade
+
 ## 4.35.0 (3/20/2026 PST)
 
 #### 🚀 Updates
