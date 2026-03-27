@@ -98,6 +98,9 @@
       ]
     },
     "lint": {
+      "dependsOn": [
+        { "projects": ["eslint-plugin-cds"], "target": "build" }
+      ],
       "inputs": [
         "default",
         "^production"
