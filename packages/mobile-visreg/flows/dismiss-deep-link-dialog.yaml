@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+---
+# Dismiss the iOS "Open in CDS?" system dialog on the first deep link of a session.
+# Subsequent deep links within the same session don't trigger the dialog.
+- openLink: ${SCHEME}:///Debug${ROUTE_NAME}
+- tapOn:
+    text: 'Open'
+    optional: true

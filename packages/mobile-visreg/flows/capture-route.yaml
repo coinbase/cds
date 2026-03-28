@@ -4,9 +4,12 @@ appId: ${APP_ID}
     appId: ${APP_ID}
 - assertVisible:
     text: 'CDS'
-- openLink: ${SCHEME}:///Debug${ROUTE_NAME}
-- tapOn:
-    text: 'Open'
-    optional: true
+- runFlow:
+    file: ./dismiss-deep-link-dialog.yaml
+    label: "Dismiss deep link dialog"
+    env:
+      ROUTE_NAME: ${ROUTE_NAME}
+- assertVisible:
+    id: mobile-playground-screen
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
