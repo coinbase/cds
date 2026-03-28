@@ -1,7 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
 import type { Polymorphic } from '../core/polymorphism';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { Box, type BoxBaseProps } from './Box';
 
@@ -68,11 +67,16 @@ type GridColumnComponent = (<AsComponent extends React.ElementType = GridColumnD
 export const GridColumn: GridColumnComponent = memo(
   forwardRef<React.ReactElement<GridColumnBaseProps>, GridColumnBaseProps>(
     <AsComponent extends React.ElementType>(
-      _props: GridColumnProps<AsComponent>,
+      {
+        as,
+        gridColumn,
+        colSpan,
+        colStart = 'auto',
+        colEnd = 'auto',
+        ...props
+      }: GridColumnProps<AsComponent>,
       forwardedRef: Polymorphic.Ref<AsComponent>,
     ) => {
-      const mergedProps = useComponentConfig('GridColumn', _props);
-      const { as, gridColumn, colSpan, colStart = 'auto', colEnd = 'auto', ...props } = mergedProps;
       const Component = (as ?? gridColumnDefaultElement) satisfies React.ElementType;
       const gridColumnValue = useMemo(
         () => gridColumn ?? (colSpan ? `${colStart} / span ${colSpan}` : undefined),

@@ -65,11 +65,7 @@ import type { DropdownBaseProps } from '../dropdown/Dropdown';
 import type { IconBaseProps } from '../icons/Icon';
 import type { DividerBaseProps } from '../layout/Divider';
 import type { FallbackBaseProps } from '../layout/Fallback';
-import type { GridBaseProps } from '../layout/Grid';
-import type { GridColumnBaseProps } from '../layout/GridColumn';
-import type { HStackBaseProps } from '../layout/HStack';
 import type { SpacerBaseProps } from '../layout/Spacer';
-import type { VStackBaseProps } from '../layout/VStack';
 import type { SpinnerBaseProps } from '../loaders/Spinner';
 import type { AvatarBaseProps } from '../media/Avatar';
 import type { RemoteImageBaseProps } from '../media/RemoteImage';
@@ -192,9 +188,6 @@ export type ComponentConfig = {
   FullscreenModal?: ConfigResolver<FullscreenModalBaseProps>;
   FullscreenModalHeader?: ConfigResolver<FullscreenModalHeaderBaseProps>;
   FullscreenModalLayout?: ConfigResolver<FullscreenModalLayoutBaseProps>;
-  Grid?: ConfigResolver<GridBaseProps>;
-  GridColumn?: ConfigResolver<GridColumnBaseProps>;
-  HStack?: ConfigResolver<HStackBaseProps>;
   HandleBar?: ConfigResolver<HandleBarBaseProps>;
   Icon?: ConfigResolver<IconBaseProps>;
   IconButton?: ConfigResolver<IconButtonBaseProps>;
@@ -267,5 +260,4 @@ export type ComponentConfig = {
   Toast?: ConfigResolver<ToastBaseProps>;
   Tour?: ConfigResolver<TourBaseProps>;
   Tray?: ConfigResolver<TrayBaseProps>;
-  VStack?: ConfigResolver<VStackBaseProps>;
 };
