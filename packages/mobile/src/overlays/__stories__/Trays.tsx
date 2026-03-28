@@ -50,7 +50,7 @@ export const DefaultTray = ({ title }: { title?: React.ReactNode }) => {
                 />
               ))}
             </Menu>
-            <Button block variant="secondary" onPress={handleOptionPress}>
+            <Button block onPress={handleOptionPress} variant="secondary">
               Close
             </Button>
           </VStack>

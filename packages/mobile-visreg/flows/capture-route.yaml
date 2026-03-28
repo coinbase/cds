@@ -6,7 +6,7 @@ appId: ${APP_ID}
     text: 'CDS'
 - runFlow:
     file: ./dismiss-deep-link-dialog.yaml
-    label: "Dismiss deep link dialog"
+    label: 'Dismiss deep link dialog'
 - openLink: ${SCHEME}:///Debug${ROUTE_NAME}
 - assertVisible:
     id: mobile-playground-screen

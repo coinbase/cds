@@ -50,7 +50,7 @@ const StickyFooterWithTray = ({ title }: { title?: string }) => {
             <StickyFooter>
               <HStack alignItems="center" gap={1} justifyContent="center" width="100%">
                 <Box flexGrow={1}>
-                  <Button block variant="secondary" onPress={handleClose}>
+                  <Button block onPress={handleClose} variant="secondary">
                     Cancel
                   </Button>
                 </Box>
