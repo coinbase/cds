@@ -133,6 +133,7 @@ export const StickerSheet = memo(() => {
               <HStack style={{ gap: 8 }}>
                 <SelectChipExample />
                 <InputChip
+                  accessibilityLabel="Select ETH asset"
                   onClick={() => undefined}
                   start={<RemoteImage height={16} source={assets.eth.imageUrl} width={16} />}
                   value="ETH"
@@ -290,14 +291,25 @@ export const StickerSheet = memo(() => {
                     <Button variant={variant} width={160}>
                       Button
                     </Button>
-                    <IconButton compact={false} name="add" variant={variant} />
+                    <IconButton
+                      accessibilityLabel={`Add item (${variant} button)`}
+                      compact={false}
+                      name="add"
+                      variant={variant}
+                    />
                   </HStack>
                 ))}
                 <HStack alignItems="center" gap={1}>
                   <Button loading width={160}>
                     Button
                   </Button>
-                  <IconButton loading compact={false} name="add" variant="primary" />
+                  <IconButton
+                    loading
+                    accessibilityLabel="Add item (loading button)"
+                    compact={false}
+                    name="add"
+                    variant="primary"
+                  />
                 </HStack>
               </VStack>
             </Container>
@@ -336,14 +348,25 @@ export const StickerSheet = memo(() => {
                     <Button compact variant={variant} width={160}>
                       Button
                     </Button>
-                    <IconButton compact name="add" variant={variant} />
+                    <IconButton
+                      compact
+                      accessibilityLabel={`Add item (${variant} compact button)`}
+                      name="add"
+                      variant={variant}
+                    />
                   </HStack>
                 ))}
                 <HStack alignItems="center" gap={1}>
                   <Button compact loading width={160}>
                     Button
                   </Button>
-                  <IconButton compact loading name="add" variant="primary" />
+                  <IconButton
+                    compact
+                    loading
+                    accessibilityLabel="Add item (loading compact button)"
+                    name="add"
+                    variant="primary"
+                  />
                 </HStack>
               </VStack>
             </Container>
@@ -359,9 +382,12 @@ export const StickerSheet = memo(() => {
 
           <Container title="Chip / InputChip">
             <HStack flexWrap="wrap" gap={1}>
-              <Chip onClick={() => {}}>Chip</Chip>
+              <Chip accessibilityLabel="Chip example" onClick={() => {}}>
+                Chip
+              </Chip>
               <MediaChip start={<Icon name="account" size="s" />}>User</MediaChip>
               <InputChip
+                accessibilityLabel="Select BTC asset"
                 onClick={() => {}}
                 start={<RemoteImage height={16} source={assets.btc.imageUrl} width={16} />}
                 value="BTC"
@@ -372,6 +398,7 @@ export const StickerSheet = memo(() => {
           <Container title="ListCell">
             <VStack>
               <ListCell
+                accessibilityLabel="Bitcoin asset row"
                 description="$64,231.00"
                 media={
                   <RemoteImage
@@ -386,6 +413,7 @@ export const StickerSheet = memo(() => {
                 title="Bitcoin"
               />
               <ListCell
+                accessibilityLabel="Ethereum asset row"
                 description="$3,421.50"
                 media={
                   <RemoteImage
@@ -400,6 +428,7 @@ export const StickerSheet = memo(() => {
                 title="Ethereum"
               />
               <ListCell
+                accessibilityLabel="XRP asset row"
                 description="$2.15"
                 media={
                   <RemoteImage

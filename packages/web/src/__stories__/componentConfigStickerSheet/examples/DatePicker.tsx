@@ -10,26 +10,38 @@ export const DatePickerExample = memo(() => {
     <VStack style={{ gap: 16 }} width="100%">
       <DatePicker
         compact
+        closeCalendarAccessibilityLabel="Close calendar"
         date={date}
         error={dateError}
         label="Birthdate"
+        nextArrowAccessibilityLabel="Next month"
         onChangeDate={setDate}
         onErrorDate={setDateError}
+        openCalendarAccessibilityLabel="Open calendar"
+        previousArrowAccessibilityLabel="Previous month"
       />
       <DatePicker
+        closeCalendarAccessibilityLabel="Close calendar"
         date={date}
         error={dateError}
         label="Birthdate"
         labelVariant="inside"
+        nextArrowAccessibilityLabel="Next month"
         onChangeDate={setDate}
         onErrorDate={setDateError}
+        openCalendarAccessibilityLabel="Open calendar"
+        previousArrowAccessibilityLabel="Previous month"
       />
       <DatePicker
+        closeCalendarAccessibilityLabel="Close calendar"
         date={date}
         error={dateError}
         label="Birthdate"
+        nextArrowAccessibilityLabel="Next month"
         onChangeDate={setDate}
         onErrorDate={setDateError}
+        openCalendarAccessibilityLabel="Open calendar"
+        previousArrowAccessibilityLabel="Previous month"
       />
     </VStack>
   );

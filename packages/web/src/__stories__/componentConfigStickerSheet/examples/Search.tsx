@@ -7,11 +7,19 @@ export const SearchExample = memo(() => {
     <>
       <SearchInput
         compact
+        clearIconAccessibilityLabel="Clear search text"
         onChangeText={setSearchValue}
         placeholder="Search..."
+        startIconAccessibilityLabel="Back"
         value={searchValue}
       />
-      <SearchInput onChangeText={setSearchValue} placeholder="Search..." value={searchValue} />
+      <SearchInput
+        clearIconAccessibilityLabel="Clear search text"
+        onChangeText={setSearchValue}
+        placeholder="Search..."
+        startIconAccessibilityLabel="Back"
+        value={searchValue}
+      />
     </>
   );
 });

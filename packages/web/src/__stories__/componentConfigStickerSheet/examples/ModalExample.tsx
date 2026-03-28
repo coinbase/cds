@@ -12,7 +12,7 @@ export const ModalExample = memo(() => {
         Open Modal
       </Button>
       <Modal onRequestClose={() => setVisible(false)} visible={visible}>
-        <ModalHeader title="Confirm transaction" />
+        <ModalHeader closeAccessibilityLabel="Close modal" title="Confirm transaction" />
         <ModalBody>
           <VStack style={{ gap: 8 }}>
             <Text font="body">Are you sure you want to send 0.5 ETH?</Text>

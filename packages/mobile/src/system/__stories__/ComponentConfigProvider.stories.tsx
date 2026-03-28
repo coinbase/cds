@@ -4,6 +4,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { Select } from '../../alpha/select/Select';
 import { Button } from '../../buttons';
 import { IconButton } from '../../buttons/IconButton';
+import { Chip } from '../../chips/Chip';
 import { SearchInput } from '../../controls/SearchInput';
 import { TextInput } from '../../controls/TextInput';
 import type { ComponentConfig } from '../../core/componentConfig';
@@ -11,10 +12,10 @@ import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { SegmentedTabs } from '../../tabs/SegmentedTabs';
-import { Chip } from '../../chips/Chip';
 import { Link } from '../../typography/Link';
 import { Text } from '../../typography/Text';
 import { ComponentConfigProvider } from '../ComponentConfigProvider';
+
 import { customComponentConfig } from './componentConfigStickerSheet/customComponentConfig';
 
 const StaticConfigExample = () => {

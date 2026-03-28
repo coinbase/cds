@@ -90,8 +90,22 @@ export const StepperVerticalCustomExample = memo(() => {
         steps={steps}
       />
       <HStack alignSelf="center" style={{ gap: 8 }}>
-        <IconButton active compact name="arrowLeft" onClick={handlePrevious} variant="primary" />
-        <IconButton active compact name="arrowRight" onClick={handleNext} variant="primary" />
+        <IconButton
+          active
+          compact
+          accessibilityLabel="Previous step"
+          name="arrowLeft"
+          onClick={handlePrevious}
+          variant="primary"
+        />
+        <IconButton
+          active
+          compact
+          accessibilityLabel="Next step"
+          name="arrowRight"
+          onClick={handleNext}
+          variant="primary"
+        />
       </HStack>
     </VStack>
   );

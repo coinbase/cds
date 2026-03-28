@@ -6,8 +6,14 @@ import { VStack } from '@coinbase/cds-web/layout/VStack';
 
 export const DropdownExample = memo(() => {
   const [value, setValue] = useState<string | undefined>();
+  const controlledElementAccessibilityProps = {
+    id: 'component-config-dropdown-menu',
+    accessibilityLabel: 'Navigation menu',
+  };
+
   return (
     <Dropdown
+      {...controlledElementAccessibilityProps}
       content={
         <VStack>
           <MenuItem value="account">Account</MenuItem>
@@ -15,6 +21,10 @@ export const DropdownExample = memo(() => {
           <MenuItem value="support">Support</MenuItem>
         </VStack>
       }
+      controlledElementAccessibilityProps={{
+        id: 'component-config-dropdown-menu',
+        accessibilityLabel: 'Navigation menu',
+      }}
       onChange={setValue}
       value={value}
     >

@@ -37,8 +37,21 @@ export const StepperHorizontalBasicExample = memo(() => {
         steps={steps}
       />
       <HStack alignSelf="center" gap={1}>
-        <IconButton active name="arrowLeft" onClick={handlePrevious} variant="secondary" />
-        <IconButton active compact name="arrowRight" onClick={handleNext} variant="secondary" />
+        <IconButton
+          active
+          accessibilityLabel="Previous step"
+          name="arrowLeft"
+          onClick={handlePrevious}
+          variant="secondary"
+        />
+        <IconButton
+          active
+          compact
+          accessibilityLabel="Next step"
+          name="arrowRight"
+          onClick={handleNext}
+          variant="secondary"
+        />
       </HStack>
     </VStack>
   );
