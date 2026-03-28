@@ -18,13 +18,7 @@ export const ModalExample = memo(() => {
             <Text font="body">Are you sure you want to send 0.5 ETH?</Text>
           </VStack>
         </ModalBody>
-        <ModalFooter
-          primaryAction={
-            <Button onClick={() => setVisible(false)} width="100%">
-              Confirm
-            </Button>
-          }
-        />
+        <ModalFooter primaryAction={<Button onClick={() => setVisible(false)}>Confirm</Button>} />
       </Modal>
     </>
   );

@@ -1,74 +1,54 @@
 import { memo } from 'react';
-import { useTheme } from '@coinbase/cds-web';
-import { Box, type BoxDefaultElement, type BoxProps } from '@coinbase/cds-web/layout/Box';
+import { type BoxDefaultElement, type BoxProps } from '@coinbase/cds-web/layout/Box';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Text } from '@coinbase/cds-web/typography/Text';
 
+type ContainerProps = Omit<BoxProps<BoxDefaultElement>, 'title'> & {
+  title?: string;
+};
+
 export const Container = memo(
   ({
-    title,
     background = 'bg',
     alignSelf = 'stretch',
     alignItems = 'center',
+    flexDirection = 'row',
     justifyContent = 'center',
     flexWrap = 'wrap',
     flexGrow = 0,
     flexShrink = 0,
     width = '100%',
-    style,
+    borderRadius = 200,
+    position = 'relative',
+    padding = 2,
+    gap = 2,
+    children,
+    title,
     ...props
-  }: BoxProps<BoxDefaultElement>) => {
-    const theme = useTheme();
-    const isDarkMode = theme.activeColorScheme === 'dark';
-    const borderColor = isDarkMode ? '#2f2f2f' : '#e1e1e1';
+  }: ContainerProps) => {
     return (
       <VStack
+        alignItems={alignItems}
         alignSelf={alignSelf}
         background={background}
+        borderRadius={borderRadius}
+        flexDirection={flexDirection}
         flexGrow={flexGrow}
         flexShrink={flexShrink}
+        flexWrap={flexWrap}
+        gap={gap}
         justifyContent={justifyContent}
-        style={{ borderRadius: 8, position: 'relative' }}
+        padding={padding}
+        position={position}
         width={width}
+        {...props}
       >
         {title && (
-          <Box
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              padding: 8,
-              borderBottom: `1px solid ${borderColor}`,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 200,
-                fontFamily: 'var(--defaultFont-sans)',
-              }}
-            >
-              {title}
-            </Text>
-          </Box>
+          <Text font="label1" textAlign="start" width="100%">
+            {title}
+          </Text>
         )}
-        <Box
-          alignItems={alignItems}
-          alignSelf={alignSelf}
-          flexGrow={flexGrow}
-          flexShrink={flexShrink}
-          flexWrap={flexWrap}
-          justifyContent={justifyContent}
-          style={{
-            marginTop: title ? 36 : 0,
-            gap: 16,
-            padding: 16,
-            ...style,
-          }}
-          width={width}
-          {...props}
-        />
+        {children}
       </VStack>
     );
   },

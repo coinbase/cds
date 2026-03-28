@@ -13,17 +13,17 @@ import {
   FloatingAssetCard,
   type FloatingAssetCardProps,
 } from '@coinbase/cds-web/cards/FloatingAssetCard';
-import { NudgeCard } from '@coinbase/cds-web/cards/NudgeCard';
-import { UpsellCard } from '@coinbase/cds-web/cards/UpsellCard';
+import { MessagingCard } from '@coinbase/cds-web/cards/MessagingCard';
 import { ListCell } from '@coinbase/cds-web/cells/ListCell';
 import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { InputChip } from '@coinbase/cds-web/chips/InputChip';
 import { MediaChip } from '@coinbase/cds-web/chips/MediaChip';
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
+import { InputIconButton } from '@coinbase/cds-web/controls/InputIconButton';
+import { TextInput } from '@coinbase/cds-web/controls/TextInput';
 import { DotCount } from '@coinbase/cds-web/dots/DotCount';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram';
-import { Box } from '@coinbase/cds-web/layout/Box';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Spinner } from '@coinbase/cds-web/loaders/Spinner';
@@ -38,7 +38,6 @@ import { AlertExample } from './examples/AlertExample';
 import { ControlsExample } from './examples/Controls';
 import { DatePickerExample } from './examples/DatePicker';
 import { DropdownExample } from './examples/DropdownExample';
-import { LineChartBasicExample } from './examples/LineChart';
 import { ModalExample } from './examples/ModalExample';
 import { PaginationExample } from './examples/Pagination';
 import { RollingNumberExample } from './examples/RollingNumber';
@@ -96,23 +95,13 @@ const floatingAssetCards: FloatingAssetCardProps[] = [
   },
 ];
 
-const rootStyle = {
-  position: 'relative',
-  maxWidth: 1200,
-  padding: 32,
-  gap: 16,
-  margin: '0 auto',
-  display: 'flex',
-  alignItems: 'center',
-} as const;
-
-const leftColumnWidth = 420 as const;
-const rightColumnWidth = 600 as const;
+const leftColumnWidth = 420;
+const rightColumnWidth = 600;
 
 export const StickerSheet = memo(() => {
   return (
-    <VStack background="bgAlternate" style={rootStyle}>
-      <HStack style={{ gap: 16 }}>
+    <VStack alignItems="center" background="bgAlternate" gap={2} padding={2}>
+      <HStack gap={2}>
         <VStack
           style={{
             gap: 16,
@@ -120,20 +109,16 @@ export const StickerSheet = memo(() => {
           }}
           width={leftColumnWidth}
         >
-          <Container style={{ marginLeft: -8, padding: 12 }}>
-            <LineChartBasicExample />
-          </Container>
-
-          <Container>
+          <Container title="Switch / Checkbox / Radio">
             <ControlsExample />
           </Container>
 
           <HStack style={{ gap: 16 }}>
-            <Container width={280}>
+            <Container title="Segmented Tabs" width={280}>
               <SegmentedTabsExample />
             </Container>
 
-            <Container width={124}>
+            <Container title="Spinner" width={124}>
               <Spinner size={2} />
               <Spinner color="bgPrimary" size={4} />
             </Container>
@@ -144,7 +129,7 @@ export const StickerSheet = memo(() => {
               <RollingNumberExample />
             </Container>
 
-            <Container width={244}>
+            <Container title="SelectChip / InputChip" width={244}>
               <HStack style={{ gap: 8 }}>
                 <SelectChipExample />
                 <InputChip
@@ -156,19 +141,19 @@ export const StickerSheet = memo(() => {
             </Container>
           </HStack>
 
-          <Container>
+          <Container title="Pagination">
             <PaginationExample />
           </Container>
 
-          <Container>
+          <Container title="Select Input (SelectOption)">
             <SelectExample />
           </Container>
 
-          <Container>
+          <Container title="SearchInput">
             <SearchExample />
           </Container>
 
-          <Container>
+          <Container title="Accordion">
             <Accordion>
               <AccordionItem
                 itemKey="1"
@@ -189,68 +174,89 @@ export const StickerSheet = memo(() => {
             </Accordion>
           </Container>
 
-          <Container>
-            <NudgeCard
+          <Container title="NudgeCard">
+            <MessagingCard
               action="Start earning"
               description="You’ve got unstaked crypto. Stake it now to earn more."
-              onActionPress={() => {}}
-              onDismissPress={() => {}}
-              pictogram="key"
+              media={<Pictogram dimension="48x48" name="key" />}
+              mediaPlacement="end"
+              onActionButtonClick={() => {}}
+              onDismissButtonClick={() => {}}
               title="Earn more crypto"
+              type="nudge"
             />
           </Container>
 
-          <Container>
-            <UpsellCard
+          <Container title="UpsellCard">
+            <MessagingCard
               action="Learn more"
               description="Zero trading fees, boosted staking rewards, and more."
-              onActionPress={() => {}}
-              onDismissPress={() => {}}
+              media={
+                <RemoteImage
+                  height={80}
+                  source={assets.btc.imageUrl}
+                  style={{ objectFit: 'cover' }}
+                  width={80}
+                />
+              }
+              mediaPlacement="end"
+              onActionButtonClick={() => {}}
+              onDismissButtonClick={() => {}}
               title="Upgrade to Coinbase One"
+              type="upsell"
             />
           </Container>
 
-          <Container>
+          <Container title="Tabs">
             <TabsExample />
           </Container>
 
-          <Container>
-            <HStack style={{ gap: 8 }}>
-              <DropdownExample />
-              <ModalExample />
-              <AlertExample />
-            </HStack>
-          </Container>
-
-          <Container>
+          <Container title="Dropdown / Modal / Alert / Toast">
+            <DropdownExample />
+            <ModalExample />
+            <AlertExample />
             <ToastExample />
           </Container>
 
-          <Container>
-            <HStack style={{ gap: 24 }}>
-              {floatingAssetCards.map((card, index) => (
-                <Tooltip key={index} content={`View details for ${card.subtitle}`}>
-                  <FloatingAssetCard {...card} />
-                </Tooltip>
-              ))}
-            </HStack>
+          <Container gap={3} title="FloatingAssetCard / Tooltip">
+            {floatingAssetCards.map((card, index) => (
+              <Tooltip key={index} content={`View details for ${card.subtitle}`}>
+                <FloatingAssetCard {...card} />
+              </Tooltip>
+            ))}
+          </Container>
+          <Container title="TableHeader / TableCell">
+            <TableExample />
+          </Container>
+
+          <Container title="Coachmark">
+            <Coachmark
+              action={
+                <Button compact variant="secondary">
+                  Got it
+                </Button>
+              }
+              content="You can now trade directly from your portfolio page."
+              onClose={() => {}}
+              title="New feature"
+            />
           </Container>
         </VStack>
 
         <VStack
+          gap={2}
           style={{
-            gap: 16,
             background: SHOW_DEBUG_BG_COLORS ? 'blue' : undefined,
           }}
           width={rightColumnWidth}
         >
-          <Container>
-            <VStack style={{ gap: 16 }}>
+          <Container title="Tag">
+            <VStack gap={2}>
               <Tag intent="informational">primary</Tag>
               <Tag intent="promotional">primary</Tag>
             </VStack>
             {tagColorSchemes.map((colorScheme) => (
-              <VStack key={colorScheme} style={{ gap: 16 }}>
+              <VStack key={colorScheme} gap={2}>
                 <Tag colorScheme={colorScheme} intent="informational">
                   {colorScheme}
                 </Tag>
@@ -261,7 +267,7 @@ export const StickerSheet = memo(() => {
             ))}
           </Container>
 
-          <Container>
+          <Container title="Icon">
             <Icon name="search" size="l" />
             <Icon name="search" size="m" />
             <Icon name="search" size="s" />
@@ -276,18 +282,18 @@ export const StickerSheet = memo(() => {
             <Icon name="account" size="xs" />
           </Container>
 
-          <HStack style={{ gap: 16 }}>
+          <HStack gap={2}>
             <Container width={240}>
-              <VStack style={{ gap: 8 }}>
+              <VStack gap={1}>
                 {buttonVariants.map((variant) => (
-                  <HStack key={variant} alignItems="center" style={{ gap: 8 }}>
+                  <HStack key={variant} alignItems="center" gap={1}>
                     <Button variant={variant} width={160}>
                       Button
                     </Button>
                     <IconButton compact={false} name="add" variant={variant} />
                   </HStack>
                 ))}
-                <HStack alignItems="center" style={{ gap: 8 }}>
+                <HStack alignItems="center" gap={1}>
                   <Button loading width={160}>
                     Button
                   </Button>
@@ -296,7 +302,7 @@ export const StickerSheet = memo(() => {
               </VStack>
             </Container>
 
-            <VStack style={{ gap: 16 }}>
+            <VStack gap={2}>
               <Container width={344}>
                 <Avatar colorScheme="red" name="Avatar" shape="circle" size="m" />
                 <Avatar colorScheme="orange" name="Avatar" shape="circle" size="l" />
@@ -310,24 +316,30 @@ export const StickerSheet = memo(() => {
                 <StepperVerticalCustomExample />
               </Container>
 
-              <Container>
+              <Container title="TextInput / InputIconButton">
                 <TextInputExample />
+                <TextInput
+                  end={<InputIconButton accessibilityLabel="Clear input" name="close" />}
+                  label="Label"
+                  labelVariant="inside"
+                  placeholder="Input with icon button"
+                />
               </Container>
             </VStack>
           </HStack>
 
-          <HStack style={{ gap: 16 }}>
+          <HStack gap={2}>
             <Container alignSelf="stretch" width={240}>
-              <VStack style={{ gap: 8 }}>
+              <VStack gap={1}>
                 {buttonVariants.map((variant) => (
-                  <HStack key={variant} alignItems="center" style={{ gap: 8 }}>
+                  <HStack key={variant} alignItems="center" gap={1}>
                     <Button compact variant={variant} width={160}>
                       Button
                     </Button>
                     <IconButton compact name="add" variant={variant} />
                   </HStack>
                 ))}
-                <HStack alignItems="center" style={{ gap: 8 }}>
+                <HStack alignItems="center" gap={1}>
                   <Button compact loading width={160}>
                     Button
                   </Button>
@@ -336,50 +348,17 @@ export const StickerSheet = memo(() => {
               </VStack>
             </Container>
 
-            <Container width={344}>
+            <Container title="DatePicker" width={344}>
               <DatePickerExample />
             </Container>
           </HStack>
 
-          <Container>
+          <Container title="StepperHorizontal">
             <StepperHorizontalBasicExample />
           </Container>
 
-          <Container>
-            {bannerVariants.map((variant, index) => (
-              <Banner
-                key={variant}
-                startIconActive
-                id={`banner-${index}`}
-                label="Message last updated today at 3:24pm"
-                primaryAction={<Link href="#">Primary</Link>}
-                secondaryAction={<Link href="#">Secondary</Link>}
-                startIcon="info"
-                styleVariant="global"
-                title="Global banner"
-                variant={variant}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </Banner>
-            ))}
-          </Container>
-
-          <Container>
-            <HStack alignItems="center" style={{ gap: 24 }}>
-              <DotCount count={3}>
-                <Icon name="bell" size="l" />
-              </DotCount>
-              <DotCount count={12}>
-                <Icon name="bell" size="l" />
-              </DotCount>
-              <DotCount count={100} max={99}>
-                <Icon name="bell" size="l" />
-              </DotCount>
-            </HStack>
-          </Container>
-
-          <Container>
-            <HStack style={{ gap: 8, flexWrap: 'wrap' }}>
+          <Container title="Chip / InputChip">
+            <HStack flexWrap="wrap" gap={1}>
               <Chip onClick={() => {}}>Chip</Chip>
               <MediaChip start={<Icon name="account" size="s" />}>User</MediaChip>
               <InputChip
@@ -390,21 +369,8 @@ export const StickerSheet = memo(() => {
             </HStack>
           </Container>
 
-          <Container>
-            <Coachmark
-              action={
-                <Button compact variant="secondary">
-                  Got it
-                </Button>
-              }
-              content="You can now trade directly from your portfolio page."
-              onClose={() => {}}
-              title="New feature"
-            />
-          </Container>
-
-          <Container>
-            <VStack style={{ gap: 0 }}>
+          <Container title="ListCell">
+            <VStack>
               <ListCell
                 description="$64,231.00"
                 media={
@@ -434,17 +400,51 @@ export const StickerSheet = memo(() => {
                 title="Ethereum"
               />
               <ListCell
-                description="$142.30"
-                media={<Avatar colorScheme="purple" name="SOL" size="s" />}
+                description="$2.15"
+                media={
+                  <RemoteImage
+                    height={36}
+                    source={assets.xrp.imageUrl}
+                    style={{ borderRadius: 18 }}
+                    width={36}
+                  />
+                }
                 onClick={() => {}}
-                subtitle="SOL"
-                title="Solana"
+                subtitle="XRP"
+                title="XRP"
               />
             </VStack>
           </Container>
 
-          <Container>
-            <TableExample />
+          <Container title="Banner">
+            {bannerVariants.map((variant, index) => (
+              <Banner
+                key={variant}
+                startIconActive
+                id={`banner-${index}`}
+                label="Message last updated today at 3:24pm"
+                primaryAction={<Link href="#">Primary</Link>}
+                secondaryAction={<Link href="#">Secondary</Link>}
+                startIcon="info"
+                styleVariant="global"
+                title="Global banner"
+                variant={variant}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </Banner>
+            ))}
+          </Container>
+
+          <Container title="DotCount">
+            <DotCount count={3}>
+              <Icon name="bell" size="l" />
+            </DotCount>
+            <DotCount count={12}>
+              <Icon name="bell" size="l" />
+            </DotCount>
+            <DotCount count={100} max={99}>
+              <Icon name="bell" size="l" />
+            </DotCount>
           </Container>
         </VStack>
       </HStack>
