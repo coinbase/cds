@@ -168,6 +168,7 @@ const names: SpotSquareName[] = [
   'holdCrypto',
   'holdingCrypto',
   'idError',
+  'inrTrade',
   'instantUnstaking',
   'instoAuthenticatorProgress',
   'instoDappWallet',

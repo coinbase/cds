@@ -162,6 +162,7 @@ export type SpotSquareName =
   | 'holdCrypto'
   | 'holdingCrypto'
   | 'idError'
+  | 'inrTrade'
   | 'instantUnstaking'
   | 'instoAuthenticatorProgress'
   | 'instoDappWallet'

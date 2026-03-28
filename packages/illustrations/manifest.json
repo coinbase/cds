@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-03-20T18:18:39.734Z",
+  "lastUpdated": "2026-03-27T19:19:59.477Z",
   "colors": {
     "light": [
       {
@@ -31785,6 +31785,66 @@
         "svgJsDark": "./spotRectangle/svgJs/dark/instoQRCode-0.js",
         "pngLight": "./spotRectangle/png/light/instoQRCode-0.png",
         "pngDark": "./spotRectangle/png/dark/instoQRCode-0.png"
+      },
+      "version": 0
+    },
+    "29036:24": {
+      "type": "heroSquare",
+      "name": "flipStable",
+      "hash": "Fws+tuML9lLE4Qp8M2bg/YFhgbFaQ9GO55/1iNSmOB8=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, cbltc, litecoin",
+      "createdAt": "2026-03-27T14:01:24.918Z",
+      "lastUpdated": "2026-03-27T14:01:24.918Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/flipStable-0.svg",
+        "svgDark": "./heroSquare/svg/dark/flipStable-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/flipStable-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/flipStable-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/flipStable-0.js",
+        "pngLight": "./heroSquare/png/light/flipStable-0.png",
+        "pngDark": "./heroSquare/png/dark/flipStable-0.png"
+      },
+      "version": 0
+    },
+    "29086:51": {
+      "type": "spotSquare",
+      "name": "inrTrade",
+      "hash": "rilGKvyBxEThpxE+NM9qYwsUIIsRSw63fNwSiZ4oxUA=",
+      "width": 96,
+      "height": 96,
+      "description": "pictogram, coin, crypto learning, rewards, bitcoin, btc, satoshi, giveaway, free, competition",
+      "createdAt": "2026-03-27T14:01:24.937Z",
+      "lastUpdated": "2026-03-27T14:01:24.937Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/inrTrade-0.svg",
+        "svgDark": "./spotSquare/svg/dark/inrTrade-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/inrTrade-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/inrTrade-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/inrTrade-0.js",
+        "pngLight": "./spotSquare/png/light/inrTrade-0.png",
+        "pngDark": "./spotSquare/png/dark/inrTrade-0.png"
+      },
+      "version": 0
+    },
+    "29086:67": {
+      "type": "pictogram",
+      "name": "inrTrade",
+      "hash": "itoHe7BAmTyYQvllRf+kZW/ANtGtxA6jUYWPnbRAbGs=",
+      "width": 48,
+      "height": 48,
+      "description": "pictogram, coin, crypto learning, rewards, bitcoin, btc, satoshi, giveaway, free, competition",
+      "createdAt": "2026-03-27T14:01:24.930Z",
+      "lastUpdated": "2026-03-27T14:01:24.930Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/inrTrade-0.svg",
+        "svgDark": "./pictogram/svg/dark/inrTrade-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/inrTrade-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/inrTrade-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/inrTrade-0.js",
+        "pngLight": "./pictogram/png/light/inrTrade-0.png",
+        "pngDark": "./pictogram/png/dark/inrTrade-0.png"
       },
       "version": 0
     }

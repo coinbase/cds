@@ -329,6 +329,7 @@ export type PictogramName =
   | 'idError'
   | 'idVerification'
   | 'increaseLimits'
+  | 'inrTrade'
   | 'instantUnstakingClock'
   | 'institutionalNavigation'
   | 'institutions'

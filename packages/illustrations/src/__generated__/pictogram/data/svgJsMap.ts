@@ -1306,6 +1306,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/increaseLimits-3.js').content,
     dark: () => require('../svgJs/dark/increaseLimits-3.js').content,
   },
+  inrTrade: {
+    light: () => require('../svgJs/light/inrTrade-0.js').content,
+    dark: () => require('../svgJs/dark/inrTrade-0.js').content,
+  },
   instantUnstakingClock: {
     light: () => require('../svgJs/light/instantUnstakingClock-1.js').content,
     dark: () => require('../svgJs/dark/instantUnstakingClock-1.js').content,
