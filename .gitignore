@@ -147,8 +147,7 @@ npm-debug.*
 web-build/
 ios
 android
-# maestro visreg screenshots
-visreg-screenshots/
+
 # failed detox test screenshots
 apps/mobile-app/artifacts
 apps/mobile-app/prebuilds/android-*

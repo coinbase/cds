@@ -50,14 +50,13 @@ if (route) {
   envFlags.push(`ROUTE_NAME=${route}`);
 }
 
-const reportPath = resolve(packageRoot, 'maestro-report.html');
+const testOutputDir = resolve(packageRoot, 'maestro-test-output');
+mkdirSync(testOutputDir, { recursive: true });
 const cmd = [
   'maestro',
   'test',
-  '--format',
-  'html-detailed',
-  '--output',
-  reportPath,
+  '--test-output-dir',
+  testOutputDir,
   flowPath,
   ...envFlags.map((e) => `--env ${e}`),
 ].join(' ');
@@ -65,5 +64,6 @@ const cmd = [
 console.log(`\nRunning: ${cmd}\n`);
 execSync(cmd, { stdio: 'inherit', cwd: outputDir });
 
-const screenshots = readdirSync(outputDir).filter((f) => f.endsWith('.png'));
-console.log(`\nCapture complete: ${screenshots.length} screenshots in ${outputDir}`);
+const screenshotDir = resolve(testOutputDir, 'screenshots');
+const screenshots = readdirSync(screenshotDir).filter((f) => f.endsWith('.png'));
+console.log(`\nCapture complete: ${screenshots.length} screenshots in ${screenshotDir}`);
