@@ -1,4 +1,5 @@
 import { Pressable } from 'react-native';
+import { Circle } from 'react-native-svg';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Text } from '../../typography/Text';
@@ -157,5 +158,42 @@ describe('Radio', () => {
     expect(screen.getByTestId('test-radio')).toHaveStyle({
       borderColor: 'rgb(9,133,81)', // This corresponds to bgPositive in defaultTheme
     });
+  });
+
+  it('applies controlSize to radio container', () => {
+    render(
+      <DefaultThemeProvider>
+        <Radio checked controlSize={60} testID="test-radio">
+          Radio
+        </Radio>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-radio')).toHaveStyle({
+      width: 60,
+      height: 60,
+    });
+  });
+
+  it('defaults dotSize to two thirds of controlSize and supports explicit dotSize', () => {
+    const { rerender } = render(
+      <DefaultThemeProvider>
+        <Radio checked controlSize={60} testID="test-radio">
+          Radio
+        </Radio>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.UNSAFE_getByType(Circle).props.r).toBe(20);
+
+    rerender(
+      <DefaultThemeProvider>
+        <Radio checked controlSize={60} dotSize={30} testID="test-radio">
+          Radio
+        </Radio>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.UNSAFE_getByType(Circle).props.r).toBe(15);
   });
 });

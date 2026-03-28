@@ -122,9 +122,9 @@ export const BarChart = memo(
       }, [seriesProp, stacked]);
 
       const seriesIds = useMemo(() => series?.map((s) => s.id), [series]);
-      const isHorizontal = chartProps.layout === 'horizontal';
-      const defaultXScaleType = isHorizontal ? 'linear' : 'band';
-      const defaultYScaleType = isHorizontal ? 'band' : 'linear';
+      const isHorizontalLayout = chartProps.layout === 'horizontal';
+      const defaultXScaleType = isHorizontalLayout ? 'linear' : 'band';
+      const defaultYScaleType = isHorizontalLayout ? 'band' : 'linear';
 
       // Split axis props into config props for Chart and visual props for axis components
       const {
@@ -164,13 +164,13 @@ export const BarChart = memo(
           scaleType: xScaleType ?? defaultXScaleType,
           data: xData,
           categoryPadding: xCategoryPadding,
-          domain: isHorizontal && !hasNegativeValues ? { min: 0, ...xDomain } : xDomain,
+          domain: isHorizontalLayout && !hasNegativeValues ? { min: 0, ...xDomain } : xDomain,
           domainLimit: xDomainLimit,
           range: xRange,
         }),
         [
           xScaleType,
-          isHorizontal,
+          isHorizontalLayout,
           xData,
           xCategoryPadding,
           hasNegativeValues,
@@ -187,13 +187,13 @@ export const BarChart = memo(
           scaleType: yScaleType ?? defaultYScaleType,
           data: yData,
           categoryPadding: yCategoryPadding,
-          domain: !isHorizontal && !hasNegativeValues ? { min: 0, ...yDomain } : yDomain,
+          domain: !isHorizontalLayout && !hasNegativeValues ? { min: 0, ...yDomain } : yDomain,
           domainLimit: yDomainLimit,
           range: yRange,
         }),
         [
           yScaleType,
-          isHorizontal,
+          isHorizontalLayout,
           yData,
           yCategoryPadding,
           hasNegativeValues,

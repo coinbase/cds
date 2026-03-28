@@ -21,7 +21,11 @@ export const Navbar = ({
       end={
         <HStack alignItems="center" gap={1}>
           <MoreMenu />
-          <IconButton name={isDark ? 'moon' : 'light'} onClick={toggleColorScheme} />
+          <IconButton
+            accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            name={isDark ? 'moon' : 'light'}
+            onClick={toggleColorScheme}
+          />
           <UserMenu />
         </HStack>
       }

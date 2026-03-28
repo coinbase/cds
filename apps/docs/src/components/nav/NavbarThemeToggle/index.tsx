@@ -1,5 +1,6 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Dropdown } from '@coinbase/cds-web/dropdown';
+import { useA11yControlledVisibility } from '@coinbase/cds-web/hooks/useA11yControlledVisibility';
 import { Box, VStack } from '@coinbase/cds-web/layout';
 import { Pressable } from '@coinbase/cds-web/system';
 import {
@@ -13,6 +14,13 @@ const NavbarThemeToggle = () => {
   const { theme: docsTheme, colorScheme } = useDocsTheme();
   const { setThemeOption } = useUnifiedTheme();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const { controlledElementAccessibilityProps } = useA11yControlledVisibility(dropdownVisible, {
+    accessibilityLabel: 'Theme color options',
+    hasPopupType: 'menu',
+  });
+
   /**
    * Handles keyboard interactions (Enter/Space) for accessibility.
    * When a valid key is pressed, prevents default behavior and
@@ -28,17 +36,23 @@ const NavbarThemeToggle = () => {
     [setThemeOption],
   );
 
-  const handleOpen = () => {
+  const handleOpenMenu = useCallback(() => {
+    setDropdownVisible(true);
     setTimeout(() => {
       containerRef.current?.querySelector<HTMLElement>('button')?.focus();
     }, 1);
-  };
+  }, []);
+
+  const handleCloseMenu = useCallback(() => {
+    setDropdownVisible(false);
+  }, []);
 
   const colorKey = `${colorScheme}Color` as const;
   const activeColor = docsTheme[colorKey]?.bgPrimary;
 
   return (
     <Dropdown
+      {...controlledElementAccessibilityProps}
       aria-label="Open theme color selector"
       content={
         <VStack
@@ -80,18 +94,20 @@ const NavbarThemeToggle = () => {
         </VStack>
       }
       contentPosition={{ gap: 0.5, skid: 0 }}
+      onCloseMenu={handleCloseMenu}
+      onOpenMenu={handleOpenMenu}
       value={activeColor}
     >
       <Pressable
+        accessibilityLabel="Edit theme color"
         alignContent="center"
         alignItems="center"
-        aria-label="Edit theme color"
         as="button"
         background="bgSecondary"
         borderRadius={1000}
         height={40}
         justifyContent="center"
-        onClick={handleOpen}
+        onClick={handleOpenMenu}
         style={{ cursor: 'pointer' }}
         width={40}
       >

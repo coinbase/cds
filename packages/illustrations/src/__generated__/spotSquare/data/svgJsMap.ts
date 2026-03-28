@@ -638,6 +638,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/idError-2.js').content,
     dark: () => require('../svgJs/dark/idError-2.js').content,
   },
+  inrTrade: {
+    light: () => require('../svgJs/light/inrTrade-0.js').content,
+    dark: () => require('../svgJs/dark/inrTrade-0.js').content,
+  },
   instantUnstaking: {
     light: () => require('../svgJs/light/instantUnstaking-0.js').content,
     dark: () => require('../svgJs/dark/instantUnstaking-0.js').content,

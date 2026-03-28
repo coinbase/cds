@@ -503,6 +503,7 @@ export type SelectBaseProps<
     | 'labelVariant'
     | 'endNode'
     | 'align'
+    | 'font'
     | 'bordered'
   > &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> &

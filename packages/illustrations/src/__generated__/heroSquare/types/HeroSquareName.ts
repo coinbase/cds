@@ -203,6 +203,7 @@ export type HeroSquareName =
   | 'fiat'
   | 'fileYourCryptoTaxes'
   | 'fileYourCryptoTaxesCheck'
+  | 'flipStable'
   | 'focusLimitOrders'
   | 'freeBtc'
   | 'futures'

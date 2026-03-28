@@ -8,7 +8,7 @@ export default function AnnouncementBarCloseButton({ onClick }: Props): ReactNod
     <IconButton
       compact
       transparent
-      aria-label={translate({
+      accessibilityLabel={translate({
         id: 'theme.AnnouncementBar.closeButtonAriaLabel',
         message: 'Close',
         description: 'The ARIA label for close button of announcement bar',

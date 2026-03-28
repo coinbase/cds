@@ -59,82 +59,86 @@ See more info about mobile builds [here](/apps/mobile-app/docs/building-mobile.m
 
 When running the debug app after a rebuild or restart, you'll most likely need to close out the Debug app and reopen it to trigger the bundler to recompile.
 
-4. (Optional - use as needed) Run detox tests locally
+4. (Optional - use as needed) Run visual regression tests locally
 
-| Platform | Profile - engine type | Command                                        |
-| -------- | --------------------- | ---------------------------------------------- |
-| ios      | debug - hermes        | `yarn nx run mobile-app:detox:ios-debug`       |
-| ios      | release - hermes      | `yarn nx run mobile-app:detox:ios-release`     |
-| android  | debug -hermes         | `yarn nx run mobile-app:detox:android-debug`   |
-| android  | release -hermes       | `yarn nx run mobile-app:detox:android-release` |
+Before running visreg, ensure the release build is installed (step 2 above). Then:
+
+| Platform | Command                             |
+| -------- | ----------------------------------- |
+| ios      | `yarn nx run mobile-visreg:ios`     |
+| android  | `yarn nx run mobile-visreg:android` |
+
+See the [mobile-visreg README](/packages/mobile-visreg/README.md) for full setup, single-route iteration, and Percy upload instructions.
 
 ## An overview of Expo NX Targets
 
-One should note that there are four NX targets associated with Expo that we leverage to build and run mobile-app in various contexts. The various contexts can be summarized as a debug and release mode for development and a debug and release mode for visreg tests (powered by detox).
+There are three core NX targets associated with Expo that we leverage to build and run mobile-app. The various contexts can be summarized as debug and release modes for development, with release builds also serving as the basis for visual regression testing.
 
-The four NX Targets (also declared in `/apps/mobile-app/project.json`):
+The three NX Targets (also declared in `/apps/mobile-app/project.json`):
 
 1. launch
 2. start
 3. build
-4. detox
 
 These targets call node scripts that live in the [scripts directory of mobile-app](/apps/mobile-app/scripts/). These scripts are intuitively named the same as their respective nx targets.
 
+Visual regression testing is handled separately by the [`packages/mobile-visreg`](/packages/mobile-visreg/README.md) package using Maestro and BrowserStack App Percy.
+
 ## Expo Debug vs Release Builds
 
-There are eight relevant build variations associated with mobile-app:
+There are four relevant build variations associated with mobile-app:
 
 Release builds:
 
 1. iOS Release build
 2. Android Release build
-3. iOS Visreg (powered by Detox) Release build
-4. Android Visreg (powered by Detox) Release build
 
 Debug builds:
 
-5. iOS Debug build
-6. Android Debug build
-7. iOS Visreg (powered by Detox) Debug build
-8. Android Visreg (powered by Detox) Debug build
+3. iOS Debug build
+4. Android Debug build
 
 There are two key ideas to understand about these build variations:
 
 1. The difference between a release and a debug build
-2. Why visreg needs its own debug and release build
+2. Why visreg uses release builds
 
 ## The difference between a release and a debug build
 
 The key difference between release and debug builds is how the javascript is bundled with the native portion of mobile-app. In release builds a fully optimized version of the javascript bundle is packaged into the iOS ipa or Android apk and is referenced by the native app entry point. In a debug build the javascript bundle is not bundled into the app artifact, instead it is kept external to the shippable native portion and the native entry point references a bundle managed by the metro bundler (the metro bundler is what runs in your terminal when you run the start target). This difference is key to understanding why hot-reloading works in debug builds but not in release builds. It is also important to note here that debug is clearly a very different environment compared to release, which is why our visreg tests must be run in the context of release build as opposed to debug.
 
-## Why visreg needs its own debug and release build
+## Why visreg uses release builds
 
-Visreg tests are powered by an end-to-end testing framework called [Detox](https://github.com/wix/Detox). Detox is different compared to other e2e testing frameworks because it a "gray-box" testing framework. What this means is that Detox has specialized code injected into the native portion of our app build to enable Detox to watch what is happening inside of the target test app. This is great for ensuring more reliable e2e tests, but its major drawback is that it requires us to build a specialized detox build to hook into the app lifecycle.
+Visual regression testing is powered by [Maestro](https://maestro.mobile.dev/), which drives the app via deep-links (`<scheme>:///Debug<RouteName>`) to navigate directly to each component route and capture a screenshot. Deep-link navigation requires the app to handle the link at the React Navigation layer — but debug builds run inside the Expo Dev Client shell, which intercepts incoming deep links before React Navigation can process them. This means debug builds cannot be used for visreg; only standard release builds are supported.
 
-For debugging visreg locally we highly recommend using the visreg debug build. Using the visreg debug build allows you to test your changes quicker because your javascript updates are hot-reloaded via metro.
+Unlike the previous Detox-based approach, Maestro does not require any specialized native build configuration or code injection. The same release prebuild used for deployment is used for visreg, which simplifies the build matrix significantly.
 
-Run iOS visreg debug tests: `yarn nx run mobile-app:detox:ios-debug`
-Run iOS visreg release tests: `yarn nx run mobile-app:detox:ios-release`
+To run visreg locally, install the release build and then run:
 
-## How visreg patching works
-
-The key to understand Visreg tests is by investigating the `apps/mobile-app/scripts/detox.mjs` script.
-
-The commands in that file are pretty straight forward; they initialize the needed emulator/simulator, launch them, and run the visreg tests via detox, but there is a key step in that file that is not immediately obvious; the patch step:
-
-```
-if (profile === 'release') {
-  if (platform === 'android') await android.patchBundle();
-  if (platform === 'ios') await ios.patchBundle();
-}
+```bash
+yarn nx run mobile-visreg:ios      # iOS
+yarn nx run mobile-visreg:android  # Android
 ```
 
-The purpose of this step is to enable updating the javascript bundle of the visreg release build (on iOS and Android) in CI without having to rebuild the native portion of the app. The command varies depending on platform because their artifact architectures are different, but the goal across the two platforms is the same; uncompress given artifact, update javascript bundle with new bundle, re-compress artifact to a state that is acceptable by the given platform.
+See the [mobile-visreg README](/packages/mobile-visreg/README.md) for the full workflow.
 
-Why is this so important?
-The native portion of the app takes over 6 minutes on Android and 8 minutes on iOS. But CDS developers rarely change the code that actually modifies the native portion of the app (native modules). Because of this it would be wasteful to rebuild the native portion of the app on every CI run. This patch method offers a very quick way of making sure all javascript code is up to date for the visreg tests without executing the long running build commands on every CI run.
+## How visreg bundle patching works
 
-When should the native portion of the app be rebuilt?
-The short answer to this is any time native dependencies, native expo configs, or relevant build tooling changes.
-Unfortunately to know exactly when this condition is true is not the easiest case to recognize. As a result this is definitely a shortcoming of this repo; ideally we would have a check that identifies whether any of these conditions are met and fail CI to indicate that a new build must be created. Until this tool is added to the repo the team is in a risky state because the native build could easily slip out of date if a developer forgets to rebuild when they should have.
+A key performance optimization keeps the committed prebuilds (native `.ipa` / `.apk` artifacts) from having to be fully rebuilt on every CI run. Because CDS developers rarely change native modules, it would be wasteful to re-run the full native build (8+ minutes on iOS, 6+ minutes on Android) just to pick up JS changes.
+
+Instead, CI uses a patch step:
+
+```bash
+yarn nx run mobile-app:patch-bundle-ios      # iOS
+yarn nx run mobile-app:patch-bundle-android  # Android
+```
+
+These scripts uncompress the committed release artifact, swap in the freshly bundled JS, and re-compress it into a valid platform artifact. This makes CI visreg runs fast while keeping the native prebuilds in sync with the JS codebase.
+
+**When should the native prebuilds be rebuilt?**
+Any time native dependencies, native Expo configs, or relevant build tooling changes. When this happens, regenerate and commit the updated prebuilds:
+
+```bash
+yarn nx run mobile-app:build:ios-release
+yarn nx run mobile-app:build:android-release
+```

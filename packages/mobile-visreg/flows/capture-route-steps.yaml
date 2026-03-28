@@ -1,0 +1,11 @@
+appId: ${APP_ID}
+---
+# Sub-flow: navigate to a single route via deep link, capture a screenshot.
+# Called from capture-all.yaml for each route via runFlow.
+# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX, SCHEME (inherited from capture-all.yaml env)
+
+- openLink: ${SCHEME}:///Debug${ROUTE_NAME}
+- assertVisible:
+    id: mobile-playground-screen
+- waitForAnimationToEnd
+- takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}

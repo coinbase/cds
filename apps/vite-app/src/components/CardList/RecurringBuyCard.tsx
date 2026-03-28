@@ -6,6 +6,7 @@ import { Box } from '@coinbase/cds-web/layout';
 export const RecurringBuyCard = () => {
   return (
     <UpsellCard
+      accessibilityLabel="Dismiss recurring buy promotion"
       action={
         <Button compact flush="start">
           Get started

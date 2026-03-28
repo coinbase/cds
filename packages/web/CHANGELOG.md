@@ -8,6 +8,25 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.59.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Suppoer controlSize on Checkbox and Radio. [[#546](https://github.com/coinbase/cds/pull/546)]
+
+## 8.58.0 (3/25/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support font prop on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
+- Feat: support borderRadius on SearchInput. [[#545](https://github.com/coinbase/cds/pull/545)]
+
+## 8.57.1 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Use aria-describedby for all tooltip's triggers. [[#541](https://github.com/coinbase/cds/pull/541)]
+
 ## 8.57.0 (3/24/2026 PST)
 
 #### 🚀 Updates

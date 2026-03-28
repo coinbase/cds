@@ -1,0 +1,32 @@
+{
+  "name": "mobile-visreg",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/mobile-visreg/src",
+  "projectType": "library",
+  "targets": {
+    "setup": {
+      "command": "node ./src/setup.mjs",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    },
+    "ios": {
+      "command": "node ./src/run.mjs --appId com.ui-systems.ios-release-hermes --scheme cds --platform ios --platform-suffix _ios",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    },
+    "android": {
+      "command": "node ./src/run.mjs --appId com.ui_systems.android_release_hermes --scheme cds --platform android --platform-suffix _android",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    },
+    "upload": {
+      "command": "node ./src/upload.mjs",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    }
+  }
+}

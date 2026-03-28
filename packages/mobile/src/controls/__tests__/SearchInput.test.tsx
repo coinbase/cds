@@ -2,6 +2,7 @@ import { Animated, StyleSheet } from 'react-native';
 import { focusedInputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { InputIconButton } from '../InputIconButton';
 import { SearchInput } from '../SearchInput';
@@ -60,6 +61,23 @@ describe('Search', () => {
     render(SearchComponent);
 
     expect(screen.getByRole('search').props.value).toBe('value');
+  });
+
+  it('passes font to the text input', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput font="label1" onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const flattenedStyle = StyleSheet.flatten(screen.getByRole('search').props.style);
+    expect(flattenedStyle).toEqual(
+      expect.objectContaining({
+        fontSize: defaultTheme.fontSize.label1,
+        minHeight: defaultTheme.lineHeight.label1,
+        fontWeight: defaultTheme.fontWeight.label1,
+      }),
+    );
   });
 
   it('keeps focused border width at 0 by default when bordered is false', () => {

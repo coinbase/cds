@@ -98,14 +98,6 @@ build:
         expire_tmp_tags_after_days: 1
         expire_all_after_days: 2
     - BaldurNode:
-        name: package-ui-mobile-visreg
-        path: ./packages/ui-mobile-visreg/publish.Dockerfile
-        autobuild_files:
-          - packages/ui-mobile-visreg/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
         name: package-ui-scorecard
         path: ./packages/ui-scorecard/publish.Dockerfile
         autobuild_files:

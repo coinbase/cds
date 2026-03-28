@@ -23,6 +23,8 @@ export function buildWebConfig(plugin: Record<string, unknown>) {
     rules: {
       '@coinbase/cds/control-has-associated-label-extended': 'warn',
       '@coinbase/cds/no-v7-imports': 'warn',
+      '@coinbase/cds/web-chart-scrubbing-accessibility': 'warn',
+      '@coinbase/cds/web-tooltip-interactive-content': 'warn',
       'jsx-a11y/control-has-associated-label': [
         'warn',
         {
@@ -49,6 +51,8 @@ export const legacyWebConfig = {
   rules: {
     '@coinbase/cds/control-has-associated-label-extended': 'warn',
     '@coinbase/cds/no-v7-imports': 'warn',
+    '@coinbase/cds/web-chart-scrubbing-accessibility': 'warn',
+    '@coinbase/cds/web-tooltip-interactive-content': 'warn',
   },
   overrides: [
     {

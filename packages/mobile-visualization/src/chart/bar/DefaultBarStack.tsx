@@ -3,7 +3,12 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { defaultBarEnterTransition, withStaggerDelayTransition } from '../utils/bar';
+import {
+  defaultBarEnterTransition,
+  getNormalizedStagger,
+  getStackInitialClipRect,
+  withStaggerDelayTransition,
+} from '../utils/bar';
 import { defaultTransition, getTransition, usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
@@ -23,20 +28,16 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
-    yOrigin,
+    origin,
     transitions,
     transition,
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
 
-    // For vertical layout, stagger by x (category axis). For horizontal, stagger by y (category axis).
-    const normalizedStagger = useMemo(() => {
-      const barsGrowVertically = layout !== 'horizontal';
-      if (barsGrowVertically) {
-        return drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0;
-      }
-      return drawingArea.height > 0 ? (y - drawingArea.y) / drawingArea.height : 0;
-    }, [layout, x, y, drawingArea.x, drawingArea.y, drawingArea.width, drawingArea.height]);
+    const normalizedStagger = useMemo(
+      () => getNormalizedStagger(layout, x, y, drawingArea),
+      [layout, x, y, drawingArea],
+    );
 
     const enterTransition = useMemo(
       () =>
@@ -66,28 +67,21 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     // Initial clip path for entry animation (bar at baseline with minimal height)
     const initialPath = useMemo(() => {
-      if (!animate) return undefined;
+      if (!animate) return;
 
-      const barsGrowVertically = layout !== 'horizontal';
-      const baseline = yOrigin ?? (barsGrowVertically ? y + height : x);
-      const minSize = 1;
-
-      const initialX = barsGrowVertically ? x : baseline;
-      const initialY = barsGrowVertically ? baseline : y;
-      const initialWidth = barsGrowVertically ? width : minSize;
-      const initialHeight = barsGrowVertically ? minSize : height;
+      const initialClipRect = getStackInitialClipRect({ x, y, width, height }, layout, origin);
 
       return getBarPath(
-        initialX,
-        initialY,
-        initialWidth,
-        initialHeight,
+        initialClipRect.x,
+        initialClipRect.y,
+        initialClipRect.width,
+        initialClipRect.height,
         borderRadius,
         roundTop,
         roundBottom,
         layout,
       );
-    }, [animate, layout, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+    }, [animate, layout, x, y, height, width, borderRadius, roundTop, roundBottom, origin]);
 
     const animatedClipPath = usePathTransition({
       currentPath: targetPath,

@@ -22,6 +22,11 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = Omit<
     'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
   > & {
     checked?: boolean;
+    /**
+     * Sets the outer checkbox control size in pixels.
+     * @default theme.controlSize.checkboxSize
+     */
+    controlSize?: number;
     title: React.ReactNode;
     description?: React.ReactNode;
     onChange?: (inputChangeEvent: React.ChangeEvent<HTMLInputElement>) => void;
@@ -92,6 +97,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     noScaleOnPress = true,
     readOnly,
     indeterminate,
+    controlSize,
     className,
     classNames,
     styles,
@@ -145,6 +151,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
           aria-describedby={ariaDescribedBy}
           aria-labelledby={ariaLabelledBy}
           checked={!!checked}
+          controlSize={controlSize}
           disabled={disabled}
           indeterminate={indeterminate}
           onChange={onChange}

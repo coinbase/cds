@@ -22,9 +22,9 @@ To start, pass in a series of data to the chart.
 />
 ```
 
-## Horizontal Bars
+### Layout
 
-To render horizontal bars, set the `layout` prop to `"horizontal"`. In this layout, the Y axis becomes the categorical axis and the X axis becomes the value axis.
+You can set `layout` to `horizontal` to render the chart horizontally.
 
 ```jsx
 function HorizontalBars() {
@@ -75,46 +75,44 @@ function HorizontalBars() {
 You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.
 
 ```tsx
-function MonthlyGainsByAsset() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-  const tickFormatter = useCallback(
-    (amount) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount),
-    [],
-  );
+function MultipleSeries() {
+  const theme = useTheme();
 
   return (
     <BarChart
-      height={150}
-      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      height={400}
       series={[
         {
-          id: 'btc',
-          data: [
-            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
-            620.57,
-          ],
-          color: assets.btc.color,
+          id: 'series1',
+          data: [5, 1, 3],
+          color: `rgb(${theme.spectrum.blue40})`,
+          label: 'Series 1',
         },
         {
-          id: 'eth',
-          data: [
-            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
-            550.93,
-          ],
-          color: assets.eth.color,
+          id: 'series2',
+          data: [2, 4, 6],
+          color: `rgb(${theme.spectrum.yellow40})`,
+          label: 'Series 2',
+        },
+        {
+          id: 'series3',
+          data: [1, 2, 3],
+          color: `rgb(${theme.spectrum.red40})`,
+          label: 'Series 3',
         },
       ]}
+      legend
+      showXAxis
       showYAxis
+      xAxis={{
+        data: ['Group A', 'Group B', 'Group C'],
+        showLine: true,
+        showTickMarks: true,
+      }}
       yAxis={{
+        showLine: true,
         showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: tickFormatter,
-        width: 70,
+        showTickMarks: true,
       }}
     />
   );
@@ -126,63 +124,45 @@ function MonthlyGainsByAsset() {
 You can also configure stacking for your chart using the `stacked` prop.
 
 ```tsx
-function MonthlyGainsByAsset() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-  const tickFormatter = useCallback(
-    (amount) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount),
-    [],
-  );
+function StackedBars() {
+  const theme = useTheme();
 
   return (
     <BarChart
-      height={150}
-      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      stacked
+      height={400}
       series={[
         {
-          id: 'xrp',
-          data: [
-            170.22, 340.34, 305.98, 225.39, 250.76, 130.53, 115.81, 195.04, 210.28, 60.42, 120.94,
-            85.12,
-          ],
-          color: assets.xrp.color,
+          id: 'series1',
+          data: [5, 1, 3, 3, 0, 2, 1],
+          color: `rgb(${theme.spectrum.blue40})`,
+          label: 'Series 1',
         },
         {
-          id: 'ltc',
-          data: [
-            450.77, 615.33, 355.68, 880.15, 810.99, 520.46, 590.29, 960.52, 910.07, 1020.41, 851.89,
-            750.61,
-          ],
-          color: assets.ltc.color,
+          id: 'series2',
+          data: [2, 4, 6, 0, 3, 1, 2],
+          color: `rgb(${theme.spectrum.yellow40})`,
+          label: 'Series 2',
         },
         {
-          id: 'eth',
-          data: [
-            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
-            550.93,
-          ],
-          color: assets.eth.color,
-        },
-        {
-          id: 'btc',
-          data: [
-            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
-            620.57,
-          ],
-          color: assets.btc.color,
+          id: 'series3',
+          data: [1, 2, 3, 1, 0, 2, 3],
+          color: `rgb(${theme.spectrum.red40})`,
+          label: 'Series 3',
         },
       ]}
-      stacked
+      legend
+      showXAxis
       showYAxis
+      xAxis={{
+        data: ['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G'],
+        showLine: true,
+        showTickMarks: true,
+      }}
       yAxis={{
+        showLine: true,
         showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: tickFormatter,
-        width: 70,
+        showTickMarks: true,
       }}
     />
   );
@@ -193,66 +173,60 @@ You can also configure multiple stacks by setting the `stackId` prop on each ser
 
 ```tsx
 function MonthlyGainsMultipleStacks() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-  const tickFormatter = useCallback(
-    (amount) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount),
-    [],
-  );
+  const theme = useTheme();
 
   return (
     <BarChart
-      height={150}
-      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      height={400}
       series={[
         {
-          id: 'xrp',
-          data: [
-            170.22, 340.34, 305.98, 225.39, 250.76, 130.53, 115.81, 195.04, 210.28, 60.42, 120.94,
-            85.12,
-          ],
-          color: assets.xrp.color,
-          stackId: 'shortTerm',
+          id: 'series1',
+          data: [5, 1, 3],
+          color: `rgb(${theme.spectrum.blue40})`,
+          stackId: 'stack1',
         },
         {
-          id: 'ltc',
-          data: [
-            450.77, 615.33, 355.68, 880.15, 810.99, 520.46, 590.29, 960.52, 910.07, 1020.41, 851.89,
-            750.61,
-          ],
-          color: assets.ltc.color,
-          stackId: 'shortTerm',
+          id: 'series2',
+          data: [2, 4, 6],
+          color: `rgb(${theme.spectrum.yellow40})`,
+          stackId: 'stack1',
         },
         {
-          id: 'eth',
-          data: [
-            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
-            550.93,
-          ],
-          color: assets.eth.color,
-          stackId: 'longTerm',
+          id: 'series3',
+          data: [1, 2, 3],
+          color: `rgb(${theme.spectrum.red40})`,
+          stackId: 'stack1',
         },
         {
-          id: 'btc',
-          data: [
-            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
-            620.57,
-          ],
-          color: assets.btc.color,
-          stackId: 'longTerm',
+          id: 'series4',
+          data: [3, 0, 2],
+          color: `rgb(${theme.spectrum.purple40})`,
+          stackId: 'stack2',
+        },
+        {
+          id: 'series5',
+          data: [0, 3, 1],
+          color: `rgb(${theme.spectrum.teal40})`,
+          stackId: 'stack2',
+        },
+        {
+          id: 'series6',
+          data: [1, 0, 2],
+          color: `rgb(${theme.spectrum.green40})`,
+          stackId: 'stack2',
         },
       ]}
-      stacked
+      showXAxis
       showYAxis
+      xAxis={{
+        data: ['Group A', 'Group B', 'Group C'],
+        showLine: true,
+        showTickMarks: true,
+      }}
       yAxis={{
+        showLine: true,
         showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: tickFormatter,
-        width: 70,
+        showTickMarks: true,
       }}
     />
   );
@@ -262,65 +236,63 @@ function MonthlyGainsMultipleStacks() {
 ### Stack Gap
 
 ```tsx
-function MonthlyGainsByAsset() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-  const tickFormatter = useCallback(
-    (amount) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount),
-    [],
-  );
+function StackGap() {
+  const theme = useTheme();
 
   return (
     <BarChart
-      height={150}
-      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      height={400}
       series={[
         {
-          id: 'xrp',
-          data: [
-            170.22, 340.34, 305.98, 225.39, 250.76, 130.53, 115.81, 195.04, 210.28, 60.42, 120.94,
-            500,
-          ],
-          color: assets.xrp.color,
+          id: 'series1',
+          data: [5, 1, 3],
+          color: `rgb(${theme.spectrum.blue40})`,
+          stackId: 'stack1',
         },
         {
-          id: 'ltc',
-          data: [
-            450.77, 615.33, 355.68, 880.15, 810.99, 520.46, 590.29, 960.52, 910.07, 1020.41, 851.89,
-            500,
-          ],
-          color: assets.ltc.color,
+          id: 'series2',
+          data: [2, 4, 6],
+          color: `rgb(${theme.spectrum.yellow40})`,
+          stackId: 'stack1',
         },
         {
-          id: 'eth',
-          data: [
-            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
-            500,
-          ],
-          color: assets.eth.color,
+          id: 'series3',
+          data: [1, 2, 3],
+          color: `rgb(${theme.spectrum.red40})`,
+          stackId: 'stack1',
         },
         {
-          id: 'btc',
-          data: [
-            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
-            500,
-          ],
-          color: assets.btc.color,
+          id: 'series4',
+          data: [3, 0, 2],
+          color: `rgb(${theme.spectrum.purple40})`,
+          stackId: 'stack2',
+        },
+        {
+          id: 'series5',
+          data: [0, 3, 1],
+          color: `rgb(${theme.spectrum.teal40})`,
+          stackId: 'stack2',
+        },
+        {
+          id: 'series6',
+          data: [1, 0, 2],
+          color: `rgb(${theme.spectrum.green40})`,
+          stackId: 'stack2',
         },
       ]}
       stackGap={4}
-      stacked
+      barMinSize={8}
+      showXAxis
       showYAxis
+      xAxis={{
+        data: ['Group A', 'Group B', 'Group C'],
+        showLine: true,
+        showTickMarks: true,
+      }}
       yAxis={{
+        showLine: true,
         showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: tickFormatter,
-        width: 70,
-        domainLimit: 'strict',
+        showTickMarks: true,
       }}
     />
   );
@@ -334,34 +306,53 @@ Bars have a default borderRadius of `4`. You can change this by setting the `bor
 Stacks will only round the top corners of touching bars.
 
 ```jsx
-<BarChart
-  stacked
-  borderRadius={1000}
-  height={300}
-  maxWidth={400}
-  padding={0}
-  series={[
-    { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
-    { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
-    { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
-    {
-      id: 'green',
-      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
-      color: '#33c481',
-    },
-  ]}
-  showXAxis
-  xAxis={{
-    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-    tickLabelFormatter: (value) => {
-      if (value === 'D') {
-        return <Tspan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
-      }
-      return value;
-    },
-  }}
-  style={{ margin: '0 auto' }}
-/>
+function RoundedStacks() {
+  const theme = useTheme();
+
+  return (
+    <BarChart
+      stacked
+      borderRadius={1000}
+      height={300}
+      maxWidth={384}
+      padding={0}
+      series={[
+        {
+          id: 'purple',
+          data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4],
+          color: `rgb(${theme.spectrum.purple30})`,
+        },
+        {
+          id: 'blue',
+          data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18],
+          color: `rgb(${theme.spectrum.blue30})`,
+        },
+        {
+          id: 'cyan',
+          data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9],
+          color: `rgb(${theme.spectrum.teal30})`,
+        },
+        {
+          id: 'green',
+          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+          color: `rgb(${theme.spectrum.green30})`,
+        },
+      ]}
+      showXAxis
+      xAxis={{
+        data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+        tickLabelFormatter: (value) => {
+          if (value === 'D') {
+            return <TSpan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
+          }
+          return value;
+        },
+        categoryPadding: 0.25,
+      }}
+      style={{ margin: '0 auto' }}
+    />
+  );
+}
 ```
 
 ### Round Baseline
@@ -369,35 +360,56 @@ Stacks will only round the top corners of touching bars.
 You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
 
 ```jsx
-<BarChart
-  roundBaseline
-  stacked
-  borderRadius={1000}
-  height={300}
-  maxWidth={400}
-  padding={0}
-  series={[
-    { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
-    { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
-    { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
-    {
-      id: 'green',
-      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
-      color: '#33c481',
-    },
-  ]}
-  showXAxis
-  xAxis={{
-    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-    tickLabelFormatter: (value) => {
-      if (value === 'D') {
-        return <TSpan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
-      }
-      return value;
-    },
-  }}
-  style={{ margin: '0 auto' }}
-/>
+function MonthlyRewards() {
+  const theme = useTheme();
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+
+  return (
+    <BarChart
+      roundBaseline
+      stacked
+      borderRadius={1000}
+      height={300}
+      maxWidth={384}
+      inset={0}
+      series={[
+        {
+          id: 'purple',
+          data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4],
+          color: `rgb(${theme.spectrum.purple30})`,
+        },
+        {
+          id: 'blue',
+          data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18],
+          color: `rgb(${theme.spectrum.blue30})`,
+        },
+        {
+          id: 'cyan',
+          data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9],
+          color: `rgb(${theme.spectrum.teal30})`,
+        },
+        {
+          id: 'green',
+          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+          color: `rgb(${theme.spectrum.green30})`,
+        },
+      ]}
+      showXAxis
+      xAxis={{
+        data: months,
+        tickLabelFormatter: (value) => {
+          if (value === 11) {
+            return <TSpan style={{ fontWeight: 'bold' }}>{months[value]}</TSpan>;
+          }
+          return months[value];
+        },
+        categoryPadding: 0.25,
+      }}
+      stackMinSize={24}
+      style={{ margin: '0 auto' }}
+    />
+  );
+}
 ```
 
 ## Data
@@ -479,6 +491,7 @@ You can also use the `BarStackComponent` prop to render an empty circle for zero
 
 ```tsx
 function MonthlyRewards() {
+  const theme = useTheme();
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   const currentMonth = 7;
   const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
@@ -487,10 +500,10 @@ function MonthlyRewards() {
   const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
 
   const series = [
-    { id: 'purple', data: purple, color: '#b399ff' },
-    { id: 'blue', data: blue, color: '#4f7cff' },
-    { id: 'cyan', data: cyan, color: '#00c2df' },
-    { id: 'green', data: green, color: '#33c481' },
+    { id: 'purple', data: purple, color: `rgb(${theme.spectrum.purple30})` },
+    { id: 'blue', data: blue, color: `rgb(${theme.spectrum.blue30})` },
+    { id: 'cyan', data: cyan, color: `rgb(${theme.spectrum.teal30})` },
+    { id: 'green', data: green, color: `rgb(${theme.spectrum.green30})` },
   ];
 
   const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
@@ -525,7 +538,7 @@ function MonthlyRewards() {
       series={series}
       showYAxis={false}
       stackMinSize={3}
-      width={403}
+      width={384}
       xAxis={{
         tickLabelFormatter: (index) => {
           if (index == currentMonth) {
@@ -533,7 +546,7 @@ function MonthlyRewards() {
           }
           return months[index];
         },
-        categoryPadding: 0.27,
+        categoryPadding: 0.25,
       }}
     />
   );
@@ -611,7 +624,6 @@ There are two ways to control the spacing between bars. You can set the `barPadd
 ### Minimum Size
 
 To better emphasize small values, you can set the `stackMinSize` or `barMinSize` prop to control the minimum size for entire stacks or individual bar.
-It is recommended to only use `stackMinSize` for stacked charts and `barMinSize` for non-stacked charts.
 
 #### Minimum Stack Size
 

@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+# Dismiss the iOS "Open in CDS?" system dialog on the first deep link of a session.
+# Uses a dummy path so the app stays on the home screen — the dialog is triggered
+# by the scheme, not the path. Subsequent deep links don't show the dialog.
+- openLink: ${SCHEME}:///dismiss
+- tapOn:
+    text: 'Open'
+    optional: true
