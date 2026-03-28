@@ -16,4 +16,10 @@ export const Custom = () => (
 export default {
   title: 'ComponentConfig',
   component: ComponentConfigProvider,
+  parameters: {
+    // We are constrained by the properties of the customTheme
+    a11y: {
+      disable: true,
+    },
+  },
 };
