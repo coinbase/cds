@@ -3,7 +3,11 @@
 // the screenshot and Cancel after.
 export const overlayRoutes = new Set([
   'AlertBasic',
+  'DrawerLeft',
+  'DrawerTop',
   'StickyFooter',
+  'TrayBasic',
+  'ModalBasic',
 ]);
 
 export const enabledRoutes = [
@@ -33,12 +37,15 @@ export const enabledRoutes = [
   'ControlGroup',
   'Divider',
   'Dot',
+  'DrawerLeft',
+  'DrawerTop',
   'Group',
   'InputChip',
   'InputStack',
   'Legend',
   'Link',
   'ListCell',
+  'ModalBasic',
   'Pressable',
   'RadioCell',
   'SelectChip',
@@ -46,6 +53,7 @@ export const enabledRoutes = [
   'StepperHorizontal',
   'StepperVertical',
   'StickyFooter',
+  'TrayBasic',
   'Switch',
   'Tabs',
   'Tag',

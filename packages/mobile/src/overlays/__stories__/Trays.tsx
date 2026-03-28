@@ -38,17 +38,22 @@ export const DefaultTray = ({ title }: { title?: React.ReactNode }) => {
           onVisibilityChange={handleTrayVisibilityChange}
           title={title}
         >
-          <Menu onChange={setValue} value={value}>
-            {options.map((option: string) => (
-              <SelectOption
-                key={option}
-                description="BTC"
-                onPress={handleOptionPress}
-                title={option}
-                value={option}
-              />
-            ))}
-          </Menu>
+          <VStack gap={2} paddingX={3}>
+            <Menu onChange={setValue} value={value}>
+              {options.map((option: string) => (
+                <SelectOption
+                  key={option}
+                  description="BTC"
+                  onPress={handleOptionPress}
+                  title={option}
+                  value={option}
+                />
+              ))}
+            </Menu>
+            <Button block variant="secondary" onPress={handleOptionPress}>
+              Close
+            </Button>
+          </VStack>
         </Tray>
       )}
     </>
