@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.59.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Suppoer controlSize on Checkbox and Radio. [[#546](https://github.com/coinbase/cds/pull/546)]
+
 ## 8.58.0 (3/25/2026 PST)
 
 #### 🚀 Updates
