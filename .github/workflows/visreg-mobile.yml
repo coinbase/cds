@@ -82,29 +82,21 @@ jobs:
           # Give the XCUITest driver extra time to attach on cold CI runners.
           MAESTRO_DRIVER_STARTUP_TIMEOUT: 180000
 
-      - name: Upload screenshots artifact
+      - name: Upload to Percy
+        id: percy-upload
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: visreg-screenshots-ios
-          path: packages/mobile-visreg/visreg-screenshots/
-          if-no-files-found: ignore
-
-      # - name: Upload to Percy
-      #   id: percy-upload
-      #   if: always()
-      #   run: |
-      #     OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
-      #     EXIT_CODE=$?
-      #     echo "$OUTPUT"
-      #     PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
-      #     echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
-      #     exit $EXIT_CODE
-      #   env:
-      #     PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
-      #     PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
-      #     PERCY_PARALLEL_NONCE: ${{ github.run_id }}
-      #     PERCY_PARALLEL_TOTAL: 1
+        run: |
+          OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
+          echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
+          PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
+          PERCY_PARALLEL_NONCE: ${{ github.run_id }}
+          PERCY_PARALLEL_TOTAL: 1
 
   # android:
   #   name: Visreg Android
@@ -206,7 +198,7 @@ jobs:
   comment-pr:
     name: Comment Percy Link
     needs: [ios]
-    if: false # temporarily disabled while Percy upload is skipped
+    if: always() && github.event_name == 'pull_request' && needs.ios.outputs.percy_url != ''
     runs-on: ubuntu-latest
     steps:
       - name: Post Percy link on PR
