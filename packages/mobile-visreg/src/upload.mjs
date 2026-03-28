@@ -13,7 +13,7 @@ function parseArgs() {
   return result;
 }
 
-const { dir = './visreg-screenshots' } = parseArgs();
+const { dir = './maestro-test-output/screenshots' } = parseArgs();
 
 if (!process.env.PERCY_TOKEN) {
   console.error('Error: PERCY_TOKEN environment variable is not set');

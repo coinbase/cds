@@ -1,11 +1,17 @@
 appId: ${APP_ID}
 ---
-# Sub-flow: navigate to a single route via deep link, capture a screenshot.
-# Called from capture-all.yaml for each route via runFlow.
+# Sub-flow for overlay routes (alerts, modals, trays, drawers, etc.)
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX, SCHEME (inherited from capture-all.yaml env)
 
 - openLink: ${SCHEME}:///Debug${ROUTE_NAME}
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd
+# Open overlay, capture, then close before next route
+- tapOn: 'Open'
+- waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
+- tapOn:
+    text: 'Cancel'
+    optional: true
+- waitForAnimationToEnd

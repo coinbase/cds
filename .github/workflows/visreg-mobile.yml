@@ -82,6 +82,16 @@ jobs:
           # Give the XCUITest driver extra time to attach on cold CI runners.
           MAESTRO_DRIVER_STARTUP_TIMEOUT: 180000
 
+      - name: Upload Maestro test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-report-ios
+          path: |
+            packages/mobile-visreg/maestro-report.html
+            packages/mobile-visreg/maestro-test-output/
+          if-no-files-found: ignore
+
       - name: Upload to Percy
         id: percy-upload
         if: always()
