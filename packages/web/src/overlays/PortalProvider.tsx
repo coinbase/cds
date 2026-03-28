@@ -8,7 +8,6 @@ import type { PortalNode } from '@coinbase/cds-common/overlays/usePortalState';
 import { usePortalState } from '@coinbase/cds-common/overlays/usePortalState';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { IsoHexagonClipPath } from '../media/Hexagon';
 import { BrowserOnly } from '../system/BrowserOnly';
 import { getBrowserGlobals } from '../utils/browser';
@@ -20,8 +19,6 @@ export type PortalProviderProps = ToastProviderProps & {
    */
   renderPortals?: boolean;
 };
-
-export type PortalProviderBaseProps = React.PropsWithChildren<PortalProviderProps>;
 
 export const portalRootId = 'portalRoot';
 export const modalContainerId = 'modalsContainer';
@@ -98,9 +95,7 @@ export const PortalHost: React.FC = memo(() => {
 });
 
 export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProps>> = memo(
-  (_props: React.PropsWithChildren<PortalProviderProps>) => {
-    const mergedProps = useComponentConfig('PortalProvider', _props);
-    const { children, toastBottomOffset = 0, renderPortals = true } = mergedProps;
+  ({ children, toastBottomOffset = 0, renderPortals = true }) => {
     const portalState = usePortalState();
 
     return (

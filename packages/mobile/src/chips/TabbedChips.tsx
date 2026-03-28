@@ -4,6 +4,7 @@ import type { View } from 'react-native';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
 import { Box, OverflowGradient } from '../layout';
 import { type TabNavigationBaseProps, Tabs } from '../tabs';
@@ -50,6 +51,7 @@ const TabbedChipsComponent = memo(
     _props: TabbedChipsProps<TabId>,
     ref: React.ForwardedRef<View>,
   ) {
+    const mergedProps = useComponentConfig('TabbedChips', _props);
     const {
       tabs,
       value = tabs[0].id,
@@ -57,7 +59,7 @@ const TabbedChipsComponent = memo(
       onChange,
       Component = TabComponent,
       ...props
-    } = _props;
+    } = mergedProps;
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
     const [scrollTarget, setScrollTarget] = useState<View | null>(null);
     const handleChange = useCallback(

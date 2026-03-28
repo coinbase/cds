@@ -11,8 +11,6 @@ import type { MotionTransition, PulseVariant } from '@coinbase/cds-common';
 import { pulseTransitionConfig, pulseVariantOpacity } from '@coinbase/cds-common/motion/hint';
 import { m as motion, useAnimation } from 'framer-motion';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
-
 import type { HintMotionBaseProps } from './types';
 import { convertTransition } from './utils';
 
@@ -56,15 +54,16 @@ export const calculateRepeatValue = (iterations: number | undefined) => {
  * Please consult with the motion team in #ask-motion before using this component.
  */
 export const Pulse = memo(
-  forwardRef(function Pulse(_props: PulseProps, ref: ForwardedRef<PulseRefBaseProps>) {
-    const mergedProps = useComponentConfig('Pulse', _props);
-    const {
+  forwardRef(function Pulse(
+    {
       children,
       variant = 'moderate',
       disableAnimateOnMount = false,
       iterations,
       motionConfig,
-    } = mergedProps;
+    }: PulseProps,
+    ref: ForwardedRef<PulseRefBaseProps>,
+  ) {
     const controls = useAnimation();
 
     const stopAnimation = useCallback(() => {

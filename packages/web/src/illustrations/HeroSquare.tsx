@@ -18,6 +18,6 @@ export type HeroSquareBaseProps = IllustrationBaseProps<'heroSquare'> &
 
 export type HeroSquareProps = HeroSquareBaseProps;
 
-export const HeroSquare = createIllustration('heroSquare', heroSquareVersionMap, 'HeroSquare');
+export const HeroSquare = createIllustration('heroSquare', heroSquareVersionMap);
 
 export type { HeroSquareName } from '@coinbase/cds-illustrations/__generated__/heroSquare/types/HeroSquareName';

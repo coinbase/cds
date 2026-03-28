@@ -5,7 +5,6 @@ import type { LottieMarkersAsMap, LottieSource } from '@coinbase/cds-common/type
 import { noop } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import type { LottieProps } from './types';
@@ -184,20 +183,10 @@ const lottieCss = css`
   }
 `;
 
-export type LottieBaseProps<
-  Marker extends string = string,
-  Source extends LottieSource<Marker> = LottieSource<Marker>,
-> = LottieProps<Marker, Source>;
-
 export const Lottie = memo(
   forwardRef(
     <Marker extends string, Source extends LottieSource<Marker>>(
-      _props: LottieProps<Marker, Source>,
-      // String wont work on literal unions, so use any here
-      forwardedRef: React.ForwardedRef<LottiePlayer<LottieSource<any>>>,
-    ) => {
-      const mergedProps = useComponentConfig('Lottie', _props);
-      const {
+      {
         source,
         loop = false,
         autoplay = false,
@@ -206,7 +195,10 @@ export const Lottie = memo(
         resizeMode = 'contain',
         filterSize = defaultFilterSize,
         ...boxProps
-      } = mergedProps;
+      }: LottieProps<Marker, Source>,
+      // String wont work on literal unions, so use any here
+      forwardedRef: React.ForwardedRef<LottiePlayer<LottieSource<any>>>,
+    ) => {
       const { containerRef, animationRef } = useLottieLoader({
         source,
         autoplay,

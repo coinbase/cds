@@ -50,10 +50,9 @@ export type GroupProps = GroupBaseProps<BoxProps>;
  */
 export const Group = memo(
   forwardRef<View, GroupProps>(function Group(
-    _props: GroupProps,
+    { children, direction = 'vertical', divider, gap, renderItem, ...boxProps }: GroupProps,
     forwardedRef: React.ForwardedRef<View>,
   ) {
-    const { children, direction = 'vertical', divider, gap, renderItem, ...boxProps } = _props;
     const contents = useMemo(
       () =>
         flattenAndJoinNodes({

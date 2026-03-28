@@ -13,7 +13,6 @@ import { pulseTransitionConfig, pulseVariantOpacity } from '@coinbase/cds-common
 import type { MotionTransition, PulseVariant } from '@coinbase/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import type { HintMotionBaseProps } from './types';
 
@@ -49,15 +48,16 @@ export type PulseProps = PulseBaseProps;
  * Please consult with the motion team in #ask-motion before using this component.
  */
 export const Pulse = memo(
-  forwardRef(function Pulse(_props: PulseProps, ref: ForwardedRef<PulseRefBaseProps>) {
-    const mergedProps = useComponentConfig('Pulse', _props);
-    const {
+  forwardRef(function Pulse(
+    {
       children,
       variant = 'moderate',
       disableAnimateOnMount = false,
       iterations,
       motionConfig,
-    } = mergedProps;
+    }: PulseProps,
+    ref: ForwardedRef<PulseRefBaseProps>,
+  ) {
     const [variantState, setVariantState] = useState(variant);
     const opacity = useRef(new Animated.Value(0)).current;
 

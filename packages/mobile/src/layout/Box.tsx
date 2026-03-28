@@ -5,7 +5,6 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 
 import type { Theme } from '../core/theme';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { pinStyles } from '../styles/pinStyles';
 import { getStyles, type StyleProps } from '../styles/styleProps';
@@ -133,93 +132,95 @@ const getBorderedStyles = (
 };
 
 export const Box = memo(
-  forwardRef<View, BoxProps>((_props: BoxProps, ref) => {
-    const mergedProps = useComponentConfig('Box', _props);
-    const {
-      children,
-      style,
-      animated,
-      testID,
-      pin,
-      bordered,
-      borderedTop,
-      borderedBottom,
-      borderedStart,
-      borderedEnd,
-      borderedHorizontal,
-      borderedVertical,
-      dangerouslySetBackground,
-      // Begin style props
-      display,
-      position,
-      overflow,
-      zIndex,
-      gap,
-      columnGap,
-      rowGap,
-      justifyContent,
-      alignContent,
-      alignItems,
-      alignSelf,
-      flexDirection,
-      flexWrap,
-      color,
-      background,
-      borderColor,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-      borderTopWidth,
-      borderEndWidth,
-      borderBottomWidth,
-      borderStartWidth,
-      elevation,
-      borderWidth,
-      borderRadius,
-      font,
-      fontFamily = font,
-      fontSize = font,
-      fontWeight = font,
-      lineHeight = font,
-      textAlign,
-      textDecorationStyle,
-      textDecorationLine,
-      textTransform,
-      padding,
-      paddingX,
-      paddingY,
-      paddingTop,
-      paddingBottom,
-      paddingStart,
-      paddingEnd,
-      margin,
-      marginX,
-      marginY,
-      marginTop,
-      marginBottom,
-      marginStart,
-      marginEnd,
-      userSelect,
-      width,
-      height,
-      minWidth,
-      minHeight,
-      maxWidth,
-      maxHeight,
-      aspectRatio,
-      top,
-      bottom,
-      left,
-      right,
-      transform,
-      flexBasis,
-      flexShrink,
-      flexGrow,
-      opacity,
-      ...props
-    } = mergedProps;
-    const Component = animated ? Animated.View : View;
+  forwardRef<View, BoxProps>(
+    (
+      {
+        children,
+        style,
+        animated,
+        testID,
+        pin,
+        bordered,
+        borderedTop,
+        borderedBottom,
+        borderedStart,
+        borderedEnd,
+        borderedHorizontal,
+        borderedVertical,
+        dangerouslySetBackground,
+        // Begin style props
+        display,
+        position,
+        overflow,
+        zIndex,
+        gap,
+        columnGap,
+        rowGap,
+        justifyContent,
+        alignContent,
+        alignItems,
+        alignSelf,
+        flexDirection,
+        flexWrap,
+        color,
+        background,
+        borderColor,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
+        borderTopWidth,
+        borderEndWidth,
+        borderBottomWidth,
+        borderStartWidth,
+        elevation,
+        borderWidth,
+        borderRadius,
+        font,
+        fontFamily = font,
+        fontSize = font,
+        fontWeight = font,
+        lineHeight = font,
+        textAlign,
+        textDecorationStyle,
+        textDecorationLine,
+        textTransform,
+        padding,
+        paddingX,
+        paddingY,
+        paddingTop,
+        paddingBottom,
+        paddingStart,
+        paddingEnd,
+        margin,
+        marginX,
+        marginY,
+        marginTop,
+        marginBottom,
+        marginStart,
+        marginEnd,
+        userSelect,
+        width,
+        height,
+        minWidth,
+        minHeight,
+        maxWidth,
+        maxHeight,
+        aspectRatio,
+        top,
+        bottom,
+        left,
+        right,
+        transform,
+        flexBasis,
+        flexShrink,
+        flexGrow,
+        opacity,
+        ...props
+      },
+      ref,
+    ) => {
+      const Component = animated ? Animated.View : View;
 
     const theme = useTheme();
 
@@ -394,12 +395,13 @@ export const Box = memo(
       ],
     );
 
-    return (
-      <Component ref={ref} style={styles} testID={testID} {...props}>
-        {children}
-      </Component>
-    );
-  }),
+      return (
+        <Component ref={ref} style={styles} testID={testID} {...props}>
+          {children}
+        </Component>
+      );
+    },
+  ),
 );
 
 Box.displayName = 'Box';

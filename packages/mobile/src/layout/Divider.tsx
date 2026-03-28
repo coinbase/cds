@@ -23,7 +23,7 @@ export type DividerBaseProps = {
 
 export type DividerProps = DividerBaseProps & BoxProps;
 
-export const Divider = memo(function Divider(_props: DividerProps) {
+export const Divider = memo((_props: DividerProps) => {
   const mergedProps = useComponentConfig('Divider', _props);
   const { color = 'bgLine', direction = 'horizontal', ...boxProps } = mergedProps;
   const theme = useTheme();

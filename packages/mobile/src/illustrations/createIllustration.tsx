@@ -22,8 +22,6 @@ import type {
 } from '@coinbase/cds-illustrations';
 import { isDevelopment } from '@coinbase/cds-utils';
 
-import type { ComponentConfig } from '../core/componentConfig';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 export type IllustrationNamesMap = {
@@ -75,22 +73,20 @@ export type IllustrationBasePropsWithA11y<Type extends IllustrationVariant> =
 export function createIllustration<
   Variant extends IllustrationVariant,
   Config extends IllustrationConfigShape,
->(variant: Variant, config: Config, componentConfigKey: keyof ComponentConfig) {
+>(variant: Variant, config: Config) {
   const defaultSize = getDefaultSizeObjectForIllustration(variant);
 
   type IllustrationProps = IllustrationBasePropsWithA11y<Variant>;
 
-  const Illustration = memo(function Illustration(_props: IllustrationProps) {
-    const mergedProps = useComponentConfig(componentConfigKey, _props);
-    const {
-      fallback = null,
-      name,
-      dimension,
-      scaleMultiplier,
-      testID,
-      accessibilityHint,
-      accessibilityLabel,
-    } = mergedProps;
+  const Illustration = memo(function Illustration({
+    fallback = null,
+    name,
+    dimension,
+    scaleMultiplier,
+    testID,
+    accessibilityHint,
+    accessibilityLabel,
+  }: IllustrationProps) {
     const { activeColorScheme } = useTheme();
     const requireFn = config[name]?.[activeColorScheme];
 

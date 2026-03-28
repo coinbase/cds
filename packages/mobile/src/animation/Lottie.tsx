@@ -3,7 +3,6 @@ import { Animated } from 'react-native';
 import type { DimensionValue } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import type { LottieProps } from './types';
@@ -59,10 +58,9 @@ const LottieContent = memo(
 );
 
 export const Lottie = memo(
-  forwardRef((_props: LottieProps, forwardedRef: React.ForwardedRef<LottieView>) => {
-    const mergedProps = useComponentConfig('Lottie', _props);
-    const colorFilters = useLottieColorFilters(mergedProps.source, mergedProps.colorFilters);
-    return <LottieContent ref={forwardedRef} {...mergedProps} colorFilters={colorFilters} />;
+  forwardRef((props: LottieProps, forwardedRef: React.ForwardedRef<LottieView>) => {
+    const colorFilters = useLottieColorFilters(props.source, props.colorFilters);
+    return <LottieContent ref={forwardedRef} {...props} colorFilters={colorFilters} />;
   }),
 );
 

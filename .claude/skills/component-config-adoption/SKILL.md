@@ -142,6 +142,17 @@ Do not change component-level precedence accidentally:
   - web: `mergeClassNameAndStyle`
   - mobile: `mergeStyleProps`
 
+### 4.1) Scope of Component Theming
+
+Component config is for **prop-level theming defaults** only:
+
+- Good use: default visual/styling props (for example `padding`, `color`, `font`, `borderRadius`)
+- Good use: design-token-level defaults that are safe to override locally
+- Avoid: changing behavioral logic, control flow, semantics, or component architecture
+- Avoid: using config to introduce opinionated implementation changes (for example altering how `HStack` layout logic works)
+
+Type config resolvers with `*BaseProps` (not platform-specific `*Props`) so defaults stay stable and platform-safe.
+
 ### 5) Add Or Update Tests
 
 Add focused tests for the adopted component:

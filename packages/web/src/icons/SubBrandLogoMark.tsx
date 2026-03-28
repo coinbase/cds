@@ -3,7 +3,6 @@ import type { SubBrandLogoMarkParams } from '@coinbase/cds-common/hooks/useSubBr
 import { useSubBrandLogoMark } from '@coinbase/cds-common/hooks/useSubBrandLogo';
 import { css } from '@linaria/core';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 const iconCss = css`
@@ -23,34 +22,32 @@ const transitionCss = css`
   transition: fill 150ms ease-in-out;
 `;
 
-export type SubBrandLogoMarkBaseProps = Omit<SubBrandLogoMarkParams, 'colorScheme'>;
+export const SubBrandLogoMark = memo(
+  ({ type, foreground }: Omit<SubBrandLogoMarkParams, 'colorScheme'>) => {
+    const { activeColorScheme } = useTheme();
+    const { logoColor, typeColor, viewBox, logoPath, typePath } = useSubBrandLogoMark({
+      type,
+      foreground,
+      colorScheme: activeColorScheme,
+    });
 
-export const SubBrandLogoMark = memo((_props: SubBrandLogoMarkBaseProps) => {
-  const mergedProps = useComponentConfig('SubBrandLogoMark', _props);
-  const { type, foreground } = mergedProps;
-  const { activeColorScheme } = useTheme();
-  const { logoColor, typeColor, viewBox, logoPath, typePath } = useSubBrandLogoMark({
-    type,
-    foreground,
-    colorScheme: activeColorScheme,
-  });
+    const title = `Coinbase ${type} logo`;
 
-  const title = `Coinbase ${type} logo`;
-
-  return (
-    <svg
-      aria-label={title}
-      className={iconCss}
-      role="img"
-      viewBox={viewBox}
-      width="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <title>{title}</title>
-      <g>
-        <path className={transitionCss} d={logoPath} fill={logoColor} />
-        <path className={transitionCss} d={typePath} fill={typeColor} />
-      </g>
-    </svg>
-  );
-});
+    return (
+      <svg
+        aria-label={title}
+        className={iconCss}
+        role="img"
+        viewBox={viewBox}
+        width="100%"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <title>{title}</title>
+        <g>
+          <path className={transitionCss} d={logoPath} fill={logoColor} />
+          <path className={transitionCss} d={typePath} fill={typeColor} />
+        </g>
+      </svg>
+    );
+  },
+);

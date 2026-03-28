@@ -3,28 +3,27 @@ import { G, Path, Svg } from 'react-native-svg';
 import type { SubBrandLogoWordmarkParams } from '@coinbase/cds-common/hooks/useSubBrandLogo';
 import { useSubBrandLogoWordmark } from '@coinbase/cds-common/hooks/useSubBrandLogo';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
-export type SubBrandLogoWordmarkBaseProps = Omit<SubBrandLogoWordmarkParams, 'colorScheme'>;
-export type SubBrandLogoWordmarkProps = SubBrandLogoWordmarkBaseProps;
+export type SubBrandLogoWordmarkProps = SubBrandLogoWordmarkParams;
 
-export const SubBrandLogoWordmark = memo((_props: SubBrandLogoWordmarkProps) => {
-  const mergedProps = useComponentConfig('SubBrandLogoWordmark', _props);
+export const SubBrandLogoWordmark = memo(
+  (props: Omit<SubBrandLogoWordmarkProps, 'colorScheme'>) => {
   const { activeColorScheme } = useTheme();
   const { logoColor, typeColor, viewBox, logoPath, typePath } = useSubBrandLogoWordmark({
-    ...mergedProps,
+    ...props,
     colorScheme: activeColorScheme,
   });
 
-  return (
-    <Svg viewBox={viewBox}>
-      <G>
-        <Path d={logoPath} fill={logoColor} />
-        <Path d={typePath} fill={typeColor} />
-      </G>
-    </Svg>
-  );
-});
+    return (
+      <Svg viewBox={viewBox}>
+        <G>
+          <Path d={logoPath} fill={logoColor} />
+          <Path d={typePath} fill={typeColor} />
+        </G>
+      </Svg>
+    );
+  },
+);
 
 SubBrandLogoWordmark.displayName = 'SubBrandLogoWordmark';

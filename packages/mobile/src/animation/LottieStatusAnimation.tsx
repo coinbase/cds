@@ -7,22 +7,20 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
 import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
-
 import { useLottie } from './useLottie';
 
-type LottieStatusAnimationCoreProps = {
+type LottieStatusAnimationBaseProps = {
   status?: LottieStatus;
   onFinish?: () => void;
 };
 
 type LottieStatusAnimationPropsWithWidth = {
   width: DimensionValue;
-} & LottieStatusAnimationCoreProps;
+} & LottieStatusAnimationBaseProps;
 
 type LottieStatusAnimationPropsWithHeight = {
   height: DimensionValue;
-} & LottieStatusAnimationCoreProps;
+} & LottieStatusAnimationBaseProps;
 
 export type LottieStatusAnimationProps = (
   | LottieStatusAnimationPropsWithWidth
@@ -31,27 +29,31 @@ export type LottieStatusAnimationProps = (
   SharedProps &
   SharedAccessibilityProps;
 
-export type LottieStatusAnimationBaseProps = LottieStatusAnimationProps;
+export const LottieStatusAnimation = memo(
+  ({
+    status = 'loading',
+    onFinish,
+    testID,
+    accessibilityLabel,
+    ...otherProps
+  }: LottieStatusAnimationProps) => {
+    const { playMarkers, Lottie } = useLottie(tradeStatus);
+    const handlePolling = useStatusAnimationPoller({ status, playMarkers, onFinish });
 
-export const LottieStatusAnimation = memo((_props: LottieStatusAnimationProps) => {
-  const mergedProps = useComponentConfig('LottieStatusAnimation', _props);
-  const { status = 'loading', onFinish, testID, accessibilityLabel, ...otherProps } = mergedProps;
-  const { playMarkers, Lottie } = useLottie(tradeStatus);
-  const handlePolling = useStatusAnimationPoller({ status, playMarkers, onFinish });
+    const label = useMemo(
+      () => accessibilityLabel ?? lottieStatusToAccessibilityLabel[status],
+      [accessibilityLabel, status],
+    );
 
-  const label = useMemo(
-    () => accessibilityLabel ?? lottieStatusToAccessibilityLabel[status],
-    [accessibilityLabel, status],
-  );
-
-  return (
-    <Lottie
-      {...otherProps}
-      accessible
-      accessibilityLabel={label}
-      accessibilityLiveRegion="polite"
-      onAnimationFinish={handlePolling}
-      testID={testID}
-    />
-  );
-});
+    return (
+      <Lottie
+        {...otherProps}
+        accessible
+        accessibilityLabel={label}
+        accessibilityLiveRegion="polite"
+        onAnimationFinish={handlePolling}
+        testID={testID}
+      />
+    );
+  },
+);

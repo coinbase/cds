@@ -7,8 +7,6 @@ import { usePortal } from '@coinbase/cds-common/overlays/usePortal';
 import type { PortalNode } from '@coinbase/cds-common/overlays/usePortalState';
 import { usePortalState } from '@coinbase/cds-common/overlays/usePortalState';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
-
 export type PortalProviderProps = ToastProviderProps & {
   /**
    * By default the PortalProvider will render portal nodes. Disable this if you want to use the PortalNodes component to render the nodes instead.
@@ -16,8 +14,6 @@ export type PortalProviderProps = ToastProviderProps & {
    */
   renderPortals?: boolean;
 };
-
-export type PortalProviderBaseProps = React.PropsWithChildren<PortalProviderProps>;
 
 type PortalHostProps = { nodes: PortalNode[] };
 
@@ -50,22 +46,22 @@ export const PortalHost = memo(({ nodes }: PortalHostProps) => {
   return <>{elements}</>;
 });
 
-export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProps>> = memo(
-  (_props) => {
-    const mergedProps = useComponentConfig('PortalProvider', _props);
-    const { children, toastBottomOffset = 0, renderPortals = true } = mergedProps;
-    const portalState = usePortalState();
+export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProps>> = ({
+  children,
+  toastBottomOffset = 0,
+  renderPortals = true,
+}) => {
+  const portalState = usePortalState();
 
-    return (
-      <PortalContext.Provider value={portalState}>
-        <ToastProvider toastBottomOffset={toastBottomOffset}>
-          {renderPortals && <PortalHost nodes={portalState.nodes} />}
-          {children}
-        </ToastProvider>
-      </PortalContext.Provider>
-    );
-  },
-);
+  return (
+    <PortalContext.Provider value={portalState}>
+      <ToastProvider toastBottomOffset={toastBottomOffset}>
+        {renderPortals && <PortalHost nodes={portalState.nodes} />}
+        {children}
+      </ToastProvider>
+    </PortalContext.Provider>
+  );
+};
 
 export const PortalNodes = () => {
   const { nodes } = usePortal();

@@ -5,10 +5,10 @@ import { getMediaChipSpacingProps } from '@coinbase/cds-common/chips/getMediaChi
 import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { Chip } from './Chip';
-import type { ChipProps } from './ChipProps';
+import type { ChipBaseProps, ChipProps } from './ChipProps';
 
-export type MediaChipProps = ChipProps;
-export type MediaChipBaseProps = MediaChipProps;
+export type MediaChipBaseProps = ChipBaseProps;
+export type MediaChipProps = MediaChipBaseProps & ChipProps;
 
 export const MediaChip = memo(
   forwardRef(function MediaChip(_props: MediaChipProps, ref: React.ForwardedRef<View>) {

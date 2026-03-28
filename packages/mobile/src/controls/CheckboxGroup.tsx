@@ -49,11 +49,17 @@ export type CheckboxGroupProps<CheckboxValue extends string> =
 
 // Follows behavior describe in https://www.w3.org/TR/wai-aria-practices/examples/checkbox/checkbox-2/checkbox-2.html
 const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxValue extends string>(
-  _props: CheckboxGroupProps<CheckboxValue>,
+  {
+    children,
+    label,
+    accessibilityLabel,
+    onChange,
+    selectedValues,
+    testID,
+    ...restProps
+  }: CheckboxGroupProps<CheckboxValue>,
   ref: React.ForwardedRef<View>,
 ) {
-  const { children, label, accessibilityLabel, onChange, selectedValues, testID, ...restProps } =
-    _props;
   if (isDevelopment()) {
     console.warn(
       'CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead.',

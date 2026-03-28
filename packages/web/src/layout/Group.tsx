@@ -62,44 +62,46 @@ const fallbackRenderItem: RenderGroupItem = ({
  * @danger Make sure to add a `key` prop to each item.
  */
 export const Group = memo(
-  forwardRef<HTMLDivElement, GroupProps>((_props: GroupProps, ref) => {
-    const {
-      children,
-      direction = 'vertical',
-      divider,
-      gap,
-      renderItem = fallbackRenderItem,
-      role = 'group',
-      ...boxProps
-    } = _props;
-    // TODO: Remove once `horizontal` is sunset in Q2.
-    const contents = useMemo(
-      () =>
-        flattenAndJoinNodes({
-          children,
-          gap,
-          divider,
-          renderItem,
-          direction,
-          Spacer,
-          ItemWrapper,
-        }),
-      [children, direction, divider, gap, renderItem],
-    );
-
-    return (
-      <Box
-        ref={ref}
-        alignItems="stretch"
-        flexDirection={direction === 'horizontal' ? 'row' : 'column'}
-        flexWrap="nowrap"
-        role={role}
-        {...boxProps}
-      >
-        {contents}
-      </Box>
-    );
-  }),
+  forwardRef<HTMLDivElement, GroupProps>(
+    (
+      {
+        children,
+        direction = 'vertical',
+        divider,
+        gap,
+        renderItem = fallbackRenderItem,
+        role = 'group',
+        ...boxProps
+      }: GroupProps,
+      ref,
+    ) => {
+      const contents = useMemo(
+        () =>
+          flattenAndJoinNodes({
+            children,
+            gap,
+            divider,
+            renderItem,
+            direction,
+            Spacer,
+            ItemWrapper,
+          }),
+        [children, direction, divider, gap, renderItem],
+      );
+      return (
+        <Box
+          ref={ref}
+          alignItems="stretch"
+          flexDirection={direction === 'horizontal' ? 'row' : 'column'}
+          flexWrap="nowrap"
+          role={role}
+          {...boxProps}
+        >
+          {contents}
+        </Box>
+      );
+    },
+  ),
 );
 
 Group.displayName = 'Group';

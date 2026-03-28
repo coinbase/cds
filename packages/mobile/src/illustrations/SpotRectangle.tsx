@@ -18,10 +18,6 @@ export type SpotRectangleBaseProps = IllustrationBaseProps<'spotRectangle'> &
 
 export type SpotRectangleProps = SpotRectangleBaseProps;
 
-export const SpotRectangle = createIllustration(
-  'spotRectangle',
-  spotRectangleIllustrations,
-  'SpotRectangle',
-);
+export const SpotRectangle = createIllustration('spotRectangle', spotRectangleIllustrations);
 
 export type { SpotRectangleName } from '@coinbase/cds-illustrations';
