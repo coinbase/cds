@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useModal } from '@coinbase/cds-common/overlays/useModal';
 
 import { Button } from '../../buttons/Button';
@@ -33,15 +33,10 @@ const ModalPortalScreen = () => {
     [openModal, closeModal],
   );
 
-  useEffect(() => {
-    handlePress();
-
-    return () => closeModal();
-  }, [closeModal, handlePress]);
   return (
     <ExampleScreen>
       <Example title="Portal Modal">
-        <Button onPress={handlePress}>Open Modal</Button>
+        <Button onPress={handlePress}>Open</Button>
       </Example>
     </ExampleScreen>
   );

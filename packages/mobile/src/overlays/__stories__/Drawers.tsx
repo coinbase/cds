@@ -15,7 +15,7 @@ export const DefaultDrawer = ({
   pin = 'left',
   reduceMotion,
 }: Pick<DrawerBaseProps, 'pin' | 'reduceMotion'>) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const setIsVisibleOff = useCallback(() => setIsVisible(false), [setIsVisible]);
   const setIsVisibleOn = useCallback(() => setIsVisible(true), [setIsVisible]);
   return (
@@ -27,7 +27,7 @@ export const DefaultDrawer = ({
             <VStack padding={2}>
               <LoremIpsum />
               <Button onPress={handleClose} variant="secondary">
-                Close Drawer
+                Cancel
               </Button>
             </VStack>
           )}
@@ -97,14 +97,14 @@ export const SideDrawerContent = ({ handleClose }: SideDrawerContentProps) => {
         </VStack>
       </VStack>
       <Button block compact onPress={handleClose} variant="secondary">
-        Sign out
+        Cancel
       </Button>
     </VStack>
   );
 };
 
 export const SideDrawer = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pin'>) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const setIsVisibleOff = useCallback(() => setIsVisible(false), [setIsVisible]);
   const setIsVisibleOn = useCallback(() => setIsVisible(true), [setIsVisible]);
   return (

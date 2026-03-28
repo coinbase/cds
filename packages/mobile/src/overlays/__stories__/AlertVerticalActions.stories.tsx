@@ -5,7 +5,7 @@ import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Alert } from '../Alert';
 
 const BasicAlert = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const handleShow = useCallback(() => setVisible(true), []);
   const handleClose = useCallback(() => setVisible(false), []);
@@ -13,7 +13,7 @@ const BasicAlert = () => {
 
   return (
     <>
-      <Button onPress={handleShow}>Show Alert</Button>
+      <Button onPress={handleShow}>Open</Button>
       <Alert
         actionLayout="vertical"
         body="Alert body type that can run over multiple lines, but should be kept short."

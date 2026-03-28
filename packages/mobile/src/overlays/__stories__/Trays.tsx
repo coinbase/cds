@@ -14,7 +14,7 @@ export const options: string[] = prices.slice(0, 4);
 const lotsOfOptions: string[] = prices.slice(0, 30);
 
 export const DefaultTray = ({ title }: { title?: React.ReactNode }) => {
-  const [isTrayVisible, setIsTrayVisible] = useState(true);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
   const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
   const [value, setValue] = useState<string>();
@@ -74,7 +74,7 @@ export const ScrollableTray = ({
   fallbackEnabled?: boolean;
   verticalDrawerPercentageOfView?: number;
 }) => {
-  const [isTrayVisible, setIsTrayVisible] = useState(true);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
   const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
   const [value, setValue] = useState<string>();
