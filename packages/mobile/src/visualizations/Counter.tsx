@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useCounter } from '@coinbase/cds-common/visualizations/useCounter';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout';
 
 export type CounterBaseProps = {
@@ -14,9 +13,7 @@ export type CounterBaseProps = {
 
 export type CounterProps = CounterBaseProps;
 
-export const Counter = (_props: CounterProps) => {
-  const mergedProps = useComponentConfig('Counter', _props);
-  const { startNum, endNum, renderNum, durationInMillis } = mergedProps;
+export const Counter = ({ startNum, endNum, renderNum, durationInMillis }: CounterProps) => {
   const count = useCounter({ startNum, endNum, durationInMillis });
   const renderFunction = useMemo(() => {
     return (num: number) => {

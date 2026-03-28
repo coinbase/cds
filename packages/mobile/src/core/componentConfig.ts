@@ -8,7 +8,6 @@ import type {
 import type { AccordionItemBaseProps } from '../accordion/AccordionItem';
 import type { AccordionPanelBaseProps } from '../accordion/AccordionPanel';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
-import type { DataCardBaseProps } from '../alpha/data-card/DataCard';
 import type { DataCardLayoutBaseProps } from '../alpha/data-card/DataCardLayout';
 import type { AlphaSelectBaseProps } from '../alpha/select/Select';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
@@ -95,7 +94,6 @@ import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
 import type { TourBaseProps } from '../tour/Tour';
 import type { LinkBaseProps } from '../typography/Link';
-import type { CounterBaseProps } from '../visualizations/Counter';
 import type { ProgressBarBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
@@ -120,7 +118,6 @@ export type ComponentConfig = {
   AccordionPanel?: ConfigResolver<AccordionPanelBaseProps>;
   AccordionTitle?: ConfigResolver<AccordionTitleBaseProps>;
   Alert?: ConfigResolver<AlertBaseProps>;
-  DataCard?: ConfigResolver<DataCardBaseProps>;
   TabbedChips?: ConfigResolver<TabbedChipsBaseProps>;
   AnimatedCaret?: ConfigResolver<AnimatedCaretBaseProps>;
   Avatar?: ConfigResolver<AvatarBaseProps>;
@@ -148,7 +145,6 @@ export type ComponentConfig = {
   ContentCardHeader?: ConfigResolver<ContentCardHeaderBaseProps>;
   Control?: ConfigResolver<ControlBaseProps<string>>;
   ControlGroup?: ConfigResolver<ControlGroupBaseProps>;
-  Counter?: ConfigResolver<CounterBaseProps>;
   DataCardLayout?: ConfigResolver<DataCardLayoutBaseProps>;
   DateInput?: ConfigResolver<DateInputBaseProps>;
   DatePicker?: ConfigResolver<DatePickerBaseProps>;
