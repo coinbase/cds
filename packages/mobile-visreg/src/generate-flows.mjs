@@ -21,9 +21,7 @@ const routeSteps = sorted
         ? `
 - runFlow:
     file: ./dismiss-deep-link-dialog.yaml
-    label: "Dismiss deep link dialog"
-    env:
-      ROUTE_NAME: ${route}`
+    label: "Dismiss deep link dialog"`
         : '';
 
     return `${dismissDialog}

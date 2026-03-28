@@ -50,7 +50,17 @@ if (route) {
   envFlags.push(`ROUTE_NAME=${route}`);
 }
 
-const cmd = ['maestro', 'test', flowPath, ...envFlags.map((e) => `--env ${e}`)].join(' ');
+const reportPath = resolve(packageRoot, 'maestro-report.html');
+const cmd = [
+  'maestro',
+  'test',
+  '--format',
+  'html-detailed',
+  '--output',
+  reportPath,
+  flowPath,
+  ...envFlags.map((e) => `--env ${e}`),
+].join(' ');
 
 console.log(`\nRunning: ${cmd}\n`);
 execSync(cmd, { stdio: 'inherit', cwd: outputDir });

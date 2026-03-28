@@ -7,8 +7,7 @@ appId: ${APP_ID}
 - runFlow:
     file: ./dismiss-deep-link-dialog.yaml
     label: "Dismiss deep link dialog"
-    env:
-      ROUTE_NAME: ${ROUTE_NAME}
+- openLink: ${SCHEME}:///Debug${ROUTE_NAME}
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd
