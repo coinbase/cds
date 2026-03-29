@@ -53,7 +53,6 @@ import type { SpacerBaseProps } from '../layout/Spacer';
 import type { AvatarBaseProps } from '../media/Avatar';
 import type { RemoteImageBaseProps } from '../media/RemoteImage';
 import type { RemoteImageGroupBaseProps } from '../media/RemoteImageGroup';
-import type { AnimatedCaretBaseProps } from '../motion/AnimatedCaret';
 import type { ColorSurgeBaseProps } from '../motion/ColorSurge';
 import type { ShakeBaseProps } from '../motion/Shake';
 import type { MultiContentModuleBaseProps } from '../multi-content-module/MultiContentModule';
@@ -104,7 +103,6 @@ export type ComponentConfig = {
   Accordion?: ConfigResolver<AccordionBaseProps>;
   Alert?: ConfigResolver<AlertBaseProps>;
   TabbedChips?: ConfigResolver<TabbedChipsBaseProps>;
-  AnimatedCaret?: ConfigResolver<AnimatedCaretBaseProps>;
   Avatar?: ConfigResolver<AvatarBaseProps>;
   Banner?: ConfigResolver<BannerBaseProps>;
   BrowserBar?: ConfigResolver<BrowserBarBaseProps>;
@@ -177,7 +175,6 @@ export type ComponentConfig = {
   Select?: ConfigResolver<AlphaSelectBaseProps>;
   SelectChip?: ConfigResolver<SelectChipBaseProps>;
   SelectOption?: ConfigResolver<SelectOptionBaseProps>;
-  Shake?: ConfigResolver<ShakeBaseProps>;
   SlideButton?: ConfigResolver<SlideButtonBaseProps>;
   Spacer?: ConfigResolver<SpacerBaseProps>;
   Stepper?: ConfigResolver<StepperBaseProps>;

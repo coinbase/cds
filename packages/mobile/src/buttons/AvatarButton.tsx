@@ -12,35 +12,37 @@ export type AvatarButtonProps = PressableBaseProps &
   Pick<ButtonBaseProps, 'accessibilityLabel' | 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
 
-export const AvatarButton = memo(function AvatarButton({
-  accessibilityLabel,
-  feedback = 'light',
-  src,
-  compact,
-  shape,
-  colorScheme,
-  borderColor,
-  name,
-  ...props
-}: AvatarButtonProps) {
-  const height = compact ? interactableHeight.compact : interactableHeight.regular;
+export const AvatarButton = memo(
+  ({
+    accessibilityLabel,
+    feedback = 'light',
+    src,
+    compact,
+    shape,
+    colorScheme,
+    borderColor,
+    name,
+    ...props
+  }: AvatarButtonProps) => {
+    const height = compact ? interactableHeight.compact : interactableHeight.regular;
 
-  return (
-    <Pressable
-      accessibilityHint={accessibilityLabel}
-      accessibilityLabel={accessibilityLabel}
-      background="transparent"
-      feedback={feedback}
-      {...props}
-    >
-      <Avatar
-        borderColor={borderColor}
-        colorScheme={colorScheme}
-        dangerouslySetSize={height}
-        name={name}
-        shape={shape}
-        src={src}
-      />
-    </Pressable>
-  );
-});
+    return (
+      <Pressable
+        accessibilityHint={accessibilityLabel}
+        accessibilityLabel={accessibilityLabel}
+        background="transparent"
+        feedback={feedback}
+        {...props}
+      >
+        <Avatar
+          borderColor={borderColor}
+          colorScheme={colorScheme}
+          dangerouslySetSize={height}
+          name={name}
+          shape={shape}
+          src={src}
+        />
+      </Pressable>
+    );
+  },
+);

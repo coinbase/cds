@@ -26,7 +26,7 @@ export type ButtonGroupBaseProps = SharedProps &
 
 export type ButtonGroupProps = ButtonGroupBaseProps;
 
-export const ButtonGroup = memo(function ButtonGroup(_props: ButtonGroupProps) {
+export const ButtonGroup = memo((_props: ButtonGroupProps) => {
   const mergedProps = useComponentConfig('ButtonGroup', _props);
   const { accessibilityLabel, block, children, testID, direction } = mergedProps;
   const isVertical = direction === 'vertical';

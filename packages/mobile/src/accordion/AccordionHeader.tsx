@@ -85,35 +85,45 @@ export type AccordionHeaderProps = AccordionHeaderBaseProps;
  * Composes an Accordion Media, Title, and Icon.
  */
 export const AccordionHeader = memo(
-  forwardRef((_props: AccordionHeaderProps, forwardedRef: React.ForwardedRef<View>) => {
-    const { itemKey, title, subtitle, onPress, media, collapsed, testID } = _props;
-    const { setActiveKey, activeKey } = useAccordionContext();
-    const spacing = useCellSpacing();
-    const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
+  forwardRef(
+    (
+      { itemKey, title, subtitle, onPress, media, collapsed, testID }: AccordionHeaderProps,
+      forwardedRef: React.ForwardedRef<View>,
+    ) => {
+      const { setActiveKey, activeKey } = useAccordionContext();
+      const spacing = useCellSpacing();
+      const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
 
-    const handlePress = useCallback(() => {
-      onPress?.(itemKey);
-      setActiveKey(itemKey === activeKey ? null : itemKey);
-    }, [onPress, itemKey, setActiveKey, activeKey]);
+      const handlePress = useCallback(() => {
+        onPress?.(itemKey);
+        setActiveKey(itemKey === activeKey ? null : itemKey);
+      }, [onPress, itemKey, setActiveKey, activeKey]);
 
-    return (
-      <Pressable
-        ref={forwardedRef}
-        noScaleOnPress
-        transparentWhileInactive
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="togglebutton"
-        accessibilityState={{ expanded: !collapsed }}
-        background="bg"
-        onPress={handlePress}
-        testID={testID}
-      >
-        <HStack alignItems="center" gap={2} minHeight={listHeight} width="100%" {...spacing.outer}>
-          {!!media && <AccordionMedia media={media} />}
-          <AccordionTitle subtitle={subtitle} title={title} />
-          <AccordionIcon collapsed={collapsed} />
-        </HStack>
-      </Pressable>
-    );
-  }),
+      return (
+        <Pressable
+          ref={forwardedRef}
+          noScaleOnPress
+          transparentWhileInactive
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="togglebutton"
+          accessibilityState={{ expanded: !collapsed }}
+          background="bg"
+          onPress={handlePress}
+          testID={testID}
+        >
+          <HStack
+            alignItems="center"
+            gap={2}
+            minHeight={listHeight}
+            width="100%"
+            {...spacing.outer}
+          >
+            {!!media && <AccordionMedia media={media} />}
+            <AccordionTitle subtitle={subtitle} title={title} />
+            <AccordionIcon collapsed={collapsed} />
+          </HStack>
+        </Pressable>
+      );
+    },
+  ),
 );

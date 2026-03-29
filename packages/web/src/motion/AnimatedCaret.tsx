@@ -5,7 +5,6 @@ import type { InputVariant, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, MotionConfig } from 'framer-motion';
 
 import { useTextInputFocusVariantContent } from '../controls/context';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon, type IconProps } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 
@@ -26,22 +25,20 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'fgMuted',
 };
 
-export const AnimatedCaret = memo(function AnimatedCaret(_props: AnimatedCaretProps) {
-  const mergedProps = useComponentConfig('AnimatedCaret', _props);
-  const {
-    rotate,
-    size = 's',
-    color = 'fgMuted',
-    testID,
-    padding,
-    paddingBottom,
-    paddingEnd,
-    paddingX,
-    paddingStart,
-    paddingTop,
-    paddingY,
-    ...props
-  } = mergedProps;
+export const AnimatedCaret = memo(function AnimatedCaret({
+  rotate,
+  size = 's',
+  color = 'fgMuted',
+  testID,
+  padding,
+  paddingBottom,
+  paddingEnd,
+  paddingX,
+  paddingStart,
+  paddingTop,
+  paddingY,
+  ...props
+}: AnimatedCaretProps) {
   const motionProps = useMotionProps({
     enterConfigs: [{ ...animateRotateConfig, toValue: rotate }],
     initial: false,

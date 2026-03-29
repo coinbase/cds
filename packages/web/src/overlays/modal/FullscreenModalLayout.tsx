@@ -14,7 +14,6 @@ import {
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { FocusTrap, type FocusTrapProps } from '../FocusTrap';
 import { Overlay } from '../overlay/Overlay';
@@ -57,67 +56,66 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const FullscreenModalLayout = memo(
-  forwardRef<HTMLDivElement, FullscreenModalLayoutProps>(
-    function FullscreenModalLayout(_props, ref) {
-      const mergedProps = useComponentConfig('FullscreenModalLayout', _props);
-      const {
-        children,
-        focusTabIndexElements,
-        visible,
-        onRequestClose,
-        testID,
-        zIndex,
-        disablePortal,
-        role,
-        onDidClose,
-        shouldCloseOnEscPress = true,
-        disableFocusTrap,
-        restoreFocusOnUnmount = true,
-        accessibilityLabelledBy,
-        accessibilityLabel,
-      } = mergedProps;
-      const overlayMotionProps = useMotionProps({
-        enterConfigs: [animateInOverlayOpacityConfig],
-        exitConfigs: [animateOutOverlayOpacityConfig],
-        exit: 'exit',
-      });
-
-      const dialogMotionProps = useMotionProps({
-        enterConfigs: [animateInOpacityConfig, animateInTranslateYConfig],
-        exitConfigs: [animateOutOpacityConfig, animateOutTranslateYConfig],
-        exit: 'exit',
-      });
-
-      return (
-        <OverlayContentContext.Provider value={overlayContentContextValue}>
-          <ModalWrapper
-            ref={ref}
-            hideOverlay
-            accessibilityLabel={accessibilityLabel}
-            accessibilityLabelledBy={accessibilityLabelledBy}
-            disablePortal={disablePortal}
-            onDidClose={onDidClose}
-            role={role}
-            testID={testID}
-            visible={visible}
-            zIndex={zIndex}
-          >
-            <motion.div {...overlayMotionProps}>
-              <Overlay />
-            </motion.div>
-            <motion.div {...dialogMotionProps} className={pinCss}>
-              <FocusTrap
-                disableFocusTrap={disableFocusTrap}
-                focusTabIndexElements={focusTabIndexElements}
-                onEscPress={shouldCloseOnEscPress ? onRequestClose : undefined}
-                restoreFocusOnUnmount={restoreFocusOnUnmount}
-              >
-                {children}
-              </FocusTrap>
-            </motion.div>
-          </ModalWrapper>
-        </OverlayContentContext.Provider>
-      );
+  forwardRef<HTMLDivElement, FullscreenModalLayoutProps>(function FullscreenModalLayout(
+    {
+      children,
+      focusTabIndexElements,
+      visible,
+      onRequestClose,
+      testID,
+      zIndex,
+      disablePortal,
+      role,
+      onDidClose,
+      shouldCloseOnEscPress = true,
+      disableFocusTrap,
+      restoreFocusOnUnmount = true,
+      accessibilityLabelledBy,
+      accessibilityLabel,
     },
-  ),
+    ref,
+  ) {
+    const overlayMotionProps = useMotionProps({
+      enterConfigs: [animateInOverlayOpacityConfig],
+      exitConfigs: [animateOutOverlayOpacityConfig],
+      exit: 'exit',
+    });
+
+    const dialogMotionProps = useMotionProps({
+      enterConfigs: [animateInOpacityConfig, animateInTranslateYConfig],
+      exitConfigs: [animateOutOpacityConfig, animateOutTranslateYConfig],
+      exit: 'exit',
+    });
+
+    return (
+      <OverlayContentContext.Provider value={overlayContentContextValue}>
+        <ModalWrapper
+          ref={ref}
+          hideOverlay
+          accessibilityLabel={accessibilityLabel}
+          accessibilityLabelledBy={accessibilityLabelledBy}
+          disablePortal={disablePortal}
+          onDidClose={onDidClose}
+          role={role}
+          testID={testID}
+          visible={visible}
+          zIndex={zIndex}
+        >
+          <motion.div {...overlayMotionProps}>
+            <Overlay />
+          </motion.div>
+          <motion.div {...dialogMotionProps} className={pinCss}>
+            <FocusTrap
+              disableFocusTrap={disableFocusTrap}
+              focusTabIndexElements={focusTabIndexElements}
+              onEscPress={shouldCloseOnEscPress ? onRequestClose : undefined}
+              restoreFocusOnUnmount={restoreFocusOnUnmount}
+            >
+              {children}
+            </FocusTrap>
+          </motion.div>
+        </ModalWrapper>
+      </OverlayContentContext.Provider>
+    );
+  }),
 );

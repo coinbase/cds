@@ -17,7 +17,7 @@ export type CardFooterBaseProps = Pick<
 
 export type CardFooterProps = CardFooterBaseProps & Omit<BoxProps, 'children'>;
 
-export const CardFooter = memo(function CardFooter(_props: CardFooterProps) {
+export const CardFooter = memo((_props: CardFooterProps) => {
   const mergedProps = useComponentConfig('CardFooter', _props);
   const { children, paddingBottom = 2, paddingX = gutter, testID, ...otherProps } = mergedProps;
   return (

@@ -3,8 +3,6 @@ import type { ForwardedRef } from 'react';
 import { shakeTransitionConfig, shakeTranslateX } from '@coinbase/cds-common/motion/hint';
 import { m as motion, useAnimation } from 'framer-motion';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
-
 import type { HintMotionBaseProps } from './types';
 import { convertTransition } from './utils';
 
@@ -22,9 +20,10 @@ export type ShakeProps = ShakeBaseProps;
  * Please consult with the motion team in #ask-motion before using this component.
  */
 export const Shake = memo(
-  forwardRef(function Shake(_props: ShakeProps, ref: ForwardedRef<ShakeRefBaseProps>) {
-    const mergedProps = useComponentConfig('Shake', _props);
-    const { children, disableAnimateOnMount = false } = mergedProps;
+  forwardRef(function Shake(
+    { children, disableAnimateOnMount = false }: ShakeProps,
+    ref: ForwardedRef<ShakeRefBaseProps>,
+  ) {
     const controls = useAnimation();
 
     const playAnimation = useCallback(
