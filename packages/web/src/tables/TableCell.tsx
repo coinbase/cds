@@ -61,11 +61,6 @@ export type TableCellBaseProps = TableCellSharedProps & {
    */
   scope?: 'col' | 'row' | 'colgroup' | 'rowgroup';
   /**
-   * Callback to fire when pressed
-   * @default noop
-   */
-  onClick?: React.MouseEventHandler;
-  /**
    * Should the title/subtitle text truncate
    * @default false
    */
@@ -76,14 +71,6 @@ export type TableCellBaseProps = TableCellSharedProps & {
    * @default vertical
    */
   direction?: 'vertical' | 'horizontal';
-  /**
-   * @deprecated. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v9
-   * HTML width attribute to help with column layout.
-   * This prop should _only_ be used to unblock migration efforts
-   * @default undefined
-   */
-  dangerouslySetHtmlWidth?: TableCellSharedProps['width'];
   /**
    * As a convenience, the width prop will set the css width and maxWidth props
    * @default undefined
@@ -98,15 +85,6 @@ export type TableCellBaseProps = TableCellSharedProps & {
    * @default { spacingHorizontal: 0 }
    */
   innerSpacing?: CellBaseProps['innerSpacing'];
-  /**
-   * Use as="th" to mark this cell as a header for screen readers
-   * @default `th` when rendered inside a TableHeader, `td` when rendered inside a TableBody or TableFooter
-   */
-  as?: 'td' | 'th';
-  /**
-   * @danger This is a migration escape hatch. It is not intended to be used normally.
-   */
-  className?: string;
 };
 
 type TableCellPropsWithInputs = TableCellBaseProps & {
@@ -141,7 +119,30 @@ type TableCellPropsWithChildren = TableCellBaseProps & {
   subtitleColor?: never;
 };
 
-export type TableCellProps = TableCellPropsWithInputs | TableCellPropsWithChildren;
+export type TableCellProps = (TableCellPropsWithInputs | TableCellPropsWithChildren) & {
+  /**
+   * Callback to fire when pressed
+   * @default noop
+   */
+  onClick?: React.MouseEventHandler;
+  /**
+   * Use as="th" to mark this cell as a header for screen readers
+   * @default `th` when rendered inside a TableHeader, `td` when rendered inside a TableBody or TableFooter
+   */
+  as?: 'td' | 'th';
+  /**
+   * @danger This is a migration escape hatch. It is not intended to be used normally.
+   */
+  className?: string;
+  /**
+   * @deprecated. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
+   * HTML width attribute to help with column layout.
+   * This prop should _only_ be used to unblock migration efforts
+   * @default undefined
+   */
+  dangerouslySetHtmlWidth?: TableCellSharedProps['width'];
+};
 
 const truncationCss = css`
   display: block;

@@ -7,7 +7,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { TableSection, type TableSectionProps } from './TableSection';
 
-export type TableHeaderBaseProps = TableSectionProps & {
+export type TableHeaderBaseProps = Pick<TableSectionProps, 'children'> & {
   /**
    * Use to make a header stick to the top of the table when scrolled
    * This will require setting a height or maxHeight on the Table or its parent
@@ -16,7 +16,7 @@ export type TableHeaderBaseProps = TableSectionProps & {
   sticky?: boolean;
 };
 
-export type TableHeaderProps = TableHeaderBaseProps;
+export type TableHeaderProps = TableHeaderBaseProps & Omit<TableSectionProps, 'as'>;
 
 export const tableHeaderStaticClassName = 'cds-table-header';
 

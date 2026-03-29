@@ -72,7 +72,7 @@ export type TagProps = TagBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'color' | 'background' | 'children' | 'maxWidth'>;
 
 export const Tag = memo(
-  forwardRef(function Tag(_props: TagProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  forwardRef((_props: TagProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
     const mergedProps = useComponentConfig('Tag', _props);
     const {
       children,

@@ -58,7 +58,6 @@ import type { SpinnerBaseProps } from '../loaders/Spinner';
 import type { AvatarBaseProps } from '../media/Avatar';
 import type { RemoteImageBaseProps } from '../media/RemoteImage';
 import type { RemoteImageGroupBaseProps } from '../media/RemoteImageGroup';
-import type { MultiContentModuleBaseProps } from '../multi-content-module/MultiContentModule';
 import type { NavigationBarBaseProps } from '../navigation/NavigationBar';
 import type { NavigationTitleBaseProps } from '../navigation/NavigationTitle';
 import type { NavigationTitleSelectBaseProps } from '../navigation/NavigationTitleSelect';
@@ -178,7 +177,6 @@ export type ComponentConfig = {
   ModalFooter?: ConfigResolver<ModalFooterBaseProps>;
   ModalHeader?: ConfigResolver<ModalHeaderBaseProps>;
   ModalWrapper?: ConfigResolver<ModalWrapperBaseProps>;
-  MultiContentModule?: ConfigResolver<MultiContentModuleBaseProps>;
   NavigationBar?: ConfigResolver<NavigationBarBaseProps>;
   NavigationTitle?: ConfigResolver<NavigationTitleBaseProps>;
   NavigationTitleSelect?: ConfigResolver<NavigationTitleSelectBaseProps>;

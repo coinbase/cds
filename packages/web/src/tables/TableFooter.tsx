@@ -4,9 +4,9 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { TableSection, type TableSectionProps } from './TableSection';
 
-export type TableFooterBaseProps = TableSectionProps;
+export type TableFooterBaseProps = Pick<TableSectionProps, 'children'>;
 
-export type TableFooterProps = TableFooterBaseProps;
+export type TableFooterProps = TableFooterBaseProps & Omit<TableSectionProps, 'as'>;
 
 export const TableFooter = memo((_props: TableFooterProps) => {
   const mergedProps = useComponentConfig('TableFooter', _props);

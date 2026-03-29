@@ -52,7 +52,6 @@ import type { FallbackBaseProps } from '../layout/Fallback';
 import type { AvatarBaseProps } from '../media/Avatar';
 import type { RemoteImageBaseProps } from '../media/RemoteImage';
 import type { RemoteImageGroupBaseProps } from '../media/RemoteImageGroup';
-import type { MultiContentModuleBaseProps } from '../multi-content-module/MultiContentModule';
 import type { BrowserBarBaseProps } from '../navigation/BrowserBar';
 import type { NavigationTitleBaseProps } from '../navigation/NavigationTitle';
 import type { NavigationTitleSelectBaseProps } from '../navigation/NavigationTitleSelect';
@@ -147,7 +146,6 @@ export type ComponentConfig = {
   ModalBody?: ConfigResolver<ModalBodyBaseProps>;
   ModalFooter?: ConfigResolver<ModalFooterBaseProps>;
   ModalHeader?: ConfigResolver<ModalHeaderBaseProps>;
-  MultiContentModule?: ConfigResolver<MultiContentModuleBaseProps>;
   NavigationTitle?: ConfigResolver<NavigationTitleBaseProps>;
   NavigationTitleSelect?: ConfigResolver<NavigationTitleSelectBaseProps>;
   Numpad?: ConfigResolver<NumpadBaseProps>;

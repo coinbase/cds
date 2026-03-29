@@ -23,8 +23,7 @@ export type TableCellSpacing = {
 };
 
 export type TableBaseProps = SharedProps &
-  Pick<SharedAccessibilityProps, 'accessibilityLabelledBy' | 'accessibilityLabel'> &
-  Omit<React.HTMLAttributes<HTMLTableElement>, 'dangerouslySetInnerHTML'> & {
+  Pick<SharedAccessibilityProps, 'accessibilityLabelledBy' | 'accessibilityLabel'> & {
     /**
      * The variant prop allows clients to use a
      * CDS approved style for their Table.
@@ -54,13 +53,15 @@ export type TableBaseProps = SharedProps &
     height?: DimensionValue;
     /** Set a maximum height. */
     maxHeight?: DimensionValue;
+  };
+
+export type TableProps = TableBaseProps &
+  Omit<React.HTMLAttributes<HTMLTableElement>, 'dangerouslySetInnerHTML'> & {
     /**
      * @danger This is an escape hatch. It is not intended to be used normally.
      */
     className?: string;
   };
-
-export type TableProps = TableBaseProps;
 
 const tableCss = css`
   display: table;
