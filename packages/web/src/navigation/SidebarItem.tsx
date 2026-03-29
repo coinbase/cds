@@ -6,8 +6,13 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon, type IconProps } from '../icons';
 import { Box } from '../layout';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
-import type { TooltipProps } from '../overlays/tooltip/TooltipProps';
-import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
+import type { TooltipBaseProps, TooltipProps } from '../overlays/tooltip/TooltipProps';
+import {
+  Pressable,
+  type PressableBaseProps,
+  type PressableDefaultElement,
+  type PressableProps,
+} from '../system/Pressable';
 import { Text } from '../typography';
 
 import { useSidebarContext } from './SidebarContext';
@@ -30,40 +35,41 @@ type ManagedPressableProps = Pick<
   'background' | 'width' | 'transparentWhileInactive' | 'className' | 'borderWidth'
 >;
 
-export type SidebarItemBaseProps = {
-  /**
-   * The Navigation Icon this item represents
-   * @default undefined
-   */
-  icon: IconProps['name'];
-  /**
-   * The title of the page this item represents
-   * @default undefined
-   */
-  title: string;
-  /**
-   * Use collapsed to show only the logo
-   * @default false
-   */
-  collapsed?: boolean;
-  /**
-   * Use the active prop to identify the current page
-   * @default false
-   */
-  active?: boolean;
-  /** Label or content to display when Sidebar is collapsed and sidebar more menu is hovered */
-  tooltipContent?: React.ReactNode;
-  /**
-   * Optional presentational component to render for the SidebarItem.
-   * By default, the SidebarItem will render as a row with an Icon and Headline Text element
-   *
-   * The component must implement the CustomSidebarItemProps props interface
-   */
-  Component?: React.ElementType<CustomSidebarItemProps>;
-} & Omit<PressableProps<PressableDefaultElement>, keyof ManagedPressableProps> &
-  Pick<TooltipProps, 'disablePortal'>;
+export type SidebarItemBaseProps = Pick<TooltipBaseProps, 'disablePortal'> &
+  Omit<PressableBaseProps, keyof ManagedPressableProps> & {
+    /**
+     * The Navigation Icon this item represents
+     * @default undefined
+     */
+    icon: IconProps['name'];
+    /**
+     * The title of the page this item represents
+     * @default undefined
+     */
+    title: string;
+    /**
+     * Use collapsed to show only the logo
+     * @default false
+     */
+    collapsed?: boolean;
+    /**
+     * Use the active prop to identify the current page
+     * @default false
+     */
+    active?: boolean;
+    /** Label or content to display when Sidebar is collapsed and sidebar more menu is hovered */
+    tooltipContent?: React.ReactNode;
+    /**
+     * Optional presentational component to render for the SidebarItem.
+     * By default, the SidebarItem will render as a row with an Icon and Headline Text element
+     *
+     * The component must implement the CustomSidebarItemProps props interface
+     */
+    Component?: React.ElementType<CustomSidebarItemProps>;
+  };
 
-export type SidebarItemProps = SidebarItemBaseProps;
+export type SidebarItemProps = SidebarItemBaseProps &
+  Omit<PressableProps<PressableDefaultElement>, keyof ManagedPressableProps>;
 
 export const SidebarItem = memo(
   forwardRef((_props: SidebarItemProps, ref: React.ForwardedRef<HTMLButtonElement>) => {

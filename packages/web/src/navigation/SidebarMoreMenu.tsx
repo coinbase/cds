@@ -2,7 +2,7 @@ import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { sidebarMenuMaxWidth, sidebarMenuMinWidth } from '@coinbase/cds-common/tokens/menu';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
-import type { DropdownProps } from '../dropdown';
+import type { DropdownBaseProps, DropdownProps } from '../dropdown';
 import { Dropdown } from '../dropdown';
 import { useA11yControlledVisibility } from '../hooks/useA11yControlledVisibility';
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -10,21 +10,20 @@ import type { PopoverContentPositionConfig } from '../overlays/popover/PopoverPr
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 
 import { useSidebarContext } from './SidebarContext';
-import type { SidebarItemProps } from './SidebarItem';
+import type { SidebarItemBaseProps, SidebarItemProps } from './SidebarItem';
 import { SidebarItem } from './SidebarItem';
 
-export type SidebarMoreMenuBaseProps = {
-  children: React.ReactNode;
-  /**
-   * Title of the menu trigger. Use this prop to localize the trigger title.
-   * @default More
-   */
-  triggerTitle?: string;
-} & Pick<DropdownProps, 'value' | 'onBlur' | 'disablePortal' | 'onChange'> &
-  Pick<SidebarItemProps, 'active' | 'tooltipContent' | 'onClick' | 'Component' | 'borderRadius'> &
-  SharedProps;
-
-export type SidebarMoreMenuProps = SidebarMoreMenuBaseProps;
+export type SidebarMoreMenuBaseProps = SharedProps &
+  Pick<DropdownBaseProps, 'value' | 'onBlur' | 'disablePortal' | 'onChange'> &
+  Pick<SidebarItemBaseProps, 'active' | 'tooltipContent' | 'Component' | 'borderRadius'> & {
+    children: React.ReactNode;
+    /**
+     * Title of the menu trigger. Use this prop to localize the trigger title.
+     * @default More
+     */
+    triggerTitle?: string;
+  };
+export type SidebarMoreMenuProps = SidebarMoreMenuBaseProps & Pick<SidebarItemProps, 'onClick'>;
 
 const defaultContentPosition: PopoverContentPositionConfig = {
   gap: 3,
