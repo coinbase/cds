@@ -32,7 +32,7 @@ export type FallbackBaseProps = {
 
 export type FallbackProps = Omit<BoxProps, 'borderRadius' | 'height' | 'width'> & FallbackBaseProps;
 
-export const Fallback = memo(function Fallback(_props: FallbackProps) {
+export const Fallback = memo((_props: FallbackProps) => {
   const mergedProps = useComponentConfig('Fallback', _props);
   const {
     height,

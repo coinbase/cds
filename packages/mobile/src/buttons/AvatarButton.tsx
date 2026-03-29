@@ -8,12 +8,12 @@ import { Pressable, type PressableBaseProps, type PressableProps } from '../syst
 
 import type { ButtonBaseProps } from './Button';
 
-export type AvatarButtonBaseProps = Omit<PressableBaseProps, 'children'> &
+export type AvatarButtonBaseProps = PressableBaseProps &
   SharedProps &
   Pick<ButtonBaseProps, 'accessibilityLabel' | 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
 
-export type AvatarButtonProps = AvatarButtonBaseProps & Omit<PressableProps, 'children'>;
+export type AvatarButtonProps = AvatarButtonBaseProps & PressableProps;
 
 export const AvatarButton = memo((_props: AvatarButtonProps) => {
   const mergedProps = useComponentConfig('AvatarButton', _props);
