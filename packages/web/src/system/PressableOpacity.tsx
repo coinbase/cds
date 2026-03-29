@@ -42,10 +42,9 @@ export const PressableOpacity: PressableOpacityComponent = forwardRef<
   PressableOpacityBaseProps
 >(
   <AsComponent extends React.ElementType>(
-    _props: PressableOpacityProps<AsComponent>,
+    { children, as, ...props }: PressableOpacityProps<AsComponent>,
     ref: Polymorphic.Ref<AsComponent>,
   ) => {
-    const { children, as, ...props } = _props;
     const Component = (as ?? pressableOpacityDefaultElement) satisfies React.ElementType;
     return (
       <Pressable ref={ref} as={Component} {...props} background="transparent">
