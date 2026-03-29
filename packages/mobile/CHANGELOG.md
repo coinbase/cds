@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.60.0 (3/29/2026 PST)
+
+#### 🚀 Updates
+
+- Add indeterminate ProgressCircle. [[#501](https://github.com/coinbase/cds/pull/501)]
+
 ## 8.59.0 (3/27/2026 PST)
 
 #### 🚀 Updates
