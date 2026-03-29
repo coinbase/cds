@@ -44,11 +44,6 @@ export type TableRowBaseProps = SharedProps & {
    */
   disableHoverIndicator?: boolean;
   /**
-   * Callback to fire when pressed
-   * @default noop
-   */
-  onClick?: React.MouseEventHandler<Element> | (() => void);
-  /**
    * The spacing to use on the parent wrapper of Cell.
    * Will only take effect when fullWidth is set to true
    */
@@ -61,7 +56,13 @@ export type TableRowBaseProps = SharedProps & {
 };
 
 export type TableRowProps = TableRowBaseProps &
-  Omit<React.HTMLAttributes<HTMLTableRowElement>, 'dangerouslySetInnerHTML' | 'onClick'>;
+  Omit<React.HTMLAttributes<HTMLTableRowElement>, 'dangerouslySetInnerHTML' | 'onClick'> & {
+    /**
+     * Callback to fire when pressed
+     * @default noop
+     */
+    onClick?: React.MouseEventHandler<Element> | (() => void);
+  };
 
 const tableRowCss = css`
   /* Let us be specific */
