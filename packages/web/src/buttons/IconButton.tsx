@@ -86,6 +86,7 @@ export const IconButton: IconButtonComponent = memo(
         active,
         flush,
         loading,
+        progressCircleSize,
         accessibilityLabel,
         accessibilityHint,
         ...props
@@ -139,7 +140,7 @@ export const IconButton: IconButtonComponent = memo(
               indeterminate
               accessibilityLabel="Loading"
               color="currentColor"
-              size={iconSizeValue}
+              size={progressCircleSize ?? iconSizeValue}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />

@@ -20,7 +20,10 @@ import { type ButtonBaseProps } from './Button';
 
 export type IconButtonBaseProps = SharedProps &
   Omit<PressableBaseProps, 'children'> &
-  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush' | 'loading'> & {
+  Pick<
+    ButtonBaseProps,
+    'disabled' | 'transparent' | 'compact' | 'flush' | 'loading' | 'progressCircleSize'
+  > & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /**
@@ -56,6 +59,7 @@ export const IconButton = memo(
       feedback = compact ? 'light' : 'normal',
       flush,
       loading,
+      progressCircleSize,
       style,
       accessibilityHint,
       accessibilityLabel,
@@ -117,7 +121,7 @@ export const IconButton = memo(
             <ProgressCircle
               indeterminate
               color={colorValue}
-              size={iconSizeValue}
+              size={progressCircleSize ?? iconSizeValue}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />
