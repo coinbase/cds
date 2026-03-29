@@ -14,7 +14,6 @@ import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@coinbase/cds-commo
 import type { MotionBaseSpec } from '@coinbase/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout';
 
 import type { HintMotionBaseProps } from './types';
@@ -38,11 +37,9 @@ export type ColorSurgeTypes = ColorSurgeBaseProps;
  */
 export const ColorSurge = memo(
   forwardRef(function ColorSurge(
-    _props: ColorSurgeTypes,
+    { background = 'bgPrimary', disableAnimateOnMount = false }: ColorSurgeTypes,
     ref: ForwardedRef<ColorSurgeRefBaseProps>,
   ) {
-    const mergedProps = useComponentConfig('ColorSurge', _props);
-    const { background = 'bgPrimary', disableAnimateOnMount = false } = mergedProps;
     const [backgroundState, setBackgroundState] = useState<ThemeVars.Color>(background);
     const opacity = useRef(new Animated.Value(colorSurgeEnterConfig.fromValue as number)).current;
 

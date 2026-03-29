@@ -10,7 +10,6 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@coinbase/cds-common/motion/hint';
 import { m as motion, useAnimation } from 'framer-motion';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import type { HintMotionBaseProps } from './types';
@@ -37,11 +36,9 @@ const MotionBox = motion(Box);
  */
 export const ColorSurge = memo(
   forwardRef(function ColorSurge(
-    _props: ColorSurgeTypes,
+    { background = 'bgPrimary', disableAnimateOnMount = false }: ColorSurgeTypes,
     ref: React.ForwardedRef<ColorSurgeRefBaseProps>,
   ) {
-    const mergedProps = useComponentConfig('ColorSurge', _props);
-    const { background = 'bgPrimary', disableAnimateOnMount = false } = mergedProps;
     const [backgroundState, setBackgroundState] = useState<ThemeVars.Color>(background);
 
     const controls = useAnimation();

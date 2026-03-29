@@ -32,7 +32,6 @@ export type LottieStatusAnimationProps = (
 ) &
   SharedProps &
   SharedAccessibilityProps;
-
 export const LottieStatusAnimation = memo(
   ({
     status = 'loading',

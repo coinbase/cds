@@ -8,15 +8,16 @@ import { Icon } from '../icons';
 import { HStack } from '../layout/HStack';
 import { type DrawerRefBaseProps, Tray } from '../overlays';
 import { Pressable } from '../system';
-import { Text, type TextProps } from '../typography/Text';
+import { Text, type TextBaseProps, type TextProps } from '../typography/Text';
 
-export type NavigationTitleSelectBaseProps = Omit<TextProps, 'onChange'> & {
+export type NavigationTitleSelectBaseProps = Omit<TextBaseProps, 'onChange'> & {
   options: { label: React.ReactNode; id: string }[];
   value: string;
   onChange: (value: string) => void;
 };
 
-export type NavigationTitleSelectProps = NavigationTitleSelectBaseProps;
+export type NavigationTitleSelectProps = NavigationTitleSelectBaseProps &
+  Omit<TextProps, 'onChange'>;
 
 export const NavigationTitleSelect = memo((_props: NavigationTitleSelectProps) => {
   const mergedProps = useComponentConfig('NavigationTitleSelect', _props);

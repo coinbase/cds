@@ -89,7 +89,7 @@ export type PageHeaderProps = Polymorphic.ExtendableProps<
 >;
 
 export const PageHeader = memo(
-  forwardRef(function PageHeader(_props: PageHeaderProps, ref: React.ForwardedRef<HTMLDivElement>) {
+  forwardRef((_props: PageHeaderProps, ref: React.ForwardedRef<HTMLDivElement>) => {
     const mergedProps = useComponentConfig('PageHeader', _props);
     const {
       start,

@@ -66,8 +66,8 @@ export type ContainedAssetCardProps = ContainedAssetCardBaseProps &
  * />
  * ```
  */
-export const ContainedAssetCard = memo((_props: ContainedAssetCardProps) => {
-  const {
+export const ContainedAssetCard = memo(
+  ({
     title,
     description,
     subtitle,
@@ -78,84 +78,85 @@ export const ContainedAssetCard = memo((_props: ContainedAssetCardProps) => {
     onPress,
     maxWidth: propMaxWidth,
     minWidth: propMinWidth,
-  } = _props;
-  const maxWidth = useMemo(
-    () =>
-      propMaxWidth ||
-      (size === 'l' ? containedAssetCardLargeWidth : containedAssetCardSmallDimension),
-    [size, propMaxWidth],
-  );
-  const minWidth = useMemo(
-    () =>
-      propMinWidth ||
-      (size === 'l' ? containedAssetCardLargeDimension : containedAssetCardSmallDimension),
-    [size, propMinWidth],
-  );
-  const pressableStyles = useMemo(() => {
-    return {
-      minWidth,
-      maxWidth,
-    } as ViewStyle;
-  }, [maxWidth, minWidth]);
-  const content = (
-    <HStack
-      background="bgAlternate"
-      borderRadius={500}
-      height={containedAssetCardSmallDimension}
-      maxWidth={maxWidth}
-      minWidth={minWidth}
-      overflow="hidden"
-      testID={onPress ? undefined : testID}
-      width="100%"
-    >
-      <VStack
-        alignContent="center"
-        gap={1}
-        height="100%"
-        justifyContent="space-between"
-        padding={2}
-        width={size === 'l' ? '50%' : '100%'}
+  }: ContainedAssetCardProps) => {
+    const maxWidth = useMemo(
+      () =>
+        propMaxWidth ||
+        (size === 'l' ? containedAssetCardLargeWidth : containedAssetCardSmallDimension),
+      [size, propMaxWidth],
+    );
+    const minWidth = useMemo(
+      () =>
+        propMinWidth ||
+        (size === 'l' ? containedAssetCardLargeDimension : containedAssetCardSmallDimension),
+      [size, propMinWidth],
+    );
+    const pressableStyles = useMemo(() => {
+      return {
+        minWidth,
+        maxWidth,
+      } as ViewStyle;
+    }, [maxWidth, minWidth]);
+    const content = (
+      <HStack
+        background="bgAlternate"
+        borderRadius={500}
+        height={containedAssetCardSmallDimension}
+        maxWidth={maxWidth}
+        minWidth={minWidth}
+        overflow="hidden"
+        testID={onPress ? undefined : testID}
+        width="100%"
       >
-        <HStack>{header}</HStack>
-        <VStack gap={0.5}>
-          {typeof subtitle === 'string' ? (
-            <Text color="fgMuted" font="legal" numberOfLines={1}>
-              {subtitle}
-            </Text>
-          ) : (
-            subtitle
-          )}
-          {typeof title === 'string' ? (
-            <Text font="headline" numberOfLines={1}>
-              {title}
-            </Text>
-          ) : (
-            title
-          )}
-          {typeof description === 'string' ? (
-            <Text color="fgMuted" font="label2" numberOfLines={1}>
-              {description}
-            </Text>
-          ) : (
-            description
-          )}
+        <VStack
+          alignContent="center"
+          gap={1}
+          height="100%"
+          justifyContent="space-between"
+          padding={2}
+          width={size === 'l' ? '50%' : '100%'}
+        >
+          <HStack>{header}</HStack>
+          <VStack gap={0.5}>
+            {typeof subtitle === 'string' ? (
+              <Text color="fgMuted" font="legal" numberOfLines={1}>
+                {subtitle}
+              </Text>
+            ) : (
+              subtitle
+            )}
+            {typeof title === 'string' ? (
+              <Text font="headline" numberOfLines={1}>
+                {title}
+              </Text>
+            ) : (
+              title
+            )}
+            {typeof description === 'string' ? (
+              <Text color="fgMuted" font="label2" numberOfLines={1}>
+                {description}
+              </Text>
+            ) : (
+              description
+            )}
+          </VStack>
         </VStack>
-      </VStack>
-      {size === 'l' && <VStack width="50%">{children}</VStack>}
-    </HStack>
-  );
-  return onPress ? (
-    <Pressable
-      accessibilityRole="button"
-      background="transparent"
-      borderRadius={500}
-      onPress={onPress}
-      style={pressableStyles}
-      testID={testID}
-    >
-      {content}
-    </Pressable>
-  ) : (
-    content
-  );
-});
+        {size === 'l' && <VStack width="50%">{children}</VStack>}
+      </HStack>
+    );
+    return onPress ? (
+      <Pressable
+        accessibilityRole="button"
+        background="transparent"
+        borderRadius={500}
+        onPress={onPress}
+        style={pressableStyles}
+        testID={testID}
+      >
+        {content}
+      </Pressable>
+    ) : (
+      content
+    );
+  },
+);

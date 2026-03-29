@@ -15,7 +15,7 @@ export type CardFooterBaseProps = Pick<SharedAccessibilityProps, 'id'> &
 export type CardFooterProps = CardFooterBaseProps & Omit<BoxProps<BoxDefaultElement>, 'children'>;
 
 export const CardFooter: React.FC<React.PropsWithChildren<CardFooterProps>> = memo(
-  function CardFooter(_props: CardFooterProps) {
+  (_props: CardFooterProps) => {
     const mergedProps = useComponentConfig('CardFooter', _props);
     const { children, paddingBottom = 2, paddingX = gutter, testID, ...otherProps } = mergedProps;
     return (

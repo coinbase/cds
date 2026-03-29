@@ -47,7 +47,7 @@ export type PageHeaderProps = PageHeaderBaseProps &
   };
 
 export const PageHeader = memo(
-  forwardRef(function PageHeader(_props: PageHeaderProps, ref: React.ForwardedRef<View>) {
+  forwardRef((_props: PageHeaderProps, ref: React.ForwardedRef<View>) => {
     const mergedProps = useComponentConfig('PageHeader', _props);
     const { start, title, end, styles, style, ...props } = mergedProps;
     const isMultiRow = useMemo(() => Boolean(start && title && end), [start, end, title]);
