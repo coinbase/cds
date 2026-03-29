@@ -64,7 +64,7 @@ export type CardBodyProps = CardBodyBaseProps & Omit<BoxProps<BoxDefaultElement>
 /**
  * Provides an opinionated layout for the typical content of a Card: a title, description, media, and action
  */
-export const CardBody = memo(function CardBody(_props: CardBodyProps) {
+export const CardBody = memo((_props: CardBodyProps) => {
   const mergedProps = useComponentConfig('CardBody', _props);
   const {
     testID = 'card-body',

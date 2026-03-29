@@ -59,7 +59,7 @@ const getBorderRadiusPinStyle = (borderRadius: number) => ({
   all: {},
 });
 
-export const Card = memo(function OldCard(_props: CardProps) {
+export const Card = memo((_props: CardProps) => {
   const mergedProps = useComponentConfig('Card', _props);
   const {
     children,

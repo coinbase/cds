@@ -21,7 +21,7 @@ export type CardBaseProps = Pick<SharedAccessibilityProps, 'id'> &
 export type CardProps = CardBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
-export const Card = memo<CardProps>(function Card(_props: CardProps) {
+export const Card = memo<CardProps>((_props: CardProps) => {
   const mergedProps = useComponentConfig('Card', _props);
   const {
     children,

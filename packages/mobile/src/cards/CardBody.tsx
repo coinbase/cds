@@ -93,7 +93,7 @@ const CardBodyAction = memo(function CardBodyAction({
   );
 });
 
-export const CardBody = memo(function CardBody(_props: CardBodyProps) {
+export const CardBody = memo((_props: CardBodyProps) => {
   const mergedProps = useComponentConfig('CardBody', _props);
   const {
     testID = 'card-body',

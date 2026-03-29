@@ -63,21 +63,20 @@ export type DataCardBaseProps = CardBaseProps &
 
 export type DataCardProps = DataCardBaseProps;
 
-export const DataCard = memo(function DataCard(_props: DataCardProps) {
-  const {
-    onClick,
-    title,
-    description,
-    progressVariant,
-    progress,
-    progressColor,
-    startLabel: startLabelProp,
-    endLabel: endLabelProp,
-    testID = 'data-card',
-    borderRadius = 0,
-    elevation = 0,
-    ...cardProps
-  } = _props;
+export const DataCard = memo(function DataCard({
+  onClick,
+  title,
+  description,
+  progressVariant,
+  progress,
+  progressColor,
+  startLabel: startLabelProp,
+  endLabel: endLabelProp,
+  testID = 'data-card',
+  borderRadius = 0,
+  elevation = 0,
+  ...cardProps
+}: DataCardProps) {
   const content = useMemo(() => {
     return (
       <HStack justifyContent="space-between">
