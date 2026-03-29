@@ -5,7 +5,7 @@ import { type SharedProps } from '@coinbase/cds-common';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons';
-import { HStack, VStack, type VStackProps } from '../layout';
+import { HStack, VStack, type BoxBaseProps, type VStackProps } from '../layout';
 import { type HapticFeedbackType, Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
@@ -28,24 +28,26 @@ export type NumpadButtonProps = {
   feedback?: HapticFeedbackType;
 };
 
-export type NumpadProps = {
-  onPress: (value: NumpadValue) => void;
-  onLongPress?: (value: NumpadValue) => void;
+export type NumpadBaseProps = BoxBaseProps & {
   separator?: string;
   disabled?: boolean;
   accessory?: React.ReactNode;
   action?: React.ReactNode;
   separatorAccessibilityLabel?: string;
   deleteAccessibilityLabel?: string;
-  /**
-   * Haptic feedback to trigger when being pressed.
-   * @default none
-   */
-  feedback?: HapticFeedbackType;
-} & SharedProps &
-  VStackProps;
+};
 
-export type NumpadBaseProps = NumpadProps;
+export type NumpadProps = NumpadBaseProps &
+  VStackProps & {
+    onPress: (value: NumpadValue) => void;
+    onLongPress?: (value: NumpadValue) => void;
+    /**
+     * Haptic feedback to trigger when being pressed.
+     * @default none
+     */
+    feedback?: HapticFeedbackType;
+  } & SharedProps &
+  VStackProps;
 
 const buttonValues: NumpadValue[][] = [
   [1, 2, 3],
