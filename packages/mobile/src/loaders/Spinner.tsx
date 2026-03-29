@@ -6,7 +6,7 @@ import { useTheme } from '../hooks/useTheme';
 
 /**
  * @deprecated Use indeterminate ProgressCircle or ActivityIndicator component instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const Spinner = memo(function Spinner({
   size = 'small',

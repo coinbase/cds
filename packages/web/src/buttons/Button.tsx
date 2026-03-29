@@ -20,7 +20,7 @@ const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 const DEFAULT_MIN_WIDTH = 100;
 
 /** @deprecated Use progressCircleSize instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const spinnerHeight = 2.5;
 
@@ -108,15 +108,6 @@ const flushStartCss = css`
 const flushEndCss = css`
   margin-inline-end: calc(var(--space-2) * -1);
 `;
-
-const spinnerStyle = {
-  width: '24px',
-  height: '24px',
-  border: '2px solid',
-  borderTopColor: 'var(--color-transparent)',
-  borderRightColor: 'var(--color-transparent)',
-  borderLeftColor: 'var(--color-transparent)',
-};
 
 export const buttonDefaultElement = 'button';
 
