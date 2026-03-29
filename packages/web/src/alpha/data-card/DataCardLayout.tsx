@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
 
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, HStack, VStack } from '../../layout';
 import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography';
@@ -46,7 +45,6 @@ export type DataCardLayoutProps = DataCardLayoutBaseProps & {
 };
 
 export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
-  const mergedProps = useComponentConfig('DataCardLayout', _props);
   const {
     title,
     subtitle,
@@ -56,7 +54,7 @@ export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
     classNames = {},
     styles = {},
     children,
-  } = mergedProps;
+  } = _props;
   const titleNode = useMemo(() => {
     if (typeof title === 'string') {
       return (

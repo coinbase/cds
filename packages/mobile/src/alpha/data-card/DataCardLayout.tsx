@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
@@ -38,7 +37,6 @@ export type DataCardLayoutProps = DataCardLayoutBaseProps & {
   };
 };
 export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
-  const mergedProps = useComponentConfig('DataCardLayout', _props);
   const {
     title,
     subtitle,
@@ -47,7 +45,7 @@ export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
     layout = 'vertical',
     children,
     styles = {},
-  } = mergedProps;
+  } = _props;
   const titleNode = useMemo(() => {
     if (typeof title === 'string') {
       return (

@@ -8,7 +8,6 @@ import type {
 import type { AccordionItemBaseProps } from '../accordion/AccordionItem';
 import type { AccordionPanelBaseProps } from '../accordion/AccordionPanel';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
-import type { DataCardLayoutBaseProps } from '../alpha/data-card/DataCardLayout';
 import type { AlphaSelectBaseProps } from '../alpha/select/Select';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
@@ -145,7 +144,6 @@ export type ComponentConfig = {
   ContentCardHeader?: ConfigResolver<ContentCardHeaderBaseProps>;
   Control?: ConfigResolver<ControlBaseProps<string>>;
   ControlGroup?: ConfigResolver<ControlGroupBaseProps>;
-  DataCardLayout?: ConfigResolver<DataCardLayoutBaseProps>;
   DateInput?: ConfigResolver<DateInputBaseProps>;
   DatePicker?: ConfigResolver<DatePickerBaseProps>;
   Divider?: ConfigResolver<DividerBaseProps>;
