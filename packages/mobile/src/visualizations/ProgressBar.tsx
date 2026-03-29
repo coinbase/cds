@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
 import type { ThemeVars } from '@cbhq/cds-common/core/theme';
-import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
 import type { SharedAccessibilityProps, SharedProps, Weight } from '@cbhq/cds-common/types';
-import { useProgressSize } from '@cbhq/cds-common/visualizations/useProgressSize';
+import { getProgressSize } from '@cbhq/cds-common/visualizations/getProgressSize';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -22,7 +21,7 @@ export type ProgressBaseProps = SharedProps &
   Pick<HintMotionBaseProps, 'disableAnimateOnMount'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** Number between 0-1 representing the progress percentage */
-    progress: number;
+    progress?: number;
     /** Toggle used to change thickness of progress visualization
      * @default normal
      * */
@@ -62,7 +61,7 @@ export const ProgressBar = memo(
     (
       {
         weight = 'normal',
-        progress,
+        progress = 0,
         color = 'bgPrimary',
         disabled,
         disableAnimateOnMount,
@@ -76,7 +75,7 @@ export const ProgressBar = memo(
       forwardedRef: React.ForwardedRef<View>,
     ) => {
       const theme = useTheme();
-      const height = useProgressSize(weight);
+      const height = getProgressSize(weight);
 
       const animatedProgress = useRef(new Animated.Value(disableAnimateOnMount ? progress : 0));
 

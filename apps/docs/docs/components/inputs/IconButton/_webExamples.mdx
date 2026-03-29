@@ -90,7 +90,64 @@ Use the `transparent` prop to remove the background until the user interacts wit
 
 ### Loading
 
-Use the `loading` prop to show a spinner when an action is in progress. The button becomes non-interactive and displays a loading spinner instead of the icon.
+Use the `loading` prop when an action is in progress. The button becomes non-interactive and shows an indeterminate [ProgressCircle](/components/feedback/ProgressCircle) instead of the icon. The circle size follows the button’s `iconSize`.
+
+#### Loading by variant
+
+Loading works with all variants, transparent, and compact. Provide `accessibilityLabel` so screen readers announce the loading state (e.g. "Loading").
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" alignItems="center">
+  <IconButton
+    loading
+    name="refresh"
+    accessibilityLabel="Loading"
+    variant="primary"
+    onClick={console.log}
+  />
+  <IconButton
+    loading
+    name="refresh"
+    accessibilityLabel="Loading"
+    variant="secondary"
+    onClick={console.log}
+  />
+  <IconButton
+    loading
+    name="refresh"
+    accessibilityLabel="Loading"
+    variant="tertiary"
+    onClick={console.log}
+  />
+  <IconButton
+    loading
+    name="refresh"
+    accessibilityLabel="Loading"
+    variant="foregroundMuted"
+    onClick={console.log}
+  />
+  <IconButton
+    loading
+    transparent
+    name="refresh"
+    accessibilityLabel="Loading"
+    variant="secondary"
+    onClick={console.log}
+  />
+  <IconButton loading compact name="refresh" accessibilityLabel="Loading" onClick={console.log} />
+  <IconButton
+    loading
+    name="refresh"
+    accessibilityLabel="Loading"
+    compact={false}
+    onClick={console.log}
+  />
+</HStack>
+```
+
+#### Interactive loading
+
+Toggle loading to simulate an async action. The button’s `accessibilityLabel` can reflect the state (e.g. "Submit form" vs "Processing submission").
 
 ```jsx live
 function LoadingExample() {

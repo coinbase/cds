@@ -10,8 +10,8 @@ import { cx } from '../../../cx';
 import { Icon } from '../../../icons/Icon';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
-import { Spinner } from '../../../loaders';
 import { Text } from '../../../typography/Text';
+import { ProgressCircle } from '../../../visualizations/ProgressCircle';
 import {
   Select,
   type SelectControlComponent,
@@ -551,11 +551,11 @@ export const MixedDefaultAndCustomComponentOptions = () => {
   const CustomOptionComponent: SelectOptionComponent = ({ value, onClick }) => {
     return (
       <HStack justifyContent="center">
-        <Spinner size={4} />
+        <ProgressCircle indeterminate color="fg" size={40} />
         <Button transparent onClick={() => onClick?.(value)} width="80%">
           {value ?? 'Empty value'}
         </Button>
-        <Spinner size={4} />
+        <ProgressCircle indeterminate color="fg" size={40} />
       </HStack>
     );
   };
@@ -1646,12 +1646,12 @@ export const CustomOptionComponent = () => {
 
   const CustomOptionComponent: SelectOptionComponent = ({ value, onClick }) => {
     return (
-      <HStack justifyContent="center">
-        <Spinner size={4} />
+      <HStack alignItems="center" justifyContent="center">
+        <ProgressCircle indeterminate size={40} />
         <Button transparent onClick={() => onClick?.(value)} width="80%">
           {value ?? 'Empty value'}
         </Button>
-        <Spinner size={4} />
+        <ProgressCircle indeterminate size={40} />
       </HStack>
     );
   };

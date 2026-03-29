@@ -7,19 +7,12 @@ import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
-import { type ButtonBaseProps, spinnerHeight } from './Button';
+import { type ButtonBaseProps } from './Button';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
-
-const baseSpinnerCss = css`
-  border: 2px solid;
-  border-top-color: var(--color-transparent);
-  border-right-color: var(--color-transparent);
-  border-left-color: var(--color-transparent);
-`;
 
 export const iconButtonDefaultElement = 'button';
 
@@ -93,6 +86,7 @@ export const IconButton: IconButtonComponent = memo(
         active,
         flush,
         loading,
+        progressCircleSize,
         accessibilityLabel,
         accessibilityHint,
         ...props
@@ -103,14 +97,6 @@ export const IconButton: IconButtonComponent = memo(
       const theme = useTheme();
 
       const iconSizeValue = theme.iconSize[iconSize];
-
-      const spinnerSizeStyles = useMemo(
-        () => ({
-          width: iconSizeValue,
-          height: iconSizeValue,
-        }),
-        [iconSizeValue],
-      );
 
       const variantMap = transparent ? transparentVariants : variants;
       const variantStyle = variantMap[variant];
@@ -150,12 +136,13 @@ export const IconButton: IconButtonComponent = memo(
           {...props}
         >
           {loading ? (
-            <Spinner
-              className={baseSpinnerCss}
+            <ProgressCircle
+              indeterminate
+              accessibilityLabel="Loading"
               color="currentColor"
-              size={spinnerHeight}
-              style={spinnerSizeStyles}
-              testID={props.testID ? `${props.testID}-spinner` : undefined}
+              size={progressCircleSize ?? iconSizeValue}
+              testID={props.testID ? `${props.testID}-progress-circle` : undefined}
+              weight="thin"
             />
           ) : (
             <Icon active={active} color="currentColor" name={name} size={iconSize} />
