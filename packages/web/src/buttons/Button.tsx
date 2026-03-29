@@ -19,7 +19,12 @@ const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
 const DEFAULT_MIN_WIDTH = 100;
 
-export const spinnerHeight = 24;
+/** @deprecated Use progressCircleSize instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
+ */
+export const spinnerHeight = 2.5;
+
+const defaultProgressCircleSize = 24;
 
 const baseCss = css`
   text-decoration: none;
@@ -130,6 +135,10 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       disabled?: boolean;
       /** Mark the button as loading and display a spinner. */
       loading?: boolean;
+      /** Size of the loading progress circle in px.
+       * @default 24
+       */
+      progressCircleSize?: number;
       /** Mark the background and border as transparent until interacted with. */
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
@@ -184,6 +193,7 @@ export const Button: ButtonComponent = memo(
         as,
         variant = 'primary',
         loading,
+        progressCircleSize = defaultProgressCircleSize,
         transparent,
         block,
         compact,
@@ -286,7 +296,7 @@ export const Button: ButtonComponent = memo(
                   indeterminate
                   accessibilityLabel="Loading"
                   color="currentColor"
-                  size={spinnerHeight}
+                  size={progressCircleSize}
                   weight="thin"
                 />
               </span>

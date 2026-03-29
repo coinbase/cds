@@ -10,17 +10,17 @@ import {
   useSpringRef,
 } from '@react-spring/native';
 
-import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 import { Pressable } from '../system/Pressable';
 import { TextHeadline } from '../typography/TextHeadline';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
-import { progressCircleHeight } from './Button';
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
 export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
+
+const progressCircleSize = 24;
 
 export type SlideButtonHandleCheckedProps = Pick<SlideButtonBaseProps, 'variant' | 'compact'> & {
   label?: React.ReactNode;
@@ -61,7 +61,6 @@ export const styles = StyleSheet.create({
 
 export const SlideButtonHandleChecked = memo(
   ({ label, end, compact }: SlideButtonHandleCheckedProps) => {
-    const theme = useTheme();
     const handleWidth = compact ? 40 : 56;
 
     return (
@@ -78,7 +77,7 @@ export const SlideButtonHandleChecked = memo(
             <ProgressCircle
               indeterminate
               color="fgInverse"
-              size={progressCircleHeight}
+              size={progressCircleSize}
               weight="thin"
             />
           )}
