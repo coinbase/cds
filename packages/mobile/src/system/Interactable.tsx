@@ -73,23 +73,22 @@ export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> & {
 
 export type InteractableProps = InteractableBaseProps & Omit<ViewProps, 'style'>;
 
-export const Interactable = memo(function Interactable(_props: InteractableProps) {
-  const {
-    background = 'transparent',
-    borderColor = background,
-    borderWidth = 100,
-    block,
-    children,
-    disabled,
-    pressed,
-    style,
-    contentStyle,
-    wrapperStyles,
-    blendStyles,
-    transparentWhileInactive,
-    transparentWhilePressed,
-    ...props
-  } = _props;
+export const Interactable = memo(function Interactable({
+  background = 'transparent',
+  borderColor = background,
+  borderWidth = 100,
+  block,
+  children,
+  disabled,
+  pressed,
+  style,
+  contentStyle,
+  wrapperStyles,
+  blendStyles,
+  transparentWhileInactive,
+  transparentWhilePressed,
+  ...props
+}: InteractableProps) {
   const theme = useTheme();
   const isTransparent = transparentWhileInactive && !pressed;
   const isPressedAndTransparent = transparentWhilePressed && pressed;

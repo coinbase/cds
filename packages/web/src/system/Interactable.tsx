@@ -203,10 +203,7 @@ export const Interactable: InteractableComponent = forwardRef<
   InteractableBaseProps
 >(
   <AsComponent extends React.ElementType>(
-    _props: Polymorphic.Props<AsComponent, InteractableBaseProps>,
-    ref: Polymorphic.Ref<AsComponent>,
-  ) => {
-    const {
+    {
       as,
       background = 'transparent',
       borderColor = background,
@@ -221,7 +218,9 @@ export const Interactable: InteractableComponent = forwardRef<
       transparentWhileInactive,
       transparentWhilePressed,
       ...props
-    } = _props;
+    }: Polymorphic.Props<AsComponent, InteractableBaseProps>,
+    ref: Polymorphic.Ref<AsComponent>,
+  ) => {
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
 
