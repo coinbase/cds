@@ -82,7 +82,8 @@
     "minimatch": "^10.2.4",
     "glob@7.1.6": "patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch",
     "koa": "^3.1.2",
-    "tar": "^7.5.12"
+    "tar": "^7.5.12",
+    "bn.js": "^5.2.3"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
@@ -100,7 +101,8 @@
     "minimatch": "Request from Coinbase Security team to fix security vulnerability",
     "glob@7.1.6": "Handle minimatch@10's Symbol(GLOBSTAR) in pattern arrays (used by @expo/config). Avoids 'Cannot convert a Symbol value to a string' when starting Expo.",
     "koa": "Request from Coinbase Security team to fix security vulnerability",
-    "tar": "Request from Coinbase Security team to fix security vulnerability"
+    "tar": "Request from Coinbase Security team to fix security vulnerability",
+    "bn.js": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
