@@ -72,9 +72,10 @@ export const Group = memo(
         renderItem = fallbackRenderItem,
         role = 'group',
         ...boxProps
-      }: GroupProps,
+      },
       ref,
     ) => {
+      // TODO: Remove once `horizontal` is sunset in Q2.
       const contents = useMemo(
         () =>
           flattenAndJoinNodes({
@@ -88,6 +89,7 @@ export const Group = memo(
           }),
         [children, direction, divider, gap, renderItem],
       );
+
       return (
         <Box
           ref={ref}

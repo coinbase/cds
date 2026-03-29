@@ -69,7 +69,7 @@ const getIconSourceSize = (iconSize: number): IconSourcePixelSize => {
   return 24;
 };
 
-export const Icon = memo(function Icon(_props: IconProps) {
+export const Icon = memo((_props: IconProps) => {
   const mergedProps = useComponentConfig('Icon', _props);
   const {
     accessibilityLabel,
