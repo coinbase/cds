@@ -23,7 +23,7 @@ import { useResponsiveHeight } from './useResponsiveHeight';
 export const DROPDOWN_MAX_HEIGHT = 300;
 const NOOP = () => {};
 
-export type DropdownBaseProps = DropdownProps;
+export type { DropdownBaseProps } from './DropdownProps';
 
 const ModalDropdown = memo(
   forwardRef<DropdownRef, DropdownInternalProps>(

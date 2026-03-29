@@ -98,7 +98,7 @@ import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
 import type { TourBaseProps } from '../tour/Tour';
 import type { LinkBaseProps } from '../typography/Link';
-import type { ProgressBarBaseProps } from '../visualizations/ProgressBar';
+import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
 import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
@@ -180,7 +180,7 @@ export type ComponentConfig = {
   PageFooter?: ConfigResolver<PageFooterBaseProps>;
   PageHeader?: ConfigResolver<PageHeaderBaseProps>;
   Pagination?: ConfigResolver<PaginationBaseProps>;
-  ProgressBar?: ConfigResolver<ProgressBarBaseProps>;
+  ProgressBar?: ConfigResolver<ProgressBaseProps>;
   ProgressBarWithFixedLabels?: ConfigResolver<ProgressBarWithFixedLabelsBaseProps>;
   ProgressBarWithFloatLabel?: ConfigResolver<ProgressBarWithFloatLabelBaseProps>;
   ProgressCircle?: ConfigResolver<ProgressCircleBaseProps>;

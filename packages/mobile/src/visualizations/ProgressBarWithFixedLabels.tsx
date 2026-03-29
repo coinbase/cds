@@ -6,11 +6,11 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, VStack } from '../layout';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
-import { type ProgressBarProps } from './ProgressBar';
+import { type ProgressBarProps, type ProgressBaseProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
-export type ProgressBarWithFixedLabelsProps = Pick<
-  ProgressBarProps,
+export type ProgressBarWithFixedLabelsBaseProps = Pick<
+  ProgressBaseProps,
   'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
   /** Label that is pinned to the start of the container. If a number is used then it will format it as a percentage. */
@@ -22,6 +22,9 @@ export type ProgressBarWithFixedLabelsProps = Pick<
    * @default beside
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below' | 'beside'>;
+};
+
+export type ProgressBarWithFixedLabelsProps = ProgressBarWithFixedLabelsBaseProps & {
   style?: StyleProp<ViewStyle>;
   /** Custom styles for individual elements of the ProgressBarWithFixedLabels component */
   styles?: {
@@ -35,8 +38,6 @@ export type ProgressBarWithFixedLabelsProps = Pick<
     endLabel?: StyleProp<TextStyle>;
   };
 };
-
-export type ProgressBarWithFixedLabelsBaseProps = ProgressBarWithFixedLabelsProps;
 
 export type ProgressBarFixedLabelBesideProps = Pick<
   ProgressBarProps,

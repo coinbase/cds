@@ -7,8 +7,7 @@ import { debounce } from '@coinbase/cds-common/utils/debounce';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { getBrowserGlobals } from '../utils/browser';
 
-export type FocusTrapProps = {
-  children: ReactElement & { ref?: React.Ref<HTMLElement> };
+export type FocusTrapBaseProps = {
   onEscPress?: () => void;
   /**
    * Use for editable Search Input components to ensure focus is correctly applied
@@ -21,42 +20,37 @@ export type FocusTrapProps = {
   /**
    * If `true`, the focus trap will not automatically shift focus to itself when it opens, and
    * replace it to the last focused element when it closes.
-   * @default false
    */
   disableAutoFocus?: boolean;
   /**
    * If `true`, the focus trap will not allow arrow key navigation.
-   * @default false
    */
   disableArrowKeyNavigation?: boolean;
   /**
    * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
-   * @default false
    */
   restoreFocusOnUnmount?: boolean;
   /**
    * If `true`, the focus trap will include the trigger in the focus trap.
-   * @default false
    */
   includeTriggerInFocusTrap?: boolean;
   /**
    * If `true`, the focus trap will respect negative `tabIndex` values, removing them from the list of focusable elements.
-   * @default false
    */
   respectNegativeTabIndex?: boolean;
   /**
    * If `true`, the focus trap will include all elements with `tabIndex` values in the list of focusable elements.
-   * @default false
    */
   focusTabIndexElements?: boolean;
   /**
    * The amount of time in milliseconds to wait before auto-focusing the first focusable element.
-   * @default undefined
    */
   autoFocusDelay?: number;
 };
 
-export type FocusTrapBaseProps = FocusTrapProps;
+export type FocusTrapProps = FocusTrapBaseProps & {
+  children: ReactElement & { ref?: React.Ref<HTMLElement> };
+};
 
 const DEBOUNCE_MS = 50;
 export const NAVIGATION_KEYS = ['Tab', 'ArrowDown', 'ArrowUp', 'Home', 'End'];

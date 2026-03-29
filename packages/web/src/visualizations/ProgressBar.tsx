@@ -60,8 +60,6 @@ export type ProgressBarProps = ProgressBaseProps & {
   };
 };
 
-export type ProgressBarBaseProps = ProgressBarProps;
-
 const MotionBox = motion(Box);
 
 const boxCss = css`

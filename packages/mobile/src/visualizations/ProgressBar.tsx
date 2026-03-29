@@ -58,8 +58,6 @@ export type ProgressBarProps = ProgressBaseProps & {
   };
 };
 
-export type ProgressBarBaseProps = ProgressBarProps;
-
 export const ProgressBar = memo(
   forwardRef((_props: ProgressBarProps, forwardedRef: React.ForwardedRef<View>) => {
     const mergedProps = useComponentConfig('ProgressBar', _props);

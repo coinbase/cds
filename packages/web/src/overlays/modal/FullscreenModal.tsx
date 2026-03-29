@@ -6,26 +6,54 @@ import { useA11yLabels } from '../../hooks/useA11yLabels';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack } from '../../layout';
 import { breakpoints } from '../../styles/media';
-import { type FocusTrapProps } from '../FocusTrap';
+import { type FocusTrapBaseProps } from '../FocusTrap';
 
 import { FullscreenModalHeader } from './FullscreenModalHeader';
 import { FullscreenModalLayout } from './FullscreenModalLayout';
-import type { ModalProps } from './Modal';
-import type { ModalHeaderProps } from './ModalHeader';
+import type { ModalBaseProps } from './Modal';
+import type { ModalHeaderBaseProps } from './ModalHeader';
 
-export type FullscreenModalProps = {
-  /**
-   * The logo to display
-   */
-  logo?: React.ReactElement;
-  /**
-   * Title displayed in the Fullscreen Modal header.
-   */
-  title?: string;
-  /**
-   * Primary content element. Primary content is where the core of the task or information should live.
-   */
-  primaryContent: React.ReactElement;
+export type FullscreenModalBaseProps = Pick<
+  ModalBaseProps,
+  | 'visible'
+  | 'onRequestClose'
+  | 'disablePortal'
+  | 'accessibilityLabel'
+  | 'accessibilityLabelledBy'
+  | 'testID'
+  | 'zIndex'
+  | 'role'
+  | 'onDidClose'
+  | 'shouldCloseOnEscPress'
+  | 'disableFocusTrap'
+  | 'focusTabIndexElements'
+  | 'restoreFocusOnUnmount'
+> &
+  Pick<ModalHeaderBaseProps, 'closeAccessibilityLabel'> &
+  Pick<FocusTrapBaseProps, 'disableFocusTrap' | 'focusTabIndexElements'> & {
+    /**
+     * The logo to display
+     */
+    logo?: React.ReactElement;
+    /**
+     * Title displayed in the Fullscreen Modal header.
+     */
+    title?: string;
+    /**
+     * Primary content element. Primary content is where the core of the task or information should live.
+     */
+    primaryContent: React.ReactElement;
+    /**
+     * Hide header bottom divider
+     */
+    hideDivider?: boolean;
+    /**
+     * Show divider between primary and secondary content
+     */
+    showSecondaryContentDivider?: boolean;
+  };
+
+export type FullscreenModalProps = FullscreenModalBaseProps & {
   /**
    * Class applied to the primary content element
    */
@@ -42,38 +70,9 @@ export type FullscreenModalProps = {
    * Class applied to the content container element
    */
   contentContainerClassName?: string;
-  /**
-   * Hide header bottom divider
-   * @default false
-   */
-  hideDivider?: boolean;
-  /**
-   * Show divider between primary and secondary content
-   * @default false
-   */
-  showSecondaryContentDivider?: boolean;
   /** Apply styles to content. */
   contentStyle?: React.CSSProperties;
-} & Pick<
-  ModalProps,
-  | 'visible'
-  | 'onRequestClose'
-  | 'disablePortal'
-  | 'accessibilityLabel'
-  | 'accessibilityLabelledBy'
-  | 'testID'
-  | 'zIndex'
-  | 'role'
-  | 'onDidClose'
-  | 'shouldCloseOnEscPress'
-  | 'disableFocusTrap'
-  | 'focusTabIndexElements'
-  | 'restoreFocusOnUnmount'
-> &
-  Pick<ModalHeaderProps, 'closeAccessibilityLabel'> &
-  Pick<FocusTrapProps, 'disableFocusTrap' | 'focusTabIndexElements'>;
-
-export type FullscreenModalBaseProps = FullscreenModalProps;
+};
 
 const contentMaxWidth = 800;
 const secondaryContentWidth = 400;

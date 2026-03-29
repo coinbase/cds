@@ -29,7 +29,7 @@ export type PopoverContentPositionConfig = {
   strategy?: PositioningStrategy;
 };
 
-export type PopoverProps = {
+export type PopoverBaseProps = {
   content: React.ReactNode;
   /** Subject of the Popover that when interacted with will toggle the visibility of the content */
   children: React.ReactNode;
@@ -83,3 +83,5 @@ export type PopoverProps = {
   > &
   SharedProps &
   Partial<Pick<AccessibleControlledReturnType, 'controlledElementAccessibilityProps'>>;
+
+export type PopoverProps = PopoverBaseProps;

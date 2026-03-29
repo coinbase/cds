@@ -130,7 +130,7 @@ const ProgressBarFloatLabel = memo(
   },
 );
 
-export type ProgressBarWithFloatLabelProps = Pick<
+export type ProgressBarWithFloatLabelBaseProps = Pick<
   ProgressBaseProps,
   'progress' | 'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
@@ -141,6 +141,9 @@ export type ProgressBarWithFloatLabelProps = Pick<
    * @default above
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below'>;
+};
+
+export type ProgressBarWithFloatLabelProps = ProgressBarWithFloatLabelBaseProps & {
   style?: StyleProp<ViewStyle>;
   /** Custom styles for individual elements of the ProgressBarWithFloatLabel component */
   styles?: {
@@ -152,8 +155,6 @@ export type ProgressBarWithFloatLabelProps = Pick<
     label?: StyleProp<TextStyle>;
   };
 };
-
-export type ProgressBarWithFloatLabelBaseProps = ProgressBarWithFloatLabelProps;
 
 export const ProgressBarWithFloatLabel: React.FC<
   React.PropsWithChildren<ProgressBarWithFloatLabelProps>

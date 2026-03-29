@@ -12,8 +12,6 @@ const preventMouseDown = (event: React.MouseEvent) => {
   event.stopPropagation();
 };
 
-export type TooltipBaseProps = TooltipProps;
-
 export const Tooltip = memo((_props: TooltipProps) => {
   const mergedProps = useComponentConfig('Tooltip', _props);
   const {
