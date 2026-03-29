@@ -48,8 +48,7 @@ export type CellMediaProps = CellMediaBaseProps;
  * @deprecationExpectedRemoval v9
  * For example: `<Avatar src={...} />`, `<Icon name={...} />`, `<RemoteImage source={...} />`, or a Pictogram.
  */
-export const CellMedia = memo(function CellMedia(_props: CellMediaProps) {
-  const props = _props;
+export const CellMedia = memo(function CellMedia(props: CellMediaProps) {
   let size = mediaSize;
   let content = null;
 

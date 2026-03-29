@@ -12,7 +12,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Fallback } from '../layout';
 
 import { useTableCellSpacing, useTableCellTag, useTableContext } from './hooks/useTable';
-import type { TableCellProps } from './TableCell';
+import type { TableCellBaseProps, TableCellProps } from './TableCell';
 
 const visuallyHiddenCss = css`
   position: absolute;
@@ -38,9 +38,14 @@ export type TableCellFallbackBaseProps = {
 } & SharedProps &
   FallbackRectWidthProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Pick<TableCellProps, 'width' | 'outerSpacing' | 'innerSpacing' | 'as'>;
+  Pick<TableCellBaseProps, 'width' | 'outerSpacing' | 'innerSpacing'>;
 
-export type TableCellFallbackProps = TableCellFallbackBaseProps;
+type TableCellFallbackSharedProps = React.TdHTMLAttributes<HTMLTableCellElement> &
+  React.ThHTMLAttributes<HTMLTableCellElement>;
+
+export type TableCellFallbackProps = TableCellFallbackBaseProps &
+  Omit<TableCellFallbackSharedProps, 'dangerouslySetInnerHTML' | 'title'> &
+  Pick<TableCellProps, 'as'>;
 
 const tableCellCss = css`
   padding: 0;

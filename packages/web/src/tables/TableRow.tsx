@@ -13,55 +13,55 @@ import { TableCell, type TableCellProps } from './TableCell';
 
 export type TableRowRef = React.MutableRefObject<HTMLTableRowElement | null>;
 
-export type TableRowBaseProps = SharedProps &
-  Omit<React.HTMLAttributes<HTMLTableRowElement>, 'dangerouslySetInnerHTML'> & {
-    /**
-     * Children are required, and should always include TableCell | TableCell[].
-     */
-    children: NonNullable<React.ReactNode>;
-    /**
-     * Should this row span the entire width of the table?
-     * Useful for treating a row as a Control Strip.
-     * @default undefined
-     */
-    fullWidth?: boolean;
-    /**
-     * Set the background color for this entire row
-     * to some CDS Palette background color name
-     * @default undefined
-     */
-    backgroundColor?: ThemeVars.Color;
-    /**
-     * Set the text color for this entire row to some
-     * CDS Palette foreground color name
-     * @default undefined
-     */
-    color?: ThemeVars.Color;
-    /**
-     * By default, we set a hover background color of
-     * palette.backgroundAlternate on hover for the row.
-     * Use this prop to disable this behavior
-     * @default false
-     */
-    disableHoverIndicator?: boolean;
-    /**
-     * Callback to fire when pressed
-     * @default noop
-     */
-    onClick?: React.MouseEventHandler<Element> | (() => void);
-    /**
-     * The spacing to use on the parent wrapper of Cell.
-     * Will only take effect when fullWidth is set to true
-     */
-    outerSpacing?: TableCellProps['outerSpacing'];
-    /**
-     * The spacing to use on the inner content of Cell.
-     * Will only take effect when fullWidth is set to true
-     */
-    innerSpacing?: TableCellProps['innerSpacing'];
-  };
+export type TableRowBaseProps = SharedProps & {
+  /**
+   * Children are required, and should always include TableCell | TableCell[].
+   */
+  children: NonNullable<React.ReactNode>;
+  /**
+   * Should this row span the entire width of the table?
+   * Useful for treating a row as a Control Strip.
+   * @default undefined
+   */
+  fullWidth?: boolean;
+  /**
+   * Set the background color for this entire row
+   * to some CDS Palette background color name
+   * @default undefined
+   */
+  backgroundColor?: ThemeVars.Color;
+  /**
+   * Set the text color for this entire row to some
+   * CDS Palette foreground color name
+   * @default undefined
+   */
+  color?: ThemeVars.Color;
+  /**
+   * By default, we set a hover background color of
+   * palette.backgroundAlternate on hover for the row.
+   * Use this prop to disable this behavior
+   * @default false
+   */
+  disableHoverIndicator?: boolean;
+  /**
+   * Callback to fire when pressed
+   * @default noop
+   */
+  onClick?: React.MouseEventHandler<Element> | (() => void);
+  /**
+   * The spacing to use on the parent wrapper of Cell.
+   * Will only take effect when fullWidth is set to true
+   */
+  outerSpacing?: TableCellProps['outerSpacing'];
+  /**
+   * The spacing to use on the inner content of Cell.
+   * Will only take effect when fullWidth is set to true
+   */
+  innerSpacing?: TableCellProps['innerSpacing'];
+};
 
-export type TableRowProps = TableRowBaseProps;
+export type TableRowProps = TableRowBaseProps &
+  Omit<React.HTMLAttributes<HTMLTableRowElement>, 'dangerouslySetInnerHTML' | 'onClick'>;
 
 const tableRowCss = css`
   /* Let us be specific */
