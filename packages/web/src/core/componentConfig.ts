@@ -53,7 +53,6 @@ import type { DropdownBaseProps } from '../dropdown/Dropdown';
 import type { IconBaseProps } from '../icons/Icon';
 import type { DividerBaseProps } from '../layout/Divider';
 import type { FallbackBaseProps } from '../layout/Fallback';
-import type { SpinnerBaseProps } from '../loaders/Spinner';
 import type { AvatarBaseProps } from '../media/Avatar';
 import type { RemoteImageBaseProps } from '../media/RemoteImage';
 import type { RemoteImageGroupBaseProps } from '../media/RemoteImageGroup';
@@ -77,7 +76,6 @@ import type { ModalHeaderBaseProps } from '../overlays/modal/ModalHeader';
 import type { ModalWrapperBaseProps } from '../overlays/modal/ModalWrapper';
 import type { OverlayBaseProps } from '../overlays/overlay/Overlay';
 import type { ToastBaseProps } from '../overlays/Toast';
-import type { TooltipBaseProps } from '../overlays/tooltip/Tooltip';
 import type { TooltipContentBaseProps } from '../overlays/tooltip/TooltipContent';
 import type { TrayBaseProps } from '../overlays/tray/Tray';
 import type { PageFooterBaseProps } from '../page/PageFooter';
@@ -102,6 +100,7 @@ import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
 import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
+import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
 
 /**
  * Config resolver that supports either static partial props object
@@ -200,7 +199,6 @@ export type ComponentConfig = {
   Sidebar?: ConfigResolver<SidebarBaseProps>;
   SidebarItem?: ConfigResolver<SidebarItemBaseProps>;
   SidebarMoreMenu?: ConfigResolver<SidebarMoreMenuBaseProps>;
-  Spinner?: ConfigResolver<SpinnerBaseProps>;
   Stepper?: ConfigResolver<StepperBaseProps>;
   TabIndicator?: ConfigResolver<TabIndicatorBaseProps>;
   TabLabel?: ConfigResolver<TabLabelBaseProps>;

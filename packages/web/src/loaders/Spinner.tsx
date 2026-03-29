@@ -2,7 +2,6 @@ import React, { memo, useMemo } from 'react';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Spinner';
@@ -46,9 +45,8 @@ const spinnerStatusCss = css`
   width: 1px;
 `;
 
-export const Spinner = memo((_props: SpinnerProps) => {
-  const mergedProps = useComponentConfig('Spinner', _props);
-  const {
+export const Spinner = memo(
+  ({
     color = 'fgMuted',
     size,
     style,
@@ -56,29 +54,30 @@ export const Spinner = memo((_props: SpinnerProps) => {
     accessibilityLabel,
     testID,
     ...props
-  } = mergedProps;
-  const spinnerStyle = useMemo(
-    () => ({
-      fontSize: `${size}px`,
-      ...style,
-    }),
-    [size, style],
-  );
-  return (
-    <Box
-      aria-describedby="spinnerStatus"
-      className={cx(COMPONENT_STATIC_CLASSNAME, baseCss, className)}
-      color={color}
-      data-testid={testID}
-      role="status"
-      style={spinnerStyle}
-      {...props}
-    >
-      <div aria-live="polite" className={spinnerStatusCss} id="spinnerStatus">
-        {accessibilityLabel}
-      </div>
-    </Box>
-  );
-});
+  }: SpinnerProps) => {
+    const spinnerStyle = useMemo(
+      () => ({
+        fontSize: `${size}px`,
+        ...style,
+      }),
+      [size, style],
+    );
+    return (
+      <Box
+        aria-describedby="spinnerStatus"
+        className={cx(COMPONENT_STATIC_CLASSNAME, baseCss, className)}
+        color={color}
+        data-testid={testID}
+        role="status"
+        style={spinnerStyle}
+        {...props}
+      >
+        <div aria-live="polite" className={spinnerStatusCss} id="spinnerStatus">
+          {accessibilityLabel}
+        </div>
+      </Box>
+    );
+  },
+);
 
 Spinner.displayName = 'Spinner';
