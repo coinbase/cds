@@ -5,7 +5,7 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, type BoxProps } from '../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout';
 import { Text } from '../typography';
 
 // Styles for container reset
@@ -18,10 +18,10 @@ const containerCss = css`
 
 export type ControlGroupOption<P> = Omit<P, 'onChange' | 'checked' | 'value'>;
 
-export type ControlGroupProps<
-  ControlValue extends string,
-  ControlComponentProps extends { value?: ControlValue },
-> = Omit<BoxProps<'div'>, 'children' | 'onChange' | 'as'> &
+export type ControlGroupBaseProps<
+  ControlValue extends string = string,
+  ControlComponentProps extends { value?: ControlValue } = { value?: ControlValue },
+> = Omit<BoxBaseProps, 'children' | 'onChange'> &
   SharedProps & {
     /** The control component to render for each option. */
     ControlComponent: React.ComponentType<ControlComponentProps>;
@@ -41,7 +41,11 @@ export type ControlGroupProps<
     name?: string;
   };
 
-export type ControlGroupBaseProps = ControlGroupProps<string, { value?: string }>;
+export type ControlGroupProps<
+  ControlValue extends string,
+  ControlComponentProps extends { value?: ControlValue },
+> = ControlGroupBaseProps<ControlValue, ControlComponentProps> &
+  Omit<BoxProps<'div'>, 'children' | 'onChange' | 'as'>;
 
 const ControlGroupWithRef = forwardRef(function ControlGroup<
   ControlValue extends string,

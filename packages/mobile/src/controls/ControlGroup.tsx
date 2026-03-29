@@ -4,17 +4,17 @@ import type { SharedProps } from '@coinbase/cds-common';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Group, type GroupProps } from '../layout';
+import { Group, type BoxBaseProps, type GroupBaseProps, type GroupProps } from '../layout';
 
 export type ControlGroupOption<ControlComponentProps> = Omit<
   ControlComponentProps,
   'onChange' | 'checked' | 'value'
 >;
 
-export type ControlGroupProps<
-  ControlValue extends string,
-  ControlComponentProps extends { value?: ControlValue },
-> = Omit<GroupProps, 'children' | 'onChange'> &
+export type ControlGroupBaseProps<
+  ControlValue extends string = string,
+  ControlComponentProps extends { value?: ControlValue } = { value?: ControlValue },
+> = Omit<GroupBaseProps<BoxBaseProps>, 'children' | 'onChange'> &
   SharedProps & {
     /** The control component to render for each option. */
     ControlComponent: React.ComponentType<ControlComponentProps>;
@@ -28,7 +28,11 @@ export type ControlGroupProps<
     onChange?: (value: ControlValue | undefined, checked?: boolean) => void;
   };
 
-export type ControlGroupBaseProps = ControlGroupProps<string, { value?: string }>;
+export type ControlGroupProps<
+  ControlValue extends string,
+  ControlComponentProps extends { value?: ControlValue },
+> = ControlGroupBaseProps<ControlValue, ControlComponentProps> &
+  Omit<GroupProps, 'children' | 'onChange'>;
 
 const ControlGroupWithRef = forwardRef(function ControlGroup<
   ControlValue extends string,
