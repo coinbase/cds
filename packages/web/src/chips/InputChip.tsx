@@ -6,13 +6,8 @@ import { Icon } from '../icons/Icon';
 import type { InputChipProps } from './ChipProps';
 import { MediaChip } from './MediaChip';
 
-export type InputChipBaseProps = InputChipProps;
-
 export const InputChip = memo(
-  forwardRef(function InputChip(
-    _props: InputChipProps,
-    ref: React.ForwardedRef<HTMLButtonElement>,
-  ) {
+  forwardRef((_props: InputChipProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
     const mergedProps = useComponentConfig('InputChip', _props);
     const {
       value,
