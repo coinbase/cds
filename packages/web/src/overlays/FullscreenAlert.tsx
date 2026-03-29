@@ -12,14 +12,14 @@ import { breakpoints } from '../styles/media';
 import { Text } from '../typography/Text';
 
 import { FullscreenModal } from './modal/FullscreenModal';
-import type { ModalProps } from './modal/Modal';
-import type { ModalHeaderProps } from './modal/ModalHeader';
-import type { AlertProps } from './Alert';
+import type { ModalBaseProps, ModalProps } from './modal/Modal';
+import type { ModalHeaderBaseProps, ModalHeaderProps } from './modal/ModalHeader';
+import type { AlertBaseProps, AlertProps } from './Alert';
 
-export type FullscreenAlertProps = Pick<AlertProps, 'title' | 'body'> &
-  Pick<ModalHeaderProps, 'closeAccessibilityLabel'> &
+export type FullscreenAlertBaseProps = Pick<AlertBaseProps, 'title' | 'body'> &
+  Pick<ModalHeaderBaseProps, 'closeAccessibilityLabel'> &
   Pick<
-    ModalProps,
+    ModalBaseProps,
     | 'visible'
     | 'onRequestClose'
     | 'disablePortal'
@@ -54,7 +54,7 @@ export type FullscreenAlertProps = Pick<AlertProps, 'title' | 'body'> &
     onDismissActionPress?: () => void;
   };
 
-export type FullscreenAlertBaseProps = FullscreenAlertProps;
+export type FullscreenAlertProps = FullscreenAlertBaseProps;
 
 const centerContentCss = css`
   height: 100%;
