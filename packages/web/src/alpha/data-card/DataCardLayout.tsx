@@ -44,8 +44,8 @@ export type DataCardLayoutProps = DataCardLayoutBaseProps & {
   };
 };
 
-export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
-  const {
+export const DataCardLayout = memo(
+  ({
     title,
     subtitle,
     titleAccessory,
@@ -54,75 +54,76 @@ export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
     classNames = {},
     styles = {},
     children,
-  } = _props;
-  const titleNode = useMemo(() => {
-    if (typeof title === 'string') {
-      return (
-        <Text as="div" font="headline" numberOfLines={2}>
-          {title}
-        </Text>
-      );
-    }
-    return title;
-  }, [title]);
+  }: DataCardLayoutProps) => {
+    const titleNode = useMemo(() => {
+      if (typeof title === 'string') {
+        return (
+          <Text as="div" font="headline" numberOfLines={2}>
+            {title}
+          </Text>
+        );
+      }
+      return title;
+    }, [title]);
 
-  const subtitleNode = useMemo(() => {
-    if (typeof subtitle === 'string') {
-      return (
-        <Text as="div" color="fgMuted" font="label2" numberOfLines={1}>
-          {subtitle}
-        </Text>
-      );
-    }
-    return subtitle;
-  }, [subtitle]);
+    const subtitleNode = useMemo(() => {
+      if (typeof subtitle === 'string') {
+        return (
+          <Text as="div" color="fgMuted" font="label2" numberOfLines={1}>
+            {subtitle}
+          </Text>
+        );
+      }
+      return subtitle;
+    }, [subtitle]);
 
-  const layoutContainerSpacingProps = useMemo(() => {
-    return {
-      flexDirection: layout === 'horizontal' ? 'row' : 'column',
-      gap: layout === 'horizontal' ? 2 : 1,
-      padding: 2,
-    } as const;
-  }, [layout]);
+    const layoutContainerSpacingProps = useMemo(() => {
+      return {
+        flexDirection: layout === 'horizontal' ? 'row' : 'column',
+        gap: layout === 'horizontal' ? 2 : 1,
+        padding: 2,
+      } as const;
+    }, [layout]);
 
-  const headerSpacingProps = useMemo(() => {
-    return {
-      flexDirection: layout === 'horizontal' ? 'column' : 'row',
-      gap: layout === 'horizontal' ? 2 : 1.5,
-      alignItems: layout === 'horizontal' ? 'flex-start' : 'center',
-      justifyContent: layout === 'horizontal' ? 'space-between' : 'flex-start',
-    } as const;
-  }, [layout]);
+    const headerSpacingProps = useMemo(() => {
+      return {
+        flexDirection: layout === 'horizontal' ? 'column' : 'row',
+        gap: layout === 'horizontal' ? 2 : 1.5,
+        alignItems: layout === 'horizontal' ? 'flex-start' : 'center',
+        justifyContent: layout === 'horizontal' ? 'space-between' : 'flex-start',
+      } as const;
+    }, [layout]);
 
-  return (
-    <Box
-      className={classNames?.layoutContainer}
-      flexGrow={1}
-      style={styles?.layoutContainer}
-      {...layoutContainerSpacingProps}
-    >
+    return (
       <Box
+        className={classNames?.layoutContainer}
         flexGrow={1}
-        {...headerSpacingProps}
-        className={classNames?.headerContainer}
-        style={styles?.headerContainer}
+        style={styles?.layoutContainer}
+        {...layoutContainerSpacingProps}
       >
-        {thumbnail}
-        <VStack className={classNames?.textContainer} style={styles?.textContainer}>
-          {subtitleNode}
-          <HStack
-            alignItems="center"
-            className={classNames?.titleContainer}
-            columnGap={0.5}
-            flexWrap="wrap"
-            style={styles?.titleContainer}
-          >
-            {titleNode}
-            {titleAccessory}
-          </HStack>
-        </VStack>
+        <Box
+          flexGrow={1}
+          {...headerSpacingProps}
+          className={classNames?.headerContainer}
+          style={styles?.headerContainer}
+        >
+          {thumbnail}
+          <VStack className={classNames?.textContainer} style={styles?.textContainer}>
+            {subtitleNode}
+            <HStack
+              alignItems="center"
+              className={classNames?.titleContainer}
+              columnGap={0.5}
+              flexWrap="wrap"
+              style={styles?.titleContainer}
+            >
+              {titleNode}
+              {titleAccessory}
+            </HStack>
+          </VStack>
+        </Box>
+        {children}
       </Box>
-      {children}
-    </Box>
-  );
-});
+    );
+  },
+);

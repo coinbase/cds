@@ -36,8 +36,8 @@ export type DataCardLayoutProps = DataCardLayoutBaseProps & {
     titleContainer?: StyleProp<ViewStyle>;
   };
 };
-export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
-  const {
+export const DataCardLayout = memo(
+  ({
     title,
     subtitle,
     titleAccessory,
@@ -45,68 +45,69 @@ export const DataCardLayout = memo((_props: DataCardLayoutProps) => {
     layout = 'vertical',
     children,
     styles = {},
-  } = _props;
-  const titleNode = useMemo(() => {
-    if (typeof title === 'string') {
-      return (
-        <Text font="headline" numberOfLines={2}>
-          {title}
-        </Text>
-      );
-    }
-    return title;
-  }, [title]);
+  }: DataCardLayoutProps) => {
+    const titleNode = useMemo(() => {
+      if (typeof title === 'string') {
+        return (
+          <Text font="headline" numberOfLines={2}>
+            {title}
+          </Text>
+        );
+      }
+      return title;
+    }, [title]);
 
-  const subtitleNode = useMemo(() => {
-    if (typeof subtitle === 'string') {
-      return (
-        <Text color="fgMuted" font="label2" numberOfLines={1}>
-          {subtitle}
-        </Text>
-      );
-    }
-    return subtitle;
-  }, [subtitle]);
+    const subtitleNode = useMemo(() => {
+      if (typeof subtitle === 'string') {
+        return (
+          <Text color="fgMuted" font="label2" numberOfLines={1}>
+            {subtitle}
+          </Text>
+        );
+      }
+      return subtitle;
+    }, [subtitle]);
 
-  const layoutContainerSpacingProps = useMemo(() => {
-    return {
-      flexDirection: layout === 'horizontal' ? ('row' as const) : ('column' as const),
-      gap: layout === 'horizontal' ? 2 : 1,
-      padding: 2,
-    } as const;
-  }, [layout]);
+    const layoutContainerSpacingProps = useMemo(() => {
+      return {
+        flexDirection: layout === 'horizontal' ? ('row' as const) : ('column' as const),
+        gap: layout === 'horizontal' ? 2 : 1,
+        padding: 2,
+      } as const;
+    }, [layout]);
 
-  const headerSpacingProps = useMemo(() => {
-    return {
-      flexDirection: layout === 'horizontal' ? ('column' as const) : ('row' as const),
-      gap: layout === 'horizontal' ? 2 : 1.5,
-      justifyContent:
-        layout === 'horizontal' ? ('space-between' as const) : ('flex-start' as const),
-      alignItems: layout === 'horizontal' ? ('flex-start' as const) : ('center' as const),
-    } as const;
-  }, [layout]);
+    const headerSpacingProps = useMemo(() => {
+      return {
+        flexDirection: layout === 'horizontal' ? ('column' as const) : ('row' as const),
+        gap: layout === 'horizontal' ? 2 : 1.5,
+        justifyContent:
+          layout === 'horizontal' ? ('space-between' as const) : ('flex-start' as const),
+        alignItems: layout === 'horizontal' ? ('flex-start' as const) : ('center' as const),
+      } as const;
+    }, [layout]);
 
-  return (
-    <Box
-      flexBasis="100%"
-      flexGrow={1}
-      flexShrink={1}
-      style={styles?.layoutContainer}
-      {...layoutContainerSpacingProps}
-    >
-      <Box flexGrow={1} flexShrink={1} style={styles?.headerContainer} {...headerSpacingProps}>
-        {thumbnail}
-        <VStack flexShrink={1} overflow="hidden" style={styles?.textContainer}>
-          {subtitleNode}
-          <HStack alignItems="center" flexWrap="wrap" gap={0.5} style={styles?.titleContainer}>
-            {titleNode}
-            {titleAccessory}
-          </HStack>
-        </VStack>
+    return (
+      <Box
+        flexBasis="100%"
+        flexGrow={1}
+        flexShrink={1}
+        style={styles?.layoutContainer}
+        {...layoutContainerSpacingProps}
+      >
+        <Box flexGrow={1} flexShrink={1} style={styles?.headerContainer} {...headerSpacingProps}>
+          {thumbnail}
+          <VStack flexShrink={1} overflow="hidden" style={styles?.textContainer}>
+            {subtitleNode}
+            <HStack alignItems="center" flexWrap="wrap" gap={0.5} style={styles?.titleContainer}>
+              {titleNode}
+              {titleAccessory}
+            </HStack>
+          </VStack>
+        </Box>
+        {children}
       </Box>
-      {children}
-    </Box>
-  );
-});
+    );
+  },
+);
 
 DataCardLayout.displayName = 'DataCardLayout';
