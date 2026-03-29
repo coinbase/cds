@@ -36,7 +36,7 @@ export type PageFooterProps = Polymorphic.ExtendableProps<
   PageFooterBaseProps
 >;
 export const PageFooter = memo(
-  forwardRef(function PageFooter(_props: PageFooterProps, ref: React.ForwardedRef<HTMLDivElement>) {
+  forwardRef((_props: PageFooterProps, ref: React.ForwardedRef<HTMLDivElement>) => {
     const mergedProps = useComponentConfig('PageFooter', _props);
     const {
       action,

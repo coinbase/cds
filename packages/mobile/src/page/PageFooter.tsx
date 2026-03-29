@@ -21,7 +21,7 @@ export type PageFooterBaseProps = SharedProps &
 export type PageFooterProps = PageFooterBaseProps & BoxProps;
 
 export const PageFooter = memo(
-  forwardRef(function PageFooter(_props: PageFooterProps, ref: React.ForwardedRef<View>) {
+  forwardRef((_props: PageFooterProps, ref: React.ForwardedRef<View>) => {
     const mergedProps = useComponentConfig('PageFooter', _props);
     const { action, ...props } = mergedProps;
     return (

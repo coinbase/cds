@@ -5,7 +5,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, HStack, type HStackProps, VStack } from '../layout';
+import { HStack, type HStackProps, VStack } from '../layout';
 
 export const TopNavBarContext = React.createContext<{ isWithinTopNavBar: boolean }>({
   isWithinTopNavBar: false,
@@ -33,7 +33,7 @@ export type NavBarEndProps = Omit<HStackProps, 'children'> & {
   paddingStart?: ThemeVars.Space;
 };
 
-export type TopNavBarBaseProps = {
+export type NavigationBarBaseProps = {
   start?: React.ReactNode;
   end?: React.ReactNode;
   /**
@@ -72,7 +72,7 @@ export type TopNavBarBaseProps = {
   rowGap?: ThemeVars.Space;
 };
 
-export type NavigationBarProps = TopNavBarBaseProps;
+export type NavigationBarProps = NavigationBarBaseProps;
 
 export const NavBarStart = memo(
   ({

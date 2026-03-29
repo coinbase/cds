@@ -6,14 +6,14 @@ import {
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 
-import type { OverlayProps } from './OverlayContent';
+import type { OverlayBaseProps, OverlayProps } from './OverlayContent';
 import { OverlayContent } from './OverlayContent';
 
 const overlayContentContextValue: OverlayContentContextValue = {
   isOverlay: true,
 };
 
-export type OverlayBaseProps = OverlayProps;
+export type { OverlayBaseProps, OverlayProps };
 
 export const Overlay = memo(
   forwardRef<HTMLDivElement, OverlayProps>((_props, forwardedRef) => {

@@ -2,12 +2,12 @@ import React, { createContext, memo, useContext, useEffect, useState } from 'rea
 import type { SharedProps } from '@coinbase/cds-common';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { HStack, type HStackProps } from '../layout';
+import { HStack, type BoxBaseProps, type HStackProps } from '../layout';
 
 import { NavBarEnd, NavBarStart } from './TopNavBar';
 
 export type BrowserBarBaseProps = SharedProps &
-  Omit<HStackProps, 'children'> & {
+  Omit<BoxBaseProps, 'children'> & {
     children: React.ReactNode;
     /**
      * start node
@@ -19,7 +19,7 @@ export type BrowserBarBaseProps = SharedProps &
     end?: React.ReactNode;
   };
 
-export type BrowserBarProps = BrowserBarBaseProps;
+export type BrowserBarProps = BrowserBarBaseProps & Omit<HStackProps, 'children'>;
 
 export const BrowserBarContext = createContext<{
   hideStart: boolean;

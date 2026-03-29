@@ -2,18 +2,22 @@ import React, { memo } from 'react';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Avatar, type AvatarBaseProps } from '../media';
-import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
 
-export type AvatarButtonProps = PressableBaseProps &
+export type AvatarButtonBaseProps = Omit<PressableBaseProps, 'children'> &
   SharedProps &
   Pick<ButtonBaseProps, 'accessibilityLabel' | 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
 
-export const AvatarButton = memo(
-  ({
+export type AvatarButtonProps = AvatarButtonBaseProps & Omit<PressableProps, 'children'>;
+
+export const AvatarButton = memo((_props: AvatarButtonProps) => {
+  const mergedProps = useComponentConfig('AvatarButton', _props);
+  const {
     accessibilityLabel,
     feedback = 'light',
     src,
@@ -23,26 +27,25 @@ export const AvatarButton = memo(
     borderColor,
     name,
     ...props
-  }: AvatarButtonProps) => {
-    const height = compact ? interactableHeight.compact : interactableHeight.regular;
+  } = mergedProps;
+  const height = compact ? interactableHeight.compact : interactableHeight.regular;
 
-    return (
-      <Pressable
-        accessibilityHint={accessibilityLabel}
-        accessibilityLabel={accessibilityLabel}
-        background="transparent"
-        feedback={feedback}
-        {...props}
-      >
-        <Avatar
-          borderColor={borderColor}
-          colorScheme={colorScheme}
-          dangerouslySetSize={height}
-          name={name}
-          shape={shape}
-          src={src}
-        />
-      </Pressable>
-    );
-  },
-);
+  return (
+    <Pressable
+      accessibilityHint={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel}
+      background="transparent"
+      feedback={feedback}
+      {...props}
+    >
+      <Avatar
+        borderColor={borderColor}
+        colorScheme={colorScheme}
+        dangerouslySetSize={height}
+        name={name}
+        shape={shape}
+        src={src}
+      />
+    </Pressable>
+  );
+});

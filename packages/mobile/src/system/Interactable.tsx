@@ -2,7 +2,6 @@ import { memo, useMemo } from 'react';
 import { type Animated, type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native';
 import type { ElevationLevels, ThemeVars } from '@coinbase/cds-common';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
 import { getInteractableStyles } from '../styles/getInteractableStyles';
@@ -75,7 +74,6 @@ export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> & {
 export type InteractableProps = InteractableBaseProps & Omit<ViewProps, 'style'>;
 
 export const Interactable = memo(function Interactable(_props: InteractableProps) {
-  const mergedProps = useComponentConfig('Interactable', _props);
   const {
     background = 'transparent',
     borderColor = background,
@@ -91,7 +89,7 @@ export const Interactable = memo(function Interactable(_props: InteractableProps
     transparentWhileInactive,
     transparentWhilePressed,
     ...props
-  } = mergedProps;
+  } = _props;
   const theme = useTheme();
   const isTransparent = transparentWhileInactive && !pressed;
   const isPressedAndTransparent = transparentWhilePressed && pressed;

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 });
 
 export const Numpad = memo(
-  forwardRef(function Numpad(_props: NumpadProps, forwardedRef: React.ForwardedRef<View>) {
+  forwardRef((_props: NumpadProps, forwardedRef: React.ForwardedRef<View>) => {
     const mergedProps = useComponentConfig('Numpad', _props);
     const {
       separator = '.',

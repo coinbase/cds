@@ -12,7 +12,6 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import type { Theme } from '../core/theme';
 import { cx } from '../cx';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
 
@@ -207,7 +206,6 @@ export const Interactable: InteractableComponent = forwardRef<
     _props: Polymorphic.Props<AsComponent, InteractableBaseProps>,
     ref: Polymorphic.Ref<AsComponent>,
   ) => {
-    const mergedProps = useComponentConfig('Interactable', _props);
     const {
       as,
       background = 'transparent',
@@ -223,7 +221,7 @@ export const Interactable: InteractableComponent = forwardRef<
       transparentWhileInactive,
       transparentWhilePressed,
       ...props
-    } = mergedProps;
+    } = _props;
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
 

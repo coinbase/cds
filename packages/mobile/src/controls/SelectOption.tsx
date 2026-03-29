@@ -26,7 +26,7 @@ export type SelectOptionBaseProps = Omit<CellBaseProps, 'children' | 'selected'>
 
 export type SelectOptionProps = SelectOptionBaseProps;
 
-export const SelectOption = memo(function SelectOption(_props: SelectOptionProps) {
+export const SelectOption = memo((_props: SelectOptionProps) => {
   const mergedProps = useComponentConfig('SelectOption', _props);
   const {
     title,

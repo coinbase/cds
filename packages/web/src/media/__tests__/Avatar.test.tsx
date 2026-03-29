@@ -4,6 +4,8 @@ import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
 import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { cleanup, render, screen } from '@testing-library/react';
 
+import type { ComponentConfig } from '../../core/componentConfig';
+import { ComponentConfigProvider } from '../../system';
 import { Avatar } from '../Avatar';
 
 const src = 'https://images.coinbase.com/avatar?s=56';
@@ -114,5 +116,35 @@ describe('Avatar', () => {
     expect(letter).toBeTruthy();
     const style = letter.getAttribute('style');
     expect(style).toContain('--transform: uppercase');
+  });
+
+  it('applies provider config defaults', () => {
+    const config: ComponentConfig = {
+      Avatar: {
+        shape: 'square',
+      },
+    };
+    render(
+      <ComponentConfigProvider value={config}>
+        <Avatar alt="TestName" src={src} testID="avatar-component" />
+      </ComponentConfigProvider>,
+    );
+
+    expect(screen.getByTestId('avatar-component')).toHaveAttribute('data-shape', 'square');
+  });
+
+  it('allows local props to override provider defaults', () => {
+    const config: ComponentConfig = {
+      Avatar: {
+        shape: 'square',
+      },
+    };
+    render(
+      <ComponentConfigProvider value={config}>
+        <Avatar alt="TestName" shape="circle" src={src} testID="avatar-component" />
+      </ComponentConfigProvider>,
+    );
+
+    expect(screen.getByTestId('avatar-component')).toHaveAttribute('data-shape', 'circle');
   });
 });

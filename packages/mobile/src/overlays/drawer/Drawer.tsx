@@ -137,7 +137,7 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Drawer = memo(
-  forwardRef<DrawerRefBaseProps, DrawerProps>(function Drawer(_props, ref) {
+  forwardRef<DrawerRefBaseProps, DrawerProps>((_props, ref) => {
     const mergedProps = useComponentConfig('Drawer', _props);
     const {
       children,
