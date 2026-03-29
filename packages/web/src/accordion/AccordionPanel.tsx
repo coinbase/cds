@@ -4,7 +4,6 @@ import { accordionSpacing } from '@coinbase/cds-common/tokens/accordion';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { Collapsible, type CollapsibleBaseProps } from '../collapsible';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { getAccordionHeaderId, getAccordionPanelId } from './utils';
 
@@ -26,23 +25,32 @@ export type AccordionPanelProps = AccordionPanelBaseProps;
  * Accepts a unique `itemKey` prop to uniquely identify one panel from another.
  */
 export const AccordionPanel = memo(
-  forwardRef((_props: AccordionPanelProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
-    const mergedProps = useComponentConfig('AccordionPanel', _props);
-    const { children, collapsed = true, itemKey, testID, maxHeight: maxHeightParam } = mergedProps;
-    return (
-      <Collapsible
-        ref={forwardedRef}
-        collapsed={collapsed}
-        maxHeight={maxHeightParam ?? accordionVisibleMaxHeight}
-        testID={testID}
-        {...accordionSpacing}
-        // a11y guideline: https://www.w3.org/TR/wai-aria-practices/#accordion
-        accessibilityLabelledBy={getAccordionHeaderId(itemKey)}
-        id={getAccordionPanelId(itemKey)}
-        role="region"
-      >
-        {children}
-      </Collapsible>
-    );
-  }),
+  forwardRef(
+    (
+      {
+        children,
+        collapsed = true,
+        itemKey,
+        testID,
+        maxHeight: maxHeightParam,
+      }: AccordionPanelProps,
+      forwardedRef: React.ForwardedRef<HTMLDivElement>,
+    ) => {
+      return (
+        <Collapsible
+          ref={forwardedRef}
+          collapsed={collapsed}
+          maxHeight={maxHeightParam ?? accordionVisibleMaxHeight}
+          testID={testID}
+          {...accordionSpacing}
+          // a11y guideline: https://www.w3.org/TR/wai-aria-practices/#accordion
+          accessibilityLabelledBy={getAccordionHeaderId(itemKey)}
+          id={getAccordionPanelId(itemKey)}
+          role="region"
+        >
+          {children}
+        </Collapsible>
+      );
+    },
+  ),
 );

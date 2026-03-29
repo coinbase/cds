@@ -1,12 +1,4 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
-import type {
-  AccordionHeaderBaseProps,
-  AccordionIconBaseProps,
-  AccordionMediaBaseProps,
-  AccordionTitleBaseProps,
-} from '../accordion/AccordionHeader';
-import type { AccordionItemBaseProps } from '../accordion/AccordionItem';
-import type { AccordionPanelBaseProps } from '../accordion/AccordionPanel';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
 import type { AlphaSelectBaseProps } from '../alpha/select/Select';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
@@ -135,12 +127,6 @@ export type ConfigResolver<P> = Partial<P> | ((props: P) => Partial<P>);
  */
 export type ComponentConfig = {
   Accordion?: ConfigResolver<AccordionBaseProps>;
-  AccordionHeader?: ConfigResolver<AccordionHeaderBaseProps>;
-  AccordionIcon?: ConfigResolver<AccordionIconBaseProps>;
-  AccordionItem?: ConfigResolver<AccordionItemBaseProps>;
-  AccordionMedia?: ConfigResolver<AccordionMediaBaseProps>;
-  AccordionPanel?: ConfigResolver<AccordionPanelBaseProps>;
-  AccordionTitle?: ConfigResolver<AccordionTitleBaseProps>;
   Alert?: ConfigResolver<AlertBaseProps>;
   TabbedChips?: ConfigResolver<TabbedChipsBaseProps>;
   AnimatedCaret?: ConfigResolver<AnimatedCaretBaseProps>;

@@ -3,7 +3,6 @@ import type { View, ViewProps } from 'react-native';
 import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
 import { accordionMinWidth } from '@coinbase/cds-common/tokens/accordion';
 
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout';
 
 import { AccordionHeader, type AccordionHeaderBaseProps } from './AccordionHeader';
@@ -23,33 +22,43 @@ export type AccordionItemProps = AccordionItemBaseProps;
  * It composes together an AccordionHeader and a collapsible AccordionPanel.
  * Accepts a unique `itemKey` prop to uniquely identify one item from another within the same Accordion.
  */
-export const AccordionItem = memo((_props: AccordionItemProps) => {
-  const mergedProps = useComponentConfig('AccordionItem', _props);
-  const { itemKey, title, subtitle, children, onPress, media, testID, headerRef, panelRef, style } =
-    mergedProps;
-  const { activeKey } = useAccordionContext();
-  const collapsed = activeKey !== itemKey;
+export const AccordionItem = memo(
+  ({
+    itemKey,
+    title,
+    subtitle,
+    children,
+    onPress,
+    media,
+    testID,
+    headerRef,
+    panelRef,
+    style,
+  }: AccordionItemProps) => {
+    const { activeKey } = useAccordionContext();
+    const collapsed = activeKey !== itemKey;
 
-  return (
-    <VStack minWidth={accordionMinWidth} style={style} testID={testID}>
-      <AccordionHeader
-        ref={headerRef}
-        collapsed={collapsed}
-        itemKey={itemKey}
-        media={media}
-        onPress={onPress}
-        subtitle={subtitle}
-        testID={testID && `${testID}-header`}
-        title={title}
-      />
-      <AccordionPanel
-        ref={panelRef}
-        collapsed={collapsed}
-        itemKey={itemKey}
-        testID={testID && `${testID}-panel`}
-      >
-        {children}
-      </AccordionPanel>
-    </VStack>
-  );
-});
+    return (
+      <VStack minWidth={accordionMinWidth} style={style} testID={testID}>
+        <AccordionHeader
+          ref={headerRef}
+          collapsed={collapsed}
+          itemKey={itemKey}
+          media={media}
+          onPress={onPress}
+          subtitle={subtitle}
+          testID={testID && `${testID}-header`}
+          title={title}
+        />
+        <AccordionPanel
+          ref={panelRef}
+          collapsed={collapsed}
+          itemKey={itemKey}
+          testID={testID && `${testID}-panel`}
+        >
+          {children}
+        </AccordionPanel>
+      </VStack>
+    );
+  },
+);
