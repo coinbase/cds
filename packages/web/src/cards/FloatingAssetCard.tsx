@@ -99,19 +99,18 @@ const focusRingCss = css`
  * Note: The floating variation (media outside the card container) is no longer supported.
  * MediaCard provides a contained layout with media placement options (start/end).
  */
-export const FloatingAssetCard = (_props: FloatingAssetCardProps) => {
-  const {
-    className,
-    title,
-    description,
-    subtitle,
-    media,
-    size = 's',
-    width = size === 'l' ? floatingAssetCardLargeWidth : floatingAssetCardSmallDimension,
-    testID = 'floating-asset-card',
-    onClick,
-    ...props
-  } = _props;
+export const FloatingAssetCard = ({
+  className,
+  title,
+  description,
+  subtitle,
+  media,
+  size = 's',
+  width = size === 'l' ? floatingAssetCardLargeWidth : floatingAssetCardSmallDimension,
+  testID = 'floating-asset-card',
+  onClick,
+  ...props
+}: FloatingAssetCardProps) => {
   return (
     <VStack
       as={onClick ? 'button' : 'div'}

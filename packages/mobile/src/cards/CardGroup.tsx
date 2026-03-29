@@ -11,34 +11,32 @@ export type CardGroupProps = CardGroupBaseProps;
 export type CardGroupRenderItem = RenderGroupItem;
 
 export const CardGroup = memo(
-  forwardRef<View, CardGroupProps>(
-    (
-      {
-        accessibilityLabel,
-        accessibilityHint = accessibilityLabel,
-        children,
-        direction = 'vertical',
-        divider = Divider,
-        marginX = direction === 'horizontal' ? 0 : (-gutter as -3),
-        ...props
-      },
-      ref,
-    ) => {
-      return (
-        <Group
-          ref={ref}
-          accessibilityHint={accessibilityHint}
-          accessibilityLabel={accessibilityLabel}
-          direction={direction}
-          divider={divider}
-          marginX={marginX}
-          {...props}
-        >
-          {children}
-        </Group>
-      );
+  forwardRef<View, CardGroupProps>(function CardGroup(
+    {
+      accessibilityLabel,
+      accessibilityHint = accessibilityLabel,
+      children,
+      direction = 'vertical',
+      divider = Divider,
+      marginX = direction === 'horizontal' ? 0 : (-gutter as -3),
+      ...props
     },
-  ),
+    ref,
+  ) {
+    return (
+      <Group
+        ref={ref}
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        direction={direction}
+        divider={divider}
+        marginX={marginX}
+        {...props}
+      >
+        {children}
+      </Group>
+    );
+  }),
 );
 
 CardGroup.displayName = 'CardGroup';

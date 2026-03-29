@@ -73,8 +73,8 @@ export type UpsellCardProps = UpsellCardBaseProps;
  * />
  * ```
  */
-export const UpsellCard = memo((_props: UpsellCardProps) => {
-  const {
+export const UpsellCard = memo(
+  ({
     title,
     description,
     action,
@@ -87,86 +87,87 @@ export const UpsellCard = memo((_props: UpsellCardProps) => {
     accessibilityLabel,
     width = upsellCardDefaultWidth,
     onPress,
-  } = _props;
-  const content = (
-    <HStack
-      alignContent="space-between"
-      background={background}
-      borderRadius={500}
-      dangerouslySetBackground={dangerouslySetBackground}
-      minHeight={upsellCardMinHeight}
-      testID={testID}
-      width={width}
-    >
+  }: UpsellCardProps) => {
+    const content = (
       <HStack
         alignContent="space-between"
-        alignItems="center"
+        background={background}
         borderRadius={500}
-        height="100%"
-        justifyContent="space-between"
-        overflow="hidden"
-        position="relative"
-        width="100%"
+        dangerouslySetBackground={dangerouslySetBackground}
+        minHeight={upsellCardMinHeight}
+        testID={testID}
+        width={width}
       >
-        <VStack
-          gap={3}
+        <HStack
+          alignContent="space-between"
+          alignItems="center"
+          borderRadius={500}
+          height="100%"
           justifyContent="space-between"
-          minHeight={upsellCardMinHeight}
-          padding={2}
-          width="70%"
+          overflow="hidden"
+          position="relative"
+          width="100%"
         >
-          <VStack gap={1}>
-            {typeof title === 'string' ? <Text font="headline">{title}</Text> : title}
-            {typeof description === 'string' ? (
-              <Text font="label2" numberOfLines={3}>
-                {description}
-              </Text>
-            ) : (
-              description
+          <VStack
+            gap={3}
+            justifyContent="space-between"
+            minHeight={upsellCardMinHeight}
+            padding={2}
+            width="70%"
+          >
+            <VStack gap={1}>
+              {typeof title === 'string' ? <Text font="headline">{title}</Text> : title}
+              {typeof description === 'string' ? (
+                <Text font="label2" numberOfLines={3}>
+                  {description}
+                </Text>
+              ) : (
+                description
+              )}
+            </VStack>
+            {!!action && (
+              <HStack paddingStart={2}>
+                {isValidElement(action) ? (
+                  action
+                ) : (
+                  <Button
+                    compact
+                    flush="start"
+                    numberOfLines={1}
+                    onPress={onActionPress}
+                    variant="secondary"
+                  >
+                    {action as string}
+                  </Button>
+                )}
+              </HStack>
             )}
           </VStack>
-          {!!action && (
-            <HStack paddingStart={2}>
-              {isValidElement(action) ? (
-                action
-              ) : (
-                <Button
-                  compact
-                  flush="start"
-                  numberOfLines={1}
-                  onPress={onActionPress}
-                  variant="secondary"
-                >
-                  {action as string}
-                </Button>
-              )}
+          {!!media && (
+            <HStack position="absolute" right={0}>
+              {media}
             </HStack>
           )}
-        </VStack>
-        {!!media && (
-          <HStack position="absolute" right={0}>
-            {media}
-          </HStack>
-        )}
-        {onDismissPress ? (
-          <HStack padding={1} position="absolute" right={0} top={0}>
-            <IconButton
-              accessibilityLabel={accessibilityLabel ?? `Dismiss the ${title} card`}
-              name="close"
-              onPress={onDismissPress}
-              testID={`${testID}-dismiss-button`}
-              variant="secondary"
-            />
-          </HStack>
-        ) : null}
+          {onDismissPress ? (
+            <HStack padding={1} position="absolute" right={0} top={0}>
+              <IconButton
+                accessibilityLabel={accessibilityLabel ?? `Dismiss the ${title} card`}
+                name="close"
+                onPress={onDismissPress}
+                testID={`${testID}-dismiss-button`}
+                variant="secondary"
+              />
+            </HStack>
+          ) : null}
+        </HStack>
       </HStack>
-    </HStack>
-  );
-  return onPress ? (
-    <Pressable accessibilityRole="button" background="transparent" onPress={onPress}>
-      {content}
-    </Pressable>
-  ) : (
-    content
-  );
-});
+    );
+    return onPress ? (
+      <Pressable accessibilityRole="button" background="transparent" onPress={onPress}>
+        {content}
+      </Pressable>
+    ) : (
+      content
+    );
+  },
+);
