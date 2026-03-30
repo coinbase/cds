@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
 
 import React from 'react';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
 import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
 import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -67,15 +66,11 @@ describe('ProgressCircle tests', () => {
       </DefaultThemeProvider>,
     );
 
-    const circumference = getCircumference(getRadius(size, 4));
     const innerCircle = screen.getByTestId('cds-progress-circle-inner');
     expect(innerCircle).toBeTruthy();
-    expect(innerCircle).toHaveAttribute('stroke-dashoffset', circumference.toString());
-
-    expect(innerCircle).toHaveAttribute('stroke-dasharray', circumference.toString());
-
+    expect(innerCircle).toHaveAttribute('stroke-dashoffset', '1');
+    expect(innerCircle).toHaveAttribute('stroke-dasharray', '1');
     expect(innerCircle).toHaveAttribute('stroke', 'var(--color-bgPrimary)');
-
     expect(screen.getAllByText('0%')).toHaveLength(2);
   });
 
@@ -87,17 +82,13 @@ describe('ProgressCircle tests', () => {
       </DefaultThemeProvider>,
     );
 
-    const circumference = getCircumference(getRadius(size, 4));
     const innerCircle = screen.getByTestId('cds-progress-circle-inner');
     expect(innerCircle).toBeTruthy();
     await waitFor(() => {
-      expect(innerCircle).toHaveAttribute('stroke-dashoffset', `${circumference * 0.5}`);
+      expect(innerCircle).toHaveAttribute('stroke-dashoffset', '0.5');
     });
-
-    expect(innerCircle).toHaveAttribute('stroke-dasharray', `${circumference}`);
-
+    expect(innerCircle).toHaveAttribute('stroke-dasharray', '1');
     expect(innerCircle).toHaveAttribute('stroke', 'var(--color-bgPrimary)');
-
     expect(screen.getAllByText('50%')).toHaveLength(2);
   });
 
@@ -109,17 +100,13 @@ describe('ProgressCircle tests', () => {
       </DefaultThemeProvider>,
     );
 
-    const circumference = getCircumference(getRadius(size, 4));
     const innerCircle = screen.getByTestId('cds-progress-circle-inner');
     expect(innerCircle).toBeTruthy();
-
     await waitFor(() => {
       expect(innerCircle).toHaveAttribute('stroke-dashoffset', '0');
     });
-    expect(innerCircle).toHaveAttribute('stroke-dasharray', `${circumference}`);
-
+    expect(innerCircle).toHaveAttribute('stroke-dasharray', '1');
     expect(innerCircle).toHaveAttribute('stroke', 'var(--color-bgPrimary)');
-
     expect(screen.getAllByText('100%')).toHaveLength(2);
   });
 
@@ -247,12 +234,10 @@ describe('ProgressCircle tests', () => {
       </DefaultThemeProvider>,
     );
 
-    const circumference = getCircumference(getRadius(size, 4));
-    const expectedOffset = (1 - progress) * circumference;
     const innerCircle = screen.getByTestId('cds-progress-circle-inner');
 
     // Should start at target offset, not at circumference (empty)
-    expect(innerCircle).toHaveAttribute('stroke-dashoffset', expectedOffset.toString());
+    expect(innerCircle).toHaveAttribute('stroke-dashoffset', '0.5');
 
     // Should show target percentage immediately, not animate from 0
     expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
@@ -266,10 +251,32 @@ describe('ProgressCircle tests', () => {
       </DefaultThemeProvider>,
     );
 
-    const circumference = getCircumference(getRadius(size, 4));
     const innerCircle = screen.getByTestId('cds-progress-circle-inner');
+    // Without disableAnimateOnMount, should start at full (empty) and animate to target
+    expect(innerCircle).toHaveAttribute('stroke-dashoffset', '1');
+  });
 
-    // Without disableAnimateOnMount, should start at full circumference (empty) and animate to target
-    expect(innerCircle).toHaveAttribute('stroke-dashoffset', circumference.toString());
+  it('renders indeterminate progress circle without percentage text', () => {
+    const size = 100;
+    render(
+      <DefaultThemeProvider>
+        <ProgressCircle indeterminate size={size} testID="indeterminate-progress-circle" />
+      </DefaultThemeProvider>,
+    );
+
+    const root = screen.getByTestId('indeterminate-progress-circle');
+    expect(root).toHaveAttribute('role', 'progressbar');
+    expect(screen.getByTestId('cds-progress-circle-inner')).toBeTruthy();
+    expect(screen.queryByText('75%')).toBeNull();
+  });
+
+  it('indeterminate progress circle passes accessibility', async () => {
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <ProgressCircle indeterminate accessibilityLabel="Loading" />
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
   });
 });

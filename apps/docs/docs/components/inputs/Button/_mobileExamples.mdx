@@ -56,7 +56,34 @@ Use transparent buttons for supplementary actions with lower prominence. The con
 
 ### Loading
 
-Use the `loading` prop to indicate an action is in progress. The button becomes non-interactive and displays a spinner while preserving its width.
+Use the `loading` prop to indicate an action is in progress. The button becomes non-interactive and displays a loading indicator (indeterminate [ProgressCircle](/components/feedback/ProgressCircle)) while preserving its width.
+
+#### Loading by variant
+
+Loading works with all variants and transparent. The label is hidden and the progress circle is shown in the button’s accent color.
+
+```jsx
+<HStack gap={2} flexWrap="wrap" alignItems="center">
+  <Button loading>Primary</Button>
+  <Button loading variant="secondary">
+    Secondary
+  </Button>
+  <Button loading variant="tertiary">
+    Tertiary
+  </Button>
+  <Button loading variant="negative">
+    Negative
+  </Button>
+  <Button loading transparent variant="secondary">
+    Transparent
+  </Button>
+  <Button loading compact>
+    Compact
+  </Button>
+</HStack>
+```
+
+#### Basic loading
 
 ```jsx
 <HStack gap={2}>

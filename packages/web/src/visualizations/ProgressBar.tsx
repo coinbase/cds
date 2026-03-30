@@ -2,7 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps, SharedProps, Weight } from '@coinbase/cds-common/types';
-import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgressSize';
+import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
@@ -17,7 +17,7 @@ export type ProgressBaseProps = SharedProps &
   Pick<HintMotionBaseProps, 'disableAnimateOnMount'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** Number between 0-1 representing the progress percentage */
-    progress: number;
+    progress?: number;
     /** Toggle used to change thickness of progress visualization
      * @default normal
      * */
@@ -71,7 +71,7 @@ export const ProgressBar = memo(
     const mergedProps = useComponentConfig('ProgressBar', _props);
     const {
       weight = 'normal',
-      progress,
+      progress = 0,
       color = 'bgPrimary',
       disabled,
       disableAnimateOnMount,
@@ -84,7 +84,7 @@ export const ProgressBar = memo(
       onAnimationEnd,
       onAnimationStart,
     } = mergedProps;
-    const height = useProgressSize(weight);
+    const height = getProgressSize(weight);
 
     // start position of the progress bar on mount
     const initialTranslateX = isRtl() ? 100 : -100;
