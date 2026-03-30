@@ -9,7 +9,7 @@ import { Text } from '../typography/Text';
 
 /**
  * @deprecated Use ContentCardHeader instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const CardHeader = memo(function CardHeader({
   avatar,

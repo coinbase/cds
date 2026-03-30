@@ -15,7 +15,7 @@ export type CardFooterProps = CardFooterBaseProps & Omit<BoxProps<BoxDefaultElem
 
 /**
  * @deprecated Use ContentCardFooter instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const CardFooter: React.FC<React.PropsWithChildren<CardFooterProps>> = memo(
   function CardFooter({ children, paddingBottom = 2, paddingX = gutter, testID, ...otherProps }) {

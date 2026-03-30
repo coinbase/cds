@@ -60,7 +60,7 @@ const getBorderRadiusPinStyle = (borderRadius: number) => ({
 
 /**
  * @deprecated Use ContentCard instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const Card = memo(function OldCard({
   children,

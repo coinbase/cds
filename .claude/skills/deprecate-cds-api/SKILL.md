@@ -6,9 +6,10 @@ description: |
   the original package. Use whenever the user asks to deprecate a CDS component or API, mark something
   as deprecated, add @deprecated / @deprecationExpectedRemoval, or update deprecation warnings in
   apps/docs metadata under components or hooks (webMetadata.json / mobileMetadata.json / metadata.json).
-  Also use when replacing a component or hook and sunsetting the old one.
-allowed-tools: Read, Grep, Glob, StrReplace
-argument-hint: '<SymbolName or path> — replacement (e.g. Tabs) — [optional notes]'
+  Also use when replacing a component or hook and sunsetting the old one. Always finish by running
+  `yarn nx run <project>:lint` on modified packages so `internal/deprecated-jsdoc-has-removal-version` passes.
+allowed-tools: Read, Grep, Glob, StrReplace, Bash(yarn nx run:*)
+argument-hint: '<SymbolName or path> — replacement — [@deprecationExpectedRemoval major e.g. v10] — [optional notes]'
 ---
 
 # Deprecate CDS public API
@@ -19,6 +20,7 @@ Automate the standard CDS deprecation workflow for symbols exported from `packag
 
 1. **What is being deprecated?** Component name, hook, prop, or other exported symbol.
 2. **What should consumers use instead?** The replacement must be named in JSDoc and in docs `warning` text.
+3. **Which major should `@deprecationExpectedRemoval` use?** (e.g. `v9`, `v10`.) **Ask the user to confirm** if they have not already stated it. If they want a default, **suggest** the next major from the relevant `package.json` (see Step 2) and confirm they accept it before editing.
 
 ---
 
@@ -54,19 +56,23 @@ Use the **standard JSDoc tag `@deprecated`** (not `@deprecate`).
 Rules:
 
 - The `@deprecated` line must end with exactly: `This will be removed in a future major release.` (same sentence as the rest of the deprecation message, as in existing CDS examples).
-- `@deprecationExpectedRemoval` must be a single token like `v9` (lowercase `v` + major number only, no minor/patch).
+- `@deprecationExpectedRemoval` must match `v` + version (e.g. `v9` or `v9.0.0`; full semver is allowed by ESLint).
+
+The repo’s ESLint rule **`internal/deprecated-jsdoc-has-removal-version`** (`libs/eslint-plugin-internal`) enforces the prose ending and the presence of `@deprecationExpectedRemoval`; **lint must pass** after edits (see **Step 6**).
 
 ---
 
-## Step 2 — Next major version for `@deprecationExpectedRemoval`
+## Step 2 — Removal version for `@deprecationExpectedRemoval`
 
-**`packages/web`, `packages/mobile`, and `packages/common` always share the same semver.** Read the **`version`** field from any one of `packages/web/package.json`, `packages/mobile/package.json`, or `packages/common/package.json` — they match.
+The tag must satisfy `@deprecationExpectedRemoval v…` as enforced by ESLint (e.g. `v10` or `v10.0.0`).
 
-1. Take **`version`** (e.g. `8.60.0`).
-2. Let **current major** be the first segment (`8` in `8.60.0`).
-3. Set **`NEXT_MAJOR = current major + 1`** and use `@deprecationExpectedRemoval v<NEXT_MAJOR>` (e.g. current `8.x` → `v9`).
+1. **Confirm with the user** which major **`N`** to use, unless they already specified it in **Inputs** (e.g. “remove in v10” → use `v10`).
+2. **Default suggestion** when the user wants a recommendation: read the **`version`** field from the relevant `package.json` and set **`N = current major + 1`**.
+   - **`packages/web`**, **`packages/mobile`**, and **`packages/common`** always share the same semver — read **`version`** from any one of them (e.g. `8.60.0` → suggest **`v9`**).
+   - Symbols owned only by **`packages/web-visualization`** or **`packages/mobile-visualization`**: read **that** package’s `package.json` (those versions are independent from web/mobile/common).
+3. After agreeing on **`N`**, use **`@deprecationExpectedRemoval v<N>`** everywhere for this deprecation (same **Step 3**).
 
-For symbols owned only by **`packages/web-visualization`** or **`packages/mobile-visualization`**, read that package’s `package.json` instead (those packages version independently from web/mobile/common).
+Do **not** assume the default without checking—either the user names **`N`**, or they accept the suggested next-major after you show the current **`version`**.
 
 ---
 
@@ -118,13 +124,29 @@ Use the same `{replacement}` phrasing as in JSDoc. If the replacement is not a s
 
 - [ ] Every **public export path** across packages that expose the symbol has been found (Step 0) and carries deprecation (implementation and re-exports as needed).
 - [ ] `@deprecated` includes replacement guidance and the exact closing sentence about future major removal.
-- [ ] `@deprecationExpectedRemoval v<N>` reflects **next major** from current version (any of web/mobile/common `package.json` for core CDS; visualization packages use their own `package.json`).
+- [ ] **`@deprecationExpectedRemoval v<N>`** matches the **confirmed** removal major (Step 2), not an unverified default.
 - [ ] **Web + mobile** implementations and metadata (when applicable) are updated; nothing skipped because the symbol was “only” defined in common or another package.
 - [ ] `warning` in metadata matches the replacement story: **this component is deprecated** for component docs, **this hook is deprecated** for hook docs (`apps/docs/docs/hooks/`).
+- [ ] **`yarn nx run <project>:lint`** has been run for every touched project (**Step 6**) and passes.
+
+---
+
+## Step 6 — Run ESLint (required)
+
+After all edits, **run the `lint` target** on **every Nx project** that contains changed source files so **`internal/deprecated-jsdoc-has-removal-version`** (and the rest of the package lint config) passes.
+
+Use the workspace convention:
+
+```bash
+yarn nx run <project>:lint
+```
+
+Examples: `web`, `mobile`, `common`, `web-visualization`, `mobile-visualization` — run **each** project you touched. Fix any reported issues before finishing (most often: missing `@deprecationExpectedRemoval`, or `@deprecated` text not ending with the standard sentence).
 
 ---
 
 ## Reference examples in-repo
 
 - JSDoc: search for `@deprecationExpectedRemoval` under `packages/web/src` (e.g. `TabNavigation.tsx`, `Spinner.tsx`).
+- ESLint: `libs/eslint-plugin-internal` — rule **`deprecated-jsdoc-has-removal-version`** (exposed as **`internal/deprecated-jsdoc-has-removal-version`** in the root `eslint.config.mjs`).
 - Metadata: search for `"warning": "This component is deprecated` under `apps/docs/docs/components`; hook docs live under `apps/docs/docs/hooks/` (use **This hook is deprecated** for hook `warning` text).

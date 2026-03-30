@@ -94,7 +94,7 @@ const CardBodyAction = memo(function CardBodyAction({
 
 /**
  * @deprecated Use ContentCardBody instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const CardBody = memo(function CardBody({
   testID = 'card-body',

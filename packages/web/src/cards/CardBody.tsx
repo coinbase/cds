@@ -64,7 +64,7 @@ export type CardBodyProps = CardBodyBaseProps & Omit<BoxProps<BoxDefaultElement>
  * Provides an opinionated layout for the typical content of a Card: a title, description, media, and action
  *
  * @deprecated Use ContentCardBody instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
+ * @deprecationExpectedRemoval v10
  */
 export const CardBody = memo(function CardBody({
   testID = 'card-body',
