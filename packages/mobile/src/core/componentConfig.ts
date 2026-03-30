@@ -20,6 +20,7 @@ import type { ContentCardFooterBaseProps } from '../cards/ContentCard/ContentCar
 import type { ContentCardHeaderBaseProps } from '../cards/ContentCard/ContentCardHeader';
 import type { LikeButtonBaseProps } from '../cards/LikeButton';
 import type { MediaCardBaseProps } from '../cards/MediaCard/index';
+import type { MediaCardLayoutBaseProps } from '../cards/MediaCard/MediaCardLayout';
 import type { MessagingCardBaseProps } from '../cards/MessagingCard/index';
 import type { CarouselBaseProps } from '../carousel/Carousel';
 import type { CellBaseProps } from '../cells/Cell';
@@ -40,6 +41,7 @@ import type { SearchInputBaseProps } from '../controls/SearchInput';
 import type { SelectOptionBaseProps } from '../controls/SelectOption';
 import type { SwitchBaseProps } from '../controls/Switch';
 import type { TextInputBaseProps } from '../controls/TextInput';
+import type { CalendarBaseProps } from '../dates/Calendar';
 import type { DateInputBaseProps } from '../dates/DateInput';
 import type { DatePickerBaseProps } from '../dates/DatePicker';
 import type { DotCountBaseProps } from '../dots/DotCount';
@@ -115,6 +117,7 @@ export type ComponentConfig = {
   Coachmark?: ConfigResolver<CoachmarkBaseProps>;
   Collapsible?: ConfigResolver<CollapsibleBaseProps>;
   Combobox?: ConfigResolver<ComboboxBaseProps>;
+  Calendar?: ConfigResolver<CalendarBaseProps>;
   ContentCard?: ConfigResolver<ContentCardBaseProps>;
   ContentCardBody?: ConfigResolver<ContentCardBodyBaseProps>;
   ContentCardFooter?: ConfigResolver<ContentCardFooterBaseProps>;
@@ -139,6 +142,7 @@ export type ComponentConfig = {
   ListCell?: ConfigResolver<ListCellBaseProps>;
   ListCellFallback?: ConfigResolver<ListCellFallbackBaseProps>;
   MediaCard?: ConfigResolver<MediaCardBaseProps>;
+  MediaCardLayout?: ConfigResolver<MediaCardLayoutBaseProps>;
   MediaChip?: ConfigResolver<MediaChipBaseProps>;
   MessagingCard?: ConfigResolver<MessagingCardBaseProps>;
   Modal?: ConfigResolver<ModalBaseProps>;
