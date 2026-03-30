@@ -442,6 +442,7 @@ const versionMap: Record<HeroSquareName, number> = {
   instoKeyGenerationComplete: 0,
   instoAdd2Fa: 0,
   instoEnableBiometrics: 0,
+  flipStable: 0,
 };
 
 export default versionMap;

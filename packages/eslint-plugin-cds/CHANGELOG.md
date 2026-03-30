@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Add more docs, new script, and new LLM skill for rule creation. [[#549](https://github.com/coinbase/cds/pull/549)]
+
+## 3.3.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Add new lint a11y rules for charts and tooltip, extend a11y label rules. [[#528](https://github.com/coinbase/cds/pull/528)]
+
 ## 3.2.2 (3/18/2026 PST)
 
 #### 🐞 Fixes

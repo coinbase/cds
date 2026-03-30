@@ -13,6 +13,10 @@ import type {
 import { Pictogram, SpotSquare } from '../illustrations';
 import { getSource, RemoteImage } from '../media/RemoteImage';
 
+/**
+ * @deprecated Use SpotSquare when `type` is "spotSquare", Pictogram when `type` is "pictogram", or RemoteImage when `type` is "image". This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardMediaProps = CommonCardMediaProps;
 
 const imageProps: Record<CardMediaPlacement, CardMediaImageSizeObject> = {
@@ -27,6 +31,10 @@ const imageProps: Record<CardMediaPlacement, CardMediaImageSizeObject> = {
   end: defaultMediaSize,
 };
 
+/**
+ * @deprecated Use SpotSquare when `type` is "spotSquare", Pictogram when `type` is "pictogram", or RemoteImage when `type` is "image". This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }: CardMediaProps) {
   switch (props.type) {
     case 'spotSquare':

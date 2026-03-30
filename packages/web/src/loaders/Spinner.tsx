@@ -45,6 +45,10 @@ const spinnerStatusCss = css`
   width: 1px;
 `;
 
+/**
+ * @deprecated Use indeterminate ProgressCircle component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const Spinner = memo(
   ({
     color = 'fgMuted',

@@ -14,7 +14,7 @@ import { StickyFooter } from '../StickyFooter';
 const options: string[] = prices.slice(0, 20);
 
 const StickyFooterWithTray = ({ title }: { title?: string }) => {
-  const [isTrayVisible, setIsTrayVisible] = useState(true);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleToFalse = useCallback(() => setIsTrayVisible(false), []);
   const setIsTrayVisibleToTrue = useCallback(() => setIsTrayVisible(true), []);
   const [value, setValue] = useState<string>();
@@ -50,14 +50,12 @@ const StickyFooterWithTray = ({ title }: { title?: string }) => {
             <StickyFooter>
               <HStack alignItems="center" gap={1} justifyContent="center" width="100%">
                 <Box flexGrow={1}>
-                  <Button block variant="secondary">
-                    Secondary
+                  <Button block onPress={handleClose} variant="secondary">
+                    Cancel
                   </Button>
                 </Box>
                 <Box flexGrow={1}>
-                  <Button block onPress={handleClose}>
-                    Primary
-                  </Button>
+                  <Button block>Primary</Button>
                 </Box>
               </HStack>
             </StickyFooter>

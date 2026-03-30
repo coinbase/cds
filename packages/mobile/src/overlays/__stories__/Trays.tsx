@@ -14,7 +14,7 @@ export const options: string[] = prices.slice(0, 4);
 const lotsOfOptions: string[] = prices.slice(0, 30);
 
 export const DefaultTray = ({ title }: { title?: React.ReactNode }) => {
-  const [isTrayVisible, setIsTrayVisible] = useState(true);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
   const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
   const [value, setValue] = useState<string>();
@@ -38,17 +38,22 @@ export const DefaultTray = ({ title }: { title?: React.ReactNode }) => {
           onVisibilityChange={handleTrayVisibilityChange}
           title={title}
         >
-          <Menu onChange={setValue} value={value}>
-            {options.map((option: string) => (
-              <SelectOption
-                key={option}
-                description="BTC"
-                onPress={handleOptionPress}
-                title={option}
-                value={option}
-              />
-            ))}
-          </Menu>
+          <VStack gap={2} paddingX={3}>
+            <Menu onChange={setValue} value={value}>
+              {options.map((option: string) => (
+                <SelectOption
+                  key={option}
+                  description="BTC"
+                  onPress={handleOptionPress}
+                  title={option}
+                  value={option}
+                />
+              ))}
+            </Menu>
+            <Button block onPress={handleOptionPress} variant="secondary">
+              Close
+            </Button>
+          </VStack>
         </Tray>
       )}
     </>
@@ -74,7 +79,7 @@ export const ScrollableTray = ({
   fallbackEnabled?: boolean;
   verticalDrawerPercentageOfView?: number;
 }) => {
-  const [isTrayVisible, setIsTrayVisible] = useState(true);
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
   const setIsTrayVisibleOff = useCallback(() => setIsTrayVisible(false), [setIsTrayVisible]);
   const setIsTrayVisibleOn = useCallback(() => setIsTrayVisible(true), [setIsTrayVisible]);
   const [value, setValue] = useState<string>();

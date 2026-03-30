@@ -93,6 +93,23 @@ describe('Checkbox', () => {
     expect(icon.className).toContain('bgNegative');
   });
 
+  it('applies controlSize to checkbox container', () => {
+    render(
+      <DefaultThemeProvider>
+        <Checkbox checked controlSize={60} onChange={mockOnChange}>
+          Checked
+        </Checkbox>
+      </DefaultThemeProvider>,
+    );
+
+    const outline = screen.getByTestId('checkbox-outer');
+
+    expect(outline).toHaveStyle({
+      width: '60px',
+      height: '60px',
+    });
+  });
+
   it('uses bg color when unchecked regardless of controlColor prop', () => {
     render(
       <DefaultThemeProvider>

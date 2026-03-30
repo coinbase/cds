@@ -53,11 +53,22 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
 
       const leftHeaderButton = showSearch ? (
         <Box marginX={-1}>
-          <IconButton transparent name="search" onPress={goToSearch} />
+          <IconButton
+            transparent
+            accessibilityLabel="Search for component"
+            name="search"
+            onPress={goToSearch}
+          />
         </Box>
       ) : showBackButton ? (
         <Box marginX={-1}>
-          <IconButton transparent name="backArrow" onPress={goBack} />
+          <IconButton
+            transparent
+            accessibilityLabel="Go back"
+            name="backArrow"
+            onPress={goBack}
+            testID="nav-back-button"
+          />
         </Box>
       ) : (
         iconButtonPlaceholder
@@ -74,6 +85,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
         <Box marginX={-1}>
           <IconButton
             transparent
+            accessibilityLabel="Toggle dark mode"
             name={theme.activeColorScheme === 'dark' ? 'moon' : 'light'}
             onPress={toggleDark}
           />
@@ -98,7 +110,14 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
                   label=""
                   onChange={handleSearch}
                   placeholder="Search"
-                  start={<IconButton transparent name="backArrow" onPress={goBackFromSearch} />}
+                  start={
+                    <IconButton
+                      transparent
+                      accessibilityLabel="Go back from search"
+                      name="backArrow"
+                      onPress={goBackFromSearch}
+                    />
+                  }
                   value={searchFilter}
                 />
               ) : (

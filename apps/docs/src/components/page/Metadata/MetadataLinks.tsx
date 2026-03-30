@@ -74,7 +74,12 @@ export const MetadataLinks = memo(({ source, storybook, changelog, figma }: Meta
           </LinkChip>
         </Tooltip>
       )}
-      <Chip compact onClick={handleCopyLLMDoc} start={<Icon color="fg" name="copy" size="s" />}>
+      <Chip
+        compact
+        accessibilityLabel="Copy component documentation for LLM"
+        onClick={handleCopyLLMDoc}
+        start={<Icon color="fg" name="copy" size="s" />}
+      >
         Copy for LLM
       </Chip>
       <LinkChip href={llmDocUrl}>View as Markdown</LinkChip>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useAlert } from '@cbhq/cds-common/overlays/useAlert';
 import { useModal } from '@cbhq/cds-common/overlays/useModal';
 
@@ -44,17 +44,7 @@ const AlertOnModal = () => {
     );
   }, [closeModal, openModal, showAlert]);
 
-  useEffect(() => {
-    handlePress();
-    showAlert();
-
-    return () => {
-      close();
-      closeModal();
-    };
-  }, [close, closeModal, handlePress, showAlert]);
-
-  return <Button onPress={handlePress}>Open Modal</Button>;
+  return <Button onPress={handlePress}>Open</Button>;
 };
 
 const AlertOverModalScreen = () => {

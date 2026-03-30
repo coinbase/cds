@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.15.2 (3/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fit lint errors. [[#528](https://github.com/coinbase/cds/pull/528)]
+
+## 4.15.1 (3/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove detox dependency. [[#517](https://github.com/coinbase/cds/pull/517)]
+
 ## 4.15.0 (3/23/2026 PST)
 
 #### 🚀 Updates

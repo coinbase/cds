@@ -11,7 +11,7 @@ import { Control, type ControlBaseProps, type ControlIconProps } from './Control
 
 export type CheckboxBaseProps<CheckboxValue extends string> = Omit<
   ControlBaseProps<CheckboxValue>,
-  'controlColor'
+  'controlColor' | 'controlSize' | 'dotSize'
 > & {
   /**
    * Sets the checked/active color of the checkbox.
@@ -23,6 +23,11 @@ export type CheckboxBaseProps<CheckboxValue extends string> = Omit<
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
+  /**
+   * Sets the outer checkbox control size in pixels.
+   * @default theme.controlSize.checkboxSize
+   */
+  controlSize?: number;
 };
 
 export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;
@@ -42,10 +47,11 @@ const CheckboxIcon = memo(
     animatedScaleValue,
     animatedOpacityValue,
     testID,
+    controlSize,
   }: React.PropsWithChildren<ControlIconProps>) => {
     const filled = checked || indeterminate;
     const theme = useTheme();
-    const checkboxSize = theme.controlSize.checkboxSize;
+    const checkboxSize = controlSize ?? theme.controlSize.checkboxSize;
     const iconPadding = checkboxSize / 5;
     const iconSize = checkboxSize - iconPadding;
 

@@ -82,7 +82,8 @@
     "minimatch": "^10.2.4",
     "glob@7.1.6": "patch:glob@npm:7.1.6#.yarn/patches/glob-npm-7.1.6-minimatch10-symbol.patch",
     "koa": "^3.1.2",
-    "tar": "^7.5.12"
+    "tar": "^7.5.12",
+    "bn.js": "^5.2.3"
   },
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
@@ -100,7 +101,8 @@
     "minimatch": "Request from Coinbase Security team to fix security vulnerability",
     "glob@7.1.6": "Handle minimatch@10's Symbol(GLOBSTAR) in pattern arrays (used by @expo/config). Avoids 'Cannot convert a Symbol value to a string' when starting Expo.",
     "koa": "Request from Coinbase Security team to fix security vulnerability",
-    "tar": "Request from Coinbase Security team to fix security vulnerability"
+    "tar": "Request from Coinbase Security team to fix security vulnerability",
+    "bn.js": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
@@ -123,6 +125,7 @@
     "@babel/runtime": "^7.28.2",
     "@babel/template": "^7.20.7",
     "@babel/types": "^7.20.7",
+    "@cbhq/eslint-plugin-cds": "workspace:^",
     "@cbhq/eslint-plugin-internal": "workspace:^",
     "@figma/code-connect": "^1.3.13",
     "@graphql-tools/jest-transform": "^2.0.0",
@@ -172,7 +175,6 @@
     "babel-plugin-replace-ts-export-assignment": "^0.0.2",
     "chalk": "^4.1.2",
     "depcheck": "patch:depcheck@npm%3A1.4.7#.yarn/patches/depcheck-npm-1.4.7-d4cc813cc3.patch",
-    "detox": "^20.14.8",
     "diff": "^5.1.0",
     "dotenv-webpack": "7.0.3",
     "eslint": "^9.22.0",

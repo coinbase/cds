@@ -2712,7 +2712,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
+"@cbhq/eslint-plugin-cds@workspace:^, @cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
   version: 0.0.0-use.local
   resolution: "@cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
   dependencies:
@@ -2751,6 +2751,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@cbhq/mobile-visreg@workspace:packages/mobile-visreg":
+  version: 0.0.0-use.local
+  resolution: "@cbhq/mobile-visreg@workspace:packages/mobile-visreg"
+  dependencies:
+    "@percy/cli": "npm:^1.31.1"
+  languageName: unknown
+  linkType: soft
+
 "@cbhq/static-assets@workspace:libs/static-assets":
   version: 0.0.0-use.local
   resolution: "@cbhq/static-assets@workspace:libs/static-assets"
@@ -2769,7 +2777,6 @@ __metadata:
     "@react-navigation/native": "npm:^6.1.6"
     "@react-navigation/stack": "npm:^6.3.16"
     "@types/react": "npm:^18.3.12"
-    detox: "npm:^20.14.8"
     lodash: "npm:^4.17.21"
     react-native-safe-area-context: "npm:4.10.5"
   peerDependencies:
@@ -2782,28 +2789,6 @@ __metadata:
     react: ^18.3.1
     react-native: ^0.74.5
     react-native-safe-area-context: ^4.10.5
-  languageName: unknown
-  linkType: soft
-
-"@cbhq/ui-mobile-visreg@workspace:^, @cbhq/ui-mobile-visreg@workspace:packages/ui-mobile-visreg":
-  version: 0.0.0-use.local
-  resolution: "@cbhq/ui-mobile-visreg@workspace:packages/ui-mobile-visreg"
-  dependencies:
-    "@babel/core": "npm:^7.28.0"
-    "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
-    "@babel/preset-typescript": "npm:^7.27.1"
-    "@cbhq/cds-mobile": "workspace:^"
-    "@cbhq/cds-mobile-visualization": "workspace:^"
-    "@percy/cli": "npm:^1.31.1"
-    "@percy/client": "npm:^1.31.1"
-    "@percy/sdk-utils": "npm:^1.31.1"
-    detox: "npm:^20.14.8"
-    lodash: "npm:^4.17.21"
-  peerDependencies:
-    "@cbhq/cds-mobile": "workspace:^"
-    "@cbhq/cds-mobile-visualization": "workspace:^"
-    detox: ^20.14.8
   languageName: unknown
   linkType: soft
 
@@ -7152,7 +7137,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@percy/client@npm:1.31.1, @percy/client@npm:^1.31.1":
+"@percy/client@npm:1.31.1":
   version: 1.31.1
   resolution: "@percy/client@npm:1.31.1"
   dependencies:
@@ -7236,7 +7221,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@percy/sdk-utils@npm:1.31.1, @percy/sdk-utils@npm:^1.31.1":
+"@percy/sdk-utils@npm:1.31.1":
   version: 1.31.1
   resolution: "@percy/sdk-utils@npm:1.31.1"
   checksum: 10c0/0a393d8abacbef4e17d41c32bdbf69a7b49851b3d5a2589a29ce1ae09b33f8a39f5e5d38137169de4e98b66568247609258648f8655af4997169cdc7802d1e30
@@ -14714,17 +14699,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bn.js@npm:^4.0.0, bn.js@npm:^4.1.0, bn.js@npm:^4.11.9":
-  version: 4.12.0
-  resolution: "bn.js@npm:4.12.0"
-  checksum: 10c0/9736aaa317421b6b3ed038ff3d4491935a01419ac2d83ddcfebc5717385295fcfcf0c57311d90fe49926d0abbd7a9dbefdd8861e6129939177f7e67ebc645b21
-  languageName: node
-  linkType: hard
-
-"bn.js@npm:^5.0.0, bn.js@npm:^5.1.1":
-  version: 5.2.0
-  resolution: "bn.js@npm:5.2.0"
-  checksum: 10c0/67e17b1934d9c7a73aed9b89222dc8c1c8e3aff46cca6609b8c2ab04fa22c6b8db42c7774b039d09fa63136d8866b777ab88af0d64d8ea3839a94e69193a6b13
+"bn.js@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "bn.js@npm:5.2.3"
+  checksum: 10c0/eef19cb9cf5e91e91e3e0f036b799ce6c72f79463c3934d62991c3dcdb58f6c94dc3d806495d9b0bf31cd121870ed79bb2115cea71b56c03e794fb71485031fa
   languageName: node
   linkType: hard
 
@@ -18106,6 +18084,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.2"
     "@babel/template": "npm:^7.20.7"
     "@babel/types": "npm:^7.20.7"
+    "@cbhq/eslint-plugin-cds": "workspace:^"
     "@cbhq/eslint-plugin-internal": "workspace:^"
     "@figma/code-connect": "npm:^1.3.13"
     "@graphql-tools/jest-transform": "npm:^2.0.0"
@@ -18155,7 +18134,6 @@ __metadata:
     babel-plugin-replace-ts-export-assignment: "npm:^0.0.2"
     chalk: "npm:^4.1.2"
     depcheck: "patch:depcheck@npm%3A1.4.7#.yarn/patches/depcheck-npm-1.4.7-d4cc813cc3.patch"
-    detox: "npm:^20.14.8"
     diff: "npm:^5.1.0"
     dotenv-webpack: "npm:7.0.3"
     eslint: "npm:^9.22.0"
@@ -29119,7 +29097,6 @@ __metadata:
     "@cbhq/cds-mobile": "workspace:^"
     "@cbhq/cds-mobile-visualization": "workspace:^"
     "@cbhq/ui-mobile-playground": "workspace:^"
-    "@cbhq/ui-mobile-visreg": "workspace:^"
     "@config-plugins/detox": "npm:^6.0.0"
     "@expo-google-fonts/inter": "npm:^0.3.0"
     "@expo-google-fonts/source-code-pro": "npm:^0.3.0"

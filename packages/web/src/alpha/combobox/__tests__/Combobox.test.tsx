@@ -115,6 +115,16 @@ describe('Combobox', () => {
       expect(input).toBeInTheDocument();
     });
 
+    it('passes font to the search input', () => {
+      render(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} defaultOpen font="label1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('textbox')).toHaveStyle('font-size: var(--fontSize-label1);');
+    });
+
     it('filters options based on search text', async () => {
       render(
         <DefaultThemeProvider>

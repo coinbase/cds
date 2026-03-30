@@ -51,8 +51,10 @@ function ParentTypesTable({
       >
         <SearchInput
           compact
+          clearIconAccessibilityLabel="Clear search"
           onChangeText={setSearchValue}
           placeholder="Search"
+          startIconAccessibilityLabel="Search"
           value={searchValue}
         />
       </Box>
