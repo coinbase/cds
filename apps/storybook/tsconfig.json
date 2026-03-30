@@ -11,7 +11,9 @@
     "vite.config.ts",
     "vite-env.d.ts"
   ],
-  "exclude": [],
+  "exclude": [
+    "scripts/shouldRunVisreg.mjs"
+  ],
   "references": [
     {
       "path": "../../packages/web"
