@@ -31,6 +31,8 @@ export type ControlIconProps = SharedProps & {
   borderRadius?: ThemeVars.BorderRadius;
   borderWidth?: ThemeVars.BorderWidth;
   elevation?: ElevationLevels;
+  controlSize?: number;
+  dotSize?: number;
   animatedScaleValue: Animated.Value;
   animatedOpacityValue: Animated.Value;
   accessible?: boolean;
@@ -68,6 +70,15 @@ export type ControlBaseProps<ControlValue extends string> = Omit<
     controlColor?: ThemeVars.Color;
     /** Sets the elevation/drop shadow of the control. */
     elevation?: ElevationLevels;
+    /**
+     * Sets the control size in pixels.
+     */
+    controlSize?: number;
+    /**
+     * Sets the inner dot size in pixels.
+     * @default 2/3 of controlSize
+     */
+    dotSize?: number;
     style?: ViewStyle;
   };
 
@@ -108,6 +119,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     borderColor,
     borderRadius,
     borderWidth,
+    controlSize,
+    dotSize,
     ...props
   }: ControlProps<ControlValue>,
   ref: React.ForwardedRef<View>,
@@ -227,7 +240,9 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
           borderWidth={borderWidth}
           checked={checked}
           controlColor={controlColor}
+          controlSize={controlSize}
           disabled={pressDisabled}
+          dotSize={dotSize}
           elevation={elevation}
           indeterminate={indeterminate}
           pressed={pressed}
@@ -261,7 +276,9 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       borderWidth,
       checked,
       controlColor,
+      controlSize,
       disabled,
+      dotSize,
       elevation,
       getLabelStyle,
       iconWrapperStyles,

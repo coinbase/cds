@@ -8,7 +8,7 @@ import { VStack } from '../../layout';
 import { StickyFooter } from '../StickyFooter';
 
 const StickyFooterScreen = () => {
-  const [showStickyFooter, setShowStickyFooter] = useState(true);
+  const [showStickyFooter, setShowStickyFooter] = useState(false);
   const handleButtonPress = useCallback(() => {
     setShowStickyFooter(!showStickyFooter);
   }, [showStickyFooter]);
@@ -17,7 +17,7 @@ const StickyFooterScreen = () => {
   return (
     <ExampleScreen>
       <Example title="StickyFooter with Screen">
-        <Button onPress={handleButtonPress}>{showStickyFooter ? 'Close' : 'Open'}</Button>
+        <Button onPress={handleButtonPress}>{showStickyFooter ? 'Cancel' : 'Open'}</Button>
       </Example>
       {showStickyFooter && (
         <View style={{ position: 'absolute', bottom: inset.bottom / 2, left: 0, right: 0 }}>

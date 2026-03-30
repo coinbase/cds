@@ -83,7 +83,7 @@ export function getBuildInfo() {
       await $`mkdir -p ${outputName}`;
       const testFolder = `${outputName}/androidTest/${profile}`;
       const buildFolder = `${outputName}/${profile}`;
-      await $`tar -xf ${this.zipFile} -C ${outputName}`;
+      await $`unzip -q ${this.zipFile} -d ${outputName}`;
       await $`mv ${testFolder}/app-${profile}-androidTest.apk ${this.testApk}`;
       await $`mv ${buildFolder}/app-${profile}.apk ${this.apk.signed}`;
       await $`rm -rf ${path.dirname(testFolder)} && rm -rf ${buildFolder}`;

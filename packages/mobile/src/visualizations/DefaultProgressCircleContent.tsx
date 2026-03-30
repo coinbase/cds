@@ -7,7 +7,7 @@ import { ProgressTextLabel } from './ProgressTextLabel';
 
 export const DefaultProgressCircleContent = memo(
   ({
-    progress,
+    progress = 0,
     disableAnimateOnMount,
     disabled,
     color = 'fgMuted',

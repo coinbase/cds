@@ -23,6 +23,8 @@ export function buildWebConfig(plugin: Record<string, unknown>) {
     rules: {
       '@cbhq/cds/control-has-associated-label-extended': 'warn',
       '@cbhq/cds/no-v7-imports': 'warn',
+      '@cbhq/cds/web-chart-scrubbing-accessibility': 'warn',
+      '@cbhq/cds/web-tooltip-interactive-content': 'warn',
       'jsx-a11y/control-has-associated-label': [
         'warn',
         {
@@ -49,6 +51,8 @@ export const legacyWebConfig = {
   rules: {
     '@cbhq/cds/control-has-associated-label-extended': 'warn',
     '@cbhq/cds/no-v7-imports': 'warn',
+    '@cbhq/cds/web-chart-scrubbing-accessibility': 'warn',
+    '@cbhq/cds/web-tooltip-interactive-content': 'warn',
   },
   overrides: [
     {

@@ -119,14 +119,16 @@
         "command": "node ./scripts/validate.mjs"
       }
     },
-    "visreg": {
-      "executor": "nx:run-commands",
+    "patch-bundle-ios": {
+      "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release --jsEngine hermes",
       "options": {
-        "commands": [
-          "buildkite-agent pipeline upload .buildkite/visreg-ios.yml",
-          "buildkite-agent pipeline upload .buildkite/visreg-android.yml"
-        ],
-        "parallel": true
+        "cwd": "apps/mobile-app"
+      }
+    },
+    "patch-bundle-android": {
+      "command": "node ./scripts/patch-bundle.mjs --platform android --profile release --jsEngine hermes",
+      "options": {
+        "cwd": "apps/mobile-app"
       }
     },
     "lint": {

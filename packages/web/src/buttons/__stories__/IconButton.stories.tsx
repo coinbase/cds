@@ -104,6 +104,12 @@ export const Default = () => (
       <Text font="title3">Variants Loading</Text>
       {variants.map((variant, index) => (
         <HStack key={index} alignItems="center" gap={4}>
+          {variant.component({ accessibilityLabel, loading: true, compact: false })}
+          <Text font="body">{variant.title}</Text>
+        </HStack>
+      ))}
+      {variants.map((variant, index) => (
+        <HStack key={index} alignItems="center" gap={4}>
           {variant.component({ accessibilityLabel, loading: true })}
           <Text font="body">{variant.title}</Text>
         </HStack>

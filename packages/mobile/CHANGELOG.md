@@ -8,6 +8,35 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Deprecate Card and its sub-components. [[#562](https://github.com/coinbase/cds/pull/562)]
+
+#### 📘 Misc
+
+- Chore: deprecate CardGroup. [[#560](https://github.com/coinbase/cds/pull/560)]
+
+## 8.60.0 (3/29/2026 PST)
+
+#### 🚀 Updates
+
+- Add indeterminate ProgressCircle. [[#501](https://github.com/coinbase/cds/pull/501)]
+
+## 8.59.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Support controlSize on Checkbox and Radio. [[#546](https://github.com/coinbase/cds/pull/546)]
+
+## 8.58.0 (3/25/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support font prop on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
+- Feat: support borderRadius on SearchInput. [[#545](https://github.com/coinbase/cds/pull/545)]
+
 ## 8.57.1 ((3/24/2026, 01:14 PM PST))
 
 This is an artificial version bump with no new change.

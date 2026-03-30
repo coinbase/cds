@@ -802,6 +802,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/fileYourCryptoTaxesCheck-6.js').content,
     dark: () => require('../svgJs/dark/fileYourCryptoTaxesCheck-6.js').content,
   },
+  flipStable: {
+    light: () => require('../svgJs/light/flipStable-0.js').content,
+    dark: () => require('../svgJs/dark/flipStable-0.js').content,
+  },
   focusLimitOrders: {
     light: () => require('../svgJs/light/focusLimitOrders-4.js').content,
     dark: () => require('../svgJs/dark/focusLimitOrders-4.js').content,

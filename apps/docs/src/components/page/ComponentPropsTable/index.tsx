@@ -54,8 +54,10 @@ function DefaultElementPropsModalContent({
         </Text>
         <SearchInput
           compact
+          clearIconAccessibilityLabel="Clear search"
           onChangeText={setSearchValue}
           placeholder="Search"
+          startIconAccessibilityLabel="Search"
           value={searchValue}
         />
       </VStack>
@@ -135,8 +137,10 @@ function ComponentPropsTable({
       >
         <SearchInput
           compact
+          clearIconAccessibilityLabel="Clear search"
           onChangeText={handleSearchChange}
           placeholder="Search"
+          startIconAccessibilityLabel="Search"
           value={searchValue}
         />
         <ParentTypesList

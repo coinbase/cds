@@ -62,9 +62,12 @@ describe('ProgressBar test', () => {
       </Box>,
     );
 
-    await waitFor(() =>
-      expect(screen.queryByTestId('cds-progress-bar-float-label')?.style.transform).toBeFalsy(),
-    );
+    await waitFor(() => {
+      const transform = screen.queryByTestId('cds-progress-bar-float-label')?.style.transform;
+      const isNoTranslation =
+        !transform || transform === 'none' || transform === 'translateX(0px) translateZ(0)';
+      expect(isNoTranslation).toBe(true);
+    });
 
     expect(screen.getAllByText('0%')).toHaveLength(2);
   });

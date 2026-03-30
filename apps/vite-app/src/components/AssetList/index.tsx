@@ -23,7 +23,7 @@ export const AssetList = ({ pageSize }: { pageSize: number }) => {
   const accountsCopy = mockAccounts.slice(startIndex, endIndex);
 
   return (
-    <Table tableLayout="auto" variant="ruled">
+    <Table accessibilityLabel="Asset list" tableLayout="auto" variant="ruled">
       <TableHeader>
         <TableRow>
           <TableCell title="Currency" width="60%" />

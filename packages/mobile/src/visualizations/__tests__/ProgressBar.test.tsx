@@ -94,7 +94,7 @@ describe('ProgressBar test', () => {
     // necessary for Animated.timing delay
     act(() => void jest.runAllTimers());
     expect(floatLabel).toHaveStyle({
-      transform: [{ translateX: 90 }], // (200/2) -10
+      transform: [{ translateX: 80 }], // containerWidth * progress - textWidth = 200*0.5 - 20
     });
 
     expect(screen.getAllByText('50%')[0]).toBeDefined();

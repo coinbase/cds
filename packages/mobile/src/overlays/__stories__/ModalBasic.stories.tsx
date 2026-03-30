@@ -9,14 +9,14 @@ import { ModalFooter } from '../modal/ModalFooter';
 import { ModalHeader } from '../modal/ModalHeader';
 
 const ModalBasicScreen = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const handleClose = useCallback(() => setVisible(false), []);
   const handleOpen = useCallback(() => setVisible(true), []);
 
   return (
     <ExampleScreen>
       <Example title="Basic Modal">
-        <Button onPress={handleOpen}>Open Modal</Button>
+        <Button onPress={handleOpen}>Open</Button>
         <Modal onRequestClose={handleClose} visible={visible}>
           <ModalHeader
             backAccessibilityLabel="Back"

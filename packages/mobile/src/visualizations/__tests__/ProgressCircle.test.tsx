@@ -264,4 +264,19 @@ describe('ProgressCircle tests and passes a11y', () => {
     expect(progressCircle.props.accessibilityValue.now).toBe(7);
     expect(Number.isInteger(progressCircle.props.accessibilityValue.now)).toBe(true);
   });
+
+  it('renders indeterminate progress circle without percentage text', () => {
+    const size = 100;
+    render(
+      <DefaultThemeProvider>
+        <ProgressCircle indeterminate size={size} testID="indeterminate-progress-circle" />
+      </DefaultThemeProvider>,
+    );
+
+    const root = screen.getByTestId('indeterminate-progress-circle');
+    expect(root.props.accessibilityRole).toBe('progressbar');
+    expect(screen.getByTestId('cds-progress-circle-inner')).toBeTruthy();
+    expect(screen.queryByText('75%')).toBeNull();
+    expect(root).toBeAccessible();
+  });
 });

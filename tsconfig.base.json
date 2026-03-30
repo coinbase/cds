@@ -108,12 +108,6 @@
       "@cbhq/ui-mobile-playground/*": [
         "packages/ui-mobile-playground/src/*"
       ],
-      "@cbhq/ui-mobile-visreg": [
-        "packages/ui-mobile-visreg/src"
-      ],
-      "@cbhq/ui-mobile-visreg/*": [
-        "packages/ui-mobile-visreg/src/*"
-      ],
       "@site/*": [
         "apps/docs/*"
       ]
