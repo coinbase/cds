@@ -3,12 +3,13 @@ import type { View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import type { HStackProps } from '../../layout';
+import type { BoxBaseProps, HStackProps } from '../../layout';
 import { HStack } from '../../layout';
 
-export type ContentCardFooterBaseProps = SharedProps & {
-  children?: React.ReactNode;
-};
+export type ContentCardFooterBaseProps = BoxBaseProps &
+  SharedProps & {
+    children?: React.ReactNode;
+  };
 
 export type ContentCardFooterProps = ContentCardFooterBaseProps & HStackProps;
 

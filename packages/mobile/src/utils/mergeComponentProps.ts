@@ -6,20 +6,25 @@ export type MergedProps<Target, Source> = Source & Target;
 /**
  * Merges two sets of component props where source overrides target.
  *
- * @param target - Base set of props (e.g., from theme config)
- * @param source - Overriding set of props (e.g., from local props)
+ * This merge is shallow by design and applies to any BaseProps keys, not only
+ * style-like props. This allows component config defaults such as `compact`,
+ * `variant`, `height`, and `font` to flow through alongside style props.
+ *
+ * @param target - Base set of props (e.g., from component config defaults)
+ * @param source - Overriding set of props (e.g., from local component props)
  * @returns Merged props with source values taking precedence
  *
  * @example
  * ```tsx
  * const merged = mergeComponentProps(
- *   { style: { color: 'red' }, size: 'md' },
- *   { style: { color: 'blue' }, variant: 'primary' }
+ *   { compact: false, variant: 'secondary', height: 32, font: 'headline' },
+ *   { compact: true, variant: 'primary' }
  * );
  * // Result: {
- * //   style: { color: 'blue' },  // Simple override
- * //   size: 'md',
- * //   variant: 'primary'
+ * //   compact: true,        // local override
+ * //   variant: 'primary',   // local override
+ * //   height: 32,           // preserved from defaults
+ * //   font: 'headline'      // preserved from defaults
  * // }
  * ```
  */
