@@ -61,10 +61,7 @@ export type RadioGroupBaseProps<RadioValue extends string> = Omit<
 export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
 const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
-  _props: RadioGroupProps<RadioValue>,
-  ref: React.ForwardedRef<View>,
-) {
-  const {
+  {
     label,
     value,
     onChange,
@@ -75,7 +72,9 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends stri
     accessibilityHint,
     radioAccessibilityLabel,
     ...props
-  } = _props;
+  }: RadioGroupProps<RadioValue>,
+  ref: React.ForwardedRef<View>,
+) {
   if (isDevelopment()) {
     console.warn(
       'RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.',

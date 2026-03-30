@@ -63,10 +63,7 @@ export type RadioGroupBaseProps<RadioValue extends string> = FilteredHTMLAttribu
 export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
 const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
-  _props: RadioGroupProps<RadioValue>,
-  ref: React.ForwardedRef<HTMLDivElement>,
-) {
-  const {
+  {
     label,
     value,
     onChange,
@@ -76,7 +73,9 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends stri
     controlColor = 'bgPrimary',
     role = 'radiogroup',
     ...props
-  } = _props;
+  }: RadioGroupProps<RadioValue>,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
   if (isDevelopment()) {
     console.warn('RadioGroup is deprecated. Use ControlGroup with role="radiogroup" instead.');
   }
