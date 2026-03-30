@@ -87,31 +87,6 @@ const NestedProvidersExample = () => {
   );
 };
 
-const MergeStylePropsExample = () => {
-  const [mergeEnabled, setMergeEnabled] = useState(false);
-  const config: ComponentConfig = {
-    Button: {
-      style: { borderColor: 'green', borderWidth: 1 },
-    },
-  };
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={2}>
-        <Button onPress={() => setMergeEnabled((value) => !value)} variant="secondary">
-          Toggle mergeStyleProps ({mergeEnabled ? 'on' : 'off'})
-        </Button>
-      </HStack>
-      <ComponentConfigProvider mergeStyleProps={mergeEnabled} value={config}>
-        <HStack gap={2}>
-          <Button style={{ borderColor: 'red' }}>Style override</Button>
-          <Button>Theme only</Button>
-        </HStack>
-      </ComponentConfigProvider>
-    </VStack>
-  );
-};
-
 const stickerSheetSelectOptions = [
   { value: null, label: 'Clear' },
   { value: 'btc', label: 'Bitcoin' },
@@ -176,9 +151,6 @@ const ComponentConfigProviderStory = () => {
       </Example>
       <Example title="Nested Providers">
         <NestedProvidersExample />
-      </Example>
-      <Example title="mergeStyleProps">
-        <MergeStylePropsExample />
       </Example>
       <Example title="Sticker-sheet parity defaults">
         <StickerSheetParityExample />

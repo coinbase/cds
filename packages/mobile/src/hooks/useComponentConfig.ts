@@ -24,7 +24,6 @@ export const useComponentConfig = <K extends keyof ComponentConfig, P extends Re
   const store = useComponentConfigStore();
 
   const rawConfig = useStore(store, (state) => state.components?.[componentName]);
-  const mergeFlag = useStore(store, (state) => state.mergeStyleProps);
 
   if (!rawConfig) return localProps;
 
@@ -32,5 +31,5 @@ export const useComponentConfig = <K extends keyof ComponentConfig, P extends Re
     typeof rawConfig === 'function'
       ? (rawConfig as (props: any) => Record<string, any>)(localProps)
       : rawConfig;
-  return mergeComponentProps(resolvedConfig, localProps, mergeFlag) as P;
+  return mergeComponentProps(resolvedConfig, localProps) as P;
 };

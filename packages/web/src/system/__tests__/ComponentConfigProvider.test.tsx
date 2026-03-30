@@ -125,23 +125,7 @@ describe('ComponentConfigProvider', () => {
     expect(getProps('child-btn').variant).toBe('positive');
   });
 
-  it('mergeClassNameAndStyle=true concatenates classNames', () => {
-    const config: ComponentConfig = {
-      Button: { className: 'theme-btn' },
-    };
-    render(
-      <Wrapper>
-        <ComponentConfigProvider mergeClassNameAndStyle value={config}>
-          <ButtonSpy className="local-btn" testID="btn" />
-        </ComponentConfigProvider>
-      </Wrapper>,
-    );
-    const props = getProps('btn');
-    expect(props.className).toContain('theme-btn');
-    expect(props.className).toContain('local-btn');
-  });
-
-  it('mergeClassNameAndStyle=false (default) uses local className only', () => {
+  it('local className overrides provider className', () => {
     const config: ComponentConfig = {
       Button: { className: 'theme-btn' },
     };

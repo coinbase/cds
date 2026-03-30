@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Button } from '../../buttons';
 import type { ComponentConfig } from '../../core/componentConfig';
@@ -100,28 +100,3 @@ export const NestedProviders = () => (
     </VStack>
   </ComponentConfigProvider>
 );
-
-export const MergeClassNameAndStyle = () => {
-  const [mergeEnabled, setMergeEnabled] = useState(false);
-  const config: ComponentConfig = {
-    Button: {
-      className: 'storybook-theme-button',
-      borderRadius: 200,
-    },
-  };
-
-  return (
-    <VStack gap={4} padding={4}>
-      <Button onClick={() => setMergeEnabled((value) => !value)} variant="secondary">
-        Toggle mergeClassNameAndStyle ({mergeEnabled ? 'on' : 'off'})
-      </Button>
-
-      <ComponentConfigProvider mergeClassNameAndStyle={mergeEnabled} value={config}>
-        <HStack gap={2}>
-          <Button className="storybook-local-button">Local className</Button>
-          <Button>Provider defaults only</Button>
-        </HStack>
-      </ComponentConfigProvider>
-    </VStack>
-  );
-};

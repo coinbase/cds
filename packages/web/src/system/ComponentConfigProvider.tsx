@@ -5,7 +5,6 @@ import type { ComponentConfig } from '../core/componentConfig';
 
 type ComponentConfigStoreState = {
   components?: ComponentConfig;
-  mergeClassNameAndStyle?: boolean;
 };
 
 export type ComponentConfigContextValue = StoreApi<ComponentConfigStoreState>;
@@ -17,24 +16,15 @@ export const ComponentConfigContext = createContext<ComponentConfigContextValue 
 /** Builds the full store state from a ComponentConfig. */
 const createComponentConfigStoreState = (
   config: ComponentConfig | undefined,
-  mergeClassNameAndStyle: boolean | undefined,
 ): ComponentConfigStoreState => {
   return {
     components: config,
-    mergeClassNameAndStyle,
   };
 };
 
 export type ComponentConfigProviderProps = {
   /** Component config: static objects and/or functional resolvers per component. */
   value?: ComponentConfig;
-  /**
-   * Controls how component props from config are merged with local component props.
-   *
-   * When falsy, `className` and `style` properties are simply overridden by local props
-   * When truthy, `className` is combined with cx() and `style` properties are shallow merged.
-   */
-  mergeClassNameAndStyle?: boolean;
   children?: React.ReactNode;
 };
 
@@ -43,20 +33,16 @@ export type ComponentConfigProviderProps = {
  * Each component subscribes to only its own config slice, preventing cross-component re-renders.
  * Supports nesting with isolated scopes: a child provider only applies its own config map.
  */
-export const ComponentConfigProvider = ({
-  value,
-  mergeClassNameAndStyle,
-  children,
-}: ComponentConfigProviderProps) => {
+export const ComponentConfigProvider = ({ value, children }: ComponentConfigProviderProps) => {
   const storeRef = useRef<ComponentConfigContextValue | null>(null);
 
   if (!storeRef.current) {
     storeRef.current = createStore<ComponentConfigStoreState>(() =>
-      createComponentConfigStoreState(value, mergeClassNameAndStyle),
+      createComponentConfigStoreState(value),
     );
   }
 
-  const newState = createComponentConfigStoreState(value, mergeClassNameAndStyle);
+  const newState = createComponentConfigStoreState(value);
   storeRef.current.setState(newState, true);
 
   return (

@@ -5,7 +5,6 @@ import type { ComponentConfig } from '../core/componentConfig';
 
 type ComponentConfigStoreState = {
   components?: ComponentConfig;
-  mergeStyleProps?: boolean;
 };
 
 export type ComponentConfigContextValue = StoreApi<ComponentConfigStoreState>;
@@ -16,24 +15,15 @@ export const ComponentConfigContext = createContext<ComponentConfigContextValue 
 
 const createComponentConfigStoreState = (
   config: ComponentConfig | undefined,
-  mergeStyleProps: boolean | undefined,
 ): ComponentConfigStoreState => {
   return {
     components: config,
-    mergeStyleProps,
   };
 };
 
 export type ComponentConfigProviderProps = {
   /** Component config: static objects and/or functional resolvers per component. */
   value?: ComponentConfig;
-  /**
-   * Controls how component props from config are merged with local component props.
-   *
-   * When falsy, `style` properties are simply overridden by local props
-   * When truthy, `style` properties are shallow merged.
-   */
-  mergeStyleProps?: boolean;
   children?: React.ReactNode;
 };
 
@@ -42,20 +32,16 @@ export type ComponentConfigProviderProps = {
  * Each component subscribes to only its own config slice, preventing cross-component re-renders.
  * Supports nesting with isolated scopes: a child provider only applies its own config map.
  */
-export const ComponentConfigProvider = ({
-  value,
-  mergeStyleProps,
-  children,
-}: ComponentConfigProviderProps) => {
+export const ComponentConfigProvider = ({ value, children }: ComponentConfigProviderProps) => {
   const storeRef = useRef<ComponentConfigContextValue | null>(null);
 
   if (!storeRef.current) {
     storeRef.current = createStore<ComponentConfigStoreState>(() =>
-      createComponentConfigStoreState(value, mergeStyleProps),
+      createComponentConfigStoreState(value),
     );
   }
 
-  const newState = createComponentConfigStoreState(value, mergeStyleProps);
+  const newState = createComponentConfigStoreState(value);
   storeRef.current.setState(newState, true);
 
   return (
