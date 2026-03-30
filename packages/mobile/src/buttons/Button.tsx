@@ -130,6 +130,13 @@ export const Button = memo(
       height = interactableHeight[compact ? 'compact' : 'regular'],
       accessibilityLabel,
       accessibilityHint,
+      padding,
+      paddingStart,
+      paddingEnd,
+      paddingTop,
+      paddingBottom,
+      paddingX: paddingXProp,
+      paddingY: paddingYProp,
       ...props
     }: ButtonProps,
     ref: React.ForwardedRef<View>,
@@ -213,8 +220,13 @@ export const Button = memo(
           flexWrap="nowrap"
           justifyContent={justifyContent}
           minHeight={height}
-          paddingX={paddingX}
-          paddingY={paddingY}
+          padding={padding}
+          paddingX={paddingXProp ?? paddingX}
+          paddingY={paddingYProp ?? paddingY}
+          paddingTop={paddingTop}
+          paddingBottom={paddingBottom}
+          paddingStart={paddingStart}
+          paddingEnd={paddingEnd}
           style={sizingStyle}
         >
           {loading ? (
