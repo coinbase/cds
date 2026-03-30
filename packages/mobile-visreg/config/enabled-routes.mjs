@@ -1,3 +1,15 @@
+// Routes whose stories open an overlay (modal, alert, tray, drawer, etc.)
+// via an "Open" button. These use a separate sub-flow that taps Open before
+// the screenshot and Cancel after.
+export const overlayRoutes = new Set([
+  'AlertBasic',
+  'DrawerLeft',
+  'DrawerTop',
+  'StickyFooter',
+  'TrayBasic',
+  'ModalBasic',
+]);
+
 export const enabledRoutes = [
   'Accordion',
   'AlertBasic',
@@ -25,12 +37,15 @@ export const enabledRoutes = [
   'ControlGroup',
   'Divider',
   'Dot',
+  'DrawerLeft',
+  'DrawerTop',
   'Group',
   'InputChip',
   'InputStack',
   'Legend',
   'Link',
   'ListCell',
+  'ModalBasic',
   'Pressable',
   'RadioCell',
   'SelectChip',
@@ -38,6 +53,7 @@ export const enabledRoutes = [
   'StepperHorizontal',
   'StepperVertical',
   'StickyFooter',
+  'TrayBasic',
   'Switch',
   'Tabs',
   'Tag',

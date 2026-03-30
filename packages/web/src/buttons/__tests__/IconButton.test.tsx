@@ -139,39 +139,39 @@ describe('IconButton', () => {
     expect(screen.getByTestId('test-test-id')).toBeDefined();
   });
 
-  it('renders Spinner when loading and not Icon', () => {
+  it('renders ProgressCircle when loading and not Icon', () => {
     render(
       <DefaultThemeProvider>
         <IconButton loading name={name} testID="icon-button" />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId('icon-button-spinner')).toBeInTheDocument();
+    expect(screen.getByTestId('icon-button-progress-circle')).toBeInTheDocument();
     expect(screen.queryByTestId(`icon-${name}`)).not.toBeInTheDocument(); // Assuming Icon component adds a testID like this or similar identifiable attribute
   });
 
-  it('renders Spinner with correct size when loading and compact', () => {
+  it('renders ProgressCircle with correct size when loading and compact', () => {
     render(
       <DefaultThemeProvider>
         <IconButton compact loading name={name} testID="icon-button" />
       </DefaultThemeProvider>,
     );
-    const spinner = screen.getByTestId('icon-button-spinner');
-    expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.s}px`);
-    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.s}px`);
+    const progressCircle = screen.getByTestId('icon-button-progress-circle');
+    expect(progressCircle).toBeInTheDocument();
+    expect(progressCircle).toHaveStyle({ '--width': `${defaultTheme.iconSize.s}px` });
+    expect(progressCircle).toHaveStyle({ '--height': `${defaultTheme.iconSize.s}px` });
   });
 
-  it('renders Spinner with correct size when loading and not compact', () => {
+  it('renders ProgressCircle with correct size when loading and not compact', () => {
     render(
       <DefaultThemeProvider>
         <IconButton loading compact={false} name={name} testID="icon-button" />
       </DefaultThemeProvider>,
     );
-    const spinner = screen.getByTestId('icon-button-spinner');
-    expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.m}px`);
-    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.m}px`);
+    const progressCircle = screen.getByTestId('icon-button-progress-circle');
+    expect(progressCircle).toBeInTheDocument();
+    expect(progressCircle).toHaveStyle({ '--width': `${defaultTheme.iconSize.m}px` });
+    expect(progressCircle).toHaveStyle({ '--height': `${defaultTheme.iconSize.m}px` });
   });
 
   it('renders Icon with overridden iconSize', () => {
@@ -186,16 +186,16 @@ describe('IconButton', () => {
     );
   });
 
-  it('renders Spinner with overridden iconSize when loading', () => {
+  it('renders ProgressCircle with overridden iconSize when loading', () => {
     render(
       <DefaultThemeProvider>
         <IconButton loading iconSize="xs" name={name} testID="icon-button" />
       </DefaultThemeProvider>,
     );
 
-    const spinner = screen.getByTestId('icon-button-spinner');
-    expect(spinner).toHaveStyle(`width: ${defaultTheme.iconSize.xs}px`);
-    expect(spinner).toHaveStyle(`height: ${defaultTheme.iconSize.xs}px`);
+    const progressCircle = screen.getByTestId('icon-button-progress-circle');
+    expect(progressCircle).toHaveStyle({ '--width': `${defaultTheme.iconSize.xs}px` });
+    expect(progressCircle).toHaveStyle({ '--height': `${defaultTheme.iconSize.xs}px` });
   });
 
   it('sets data attributes for style variants', () => {

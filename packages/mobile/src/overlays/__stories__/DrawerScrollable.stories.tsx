@@ -19,7 +19,7 @@ type RenderItemProps = {
 };
 
 const SideDrawerScrollableContent = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pin'>) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const setIsVisibleToOn = useCallback(() => setIsVisible(true), []);
   const setIsVisibleToOff = useCallback(() => setIsVisible(false), []);
   const drawerRef = useRef<DrawerRefBaseProps>(null);
@@ -64,6 +64,11 @@ const SideDrawerScrollableContent = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pi
           <Menu onChange={setValue} value={value}>
             <FlatList data={lotsOfOptions} renderItem={renderItem} />
           </Menu>
+          <VStack padding={2}>
+            <Button onPress={handleOptionPress} variant="secondary">
+              Cancel
+            </Button>
+          </VStack>
         </Drawer>
       )}
     </>

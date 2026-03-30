@@ -1,7 +1,7 @@
 {
   "import": "import { ProgressCircle } from '@coinbase/cds-mobile/visualizations/ProgressCircle'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/ProgressCircle.tsx",
-  "description": "A circular visual indicator of completion progress.",
+  "description": "A circular visual indicator of completion progress. Supports both determinate progress (0–100%) and an indeterminate variant for loading states.",
   "relatedComponents": [
     {
       "label": "ProgressBar",

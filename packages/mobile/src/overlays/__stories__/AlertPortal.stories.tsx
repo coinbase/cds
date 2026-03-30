@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useAlert } from '@coinbase/cds-common/overlays/useAlert';
 
 import { Button } from '../../buttons/Button';
@@ -36,12 +36,7 @@ const AlertExample = () => {
     [open, close, handleAction],
   );
 
-  useEffect(() => {
-    showAlert();
-    return () => close();
-  }, [close, showAlert]);
-
-  return <Button onPress={showAlert}>Show Alert</Button>;
+  return <Button onPress={showAlert}>Open</Button>;
 };
 
 const AlertPortalScreen = () => {

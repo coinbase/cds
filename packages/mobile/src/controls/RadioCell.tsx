@@ -27,7 +27,7 @@ export type RadioCellBaseProps<RadioValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<RadioValue>, 'style' | 'children' | 'title'> &
+} & Omit<ControlBaseProps<RadioValue>, 'style' | 'children' | 'title' | 'controlSize' | 'dotSize'> &
   Omit<PressableProps, 'children' | 'noScaleOnPress'>;
 
 export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {

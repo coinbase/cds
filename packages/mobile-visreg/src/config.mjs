@@ -1,4 +1,4 @@
-import { enabledRoutes } from '../config/enabled-routes.mjs';
+import { enabledRoutes, overlayRoutes } from '../config/enabled-routes.mjs';
 
 /**
  * Returns the explicit whitelist of routes to run visreg against.
@@ -6,6 +6,10 @@ import { enabledRoutes } from '../config/enabled-routes.mjs';
  */
 export function getVisregRoutes() {
   return [...enabledRoutes];
+}
+
+export function isOverlayRoute(route) {
+  return overlayRoutes.has(route);
 }
 
 export const defaults = {

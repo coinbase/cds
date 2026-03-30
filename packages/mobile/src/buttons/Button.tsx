@@ -20,6 +20,9 @@ import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
+
+const defaultProgressCircleSize = 24;
 
 export const styles = StyleSheet.create({
   inline: {
@@ -50,6 +53,10 @@ export type ButtonBaseProps = SharedProps &
     disabled?: boolean;
     /** Mark the button as loading and display a spinner. */
     loading?: boolean;
+    /** Size of the loading progress circle in px.
+     * @default 24
+     */
+    progressCircleSize?: number;
     /** Mark the background and border as transparent until interacted with. */
     transparent?: boolean;
     /** Change to block and expand to 100% of parent width. */
@@ -93,6 +100,7 @@ export const Button = memo(
     {
       variant = 'primary',
       loading,
+      progressCircleSize = defaultProgressCircleSize,
       transparent,
       block,
       compact,
@@ -210,7 +218,12 @@ export const Button = memo(
           style={sizingStyle}
         >
           {loading ? (
-            <ActivityIndicator color={theme.color[colorValue]} size="small" />
+            <ProgressCircle
+              indeterminate
+              color={colorValue}
+              size={progressCircleSize}
+              weight="thin"
+            />
           ) : (
             <>
               {start ??

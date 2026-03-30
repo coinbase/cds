@@ -107,6 +107,58 @@ const ProgressBarScreen = () => {
           )}
         </ProgressContainerWithButtons>
       </Example>
+      <Example title="Indeterminate">
+        <ProgressContainerWithButtons>
+          {({ calculateProgress }) => (
+            <HStack flexWrap="wrap" gap={2}>
+              <ProgressCircle
+                indeterminate
+                accessibilityLabel="Loading"
+                color="bgPositive"
+                progress={calculateProgress(0.75)}
+                size={30}
+              />
+              <ProgressCircle
+                indeterminate
+                accessibilityLabel="Loading"
+                color="bgSecondary"
+                progress={calculateProgress(0.75)}
+                size={30}
+              />
+              <ProgressCircle
+                indeterminate
+                accessibilityLabel="Loading"
+                disableAnimateOnMount={false}
+                progress={calculateProgress(0.75)}
+                size={100}
+                weight="thin"
+              />
+              <ProgressCircle
+                indeterminate
+                accessibilityLabel="Loading"
+                disableAnimateOnMount={false}
+                progress={calculateProgress(0.75)}
+                size={100}
+                weight="normal"
+              />
+              <ProgressCircle
+                indeterminate
+                accessibilityLabel="Loading"
+                progress={calculateProgress(0.75)}
+                size={100}
+                weight="semiheavy"
+              />
+              <ProgressCircle
+                indeterminate
+                accessibilityLabel="Loading"
+                progress={calculateProgress(0.75)}
+                size={100}
+                weight="heavy"
+              />
+            </HStack>
+          )}
+        </ProgressContainerWithButtons>
+      </Example>
       <Example title="Heavy">
         <ProgressContainerWithButtons>
           {({ calculateProgress }) => (

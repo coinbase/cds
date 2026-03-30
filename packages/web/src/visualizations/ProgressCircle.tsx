@@ -1,9 +1,8 @@
 import React, { forwardRef, memo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
 import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
-import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgressSize';
+import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
@@ -21,6 +20,8 @@ import {
 const svgCss = css`
   display: block;
   max-width: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
 `;
 
 export type ProgressCircleBaseProps = ProgressBaseProps & {
@@ -45,6 +46,10 @@ export type ProgressCircleBaseProps = ProgressBaseProps & {
    * Optional component to override the default content rendered inside the circle.
    */
   contentNode?: React.ReactNode;
+  /**
+   * Toggle used to show an indeterminate progress circle.
+   */
+  indeterminate?: boolean;
 };
 
 export type ProgressCircleProps = ProgressCircleBaseProps & {
@@ -87,20 +92,33 @@ export type ProgressCircleContentProps = Pick<
 
 type ProgressInnerCircleProps = Pick<
   ProgressCircleBaseProps,
-  'progress' | 'onAnimationEnd' | 'onAnimationStart' | 'disableAnimateOnMount'
+  'progress' | 'onAnimationEnd' | 'onAnimationStart' | 'disableAnimateOnMount' | 'indeterminate'
 > &
-  Required<Pick<ProgressCircleBaseProps, 'size' | 'weight' | 'color'>> & {
+  Required<Pick<ProgressCircleBaseProps, 'size' | 'color'>> & {
     visuallyDisabled?: boolean;
     style?: React.CSSProperties;
     className?: string;
+    strokeWidth: number;
   };
+
+const indeterminateProgressCircleCss = css`
+  animation: spin 1000ms linear infinite;
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
 
 const ProgressCircleInner = memo(
   ({
+    strokeWidth,
     size,
-    progress,
+    progress = 0,
     color,
-    weight,
     visuallyDisabled,
     style,
     className,
@@ -108,12 +126,9 @@ const ProgressCircleInner = memo(
     onAnimationStart,
     disableAnimateOnMount,
   }: ProgressInnerCircleProps) => {
-    const strokeWidth = useProgressSize(weight);
     const circleRef = useRef<SVGCircleElement>(null);
 
-    const circumference = getCircumference(getRadius(size, strokeWidth));
-
-    const progressOffset = (1 - progress) * circumference;
+    const progressOffset = 1 - progress;
 
     const motionProps = useMotionProps({
       style: {
@@ -125,7 +140,7 @@ const ProgressCircleInner = memo(
       },
       transition: animateProgressBaseSpec,
       initial: {
-        strokeDashoffset: disableAnimateOnMount ? progressOffset : circumference,
+        strokeDashoffset: disableAnimateOnMount ? progressOffset : 1,
       },
     });
 
@@ -133,7 +148,8 @@ const ProgressCircleInner = memo(
       <motion.circle
         ref={circleRef}
         data-testid="cds-progress-circle-inner"
-        strokeDasharray={circumference}
+        pathLength={1}
+        strokeDasharray={1}
         strokeLinecap="round"
         {...motionProps}
         {...getProgressCircleParams({
@@ -153,16 +169,17 @@ export const ProgressCircle = memo(
   forwardRef(
     (
       {
+        indeterminate,
         weight = 'normal',
-        progress,
-        color = 'bgPrimary',
+        progress = indeterminate ? 0.75 : 0,
+        color = indeterminate ? 'fgMuted' : 'bgPrimary',
         disabled,
-        disableAnimateOnMount,
+        disableAnimateOnMount = indeterminate ? true : false,
         testID,
         hideContent,
         hideText,
         size,
-        accessibilityLabel,
+        accessibilityLabel = indeterminate ? 'Loading' : undefined,
         contentNode,
         style,
         styles,
@@ -173,39 +190,42 @@ export const ProgressCircle = memo(
       }: ProgressCircleProps,
       forwardedRef: React.ForwardedRef<HTMLDivElement>,
     ) => {
-      const strokeWidth = useProgressSize(weight);
-
       const visSize = size ?? '100%';
+      const strokeWidth = getProgressSize(weight);
+
       return (
         <VisualizationContainer height={visSize} width={visSize}>
-          {({ width, height, circleSize }: VisualizationContainerDimension) => (
-            <Box
-              ref={forwardedRef}
-              accessibilityLabel={accessibilityLabel}
-              alignItems="center"
-              aria-valuemax={100}
-              aria-valuemin={0}
-              aria-valuenow={Math.round(progress * 100)}
-              className={cx(className, classNames?.root)}
-              height={height}
-              justifyContent="center"
-              role="progressbar"
-              style={{ ...style, ...styles?.root }}
-              testID={testID}
-              title={accessibilityLabel}
-              width={width}
-            >
+          {({ width, height, circleSize }: VisualizationContainerDimension) => {
+            return (
               <Box
-                flexGrow={0}
-                flexShrink={0}
-                height={circleSize}
+                ref={forwardedRef}
+                accessibilityLabel={accessibilityLabel}
+                alignItems="center"
+                {...(indeterminate
+                  ? {}
+                  : {
+                      'aria-valuemax': 100,
+                      'aria-valuemin': 0,
+                      'aria-valuenow': Math.round(progress * 100),
+                    })}
+                className={cx(className, classNames?.root)}
+                height={height}
+                justifyContent="center"
                 position="relative"
-                width={circleSize}
+                role="progressbar"
+                style={{ ...style, ...styles?.root }}
+                testID={testID}
+                title={accessibilityLabel}
+                width={width}
               >
                 <svg
                   key={circleSize}
                   aria-hidden
-                  className={cx(svgCss, classNames?.svg)}
+                  className={cx(
+                    svgCss,
+                    classNames?.svg,
+                    indeterminate && indeterminateProgressCircleCss,
+                  )}
                   height={circleSize}
                   style={styles?.svg}
                   width={circleSize}
@@ -223,13 +243,14 @@ export const ProgressCircle = memo(
                     className={classNames?.progress}
                     color={color}
                     disableAnimateOnMount={disableAnimateOnMount}
+                    indeterminate={indeterminate}
                     onAnimationEnd={onAnimationEnd}
                     onAnimationStart={onAnimationStart}
                     progress={progress}
                     size={circleSize}
+                    strokeWidth={strokeWidth}
                     style={styles?.progress}
                     visuallyDisabled={disabled}
-                    weight={weight}
                   />
                 </svg>
                 {!hideText && !hideContent && (
@@ -248,19 +269,20 @@ export const ProgressCircle = memo(
                       overflow="clip"
                       width="100%"
                     >
-                      {contentNode ?? (
-                        <DefaultProgressCircleContent
-                          disableAnimateOnMount={disableAnimateOnMount}
-                          disabled={disabled}
-                          progress={progress}
-                        />
-                      )}
+                      {contentNode ??
+                        (!indeterminate && (
+                          <DefaultProgressCircleContent
+                            disableAnimateOnMount={disableAnimateOnMount}
+                            disabled={disabled}
+                            progress={progress}
+                          />
+                        ))}
                     </Box>
                   </Box>
                 )}
               </Box>
-            </Box>
-          )}
+            );
+          }}
         </VisualizationContainer>
       );
     },

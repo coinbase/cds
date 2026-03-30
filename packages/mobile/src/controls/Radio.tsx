@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
 export type RadioBaseProps<RadioValue extends string> = Omit<
   ControlBaseProps<RadioValue>,
-  'controlColor'
+  'controlColor' | 'controlSize' | 'dotSize'
 > & {
   /**
    * Sets the checked/active color of the radio.
@@ -30,14 +30,32 @@ export type RadioBaseProps<RadioValue extends string> = Omit<
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
+  /**
+   * Sets the outer radio control size in pixels.
+   * @default theme.controlSize.radioSize
+   */
+  controlSize?: number;
+  /**
+   * Sets the inner dot size in pixels.
+   * @default 2/3 of controlSize
+   */
+  dotSize?: number;
 };
 
 export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
-const DotSvg = ({ color = 'black', width = 20 }: { color?: ColorValue; width?: number }) => {
+const DotSvg = ({
+  color = 'black',
+  width = 20,
+  dotSize = (2 * width) / 3,
+}: {
+  color?: ColorValue;
+  width?: number;
+  dotSize?: number;
+}) => {
   return (
     <Svg fill="none" height={width} viewBox={`0 0 ${width} ${width}`} width={width}>
-      <Circle cx="50%" cy="50%" fill={color} r={width / 3} />
+      <Circle cx="50%" cy="50%" fill={color} r={dotSize / 2} />
     </Svg>
   );
 };
@@ -53,11 +71,13 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   animatedScaleValue,
   animatedOpacityValue,
   controlColor = 'bgPrimary',
+  controlSize,
+  dotSize,
   borderColor = checked ? controlColor : 'bgLineHeavy',
   testID,
 }) => {
   const theme = useTheme();
-  const radioSize = theme.controlSize.radioSize;
+  const radioSize = controlSize ?? theme.controlSize.radioSize;
 
   return (
     <Interactable
@@ -81,7 +101,7 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
         style={{ transform: [{ scale: animatedScaleValue }], opacity: animatedOpacityValue }}
       >
         <Box testID="radio-icon">
-          <DotSvg color={theme.color[controlColor]} width={radioSize} />
+          <DotSvg color={theme.color[controlColor]} dotSize={dotSize} width={radioSize} />
         </Box>
       </Animated.View>
     </Interactable>
@@ -96,7 +116,6 @@ const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
     typeof children === 'string' && accessibilityLabel === undefined
       ? children
       : accessibilityLabel;
-
   return (
     <Control<RadioValue>
       {...props}
