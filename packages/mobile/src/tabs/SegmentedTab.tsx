@@ -33,12 +33,13 @@ export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabI
      * @default foreground
      */
     color?: ThemeVars.Color;
-    /** Callback that is fired when the SegmentedTab is pressed. */
-    onPress?: (id: TabId, event: GestureResponderEvent) => void;
-    style?: StyleProp<ViewStyle>;
   };
 
-export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId>;
+export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {
+  /** Callback that is fired when the SegmentedTab is pressed. */
+  onPress?: (id: TabId, event: GestureResponderEvent) => void;
+  style?: StyleProp<ViewStyle>;
+};
 
 const AnimatedTextHeadline = Animated.createAnimatedComponent(Text);
 
@@ -52,7 +53,7 @@ const SegmentedTabComponent = memo(
       _props: SegmentedTabProps<TabId>,
       ref: React.ForwardedRef<View>,
     ) => {
-      const mergedProps = useComponentConfig('SegmentedTab', _props) as SegmentedTabProps<TabId>;
+      const mergedProps = useComponentConfig('SegmentedTab', _props);
       const {
         id,
         label,

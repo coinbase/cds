@@ -54,11 +54,12 @@ export type SegmentedTabBaseProps<TabId extends string = string> = PressableBase
      * @default foreground
      */
     color?: ThemeVars.Color;
-    /** Callback that is fired when the SegmentedTab is clicked. */
-    onClick?: (id: TabId, event: React.MouseEvent) => void;
   };
 
-export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId>;
+export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {
+  /** Callback that is fired when the SegmentedTab is clicked. */
+  onClick?: (id: TabId, event: React.MouseEvent) => void;
+};
 
 const disabledCss = css`
   opacity: 0.5;
@@ -74,7 +75,7 @@ const SegmentedTabComponent = memo(
       _props: SegmentedTabProps<TabId>,
       ref: React.ForwardedRef<HTMLButtonElement>,
     ) => {
-      const mergedProps = useComponentConfig('SegmentedTab', _props) as SegmentedTabProps<TabId>;
+      const mergedProps = useComponentConfig('SegmentedTab', _props);
       const {
         id,
         label,

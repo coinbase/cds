@@ -5,11 +5,18 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { SegmentedTab } from './SegmentedTab';
 import { SegmentedTabsActiveIndicator } from './SegmentedTabsActiveIndicator';
-import { Tabs, type TabsProps } from './Tabs';
+import { Tabs, type TabsBaseProps, type TabsProps } from './Tabs';
 
 export type SegmentedTabsBaseProps<TabId extends string = string> = Partial<
-  Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
+  Pick<TabsBaseProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
 > &
+  Omit<
+    TabsBaseProps<TabId>,
+    'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles' | 'classNames'
+  >;
+
+export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBaseProps<TabId> &
+  Partial<Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>> &
   Omit<
     TabsProps<TabId>,
     'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles' | 'classNames'
@@ -33,8 +40,6 @@ export type SegmentedTabsBaseProps<TabId extends string = string> = Partial<
       activeIndicator?: string;
     };
   };
-
-export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBaseProps<TabId>;
 
 type SegmentedTabsFC = <TabId extends string>(
   props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },

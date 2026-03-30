@@ -5,11 +5,18 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { SegmentedTab } from './SegmentedTab';
 import { SegmentedTabsActiveIndicator } from './SegmentedTabsActiveIndicator';
-import { Tabs, type TabsProps } from './Tabs';
+import { Tabs, type TabsBaseProps, type TabsProps } from './Tabs';
+
+// We do Partial/Pick to allow TabComponent and TabsActiveIndicatorComponent to be optional
+// We grab 'tabs' from the Omit allowing it to stay required
 
 export type SegmentedTabsBaseProps<TabId extends string = string> = Partial<
-  Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
+  Pick<TabsBaseProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>
 > &
+  Omit<TabsBaseProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles'>;
+
+export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBaseProps<TabId> &
+  Partial<Pick<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent'>> &
   Omit<TabsProps<TabId>, 'TabComponent' | 'TabsActiveIndicatorComponent' | 'styles'> & {
     /** Custom styles for individual elements of the SegmentedTabs component */
     styles?: {
@@ -21,8 +28,6 @@ export type SegmentedTabsBaseProps<TabId extends string = string> = Partial<
       activeIndicator?: StyleProp<ViewStyle>;
     };
   };
-
-export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBaseProps<TabId>;
 
 type SegmentedTabsFC = <TabId extends string = string>(
   props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<View> },
