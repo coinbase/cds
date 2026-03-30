@@ -7,9 +7,9 @@ import {
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useTheme } from '../../hooks/useTheme';
+import type { BoxBaseProps } from '../../layout';
 import type { VStackProps } from '../../layout/VStack';
 import { VStack } from '../../layout/VStack';
-import type { BoxBaseProps } from '../../layout';
 
 const overlayContentContextValue: OverlayContentContextValue = {
   isOverlay: true,

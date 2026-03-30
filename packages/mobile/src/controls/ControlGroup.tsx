@@ -4,7 +4,7 @@ import type { SharedProps } from '@coinbase/cds-common';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Group, type BoxBaseProps, type GroupBaseProps, type GroupProps } from '../layout';
+import { type BoxBaseProps, Group, type GroupBaseProps, type GroupProps } from '../layout';
 
 export type ControlGroupOption<ControlComponentProps> = Omit<
   ControlComponentProps,

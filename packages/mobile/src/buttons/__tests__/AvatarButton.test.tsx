@@ -1,6 +1,6 @@
 import { Animated, Pressable } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import type { ComponentConfig } from '../../core/componentConfig';
 import { ComponentConfigProvider } from '../../system/ComponentConfigProvider';

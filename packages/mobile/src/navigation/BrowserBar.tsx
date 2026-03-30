@@ -2,7 +2,7 @@ import React, { createContext, memo, useContext, useEffect, useState } from 'rea
 import type { SharedProps } from '@coinbase/cds-common';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { HStack, type BoxBaseProps, type HStackProps } from '../layout';
+import { type BoxBaseProps, HStack, type HStackProps } from '../layout';
 
 import { NavBarEnd, NavBarStart } from './TopNavBar';
 

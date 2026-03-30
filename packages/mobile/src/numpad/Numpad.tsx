@@ -5,7 +5,7 @@ import { type SharedProps } from '@coinbase/cds-common';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons';
-import { HStack, VStack, type BoxBaseProps, type VStackProps } from '../layout';
+import { type BoxBaseProps, HStack, VStack, type VStackProps } from '../layout';
 import { type HapticFeedbackType, Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
