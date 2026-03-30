@@ -1,46 +1,44 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
+import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';
 
-import { InputIconButton } from '../../../../controls/InputIconButton';
-import { TextInput } from '../../../../controls/TextInput';
-import { VStack } from '../../../../layout/VStack';
+import { InputIconButton } from '../../../../controls';
 
 export const TextInputExample = memo(() => {
-  const [value, setValue] = useState('12.34');
+  const [value, setValue] = useState('');
 
   return (
-    <VStack gap={1}>
+    <>
       <TextInput
-        end={<InputIconButton accessibilityLabel="Clear input foregroundMuted" name="close" />}
-        label="Amount (foregroundMuted)"
+        label="Label"
         onChangeText={setValue}
-        placeholder="0.00"
+        placeholder="Outside label"
+        style={{ flexGrow: 1 }}
         value={value}
-        variant="foregroundMuted"
       />
       <TextInput
-        end={<InputIconButton accessibilityLabel="Clear input primary" name="close" />}
-        label="Amount (primary)"
+        label="Label"
+        labelVariant="inside"
         onChangeText={setValue}
-        placeholder="0.00"
+        placeholder="Default input"
+        style={{ flexGrow: 1 }}
         value={value}
-        variant="primary"
       />
       <TextInput
-        end={<InputIconButton accessibilityLabel="Clear input positive" name="close" />}
-        label="Amount (positive)"
+        compact
+        label="Label"
         onChangeText={setValue}
-        placeholder="0.00"
+        placeholder="Compact input"
+        style={{ flexGrow: 1 }}
         value={value}
-        variant="positive"
       />
       <TextInput
-        end={<InputIconButton accessibilityLabel="Clear input negative" name="close" />}
-        label="Amount (negative)"
+        end={<InputIconButton accessibilityLabel="Clear input" name="close" />}
+        label="Label"
+        labelVariant="inside"
         onChangeText={setValue}
-        placeholder="0.00"
+        placeholder="Input with icon button"
         value={value}
-        variant="negative"
       />
-    </VStack>
+    </>
   );
 });

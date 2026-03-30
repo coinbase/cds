@@ -3,9 +3,10 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 import type { ComponentConfig } from '../../core/componentConfig';
 
 export const customComponentConfig: ComponentConfig = {
-  /**
-   * Advanced parity gap: can't customize loading spinner
-   */
+  Banner: {
+    borderRadius: 0,
+  },
+
   Button: (props) => ({
     borderRadius: 200,
     height: props.compact ? 24 : 32,
@@ -13,9 +14,6 @@ export const customComponentConfig: ComponentConfig = {
     progressCircleSize: props.compact ? 16 : 24,
   }),
 
-  /**
-   * Advanced parity gap: can't customize loading spinner
-   */
   IconButton: (props) => {
     const isCompact = props.compact ?? true;
     return {
@@ -59,9 +57,6 @@ export const customComponentConfig: ComponentConfig = {
     background: 'bgSecondary',
   },
 
-  /**
-   * Advanced parity gap: we don't suport customizing the inner circle size
-   */
   Radio: (props) => ({
     background: 'bg',
     borderWidth: props.checked ? 200 : 100,

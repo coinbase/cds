@@ -2,10 +2,16 @@ import type { ComponentConfig } from '../../../core/componentConfig';
 import { Text } from '../../../typography/Text';
 
 export const customComponentConfig: ComponentConfig = {
+  Banner: {
+    borderRadius: 0,
+  },
+
   Button: (props) => ({
     borderRadius: 200,
     height: props.compact ? 24 : 32,
     font: props.compact ? 'label1' : 'headline',
+    progressCircleSize: props.compact ? 12 : 16,
+    paddingY: 0,
   }),
 
   IconButton: (props) => {
@@ -52,9 +58,12 @@ export const customComponentConfig: ComponentConfig = {
     borderWidth: props.checked ? 200 : 100,
     borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
     controlColor: 'bgPrimary',
-    dotSize: 8,
+    dotSize: 20 / 3,
   }),
 
+  /**
+   * Advanced parity gap: we use 4px border radius instead of 2px border radius, could be fixed by adding borderRadius of 50
+   */
   Checkbox: (props) => ({
     borderWidth: 200,
     controlColor: 'fg',
@@ -84,6 +93,7 @@ export const customComponentConfig: ComponentConfig = {
 
   SegmentedTab: {
     activeColor: 'fg',
+    borderRadius: 200,
     font: 'headline',
   },
 
@@ -99,13 +109,24 @@ export const customComponentConfig: ComponentConfig = {
     gap: 1,
   },
 
+  ListCell: (props) => {
+    const spacingVariant = props.spacingVariant ?? (props.compact ? 'compact' : 'normal');
+    return spacingVariant === 'normal' ? { minHeight: 36 } : {};
+  },
+
   SearchInput: (props) => ({
     borderRadius: 200,
     height: props.compact ? 24 : 32,
   }),
 
-  Select: {
+  Select: (props) => ({
     bordered: false,
     variant: 'foregroundMuted',
-  },
+    inputBackground: 'bgAlternate',
+    focusedBorderWidth: 100,
+    height: props.compact ? 24 : props.labelVariant === 'inside' ? 40 : 32,
+    font: props.compact ? 'label2' : 'body',
+    labelColor: 'fgMuted',
+    labelFont: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
+  }),
 };

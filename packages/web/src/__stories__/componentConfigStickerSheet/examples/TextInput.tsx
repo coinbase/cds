@@ -1,6 +1,8 @@
 import { memo, useState } from 'react';
 import { TextInput } from '@coinbase/cds-web/controls/TextInput';
 
+import { InputIconButton } from '../../../controls/InputIconButton';
+
 export const TextInputExample = memo(() => {
   const [value, setValue] = useState('');
 
@@ -27,6 +29,14 @@ export const TextInputExample = memo(() => {
         onChange={(e) => setValue(e.target.value)}
         placeholder="Compact input"
         style={{ flexGrow: 1 }}
+        value={value}
+      />
+      <TextInput
+        end={<InputIconButton accessibilityLabel="Clear input" name="close" />}
+        label="Label"
+        labelVariant="inside"
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Input with icon button"
         value={value}
       />
     </>

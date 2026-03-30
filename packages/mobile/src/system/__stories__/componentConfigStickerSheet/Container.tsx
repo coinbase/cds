@@ -8,43 +8,11 @@ type ContainerProps = React.ComponentProps<typeof VStack> & {
 };
 
 export const Container = memo(
-  ({
-    background = 'bg',
-    alignItems = 'center',
-    alignSelf = 'stretch',
-    borderRadius = 200,
-    flexDirection = 'row',
-    flexGrow = 0,
-    flexShrink = 0,
-    flexWrap = 'wrap',
-    gap = 2,
-    justifyContent = 'center',
-    padding = 2,
-    position = 'relative',
-    title,
-    width = '100%',
-    children,
-    ...props
-  }: ContainerProps) => {
+  ({ paddingX = 2, gap = 2, title, children, ...props }: ContainerProps) => {
     return (
-      <VStack
-        alignItems={alignItems}
-        alignSelf={alignSelf}
-        background={background}
-        borderRadius={borderRadius}
-        flexDirection={flexDirection}
-        flexGrow={flexGrow}
-        flexShrink={flexShrink}
-        flexWrap={flexWrap}
-        gap={gap}
-        justifyContent={justifyContent}
-        padding={padding}
-        position={position}
-        width={width}
-        {...props}
-      >
+      <VStack gap={gap} maxWidth="100%" paddingX={paddingX} {...props}>
         {title && (
-          <Text font="label1" width="100%">
+          <Text font="title3" width="100%">
             {title}
           </Text>
         )}

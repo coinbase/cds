@@ -1,26 +1,16 @@
 import { memo } from 'react';
-import {
-  assets,
-  ethBackground,
-  floatingAssetCardCustomImage,
-} from '@coinbase/cds-common/internal/data/assets';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
 import { Button } from '@coinbase/cds-web/buttons/Button';
 import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
-import {
-  FloatingAssetCard,
-  type FloatingAssetCardProps,
-} from '@coinbase/cds-web/cards/FloatingAssetCard';
 import { MessagingCard } from '@coinbase/cds-web/cards/MessagingCard';
 import { ListCell } from '@coinbase/cds-web/cells/ListCell';
 import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { InputChip } from '@coinbase/cds-web/chips/InputChip';
 import { MediaChip } from '@coinbase/cds-web/chips/MediaChip';
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
-import { InputIconButton } from '@coinbase/cds-web/controls/InputIconButton';
-import { TextInput } from '@coinbase/cds-web/controls/TextInput';
 import { DotCount } from '@coinbase/cds-web/dots/DotCount';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram';
@@ -29,7 +19,6 @@ import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Spinner } from '@coinbase/cds-web/loaders/Spinner';
 import { Avatar } from '@coinbase/cds-web/media/Avatar';
 import { RemoteImage } from '@coinbase/cds-web/media/RemoteImage';
-import { Tooltip } from '@coinbase/cds-web/overlays';
 import { Tag } from '@coinbase/cds-web/tag/Tag';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import { Text } from '@coinbase/cds-web/typography/Text';
@@ -55,45 +44,6 @@ import { Container } from './Container';
 import { bannerVariants, buttonVariants, tagColorSchemes } from './themeVars';
 
 const SHOW_DEBUG_BG_COLORS = false;
-
-const floatingAssetCards: FloatingAssetCardProps[] = [
-  {
-    title: '#7560',
-    description: (
-      <Text as="p" color="fgPositive" font="label2" numberOfLines={2}>
-        &#x2197;14.42%
-      </Text>
-    ),
-    subtitle: 'Bored Ape',
-    onClick: () => {},
-    media: (
-      <RemoteImage
-        height={'100%'}
-        source={floatingAssetCardCustomImage}
-        style={{ objectFit: 'cover', cursor: 'pointer' }}
-        width="100%"
-      />
-    ),
-  },
-  {
-    title: '#2015',
-    description: (
-      <Text as="p" color="fgNegative" font="label2" numberOfLines={2}>
-        &#x2198;6.37%
-      </Text>
-    ),
-    subtitle: 'Pudgy Penguins',
-    onClick: () => {},
-    media: (
-      <RemoteImage
-        height={'100%'}
-        source={ethBackground}
-        style={{ objectFit: 'cover', cursor: 'pointer' }}
-        width="100%"
-      />
-    ),
-  },
-];
 
 const leftColumnWidth = 420;
 const rightColumnWidth = 600;
@@ -219,13 +169,6 @@ export const StickerSheet = memo(() => {
             <ToastExample />
           </Container>
 
-          <Container gap={3} title="FloatingAssetCard / Tooltip">
-            {floatingAssetCards.map((card, index) => (
-              <Tooltip key={index} content={`View details for ${card.subtitle}`}>
-                <FloatingAssetCard {...card} />
-              </Tooltip>
-            ))}
-          </Container>
           <Container title="TableHeader / TableCell">
             <TableExample />
           </Container>
@@ -330,12 +273,6 @@ export const StickerSheet = memo(() => {
 
               <Container title="TextInput / InputIconButton">
                 <TextInputExample />
-                <TextInput
-                  end={<InputIconButton accessibilityLabel="Clear input" name="close" />}
-                  label="Label"
-                  labelVariant="inside"
-                  placeholder="Input with icon button"
-                />
               </Container>
             </VStack>
           </HStack>

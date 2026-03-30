@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
+import { HStack } from '../../../../layout';
 import { SegmentedTabs } from '../../../../tabs/SegmentedTabs';
 
 import { segmentedTabs } from './constants';
