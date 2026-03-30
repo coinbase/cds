@@ -47,8 +47,8 @@ export type SelectProps = SelectBaseProps;
  * @deprecationExpectedRemoval v9
  */
 export const Select = memo(
-  forwardRef<HTMLButtonElement, SelectProps>(function Select(_props, ref) {
-    const {
+  forwardRef<HTMLButtonElement, SelectProps>(function Select(
+    {
       children,
       value,
       valueLabel,
@@ -60,7 +60,9 @@ export const Select = memo(
       onChange,
       disablePortal,
       ...props
-    } = _props;
+    },
+    ref,
+  ) {
     const [visible, setVisible] = useState(false);
     const [menuHasClosed, setMenuHasClosed] = useState(false);
     const focusedVariant = useInputVariant(visible, variant);
