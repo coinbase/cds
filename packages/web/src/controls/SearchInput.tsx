@@ -153,6 +153,7 @@ export const SearchInput = memo(
             </Box>
           ))
         }
+        height={height}
         onChange={handleOnChange}
         onKeyUp={handleOnKeyUp}
         role="searchbox"
@@ -169,7 +170,6 @@ export const SearchInput = memo(
         type="search"
         value={value}
         variant="secondary"
-        height={height}
         {...props}
       />
     );

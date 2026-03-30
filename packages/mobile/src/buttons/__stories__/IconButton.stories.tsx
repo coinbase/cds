@@ -228,34 +228,34 @@ const IconButtonScreen = () => {
       <Example inline title="Small">
         <IconButton
           accessibilityLabel={accessibilityLabel}
+          height={32}
           name={iconName}
           onPress={onPress}
-          height={32}
           width={32}
         />
         <IconButton
-          accessibilityLabel={accessibilityLabel}
-          name={iconName}
-          onPress={onPress}
           loading
+          accessibilityLabel={accessibilityLabel}
           height={32}
+          name={iconName}
+          onPress={onPress}
           width={32}
         />
         <IconButton
+          compact
           accessibilityLabel={accessibilityLabel}
+          height={24}
           name={iconName}
           onPress={onPress}
-          compact
-          height={24}
           width={24}
         />
         <IconButton
+          compact
+          loading
           accessibilityLabel={accessibilityLabel}
+          height={24}
           name={iconName}
           onPress={onPress}
-          loading
-          compact
-          height={24}
           width={24}
         />
       </Example>

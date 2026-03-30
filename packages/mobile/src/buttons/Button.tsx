@@ -205,6 +205,7 @@ export const Button = memo(
         borderRadius={borderRadius}
         borderWidth={borderWidth}
         feedback={feedback}
+        height={height}
         loading={loading}
         marginEnd={marginEnd}
         marginStart={marginStart}
@@ -212,7 +213,6 @@ export const Button = memo(
         style={pressableStyle}
         transparentWhileInactive={transparent}
         wrapperStyles={wrapperStyles}
-        height={height}
         {...props}
       >
         <HStack
@@ -221,12 +221,12 @@ export const Button = memo(
           justifyContent={justifyContent}
           minHeight={height}
           padding={padding}
+          paddingBottom={paddingBottom}
+          paddingEnd={paddingEnd}
+          paddingStart={paddingStart}
+          paddingTop={paddingTop}
           paddingX={paddingXProp ?? paddingX}
           paddingY={paddingYProp ?? paddingY}
-          paddingTop={paddingTop}
-          paddingBottom={paddingBottom}
-          paddingStart={paddingStart}
-          paddingEnd={paddingEnd}
           style={sizingStyle}
         >
           {loading ? (

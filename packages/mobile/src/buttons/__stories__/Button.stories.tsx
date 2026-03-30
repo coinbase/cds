@@ -115,7 +115,7 @@ const ButtonScreen = () => {
           <Button height={32} paddingY={0}>
             I am a button
           </Button>
-          <Button height={32} loading paddingY={0}>
+          <Button loading height={32} paddingY={0}>
             I am a button
           </Button>
         </HStack>
@@ -123,7 +123,7 @@ const ButtonScreen = () => {
           <Button compact height={24} paddingY={0} progressCircleSize={16}>
             I am a button
           </Button>
-          <Button compact height={24} paddingY={0} loading progressCircleSize={16}>
+          <Button compact loading height={24} paddingY={0} progressCircleSize={16}>
             I am a button
           </Button>
         </HStack>
