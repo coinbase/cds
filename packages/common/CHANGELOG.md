@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Deprecate Card-related types. [[#562](https://github.com/coinbase/cds/pull/562)]
+
 ## 8.60.0 (3/29/2026 PST)
 
 #### 🚀 Updates

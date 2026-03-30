@@ -20,6 +20,10 @@ export type CardBaseProps = Pick<SharedAccessibilityProps, 'id'> &
 export type CardProps = CardBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
+/**
+ * @deprecated Use ContentCard instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const Card = memo<CardProps>(function Card({
   children,
   background = 'bg',

@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 
 #### 📘 Misc
 
+- Deprecate Card and its sub-components. [[#562](https://github.com/coinbase/cds/pull/562)]
+
+#### 📘 Misc
+
 - Chore: deprecate CardGroup. [[#560](https://github.com/coinbase/cds/pull/560)]
 
 ## 8.60.0 (3/29/2026 PST)
