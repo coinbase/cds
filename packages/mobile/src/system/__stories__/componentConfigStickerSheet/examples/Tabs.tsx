@@ -8,6 +8,10 @@ export const TabsExample = memo(() => {
   const [value, setValue] = useState<string>(tabNavigationTabs[0].id);
 
   return (
-    <TabNavigation onChange={setValue} tabs={tabNavigationTabs.map((tab) => ({ ...tab }))} value={value} />
+    <TabNavigation
+      onChange={setValue}
+      tabs={tabNavigationTabs.map((tab) => ({ ...tab }))}
+      value={value}
+    />
   );
 });
