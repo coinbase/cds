@@ -1,6 +1,6 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
+import type { SelectBaseProps } from '../alpha';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
-import type { AlphaSelectBaseProps } from '../alpha/select/Select';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
 import type { BannerBaseProps } from '../banner/Banner';
@@ -163,7 +163,7 @@ export type ComponentConfig = {
   SearchInput?: ConfigResolver<SearchInputBaseProps>;
   SegmentedTab?: ConfigResolver<SegmentedTabBaseProps>;
   SegmentedTabs?: ConfigResolver<SegmentedTabsBaseProps>;
-  Select?: ConfigResolver<AlphaSelectBaseProps>;
+  Select?: ConfigResolver<SelectBaseProps>;
   SelectChip?: ConfigResolver<SelectChipBaseProps>;
   SelectOption?: ConfigResolver<SelectOptionBaseProps>;
   SlideButton?: ConfigResolver<SlideButtonBaseProps>;

@@ -48,18 +48,13 @@ export type {
 
 export { isSelectOptionGroup };
 
-export type AlphaSelectBaseProps = SelectBaseProps;
-
 const SelectBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       _props: SelectProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
-      const mergedProps = useComponentConfig(
-        'Select',
-        _props as AlphaSelectBaseProps,
-      ) as SelectProps<Type, SelectOptionValue>;
+      const mergedProps = useComponentConfig('Select', _props);
       const {
         value,
         type = 'single' as Type,

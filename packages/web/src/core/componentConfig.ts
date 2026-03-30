@@ -1,6 +1,5 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
-import type { AlphaSelectBaseProps } from '../alpha/select/Select';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
 import type { BannerBaseProps } from '../banner/Banner';
@@ -101,6 +100,7 @@ import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/Prog
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
 import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
 import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
+import type { SelectBaseProps } from '../alpha';
 
 /**
  * Config resolver that supports either static partial props object
@@ -192,7 +192,7 @@ export type ComponentConfig = {
   SegmentedTab?: ConfigResolver<SegmentedTabBaseProps>;
   SegmentedTabs?: ConfigResolver<SegmentedTabsBaseProps>;
   SectionHeader?: ConfigResolver<SectionHeaderBaseProps>;
-  Select?: ConfigResolver<AlphaSelectBaseProps>;
+  Select?: ConfigResolver<SelectBaseProps>;
   SelectChip?: ConfigResolver<SelectChipBaseProps>;
   SelectOption?: ConfigResolver<SelectOptionBaseProps>;
   Switch?: ConfigResolver<SwitchBaseProps>;

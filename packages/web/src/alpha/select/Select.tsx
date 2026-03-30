@@ -46,8 +46,6 @@ export type {
 // Re-export the type guard function
 export { isSelectOptionGroup } from './types';
 
-export type AlphaSelectBaseProps = SelectBaseProps;
-
 export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
   dropdown: 'listbox',
   option: 'option',
@@ -71,10 +69,7 @@ const SelectBase = memo(
       _props: SelectProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
-      const mergedProps = useComponentConfig(
-        'Select',
-        _props as AlphaSelectBaseProps,
-      ) as SelectProps<Type, SelectOptionValue>;
+      const mergedProps = useComponentConfig('Select', _props);
       const {
         value,
         type = 'single' as Type,
