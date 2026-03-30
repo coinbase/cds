@@ -178,13 +178,14 @@ export const ListCell = memo(function ListCell({
   spacingVariant = compact ? 'compact' : 'normal',
   style,
   styles,
-  minHeight = spacingVariant === 'compact'
-    ? compactListHeight
-    : spacingVariant === 'normal'
-      ? listHeight
-      : undefined,
   ...props
 }: ListCellProps) {
+  const minHeight =
+    spacingVariant === 'compact'
+      ? compactListHeight
+      : spacingVariant === 'normal'
+        ? listHeight
+        : undefined;
   const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
   const hasDetails = Boolean(detail || subdetail || detailNode || subdetailNode);
 

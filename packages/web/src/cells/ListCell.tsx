@@ -234,16 +234,18 @@ export const ListCell: ListCellComponent = memo(
         style,
         subtitle,
         subtitleNode,
-        minHeight = spacingVariant === 'compact'
-          ? compactListHeight
-          : spacingVariant === 'normal'
-            ? listHeight
-            : undefined,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
+
+      const minHeight =
+        spacingVariant === 'compact'
+          ? compactListHeight
+          : spacingVariant === 'normal'
+            ? listHeight
+            : undefined;
 
       const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
 
