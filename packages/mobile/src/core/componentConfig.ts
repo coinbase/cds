@@ -66,7 +66,6 @@ import type { PageHeaderBaseProps } from '../page/PageHeader';
 import type { StepperBaseProps } from '../stepper/Stepper';
 import type { SegmentedTabBaseProps } from '../tabs/SegmentedTab';
 import type { SegmentedTabsBaseProps } from '../tabs/SegmentedTabs';
-import type { TabIndicatorBaseProps } from '../tabs/TabIndicator';
 import type { TabLabelBaseProps } from '../tabs/TabLabel';
 import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
@@ -158,7 +157,6 @@ export type ComponentConfig = {
   SlideButton?: ConfigResolver<SlideButtonBaseProps>;
   Stepper?: ConfigResolver<StepperBaseProps>;
   Switch?: ConfigResolver<SwitchBaseProps<string>>;
-  TabIndicator?: ConfigResolver<TabIndicatorBaseProps>;
   TabLabel?: ConfigResolver<TabLabelBaseProps>;
   Tabs?: ConfigResolver<TabsBaseProps>;
   Tag?: ConfigResolver<TagBaseProps>;
