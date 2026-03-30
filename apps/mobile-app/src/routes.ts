@@ -187,6 +187,17 @@ export const routes = [
       require('@coinbase/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
   },
   {
+    key: 'ComponentConfigProvider',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/system/__stories__/ComponentConfigProvider.stories').default,
+  },
+  {
+    key: 'ComponentConfigProviderCustom',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/system/__stories__/ComponentConfigProviderCustom.stories')
+        .default,
+  },
+  {
     key: 'ContainedAssetCard',
     getComponent: () =>
       require('@coinbase/cds-mobile/cards/__stories__/ContainedAssetCard.stories').default,

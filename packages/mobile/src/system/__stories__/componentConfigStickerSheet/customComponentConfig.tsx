@@ -52,6 +52,7 @@ export const customComponentConfig: ComponentConfig = {
     borderWidth: props.checked ? 200 : 100,
     borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
     controlColor: 'bgPrimary',
+    dotSize: 8,
   }),
 
   Checkbox: (props) => ({

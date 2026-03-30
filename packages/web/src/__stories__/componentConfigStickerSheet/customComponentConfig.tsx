@@ -10,6 +10,7 @@ export const customComponentConfig: ComponentConfig = {
     borderRadius: 200,
     height: props.compact ? 24 : 32,
     font: props.compact ? 'label1' : 'headline',
+    progressCircleSize: props.compact ? 16 : 24,
   }),
 
   /**
