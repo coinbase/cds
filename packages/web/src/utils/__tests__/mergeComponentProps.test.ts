@@ -26,6 +26,27 @@ describe('mergeComponentProps', () => {
   });
 
   describe('override behavior', () => {
+    it('keeps BaseProps defaults while allowing local overrides', () => {
+      const target = {
+        compact: false,
+        variant: 'secondary',
+        height: 32,
+        font: 'headline',
+      };
+      const source = {
+        compact: true,
+        variant: 'primary',
+      };
+      const result = mergeComponentProps(target, source);
+
+      expect(result).toEqual({
+        compact: true,
+        variant: 'primary',
+        height: 32,
+        font: 'headline',
+      });
+    });
+
     it('overrides target with source props', () => {
       const target = { variant: 'primary', size: 'md' };
       const source = { variant: 'secondary', compact: true };
