@@ -1,4 +1,5 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
+import type { SelectBaseProps } from '../alpha';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
@@ -65,7 +66,6 @@ import type { RollingNumberBaseProps } from '../numbers/RollingNumber/RollingNum
 import type { AlertBaseProps } from '../overlays/Alert';
 import type { FocusTrapBaseProps } from '../overlays/FocusTrap';
 import type { FullscreenAlertBaseProps } from '../overlays/FullscreenAlert';
-import type { HandleBarBaseProps } from '../overlays/handlebar/HandleBar';
 import type { FullscreenModalBaseProps } from '../overlays/modal/FullscreenModal';
 import type { FullscreenModalHeaderBaseProps } from '../overlays/modal/FullscreenModalHeader';
 import type { ModalBaseProps } from '../overlays/modal/Modal';
@@ -76,6 +76,7 @@ import type { ModalWrapperBaseProps } from '../overlays/modal/ModalWrapper';
 import type { OverlayBaseProps } from '../overlays/overlay/Overlay';
 import type { ToastBaseProps } from '../overlays/Toast';
 import type { TooltipContentBaseProps } from '../overlays/tooltip/TooltipContent';
+import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
 import type { TrayBaseProps } from '../overlays/tray/Tray';
 import type { PageFooterBaseProps } from '../page/PageFooter';
 import type { PageHeaderBaseProps } from '../page/PageHeader';
@@ -99,8 +100,6 @@ import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
 import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
-import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
-import type { SelectBaseProps } from '../alpha';
 
 /**
  * Config resolver that supports either static partial props object
@@ -153,7 +152,6 @@ export type ComponentConfig = {
   FullscreenAlert?: ConfigResolver<FullscreenAlertBaseProps>;
   FullscreenModal?: ConfigResolver<FullscreenModalBaseProps>;
   FullscreenModalHeader?: ConfigResolver<FullscreenModalHeaderBaseProps>;
-  HandleBar?: ConfigResolver<HandleBarBaseProps>;
   Icon?: ConfigResolver<IconBaseProps>;
   IconButton?: ConfigResolver<IconButtonBaseProps>;
   IconCounterButton?: ConfigResolver<IconCounterButtonBaseProps>;
