@@ -48,7 +48,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
 
       const iconButtonPlaceholder = (
         <Box opacity={0} pointerEvents="none">
-          <IconButton transparent name="close" />
+          <IconButton transparent accessibilityLabel="Close" name="close" />
         </Box>
       );
 

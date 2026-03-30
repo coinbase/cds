@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process';
-import fs from 'node:fs/promises';
 import { readdirSync } from 'node:fs';
+import fs from 'node:fs/promises';
 
 import { run } from './shell.mjs';
 

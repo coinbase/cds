@@ -63,7 +63,7 @@ const getBorderRadiusPinStyle = (borderRadius: number) => ({
 });
 
 /**
- * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This will be removed in a future major release.
+ * @deprecated Use ContentCard instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const Card = memo(function OldCard({

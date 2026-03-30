@@ -25,7 +25,7 @@ export type CardProps = CardBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
 /**
- * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This will be removed in a future major release.
+ * @deprecated Use ContentCard instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const Card = memo<CardProps>(function Card({

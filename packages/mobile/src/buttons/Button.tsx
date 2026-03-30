@@ -15,6 +15,9 @@ import { HStack } from '../layout/HStack';
 import { Spinner } from '../loaders';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
+
+const defaultProgressCircleSize = 24;
 
 const defaultLoadingSpinnerSize = 24;
 
@@ -46,11 +49,11 @@ export type ButtonBaseProps = SharedProps &
     disabled?: boolean;
     /** Mark the button as loading and display a spinner. */
     loading?: boolean;
-    /** The size of the loading spinner in pixels
-     *  @default 24
+    /** Size of the loading progress circle in px.
+     * @default 24
      */
-    loadingSpinnerSize?: number;
-    /** Set the background to transparent until interacted with. */
+    progressCircleSize?: number;
+    /** Mark the background and border as transparent until interacted with. */
     transparent?: boolean;
     /** Change to block and expand to 100% of parent width. */
     block?: boolean;
@@ -93,7 +96,7 @@ export const Button = memo(
     {
       variant = 'primary',
       loading,
-      loadingSpinnerSize,
+      progressCircleSize = defaultProgressCircleSize,
       transparent,
       block,
       compact,
@@ -153,8 +156,6 @@ export const Button = memo(
       [sizingStyle, style],
     );
 
-    const spinnerSize = loadingSpinnerSize ?? defaultLoadingSpinnerSize;
-
     const childrenNode = useMemo(
       () =>
         isValidElement(children) &&
@@ -209,7 +210,12 @@ export const Button = memo(
           style={sizingStyle}
         >
           {loading ? (
-            <Spinner color={theme.color[colorValue]} size={spinnerSize} />
+            <ProgressCircle
+              indeterminate
+              color={colorValue}
+              size={progressCircleSize}
+              weight="thin"
+            />
           ) : (
             <>
               {start ??

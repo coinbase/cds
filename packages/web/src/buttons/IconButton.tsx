@@ -8,19 +8,12 @@ import { cx } from '../cx';
 import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
-
-const baseSpinnerCss = css`
-  border: var(--borderWidth-200) solid;
-  border-top-color: var(--color-transparent);
-  border-right-color: var(--color-transparent);
-  border-left-color: var(--color-transparent);
-`;
 
 export const iconButtonDefaultElement = 'button';
 
@@ -84,6 +77,7 @@ export const IconButton: IconButtonComponent = memo(
         active,
         flush,
         loading,
+        progressCircleSize,
         accessibilityLabel,
         accessibilityHint,
         ...props
@@ -141,11 +135,13 @@ export const IconButton: IconButtonComponent = memo(
           {...props}
         >
           {loading ? (
-            <Spinner
-              className={baseSpinnerCss}
+            <ProgressCircle
+              indeterminate
+              accessibilityLabel="Loading"
               color="currentColor"
-              size={spinnerSize}
-              testID={props.testID ? `${props.testID}-spinner` : undefined}
+              size={progressCircleSize ?? iconSizeValue}
+              testID={props.testID ? `${props.testID}-progress-circle` : undefined}
+              weight="thin"
             />
           ) : (
             <Icon active={active} color="currentColor" name={name} size={iconSize} />

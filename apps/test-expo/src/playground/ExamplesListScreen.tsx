@@ -31,6 +31,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
       return (
         <ListCell
           compact
+          accessibilityLabel={`Navigate to ${item} example`}
           accessory="arrow"
           innerSpacing={innerSpacingConfig}
           onPress={handlePress}

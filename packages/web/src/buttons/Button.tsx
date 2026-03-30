@@ -13,19 +13,18 @@ import { cx } from '../cx';
 import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { ProgressCircle } from '../visualizations';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
-const defaultLoadingSpinnerSize = 24;
-
-/**
- * @deprecated This will be removed in a future major release.
+/** @deprecated Use progressCircleSize instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const spinnerHeight = 2.5;
+
+const defaultProgressCircleSize = 24;
 
 const baseCss = css`
   text-decoration: none;
@@ -100,13 +99,6 @@ const flushCss = css`
   min-width: unset;
 `;
 
-const spinnerStyle = {
-  border: 'var(--borderWidth-200) solid',
-  borderTopColor: 'var(--color-transparent)',
-  borderRightColor: 'var(--color-transparent)',
-  borderLeftColor: 'var(--color-transparent)',
-};
-
 export const buttonDefaultElement = 'button';
 
 export type ButtonDefaultElement = typeof buttonDefaultElement;
@@ -124,11 +116,11 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       disabled?: boolean;
       /** Mark the button as loading and display a spinner. */
       loading?: boolean;
-      /** The size of the loading spinner in pixels
-       *  @default 24
+      /** Size of the loading progress circle in px.
+       * @default 24
        */
-      loadingSpinnerSize?: number;
-      /** Set the background to transparent until interacted with. */
+      progressCircleSize?: number;
+      /** Mark the background and border as transparent until interacted with. */
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
       block?: boolean;
@@ -182,7 +174,7 @@ export const Button: ButtonComponent = memo(
         as,
         variant = 'primary',
         loading,
-        loadingSpinnerSize,
+        progressCircleSize = defaultProgressCircleSize,
         transparent,
         block,
         compact,
@@ -243,10 +235,6 @@ export const Button: ButtonComponent = memo(
         };
       }, [flush, resolvedPaddingX, theme.space, style]);
 
-      // due to an odd, legacy implementation detail, the web Spinner uses 10em units to set the width/height of the spinner
-      // the "size" prop of Spinner is set to the font size of the Spinner element so ultimately its pixel size is 10 x size
-      const spinnerHeight = (loadingSpinnerSize ?? defaultLoadingSpinnerSize) / 10;
-
       return (
         <Pressable
           ref={ref}
@@ -298,7 +286,13 @@ export const Button: ButtonComponent = memo(
           <span className={middleNodeCss}>
             {loading && (
               <span className={spinnerContainerCss}>
-                <Spinner color="currentColor" size={spinnerHeight} style={spinnerStyle} />
+                <ProgressCircle
+                  indeterminate
+                  accessibilityLabel="Loading"
+                  color="currentColor"
+                  size={progressCircleSize}
+                  weight="thin"
+                />
               </span>
             )}
             <Text

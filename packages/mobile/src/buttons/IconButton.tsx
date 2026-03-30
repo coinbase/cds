@@ -1,5 +1,5 @@
 import { forwardRef, memo } from 'react';
-import { ActivityIndicator, type View } from 'react-native';
+import { type View } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type {
   IconButtonVariant,
@@ -12,12 +12,16 @@ import type {
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
-import type { ButtonBaseProps } from './Button';
+import { type ButtonBaseProps } from './Button';
 
 export type IconButtonBaseProps = SharedProps &
   Omit<PressableBaseProps, 'children'> &
-  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush' | 'loading'> & {
+  Pick<
+    ButtonBaseProps,
+    'disabled' | 'transparent' | 'compact' | 'flush' | 'loading' | 'progressCircleSize'
+  > & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /**
@@ -54,6 +58,7 @@ export const IconButton = memo(
       flush,
       padding = compact ? 1.5 : 2,
       loading,
+      progressCircleSize,
       accessibilityHint,
       accessibilityLabel,
       ...props
@@ -61,7 +66,7 @@ export const IconButton = memo(
     ref,
   ) {
     const theme = useTheme();
-
+    const iconSizeValue = theme.iconSize[iconSize];
     const variantMap = transparent ? transparentVariants : variants;
     const variantStyle = variantMap[variant];
 
@@ -93,10 +98,12 @@ export const IconButton = memo(
         {...props}
       >
         {loading ? (
-          <ActivityIndicator
-            color={theme.color[colorValue]}
-            size="small"
-            testID={props.testID ? `${props.testID}-activity-indicator` : undefined}
+          <ProgressCircle
+            indeterminate
+            color={colorValue}
+            size={progressCircleSize ?? iconSizeValue}
+            testID={props.testID ? `${props.testID}-progress-circle` : undefined}
+            weight="thin"
           />
         ) : (
           /* TO DO: test using currentColor like web does on Icon here */

@@ -15,6 +15,10 @@ export type CardMediaImageSizeObject =
       aspectRatio: AspectRatio;
     };
 
+/**
+ * @deprecated Use SpotSquare when `type` is "spotSquare", Pictogram when `type` is "pictogram", or RemoteImage when `type` is "image". This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardMediaProps = {
   /** Informs how to auto-magically size the media. */
   placement: CardMediaPlacement;

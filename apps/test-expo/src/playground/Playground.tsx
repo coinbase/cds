@@ -72,17 +72,28 @@ const HeaderContent = memo(
 
     const iconButtonPlaceholder = (
       <Box opacity={0} pointerEvents="none">
-        <IconButton transparent name="close" />
+        <IconButton transparent accessibilityLabel="Close" name="close" />
       </Box>
     );
 
     const leftHeaderButton = showSearch ? (
       <Box marginX={-1}>
-        <IconButton transparent name="search" onPress={onGoToSearch} />
+        <IconButton
+          transparent
+          accessibilityLabel="Search for component"
+          name="search"
+          onPress={onGoToSearch}
+        />
       </Box>
     ) : showBackButton ? (
       <Box marginX={-1}>
-        <IconButton transparent name="backArrow" onPress={onGoBack} testID="nav-back-button" />
+        <IconButton
+          transparent
+          accessibilityLabel="Go back"
+          name="backArrow"
+          onPress={onGoBack}
+          testID="nav-back-button"
+        />
       </Box>
     ) : (
       iconButtonPlaceholder
@@ -92,7 +103,12 @@ const HeaderContent = memo(
       iconButtonPlaceholder
     ) : (
       <Box marginX={-1}>
-        <IconButton transparent name={isDark ? 'moon' : 'light'} onPress={onToggleTheme} />
+        <IconButton
+          transparent
+          accessibilityLabel="Toggle dark mode"
+          name={isDark ? 'moon' : 'light'}
+          onPress={onToggleTheme}
+        />
       </Box>
     );
 
@@ -114,7 +130,14 @@ const HeaderContent = memo(
                 label=""
                 onChange={onSearchChange}
                 placeholder="Search"
-                start={<IconButton transparent name="backArrow" onPress={onGoBackFromSearch} />}
+                start={
+                  <IconButton
+                    transparent
+                    accessibilityLabel="Go back from search"
+                    name="backArrow"
+                    onPress={onGoBackFromSearch}
+                  />
+                }
                 value={searchFilter}
               />
             ) : (

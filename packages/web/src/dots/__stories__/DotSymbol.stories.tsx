@@ -1,4 +1,3 @@
-import React from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
 import { iconSizes } from '@coinbase/cds-common/internal/data/iconData';
@@ -6,9 +5,9 @@ import { avatarDotSizeMap, avatarIconSizeMap } from '@coinbase/cds-common/tokens
 
 import { Icon } from '../../icons/Icon';
 import { HStack, VStack } from '../../layout';
-import { Spinner } from '../../loaders/Spinner';
 import { Avatar } from '../../media/Avatar';
 import { Text } from '../../typography/Text';
+import { ProgressCircle } from '../../visualizations/ProgressCircle';
 import { DotSymbol } from '..';
 
 export default {
@@ -176,7 +175,10 @@ export const AllDotSymbol = () => {
 
 export const CustomSymbol = () => {
   return (
-    <DotSymbol pin="bottom-end" symbol={<Spinner size={1} />}>
+    <DotSymbol
+      pin="bottom-end"
+      symbol={<ProgressCircle indeterminate accessibilityLabel="Loading" size={10} />}
+    >
       <Icon active name="airdrop" size="l" />
     </DotSymbol>
   );

@@ -3,7 +3,7 @@ import type { GestureResponderEvent } from 'react-native';
 import { names } from '@coinbase/cds-icons/names';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
-import { HStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
 import { Box } from '../../layout/Box';
 import { Text } from '../../typography/Text';
 import { IconButton, type IconButtonProps } from '../IconButton';
@@ -86,6 +86,15 @@ const IconButtonScreen = () => {
           <IconButton disabled accessibilityLabel={accessibilityLabel} name={iconName} />
           <Text font="body">Disabled secondary</Text>
         </Box>
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+          <IconButton
+            loading
+            accessibilityLabel={accessibilityLabel}
+            name={iconName}
+            variant="primary"
+          />
+          <Text font="body">Loading primary</Text>
+        </Box>
       </Example>
 
       <Example inline title="Variants">
@@ -118,6 +127,71 @@ const IconButtonScreen = () => {
             />
           </HStack>
         </Box>
+      </Example>
+
+      <Example inline title="Loading">
+        <VStack gap={3}>
+          <Box>
+            <Text font="label2" style={{ marginBottom: 8 }}>
+              Loading by variant
+            </Text>
+            <HStack flexWrap="wrap" gap={2}>
+              <IconButton loading accessibilityLabel="Loading" name={iconName} variant="primary" />
+              <IconButton
+                loading
+                accessibilityLabel="Loading"
+                name={iconName}
+                variant="secondary"
+              />
+              <IconButton
+                loading
+                accessibilityLabel="Loading"
+                name={iconName}
+                variant="foregroundMuted"
+              />
+              <IconButton
+                loading
+                transparent
+                accessibilityLabel="Loading"
+                name={iconName}
+                variant="primary"
+              />
+              <IconButton
+                loading
+                transparent
+                accessibilityLabel="Loading"
+                name={iconName}
+                variant="secondary"
+              />
+            </HStack>
+          </Box>
+          <Box>
+            <Text font="label2" style={{ marginBottom: 8 }}>
+              Loading by icon size
+            </Text>
+            <HStack alignItems="center" gap={2}>
+              <IconButton loading accessibilityLabel="Loading" iconSize="xs" name={iconName} />
+              <IconButton loading accessibilityLabel="Loading" iconSize="s" name={iconName} />
+              <IconButton loading accessibilityLabel="Loading" iconSize="m" name={iconName} />
+              <IconButton
+                loading
+                accessibilityLabel="Loading"
+                compact={false}
+                iconSize="l"
+                name={iconName}
+              />
+            </HStack>
+          </Box>
+          <Box>
+            <Text font="label2" style={{ marginBottom: 8 }}>
+              Loading compact vs regular
+            </Text>
+            <HStack alignItems="center" gap={2}>
+              <IconButton compact loading accessibilityLabel="Loading" name={iconName} />
+              <IconButton loading accessibilityLabel="Loading" compact={false} name={iconName} />
+            </HStack>
+          </Box>
+        </VStack>
       </Example>
       <Example title="All">
         {names.map((name) => {

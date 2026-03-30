@@ -14,9 +14,9 @@ import type { SpringConfig } from '@react-spring/core';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
-import { Spinner } from '../loaders/Spinner';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
@@ -93,14 +93,7 @@ export const SlideButtonHandleChecked = memo(
           pin="right"
         >
           {end ?? (
-            <Spinner
-              color={theme.color.fgInverse}
-              // use icon size dimensions for spinner width/height
-              // native ActivityIndicator uses it's own sizes/dimensions that do not align with the CDS theme
-              // couples the customization of this element with the Unchecked variant component (i.e. icon size theme var)
-              // see: CDS-1590
-              style={{ height: iconSizeValue, width: iconSizeValue }}
-            />
+            <ProgressCircle indeterminate color="fgInverse" size={iconSizeValue} weight="thin" />
           )}
         </Box>
       </Box>

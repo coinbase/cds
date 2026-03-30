@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Deprecate Card and its sub-components. [[#562](https://github.com/coinbase/cds/pull/562)]
+
+#### 📘 Misc
+
+- Chore: deprecate CardGroup. [[#560](https://github.com/coinbase/cds/pull/560)]
+
+## 8.60.0 (3/29/2026 PST)
+
+#### 🚀 Updates
+
+- Add indeterminate ProgressCircle. [[#501](https://github.com/coinbase/cds/pull/501)]
+
 ## 8.59.0 (3/27/2026 PST)
 
 #### 🚀 Updates
