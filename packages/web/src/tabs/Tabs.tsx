@@ -16,7 +16,7 @@ import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
 
 const MotionBox = motion<BoxProps<BoxDefaultElement>>(Box);
@@ -64,18 +64,19 @@ export type TabComponent<TabId extends string = string> = React.FC<TabComponentP
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-export type TabsBaseProps<TabId extends string = string> = {
-  /** The array of tabs data. Each tab may optionally define a custom Component to render. */
-  tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
-  /** The default Component to render each tab. */
-  TabComponent: TabComponent<TabId>;
-  /** The default Component to render the tabs active indicator. */
-  TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
-  /** Background color passed to the TabsActiveIndicatorComponent. */
-  activeBackground?: ThemeVars.Color;
-  /** Optional callback to receive the active tab element. */
-  onActiveTabElementChange?: (element: HTMLElement | null) => void;
-} & Omit<TabsOptions<TabId>, 'tabs'>;
+export type TabsBaseProps<TabId extends string = string> = Omit<BoxBaseProps, 'onChange' | 'ref'> &
+  Omit<TabsOptions<TabId>, 'tabs'> & {
+    /** The array of tabs data. Each tab may optionally define a custom Component to render. */
+    tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
+    /** The default Component to render each tab. */
+    TabComponent: TabComponent<TabId>;
+    /** The default Component to render the tabs active indicator. */
+    TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
+    /** Background color passed to the TabsActiveIndicatorComponent. */
+    activeBackground?: ThemeVars.Color;
+    /** Optional callback to receive the active tab element. */
+    onActiveTabElementChange?: (element: HTMLElement | null) => void;
+  };
 
 export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
   Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'> & {
