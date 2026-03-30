@@ -15,12 +15,7 @@ import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
-import {
-  type SelectBaseProps,
-  type SelectDropdownProps,
-  type SelectProps,
-  type SelectType,
-} from './types';
+import { type SelectDropdownProps, type SelectProps, type SelectType } from './types';
 
 // Re-export all types for backward compatibility
 export type {

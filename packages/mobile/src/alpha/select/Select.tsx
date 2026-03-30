@@ -11,7 +11,6 @@ import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
 import {
   isSelectOptionGroup,
-  type SelectBaseProps,
   type SelectComponent,
   type SelectDropdownProps,
   type SelectProps,
