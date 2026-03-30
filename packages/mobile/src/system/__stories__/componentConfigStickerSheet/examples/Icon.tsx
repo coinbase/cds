@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 
+import { Icon } from '../../../../icons/Icon';
 import { HStack } from '../../../../layout/HStack';
 import { VStack } from '../../../../layout/VStack';
-import { Icon } from '../../../../icons/Icon';
 
 export const IconExample = memo(() => {
   return (

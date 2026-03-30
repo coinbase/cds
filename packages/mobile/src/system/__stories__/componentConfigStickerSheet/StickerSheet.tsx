@@ -5,7 +5,6 @@ import { VStack } from '../../../layout/VStack';
 import { Link } from '../../../typography/Link';
 import { Text } from '../../../typography/Text';
 
-import { Container } from './Container';
 import { AccordionExample } from './examples/Accordion';
 import { AvatarExample } from './examples/Avatar';
 import { BannerExample } from './examples/Banner';
@@ -20,12 +19,13 @@ import { InputChipExample } from './examples/InputChip';
 import { ListCellExample } from './examples/ListCell';
 import { SearchExample } from './examples/Search';
 import { SegmentedTabsExample } from './examples/SegmentedTabs';
-import { SelectChipExample } from './examples/SelectChip';
 import { SelectExample } from './examples/Select';
+import { SelectChipExample } from './examples/SelectChip';
 import { SpinnerExample } from './examples/Spinner';
 import { TabsExample } from './examples/Tabs';
 import { TagExample } from './examples/Tag';
 import { TextInputExample } from './examples/TextInput';
+import { Container } from './Container';
 
 const leftColumnWidth = 320;
 const rightColumnWidth = 380;
@@ -57,7 +57,7 @@ export const StickerSheet = memo(() => {
           </Container>
 
           <Container title="SelectChip / InputChip">
-            <HStack gap={1} flexWrap="wrap">
+            <HStack flexWrap="wrap" gap={1}>
               <SelectChipExample />
               <InputChipExample />
             </HStack>

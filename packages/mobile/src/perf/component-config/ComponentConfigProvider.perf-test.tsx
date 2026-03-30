@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import React, { useMemo, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import { fireEvent, screen } from '@testing-library/react-native';
@@ -35,7 +34,7 @@ const ButtonConfigConsumerList = ({ count }: { count: number }) => {
   return (
     <>
       {Array.from({ length: count }, (_, index) => (
-        <ButtonConfigConsumer index={index} key={index} />
+        <ButtonConfigConsumer key={index} index={index} />
       ))}
     </>
   );

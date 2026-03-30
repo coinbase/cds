@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import React from 'react';
 import { Pressable } from 'react-native';
 import { fireEvent, screen } from '@testing-library/react-native';

@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { measurePerformance } from 'reassure';
@@ -32,7 +31,7 @@ const ButtonConfigConsumerList = ({ count }: { count: number }) => {
   return (
     <>
       {Array.from({ length: count }, (_, index) => (
-        <ButtonConfigConsumer index={index} key={index} />
+        <ButtonConfigConsumer key={index} index={index} />
       ))}
     </>
   );

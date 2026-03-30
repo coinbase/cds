@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 
-import { SelectOption } from '../../../../controls/SelectOption';
 import { SelectChip } from '../../../../chips/SelectChip';
+import { SelectOption } from '../../../../controls/SelectOption';
 
 export const SelectChipExample = memo(() => {
   const [value, setValue] = useState<string | undefined>('Balance');
