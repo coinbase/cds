@@ -110,6 +110,20 @@ const ButtonScreen = () => {
           Hello world
         </Button>
       </Example>
+      <Example inline title="Small">
+        <HStack gap={2}>
+          <Button height={32}>I am a button</Button>
+          <Button height={32} loading>
+            I am a button
+          </Button>
+          <Button compact height={24} progressCircleSize={16}>
+            I am a button
+          </Button>
+          <Button compact height={24} loading progressCircleSize={16}>
+            I am a button
+          </Button>
+        </HStack>
+      </Example>
     </ExampleScreen>
   );
 };

@@ -127,6 +127,7 @@ export const Button = memo(
       borderColor,
       borderWidth = 100,
       borderRadius = compact ? 700 : 900,
+      height = interactableHeight[compact ? 'compact' : 'regular'],
       accessibilityLabel,
       accessibilityHint,
       ...props
@@ -147,8 +148,6 @@ export const Button = memo(
 
     const sizingStyle = block ? styles.block : styles.inline;
     const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
-
-    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
 
     const { paddingX, paddingY, marginStart, marginEnd } = getButtonSpacingProps({
       compact,
@@ -206,13 +205,14 @@ export const Button = memo(
         style={pressableStyle}
         transparentWhileInactive={transparent}
         wrapperStyles={wrapperStyles}
+        height={height}
         {...props}
       >
         <HStack
           alignItems="center"
           flexWrap="nowrap"
           justifyContent={justifyContent}
-          minHeight={minHeight}
+          minHeight={height}
           paddingX={paddingX}
           paddingY={paddingY}
           style={sizingStyle}

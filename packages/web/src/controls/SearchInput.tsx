@@ -3,7 +3,6 @@ import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import type { IconName } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
-import { cx } from '../cx';
 import { Box } from '../layout/Box';
 
 import { InputIcon } from './InputIcon';
@@ -14,14 +13,6 @@ export const scales = {
   regular: 56,
   compact: 40,
 };
-
-const baseCss = css`
-  height: ${scales.regular}px;
-`;
-
-const compactCss = css`
-  height: ${scales.compact}px;
-`;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -105,6 +96,7 @@ export const SearchInput = memo(
       startIconAccessibilityLabel = 'Back',
       clearIconAccessibilityLabel = 'Clear search query',
       borderRadius = 1000,
+      height = compact ? scales.compact : scales.regular,
       ...props
     }: SearchInputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
@@ -148,7 +140,6 @@ export const SearchInput = memo(
       <TextInput
         ref={refs}
         borderRadius={borderRadius}
-        className={cx(baseCss, compact && compactCss)}
         end={
           end ??
           (!!value && !hideEndIcon && (
@@ -178,6 +169,7 @@ export const SearchInput = memo(
         type="search"
         value={value}
         variant="secondary"
+        height={height}
         {...props}
       />
     );

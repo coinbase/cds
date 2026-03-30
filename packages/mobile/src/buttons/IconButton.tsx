@@ -56,6 +56,8 @@ export const IconButton = memo(
       iconSize = compact ? 's' : 'm',
       borderWidth = 100,
       borderRadius = 1000,
+      height = interactableHeight[compact ? 'compact' : 'regular'],
+      width = interactableHeight[compact ? 'compact' : 'regular'],
       feedback = compact ? 'light' : 'normal',
       flush,
       loading,
@@ -76,19 +78,17 @@ export const IconButton = memo(
     const backgroundValue = background ?? variantStyle.background;
     const borderColorValue = borderColor ?? variantStyle.borderColor;
 
-    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
-
     const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
 
     const sizingStyle = useMemo<ViewStyle>(
       () => ({
-        height: minHeight,
-        width: minHeight,
+        height: height as ViewStyle['height'],
+        width: width as ViewStyle['width'],
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
       }),
-      [minHeight],
+      [height, width],
     );
 
     const pressableStyle = useCallback(
@@ -117,7 +117,7 @@ export const IconButton = memo(
         {...props}
       >
         {loading ? (
-          <Box alignItems="center" height={minHeight} justifyContent="center" width={minHeight}>
+          <Box alignItems="center" height={height} justifyContent="center" width={width}>
             <ProgressCircle
               indeterminate
               color={colorValue}
