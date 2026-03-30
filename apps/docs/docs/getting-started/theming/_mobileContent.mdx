@@ -384,5 +384,52 @@ Property values being set for an individual component instance will override the
 </VStack>
 ```
 
+### Function-based defaults
+
+`ComponentConfigProvider` can also accept a function to compute defaults from incoming component props.
+
+When using function-based defaults, keep both the resolver and provider `value` stable with `useCallback` and `useMemo` to reduce avoidable work during rerenders.
+
+```tsx
+import { useCallback, useMemo } from 'react';
+import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
+import { Button } from '@coinbase/cds-mobile/buttons/Button';
+import { ComponentConfigProvider } from '@coinbase/cds-mobile/system/ComponentConfigProvider';
+
+const compactButtonDefaults = {
+  borderRadius: 200,
+  height: 24,
+  font: 'label1',
+} as const;
+
+const regularButtonDefaults = {
+  borderRadius: 200,
+  height: 32,
+  font: 'headline',
+} as const;
+
+const App = () => {
+  const buttonConfig = useCallback(
+    (props: { compact?: boolean }) =>
+      props.compact ? compactButtonDefaults : regularButtonDefaults,
+    [],
+  );
+
+  const componentConfig = useMemo<ComponentConfig>(
+    () => ({
+      Button: buttonConfig,
+    }),
+    [buttonConfig],
+  );
+
+  return (
+    <ComponentConfigProvider value={componentConfig}>
+      <Button>Default</Button>
+      <Button compact>Compact</Button>
+    </ComponentConfigProvider>
+  );
+};
+```
+
 </MDXArticle>
 </MDXSection>
