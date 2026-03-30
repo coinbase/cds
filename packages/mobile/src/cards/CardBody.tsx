@@ -5,7 +5,6 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import type { PictogramName, SpotSquareName } from '@coinbase/cds-illustrations';
 
 import { Button, type ButtonProps } from '../buttons/Button';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -93,33 +92,31 @@ const CardBodyAction = memo(function CardBodyAction({
   );
 });
 
-export const CardBody = memo((_props: CardBodyProps) => {
-  const mergedProps = useComponentConfig('CardBody', _props);
-  const {
-    testID = 'card-body',
-    title,
-    description,
-    mediaPlacement = 'end',
-    onActionPress,
-    actionLabel,
-    action: actionProp,
-    pictogram,
-    spotSquare,
-    image,
-    media: mediaProp,
-    padding,
-    paddingX,
-    paddingY,
-    paddingTop,
-    paddingEnd,
-    paddingBottom,
-    paddingStart,
-    numberOfLines = 3,
-    accessibilityLabel,
-    children,
-    compact,
-    ...props
-  } = mergedProps;
+export const CardBody = memo(function CardBody({
+  testID = 'card-body',
+  title,
+  description,
+  mediaPlacement = 'end',
+  onActionPress,
+  actionLabel,
+  action: actionProp,
+  pictogram,
+  spotSquare,
+  image,
+  media: mediaProp,
+  padding,
+  paddingX,
+  paddingY,
+  paddingTop,
+  paddingEnd,
+  paddingBottom,
+  paddingStart,
+  numberOfLines = 3,
+  accessibilityLabel,
+  children,
+  compact,
+  ...props
+}: CardBodyProps) {
   const paddingBottomValue = paddingBottom ?? paddingY ?? padding ?? (compact ? 1 : 3);
   const paddingTopValue = paddingTop ?? paddingY ?? padding ?? (compact ? 2 : 3);
   const paddingStartValue = paddingStart ?? paddingX ?? padding ?? (compact ? 2 : 3);

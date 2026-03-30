@@ -65,11 +65,11 @@ export const FunctionalConfig = () => (
 );
 
 const outerConfig: ComponentConfig = {
-  Button: { variant: 'secondary' },
+  Button: { variant: 'secondary', compact: true },
 };
 
 const innerConfig: ComponentConfig = {
-  Button: { variant: 'positive', compact: true },
+  Button: { variant: 'positive' },
 };
 
 export const NestedProviders = () => (
@@ -80,12 +80,12 @@ export const NestedProviders = () => (
           Nested Providers
         </Text>
         <Text as="p" color="fgMuted" display="block" font="body">
-          Inner providers use isolated config scope.
+          The inner provider overrides (does not merge) outer config defaults.
         </Text>
       </VStack>
 
       <HStack gap={2}>
-        <Button>Outer scope button</Button>
+        <Button>Outer scope button (secondary + compact)</Button>
       </HStack>
 
       <ComponentConfigProvider value={innerConfig}>
@@ -94,7 +94,7 @@ export const NestedProviders = () => (
           padding={3}
           style={{ border: '2px dashed var(--color-bgPositive)', borderRadius: 12 }}
         >
-          <Button>Inner scope button</Button>
+          <Button>Inner scope button (positive, not compact)</Button>
         </VStack>
       </ComponentConfigProvider>
     </VStack>

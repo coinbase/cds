@@ -3,7 +3,6 @@ import type { ThemeVars } from '@coinbase/cds-common';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { CardRoot, type CardRootBaseProps } from '../CardRoot';
 
 import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
@@ -42,11 +41,7 @@ type MediaCardComponent = (<AsComponent extends React.ElementType = 'article'>(
 export const MediaCard: MediaCardComponent = memo(
   forwardRef<React.ReactElement<MediaCardBaseProps>, MediaCardBaseProps>(
     <AsComponent extends React.ElementType>(
-      _props: MediaCardProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
-      const mergedProps = useComponentConfig('MediaCard', _props);
-      const {
+      {
         title,
         subtitle,
         description,
@@ -60,28 +55,28 @@ export const MediaCard: MediaCardComponent = memo(
         className,
         style,
         ...props
-      } = mergedProps;
-      return (
-        <CardRoot
-          ref={ref}
-          as={as as React.ElementType}
-          className={cx(rootClassName, className)}
-          style={{ ...rootStyle, ...style }}
-          {...mediaCardContainerProps}
-          {...props}
-        >
-          <MediaCardLayout
-            classNames={layoutClassNames}
-            description={description}
-            media={media}
-            mediaPlacement={mediaPlacement}
-            styles={layoutStyles}
-            subtitle={subtitle}
-            thumbnail={thumbnail}
-            title={title}
-          />
-        </CardRoot>
-      );
-    },
+      }: MediaCardProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => (
+      <CardRoot
+        ref={ref}
+        as={as as React.ElementType}
+        className={cx(rootClassName, className)}
+        style={{ ...rootStyle, ...style }}
+        {...mediaCardContainerProps}
+        {...props}
+      >
+        <MediaCardLayout
+          classNames={layoutClassNames}
+          description={description}
+          media={media}
+          mediaPlacement={mediaPlacement}
+          styles={layoutStyles}
+          subtitle={subtitle}
+          thumbnail={thumbnail}
+          title={title}
+        />
+      </CardRoot>
+    ),
   ),
 );

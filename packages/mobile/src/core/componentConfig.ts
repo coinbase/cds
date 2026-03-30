@@ -13,15 +13,7 @@ import type { SlideButtonBaseProps } from '../buttons/SlideButton';
 import type { CardBaseProps } from '../cards/Card';
 import type { CardBodyBaseProps } from '../cards/CardBody';
 import type { CardFooterBaseProps } from '../cards/CardFooter';
-import type { CardRootBaseProps } from '../cards/CardRoot';
-import type { ContentCardBaseProps } from '../cards/ContentCard/ContentCard';
-import type { ContentCardBodyBaseProps } from '../cards/ContentCard/ContentCardBody';
-import type { ContentCardFooterBaseProps } from '../cards/ContentCard/ContentCardFooter';
-import type { ContentCardHeaderBaseProps } from '../cards/ContentCard/ContentCardHeader';
 import type { LikeButtonBaseProps } from '../cards/LikeButton';
-import type { MediaCardBaseProps } from '../cards/MediaCard/index';
-import type { MediaCardLayoutBaseProps } from '../cards/MediaCard/MediaCardLayout';
-import type { MessagingCardBaseProps } from '../cards/MessagingCard/index';
 import type { CarouselBaseProps } from '../carousel/Carousel';
 import type { CellBaseProps } from '../cells/Cell';
 import type { ListCellBaseProps } from '../cells/ListCell';
@@ -92,8 +84,9 @@ import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
 export type ConfigResolver<P> = Partial<P> | ((props: P) => Partial<P>);
 
 /**
- * Component config for customization of default component props.
- * Use base props for config resolver typing so defaults are element-agnostic.
+ * Component config for customization of default ComponentBaseProps.
+ *
+ * @note components that aren't listed here are either primitives or sub-components with limited customization opportunities.
  */
 export type ComponentConfig = {
   Accordion?: ConfigResolver<AccordionBaseProps>;
@@ -108,7 +101,6 @@ export type ComponentConfig = {
   Card?: ConfigResolver<CardBaseProps>;
   CardBody?: ConfigResolver<CardBodyBaseProps>;
   CardFooter?: ConfigResolver<CardFooterBaseProps>;
-  CardRoot?: ConfigResolver<CardRootBaseProps>;
   Carousel?: ConfigResolver<CarouselBaseProps>;
   Cell?: ConfigResolver<CellBaseProps>;
   Chip?: ConfigResolver<ChipBaseProps>;
@@ -118,10 +110,6 @@ export type ComponentConfig = {
   Collapsible?: ConfigResolver<CollapsibleBaseProps>;
   Combobox?: ConfigResolver<ComboboxBaseProps>;
   Calendar?: ConfigResolver<CalendarBaseProps>;
-  ContentCard?: ConfigResolver<ContentCardBaseProps>;
-  ContentCardBody?: ConfigResolver<ContentCardBodyBaseProps>;
-  ContentCardFooter?: ConfigResolver<ContentCardFooterBaseProps>;
-  ContentCardHeader?: ConfigResolver<ContentCardHeaderBaseProps>;
   Control?: ConfigResolver<ControlBaseProps<string>>;
   ControlGroup?: ConfigResolver<ControlGroupBaseProps>;
   DateInput?: ConfigResolver<DateInputBaseProps>;
@@ -141,10 +129,7 @@ export type ComponentConfig = {
   Link?: ConfigResolver<LinkBaseProps>;
   ListCell?: ConfigResolver<ListCellBaseProps>;
   ListCellFallback?: ConfigResolver<ListCellFallbackBaseProps>;
-  MediaCard?: ConfigResolver<MediaCardBaseProps>;
-  MediaCardLayout?: ConfigResolver<MediaCardLayoutBaseProps>;
   MediaChip?: ConfigResolver<MediaChipBaseProps>;
-  MessagingCard?: ConfigResolver<MessagingCardBaseProps>;
   Modal?: ConfigResolver<ModalBaseProps>;
   ModalBody?: ConfigResolver<ModalBodyBaseProps>;
   ModalFooter?: ConfigResolver<ModalFooterBaseProps>;

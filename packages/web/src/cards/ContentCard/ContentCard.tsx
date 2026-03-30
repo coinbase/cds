@@ -2,7 +2,6 @@ import React, { forwardRef, memo } from 'react';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
 
 import type { Polymorphic } from '../../core/polymorphism';
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack, type VStackBaseProps } from '../../layout';
 
 export const contentCardDefaultElement = 'article';
@@ -23,11 +22,7 @@ type ContentCardComponent = (<AsComponent extends React.ElementType = ContentCar
 export const ContentCard: ContentCardComponent = memo(
   forwardRef<React.ReactElement<ContentCardBaseProps>, ContentCardBaseProps>(
     <AsComponent extends React.ElementType>(
-      _props: ContentCardProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
-      const mergedProps = useComponentConfig('ContentCard', _props);
-      const {
+      {
         as,
         testID,
         children,
@@ -37,7 +32,9 @@ export const ContentCard: ContentCardComponent = memo(
         padding = 2,
         gap = 2,
         ...props
-      } = mergedProps;
+      }: ContentCardProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
       const Component = (as ?? contentCardDefaultElement) satisfies React.ElementType;
       return (
         <VStack

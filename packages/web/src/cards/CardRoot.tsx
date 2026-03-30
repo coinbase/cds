@@ -1,7 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 
 import type { Polymorphic } from '../core/polymorphism';
-import { useComponentConfig } from '../hooks/useComponentConfig';
 import { HStack, type HStackProps } from '../layout/HStack';
 import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
@@ -40,16 +39,14 @@ type CardRootComponent = (<AsComponent extends React.ElementType = 'div'>(
 export const CardRoot: CardRootComponent = memo(
   forwardRef<React.ReactElement<CardRootBaseProps>, CardRootBaseProps>(
     <AsComponent extends React.ElementType>(
-      _props: CardRootProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
-      const mergedProps = useComponentConfig('CardRoot', _props);
-      const {
+      {
         as,
         renderAsPressable = as === 'button' || as === 'a' ? true : false,
         children,
         ...props
-      } = mergedProps;
+      }: CardRootProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
       if (renderAsPressable) {
         return (
           <Pressable ref={ref} as={as} {...(props as PressableProps<AsComponent>)}>

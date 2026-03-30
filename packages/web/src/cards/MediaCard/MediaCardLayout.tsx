@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
 
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
@@ -50,9 +49,8 @@ export type MediaCardLayoutProps = MediaCardLayoutBaseProps & {
   };
 };
 
-export const MediaCardLayout = memo((_props: MediaCardLayoutProps) => {
-  const mergedProps = useComponentConfig('MediaCardLayout', _props);
-  const {
+export const MediaCardLayout = memo(
+  ({
     title,
     subtitle,
     description,
@@ -61,94 +59,99 @@ export const MediaCardLayout = memo((_props: MediaCardLayoutProps) => {
     mediaPlacement = 'end',
     classNames = {},
     styles = {},
-  } = mergedProps;
-  const titleNode = useMemo(() => {
-    if (typeof title === 'string') {
-      return (
-        <Text as="div" font="headline" numberOfLines={2}>
-          {title}
-        </Text>
-      );
-    }
-    return title;
-  }, [title]);
+  }: MediaCardLayoutProps) => {
+    const titleNode = useMemo(() => {
+      if (typeof title === 'string') {
+        return (
+          <Text as="div" font="headline" numberOfLines={2}>
+            {title}
+          </Text>
+        );
+      }
+      return title;
+    }, [title]);
 
-  const subtitleNode = useMemo(
-    () =>
-      typeof subtitle === 'string' ? (
-        <Text as="div" color="fgMuted" font="legal" numberOfLines={1}>
-          {subtitle}
-        </Text>
-      ) : (
-        subtitle
-      ),
-    [subtitle],
-  );
+    const subtitleNode = useMemo(
+      () =>
+        typeof subtitle === 'string' ? (
+          <Text as="div" color="fgMuted" font="legal" numberOfLines={1}>
+            {subtitle}
+          </Text>
+        ) : (
+          subtitle
+        ),
+      [subtitle],
+    );
 
-  const headerNode = useMemo(
-    () => (
-      <VStack className={classNames?.headerContainer} style={styles?.headerContainer}>
-        {subtitleNode}
-        {titleNode}
-      </VStack>
-    ),
-    [subtitleNode, titleNode, styles?.headerContainer, classNames?.headerContainer],
-  );
-
-  const descriptionNode = useMemo(
-    () =>
-      typeof description === 'string' ? (
-        <Text as="p" color="fgMuted" font="label2" numberOfLines={2}>
-          {description}
-        </Text>
-      ) : (
-        description
-      ),
-    [description],
-  );
-
-  const contentNode = useMemo(
-    () => (
-      <VStack
-        className={classNames?.contentContainer}
-        flexBasis="50%"
-        gap={4}
-        justifyContent="space-between"
-        padding={2}
-        style={styles?.contentContainer}
-      >
-        {thumbnail}
-        <VStack className={classNames?.textContainer} style={styles?.textContainer}>
-          {headerNode}
-          {descriptionNode}
+    const headerNode = useMemo(
+      () => (
+        <VStack className={classNames?.headerContainer} style={styles?.headerContainer}>
+          {subtitleNode}
+          {titleNode}
         </VStack>
-      </VStack>
-    ),
-    [
-      thumbnail,
-      headerNode,
-      descriptionNode,
-      styles?.contentContainer,
-      classNames?.contentContainer,
-      classNames?.textContainer,
-      styles?.textContainer,
-    ],
-  );
+      ),
+      [subtitleNode, titleNode, styles?.headerContainer, classNames?.headerContainer],
+    );
 
-  const mediaNode = useMemo(() => {
-    if (media) {
-      return (
-        <Box className={classNames?.mediaContainer} flexBasis="50%" style={styles?.mediaContainer}>
-          {media}
-        </Box>
-      );
-    }
-  }, [media, styles?.mediaContainer, classNames?.mediaContainer]);
+    const descriptionNode = useMemo(
+      () =>
+        typeof description === 'string' ? (
+          <Text as="p" color="fgMuted" font="label2" numberOfLines={2}>
+            {description}
+          </Text>
+        ) : (
+          description
+        ),
+      [description],
+    );
 
-  return (
-    <HStack className={classNames?.layoutContainer} flexGrow={1} style={styles?.layoutContainer}>
-      {mediaPlacement === 'start' ? mediaNode : contentNode}
-      {mediaPlacement === 'end' ? mediaNode : contentNode}
-    </HStack>
-  );
-});
+    const contentNode = useMemo(
+      () => (
+        <VStack
+          className={classNames?.contentContainer}
+          flexBasis="50%"
+          gap={4}
+          justifyContent="space-between"
+          padding={2}
+          style={styles?.contentContainer}
+        >
+          {thumbnail}
+          <VStack className={classNames?.textContainer} style={styles?.textContainer}>
+            {headerNode}
+            {descriptionNode}
+          </VStack>
+        </VStack>
+      ),
+      [
+        thumbnail,
+        headerNode,
+        descriptionNode,
+        styles?.contentContainer,
+        classNames?.contentContainer,
+        classNames?.textContainer,
+        styles?.textContainer,
+      ],
+    );
+
+    const mediaNode = useMemo(() => {
+      if (media) {
+        return (
+          <Box
+            className={classNames?.mediaContainer}
+            flexBasis="50%"
+            style={styles?.mediaContainer}
+          >
+            {media}
+          </Box>
+        );
+      }
+    }, [media, styles?.mediaContainer, classNames?.mediaContainer]);
+
+    return (
+      <HStack className={classNames?.layoutContainer} flexGrow={1} style={styles?.layoutContainer}>
+        {mediaPlacement === 'start' ? mediaNode : contentNode}
+        {mediaPlacement === 'end' ? mediaNode : contentNode}
+      </HStack>
+    );
+  },
+);
