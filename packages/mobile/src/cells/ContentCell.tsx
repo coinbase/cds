@@ -126,35 +126,34 @@ function generateAccessibilityLabels(
  * @deprecated Use ListCell instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v9
  */
-export const ContentCell = memo(function ContentCell(_props: ContentCellProps) {
-  const {
-    accessory,
-    accessoryNode,
-    title,
-    titleNode,
-    description,
-    descriptionNode,
-    disabled,
-    media,
-    meta,
-    metaNode,
-    selected,
-    subtitle,
-    subtitleNode,
-    accessibilityLabel,
-    accessibilityHint,
-    detailWidth,
-    priority,
-    innerSpacing,
-    outerSpacing,
-    compact: compactProp,
-    spacingVariant = compactProp ? 'compact' : 'normal',
-    alignItems = 'flex-start',
-    style,
-    styles,
-    onPress,
-    ...props
-  } = _props;
+export const ContentCell = memo(function ContentCell({
+  accessory,
+  accessoryNode,
+  title,
+  titleNode,
+  description,
+  descriptionNode,
+  disabled,
+  media,
+  meta,
+  metaNode,
+  selected,
+  subtitle,
+  subtitleNode,
+  accessibilityLabel,
+  accessibilityHint,
+  detailWidth,
+  priority,
+  innerSpacing,
+  outerSpacing,
+  compact: compactProp,
+  spacingVariant = compactProp ? 'compact' : 'normal',
+  alignItems = 'flex-start',
+  style,
+  styles,
+  onPress,
+  ...props
+}: ContentCellProps) {
   const hasTitleContent = Boolean(titleNode ?? title);
   const hasSubtitleContent = Boolean(subtitleNode ?? subtitle);
   const hasMetaContent = Boolean(metaNode ?? meta);

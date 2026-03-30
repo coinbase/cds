@@ -173,10 +173,7 @@ type ContentCellComponent = (<AsComponent extends React.ElementType = ContentCel
 export const ContentCell: ContentCellComponent = memo(
   forwardRef<React.ReactElement<ContentCellBaseProps>, ContentCellBaseProps>(
     <AsComponent extends React.ElementType>(
-      _props: ContentCellProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
-      const {
+      {
         as,
         accessory,
         accessoryNode,
@@ -203,7 +200,9 @@ export const ContentCell: ContentCellComponent = memo(
         style,
         styles,
         ...props
-      } = _props;
+      }: ContentCellProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
       const Component = (as ?? contentCellDefaultElement) satisfies React.ElementType;
       const hasTitleContent = Boolean(titleNode ?? title);
       const hasSubtitleContent = Boolean(subtitleNode ?? subtitle);
