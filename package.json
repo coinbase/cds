@@ -64,7 +64,8 @@
     "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs",
     "code-connect:publish": "yarn code-connect:publish:web && yarn code-connect:publish:mobile",
     "code-connect:publish:web": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files --batch-size 50",
-    "code-connect:publish:mobile": "figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files --batch-size 50"
+    "code-connect:publish:mobile": "figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files --batch-size 50",
+    "perf:component-config": "yarn exec jest --config packages/web/jest.config.js --runTestsByPath packages/web/src/perf/component-config/Button.component-config.perf-test.tsx packages/web/src/perf/component-config/ComponentConfigProvider.perf-test.tsx packages/web/src/perf/component-config/ComponentConfigStickerSheet.perf-test.tsx --testMatch='**/*.perf-test.tsx' && yarn exec jest --config packages/mobile/jest.config.js --runTestsByPath packages/mobile/src/perf/component-config/Button.component-config.perf-test.tsx packages/mobile/src/perf/component-config/ComponentConfigProvider.perf-test.tsx packages/mobile/src/perf/component-config/ComponentConfigStickerSheet.perf-test.tsx --testMatch='**/*.perf-test.tsx'"
   },
   "resolutions": {
     "@testing-library/user-event@^14.0.4": "patch:@testing-library/user-event@npm:14.0.4#.yarn/patches/@testing-library-user-event-npm-14.0.4-109d618170",
