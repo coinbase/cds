@@ -1,6 +1,6 @@
 ---
 name: development-cds-mobile
-description: USE THIS when asked to work on a new or existing (MOBILE) CDS React component in packages/web
+description: USE THIS when asked to work on a new or existing (MOBILE) CDS React component in packages/mobile
 ---
 
 <!-- TODO: nested AGENTS.md files should work but they seem a little flaky at the moment. Intelligent mdc files are working better -->
@@ -8,6 +8,43 @@ description: USE THIS when asked to work on a new or existing (MOBILE) CDS React
 # CDS Mobile Package Guidelines
 
 Mobile-specific patterns for `@coinbase/cds-mobile`.
+
+## Component Config Adoption (Mobile)
+
+Use this guidance when adding `ComponentConfigProvider` defaults for the specific component you are editing.
+
+### Required implementation pattern
+
+1. Register the component in `packages/mobile/src/core/componentConfig.ts` using its `*BaseProps`:
+
+```ts
+import type { MyComponentBaseProps } from '../category/MyComponent';
+
+export type ComponentConfig = {
+  MyComponent?: ConfigResolver<MyComponentBaseProps>;
+};
+```
+
+1. Adopt `useComponentConfig` in the component and destructure from merged props:
+
+```tsx
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
+export const MyComponent = memo((_props: MyComponentProps) => {
+  const mergedProps = useComponentConfig('MyComponent', _props);
+  const { style, ...props } = mergedProps;
+
+  return <Pressable style={style} {...props} />;
+});
+```
+
+### Rules to preserve behavior
+
+- Provider config supplies defaults only; local props must continue to win.
+- Use `_props` as the input variable and `mergedProps` as the configured output.
+- Type resolver entries with `*BaseProps` (not full `*Props`).
+- Keep scope to prop-level theming defaults; do not alter component behavior or control flow.
+- When practical during the same change, prefer arrow-function component declarations.
 
 ## Styling with StyleSheet
 
