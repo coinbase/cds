@@ -2,7 +2,6 @@
   "import": "import { XAxis } from '@coinbase/cds-web/visualizations/chart'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/axis/XAxis.tsx",
   "description": "A horizontal axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting and data domains.",
-  "warning": "This component is deprecated. Please use @coinbase/cds-web/visualizations/chart instead.",
   "relatedComponents": [
     {
       "label": "CartesianChart",
