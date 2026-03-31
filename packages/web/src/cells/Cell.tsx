@@ -6,6 +6,7 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useCellSpacing } from '../hooks/useCellSpacing';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxBaseProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -197,7 +198,11 @@ type CellComponent = (<AsComponent extends React.ElementType = CellDefaultElemen
 export const Cell: CellComponent = memo(
   forwardRef<React.ReactElement<CellBaseProps>, CellBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: CellProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('Cell', _props);
+      const {
         as,
         accessory,
         accessoryNode,
@@ -245,9 +250,7 @@ export const Cell: CellComponent = memo(
         bottomContent: bottom,
         background = 'bgAlternate',
         ...props
-      }: CellProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? cellDefaultElement) satisfies React.ElementType;
 
       const { inner: innerSpacing, outer: outerSpacing } = useCellSpacing({

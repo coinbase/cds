@@ -1,22 +1,22 @@
 import React, { forwardRef, memo } from 'react';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 
 import type { InputChipProps } from './ChipProps';
 import { MediaChip } from './MediaChip';
 
 export const InputChip = memo(
-  forwardRef(function InputChip(
-    {
+  forwardRef((_props: InputChipProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
+    const mergedProps = useComponentConfig('InputChip', _props);
+    const {
       value,
       children = value,
       accessibilityLabel = typeof children === 'string' ? `Remove ${children}` : 'Remove option',
       invertColorScheme = true,
       testID = 'input-chip',
       ...props
-    }: InputChipProps,
-    ref: React.ForwardedRef<HTMLButtonElement>,
-  ) {
+    } = mergedProps;
     return (
       <MediaChip
         ref={ref}

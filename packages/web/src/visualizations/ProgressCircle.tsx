@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { useMotionProps } from '../motion/useMotionProps';
 
@@ -166,125 +167,122 @@ const ProgressCircleInner = memo(
 );
 
 export const ProgressCircle = memo(
-  forwardRef(
-    (
-      {
-        indeterminate,
-        weight = 'normal',
-        progress = indeterminate ? 0.75 : 0,
-        color = indeterminate ? 'fgMuted' : 'bgPrimary',
-        disabled,
-        disableAnimateOnMount = indeterminate ? true : false,
-        testID,
-        hideContent,
-        hideText,
-        size,
-        accessibilityLabel = indeterminate ? 'Loading' : undefined,
-        contentNode,
-        style,
-        styles,
-        className,
-        classNames,
-        onAnimationEnd,
-        onAnimationStart,
-      }: ProgressCircleProps,
-      forwardedRef: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const visSize = size ?? '100%';
-      const strokeWidth = getProgressSize(weight);
+  forwardRef((_props: ProgressCircleProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('ProgressCircle', _props);
+    const {
+      indeterminate,
+      weight = 'normal',
+      progress = indeterminate ? 0.75 : 0,
+      color = indeterminate ? 'fgMuted' : 'bgPrimary',
+      disabled,
+      disableAnimateOnMount = indeterminate ? true : false,
+      testID,
+      hideContent,
+      hideText,
+      size,
+      accessibilityLabel = indeterminate ? 'Loading' : undefined,
+      contentNode,
+      style,
+      styles,
+      className,
+      classNames,
+      onAnimationEnd,
+      onAnimationStart,
+    } = mergedProps;
+    const visSize = size ?? '100%';
+    const strokeWidth = getProgressSize(weight);
 
-      return (
-        <VisualizationContainer height={visSize} width={visSize}>
-          {({ width, height, circleSize }: VisualizationContainerDimension) => {
-            return (
-              <Box
-                ref={forwardedRef}
-                accessibilityLabel={accessibilityLabel}
-                alignItems="center"
-                {...(indeterminate
-                  ? {}
-                  : {
-                      'aria-valuemax': 100,
-                      'aria-valuemin': 0,
-                      'aria-valuenow': Math.round(progress * 100),
-                    })}
-                className={cx(className, classNames?.root)}
-                height={height}
-                justifyContent="center"
-                position="relative"
-                role="progressbar"
-                style={{ ...style, ...styles?.root }}
-                testID={testID}
-                title={accessibilityLabel}
-                width={width}
+    return (
+      <VisualizationContainer height={visSize} width={visSize}>
+        {({ width, height, circleSize }: VisualizationContainerDimension) => {
+          return (
+            <Box
+              ref={forwardedRef}
+              accessibilityLabel={accessibilityLabel}
+              alignItems="center"
+              {...(indeterminate
+                ? {}
+                : {
+                    'aria-valuemax': 100,
+                    'aria-valuemin': 0,
+                    'aria-valuenow': Math.round(progress * 100),
+                  })}
+              className={cx(className, classNames?.root)}
+              height={height}
+              justifyContent="center"
+              position="relative"
+              role="progressbar"
+              style={{ ...style, ...styles?.root }}
+              testID={testID}
+              title={accessibilityLabel}
+              width={width}
+            >
+              <svg
+                key={circleSize}
+                aria-hidden
+                className={cx(
+                  svgCss,
+                  classNames?.svg,
+                  indeterminate && indeterminateProgressCircleCss,
+                )}
+                height={circleSize}
+                style={styles?.svg}
+                width={circleSize}
               >
-                <svg
-                  key={circleSize}
-                  aria-hidden
-                  className={cx(
-                    svgCss,
-                    classNames?.svg,
-                    indeterminate && indeterminateProgressCircleCss,
-                  )}
-                  height={circleSize}
-                  style={styles?.svg}
-                  width={circleSize}
+                <circle
+                  {...getProgressCircleParams({
+                    size: circleSize,
+                    strokeWidth,
+                    stroke: 'var(--color-bgLine)',
+                  })}
+                  className={classNames?.circle}
+                  style={styles?.circle}
+                />
+                <ProgressCircleInner
+                  className={classNames?.progress}
+                  color={color}
+                  disableAnimateOnMount={disableAnimateOnMount}
+                  indeterminate={indeterminate}
+                  onAnimationEnd={onAnimationEnd}
+                  onAnimationStart={onAnimationStart}
+                  progress={progress}
+                  size={circleSize}
+                  strokeWidth={strokeWidth}
+                  style={styles?.progress}
+                  visuallyDisabled={disabled}
+                />
+              </svg>
+              {!hideText && !hideContent && (
+                <Box
+                  height="100%"
+                  position="absolute"
+                  style={{ padding: strokeWidth }}
+                  width="100%"
                 >
-                  <circle
-                    {...getProgressCircleParams({
-                      size: circleSize,
-                      strokeWidth,
-                      stroke: 'var(--color-bgLine)',
-                    })}
-                    className={classNames?.circle}
-                    style={styles?.circle}
-                  />
-                  <ProgressCircleInner
-                    className={classNames?.progress}
-                    color={color}
-                    disableAnimateOnMount={disableAnimateOnMount}
-                    indeterminate={indeterminate}
-                    onAnimationEnd={onAnimationEnd}
-                    onAnimationStart={onAnimationStart}
-                    progress={progress}
-                    size={circleSize}
-                    strokeWidth={strokeWidth}
-                    style={styles?.progress}
-                    visuallyDisabled={disabled}
-                  />
-                </svg>
-                {!hideText && !hideContent && (
+                  {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
                   <Box
+                    alignItems="center"
+                    borderRadius={1000}
                     height="100%"
-                    position="absolute"
-                    style={{ padding: strokeWidth }}
+                    justifyContent="center"
+                    overflow="clip"
                     width="100%"
                   >
-                    {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
-                    <Box
-                      alignItems="center"
-                      borderRadius={1000}
-                      height="100%"
-                      justifyContent="center"
-                      overflow="clip"
-                      width="100%"
-                    >
-                      {contentNode ??
-                        (!indeterminate && (
-                          <DefaultProgressCircleContent
-                            disableAnimateOnMount={disableAnimateOnMount}
-                            disabled={disabled}
-                            progress={progress}
-                          />
-                        ))}
-                    </Box>
+                    {contentNode ??
+                      (!indeterminate && (
+                        <DefaultProgressCircleContent
+                          disableAnimateOnMount={disableAnimateOnMount}
+                          disabled={disabled}
+                          progress={progress}
+                        />
+                      ))}
                   </Box>
-                )}
-              </Box>
-            );
-          }}
-        </VisualizationContainer>
-      );
-    },
-  ),
+                </Box>
+              )}
+            </Box>
+          );
+        }}
+      </VisualizationContainer>
+    );
+  }),
 );

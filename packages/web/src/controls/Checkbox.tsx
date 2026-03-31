@@ -9,6 +9,7 @@ import {
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout';
@@ -57,7 +58,11 @@ export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<C
 export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;
 
 const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extends string>(
-  {
+  _props: CheckboxProps<CheckboxValue>,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) {
+  const mergedProps = useComponentConfig('Checkbox', _props);
+  const {
     children,
     checked,
     indeterminate,
@@ -69,9 +74,7 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extend
     elevation,
     controlSize,
     ...props
-  }: CheckboxProps<CheckboxValue>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+  } = mergedProps;
   const filled = checked || indeterminate;
   const theme = useTheme();
   const checkboxSize = controlSize ?? theme.controlSize.checkboxSize;

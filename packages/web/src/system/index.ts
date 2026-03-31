@@ -1,3 +1,4 @@
+export * from './ComponentConfigProvider';
 export * from './EventHandlerProvider';
 export * from './Interactable';
 export * from './MediaQueryProvider';

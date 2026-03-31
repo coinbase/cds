@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 
 import { Cell, type CellBaseProps } from '../cells/Cell';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Text, type TextBaseProps } from '../typography/Text';
 
@@ -23,7 +24,7 @@ type TableCellSharedProps = (React.TdHTMLAttributes<HTMLTableCellElement> &
   React.ThHTMLAttributes<HTMLTableCellElement>) &
   SharedProps;
 
-type TableCellBaseProps = TableCellSharedProps & {
+export type TableCellBaseProps = TableCellSharedProps & {
   /**
    * Element (icon, asset, image, etc) to display at the start of the cell
    * @default undefined
@@ -60,11 +61,6 @@ type TableCellBaseProps = TableCellSharedProps & {
    */
   scope?: 'col' | 'row' | 'colgroup' | 'rowgroup';
   /**
-   * Callback to fire when pressed
-   * @default noop
-   */
-  onClick?: React.MouseEventHandler;
-  /**
    * Should the title/subtitle text truncate
    * @default false
    */
@@ -75,14 +71,6 @@ type TableCellBaseProps = TableCellSharedProps & {
    * @default vertical
    */
   direction?: 'vertical' | 'horizontal';
-  /**
-   * @deprecated. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v9
-   * HTML width attribute to help with column layout.
-   * This prop should _only_ be used to unblock migration efforts
-   * @default undefined
-   */
-  dangerouslySetHtmlWidth?: TableCellSharedProps['width'];
   /**
    * As a convenience, the width prop will set the css width and maxWidth props
    * @default undefined
@@ -97,15 +85,6 @@ type TableCellBaseProps = TableCellSharedProps & {
    * @default { spacingHorizontal: 0 }
    */
   innerSpacing?: CellBaseProps['innerSpacing'];
-  /**
-   * Use as="th" to mark this cell as a header for screen readers
-   * @default `th` when rendered inside a TableHeader, `td` when rendered inside a TableBody or TableFooter
-   */
-  as?: 'td' | 'th';
-  /**
-   * @danger This is a migration escape hatch. It is not intended to be used normally.
-   */
-  className?: string;
 };
 
 type TableCellPropsWithInputs = TableCellBaseProps & {
@@ -140,7 +119,30 @@ type TableCellPropsWithChildren = TableCellBaseProps & {
   subtitleColor?: never;
 };
 
-export type TableCellProps = TableCellPropsWithInputs | TableCellPropsWithChildren;
+export type TableCellProps = (TableCellPropsWithInputs | TableCellPropsWithChildren) & {
+  /**
+   * Callback to fire when pressed
+   * @default noop
+   */
+  onClick?: React.MouseEventHandler;
+  /**
+   * Use as="th" to mark this cell as a header for screen readers
+   * @default `th` when rendered inside a TableHeader, `td` when rendered inside a TableBody or TableFooter
+   */
+  as?: 'td' | 'th';
+  /**
+   * @danger This is a migration escape hatch. It is not intended to be used normally.
+   */
+  className?: string;
+  /**
+   * @deprecated. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v9
+   * HTML width attribute to help with column layout.
+   * This prop should _only_ be used to unblock migration efforts
+   * @default undefined
+   */
+  dangerouslySetHtmlWidth?: TableCellSharedProps['width'];
+};
 
 const truncationCss = css`
   display: block;
@@ -172,8 +174,9 @@ const tableOverflowWidthCss = css`
   max-width: 0;
 `;
 
-export const TableCell = memo(
-  ({
+export const TableCell = memo((_props: TableCellProps) => {
+  const mergedProps = useComponentConfig('TableCell', _props);
+  const {
     alignItems,
     children,
     colSpan = 1,
@@ -186,7 +189,7 @@ export const TableCell = memo(
     start,
     testID,
     overflow,
-    // Only available when Children is null
+    // Only available when children is null
     title,
     titleColor,
     subtitle,
@@ -197,155 +200,154 @@ export const TableCell = memo(
     as,
     className,
     ...props
-  }: TableCellProps) => {
-    if (isDevelopment() && children && (title || subtitle)) {
-      console.error('TableCell: Cannot use `title` or `subtitle` with `children`.');
-    }
+  } = mergedProps;
+  if (isDevelopment() && children && (title || subtitle)) {
+    console.error('TableCell: Cannot use `title` or `subtitle` with `children`.');
+  }
 
-    /**
-     * ===================================================
-     * SIMPLE PROP DRIVEN VARIABLES
-     * These variables get their default value from
-     * component props, which are memoized
-     * ===================================================
-     */
-    const defaultJustifyContent = direction === 'vertical' ? 'flex-start' : 'space-between';
-    const defaultAlignItems = direction === 'vertical' ? 'flex-start' : 'center';
-    const shouldHandleOverflow = !!overflow && !width;
+  /**
+   * ===================================================
+   * SIMPLE PROP DRIVEN VARIABLES
+   * These variables get their default value from
+   * component props, which are memoized
+   * ===================================================
+   */
+  const defaultJustifyContent = direction === 'vertical' ? 'flex-start' : 'space-between';
+  const defaultAlignItems = direction === 'vertical' ? 'flex-start' : 'center';
+  const shouldHandleOverflow = !!overflow && !width;
 
-    /**
-     * ===================================================
-     * CONDITIONALS VARIABLES
-     * These variables get their default value from a hook
-     * so need to be memoized and computed here
-     * ===================================================
-     */
-    // Depending on compact value
-    const { compact } = useTableContext();
-    const textPaddingTop = !compact && title ? 0.5 : 0;
-    const cellGap = compact ? 0.5 : 1;
+  /**
+   * ===================================================
+   * CONDITIONALS VARIABLES
+   * These variables get their default value from a hook
+   * so need to be memoized and computed here
+   * ===================================================
+   */
+  // Depending on compact value
+  const { compact } = useTableContext();
+  const textPaddingTop = !compact && title ? 0.5 : 0;
+  const cellGap = compact ? 0.5 : 1;
 
-    // Depends on tableSectionType value
-    const tableSectionType = useTableSectionTag();
-    const isInBody = tableSectionType === 'tbody';
-    const defaultTitleColor = isInBody ? 'fg' : 'fgMuted';
-    const smartTitleColor = titleColor ?? color ?? defaultTitleColor;
+  // Depends on tableSectionType value
+  const tableSectionType = useTableSectionTag();
+  const isInBody = tableSectionType === 'tbody';
+  const defaultTitleColor = isInBody ? 'fg' : 'fgMuted';
+  const smartTitleColor = titleColor ?? color ?? defaultTitleColor;
 
-    // Spacing defined on the TableCell will override cellSpacing defined on the Table
-    const { outer, inner } = useTableCellSpacing({ outer: outerSpacing, inner: innerSpacing });
+  // Spacing defined on the TableCell will override cellSpacing defined on the Table
+  const { outer, inner } = useTableCellSpacing({ outer: outerSpacing, inner: innerSpacing });
 
-    // Depends on prop infered variables
-    const smartAlignItems = alignItems ?? defaultAlignItems;
-    const smartJustifyContent = justifyContent ?? defaultJustifyContent;
+  // Depends on prop infered variables
+  const smartAlignItems = alignItems ?? defaultAlignItems;
+  const smartJustifyContent = justifyContent ?? defaultJustifyContent;
 
-    /**
-     * ===================================================
-     * CONDITIONALS COMPONENTS
-     * These variables get their default value from a hook
-     * so need to be memoized and computed here
-     * ===================================================
-     */
-    const TableCellComponent = useTableCellTag(as);
-    const cellScope = useMemo(() => {
-      if (TableCellComponent !== 'th') return undefined;
-      if (scope) return scope;
-      return tableSectionType === 'thead' ? 'col' : 'row';
-    }, [TableCellComponent, tableSectionType, scope]);
-    const flexDirection = direction === 'vertical' ? 'column' : 'row';
-    const textComponentFont = useMemo(
-      () => (tableSectionType === 'thead' ? 'headline' : 'body'),
-      [tableSectionType],
-    );
+  /**
+   * ===================================================
+   * CONDITIONALS COMPONENTS
+   * These variables get their default value from a hook
+   * so need to be memoized and computed here
+   * ===================================================
+   */
+  const TableCellComponent = useTableCellTag(as);
+  const cellScope = useMemo(() => {
+    if (TableCellComponent !== 'th') return undefined;
+    if (scope) return scope;
+    return tableSectionType === 'thead' ? 'col' : 'row';
+  }, [TableCellComponent, tableSectionType, scope]);
+  const flexDirection = direction === 'vertical' ? 'column' : 'row';
+  const textComponentFont = useMemo(
+    () => (tableSectionType === 'thead' ? 'headline' : 'body'),
+    [tableSectionType],
+  );
 
-    /**
-     * ===================================================
-     * STYLES
-     * ===================================================
-     */
-    const inlineStyles = useMemo(() => ({ width, maxWidth: width }), [width]);
+  /**
+   * ===================================================
+   * STYLES
+   * ===================================================
+   */
+  const inlineStyles = useMemo(() => ({ width, maxWidth: width }), [width]);
 
-    return (
-      <TableCellComponent
-        className={cx(
-          tableCellCss,
-          tableSectionType === 'thead' && tableHeaderCellCss,
-          tableSectionType === 'tfoot' && tableFooterCellCss,
-          shouldHandleOverflow && tableOverflowWidthCss,
-          className,
-        )}
-        colSpan={colSpan}
-        data-testid={testID}
-        scope={cellScope}
-        style={inlineStyles}
-        {...props}
+  return (
+    <TableCellComponent
+      className={cx(
+        tableCellCss,
+        tableSectionType === 'thead' && tableHeaderCellCss,
+        tableSectionType === 'tfoot' && tableFooterCellCss,
+        shouldHandleOverflow && tableOverflowWidthCss,
+        className,
+      )}
+      colSpan={colSpan}
+      data-testid={testID}
+      scope={cellScope}
+      style={inlineStyles}
+      {...props}
+    >
+      <Cell
+        accessory={end}
+        alignItems={alignItems}
+        gap={cellGap}
+        innerSpacing={inner}
+        media={start}
+        onClick={onClick}
+        outerSpacing={outer}
+        shouldOverflow={!overflow}
       >
-        <Cell
-          accessory={end}
-          alignItems={alignItems}
-          gap={cellGap}
-          innerSpacing={inner}
-          media={start}
-          onClick={onClick}
-          outerSpacing={outer}
-          shouldOverflow={!overflow}
-        >
-          {children ? (
+        {children ? (
+          <Text
+            as="div"
+            color={color}
+            display="block"
+            font={textComponentFont}
+            noWrap={!!overflow}
+            overflow={overflow}
+          >
+            <Box
+              alignItems={smartAlignItems}
+              flexDirection={flexDirection}
+              flexGrow={1}
+              flexShrink={1}
+              gap={0.5}
+              justifyContent={smartJustifyContent}
+            >
+              {children}
+            </Box>
+          </Text>
+        ) : (
+          <Box
+            alignItems={smartAlignItems}
+            className={overflow ? truncationCss : undefined}
+            flexDirection={flexDirection}
+            flexGrow={1}
+            flexShrink={1}
+            justifyContent={smartJustifyContent}
+          >
             <Text
               as="div"
-              color={color}
+              color={smartTitleColor}
               display="block"
               font={textComponentFont}
               noWrap={!!overflow}
               overflow={overflow}
             >
-              <Box
-                alignItems={smartAlignItems}
-                flexDirection={flexDirection}
-                flexGrow={1}
-                flexShrink={1}
-                gap={0.5}
-                justifyContent={smartJustifyContent}
-              >
-                {children}
-              </Box>
+              {title}
             </Text>
-          ) : (
-            <Box
-              alignItems={smartAlignItems}
-              className={overflow ? truncationCss : undefined}
-              flexDirection={flexDirection}
-              flexGrow={1}
-              flexShrink={1}
-              justifyContent={smartJustifyContent}
-            >
+            {subtitle ? (
               <Text
                 as="div"
-                color={smartTitleColor}
+                color={subtitleColor}
                 display="block"
-                font={textComponentFont}
-                noWrap={!!overflow}
+                font="label2"
                 overflow={overflow}
+                paddingTop={textPaddingTop}
               >
-                {title}
+                {subtitle}
               </Text>
-              {subtitle ? (
-                <Text
-                  as="div"
-                  color={subtitleColor}
-                  display="block"
-                  font="label2"
-                  overflow={overflow}
-                  paddingTop={textPaddingTop}
-                >
-                  {subtitle}
-                </Text>
-              ) : null}
-            </Box>
-          )}
-        </Cell>
-      </TableCellComponent>
-    );
-  },
-);
+            ) : null}
+          </Box>
+        )}
+      </Cell>
+    </TableCellComponent>
+  );
+});
 
 TableCell.displayName = 'TableCell';

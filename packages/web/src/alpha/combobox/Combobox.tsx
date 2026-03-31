@@ -11,6 +11,7 @@ import {
 } from 'react';
 import Fuse from 'fuse.js';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import type { SelectOptionList } from '../select';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type {
@@ -155,7 +156,11 @@ const ComboboxControlContextAdapter = memo(
 const ComboboxBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: ComboboxProps<Type, SelectOptionValue>,
+      ref: React.Ref<ComboboxRef>,
+    ) => {
+      const mergedProps = useComponentConfig('Combobox', _props);
+      const {
         type = 'single' as Type,
         value,
         onChange,
@@ -175,9 +180,7 @@ const ComboboxBase = memo(
         hideSearchInput,
         font,
         ...props
-      }: ComboboxProps<Type, SelectOptionValue>,
-      ref: React.Ref<ComboboxRef>,
-    ) => {
+      } = mergedProps;
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
