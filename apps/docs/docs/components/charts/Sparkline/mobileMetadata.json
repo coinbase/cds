@@ -2,6 +2,7 @@
   "import": "import { Sparkline } from '@coinbase/cds-mobile/visualizations/sparkline'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/sparkline/Sparkline.tsx",
   "description": "A small line chart component for displaying data trends.",
+  "warning": "Sparkline components are deprecated. Please use LineChart instead.",
   "relatedComponents": [
     {
       "label": "SparklineGradient",
