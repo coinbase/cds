@@ -287,6 +287,7 @@ export const Cell = memo(function Cell({
           disabled={disabled}
           onPress={onPress}
           style={[offsetStyle, pressStyles, styles?.pressable]}
+          testID={testID && `${testID}-cell-pressable`}
         >
           {content}
         </Pressable>
@@ -306,6 +307,7 @@ export const Cell = memo(function Cell({
     accessibilityState,
     blendStyles,
     borderRadius,
+    testID,
   ]);
 
   return (

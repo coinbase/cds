@@ -27,7 +27,7 @@ const titlePadding = { paddingX: gutter } as const;
 const Content = () => {
   return (
     <>
-      <ListCell spacingVariant="condensed" title="Title" />
+      <ListCell spacingVariant="condensed" testID="non-pressable" title="Title" />
       <ListCell detail="Detail" spacingVariant="condensed" title="Title" />
       <ListCell description="Description" spacingVariant="condensed" title="Title" />
       <ListCell
@@ -194,6 +194,7 @@ const PressableContent = () => (
       description="Multi-line description"
       onPress={onPressConsole}
       spacingVariant="condensed"
+      testID="list-cell-with-press"
       title="Title"
     />
     <ListCell
