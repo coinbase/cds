@@ -1,8 +1,8 @@
 /**
  * Migrate `useMergeRefs` from the deprecated hooks entry to `mergeRefs` on `utils/mergeRefs`.
  *
- * Goal: use `@coinbase/cds-common/utils/mergeRefs` and the `mergeRefs` binding (the deprecated
- * `useMergeRefs` export is identical at runtime to `mergeRefs`).
+ * Goal: use `…/utils/mergeRefs` and the `mergeRefs` binding (the deprecated `useMergeRefs` export is
+ * identical at runtime to `mergeRefs`). Supports `@coinbase/cds-common` and `@cbhq/cds-common`.
  *
  * Cases handled:
  * - A: `import { useMergeRefs } from '…hooks/useMergeRefs'` → `import { mergeRefs } from '…utils/mergeRefs'`.
@@ -35,17 +35,34 @@ import type { API, ASTPath, FileInfo, Identifier, Options } from 'jscodeshift';
 
 import { transformLogger } from '../../utils/transform-utils';
 
-const DEPRECATED_MODULE = '@coinbase/cds-common/hooks/useMergeRefs';
-const TARGET_MODULE = '@coinbase/cds-common/utils/mergeRefs';
+const MERGE_REFS_TARGET_MODULES = [
+  '@coinbase/cds-common/utils/mergeRefs',
+  '@cbhq/cds-common/utils/mergeRefs',
+] as const;
+
+const MERGE_REFS_KNOWN_SOURCES = new Set<string>([
+  '@coinbase/cds-common/hooks/useMergeRefs',
+  '@coinbase/cds-common/utils/mergeRefs',
+  '@cbhq/cds-common/hooks/useMergeRefs',
+  '@cbhq/cds-common/utils/mergeRefs',
+]);
+
+/** Deprecated hooks entry → utils entry (same org prefix). */
+function migrateMergeRefsModulePath(value: string): string | null {
+  if (value === '@coinbase/cds-common/hooks/useMergeRefs') {
+    return '@coinbase/cds-common/utils/mergeRefs';
+  }
+  if (value === '@cbhq/cds-common/hooks/useMergeRefs') {
+    return '@cbhq/cds-common/utils/mergeRefs';
+  }
+  return null;
+}
 
 function isCdsMergeRefsModuleSource(
   j: API['jscodeshift'],
   source: unknown,
 ): source is { value: string } {
-  return (
-    j.StringLiteral.check(source) &&
-    (source.value === TARGET_MODULE || source.value === DEPRECATED_MODULE)
-  );
+  return j.StringLiteral.check(source) && MERGE_REFS_KNOWN_SOURCES.has(source.value);
 }
 
 /**
@@ -198,14 +215,15 @@ function renameRemainingUseMergeRefsIdentifiers(
 }
 
 /**
- * Merge multiple `import … from TARGET_MODULE` into a single declaration; dedupe named imports.
+ * Merge multiple `import … from targetModule` into a single declaration; dedupe named imports.
  */
 function consolidateImportsFromMergeRefsModule(
   j: API['jscodeshift'],
   root: ReturnType<API['jscodeshift']>,
+  targetModule: string,
 ) {
   const declarations = root
-    .find(j.ImportDeclaration, { source: { value: TARGET_MODULE } })
+    .find(j.ImportDeclaration, { source: { value: targetModule } })
     .filter((path) => (path.value.specifiers?.length ?? 0) > 0);
 
   if (declarations.length <= 1) {
@@ -277,12 +295,14 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
 
   root.find(j.ImportDeclaration).forEach((path) => {
     if (path.value.source && j.StringLiteral.check(path.value.source)) {
-      if (path.value.source.value === DEPRECATED_MODULE) {
-        path.value.source = j.stringLiteral(TARGET_MODULE);
+      const next = migrateMergeRefsModulePath(path.value.source.value);
+      if (next) {
+        const prev = path.value.source.value;
+        path.value.source = j.stringLiteral(next);
         hasChanges = true;
         cdsMergeRefsMigration = true;
         transformLogger.success(
-          `Updated import: ${DEPRECATED_MODULE} → ${TARGET_MODULE}`,
+          `Updated import: ${prev} → ${next}`,
           file.path,
           path.value.loc?.start.line,
         );
@@ -292,25 +312,31 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
 
   root.find(j.ExportNamedDeclaration).forEach((path) => {
     const src = path.value.source;
-    if (src && j.StringLiteral.check(src) && src.value === DEPRECATED_MODULE) {
-      path.value.source = j.stringLiteral(TARGET_MODULE);
-      hasChanges = true;
-      cdsMergeRefsMigration = true;
-      transformLogger.success(
-        `Updated export from: ${DEPRECATED_MODULE} → ${TARGET_MODULE}`,
-        file.path,
-        path.value.loc?.start.line,
-      );
+    if (src && j.StringLiteral.check(src)) {
+      const next = migrateMergeRefsModulePath(src.value);
+      if (next) {
+        const prev = src.value;
+        path.value.source = j.stringLiteral(next);
+        hasChanges = true;
+        cdsMergeRefsMigration = true;
+        transformLogger.success(
+          `Updated export from: ${prev} → ${next}`,
+          file.path,
+          path.value.loc?.start.line,
+        );
+      }
     }
   });
 
   root.find(j.StringLiteral).forEach((path) => {
-    if (path.value.value === DEPRECATED_MODULE) {
-      path.value.value = TARGET_MODULE;
+    const next = migrateMergeRefsModulePath(path.value.value);
+    if (next) {
+      const prev = path.value.value;
+      path.value.value = next;
       hasChanges = true;
       cdsMergeRefsMigration = true;
       transformLogger.success(
-        `Updated module path string: ${DEPRECATED_MODULE} → ${TARGET_MODULE}`,
+        `Updated module path string: ${prev} → ${next}`,
         file.path,
         path.value.loc?.start.line,
       );
@@ -335,7 +361,9 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
   }
 
   if (hasChanges) {
-    consolidateImportsFromMergeRefsModule(j, root);
+    for (const targetModule of MERGE_REFS_TARGET_MODULES) {
+      consolidateImportsFromMergeRefsModule(j, root, targetModule);
+    }
   }
 
   if (!hasChanges) {

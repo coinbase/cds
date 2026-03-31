@@ -34,6 +34,16 @@ const App = () => <Button variant="foregroundMuted">Click</Button>;
       expect(output).not.toContain('variant="foregroundMuted"');
     });
 
+    it('rewrites variant="tertiary" to variant="inverse" on Button from @cbhq/cds-web', () => {
+      const input = `
+import { Button } from '@cbhq/cds-web';
+const App = () => <Button variant="tertiary">Click</Button>;
+`;
+      const output = applyButtonVariantTransform(input);
+      expect(output).toContain('variant="inverse"');
+      expect(output).not.toContain('variant="tertiary"');
+    });
+
     it('rewrites variant="tertiary" to variant="inverse" on IconButton from @coinbase/cds-mobile', () => {
       const input = `
 import { IconButton } from '@coinbase/cds-mobile';

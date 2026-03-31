@@ -23,6 +23,7 @@ describe('migrate-use-merge-refs', () => {
 
   it.each([
     ['basic'],
+    ['cbhq-basic'],
     ['import-alias'],
     ['jest-mock'],
     ['re-export'],

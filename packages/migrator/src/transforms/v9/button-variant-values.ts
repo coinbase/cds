@@ -5,7 +5,7 @@
  *   - "tertiary"        → "inverse"   (old tertiary used bgInverse; v9 gives tertiary new semantics)
  *   - "foregroundMuted"  → "secondary" (foregroundMuted deprecated per design)
  *
- * Only targets components imported from @coinbase/cds-web or @coinbase/cds-mobile.
+ * Only targets components imported from @coinbase/cds-* or @cbhq/cds-* web/mobile packages.
  * Adds TODO comments for dynamic variant expressions that need manual review.
  */
 import type { API, FileInfo } from 'jscodeshift';
@@ -17,7 +17,12 @@ const VARIANT_MAP: Record<string, string> = {
   foregroundMuted: 'secondary',
 };
 
-const CDS_PACKAGES = ['@coinbase/cds-web', '@coinbase/cds-mobile'];
+const CDS_PACKAGES = [
+  '@coinbase/cds-web',
+  '@coinbase/cds-mobile',
+  '@cbhq/cds-web',
+  '@cbhq/cds-mobile',
+];
 const TARGET_COMPONENTS = ['Button', 'IconButton'];
 
 // eslint-disable-next-line no-restricted-exports -- jscodeshift requires default export
