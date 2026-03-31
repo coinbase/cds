@@ -1,6 +1,6 @@
 {
   "import": "import { Scrubber } from '@coinbase/cds-mobile/visualizations/chart'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/scrubber/Scrubber.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/chart/scrubber/Scrubber.tsx",
   "description": "An interactive scrubber component for exploring individual data points in charts. Displays values on hover or drag and supports custom labels and formatting.",
   "relatedComponents": [
     {
