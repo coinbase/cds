@@ -79,7 +79,6 @@ import type { TableCellFallbackBaseProps } from '../tables/TableCellFallback';
 import type { TableRowBaseProps } from '../tables/TableRow';
 import type { SegmentedTabBaseProps } from '../tabs/SegmentedTab';
 import type { SegmentedTabsBaseProps } from '../tabs/SegmentedTabs';
-import type { TabLabelBaseProps } from '../tabs/TabLabel';
 import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
 import type { TourBaseProps } from '../tour/Tour';
@@ -176,7 +175,6 @@ export type ComponentConfig = {
   SidebarItem?: ConfigResolver<SidebarItemBaseProps>;
   SidebarMoreMenu?: ConfigResolver<SidebarMoreMenuBaseProps>;
   Stepper?: ConfigResolver<StepperBaseProps>;
-  TabLabel?: ConfigResolver<TabLabelBaseProps>;
   Table?: ConfigResolver<TableBaseProps>;
   TableCaption?: ConfigResolver<TableCaptionBaseProps>;
   TableCell?: ConfigResolver<TableCellBaseProps>;
