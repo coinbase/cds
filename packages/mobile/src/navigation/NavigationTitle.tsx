@@ -1,13 +1,16 @@
 import { memo } from 'react';
 
-import { Text, type TextProps } from '../typography/Text';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { Text, type TextBaseProps, type TextProps } from '../typography/Text';
 
-export type NavigationTitleProps = TextProps;
+export type NavigationTitleBaseProps = TextBaseProps;
 
-export const NavigationTitle = memo(
-  ({ accessibilityRole = 'header', font = 'headline', ...props }: NavigationTitleProps) => {
-    return <Text accessibilityRole={accessibilityRole} font={font} {...props} />;
-  },
-);
+export type NavigationTitleProps = NavigationTitleBaseProps & TextProps;
+
+export const NavigationTitle = memo((_props: NavigationTitleProps) => {
+  const mergedProps = useComponentConfig('NavigationTitle', _props);
+  const { accessibilityRole = 'header', font = 'headline', ...props } = mergedProps;
+  return <Text accessibilityRole={accessibilityRole} font={font} {...props} />;
+});
 
 NavigationTitle.displayName = 'NavigationTitle';

@@ -187,6 +187,17 @@ export const routes = [
       require('@cbhq/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
   },
   {
+    key: 'ComponentConfigProvider',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/system/__stories__/ComponentConfigProvider.stories').default,
+  },
+  {
+    key: 'ComponentConfigProviderCustom',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/system/__stories__/ComponentConfigProviderCustom.stories')
+        .default,
+  },
+  {
     key: 'ContainedAssetCard',
     getComponent: () =>
       require('@cbhq/cds-mobile/cards/__stories__/ContainedAssetCard.stories').default,

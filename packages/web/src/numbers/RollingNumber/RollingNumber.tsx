@@ -16,6 +16,7 @@ import { m, type Transition } from 'framer-motion';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { HStack } from '../../layout/HStack';
 import {
   Text,
@@ -419,7 +420,11 @@ type RollingNumberComponent = (<
 export const RollingNumber: RollingNumberComponent = memo(
   forwardRef<React.ReactElement<RollingNumberBaseProps>, RollingNumberBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: RollingNumberProps<AsComponent>,
+      ref: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('RollingNumber', _props);
+      const {
         as,
         value,
         transition,
@@ -454,9 +459,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         accessibilityLabelPrefix,
         accessibilityLabelSuffix,
         ...props
-      }: RollingNumberProps<AsComponent>,
-      ref: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? rollingNumberDefaultElement) satisfies React.ElementType;
       const { locale: defaultLocale } = useLocale();
       const locale = localeProp ?? defaultLocale;

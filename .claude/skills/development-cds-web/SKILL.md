@@ -7,6 +7,43 @@ description: USE THIS when asked to work on a new or existing (WEB) CDS React co
 
 # CDS Web Package Guidelines
 
+## Component Config Adoption (Web)
+
+Use this guidance when adding `ComponentConfigProvider` defaults for the specific component you are editing.
+
+### Required implementation pattern
+
+1. Register the component in `packages/web/src/core/componentConfig.ts` using its `*BaseProps`:
+
+```ts
+import type { MyComponentBaseProps } from '../category/MyComponent';
+
+export type ComponentConfig = {
+  MyComponent?: ConfigResolver<MyComponentBaseProps>;
+};
+```
+
+1. Adopt `useComponentConfig` in the component and destructure from merged props:
+
+```tsx
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
+export const MyComponent = memo((_props: MyComponentProps) => {
+  const mergedProps = useComponentConfig('MyComponent', _props);
+  const { className, style, ...props } = mergedProps;
+
+  return <Box className={className} style={style} {...props} />;
+});
+```
+
+### Rules to preserve behavior
+
+- Provider config supplies defaults only; local props must continue to win.
+- Use `_props` as the input variable and `mergedProps` as the configured output.
+- Type resolver entries with `*BaseProps` (not polymorphic/full `*Props`).
+- Keep scope to prop-level theming defaults; do not alter component behavior or control flow.
+- When practical during the same change, prefer arrow-function component declarations.
+
 ## CSS with Linaria
 
 Use Linaria for zero-runtime CSS. **Always use CDS theme CSS variables** for colors, spacing, typography, and other design tokens.

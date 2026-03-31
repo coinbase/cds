@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.16.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Add mobile component config route. [[#507](https://github.com/coinbase/cds/pull/507)]
+
 ## 4.15.2 (3/27/2026 PST)
 
 #### 🐞 Fixes

@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
 import {
@@ -144,7 +145,11 @@ type TabbedChipsFC = <TabId extends string = string>(
 
 const TabbedChipsComponent = memo(
   forwardRef(function TabbedChips<TabId extends string = string>(
-    {
+    _props: TabbedChipsProps<TabId>,
+    ref: React.ForwardedRef<HTMLElement | null>,
+  ) {
+    const mergedProps = useComponentConfig('TabbedChips', _props);
+    const {
       tabs,
       activeTab,
       onChange,
@@ -162,9 +167,7 @@ const TabbedChipsComponent = memo(
       classNames,
       autoScrollOffset = 50,
       ...accessibilityProps
-    }: TabbedChipsProps<TabId>,
-    ref: React.ForwardedRef<HTMLElement | null>,
-  ) {
+    } = mergedProps;
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
       useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });

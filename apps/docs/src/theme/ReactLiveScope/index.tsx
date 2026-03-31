@@ -79,6 +79,7 @@ import * as CDSPagination from '@cbhq/cds-web/pagination';
 import * as CDSSectionHeader from '@cbhq/cds-web/section-header';
 import * as StepperComponents from '@cbhq/cds-web/stepper';
 import * as CDSSystem from '@cbhq/cds-web/system';
+import { ComponentConfigProvider } from '@cbhq/cds-web/system/ComponentConfigProvider';
 import * as CDSTables from '@cbhq/cds-web/tables';
 import { useSortableCell } from '@cbhq/cds-web/tables/hooks/useSortableCell';
 import * as CDSTabs from '@cbhq/cds-web/tabs';
@@ -187,6 +188,10 @@ const explicitRegistrations: Record<string, ExplicitEntry> = {
 
   // Components not exported from their barrel
   InputLabel: { value: InputLabel, source: '@cbhq/cds-web/controls/InputLabel' },
+  ComponentConfigProvider: {
+    value: ComponentConfigProvider,
+    source: '@cbhq/cds-web/system/ComponentConfigProvider',
+  },
   useToast: { value: useToast, source: '@cbhq/cds-web/overlays/useToast' },
   useSortableCell: {
     value: useSortableCell,

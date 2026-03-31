@@ -13,6 +13,7 @@ import { KeyboardAvoidingView, Platform, type TextInput, View } from 'react-nati
 import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
@@ -166,7 +167,11 @@ const ComboboxControlContextAdapter = memo(
 const ComboboxBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: ComboboxProps<Type, SelectOptionValue>,
+      ref: React.Ref<ComboboxRef>,
+    ) => {
+      const mergedProps = useComponentConfig('Combobox', _props);
+      const {
         type = 'single' as Type,
         value,
         onChange,
@@ -193,9 +198,7 @@ const ComboboxBase = memo(
         hideSearchInput,
         font,
         ...props
-      }: ComboboxProps<Type, SelectOptionValue>,
-      ref: React.Ref<ComboboxRef>,
-    ) => {
+      } = mergedProps;
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;

@@ -7,6 +7,7 @@ import { Cell, type CellBaseProps } from '../cells/Cell';
 import { CellAccessory } from '../cells/CellAccessory';
 import type { ListCellBaseProps } from '../cells/ListCell';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
@@ -109,8 +110,9 @@ export type SelectOptionBaseProps = Omit<CellBaseProps, 'children' | 'selected'>
 
 export type SelectOptionProps = SelectOptionBaseProps;
 
-export const SelectOption = memo(
-  ({
+export const SelectOption = memo((_props: SelectOptionProps) => {
+  const mergedProps = useComponentConfig('SelectOption', _props);
+  const {
     title,
     description,
     multiline,
@@ -123,78 +125,77 @@ export const SelectOption = memo(
     testID,
     disabled,
     ...props
-  }: SelectOptionProps) => {
-    const selectOptionRef = useRef<HTMLButtonElement | null>(null);
-    const { onChange, value: selectedValue, handleCloseMenu } = useSelectContext();
-    const selected = selectedValue === value;
+  } = mergedProps;
+  const selectOptionRef = useRef<HTMLButtonElement | null>(null);
+  const { onChange, value: selectedValue, handleCloseMenu } = useSelectContext();
+  const selected = selectedValue === value;
 
-    const heightStyles = compact ? compactCss : normalCss;
+  const heightStyles = compact ? compactCss : normalCss;
 
-    useEffect(() => {
-      if (selected) {
-        selectOptionRef.current?.focus();
-      }
-    }, [selected]);
+  useEffect(() => {
+    if (selected) {
+      selectOptionRef.current?.focus();
+    }
+  }, [selected]);
 
-    const handleChange = useCallback(() => {
-      onChange?.(value);
-      // You can disable close on option change from either an individual SelectOption or globally through the Select or Dropdown components
-      if (!disableCloseOnOptionChange) {
-        handleCloseMenu?.();
-      }
-    }, [onChange, value, disableCloseOnOptionChange, handleCloseMenu]);
+  const handleChange = useCallback(() => {
+    onChange?.(value);
+    // You can disable close on option change from either an individual SelectOption or globally through the Select or Dropdown components
+    if (!disableCloseOnOptionChange) {
+      handleCloseMenu?.();
+    }
+  }, [onChange, value, disableCloseOnOptionChange, handleCloseMenu]);
 
-    const handleClick = useCallback(
-      (event: React.MouseEvent) => {
-        handleChange();
-        onClick?.(event);
-      },
-      [onClick, handleChange],
-    );
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      handleChange();
+      onClick?.(event);
+    },
+    [onClick, handleChange],
+  );
 
-    return (
-      <Pressable
-        ref={selectOptionRef}
-        noScaleOnPress
-        accessibilityLabel={accessibilityLabel}
-        background="bg"
-        className={cx(selectOptionStaticClassName, pressableCss)}
-        disabled={disabled}
-        onClick={handleClick}
-        role="menuitem"
-        tabIndex={tabIndex ?? -1} // default to -1 since this is a grouped control and the parent control will have tabIndex 0
-        testID={testID}
+  return (
+    <Pressable
+      ref={selectOptionRef}
+      noScaleOnPress
+      accessibilityLabel={accessibilityLabel}
+      background="bg"
+      className={cx(selectOptionStaticClassName, pressableCss)}
+      disabled={disabled}
+      onClick={handleClick}
+      role="menuitem"
+      tabIndex={tabIndex ?? -1} // default to -1 since this is a grouped control and the parent control will have tabIndex 0
+      testID={testID}
+    >
+      <Cell
+        {...selectCellSpacingConfig}
+        accessory={<CellAccessory type="selected" visibility={selected ? 'visible' : 'hidden'} />}
+        borderRadius={0}
+        className={cx(heightStyles, multiline ? multilineCss : undefined)}
+        selected={selected}
+        {...props}
       >
-        <Cell
-          {...selectCellSpacingConfig}
-          accessory={<CellAccessory type="selected" visibility={selected ? 'visible' : 'hidden'} />}
-          borderRadius={0}
-          className={cx(heightStyles, multiline ? multilineCss : undefined)}
-          selected={selected}
-          {...props}
-        >
-          <VStack>
-            {!!title && (
-              <Text as="div" display="block" font="headline" overflow="truncate">
-                {title}
-              </Text>
-            )}
+        <VStack>
+          {!!title && (
+            <Text as="div" display="block" font="headline" overflow="truncate">
+              {title}
+            </Text>
+          )}
 
-            {!!description && (
-              <Text
-                as="div"
-                className={multiline ? multilineTextCss : undefined}
-                color="fgMuted"
-                display="block"
-                font="body"
-                overflow={multiline ? undefined : 'truncate'}
-              >
-                {description}
-              </Text>
-            )}
-          </VStack>
-        </Cell>
-      </Pressable>
-    );
-  },
-);
+          {!!description && (
+            <Text
+              as="div"
+              className={multiline ? multilineTextCss : undefined}
+              color="fgMuted"
+              display="block"
+              font="body"
+              overflow={multiline ? undefined : 'truncate'}
+            >
+              {description}
+            </Text>
+          )}
+        </VStack>
+      </Cell>
+    </Pressable>
+  );
+});
