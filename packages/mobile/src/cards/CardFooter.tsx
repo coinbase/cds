@@ -16,6 +16,10 @@ export type CardFooterBaseProps = Pick<
 
 export type CardFooterProps = CardFooterBaseProps & Omit<BoxProps, 'children'>;
 
+/**
+ * @deprecated Use ContentCardFooter instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const CardFooter = memo(function CardFooter({
   children,
   paddingBottom = 2,

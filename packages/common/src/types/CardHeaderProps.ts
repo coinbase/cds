@@ -1,5 +1,9 @@
 import type { SharedProps } from './SharedProps';
 
+/**
+ * @deprecated Use ContentCardHeaderProps instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardHeaderProps = {
   /** Absolute or Relative path to Avatar */
   avatar?: string;

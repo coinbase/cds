@@ -7,6 +7,10 @@ import { VStack } from '../layout/VStack';
 import { Avatar } from '../media/Avatar';
 import { Text } from '../typography/Text';
 
+/**
+ * @deprecated Use ContentCardHeader instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const CardHeader = memo(function CardHeader({
   avatar,
   metaData,
