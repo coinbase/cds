@@ -22,24 +22,6 @@ const defaultProps: SelectProps<'single' | 'multi'> = {
   label: 'Test Select',
 };
 
-jest.mock('@floating-ui/react-dom', () => {
-  const floatingRef = { current: null as HTMLElement | null };
-  return {
-    useFloating: () => ({
-      refs: {
-        setReference: jest.fn(),
-        setFloating: jest.fn((el: HTMLElement | null) => {
-          floatingRef.current = el;
-        }),
-        reference: { current: null },
-        floating: floatingRef,
-      },
-      floatingStyles: {},
-    }),
-    flip: () => ({}),
-  };
-});
-
 jest.mock('../../../overlays/Portal', () => ({
   Portal: ({ children, containerId }: { children: React.ReactNode; containerId?: string }) => (
     <div data-testid="portal-container">{children}</div>
