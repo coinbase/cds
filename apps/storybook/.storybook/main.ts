@@ -46,10 +46,7 @@ const config: StorybookConfig = {
     options: {},
   },
   addons,
-  stories: [
-    '../../../packages/web/**/*.stories.@(tsx|mdx)',
-    '../../../packages/web-visualization/**/*.stories.@(tsx|mdx)',
-  ],
+  stories: ['../../../packages/web/**/*.stories.@(tsx|mdx)'],
   staticDirs: [
     {
       from: path.resolve(MONOREPO_ROOT, 'packages/icons/src'),
@@ -91,10 +88,6 @@ const config: StorybookConfig = {
           '@coinbase/cds-lottie-files': path.resolve(MONOREPO_ROOT, 'packages/lottie-files/src'),
           '@coinbase/cds-utils': path.resolve(MONOREPO_ROOT, 'packages/utils/src'),
           '@coinbase/cds-web': path.resolve(MONOREPO_ROOT, 'packages/web/src'),
-          '@coinbase/cds-web-visualization': path.resolve(
-            MONOREPO_ROOT,
-            'packages/web-visualization/src',
-          ),
         },
       },
     });

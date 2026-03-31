@@ -33,7 +33,6 @@ export const PACKAGE_JSON = JSON.stringify(
       '@coinbase/cds-common': 'latest',
       '@coinbase/cds-icons': 'latest',
       '@coinbase/cds-illustrations': 'latest',
-      '@coinbase/cds-web-visualization': 'beta',
       'framer-motion': '^10.18.0',
     },
     devDependencies: {

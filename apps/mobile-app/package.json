@@ -16,7 +16,6 @@
     "@coinbase/cds-icons": "workspace:^",
     "@coinbase/cds-illustrations": "workspace:^",
     "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
     "@coinbase/ui-mobile-playground": "workspace:^",
     "@config-plugins/detox": "^6.0.0",
     "@expo-google-fonts/inter": "^0.3.0",

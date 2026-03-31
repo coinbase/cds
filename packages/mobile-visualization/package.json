@@ -2,6 +2,7 @@
   "name": "@coinbase/cds-mobile-visualization",
   "version": "3.4.0-beta.25",
   "description": "Coinbase Design System - Mobile Visualization Native",
+  "deprecated": "Use @coinbase/cds-mobile/visualizations/chart and @coinbase/cds-mobile/visualizations/sparkline instead.",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",

@@ -1,13 +1,17 @@
 import React from 'react';
 import { figma } from '@figma/code-connect';
 
-import { SparklineInteractive } from '../SparklineInteractive';
+import { SparklineInteractive } from '../../sparkline-interactive/SparklineInteractive';
+import { SparklineInteractiveHeader } from '../SparklineInteractiveHeader';
 
 figma.connect(
-  SparklineInteractive,
-  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=320-14858&m=dev',
+  SparklineInteractiveHeader,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=320-14931&m=dev',
   {
-    imports: ["import { SparklineInteractive } from '@coinbase/cds-mobile-visualization'"],
+    imports: [
+      "import { SparklineInteractiveHeader } from '@coinbase/cds-mobile/visualizations/sparkline'",
+      "import { SparklineInteractive } from '@coinbase/cds-mobile/visualizations/sparkline'",
+    ],
     props: {
       compact: figma.boolean('compact'),
       disableScrubbing: figma.boolean('scrubbing', {
@@ -92,6 +96,23 @@ figma.connect(
         all: [],
       };
 
+      const defaultSubHead = {
+        percent: '1.35%',
+        sign: 'upwardTrend',
+        variant: 'positive',
+        accessibilityLabel: 'on Sunday, December 5, 2021 at 10:55 PM, up',
+        priceChange: '$21.36',
+      };
+
+      const header = (
+        <SparklineInteractiveHeader
+          defaultLabel="Portfolio balance"
+          // @ts-expect-error: defaultSubHead is not part of the type definition
+          defaultSubHead={defaultSubHead}
+          defaultTitle="$10,023.82"
+        />
+      );
+
       return (
         <SparklineInteractive
           data={data}
@@ -103,6 +124,10 @@ figma.connect(
               minute: 'numeric',
             })
           }
+          headerNode={header}
+          onPeriodChanged={() => {}}
+          onScrub={() => {}}
+          onScrubEnd={() => {}}
           periods={periods}
           strokeColor="#cb51bb"
           {...props}

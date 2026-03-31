@@ -180,6 +180,14 @@
       "types": "./dts/typography/index.d.ts",
       "default": "./esm/typography/index.js"
     },
+    "./visualizations/chart": {
+      "types": "./dts/visualizations/chart/index.d.ts",
+      "default": "./esm/visualizations/chart/index.js"
+    },
+    "./visualizations/sparkline": {
+      "types": "./dts/visualizations/sparkline/index.d.ts",
+      "default": "./esm/visualizations/sparkline/index.js"
+    },
     "./visualizations": {
       "types": "./dts/visualizations/index.d.ts",
       "default": "./esm/visualizations/index.js"
@@ -216,8 +224,10 @@
     "@popperjs/core": "^2.9.0",
     "@react-spring/web": "^9.7.4",
     "d3-interpolate": "^3.0.1",
+    "d3-color": "^3.1.0",
     "d3-interpolate-path": "^2.3.0",
     "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",

@@ -30,12 +30,6 @@ export const VersionLabel = ({
     case '@coinbase/cds-illustrations':
       version = versions.cdsIllustrationsVersion;
       break;
-    case '@coinbase/cds-web-visualization':
-      version = versions.cdsWebVisualizationVersion;
-      break;
-    case '@coinbase/cds-mobile-visualization':
-      version = versions.cdsMobileVisualizationVersion;
-      break;
     default:
       throw new Error(`VersionLabel received invalid "packageName" prop: ${packageName}`);
   }

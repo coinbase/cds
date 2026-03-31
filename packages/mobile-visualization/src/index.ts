@@ -1,4 +1,6 @@
-// codegen:start {preset: barrel, include: ./*/index.ts}
+/**
+ * @deprecated Use `@coinbase/cds-mobile/visualizations/chart` or `@coinbase/cds-mobile/visualizations/sparkline` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
+ */
 export * from './chart';
 export * from './sparkline';
-// codegen:end

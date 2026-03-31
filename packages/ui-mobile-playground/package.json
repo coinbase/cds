@@ -36,7 +36,6 @@
   "peerDependencies": {
     "@coinbase/cds-common": "workspace:^",
     "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
     "@react-navigation/native": "6.1.17",
     "@react-navigation/stack": "^6.3.16",
     "react": "~19.1.2",
@@ -54,7 +53,6 @@
     "@babel/preset-typescript": "^7.27.1",
     "@coinbase/cds-common": "workspace:^",
     "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
     "@react-navigation/elements": "^1.3.17",
     "@react-navigation/native": "6.1.17",
     "@react-navigation/stack": "^6.3.16",

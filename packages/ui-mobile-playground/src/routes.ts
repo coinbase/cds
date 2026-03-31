@@ -67,7 +67,7 @@ export const routes = [
   {
     key: 'AreaChart',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/area/__stories__/AreaChart.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/area/__stories__/AreaChart.stories')
         .default,
   },
   {
@@ -82,7 +82,7 @@ export const routes = [
   {
     key: 'Axis',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/axis/__stories__/Axis.stories').default,
+      require('@coinbase/cds-mobile/visualizations/chart/axis/__stories__/Axis.stories').default,
   },
   {
     key: 'Banner',
@@ -101,7 +101,7 @@ export const routes = [
   {
     key: 'BarChart',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/bar/__stories__/BarChart.stories').default,
+      require('@coinbase/cds-mobile/visualizations/chart/bar/__stories__/BarChart.stories').default,
   },
   {
     key: 'Box',
@@ -147,19 +147,19 @@ export const routes = [
   {
     key: 'CartesianChart',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/CartesianChart.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/__stories__/CartesianChart.stories')
         .default,
   },
   {
     key: 'ChartAccessibility',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/ChartAccessibility.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/__stories__/ChartAccessibility.stories')
         .default,
   },
   {
     key: 'ChartTransitions',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/ChartTransitions.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/__stories__/ChartTransitions.stories')
         .default,
   },
   {
@@ -341,7 +341,8 @@ export const routes = [
   {
     key: 'Legend',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/legend/__stories__/Legend.stories').default,
+      require('@coinbase/cds-mobile/visualizations/chart/legend/__stories__/Legend.stories')
+        .default,
   },
   {
     key: 'LinearGradient',
@@ -351,7 +352,7 @@ export const routes = [
   {
     key: 'LineChart',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/line/__stories__/LineChart.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/line/__stories__/LineChart.stories')
         .default,
   },
   {
@@ -517,7 +518,7 @@ export const routes = [
   {
     key: 'PeriodSelector',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/PeriodSelector.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/__stories__/PeriodSelector.stories')
         .default,
   },
   {
@@ -558,7 +559,7 @@ export const routes = [
   {
     key: 'ReferenceLine',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/line/__stories__/ReferenceLine.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/line/__stories__/ReferenceLine.stories')
         .default,
   },
   {
@@ -579,7 +580,7 @@ export const routes = [
   {
     key: 'Scrubber',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/scrubber/__stories__/Scrubber.stories')
+      require('@coinbase/cds-mobile/visualizations/chart/scrubber/__stories__/Scrubber.stories')
         .default,
   },
   {
@@ -623,24 +624,25 @@ export const routes = [
   {
     key: 'Sparkline',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/sparkline/__stories__/Sparkline.stories').default,
+      require('@coinbase/cds-mobile/visualizations/sparkline/__stories__/Sparkline.stories')
+        .default,
   },
   {
     key: 'SparklineGradient',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/sparkline/__stories__/SparklineGradient.stories')
+      require('@coinbase/cds-mobile/visualizations/sparkline/__stories__/SparklineGradient.stories')
         .default,
   },
   {
     key: 'SparklineInteractive',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/sparkline/sparkline-interactive/__stories__/SparklineInteractive.stories')
+      require('@coinbase/cds-mobile/visualizations/sparkline/sparkline-interactive/__stories__/SparklineInteractive.stories')
         .default,
   },
   {
     key: 'SparklineInteractiveHeader',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/sparkline/sparkline-interactive-header/__stories__/SparklineInteractiveHeader.stories')
+      require('@coinbase/cds-mobile/visualizations/sparkline/sparkline-interactive-header/__stories__/SparklineInteractiveHeader.stories')
         .default,
   },
   {

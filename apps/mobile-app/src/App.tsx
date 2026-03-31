@@ -7,7 +7,7 @@ import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider';
 import { StatusBar } from '@coinbase/cds-mobile/system/StatusBar';
 import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
-import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization/chart';
+import { ChartBridgeProvider } from '@coinbase/cds-mobile/visualizations/chart';
 import { Playground } from '@coinbase/ui-mobile-playground';
 import { CommonActions, NavigationContainer } from '@react-navigation/native';
 import * as Linking from 'expo-linking';

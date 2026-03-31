@@ -13,7 +13,6 @@
     "@coinbase/cds-icons": "workspace:^",
     "@coinbase/cds-illustrations": "workspace:^",
     "@coinbase/cds-web": "workspace:^",
-    "@coinbase/cds-web-visualization": "workspace:^",
     "framer-motion": "^10.18.0",
     "react": "19.1.2",
     "react-dom": "19.1.2"

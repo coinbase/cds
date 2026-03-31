@@ -1,5 +1,5 @@
-export * from './Sparkline';
-export * from './sparkline-interactive/SparklineInteractive';
-export * from './sparkline-interactive-header/SparklineInteractiveHeader';
-export * from './SparklineArea';
-export * from './SparklineGradient';
+/**
+ * @deprecated Use `@coinbase/cds-web/visualizations/sparkline` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v9
+ */
+export * from '@coinbase/cds-web/visualizations/sparkline';

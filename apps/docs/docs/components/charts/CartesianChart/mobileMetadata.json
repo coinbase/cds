@@ -1,7 +1,8 @@
 {
-  "import": "import { CartesianChart } from '@coinbase/cds-mobile-visualization'",
+  "import": "import { CartesianChart } from '@coinbase/cds-mobile/visualizations/chart'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/CartesianChart.tsx",
   "description": "A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.",
+  "warning": "This component is deprecated. Please use @coinbase/cds-mobile/visualizations/chart instead.",
   "relatedComponents": [
     {
       "label": "Point",

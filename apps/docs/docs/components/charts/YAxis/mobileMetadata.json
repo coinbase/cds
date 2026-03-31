@@ -1,7 +1,8 @@
 {
-  "import": "import { YAxis } from '@coinbase/cds-mobile-visualization'",
+  "import": "import { YAxis } from '@coinbase/cds-mobile/visualizations/chart'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/axis/YAxis.tsx",
   "description": "A vertical axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting, positioning, and data domains.",
+  "warning": "This component is deprecated. Please use @coinbase/cds-mobile/visualizations/chart instead.",
   "relatedComponents": [
     {
       "label": "CartesianChart",

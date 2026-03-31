@@ -2,6 +2,7 @@
   "name": "@coinbase/cds-web-visualization",
   "version": "3.4.0-beta.25",
   "description": "Coinbase Design System - Web Sparkline",
+  "deprecated": "Use @coinbase/cds-web/visualizations/chart and @coinbase/cds-web/visualizations/sparkline instead.",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
