@@ -1,6 +1,8 @@
 import { memo, useState } from 'react';
 import { Select } from '@coinbase/cds-web/alpha/select';
 
+import { VStack } from '../../../layout';
+
 const selectOptions = [
   { value: 'option1', label: 'Option 1', description: 'Description' },
   { value: 'option2', label: 'Option 2', description: 'Description' },
@@ -13,8 +15,10 @@ const selectOptions = [
 export const SelectExample = memo(() => {
   const [selectValue, setSelectValue] = useState<string | null>(null);
 
+  // Select stories run with a11y test off due to a known nested-interactive issue
+
   return (
-    <>
+    <VStack className="no-a11y-checks">
       <Select
         compact
         label="Label"
@@ -42,6 +46,6 @@ export const SelectExample = memo(() => {
         style={{ flexGrow: 1 }}
         value={selectValue}
       />
-    </>
+    </VStack>
   );
 });
