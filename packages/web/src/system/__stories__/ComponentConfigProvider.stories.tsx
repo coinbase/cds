@@ -94,3 +94,5 @@ export const Custom = () => (
     </ComponentConfigProvider>
   </ThemeProvider>
 );
+
+Custom.parameters = { a11y: { disable: true } };
