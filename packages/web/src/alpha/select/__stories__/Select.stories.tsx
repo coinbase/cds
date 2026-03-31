@@ -1085,13 +1085,11 @@ export const VeryLongLabels = () => {
     {
       value: '4',
       label: 'Moderately long label that is somewhere between short and extremely long',
-      description:
-        'Moderately long description that is somewhere between short and extremely long',
+      description: 'Moderately long description that is somewhere between short and extremely long',
     },
     {
       value: '5',
-      description:
-        'Distinctly long description that is somewhere between short and extremely long',
+      description: 'Distinctly long description that is somewhere between short and extremely long',
     },
   ];
   const [value, setValue] = useState<string | null>('1');
