@@ -1,8 +1,6 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import {
   type GestureResponderEvent,
-  Pressable,
-  type PressableProps,
   type StyleProp,
   type View,
   type ViewStyle,
@@ -16,13 +14,14 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
+import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 import { Text, type TextBaseProps } from '../typography/Text';
 
 import { tabsSpringConfig } from './Tabs';
 
 export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabId> &
   Pick<TextBaseProps, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'> &
-  Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
+  Omit<PressableBaseProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
     /**
      * Text color when the SegmentedTab is active.
      * @default negativeForeground
@@ -35,11 +34,12 @@ export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabI
     color?: ThemeVars.Color;
   };
 
-export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {
-  /** Callback that is fired when the SegmentedTab is pressed. */
-  onPress?: (id: TabId, event: GestureResponderEvent) => void;
-  style?: StyleProp<ViewStyle>;
-};
+export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> &
+  Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
+    /** Callback that is fired when the SegmentedTab is pressed. */
+    onPress?: (id: TabId, event: GestureResponderEvent) => void;
+    style?: StyleProp<ViewStyle>;
+  };
 
 const AnimatedTextHeadline = Animated.createAnimatedComponent(Text);
 
