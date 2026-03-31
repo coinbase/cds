@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.26 (3/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix scrubber beacon label single frame delay for y value. [[#570](https://github.com/coinbase/cds/pull/570)]
+
 ## 3.4.0-beta.25 (3/24/2026 PST)
 
 #### 🐞 Fixes
