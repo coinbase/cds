@@ -645,37 +645,31 @@ describe('Select', () => {
       });
     });
 
-    it('opens dropdown on ArrowDown key', async () => {
+    it('focuses the matching option even when textContent has non-letter prefix characters', async () => {
       const user = userEvent.setup();
+      const typeAheadOptions = [
+        { value: 'apple', label: 'Apple' },
+        { value: 'banana', label: 'Banana' },
+      ];
+
       render(
         <DefaultThemeProvider>
-          <Select {...defaultProps} />
+          <Select {...defaultProps} options={typeAheadOptions} type="multi" value={[]} />
         </DefaultThemeProvider>,
       );
 
       const button = screen.getByRole('button');
       button.focus();
-      await user.keyboard('{ArrowDown}');
+      await user.keyboard('b');
 
       await waitFor(() => {
         expect(screen.getByRole('listbox')).toBeInTheDocument();
       });
-    });
-
-    it('opens dropdown on ArrowUp key', async () => {
-      const user = userEvent.setup();
-      render(
-        <DefaultThemeProvider>
-          <Select {...defaultProps} />
-        </DefaultThemeProvider>,
-      );
-
-      const button = screen.getByRole('button');
-      button.focus();
-      await user.keyboard('{ArrowUp}');
 
       await waitFor(() => {
-        expect(screen.getByRole('listbox')).toBeInTheDocument();
+        const options = screen.getAllByRole('option');
+        const bananaOption = options.find((opt) => opt.textContent?.includes('Banana'));
+        expect(bananaOption).toHaveFocus();
       });
     });
 

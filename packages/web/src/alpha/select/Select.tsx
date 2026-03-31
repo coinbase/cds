@@ -172,9 +172,10 @@ const SelectBase = memo(
 
         const optionRole = accessibilityRoles?.option ?? 'option';
         const options = floatingEl.querySelectorAll(`[role="${optionRole}"]`);
-        const matchingOption = Array.from(options).find(
-          (option) => option.textContent?.charAt(0)?.toLowerCase() === key,
-        );
+        const matchingOption = Array.from(options).find((option) => {
+          const firstLetterMatch = option.textContent?.match(/[a-z]/i);
+          return firstLetterMatch?.[0]?.toLowerCase() === key;
+        });
 
         if (matchingOption) {
           (matchingOption as HTMLElement).focus();
