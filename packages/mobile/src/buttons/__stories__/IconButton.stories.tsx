@@ -225,6 +225,40 @@ const IconButtonScreen = () => {
           );
         })}
       </Example>
+      <Example inline title="Small">
+        <IconButton
+          accessibilityLabel={accessibilityLabel}
+          height={32}
+          name={iconName}
+          onPress={onPress}
+          width={32}
+        />
+        <IconButton
+          loading
+          accessibilityLabel={accessibilityLabel}
+          height={32}
+          name={iconName}
+          onPress={onPress}
+          width={32}
+        />
+        <IconButton
+          compact
+          accessibilityLabel={accessibilityLabel}
+          height={24}
+          name={iconName}
+          onPress={onPress}
+          width={24}
+        />
+        <IconButton
+          compact
+          loading
+          accessibilityLabel={accessibilityLabel}
+          height={24}
+          name={iconName}
+          onPress={onPress}
+          width={24}
+        />
+      </Example>
     </ExampleScreen>
   );
 };

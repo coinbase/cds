@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.61.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support Button and IconButton size customization. [[#565](https://github.com/coinbase/cds/pull/565)]
 
 #### 📘 Misc
 
