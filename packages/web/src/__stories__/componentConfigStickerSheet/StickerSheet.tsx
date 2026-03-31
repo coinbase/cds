@@ -16,7 +16,6 @@ import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
-import { Spinner } from '@coinbase/cds-web/loaders/Spinner';
 import { Avatar } from '@coinbase/cds-web/media/Avatar';
 import { RemoteImage } from '@coinbase/cds-web/media/RemoteImage';
 import { Tag } from '@coinbase/cds-web/tag/Tag';
@@ -37,7 +36,6 @@ import { SelectChipExample } from './examples/SelectChip';
 import { StepperHorizontalBasicExample } from './examples/StepperHorizontal';
 import { StepperVerticalCustomExample } from './examples/StepperVertical';
 import { TableExample } from './examples/TableExample';
-import { TabsExample } from './examples/Tabs';
 import { TextInputExample } from './examples/TextInput';
 import { ToastExample } from './examples/ToastExample';
 import { Container } from './Container';
@@ -63,24 +61,19 @@ export const StickerSheet = memo(() => {
             <ControlsExample />
           </Container>
 
-          <HStack style={{ gap: 16 }}>
-            <Container title="Segmented Tabs" width={280}>
+          <HStack>
+            <Container title="Segmented Tabs">
               <SegmentedTabsExample />
-            </Container>
-
-            <Container title="Spinner" width={124}>
-              <Spinner size={2} />
-              <Spinner color="bgPrimary" size={4} />
             </Container>
           </HStack>
 
-          <HStack style={{ gap: 16 }}>
+          <HStack gap={2}>
             <Container width={160}>
               <RollingNumberExample />
             </Container>
 
             <Container title="SelectChip / InputChip" width={244}>
-              <HStack style={{ gap: 8 }}>
+              <HStack gap={1}>
                 <SelectChipExample />
                 <InputChip
                   accessibilityLabel="Select ETH asset"
@@ -156,10 +149,6 @@ export const StickerSheet = memo(() => {
               title="Upgrade to Coinbase One"
               type="upsell"
             />
-          </Container>
-
-          <Container title="Tabs">
-            <TabsExample />
           </Container>
 
           <Container title="Dropdown / Modal / Alert / Toast">
