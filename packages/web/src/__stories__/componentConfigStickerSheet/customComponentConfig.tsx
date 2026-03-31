@@ -117,11 +117,6 @@ export const customComponentConfig: ComponentConfig = {
     gap: 1,
   },
 
-  ListCell: (props) => {
-    const spacingVariant = props.spacingVariant ?? (props.compact ? 'compact' : 'normal');
-    return spacingVariant === 'normal' ? { minHeight: '36px' } : {};
-  },
-
   SearchInput: (props) => ({
     borderRadius: 200,
     height: props.compact ? 24 : 32,
