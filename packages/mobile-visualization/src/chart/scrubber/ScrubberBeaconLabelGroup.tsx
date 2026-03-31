@@ -62,17 +62,24 @@ const PositionedLabel = memo<{
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
     const targetY = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
-    const animatedY = useSharedValue(0);
+    const idleAnimatedY = useSharedValue(0);
     useAnimatedReaction(
       () => ({ y: targetY.value, idle: unwrapAnimatedValue(isIdle) }),
       (current, previous) => {
-        if (previous === null || !previous.idle || !current.idle) {
-          animatedY.value = current.y;
+        // Only animate idle-to-idle updates, immediately set the value for other changes.
+        if (previous?.idle && current.idle) {
+          idleAnimatedY.value = buildTransition(current.y, updateTransition);
         } else {
-          animatedY.value = buildTransition(current.y, updateTransition);
+          idleAnimatedY.value = current.y;
         }
       },
       [updateTransition],
+    );
+
+    // When scrubbing, use the targetY value, when idle, use the idleAnimatedY value.
+    const y = useDerivedValue(
+      () => (unwrapAnimatedValue(isIdle) ? idleAnimatedY.value : targetY.value),
+      [isIdle, idleAnimatedY, targetY],
     );
 
     const dx = useDerivedValue(() => {
@@ -95,7 +102,7 @@ const PositionedLabel = memo<{
         opacity={opacity}
         seriesId={seriesId}
         x={x}
-        y={animatedY}
+        y={y}
       />
     );
   },
