@@ -13,12 +13,7 @@ const ruleCreator = ESLintUtils.RuleCreator(
 type MessageIds = 'missingChartAccessibleName' | 'missingScrubberAccessibilityLabel';
 
 const config = {
-  allowedPackages: [
-    '@coinbase/cds-common',
-    '@coinbase/cds-web-visualization',
-    '@coinbase/cds-web',
-    '@coinbase/cds-web/visualizations/chart',
-  ],
+  allowedPackages: ['@coinbase/cds-common', '@coinbase/cds-web-visualization', '@coinbase/cds-web'],
   chartComponents: ['LineChart', 'BarChart', 'CartesianChart', 'AreaChart'],
 };
 

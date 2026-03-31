@@ -17,7 +17,6 @@ const config = {
     '@coinbase/cds-common',
     '@coinbase/cds-mobile',
     '@coinbase/cds-mobile-visualization',
-    '@coinbase/cds-mobile/visualizations/chart',
   ],
   chartComponents: ['LineChart', 'BarChart', 'CartesianChart', 'AreaChart'],
 };
