@@ -1,21 +1,15 @@
-import fs from 'fs';
-import path from 'path';
+import { readTransformFixture } from '../../../test-utils/readTransformFixture';
+import transform from '../button-variant-values';
+import { applyTransform } from 'jscodeshift/src/testUtils';
 
-const { applyTransform } = require('jscodeshift/src/testUtils');
-
-const transform = require('../button-variant-values');
-
-const PARSER_OPTIONS = { parser: 'tsx' };
+const FIXTURE_SUITE = 'button-variant-values';
 
 function applyButtonVariantTransform(source: string) {
-  return applyTransform(transform, {}, { source }, PARSER_OPTIONS);
+  return applyTransform(transform, {}, { source }, { parser: 'tsx' });
 }
 
 function readFixture(name: string) {
-  return fs.readFileSync(
-    path.join(__dirname, '..', '__testfixtures__', 'button-variant-values', `${name}.tsx`),
-    'utf8',
-  );
+  return readTransformFixture(__dirname, FIXTURE_SUITE, `${name}.tsx`);
 }
 
 describe('button-variant-values', () => {

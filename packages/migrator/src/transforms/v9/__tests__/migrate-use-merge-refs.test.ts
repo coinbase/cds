@@ -1,26 +1,15 @@
-import { withParser } from 'jscodeshift';
+import { readTransformFixture } from '../../../test-utils/readTransformFixture';
+import transform from '../migrate-use-merge-refs';
+import { applyTransform } from 'jscodeshift/src/testUtils';
 
-import transformer from '../migrate-use-merge-refs';
+const FIXTURE_SUITE = 'migrate-use-merge-refs';
 
-const DEPRECATED = '@coinbase/cds-common/hooks/useMergeRefs';
-const TARGET = '@coinbase/cds-common/utils/mergeRefs';
-
-function escapeRe(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function readFixtureFile(name: string): string {
+  return readTransformFixture(__dirname, FIXTURE_SUITE, name);
 }
 
-function runTransform(source: string): string | null {
-  const jscodeshift = withParser('tsx');
-  return transformer(
-    { path: 'test.tsx', source },
-    {
-      jscodeshift,
-      j: jscodeshift,
-      stats: () => {},
-      report: () => {},
-    } as Parameters<typeof transformer>[1],
-    {},
-  );
+function applyMigrateTransform(source: string): string {
+  return applyTransform(transform, {}, { source }, { parser: 'tsx' });
 }
 
 describe('migrate-use-merge-refs', () => {
@@ -32,112 +21,33 @@ describe('migrate-use-merge-refs', () => {
     jest.restoreAllMocks();
   });
 
-  it('rewrites deprecated import path and renames binding at import and call sites', () => {
-    const input = `
-import { useMergeRefs } from '${DEPRECATED}';
-
-export const X = () => {
-  const ref = useMergeRefs(a, b);
-  return ref;
-};
-`;
-    const out = runTransform(input);
-    expect(out).not.toBeNull();
-    expect(out).toContain(TARGET);
-    expect(out).not.toContain(DEPRECATED);
-    expect(out).toMatch(/\bmergeRefs\s*\(/);
-    expect(out).not.toMatch(/\buseMergeRefs\b/);
+  it.each([
+    ['basic'],
+    ['import-alias'],
+    ['jest-mock'],
+    ['re-export'],
+    ['merge-duplicate-imports'],
+    ['object-literal-key'],
+  ])('transforms %s fixture', (basename) => {
+    const input = readFixtureFile(`${basename}.input.tsx`);
+    const expected = readFixtureFile(`${basename}.output.tsx`);
+    const out = applyMigrateTransform(input);
+    expect(out).not.toBe('');
+    expect(out).toBe(expected.trim());
   });
 
-  it('preserves import alias: useMergeRefs as x → mergeRefs as x', () => {
-    const input = `
-import { useMergeRefs as combineRefs } from '${DEPRECATED}';
-combineRefs(r1, r2);
-`;
-    const out = runTransform(input);
-    expect(out).not.toBeNull();
-    expect(out).toContain(TARGET);
-    expect(out).toMatch(/import\s*\{\s*mergeRefs\s+as\s+combineRefs\s*\}/);
-    expect(out).toMatch(/\bcombineRefs\s*\(/);
-    expect(out).not.toContain('useMergeRefs');
+  it('does not modify third-party useMergeRefs import', () => {
+    const input = readFixtureFile('third-party-import.input.tsx');
+    expect(applyMigrateTransform(input)).toBe('');
   });
 
-  it('updates jest.mock module string and binding', () => {
-    const input = `
-jest.mock('${DEPRECATED}');
-import { useMergeRefs } from '${DEPRECATED}';
-useMergeRefs(x);
-`;
-    const out = runTransform(input);
-    expect(out).not.toBeNull();
-    expect(out).not.toContain(DEPRECATED);
-    expect(out).toMatch(new RegExp(`jest\\.mock\\(["']${escapeRe(TARGET)}["']\\)`));
+  it('makes no changes when there is nothing to migrate', () => {
+    const input = readFixtureFile('nothing-to-migrate.input.tsx');
+    expect(applyMigrateTransform(input)).toBe('');
   });
 
-  it('updates re-export from deprecated path', () => {
-    const input = `export { useMergeRefs } from '${DEPRECATED}';`;
-    const out = runTransform(input);
-    expect(out).not.toBeNull();
-    expect(out).toMatch(
-      new RegExp(`^export\\s*\\{\\s*mergeRefs\\s*\\}\\s*from\\s*["']${escapeRe(TARGET)}["'];?$`),
-    );
-  });
-
-  it('merges duplicate imports from utils/mergeRefs after rewrite', () => {
-    const input = `
-import { mergeRefs } from '${TARGET}';
-import { useMergeRefs } from '${DEPRECATED}';
-
-const cb = mergeRefs(useMergeRefs(a));
-`;
-    const out = runTransform(input);
-    expect(out).not.toBeNull();
-    expect(out).not.toContain(DEPRECATED);
-    const importLines = out!.split('\n').filter((l) => l.includes(TARGET) && l.includes('from'));
-    expect(importLines.length).toBe(1);
-    expect(out).toContain(`from '${TARGET}'`);
-  });
-
-  it('does not rename useMergeRefs as a non-shorthand object literal key', () => {
-    const input = `
-import { useMergeRefs } from '${DEPRECATED}';
-const o = { useMergeRefs: 1 };
-useMergeRefs(r);
-`;
-    const out = runTransform(input);
-    expect(out).not.toBeNull();
-    expect(out).toMatch(/\{\s*useMergeRefs:\s*1\s*\}/);
-    expect(out).toMatch(/\bmergeRefs\s*\(\s*r\s*\)/);
-  });
-
-  it('does not rename useMergeRefs imported from another package', () => {
-    const input = `
-import { useMergeRefs } from 'some-other-library';
-
-export function f() {
-  return useMergeRefs(a, b);
-}
-`;
-    const out = runTransform(input);
-    expect(out).toBeNull();
-  });
-
-  it('is idempotent: second run returns null', () => {
-    const input = `
-import { useMergeRefs } from '${DEPRECATED}';
-useMergeRefs(x);
-`;
-    const once = runTransform(input);
-    expect(once).not.toBeNull();
-    const twice = runTransform(once!);
-    expect(twice).toBeNull();
-  });
-
-  it('returns null when there is nothing to migrate', () => {
-    const input = `
-import React from 'react';
-export const x = 1;
-`;
-    expect(runTransform(input)).toBeNull();
+  it('is idempotent: second run on transformed output makes no changes', () => {
+    const transformed = readFixtureFile('basic.output.tsx');
+    expect(applyMigrateTransform(transformed)).toBe('');
   });
 });

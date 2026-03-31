@@ -10,7 +10,7 @@
  */
 import type { API, FileInfo } from 'jscodeshift';
 
-import { addTodoComment, hasMigrationTodo, transformLogger } from '../utils/transform-utils';
+import { addTodoComment, hasMigrationTodo, transformLogger } from '../../utils/transform-utils';
 
 const VARIANT_MAP: Record<string, string> = {
   tertiary: 'inverse',

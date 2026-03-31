@@ -5,7 +5,7 @@
     {
       "name": "button-variant-values",
       "description": "Remap Button/IconButton variant values: tertiary -> inverse, foregroundMuted -> secondary",
-      "file": "button-variant-values"
+      "file": "v9/button-variant-values"
     },
     {
       "name": "migrate-use-merge-refs-import",
