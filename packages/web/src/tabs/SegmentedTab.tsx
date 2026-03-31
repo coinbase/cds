@@ -6,6 +6,7 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
@@ -41,7 +42,7 @@ const buttonDisabledCss = css`
   touch-action: none;
 `;
 
-export type SegmentedTabProps<TabId extends string = string> = PressableBaseProps &
+export type SegmentedTabBaseProps<TabId extends string = string> = PressableBaseProps &
   TabValue<TabId> & {
     /**
      * Text color when the SegmentedTab is active.
@@ -53,9 +54,12 @@ export type SegmentedTabProps<TabId extends string = string> = PressableBaseProp
      * @default foreground
      */
     color?: ThemeVars.Color;
-    /** Callback that is fired when the SegmentedTab is clicked. */
-    onClick?: (id: TabId, event: React.MouseEvent) => void;
   };
+
+export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {
+  /** Callback that is fired when the SegmentedTab is clicked. */
+  onClick?: (id: TabId, event: React.MouseEvent) => void;
+};
 
 const disabledCss = css`
   opacity: 0.5;
@@ -68,7 +72,11 @@ type SegmentedTabComponent = <TabId extends string = string>(
 const SegmentedTabComponent = memo(
   forwardRef(
     <TabId extends string>(
-      {
+      _props: SegmentedTabProps<TabId>,
+      ref: React.ForwardedRef<HTMLButtonElement>,
+    ) => {
+      const mergedProps = useComponentConfig('SegmentedTab', _props);
+      const {
         id,
         label,
         disabled: disabledProp,
@@ -85,9 +93,7 @@ const SegmentedTabComponent = memo(
         textAlign,
         textTransform,
         ...props
-      }: SegmentedTabProps<TabId>,
-      ref: React.ForwardedRef<HTMLButtonElement>,
-    ) => {
+      } = mergedProps;
       const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
       const isActive = activeTab?.id === id;
       const isDisabled = disabledProp || allTabsDisabled;

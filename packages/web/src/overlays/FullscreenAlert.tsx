@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import { Button } from '../buttons';
 import { useA11yLabels } from '../hooks/useA11yLabels';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { HeroSquare } from '../illustrations';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
@@ -11,14 +12,14 @@ import { breakpoints } from '../styles/media';
 import { Text } from '../typography/Text';
 
 import { FullscreenModal } from './modal/FullscreenModal';
-import type { ModalProps } from './modal/Modal';
-import type { ModalHeaderProps } from './modal/ModalHeader';
-import type { AlertProps } from './Alert';
+import type { ModalBaseProps, ModalProps } from './modal/Modal';
+import type { ModalHeaderBaseProps, ModalHeaderProps } from './modal/ModalHeader';
+import type { AlertBaseProps, AlertProps } from './Alert';
 
-export type FullscreenAlertProps = Pick<AlertProps, 'title' | 'body'> &
-  Pick<ModalHeaderProps, 'closeAccessibilityLabel'> &
+export type FullscreenAlertBaseProps = Pick<AlertBaseProps, 'title' | 'body'> &
+  Pick<ModalHeaderBaseProps, 'closeAccessibilityLabel'> &
   Pick<
-    ModalProps,
+    ModalBaseProps,
     | 'visible'
     | 'onRequestClose'
     | 'disablePortal'
@@ -53,6 +54,8 @@ export type FullscreenAlertProps = Pick<AlertProps, 'title' | 'body'> &
     onDismissActionPress?: () => void;
   };
 
+export type FullscreenAlertProps = FullscreenAlertBaseProps;
+
 const centerContentCss = css`
   height: 100%;
   align-items: center;
@@ -79,23 +82,25 @@ const primaryContentCss = css`
   }
 `;
 
-export const FullscreenAlert = memo(function FullscreenAlert({
-  visible,
-  onRequestClose,
-  title,
-  body,
-  heroSquare,
-  preferredActionLabel,
-  onPreferredActionPress,
-  preferredActionVariant,
-  dismissActionLabel,
-  onDismissActionPress,
-  disablePortal,
-  accessibilityLabel,
-  accessibilityLabelledBy,
-  testID,
-  closeAccessibilityLabel,
-}: FullscreenAlertProps) {
+export const FullscreenAlert = memo((_props: FullscreenAlertProps) => {
+  const mergedProps = useComponentConfig('FullscreenAlert', _props);
+  const {
+    visible,
+    onRequestClose,
+    title,
+    body,
+    heroSquare,
+    preferredActionLabel,
+    onPreferredActionPress,
+    preferredActionVariant,
+    dismissActionLabel,
+    onDismissActionPress,
+    disablePortal,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    testID,
+    closeAccessibilityLabel,
+  } = mergedProps;
   const { labelledBySource, labelledBy, label } = useA11yLabels({
     accessibilityLabelledBy,
     accessibilityLabel,

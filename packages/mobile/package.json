@@ -1,6 +1,6 @@
 {
   "name": "@cbhq/cds-mobile",
-  "version": "8.60.0",
+  "version": "8.62.0",
   "description": "Coinbase Design System - Mobile",
   "repository": {
     "type": "git",
@@ -206,7 +206,8 @@
     "@react-spring/native": "^9.7.4",
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
-    "type-fest": "^2.19.0"
+    "type-fest": "^2.19.0",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

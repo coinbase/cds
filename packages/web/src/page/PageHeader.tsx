@@ -6,6 +6,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Grid, type GridDefaultElement, type GridProps } from '../layout/Grid';
 import { media } from '../styles/media';
@@ -88,8 +89,9 @@ export type PageHeaderProps = Polymorphic.ExtendableProps<
 >;
 
 export const PageHeader = memo(
-  forwardRef(function PageHeader(
-    {
+  forwardRef((_props: PageHeaderProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('PageHeader', _props);
+    const {
       start,
       end,
       title,
@@ -101,9 +103,7 @@ export const PageHeader = memo(
       classNames,
       className,
       ...props
-    }: PageHeaderProps,
-    ref: React.ForwardedRef<HTMLDivElement>,
-  ) {
+    } = mergedProps;
     const titleResponsivePaddingLeft: ResponsiveProps<StaticStyleProps>['paddingStart'] = useMemo(
       () => ({
         phone: start && !end ? 0 : 3,

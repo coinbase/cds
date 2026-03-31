@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, HStack } from '../layout';
 import type { HintMotionBaseProps } from '../motion/types';
 import { useMotionProps } from '../motion/useMotionProps';
@@ -66,85 +67,82 @@ const boxCss = css`
 `;
 
 export const ProgressBar = memo(
-  forwardRef(
-    (
-      {
-        weight = 'normal',
-        progress = 0,
-        color = 'bgPrimary',
-        disabled,
-        disableAnimateOnMount,
-        testID,
-        accessibilityLabel,
-        style,
-        styles,
-        className,
-        classNames,
-        onAnimationEnd,
-        onAnimationStart,
-      }: ProgressBarProps,
-      forwardedRef: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const height = getProgressSize(weight);
+  forwardRef((_props: ProgressBarProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('ProgressBar', _props);
+    const {
+      weight = 'normal',
+      progress = 0,
+      color = 'bgPrimary',
+      disabled,
+      disableAnimateOnMount,
+      testID,
+      accessibilityLabel,
+      style,
+      styles,
+      className,
+      classNames,
+      onAnimationEnd,
+      onAnimationStart,
+    } = mergedProps;
+    const height = getProgressSize(weight);
 
-      // start position of the progress bar on mount
-      const initialTranslateX = isRtl() ? 100 : -100;
+    // start position of the progress bar on mount
+    const initialTranslateX = isRtl() ? 100 : -100;
 
-      const translateX = isRtl() ? 100 - progress * 100 : -100 + progress * 100;
+    const translateX = isRtl() ? 100 - progress * 100 : -100 + progress * 100;
 
-      const motionProps = useMotionProps({
-        style: {
-          originX: isRtl() ? 'right' : 'left',
-        },
-        animate: {
-          x: `${translateX}%`,
-          opacity: 1,
-        },
-        transition: animateProgressBaseSpec,
-        initial: !progress || disableAnimateOnMount ? false : { x: `${initialTranslateX}%` }, // skip initial animation if no progress or disableAnimateOnMount is true
-      });
+    const motionProps = useMotionProps({
+      style: {
+        originX: isRtl() ? 'right' : 'left',
+      },
+      animate: {
+        x: `${translateX}%`,
+        opacity: 1,
+      },
+      transition: animateProgressBaseSpec,
+      initial: !progress || disableAnimateOnMount ? false : { x: `${initialTranslateX}%` }, // skip initial animation if no progress or disableAnimateOnMount is true
+    });
 
-      return (
-        <HStack
-          ref={forwardedRef}
-          accessibilityLabel={accessibilityLabel}
+    return (
+      <HStack
+        ref={forwardedRef}
+        accessibilityLabel={accessibilityLabel}
+        alignItems="center"
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={progress * 100}
+        background="bgLine"
+        borderRadius={200}
+        className={cx(boxCss, className, classNames?.root)}
+        flexGrow={1}
+        flexShrink={0}
+        height={height}
+        justifyContent={isRtl() ? 'flex-end' : 'flex-start'}
+        overflow="hidden"
+        role="progressbar"
+        style={{ ...style, ...styles?.root }}
+        testID={testID}
+      >
+        <MotionBox
           alignItems="center"
-          aria-valuemax={100}
-          aria-valuemin={0}
-          aria-valuenow={progress * 100}
-          background="bgLine"
+          animate={motionProps.animate}
+          background={disabled ? 'bgLineHeavy' : color}
           borderRadius={200}
-          className={cx(boxCss, className, classNames?.root)}
-          flexGrow={1}
+          className={classNames?.progress}
+          flexGrow={0}
           flexShrink={0}
-          height={height}
-          justifyContent={isRtl() ? 'flex-end' : 'flex-start'}
-          overflow="hidden"
-          role="progressbar"
-          style={{ ...style, ...styles?.root }}
-          testID={testID}
-        >
-          <MotionBox
-            alignItems="center"
-            animate={motionProps.animate}
-            background={disabled ? 'bgLineHeavy' : color}
-            borderRadius={200}
-            className={classNames?.progress}
-            flexGrow={0}
-            flexShrink={0}
-            height="100%"
-            initial={motionProps.initial}
-            justifyContent="flex-start"
-            onAnimationComplete={onAnimationEnd}
-            onAnimationStart={onAnimationStart}
-            opacity={disableAnimateOnMount ? 1 : 0}
-            style={{ ...motionProps.style, ...styles?.progress }}
-            testID="cds-progress-bar"
-            transition={motionProps.transition}
-            width="100%"
-          />
-        </HStack>
-      );
-    },
-  ),
+          height="100%"
+          initial={motionProps.initial}
+          justifyContent="flex-start"
+          onAnimationComplete={onAnimationEnd}
+          onAnimationStart={onAnimationStart}
+          opacity={disableAnimateOnMount ? 1 : 0}
+          style={{ ...motionProps.style, ...styles?.progress }}
+          testID="cds-progress-bar"
+          transition={motionProps.transition}
+          width="100%"
+        />
+      </HStack>
+    );
+  }),
 );

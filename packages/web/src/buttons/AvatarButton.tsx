@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Avatar, type AvatarBaseProps } from '../media';
 import { Pressable, type PressableBaseProps } from '../system';
 
@@ -44,7 +45,11 @@ const baseCss = css`
 export const AvatarButton: AvatarButtonComponent = memo(
   forwardRef<React.ReactElement<AvatarButtonBaseProps>, AvatarButtonBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: AvatarButtonProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('AvatarButton', _props);
+      const {
         accessibilityLabel,
         as,
         className,
@@ -56,9 +61,7 @@ export const AvatarButton: AvatarButtonComponent = memo(
         selected,
         name,
         ...props
-      }: AvatarButtonProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? avatarButtonDefaultElement) satisfies React.ElementType;
 
       const height = compact ? interactableHeight.compact : interactableHeight.regular;

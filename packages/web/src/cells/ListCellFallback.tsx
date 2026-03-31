@@ -20,6 +20,8 @@ const visuallyHiddenCss = css`
   border: 0;
 `;
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
 import { Cell } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import type { CellMediaType } from './CellMedia';
@@ -87,26 +89,28 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
   };
 };
 
-export const ListCellFallback = memo(function ListCellFallback({
-  accessory,
-  accessoryNode,
-  classNames,
-  styles,
-  title,
-  description,
-  detail,
-  subdetail,
-  media,
-  disableRandomRectWidth,
-  rectWidthVariant,
-  helperText,
-  subtitle,
-  spacingVariant,
-  innerSpacing,
-  outerSpacing,
-  accessibilityLabel = 'Loading',
-  ...props
-}: ListCellFallbackProps) {
+export const ListCellFallback = memo(function ListCellFallback(_props: ListCellFallbackProps) {
+  const mergedProps = useComponentConfig('ListCellFallback', _props);
+  const {
+    accessory,
+    accessoryNode,
+    classNames,
+    styles,
+    title,
+    description,
+    detail,
+    subdetail,
+    media,
+    disableRandomRectWidth,
+    rectWidthVariant,
+    helperText,
+    subtitle,
+    spacingVariant,
+    innerSpacing,
+    outerSpacing,
+    accessibilityLabel = 'Loading',
+    ...props
+  } = mergedProps;
   // We cant use ListCell here as we need to account for percentage based widths.
   // Flexbox collides with percentages also, so we need to wrap in normal divs.
 

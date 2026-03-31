@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
     branches: [master]
   workflow_dispatch:
     inputs:
@@ -26,8 +26,51 @@ env:
   CI: true
 
 jobs:
+  check:
+    name: Check if visreg should run
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.evaluate.outputs.should_run }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Fetch master for merge-base
+        if: github.event_name == 'pull_request'
+        run: git fetch -f --no-tags origin master:master --depth=100
+
+      - name: Evaluate should run
+        id: evaluate
+        run: |
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+            echo "Non-PR event, always running visreg"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'visreg-mobile') }}" == "true" ]]; then
+            echo "visreg-mobile label present, running visreg"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          elif node packages/mobile-visreg/scripts/shouldRunVisreg.mjs; then
+            echo "Relevant changes detected, running visreg"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No relevant changes, skipping visreg"
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
   ios:
     name: Visreg iOS
+    needs: [check]
+    if: needs.check.outputs.should_run == 'true'
     runs-on: macos-latest
     environment: production
     outputs:
@@ -208,7 +251,7 @@ jobs:
   comment-pr:
     name: Comment Percy Link
     needs: [ios]
-    if: always() && github.event_name == 'pull_request' && needs.ios.outputs.percy_url != ''
+    if: always() && github.event_name == 'pull_request' && needs.ios.result == 'success' && needs.ios.outputs.percy_url != ''
     runs-on: ubuntu-latest
     steps:
       - name: Post Percy link on PR

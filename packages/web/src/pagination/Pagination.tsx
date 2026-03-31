@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { HStackDefaultElement, HStackProps } from '../layout/HStack';
 import { HStack } from '../layout/HStack';
 
@@ -102,25 +103,27 @@ export type PaginationProps = Polymorphic.ExtendableProps<
   PaginationBaseProps
 >;
 
-export const Pagination = ({
-  totalPages,
-  activePage,
-  onChange,
-  disabled,
-  showFirstLastButtons,
-  siblingCount = 1,
-  boundaryCount = 1,
-  accessibilityLabel = 'Pagination',
-  testID,
-  testIDMap,
-  accessibilityLabels,
-  PaginationPageButtonComponent = DefaultPaginationPageButton,
-  PaginationNavigationButtonComponent = DefaultPaginationNavigationButton,
-  PaginationEllipsisComponent = DefaultPaginationEllipsis,
-  firstPageButtonLabel = 'First',
-  lastPageButtonLabel = 'Last',
-  ...props
-}: PaginationProps) => {
+export const Pagination = (_props: PaginationProps) => {
+  const mergedProps = useComponentConfig('Pagination', _props);
+  const {
+    totalPages,
+    activePage,
+    onChange,
+    disabled,
+    showFirstLastButtons,
+    siblingCount = 1,
+    boundaryCount = 1,
+    accessibilityLabel = 'Pagination',
+    testID,
+    testIDMap,
+    accessibilityLabels,
+    PaginationPageButtonComponent = DefaultPaginationPageButton,
+    PaginationNavigationButtonComponent = DefaultPaginationNavigationButton,
+    PaginationEllipsisComponent = DefaultPaginationEllipsis,
+    firstPageButtonLabel = 'First',
+    lastPageButtonLabel = 'Last',
+    ...props
+  } = mergedProps;
   const { items, updateActivePage, goNextPage, goPrevPage, goFirstPage, goLastPage } =
     usePagination({
       activePage,

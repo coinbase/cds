@@ -10,6 +10,7 @@ import type {
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon, type IconProps } from '../icons/Icon';
 import { Box, type BoxBaseProps } from '../layout/Box';
 import { RemoteImage } from '../media/RemoteImage';
@@ -74,8 +75,9 @@ export type DotSymbolProps = DotSymbolBaseProps;
 
 const aspectRatio: [number, number] = [1, 1];
 
-export const DotSymbol = memo(
-  ({
+export const DotSymbol = memo((_props: DotSymbolProps) => {
+  const mergedProps = useComponentConfig('DotSymbol', _props);
+  const {
     children,
     symbol,
     pin,
@@ -96,49 +98,48 @@ export const DotSymbol = memo(
     imageClassName,
     accessibilityLabel,
     ...props
-  }: DotSymbolProps) => {
-    const pinStyles = getTransform(pin, overlap);
+  } = mergedProps;
+  const pinStyles = getTransform(pin, overlap);
 
-    return (
+  return (
+    <div
+      aria-label={accessibilityLabel}
+      className={cx(baseCss, className)}
+      data-testid={testID}
+      {...props}
+      style={style}
+    >
+      {children}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
       <div
-        aria-label={accessibilityLabel}
-        className={cx(baseCss, className)}
-        data-testid={testID}
-        {...props}
-        style={style}
+        data-testid="dotsymbol-inner-container"
+        onClick={handlePreventPropagation}
+        style={pinStyles}
       >
-        {children}
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-        <div
-          data-testid="dotsymbol-inner-container"
-          onClick={handlePreventPropagation}
-          style={pinStyles}
-        >
-          {source && (
-            <RemoteImage
-              aspectRatio={aspectRatio}
-              className={cx(remoteImageCss, imageClassName)}
-              shape="circle"
-              source={source}
-              style={imageStyle}
-              width={`var(--iconSize-${size})`}
-            />
-          )}
-          {iconName && (
-            <Box
-              background={background}
-              borderColor={borderColor}
-              borderRadius={1000}
-              className={cx(iconContainerCss, iconClassName)}
-              padding={0.5}
-              style={iconStyle}
-            >
-              <Icon active={active} color={color} name={iconName} size={size} />
-            </Box>
-          )}
-          {symbol}
-        </div>
+        {source && (
+          <RemoteImage
+            aspectRatio={aspectRatio}
+            className={cx(remoteImageCss, imageClassName)}
+            shape="circle"
+            source={source}
+            style={imageStyle}
+            width={`var(--iconSize-${size})`}
+          />
+        )}
+        {iconName && (
+          <Box
+            background={background}
+            borderColor={borderColor}
+            borderRadius={1000}
+            className={cx(iconContainerCss, iconClassName)}
+            padding={0.5}
+            style={iconStyle}
+          >
+            <Icon active={active} color={color} name={iconName} size={size} />
+          </Box>
+        )}
+        {symbol}
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
