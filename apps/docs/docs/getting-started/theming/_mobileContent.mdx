@@ -343,6 +343,8 @@ Now that `myCustomColor` is defined in your theme the `useTheme` hook will inclu
 
 This is **not recommended for most use cases**. In most cases, passing props directly to components is clearer and more efficient.
 
+Also, it is not recommended to nest `ComponentConfigProvider`. If you nest `ComponentConfigProvider`, it will not inherit the parent provider's config. It will only use its own config.
+
 Use `ComponentConfigProvider` when you need to set defaults across many instances of a component (for example, changing the default `borderRadius` of all `Button` components) and you do not want to change theme tokens.
 
 ```tsx
