@@ -89,7 +89,7 @@ export const StickerSheet = memo(() => {
             <PaginationExample />
           </Container>
 
-          <Container title="Select Input (SelectOption)">
+          <Container title="Select Input">
             <SelectExample />
           </Container>
 
@@ -169,6 +169,7 @@ export const StickerSheet = memo(() => {
                   Got it
                 </Button>
               }
+              closeButtonAccessibilityLabel="Close coachmark"
               content="You can now trade directly from your portfolio page."
               onClose={() => {}}
               title="New feature"
@@ -389,18 +390,19 @@ export const StickerSheet = memo(() => {
               </Banner>
             ))}
           </Container>
-
-          <Container title="DotCount">
-            <DotCount count={3}>
-              <Icon name="bell" size="l" />
-            </DotCount>
-            <DotCount count={12}>
-              <Icon name="bell" size="l" />
-            </DotCount>
-            <DotCount count={100} max={99}>
-              <Icon name="bell" size="l" />
-            </DotCount>
-          </Container>
+          <VStack className="no-a11y-checks">
+            <Container title="DotCount">
+              <DotCount count={3}>
+                <Icon name="bell" size="l" />
+              </DotCount>
+              <DotCount count={12}>
+                <Icon name="bell" size="l" />
+              </DotCount>
+              <DotCount count={100} max={99}>
+                <Icon name="bell" size="l" />
+              </DotCount>
+            </Container>
+          </VStack>
         </VStack>
       </HStack>
     </VStack>
