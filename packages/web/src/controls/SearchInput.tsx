@@ -80,10 +80,7 @@ export type SearchInputProps = SearchInputBaseProps &
   };
 
 export const SearchInput = memo(
-  forwardRef(function SearchInput(
-    _props: SearchInputProps,
-    ref: React.ForwardedRef<HTMLInputElement>,
-  ) {
+  forwardRef((_props: SearchInputProps, ref: React.ForwardedRef<HTMLInputElement>) => {
     const mergedProps = useComponentConfig('SearchInput', _props);
     const {
       onChange,
