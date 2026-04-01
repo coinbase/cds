@@ -7,9 +7,6 @@
       "path": "apps/docs"
     },
     {
-      "path": "apps/mobile-app"
-    },
-    {
       "path": "apps/storybook"
     },
     {
@@ -59,9 +56,6 @@
     },
     {
       "path": "packages/mobile-visualization"
-    },
-    {
-      "path": "packages/ui-mobile-playground"
     },
     {
       "path": "packages/utils"

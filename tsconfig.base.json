@@ -102,12 +102,6 @@
       "@coinbase/docusaurus-plugin-kbar/*": [
         "libs/docusaurus-plugin-kbar/src/*"
       ],
-      "@coinbase/ui-mobile-playground": [
-        "packages/ui-mobile-playground/src"
-      ],
-      "@coinbase/ui-mobile-playground/*": [
-        "packages/ui-mobile-playground/src/*"
-      ],
       "@site/*": [
         "apps/docs/*"
       ]

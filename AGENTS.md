@@ -57,7 +57,7 @@ Runtime: NodeJS (see .nvmrc for version)
 - **`packages/illustrations/`** - Illustration assets (`@coinbase/illustrations`)
 - **`apps/docs/`** - Public documentation website (Docusaurus)
 - **`apps/storybook/`** - Component development and testing environment for cds-web
-- **`apps/mobile-app/`** - Sample React Native app for testing components from cds-mobile
+- **`apps/test-expo/`** - Expo app for testing and visual regression of CDS mobile components
 
 ## Standards & Best Practices
 

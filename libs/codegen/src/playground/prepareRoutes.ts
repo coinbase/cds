@@ -53,49 +53,10 @@ export async function prepare() {
   try {
     const routes = await getRoutes();
 
-    const hotReloadRoutes = routes.map((route) => ({
-      name: route.name,
-      path: route.path,
-    }));
     const consumerRoutes = routes.map((route) => ({
       name: route.name,
       path: route.consumerPath,
     }));
-
-    // Write to ui-mobile-playground package. This includes the route paths that consumers would use.
-    await writeFile({
-      data: { routes: consumerRoutes },
-      template: 'mobileRoutes.ejs',
-      dest: `packages/ui-mobile-playground/src/routes.ts`,
-    });
-
-    // Write to mobile-app. This is required for hot reload - internal packages need src in path for hot reload, while consumers do not.
-    await writeFile({
-      data: { routes: hotReloadRoutes },
-      template: 'mobileRoutes.ejs',
-      dest: `apps/mobile-app/src/routes.ts`,
-    });
-
-    // Write to mobile-app. This is required for hot reload - internal packages need src in path for hot reload, while consumers do not.
-    await writeFile({
-      data: { routes: hotReloadRoutes },
-      template: 'mobileRoutes.ejs',
-      dest: `apps/mobile-app/src/routes.ts`,
-    });
-
-    // Write to mobile-app. This is required for evaluating which routes to run during visreg testing.
-    await writeFile({
-      data: { routes: consumerRoutes },
-      template: 'mobileRoutes.ejs',
-      dest: `apps/mobile-app/scripts/utils/routes.mjs`,
-    });
-
-    // Write to mobile-app. This is required for evaluating which routes to run during visreg testing.
-    await writeFile({
-      data: { routes: consumerRoutes },
-      template: 'mobileRoutes.ejs',
-      dest: `apps/mobile-app/scripts/utils/routes.mjs`,
-    });
 
     // Write to test-expo for Expo demo app
     await writeFile({

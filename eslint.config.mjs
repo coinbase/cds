@@ -37,13 +37,11 @@ const ignores = [
   // These files use assert { type: 'json' } syntax that breaks eslint and must be fully ignored
   '**/getAffectedRoutes.mjs',
   '**/getBuildInfo.mjs',
-  'apps/mobile-app/prebuilds',
   // within their NX project, these files are not included by the Typescript config
   // when linting with TS types (e.g. internal/safely-spread-props) this will raise an error
   'packages/web/optimize-css.ts',
   'packages/icons/scripts/*.ts',
   'packages/illustrations/scripts/*.ts',
-  'packages/ui-mobile-playground/scripts/*.ts',
   'libs/docusaurus-plugin-docgen/module-declarations.d.ts',
 ];
 
@@ -388,7 +386,6 @@ export default tseslint.config(
     files: ['packages/**/*.{ts,tsx}'],
     ignores: [
       'packages/illustrations/src/__generated__/**',
-      'packages/ui-mobile-playground/**',
       'packages/**/__stories__/**',
       'packages/**/__tests__/**',
       'packages/**/__mocks__/**',

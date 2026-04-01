@@ -42,12 +42,12 @@ packages/mobile-visreg/
 
 All targets are run from the repo root via `yarn nx run mobile-visreg:<target>`.
 
-| Target    | Command                             | Description                                            |
-| --------- | ----------------------------------- | ------------------------------------------------------ |
-| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                         |
-| `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS mobile app on iOS     |
-| `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS mobile app on Android |
-| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy           |
+| Target    | Command                             | Description                                               |
+| --------- | ----------------------------------- | --------------------------------------------------------- |
+| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                            |
+| `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS test-expo app on iOS     |
+| `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS test-expo app on Android |
+| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy              |
 
 ## Prerequisites
 
@@ -83,8 +83,8 @@ yarn nx run mobile-visreg:setup
 > **Important**: Use the **release** build, not debug. Debug builds use the Expo Dev Client shell which intercepts deep links before React Navigation can handle them, preventing navigation to component routes.
 
 ```bash
-yarn nx run mobile-app:build:ios-release
-yarn nx run mobile-app:launch:ios-release
+yarn nx run test-expo:patch-bundle-ios
+xcrun simctl install booted apps/test-expo/prebuilds/ios-release/testexpo.app
 ```
 
 ### 4. Capture screenshots
