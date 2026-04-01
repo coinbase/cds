@@ -12,7 +12,6 @@
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
     "@coinbase/cds-mobile": "^8",
-    "@coinbase/cds-mobile-visualization": "beta",
     "@expo-google-fonts/inter": "^0.3.0",
     "@react-navigation/native": "6.1.17",
     "@react-navigation/native-stack": "6.9.26",

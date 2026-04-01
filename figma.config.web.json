@@ -3,8 +3,7 @@
     "parser": "react",
     "label": "React",
     "include": [
-      "packages/web/src/**/*.tsx",
-      "packages/web-visualization/src/**/*.tsx"
+      "packages/web/src/**/*.tsx"
     ],
     "exclude": [
       "**/__tests__/**",

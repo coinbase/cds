@@ -905,26 +905,6 @@ const sidebars: SidebarsConfig = {
             },
           },
         },
-        {
-          type: 'link',
-          href: 'https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/CHANGELOG.md',
-          label: '@coinbase/cds-mobile-visualization',
-          customProps: {
-            kbar: {
-              keywords: 'changelog',
-            },
-          },
-        },
-        {
-          type: 'link',
-          href: 'https://github.com/coinbase/cds/blob/master/packages/web-visualization/CHANGELOG.md',
-          label: '@coinbase/cds-web-visualization',
-          customProps: {
-            kbar: {
-              keywords: 'changelog',
-            },
-          },
-        },
       ],
     },
   ],

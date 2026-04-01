@@ -207,9 +207,9 @@
     "@coinbase/cds-illustrations": "workspace:^",
     "@coinbase/cds-lottie-files": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
-    "d3-interpolate-path": "^2.3.0",
     "@floating-ui/react-native": "^0.10.5",
     "@react-spring/native": "^10.0.3",
+    "d3-interpolate-path": "^2.3.0",
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "type-fest": "^2.19.0"

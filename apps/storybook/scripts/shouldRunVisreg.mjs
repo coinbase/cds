@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
-const WEB_PACKAGES = ['common', 'web', 'web-visualization', 'icons', 'illustrations'];
+const WEB_PACKAGES = ['common', 'web', 'icons', 'illustrations'];
 const RELEVANT_ROOTS = [
   'apps/storybook',
   ...WEB_PACKAGES.map((packageName) => `packages/${packageName}`),

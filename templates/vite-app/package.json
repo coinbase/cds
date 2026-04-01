@@ -15,7 +15,6 @@
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
     "@coinbase/cds-web": "^8",
-    "@coinbase/cds-web-visualization": "^3",
     "framer-motion": "^10",
     "react": "19.1.2",
     "react-dom": "19.1.2"

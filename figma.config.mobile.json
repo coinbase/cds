@@ -3,8 +3,7 @@
     "parser": "react",
     "label": "React Native",
     "include": [
-      "packages/mobile/src/**/*.tsx",
-      "packages/mobile-visualization/src/**/*.tsx"
+      "packages/mobile/src/**/*.tsx"
     ],
     "exclude": [
       "**/__tests__/**",

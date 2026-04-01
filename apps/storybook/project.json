@@ -22,7 +22,6 @@
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
         "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*",
         "!{projectRoot}/scripts/**"
       ],
       "outputs": [
@@ -40,7 +39,6 @@
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
         "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*",
         "!{projectRoot}/scripts/**"
       ],
       "outputs": [
@@ -70,8 +68,7 @@
       "inputs": [
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
-        "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+        "{workspaceRoot}/packages/web/**/*.stories.*"
       ],
       "outputs": [
         "{projectRoot}/dist"
@@ -87,8 +84,7 @@
       "inputs": [
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
-        "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+        "{workspaceRoot}/packages/web/**/*.stories.*"
       ],
       "outputs": [
         "{projectRoot}/dist",
@@ -130,8 +126,7 @@
       "inputs": [
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
-        "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+        "{workspaceRoot}/packages/web/**/*.stories.*"
       ],
       "outputs": [
         "{projectRoot}/dist"

@@ -1,7 +1,6 @@
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import fs from 'fs';
 import path from 'path';
-
-import { RuleTester } from '@typescript-eslint/rule-tester';
 
 import rule from './index.mjs';
 
@@ -31,21 +30,14 @@ describe("'figma-connect-imports-package-match' rule", () => {
     fs.existsSync = (filePath) => {
       if (filePath.endsWith('package.json')) {
         // Return true for our test package paths
-        if (
-          filePath.includes('/packages/web/') ||
-          filePath.includes('/packages/mobile/') ||
-          filePath.includes('/packages/web-visualization/') ||
-          filePath.includes('/packages/mobile-visualization/')
-        ) {
+        if (filePath.includes('/packages/web/') || filePath.includes('/packages/mobile/')) {
           return true;
         }
         // Check if it's a direct package.json path we want to mock
         const normalizedPath = filePath.replace(/\\/g, '/');
         if (
           normalizedPath === '/project/packages/web/package.json' ||
-          normalizedPath === '/project/packages/mobile/package.json' ||
-          normalizedPath === '/project/packages/web-visualization/package.json' ||
-          normalizedPath === '/project/packages/mobile-visualization/package.json'
+          normalizedPath === '/project/packages/mobile/package.json'
         ) {
           return true;
         }
@@ -61,12 +53,6 @@ describe("'figma-connect-imports-package-match' rule", () => {
       }
       if (normalizedPath.includes('/packages/mobile/package.json')) {
         return JSON.stringify({ name: '@coinbase/cds-mobile' });
-      }
-      if (normalizedPath.includes('/packages/web-visualization/package.json')) {
-        return JSON.stringify({ name: '@coinbase/cds-web-visualization' });
-      }
-      if (normalizedPath.includes('/packages/mobile-visualization/package.json')) {
-        return JSON.stringify({ name: '@coinbase/cds-mobile-visualization' });
       }
 
       return originalReadFileSync(filePath, encoding);
@@ -116,14 +102,15 @@ describe("'figma-connect-imports-package-match' rule", () => {
 
           figma.connect(Sparkline, 'https://figma.com/design/abc', {
             imports: [
-              "import { Sparkline } from '@coinbase/cds-web-visualization';",
+              "import { Sparkline } from '@coinbase/cds-web/visualizations/sparkline';",
               "import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';",
             ],
             props: {},
             example: () => <Sparkline />,
           });
         `,
-        filename: '/project/packages/web-visualization/src/sparkline/__figma__/Sparkline.figma.tsx',
+        filename:
+          '/project/packages/web/src/visualizations/sparkline/__figma__/Sparkline.figma.tsx',
       },
       {
         // Valid: not a figma.connect call (should be ignored)

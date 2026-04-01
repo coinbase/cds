@@ -13,7 +13,7 @@ import {
   LineChart,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
-} from '@coinbase/cds-mobile-visualization';
+} from '@coinbase/cds-mobile/visualizations/chart';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 

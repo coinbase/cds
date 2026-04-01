@@ -429,8 +429,6 @@ export default tseslint.config(
       'packages/web/**/*.{ts,tsx}',
       'packages/common/**/*.{ts,tsx}',
       'packages/mobile/**/*.{ts,tsx}',
-      'packages/web-visualization/**/*.{ts,tsx}',
-      'packages/mobile-visualization/**/*.{ts,tsx}',
     ],
     rules: {
       ...react19CompatibilityRules,

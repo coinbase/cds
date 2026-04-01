@@ -5,7 +5,6 @@
   "dependencies": {
     "@coinbase/cds-icons": "workspace:^",
     "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
     "@expo-google-fonts/inter": "^0.3.0",
     "@expo-google-fonts/source-code-pro": "^0.3.0",
     "@formatjs/intl-getcanonicallocales": "^2.5.5",
