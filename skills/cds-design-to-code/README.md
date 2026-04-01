@@ -14,11 +14,11 @@ This skill provides a structured workflow for translating Figma designs into rea
 
 ## Dependencies
 
-| Dependency | Required | Purpose |
-| --- | --- | --- |
-| **`cds-code` skill** | Yes | Provides component selection, styling rules, doc lookup workflow, and code quality standards. This skill must be installed first. |
-| **CDS MCP server** | Yes | Provides `list-cds-routes` and `get-cds-doc` tools for looking up component docs, props, and examples at runtime. |
-| **Figma MCP server** | Yes | Provides `get_design_context`, `get_metadata`, and `get_screenshot` tools for fetching design data from Figma files. |
+| Dependency           | Required | Purpose                                                                                                                           |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **`cds-code` skill** | Yes      | Provides component selection, styling rules, doc lookup workflow, and code quality standards. This skill must be installed first. |
+| **CDS MCP server**   | Yes      | Provides `list-cds-routes` and `get-cds-doc` tools for looking up component docs, props, and examples at runtime.                 |
+| **Figma MCP server** | Yes      | Provides `get_design_context`, `get_metadata`, and `get_screenshot` tools for fetching design data from Figma files.              |
 
 ### Installing the cds-code skill
 
