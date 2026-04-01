@@ -275,7 +275,7 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
         event.preventDefault();
 
         const elementWithMatchingFirstLetter = focusableElements.find((el: Element) => {
-          const textContentFirstLetter = el.textContent?.at(0)?.toLowerCase();
+          const textContentFirstLetter = el.textContent?.[0]?.toLowerCase();
           const eventKeyLowerCase = event.key.toLowerCase();
 
           return textContentFirstLetter === eventKeyLowerCase;
