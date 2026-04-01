@@ -8,7 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 3.4.0-beta.26 (3/24/2026 PST)
+## 3.4.0-beta.27 (4/1/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix scrubber beacon initial load glitch. [[#573](https://github.com/coinbase/cds/pull/573)]
+
+## 3.4.0-beta.26 (3/31/2026 PST)
 
 #### 🐞 Fixes
 

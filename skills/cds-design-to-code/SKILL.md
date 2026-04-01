@@ -7,7 +7,7 @@ description: |
 license: Apache-2.0
 metadata:
   author: ruikun.hao@coinbase.com
-  version: '1.0.0'
+  version: '1.0.1'
 ---
 
 # CDS Design To Code
@@ -194,7 +194,7 @@ Pay special attention to:
 
 Prefer a short corrective loop: implement, visually compare, correct the largest differences, re-check once more.
 
-Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it.
+Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design. See the `Step 4: Verify visually` in the `cds-code` skill for the full workflow.
 
 ### Step 8: Validate Against Figma
 

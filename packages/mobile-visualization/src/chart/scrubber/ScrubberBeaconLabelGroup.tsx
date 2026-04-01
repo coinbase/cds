@@ -62,7 +62,7 @@ const PositionedLabel = memo<{
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
     const targetY = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
-    const idleAnimatedY = useSharedValue(0);
+    const idleAnimatedY = useSharedValue<number | null>(null);
     useAnimatedReaction(
       () => ({ y: targetY.value, idle: unwrapAnimatedValue(isIdle) }),
       (current, previous) => {
@@ -78,7 +78,10 @@ const PositionedLabel = memo<{
 
     // When scrubbing, use the targetY value, when idle, use the idleAnimatedY value.
     const y = useDerivedValue(
-      () => (unwrapAnimatedValue(isIdle) ? idleAnimatedY.value : targetY.value),
+      () =>
+        unwrapAnimatedValue(isIdle) && idleAnimatedY.value !== null
+          ? idleAnimatedY.value
+          : targetY.value,
       [isIdle, idleAnimatedY, targetY],
     );
 
