@@ -69,7 +69,7 @@ for suffix in "${CDS_PACKAGE_SUFFIXES[@]}"; do
   node -e "
     const exports = require('$pkg_json').exports || {};
     const paths = Object.keys(exports)
-      .filter(p => p !== './package.json')
+      .filter(p => p !== './package.json' && !p.toLowerCase().includes('v7'))
       .map(p => p === '.' ? '$pkg_name' : '$pkg_name/' + p.slice(2))
       .sort();
     paths.forEach(p => console.log('  ' + p));
