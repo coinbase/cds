@@ -1,11 +1,15 @@
+import { applyTransform } from 'jscodeshift/src/testUtils';
+
 import { readTransformFixture } from '../../../test-utils/readTransformFixture';
 import transform from '../button-variant-values';
-import { applyTransform } from 'jscodeshift/src/testUtils';
 
 const FIXTURE_SUITE = 'button-variant-values';
 
-function applyButtonVariantTransform(source: string) {
-  return applyTransform(transform, {}, { source }, { parser: 'tsx' });
+function applyButtonVariantTransform(
+  source: string,
+  jscodeshiftOptions: Record<string, unknown> = {},
+) {
+  return applyTransform(transform, jscodeshiftOptions, { source }, { parser: 'tsx' });
 }
 
 function readFixture(name: string) {
@@ -34,14 +38,22 @@ const App = () => <Button variant="foregroundMuted">Click</Button>;
       expect(output).not.toContain('variant="foregroundMuted"');
     });
 
-    it('rewrites variant="tertiary" to variant="inverse" on Button from @cbhq/cds-web', () => {
+    it('rewrites variant="tertiary" to variant="inverse" on Button from a non-@coinbase scope', () => {
       const input = `
-import { Button } from '@cbhq/cds-web';
+import { Button } from '@example/cds-web';
 const App = () => <Button variant="tertiary">Click</Button>;
 `;
       const output = applyButtonVariantTransform(input);
       expect(output).toContain('variant="inverse"');
       expect(output).not.toContain('variant="tertiary"');
+    });
+
+    it('skips non-matching scope when --package-scope is set', () => {
+      const input = `
+import { Button } from '@example/cds-web';
+const App = () => <Button variant="tertiary">Click</Button>;
+`;
+      expect(applyButtonVariantTransform(input, { packageScope: '@coinbase' })).toBe('');
     });
 
     it('rewrites variant="tertiary" to variant="inverse" on IconButton from @coinbase/cds-mobile', () => {

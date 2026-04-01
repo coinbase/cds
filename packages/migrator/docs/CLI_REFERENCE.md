@@ -109,6 +109,21 @@ npx @coinbase/cds-migrator ./src -t button-variant -t input-size
 
 **Transforms are standalone files** in `src/transforms/` that run independently.
 
+#### `-ps, --package-scope <scope>`
+
+Limit scope-aware transforms (for example `button-variant-values`, `migrate-use-merge-refs`) to imports under a single npm scope. Omit this flag to rewrite every scope (for example both `@coinbase/cds-web` and `@acme/cds-web`).
+
+```bash
+# Only rewrite @coinbase/cds-* imports
+npx @coinbase/cds-migrator ./src -t button-variant-values --package-scope coinbase
+
+# Shorthand
+npx @coinbase/cds-migrator ./src -t button-variant-values -ps coinbase
+
+# Equivalent
+npx @coinbase/cds-migrator ./src -t button-variant-values --package-scope @coinbase
+```
+
 #### `--clear-history`
 
 Clear migration history for a path.

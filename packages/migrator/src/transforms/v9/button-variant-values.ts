@@ -5,11 +5,13 @@
  *   - "tertiary"        → "inverse"   (old tertiary used bgInverse; v9 gives tertiary new semantics)
  *   - "foregroundMuted"  → "secondary" (foregroundMuted deprecated per design)
  *
- * Only targets components imported from @coinbase/cds-* or @cbhq/cds-* web/mobile packages.
+ * Only targets components imported from `@<scope>/cds-web` or `@<scope>/cds-mobile`. Use CLI
+ * `-ps` / `--package-scope` to limit to one scope, or omit to match every scope.
  * Adds TODO comments for dynamic variant expressions that need manual review.
  */
-import type { API, FileInfo } from 'jscodeshift';
+import type { API, FileInfo, Options } from 'jscodeshift';
 
+import { escapeRegExp, getPackageScopeFromOptions } from '../../utils/package-scope';
 import { addTodoComment, hasMigrationTodo, transformLogger } from '../../utils/transform-utils';
 
 const VARIANT_MAP: Record<string, string> = {
@@ -17,24 +19,33 @@ const VARIANT_MAP: Record<string, string> = {
   foregroundMuted: 'secondary',
 };
 
-const CDS_PACKAGES = [
-  '@coinbase/cds-web',
-  '@coinbase/cds-mobile',
-  '@cbhq/cds-web',
-  '@cbhq/cds-mobile',
-];
+const CDS_WEB_OR_MOBILE_PACKAGE_RE = /^@[^/]+\/(cds-web|cds-mobile)$/;
+
+function buildCdsWebOrMobilePackageRe(packageScope: string | undefined): RegExp {
+  if (packageScope) {
+    return new RegExp(`^${escapeRegExp(packageScope)}/(cds-web|cds-mobile)$`);
+  }
+  return CDS_WEB_OR_MOBILE_PACKAGE_RE;
+}
+
 const TARGET_COMPONENTS = ['Button', 'IconButton'];
 
 // eslint-disable-next-line no-restricted-exports -- jscodeshift requires default export
-export default function transformer(file: FileInfo, api: API) {
+export default function transformer(file: FileInfo, api: API, options: Options) {
   const j = api.jscodeshift;
   const root = j(file.source);
+
+  const packageScope = getPackageScopeFromOptions(options);
+  const cdsPackageRe = buildCdsWebOrMobilePackageRe(packageScope);
 
   const cdsComponentLocalNames = new Set<string>();
 
   root
     .find(j.ImportDeclaration)
-    .filter((path) => CDS_PACKAGES.includes(path.value.source.value as string))
+    .filter((path) => {
+      const src = path.value.source;
+      return j.StringLiteral.check(src) && cdsPackageRe.test(src.value);
+    })
     .forEach((path) => {
       path.value.specifiers?.forEach((specifier) => {
         if (

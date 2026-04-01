@@ -2,7 +2,8 @@
  * Migrate `useMergeRefs` from the deprecated hooks entry to `mergeRefs` on `utils/mergeRefs`.
  *
  * Goal: use `…/utils/mergeRefs` and the `mergeRefs` binding (the deprecated `useMergeRefs` export is
- * identical at runtime to `mergeRefs`). Supports `@coinbase/cds-common` and `@cbhq/cds-common`.
+ * identical at runtime to `mergeRefs`). Matches `@<scope>/cds-common/…`; use CLI `-ps` / `--package-scope`
+ * to limit to one scope, or omit to match every scope.
  *
  * Cases handled:
  * - A: `import { useMergeRefs } from '…hooks/useMergeRefs'` → `import { mergeRefs } from '…utils/mergeRefs'`.
@@ -33,27 +34,43 @@
 
 import type { API, ASTPath, FileInfo, Identifier, Options } from 'jscodeshift';
 
+import { escapeRegExp, getPackageScopeFromOptions } from '../../utils/package-scope';
 import { transformLogger } from '../../utils/transform-utils';
 
-const MERGE_REFS_TARGET_MODULES = [
-  '@coinbase/cds-common/utils/mergeRefs',
-  '@cbhq/cds-common/utils/mergeRefs',
-] as const;
-
-const MERGE_REFS_KNOWN_SOURCES = new Set<string>([
-  '@coinbase/cds-common/hooks/useMergeRefs',
-  '@coinbase/cds-common/utils/mergeRefs',
-  '@cbhq/cds-common/hooks/useMergeRefs',
-  '@cbhq/cds-common/utils/mergeRefs',
-]);
-
-/** Deprecated hooks entry → utils entry (same org prefix). */
-function migrateMergeRefsModulePath(value: string): string | null {
-  if (value === '@coinbase/cds-common/hooks/useMergeRefs') {
-    return '@coinbase/cds-common/utils/mergeRefs';
+/** `hooks/useMergeRefs` or `utils/mergeRefs` under `@<scope>/cds-common`. */
+function buildCdsCommonMergeRefsModuleRe(packageScope: string | undefined): RegExp {
+  if (packageScope) {
+    return new RegExp(
+      `^${escapeRegExp(packageScope)}/cds-common/(hooks\\/useMergeRefs|utils\\/mergeRefs)$`,
+    );
   }
-  if (value === '@cbhq/cds-common/hooks/useMergeRefs') {
-    return '@cbhq/cds-common/utils/mergeRefs';
+  return /^@[^/]+\/cds-common\/(hooks\/useMergeRefs|utils\/mergeRefs)$/;
+}
+
+function buildCdsCommonMergeRefsUtilsModuleRe(packageScope: string | undefined): RegExp {
+  if (packageScope) {
+    return new RegExp(`^${escapeRegExp(packageScope)}/cds-common/utils/mergeRefs$`);
+  }
+  return /^@[^/]+\/cds-common\/utils\/mergeRefs$/;
+}
+
+/** Deprecated hooks entry → utils entry (preserves scope). */
+function migrateMergeRefsModulePath(
+  value: string,
+  packageScope: string | undefined,
+): string | null {
+  if (packageScope) {
+    const m = value.match(
+      new RegExp(`^(${escapeRegExp(packageScope)}/cds-common)/hooks/useMergeRefs$`),
+    );
+    if (m) {
+      return `${m[1]}/utils/mergeRefs`;
+    }
+    return null;
+  }
+  const m = value.match(/^(@[^/]+\/cds-common)\/hooks\/useMergeRefs$/);
+  if (m) {
+    return `${m[1]}/utils/mergeRefs`;
   }
   return null;
 }
@@ -61,8 +78,27 @@ function migrateMergeRefsModulePath(value: string): string | null {
 function isCdsMergeRefsModuleSource(
   j: API['jscodeshift'],
   source: unknown,
+  moduleRe: RegExp,
 ): source is { value: string } {
-  return j.StringLiteral.check(source) && MERGE_REFS_KNOWN_SOURCES.has(source.value);
+  return j.StringLiteral.check(source) && moduleRe.test(source.value);
+}
+
+/**
+ * Unique `import … from '@<scope>/cds-common/utils/mergeRefs'` sources in the file (for consolidation).
+ */
+function collectCdsCommonMergeRefsUtilsModulePaths(
+  j: API['jscodeshift'],
+  root: ReturnType<API['jscodeshift']>,
+  utilsModuleRe: RegExp,
+): string[] {
+  const seen = new Set<string>();
+  root.find(j.ImportDeclaration).forEach((path) => {
+    const src = path.value.source;
+    if (j.StringLiteral.check(src) && utilsModuleRe.test(src.value)) {
+      seen.add(src.value);
+    }
+  });
+  return [...seen];
 }
 
 /**
@@ -71,11 +107,12 @@ function isCdsMergeRefsModuleSource(
 function renameUseMergeRefsInImportSpecifiers(
   j: API['jscodeshift'],
   root: ReturnType<API['jscodeshift']>,
+  moduleRe: RegExp,
 ): boolean {
   let changed = false;
   root.find(j.ImportDeclaration).forEach((path) => {
     const src = path.value.source;
-    if (!isCdsMergeRefsModuleSource(j, src)) {
+    if (!isCdsMergeRefsModuleSource(j, src, moduleRe)) {
       return;
     }
     path.value.specifiers?.forEach((spec) => {
@@ -101,11 +138,12 @@ function renameUseMergeRefsInImportSpecifiers(
 function renameUseMergeRefsInExportSpecifiersFromCds(
   j: API['jscodeshift'],
   root: ReturnType<API['jscodeshift']>,
+  moduleRe: RegExp,
 ): boolean {
   let changed = false;
   root.find(j.ExportNamedDeclaration).forEach((path) => {
     const src = path.value.source;
-    if (!src || !isCdsMergeRefsModuleSource(j, src)) {
+    if (!src || !isCdsMergeRefsModuleSource(j, src, moduleRe)) {
       return;
     }
     path.value.specifiers?.forEach((spec) => {
@@ -286,16 +324,20 @@ function consolidateImportsFromMergeRefsModule(
 }
 
 // eslint-disable-next-line no-restricted-exports -- jscodeshift requires default export
-export default function transformer(file: FileInfo, api: API, _options: Options) {
+export default function transformer(file: FileInfo, api: API, options: Options) {
   const j = api.jscodeshift;
   const root = j(file.source);
+
+  const packageScope = getPackageScopeFromOptions(options);
+  const mergeRefsModuleRe = buildCdsCommonMergeRefsModuleRe(packageScope);
+  const mergeRefsUtilsModuleRe = buildCdsCommonMergeRefsUtilsModuleRe(packageScope);
 
   let hasChanges = false;
   let cdsMergeRefsMigration = false;
 
   root.find(j.ImportDeclaration).forEach((path) => {
     if (path.value.source && j.StringLiteral.check(path.value.source)) {
-      const next = migrateMergeRefsModulePath(path.value.source.value);
+      const next = migrateMergeRefsModulePath(path.value.source.value, packageScope);
       if (next) {
         const prev = path.value.source.value;
         path.value.source = j.stringLiteral(next);
@@ -313,7 +355,7 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
   root.find(j.ExportNamedDeclaration).forEach((path) => {
     const src = path.value.source;
     if (src && j.StringLiteral.check(src)) {
-      const next = migrateMergeRefsModulePath(src.value);
+      const next = migrateMergeRefsModulePath(src.value, packageScope);
       if (next) {
         const prev = src.value;
         path.value.source = j.stringLiteral(next);
@@ -329,7 +371,7 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
   });
 
   root.find(j.StringLiteral).forEach((path) => {
-    const next = migrateMergeRefsModulePath(path.value.value);
+    const next = migrateMergeRefsModulePath(path.value.value, packageScope);
     if (next) {
       const prev = path.value.value;
       path.value.value = next;
@@ -343,13 +385,13 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
     }
   });
 
-  if (renameUseMergeRefsInImportSpecifiers(j, root)) {
+  if (renameUseMergeRefsInImportSpecifiers(j, root, mergeRefsModuleRe)) {
     hasChanges = true;
     cdsMergeRefsMigration = true;
     transformLogger.success(`Renamed import useMergeRefs → mergeRefs`, file.path);
   }
 
-  if (renameUseMergeRefsInExportSpecifiersFromCds(j, root)) {
+  if (renameUseMergeRefsInExportSpecifiersFromCds(j, root, mergeRefsModuleRe)) {
     hasChanges = true;
     cdsMergeRefsMigration = true;
     transformLogger.success(`Renamed re-export useMergeRefs → mergeRefs`, file.path);
@@ -361,7 +403,11 @@ export default function transformer(file: FileInfo, api: API, _options: Options)
   }
 
   if (hasChanges) {
-    for (const targetModule of MERGE_REFS_TARGET_MODULES) {
+    for (const targetModule of collectCdsCommonMergeRefsUtilsModulePaths(
+      j,
+      root,
+      mergeRefsUtilsModuleRe,
+    )) {
       consolidateImportsFromMergeRefsModule(j, root, targetModule);
     }
   }

@@ -12,6 +12,8 @@ export type CliArgs = {
   clearHistory?: boolean;
   partial?: boolean;
   transform?: string[];
+  /** When set, only rewrite imports from this npm scope (e.g. coinbase or @coinbase). */
+  packageScope?: string;
 };
 
 export function parseCliArgs(): CliArgs {
@@ -30,6 +32,10 @@ export function parseCliArgs(): CliArgs {
     .option(
       '-t, --transform <transforms...>',
       'Migrate specific transforms by name (preset auto-detected)',
+    )
+    .option(
+      '-ps, --package-scope <scope>',
+      'Only rewrite imports from this npm scope (e.g. coinbase or @coinbase). Omit to include every scope',
     );
 
   program.parse();
@@ -45,5 +51,6 @@ export function parseCliArgs(): CliArgs {
     clearHistory: options.clearHistory,
     partial: options.partial,
     transform: options.transform,
+    packageScope: options.packageScope,
   };
 }

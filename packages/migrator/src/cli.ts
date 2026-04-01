@@ -216,6 +216,9 @@ async function setupMigration(args: CliArgs) {
     console.log('\n📋 Migration Summary:');
     console.log(`  Path: ${targetPath}`);
     console.log(`  Mode: ${args.dryRun ? 'Dry Run' : 'Apply Changes'}`);
+    if (args.packageScope) {
+      console.log(`  Package scope: ${args.packageScope}`);
+    }
     console.log(`  Transforms: ${filtered.length}\n`);
 
     return {
@@ -223,6 +226,7 @@ async function setupMigration(args: CliArgs) {
       path: targetPath,
       dryRun: args.dryRun || false,
       transformsToRun: filtered,
+      packageScope: args.packageScope,
     };
   }
 
@@ -294,6 +298,9 @@ async function setupMigration(args: CliArgs) {
   console.log(`  Preset: ${preset}`);
   console.log(`  Path: ${targetPath}`);
   console.log(`  Mode: ${args.dryRun ? 'Dry Run' : 'Apply Changes'}`);
+  if (args.packageScope) {
+    console.log(`  Package scope: ${args.packageScope}`);
+  }
   console.log(`  Transforms: ${filtered.length}\n`);
 
   return {
@@ -301,6 +308,7 @@ async function setupMigration(args: CliArgs) {
     path: targetPath,
     dryRun: args.dryRun || false,
     transformsToRun: filtered,
+    packageScope: args.packageScope,
   };
 }
 

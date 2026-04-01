@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { createLogger, recordTransformRun } from './utils/index';
+import { normalizePackageScope } from './utils/package-scope';
 import type { Transform } from './types';
 
 // In CommonJS, __dirname is automatically available
@@ -19,10 +20,19 @@ type RunMigrationOptions = {
   path: string;
   dryRun: boolean;
   transformsToRun: Transform[];
+  /** Forwarded to jscodeshift as `--packageScope` for scope-targeted transforms. */
+  packageScope?: string;
 };
 
 export async function runMigration(options: RunMigrationOptions): Promise<void> {
-  const { preset, path: targetPath, dryRun, transformsToRun } = options;
+  const {
+    preset,
+    path: targetPath,
+    dryRun,
+    transformsToRun,
+    packageScope: packageScopeRaw,
+  } = options;
+  const packageScope = packageScopeRaw ? normalizePackageScope(packageScopeRaw) : undefined;
 
   console.log(`\n🔄 Running migration...\n`);
 
@@ -31,6 +41,9 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
   logger.info(`Starting migration${preset ? ` (${preset})` : ''}`);
   logger.info(`Target path: ${targetPath}`);
   logger.info(`Mode: ${dryRun ? 'Dry Run' : 'Apply Changes'}`);
+  if (packageScope) {
+    logger.info(`Package scope: ${packageScope} (only matching imports are rewritten)`);
+  }
 
   if (transformsToRun.length === 0) {
     console.log('ℹ️  No transforms to run.');
@@ -87,6 +100,7 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
         '--ignore-pattern=**/dist/**',
         '--ignore-pattern=**/build/**',
         `--transform=${fullTransformPath}`,
+        ...(packageScope ? [`--packageScope=${packageScope}`] : []),
         targetPath,
       ];
 

@@ -1,6 +1,7 @@
+import { applyTransform } from 'jscodeshift/src/testUtils';
+
 import { readTransformFixture } from '../../../test-utils/readTransformFixture';
 import transform from '../migrate-use-merge-refs';
-import { applyTransform } from 'jscodeshift/src/testUtils';
 
 const FIXTURE_SUITE = 'migrate-use-merge-refs';
 
@@ -8,8 +9,11 @@ function readFixtureFile(name: string): string {
   return readTransformFixture(__dirname, FIXTURE_SUITE, name);
 }
 
-function applyMigrateTransform(source: string): string {
-  return applyTransform(transform, {}, { source }, { parser: 'tsx' });
+function applyMigrateTransform(
+  source: string,
+  jscodeshiftOptions: Record<string, unknown> = {},
+): string {
+  return applyTransform(transform, jscodeshiftOptions, { source }, { parser: 'tsx' });
 }
 
 describe('migrate-use-merge-refs', () => {
@@ -23,7 +27,7 @@ describe('migrate-use-merge-refs', () => {
 
   it.each([
     ['basic'],
-    ['cbhq-basic'],
+    ['alternate-scope-basic'],
     ['import-alias'],
     ['jest-mock'],
     ['re-export'],
@@ -40,6 +44,17 @@ describe('migrate-use-merge-refs', () => {
   it('does not modify third-party useMergeRefs import', () => {
     const input = readFixtureFile('third-party-import.input.tsx');
     expect(applyMigrateTransform(input)).toBe('');
+  });
+
+  it('does not migrate alternate scope when --package-scope is @coinbase', () => {
+    const input = readFixtureFile('alternate-scope-basic.input.tsx');
+    expect(applyMigrateTransform(input, { packageScope: '@coinbase' })).toBe('');
+  });
+
+  it('migrates alternate scope when --package-scope matches', () => {
+    const input = readFixtureFile('alternate-scope-basic.input.tsx');
+    const expected = readFixtureFile('alternate-scope-basic.output.tsx');
+    expect(applyMigrateTransform(input, { packageScope: '@example' })).toBe(expected.trim());
   });
 
   it('makes no changes when there is nothing to migrate', () => {
