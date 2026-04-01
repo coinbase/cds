@@ -36,14 +36,13 @@ This section describes the steps you follow, in order, when working on a UI task
 
 When this skill first loads, run these steps once so all later work is grounded in the docs:
 
-1. Detect the target platform from the codebase: `web` or `mobile`.
-2. **Discover installed CDS packages.** Run the `scripts/discover-cds-packages.sh` script bundled with this skill:
+1. **Discover installed CDS packages and platform.** Run the discovery script bundled with this skill:
    ```sh
    bash <path-to-skill>/scripts/discover-cds-packages.sh
    ```
-   This prints every installed CDS package with its name, version, and valid export subpaths. Save this output -- you will use it to verify import paths throughout the session.
-3. Call the CDS MCP tool `list-cds-routes` for that platform to get the full route listing.
-4. Read the platform-specific foundation docs with `get-cds-doc`:
+   This prints the `CDS Runtime` (`web` or `mobile`), followed by every installed CDS package with its name, version, and valid export subpaths. Save this output -- you will use it to verify import paths and runtime throughout the session.
+2. Call the CDS MCP tool `list-cds-routes` for the detected runtime to get the full route listing.
+3. Read the platform-specific foundation docs with `get-cds-doc`:
    - `web/getting-started/styling.txt` (or `mobile/getting-started/styling.txt`)
    - `web/getting-started/theming.txt` (or `mobile/getting-started/theming.txt`)
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Discovers installed CDS packages, their versions, and valid export paths.
+# Discovers installed CDS packages, their versions, valid export paths,
+# and the CDS runtime (web or mobile).
 #
 # Usage:
 #   bash discover-cds-packages.sh [node_modules_path]
@@ -8,8 +9,8 @@
 # If node_modules_path is omitted, walks up from $PWD to find the nearest
 # node_modules directory.
 #
-# Output: one section per discovered CDS package with name, version, and
-# every valid subpath export. Use this output to verify import paths.
+# Output: a CDS Runtime line, then one section per discovered CDS package
+# with name, version, and every valid subpath export.
 
 set -euo pipefail
 
@@ -34,6 +35,17 @@ find_node_modules() {
   return 1
 }
 
+resolve_package() {
+  local node_modules="$1" suffix="$2"
+  for scope in $(ls "$node_modules" | grep '^@' 2>/dev/null); do
+    if [[ -f "$node_modules/$scope/$suffix/package.json" ]]; then
+      echo "$scope/$suffix"
+      return 0
+    fi
+  done
+  return 1
+}
+
 if [[ $# -ge 1 ]]; then
   NODE_MODULES="$1"
 else
@@ -43,24 +55,31 @@ else
   }
 fi
 
+# Detect CDS runtime
+has_web=0
+has_mobile=0
+resolve_package "$NODE_MODULES" "cds-web" >/dev/null 2>&1 && has_web=1
+resolve_package "$NODE_MODULES" "cds-mobile" >/dev/null 2>&1 && has_mobile=1
+
+if [[ $has_web -eq 1 && $has_mobile -eq 1 ]]; then
+  echo "CDS Runtime: web (both web and mobile are installed, defaulting to web)"
+elif [[ $has_web -eq 1 ]]; then
+  echo "CDS Runtime: web"
+elif [[ $has_mobile -eq 1 ]]; then
+  echo "CDS Runtime: mobile"
+else
+  echo "CDS Runtime: unknown (neither cds-web nor cds-mobile found)"
+fi
+echo ""
+
+# Print package details
 found=0
 
 for suffix in "${CDS_PACKAGE_SUFFIXES[@]}"; do
-  pkg_json=""
-  pkg_name=""
-
-  for scope in $(ls "$NODE_MODULES" | grep '^@' 2>/dev/null); do
-    candidate="$NODE_MODULES/$scope/$suffix/package.json"
-    if [[ -f "$candidate" ]]; then
-      pkg_json="$candidate"
-      pkg_name="$scope/$suffix"
-      break
-    fi
-  done
-
-  [[ -z "$pkg_json" ]] && continue
+  pkg_name="$(resolve_package "$NODE_MODULES" "$suffix" 2>/dev/null)" || continue
   found=1
 
+  pkg_json="$NODE_MODULES/$pkg_name/package.json"
   version=$(node -e "console.log(require('$pkg_json').version)")
 
   echo "=== $pkg_name@$version ==="
