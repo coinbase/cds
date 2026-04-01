@@ -48,7 +48,7 @@ export const useTabs = <TabId extends string>({
   );
 
   const goNextTab = useCallback(() => {
-    if (!activeTab || activeTab === tabs.at(-1)) return;
+    if (!activeTab || activeTab === tabs[tabs.length - 1]) return;
     const activeTabIndex = tabs.indexOf(activeTab);
     // Find next tab that isn't disabled
     for (let i = activeTabIndex + 1; i < tabs.length; i++) {
