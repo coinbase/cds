@@ -1,15 +1,20 @@
 {
-  "import": "import { Tabs } from '@coinbase/cds-web/tabs/Tabs'",
+  "import": "import { Tabs, DefaultTabsActiveIndicator } from '@coinbase/cds-web/tabs'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tabs/Tabs.tsx",
-  "description": "Tabs is a flexible, accessible tab navigation component for switching between content sections. It supports custom tab components, animated active indicators, and full keyboard navigation.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tabs-tabs--all",
+  "description": "Tabs is a flexible, accessible tab list for switching between related views. Use `DefaultTab` and `DefaultTabsActiveIndicator` for a standard underline tab row without wiring custom components, or supply your own `TabComponent` and `TabsActiveIndicatorComponent` for full control. For pill-style selection, see SegmentedTabs.",
   "relatedComponents": [
-    {
-      "label": "TabNavigation",
-      "url": "/components/navigation/TabNavigation/"
-    },
     {
       "label": "SegmentedTabs",
       "url": "/components/navigation/SegmentedTabs"
+    },
+    {
+      "label": "TabIndicator",
+      "url": "/components/navigation/TabIndicator/"
+    },
+    {
+      "label": "TabLabel",
+      "url": "/components/navigation/TabLabel/"
     }
   ],
   "dependencies": [

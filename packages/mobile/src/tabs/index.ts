@@ -1,3 +1,5 @@
+export * from './DefaultTab';
+export * from './DefaultTabsActiveIndicator';
 export * from './SegmentedTabs';
 export * from './TabIndicator';
 export * from './TabLabel';
