@@ -119,8 +119,8 @@ export const DefaultScrubberBeacon = memo(
         idlePulseShared.value = idlePulse ?? false;
       }, [idlePulse, idlePulseShared]);
 
-      const animatedX = useSharedValue(0);
-      const animatedY = useSharedValue(0);
+      const animatedX = useSharedValue<number | null>(null);
+      const animatedY = useSharedValue<number | null>(null);
 
       // Calculate the target point position - project data to pixels
       const targetPoint = useDerivedValue(() => {
@@ -154,8 +154,10 @@ export const DefaultScrubberBeacon = memo(
 
       // Create animated point using the animated values
       const animatedPoint = useDerivedValue(() => {
+        // If the animated values have not been set yet, return the target point
+        if (animatedX.value === null || animatedY.value === null) return targetPoint.value;
         return { x: animatedX.value, y: animatedY.value };
-      }, [animatedX, animatedY]);
+      }, [targetPoint, animatedX, animatedY]);
 
       useImperativeHandle(
         ref,
