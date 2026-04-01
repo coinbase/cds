@@ -6,8 +6,8 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-mobile';
 import { IconButton } from '@coinbase/cds-mobile/buttons';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { RemoteImage } from '@coinbase/cds-mobile/media';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
@@ -660,7 +660,7 @@ function ExampleNavigator() {
           <Text color="fgMuted" font="label2">
             Swipe to navigate chart segments.
           </Text>
-          <Box padding={1}>{currentExample.component}</Box>
+          <Example>{currentExample.component}</Example>
         </VStack>
       </VStack>
     </ExampleScreen>

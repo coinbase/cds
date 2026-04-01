@@ -3,9 +3,9 @@ import { useDerivedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography';
 import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 
@@ -1319,7 +1319,7 @@ function ExampleNavigator() {
             variant="secondary"
           />
         </HStack>
-        <Box padding={1}>{currentExample.component}</Box>
+        <Example>{currentExample.component}</Example>
       </VStack>
     </ExampleScreen>
   );

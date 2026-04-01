@@ -1,5 +1,4 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import { ScrollView } from 'react-native';
 import { Chip } from '@coinbase/cds-mobile/chips';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -595,34 +594,32 @@ const LegendShapes = () => {
 
 const LegendStories = () => {
   return (
-    <ScrollView>
-      <ExampleScreen>
-        <Example title="Shapes">
-          <Shapes />
-        </Example>
-        <Example title="Basic Legend">
-          <BasicLegend />
-        </Example>
-        <Example title="Position">
-          <Position />
-        </Example>
-        <Example title="Shape Variants">
-          <ShapeVariants />
-        </Example>
-        <Example title="Dynamic Data">
-          <DynamicData />
-        </Example>
-        <Example title="Interactive Legend">
-          <Interactive />
-        </Example>
-        <Example title="Legend Shapes">
-          <LegendShapes />
-        </Example>
-        <Example title="Accessible Legend">
-          <Accessible />
-        </Example>
-      </ExampleScreen>
-    </ScrollView>
+    <ExampleScreen>
+      <Example title="Shapes">
+        <Shapes />
+      </Example>
+      <Example title="Basic Legend">
+        <BasicLegend />
+      </Example>
+      <Example title="Position">
+        <Position />
+      </Example>
+      <Example title="Shape Variants">
+        <ShapeVariants />
+      </Example>
+      <Example title="Dynamic Data">
+        <DynamicData />
+      </Example>
+      <Example title="Interactive Legend">
+        <Interactive />
+      </Example>
+      <Example title="Legend Shapes">
+        <LegendShapes />
+      </Example>
+      <Example title="Accessible Legend">
+        <Accessible />
+      </Example>
+    </ExampleScreen>
   );
 };
 

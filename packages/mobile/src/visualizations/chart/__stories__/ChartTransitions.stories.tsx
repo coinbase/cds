@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@coinbase/cds-mobile/buttons/Button';
 import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography';
 
@@ -538,7 +538,7 @@ function ExampleNavigator() {
             variant="secondary"
           />
         </HStack>
-        <Box key={currentIndex}>{currentExample.component}</Box>
+        <Example key={currentIndex}>{currentExample.component}</Example>
       </VStack>
     </ExampleScreen>
   );

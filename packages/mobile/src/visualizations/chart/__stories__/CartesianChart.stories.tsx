@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
@@ -524,28 +524,26 @@ const ScatterplotWithCustomLabels = memo(() => {
 
 const ChartStories = () => {
   return (
-    <ScrollView>
-      <ExampleScreen>
-        <Example title="Line Styles">
-          <LineStyles />
-        </Example>
-        <Example title="Multiple Types">
-          <MultipleChart />
-        </Example>
-        <Example title="Earnings History">
-          <EarningsHistory />
-        </Example>
-        <Example title="Price With Volume">
-          <PriceWithVolume />
-        </Example>
-        <Example title="Trading Trends">
-          <TradingTrends />
-        </Example>
-        <Example title="Scatterplot with Custom Labels">
-          <ScatterplotWithCustomLabels />
-        </Example>
-      </ExampleScreen>
-    </ScrollView>
+    <ExampleScreen>
+      <Example title="Line Styles">
+        <LineStyles />
+      </Example>
+      <Example title="Multiple Types">
+        <MultipleChart />
+      </Example>
+      <Example title="Earnings History">
+        <EarningsHistory />
+      </Example>
+      <Example title="Price With Volume">
+        <PriceWithVolume />
+      </Example>
+      <Example title="Trading Trends">
+        <TradingTrends />
+      </Example>
+      <Example title="Scatterplot with Custom Labels">
+        <ScatterplotWithCustomLabels />
+      </Example>
+    </ExampleScreen>
   );
 };
 

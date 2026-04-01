@@ -20,15 +20,12 @@ async function getRoutes() {
   try {
     const rootDir = getSourcePath('packages');
 
-    const files = await glob(
-      ['**/mobile/src/**/__stories__/*.stories.(ts|tsx|js|jsx)'],
-      {
-        ignore: ['__tests__/*'],
-        onlyFiles: true,
-        cwd: rootDir,
-        absolute: false,
-      },
-    );
+    const files = await glob(['**/mobile/src/**/__stories__/*.stories.(ts|tsx|js|jsx)'], {
+      ignore: ['__tests__/*'],
+      onlyFiles: true,
+      cwd: rootDir,
+      absolute: false,
+    });
 
     const processedFiles = files
       .map((file) => {

@@ -23,9 +23,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "options": {
-        "jestConfig": "{projectRoot}/jest.config.js"
+        "command": "jest --runInBand",
+        "cwd": "{projectRoot}"
       }
     },
     "typecheck": {

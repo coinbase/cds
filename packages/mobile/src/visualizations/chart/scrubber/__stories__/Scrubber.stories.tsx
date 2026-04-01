@@ -3,7 +3,7 @@ import { useDerivedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography';
 import { FontWeight, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
@@ -1040,7 +1040,7 @@ const ExampleNavigator = () => {
             variant="secondary"
           />
         </HStack>
-        <Box padding={1}>{currentExample.component}</Box>
+        <Example>{currentExample.component}</Example>
       </VStack>
     </ExampleScreen>
   );

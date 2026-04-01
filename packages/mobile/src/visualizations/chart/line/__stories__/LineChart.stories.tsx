@@ -18,7 +18,7 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { DataCard } from '@coinbase/cds-mobile/alpha/data-card/DataCard';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
 import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
@@ -2246,7 +2246,7 @@ function ExampleNavigator() {
             variant="secondary"
           />
         </HStack>
-        <Box padding={1}>{currentExample.component}</Box>
+        <Example>{currentExample.component}</Example>
       </VStack>
     </ExampleScreen>
   );
