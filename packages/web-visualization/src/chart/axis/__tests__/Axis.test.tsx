@@ -440,7 +440,8 @@ describe('Layout-aware requestedTickCount defaults', () => {
 
     expect(getAxisTicksDataMock).toHaveBeenCalled();
     const horizontalRequestedTickCount =
-      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+      getAxisTicksDataMock.mock.calls[getAxisTicksDataMock.mock.calls.length - 1]?.[0]
+        ?.requestedTickCount;
     expect(horizontalRequestedTickCount).toBe(5);
 
     horizontal.unmount();
@@ -456,7 +457,8 @@ describe('Layout-aware requestedTickCount defaults', () => {
 
     expect(getAxisTicksDataMock).toHaveBeenCalled();
     const verticalRequestedTickCount =
-      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+      getAxisTicksDataMock.mock.calls[getAxisTicksDataMock.mock.calls.length - 1]?.[0]
+        ?.requestedTickCount;
     expect(verticalRequestedTickCount).toBeUndefined();
   });
 
@@ -474,7 +476,8 @@ describe('Layout-aware requestedTickCount defaults', () => {
 
     expect(getAxisTicksDataMock).toHaveBeenCalled();
     const verticalRequestedTickCount =
-      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+      getAxisTicksDataMock.mock.calls[getAxisTicksDataMock.mock.calls.length - 1]?.[0]
+        ?.requestedTickCount;
     expect(verticalRequestedTickCount).toBe(5);
 
     vertical.unmount();
@@ -490,7 +493,8 @@ describe('Layout-aware requestedTickCount defaults', () => {
 
     expect(getAxisTicksDataMock).toHaveBeenCalled();
     const horizontalRequestedTickCount =
-      getAxisTicksDataMock.mock.calls.at(-1)?.[0]?.requestedTickCount;
+      getAxisTicksDataMock.mock.calls[getAxisTicksDataMock.mock.calls.length - 1]?.[0]
+        ?.requestedTickCount;
     expect(horizontalRequestedTickCount).toBeUndefined();
   });
 });
