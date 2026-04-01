@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0 (4/1/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove usage of Array.prototype.at(). [[#575](https://github.com/coinbase/cds/pull/575)]
+
 ## 3.4.0-beta.27 (4/1/2026 PST)
 
 This is an artificial version bump with no new change.
