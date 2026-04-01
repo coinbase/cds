@@ -161,7 +161,8 @@ export const useTour = <TourStepId extends string = string>({
 
   const goNextTourStep = useCallback(async () => {
     // If no active step, or active step is the last step, or there are 0 - 1 steps, do nothing
-    if (!activeTourStep || activeTourStep.id === steps.at(-1)?.id || steps.length < 2) return;
+    if (!activeTourStep || activeTourStep.id === steps[steps.length - 1]?.id || steps.length < 2)
+      return;
     const activeStepIndex = steps.findIndex((step) => step.id === activeTourStep.id);
     // Find next step that isn't disabled
     for (let i = activeStepIndex + 1; i < steps.length; i++) {
