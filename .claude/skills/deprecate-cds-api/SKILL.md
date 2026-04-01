@@ -14,7 +14,7 @@ argument-hint: '<SymbolName or path> — replacement — [@deprecationExpectedRe
 
 # Deprecate CDS public API
 
-Automate the standard CDS deprecation workflow for symbols exported from `packages/web`, `packages/mobile`, `packages/common`, `packages/web-visualization`, or `packages/mobile-visualization`.
+Automate the standard CDS deprecation workflow for symbols exported from `packages/web`, `packages/mobile`, or `packages/common`.
 
 ## Inputs to confirm first
 
@@ -28,7 +28,7 @@ Automate the standard CDS deprecation workflow for symbols exported from `packag
 
 **Deprecate the symbol everywhere it is publicly reachable**, not only where it is first implemented.
 
-1. For each CDS package (`web`, `mobile`, `common`, `web-visualization`, `mobile-visualization`), trace the symbol from that package’s `package.json` **`exports`** map → barrel / `index` files → the module that declares or re-exports the symbol.
+1. For each CDS package (`web`, `mobile`, `common`), trace the symbol from that package’s `package.json` **`exports`** map → barrel / `index` files → the module that declares or re-exports the symbol.
 2. **`Grep`** for the symbol name under `packages/<name>/src` (e.g. `export { Foo`, `export * from`, `Foo as`) to catch re-exports and alternate entry paths.
 3. **Every** package that publicly exports the symbol must end up with deprecation coverage: primary implementation **and** any re-export site where your tooling or consumers would not see JSDoc from the source file (add JSDoc on the re-export line or duplicate the tags as needed so imports from `@coinbase/cds-web`, `@coinbase/cds-mobile`, `@coinbase/cds-common`, etc. all surface the deprecation).
 
@@ -69,7 +69,6 @@ The tag must satisfy `@deprecationExpectedRemoval v…` as enforced by ESLint (e
 1. **Confirm with the user** which major **`N`** to use, unless they already specified it in **Inputs** (e.g. “remove in v10” → use `v10`).
 2. **Default suggestion** when the user wants a recommendation: read the **`version`** field from the relevant `package.json` and set **`N = current major + 1`**.
    - **`packages/web`**, **`packages/mobile`**, and **`packages/common`** always share the same semver — read **`version`** from any one of them (e.g. `8.60.0` → suggest **`v9`**).
-   - Symbols owned only by **`packages/web-visualization`** or **`packages/mobile-visualization`**: read **that** package’s `package.json` (those versions are independent from web/mobile/common).
 3. After agreeing on **`N`**, use **`@deprecationExpectedRemoval v<N>`** everywhere for this deprecation (same **Step 3**).
 
 Do **not** assume the default without checking—either the user names **`N`**, or they accept the suggested next-major after you show the current **`version`**.
@@ -141,7 +140,7 @@ Use the workspace convention:
 yarn nx run <project>:lint
 ```
 
-Examples: `web`, `mobile`, `common`, `web-visualization`, `mobile-visualization` — run **each** project you touched. Fix any reported issues before finishing (most often: missing `@deprecationExpectedRemoval`, or `@deprecated` text not ending with the standard sentence).
+Examples: `web`, `mobile`, `common` — run **each** project you touched. Fix any reported issues before finishing (most often: missing `@deprecationExpectedRemoval`, or `@deprecated` text not ending with the standard sentence).
 
 ---
 

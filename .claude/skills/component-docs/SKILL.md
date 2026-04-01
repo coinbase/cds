@@ -80,11 +80,6 @@ packages/web/src/[source-category]/[ComponentName].tsx    # for web
 packages/mobile/src/[source-category]/[ComponentName].tsx # for mobile
 ```
 
-Also check visualization packages if applicable:
-
-- `packages/web-visualization/src/...`
-- `packages/mobile-visualization/src/...`
-
 Also check for Storybook stories (`packages/*/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
 
 ### Check for Styles
@@ -695,4 +690,3 @@ Before completing, verify:
 3. Ensure all examples work and have proper code snippets
 4. Include accessibility section with specific examples
 5. Test all examples and props tables render correctly
-6. For visualization components, use paths like `web-visualization` or `mobile-visualization` instead of `web` or `mobile`

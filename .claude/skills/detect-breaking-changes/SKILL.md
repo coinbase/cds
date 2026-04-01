@@ -17,8 +17,6 @@ Only analyze changes within these packages:
 - `packages/web/`
 - `packages/mobile/`
 - `packages/common/`
-- `packages/web-visualization/`
-- `packages/mobile-visualization/`
 
 ## Determining the public API surface
 
@@ -85,7 +83,7 @@ Examples:
 
 ### 5. DOM / element structure change (web packages only)
 
-Applies to `packages/web/` and `packages/web-visualization/` only. Changes to the rendered HTML element tree that could break consumer CSS selectors or DOM queries targeting internal component structure.
+Applies to `packages/web/` only. Changes to the rendered HTML element tree that could break consumer CSS selectors or DOM queries targeting internal component structure.
 
 Examples:
 
