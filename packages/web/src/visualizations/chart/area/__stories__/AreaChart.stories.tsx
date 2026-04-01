@@ -1,6 +1,5 @@
-import { VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
-
+import { VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { CartesianChart } from '../../CartesianChart';
 import { DottedLine, Line } from '../../line';
 import { Scrubber } from '../../scrubber/Scrubber';

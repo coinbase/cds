@@ -1,7 +1,8 @@
 import React from 'react';
 import { Circle, G, Pattern, Rect } from 'react-native-svg';
 import { useSparklineAreaOpacity } from '@coinbase/cds-common/visualizations/useSparklineAreaOpacity';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useTheme } from '../../hooks/useTheme';
 
 export type SparklineAreaPatternBaseProps = {
   color: string;

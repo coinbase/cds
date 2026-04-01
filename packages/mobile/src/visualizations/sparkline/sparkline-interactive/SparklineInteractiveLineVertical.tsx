@@ -3,7 +3,8 @@ import { Animated as RNAnimated, StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Line, Svg } from 'react-native-svg';
 import { maskOpacity } from '@coinbase/cds-common/tokens/sparkline';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useTheme } from '../../../hooks/useTheme';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useSparklineInteractiveConstants } from './useSparklineInteractiveConstants';

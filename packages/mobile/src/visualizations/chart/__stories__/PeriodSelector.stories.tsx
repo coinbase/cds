@@ -10,16 +10,16 @@ import {
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { IconButton } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Icon, type IconProps } from '@coinbase/cds-mobile/icons';
-import { HStack } from '@coinbase/cds-mobile/layout';
-import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
-import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { tabsSpringConfig } from '@coinbase/cds-mobile/tabs/Tabs';
-import { Text } from '@coinbase/cds-mobile/typography';
 
+import { IconButton } from '../../../buttons';
+import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import { useTheme } from '../../../hooks/useTheme';
+import { Icon, type IconProps } from '../../../icons';
+import { HStack } from '../../../layout';
+import { type TabComponent, type TabsActiveIndicatorProps } from '../../../tabs';
+import { SegmentedTab, type SegmentedTabProps } from '../../../tabs/SegmentedTab';
+import { tabsSpringConfig } from '../../../tabs/Tabs';
+import { Text } from '../../../typography';
 import {
   LiveTabLabel,
   type LiveTabLabelProps,

@@ -1,6 +1,6 @@
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import { DefaultThemeProvider } from '../../../../utils/test';
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
 import { getAxisTicksData } from '../../utils';
@@ -14,7 +14,7 @@ jest.mock('../../utils', () => {
   };
 });
 
-jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
+jest.mock('../../../../hooks/useDimensions', () => ({
   useDimensions: jest.fn(() => ({
     observe: jest.fn(),
     width: 600,

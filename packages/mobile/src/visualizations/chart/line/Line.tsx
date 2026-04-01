@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../index';
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';

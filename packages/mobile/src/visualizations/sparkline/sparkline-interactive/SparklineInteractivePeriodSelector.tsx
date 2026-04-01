@@ -3,14 +3,15 @@ import { ScrollView, StyleSheet } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 import { periodLabelMap } from '@coinbase/cds-common/tokens/sparkline';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { useHorizontallyScrollingPressables } from '@coinbase/cds-mobile/hooks/useHorizontallyScrollingPressables';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box } from '@coinbase/cds-mobile/layout/Box';
-import { HStack } from '@coinbase/cds-mobile/layout/HStack';
-import { OverflowGradient } from '@coinbase/cds-mobile/layout/OverflowGradient';
-import { Pressable } from '@coinbase/cds-mobile/system/Pressable';
-import { Text } from '@coinbase/cds-mobile/typography';
-import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
+
+import { useHorizontallyScrollingPressables } from '../../../hooks/useHorizontallyScrollingPressables';
+import { useTheme } from '../../../hooks/useTheme';
+import { Box } from '../../../layout/Box';
+import { HStack } from '../../../layout/HStack';
+import { OverflowGradient } from '../../../layout/OverflowGradient';
+import { Pressable } from '../../../system/Pressable';
+import { Text } from '../../../typography';
+import { Haptics } from '../../../utils/haptics';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 

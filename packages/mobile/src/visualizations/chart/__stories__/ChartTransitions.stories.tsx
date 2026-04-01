@@ -1,10 +1,10 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button } from '@coinbase/cds-mobile/buttons/Button';
-import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 
+import { Button } from '../../../buttons/Button';
+import { IconButton } from '../../../buttons/IconButton';
+import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import { Box, HStack, VStack } from '../../../layout';
+import { Text } from '../../../typography';
 import { AreaChart } from '../area/AreaChart';
 import type { BarProps } from '../bar/Bar';
 import { BarChart } from '../bar/BarChart';

@@ -1,16 +1,17 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useTheme } from '../../hooks/useTheme';
 import {
   SegmentedTabs,
   type SegmentedTabsProps,
   type TabComponent,
   type TabsActiveIndicatorProps,
-} from '@coinbase/cds-mobile/tabs';
-import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { tabsSpringConfig } from '@coinbase/cds-mobile/tabs/Tabs';
-import { Text, type TextBaseProps } from '@coinbase/cds-mobile/typography';
+} from '../../tabs';
+import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
+import { tabsSpringConfig } from '../../tabs/Tabs';
+import { Text, type TextBaseProps } from '../../typography';
 
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({

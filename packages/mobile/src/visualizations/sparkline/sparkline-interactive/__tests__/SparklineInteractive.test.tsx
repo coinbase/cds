@@ -1,8 +1,8 @@
 import React from 'react';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { render, screen } from '@testing-library/react-native';
 
+import { DefaultThemeProvider } from '../../../../utils/testHelpers';
 import { SparklineInteractiveHeader } from '../..';
 import { SparklineInteractive } from '../SparklineInteractive';
 

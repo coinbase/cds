@@ -1,9 +1,10 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import { cx } from '@coinbase/cds-web';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
+
+import { useDimensions } from '../../hooks/useDimensions';
+import { cx } from '../../index';
+import { Box, type BoxBaseProps, type BoxProps } from '../../layout';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { CartesianChartProvider } from './ChartProvider';

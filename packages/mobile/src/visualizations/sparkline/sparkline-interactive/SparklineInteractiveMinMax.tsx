@@ -2,9 +2,10 @@ import React, { memo, useCallback, useMemo, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 import type { ChartDataPoint, ChartFormatAmount, ChartXFunction } from '@coinbase/cds-common/types';
-import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Text } from '@coinbase/cds-mobile/typography';
+
+import { useLayout } from '../../../hooks/useLayout';
+import { useTheme } from '../../../hooks/useTheme';
+import { Text } from '../../../typography';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useMinMaxTransform } from './useMinMaxTransform';

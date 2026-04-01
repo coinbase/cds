@@ -4,11 +4,11 @@ import type { ChartDataPoint, ChartTimeseries } from '@coinbase/cds-common/types
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
 import { useTimeseriesPaths } from '@coinbase/cds-common/visualizations/useTimeseriesPaths';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 import type { Area, Line } from 'd3-shape';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { SparklinePath } from '../SparklinePath';
 
 const { duration, easing } = animatedPathConfig;

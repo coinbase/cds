@@ -1,7 +1,7 @@
 import { Animated } from 'react-native';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { renderHook } from '@testing-library/react-native';
 
+import { DefaultThemeProvider } from '../../../../utils/testHelpers';
 import { useMinMaxTransform } from '../useMinMaxTransform';
 
 jest.useFakeTimers();

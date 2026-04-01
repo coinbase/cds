@@ -4,8 +4,9 @@ import { getAccessibleForegroundGradient } from '@coinbase/cds-common/color/getA
 import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
+
+import { useTheme } from '../../hooks/useTheme';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineBaseProps } from './Sparkline';

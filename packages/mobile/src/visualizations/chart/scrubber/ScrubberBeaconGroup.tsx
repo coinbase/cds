@@ -2,8 +2,8 @@ import { forwardRef, memo, useCallback, useImperativeHandle, useMemo } from 'rea
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import { useTheme } from '@coinbase/cds-mobile';
 
+import { useTheme } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import { evaluateGradientAtValue, getGradientStops, useScrubberContext } from '../utils';
 import { convertToSerializableScale } from '../utils/scale';

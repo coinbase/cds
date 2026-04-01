@@ -2,8 +2,6 @@ import { memo, useMemo } from 'react';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect } from '@coinbase/cds-common/types';
-import type { Theme } from '@coinbase/cds-mobile/core/theme';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   type AnimatedProp,
   type Color,
@@ -21,6 +19,8 @@ import {
   type Transforms3d,
 } from '@shopify/react-native-skia';
 
+import type { Theme } from '../../../core/theme';
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset, getColorWithOpacity, unwrapAnimatedValue } from '../utils';
 

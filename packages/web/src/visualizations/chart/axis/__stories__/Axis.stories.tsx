@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { Examples } from '@coinbase/cds-web/dates/__stories__/Calendar.stories';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 
+import { Examples } from '../../../../dates/__stories__/Calendar.stories';
+import { HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { LineChart, SolidLine, type SolidLineProps } from '../../line';

@@ -1,11 +1,11 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import { Chip } from '@coinbase/cds-mobile/chips';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography/Text';
 import { Canvas, Group, Path as SkiaPath, Skia } from '@shopify/react-native-skia';
 
+import { Chip } from '../../../../chips';
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { useTheme } from '../../../../hooks/useTheme';
+import { Box, HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography/Text';
 import { XAxis, YAxis } from '../../axis';
 import type { BarComponentProps } from '../../bar';
 import { BarChart, BarPlot, DefaultBar } from '../../bar';

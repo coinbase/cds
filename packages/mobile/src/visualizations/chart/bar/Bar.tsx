@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { type BarTransition, getBarPath, type Transition } from '../utils';
 

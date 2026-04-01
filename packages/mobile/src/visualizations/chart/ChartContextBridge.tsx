@@ -17,7 +17,8 @@ import {
   useState,
 } from 'react';
 import type ReactReconciler from 'react-reconciler';
-import { ThemeContext } from '@coinbase/cds-mobile/system/ThemeProvider';
+
+import { ThemeContext } from '../../system/ThemeProvider';
 
 import { ScrubberContext } from './utils/context';
 import { CartesianChartContext } from './ChartProvider';

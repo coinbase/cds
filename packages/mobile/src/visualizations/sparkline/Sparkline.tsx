@@ -6,8 +6,9 @@ import type { ElementChildren, SharedProps } from '@coinbase/cds-common/types';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { getSparklineRange } from '@coinbase/cds-common/visualizations/getSparklineRange';
 import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
+
+import { useTheme } from '../../hooks/useTheme';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineAreaBaseProps } from './SparklineArea';

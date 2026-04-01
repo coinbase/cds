@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
-import { useTheme } from '@coinbase/cds-mobile';
-import { Box, type BoxProps } from '@coinbase/cds-mobile/layout';
 
+import { useTheme } from '../../../index';
+import { Box, type BoxProps } from '../../../layout';
 import type { LegendShape, LegendShapeVariant } from '../utils/chart';
 
 import type { LegendShapeProps } from './Legend';

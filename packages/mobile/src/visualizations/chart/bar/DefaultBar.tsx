@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
 import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';

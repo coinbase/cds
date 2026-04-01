@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { cx } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { SolidLine } from '../line/SolidLine';

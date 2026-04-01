@@ -5,7 +5,8 @@ import {
   chartCompactHeight,
   chartHeight as chartHeightToken,
 } from '@coinbase/cds-common/tokens/sparkline';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useTheme } from '../../../hooks/useTheme';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 

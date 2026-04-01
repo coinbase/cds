@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { DashPathEffect } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 

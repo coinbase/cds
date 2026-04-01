@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
-import { useScreenReaderStatus } from '@coinbase/cds-mobile/hooks/useScreenReaderStatus';
 
+import { useScreenReaderStatus } from '../../../hooks/useScreenReaderStatus';
 import { useCartesianChartContext } from '../ChartProvider';
 import { useScrubberContext } from '../utils';
 import type { AxisConfig } from '../utils/axis';

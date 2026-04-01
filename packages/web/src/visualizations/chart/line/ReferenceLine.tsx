@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { cx } from '@coinbase/cds-web';
 
+import { cx } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import type {
   ChartTextChildren,

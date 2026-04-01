@@ -1,7 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { Text } from '@coinbase/cds-web/typography/Text';
 import { css } from '@linaria/core';
+
+import { cx } from '../../../index';
+import { Text } from '../../../typography/Text';
 
 import { useSparklineInteractiveScrubContext } from './SparklineInteractiveScrubProvider';
 

@@ -2,18 +2,18 @@ import { forwardRef, memo, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { css } from '@linaria/core';
+
+import { IconButton } from '../../../buttons';
+import { useTheme } from '../../../hooks/useTheme';
+import { Box, HStack, VStack } from '../../../layout';
 import {
   SegmentedTab,
   type SegmentedTabProps,
   type TabComponent,
   type TabsActiveIndicatorProps,
-} from '@coinbase/cds-web/tabs';
-import { Text } from '@coinbase/cds-web/typography';
-import { css } from '@linaria/core';
-
+} from '../../../tabs';
+import { Text } from '../../../typography';
 import { LiveTabLabel, PeriodSelector, PeriodSelectorActiveIndicator } from '../PeriodSelector';
 
 export default {

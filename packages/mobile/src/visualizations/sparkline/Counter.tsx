@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useCounter } from '@coinbase/cds-common/visualizations/useCounter';
-import { Box } from '@coinbase/cds-mobile/layout';
-import type { CounterBaseProps } from '@coinbase/cds-mobile/visualizations/Counter';
+
+import { Box } from '../../layout';
+import type { CounterBaseProps } from '../Counter';
 
 const styles = StyleSheet.create({
   hidden: {

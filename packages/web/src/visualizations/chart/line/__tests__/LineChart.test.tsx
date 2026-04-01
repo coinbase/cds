@@ -1,10 +1,10 @@
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import { DefaultThemeProvider } from '../../../../utils/test';
 import type { LineComponentProps } from '../Line';
 import { LineChart } from '../LineChart';
 
-jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
+jest.mock('../../../../hooks/useDimensions', () => ({
   useDimensions: jest.fn(() => ({
     observe: jest.fn(),
     width: 600,

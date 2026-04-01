@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Group } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { SolidLine } from '../line/SolidLine';

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { borderWidth, lineDashArray, lineOpacity } from '@coinbase/cds-common/tokens/sparkline';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useTheme } from '../../../hooks/useTheme';
 
 const staticLineProps = {
   x1: 0,

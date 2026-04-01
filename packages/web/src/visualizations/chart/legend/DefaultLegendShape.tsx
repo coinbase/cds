@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
+import { cx } from '../../../index';
+import { Box, type BoxProps } from '../../../layout';
 import type { LegendShape, LegendShapeVariant } from '../utils/chart';
 
 import type { LegendShapeProps } from './Legend';

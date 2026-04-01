@@ -1,12 +1,12 @@
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import type { Rect } from '@coinbase/cds-common/types';
-import { Button } from '@coinbase/cds-web/buttons';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
 
+import { Button } from '../../../../buttons';
+import { useTheme } from '../../../../hooks/useTheme';
+import { Box, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import {
   ChartText,
   type ChartTextChildren,

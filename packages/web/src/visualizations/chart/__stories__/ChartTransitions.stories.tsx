@@ -7,10 +7,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Button } from '@coinbase/cds-web/buttons';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 
+import { Button } from '../../../buttons';
+import { Box, VStack } from '../../../layout';
+import { Text } from '../../../typography';
 import { Area } from '../area/Area';
 import type { BarProps } from '../bar/Bar';
 import { BarChart } from '../bar/BarChart';

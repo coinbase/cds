@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { StyleSheet } from 'react-native';
-import { HStack, type HStackProps } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography/Text';
+
+import { HStack, type HStackProps } from '../../../layout';
+import { Text } from '../../../typography/Text';
 
 import { DefaultLegendShape } from './DefaultLegendShape';
 import type { LegendEntryProps } from './Legend';

@@ -2,8 +2,8 @@ import React, { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
-import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
+import { Haptics } from '../../../utils/haptics';
 import { useCartesianChartContext } from '../ChartProvider';
 import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';

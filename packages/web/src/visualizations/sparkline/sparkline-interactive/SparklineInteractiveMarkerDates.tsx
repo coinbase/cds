@@ -2,11 +2,12 @@ import React, { memo, useCallback, useMemo, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { fadeDuration } from '@coinbase/cds-common/tokens/sparkline';
 import { useDateLookup } from '@coinbase/cds-common/visualizations/useDateLookup';
-import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
-import { HStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
 import { css } from '@linaria/core';
 import times from 'lodash/times';
+
+import { cubicBezier } from '../../../animation/convertMotionConfig';
+import { HStack } from '../../../layout';
+import { Text } from '../../../typography/Text';
 
 import type { ChartFormatDate, ChartGetMarker } from './SparklineInteractive';
 

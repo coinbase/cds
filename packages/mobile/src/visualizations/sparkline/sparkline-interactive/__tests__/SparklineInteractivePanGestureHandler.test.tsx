@@ -1,7 +1,7 @@
 import { Text } from 'react-native';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { render, screen } from '@testing-library/react-native';
 
+import { DefaultThemeProvider } from '../../../../utils/testHelpers';
 import { SparklineInteractivePanGestureHandler } from '../SparklineInteractivePanGestureHandler';
 
 describe('SparklineInteractivePanGestureHandler.test', () => {

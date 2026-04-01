@@ -1,10 +1,10 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { cx } from '@coinbase/cds-web';
-import { Box, type BoxProps } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
 
+import { cx } from '../../../index';
+import { Box, type BoxProps } from '../../../layout';
+import { Text } from '../../../typography';
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset } from '../utils';
 import { accessoryFadeTransitionDuration } from '../utils/transition';

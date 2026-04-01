@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 

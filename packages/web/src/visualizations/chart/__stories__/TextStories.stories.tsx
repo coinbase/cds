@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import { Switch } from '@coinbase/cds-web/controls';
 
+import { Switch } from '../../../controls';
 import { XAxis, YAxis } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { LineChart } from '../line/LineChart';

@@ -5,13 +5,13 @@ import { prices, pricesWithScalingFactor } from '@coinbase/cds-common/internal/d
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import { useSparklineArea } from '@coinbase/cds-common/visualizations/useSparklineArea';
 import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';
-import { Cell } from '@coinbase/cds-mobile/cells/Cell';
-import { CellMedia } from '@coinbase/cds-mobile/cells/CellMedia';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 
+import { Cell } from '../../../cells/Cell';
+import { CellMedia } from '../../../cells/CellMedia';
+import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import { useTheme } from '../../../hooks/useTheme';
+import { VStack } from '../../../layout';
+import { Text } from '../../../typography';
 import { SparklineArea } from '../SparklineArea';
 import { SparklineGradient } from '../SparklineGradient';
 

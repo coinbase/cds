@@ -1,10 +1,11 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
-import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
-import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
-import { Box } from '@coinbase/cds-mobile/layout';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
+
+import { useLayout } from '../../hooks/useLayout';
+import type { BoxBaseProps, BoxProps } from '../../layout';
+import { Box } from '../../layout';
 
 import {
   ScrubberAccessibilityView,

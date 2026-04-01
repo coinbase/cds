@@ -14,18 +14,19 @@ import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColo
 import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
 import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
 import { emptyArray, isStorybook, noop } from '@coinbase/cds-utils';
-import { cx, useTheme } from '@coinbase/cds-web';
-import { Lottie } from '@coinbase/cds-web/animation';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Box } from '@coinbase/cds-web/layout/Box';
-import { getBrowserGlobals } from '@coinbase/cds-web/utils/browser';
+import isEqual from 'lodash/isEqual';
+import isObject from 'lodash/isObject';
+
+import { Lottie } from '../../../animation';
+import { useDimensions } from '../../../hooks/useDimensions';
+import { cx, useTheme } from '../../../index';
+import { HStack, VStack } from '../../../layout';
+import { Box } from '../../../layout/Box';
+import { getBrowserGlobals } from '../../../utils/browser';
 import {
   VisualizationContainer,
   type VisualizationContainerDimension,
-} from '@coinbase/cds-web/visualizations/VisualizationContainer';
-import isEqual from 'lodash/isEqual';
-import isObject from 'lodash/isObject';
+} from '../../VisualizationContainer';
 
 import { InnerSparklineInteractiveProvider } from './InnerSparklineInteractiveProvider';
 import { SparklineInteractiveHoverDate } from './SparklineInteractiveHoverDate';

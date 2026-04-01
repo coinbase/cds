@@ -1,6 +1,7 @@
 import { fadeDuration } from '@coinbase/cds-common/tokens/sparkline';
-import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
 import { css } from '@linaria/core';
+
+import { cubicBezier } from '../../../animation/convertMotionConfig';
 
 // keyframes are global so they should be namespaced
 const fadeInCss = css`

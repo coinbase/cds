@@ -1,13 +1,13 @@
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { useTheme } from '@coinbase/cds-mobile';
-import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 import { FontWeight, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
 
+import { Button, IconButton } from '../../../../buttons';
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { useTheme } from '../../../../index';
+import { Box, HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart, SolidLine } from '../../line';
 import {

@@ -1,8 +1,8 @@
 import type { StyleProp, TextStyle } from 'react-native';
-import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { renderHook } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../../../themes/defaultTheme';
+import { DefaultThemeProvider } from '../../../../utils/testHelpers';
 import { useSparklineInteractiveHeaderStyles } from '../useSparklineInteractiveHeaderStyles';
 
 const getStyleValue = (styles: StyleProp<TextStyle>, styleProp: keyof TextStyle) =>

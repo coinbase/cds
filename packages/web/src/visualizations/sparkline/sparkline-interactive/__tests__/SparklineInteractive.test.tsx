@@ -1,7 +1,7 @@
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import { DefaultThemeProvider } from '../../../../utils/test';
 import { SparklineInteractiveHeader } from '../..';
 import { SparklineInteractive } from '../SparklineInteractive';
 

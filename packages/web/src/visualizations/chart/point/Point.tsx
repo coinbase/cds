@@ -1,9 +1,9 @@
 import React, { memo, type SVGProps, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion, type Transition } from 'framer-motion';
 
+import { cx } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import {

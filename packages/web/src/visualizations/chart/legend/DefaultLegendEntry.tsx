@@ -1,8 +1,9 @@
 import { memo } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { HStack, type HStackDefaultElement, type HStackProps } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
+
+import { cx } from '../../../index';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../../../layout';
+import { Text } from '../../../typography';
 
 import { DefaultLegendShape } from './DefaultLegendShape';
 import type { LegendEntryProps } from './Legend';

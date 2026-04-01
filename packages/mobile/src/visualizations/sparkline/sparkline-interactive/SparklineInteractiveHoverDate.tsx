@@ -1,7 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, TextInput } from 'react-native';
 import type { ChartScrubParams } from '@coinbase/cds-common/types/Chart';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useTheme } from '../../../hooks/useTheme';
 
 import type { SparklineInteractiveBaseProps } from './SparklineInteractive';
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';

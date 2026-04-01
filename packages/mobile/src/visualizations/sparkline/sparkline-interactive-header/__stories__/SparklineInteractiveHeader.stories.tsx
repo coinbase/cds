@@ -6,12 +6,12 @@ import {
   type SparklinePeriod,
 } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { ChartData, ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common/types';
-import { IconButton } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Icon } from '@coinbase/cds-mobile/icons';
-import { Box, HStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 
+import { IconButton } from '../../../../buttons';
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { Icon } from '../../../../icons';
+import { Box, HStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import {
   SparklineInteractive,
   type SparklineInteractiveBaseProps,

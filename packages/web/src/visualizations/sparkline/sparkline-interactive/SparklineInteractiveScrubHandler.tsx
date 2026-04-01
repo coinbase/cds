@@ -4,10 +4,11 @@ import type { ChartGetMarker } from '@coinbase/cds-common';
 import { fadeDuration, maskOpacity } from '@coinbase/cds-common/tokens/sparkline';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 import { noop } from '@coinbase/cds-utils';
-import { cx } from '@coinbase/cds-web';
-import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { css } from '@linaria/core';
+
+import { cubicBezier } from '../../../animation/convertMotionConfig';
+import { useDimensions } from '../../../hooks/useDimensions';
+import { cx } from '../../../index';
 
 import { fadeIn, fadeOut } from './fade';
 import type { SparklineInteractiveBaseProps } from './SparklineInteractive';

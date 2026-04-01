@@ -5,22 +5,22 @@ import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { DataCard } from '@coinbase/cds-web/alpha/data-card/DataCard';
-import { ListCell } from '@coinbase/cds-web/cells';
-import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Avatar, RemoteImage } from '@coinbase/cds-web/media';
-import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
-import { Pressable } from '@coinbase/cds-web/system';
+import { m } from 'framer-motion';
+
+import { DataCard } from '../../../../alpha/data-card/DataCard';
+import { ListCell } from '../../../../cells';
+import { useBreakpoints } from '../../../../hooks/useBreakpoints';
+import { Box, HStack, VStack } from '../../../../layout';
+import { Avatar, RemoteImage } from '../../../../media';
+import { SectionHeader } from '../../../../section-header/SectionHeader';
+import { Pressable } from '../../../../system';
 import {
   SegmentedTab,
   type SegmentedTabProps,
   type TabComponent,
   type TabsActiveIndicatorProps,
-} from '@coinbase/cds-web/tabs';
-import { Text } from '@coinbase/cds-web/typography';
-import { m } from 'framer-motion';
-
+} from '../../../../tabs';
+import { Text } from '../../../../typography';
 import {
   DefaultScrubberBeacon,
   defaultTransition,

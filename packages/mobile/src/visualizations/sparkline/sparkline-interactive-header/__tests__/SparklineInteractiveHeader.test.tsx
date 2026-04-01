@@ -1,6 +1,6 @@
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { render, screen } from '@testing-library/react-native';
 
+import { DefaultThemeProvider } from '../../../../utils/testHelpers';
 import { SparklineInteractiveHeader } from '../SparklineInteractiveHeader';
 
 const defaultSubHead = {

@@ -14,19 +14,6 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
-import { useTheme } from '@coinbase/cds-mobile';
-import { DataCard } from '@coinbase/cds-mobile/alpha/data-card/DataCard';
-import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
-import { ListCell } from '@coinbase/cds-mobile/cells';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
-import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation';
-import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
-import { Pressable } from '@coinbase/cds-mobile/system';
-import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
-import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { Text } from '@coinbase/cds-mobile/typography';
 import {
   Circle,
   FontWeight,
@@ -36,6 +23,19 @@ import {
   TextAlign,
 } from '@shopify/react-native-skia';
 
+import { DataCard } from '../../../../alpha/data-card/DataCard';
+import { Button, IconButton } from '../../../../buttons';
+import { ListCell } from '../../../../cells';
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { useTheme } from '../../../../index';
+import { Box, type BoxBaseProps, HStack, VStack } from '../../../../layout';
+import { Avatar, RemoteImage } from '../../../../media';
+import { NavigationTitleSelect } from '../../../../navigation';
+import { SectionHeader } from '../../../../section-header/SectionHeader';
+import { Pressable } from '../../../../system';
+import { type TabComponent, type TabsActiveIndicatorProps } from '../../../../tabs';
+import { SegmentedTab, type SegmentedTabProps } from '../../../../tabs/SegmentedTab';
+import { Text } from '../../../../typography';
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';

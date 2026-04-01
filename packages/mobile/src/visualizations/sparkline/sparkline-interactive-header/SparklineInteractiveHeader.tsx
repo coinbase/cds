@@ -7,7 +7,8 @@ import type {
   SparklineInteractiveHeaderSignVariant,
   SparklineInteractiveHeaderVariant,
 } from '@coinbase/cds-common/types';
-import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+
+import { HStack, VStack } from '../../../layout';
 
 import { useSparklineInteractiveHeaderStyles } from './useSparklineInteractiveHeaderStyles';
 

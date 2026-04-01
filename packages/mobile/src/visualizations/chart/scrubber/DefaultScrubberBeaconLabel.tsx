@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile';
 
+import { useTheme } from '../../../index';
 import { ChartText, type ChartTextProps } from '../text';
 
 import type { ScrubberBeaconLabelProps } from './Scrubber';

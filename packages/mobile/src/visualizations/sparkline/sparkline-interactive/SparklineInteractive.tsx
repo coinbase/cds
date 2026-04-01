@@ -15,13 +15,14 @@ import { minMax } from '@coinbase/cds-common/utils/chart';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
 import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
-import { Lottie } from '@coinbase/cds-mobile/animation';
-import { useScreenReaderStatus } from '@coinbase/cds-mobile/hooks/useScreenReaderStatus';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box } from '@coinbase/cds-mobile/layout';
 import { emptyArray, noop } from '@coinbase/cds-utils';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
+
+import { Lottie } from '../../../animation';
+import { useScreenReaderStatus } from '../../../hooks/useScreenReaderStatus';
+import { useTheme } from '../../../hooks/useTheme';
+import { Box } from '../../../layout';
 
 import { SparklineAccessibleView } from './SparklineAccessibleView';
 import { SparklineInteractiveHoverDate } from './SparklineInteractiveHoverDate';

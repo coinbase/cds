@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { useTheme } from '../../../../hooks/useTheme';
 import { DottedLine } from '../../line';
 import { Scrubber } from '../../scrubber/Scrubber';
 import { AreaChart } from '..';

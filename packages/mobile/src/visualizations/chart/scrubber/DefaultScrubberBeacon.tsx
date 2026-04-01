@@ -10,9 +10,9 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import { unwrapAnimatedValue } from '../utils';
 import { projectPointWithSerializableScale } from '../utils/point';

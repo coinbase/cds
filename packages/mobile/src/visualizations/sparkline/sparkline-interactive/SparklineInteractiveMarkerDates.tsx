@@ -3,10 +3,11 @@ import { Animated, StyleSheet } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useDateLookup } from '@coinbase/cds-common/visualizations/useDateLookup';
-import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Text } from '@coinbase/cds-mobile/typography';
 import times from 'lodash/times';
+
+import { useLayout } from '../../../hooks/useLayout';
+import { useTheme } from '../../../hooks/useTheme';
+import { Text } from '../../../typography';
 
 import type { ChartFormatDate, ChartGetMarker } from './SparklineInteractive';
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';

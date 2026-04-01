@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Group, Skia } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';

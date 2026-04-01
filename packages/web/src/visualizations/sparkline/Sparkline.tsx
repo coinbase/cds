@@ -5,7 +5,8 @@ import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColo
 import { getSparklineRange } from '@coinbase/cds-common/visualizations/getSparklineRange';
 import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
 import { generateRandomId } from '@coinbase/cds-utils';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+
+import { useTheme } from '../../hooks/useTheme';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineAreaBaseProps } from './SparklineArea';

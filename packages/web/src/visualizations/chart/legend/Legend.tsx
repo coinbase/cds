@@ -1,11 +1,6 @@
 import { forwardRef, memo, useMemo } from 'react';
-import {
-  Box,
-  type BoxBaseProps,
-  type BoxDefaultElement,
-  type BoxProps,
-} from '@coinbase/cds-web/layout';
 
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../../layout';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { LegendShape } from '../utils';
 

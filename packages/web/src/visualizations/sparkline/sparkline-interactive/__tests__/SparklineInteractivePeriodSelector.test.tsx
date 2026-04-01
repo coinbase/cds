@@ -1,6 +1,6 @@
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { DefaultThemeProvider } from '../../../../utils/test';
 import { SparklineInteractivePeriodSelector } from '../SparklineInteractivePeriodSelector';
 
 const periods = [

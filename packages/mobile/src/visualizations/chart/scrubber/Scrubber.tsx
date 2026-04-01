@@ -12,9 +12,9 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
-import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import {
   ReferenceLine,

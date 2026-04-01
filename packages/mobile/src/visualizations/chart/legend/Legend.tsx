@@ -1,7 +1,7 @@
 import { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-mobile/layout';
 
+import { Box, type BoxBaseProps, type BoxProps } from '../../../layout';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { LegendShape } from '../utils';
 

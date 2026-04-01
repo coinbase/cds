@@ -1,10 +1,11 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { periodLabelMap } from '@coinbase/cds-common/tokens/sparkline';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
-import { Box, HStack } from '@coinbase/cds-web/layout';
-import { Pressable } from '@coinbase/cds-web/system/Pressable';
-import { Text } from '@coinbase/cds-web/typography/Text';
+
+import { useTheme } from '../../../hooks/useTheme';
+import { Box, HStack } from '../../../layout';
+import { Pressable } from '../../../system/Pressable';
+import { Text } from '../../../typography/Text';
 
 export type SparklineInteractivePeriodSelectorProps<Period extends string> = {
   selectedPeriod: Period;

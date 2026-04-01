@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
-import { useTheme } from '@coinbase/cds-mobile';
 
+import { useTheme } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
 import { type ChartInset, getChartInset } from '../utils';

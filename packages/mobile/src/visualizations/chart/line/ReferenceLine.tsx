@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import type {
   ChartTextChildren,

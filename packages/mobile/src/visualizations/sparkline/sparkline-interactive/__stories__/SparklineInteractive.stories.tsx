@@ -7,10 +7,10 @@ import {
   strokeColor,
 } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { ChartData, ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common/types';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { Box } from '../../../../layout';
+import { Text } from '../../../../typography';
 import {
   SparklineInteractiveHeader,
   type SparklineInteractiveHeaderRef,

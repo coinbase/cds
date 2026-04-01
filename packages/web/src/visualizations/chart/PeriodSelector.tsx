@@ -1,18 +1,19 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { cx } from '@coinbase/cds-web';
-import type { Polymorphic } from '@coinbase/cds-web/core/polymorphism';
-import { Box } from '@coinbase/cds-web/layout';
+import { css } from '@linaria/core';
+import { m as motion } from 'framer-motion';
+
+import type { Polymorphic } from '../../core/polymorphism';
+import { cx } from '../../index';
+import { Box } from '../../layout';
 import {
   SegmentedTabs,
   type SegmentedTabsProps,
   type TabComponent,
   type TabsActiveIndicatorProps,
   tabsTransitionConfig,
-} from '@coinbase/cds-web/tabs';
-import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-web/tabs/SegmentedTab';
-import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
-import { css } from '@linaria/core';
-import { m as motion } from 'framer-motion';
+} from '../../tabs';
+import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
+import { Text, type TextBaseProps } from '../../typography';
 
 const MotionBox = motion(Box);
 

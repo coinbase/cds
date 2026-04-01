@@ -7,9 +7,10 @@ import type {
   SparklineInteractiveHeaderVariant,
 } from '@coinbase/cds-common/types';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
-import { AccessibilityAnnouncer } from '@coinbase/cds-web/AccessibilityAnnouncer/AccessibilityAnnouncer';
-import { VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
+
+import { AccessibilityAnnouncer } from '../../../AccessibilityAnnouncer/AccessibilityAnnouncer';
+import { VStack } from '../../../layout';
+import { Text } from '../../../typography/Text';
 
 export * from '@coinbase/cds-common/types/SparklineInteractiveHeaderBaseProps';
 

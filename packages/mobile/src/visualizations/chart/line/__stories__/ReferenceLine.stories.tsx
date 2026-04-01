@@ -1,10 +1,10 @@
 import { memo, useCallback, useMemo } from 'react';
 import { useDerivedValue, withTiming } from 'react-native-reanimated';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { useTheme } from '@coinbase/cds-mobile';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { VStack } from '@coinbase/cds-mobile/layout';
 
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { useTheme } from '../../../../index';
+import { VStack } from '../../../../layout';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { Scrubber } from '../../scrubber';
 import { getPointOnSerializableScale, useScrubberContext } from '../../utils';

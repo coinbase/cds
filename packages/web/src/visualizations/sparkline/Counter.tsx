@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { useCounter } from '@coinbase/cds-common/visualizations/useCounter';
-import type { CounterBaseProps } from '@coinbase/cds-web/visualizations/Counter';
 import { css } from '@linaria/core';
+
+import type { CounterBaseProps } from '../Counter';
 
 const containerCss = css`
   position: relative;

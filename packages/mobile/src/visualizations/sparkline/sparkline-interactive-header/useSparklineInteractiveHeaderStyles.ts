@@ -2,8 +2,9 @@ import { useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { getAdjustedFontScale } from '@coinbase/cds-mobile/utils/getAdjustedFontScale';
+
+import { useTheme } from '../../../hooks/useTheme';
+import { getAdjustedFontScale } from '../../../utils/getAdjustedFontScale';
 
 import type { SparklineInteractiveSubHead } from './SparklineInteractiveHeader';
 

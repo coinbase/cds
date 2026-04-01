@@ -1,7 +1,8 @@
 import React, { memo, useCallback } from 'react';
 import { borderWidth, lineDashArray } from '@coinbase/cds-common/tokens/sparkline';
-import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
+
+import { cx } from '../../../index';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useSparklineInteractiveScrubContext } from './SparklineInteractiveScrubProvider';

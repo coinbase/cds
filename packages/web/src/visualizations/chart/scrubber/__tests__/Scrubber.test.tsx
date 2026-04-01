@@ -1,6 +1,6 @@
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import { DefaultThemeProvider } from '../../../../utils/test';
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
 import { ReferenceLine } from '../../line/ReferenceLine';
@@ -8,7 +8,7 @@ import { DefaultScrubberBeacon } from '../DefaultScrubberBeacon';
 import { DefaultScrubberLabel } from '../DefaultScrubberLabel';
 import { Scrubber } from '../Scrubber';
 
-jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
+jest.mock('../../../../hooks/useDimensions', () => ({
   useDimensions: jest.fn(() => ({
     observe: jest.fn(),
     width: 600,

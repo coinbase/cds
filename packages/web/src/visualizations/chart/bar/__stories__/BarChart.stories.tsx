@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 import { m as motion, type Transition } from 'framer-motion';
 
+import { HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
 import { useCartesianChartContext } from '../../ChartProvider';

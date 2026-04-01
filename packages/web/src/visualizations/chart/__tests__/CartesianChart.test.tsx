@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
 import { render, screen } from '@testing-library/react';
 
+import { DefaultThemeProvider } from '../../../utils/test';
 import { Area } from '../area/Area';
 import { XAxis } from '../axis/XAxis';
 import { YAxis } from '../axis/YAxis';
@@ -13,7 +13,7 @@ import { ReferenceLine } from '../line/ReferenceLine';
 import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
 
-jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
+jest.mock('../../../hooks/useDimensions', () => ({
   useDimensions: jest.fn(() => ({
     observe: jest.fn(),
     width: 600,

@@ -1,9 +1,9 @@
 import { type ComponentType, memo, useEffect, useMemo } from 'react';
 import { cancelAnimation, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
 
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type PointLabelPosition, projectPoint } from '../utils';

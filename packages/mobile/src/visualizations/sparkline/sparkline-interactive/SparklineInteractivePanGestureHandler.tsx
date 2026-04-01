@@ -3,8 +3,9 @@ import { Animated as RNAnimated, Platform, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS } from 'react-native-reanimated';
 import type { ChartGetMarker, ChartScrubParams } from '@coinbase/cds-common/types/Chart';
-import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 import { noop } from '@coinbase/cds-utils';
+
+import { Haptics } from '../../../utils/haptics';
 
 import { type SparklineInteractiveProps } from './SparklineInteractive';
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';

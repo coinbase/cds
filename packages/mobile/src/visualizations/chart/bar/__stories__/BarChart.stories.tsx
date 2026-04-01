@@ -2,13 +2,13 @@ import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 
+import { Button, IconButton } from '../../../../buttons';
+import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
+import { useTheme } from '../../../../hooks/useTheme';
+import { HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';

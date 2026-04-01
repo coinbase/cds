@@ -2,12 +2,12 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography';
 import { Circle, Group, Skia } from '@shopify/react-native-skia';
 
+import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import { useTheme } from '../../../hooks/useTheme';
+import { Box, HStack, VStack } from '../../../layout';
+import { Text } from '../../../typography';
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { BarPlot } from '../bar/BarPlot';

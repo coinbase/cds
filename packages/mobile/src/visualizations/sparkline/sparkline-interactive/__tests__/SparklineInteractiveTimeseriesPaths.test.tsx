@@ -1,7 +1,7 @@
 import type { ChartTimeseries } from '@coinbase/cds-common';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
 import { render } from '@testing-library/react-native';
 
+import { DefaultThemeProvider } from '../../../../utils/testHelpers';
 import { SparklineInteractiveTimeseriesPaths } from '../SparklineInteractiveTimeseriesPaths';
 
 describe('SparklineInteractiveTimeseriesPaths.test', () => {

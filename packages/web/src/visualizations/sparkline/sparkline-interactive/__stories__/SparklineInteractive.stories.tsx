@@ -4,9 +4,9 @@ import {
   sparklineInteractiveData,
   sparklineInteractiveHoverData,
 } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { Box, VStack } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
+import { Box, VStack } from '../../../../layout';
 import {
   SparklineInteractiveHeader,
   type SparklineInteractiveHeaderRef,

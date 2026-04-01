@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Chip } from '@coinbase/cds-web/chips';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
 
+import { Chip } from '../../../../chips';
+import { Box, HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { XAxis, YAxis } from '../../axis';
 import { BarChart, type BarComponentProps, BarPlot, DefaultBar } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
