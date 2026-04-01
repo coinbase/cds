@@ -7,7 +7,7 @@ description: |
 license: Apache-2.0
 metadata:
   author: ruikun.hao@coinbase.com
-  version: '1.0.0'
+  version: '1.0.1'
 ---
 
 # CDS Code
@@ -64,7 +64,7 @@ Apply the code style rules from Part 2 below.
 
 ### Step 4: Verify visually
 
-When rendering and inspection tooling are available, do one visual verification pass before finishing:
+Do one visual verification pass before finishing. When rendering and inspection tooling are available:
 
 1. Open the running app in a browser or simulator.
 2. Navigate to the screen where your code changes are visible. The app landing page may not show your work -- infer the correct tab, dropdown selection, or route from the code you just edited and click through to reach it. If you cannot find the right screen after a reasonable attempt, ask the user to navigate to it in the browser for you and then continue verification from there.
@@ -72,7 +72,7 @@ When rendering and inspection tooling are available, do one visual verification 
 4. Compare against the design intent -- check spacing, alignment, typography, color, and overflow.
 5. If something looks off, fix the code and verify again.
 
-Do not claim the UI looks correct based only on reading code or DOM structure. If the dev server is not running or inspection tooling is unavailable, note this to the user instead of skipping verification silently.
+Do not claim the UI looks correct based only on reading code or DOM structure. If the dev server is not running or inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can verify visually. Do not skip verification silently.
 
 > **Cursor example:** Use the built-in browser tools -- `browser_navigate` to open `http://localhost:8080` (or whatever port the local app runs on), then `browser_snapshot` to see the page structure and click through tabs or dropdowns to reach the right screen, then `browser_screenshot` to capture the rendered output for comparison.
 
