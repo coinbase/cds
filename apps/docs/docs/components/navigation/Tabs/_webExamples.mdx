@@ -1,10 +1,8 @@
-Tabs is a low-level primitive for building custom tab interfaces. It requires a `TabComponent` and `TabsActiveIndicatorComponent` to render. For a ready-to-use tab experience, see [SegmentedTabs](/components/navigation/SegmentedTabs).
+Tabs manages which tab is active and positions the animated indicator. For the common **underline** pattern, pass **`TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}`** and rely on the default **`TabComponent` (`DefaultTab`)**. Use a custom **`TabComponent`** when you need layout or content beyond what `DefaultTab` provides. For **pill / segmented** controls, use [SegmentedTabs](/components/navigation/SegmentedTabs) instead.
 
 ## Basics
 
-### Initial Value
-
-Use `useTabsContext` inside your `TabComponent` to access the active tab state. Pair with [TabLabel](/components/navigation/TabLabel) for consistent label styling and [TabsActiveIndicator](/components/navigation/TabIndicator) for the animated indicator.
+Out of the box, **`Tabs`** uses **`DefaultTab`** for each row (headline text, optional [DotCount](/components/other/DotCount/) via `count` / `max` on each tab) and **`DefaultTabsActiveIndicator`** for the animated underline. **`activeBackground`** sets the **underline color** (it is forwarded to the indicator as its `background` token).
 
 ```jsx live
 function Example() {
@@ -13,44 +11,28 @@ function Example() {
     { id: 'tab2', label: 'Tab 2' },
     { id: 'tab3', label: 'Tab 3' },
   ];
-
-  const TabComponent = useCallback(({ id, label, disabled, ...props }) => {
-    const { activeTab, updateActiveTab } = useTabsContext();
-    const isActive = activeTab?.id === id;
-    return (
-      <Pressable
-        onClick={() => updateActiveTab(id)}
-        disabled={disabled}
-        aria-pressed={isActive}
-        {...props}
-      >
-        <TabLabel id={id} active={isActive}>
-          {label}
-        </TabLabel>
-      </Pressable>
-    );
-  }, []);
-
-  const ActiveIndicator = useCallback(
-    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
-    [],
-  );
-
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
     <Tabs
-      gap={4}
-      tabs={tabs}
+      accessibilityLabel="Example tabs"
+      activeBackground="bgPrimary"
       activeTab={activeTab}
+      background="bg"
+      gap={4}
       onChange={setActiveTab}
-      TabComponent={TabComponent}
-      TabsActiveIndicatorComponent={ActiveIndicator}
+      // default value; can be omitted.
+      TabComponent={DefaultTab}
+      tabs={tabs}
+      // default value; can be omitted.
+      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
     />
   );
 }
 ```
 
-Tabs can also start with no active selection by passing `null`.
+You can omit `TabComponent` explicitly: **`Tabs`** defaults it to **`DefaultTab`**.
+
+### No initial selection
 
 ```jsx live
 function Example() {
@@ -59,38 +41,41 @@ function Example() {
     { id: 'tab2', label: 'Tab 2' },
     { id: 'tab3', label: 'Tab 3' },
   ];
-
-  const TabComponent = useCallback(({ id, label, disabled, ...props }) => {
-    const { activeTab, updateActiveTab } = useTabsContext();
-    const isActive = activeTab?.id === id;
-    return (
-      <Pressable
-        onClick={() => updateActiveTab(id)}
-        disabled={disabled}
-        aria-pressed={isActive}
-        {...props}
-      >
-        <TabLabel id={id} active={isActive}>
-          {label}
-        </TabLabel>
-      </Pressable>
-    );
-  }, []);
-
-  const ActiveIndicator = useCallback(
-    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
-    [],
-  );
-
   const [activeTab, setActiveTab] = useState(null);
   return (
     <Tabs
-      gap={4}
-      tabs={tabs}
+      accessibilityLabel="Example tabs"
+      activeBackground="bgPrimary"
       activeTab={activeTab}
+      background="bg"
+      gap={4}
       onChange={setActiveTab}
-      TabComponent={TabComponent}
-      TabsActiveIndicatorComponent={ActiveIndicator}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Dot counts
+
+Optional **`count`** and **`max`** on each tab are forwarded to the badge next to the label (see [DotCount](/components/other/DotCount/)).
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'inbox', label: 'Inbox', count: 3, max: 99 },
+    { id: 'sent', label: 'Sent' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Mail folders"
+      activeBackground="bgPrimary"
+      activeTab={activeTab}
+      background="bg"
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
     />
   );
 }
@@ -98,54 +83,7 @@ function Example() {
 
 ### Disabled
 
-The entire component can be disabled with the `disabled` prop.
-
-```jsx live
-function Example() {
-  const tabs = [
-    { id: 'tab1', label: 'Tab 1' },
-    { id: 'tab2', label: 'Tab 2' },
-    { id: 'tab3', label: 'Tab 3' },
-  ];
-
-  const TabComponent = useCallback(({ id, label, disabled, ...props }) => {
-    const { activeTab, updateActiveTab } = useTabsContext();
-    const isActive = activeTab?.id === id;
-    return (
-      <Pressable
-        onClick={() => updateActiveTab(id)}
-        disabled={disabled}
-        aria-pressed={isActive}
-        {...props}
-      >
-        <TabLabel id={id} active={isActive}>
-          {label}
-        </TabLabel>
-      </Pressable>
-    );
-  }, []);
-
-  const ActiveIndicator = useCallback(
-    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
-    [],
-  );
-
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-  return (
-    <Tabs
-      disabled
-      gap={4}
-      tabs={tabs}
-      activeTab={activeTab}
-      onChange={setActiveTab}
-      TabComponent={TabComponent}
-      TabsActiveIndicatorComponent={ActiveIndicator}
-    />
-  );
-}
-```
-
-Individual tabs can also be disabled while keeping others interactive.
+Disable the whole row with **`disabled`**, or set **`disabled: true`** on individual tab items.
 
 ```jsx live
 function Example() {
@@ -154,6 +92,32 @@ function Example() {
     { id: 'tab2', label: 'Tab 2', disabled: true },
     { id: 'tab3', label: 'Tab 3' },
   ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeBackground="bgPrimary"
+      activeTab={activeTab}
+      background="bg"
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+## Custom `TabComponent`
+
+Use **`useTabsContext`** inside your own tab button.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
 
   const TabComponent = useCallback(({ id, label, disabled, ...props }) => {
     const { activeTab, updateActiveTab } = useTabsContext();
@@ -165,9 +129,9 @@ function Example() {
         aria-pressed={isActive}
         {...props}
       >
-        <TabLabel id={id} active={isActive}>
+        <Text font="headline" color={isActive ? 'fgPositive' : 'fg'}>
           {label}
-        </TabLabel>
+        </Text>
       </Pressable>
     );
   }, []);
@@ -191,11 +155,9 @@ function Example() {
 }
 ```
 
-## Custom Components
+### Custom label content
 
-### Tab
-
-Pass additional data through the tab definitions and access it in your `TabComponent` to render custom content like icons.
+Pass extra fields on each tab and read them in your `TabComponent` (for example icons).
 
 ```jsx live
 function Example() {
@@ -217,9 +179,9 @@ function Example() {
       >
         <HStack gap={1} alignItems="center">
           <Icon name={icon} size="s" color={isActive ? 'fgPrimary' : 'fgMuted'} />
-          <TabLabel id={id} active={isActive}>
+          <Text font="headline" color={isActive ? 'fgPrimary' : 'fg'}>
             {label}
-          </TabLabel>
+          </Text>
         </HStack>
       </Pressable>
     );
@@ -243,3 +205,7 @@ function Example() {
   );
 }
 ```
+
+## Accessibility
+
+Provide a descriptive **`accessibilityLabel`** on **`Tabs`** for the tab list. **`DefaultTab`** sets `aria-controls` / `aria-selected` for each tab; pair tabs with **`role="tabpanel"`** regions in your page content when you switch panels.

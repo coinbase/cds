@@ -8,19 +8,6 @@ import type { SelectOption } from '../../select/types';
 import type { SelectChipProps } from '../SelectChip';
 import { SelectChip } from '../SelectChip';
 
-jest.mock('@floating-ui/react-dom', () => ({
-  useFloating: () => ({
-    refs: {
-      setReference: jest.fn(),
-      setFloating: jest.fn(),
-      reference: { current: null },
-      floating: { current: null },
-    },
-    floatingStyles: {},
-  }),
-  flip: () => ({}),
-}));
-
 jest.mock('../../../overlays/Portal', () => ({
   Portal: ({ children, containerId }: { children: React.ReactNode; containerId?: string }) => (
     <div data-testid="portal-container">{children}</div>
