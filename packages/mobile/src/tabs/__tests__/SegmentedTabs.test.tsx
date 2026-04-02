@@ -89,7 +89,7 @@ describe('SegmentedTabs', () => {
     });
 
     jest.advanceTimersByTime(300);
-    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+    expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
       height: 40,
       transform: [{ translateX: 0 }, { translateY: 0 }],
@@ -129,7 +129,7 @@ describe('SegmentedTabs', () => {
 
     jest.advanceTimersByTime(300);
 
-    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+    expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
       height: 40,
       transform: [{ translateX: 68 }, { translateY: 0 }],
@@ -208,7 +208,7 @@ describe('SegmentedTabs', () => {
 
     jest.advanceTimersByTime(300);
 
-    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+    expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
       height: 40,
       transform: [{ translateX: 20 }, { translateY: 0 }],
@@ -242,7 +242,7 @@ describe('SegmentedTabs', () => {
 
     jest.advanceTimersByTime(300);
 
-    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+    expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
       height: 40,
       transform: [{ translateX: 0 }, { translateY: 8 }],
@@ -276,7 +276,7 @@ describe('SegmentedTabs', () => {
 
     jest.advanceTimersByTime(300);
 
-    expect(screen.getByTestId('tabs-active-indicator')).toHaveAnimatedStyle({
+    expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
       height: 40,
       transform: [{ translateX: 20 }, { translateY: 8 }],

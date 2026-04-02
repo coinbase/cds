@@ -15,6 +15,10 @@ import { Pressable } from '../system/Pressable';
 import { TabIndicator } from './TabIndicator';
 import { TabLabel } from './TabLabel';
 
+/**
+ * @deprecated Use Tabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TabProps<TabId extends string | undefined = string> = SharedProps &
   Partial<Pick<DotCountBaseProps, 'max' | 'count'>> & {
     /** The id should be a meaningful and useful identifier like "watchlist" or "forSale" */
@@ -35,6 +39,10 @@ export type TabProps<TabId extends string | undefined = string> = SharedProps &
     Component?: (props: CustomTabProps) => React.ReactNode;
   };
 
+/**
+ * @deprecated Use Tabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CustomTabProps = Pick<TabProps, 'id'> & {
   /**
    * @default false
@@ -45,6 +53,10 @@ export type CustomTabProps = Pick<TabProps, 'id'> & {
   label?: React.ReactNode;
 };
 
+/**
+ * @deprecated Use Tabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TabNavigationBaseProps<TabId extends string | undefined = string> = BoxBaseProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy'> &
   Pick<TabProps, 'variant' | 'Component'> & {
@@ -88,6 +100,10 @@ export type TabNavigationBaseProps<TabId extends string | undefined = string> = 
     id?: string;
   };
 
+/**
+ * @deprecated Use Tabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TabNavigationProps<TabId extends string | undefined = string> =
   TabNavigationBaseProps<TabId>;
 
