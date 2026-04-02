@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.0 (4/2/2026 PST)
+
+#### 🚀 Updates
+
+- Added DefaultTab and DefaultTabActiveIndicator and deprecate types used by TabNavigation. [[#558](https://github.com/coinbase/cds/pull/558)]
+
 ## 8.63.0 ((4/1/2026, 03:43 PM PST))
 
 This is an artificial version bump with no new change.

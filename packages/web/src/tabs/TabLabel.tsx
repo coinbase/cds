@@ -58,6 +58,9 @@ export type TabLabelBaseProps = SharedProps &
 export type TabLabelProps = TabLabelBaseProps &
   TextProps<'h2'> & { onLayout?: (key: string, props: TabIndicatorProps) => void };
 
+/** @deprecated Use DefaultTab instead. This will be removed in a future major release. */
+/** @deprecationExpectedRemoval v10 */
+
 export const TabLabel = memo(
   ({
     id = '',

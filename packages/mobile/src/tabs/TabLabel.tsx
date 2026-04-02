@@ -34,6 +34,8 @@ export type TabLabelBaseProps = SharedProps &
 
 export type TabLabelProps = TabLabelBaseProps & TextProps;
 
+/** @deprecated Use DefaultTab instead. This will be removed in a future major release. */
+/** @deprecationExpectedRemoval v10 */
 export const TabLabel = memo(
   ({ active, variant = 'primary', count = 0, max, ...props }: TabLabelProps) => {
     const theme = useTheme();
