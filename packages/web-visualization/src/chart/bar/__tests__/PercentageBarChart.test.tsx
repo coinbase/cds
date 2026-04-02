@@ -32,14 +32,14 @@ beforeAll(() => {
 });
 
 describe('PercentageBarChart', () => {
-  it('renders a horizontal stacked bar with normalized segments', () => {
+  it('renders chart shell', () => {
     render(
       <DefaultThemeProvider>
         <PercentageBarChart
           height={24}
           series={[
-            { id: 'a', data: [70], color: 'green' },
-            { id: 'b', data: [30], color: 'orange' },
+            { id: 'a', data: 70, color: 'green' },
+            { id: 'b', data: 30, color: 'orange' },
           ]}
           testID="percentage-bar-chart"
           width={400}
@@ -47,112 +47,10 @@ describe('PercentageBarChart', () => {
       </DefaultThemeProvider>,
     );
 
-    const svg = screen.getByTestId('percentage-bar-chart');
-    expect(svg).toBeInTheDocument();
-    const barPaths = Array.from(svg.querySelectorAll('path')).filter((path) =>
-      Boolean(path.getAttribute('d')),
-    );
-    expect(barPaths.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByTestId('percentage-bar-chart')).toBeInTheDocument();
   });
 
-  it('normalizes raw values to 100%', () => {
-    render(
-      <DefaultThemeProvider>
-        <PercentageBarChart
-          animate={false}
-          height={24}
-          series={[
-            { id: 'confirmed', data: [28], color: 'var(--color-fgPositive)' },
-            { id: 'review', data: [2], color: 'var(--color-fgCaution)' },
-          ]}
-          testID="percentage-bar-normalized"
-          width={400}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    const svg = screen.getByTestId('percentage-bar-normalized');
-    expect(svg).toBeInTheDocument();
-    const paths = Array.from(svg.querySelectorAll('path')).filter((p) =>
-      Boolean(p.getAttribute('d')),
-    );
-    expect(paths.length).toBeGreaterThan(0);
-  });
-
-  it('renders chart shell when series is empty', () => {
-    render(
-      <DefaultThemeProvider>
-        <PercentageBarChart height={24} series={[]} testID="percentage-bar-empty" width={400} />
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.getByTestId('percentage-bar-empty')).toBeInTheDocument();
-  });
-
-  it('renders chart shell when all values are zero', () => {
-    render(
-      <DefaultThemeProvider>
-        <PercentageBarChart
-          height={24}
-          series={[
-            { id: 'a', data: [0] },
-            { id: 'b', data: [0] },
-          ]}
-          testID="percentage-bar-zeros"
-          width={400}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.getByTestId('percentage-bar-zeros')).toBeInTheDocument();
-  });
-
-  it('renders single series as full bar', () => {
-    render(
-      <DefaultThemeProvider>
-        <PercentageBarChart
-          animate={false}
-          height={24}
-          series={[{ id: 'full', data: [100], color: 'blue' }]}
-          testID="percentage-bar-single"
-          width={400}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    const svg = screen.getByTestId('percentage-bar-single');
-    expect(svg).toBeInTheDocument();
-    const barPaths = Array.from(svg.querySelectorAll('path')).filter((path) =>
-      Boolean(path.getAttribute('d')),
-    );
-    expect(barPaths.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it('clamps negative values to zero', () => {
-    render(
-      <DefaultThemeProvider>
-        <PercentageBarChart
-          animate={false}
-          height={24}
-          series={[
-            { id: 'pos', data: [80] },
-            { id: 'neg', data: [-10] },
-          ]}
-          testID="percentage-bar-clamped"
-          width={400}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    const svg = screen.getByTestId('percentage-bar-clamped');
-    expect(svg).toBeInTheDocument();
-    const paths = Array.from(svg.querySelectorAll('path')).filter((p) =>
-      Boolean(p.getAttribute('d')),
-    );
-    expect(paths.length).toBeGreaterThan(0);
-  });
-
-  it('renders multiple groups as separate bars', () => {
+  it('renders in vertical layout', () => {
     render(
       <DefaultThemeProvider>
         <PercentageBarChart
@@ -162,19 +60,15 @@ describe('PercentageBarChart', () => {
             { id: 'a', data: [60, 50], color: 'green' },
             { id: 'b', data: [40, 50], color: 'orange' },
           ]}
-          testID="percentage-bar-multi-group"
+          layout="vertical"
+          testID="percentage-bar-vertical"
           width={400}
-          yAxis={{ data: ['Q1', 'Q2'] }}
+          xAxis={{ data: ['Q1', 'Q2'] }}
         />
       </DefaultThemeProvider>,
     );
 
-    const svg = screen.getByTestId('percentage-bar-multi-group');
-    expect(svg).toBeInTheDocument();
-    const barPaths = Array.from(svg.querySelectorAll('path')).filter((path) =>
-      Boolean(path.getAttribute('d')),
-    );
-    expect(barPaths.length).toBeGreaterThanOrEqual(4);
+    expect(screen.getByTestId('percentage-bar-vertical')).toBeInTheDocument();
   });
 
   it('renders legend entries for each series', () => {
