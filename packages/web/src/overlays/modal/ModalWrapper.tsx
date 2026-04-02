@@ -10,6 +10,7 @@ import { media } from '../../styles/media';
 import { Overlay } from '../overlay/Overlay';
 import { Portal, type PortalProps } from '../Portal';
 import { modalContainerId } from '../PortalProvider';
+import { VStack } from '../../layout';
 
 const modalOverlayResponsiveCss = css`
   @media ${media.phone} {
@@ -106,12 +107,19 @@ export const ModalWrapper = memo(
               {...props}
             >
               <>
-                {!hideOverlay && (
+                {!hideOverlay ? (
                   <Overlay
                     animated
                     className={cx(!dangerouslyDisableResponsiveness && modalOverlayResponsiveCss)}
                     onClick={!disableOverlayPress ? onOverlayPress : undefined}
                     testID="modal-overlay"
+                  />
+                ) : (
+                  <VStack
+                    background="transparent"
+                    pin="all"
+                    position="fixed"
+                    onClick={!disableOverlayPress ? onOverlayPress : undefined}
                   />
                 )}
                 {/* NOTE: Add position or zIndex to children to avoid displaying under overlay

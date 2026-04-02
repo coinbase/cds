@@ -9,7 +9,7 @@ import { type FocusTrapBaseProps } from '../FocusTrap';
 
 export type PopoverContentPositionConfig = {
   /**
-   * Custom placement config from Popper. See docs: https://popper.js.org/docs/v2/constructors/#placement
+   * Custom placement config from Floating UI. See docs: https://floating-ui.com/docs/useFloating#placement
    * @default bottom
    */
   placement?: Placement;
@@ -23,7 +23,7 @@ export type PopoverContentPositionConfig = {
    */
   offsetGap?: number;
   /**
-   * Custom strategy config from Popper. See docs: https://popper.js.org/docs/v2/constructors/#strategy
+   * Custom strategy config from Floating UI. See docs: https://floating-ui.com/docs/useFloating#strategy
    * @default absolute
    */
   strategy?: PositioningStrategy;

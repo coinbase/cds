@@ -73,12 +73,14 @@ export type PopoverPanelProps = {
    * Panel body, or a function that receives `closePopover` (helpfulwhen actions inside the panel should dismiss it).
    */
   content: React.ReactNode | PopoverPanelRenderContent;
+  style?: React.CSSProperties;
   styles?: {
     /** Inline styles for the elevated panel surface (`PopoverPanelContent`). */
     content?: React.CSSProperties;
     /** Inline styles for the wrapper around `children` (the `Popover` root in floating layout, or the trigger `Box` in the mobile modal). */
     triggerContainer?: React.CSSProperties;
   };
+  className?: string;
   classNames?: {
     /** Additional class name merged onto the panel surface (`PopoverPanelContent`). */
     content?: string;
@@ -133,6 +135,10 @@ const triggerContainerCss = css`
   width: fit-content;
 `;
 
+const blockCss = css`
+  width: 100%;
+`;
+
 const MobilePopoverPanel = memo(
   forwardRef<PopoverPanelRef, PopoverPanelInternalProps>(
     (
@@ -140,10 +146,12 @@ const MobilePopoverPanel = memo(
         children,
         onOpen = NOOP,
         onClose = NOOP,
+        block,
         content,
         disablePortal,
         visible,
         panelWidth,
+        showOverlay,
         minPanelWidth,
         maxPanelWidth,
         maxPanelHeight,
@@ -151,21 +159,35 @@ const MobilePopoverPanel = memo(
         controlledElementAccessibilityProps,
         respectNegativeTabIndex,
         restoreFocusOnUnmount,
+        style,
         styles,
+        className,
         classNames,
+        onBlur,
+        ...props
       },
       ref,
     ) => {
       usePopoverPanelImperativeHandle(ref, onOpen, onClose);
-
+      const handleCaptureEvents = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+      }, []);
       return (
-        <>
+        <div
+          className={cx(block ? blockCss : triggerContainerCss, classNames?.triggerContainer)}
+          onClick={disabled ? undefined : onOpen}
+          onBlur={onBlur}
+          style={styles?.triggerContainer}
+        >
+          {children}
           <ModalWrapper
             dangerouslyDisableResponsiveness
             disablePortal={disablePortal}
             onOverlayPress={onClose}
             testID="popover-panel-modal"
             visible={visible}
+            hideOverlay={!showOverlay}
+            onClick={handleCaptureEvents}
             {...controlledElementAccessibilityProps}
           >
             <FocusTrap
@@ -185,15 +207,7 @@ const MobilePopoverPanel = memo(
               </PopoverPanelContent>
             </FocusTrap>
           </ModalWrapper>
-          <Box
-            className={classNames?.triggerContainer}
-            onClick={disabled ? undefined : onOpen}
-            onKeyDown={onOpen}
-            style={styles?.triggerContainer}
-          >
-            {children}
-          </Box>
-        </>
+        </div>
       );
     },
   ),
@@ -221,7 +235,9 @@ const FloatingPopoverPanel = memo(
         block,
         disabled,
         restoreFocusOnUnmount,
+        style,
         styles,
+        className,
         classNames,
         ...props
       },
@@ -278,7 +294,7 @@ const FloatingPopoverPanel = memo(
         <Popover
           ref={triggerRef}
           block={block}
-          className={cx(triggerContainerCss, classNames?.triggerContainer)}
+          className={cx(!block && triggerContainerCss, className, classNames?.triggerContainer)}
           content={disabled ? undefined : memoizedContent}
           contentPosition={combinedContentPosition}
           disablePortal={disablePortal}
@@ -288,7 +304,7 @@ const FloatingPopoverPanel = memo(
           onPressSubject={!visible ? onOpen : undefined}
           restoreFocusOnUnmount={restoreFocusOnUnmount}
           showOverlay={showOverlay}
-          style={styles?.triggerContainer}
+          style={{ ...style, ...styles?.triggerContainer }}
           testID={testID}
           visible={disabled ? false : visible}
           {...props}
