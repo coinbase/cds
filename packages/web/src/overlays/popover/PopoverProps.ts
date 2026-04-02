@@ -5,7 +5,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { Placement, PositioningStrategy } from '@popperjs/core';
 
 import type { AccessibleControlledReturnType } from '../../hooks/useA11yControlledVisibility';
-import { type FocusTrapBaseProps, type FocusTrapProps } from '../FocusTrap';
+import { type FocusTrapBaseProps } from '../FocusTrap';
 
 export type PopoverContentPositionConfig = {
   /**
@@ -83,4 +83,12 @@ export type PopoverProps = PopoverBaseProps & {
   onBlur?: (event?: React.FocusEvent) => void;
   /** Callback fired when a mouse down event is fired on the subject */
   onMouseDown?: (event: React.MouseEvent) => void;
+  /**
+   * Style the Popover subject
+   */
+  style?: React.CSSProperties;
+  /**
+   * Class name for the Popover subject
+   */
+  className?: string;
 };

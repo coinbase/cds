@@ -218,6 +218,10 @@ const PopoverDropdown = memo(
   ),
 );
 
+/**
+ * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const Dropdown = memo(
   forwardRef<DropdownRef, DropdownProps>((_props, ref) => {
     const mergedProps = useComponentConfig('Dropdown', _props);

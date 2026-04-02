@@ -148,6 +148,10 @@
       "types": "./dts/pagination/index.d.ts",
       "default": "./esm/pagination/index.js"
     },
+    "./popover": {
+      "types": "./dts/popover/index.d.ts",
+      "default": "./esm/popover/index.js"
+    },
     "./section-header": {
       "types": "./dts/section-header/index.d.ts",
       "default": "./esm/section-header/index.js"

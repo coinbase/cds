@@ -6,35 +6,32 @@ import {
   animateDropdownTransformOutConfig,
 } from '@coinbase/cds-common/animation/dropdown';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { DimensionValue } from '@coinbase/cds-common/types';
 import type { Placement } from '@popperjs/core';
 import { m as motion } from 'framer-motion';
 
-import { VStack } from '../layout/VStack';
-import { useMotionProps } from '../motion/useMotionProps';
+import { cx } from '../../cx';
+import { VStack } from '../../layout/VStack';
+import { useMotionProps } from '../../motion/useMotionProps';
 
-import type { DropdownProps } from './DropdownProps';
+const popoverPanelContentClassName = 'cds-popover-panel-content';
 
-const dropdownStaticClassName = 'cds-dropdown';
-
-/**
- * @deprecated Use PopoverPanelContent instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v10
- */
-export type DropdownContentProps = {
-  height?: DimensionValue;
+export type PopoverPanelContentProps = {
+  height?: React.CSSProperties['height'];
   placement?: Placement;
-} & Pick<DropdownProps, 'width' | 'maxHeight' | 'maxWidth' | 'minWidth' | 'children'>;
+  width?: React.CSSProperties['width'];
+  maxHeight?: React.CSSProperties['maxHeight'];
+  maxWidth?: React.CSSProperties['maxWidth'];
+  minWidth?: React.CSSProperties['minWidth'];
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+};
 
 const MotionVStack = motion(VStack);
 
-/**
- * @deprecated Use PopoverPanelContent instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v10
- */
-export const DropdownContent = memo(
-  forwardRef<HTMLDivElement, DropdownContentProps>(
-    ({ children, placement, minWidth = 'min-content', ...props }, ref) => {
+export const PopoverPanelContent = memo(
+  forwardRef<HTMLDivElement, PopoverPanelContentProps>(
+    ({ children, placement, minWidth = 'min-content', style, className, ...props }, ref) => {
       const isHorizontal = placement?.includes('left') || placement?.includes('right');
       const translate = isHorizontal ? 'x' : 'y';
 
@@ -56,11 +53,12 @@ export const DropdownContent = memo(
           bordered
           background="bg"
           borderRadius={400}
-          className={dropdownStaticClassName}
+          className={cx(popoverPanelContentClassName, className)}
           elevation={2}
           minWidth={minWidth}
           overflow="auto"
-          role="menu"
+          role="dialog"
+          style={style}
           tabIndex={0}
           zIndex={zIndex.dropdown}
           {...props}
