@@ -3,4 +3,4 @@ export * from '../overlays/popover/PopoverPanel';
 export * from '../overlays/popover/PopoverPanelContent';
 export * from '../overlays/popover/PopoverProps';
 export * from '../overlays/popover/usePopper';
-export * from '../overlays/popover/useResponsiveHeight';
+export * from '../overlays/popover/useResponsivePanelMaxHeight';

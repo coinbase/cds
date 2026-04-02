@@ -325,10 +325,7 @@ const FloatingPopoverPanel = memo(
 );
 
 /**
- * Anchored floating panel with the same layout and styling as {@link Dropdown}, built on {@link Popover}
- * and {@link PopoverPanelContent}, without select context. Use for custom panel content; for list
- * selection with `MenuItem` and `SelectContext`, use {@link Dropdown} or wire actions manually.
- *
+ * Anchored floating panel  built on {@link Popover} and {@link PopoverPanelContent} without select context. Use for custom panel content.
  * Imperative `openPopover` / `closePopover` are implemented in the floating and modal subcomponents (Dropdown continues to use `openMenu` / `closeMenu` on its ref).
  */
 export const PopoverPanel = forwardRef<PopoverPanelRef, PopoverPanelProps>((_props, ref) => {
