@@ -7,6 +7,7 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Interactable, type InteractableBaseProps } from '../system/Interactable';
 import type { FilteredHTMLAttributes } from '../types';
@@ -91,7 +92,11 @@ export type ControlProps<ControlValue extends string> = ControlBaseProps<Control
 };
 
 const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
-  {
+  _props: ControlProps<ControlValue>,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) {
+  const mergedProps = useComponentConfig('Control', _props);
+  const {
     type,
     checked,
     disabled,
@@ -112,9 +117,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     iconStyle,
     labelStyle,
     ...htmlProps
-  }: ControlProps<ControlValue>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+  } = mergedProps;
   if (isDevelopment() && !children && !ariaLabelledby) {
     console.warn(
       `Please provide an aria label for the control component ${value} either through the children or aria-labelledby prop.`,

@@ -2,27 +2,32 @@ import React, { memo } from 'react';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Avatar, type AvatarBaseProps } from '../media';
-import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
 
-export type AvatarButtonProps = PressableBaseProps &
+export type AvatarButtonBaseProps = PressableBaseProps &
   SharedProps &
   Pick<ButtonBaseProps, 'accessibilityLabel' | 'compact'> &
   Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
 
-export const AvatarButton = memo(function AvatarButton({
-  accessibilityLabel,
-  feedback = 'light',
-  src,
-  compact,
-  shape,
-  colorScheme,
-  borderColor,
-  name,
-  ...props
-}: AvatarButtonProps) {
+export type AvatarButtonProps = AvatarButtonBaseProps & PressableProps;
+
+export const AvatarButton = memo((_props: AvatarButtonProps) => {
+  const mergedProps = useComponentConfig('AvatarButton', _props);
+  const {
+    accessibilityLabel,
+    feedback = 'light',
+    src,
+    compact,
+    shape,
+    colorScheme,
+    borderColor,
+    name,
+    ...props
+  } = mergedProps;
   const height = compact ? interactableHeight.compact : interactableHeight.regular;
 
   return (

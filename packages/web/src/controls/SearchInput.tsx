@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import type { IconName } from '@coinbase/cds-common/types';
-import { css } from '@linaria/core';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { InputIcon } from './InputIcon';
@@ -80,8 +80,9 @@ export type SearchInputProps = SearchInputBaseProps &
   };
 
 export const SearchInput = memo(
-  forwardRef(function SearchInput(
-    {
+  forwardRef((_props: SearchInputProps, ref: React.ForwardedRef<HTMLInputElement>) => {
+    const mergedProps = useComponentConfig('SearchInput', _props);
+    const {
       onChange,
       onClear,
       onChangeText,
@@ -98,9 +99,7 @@ export const SearchInput = memo(
       borderRadius = 1000,
       height = compact ? scales.compact : scales.regular,
       ...props
-    }: SearchInputProps,
-    ref: React.ForwardedRef<HTMLInputElement>,
-  ) {
+    } = mergedProps;
     const internalRef = useRef<HTMLInputElement>(null);
     const refs = useMergeRefs(ref, internalRef);
 

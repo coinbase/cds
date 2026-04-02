@@ -7,7 +7,7 @@ description: |
 license: Apache-2.0
 metadata:
   author: ruikun.hao@coinbase.com
-  version: '1.0.0'
+  version: '1.0.1'
 ---
 
 # CDS Code
@@ -36,8 +36,12 @@ This section describes the steps you follow, in order, when working on a UI task
 
 When this skill first loads, run these steps once so all later work is grounded in the docs:
 
-1. Detect the target platform from the codebase: `web` or `mobile`.
-2. Call the CDS MCP tool `list-cds-routes` for that platform to get the full route listing.
+1. **Discover installed CDS packages and platform.** Run the discovery script bundled with this skill:
+   ```sh
+   bash <path-to-skill>/scripts/discover-cds-packages.sh
+   ```
+   This prints the `CDS Runtime` (`web` or `mobile`), followed by every installed CDS package with its name, version, and valid export subpaths. Save this output -- you will use it to verify import paths and runtime throughout the session.
+2. Call the CDS MCP tool `list-cds-routes` for the detected runtime to get the full route listing.
 3. Read the platform-specific foundation docs with `get-cds-doc`:
    - `web/getting-started/styling.txt` (or `mobile/getting-started/styling.txt`)
    - `web/getting-started/theming.txt` (or `mobile/getting-started/theming.txt`)
@@ -64,7 +68,7 @@ Apply the code style rules from Part 2 below.
 
 ### Step 4: Verify visually
 
-When rendering and inspection tooling are available, do one visual verification pass before finishing:
+Do one visual verification pass before finishing. When rendering and inspection tooling are available:
 
 1. Open the running app in a browser or simulator.
 2. Navigate to the screen where your code changes are visible. The app landing page may not show your work -- infer the correct tab, dropdown selection, or route from the code you just edited and click through to reach it. If you cannot find the right screen after a reasonable attempt, ask the user to navigate to it in the browser for you and then continue verification from there.
@@ -72,7 +76,7 @@ When rendering and inspection tooling are available, do one visual verification 
 4. Compare against the design intent -- check spacing, alignment, typography, color, and overflow.
 5. If something looks off, fix the code and verify again.
 
-Do not claim the UI looks correct based only on reading code or DOM structure. If the dev server is not running or inspection tooling is unavailable, note this to the user instead of skipping verification silently.
+Do not claim the UI looks correct based only on reading code or DOM structure. If the dev server is not running or inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can verify visually. Do not skip verification silently.
 
 > **Cursor example:** Use the built-in browser tools -- `browser_navigate` to open `http://localhost:8080` (or whatever port the local app runs on), then `browser_snapshot` to see the page structure and click through tabs or dropdowns to reach the right screen, then `browser_screenshot` to capture the rendered output for comparison.
 
@@ -85,8 +89,8 @@ Before returning code, confirm:
 3. Styling prefers StyleProps, tokens, and CSS variables over hardcoded values.
 4. No `style` override duplicates a value that could be set via a component prop (e.g. `font`, `color`, `textAlign`, `textTransform`, `padding`, `gap`).
 5. Imports and prop usage match the docs you just read.
-6. Imports come from `@coinbase/cds-web` for web or `@coinbase/cds-mobile` for mobile, using the documented component path instead of guessing.
-7. Charts use `@coinbase/cds-web-visualization` or `@coinbase/cds-mobile-visualization` when CDS provides the needed visualization primitive.
+6. Every CDS import path matches a valid export from the discovery script output (see "Verifying import paths" in Part 2).
+7. Charts use the CDS visualization package for the target platform when CDS provides the needed visualization primitive.
 8. The UI has gone through at least one visual verification pass when rendering and inspection tooling are available.
 
 ---
@@ -189,6 +193,24 @@ When you need runtime access to theme values, use `useTheme`. On web, prefer CSS
 
 Prefer theme-derived spacing, radius, typography, and colors over hardcoded numbers and strings.
 
+### Verifying import paths
+
+**This is critical.** Do not guess or memorize CDS import paths. The discovery script output is the source of truth.
+
+Before writing or returning any CDS import, verify it against the export list from setup:
+
+1. Find the CDS package for the target platform in the discovery script output.
+2. Confirm the subpath you want to import is listed as a valid export.
+3. If the subpath is not listed, it does not exist -- pick the closest valid export instead.
+
+**The package name may vary between projects.** Different repos may install CDS under different scopes. Always use the package name reported by the discovery script, not a hardcoded scope. If the project already has CDS imports in existing code, match whatever scope those files use.
+
+Common mistakes to avoid:
+
+- Inventing deep subpaths like `<pkg>/layout/Box` or `<pkg>/buttons/Button` when the actual export is `<pkg>/layout` or `<pkg>/buttons`.
+- Guessing a package scope when the project uses a different one.
+- Assuming that the CDS docs examples use the same package name as the target project -- they may differ.
+
 ### Visualization and illustration
 
 Treat visualization and illustration packages as part of the CDS-first workflow. If the task includes charts, sparklines, axes, scrubbers, pictograms, hero art, or spot illustrations, look for CDS visualization or CDS illustration components before reaching for custom SVG or bespoke assets.
@@ -196,7 +218,7 @@ Treat visualization and illustration packages as part of the CDS-first workflow.
 When a design includes a chart, sparkline, axis, scrubber, or other data visualization:
 
 1. Check CDS visualization docs first.
-2. Prefer `@coinbase/cds-web-visualization` on web and `@coinbase/cds-mobile-visualization` on mobile when CDS provides the chart or primitive.
+2. Prefer the CDS visualization package for the target platform when CDS provides the chart or primitive. The actual package name will appear in the discovery script output.
 3. Scan routes first when the task is broad to see whether CDS already has a purpose-built visualization component before composing with lower-level primitives.
 4. Use custom SVG, canvas, or drawing code only when the CDS visualization package clearly cannot achieve the required behavior or appearance in a reasonable way.
 
@@ -206,15 +228,24 @@ When a design includes a chart, sparkline, axis, scrubber, or other data visuali
 
 Quick-lookup information for component selection and package mapping.
 
-### Package mapping
+### Package discovery
 
-- For standard web UI, use `@coinbase/cds-web`.
-- For standard mobile UI, use `@coinbase/cds-mobile`.
-- For web charts and data visualization, use `@coinbase/cds-web-visualization`.
-- For mobile charts and data visualization, use `@coinbase/cds-mobile-visualization`.
-- For illustrations and pictograms, use the documented CDS component import paths for the target platform rather than guessing from the standalone package name.
+CDS packages are published under different scopes depending on the consuming project. **Do not hardcode a package scope.** Instead, rely on the discovery script output from setup, which detects the actual installed packages and their names.
 
-The CDS MCP server exposes visualization and illustration docs through the same route listing as other CDS components. Do not assume that because a route is listed under `mobile/components/...` or `web/components/...` it should be imported from `@coinbase/cds-mobile` or `@coinbase/cds-web`. Read the doc and use the documented import path.
+The six CDS packages the script looks for (regardless of scope):
+
+| Package suffix             | Purpose                              |
+| -------------------------- | ------------------------------------ |
+| `cds-web`                  | Standard web UI components           |
+| `cds-mobile`               | Standard mobile UI components        |
+| `cds-common`               | Shared types and utilities           |
+| `cds-icons`                | Icon definitions and font files      |
+| `cds-web-visualization`    | Web charts and data visualization    |
+| `cds-mobile-visualization` | Mobile charts and data visualization |
+
+For illustrations and pictograms, use the documented CDS component import paths for the target platform rather than guessing from the standalone package name.
+
+The CDS MCP server exposes visualization and illustration docs through the same route listing as other CDS components. Do not assume that because a route is listed under `mobile/components/...` or `web/components/...` it maps one-to-one to a package name. Read the doc and use the documented import path, then verify against the discovery script output.
 
 ### Component selection guidance
 
@@ -235,11 +266,13 @@ Do not memorize this list as exhaustive. Use it as a reminder to check the docs 
 
 ### Code examples
 
+In the examples below, `<cds-web>` is a placeholder for the actual package name reported by the discovery script.
+
 Prefer:
 
 ```tsx
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Box } from '@coinbase/cds-web/layout/Box';
+import { HStack, VStack } from '<cds-web>/layout';
+import { Box } from '<cds-web>/layout';
 
 <HStack gap={2} alignItems="center">
   <Box background="bgAlternate" padding={2} borderRadius={200} />

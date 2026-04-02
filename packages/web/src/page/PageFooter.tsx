@@ -4,6 +4,7 @@ import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
 import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
 
@@ -35,8 +36,9 @@ export type PageFooterProps = Polymorphic.ExtendableProps<
   PageFooterBaseProps
 >;
 export const PageFooter = memo(
-  forwardRef(function PageFooter(
-    {
+  forwardRef((_props: PageFooterProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('PageFooter', _props);
+    const {
       action,
       height = pageFooterHeight,
       justifyContent = pageFooterJustifyContent,
@@ -44,9 +46,7 @@ export const PageFooter = memo(
       paddingY = 1.5,
       role = 'contentinfo',
       ...props
-    }: PageFooterProps,
-    ref: React.ForwardedRef<HTMLDivElement>,
-  ) {
+    } = mergedProps;
     return (
       <Box
         ref={ref}

@@ -127,7 +127,7 @@ jobs:
 
       - name: Upload Maestro test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: maestro-report-ios
           path: |
@@ -233,7 +233,7 @@ jobs:
 
   #     - name: Upload Maestro debug artifacts
   #       if: always()
-  #       uses: actions/upload-artifact@v4
+  #       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
   #       with:
   #         name: maestro-debug-android
   #         path: /tmp/maestro-debug/
@@ -254,6 +254,11 @@ jobs:
     if: always() && github.event_name == 'pull_request' && needs.ios.result == 'success' && needs.ios.outputs.percy_url != ''
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
       - name: Post Percy link on PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

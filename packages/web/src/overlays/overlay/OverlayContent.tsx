@@ -3,20 +3,23 @@ import {
   animateInOpacityConfig,
   animateOutOpacityConfig,
 } from '@coinbase/cds-common/animation/overlay';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { m as motion } from 'framer-motion';
 
+import type { BoxBaseProps } from '../../layout';
 import { VStack, type VStackDefaultElement, type VStackProps } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 
-export type OverlayProps = {
-  onClick?: React.MouseEventHandler;
+export type OverlayBaseProps = BoxBaseProps & {
   /** Animate overlay
    * @default false
    */
   animated?: boolean;
-} & VStackProps<VStackDefaultElement> &
-  SharedProps;
+};
+
+export type OverlayProps = OverlayBaseProps &
+  VStackProps<VStackDefaultElement> & {
+    onClick?: React.MouseEventHandler;
+  };
 
 export const OverlayContent = forwardRef<HTMLDivElement, OverlayProps>(
   ({ onClick, animated = false, ...props }, forwardedRef) => {

@@ -29,6 +29,7 @@ import type {
 import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useInputBorderStyle } from '../hooks/useInputBorderStyle';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
@@ -133,250 +134,242 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
 };
 
 export const TextInput = memo(
-  forwardRef(
-    (
-      {
-        label,
-        helperText = '',
-        variant = 'foregroundMuted',
-        testID,
-        testIDMap,
-        start,
-        end,
-        width = '100%',
-        disabled = false,
-        align = 'start',
-        font = 'body',
-        compact,
-        suffix = '',
-        accessibilityLabel,
-        borderRadius,
-        enableColorSurge = false,
-        helperTextErrorIconAccessibilityLabel = 'error',
-        bordered = true,
-        focusedBorderWidth,
-        labelVariant = 'outside',
-        labelNode,
-        inputBackground,
-        ...editableInputProps
-      }: TextInputProps,
-      ref: ForwardedRef<RNTextInput>,
-    ) => {
-      const theme = useTheme();
-      const [focused, setFocused] = useState(false);
-      const focusedVariant = useInputVariant(focused, variant);
-      const internalRef = useRef<RNTextInput>(null);
-      const refs = useMergeRefs(ref, internalRef);
-      const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
-        focused,
-        variant,
-        focusedVariant,
-        bordered,
-        bordered ? 100 : 0,
-        focusedBorderWidth,
-      );
+  forwardRef((_props: TextInputProps, ref: ForwardedRef<RNTextInput>) => {
+    const mergedProps = useComponentConfig('TextInput', _props);
+    const {
+      label,
+      helperText = '',
+      variant = 'foregroundMuted',
+      testID,
+      testIDMap,
+      start,
+      end,
+      width = '100%',
+      disabled = false,
+      align = 'start',
+      font = 'body',
+      compact,
+      suffix = '',
+      accessibilityLabel,
+      borderRadius,
+      enableColorSurge = false,
+      helperTextErrorIconAccessibilityLabel = 'error',
+      bordered = true,
+      focusedBorderWidth,
+      labelVariant = 'outside',
+      labelNode,
+      inputBackground,
+      ...editableInputProps
+    } = mergedProps;
+    const theme = useTheme();
+    const [focused, setFocused] = useState(false);
+    const focusedVariant = useInputVariant(focused, variant);
+    const internalRef = useRef<RNTextInput>(null);
+    const refs = useMergeRefs(ref, internalRef);
+    const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
+      focused,
+      variant,
+      focusedVariant,
+      bordered,
+      bordered ? 100 : 0,
+      focusedBorderWidth,
+    );
 
-      const editableInputAddonProps = {
-        ...editableInputProps,
-        onFocus: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-          editableInputProps?.onFocus?.(e);
-          setFocused(true);
-        },
-        onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-          editableInputProps?.onBlur?.(e);
-          setFocused(false);
-        },
-      };
+    const editableInputAddonProps = {
+      ...editableInputProps,
+      onFocus: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        editableInputProps?.onFocus?.(e);
+        setFocused(true);
+      },
+      onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        editableInputProps?.onBlur?.(e);
+        setFocused(false);
+      },
+    };
 
-      const handleNodePress = useCallback(() => {
-        if (!editableInputAddonProps.readOnly) {
-          setFocused(true);
-          internalRef.current?.focus();
+    const handleNodePress = useCallback(() => {
+      if (!editableInputAddonProps.readOnly) {
+        setFocused(true);
+        internalRef.current?.focus();
+      }
+    }, [setFocused, internalRef, editableInputAddonProps.readOnly]);
+
+    const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
+
+    const containerSpacing: ViewStyle = useMemo(
+      () => ({
+        ...(!!start && { paddingStart: theme.space[0.5] }),
+        ...(labelVariant === 'inside' &&
+          hasLabel &&
+          !compact && {
+            paddingBottom: 0,
+            paddingTop: 0,
+          }),
+      }),
+      [start, theme.space, labelVariant, hasLabel, compact],
+    );
+
+    // Get the accessability label from the start node child
+    const startIconA11yLabel = useMemo(() => {
+      if (isValidElement(start) && start.type === InputIconButton) {
+        return (start.props as InputIconButtonProps).accessibilityLabel;
+      }
+
+      return undefined;
+    }, [start]);
+
+    // The Pressable element steals the accessability props 🥷
+    const inaccessibleStart = useMemo(() => {
+      if (isValidElement(start) && start.type === InputIconButton) {
+        return cloneElement(start, {
+          ...start.props,
+          accessibilityLabel: undefined,
+          accessibilityHint: undefined,
+          accessibilityElementsHidden: true,
+          importantForAccessibility: 'no',
+        } as InputIconButtonProps);
+      }
+
+      return start;
+    }, [start]);
+
+    const readOnlyInputBackground = useMemo(() => {
+      if (!disabled && editableInputAddonProps.readOnly) {
+        return 'bgSecondary';
+      }
+      return undefined;
+    }, [disabled, editableInputAddonProps.readOnly]);
+
+    return (
+      <InputStack
+        borderFocusedStyle={borderFocusedStyle}
+        borderRadius={borderRadius}
+        borderStyle={borderUnfocusedStyle}
+        borderWidth={bordered ? 100 : 0}
+        disabled={disabled}
+        enableColorSurge={enableColorSurge}
+        endNode={
+          (suffix !== '' || !!end) && (
+            <HStack
+              alignItems="center"
+              background={readOnlyInputBackground}
+              gap={2}
+              justifyContent="center"
+              testID={testIDMap?.end ?? ''}
+            >
+              <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
+                <HStack>
+                  {suffix !== '' && (
+                    <Text color="fgMuted" font="label1" paddingEnd={2}>
+                      {suffix}
+                    </Text>
+                  )}
+                  {!!end && (
+                    <TextInputFocusVariantContext.Provider value={focusedVariant}>
+                      {end}
+                    </TextInputFocusVariantContext.Provider>
+                  )}
+                </HStack>
+              </Pressable>
+            </HStack>
+          )
         }
-      }, [setFocused, internalRef, editableInputAddonProps.readOnly]);
-
-      const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
-
-      const containerSpacing: ViewStyle = useMemo(
-        () => ({
-          ...(!!start && { paddingStart: theme.space[0.5] }),
-          ...(labelVariant === 'inside' &&
-            hasLabel &&
-            !compact && {
-              paddingBottom: 0,
-              paddingTop: 0,
-            }),
-        }),
-        [start, theme.space, labelVariant, hasLabel, compact],
-      );
-
-      // Get the accessability label from the start node child
-      const startIconA11yLabel = useMemo(() => {
-        if (isValidElement(start) && start.type === InputIconButton) {
-          return (start.props as InputIconButtonProps).accessibilityLabel;
-        }
-
-        return undefined;
-      }, [start]);
-
-      // The Pressable element steals the accessability props 🥷
-      const inaccessibleStart = useMemo(() => {
-        if (isValidElement(start) && start.type === InputIconButton) {
-          return cloneElement(start, {
-            ...start.props,
-            accessibilityLabel: undefined,
-            accessibilityHint: undefined,
-            accessibilityElementsHidden: true,
-            importantForAccessibility: 'no',
-          } as InputIconButtonProps);
-        }
-
-        return start;
-      }, [start]);
-
-      const readOnlyInputBackground = useMemo(() => {
-        if (!disabled && editableInputAddonProps.readOnly) {
-          return 'bgSecondary';
-        }
-        return undefined;
-      }, [disabled, editableInputAddonProps.readOnly]);
-
-      return (
-        <InputStack
-          borderFocusedStyle={borderFocusedStyle}
-          borderRadius={borderRadius}
-          borderStyle={borderUnfocusedStyle}
-          borderWidth={bordered ? 100 : 0}
-          disabled={disabled}
-          enableColorSurge={enableColorSurge}
-          endNode={
-            (suffix !== '' || !!end) && (
-              <HStack
-                alignItems="center"
-                background={readOnlyInputBackground}
-                gap={2}
-                justifyContent="center"
-                testID={testIDMap?.end ?? ''}
-              >
-                <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  <HStack>
-                    {suffix !== '' && (
-                      <Text color="fgMuted" font="label1" paddingEnd={2}>
-                        {suffix}
-                      </Text>
-                    )}
-                    {!!end && (
-                      <TextInputFocusVariantContext.Provider value={focusedVariant}>
-                        {end}
-                      </TextInputFocusVariantContext.Provider>
-                    )}
-                  </HStack>
-                </Pressable>
-              </HStack>
-            )
-          }
-          focused={focused}
-          focusedBorderWidth={focusedBorderWidth}
-          helperTextNode={
-            !!helperText &&
-            (typeof helperText === 'string' ? (
-              <HelperText
-                align={align}
-                color={variantColorMap[variant]}
-                errorIconAccessibilityLabel={helperTextErrorIconAccessibilityLabel}
-                errorIconTestID={`${testIDMap?.helperText}-error-icon`}
-                testID={testIDMap?.helperText ?? ''}
-              >
-                {helperText}
-              </HelperText>
-            ) : (
-              helperText
-            ))
-          }
-          inputBackground={readOnlyInputBackground ?? inputBackground}
-          inputNode={
-            <NativeInput
-              ref={refs}
-              accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
-              accessibilityLabel={accessibilityLabel ?? label}
+        focused={focused}
+        focusedBorderWidth={focusedBorderWidth}
+        helperTextNode={
+          !!helperText &&
+          (typeof helperText === 'string' ? (
+            <HelperText
               align={align}
-              compact={compact}
-              containerSpacing={containerSpacing}
-              disabled={disabled}
-              font={font}
-              testID={testID}
-              {...editableInputAddonProps}
-            />
-          }
-          labelNode={
-            !compact &&
-            (labelNode && labelVariant !== 'inside'
-              ? labelNode
-              : hasLabel && (
-                  <Pressable
-                    accessibilityRole="button"
-                    disabled={disabled}
-                    onPress={handleNodePress}
+              color={variantColorMap[variant]}
+              errorIconAccessibilityLabel={helperTextErrorIconAccessibilityLabel}
+              errorIconTestID={`${testIDMap?.helperText}-error-icon`}
+              testID={testIDMap?.helperText ?? ''}
+            >
+              {helperText}
+            </HelperText>
+          ) : (
+            helperText
+          ))
+        }
+        inputBackground={readOnlyInputBackground ?? inputBackground}
+        inputNode={
+          <NativeInput
+            ref={refs}
+            accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
+            accessibilityLabel={accessibilityLabel ?? label}
+            align={align}
+            compact={compact}
+            containerSpacing={containerSpacing}
+            disabled={disabled}
+            font={font}
+            testID={testID}
+            {...editableInputAddonProps}
+          />
+        }
+        labelNode={
+          !compact &&
+          (labelNode && labelVariant !== 'inside'
+            ? labelNode
+            : hasLabel && (
+                <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
+                  <Box
+                    {...(labelVariant === 'inside' && {
+                      paddingStart: start ? 0.5 : 2,
+                      paddingEnd: 2,
+                      background: readOnlyInputBackground,
+                    })}
                   >
-                    <Box
-                      {...(labelVariant === 'inside' && {
-                        paddingStart: start ? 0.5 : 2,
-                        paddingEnd: 2,
-                        background: readOnlyInputBackground,
-                      })}
-                    >
-                      {labelNode ? (
-                        labelNode
-                      ) : (
-                        <InputLabel
-                          testID={testIDMap?.label ?? ''}
-                          {...(labelVariant === 'inside' && {
-                            paddingTop: 0,
-                            paddingBottom: 0,
-                          })}
-                        >
-                          {label}
-                        </InputLabel>
-                      )}
-                    </Box>
-                  </Pressable>
-                ))
-          }
-          labelVariant={labelVariant}
-          startNode={
-            ((compact && hasLabel) || !!start) && (
-              <Box
-                alignItems="center"
-                background={readOnlyInputBackground}
-                justifyContent="center"
-                testID={testIDMap?.start}
-              >
-                <Pressable
-                  accessibilityElementsHidden={!startIconA11yLabel}
-                  accessibilityHint={startIconA11yLabel}
-                  accessibilityLabel={startIconA11yLabel}
-                  accessibilityRole="button"
-                  disabled={disabled}
-                  importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
-                  onPress={handleNodePress}
-                >
-                  <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
-                    {compact &&
-                      (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
-                    {!!start && (
-                      <TextInputFocusVariantContext.Provider value={focusedVariant}>
-                        {inaccessibleStart}
-                      </TextInputFocusVariantContext.Provider>
+                    {labelNode ? (
+                      labelNode
+                    ) : (
+                      <InputLabel
+                        testID={testIDMap?.label ?? ''}
+                        {...(labelVariant === 'inside' && {
+                          paddingTop: 0,
+                          paddingBottom: 0,
+                        })}
+                      >
+                        {label}
+                      </InputLabel>
                     )}
-                  </HStack>
+                  </Box>
                 </Pressable>
-              </Box>
-            )
-          }
-          variant={variant}
-          width={width}
-        />
-      );
-    },
-  ),
+              ))
+        }
+        labelVariant={labelVariant}
+        startNode={
+          ((compact && hasLabel) || !!start) && (
+            <Box
+              alignItems="center"
+              background={readOnlyInputBackground}
+              justifyContent="center"
+              testID={testIDMap?.start}
+            >
+              <Pressable
+                accessibilityElementsHidden={!startIconA11yLabel}
+                accessibilityHint={startIconA11yLabel}
+                accessibilityLabel={startIconA11yLabel}
+                accessibilityRole="button"
+                disabled={disabled}
+                importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
+                onPress={handleNodePress}
+              >
+                <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
+                  {compact && (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
+                  {!!start && (
+                    <TextInputFocusVariantContext.Provider value={focusedVariant}>
+                      {inaccessibleStart}
+                    </TextInputFocusVariantContext.Provider>
+                  )}
+                </HStack>
+              </Pressable>
+            </Box>
+          )
+        }
+        variant={variant}
+        width={width}
+      />
+    );
+  }),
 );

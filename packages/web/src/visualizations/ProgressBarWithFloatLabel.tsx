@@ -7,6 +7,7 @@ import type { MotionStyle } from 'framer-motion';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useDimensions } from '../hooks/useDimensions';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
@@ -122,7 +123,7 @@ const ProgressBarFloatLabel = memo(
   },
 );
 
-export type ProgressBarWithFloatLabelProps = Pick<
+export type ProgressBarWithFloatLabelBaseProps = Pick<
   ProgressBaseProps,
   'progress' | 'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
@@ -133,6 +134,9 @@ export type ProgressBarWithFloatLabelProps = Pick<
    * @default above
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below'>;
+};
+
+export type ProgressBarWithFloatLabelProps = ProgressBarWithFloatLabelBaseProps & {
   style?: React.CSSProperties;
   className?: string;
   /** Custom styles for individual elements of the ProgressBarWithFloatLabel component */
@@ -157,8 +161,9 @@ export type ProgressBarWithFloatLabelProps = Pick<
 
 export const ProgressBarWithFloatLabel: React.FC<
   React.PropsWithChildren<ProgressBarWithFloatLabelProps>
-> = memo(
-  ({
+> = memo((_props: React.PropsWithChildren<ProgressBarWithFloatLabelProps>) => {
+  const mergedProps = useComponentConfig('ProgressBarWithFloatLabel', _props);
+  const {
     label,
     labelPlacement = 'above',
     progress,
@@ -170,30 +175,29 @@ export const ProgressBarWithFloatLabel: React.FC<
     className,
     styles,
     classNames,
-  }) => {
-    const skipLabel = isStorybook();
-    const progressBarFloatLabel = !skipLabel && (
-      <ProgressBarFloatLabel
-        classNames={classNames}
-        disableAnimateOnMount={disableAnimateOnMount}
-        disabled={disabled}
-        label={label}
-        labelPlacement={labelPlacement}
-        progress={progress}
-        styles={styles}
-      />
-    );
+  } = mergedProps;
+  const skipLabel = isStorybook();
+  const progressBarFloatLabel = !skipLabel && (
+    <ProgressBarFloatLabel
+      classNames={classNames}
+      disableAnimateOnMount={disableAnimateOnMount}
+      disabled={disabled}
+      label={label}
+      labelPlacement={labelPlacement}
+      progress={progress}
+      styles={styles}
+    />
+  );
 
-    return (
-      <VStack
-        className={cx(className, classNames?.root)}
-        style={{ ...style, ...styles?.root }}
-        testID={testID}
-      >
-        {labelPlacement === 'above' && progressBarFloatLabel}
-        {children}
-        {labelPlacement === 'below' && progressBarFloatLabel}
-      </VStack>
-    );
-  },
-);
+  return (
+    <VStack
+      className={cx(className, classNames?.root)}
+      style={{ ...style, ...styles?.root }}
+      testID={testID}
+    >
+      {labelPlacement === 'above' && progressBarFloatLabel}
+      {children}
+      {labelPlacement === 'below' && progressBarFloatLabel}
+    </VStack>
+  );
+});

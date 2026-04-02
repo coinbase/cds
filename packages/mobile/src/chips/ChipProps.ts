@@ -60,11 +60,14 @@ export type ChipBaseProps = SharedProps &
 
 export type ChipProps = ChipBaseProps;
 
-export type InputChipProps = ChipProps & {
-  /**
-   * Value indicates what is currently selected
-   * @deprecated Use the `children` prop instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v9
-   */
-  value?: string;
-};
+export type InputChipBaseProps = ChipBaseProps;
+
+export type InputChipProps = InputChipBaseProps &
+  ChipProps & {
+    /**
+     * Value indicates what is currently selected
+     * @deprecated Use the `children` prop instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v9
+     */
+    value?: string;
+  };

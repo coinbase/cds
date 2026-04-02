@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
@@ -200,7 +201,11 @@ type ListCellComponent = (<AsComponent extends React.ElementType = ListCellDefau
 export const ListCell: ListCellComponent = memo(
   forwardRef<React.ReactElement<ListCellBaseProps>, ListCellBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: ListCellProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('ListCell', _props);
+      const {
         as,
         accessory,
         accessoryNode,
@@ -235,9 +240,7 @@ export const ListCell: ListCellComponent = memo(
         subtitle,
         subtitleNode,
         ...props
-      }: ListCellProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
 
       const minHeight =

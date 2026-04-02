@@ -20,6 +20,7 @@ import {
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { HStack, type HStackProps } from '../../layout/HStack';
 import type { Transition } from '../../motion/types';
 import { Text, type TextBaseProps, type TextProps } from '../../typography/Text';
@@ -403,260 +404,176 @@ export type RollingNumberProps = TextProps &
   };
 
 export const RollingNumber = memo(
-  forwardRef<View, RollingNumberProps>(
-    (
-      {
-        value,
-        color: colorProp = 'fg',
-        colorPulseOnUpdate,
-        positivePulseColor = 'fgPositive',
-        negativePulseColor = 'fgNegative',
-        font = 'inherit',
-        fontFamily = font,
-        fontSize = font,
-        fontWeight = font,
-        // default to fontSize since lineHeight changes depending on the fontSize
-        lineHeight = fontSize,
-        tabularNumbers = true,
-        testID,
-        accessibilityLiveRegion = 'polite',
-        locale: localeProp,
-        format,
-        style,
-        prefix,
-        suffix,
-        styles,
-        enableSubscriptNotation,
-        transition = defaultTransitionConfig,
-        digitTransitionVariant = 'every',
-        formattedValue,
-        accessibilityLabel,
-        accessibilityLabelPrefix,
-        accessibilityLabelSuffix,
-        RollingNumberMaskComponent = DefaultRollingNumberMask,
-        RollingNumberAffixSectionComponent = DefaultRollingNumberAffixSection,
-        RollingNumberValueSectionComponent = DefaultRollingNumberValueSection,
-        RollingNumberDigitComponent = DefaultRollingNumberDigit,
-        RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
-        ...restTextProps
-      }: RollingNumberProps,
-      ref,
-    ) => {
-      const { locale: defaultLocale } = useLocale();
-      const locale = localeProp ?? defaultLocale;
-      const [digitHeight, setDigitHeight] = useState<number | undefined>();
-      const direction = useValueChangeDirection(value);
+  forwardRef<View, RollingNumberProps>((_props: RollingNumberProps, ref) => {
+    const mergedProps = useComponentConfig('RollingNumber', _props);
+    const {
+      value,
+      color: colorProp = 'fg',
+      colorPulseOnUpdate,
+      positivePulseColor = 'fgPositive',
+      negativePulseColor = 'fgNegative',
+      font = 'inherit',
+      fontFamily = font,
+      fontSize = font,
+      fontWeight = font,
+      // default to fontSize since lineHeight changes depending on the fontSize
+      lineHeight = fontSize,
+      tabularNumbers = true,
+      testID,
+      accessibilityLiveRegion = 'polite',
+      locale: localeProp,
+      format,
+      style,
+      prefix,
+      suffix,
+      styles,
+      enableSubscriptNotation,
+      transition = defaultTransitionConfig,
+      digitTransitionVariant = 'every',
+      formattedValue,
+      accessibilityLabel,
+      accessibilityLabelPrefix,
+      accessibilityLabelSuffix,
+      RollingNumberMaskComponent = DefaultRollingNumberMask,
+      RollingNumberAffixSectionComponent = DefaultRollingNumberAffixSection,
+      RollingNumberValueSectionComponent = DefaultRollingNumberValueSection,
+      RollingNumberDigitComponent = DefaultRollingNumberDigit,
+      RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
+      ...restTextProps
+    } = mergedProps;
+    const { locale: defaultLocale } = useLocale();
+    const locale = localeProp ?? defaultLocale;
+    const [digitHeight, setDigitHeight] = useState<number | undefined>();
+    const direction = useValueChangeDirection(value);
 
-      const handleMeasureDigits = (e: LayoutChangeEvent) => {
-        const { layout } = e.nativeEvent;
-        setDigitHeight(layout.height);
-      };
+    const handleMeasureDigits = (e: LayoutChangeEvent) => {
+      const { layout } = e.nativeEvent;
+      setDigitHeight(layout.height);
+    };
 
-      const textProps = useMemo(
-        () => ({
-          font,
-          fontSize,
-          fontWeight,
-          fontFamily,
-          lineHeight,
-          tabularNumbers,
-          color: colorProp,
-          ...restTextProps,
+    const textProps = useMemo(
+      () => ({
+        font,
+        fontSize,
+        fontWeight,
+        fontFamily,
+        lineHeight,
+        tabularNumbers,
+        color: colorProp,
+        ...restTextProps,
+      }),
+      [
+        font,
+        fontSize,
+        fontWeight,
+        fontFamily,
+        lineHeight,
+        tabularNumbers,
+        colorProp,
+        restTextProps,
+      ],
+    );
+
+    const transitionConfig = useMemo(
+      () => ({ ...defaultTransitionConfig, ...transition }),
+      [transition],
+    );
+
+    const intlNumberFormatter = useMemo(
+      () =>
+        new IntlNumberFormat({
+          value,
+          format,
+          locale,
         }),
-        [
-          font,
-          fontSize,
-          fontWeight,
-          fontFamily,
-          lineHeight,
-          tabularNumbers,
-          colorProp,
-          restTextProps,
-        ],
-      );
+      [value, format, locale],
+    );
 
-      const transitionConfig = useMemo(
-        () => ({ ...defaultTransitionConfig, ...transition }),
-        [transition],
-      );
+    const formatted = useMemo(
+      () => formattedValue ?? intlNumberFormatter.format(),
+      [formattedValue, intlNumberFormatter],
+    );
 
-      const intlNumberFormatter = useMemo(
-        () =>
-          new IntlNumberFormat({
-            value,
-            format,
-            locale,
-          }),
-        [value, format, locale],
-      );
+    const animatedColorStyle = useColorPulse({
+      value,
+      defaultColor: colorProp,
+      colorPulseOnUpdate: !!colorPulseOnUpdate,
+      positivePulseColor,
+      negativePulseColor,
+      transitionConfig,
+      formatted,
+    });
 
-      const formatted = useMemo(
-        () => formattedValue ?? intlNumberFormatter.format(),
-        [formattedValue, intlNumberFormatter],
-      );
+    const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
-      const animatedColorStyle = useColorPulse({
-        value,
-        defaultColor: colorProp,
-        colorPulseOnUpdate: !!colorPulseOnUpdate,
-        positivePulseColor,
-        negativePulseColor,
-        transitionConfig,
-        formatted,
-      });
+    const invisibleMeasuredDigits = useMemo(
+      () => (
+        <Text
+          accessibilityElementsHidden
+          accessibilityLabel=""
+          importantForAccessibility="no-hide-descendants"
+          onLayout={handleMeasureDigits}
+          style={[baseStylesheet.hide, styles?.text]}
+          {...textProps}
+        >
+          0
+        </Text>
+      ),
 
-      const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
+      [textProps, styles?.text],
+    );
 
-      const invisibleMeasuredDigits = useMemo(
-        () => (
-          <Text
-            accessibilityElementsHidden
-            accessibilityLabel=""
-            importantForAccessibility="no-hide-descendants"
-            onLayout={handleMeasureDigits}
-            style={[baseStylesheet.hide, styles?.text]}
-            {...textProps}
-          >
-            0
-          </Text>
-        ),
-
-        [textProps, styles?.text],
-      );
-
-      const prefixSection = useMemo(
-        () => (
-          // prefix from props
-          <RollingNumberAffixSectionComponent
-            justifyContent="flex-end"
-            style={styles?.prefix}
-            styles={{ text: [animatedColorStyle, styles?.text] }}
-            textProps={textProps}
-          >
-            {prefix}
-          </RollingNumberAffixSectionComponent>
-        ),
-        [
-          RollingNumberAffixSectionComponent,
-          animatedColorStyle,
-          styles?.prefix,
-          textProps,
-          prefix,
-          styles?.text,
-        ],
-      );
-
-      const suffixSection = useMemo(
-        () => (
-          // suffix from props
-          <RollingNumberAffixSectionComponent
-            justifyContent="flex-start"
-            style={styles?.suffix}
-            styles={{ text: [animatedColorStyle, styles?.text] }}
-            textProps={textProps}
-          >
-            {suffix}
-          </RollingNumberAffixSectionComponent>
-        ),
-        [
-          RollingNumberAffixSectionComponent,
-          animatedColorStyle,
-          styles?.suffix,
-          textProps,
-          suffix,
-          styles?.text,
-        ],
-      );
-
-      const intlPartsValueSection = useMemo(() => {
-        const { pre, integer, fraction, post } = intlNumberFormatter.formatToParts({
-          enableSubscriptNotation,
-        });
-        return (
-          <HStack style={styles?.formattedValueSection}>
-            {/* Prefix generated by Intl.NumberFormat */}
-            <RollingNumberValueSectionComponent
-              RollingNumberDigitComponent={RollingNumberDigitComponent}
-              RollingNumberMaskComponent={RollingNumberMaskComponent}
-              RollingNumberSymbolComponent={RollingNumberSymbolComponent}
-              digitHeight={digitHeight}
-              digitTransitionVariant={digitTransitionVariant}
-              direction={direction}
-              intlNumberParts={pre}
-              justifyContent="flex-end"
-              style={styles?.i18nPrefix}
-              styles={{ text: [animatedColorStyle, styles?.text] }}
-              textProps={textProps}
-              transitionConfig={transitionConfig}
-            />
-            <RollingNumberValueSectionComponent
-              RollingNumberDigitComponent={RollingNumberDigitComponent}
-              RollingNumberMaskComponent={RollingNumberMaskComponent}
-              RollingNumberSymbolComponent={RollingNumberSymbolComponent}
-              digitHeight={digitHeight}
-              digitTransitionVariant={digitTransitionVariant}
-              direction={direction}
-              intlNumberParts={integer}
-              justifyContent="flex-end"
-              style={styles?.integer}
-              styles={{ text: [animatedColorStyle, styles?.text] }}
-              textProps={textProps}
-              transitionConfig={transitionConfig}
-            />
-            <RollingNumberValueSectionComponent
-              RollingNumberDigitComponent={RollingNumberDigitComponent}
-              RollingNumberMaskComponent={RollingNumberMaskComponent}
-              RollingNumberSymbolComponent={RollingNumberSymbolComponent}
-              digitHeight={digitHeight}
-              digitTransitionVariant={digitTransitionVariant}
-              direction={direction}
-              intlNumberParts={fraction}
-              justifyContent="flex-start"
-              style={styles?.fraction}
-              styles={{ text: [animatedColorStyle, styles?.text] }}
-              textProps={textProps}
-              transitionConfig={transitionConfig}
-            />
-            {/* Suffix generated by Intl.NumberFormat */}
-            <RollingNumberValueSectionComponent
-              RollingNumberDigitComponent={RollingNumberDigitComponent}
-              RollingNumberMaskComponent={RollingNumberMaskComponent}
-              RollingNumberSymbolComponent={RollingNumberSymbolComponent}
-              digitHeight={digitHeight}
-              digitTransitionVariant={digitTransitionVariant}
-              direction={direction}
-              intlNumberParts={post}
-              justifyContent="flex-start"
-              style={styles?.i18nSuffix}
-              styles={{ text: [animatedColorStyle, styles?.text] }}
-              textProps={textProps}
-              transitionConfig={transitionConfig}
-            />
-          </HStack>
-        );
-      }, [
-        intlNumberFormatter,
-        enableSubscriptNotation,
-        styles?.formattedValueSection,
-        styles?.i18nPrefix,
-        styles?.text,
-        styles?.integer,
-        styles?.fraction,
-        styles?.i18nSuffix,
-        RollingNumberValueSectionComponent,
-        RollingNumberDigitComponent,
-        RollingNumberMaskComponent,
-        RollingNumberSymbolComponent,
-        digitHeight,
-        digitTransitionVariant,
-        direction,
+    const prefixSection = useMemo(
+      () => (
+        // prefix from props
+        <RollingNumberAffixSectionComponent
+          justifyContent="flex-end"
+          style={styles?.prefix}
+          styles={{ text: [animatedColorStyle, styles?.text] }}
+          textProps={textProps}
+        >
+          {prefix}
+        </RollingNumberAffixSectionComponent>
+      ),
+      [
+        RollingNumberAffixSectionComponent,
         animatedColorStyle,
+        styles?.prefix,
         textProps,
-        transitionConfig,
-      ]);
+        prefix,
+        styles?.text,
+      ],
+    );
 
-      const formattedValueValueSection = useMemo(
-        () => (
+    const suffixSection = useMemo(
+      () => (
+        // suffix from props
+        <RollingNumberAffixSectionComponent
+          justifyContent="flex-start"
+          style={styles?.suffix}
+          styles={{ text: [animatedColorStyle, styles?.text] }}
+          textProps={textProps}
+        >
+          {suffix}
+        </RollingNumberAffixSectionComponent>
+      ),
+      [
+        RollingNumberAffixSectionComponent,
+        animatedColorStyle,
+        styles?.suffix,
+        textProps,
+        suffix,
+        styles?.text,
+      ],
+    );
+
+    const intlPartsValueSection = useMemo(() => {
+      const { pre, integer, fraction, post } = intlNumberFormatter.formatToParts({
+        enableSubscriptNotation,
+      });
+      return (
+        <HStack style={styles?.formattedValueSection}>
+          {/* Prefix generated by Intl.NumberFormat */}
           <RollingNumberValueSectionComponent
             RollingNumberDigitComponent={RollingNumberDigitComponent}
             RollingNumberMaskComponent={RollingNumberMaskComponent}
@@ -664,79 +581,160 @@ export const RollingNumber = memo(
             digitHeight={digitHeight}
             digitTransitionVariant={digitTransitionVariant}
             direction={direction}
-            formattedValue={formattedValue}
-            intlNumberParts={[]}
-            justifyContent="flex-start"
-            style={styles?.formattedValueSection}
+            intlNumberParts={pre}
+            justifyContent="flex-end"
+            style={styles?.i18nPrefix}
             styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
             transitionConfig={transitionConfig}
           />
-        ),
-        [
-          RollingNumberMaskComponent,
-          styles?.formattedValueSection,
-          styles?.text,
-          RollingNumberValueSectionComponent,
-          RollingNumberDigitComponent,
-          RollingNumberSymbolComponent,
-          formattedValue,
-          digitHeight,
-          digitTransitionVariant,
-          direction,
-          animatedColorStyle,
-          textProps,
-          transitionConfig,
-        ],
-      );
-
-      const screenReaderOnlySection = useMemo(() => {
-        const prefixString = typeof prefix === 'string' ? prefix : '';
-        const suffixString = typeof suffix === 'string' ? suffix : '';
-        const formattedWithPrefixSuffix = `${prefixString}${formatted}${suffixString}`;
-        return (
-          <Text
-            allowFontScaling
-            accessibilityLiveRegion={accessibilityLiveRegion}
-            importantForAccessibility="yes"
-            style={[baseStylesheet.screenReaderOnly, styles?.text]}
-            {...textProps}
-          >
-            {`${accessibilityLabelPrefix ?? ''}
-            ${accessibilityLabel ?? formattedWithPrefixSuffix}
-            ${accessibilityLabelSuffix ?? ''}`}
-          </Text>
-        );
-      }, [
-        accessibilityLiveRegion,
-        textProps,
-        accessibilityLabelPrefix,
-        accessibilityLabel,
-        formatted,
-        prefix,
-        suffix,
-        accessibilityLabelSuffix,
-        styles?.text,
-      ]);
-
-      return (
-        <HStack ref={ref} style={rootStyle} testID={testID}>
-          {/* render invisible measured digits for measuring the digits height */}
-          {invisibleMeasuredDigits}
-          {/* render screen reader only section for accessibility */}
-          {screenReaderOnlySection}
-          <HStack
-            accessibilityElementsHidden
-            flexWrap="wrap"
-            importantForAccessibility="no-hide-descendants"
-            style={styles?.visibleContent}
-          >
-            {prefixSection}
-            {formattedValue ? formattedValueValueSection : intlPartsValueSection}
-            {suffixSection}
-          </HStack>
+          <RollingNumberValueSectionComponent
+            RollingNumberDigitComponent={RollingNumberDigitComponent}
+            RollingNumberMaskComponent={RollingNumberMaskComponent}
+            RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+            digitHeight={digitHeight}
+            digitTransitionVariant={digitTransitionVariant}
+            direction={direction}
+            intlNumberParts={integer}
+            justifyContent="flex-end"
+            style={styles?.integer}
+            styles={{ text: [animatedColorStyle, styles?.text] }}
+            textProps={textProps}
+            transitionConfig={transitionConfig}
+          />
+          <RollingNumberValueSectionComponent
+            RollingNumberDigitComponent={RollingNumberDigitComponent}
+            RollingNumberMaskComponent={RollingNumberMaskComponent}
+            RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+            digitHeight={digitHeight}
+            digitTransitionVariant={digitTransitionVariant}
+            direction={direction}
+            intlNumberParts={fraction}
+            justifyContent="flex-start"
+            style={styles?.fraction}
+            styles={{ text: [animatedColorStyle, styles?.text] }}
+            textProps={textProps}
+            transitionConfig={transitionConfig}
+          />
+          {/* Suffix generated by Intl.NumberFormat */}
+          <RollingNumberValueSectionComponent
+            RollingNumberDigitComponent={RollingNumberDigitComponent}
+            RollingNumberMaskComponent={RollingNumberMaskComponent}
+            RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+            digitHeight={digitHeight}
+            digitTransitionVariant={digitTransitionVariant}
+            direction={direction}
+            intlNumberParts={post}
+            justifyContent="flex-start"
+            style={styles?.i18nSuffix}
+            styles={{ text: [animatedColorStyle, styles?.text] }}
+            textProps={textProps}
+            transitionConfig={transitionConfig}
+          />
         </HStack>
       );
-    },
-  ),
+    }, [
+      intlNumberFormatter,
+      enableSubscriptNotation,
+      styles?.formattedValueSection,
+      styles?.i18nPrefix,
+      styles?.text,
+      styles?.integer,
+      styles?.fraction,
+      styles?.i18nSuffix,
+      RollingNumberValueSectionComponent,
+      RollingNumberDigitComponent,
+      RollingNumberMaskComponent,
+      RollingNumberSymbolComponent,
+      digitHeight,
+      digitTransitionVariant,
+      direction,
+      animatedColorStyle,
+      textProps,
+      transitionConfig,
+    ]);
+
+    const formattedValueValueSection = useMemo(
+      () => (
+        <RollingNumberValueSectionComponent
+          RollingNumberDigitComponent={RollingNumberDigitComponent}
+          RollingNumberMaskComponent={RollingNumberMaskComponent}
+          RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+          digitHeight={digitHeight}
+          digitTransitionVariant={digitTransitionVariant}
+          direction={direction}
+          formattedValue={formattedValue}
+          intlNumberParts={[]}
+          justifyContent="flex-start"
+          style={styles?.formattedValueSection}
+          styles={{ text: [animatedColorStyle, styles?.text] }}
+          textProps={textProps}
+          transitionConfig={transitionConfig}
+        />
+      ),
+      [
+        RollingNumberMaskComponent,
+        styles?.formattedValueSection,
+        styles?.text,
+        RollingNumberValueSectionComponent,
+        RollingNumberDigitComponent,
+        RollingNumberSymbolComponent,
+        formattedValue,
+        digitHeight,
+        digitTransitionVariant,
+        direction,
+        animatedColorStyle,
+        textProps,
+        transitionConfig,
+      ],
+    );
+
+    const screenReaderOnlySection = useMemo(() => {
+      const prefixString = typeof prefix === 'string' ? prefix : '';
+      const suffixString = typeof suffix === 'string' ? suffix : '';
+      const formattedWithPrefixSuffix = `${prefixString}${formatted}${suffixString}`;
+      return (
+        <Text
+          allowFontScaling
+          accessibilityLiveRegion={accessibilityLiveRegion}
+          importantForAccessibility="yes"
+          style={[baseStylesheet.screenReaderOnly, styles?.text]}
+          {...textProps}
+        >
+          {`${accessibilityLabelPrefix ?? ''}
+            ${accessibilityLabel ?? formattedWithPrefixSuffix}
+            ${accessibilityLabelSuffix ?? ''}`}
+        </Text>
+      );
+    }, [
+      accessibilityLiveRegion,
+      textProps,
+      accessibilityLabelPrefix,
+      accessibilityLabel,
+      formatted,
+      prefix,
+      suffix,
+      accessibilityLabelSuffix,
+      styles?.text,
+    ]);
+
+    return (
+      <HStack ref={ref} style={rootStyle} testID={testID}>
+        {/* render invisible measured digits for measuring the digits height */}
+        {invisibleMeasuredDigits}
+        {/* render screen reader only section for accessibility */}
+        {screenReaderOnlySection}
+        <HStack
+          accessibilityElementsHidden
+          flexWrap="wrap"
+          importantForAccessibility="no-hide-descendants"
+          style={styles?.visibleContent}
+        >
+          {prefixSection}
+          {formattedValue ? formattedValueValueSection : intlPartsValueSection}
+          {suffixSection}
+        </HStack>
+      </HStack>
+    );
+  }),
 );

@@ -7,6 +7,7 @@ import type { Shape } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { Box, type BoxBaseProps } from './Box';
 
@@ -93,7 +94,11 @@ type FallbackComponent = (<AsComponent extends React.ElementType = FallbackDefau
 export const Fallback: FallbackComponent = memo(
   forwardRef<React.ReactElement<FallbackBaseProps>, FallbackBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: FallbackProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('Fallback', _props);
+      const {
         as,
         height,
         shape = 'rectangle',
@@ -103,9 +108,7 @@ export const Fallback: FallbackComponent = memo(
         rectWidthVariant,
         accessibilityLabel = 'Loading',
         ...props
-      }: FallbackProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? fallbackDefaultElement) satisfies React.ElementType;
 
       const fallbackShapeOptions = useMemo<UseFallbackShapeOptions>(

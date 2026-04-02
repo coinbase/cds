@@ -2,16 +2,17 @@ import React, { memo } from 'react';
 import type { PaddingProps, Placement } from '@coinbase/cds-common/types';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { isRtl } from '../utils/isRtl';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
-import { type ProgressBarProps } from './ProgressBar';
+import { type ProgressBarProps, type ProgressBaseProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
-export type ProgressBarWithFixedLabelsProps = Pick<
-  ProgressBarProps,
+export type ProgressBarWithFixedLabelsBaseProps = Pick<
+  ProgressBaseProps,
   'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
   /** Label that is pinned to the start of the container. If a number is used then it will format it as a percentage. */
@@ -23,6 +24,9 @@ export type ProgressBarWithFixedLabelsProps = Pick<
    * @default beside
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below' | 'beside'>;
+};
+
+export type ProgressBarWithFixedLabelsProps = ProgressBarWithFixedLabelsBaseProps & {
   style?: React.CSSProperties;
   className?: string;
   /** Custom styles for individual elements of the ProgressBarWithFixedLabels component */
@@ -190,8 +194,9 @@ const ProgressBarFixedLabelContainer = memo(
 
 export const ProgressBarWithFixedLabels: React.FC<
   React.PropsWithChildren<ProgressBarWithFixedLabelsProps>
-> = memo(
-  ({
+> = memo((_props: React.PropsWithChildren<ProgressBarWithFixedLabelsProps>) => {
+  const mergedProps = useComponentConfig('ProgressBarWithFixedLabels', _props);
+  const {
     startLabel,
     endLabel,
     labelPlacement = 'beside',
@@ -203,71 +208,70 @@ export const ProgressBarWithFixedLabels: React.FC<
     className,
     styles,
     classNames,
-  }) => {
-    const startLabelEl = typeof startLabel !== 'undefined' && (
-      <Box flexGrow={0} flexShrink={0} paddingEnd={1}>
-        <ProgressBarFixedLabelBeside
-          className={classNames?.startLabel}
+  } = mergedProps;
+  const startLabelEl = typeof startLabel !== 'undefined' && (
+    <Box flexGrow={0} flexShrink={0} paddingEnd={1}>
+      <ProgressBarFixedLabelBeside
+        className={classNames?.startLabel}
+        disableAnimateOnMount={disableAnimateOnMount}
+        label={startLabel}
+        style={styles?.startLabel}
+        visuallyDisabled={disabled}
+      />
+    </Box>
+  );
+
+  const endLabelEl = typeof endLabel !== 'undefined' && (
+    <Box flexGrow={0} flexShrink={0} paddingStart={1}>
+      <ProgressBarFixedLabelBeside
+        className={classNames?.endLabel}
+        disableAnimateOnMount={disableAnimateOnMount}
+        label={endLabel}
+        style={styles?.endLabel}
+        visuallyDisabled={disabled}
+      />
+    </Box>
+  );
+
+  const leftEl = isRtl() ? endLabelEl : startLabelEl;
+  const rightEl = isRtl() ? startLabelEl : endLabelEl;
+
+  return (
+    <VStack
+      className={cx(className, classNames?.root)}
+      style={{ ...style, ...styles?.root }}
+      testID={testID}
+      width="100%"
+    >
+      {labelPlacement === 'above' && (
+        <ProgressBarFixedLabelContainer
+          classNames={classNames}
           disableAnimateOnMount={disableAnimateOnMount}
-          label={startLabel}
-          style={styles?.startLabel}
+          endLabel={endLabel}
+          paddingBottom={1}
+          startLabel={startLabel}
+          styles={styles}
           visuallyDisabled={disabled}
         />
-      </Box>
-    );
+      )}
 
-    const endLabelEl = typeof endLabel !== 'undefined' && (
-      <Box flexGrow={0} flexShrink={0} paddingStart={1}>
-        <ProgressBarFixedLabelBeside
-          className={classNames?.endLabel}
+      <Box alignItems="center" flexShrink={0} flexWrap="nowrap" width="100%">
+        {labelPlacement === 'beside' && leftEl}
+        {children}
+        {labelPlacement === 'beside' && rightEl}
+      </Box>
+
+      {labelPlacement === 'below' && (
+        <ProgressBarFixedLabelContainer
+          classNames={classNames}
           disableAnimateOnMount={disableAnimateOnMount}
-          label={endLabel}
-          style={styles?.endLabel}
+          endLabel={endLabel}
+          paddingTop={1}
+          startLabel={startLabel}
+          styles={styles}
           visuallyDisabled={disabled}
         />
-      </Box>
-    );
-
-    const leftEl = isRtl() ? endLabelEl : startLabelEl;
-    const rightEl = isRtl() ? startLabelEl : endLabelEl;
-
-    return (
-      <VStack
-        className={cx(className, classNames?.root)}
-        style={{ ...style, ...styles?.root }}
-        testID={testID}
-        width="100%"
-      >
-        {labelPlacement === 'above' && (
-          <ProgressBarFixedLabelContainer
-            classNames={classNames}
-            disableAnimateOnMount={disableAnimateOnMount}
-            endLabel={endLabel}
-            paddingBottom={1}
-            startLabel={startLabel}
-            styles={styles}
-            visuallyDisabled={disabled}
-          />
-        )}
-
-        <Box alignItems="center" flexShrink={0} flexWrap="nowrap" width="100%">
-          {labelPlacement === 'beside' && leftEl}
-          {children}
-          {labelPlacement === 'beside' && rightEl}
-        </Box>
-
-        {labelPlacement === 'below' && (
-          <ProgressBarFixedLabelContainer
-            classNames={classNames}
-            disableAnimateOnMount={disableAnimateOnMount}
-            endLabel={endLabel}
-            paddingTop={1}
-            startLabel={startLabel}
-            styles={styles}
-            visuallyDisabled={disabled}
-          />
-        )}
-      </VStack>
-    );
-  },
-);
+      )}
+    </VStack>
+  );
+});

@@ -6,6 +6,7 @@ import { isDevelopment } from '@coinbase/cds-utils/env';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
@@ -109,83 +110,78 @@ const getIconSourceSize = (iconSize: number): IconSourcePixelSize => {
 };
 
 export const Icon = memo(
-  forwardRef(
-    (
-      {
-        accessibilityLabel,
-        color = 'fgPrimary',
-        dangerouslySetColor,
-        fallback = null,
-        name,
-        size = 'm',
-        testID,
-        className,
-        classNames,
-        style,
-        styles,
-        active,
-        ...props
-      }: IconProps,
-      ref: React.Ref<HTMLElement>,
-    ) => {
-      const theme = useTheme();
+  forwardRef((_props: IconProps, ref: React.Ref<HTMLElement>) => {
+    const mergedProps = useComponentConfig('Icon', _props);
+    const {
+      accessibilityLabel,
+      color = 'fgPrimary',
+      dangerouslySetColor,
+      fallback = null,
+      name,
+      size = 'm',
+      testID,
+      className,
+      classNames,
+      style,
+      styles,
+      active,
+      ...props
+    } = mergedProps;
+    const theme = useTheme();
 
-      const iconSize = theme.iconSize[size];
-      const sourceSize = getIconSourceSize(iconSize);
+    const iconSize = theme.iconSize[size];
+    const sourceSize = getIconSourceSize(iconSize);
 
-      const rootStyle = useMemo(
-        () => ({
-          ...(dangerouslySetColor ? { color: dangerouslySetColor } : {}),
-          ...style,
-          ...styles?.root,
-        }),
-        [dangerouslySetColor, style, styles?.root],
-      );
+    const rootStyle = useMemo(
+      () => ({
+        ...(dangerouslySetColor ? { color: dangerouslySetColor } : {}),
+        ...style,
+        ...styles?.root,
+      }),
+      [dangerouslySetColor, style, styles?.root],
+    );
 
-      const iconName = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
-      const glyph = glyphMap[iconName as keyof typeof glyphMap];
+    const iconName = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
+    const glyph = glyphMap[iconName as keyof typeof glyphMap];
 
-      if (glyph === undefined) {
-        if (isDevelopment()) {
-          console.error(
-            `Unable to find glyph for icon name "${name}" with glyph key "${iconName}"`,
-          );
-        }
-        return fallback;
+    if (glyph === undefined) {
+      if (isDevelopment()) {
+        console.error(`Unable to find glyph for icon name "${name}" with glyph key "${iconName}"`);
       }
+      return fallback;
+    }
 
-      const glyphTestId = testID ? `${testID}-glyph` : 'icon-base-glyph';
+    const glyphTestId = testID ? `${testID}-glyph` : 'icon-base-glyph';
 
-      return (
-        <Box
-          className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
-          color={color}
-          position="relative"
-          style={rootStyle}
-          testID={testID}
-          {...(props satisfies ValidateProps<
-            typeof props,
-            Omit<IconProps, keyof BoxProps<BoxDefaultElement>>
-          >)}
+    return (
+      <Box
+        className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+        color={color}
+        position="relative"
+        style={rootStyle}
+        testID={testID}
+        {...(props satisfies ValidateProps<
+          typeof props,
+          Omit<IconProps, keyof BoxProps<BoxDefaultElement>>
+        >)}
+      >
+        <span
+          ref={ref}
+          aria-hidden={!accessibilityLabel}
+          aria-label={accessibilityLabel}
+          className={cx(iconCss, sizeCss[size], classNames?.icon)}
+          data-icon-name={name}
+          data-testid={glyphTestId}
+          role="img"
+          style={styles?.icon}
+          title={accessibilityLabel}
+          translate="no"
         >
-          <span
-            ref={ref}
-            aria-hidden={!accessibilityLabel}
-            aria-label={accessibilityLabel}
-            className={cx(iconCss, sizeCss[size], classNames?.icon)}
-            data-icon-name={name}
-            data-testid={glyphTestId}
-            role="img"
-            style={styles?.icon}
-            title={accessibilityLabel}
-            translate="no"
-          >
-            {glyph}
-          </span>
-        </Box>
-      );
-    },
-  ),
+          {glyph}
+        </span>
+      </Box>
+    );
+  }),
 );
 
 Icon.displayName = 'Icon';

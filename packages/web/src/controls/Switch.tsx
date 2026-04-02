@@ -4,6 +4,7 @@ import { switchTransitionConfig } from '@coinbase/cds-common/motion/switch';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { convertTransition } from '../motion/utils';
@@ -37,12 +38,14 @@ const thumbCss = css`
   left: 1px;
 `;
 
-export type SwitchProps = ControlBaseProps<string> & {
+export type SwitchBaseProps = ControlBaseProps<string> & {
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
 };
+
+export type SwitchProps = SwitchBaseProps;
 
 const MotionBox = motion(Box);
 
@@ -55,76 +58,77 @@ const thumbMotionVariants = {
   },
 };
 
-const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchWithRef(
-  {
-    children,
-    checked,
-    disabled,
-    elevation,
-    controlColor,
-    background = checked ? 'bgPrimary' : 'bgTertiary',
-    borderColor,
-    borderRadius = 1000,
-    borderWidth,
-    value,
-    ...props
-  },
-  ref,
-) {
-  const { activeColorScheme } = useTheme();
-  const defaultControlColor = activeColorScheme === 'dark' ? 'fg' : 'fgInverse';
-  const switchNode = (
-    <Control
-      ref={ref}
-      borderRadius={1000}
-      checked={checked}
-      disabled={disabled}
-      label={children}
-      role="switch"
-      type="checkbox"
-      value={value}
-      {...props}
-    >
+const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
+  function SwitchWithRef(_props, ref) {
+    const mergedProps = useComponentConfig('Switch', _props);
+    const {
+      children,
+      checked,
+      disabled,
+      elevation,
+      controlColor,
+      background = checked ? 'bgPrimary' : 'bgTertiary',
+      borderColor,
+      borderRadius = 1000,
+      borderWidth,
+      value,
+      ...props
+    } = mergedProps;
+    const { activeColorScheme } = useTheme();
+    const defaultControlColor = activeColorScheme === 'dark' ? 'fg' : 'fgInverse';
+    const switchNode = (
+      <Control
+        ref={ref}
+        borderRadius={1000}
+        checked={checked}
+        disabled={disabled}
+        label={children}
+        role="switch"
+        type="checkbox"
+        value={value}
+        {...props}
+      >
+        <Box
+          alignItems="center"
+          background={background}
+          borderColor={borderColor}
+          borderRadius={borderRadius}
+          borderWidth={borderWidth}
+          className={trackCss}
+          data-filled={checked}
+          justifyContent="flex-start"
+          testID="switch-track"
+        >
+          <MotionBox
+            animate={checked ? 'checked' : 'unchecked'}
+            background={controlColor ?? defaultControlColor}
+            borderRadius={1000}
+            className={thumbCss}
+            data-testid="switch-thumb"
+            elevation={elevation}
+            initial={false}
+            testID="switch-thumb"
+            transition={convertTransition(switchTransitionConfig)}
+            variants={thumbMotionVariants}
+          />
+        </Box>
+      </Control>
+    );
+
+    return children ? (
       <Box
         alignItems="center"
-        background={background}
-        borderColor={borderColor}
-        borderRadius={borderRadius}
-        borderWidth={borderWidth}
-        className={trackCss}
-        data-filled={checked}
-        justifyContent="flex-start"
-        testID="switch-track"
+        className={COMPONENT_STATIC_CLASSNAME}
+        minHeight="var(--controlSize-switchHeight)"
+        role="presentation"
+        width="fit-content"
       >
-        <MotionBox
-          animate={checked ? 'checked' : 'unchecked'}
-          background={controlColor ?? defaultControlColor}
-          borderRadius={1000}
-          className={thumbCss}
-          data-testid="switch-thumb"
-          elevation={elevation}
-          initial={false}
-          testID="switch-thumb"
-          transition={convertTransition(switchTransitionConfig)}
-          variants={thumbMotionVariants}
-        />
+        {switchNode}
       </Box>
-    </Control>
-  );
-
-  return children ? (
-    <Box
-      alignItems="center"
-      className={COMPONENT_STATIC_CLASSNAME}
-      minHeight="var(--controlSize-switchHeight)"
-      role="presentation"
-      width="fit-content"
-    >
-      {switchNode}
-    </Box>
-  ) : (
-    switchNode
-  );
-});
+    ) : (
+      switchNode
+    );
+  },
+);
 
 export const Switch = memo(SwitchWithRef);

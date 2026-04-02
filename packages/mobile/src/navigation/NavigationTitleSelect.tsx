@@ -3,20 +3,25 @@ import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { SelectProvider } from '../controls/SelectContext';
 import { SelectOption } from '../controls/SelectOption';
 import { useSelect } from '../controls/useSelect';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons';
 import { HStack } from '../layout/HStack';
 import { type DrawerRefBaseProps, Tray } from '../overlays';
 import { Pressable } from '../system';
-import { Text, type TextProps } from '../typography/Text';
+import { Text, type TextBaseProps, type TextProps } from '../typography/Text';
 
-export type NavigationTitleSelectProps = Omit<TextProps, 'onChange'> & {
+export type NavigationTitleSelectBaseProps = Omit<TextBaseProps, 'onChange'> & {
   options: { label: React.ReactNode; id: string }[];
   value: string;
   onChange: (value: string) => void;
 };
 
-export const NavigationTitleSelect = memo(
-  ({
+export type NavigationTitleSelectProps = NavigationTitleSelectBaseProps &
+  Omit<TextProps, 'onChange'>;
+
+export const NavigationTitleSelect = memo((_props: NavigationTitleSelectProps) => {
+  const mergedProps = useComponentConfig('NavigationTitleSelect', _props);
+  const {
     options,
     value,
     onChange,
@@ -24,53 +29,52 @@ export const NavigationTitleSelect = memo(
     font = 'headline',
     accessibilityRole = 'header',
     ...props
-  }: NavigationTitleSelectProps) => {
-    const [visible, setVisible] = useState(false);
-    const trayRef = useRef<DrawerRefBaseProps>(null);
+  } = mergedProps;
+  const [visible, setVisible] = useState(false);
+  const trayRef = useRef<DrawerRefBaseProps>(null);
 
-    const handleCloseMenu = useCallback(() => {
-      setVisible(false);
-    }, []);
-    const handleOpenMenu = useCallback(() => {
-      setVisible(true);
-    }, []);
+  const handleCloseMenu = useCallback(() => {
+    setVisible(false);
+  }, []);
+  const handleOpenMenu = useCallback(() => {
+    setVisible(true);
+  }, []);
 
-    const handleOptionPress = useCallback(() => {
-      trayRef.current?.handleClose();
-    }, []);
+  const handleOptionPress = useCallback(() => {
+    trayRef.current?.handleClose();
+  }, []);
 
-    const label = useMemo(() => {
-      return options.find((option) => option.id === value)?.label;
-    }, [options, value]);
+  const label = useMemo(() => {
+    return options.find((option) => option.id === value)?.label;
+  }, [options, value]);
 
-    const selectContextValue = useSelect({ onChange, value });
+  const selectContextValue = useSelect({ onChange, value });
 
-    return (
-      <>
-        <Pressable background="transparent" onPress={handleOpenMenu}>
-          <HStack alignItems="center" gap={1}>
-            {typeof label === 'string' ? (
-              <Text accessibilityRole={accessibilityRole} color={color} font={font} {...props}>
-                {label}
-              </Text>
-            ) : (
-              label
-            )}
-            <Icon color={color} name="caretDown" size="s" testID="icon-caretDown" />
-          </HStack>
-        </Pressable>
-        {visible && (
-          <Tray ref={trayRef} onCloseComplete={handleCloseMenu}>
-            <SelectProvider value={selectContextValue}>
-              {options.map(({ id, label }) => (
-                <SelectOption key={id} onPress={handleOptionPress} title={label} value={id} />
-              ))}
-            </SelectProvider>
-          </Tray>
-        )}
-      </>
-    );
-  },
-);
+  return (
+    <>
+      <Pressable background="transparent" onPress={handleOpenMenu}>
+        <HStack alignItems="center" gap={1}>
+          {typeof label === 'string' ? (
+            <Text accessibilityRole={accessibilityRole} color={color} font={font} {...props}>
+              {label}
+            </Text>
+          ) : (
+            label
+          )}
+          <Icon color={color} name="caretDown" size="s" testID="icon-caretDown" />
+        </HStack>
+      </Pressable>
+      {visible && (
+        <Tray ref={trayRef} onCloseComplete={handleCloseMenu}>
+          <SelectProvider value={selectContextValue}>
+            {options.map(({ id, label }) => (
+              <SelectOption key={id} onPress={handleOptionPress} title={label} value={id} />
+            ))}
+          </SelectProvider>
+        </Tray>
+      )}
+    </>
+  );
+});
 
 NavigationTitleSelect.displayName = 'NavigationTitleSelect';

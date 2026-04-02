@@ -29,6 +29,7 @@ import {
 
 import { IconButton } from '../../buttons';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useDimensions } from '../../hooks/useDimensions';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
 import { useTheme } from '../../hooks/useTheme';
@@ -246,8 +247,9 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Tray = memo(
-  forwardRef<TrayRefProps, TrayProps>(function Tray(
-    {
+  forwardRef<TrayRefProps, TrayProps>(function Tray(_props, ref) {
+    const mergedProps = useComponentConfig('Tray', _props);
+    const {
       children,
       header,
       footer,
@@ -275,9 +277,7 @@ export const Tray = memo(
       pin = 'bottom',
       showHandleBar,
       hideCloseButton,
-    },
-    ref,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const [isOpen, setIsOpen] = useState(true);
     const [hasScrolledDown, setHasScrolledDown] = useState(false);

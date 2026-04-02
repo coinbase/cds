@@ -4,7 +4,8 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
-import { Box, type BoxProps } from '../layout';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout';
 import { Text } from '../typography';
 
 // Styles for container reset
@@ -17,10 +18,10 @@ const containerCss = css`
 
 export type ControlGroupOption<P> = Omit<P, 'onChange' | 'checked' | 'value'>;
 
-export type ControlGroupProps<
-  ControlValue extends string,
-  ControlComponentProps extends { value?: ControlValue },
-> = Omit<BoxProps<'div'>, 'children' | 'onChange' | 'as'> &
+export type ControlGroupBaseProps<
+  ControlValue extends string = string,
+  ControlComponentProps extends { value?: ControlValue } = { value?: ControlValue },
+> = Omit<BoxBaseProps, 'children' | 'onChange'> &
   SharedProps & {
     /** The control component to render for each option. */
     ControlComponent: React.ComponentType<ControlComponentProps>;
@@ -40,11 +41,21 @@ export type ControlGroupProps<
     name?: string;
   };
 
+export type ControlGroupProps<
+  ControlValue extends string,
+  ControlComponentProps extends { value?: ControlValue },
+> = ControlGroupBaseProps<ControlValue, ControlComponentProps> &
+  Omit<BoxProps<'div'>, 'children' | 'onChange' | 'as'>;
+
 const ControlGroupWithRef = forwardRef(function ControlGroup<
   ControlValue extends string,
   ControlComponentProps extends { value?: ControlValue },
 >(
-  {
+  _props: ControlGroupProps<ControlValue, ControlComponentProps>,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
+  const mergedProps = useComponentConfig('ControlGroup', _props);
+  const {
     ControlComponent: ControlComponent,
     options,
     label,
@@ -57,9 +68,7 @@ const ControlGroupWithRef = forwardRef(function ControlGroup<
     name,
     role = 'group',
     ...restProps
-  }: ControlGroupProps<ControlValue, ControlComponentProps>,
-  ref: React.ForwardedRef<HTMLDivElement>,
-) {
+  } = mergedProps;
   const generatedId = useId();
   const labelId = `${generatedId}-label`;
 

@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
 import type { ChipBaseProps } from '../../chips';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import type { PressableBaseProps } from '../../system/Pressable';
 import { Select, type SelectRef } from '../select/Select';
 import type { SelectControlProps, SelectProps, SelectType } from '../select/types';
@@ -72,15 +73,11 @@ function createSelectChipControlWrapper<
 const SelectChipComponent = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
-        invertColorScheme,
-        numberOfLines,
-        maxWidth,
-        displayValue,
-        ...props
-      }: SelectChipProps<Type, SelectOptionValue>,
+      _props: SelectChipProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
+      const mergedProps = useComponentConfig('SelectChip', _props);
+      const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
       const WrappedSelectChipControl = useMemo(
         () =>
           createSelectChipControlWrapper<Type, SelectOptionValue>({

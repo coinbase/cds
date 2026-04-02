@@ -12,6 +12,7 @@ import type { DateInputValidationError } from '@coinbase/cds-common/dates/DateIn
 
 import { Button } from '../buttons/Button';
 import { InputIconButton } from '../controls/InputIconButton';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, VStack } from '../layout';
 import { Tray } from '../overlays/tray/Tray';
 import { StickyFooter } from '../sticky-footer/StickyFooter';
@@ -108,211 +109,209 @@ export type DatePickerProps = DatePickerBaseProps &
   };
 
 export const DatePicker = memo(
-  forwardRef<View, DatePickerProps>(
-    (
-      {
-        date,
-        styles,
-        highlightedDates,
-        highlightedDateAccessibilityHint,
-        nextArrowAccessibilityLabel,
-        previousArrowAccessibilityLabel,
-        disabledDates,
-        onChangeDate,
-        error,
-        onErrorDate,
-        required,
-        disabled,
-        seedDate,
-        minDate,
-        maxDate,
-        requiredError = 'This field is required',
-        invalidDateError = 'Please enter a valid date',
-        disabledDateError = 'Date unavailable',
-        label,
-        accessibilityHint = 'Enter date or select from calendar using the calendar button.',
-        accessibilityLabel,
-        accessibilityLabelledBy,
-        calendarIconButtonAccessibilityLabel,
-        openCalendarAccessibilityLabel = 'Open calendar',
-        closeCalendarAccessibilityLabel = 'Close calendar without selecting a date',
-        dateInputStyle,
-        compact,
-        variant,
-        confirmText = 'Confirm',
-        confirmButtonAccessibilityHint,
-        helperText,
-        width = '100%',
-        onOpen,
-        onClose,
-        onConfirm,
-        onCancel,
-        onChange,
-        ...props
-      },
-      ref,
-    ) => {
-      const [showPicker, setShowPicker] = useState(false);
-      const [calendarSelectedDate, setCalendarSelectedDate] = useState<Date | null>(null);
-      const dateInputRef = useRef<TextInput | null>(null);
-      const calendarButtonRef = useRef<View | null>(null);
-      const calendarRef = useRef<CalendarRefHandle>(null);
-      const closedByConfirmRef = useRef(false);
-      /**
-       * Be careful to preserve the correct event orders
-       *   1. Selecting a date with the picker:                onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose
-       *   2. Closing the picker without selecting a date:     onOpen -> onCancel -> onClose
-       *   3. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
-       *   4. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
-       */
+  forwardRef<View, DatePickerProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('DatePicker', _props);
+    const {
+      date,
+      styles,
+      highlightedDates,
+      highlightedDateAccessibilityHint,
+      nextArrowAccessibilityLabel,
+      previousArrowAccessibilityLabel,
+      disabledDates,
+      onChangeDate,
+      error,
+      onErrorDate,
+      required,
+      disabled,
+      seedDate,
+      minDate,
+      maxDate,
+      requiredError = 'This field is required',
+      invalidDateError = 'Please enter a valid date',
+      disabledDateError = 'Date unavailable',
+      label,
+      accessibilityHint = 'Enter date or select from calendar using the calendar button.',
+      accessibilityLabel,
+      accessibilityLabelledBy,
+      calendarIconButtonAccessibilityLabel,
+      openCalendarAccessibilityLabel = 'Open calendar',
+      closeCalendarAccessibilityLabel = 'Close calendar without selecting a date',
+      dateInputStyle,
+      compact,
+      variant,
+      confirmText = 'Confirm',
+      confirmButtonAccessibilityHint,
+      helperText,
+      width = '100%',
+      onOpen,
+      onClose,
+      onConfirm,
+      onCancel,
+      onChange,
+      ...props
+    } = mergedProps;
+    const [showPicker, setShowPicker] = useState(false);
+    const [calendarSelectedDate, setCalendarSelectedDate] = useState<Date | null>(null);
+    const dateInputRef = useRef<TextInput | null>(null);
+    const calendarButtonRef = useRef<View | null>(null);
+    const calendarRef = useRef<CalendarRefHandle>(null);
+    const closedByConfirmRef = useRef(false);
 
-      const handleOpenPicker = useCallback(() => {
-        onOpen?.();
-        setCalendarSelectedDate(date); // Initialize with current date
-        setShowPicker(true);
-      }, [onOpen, date]);
+    /**
+     * Be careful to preserve the correct event orders
+     *   1. Selecting a date with the picker:                onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose
+     *   2. Closing the picker without selecting a date:     onOpen -> onCancel -> onClose
+     *   3. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     *   4. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     */
 
-      const handleConfirmPicker = useCallback(
-        (selectedDate: Date) => {
-          closedByConfirmRef.current = true;
-          onConfirm?.();
-          onChangeDate(selectedDate);
-          if (error && error.type !== 'custom') {
-            onErrorDate(null);
-          }
-        },
-        [onChangeDate, onConfirm, error, onErrorDate],
-      );
+    const handleOpenPicker = useCallback(() => {
+      onOpen?.();
+      setCalendarSelectedDate(date); // Initialize with current date
+      setShowPicker(true);
+    }, [onOpen, date]);
 
-      const handleTrayCloseComplete = useCallback(() => {
-        if (!closedByConfirmRef.current) {
-          onCancel?.();
-          setCalendarSelectedDate(null);
+    const handleConfirmPicker = useCallback(
+      (selectedDate: Date) => {
+        closedByConfirmRef.current = true;
+        onConfirm?.();
+        onChangeDate(selectedDate);
+        if (error && error.type !== 'custom') {
+          onErrorDate(null);
         }
-        onClose?.();
-        setShowPicker(false);
-        closedByConfirmRef.current = false;
-      }, [onCancel, onClose]);
+      },
+      [onChangeDate, onConfirm, error, onErrorDate],
+    );
 
-      const handleCalendarDatePress = useCallback((selectedDate: Date) => {
-        // Update local state, user must press confirm button
-        setCalendarSelectedDate(selectedDate);
-      }, []);
+    const handleTrayCloseComplete = useCallback(() => {
+      if (!closedByConfirmRef.current) {
+        onCancel?.();
+        setCalendarSelectedDate(null);
+      }
+      onClose?.();
+      setShowPicker(false);
+      closedByConfirmRef.current = false;
+    }, [onCancel, onClose]);
 
-      const handleModalShow = useCallback(() => {
-        calendarRef.current?.focusInitialDate();
-      }, []);
+    const handleCalendarDatePress = useCallback((selectedDate: Date) => {
+      // Update local state, user must press confirm button
+      setCalendarSelectedDate(selectedDate);
+    }, []);
 
-      const dateInputCalendarButton = useMemo(
-        () => (
-          <VStack accessible={true} paddingEnd={0.5}>
-            <InputIconButton
-              ref={calendarButtonRef}
-              disableInheritFocusStyle
-              transparent
-              accessibilityLabel={
-                calendarIconButtonAccessibilityLabel ?? openCalendarAccessibilityLabel
-              }
-              disabled={disabled}
-              name="calendarEmpty"
-              onPress={handleOpenPicker}
-              variant="secondary"
-            />
-          </VStack>
-        ),
-        [
-          handleOpenPicker,
-          openCalendarAccessibilityLabel,
-          calendarIconButtonAccessibilityLabel,
-          disabled,
-        ],
-      );
+    const handleModalShow = useCallback(() => {
+      calendarRef.current?.focusInitialDate();
+    }, []);
 
-      return (
-        <Box ref={ref} width={width}>
-          <DateInput
-            ref={dateInputRef}
-            {...props}
-            accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
-            accessibilityLabelledBy={accessibilityLabelledBy}
-            compact={compact}
-            date={date}
+    const dateInputCalendarButton = useMemo(
+      () => (
+        <VStack accessible={true} paddingEnd={0.5}>
+          <InputIconButton
+            ref={calendarButtonRef}
+            disableInheritFocusStyle
+            transparent
+            accessibilityLabel={
+              calendarIconButtonAccessibilityLabel ?? openCalendarAccessibilityLabel
+            }
             disabled={disabled}
-            disabledDateError={disabledDateError}
-            disabledDates={disabledDates}
-            end={dateInputCalendarButton}
-            error={error}
-            helperText={helperText}
-            invalidDateError={invalidDateError}
-            label={label}
-            maxDate={maxDate}
-            minDate={minDate}
-            onChange={onChange}
-            onChangeDate={onChangeDate}
-            onErrorDate={onErrorDate}
-            required={required}
-            requiredError={requiredError}
-            style={[dateInputStyle, styles?.dateInput]}
-            variant={variant}
+            name="calendarEmpty"
+            onPress={handleOpenPicker}
+            variant="secondary"
           />
-          {showPicker && (
-            <Tray
-              accessibilityRole="none"
-              footer={({ handleClose }) => (
-                <StickyFooter paddingTop={3} paddingX={3} role="none">
-                  <Button
-                    block
-                    compact
-                    accessibilityHint={confirmButtonAccessibilityHint}
-                    disabled={disabled || !calendarSelectedDate}
-                    onPress={() => {
-                      if (calendarSelectedDate) {
-                        handleConfirmPicker(calendarSelectedDate);
-                        handleClose();
-                      }
-                    }}
-                  >
-                    {confirmText}
-                  </Button>
-                </StickyFooter>
-              )}
-              handleBarAccessibilityLabel={closeCalendarAccessibilityLabel}
-              handleBarVariant="inside"
-              onCloseComplete={handleTrayCloseComplete}
-              onOpenComplete={handleModalShow}
-            >
-              <Calendar
-                ref={calendarRef}
-                disabled={disabled}
-                disabledDateError={disabledDateError}
-                disabledDates={disabledDates}
-                highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
-                highlightedDates={highlightedDates}
-                maxDate={maxDate}
-                minDate={minDate}
-                nextArrowAccessibilityLabel={nextArrowAccessibilityLabel}
-                onPressDate={handleCalendarDatePress}
-                paddingBottom={2}
-                paddingX={3}
-                previousArrowAccessibilityLabel={previousArrowAccessibilityLabel}
-                seedDate={seedDate}
-                selectedDate={calendarSelectedDate}
-                styles={{
-                  root: styles?.calendar,
-                  header: styles?.calendarHeader,
-                  title: styles?.calendarTitle,
-                  navigation: styles?.calendarNavigation,
-                  content: styles?.calendarContent,
-                  day: styles?.calendarDay,
-                }}
-              />
-            </Tray>
-          )}
-        </Box>
-      );
-    },
-  ),
+        </VStack>
+      ),
+      [
+        handleOpenPicker,
+        openCalendarAccessibilityLabel,
+        calendarIconButtonAccessibilityLabel,
+        disabled,
+      ],
+    );
+
+    return (
+      <Box ref={ref} width={width}>
+        <DateInput
+          ref={dateInputRef}
+          {...props}
+          accessibilityHint={accessibilityHint}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityLabelledBy={accessibilityLabelledBy}
+          compact={compact}
+          date={date}
+          disabled={disabled}
+          disabledDateError={disabledDateError}
+          disabledDates={disabledDates}
+          end={dateInputCalendarButton}
+          error={error}
+          helperText={helperText}
+          invalidDateError={invalidDateError}
+          label={label}
+          maxDate={maxDate}
+          minDate={minDate}
+          onChange={onChange}
+          onChangeDate={onChangeDate}
+          onErrorDate={onErrorDate}
+          required={required}
+          requiredError={requiredError}
+          style={[dateInputStyle, styles?.dateInput]}
+          variant={variant}
+        />
+        {showPicker && (
+          <Tray
+            accessibilityRole="none"
+            footer={({ handleClose }) => (
+              <StickyFooter paddingTop={3} paddingX={3} role="none">
+                <Button
+                  block
+                  compact
+                  accessibilityHint={confirmButtonAccessibilityHint}
+                  disabled={disabled || !calendarSelectedDate}
+                  onPress={() => {
+                    if (calendarSelectedDate) {
+                      handleConfirmPicker(calendarSelectedDate);
+                      handleClose();
+                    }
+                  }}
+                >
+                  {confirmText}
+                </Button>
+              </StickyFooter>
+            )}
+            handleBarAccessibilityLabel={closeCalendarAccessibilityLabel}
+            handleBarVariant="inside"
+            onCloseComplete={handleTrayCloseComplete}
+            onOpenComplete={handleModalShow}
+          >
+            <Calendar
+              ref={calendarRef}
+              disabled={disabled}
+              disabledDateError={disabledDateError}
+              disabledDates={disabledDates}
+              highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
+              highlightedDates={highlightedDates}
+              maxDate={maxDate}
+              minDate={minDate}
+              nextArrowAccessibilityLabel={nextArrowAccessibilityLabel}
+              onPressDate={handleCalendarDatePress}
+              paddingBottom={2}
+              paddingX={3}
+              previousArrowAccessibilityLabel={previousArrowAccessibilityLabel}
+              seedDate={seedDate}
+              selectedDate={calendarSelectedDate}
+              styles={{
+                root: styles?.calendar,
+                header: styles?.calendarHeader,
+                title: styles?.calendarTitle,
+                navigation: styles?.calendarNavigation,
+                content: styles?.calendarContent,
+                day: styles?.calendarDay,
+              }}
+            />
+          </Tray>
+        )}
+      </Box>
+    );
+  }),
 );
 
 DatePicker.displayName = 'DatePicker';

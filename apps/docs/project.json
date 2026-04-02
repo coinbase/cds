@@ -99,6 +99,21 @@
         "cwd": "{workspaceRoot}"
       }
     },
+    "concatenate-llm-docs": {
+      "command": "node {projectRoot}/ai-doc-generator/concatenate-docs.cjs",
+      "dependsOn": [
+        "build-llm-docs"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "generate-site-directory": {
+      "command": "node {projectRoot}/ai-doc-generator/generate-site-directory.cjs",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
     "peer-dependencies": {
       "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts",
       "options": {

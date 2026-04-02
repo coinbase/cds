@@ -79,6 +79,7 @@ import * as CDSPagination from '@coinbase/cds-web/pagination';
 import * as CDSSectionHeader from '@coinbase/cds-web/section-header';
 import * as StepperComponents from '@coinbase/cds-web/stepper';
 import * as CDSSystem from '@coinbase/cds-web/system';
+import { ComponentConfigProvider } from '@coinbase/cds-web/system/ComponentConfigProvider';
 import * as CDSTables from '@coinbase/cds-web/tables';
 import { useSortableCell } from '@coinbase/cds-web/tables/hooks/useSortableCell';
 import * as CDSTabs from '@coinbase/cds-web/tabs';
@@ -187,6 +188,10 @@ const explicitRegistrations: Record<string, ExplicitEntry> = {
 
   // Components not exported from their barrel
   InputLabel: { value: InputLabel, source: '@coinbase/cds-web/controls/InputLabel' },
+  ComponentConfigProvider: {
+    value: ComponentConfigProvider,
+    source: '@coinbase/cds-web/system/ComponentConfigProvider',
+  },
   useToast: { value: useToast, source: '@coinbase/cds-web/overlays/useToast' },
   useSortableCell: {
     value: useSortableCell,

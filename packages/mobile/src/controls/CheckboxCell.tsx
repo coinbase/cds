@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useSelectionCellBorderStyle } from '../hooks/useSelectionCellBorderStyle';
 import { useTheme } from '../hooks/useTheme';
@@ -47,7 +48,11 @@ export type CheckboxCellProps<CheckboxValue extends string> =
   };
 
 const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
-  {
+  _props: CheckboxCellProps<CheckboxValue>,
+  ref: React.ForwardedRef<View>,
+) {
+  const mergedProps = useComponentConfig('CheckboxCell', _props);
+  const {
     title,
     description,
     checked,
@@ -78,9 +83,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     readOnly,
     styles,
     ...props
-  }: CheckboxCellProps<CheckboxValue>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   const theme = useTheme();
   const [layout, setLayout] = useLayout();
   const [pressed, setPressed] = useState(false);

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 import { css } from '@linaria/core';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { Button } from '../../buttons/Button';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import {
   HStack,
   type HStackBaseProps,
@@ -47,16 +48,18 @@ export type ModalFooterBaseProps = Omit<HStackBaseProps, 'children'> & {
 export type ModalFooterProps = ModalFooterBaseProps &
   Omit<HStackProps<HStackDefaultElement>, 'children'>;
 
-export const ModalFooter = ({
-  gap = 2,
-  justifyContent = 'flex-end',
-  paddingX = 3,
-  paddingY = 2,
-  width = '100%',
-  primaryAction,
-  secondaryAction,
-  ...props
-}: ModalFooterProps) => {
+export const ModalFooter = memo((_props: ModalFooterProps) => {
+  const mergedProps = useComponentConfig('ModalFooter', _props);
+  const {
+    gap = 2,
+    justifyContent = 'flex-end',
+    paddingX = 3,
+    paddingY = 2,
+    width = '100%',
+    primaryAction,
+    secondaryAction,
+    ...props
+  } = mergedProps;
   const { hideDividers } = useModalContext();
 
   return (
@@ -74,4 +77,4 @@ export const ModalFooter = ({
       {primaryAction}
     </HStack>
   );
-};
+});

@@ -4,6 +4,7 @@ import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeig
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import { IconButton } from '../../buttons/IconButton';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout/Box';
 import {
   HStack,
@@ -57,18 +58,20 @@ export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
 export type ModalHeaderProps = ModalHeaderBaseProps &
   Omit<HStackProps<HStackDefaultElement>, 'children'>;
 
-export const ModalHeader = ({
-  alignItems = 'center',
-  paddingX = 3,
-  paddingY = 2,
-  title,
-  onBackButtonClick,
-  backAccessibilityLabel,
-  backAccessibilityHint,
-  closeAccessibilityLabel,
-  closeAccessibilityHint,
-  ...props
-}: ModalHeaderProps) => {
+export const ModalHeader = (_props: ModalHeaderProps) => {
+  const mergedProps = useComponentConfig('ModalHeader', _props);
+  const {
+    alignItems = 'center',
+    paddingX = 3,
+    paddingY = 2,
+    title,
+    onBackButtonClick,
+    backAccessibilityLabel,
+    backAccessibilityHint,
+    closeAccessibilityLabel,
+    closeAccessibilityHint,
+    ...props
+  } = mergedProps;
   const { onRequestClose, accessibilityLabelledBy, hideCloseButton, hideDividers } =
     useModalContext();
 

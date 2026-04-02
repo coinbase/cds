@@ -40,14 +40,14 @@ const hoveredBackgroundCss = css`
 export const Default = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
@@ -69,14 +69,14 @@ export const Default = () => {
 export const Compact = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
@@ -98,10 +98,10 @@ export const Compact = () => {
 export const InsideLabelVariant = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2', '3', '4'],
@@ -123,16 +123,16 @@ export const InsideLabelVariant = () => {
 export const CompactManySelected = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
-    { value: '9', label: 'Option 9' },
-    { value: '10', label: 'Option 10' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
+    { value: '9', label: 'Jackfruit' },
+    { value: '10', label: 'Kiwi' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '3', '7', '8', '9', '10'],
@@ -154,14 +154,14 @@ export const CompactManySelected = () => {
 export const HideSelectAll = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -183,14 +183,14 @@ export const HideSelectAll = () => {
 export const Alignments = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -260,14 +260,14 @@ export const Alignments = () => {
 export const CustomSelectAllLabel = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -292,14 +292,14 @@ export const CustomClearAllLabel = () => {
   });
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
 
   return (
@@ -318,14 +318,14 @@ export const CustomClearAllLabel = () => {
 export const CustomSelectAllOption = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -399,14 +399,14 @@ export const LongOptionLabels = () => {
 export const Disabled = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -437,14 +437,14 @@ Disabled.parameters = {
 export const DisabledOptions = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1', disabled: true },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4', disabled: true },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6', disabled: true },
-    { value: '7', label: 'Option 7', disabled: true },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple', disabled: true },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date', disabled: true },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig', disabled: true },
+    { value: '7', label: 'Grape', disabled: true },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2', '3', '4', '5', '6', '7', '8'],
@@ -465,14 +465,14 @@ export const DisabledOptions = () => {
 export const CustomAccessory = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -494,14 +494,14 @@ export const CustomAccessory = () => {
 export const CustomMedia = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -589,14 +589,14 @@ export const CustomHiddenSelectedOptionsLabel = () => {
 export const Descriptions = () => {
   const exampleOptionsWithDescription = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1', description: 'Description 1' },
-    { value: '2', label: 'Option 2', description: 'Description 2' },
-    { value: '3', label: 'Option 3', description: 'Description 3' },
-    { value: '4', label: 'Option 4', description: 'Description 4' },
-    { value: '5', label: 'Option 5', description: 'Description 5' },
-    { value: '6', label: 'Option 6', description: 'Description 6' },
-    { value: '7', label: 'Option 7', description: 'Description 7' },
-    { value: '8', label: 'Option 8', description: 'Description 8' },
+    { value: '1', label: 'Apple', description: 'Crisp and sweet' },
+    { value: '2', label: 'Banana', description: 'Bright and yellow' },
+    { value: '3', label: 'Cherry', description: 'Dark and tart' },
+    { value: '4', label: 'Date', description: 'Dense and sweet' },
+    { value: '5', label: 'Elderberry', description: 'Earthy and rich' },
+    { value: '6', label: 'Fig', description: 'Fresh and jammy' },
+    { value: '7', label: 'Grape', description: 'Juicy clusters' },
+    { value: '8', label: 'Honeydew', description: 'Honeyed melon' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -617,10 +617,10 @@ export const Descriptions = () => {
 export const DescriptionsOnly = () => {
   const exampleOptionsWithOnlyDescription = [
     { value: null, label: 'Remove selection' },
-    { value: '1', description: 'Description 1' },
-    { value: '2', description: 'Description 2' },
-    { value: '3', description: 'Description 3' },
-    { value: '4', description: 'Description 4' },
+    { value: '1', description: 'A crisp red apple' },
+    { value: '2', description: 'Bright yellow banana' },
+    { value: '3', description: 'Cherry red and tart' },
+    { value: '4', description: 'Date palm fruit' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -643,31 +643,31 @@ export const MixedAccessoriesMedia = () => {
     { value: null, label: 'Remove selection' },
     {
       value: '1',
-      label: 'Option 1',
+      label: 'Apple',
       accessory: <Icon color="fg" name="star" />,
       media: <Icon color="fg" name="heart" />,
     },
     {
       value: '2',
-      label: 'Option 2',
+      label: 'Banana',
       accessory: <Icon color="fg" name="checkmark" />,
       media: <Icon color="fg" name="cross" />,
     },
     {
       value: '3',
-      label: 'Option 3',
+      label: 'Cherry',
       accessory: <Icon color="fg" name="add" />,
       media: <Icon color="fg" name="minus" />,
     },
     {
       value: '4',
-      label: 'Option 4',
+      label: 'Date',
       accessory: <Icon color="fg" name="caretRight" />,
       media: <Icon color="fg" name="caretLeft" />,
     },
     {
       value: '5',
-      label: 'Option 5',
+      label: 'Elderberry',
       accessory: <Icon color="fg" name="arrowUp" />,
       media: <Icon color="fg" name="home" />,
     },
@@ -693,31 +693,31 @@ export const AllCombinedFeatures = () => {
     { value: null, label: 'Remove selection' },
     {
       value: '1',
-      label: 'Option 1',
+      label: 'Apple',
       accessory: <Icon color="fg" name="star" />,
       media: <Icon color="fg" name="heart" />,
     },
     {
       value: '2',
-      label: 'Option 2',
+      label: 'Banana',
       accessory: <Icon color="fg" name="checkmark" />,
       media: <Icon color="fg" name="cross" />,
     },
     {
       value: '3',
-      label: 'Option 3',
+      label: 'Cherry',
       accessory: <Icon color="fg" name="add" />,
       media: <Icon color="fg" name="minus" />,
     },
     {
       value: '4',
-      label: 'Option 4',
+      label: 'Date',
       accessory: <Icon color="fg" name="caretRight" />,
       media: <Icon color="fg" name="caretLeft" />,
     },
     {
       value: '5',
-      label: 'Option 5',
+      label: 'Elderberry',
       accessory: <Icon color="fg" name="arrowUp" />,
       media: <Icon color="fg" name="home" />,
     },
@@ -769,14 +769,14 @@ export const EdgeCaseEmptyLabels = () => {
 export const ControlledOpen = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -806,14 +806,14 @@ export const ControlledOpen = () => {
 export const PositiveVariant = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -836,14 +836,14 @@ export const PositiveVariant = () => {
 export const NegativeVariant = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -866,14 +866,14 @@ export const NegativeVariant = () => {
 export const StartNode = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -910,14 +910,14 @@ export const EmptyOptions = () => {
 export const ComplexStyles = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-    { value: '6', label: 'Option 6' },
-    { value: '7', label: 'Option 7' },
-    { value: '8', label: 'Option 8' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
   ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],

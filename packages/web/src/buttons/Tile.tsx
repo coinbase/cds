@@ -2,6 +2,7 @@ import React, { memo, useCallback, useMemo, useState } from 'react';
 import { css } from '@linaria/core';
 
 import { DotCount } from '../dots/DotCount';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
@@ -33,7 +34,9 @@ const visibleCss = css`
 /**
  * @danger this component is for internal use only
  */
-export const Tile = memo(({ title, count, showOverflow, children }: TileProps) => {
+export const Tile = memo((_props: TileProps) => {
+  const mergedProps = useComponentConfig('Tile', _props);
+  const { title, count, showOverflow, children } = mergedProps;
   const [shouldOverflow, setShouldOverflow] = useState(false);
   const overflowTextStyles = (showOverflow ?? shouldOverflow) ? visibleCss : truncatedCss;
 

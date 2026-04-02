@@ -16,6 +16,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
@@ -71,8 +72,9 @@ export type TagProps = TagBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'color' | 'background' | 'children' | 'maxWidth'>;
 
 export const Tag = memo(
-  forwardRef(function Tag(
-    {
+  forwardRef((_props: TagProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('Tag', _props);
+    const {
       children,
       intent = 'informational',
       emphasis = intent === 'informational' ? 'low' : 'high',
@@ -92,9 +94,7 @@ export const Tag = memo(
       paddingY = 0.25,
       testID = tagStaticClassName,
       ...props
-    }: TagProps,
-    forwardedRef: React.ForwardedRef<HTMLDivElement>,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const { background, foreground } = tagEmphasisColorMap[emphasis][colorScheme];
     const boxStyles = useMemo(

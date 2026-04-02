@@ -235,7 +235,7 @@ export const getLineData = (
   if (Array.isArray(firstNonNull)) {
     return data.map((d) => {
       if (d === null) return null;
-      if (Array.isArray(d)) return d.at(-1) ?? null;
+      if (Array.isArray(d)) return d[d.length - 1] ?? null;
       return d as number;
     });
   }

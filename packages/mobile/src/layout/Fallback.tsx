@@ -7,6 +7,7 @@ import { useFallbackShape } from '@coinbase/cds-common/hooks/useFallbackShape';
 import type { Shape } from '@coinbase/cds-common/types/Shape';
 
 import { LinearGradient } from '../gradients/LinearGradient';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { fallbackShimmer } from '../styles/fallbackShimmer';
 
@@ -31,15 +32,17 @@ export type FallbackBaseProps = {
 
 export type FallbackProps = Omit<BoxProps, 'borderRadius' | 'height' | 'width'> & FallbackBaseProps;
 
-export const Fallback = memo(function Fallback({
-  height,
-  shape = 'rectangle',
-  width: baseWidth,
-  disableRandomRectWidth,
-  rectWidthVariant,
-  accessibilityLabel = 'Loading',
-  ...props
-}: FallbackProps) {
+export const Fallback = memo((_props: FallbackProps) => {
+  const mergedProps = useComponentConfig('Fallback', _props);
+  const {
+    height,
+    shape = 'rectangle',
+    width: baseWidth,
+    disableRandomRectWidth,
+    rectWidthVariant,
+    accessibilityLabel = 'Loading',
+    ...props
+  } = mergedProps;
   const fallbackShapeOptions = useMemo(
     (): UseFallbackShapeOptions => ({
       disableRandomRectWidth,

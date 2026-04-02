@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 import { Text, type TextProps } from '../typography/Text';
 
@@ -145,41 +146,43 @@ export type ListCellBaseProps = CellDetailProps &
 
 export type ListCellProps = ListCellBaseProps & Omit<CellProps, 'accessory' | 'children'>;
 
-export const ListCell = memo(function ListCell({
-  accessory,
-  accessoryNode,
-  end: endProp,
-  action,
-  compact,
-  title,
-  titleNode,
-  disableMultilineTitle = false,
-  description,
-  descriptionNode,
-  subtitle,
-  subtitleNode,
-  detail,
-  detailNode,
-  detailWidth,
-  intermediary,
-  priority,
-  innerSpacing,
-  outerSpacing,
-  disabled,
-  disableSelectionAccessory,
-  helperText,
-  media,
-  multiline,
-  selected,
-  subdetail,
-  subdetailNode,
-  variant,
-  onPress,
-  spacingVariant = compact ? 'compact' : 'normal',
-  style,
-  styles,
-  ...props
-}: ListCellProps) {
+export const ListCell = memo(function ListCell(_props: ListCellProps) {
+  const mergedProps = useComponentConfig('ListCell', _props);
+  const {
+    accessory,
+    accessoryNode,
+    end: endProp,
+    action,
+    compact,
+    title,
+    titleNode,
+    disableMultilineTitle = false,
+    description,
+    descriptionNode,
+    subtitle,
+    subtitleNode,
+    detail,
+    detailNode,
+    detailWidth,
+    intermediary,
+    priority,
+    innerSpacing,
+    outerSpacing,
+    disabled,
+    disableSelectionAccessory,
+    helperText,
+    media,
+    multiline,
+    selected,
+    subdetail,
+    subdetailNode,
+    variant,
+    onPress,
+    spacingVariant = compact ? 'compact' : 'normal',
+    style,
+    styles,
+    ...props
+  } = mergedProps;
   const minHeight =
     spacingVariant === 'compact'
       ? compactListHeight

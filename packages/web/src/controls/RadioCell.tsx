@@ -3,6 +3,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 import { Pressable, type PressableProps } from '../system';
@@ -67,7 +68,11 @@ const baseCss = css`
 `;
 
 const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string>(
-  {
+  _props: RadioCellProps<RadioValue>,
+  ref: React.ForwardedRef<HTMLLabelElement>,
+) {
+  const mergedProps = useComponentConfig('RadioCell', _props);
+  const {
     title,
     description,
     checked,
@@ -89,9 +94,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
     classNames,
     styles,
     ...props
-  }: RadioCellProps<RadioValue>,
-  ref: React.ForwardedRef<HTMLLabelElement>,
-) {
+  } = mergedProps;
   const generatedTitleId = useId();
   const generatedDescriptionId = useId();
 

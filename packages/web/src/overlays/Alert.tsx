@@ -9,6 +9,7 @@ import type {
 
 import { Button } from '../buttons';
 import { useA11yLabels } from '../hooks/useA11yLabels';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Pictogram } from '../illustrations';
 import { Box } from '../layout/Box';
 import { Text } from '../typography/Text';
@@ -77,134 +78,128 @@ export type AlertProps = AlertBaseProps;
 export const alertModalWidth = 318;
 
 export const Alert = memo(
-  forwardRef<ModalRefBaseProps, AlertProps>(
-    (
-      {
-        title,
-        body,
-        pictogram,
-        visible,
-        onRequestClose,
-        preferredActionLabel,
-        onPreferredActionPress,
-        preferredActionVariant,
-        dismissActionLabel,
-        onDismissActionPress,
-        disablePortal,
-        testID,
-        stacked,
-        actionLayout = 'horizontal',
-        accessibilityLabelledBy,
-        accessibilityLabel,
-        ...props
-      },
-      ref,
-    ) => {
-      const { labelledBySource, labelledBy, label } = useA11yLabels({
-        accessibilityLabelledBy,
-        accessibilityLabel,
-      });
+  forwardRef<ModalRefBaseProps, AlertProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('Alert', _props);
+    const {
+      title,
+      body,
+      pictogram,
+      visible,
+      onRequestClose,
+      preferredActionLabel,
+      onPreferredActionPress,
+      preferredActionVariant,
+      dismissActionLabel,
+      onDismissActionPress,
+      disablePortal,
+      testID,
+      stacked,
+      actionLayout = 'horizontal',
+      accessibilityLabelledBy,
+      accessibilityLabel,
+      ...props
+    } = mergedProps;
+    const { labelledBySource, labelledBy, label } = useA11yLabels({
+      accessibilityLabelledBy,
+      accessibilityLabel,
+    });
 
-      const handlePreferredActionPress = useCallback(() => {
-        onPreferredActionPress?.();
-        onRequestClose?.();
-      }, [onPreferredActionPress, onRequestClose]);
+    const handlePreferredActionPress = useCallback(() => {
+      onPreferredActionPress?.();
+      onRequestClose?.();
+    }, [onPreferredActionPress, onRequestClose]);
 
-      const handleDismissActionPress = useCallback(() => {
-        onDismissActionPress?.();
-        onRequestClose?.();
-      }, [onDismissActionPress, onRequestClose]);
+    const handleDismissActionPress = useCallback(() => {
+      onDismissActionPress?.();
+      onRequestClose?.();
+    }, [onDismissActionPress, onRequestClose]);
 
-      const dismissAction = useMemo(() => {
-        if (!dismissActionLabel) {
-          return null;
-        }
-        return (
-          <Box flexBasis={0} flexGrow={1} minWidth={0}>
-            <Button block onClick={handleDismissActionPress} variant="secondary">
-              {dismissActionLabel}
-            </Button>
-          </Box>
-        );
-      }, [dismissActionLabel, handleDismissActionPress]);
-
-      const preferredAction = useMemo(() => {
-        return (
-          <Box flexBasis={0} flexGrow={1} minWidth={0}>
-            <Button block onClick={handlePreferredActionPress} variant={preferredActionVariant}>
-              {preferredActionLabel}
-            </Button>
-          </Box>
-        );
-      }, [preferredActionLabel, handlePreferredActionPress, preferredActionVariant]);
-
+    const dismissAction = useMemo(() => {
+      if (!dismissActionLabel) {
+        return null;
+      }
       return (
-        <Portal containerId={alertContainerId} disablePortal={disablePortal}>
-          <Modal
-            ref={ref}
-            dangerouslyDisableResponsiveness
-            disableOverlayPress
-            disablePortal
-            hideDividers
-            accessibilityLabel={label}
-            accessibilityLabelledBy={labelledBy}
-            dangerouslySetPosition={!stacked ? 'static' : undefined} // center alert vertically
-            onRequestClose={onRequestClose}
-            role="alertdialog"
-            shouldCloseOnEscPress={!!dismissActionLabel} // disable esc close when no dismiss action
-            testID={testID}
-            visible={visible}
-            width={alertModalWidth}
-            {...(props satisfies ValidateProps<
-              typeof props,
-              Omit<AlertProps, keyof ModalBaseProps>
-            >)}
-          >
-            <Box
-              alignItems="center"
-              flexDirection="column"
-              paddingBottom={1}
-              paddingTop={3}
-              paddingX={3}
-            >
-              {!!pictogram && (
-                <Box paddingBottom={2}>
-                  {/* fixed size: 120x120 */}
-                  <Pictogram
-                    dimension="48x48"
-                    name={pictogram}
-                    scaleMultiplier={2.5}
-                    testID={testID && `${testID}-pictogram`}
-                  />
-                </Box>
-              )}
-              <Text
-                as="h3"
-                display="block"
-                font="title3"
-                id={labelledBySource}
-                paddingBottom={0.5}
-                textAlign="center"
-              >
-                {title}
-              </Text>
-              <Text as="p" color="fgMuted" display="block" font="body" textAlign="center">
-                {body}
-              </Text>
-            </Box>
-            <Box
-              flexDirection={actionLayout === 'vertical' ? 'column-reverse' : 'row'}
-              gap={2}
-              paddingX={2}
-              paddingY={3}
-              testID={testID && `${testID}-actions`}
-            >
-              {dismissAction}
-              {preferredAction}
-            </Box>
-          </Modal>
-        </Portal>
+        <Box flexBasis={0} flexGrow={1} minWidth={0}>
+          <Button block onClick={handleDismissActionPress} variant="secondary">
+            {dismissActionLabel}
+          </Button>
+        </Box>
       );
-    },
-  ),
+    }, [dismissActionLabel, handleDismissActionPress]);
+
+    const preferredAction = useMemo(() => {
+      return (
+        <Box flexBasis={0} flexGrow={1} minWidth={0}>
+          <Button block onClick={handlePreferredActionPress} variant={preferredActionVariant}>
+            {preferredActionLabel}
+          </Button>
+        </Box>
+      );
+    }, [preferredActionLabel, handlePreferredActionPress, preferredActionVariant]);
+
+    return (
+      <Portal containerId={alertContainerId} disablePortal={disablePortal}>
+        <Modal
+          ref={ref}
+          dangerouslyDisableResponsiveness
+          disableOverlayPress
+          disablePortal
+          hideDividers
+          accessibilityLabel={label}
+          accessibilityLabelledBy={labelledBy}
+          dangerouslySetPosition={!stacked ? 'static' : undefined} // center alert vertically
+          onRequestClose={onRequestClose}
+          role="alertdialog"
+          shouldCloseOnEscPress={!!dismissActionLabel} // disable esc close when no dismiss action
+          testID={testID}
+          visible={visible}
+          width={alertModalWidth}
+          {...(props satisfies ValidateProps<typeof props, Omit<AlertProps, keyof ModalBaseProps>>)}
+        >
+          <Box
+            alignItems="center"
+            flexDirection="column"
+            paddingBottom={1}
+            paddingTop={3}
+            paddingX={3}
+          >
+            {!!pictogram && (
+              <Box paddingBottom={2}>
+                {/* fixed size: 120x120 */}
+                <Pictogram
+                  dimension="48x48"
+                  name={pictogram}
+                  scaleMultiplier={2.5}
+                  testID={testID && `${testID}-pictogram`}
+                />
+              </Box>
+            )}
+            <Text
+              as="h3"
+              display="block"
+              font="title3"
+              id={labelledBySource}
+              paddingBottom={0.5}
+              textAlign="center"
+            >
+              {title}
+            </Text>
+            <Text as="p" color="fgMuted" display="block" font="body" textAlign="center">
+              {body}
+            </Text>
+          </Box>
+          <Box
+            flexDirection={actionLayout === 'vertical' ? 'column-reverse' : 'row'}
+            gap={2}
+            paddingX={2}
+            paddingY={3}
+            testID={testID && `${testID}-actions`}
+          >
+            {dismissAction}
+            {preferredAction}
+          </Box>
+        </Modal>
+      </Portal>
+    );
+  }),
 );

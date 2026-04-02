@@ -4,6 +4,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
 import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -46,10 +47,9 @@ export type PageHeaderProps = PageHeaderBaseProps &
   };
 
 export const PageHeader = memo(
-  forwardRef(function PageHeader(
-    { start, title, end, styles, style, ...props }: PageHeaderProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+  forwardRef((_props: PageHeaderProps, ref: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('PageHeader', _props);
+    const { start, title, end, styles, style, ...props } = mergedProps;
     const isMultiRow = useMemo(() => Boolean(start && title && end), [start, end, title]);
 
     return (
