@@ -20,6 +20,8 @@ export type TabIndicatorProps = SharedProps & {
   background?: ThemeVars.Color;
 };
 
+/** @deprecated Use DefaultTabsActiveIndicator instead. This will be removed in a future major release. */
+/** @deprecationExpectedRemoval v10 */
 export const TabIndicator = memo(
   forwardRef(
     (

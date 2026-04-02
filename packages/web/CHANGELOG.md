@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.0 (4/2/2026 PST)
+
+#### 🚀 Updates
+
+- Added DefaultTab and DefaultTabActiveIndicator and deprecate types used by TabNavigation. [[#558](https://github.com/coinbase/cds/pull/558)]
+
+## 8.63.0 (4/1/2026 PST)
+
+#### 🚀 Updates
+
+- Add type focus to Select. [[#571](https://github.com/coinbase/cds/pull/571)]
+
 ## 8.62.1 (4/1/2026 PST)
 
 #### 🐞 Fixes

@@ -22,19 +22,6 @@ const defaultProps: SelectProps<'single' | 'multi'> = {
   label: 'Test Select',
 };
 
-jest.mock('@floating-ui/react-dom', () => ({
-  useFloating: () => ({
-    refs: {
-      setReference: jest.fn(),
-      setFloating: jest.fn(),
-      reference: { current: null },
-      floating: { current: null },
-    },
-    floatingStyles: {},
-  }),
-  flip: () => ({}),
-}));
-
 jest.mock('../../../overlays/Portal', () => ({
   Portal: ({ children, containerId }: { children: React.ReactNode; containerId?: string }) => (
     <div data-testid="portal-container">{children}</div>
@@ -591,6 +578,111 @@ describe('Select', () => {
       await waitFor(() => {
         expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
       });
+    });
+
+    it('opens dropdown when a letter key is pressed while closed', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('o');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('focuses the first matching option when a letter key opens the dropdown', async () => {
+      const user = userEvent.setup();
+      const typeAheadOptions = [
+        { value: 'apple', label: 'Apple' },
+        { value: 'banana', label: 'Banana' },
+        { value: 'cherry', label: 'Cherry' },
+        { value: 'date', label: 'Date' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} options={typeAheadOptions} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('b');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        const bananaOption = options.find((opt) => opt.textContent?.includes('Banana'));
+        expect(bananaOption).toHaveFocus();
+      });
+    });
+
+    it('focuses the matching option even when textContent has non-letter prefix characters', async () => {
+      const user = userEvent.setup();
+      const typeAheadOptions = [
+        { value: 'apple', label: 'Apple' },
+        { value: 'banana', label: 'Banana' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} options={typeAheadOptions} type="multi" value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('b');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        const bananaOption = options.find((opt) => opt.textContent?.includes('Banana'));
+        expect(bananaOption).toHaveFocus();
+      });
+    });
+
+    it('does not open dropdown when letter key is pressed while disabled', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} disabled />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('o');
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('does not open dropdown when modifier key + letter is pressed', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('{Control>}a{/Control}');
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     });
   });
 
