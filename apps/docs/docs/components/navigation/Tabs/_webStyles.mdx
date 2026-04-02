@@ -1,10 +1,7 @@
-import { useState, useCallback } from 'react';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { useState } from 'react';
 import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
 import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
-import { Tabs, TabsActiveIndicator } from '@coinbase/cds-web/tabs/Tabs';
-import { Pressable } from '@coinbase/cds-web/system/Pressable';
-import { TabLabel } from '@coinbase/cds-web/tabs/TabLabel';
+import { DefaultTabsActiveIndicator, Tabs } from '@coinbase/cds-web/tabs';
 
 import webStylesData from ':docgen/web/tabs/Tabs/styles-data';
 
@@ -14,36 +11,17 @@ export const TabsExample = ({ classNames }) => {
     { id: 'tab2', label: 'Tab 2' },
     { id: 'tab3', label: 'Tab 3' },
   ];
-  const TabComponent = useCallback(({ id, label, disabled, ...props }) => {
-    const api = useTabsContext();
-    const isActive = api.activeTab?.id === id;
-    return (
-      <Pressable
-        onClick={() => api.updateActiveTab(id)}
-        disabled={disabled}
-        aria-pressed={isActive}
-        {...props}
-      >
-        <TabLabel id={id} active={isActive}>
-          {label}
-        </TabLabel>
-      </Pressable>
-    );
-  }, []);
-  const CustomIndicator = useCallback(
-    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
-    [],
-  );
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
     <Tabs
       classNames={classNames}
-      gap={4}
-      tabs={tabs}
+      accessibilityLabel="Example tabs"
       activeTab={activeTab}
+      background="bg"
+      gap={4}
       onChange={setActiveTab}
-      TabComponent={TabComponent}
-      TabsActiveIndicatorComponent={CustomIndicator}
+      tabs={tabs}
+      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
     />
   );
 };
