@@ -23,20 +23,6 @@ const defaultProps: ComboboxProps<'single' | 'multi'> = {
   label: 'Test Combobox',
 };
 
-// Mock floating-ui to simplify testing
-jest.mock('@floating-ui/react-dom', () => ({
-  useFloating: () => ({
-    refs: {
-      setReference: jest.fn(),
-      setFloating: jest.fn(),
-      reference: { current: null },
-      floating: { current: null },
-    },
-    floatingStyles: {},
-  }),
-  flip: () => ({}),
-}));
-
 jest.mock('../../../overlays/Portal', () => ({
   Portal: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="portal-container">{children}</div>

@@ -1,4 +1,13 @@
-import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
 
 import { cx } from '../../cx';
@@ -135,6 +144,43 @@ const SelectBase = memo(
         ref: refs.floating,
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
+
+      const pendingTypeAheadKeyRef = useRef<string | null>(null);
+
+      const handleControlKeyDown = useCallback(
+        (event: React.KeyboardEvent) => {
+          if (disabled || open) return;
+          if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+          const key = event.key;
+          if (/^[a-z]$/.test(key)) {
+            pendingTypeAheadKeyRef.current = key;
+            setOpen(true);
+          }
+        },
+        [disabled, open, setOpen],
+      );
+
+      useEffect(() => {
+        if (!open || !pendingTypeAheadKeyRef.current) return;
+
+        const key = pendingTypeAheadKeyRef.current;
+        pendingTypeAheadKeyRef.current = null;
+
+        const floatingEl = refs.floating.current;
+        if (!floatingEl) return;
+
+        const optionRole = accessibilityRoles?.option ?? 'option';
+        const options = floatingEl.querySelectorAll(`[role="${optionRole}"]`);
+        const matchingOption = Array.from(options).find((option) => {
+          const firstLetterMatch = option.textContent?.match(/[a-z]/i);
+          return firstLetterMatch?.[0]?.toLowerCase() === key;
+        });
+
+        if (matchingOption) {
+          (matchingOption as HTMLElement).focus();
+        }
+      }, [open, refs.floating, accessibilityRoles?.option]);
 
       const rootStyles = useMemo(
         () => ({
@@ -274,6 +320,7 @@ const SelectBase = memo(
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
+            onKeyDown={handleControlKeyDown}
             open={open}
             options={options}
             placeholder={placeholder}
