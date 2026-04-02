@@ -12,15 +12,15 @@ import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common
 import { css } from '@linaria/core';
 
 import { cx } from '../../cx';
-import { useResponsiveHeight } from '../../dropdown/useResponsiveHeight';
 import { useBreakpoints } from '../../hooks/useBreakpoints';
-import { Box } from '../../layout';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { FocusTrap } from '../FocusTrap';
 import { ModalWrapper } from '../modal/ModalWrapper';
 
 import { Popover } from './Popover';
-import { PopoverPanelContent } from './PopoverPanelContent';
-import type { PopoverContentPositionConfig, PopoverProps } from './PopoverProps';
+import { PopoverPanelContent, type PopoverPanelContentBaseProps } from './PopoverPanelContent';
+import type { PopoverBaseProps, PopoverContentPositionConfig } from './PopoverProps';
+import { useResponsiveHeight } from './useResponsiveHeight';
 
 export type PopoverPanelRef = {
   openPopover: () => void;
@@ -29,50 +29,69 @@ export type PopoverPanelRef = {
 
 export type PopoverPanelRenderContent = (api: { closePopover: () => void }) => React.ReactNode;
 
-export type PopoverPanelProps = {
-  /**
-   * Enable to have PopoverPanel render its content inside a Modal as opposed to a relatively positioned Popover.
-   * Ideal for mobile or smaller devices.
-   */
-  enableMobileModal?: boolean;
-  /**
-   * Width of the panel as a percentage string or number converted to pixels.
-   */
-  panelWidth?: React.CSSProperties['width'];
-  /** Minimum width of the panel as a percentage string or number converted to pixels. */
-  minPanelWidth?: React.CSSProperties['minWidth'];
-  /** Maximum width of the panel as a percentage string or number converted to pixels. */
-  maxPanelWidth?: React.CSSProperties['maxWidth'];
-  /** Can optionally pass a maxHeight.
-   * @default 300
-   */
-  maxPanelHeight?: React.CSSProperties['maxHeight'];
-  /** Callback that fires when PopoverPanel is opened */
-  onOpen?: () => void;
-  /** Callback that fires when PopoverPanel is closed */
-  onClose?: () => void;
-  /** Callback that fires when PopoverPanel or trigger are blurred */
-  onBlur?: () => void;
-  /** Does not render the panel inside of a portal (react-dom createPortal).
-   * Portal is automatically disabled for SSR
-   */
-  disablePortal?: boolean;
-  /**
-   * Prevents the panel from opening.
-   * You'll need to surface disabled state on the trigger manually.
-   */
-  disabled?: boolean;
-  /**
-   * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
-   *
-   * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
-   * @default true
-   */
-  restoreFocusOnUnmount?: boolean;
-  /**
-   * Panel body, or a function that receives `closePopover` (helpfulwhen actions inside the panel should dismiss it).
-   */
-  content: React.ReactNode | PopoverPanelRenderContent;
+export type PopoverPanelBaseProps = Pick<
+  PopoverBaseProps,
+  | 'children'
+  | 'showOverlay'
+  | 'contentPosition'
+  | 'block'
+  | 'disableTypeFocus'
+  | 'controlledElementAccessibilityProps'
+  | 'respectNegativeTabIndex'
+> &
+  SharedProps &
+  Pick<
+    SharedAccessibilityProps,
+    'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
+  > & {
+    /**
+     * Enable to have PopoverPanel render its content inside a Modal as opposed to a relatively positioned Popover.
+     * Ideal for mobile or smaller devices.
+     */
+    enableMobileModal?: boolean;
+    /**
+     * Width of the panel as a percentage string or number converted to pixels.
+     */
+    panelWidth?: PopoverPanelContentBaseProps['width'];
+    /** Minimum width of the panel as a percentage string or number converted to pixels. */
+    minPanelWidth?: PopoverPanelContentBaseProps['minWidth'];
+    /** Maximum width of the panel as a percentage string or number converted to pixels. */
+    maxPanelWidth?: PopoverPanelContentBaseProps['maxWidth'];
+    /** Height of the panel as a percentage string or number converted to pixels. */
+    panelHeight?: PopoverPanelContentBaseProps['height'];
+    /** Can optionally pass a maxHeight.
+     * @default 300
+     */
+    maxPanelHeight?: PopoverPanelContentBaseProps['maxHeight'];
+    /** Callback that fires when PopoverPanel is opened */
+    onOpen?: () => void;
+    /** Callback that fires when PopoverPanel is closed */
+    onClose?: () => void;
+    /** Callback that fires when PopoverPanel or trigger are blurred */
+    onBlur?: () => void;
+    /** Does not render the panel inside of a portal (react-dom createPortal).
+     * Portal is automatically disabled for SSR
+     */
+    disablePortal?: boolean;
+    /**
+     * Prevents the panel from opening.
+     * You'll need to surface disabled state on the trigger manually.
+     */
+    disabled?: boolean;
+    /**
+     * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
+     *
+     * WARNING: If you disable this, you need to ensure that focus is restored properly so it doesn't end up on the body
+     * @default true
+     */
+    restoreFocusOnUnmount?: boolean;
+    /**
+     * Panel body, or a function that receives `closePopover` (helpfulwhen actions inside the panel should dismiss it).
+     */
+    content: React.ReactNode | PopoverPanelRenderContent;
+  };
+
+export type PopoverPanelProps = PopoverPanelBaseProps & {
   style?: React.CSSProperties;
   styles?: {
     /** Inline styles for the elevated panel surface (`PopoverPanelContent`). */
@@ -87,21 +106,7 @@ export type PopoverPanelProps = {
     /** Additional class name merged onto the wrapper around `children` (same targets as `styles.triggerContainer`). */
     triggerContainer?: string;
   };
-} & Pick<
-  PopoverProps,
-  | 'children'
-  | 'showOverlay'
-  | 'contentPosition'
-  | 'block'
-  | 'disableTypeFocus'
-  | 'controlledElementAccessibilityProps'
-  | 'respectNegativeTabIndex'
-> &
-  SharedProps &
-  Pick<
-    SharedAccessibilityProps,
-    'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
-  >;
+};
 
 export type PopoverPanelInternalProps = Omit<PopoverPanelProps, 'content'> & {
   content: React.ReactNode;
@@ -164,7 +169,6 @@ const MobilePopoverPanel = memo(
         className,
         classNames,
         onBlur,
-        ...props
       },
       ref,
     ) => {
@@ -175,19 +179,19 @@ const MobilePopoverPanel = memo(
       return (
         <div
           className={cx(block ? blockCss : triggerContainerCss, classNames?.triggerContainer)}
-          onClick={disabled ? undefined : onOpen}
           onBlur={onBlur}
+          onClick={disabled ? undefined : onOpen}
           style={styles?.triggerContainer}
         >
           {children}
           <ModalWrapper
             dangerouslyDisableResponsiveness
             disablePortal={disablePortal}
+            hideOverlay={!showOverlay}
+            onClick={handleCaptureEvents}
             onOverlayPress={onClose}
             testID="popover-panel-modal"
             visible={visible}
-            hideOverlay={!showOverlay}
-            onClick={handleCaptureEvents}
             {...controlledElementAccessibilityProps}
           >
             <FocusTrap
@@ -228,6 +232,7 @@ const FloatingPopoverPanel = memo(
         minPanelWidth: minWidth,
         maxPanelWidth: maxWidth,
         maxPanelHeight: maxHeight,
+        panelHeight,
         testID,
         disablePortal,
         onBlur,
@@ -264,6 +269,7 @@ const FloatingPopoverPanel = memo(
           <PopoverPanelContent
             ref={panelContentRef}
             className={classNames?.content}
+            height={panelHeight}
             maxHeight={dropdownHeight}
             maxWidth={maxWidth}
             minWidth={minWidth}
@@ -323,57 +329,53 @@ const FloatingPopoverPanel = memo(
  *
  * Imperative `openPopover` / `closePopover` are implemented in the floating and modal subcomponents (Dropdown continues to use `openMenu` / `closeMenu` on its ref).
  */
-export const PopoverPanel = forwardRef<PopoverPanelRef, PopoverPanelProps>(
-  (
-    {
-      children,
-      content,
-      maxPanelHeight = POPOVER_PANEL_MAX_HEIGHT,
-      enableMobileModal,
-      onOpen,
-      onClose,
-      restoreFocusOnUnmount = true,
-      ...props
-    },
-    ref,
-  ) => {
-    const { isPhone } = useBreakpoints();
-    const [visible, setVisible] = useState(false);
+export const PopoverPanel = forwardRef<PopoverPanelRef, PopoverPanelProps>((_props, ref) => {
+  const mergedProps = useComponentConfig('PopoverPanel', _props);
+  const {
+    children,
+    content,
+    maxPanelHeight = POPOVER_PANEL_MAX_HEIGHT,
+    enableMobileModal,
+    onOpen,
+    onClose,
+    restoreFocusOnUnmount = true,
+    ...props
+  } = mergedProps;
+  const { isPhone } = useBreakpoints();
+  const [visible, setVisible] = useState(false);
 
-    const handleOpenPopover = useCallback(() => {
-      setVisible(true);
-      onOpen?.();
-    }, [onOpen]);
+  const handleOpenPopover = useCallback(() => {
+    setVisible(true);
+    onOpen?.();
+  }, [onOpen]);
 
-    const handleClosePopover = useCallback(() => {
-      setVisible(false);
-      onClose?.();
-    }, [onClose]);
+  const handleClosePopover = useCallback(() => {
+    setVisible(false);
+    onClose?.();
+  }, [onClose]);
 
-    const resolvedContent = useMemo(
-      () =>
-        typeof content === 'function' ? content({ closePopover: handleClosePopover }) : content,
-      [content, handleClosePopover],
-    );
+  const resolvedContent = useMemo(
+    () => (typeof content === 'function' ? content({ closePopover: handleClosePopover }) : content),
+    [content, handleClosePopover],
+  );
 
-    const sharedProps = {
-      maxPanelHeight,
-      onClose: handleClosePopover,
-      onOpen: handleOpenPopover,
-      restoreFocusOnUnmount,
-      visible,
-      content: resolvedContent,
-      ...props,
-    };
+  const sharedProps = {
+    maxPanelHeight,
+    onClose: handleClosePopover,
+    onOpen: handleOpenPopover,
+    restoreFocusOnUnmount,
+    visible,
+    content: resolvedContent,
+    ...props,
+  };
 
-    return isPhone && enableMobileModal ? (
-      <MobilePopoverPanel ref={ref} {...sharedProps}>
-        {children}
-      </MobilePopoverPanel>
-    ) : (
-      <FloatingPopoverPanel ref={ref} {...sharedProps}>
-        {children}
-      </FloatingPopoverPanel>
-    );
-  },
-);
+  return isPhone && enableMobileModal ? (
+    <MobilePopoverPanel ref={ref} {...sharedProps}>
+      {children}
+    </MobilePopoverPanel>
+  ) : (
+    <FloatingPopoverPanel ref={ref} {...sharedProps}>
+      {children}
+    </FloatingPopoverPanel>
+  );
+});

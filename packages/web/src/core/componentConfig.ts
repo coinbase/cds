@@ -87,6 +87,8 @@ import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
 import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
+import type { PopoverPanelBaseProps } from '../overlays/popover/PopoverPanel';
+import type { PopoverPanelContentBaseProps } from '../overlays/popover/PopoverPanelContent';
 
 /**
  * Config resolver that supports either static partial props object
@@ -154,6 +156,8 @@ export type ComponentConfig = {
   PageFooter?: ConfigResolver<PageFooterBaseProps>;
   PageHeader?: ConfigResolver<PageHeaderBaseProps>;
   Pagination?: ConfigResolver<PaginationBaseProps>;
+  PopoverPanel?: ConfigResolver<PopoverPanelBaseProps>;
+  PopoverPanelContent?: ConfigResolver<PopoverPanelContentBaseProps>;
   ProgressBar?: ConfigResolver<ProgressBaseProps>;
   ProgressBarWithFixedLabels?: ConfigResolver<ProgressBarWithFixedLabelsBaseProps>;
   ProgressBarWithFloatLabel?: ConfigResolver<ProgressBarWithFloatLabelBaseProps>;

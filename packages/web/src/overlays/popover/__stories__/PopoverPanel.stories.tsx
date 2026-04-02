@@ -59,6 +59,37 @@ export const Default: Story = {
   render: () => <DefaultStory />,
 };
 
+function MobileStory() {
+  const panelRef = useRef<PopoverPanelRef>(null);
+
+  return (
+    <HStack gap={4} padding={4}>
+      <PopoverPanel
+        ref={panelRef}
+        showOverlay
+        accessibilityLabel={panelAccessibilityLabel}
+        enableMobileModal
+        content={
+          <VStack gap={2} padding={3}>
+            <Text font="headline">Panel title</Text>
+            <Text color="fgMuted">Floating panel anchored to the trigger.</Text>
+            <Button compact onClick={() => panelRef.current?.closePopover()} variant="secondary">
+              Close from content
+            </Button>
+          </VStack>
+        }
+        testID="popover-panel-mobile"
+      >
+        <Button>Open panel</Button>
+      </PopoverPanel>
+    </HStack>
+  );
+}
+
+export const Mobile: Story = {
+  render: () => <MobileStory />,
+};
+
 function WithOverlayStory() {
   const panelRef = useRef<PopoverPanelRef>(null);
 
@@ -213,14 +244,9 @@ function ImperativeRefStory() {
 
   return (
     <VStack gap={4} padding={4}>
-      <HStack gap={2}>
-        <Button compact onClick={() => panelRef.current?.openPopover()} variant="secondary">
-          Open via ref
-        </Button>
-        <Button compact onClick={() => panelRef.current?.closePopover()} variant="secondary">
-          Close via ref
-        </Button>
-      </HStack>
+      <Button compact onClick={() => panelRef.current?.openPopover()} variant="secondary">
+        Open via ref
+      </Button>
       <PopoverPanel
         ref={panelRef}
         accessibilityLabel={panelAccessibilityLabel}
