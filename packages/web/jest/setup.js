@@ -1,3 +1,32 @@
+/* -------------------------------------------------------------------------- */
+/*                             @floating-ui/react-dom                         */
+/* -------------------------------------------------------------------------- */
+jest.mock('@floating-ui/react-dom', () => {
+  const floatingRef = { current: null };
+  return {
+    useFloating: () => ({
+      refs: {
+        setReference: jest.fn(),
+        setFloating: jest.fn((el) => {
+          floatingRef.current = el;
+        }),
+        reference: { current: null },
+        floating: floatingRef,
+      },
+      floatingStyles: {},
+      placement: 'bottom',
+      middlewareData: { arrow: {} },
+    }),
+    // Middleware stubs — these are called as functions and must return a value
+    arrow: () => ({}),
+    autoPlacement: () => ({}),
+    autoUpdate: jest.fn(),
+    flip: () => ({}),
+    offset: () => ({}),
+    shift: () => ({}),
+  };
+});
+
 jest.mock('framer-motion', () => ({
   ...jest.requireActual('framer-motion'),
   m: jest.requireActual('framer-motion')?.motion,
