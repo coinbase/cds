@@ -16,7 +16,6 @@
 
 name: Debug Workflow (replace me in your branch)
 
-
 on:
   # Manual trigger for testing
   workflow_dispatch:
