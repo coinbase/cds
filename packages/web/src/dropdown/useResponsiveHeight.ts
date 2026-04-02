@@ -18,9 +18,8 @@ type UseResponsiveHeightParams = {
 
 const BOTTOM_GUTTER_SPACE: ThemeVars.Space = 2;
 
-// New behavior (ResponsiveProp maxHeight, breakpoint resolution) lives in `overlays/popover/useResponsiveHeight.ts`; this file is legacy for Dropdown only.
 /**
- * @deprecated Import `useResponsiveHeight` from `@coinbase/cds-web/popover` instead. This will be removed in a future major release.
+ * @deprecated Import `useResponsivePanelMaxHeight` from `@coinbase/cds-web/popover` instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export function useResponsiveHeight({

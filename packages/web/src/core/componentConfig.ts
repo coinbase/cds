@@ -63,6 +63,8 @@ import type { ModalFooterBaseProps } from '../overlays/modal/ModalFooter';
 import type { ModalHeaderBaseProps } from '../overlays/modal/ModalHeader';
 import type { ModalWrapperBaseProps } from '../overlays/modal/ModalWrapper';
 import type { OverlayBaseProps } from '../overlays/overlay/Overlay';
+import type { PopoverPanelBaseProps } from '../overlays/popover/PopoverPanel';
+import type { PopoverPanelContentBaseProps } from '../overlays/popover/PopoverPanelContent';
 import type { ToastBaseProps } from '../overlays/Toast';
 import type { TooltipContentBaseProps } from '../overlays/tooltip/TooltipContent';
 import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
@@ -87,8 +89,6 @@ import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
 import type { ProgressCircleBaseProps } from '../visualizations/ProgressCircle';
-import type { PopoverPanelBaseProps } from '../overlays/popover/PopoverPanel';
-import type { PopoverPanelContentBaseProps } from '../overlays/popover/PopoverPanelContent';
 
 /**
  * Config resolver that supports either static partial props object

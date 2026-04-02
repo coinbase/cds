@@ -9,12 +9,12 @@ import { useTheme } from '../../hooks/useTheme';
 import type { ResponsiveProp } from '../../styles/styleProps';
 import { getBrowserGlobals, isSSR } from '../../utils/browser';
 
-import type { PopoverContentPositionConfig } from './PopoverProps';
 import { POPOVER_PANEL_MAX_HEIGHT } from './PopoverPanel';
+import type { PopoverContentPositionConfig } from './PopoverProps';
 
 type UseResponsiveHeightParams = {
   gap?: ThemeVars.Space;
-  dropdownBounds: RectReadOnly;
+  panelBounds: RectReadOnly;
   maxHeight?: ResponsiveProp<React.CSSProperties['maxHeight']>;
   visible: boolean;
   placement: PopoverContentPositionConfig['placement'];
@@ -50,12 +50,12 @@ function resolveResponsiveMaxHeight(
 }
 
 /**
- * Computes a max height for floating popover or dropdown panels so they stay within the viewport,
+ * Computes a max height for floating popover or modal panels so they stay within the viewport,
  * including `ResponsiveProp` maxHeight resolution and placement-aware `calc(100vh - …)` fallback.
  */
-export function useResponsiveHeight({
+export function useResponsivePanelMaxHeight({
   gap,
-  dropdownBounds,
+  panelBounds,
   maxHeight,
   visible,
   placement,
@@ -71,9 +71,7 @@ export function useResponsiveHeight({
   const bottomGutter = space[BOTTOM_GUTTER_SPACE];
   const calculatedGap = space[gap ?? 0];
 
-  const [dropdownHeight, setDropdownHeight] = useState<DimensionValue | undefined>(
-    resolvedMaxHeight,
-  );
+  const [panelMaxHeight, setPanelHeight] = useState<DimensionValue | undefined>(resolvedMaxHeight);
 
   // the following calculates the window height on resize changes and stores it in state
   const [windowHeight, setWindowHeight] = useState<number | undefined>(
@@ -101,38 +99,34 @@ export function useResponsiveHeight({
   }, [resolvedMaxHeight, windowHeight]);
 
   const verticalBreakpoint = useMemo(() => {
-    if (dropdownBounds) {
+    if (panelBounds) {
       if (placement?.includes('bottom')) {
-        return dropdownBounds.top + calculatedMaxHeight + bottomGutter + calculatedGap;
+        return panelBounds.top + calculatedMaxHeight + bottomGutter + calculatedGap;
       }
       if (placement?.includes('top')) {
-        return dropdownBounds.bottom + calculatedMaxHeight + bottomGutter + calculatedGap;
+        return panelBounds.bottom + calculatedMaxHeight + bottomGutter + calculatedGap;
       }
     }
     return undefined;
-  }, [bottomGutter, calculatedGap, calculatedMaxHeight, dropdownBounds, placement]);
+  }, [bottomGutter, calculatedGap, calculatedMaxHeight, panelBounds, placement]);
 
   const responsivePopoverMenuHeight = useMemo(() => {
     if (placement?.includes('bottom')) {
-      return dropdownBounds
-        ? `calc(100vh - ${dropdownBounds.top}px - ${bottomGutter}px)`
-        : undefined;
+      return panelBounds ? `calc(100vh - ${panelBounds.top}px - ${bottomGutter}px)` : undefined;
     }
     if (placement?.includes('top')) {
-      return dropdownBounds
-        ? `calc(100vh - ${dropdownBounds.bottom}px - ${bottomGutter}px)`
-        : undefined;
+      return panelBounds ? `calc(100vh - ${panelBounds.bottom}px - ${bottomGutter}px)` : undefined;
     }
-  }, [placement, dropdownBounds, bottomGutter]);
+  }, [placement, panelBounds, bottomGutter]);
 
   useIsoEffect(() => {
     if (windowHeight && verticalBreakpoint && visible && windowHeight <= verticalBreakpoint) {
       // only apply a responsive menu height if the viewport height encroaches on the menu
-      setDropdownHeight(responsivePopoverMenuHeight);
+      setPanelHeight(responsivePopoverMenuHeight);
     } else {
-      setDropdownHeight(calculatedMaxHeight);
+      setPanelHeight(calculatedMaxHeight);
     }
   }, [calculatedMaxHeight, responsivePopoverMenuHeight, verticalBreakpoint, visible, windowHeight]);
 
-  return { dropdownHeight };
+  return { panelMaxHeight };
 }

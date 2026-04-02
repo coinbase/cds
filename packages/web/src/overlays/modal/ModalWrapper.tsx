@@ -5,12 +5,12 @@ import { NewAnimatePresence } from '../../animation/NewAnimatePresence';
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
+import { VStack } from '../../layout';
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 import { media } from '../../styles/media';
 import { Overlay } from '../overlay/Overlay';
 import { Portal, type PortalProps } from '../Portal';
 import { modalContainerId } from '../PortalProvider';
-import { VStack } from '../../layout';
 
 const modalOverlayResponsiveCss = css`
   @media ${media.phone} {
@@ -117,9 +117,9 @@ export const ModalWrapper = memo(
                 ) : (
                   <VStack
                     background="transparent"
+                    onClick={!disableOverlayPress ? onOverlayPress : undefined}
                     pin="all"
                     position="fixed"
-                    onClick={!disableOverlayPress ? onOverlayPress : undefined}
                   />
                 )}
                 {/* NOTE: Add position or zIndex to children to avoid displaying under overlay

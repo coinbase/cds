@@ -66,9 +66,9 @@ function MobileStory() {
     <HStack gap={4} padding={4}>
       <PopoverPanel
         ref={panelRef}
+        enableMobileModal
         showOverlay
         accessibilityLabel={panelAccessibilityLabel}
-        enableMobileModal
         content={
           <VStack gap={2} padding={3}>
             <Text font="headline">Panel title</Text>

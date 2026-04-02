@@ -20,7 +20,7 @@ import { ModalWrapper } from '../modal/ModalWrapper';
 import { Popover } from './Popover';
 import { PopoverPanelContent, type PopoverPanelContentBaseProps } from './PopoverPanelContent';
 import type { PopoverBaseProps, PopoverContentPositionConfig } from './PopoverProps';
-import { useResponsiveHeight } from './useResponsiveHeight';
+import { useResponsivePanelMaxHeight } from './useResponsivePanelMaxHeight';
 
 export type PopoverPanelRef = {
   openPopover: () => void;
@@ -177,6 +177,7 @@ const MobilePopoverPanel = memo(
         event.stopPropagation();
       }, []);
       return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
           className={cx(block ? blockCss : triggerContainerCss, classNames?.triggerContainer)}
           onBlur={onBlur}
@@ -228,11 +229,11 @@ const FloatingPopoverPanel = memo(
         visible,
         onClose = NOOP,
         onOpen = NOOP,
-        panelWidth,
+        panelWidth: width,
         minPanelWidth: minWidth,
         maxPanelWidth: maxWidth,
         maxPanelHeight: maxHeight,
-        panelHeight,
+        panelHeight: height,
         testID,
         disablePortal,
         onBlur,
@@ -248,7 +249,7 @@ const FloatingPopoverPanel = memo(
       },
       ref,
     ) => {
-      const [panelContentRef, dropdownBounds] = useMeasure();
+      const [panelContentRef, panelBounds] = useMeasure();
       const [triggerRef, triggerBounds] = useMeasure();
 
       const combinedContentPosition = useMemo(
@@ -256,9 +257,9 @@ const FloatingPopoverPanel = memo(
         [contentPosition],
       );
 
-      const { dropdownHeight } = useResponsiveHeight({
+      const { panelMaxHeight } = useResponsivePanelMaxHeight({
         gap: combinedContentPosition.gap,
-        dropdownBounds,
+        panelBounds,
         maxHeight,
         visible,
         placement: combinedContentPosition.placement,
@@ -269,28 +270,29 @@ const FloatingPopoverPanel = memo(
           <PopoverPanelContent
             ref={panelContentRef}
             className={classNames?.content}
-            height={panelHeight}
-            maxHeight={dropdownHeight}
+            height={height}
+            maxHeight={panelMaxHeight}
             maxWidth={maxWidth}
             minWidth={minWidth}
             placement={combinedContentPosition.placement}
             style={styles?.content}
-            width={panelWidth ?? triggerBounds.width}
+            width={width ?? triggerBounds.width}
           >
             {content}
           </PopoverPanelContent>
         ),
         [
           panelContentRef,
-          dropdownHeight,
+          classNames?.content,
+          height,
+          panelMaxHeight,
           maxWidth,
           minWidth,
           combinedContentPosition.placement,
-          triggerBounds.width,
-          panelWidth,
-          content,
           styles?.content,
-          classNames?.content,
+          width,
+          triggerBounds.width,
+          content,
         ],
       );
 
