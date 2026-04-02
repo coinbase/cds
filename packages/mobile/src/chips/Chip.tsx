@@ -2,6 +2,7 @@ import React, { forwardRef, Fragment, memo } from 'react';
 import type { View } from 'react-native';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, HStack } from '../layout';
 import { InvertedThemeProvider, Pressable } from '../system';
 import { Text } from '../typography/Text';
@@ -13,8 +14,9 @@ export type { ChipProps };
  * This is a basic Chip component used to create all Chip components.
  */
 export const Chip = memo(
-  forwardRef(function Chip(
-    {
+  forwardRef(function Chip(_props: ChipProps, ref: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('Chip', _props);
+    const {
       alignSelf = 'flex-start',
       children,
       start,
@@ -44,9 +46,7 @@ export const Chip = memo(
       color = 'fg',
       font = compact ? 'label1' : 'headline',
       ...props
-    }: ChipProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
     const containerProps = {
       testID,

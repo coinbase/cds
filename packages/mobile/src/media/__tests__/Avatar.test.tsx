@@ -1,6 +1,8 @@
 import type { AvatarSize } from '@coinbase/cds-common/types';
 import { render, screen } from '@testing-library/react-native';
 
+import type { ComponentConfig } from '../../core/componentConfig';
+import { ComponentConfigProvider } from '../../system/ComponentConfigProvider';
 import { DefaultThemeProvider, theme as defaultTheme } from '../../utils/testHelpers';
 import { Avatar, coloredFallbackTestID } from '../Avatar';
 
@@ -144,5 +146,52 @@ describe('Avatar', () => {
     expect(screen.getByTestId(coloredFallbackTestID)).toBeAccessible();
 
     expect(screen.getByText('T')).toBeTruthy();
+  });
+
+  it('applies provider config defaults', () => {
+    const config: ComponentConfig = {
+      Avatar: {
+        shape: 'square',
+      },
+    };
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={config}>
+          <Avatar
+            accessibilityLabel=""
+            src="https://images.coinbase.com/avatar?s=56"
+            testID="avatar"
+          />
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('avatar')).toHaveStyle({
+      borderRadius: defaultTheme.borderRadius[100],
+    });
+  });
+
+  it('allows local props to override provider defaults', () => {
+    const config: ComponentConfig = {
+      Avatar: {
+        shape: 'square',
+      },
+    };
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={config}>
+          <Avatar
+            accessibilityLabel=""
+            shape="circle"
+            src="https://images.coinbase.com/avatar?s=56"
+            testID="avatar"
+          />
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('avatar')).toHaveStyle({
+      borderRadius: defaultTheme.borderRadius[1000],
+    });
   });
 });

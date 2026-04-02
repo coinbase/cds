@@ -12,6 +12,7 @@ import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { TextIcon } from '../icons/TextIcon';
 import { HStack } from '../layout/HStack';
 import type { PressableProps } from '../system/Pressable';
@@ -39,17 +40,19 @@ export type LikeButtonProps = LikeButtonBaseProps & PressableProps;
 const scaleIn = convertMotionConfig(scaleInConfig);
 const scaleOut = convertMotionConfig(scaleOutConfig);
 
-export const LikeButton = memo(function LikeButton({
-  count = 0,
-  compact = true,
-  flush,
-  liked = false,
-  onPress,
-  accessibilityHint,
-  accessibilityLabel = 'Like',
-  borderRadius = compact ? 700 : 900,
-  ...props
-}: LikeButtonProps) {
+export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
+  const mergedProps = useComponentConfig('LikeButton', _props);
+  const {
+    count = 0,
+    compact = true,
+    flush,
+    liked = false,
+    onPress,
+    accessibilityHint,
+    accessibilityLabel = 'Like',
+    borderRadius = compact ? 700 : 900,
+    ...props
+  } = mergedProps;
   const iconScale = useRef(new Animated.Value(1));
   const iconSize = compact ? 's' : 'm';
   const size = interactableHeight[compact ? 'compact' : 'regular'];

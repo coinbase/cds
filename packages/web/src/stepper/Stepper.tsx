@@ -6,6 +6,7 @@ import type { IconName } from '@coinbase/cds-common/types';
 import { type SpringConfig, type SpringValue, useSprings } from '@react-spring/web';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useHasMounted } from '../hooks/useHasMounted';
 import type { IconProps } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
@@ -291,7 +292,11 @@ type StepperComponent = <Metadata extends Record<string, unknown> = Record<strin
 const StepperBase = memo(
   forwardRef(
     <Metadata extends Record<string, unknown> = Record<string, unknown>>(
-      {
+      _props: StepperProps<Metadata>,
+      ref: React.Ref<HTMLDivElement>,
+    ) => {
+      const mergedProps = useComponentConfig('Stepper', _props);
+      const {
         direction,
         activeStepId,
         steps,
@@ -325,9 +330,7 @@ const StepperBase = memo(
         animate = true,
         disableAnimateOnMount,
         ...props
-      }: StepperProps<Metadata>,
-      ref: React.Ref<HTMLDivElement>,
-    ) => {
+      } = mergedProps;
       const hasMounted = useHasMounted();
       const flatStepIds = useMemo(() => flattenSteps(steps).map((step) => step.id), [steps]);
 

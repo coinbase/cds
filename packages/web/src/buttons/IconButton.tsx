@@ -5,6 +5,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
@@ -65,7 +66,11 @@ const flushEndCss = css`
 export const IconButton: IconButtonComponent = memo(
   forwardRef<React.ReactElement<IconButtonBaseProps>, IconButtonBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: IconButtonProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('IconButton', _props);
+      const {
         as,
         variant = 'secondary',
         transparent,
@@ -90,9 +95,7 @@ export const IconButton: IconButtonComponent = memo(
         accessibilityLabel,
         accessibilityHint,
         ...props
-      }: IconButtonProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
       const theme = useTheme();
 

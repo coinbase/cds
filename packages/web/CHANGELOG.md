@@ -8,7 +8,23 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.62.1 (4/1/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove usage of Array.prototype.at(). [[#575](https://github.com/coinbase/cds/pull/575)]
+
+## 8.62.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Add ComponentConfigProvider. [[#507](https://github.com/coinbase/cds/pull/507)]
+
+## 8.61.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support SearchInput height customization. [[#565](https://github.com/coinbase/cds/pull/565)]
 
 #### 📘 Misc
 

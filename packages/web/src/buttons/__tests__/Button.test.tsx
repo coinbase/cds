@@ -2,6 +2,7 @@ import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Box } from '../../layout';
+import { ComponentConfigProvider } from '../../system';
 import { DefaultThemeProvider } from '../../utils/test';
 import { Button } from '../Button';
 
@@ -189,5 +190,50 @@ describe('Button', () => {
     expect(childTextNode.parentElement).toHaveStyle({
       '--text-textTransform': 'var(--textTransform-body)',
     });
+  });
+
+  it('applies Button defaults from ComponentConfigProvider', () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={{ Button: { variant: 'secondary' } }}>
+          <Button>Child</Button>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'secondary');
+  });
+
+  it('keeps local Button props higher precedence than provider defaults', () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={{ Button: { variant: 'secondary' } }}>
+          <Button variant="positive">Child</Button>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'positive');
+  });
+
+  it('supports functional Button config resolvers', () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Button: (props) => ({
+              variant: props.loading ? 'secondary' : 'positive',
+            }),
+          }}
+        >
+          <Button loading>Loading</Button>
+          <Button>Ready</Button>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    const [loadingButton, readyButton] = screen.getAllByRole('button');
+    expect(loadingButton).toHaveAttribute('data-variant', 'secondary');
+    expect(readyButton).toHaveAttribute('data-variant', 'positive');
   });
 });

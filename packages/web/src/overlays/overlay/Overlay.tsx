@@ -4,18 +4,23 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 
-import type { OverlayProps } from './OverlayContent';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
+
+import type { OverlayBaseProps, OverlayProps } from './OverlayContent';
 import { OverlayContent } from './OverlayContent';
 
 const overlayContentContextValue: OverlayContentContextValue = {
   isOverlay: true,
 };
 
+export type { OverlayBaseProps, OverlayProps };
+
 export const Overlay = memo(
-  forwardRef<HTMLDivElement, OverlayProps>((props, forwardedRef) => {
+  forwardRef<HTMLDivElement, OverlayProps>((_props, forwardedRef) => {
+    const mergedProps = useComponentConfig('Overlay', _props);
     return (
       <OverlayContentContext.Provider value={overlayContentContextValue}>
-        <OverlayContent ref={forwardedRef} {...props} />
+        <OverlayContent ref={forwardedRef} {...mergedProps} />
       </OverlayContentContext.Provider>
     );
   }),

@@ -14,6 +14,7 @@ import { useCarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAu
 import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 import { animated, useSpring } from '@react-spring/native';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { type BoxBaseProps, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
@@ -550,8 +551,9 @@ const animationConfig = {
 
 export const Carousel = memo(
   forwardRef<CarouselImperativeHandle, CarouselProps>(
-    (
-      {
+    (_props: CarouselProps, ref: React.ForwardedRef<CarouselImperativeHandle>) => {
+      const mergedProps = useComponentConfig('Carousel', _props);
+      const {
         children,
         title,
         hideNavigation,
@@ -575,9 +577,7 @@ export const Carousel = memo(
         autoplayInterval = 3000,
         paginationVariant,
         ...props
-      }: CarouselProps,
-      ref: React.ForwardedRef<CarouselImperativeHandle>,
-    ) => {
+      } = mergedProps;
       const carouselScrollX = useRef(0);
 
       const animationApi = useSpring({

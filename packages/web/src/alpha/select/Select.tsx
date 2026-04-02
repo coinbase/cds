@@ -3,6 +3,7 @@ import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating
 
 import { cx } from '../../cx';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHasMounted } from '../../hooks/useHasMounted';
 import { Box } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
@@ -60,7 +61,11 @@ type SelectComponent = <
 const SelectBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: SelectProps<Type, SelectOptionValue>,
+      ref: React.Ref<SelectRef>,
+    ) => {
+      const mergedProps = useComponentConfig('Select', _props);
+      const {
         value,
         type = 'single' as Type,
         options,
@@ -105,9 +110,7 @@ const SelectBase = memo(
         className,
         classNames,
         testID,
-      }: SelectProps<Type, SelectOptionValue>,
-      ref: React.Ref<SelectRef>,
-    ) => {
+      } = mergedProps;
       const hasMounted = useHasMounted();
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;

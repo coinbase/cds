@@ -8,7 +8,21 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.62.1 ((4/1/2026, 12:25 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.62.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Add ComponentConfigProvider. [[#507](https://github.com/coinbase/cds/pull/507)]
+
+## 8.61.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support Button and IconButton size customization. [[#565](https://github.com/coinbase/cds/pull/565)]
 
 #### 📘 Misc
 

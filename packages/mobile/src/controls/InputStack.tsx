@@ -6,6 +6,7 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useTheme } from '../hooks/useTheme';
 import type { BoxBaseProps, BoxProps } from '../layout';
@@ -98,30 +99,32 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
-export const InputStack = memo(function InputStack({
-  /** CDS custom props */
-  width = '100%',
-  prependNode,
-  endNode,
-  appendNode,
-  startNode,
-  disabled = false,
-  inputNode,
-  helperTextNode,
-  borderStyle,
-  variant,
-  labelNode,
-  testID = '',
-  borderRadius = 200,
-  borderFocusedStyle,
-  focused,
-  enableColorSurge,
-  labelVariant = 'outside',
-  inputBackground = 'bg',
-  borderWidth = 100,
-  focusedBorderWidth = borderWidth,
-  ...props
-}: InputStackProps) {
+export const InputStack = memo(function InputStack(_props: InputStackProps) {
+  const mergedProps = useComponentConfig('InputStack', _props);
+  const {
+    /** CDS custom props */
+    width = '100%',
+    prependNode,
+    endNode,
+    appendNode,
+    startNode,
+    disabled = false,
+    inputNode,
+    helperTextNode,
+    borderStyle,
+    variant,
+    labelNode,
+    testID = '',
+    borderRadius = 200,
+    borderFocusedStyle,
+    focused,
+    enableColorSurge,
+    labelVariant = 'outside',
+    inputBackground = 'bg',
+    borderWidth = 100,
+    focusedBorderWidth = borderWidth,
+    ...props
+  } = mergedProps;
   const theme = useTheme();
   const [inputAreaSize, onInputAreaLayout] = useLayout();
 

@@ -10,6 +10,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
@@ -43,8 +44,9 @@ export type IconButtonBaseProps = SharedProps &
 export type IconButtonProps = IconButtonBaseProps;
 
 export const IconButton = memo(
-  forwardRef<View, IconButtonProps>(function IconButton(
-    {
+  forwardRef<View, IconButtonProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('IconButton', _props);
+    const {
       name,
       active,
       variant = 'secondary',
@@ -56,6 +58,8 @@ export const IconButton = memo(
       iconSize = compact ? 's' : 'm',
       borderWidth = 100,
       borderRadius = 1000,
+      height = interactableHeight[compact ? 'compact' : 'regular'],
+      width = interactableHeight[compact ? 'compact' : 'regular'],
       feedback = compact ? 'light' : 'normal',
       flush,
       loading,
@@ -64,9 +68,7 @@ export const IconButton = memo(
       accessibilityHint,
       accessibilityLabel,
       ...props
-    },
-    ref,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const iconSizeValue = theme.iconSize[iconSize];
     const variantMap = transparent ? transparentVariants : variants;
@@ -76,19 +78,17 @@ export const IconButton = memo(
     const backgroundValue = background ?? variantStyle.background;
     const borderColorValue = borderColor ?? variantStyle.borderColor;
 
-    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
-
     const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
 
     const sizingStyle = useMemo<ViewStyle>(
       () => ({
-        height: minHeight,
-        width: minHeight,
+        height: height as ViewStyle['height'],
+        width: width as ViewStyle['width'],
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
       }),
-      [minHeight],
+      [height, width],
     );
 
     const pressableStyle = useCallback(
@@ -117,7 +117,7 @@ export const IconButton = memo(
         {...props}
       >
         {loading ? (
-          <Box alignItems="center" height={minHeight} justifyContent="center" width={minHeight}>
+          <Box alignItems="center" height={height} justifyContent="center" width={width}>
             <ProgressCircle
               indeterminate
               color={colorValue}

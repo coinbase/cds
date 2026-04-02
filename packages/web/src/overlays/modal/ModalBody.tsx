@@ -1,13 +1,16 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, memo } from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 
-export type ModalBodyProps = BoxProps<BoxDefaultElement>;
+export type ModalBodyBaseProps = BoxProps<BoxDefaultElement>;
+export type ModalBodyProps = ModalBodyBaseProps;
 
-export const ModalBody = forwardRef(
-  (
-    {
+export const ModalBody = memo(
+  forwardRef((_props: ModalBodyProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('ModalBody', _props);
+    const {
       children,
       flexDirection = 'column',
       flexGrow = 1,
@@ -15,9 +18,7 @@ export const ModalBody = forwardRef(
       paddingX = 3,
       tabIndex = 0,
       ...props
-    }: ModalBodyProps,
-    ref: React.ForwardedRef<HTMLDivElement>,
-  ) => {
+    } = mergedProps;
     const { hideDividers } = useModalContext();
 
     return (
@@ -34,5 +35,7 @@ export const ModalBody = forwardRef(
         {children}
       </Box>
     );
-  },
+  }),
 );
+
+ModalBody.displayName = 'ModalBody';

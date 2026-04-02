@@ -3,6 +3,7 @@ import { css } from '@linaria/core';
 
 import { NewAnimatePresence } from '../../animation/NewAnimatePresence';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 import { media } from '../../styles/media';
@@ -56,75 +57,72 @@ export type ModalWrapperBaseProps = {
 export type ModalWrapperProps = ModalWrapperBaseProps & BoxProps<BoxDefaultElement>;
 
 export const ModalWrapper = memo(
-  forwardRef(
-    (
-      {
-        alignItems = 'center',
-        'aria-modal': ariaModal,
-        children,
-        visible = false,
-        disablePortal = false,
-        disableOverlayPress = false,
-        dangerouslyDisableResponsiveness = false,
-        height = '100vh',
-        justifyContent = 'center',
-        position = 'fixed',
-        pin = 'all',
-        onOverlayPress,
-        onDidClose,
-        hideOverlay = false,
-        role = 'dialog',
-        width = '100vw',
-        ...props
-      }: ModalWrapperProps,
-      ref: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const blockScroll = useScrollBlocker();
+  forwardRef((_props: ModalWrapperProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('ModalWrapper', _props);
+    const {
+      alignItems = 'center',
+      'aria-modal': ariaModal,
+      children,
+      visible = false,
+      disablePortal = false,
+      disableOverlayPress = false,
+      dangerouslyDisableResponsiveness = false,
+      height = '100vh',
+      justifyContent = 'center',
+      position = 'fixed',
+      pin = 'all',
+      onOverlayPress,
+      onDidClose,
+      hideOverlay = false,
+      role = 'dialog',
+      width = '100vw',
+      ...props
+    } = mergedProps;
+    const blockScroll = useScrollBlocker();
 
-      // prevent body scroll when modal is open
-      useEffect(() => {
-        blockScroll(visible);
+    // prevent body scroll when modal is open
+    useEffect(() => {
+      blockScroll(visible);
 
-        return () => {
-          blockScroll(false);
-        };
-      }, [visible, blockScroll]);
+      return () => {
+        blockScroll(false);
+      };
+    }, [visible, blockScroll]);
 
-      return (
-        <NewAnimatePresence onExitComplete={onDidClose}>
-          {!!visible && (
-            <Portal containerId={modalContainerId} disablePortal={disablePortal}>
-              <Box
-                ref={ref}
-                alignItems={alignItems}
-                aria-modal={ariaModal ?? 'true'}
-                height={height}
-                justifyContent={justifyContent}
-                pin={pin}
-                position={position}
-                role={role}
-                width={width}
-                {...props}
-              >
-                <>
-                  {!hideOverlay && (
-                    <Overlay
-                      animated
-                      className={cx(!dangerouslyDisableResponsiveness && modalOverlayResponsiveCss)}
-                      onClick={!disableOverlayPress ? onOverlayPress : undefined}
-                      testID="modal-overlay"
-                    />
-                  )}
-                  {/* NOTE: Add position or zIndex to children to avoid displaying under overlay
-                   * https://www.freecodecamp.org/news/z-index-explained-how-to-stack-elements-using-css-7c5aa0f179b3/
-                   */}
-                  {children}
-                </>
-              </Box>
-            </Portal>
-          )}
-        </NewAnimatePresence>
-      );
-    },
-  ),
+    return (
+      <NewAnimatePresence onExitComplete={onDidClose}>
+        {!!visible && (
+          <Portal containerId={modalContainerId} disablePortal={disablePortal}>
+            <Box
+              ref={ref}
+              alignItems={alignItems}
+              aria-modal={ariaModal ?? 'true'}
+              height={height}
+              justifyContent={justifyContent}
+              pin={pin}
+              position={position}
+              role={role}
+              width={width}
+              {...props}
+            >
+              <>
+                {!hideOverlay && (
+                  <Overlay
+                    animated
+                    className={cx(!dangerouslyDisableResponsiveness && modalOverlayResponsiveCss)}
+                    onClick={!disableOverlayPress ? onOverlayPress : undefined}
+                    testID="modal-overlay"
+                  />
+                )}
+                {/* NOTE: Add position or zIndex to children to avoid displaying under overlay
+                 * https://www.freecodecamp.org/news/z-index-explained-how-to-stack-elements-using-css-7c5aa0f179b3/
+                 */}
+                {children}
+              </>
+            </Box>
+          </Portal>
+        )}
+      </NewAnimatePresence>
+    );
+  }),
 );

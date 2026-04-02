@@ -4,12 +4,13 @@ import type { CircleProps } from 'react-native-svg';
 import { Circle, G, Svg } from 'react-native-svg';
 import type { SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { getCenter, getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
+import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
 import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
 import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { isTest } from '@coinbase/cds-utils';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout';
 
@@ -150,159 +151,156 @@ const ProgressCircleInner = memo(
 );
 
 export const ProgressCircle = memo(
-  forwardRef(
-    (
-      {
-        indeterminate,
-        weight = 'normal',
-        progress = indeterminate ? 0.75 : 0,
-        // Default is empty string due to iOS VoiceOver repeating percentage multiple times when
-        // a11y label isn't specified
-        accessibilityLabel = indeterminate ? 'Loading' : '',
-        color = indeterminate ? 'fgMuted' : 'bgPrimary',
-        disabled,
-        disableAnimateOnMount = indeterminate ? true : false,
-        testID,
-        hideContent,
-        hideText,
-        size,
-        contentNode,
-        style,
-        styles,
-        onAnimationEnd,
-        onAnimationStart,
-      }: ProgressCircleProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const theme = useTheme();
-      const strokeWidth = getProgressSize(weight);
+  forwardRef((_props: ProgressCircleProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('ProgressCircle', _props);
+    const {
+      indeterminate,
+      weight = 'normal',
+      progress = indeterminate ? 0.75 : 0,
+      // Default is empty string due to iOS VoiceOver repeating percentage multiple times when
+      // a11y label isn't specified
+      accessibilityLabel = indeterminate ? 'Loading' : '',
+      color = indeterminate ? 'fgMuted' : 'bgPrimary',
+      disabled,
+      disableAnimateOnMount = indeterminate ? true : false,
+      testID,
+      hideContent,
+      hideText,
+      size,
+      contentNode,
+      style,
+      styles,
+      onAnimationEnd,
+      onAnimationStart,
+    } = mergedProps;
+    const theme = useTheme();
+    const strokeWidth = getProgressSize(weight);
 
-      const visSize = size ?? '100%';
+    const visSize = size ?? '100%';
 
-      const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
+    const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
-      const textContainerStyle = useMemo(
-        () => [{ padding: strokeWidth }, styles?.textContainer],
-        [strokeWidth, styles?.textContainer],
+    const textContainerStyle = useMemo(
+      () => [{ padding: strokeWidth }, styles?.textContainer],
+      [strokeWidth, styles?.textContainer],
+    );
+
+    const animatedRotate = useRef(new Animated.Value(0));
+
+    useEffect(() => {
+      if (!indeterminate) return;
+      // if indeterminate, animate the rotation of the svg
+      const animation = Animated.loop(
+        Animated.timing(
+          animatedRotate.current,
+          convertMotionConfig({
+            toValue: 1,
+            duration: 'slow4',
+            easing: 'linear',
+            fromValue: 0,
+          }),
+        ),
       );
+      animation.start();
+      return () => animation.stop();
+    }, [indeterminate]);
 
-      const animatedRotate = useRef(new Animated.Value(0));
-
-      useEffect(() => {
-        if (!indeterminate) return;
-        // if indeterminate, animate the rotation of the svg
-        const animation = Animated.loop(
-          Animated.timing(
-            animatedRotate.current,
-            convertMotionConfig({
-              toValue: 1,
-              duration: 'slow4',
-              easing: 'linear',
-              fromValue: 0,
-            }),
-          ),
-        );
-        animation.start();
-        return () => animation.stop();
-      }, [indeterminate]);
-
-      return (
-        <VisualizationContainer height={visSize} width={visSize}>
-          {({ width, height, circleSize }: VisualizationContainerDimension) => {
-            return (
-              <Box
-                ref={forwardedRef}
-                accessible
-                accessibilityLabel={accessibilityLabel}
-                accessibilityRole="progressbar"
-                accessibilityValue={
-                  indeterminate
-                    ? undefined
-                    : {
-                        min: 0,
-                        max: 100,
-                        now: Math.round(progress * 100),
-                      }
-                }
-                alignItems="center"
-                height={height}
-                justifyContent="center"
-                style={rootStyle}
-                testID={testID}
-                width={width}
+    return (
+      <VisualizationContainer height={visSize} width={visSize}>
+        {({ width, height, circleSize }: VisualizationContainerDimension) => {
+          return (
+            <Box
+              ref={forwardedRef}
+              accessible
+              accessibilityLabel={accessibilityLabel}
+              accessibilityRole="progressbar"
+              accessibilityValue={
+                indeterminate
+                  ? undefined
+                  : {
+                      min: 0,
+                      max: 100,
+                      now: Math.round(progress * 100),
+                    }
+              }
+              alignItems="center"
+              height={height}
+              justifyContent="center"
+              style={rootStyle}
+              testID={testID}
+              width={width}
+            >
+              <AnimatedSvg
+                key={circleSize}
+                height={circleSize}
+                style={[
+                  styles?.svg,
+                  styleSheet.svg,
+                  {
+                    transform: [
+                      {
+                        rotate: animatedRotate.current.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: ['0deg', '360deg'],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+                viewBox={`0 0 ${circleSize} ${circleSize}`}
+                width={circleSize}
               >
-                <AnimatedSvg
-                  key={circleSize}
-                  height={circleSize}
-                  style={[
-                    styles?.svg,
-                    styleSheet.svg,
-                    {
-                      transform: [
-                        {
-                          rotate: animatedRotate.current.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: ['0deg', '360deg'],
-                          }),
-                        },
-                      ],
-                    },
-                  ]}
-                  viewBox={`0 0 ${circleSize} ${circleSize}`}
-                  width={circleSize}
-                >
-                  <G origin={`${circleSize / 2}, ${circleSize / 2}`} rotation={-90}>
-                    <Circle
-                      {...getProgressCircleParams({
-                        size: circleSize,
-                        strokeWidth,
-                        stroke: theme.color.bgLine,
-                      })}
-                      {...(styles?.circle || {})}
-                    />
-                    <ProgressCircleInner
-                      color={color}
-                      disableAnimateOnMount={disableAnimateOnMount}
-                      indeterminate={indeterminate}
-                      onAnimationEnd={onAnimationEnd}
-                      onAnimationStart={onAnimationStart}
-                      progress={progress}
-                      size={circleSize}
-                      strokeWidth={strokeWidth}
-                      style={styles?.progress}
-                      visuallyDisabled={disabled}
-                    />
-                  </G>
-                </AnimatedSvg>
-                {!hideText && !hideContent && (
-                  <Box height="100%" position="absolute" style={textContainerStyle} width="100%">
-                    {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
-                    <Box
-                      alignItems="center"
-                      borderRadius={1000}
-                      height="100%"
-                      justifyContent="center"
-                      overflow="hidden"
-                      width="100%"
-                    >
-                      {contentNode ??
-                        (!indeterminate && (
-                          <DefaultProgressCircleContent
-                            disableAnimateOnMount={disableAnimateOnMount}
-                            disabled={disabled}
-                            progress={progress}
-                          />
-                        ))}
-                    </Box>
+                <G origin={`${circleSize / 2}, ${circleSize / 2}`} rotation={-90}>
+                  <Circle
+                    {...getProgressCircleParams({
+                      size: circleSize,
+                      strokeWidth,
+                      stroke: theme.color.bgLine,
+                    })}
+                    {...(styles?.circle || {})}
+                  />
+                  <ProgressCircleInner
+                    color={color}
+                    disableAnimateOnMount={disableAnimateOnMount}
+                    indeterminate={indeterminate}
+                    onAnimationEnd={onAnimationEnd}
+                    onAnimationStart={onAnimationStart}
+                    progress={progress}
+                    size={circleSize}
+                    strokeWidth={strokeWidth}
+                    style={styles?.progress}
+                    visuallyDisabled={disabled}
+                  />
+                </G>
+              </AnimatedSvg>
+              {!hideText && !hideContent && (
+                <Box height="100%" position="absolute" style={textContainerStyle} width="100%">
+                  {/* We clip the content node to the circle to prevent the node from overflowing over the circle */}
+                  <Box
+                    alignItems="center"
+                    borderRadius={1000}
+                    height="100%"
+                    justifyContent="center"
+                    overflow="hidden"
+                    width="100%"
+                  >
+                    {contentNode ??
+                      (!indeterminate && (
+                        <DefaultProgressCircleContent
+                          disableAnimateOnMount={disableAnimateOnMount}
+                          disabled={disabled}
+                          progress={progress}
+                        />
+                      ))}
                   </Box>
-                )}
-              </Box>
-            );
-          }}
-        </VisualizationContainer>
-      );
-    },
-  ),
+                </Box>
+              )}
+            </Box>
+          );
+        }}
+      </VisualizationContainer>
+    );
+  }),
 );
 
 const styleSheet = StyleSheet.create({

@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import type { ScrollViewProps } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useContentSize } from '../../hooks/useContentSize';
 import { useLayout } from '../../hooks/useLayout';
 import { Box, type BoxBaseProps } from '../../layout/Box';
@@ -21,17 +22,19 @@ export type ModalBodyBaseProps = ScrollViewProps &
 
 export type ModalBodyProps = ModalBodyBaseProps;
 
-export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
-  children,
-  padding,
-  paddingX = 3,
-  paddingY: paddingYProp,
-  paddingTop,
-  paddingBottom,
-  paddingStart,
-  paddingEnd,
-  ...props
-}) => {
+export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = memo((_props) => {
+  const mergedProps = useComponentConfig('ModalBody', _props);
+  const {
+    children,
+    padding,
+    paddingX = 3,
+    paddingY: paddingYProp,
+    paddingTop,
+    paddingBottom,
+    paddingStart,
+    paddingEnd,
+    ...props
+  } = mergedProps;
   const [{ height: contentHeight }, onContentSizeChange] = useContentSize();
   const [{ height: scrollHeight }, onLayout] = useLayout();
   const { hideDividers } = useModalContext();
@@ -71,4 +74,4 @@ export const ModalBody: React.FC<React.PropsWithChildren<ModalBodyProps>> = ({
       </ScrollView>
     </KeyboardAvoidingView>
   );
-};
+});

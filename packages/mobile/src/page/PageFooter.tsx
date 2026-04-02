@@ -4,6 +4,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
 import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxProps } from '../layout/Box';
 
 export type PageFooterBaseProps = SharedProps &
@@ -20,10 +21,9 @@ export type PageFooterBaseProps = SharedProps &
 export type PageFooterProps = PageFooterBaseProps & BoxProps;
 
 export const PageFooter = memo(
-  forwardRef(function PageFooter(
-    { action, ...props }: PageFooterProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+  forwardRef((_props: PageFooterProps, ref: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('PageFooter', _props);
+    const { action, ...props } = mergedProps;
     return (
       <Box
         ref={ref}

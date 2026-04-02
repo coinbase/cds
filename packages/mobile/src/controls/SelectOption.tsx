@@ -6,6 +6,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import { Cell, type CellBaseProps } from '../cells/Cell';
 import { CellAccessory } from '../cells/CellAccessory';
 import type { ListCellBaseProps } from '../cells/ListCell';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
@@ -25,16 +26,18 @@ export type SelectOptionBaseProps = Omit<CellBaseProps, 'children' | 'selected'>
 
 export type SelectOptionProps = SelectOptionBaseProps;
 
-export const SelectOption = memo(function SelectOption({
-  title,
-  description,
-  multiline,
-  onPress,
-  value,
-  accessibilityLabel,
-  accessibilityHint,
-  ...props
-}: SelectOptionProps) {
+export const SelectOption = memo((_props: SelectOptionProps) => {
+  const mergedProps = useComponentConfig('SelectOption', _props);
+  const {
+    title,
+    description,
+    multiline,
+    onPress,
+    value,
+    accessibilityLabel,
+    accessibilityHint,
+    ...props
+  } = mergedProps;
   const { value: selectedValue, onChange, handleClose } = useSelectContext();
 
   const selected = value === selectedValue;

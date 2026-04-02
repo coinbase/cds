@@ -6,21 +6,17 @@ import {
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { join } from '@coinbase/cds-common/utils/join';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Divider, VStack } from '../layout';
 
 export type AccordionBaseProps = SharedProps & AccordionProviderProps;
 
 export type AccordionProps = AccordionBaseProps & { style?: React.CSSProperties };
 
-export const Accordion = ({
-  activeKey,
-  children,
-  defaultActiveKey,
-  onChange,
-  setActiveKey,
-  testID,
-  style,
-}: AccordionProps) => {
+export const Accordion = (_props: AccordionProps) => {
+  const mergedProps = useComponentConfig('Accordion', _props);
+  const { activeKey, children, defaultActiveKey, onChange, setActiveKey, testID, style } =
+    mergedProps;
   return (
     <AccordionProvider
       activeKey={activeKey}

@@ -3,6 +3,7 @@ import { Animated, type ColorValue, StyleSheet, type View } from 'react-native';
 import { Circle, Svg } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
 import { Interactable } from '../system/Interactable';
@@ -109,9 +110,11 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
 };
 
 const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
-  { children, accessibilityHint, accessibilityLabel, ...props }: RadioProps<RadioValue>,
+  _props: RadioProps<RadioValue>,
   ref: React.ForwardedRef<View>,
 ) {
+  const mergedProps = useComponentConfig('Radio', _props);
+  const { children, accessibilityHint, accessibilityLabel, ...props } = mergedProps;
   const accessibilityLabelValue =
     typeof children === 'string' && accessibilityLabel === undefined
       ? children

@@ -2,9 +2,10 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { type SharedProps } from '@coinbase/cds-common';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons';
-import { HStack, VStack, type VStackProps } from '../layout';
+import { type BoxBaseProps, HStack, VStack, type VStackProps } from '../layout';
 import { type HapticFeedbackType, Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
@@ -27,21 +28,25 @@ export type NumpadButtonProps = {
   feedback?: HapticFeedbackType;
 };
 
-export type NumpadProps = {
-  onPress: (value: NumpadValue) => void;
-  onLongPress?: (value: NumpadValue) => void;
+export type NumpadBaseProps = BoxBaseProps & {
   separator?: string;
   disabled?: boolean;
   accessory?: React.ReactNode;
   action?: React.ReactNode;
   separatorAccessibilityLabel?: string;
   deleteAccessibilityLabel?: string;
-  /**
-   * Haptic feedback to trigger when being pressed.
-   * @default none
-   */
-  feedback?: HapticFeedbackType;
-} & SharedProps &
+};
+
+export type NumpadProps = NumpadBaseProps &
+  VStackProps & {
+    onPress: (value: NumpadValue) => void;
+    onLongPress?: (value: NumpadValue) => void;
+    /**
+     * Haptic feedback to trigger when being pressed.
+     * @default none
+     */
+    feedback?: HapticFeedbackType;
+  } & SharedProps &
   VStackProps;
 
 const buttonValues: NumpadValue[][] = [
@@ -66,8 +71,9 @@ const styles = StyleSheet.create({
 });
 
 export const Numpad = memo(
-  forwardRef(function Numpad(
-    {
+  forwardRef((_props: NumpadProps, forwardedRef: React.ForwardedRef<View>) => {
+    const mergedProps = useComponentConfig('Numpad', _props);
+    const {
       separator = '.',
       disabled,
       onPress,
@@ -83,9 +89,7 @@ export const Numpad = memo(
       gap = 2,
       feedback,
       ...props
-    }: NumpadProps,
-    forwardedRef: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const buttons = useMemo(() => {
       return buttonValues.map((values, i) => {
         return (

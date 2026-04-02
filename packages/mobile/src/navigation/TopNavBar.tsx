@@ -4,7 +4,8 @@ import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
 import { Collapsible } from '../collapsible/Collapsible';
-import { Box, HStack, type HStackProps, VStack } from '../layout';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { HStack, type HStackProps, VStack } from '../layout';
 
 export const TopNavBarContext = React.createContext<{ isWithinTopNavBar: boolean }>({
   isWithinTopNavBar: false,
@@ -32,7 +33,7 @@ export type NavBarEndProps = Omit<HStackProps, 'children'> & {
   paddingStart?: ThemeVars.Space;
 };
 
-export type NavigationBarProps = {
+export type NavigationBarBaseProps = {
   start?: React.ReactNode;
   end?: React.ReactNode;
   /**
@@ -70,6 +71,8 @@ export type NavigationBarProps = {
    */
   rowGap?: ThemeVars.Space;
 };
+
+export type NavigationBarProps = NavigationBarBaseProps;
 
 export const NavBarStart = memo(
   ({
@@ -139,8 +142,9 @@ export const NavBarEnd = memo(
 
 NavBarEnd.displayName = 'NavBarEnd';
 
-export const TopNavBar = memo(
-  ({
+export const TopNavBar = memo((_props: NavigationBarProps) => {
+  const mergedProps = useComponentConfig('TopNavBar', _props);
+  const {
     start,
     end,
     children,
@@ -151,38 +155,37 @@ export const TopNavBar = memo(
     paddingX = 3,
     paddingTop = 2,
     paddingBottom = bottom ? undefined : 2,
-  }: NavigationBarProps) => {
-    return (
-      <TopNavBarContext.Provider value={{ isWithinTopNavBar: true }}>
-        <VStack
-          accessibilityLabel={accessibilityLabel}
-          background="bg"
-          gap={rowGap}
-          left={0}
-          paddingBottom={paddingBottom}
-          paddingTop={paddingTop}
-          paddingX={paddingX}
-          position="sticky"
-          right={0}
-          top={0}
-          width="100%"
-          zIndex={zIndex.navigation}
-        >
-          <HStack alignItems="center">
-            {/* Always render start container */}
-            <NavBarStart paddingEnd={columnGap}>{start}</NavBarStart>
+  } = mergedProps;
+  return (
+    <TopNavBarContext.Provider value={{ isWithinTopNavBar: true }}>
+      <VStack
+        accessibilityLabel={accessibilityLabel}
+        background="bg"
+        gap={rowGap}
+        left={0}
+        paddingBottom={paddingBottom}
+        paddingTop={paddingTop}
+        paddingX={paddingX}
+        position="sticky"
+        right={0}
+        top={0}
+        width="100%"
+        zIndex={zIndex.navigation}
+      >
+        <HStack alignItems="center">
+          {/* Always render start container */}
+          <NavBarStart paddingEnd={columnGap}>{start}</NavBarStart>
 
-            {/* Middle content */}
-            {children}
+          {/* Middle content */}
+          {children}
 
-            {/* Always render end container */}
-            <NavBarEnd paddingStart={columnGap}>{end}</NavBarEnd>
-          </HStack>
-          {bottom}
-        </VStack>
-      </TopNavBarContext.Provider>
-    );
-  },
-);
+          {/* Always render end container */}
+          <NavBarEnd paddingStart={columnGap}>{end}</NavBarEnd>
+        </HStack>
+        {bottom}
+      </VStack>
+    </TopNavBarContext.Provider>
+  );
+});
 
 TopNavBar.displayName = 'TopNavBar';

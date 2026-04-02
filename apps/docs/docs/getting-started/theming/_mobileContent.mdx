@@ -334,3 +334,104 @@ Now that `myCustomColor` is defined in your theme the `useTheme` hook will inclu
 
 </MDXArticle>
 </MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## ComponentConfigProvider component
+
+`ComponentConfigProvider` lets you set component-level default BaseProps for all matching component instances in its subtree. It should be used sparingly and you should avoid frequent updates.
+
+This is **not recommended for most use cases**. In most cases, passing props directly to components is clearer and more efficient.
+
+Also, it is not recommended to nest `ComponentConfigProvider`. If you nest `ComponentConfigProvider`, it will not inherit the parent provider's config. It will only use its own config.
+
+Use `ComponentConfigProvider` when you need to set defaults across many instances of a component (for example, changing the default `borderRadius` of all `Button` components) and you do not want to change theme tokens.
+
+```tsx
+import { Button } from '@coinbase/cds-mobile/buttons/Button';
+import { ComponentConfigProvider } from '@coinbase/cds-mobile/system/ComponentConfigProvider';
+
+const App = () => (
+  <ComponentConfigProvider value={{ Button: { borderRadius: 200 } }}>
+    <Button>Primary action</Button>
+    <Button variant="secondary">Secondary action</Button>
+  </ComponentConfigProvider>
+);
+```
+
+Property values being set for an individual component instance will override the default values set on the provider.
+
+```tsx
+<VStack gap={4}>
+  <ComponentConfigProvider value={{ Button: { borderRadius: 200 } }}>
+    <VStack gap={2}>
+      <Text font="label1">ComponentConfigProvider with custom default borderRadius</Text>
+      <HStack gap={2}>
+        <Button>Default button</Button>
+        <Button variant="secondary" borderRadius={0}>
+          Square button
+        </Button>
+      </HStack>
+    </VStack>
+  </ComponentConfigProvider>
+  <VStack gap={2}>
+    <Text font="label1">Default Button</Text>
+    <HStack gap={2}>
+      <Button>Default button</Button>
+      <Button variant="secondary" borderRadius={0}>
+        Square button
+      </Button>
+    </HStack>
+  </VStack>
+</VStack>
+```
+
+### Function-based defaults
+
+`ComponentConfigProvider` can also accept a function to compute defaults from incoming component props.
+
+When using function-based defaults, keep both the resolver and provider `value` stable with `useCallback` and `useMemo` to reduce avoidable work during rerenders.
+
+```tsx
+import { useCallback, useMemo } from 'react';
+import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
+import { Button } from '@coinbase/cds-mobile/buttons/Button';
+import { ComponentConfigProvider } from '@coinbase/cds-mobile/system/ComponentConfigProvider';
+
+const compactButtonDefaults = {
+  borderRadius: 200,
+  height: 24,
+  font: 'label1',
+} as const;
+
+const regularButtonDefaults = {
+  borderRadius: 200,
+  height: 32,
+  font: 'headline',
+} as const;
+
+const App = () => {
+  const buttonConfig = useCallback(
+    (props: { compact?: boolean }) =>
+      props.compact ? compactButtonDefaults : regularButtonDefaults,
+    [],
+  );
+
+  const componentConfig = useMemo<ComponentConfig>(
+    () => ({
+      Button: buttonConfig,
+    }),
+    [buttonConfig],
+  );
+
+  return (
+    <ComponentConfigProvider value={componentConfig}>
+      <Button>Default</Button>
+      <Button compact>Compact</Button>
+    </ComponentConfigProvider>
+  );
+};
+```
+
+</MDXArticle>
+</MDXSection>

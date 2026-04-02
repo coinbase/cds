@@ -27,6 +27,7 @@ import {
 import { css } from '@linaria/core';
 import { animated, config as springConfig, useSpring } from '@react-spring/web';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useScrollBlocker } from '../hooks/useScrollBlocker';
 import { FocusTrap } from '../overlays/FocusTrap';
 import { Portal } from '../overlays/Portal';
@@ -67,59 +68,61 @@ export type TourMaskComponentProps = {
 
 export type TourMaskComponent = React.FC<TourMaskComponentProps>;
 
-export type TourProps<TourStepId extends string = string> = TourOptions<TourStepId> & {
-  children?: React.ReactNode;
-  /**
-   * The Component to render as a tour overlay and mask.
-   * @default DefaultTourMask
-   */
-  TourMaskComponent?: TourMaskComponent;
-  /**
-   * The default Component to render for each TourStep arrow element.
-   * @default DefaultTourStepArrow
-   */
-  TourStepArrowComponent?: TourStepArrowComponent;
-  /**
-   * Hide overlay when tour is active
-   * @default false
-   */
-  hideOverlay?: boolean;
-  /**
-   * Configures `@floating-ui` offset options for Tour Step component. See https://floating-ui.com/docs/offset.
-   */
-  tourStepOffset?: OffsetOptions;
-  /**
-   * Configures `@floating-ui` autoPlacement options for Tour Step component. See https://floating-ui.com/docs/autoplacement.
-   * @default 24
-   */
-  tourStepAutoPlacement?: AutoPlacementOptions;
-  /**
-   * Configures `@floating-ui` shift options for Tour Step component. See https://floating-ui.com/docs/shift.
-   */
-  tourStepShift?: ShiftOptions;
-  /**
-   * Padding to add around the edges of the TourMask's content mask.
-   */
-  tourMaskPadding?: string | number;
-  /**
-   * Corner radius for the TourMask's content mask. Uses SVG rect element's `rx` and `ry`
-   * attributes https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/rx.
-   */
-  tourMaskBorderRadius?: string | number;
-  /**
-   * Controls the scrolling behavior and margins when calling element.scrollTo() to scroll to an active TourStep target.
-   */
-  scrollOptions?: TourScrollOptions;
-  /**
-   * @danger This disables React portal integration. Use this with caution.
-   */
-  disablePortal?: boolean;
-  /**
-   * Disable automatically scrolling to active elements.
-   */
-  disableAutoScroll?: boolean;
-} & Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy' | 'id'> &
-  SharedProps;
+export type TourBaseProps<TourStepId extends string = string> = SharedProps &
+  TourOptions<TourStepId> &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy' | 'id'> & {
+    children?: React.ReactNode;
+    /**
+     * The Component to render as a tour overlay and mask.
+     * @default DefaultTourMask
+     */
+    TourMaskComponent?: TourMaskComponent;
+    /**
+     * The default Component to render for each TourStep arrow element.
+     * @default DefaultTourStepArrow
+     */
+    TourStepArrowComponent?: TourStepArrowComponent;
+    /**
+     * Hide overlay when tour is active
+     */
+    hideOverlay?: boolean;
+    /**
+     * Configures `@floating-ui` offset options for Tour Step component. See https://floating-ui.com/docs/offset.
+     */
+    tourStepOffset?: OffsetOptions;
+    /**
+     * Configures `@floating-ui` autoPlacement options for Tour Step component. See https://floating-ui.com/docs/autoplacement.
+     * @default 24
+     */
+    tourStepAutoPlacement?: AutoPlacementOptions;
+    /**
+     * Configures `@floating-ui` shift options for Tour Step component. See https://floating-ui.com/docs/shift.
+     */
+    tourStepShift?: ShiftOptions;
+    /**
+     * Padding to add around the edges of the TourMask's content mask.
+     */
+    tourMaskPadding?: string | number;
+    /**
+     * Corner radius for the TourMask's content mask. Uses SVG rect element's `rx` and `ry`
+     * attributes https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/rx.
+     */
+    tourMaskBorderRadius?: string | number;
+    /**
+     * Controls the scrolling behavior and margins when calling element.scrollTo() to scroll to an active TourStep target.
+     */
+    scrollOptions?: TourScrollOptions;
+    /**
+     * @danger This disables React portal integration. Use this with caution.
+     */
+    disablePortal?: boolean;
+    /**
+     * Disable automatically scrolling to active elements.
+     */
+    disableAutoScroll?: boolean;
+  };
+
+export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId> & {};
 
 const defaultScrollOptions: TourScrollOptions = {
   behavior: 'smooth',
@@ -180,28 +183,30 @@ export type TourFC = <TourStepId extends string = string>(
 const defaultTourStepOffset = 24;
 const defaultTourStepShiftPadding = 32;
 
-const TourComponent = <TourStepId extends string = string>({
-  steps,
-  activeTourStep,
-  onChange,
-  children,
-  TourMaskComponent = DefaultTourMask,
-  TourStepArrowComponent = DefaultTourStepArrow,
-  hideOverlay,
-  tourStepOffset = defaultTourStepOffset,
-  tourStepShift,
-  tourStepAutoPlacement,
-  tourMaskPadding,
-  tourMaskBorderRadius,
-  scrollOptions = defaultScrollOptions,
-  disablePortal,
-  disableAutoScroll,
-  accessibilityLabel,
-  accessibilityLabelledBy,
-  id,
-  testID,
-}: TourProps<TourStepId>) => {
-  const tourStepArrowRef = useRef<HTMLElement>(null);
+const TourComponent = <TourStepId extends string = string>(_props: TourProps<TourStepId>) => {
+  const mergedProps = useComponentConfig('Tour', _props);
+  const {
+    steps,
+    activeTourStep,
+    onChange,
+    children,
+    TourMaskComponent = DefaultTourMask,
+    TourStepArrowComponent = DefaultTourStepArrow,
+    hideOverlay,
+    tourStepOffset = defaultTourStepOffset,
+    tourStepShift,
+    tourStepAutoPlacement,
+    tourMaskPadding,
+    tourMaskBorderRadius,
+    scrollOptions = defaultScrollOptions,
+    disablePortal,
+    disableAutoScroll,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    id,
+    testID,
+  } = mergedProps;
+  const tourStepArrowRef = useRef<HTMLDivElement>(null);
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 

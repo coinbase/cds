@@ -24,6 +24,9 @@ on:
     paths:
       - 'packages/*/package.json'
 
+permissions:
+  contents: read
+
 jobs:
   # Determine which packages to build/publish
   detect-changes:

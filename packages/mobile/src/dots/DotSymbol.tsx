@@ -15,6 +15,7 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';
 import { useTheme } from '../hooks/useTheme';
@@ -57,8 +58,9 @@ export type DotSymbolBaseProps = SharedProps &
 
 export type DotSymbolProps = DotSymbolBaseProps;
 
-export const DotSymbol = memo(
-  ({
+export const DotSymbol = memo((_props: DotSymbolProps) => {
+  const mergedProps = useComponentConfig('DotSymbol', _props);
+  const {
     children,
     symbol,
     pin,
@@ -74,86 +76,85 @@ export const DotSymbol = memo(
     iconStyle,
     imageStyle,
     ...props
-  }: DotSymbolProps) => {
-    const theme = useTheme();
-    const iconSize = theme.iconSize[size];
-    const [childrenSize, onChildrenLayout] = useDotsLayout();
-    const dotIsIcon = iconName !== undefined;
-    const transforms = useDotPinStyles(
-      childrenSize,
-      dotIsIcon
-        ? // iconSize + border + spacing
-          iconSize + 4 + 4
-        : iconSize,
-      overlap,
-    );
+  } = mergedProps;
+  const theme = useTheme();
+  const iconSize = theme.iconSize[size];
+  const [childrenSize, onChildrenLayout] = useDotsLayout();
+  const dotIsIcon = iconName !== undefined;
+  const transforms = useDotPinStyles(
+    childrenSize,
+    dotIsIcon
+      ? // iconSize + border + spacing
+        iconSize + 4 + 4
+      : iconSize,
+    overlap,
+  );
 
-    const pinStyles = useMemo(() => {
-      if (pin && transforms !== null) {
-        const [vertical, horizontal] = (pin as string).split('-');
+  const pinStyles = useMemo(() => {
+    if (pin && transforms !== null) {
+      const [vertical, horizontal] = (pin as string).split('-');
 
-        return getTransform(
-          transforms[horizontal as DotPinStylesKey],
-          transforms[vertical as DotPinStylesKey],
-        );
-      }
-      return {};
-    }, [pin, transforms]);
+      return getTransform(
+        transforms[horizontal as DotPinStylesKey],
+        transforms[vertical as DotPinStylesKey],
+      );
+    }
+    return {};
+  }, [pin, transforms]);
 
-    // TODO: These should be tokens, i don't know what the name
-    // of the token will be called though. No design direction yet
-    const imageBorderStyle = useMemo(() => {
-      return {
-        borderColor: theme.color[borderColor],
-        borderWidth: 1,
-      };
-    }, [theme.color, borderColor]);
+  // TODO: These should be tokens, i don't know what the name
+  // of the token will be called though. No design direction yet
+  const imageBorderStyle = useMemo(() => {
+    return {
+      borderColor: theme.color[borderColor],
+      borderWidth: 1,
+    };
+  }, [theme.color, borderColor]);
 
-    // TODO: These should be tokens, i don't know what the name
-    // of the token will be called though. No design direction yet
-    const iconBorderStyle = useMemo(() => {
-      return {
-        borderWidth: 2,
-      };
-    }, []);
+  // TODO: These should be tokens, i don't know what the name
+  // of the token will be called though. No design direction yet
+  const iconBorderStyle = useMemo(() => {
+    return {
+      borderWidth: 2,
+    };
+  }, []);
 
-    // only check childrenSize when children is defined
-    const shouldShow = children !== undefined ? childrenSize !== null : true;
+  // only check childrenSize when children is defined
+  const shouldShow = children !== undefined ? childrenSize !== null : true;
 
-    return (
-      <View {...props} style={style}>
-        <View onLayout={onChildrenLayout} testID={`${props.testID}-children`}>
-          {children}
-        </View>
-        {shouldShow && (
-          <View style={pinStyles} testID="dotsymbol-inner-container">
-            {source !== undefined && (
-              <RemoteImage
-                darkModeEnhancementsApplied
-                height={iconSize}
-                resizeMode="cover"
-                shape="circle"
-                source={typeof source === 'string' ? { uri: source } : source}
-                style={[imageBorderStyle, imageStyle]}
-                testID="dotsymbol-remote-image"
-                width={iconSize}
-              />
-            )}
-            {iconName !== undefined && (
-              <Box
-                background={background}
-                borderColor={borderColor}
-                borderRadius={1000}
-                padding={0.5}
-                style={[iconBorderStyle, iconStyle]}
-              >
-                <Icon active={active} color={color} name={iconName} size={size} />
-              </Box>
-            )}
-            {symbol}
-          </View>
-        )}
+  return (
+    <View {...props} style={style}>
+      <View onLayout={onChildrenLayout} testID={`${props.testID}-children`}>
+        {children}
       </View>
-    );
-  },
-);
+      {shouldShow && (
+        <View style={pinStyles} testID="dotsymbol-inner-container">
+          {source !== undefined && (
+            <RemoteImage
+              darkModeEnhancementsApplied
+              height={iconSize}
+              resizeMode="cover"
+              shape="circle"
+              source={typeof source === 'string' ? { uri: source } : source}
+              style={[imageBorderStyle, imageStyle]}
+              testID="dotsymbol-remote-image"
+              width={iconSize}
+            />
+          )}
+          {iconName !== undefined && (
+            <Box
+              background={background}
+              borderColor={borderColor}
+              borderRadius={1000}
+              padding={0.5}
+              style={[iconBorderStyle, iconStyle]}
+            >
+              <Icon active={active} color={color} name={iconName} size={size} />
+            </Box>
+          )}
+          {symbol}
+        </View>
+      )}
+    </View>
+  );
+});

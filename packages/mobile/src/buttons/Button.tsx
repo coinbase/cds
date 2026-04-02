@@ -15,6 +15,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
@@ -96,8 +97,9 @@ export type ButtonBaseProps = SharedProps &
 export type ButtonProps = ButtonBaseProps;
 
 export const Button = memo(
-  forwardRef(function Button(
-    {
+  forwardRef(function Button(_props: ButtonProps, ref: React.ForwardedRef<View>) {
+    const mergedProps = useComponentConfig('Button', _props);
+    const {
       variant = 'primary',
       loading,
       progressCircleSize = defaultProgressCircleSize,
@@ -127,12 +129,18 @@ export const Button = memo(
       borderColor,
       borderWidth = 100,
       borderRadius = compact ? 700 : 900,
+      height = interactableHeight[compact ? 'compact' : 'regular'],
       accessibilityLabel,
       accessibilityHint,
+      padding,
+      paddingStart,
+      paddingEnd,
+      paddingTop,
+      paddingBottom,
+      paddingX: paddingXProp,
+      paddingY: paddingYProp,
       ...props
-    }: ButtonProps,
-    ref: React.ForwardedRef<View>,
-  ) {
+    } = mergedProps;
     const theme = useTheme();
     const iconSize = compact ? 's' : 'm';
     const hasIcon = Boolean(startIcon || endIcon);
@@ -147,8 +155,6 @@ export const Button = memo(
 
     const sizingStyle = block ? styles.block : styles.inline;
     const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
-
-    const minHeight = interactableHeight[compact ? 'compact' : 'regular'];
 
     const { paddingX, paddingY, marginStart, marginEnd } = getButtonSpacingProps({
       compact,
@@ -199,6 +205,7 @@ export const Button = memo(
         borderRadius={borderRadius}
         borderWidth={borderWidth}
         feedback={feedback}
+        height={height}
         loading={loading}
         marginEnd={marginEnd}
         marginStart={marginStart}
@@ -212,9 +219,14 @@ export const Button = memo(
           alignItems="center"
           flexWrap="nowrap"
           justifyContent={justifyContent}
-          minHeight={minHeight}
-          paddingX={paddingX}
-          paddingY={paddingY}
+          minHeight={height}
+          padding={padding}
+          paddingBottom={paddingBottom}
+          paddingEnd={paddingEnd}
+          paddingStart={paddingStart}
+          paddingTop={paddingTop}
+          paddingX={paddingXProp ?? paddingX}
+          paddingY={paddingYProp ?? paddingY}
           style={sizingStyle}
         >
           {loading ? (

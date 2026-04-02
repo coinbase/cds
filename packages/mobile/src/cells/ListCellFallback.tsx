@@ -4,6 +4,7 @@ import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/t
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
@@ -58,26 +59,28 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
   };
 };
 
-export const ListCellFallback = memo(function ListCellFallback({
-  accessory,
-  accessoryNode,
-  title,
-  description,
-  detail,
-  subdetail,
-  media,
-  disableRandomRectWidth,
-  rectWidthVariant,
-  helperText,
-  subtitle,
-  styles,
-  compact,
-  spacingVariant = compact ? 'compact' : 'normal',
-  innerSpacing,
-  outerSpacing,
-  accessibilityLabel = 'Loading',
-  ...props
-}: ListCellFallbackProps) {
+export const ListCellFallback = memo(function ListCellFallback(_props: ListCellFallbackProps) {
+  const mergedProps = useComponentConfig('ListCellFallback', _props);
+  const {
+    accessory,
+    accessoryNode,
+    title,
+    description,
+    detail,
+    subdetail,
+    media,
+    disableRandomRectWidth,
+    rectWidthVariant,
+    helperText,
+    subtitle,
+    styles,
+    compact,
+    spacingVariant = compact ? 'compact' : 'normal',
+    innerSpacing,
+    outerSpacing,
+    accessibilityLabel = 'Loading',
+    ...props
+  } = mergedProps;
   const theme = useTheme();
 
   const descriptionFallback = useMemo(() => {

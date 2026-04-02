@@ -1,6 +1,9 @@
 import { Animated, Pressable } from 'react-native';
+import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import type { ComponentConfig } from '../../core/componentConfig';
+import { ComponentConfigProvider } from '../../system/ComponentConfigProvider';
 import { debounce } from '../../utils/debounce';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { AvatarButton } from '../AvatarButton';
@@ -68,5 +71,47 @@ describe('AvatarButton', () => {
     fireEvent.press(screen.getByTestId('avatar-button'));
 
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('applies provider config defaults', () => {
+    const config: ComponentConfig = {
+      AvatarButton: {
+        compact: true,
+      },
+    };
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={config}>
+          <AvatarButton accessibilityLabel="Sneezy" testID="avatar-button" />
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(
+      screen.getByTestId('avatar-button').findByProps({
+        dangerouslySetSize: interactableHeight.compact,
+      }),
+    ).toBeTruthy();
+  });
+
+  it('allows local props to override provider defaults', () => {
+    const config: ComponentConfig = {
+      AvatarButton: {
+        compact: true,
+      },
+    };
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={config}>
+          <AvatarButton accessibilityLabel="Sneezy" compact={false} testID="avatar-button" />
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(
+      screen.getByTestId('avatar-button').findByProps({
+        dangerouslySetSize: interactableHeight.regular,
+      }),
+    ).toBeTruthy();
   });
 });

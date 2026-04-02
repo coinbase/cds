@@ -3,6 +3,7 @@ import { Animated } from 'react-native';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Interactable } from '../system/Interactable';
@@ -103,15 +104,17 @@ const CheckboxIcon = memo(
 );
 
 const CheckboxWithRef = forwardRef(function Checkbox<CheckboxValue extends string>(
-  {
+  _props: CheckboxProps<CheckboxValue>,
+  ref: React.ForwardedRef<View>,
+) {
+  const mergedProps = useComponentConfig('Checkbox', _props);
+  const {
     children,
     accessibilityLabel,
     accessibilityHint,
     accessible = true,
     ...props
-  }: CheckboxProps<CheckboxValue>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   const accessibilityLabelValue =
     typeof children === 'string' && accessibilityLabel === undefined
       ? children

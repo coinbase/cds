@@ -5,6 +5,7 @@ import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { PictogramName } from '../illustrations/Pictogram';
 import { Pictogram } from '../illustrations/Pictogram';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
@@ -35,17 +36,11 @@ type TileButtonComponent = (<AsComponent extends React.ElementType = TileButtonD
 export const TileButton: TileButtonComponent = memo(
   forwardRef<React.ReactElement<TileButtonBaseProps>, TileButtonBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
-        as,
-        pictogram,
-        title,
-        count,
-        children,
-        showOverflow,
-        ...props
-      }: TileButtonProps<AsComponent>,
+      _props: TileButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
+      const mergedProps = useComponentConfig('TileButton', _props);
+      const { as, pictogram, title, count, children, showOverflow, ...props } = mergedProps;
       const Component = (as ?? tileButtonDefaultElement) satisfies React.ElementType;
 
       if (isDevelopment() && title.trim() === '') {
