@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { RectReadOnly } from 'react-use-measure';
-import type { DimensionValue } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useBreakpoints } from '../../hooks/useBreakpoints';
@@ -71,7 +70,8 @@ export function useResponsivePanelMaxHeight({
   const bottomGutter = space[BOTTOM_GUTTER_SPACE];
   const calculatedGap = space[gap ?? 0];
 
-  const [panelMaxHeight, setPanelHeight] = useState<DimensionValue | undefined>(resolvedMaxHeight);
+  const [panelMaxHeight, setPanelHeight] =
+    useState<React.CSSProperties['maxHeight']>(resolvedMaxHeight);
 
   // the following calculates the window height on resize changes and stores it in state
   const [windowHeight, setWindowHeight] = useState<number | undefined>(

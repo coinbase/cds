@@ -6,13 +6,14 @@ import {
   animateDropdownTransformOutConfig,
 } from '@coinbase/cds-common/animation/dropdown';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { Placement } from '@popperjs/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack, type VStackBaseProps } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
+
+import type { Placement } from './PopoverProps';
 
 const popoverPanelContentClassName = 'cds-popover-panel-content';
 

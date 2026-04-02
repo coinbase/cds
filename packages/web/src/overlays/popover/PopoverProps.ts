@@ -2,10 +2,12 @@ import type React from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import type { Placement, PositioningStrategy } from '@popperjs/core';
+import type { Placement as FloatingPlacement, Strategy } from '@floating-ui/react-dom';
 
 import type { AccessibleControlledReturnType } from '../../hooks/useA11yControlledVisibility';
 import { type FocusTrapBaseProps } from '../FocusTrap';
+
+export type Placement = FloatingPlacement | 'auto' | 'auto-start' | 'auto-end';
 
 export type PopoverContentPositionConfig = {
   /**
@@ -26,7 +28,7 @@ export type PopoverContentPositionConfig = {
    * Custom strategy config from Floating UI. See docs: https://floating-ui.com/docs/useFloating#strategy
    * @default absolute
    */
-  strategy?: PositioningStrategy;
+  strategy?: Strategy;
 };
 
 export type PopoverBaseProps = SharedProps &

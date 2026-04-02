@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import { forwardRef, memo } from 'react';
 import {
   animateDropdownOpacityInConfig,
   animateDropdownOpacityOutConfig,
@@ -7,11 +7,11 @@ import {
 } from '@coinbase/cds-common/animation/dropdown';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { DimensionValue } from '@coinbase/cds-common/types';
-import type { Placement } from '@popperjs/core';
 import { m as motion } from 'framer-motion';
 
 import { VStack } from '../layout/VStack';
 import { useMotionProps } from '../motion/useMotionProps';
+import type { Placement } from '../overlays/popover/PopoverProps';
 
 import type { DropdownProps } from './DropdownProps';
 
