@@ -367,7 +367,7 @@ export const coinbaseHighContrastTheme = {
     bgPrimaryWash: `rgb(${darkSpectrum.blue5})`,
     bgSecondary: `rgb(${darkSpectrum.gray15})`,
     bgSecondaryWash: `rgb(${darkSpectrum.gray10})`,
-    bgTertiary: `rgb(${darkSpectrum.gray20})`,
+    bgTertiary: `rgb(${darkSpectrum.gray30})`,
     bgNegative: `rgb(${darkSpectrum.red80})`,
     bgNegativeWash: `rgb(${darkSpectrum.red5})`,
     bgPositive: `rgb(${darkSpectrum.green80})`,

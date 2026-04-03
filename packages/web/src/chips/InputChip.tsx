@@ -13,7 +13,7 @@ export const InputChip = memo(
       value,
       children = value,
       accessibilityLabel = typeof children === 'string' ? `Remove ${children}` : 'Remove option',
-      invertColorScheme = true,
+      invertColorScheme = false,
       testID = 'input-chip',
       ...props
     } = mergedProps;
@@ -21,6 +21,7 @@ export const InputChip = memo(
       <MediaChip
         ref={ref}
         accessibilityLabel={accessibilityLabel}
+        background="bgTertiary"
         end={
           <Icon
             active

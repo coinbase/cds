@@ -366,7 +366,7 @@ export const defaultTheme = {
     bgPrimary: `rgb(${darkSpectrum.blue70})`,
     bgPrimaryWash: `rgb(${darkSpectrum.blue0})`,
     bgSecondary: `rgb(${darkSpectrum.gray15})`,
-    bgTertiary: `rgb(${darkSpectrum.gray20})`,
+    bgTertiary: `rgb(${darkSpectrum.gray30})`,
     bgSecondaryWash: `rgb(${darkSpectrum.gray5})`,
     bgNegative: `rgb(${darkSpectrum.red60})`,
     bgNegativeWash: `rgb(${darkSpectrum.red0})`,
