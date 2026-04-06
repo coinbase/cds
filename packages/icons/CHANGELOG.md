@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (3)
+
+- overPredictions
+- column
+- underPredictions
+
+##### ⭐️ Updated (1)
+
+- usdc
+
 ## 5.13.0 (3/11/2026 PST)
 
 #### 🚀 Updates
