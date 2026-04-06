@@ -9,10 +9,8 @@ export default function Root({ children }: { children: React.ReactNode }) {
   const { postMetric } = useAnalytics();
 
   useEffect(() => {
-    if (window.location.hash) {
-      const elementId = window.location.hash.slice(1);
-      const element = document.getElementById(elementId);
-
+    if (location.hash) {
+      const elementId = location.hash.slice(1);
       const startTime = Date.now();
 
       const intervalId = setInterval(() => {
@@ -31,7 +29,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
       return () => clearInterval(intervalId);
     }
-  }, []);
+  }, [location.hash]);
 
   // Track page view events
   useEffect(() => {
