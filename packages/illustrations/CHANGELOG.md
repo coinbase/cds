@@ -8,6 +8,51 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (1)
+
+###### SpotSquare (1)
+
+- instoAuthenticatorProgress
+
+##### ⭐️ Updated (22)
+
+###### Pictogram (2)
+
+- instoRestaking
+- instoApyInterest
+
+###### HeroSquare (8)
+
+- instoCoinbaseOneProtectedCrypto
+- instoStakingMissedReturns
+- instoRequestSent
+- instoPrivateKey
+- instoKeyGenerationComplete
+- instoOnChain
+- instoDocumentSuccess
+- instoOpenEmail
+
+###### SpotIcon (5)
+
+- instoFast
+- instoDelegate
+- instantAccess
+- instoRecurringPurchases
+- instoPrivateClientProduct
+
+###### SpotRectangle (3)
+
+- instoApiKey
+- instoEmptyTrading
+- instoCryptoAndMore
+
+###### SpotSquare (4)
+
+- instoUbiKey
+- instoWaiting
+- instantUnstaking
+- instoAuthenticatorProgress
+
 ## 4.36.0 (3/27/2026 PST)
 
 #### 🚀 Updates
