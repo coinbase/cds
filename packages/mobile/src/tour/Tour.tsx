@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { Modal, StyleSheet, type StyleProp, View, type ViewStyle } from 'react-native';
+import { Modal, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
@@ -248,8 +248,8 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
             accessibilityLabelledBy={accessibilityLabelledBy}
             animationType="none"
             id={id}
-            style={styles?.root}
             presentationStyle="overFullScreen"
+            style={styles?.root}
             testID={testID}
           >
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (

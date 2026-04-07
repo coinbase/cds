@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { View, type ViewStyle } from 'react-native';
+import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 
 type TourStepProps = {
   /** The id of the corresponding tour step data */
   id: string;
   children?: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 };
 
 /**

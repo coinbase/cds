@@ -1,4 +1,4 @@
-import React, { useCallback, type CSSProperties } from 'react';
+import React, { type CSSProperties, useCallback } from 'react';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 
 type TourStepProps = {

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { type TourStepValue } from '@coinbase/cds-common/tour/useTour';
 
 import { Button } from '../../buttons';
 import { Coachmark } from '../../coachmark/Coachmark';
@@ -12,7 +13,6 @@ import { Text } from '../../typography/Text';
 import { ProgressBar } from '../../visualizations';
 import { Tour } from '../Tour';
 import { TourStep } from '../TourStep';
-import { type TourStepValue } from '@coinbase/cds-common/tour/useTour';
 
 export default {
   title: 'Components/Tour',

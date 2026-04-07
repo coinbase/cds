@@ -3,7 +3,6 @@ import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
-import { type Coords, type Placement } from '@floating-ui/react-dom';
 import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/TourContext';
 import type {
   TourOptions,
@@ -18,8 +17,10 @@ import {
   autoPlacement,
   type AutoPlacementOptions,
   autoUpdate,
+  type Coords,
   offset,
   type OffsetOptions,
+  type Placement,
   shift,
   type ShiftOptions,
   useFloating,
@@ -371,10 +372,10 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               aria-labelledby={accessibilityLabelledBy}
               aria-modal="true"
               className={cx(tourClassNames.root, containerCss, classNames?.root)}
-              style={styles?.root}
               data-testid={testID}
               id={id}
               role="dialog"
+              style={styles?.root}
             >
               {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
                 <animated.div
