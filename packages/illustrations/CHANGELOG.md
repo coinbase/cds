@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.37.0 (4/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026/04/07. [[#590](https://github.com/coinbase/cds/pull/590)]
+
 ##### ⭐️ Added (1)
 
 ###### SpotSquare (1)
