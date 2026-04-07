@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
-import { type TourStepValue } from '@coinbase/cds-common/tour/useTour';
 
 import { Button } from '../../buttons';
 import { Coachmark } from '../../coachmark/Coachmark';
@@ -13,6 +12,7 @@ import { Text } from '../../typography/Text';
 import { ProgressBar } from '../../visualizations';
 import { Tour } from '../Tour';
 import { TourStep } from '../TourStep';
+import { type TourStepValue } from '@coinbase/cds-common/tour/useTour';
 
 export default {
   title: 'Components/Tour',
@@ -301,6 +301,29 @@ export const TourWithStringLiteralId = () => {
       steps={tourStepsWithStringLiteral}
     >
       <TourExample stagger ids={tourStepsWithStringLiteral.map((s) => s.id)} />
+    </Tour>
+  );
+};
+
+export const TourWithCustomStyles = () => {
+  const [activeTourStep, setActiveTourStep] = useState<TourStepValue | null>(null);
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      styles={{
+        stepContainer: {
+          border: '2px solid var(--color-fg)',
+          padding: 'var(--space-2)',
+          borderRadius: 'var(--borderRadius-600)',
+        },
+        stepArrow: {
+          display: 'none',
+        },
+      }}
+    >
+      <TourExample stagger ids={['step1', 'step2', 'step3', 'step4']} />
     </Tour>
   );
 };

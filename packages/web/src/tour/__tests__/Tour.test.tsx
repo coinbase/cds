@@ -107,4 +107,46 @@ describe('Tour', () => {
 
     expect(screen.getByText('Step 2')).toBeInTheDocument();
   });
+
+  describe('classNames and styles', () => {
+    it('applies styles.stepArrow to the arrow element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} styles={{ stepArrow: { backgroundColor: 'blue' } }} />
+        </DefaultThemeProvider>,
+      );
+      const arrowEl = screen.getByTestId('tour-step-arrow');
+      expect(arrowEl).toHaveStyle({ backgroundColor: 'blue' });
+    });
+
+    it('applies classNames.stepArrow to the arrow element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} classNames={{ stepArrow: 'custom-arrow-class' }} />
+        </DefaultThemeProvider>,
+      );
+      const arrowEl = screen.getByTestId('tour-step-arrow');
+      expect(arrowEl).toHaveClass('custom-arrow-class');
+    });
+
+    it('applies styles.root to the root dialog element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} styles={{ root: { borderRadius: '16px' } }} />
+        </DefaultThemeProvider>,
+      );
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).toHaveStyle({ borderRadius: '16px' });
+    });
+
+    it('applies classNames.root to the root dialog element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} classNames={{ root: 'custom-root-class' }} />
+        </DefaultThemeProvider>,
+      );
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).toHaveClass('custom-root-class');
+    });
+  });
 });

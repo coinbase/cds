@@ -105,4 +105,16 @@ describe('Tour', () => {
 
     expect(screen.getByText('Step 2')).toBeTruthy();
   });
+
+  describe('styles', () => {
+    it('applies styles.stepArrow to the arrow element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} styles={{ stepArrow: { backgroundColor: 'blue' } }} />
+        </DefaultThemeProvider>,
+      );
+      const arrowEl = screen.getByTestId('tour-step-arrow');
+      expect(arrowEl).toHaveStyle({ backgroundColor: 'blue' });
+    });
+  });
 });
