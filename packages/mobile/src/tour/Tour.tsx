@@ -253,7 +253,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
             testID={testID}
           >
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
-              <animated.View style={maskStyles}>
+              <animated.View style={maskStyles} testID="tour-mask">
                 <TourMaskComponent
                   activeTourStepTarget={activeTourStepTarget as View}
                   borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
@@ -262,7 +262,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               </animated.View>
             )}
             <View ref={refs.setFloating} collapsable={false} style={floatingStyles}>
-              <animated.View style={stepContainerStyles}>
+              <animated.View style={stepContainerStyles} testID="tour-step-container">
                 <RenderedTourStepArrow
                   ref={tourStepArrowRef}
                   arrow={arrow}

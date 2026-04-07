@@ -1,6 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
-import { cx } from '../cx';
 import { Box } from '../layout/Box';
 
 import type { TourStepArrowComponentProps } from './Tour';
@@ -29,7 +28,7 @@ export const DefaultTourStepArrow = memo(
         <Box
           ref={ref}
           background="bgInverse"
-          className={cx(className)}
+          className={className}
           height={height}
           style={arrowStyles}
           testID="tour-step-arrow"
