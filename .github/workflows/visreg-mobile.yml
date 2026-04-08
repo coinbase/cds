@@ -31,6 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_run: ${{ steps.evaluate.outputs.should_run }}
+      content_hash: ${{ steps.hash.outputs.hash }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -50,6 +51,22 @@ jobs:
         if: github.event_name == 'pull_request'
         run: git fetch -f --no-tags origin master:master --depth=100
 
+      - name: Compute visreg content hash
+        id: hash
+        if: github.event_name == 'pull_request'
+        run: |
+          HASH=$(git ls-tree -r HEAD -- packages/common packages/mobile packages/mobile-visualization | sha256sum | cut -d' ' -f1)
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+
+      - name: Check visreg result cache
+        id: cache-check
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: mobile-visreg-v1-${{ steps.hash.outputs.hash }}
+          lookup-only: true
+
       - name: Evaluate should run
         id: evaluate
         run: |
@@ -59,6 +76,9 @@ jobs:
           elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'visreg-mobile') }}" == "true" ]]; then
             echo "visreg-mobile label present, running visreg"
             echo "should_run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ steps.cache-check.outputs.cache-hit }}" == "true" ]]; then
+            echo "Cache hit - visreg already passed with these exact files, skipping"
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
           elif node packages/mobile-visreg/scripts/shouldRunVisreg.mjs; then
             echo "Relevant changes detected, running visreg"
             echo "should_run=true" >> "$GITHUB_OUTPUT"
@@ -150,6 +170,17 @@ jobs:
           PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
           PERCY_PARALLEL_NONCE: ${{ github.run_id }}
           PERCY_PARALLEL_TOTAL: 1
+
+      - name: Create visreg cache marker
+        if: success() && github.event_name == 'pull_request'
+        run: touch .visreg-cache-marker
+
+      - name: Save visreg result cache
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: mobile-visreg-v1-${{ needs.check.outputs.content_hash }}
 
   # android:
   #   name: Visreg Android
