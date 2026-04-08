@@ -1111,8 +1111,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/done-4.js').content,
   },
   download: {
-    light: () => require('../svgJs/light/download-0.js').content,
-    dark: () => require('../svgJs/dark/download-0.js').content,
+    light: () => require('../svgJs/light/download-1.js').content,
+    dark: () => require('../svgJs/dark/download-1.js').content,
   },
   driversLicense: {
     light: () => require('../svgJs/light/driversLicense-3.js').content,
@@ -1335,8 +1335,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoAdvancedTradingRebates-0.js').content,
   },
   instoApyInterest: {
-    light: () => require('../svgJs/light/instoApyInterest-1.js').content,
-    dark: () => require('../svgJs/dark/instoApyInterest-1.js').content,
+    light: () => require('../svgJs/light/instoApyInterest-2.js').content,
+    dark: () => require('../svgJs/dark/instoApyInterest-2.js').content,
   },
   instoAuthenticatorProgress: {
     light: () => require('../svgJs/light/instoAuthenticatorProgress-0.js').content,
@@ -1435,8 +1435,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoprimeMobileApp-0.js').content,
   },
   instoRestaking: {
-    light: () => require('../svgJs/light/instoRestaking-1.js').content,
-    dark: () => require('../svgJs/dark/instoRestaking-1.js').content,
+    light: () => require('../svgJs/light/instoRestaking-2.js').content,
+    dark: () => require('../svgJs/dark/instoRestaking-2.js').content,
   },
   instoRiskStaking: {
     light: () => require('../svgJs/light/instoRiskStaking-0.js').content,

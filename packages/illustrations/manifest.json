@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-03-27T19:19:59.477Z",
+  "lastUpdated": "2026-04-08T18:35:15.991Z",
   "colors": {
     "light": [
       {
@@ -16,18 +16,6 @@
         "cssVarGetter": "var(--illustration-gray-3)"
       },
       {
-        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
-        "name": "accent-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
-        "cssVarSetter": "--illustration-accent-2",
-        "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
         "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
         "name": "positive",
         "type": "light",
@@ -38,18 +26,6 @@
         },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
-        "name": "negative",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
-        "cssVarSetter": "--illustration-negative",
-        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "932552c58e590ee79409364aad163a6ae566f46f",
@@ -64,16 +40,40 @@
         "cssVarGetter": "var(--illustration-accent-4)"
       },
       {
-        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
-        "name": "primary",
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
         "type": "light",
         "prefix": "illustration",
         "paint": {
           "type": "solid",
-          "value": "#0052FF"
+          "value": "#0A0B0F"
         },
-        "cssVarSetter": "--illustration-primary",
-        "cssVarGetter": "var(--illustration-primary)"
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
+      },
+      {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#5DE2F8"
+        },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
       },
       {
         "key": "2712067c08bfd1c738125b79013b576ed4193c24",
@@ -148,6 +148,18 @@
         "cssVarGetter": "var(--illustration-base-gray)"
       },
       {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#E13947"
+        },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
+      },
+      {
         "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
         "name": "accent-1",
         "type": "light",
@@ -160,28 +172,16 @@
         "cssVarGetter": "var(--illustration-accent-1)"
       },
       {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
         "type": "light",
         "prefix": "illustration",
         "paint": {
           "type": "solid",
-          "value": "#0A0B0F"
+          "value": "#0052FF"
         },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
-      },
-      {
-        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
-        "name": "black",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-black",
-        "cssVarGetter": "var(--illustration-black)"
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
       }
     ],
     "dark": [
@@ -198,18 +198,6 @@
         "cssVarGetter": "var(--illustration-gray-3)"
       },
       {
-        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
-        "name": "accent-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
-        "cssVarSetter": "--illustration-accent-2",
-        "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
         "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
         "name": "positive",
         "type": "dark",
@@ -220,18 +208,6 @@
         },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
-        "name": "negative",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
-        "cssVarSetter": "--illustration-negative",
-        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "932552c58e590ee79409364aad163a6ae566f46f",
@@ -246,16 +222,40 @@
         "cssVarGetter": "var(--illustration-accent-4)"
       },
       {
-        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
-        "name": "primary",
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
         "type": "dark",
         "prefix": "illustration",
         "paint": {
           "type": "solid",
-          "value": "#578BFA"
+          "value": "#464B55"
         },
-        "cssVarSetter": "--illustration-primary",
-        "cssVarGetter": "var(--illustration-primary)"
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
+      },
+      {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#45D9F5"
+        },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
       },
       {
         "key": "2712067c08bfd1c738125b79013b576ed4193c24",
@@ -330,6 +330,18 @@
         "cssVarGetter": "var(--illustration-base-gray)"
       },
       {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#F0616D"
+        },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
+      },
+      {
         "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
         "name": "accent-1",
         "type": "dark",
@@ -342,28 +354,16 @@
         "cssVarGetter": "var(--illustration-accent-1)"
       },
       {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
         "type": "dark",
         "prefix": "illustration",
         "paint": {
           "type": "solid",
-          "value": "#464B55"
+          "value": "#578BFA"
         },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
-      },
-      {
-        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
-        "name": "black",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-black",
-        "cssVarGetter": "var(--illustration-black)"
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
       }
     ]
   },
@@ -29211,22 +29211,22 @@
     "28633:2306": {
       "type": "pictogram",
       "name": "download",
-      "hash": "5aA7uCDKWn7udEnLTquFP2oNBdJwXtXiA7j8oZIS1BE=",
+      "hash": "BPADqIJljEtePqdV+1YEhDDP7AYKY7uUQxKXFheFEho=",
       "width": 48,
       "height": 48,
       "description": "below, currency, money, arrow, downwards, down, direction, 👇, ⬇️, 🔻, 💰, 💸, 💵, 💶, 💷, 💴",
       "createdAt": "2026-03-11T21:09:16.029Z",
-      "lastUpdated": "2026-03-11T21:09:16.029Z",
+      "lastUpdated": "2026-04-07T23:04:46.229Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/download-0.svg",
-        "svgDark": "./pictogram/svg/dark/download-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/download-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/download-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/download-0.js",
-        "pngLight": "./pictogram/png/light/download-0.png",
-        "pngDark": "./pictogram/png/dark/download-0.png"
+        "svgLight": "./pictogram/svg/light/download-1.svg",
+        "svgDark": "./pictogram/svg/dark/download-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/download-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/download-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/download-1.js",
+        "pngLight": "./pictogram/png/light/download-1.png",
+        "pngDark": "./pictogram/png/dark/download-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:27": {
       "type": "heroSquare",
@@ -29271,42 +29271,42 @@
     "28806:29": {
       "type": "spotSquare",
       "name": "instantUnstaking",
-      "hash": "nkfUJLOwgaTal0VpJ0sHvf5Oz59ZVdgPnH7TNNOosLc=",
+      "hash": "EA/pFwvwSmkzOsvBEepf9LIoTCV/hMqYwL7c32snnuw=",
       "width": 96,
       "height": 96,
       "description": "",
       "createdAt": "2026-03-16T14:55:20.585Z",
-      "lastUpdated": "2026-03-16T14:55:20.585Z",
+      "lastUpdated": "2026-04-06T17:51:44.795Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instantUnstaking-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instantUnstaking-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instantUnstaking-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instantUnstaking-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instantUnstaking-0.js",
-        "pngLight": "./spotSquare/png/light/instantUnstaking-0.png",
-        "pngDark": "./spotSquare/png/dark/instantUnstaking-0.png"
+        "svgLight": "./spotSquare/svg/light/instantUnstaking-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instantUnstaking-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instantUnstaking-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instantUnstaking-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instantUnstaking-1.js",
+        "pngLight": "./spotSquare/png/light/instantUnstaking-1.png",
+        "pngDark": "./spotSquare/png/dark/instantUnstaking-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:30": {
       "type": "spotIcon",
       "name": "instantAccess",
-      "hash": "xAssLmtB6TTMl8xebKP3+4rs15ZiiKABIPNsjEHWqh0=",
+      "hash": "Rv36iX07h8VkvptvHOhpxHMR5/pR492cPtGwRtjNK80=",
       "width": 32,
       "height": 32,
       "description": "",
       "createdAt": "2026-03-16T14:55:20.820Z",
-      "lastUpdated": "2026-03-16T14:55:20.820Z",
+      "lastUpdated": "2026-04-01T17:18:37.445Z",
       "outputs": {
-        "svgLight": "./spotIcon/svg/light/instantAccess-0.svg",
-        "svgDark": "./spotIcon/svg/dark/instantAccess-0.svg",
-        "svgThemed": "./spotIcon/svg/themeable/instantAccess-0.svg",
-        "svgJsLight": "./spotIcon/svgJs/light/instantAccess-0.js",
-        "svgJsDark": "./spotIcon/svgJs/dark/instantAccess-0.js",
-        "pngLight": "./spotIcon/png/light/instantAccess-0.png",
-        "pngDark": "./spotIcon/png/dark/instantAccess-0.png"
+        "svgLight": "./spotIcon/svg/light/instantAccess-1.svg",
+        "svgDark": "./spotIcon/svg/dark/instantAccess-1.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instantAccess-1.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instantAccess-1.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instantAccess-1.js",
+        "pngLight": "./spotIcon/png/light/instantAccess-1.png",
+        "pngDark": "./spotIcon/png/dark/instantAccess-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:31": {
       "type": "spotRectangle",
@@ -29411,62 +29411,62 @@
     "28806:37": {
       "type": "heroSquare",
       "name": "instoCoinbaseOneProtectedCrypto",
-      "hash": "AmGgSamHQGeOKa4yZ+iFDAFtwYZv0VQtSMdD6qQOsjA=",
+      "hash": "ttLIpGE9rY8GNURE/cLYF61QcitADIl3cxHIBfO2J4w=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbaseone, one, shield, protect, protected",
       "createdAt": "2026-03-16T14:55:20.793Z",
-      "lastUpdated": "2026-03-19T18:42:00.188Z",
+      "lastUpdated": "2026-04-06T17:51:44.802Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoCoinbaseOneProtectedCrypto-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoCoinbaseOneProtectedCrypto-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoCoinbaseOneProtectedCrypto-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoCoinbaseOneProtectedCrypto-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoCoinbaseOneProtectedCrypto-0.js",
-        "pngLight": "./heroSquare/png/light/instoCoinbaseOneProtectedCrypto-0.png",
-        "pngDark": "./heroSquare/png/dark/instoCoinbaseOneProtectedCrypto-0.png"
+        "svgLight": "./heroSquare/svg/light/instoCoinbaseOneProtectedCrypto-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoCoinbaseOneProtectedCrypto-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoCoinbaseOneProtectedCrypto-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoCoinbaseOneProtectedCrypto-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoCoinbaseOneProtectedCrypto-1.js",
+        "pngLight": "./heroSquare/png/light/instoCoinbaseOneProtectedCrypto-1.png",
+        "pngDark": "./heroSquare/png/dark/instoCoinbaseOneProtectedCrypto-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:38": {
       "type": "heroSquare",
       "name": "instoDocumentSuccess",
-      "hash": "FewrYdNUsuuYTVI0nDqO0vbB+TNhVS35OR420SBMKI0=",
+      "hash": "EvryjLLcYKzRG9Aj+hw3PCqiGGGUykXNAXGIBNGK4T0=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Documents, reviewed, success, checkmark, confirm, complete, ✅, success state",
       "createdAt": "2026-03-16T14:55:20.800Z",
-      "lastUpdated": "2026-03-19T18:42:00.282Z",
+      "lastUpdated": "2026-04-01T17:18:37.471Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoDocumentSuccess-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoDocumentSuccess-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoDocumentSuccess-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoDocumentSuccess-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoDocumentSuccess-0.js",
-        "pngLight": "./heroSquare/png/light/instoDocumentSuccess-0.png",
-        "pngDark": "./heroSquare/png/dark/instoDocumentSuccess-0.png"
+        "svgLight": "./heroSquare/svg/light/instoDocumentSuccess-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoDocumentSuccess-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoDocumentSuccess-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoDocumentSuccess-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoDocumentSuccess-1.js",
+        "pngLight": "./heroSquare/png/light/instoDocumentSuccess-1.png",
+        "pngDark": "./heroSquare/png/dark/instoDocumentSuccess-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:39": {
       "type": "heroSquare",
       "name": "instoPrivateKey",
-      "hash": "VGGrhpjT9i0X/DZD6GzVSy/WTR3DP5XO4fn1fN3HJh8=",
+      "hash": "C/O5xR20IXttRgB3vwj5TeP6o6qoTwaiFFIRzuQj5+o=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, private, key, network, access, secure, encryption, encrypted, acces",
       "createdAt": "2026-03-16T14:55:20.875Z",
-      "lastUpdated": "2026-03-19T18:42:00.027Z",
+      "lastUpdated": "2026-04-01T17:18:37.423Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoPrivateKey-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoPrivateKey-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoPrivateKey-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoPrivateKey-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoPrivateKey-0.js",
-        "pngLight": "./heroSquare/png/light/instoPrivateKey-0.png",
-        "pngDark": "./heroSquare/png/dark/instoPrivateKey-0.png"
+        "svgLight": "./heroSquare/svg/light/instoPrivateKey-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoPrivateKey-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoPrivateKey-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoPrivateKey-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoPrivateKey-1.js",
+        "pngLight": "./heroSquare/png/light/instoPrivateKey-1.png",
+        "pngDark": "./heroSquare/png/dark/instoPrivateKey-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:40": {
       "type": "heroSquare",
@@ -29551,22 +29551,22 @@
     "28806:44": {
       "type": "heroSquare",
       "name": "instoOpenEmail",
-      "hash": "VHql8v3FK0KYY8i9osgIIPN+gVfAw5sQJuG//0YHg/k=",
+      "hash": "XelfRCc36iBuLEtwhg1njwLug5UQGdkhIeIaZY1lFCs=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, open, email, envelope, letter, 📧 📥 📤 ✉ 📩 📨",
       "createdAt": "2026-03-16T14:55:20.896Z",
-      "lastUpdated": "2026-03-19T18:42:00.399Z",
+      "lastUpdated": "2026-04-01T17:18:37.482Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoOpenEmail-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoOpenEmail-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoOpenEmail-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoOpenEmail-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoOpenEmail-0.js",
-        "pngLight": "./heroSquare/png/light/instoOpenEmail-0.png",
-        "pngDark": "./heroSquare/png/dark/instoOpenEmail-0.png"
+        "svgLight": "./heroSquare/svg/light/instoOpenEmail-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoOpenEmail-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoOpenEmail-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoOpenEmail-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoOpenEmail-1.js",
+        "pngLight": "./heroSquare/png/light/instoOpenEmail-1.png",
+        "pngDark": "./heroSquare/png/dark/instoOpenEmail-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:45": {
       "type": "heroSquare",
@@ -29611,22 +29611,42 @@
     "28806:47": {
       "type": "heroSquare",
       "name": "instoStakingMissedReturns",
-      "hash": "Bas8OSghkm3+vVPz9OXYj+5J4oj4DAUDQkd01/ZtdfY=",
+      "hash": "Dv6x/E6P9ZwyMzKQ9vNqFzYUQn32mRipZf039HiGGis=",
       "width": 240.0001220703125,
       "height": 240.00021362304688,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, staking, earn, yield, interest, would, have, missed, out, on, coins, clock, time, money, grow",
       "createdAt": "2026-03-16T14:55:20.737Z",
-      "lastUpdated": "2026-03-19T18:41:59.988Z",
+      "lastUpdated": "2026-04-01T17:18:37.413Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoStakingMissedReturns-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoStakingMissedReturns-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoStakingMissedReturns-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoStakingMissedReturns-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoStakingMissedReturns-0.js",
-        "pngLight": "./heroSquare/png/light/instoStakingMissedReturns-0.png",
-        "pngDark": "./heroSquare/png/dark/instoStakingMissedReturns-0.png"
+        "svgLight": "./heroSquare/svg/light/instoStakingMissedReturns-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoStakingMissedReturns-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoStakingMissedReturns-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoStakingMissedReturns-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoStakingMissedReturns-1.js",
+        "pngLight": "./heroSquare/png/light/instoStakingMissedReturns-1.png",
+        "pngDark": "./heroSquare/png/dark/instoStakingMissedReturns-1.png"
       },
-      "version": 0
+      "version": 1
+    },
+    "28806:48": {
+      "type": "heroSquare",
+      "name": "instoOnChain",
+      "hash": "g2J7zRHsoM4mu46YlacHXkULE4FxwMZQXN7drYUQE3U=",
+      "width": 240,
+      "height": 240,
+      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+      "createdAt": "2026-03-16T14:55:20.765Z",
+      "lastUpdated": "2026-04-01T17:18:37.477Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/instoOnChain-2.svg",
+        "svgDark": "./heroSquare/svg/dark/instoOnChain-2.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoOnChain-2.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoOnChain-2.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoOnChain-2.js",
+        "pngLight": "./heroSquare/png/light/instoOnChain-2.png",
+        "pngDark": "./heroSquare/png/dark/instoOnChain-2.png"
+      },
+      "version": 2
     },
     "28806:49": {
       "type": "heroSquare",
@@ -29647,26 +29667,6 @@
         "pngDark": "./heroSquare/png/dark/instoSecurityKeyAuth-0.png"
       },
       "version": 0
-    },
-    "28806:50": {
-      "type": "heroSquare",
-      "name": "instoOnChain",
-      "hash": "E2tS181QS2c/K0IRqNzr1EgfLXuYgfaH2a2hI8sBAGk=",
-      "width": 240,
-      "height": 240,
-      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
-      "createdAt": "2026-03-16T14:55:20.765Z",
-      "lastUpdated": "2026-03-19T18:42:00.136Z",
-      "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoOnChain-1.svg",
-        "svgDark": "./heroSquare/svg/dark/instoOnChain-1.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoOnChain-1.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoOnChain-1.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoOnChain-1.js",
-        "pngLight": "./heroSquare/png/light/instoOnChain-1.png",
-        "pngDark": "./heroSquare/png/dark/instoOnChain-1.png"
-      },
-      "version": 1
     },
     "28806:51": {
       "type": "heroSquare",
@@ -29691,22 +29691,22 @@
     "28806:52": {
       "type": "heroSquare",
       "name": "instoRequestSent",
-      "hash": "SAU3NNDv+LHR26i7l3fv+8YlseKQmf6ejXlg7pUMFRE=",
+      "hash": "K2cK2Rs90zxlhsIg5FPmYTl4lAejzb5cFthA9yhGdpQ=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.745Z",
-      "lastUpdated": "2026-03-19T18:41:59.967Z",
+      "lastUpdated": "2026-04-01T17:18:37.403Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoRequestSent-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoRequestSent-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoRequestSent-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoRequestSent-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoRequestSent-0.js",
-        "pngLight": "./heroSquare/png/light/instoRequestSent-0.png",
-        "pngDark": "./heroSquare/png/dark/instoRequestSent-0.png"
+        "svgLight": "./heroSquare/svg/light/instoRequestSent-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoRequestSent-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoRequestSent-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoRequestSent-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoRequestSent-1.js",
+        "pngLight": "./heroSquare/png/light/instoRequestSent-1.png",
+        "pngDark": "./heroSquare/png/dark/instoRequestSent-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:53": {
       "type": "heroSquare",
@@ -29771,22 +29771,22 @@
     "28806:56": {
       "type": "heroSquare",
       "name": "instoKeyGenerationComplete",
-      "hash": "bBInpW3KCHET1zHreDJGiquoan9/rVFHhfFP/yd67p0=",
+      "hash": "T+o5k8tQkm1f7Nsen8FU115BENxGac4eq3G+EkM4dBo=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.996Z",
-      "lastUpdated": "2026-03-19T18:42:00.065Z",
+      "lastUpdated": "2026-04-01T17:18:37.440Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instoKeyGenerationComplete-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instoKeyGenerationComplete-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instoKeyGenerationComplete-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instoKeyGenerationComplete-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instoKeyGenerationComplete-0.js",
-        "pngLight": "./heroSquare/png/light/instoKeyGenerationComplete-0.png",
-        "pngDark": "./heroSquare/png/dark/instoKeyGenerationComplete-0.png"
+        "svgLight": "./heroSquare/svg/light/instoKeyGenerationComplete-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instoKeyGenerationComplete-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instoKeyGenerationComplete-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instoKeyGenerationComplete-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instoKeyGenerationComplete-1.js",
+        "pngLight": "./heroSquare/png/light/instoKeyGenerationComplete-1.png",
+        "pngDark": "./heroSquare/png/dark/instoKeyGenerationComplete-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:57": {
       "type": "spotRectangle",
@@ -29931,42 +29931,42 @@
     "28806:64": {
       "type": "spotRectangle",
       "name": "instoCryptoAndMore",
-      "hash": "uaT1hrtZhN81d0vd/ZXF03LmVLSf3P+JxkfEk49OGZY=",
+      "hash": "NDE3S2JO42hzVQsPnUYF6pz8VFxg8l45C5CQWho4Gzw=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coin, coins, moon, more, empty state",
       "createdAt": "2026-03-16T14:55:20.724Z",
-      "lastUpdated": "2026-03-19T18:42:00.420Z",
+      "lastUpdated": "2026-04-01T17:18:37.487Z",
       "outputs": {
-        "svgLight": "./spotRectangle/svg/light/instoCryptoAndMore-1.svg",
-        "svgDark": "./spotRectangle/svg/dark/instoCryptoAndMore-1.svg",
-        "svgThemed": "./spotRectangle/svg/themeable/instoCryptoAndMore-1.svg",
-        "svgJsLight": "./spotRectangle/svgJs/light/instoCryptoAndMore-1.js",
-        "svgJsDark": "./spotRectangle/svgJs/dark/instoCryptoAndMore-1.js",
-        "pngLight": "./spotRectangle/png/light/instoCryptoAndMore-1.png",
-        "pngDark": "./spotRectangle/png/dark/instoCryptoAndMore-1.png"
+        "svgLight": "./spotRectangle/svg/light/instoCryptoAndMore-2.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoCryptoAndMore-2.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoCryptoAndMore-2.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoCryptoAndMore-2.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoCryptoAndMore-2.js",
+        "pngLight": "./spotRectangle/png/light/instoCryptoAndMore-2.png",
+        "pngDark": "./spotRectangle/png/dark/instoCryptoAndMore-2.png"
       },
-      "version": 1
+      "version": 2
     },
     "28806:65": {
       "type": "spotRectangle",
       "name": "instoEmptyTrading",
-      "hash": "rY+oPYRHHiGkvdP+2wWQ3DKu0ZJzY79w9W3yhr2OxNk=",
+      "hash": "y70yKKKG4rOJco7uVhwjQC2oGpC4ez6GHFaq+9E295o=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, empty state, trading, exchange",
       "createdAt": "2026-03-16T14:55:20.652Z",
-      "lastUpdated": "2026-03-19T18:42:00.037Z",
+      "lastUpdated": "2026-04-01T17:29:48.568Z",
       "outputs": {
-        "svgLight": "./spotRectangle/svg/light/instoEmptyTrading-0.svg",
-        "svgDark": "./spotRectangle/svg/dark/instoEmptyTrading-0.svg",
-        "svgThemed": "./spotRectangle/svg/themeable/instoEmptyTrading-0.svg",
-        "svgJsLight": "./spotRectangle/svgJs/light/instoEmptyTrading-0.js",
-        "svgJsDark": "./spotRectangle/svgJs/dark/instoEmptyTrading-0.js",
-        "pngLight": "./spotRectangle/png/light/instoEmptyTrading-0.png",
-        "pngDark": "./spotRectangle/png/dark/instoEmptyTrading-0.png"
+        "svgLight": "./spotRectangle/svg/light/instoEmptyTrading-1.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoEmptyTrading-1.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoEmptyTrading-1.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoEmptyTrading-1.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoEmptyTrading-1.js",
+        "pngLight": "./spotRectangle/png/light/instoEmptyTrading-1.png",
+        "pngDark": "./spotRectangle/png/dark/instoEmptyTrading-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28806:66": {
       "type": "spotSquare",
@@ -30091,22 +30091,22 @@
     "28806:72": {
       "type": "spotSquare",
       "name": "instoWaiting",
-      "hash": "g7BbgRXDiUKhaDO6LdXrWBBU9eZuoTIBFNUPm2c2mBw=",
+      "hash": "k1OxbtDV4KOtKrSPLlyQmRY8qvxfINN5UNxq7O7HZxE=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.072Z",
-      "lastUpdated": "2026-03-19T18:42:00.047Z",
+      "lastUpdated": "2026-04-01T17:18:37.427Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoWaiting-1.svg",
-        "svgDark": "./spotSquare/svg/dark/instoWaiting-1.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoWaiting-1.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoWaiting-1.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoWaiting-1.js",
-        "pngLight": "./spotSquare/png/light/instoWaiting-1.png",
-        "pngDark": "./spotSquare/png/dark/instoWaiting-1.png"
+        "svgLight": "./spotSquare/svg/light/instoWaiting-2.svg",
+        "svgDark": "./spotSquare/svg/dark/instoWaiting-2.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoWaiting-2.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoWaiting-2.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoWaiting-2.js",
+        "pngLight": "./spotSquare/png/light/instoWaiting-2.png",
+        "pngDark": "./spotSquare/png/dark/instoWaiting-2.png"
       },
-      "version": 1
+      "version": 2
     },
     "28806:73": {
       "type": "spotSquare",
@@ -30151,22 +30151,42 @@
     "28806:75": {
       "type": "spotSquare",
       "name": "instoUbiKey",
-      "hash": "8Du474eHz1Ws8RDQPsf7OySNCpRMX5qtuJf4BUr/rDg=",
+      "hash": "P7Mjuq5GrJmmNn4tMVisMDiBYHwamoCN5WhAPrQXxZc=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.019Z",
-      "lastUpdated": "2026-03-19T18:42:00.001Z",
+      "lastUpdated": "2026-04-01T17:29:48.556Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoUbiKey-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoUbiKey-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoUbiKey-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoUbiKey-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoUbiKey-0.js",
-        "pngLight": "./spotSquare/png/light/instoUbiKey-0.png",
-        "pngDark": "./spotSquare/png/dark/instoUbiKey-0.png"
+        "svgLight": "./spotSquare/svg/light/instoUbiKey-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoUbiKey-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoUbiKey-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoUbiKey-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoUbiKey-1.js",
+        "pngLight": "./spotSquare/png/light/instoUbiKey-1.png",
+        "pngDark": "./spotSquare/png/dark/instoUbiKey-1.png"
       },
-      "version": 0
+      "version": 1
+    },
+    "28806:76": {
+      "type": "spotSquare",
+      "name": "instoAuthenticatorProgress",
+      "hash": "mU+JmsJXCnNrjE6Vxh45tOQeC++BFgBXGZ2uX57zTxM=",
+      "width": 96,
+      "height": 96,
+      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+      "createdAt": "2026-03-16T14:55:20.778Z",
+      "lastUpdated": "2026-04-01T17:18:37.457Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/instoAuthenticatorProgress-2.svg",
+        "svgDark": "./spotSquare/svg/dark/instoAuthenticatorProgress-2.svg",
+        "svgThemed": "./spotSquare/svg/themeable/instoAuthenticatorProgress-2.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/instoAuthenticatorProgress-2.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/instoAuthenticatorProgress-2.js",
+        "pngLight": "./spotSquare/png/light/instoAuthenticatorProgress-2.png",
+        "pngDark": "./spotSquare/png/dark/instoAuthenticatorProgress-2.png"
+      },
+      "version": 2
     },
     "28806:77": {
       "type": "pictogram",
@@ -30251,42 +30271,42 @@
     "28806:81": {
       "type": "pictogram",
       "name": "instoApyInterest",
-      "hash": "Q8IwWnyrsHpA/+Z0xLlli1HBBR55WXyI9KFXfdyuubM=",
+      "hash": "qZBARvsXKKwKGQhod37ZLDVvwErS2atLdJ8U0rhNYEs=",
       "width": 40,
       "height": 40,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, APY, interest, growth, graph, chart, yield, coin, arrow, trending, value, increase, growing, 📈",
       "createdAt": "2026-03-16T14:55:20.960Z",
-      "lastUpdated": "2026-03-19T18:42:00.258Z",
+      "lastUpdated": "2026-04-01T17:18:37.466Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoApyInterest-1.svg",
-        "svgDark": "./pictogram/svg/dark/instoApyInterest-1.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoApyInterest-1.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoApyInterest-1.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoApyInterest-1.js",
-        "pngLight": "./pictogram/png/light/instoApyInterest-1.png",
-        "pngDark": "./pictogram/png/dark/instoApyInterest-1.png"
+        "svgLight": "./pictogram/svg/light/instoApyInterest-2.svg",
+        "svgDark": "./pictogram/svg/dark/instoApyInterest-2.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoApyInterest-2.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoApyInterest-2.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoApyInterest-2.js",
+        "pngLight": "./pictogram/png/light/instoApyInterest-2.png",
+        "pngDark": "./pictogram/png/dark/instoApyInterest-2.png"
       },
-      "version": 1
+      "version": 2
     },
     "28806:82": {
       "type": "pictogram",
       "name": "instoRestaking",
-      "hash": "tl6bu5MpcpWHGi5QYV7C30yM6pXRWebH+bR+0tFnZSQ=",
+      "hash": "QQBXY7DwpakFAmolMZLbJk/HkZNm8udU3U5mfp+HVxk=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbase, one, cb1, refresh, restore, refill, 🔄, staking",
       "createdAt": "2026-03-16T14:55:20.827Z",
-      "lastUpdated": "2026-03-19T18:42:00.059Z",
+      "lastUpdated": "2026-04-01T17:18:37.431Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoRestaking-1.svg",
-        "svgDark": "./pictogram/svg/dark/instoRestaking-1.svg",
-        "svgThemed": "./pictogram/svg/themeable/instoRestaking-1.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instoRestaking-1.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instoRestaking-1.js",
-        "pngLight": "./pictogram/png/light/instoRestaking-1.png",
-        "pngDark": "./pictogram/png/dark/instoRestaking-1.png"
+        "svgLight": "./pictogram/svg/light/instoRestaking-2.svg",
+        "svgDark": "./pictogram/svg/dark/instoRestaking-2.svg",
+        "svgThemed": "./pictogram/svg/themeable/instoRestaking-2.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instoRestaking-2.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instoRestaking-2.js",
+        "pngLight": "./pictogram/png/light/instoRestaking-2.png",
+        "pngDark": "./pictogram/png/dark/instoRestaking-2.png"
       },
-      "version": 1
+      "version": 2
     },
     "28806:83": {
       "type": "pictogram",
@@ -30828,26 +30848,6 @@
       },
       "version": 0
     },
-    "28897:172": {
-      "type": "spotSquare",
-      "name": "instoAuthenticatorProgress",
-      "hash": "RMcuuy3b2ChqE9M3I7SDbrNAFNxEVSyRfaeXr/rP6Io=",
-      "width": 48,
-      "height": 48,
-      "description": "insto, prime, negroni, orange, institutional, institutional investor,",
-      "createdAt": "2026-03-16T14:55:20.778Z",
-      "lastUpdated": "2026-03-19T18:41:59.972Z",
-      "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoAuthenticatorProgress-1.svg",
-        "svgDark": "./spotSquare/svg/dark/instoAuthenticatorProgress-1.svg",
-        "svgThemed": "./spotSquare/svg/themeable/instoAuthenticatorProgress-1.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/instoAuthenticatorProgress-1.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/instoAuthenticatorProgress-1.js",
-        "pngLight": "./spotSquare/png/light/instoAuthenticatorProgress-1.png",
-        "pngDark": "./spotSquare/png/dark/instoAuthenticatorProgress-1.png"
-      },
-      "version": 1
-    },
     "28897:183": {
       "type": "pictogram",
       "name": "instoCoinFocus",
@@ -30931,22 +30931,22 @@
     "28932:405": {
       "type": "spotIcon",
       "name": "instoDelegate",
-      "hash": "hpN4dcAoBVcBEXx0MUEY+qChD6Uu9X8WqowNytlN+w4=",
+      "hash": "o9LMH0mlZtOlTxnW+PAGlZVZLvcRu4KYxKsBEYc7FYs=",
       "width": 32,
       "height": 32,
       "description": "represent, envoy, agent, assign, entrust, give, person, check, checkmark, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
       "createdAt": "2026-03-19T18:41:59.421Z",
-      "lastUpdated": "2026-03-19T18:41:59.421Z",
+      "lastUpdated": "2026-04-01T17:18:37.418Z",
       "outputs": {
-        "svgLight": "./spotIcon/svg/light/instoDelegate-0.svg",
-        "svgDark": "./spotIcon/svg/dark/instoDelegate-0.svg",
-        "svgThemed": "./spotIcon/svg/themeable/instoDelegate-0.svg",
-        "svgJsLight": "./spotIcon/svgJs/light/instoDelegate-0.js",
-        "svgJsDark": "./spotIcon/svgJs/dark/instoDelegate-0.js",
-        "pngLight": "./spotIcon/png/light/instoDelegate-0.png",
-        "pngDark": "./spotIcon/png/dark/instoDelegate-0.png"
+        "svgLight": "./spotIcon/svg/light/instoDelegate-1.svg",
+        "svgDark": "./spotIcon/svg/dark/instoDelegate-1.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoDelegate-1.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoDelegate-1.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoDelegate-1.js",
+        "pngLight": "./spotIcon/png/light/instoDelegate-1.png",
+        "pngDark": "./spotIcon/png/dark/instoDelegate-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28932:406": {
       "type": "spotIcon",
@@ -31031,42 +31031,42 @@
     "28932:426": {
       "type": "spotIcon",
       "name": "instoFast",
-      "hash": "0PZaxt4Gk2fMJvJ8xttHnLpWvS/VQ718W1xt7quoC1w=",
+      "hash": "KU6Nod+zm6ViRXsNXu2Poc1NM8luiVbR+0QKn//wDHE=",
       "width": 32,
       "height": 32,
       "description": "quick, time, clock, speed, lightning, 🕦, 🕐, 🕚, 🕥, 🕧, 🕙, 🕣, 🕠, 🕝, 🕢, 🕟, 🕜, 🕤, 🕡, 🕞, 🕘, 🕒, 🕗, 🕔, 🕑, 🕖, 🕓, 🕛, ⏰, ⏱, 🕰, 🔄, ⏳, ⌛️",
       "createdAt": "2026-03-19T18:41:59.476Z",
-      "lastUpdated": "2026-03-19T18:41:59.476Z",
+      "lastUpdated": "2026-04-01T17:18:37.398Z",
       "outputs": {
-        "svgLight": "./spotIcon/svg/light/instoFast-0.svg",
-        "svgDark": "./spotIcon/svg/dark/instoFast-0.svg",
-        "svgThemed": "./spotIcon/svg/themeable/instoFast-0.svg",
-        "svgJsLight": "./spotIcon/svgJs/light/instoFast-0.js",
-        "svgJsDark": "./spotIcon/svgJs/dark/instoFast-0.js",
-        "pngLight": "./spotIcon/png/light/instoFast-0.png",
-        "pngDark": "./spotIcon/png/dark/instoFast-0.png"
+        "svgLight": "./spotIcon/svg/light/instoFast-1.svg",
+        "svgDark": "./spotIcon/svg/dark/instoFast-1.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoFast-1.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoFast-1.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoFast-1.js",
+        "pngLight": "./spotIcon/png/light/instoFast-1.png",
+        "pngDark": "./spotIcon/png/dark/instoFast-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28932:434": {
       "type": "spotIcon",
       "name": "instoRecurringPurchases",
-      "hash": "BY+mwy47+1UNq6zRqqXW2KsvPrAuCj4wSG5vvJjCHqk=",
+      "hash": "7zUJ2OtjTuKKLiFZiqzKApJ+8LAJqKZAeZBaxW+kK1w=",
       "width": 32,
       "height": 32,
       "description": "reoccur, regular, schedule, calendar, organize, date, year, month, week, book, refresh, 📆, 📅, 🗓",
       "createdAt": "2026-03-19T18:41:59.483Z",
-      "lastUpdated": "2026-03-19T18:41:59.483Z",
+      "lastUpdated": "2026-04-01T17:18:37.451Z",
       "outputs": {
-        "svgLight": "./spotIcon/svg/light/instoRecurringPurchases-0.svg",
-        "svgDark": "./spotIcon/svg/dark/instoRecurringPurchases-0.svg",
-        "svgThemed": "./spotIcon/svg/themeable/instoRecurringPurchases-0.svg",
-        "svgJsLight": "./spotIcon/svgJs/light/instoRecurringPurchases-0.js",
-        "svgJsDark": "./spotIcon/svgJs/dark/instoRecurringPurchases-0.js",
-        "pngLight": "./spotIcon/png/light/instoRecurringPurchases-0.png",
-        "pngDark": "./spotIcon/png/dark/instoRecurringPurchases-0.png"
+        "svgLight": "./spotIcon/svg/light/instoRecurringPurchases-1.svg",
+        "svgDark": "./spotIcon/svg/dark/instoRecurringPurchases-1.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoRecurringPurchases-1.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoRecurringPurchases-1.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoRecurringPurchases-1.js",
+        "pngLight": "./spotIcon/png/light/instoRecurringPurchases-1.png",
+        "pngDark": "./spotIcon/png/dark/instoRecurringPurchases-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28932:440": {
       "type": "spotIcon",
@@ -31251,22 +31251,22 @@
     "28932:476": {
       "type": "spotIcon",
       "name": "instoPrivateClientProduct",
-      "hash": "1AHtK1c9Kvo78AYT0DafVHAvdYDXYZtyRdQW31fS0hI=",
+      "hash": "Iv5jJOVb/EK9sDbykvbH/UFXgXaKwnE60WMEukVNPrY=",
       "width": 32,
       "height": 32,
       "description": "product, icons, private, client",
       "createdAt": "2026-03-19T18:41:59.452Z",
-      "lastUpdated": "2026-03-19T18:41:59.452Z",
+      "lastUpdated": "2026-04-01T17:18:37.435Z",
       "outputs": {
-        "svgLight": "./spotIcon/svg/light/instoPrivateClientProduct-0.svg",
-        "svgDark": "./spotIcon/svg/dark/instoPrivateClientProduct-0.svg",
-        "svgThemed": "./spotIcon/svg/themeable/instoPrivateClientProduct-0.svg",
-        "svgJsLight": "./spotIcon/svgJs/light/instoPrivateClientProduct-0.js",
-        "svgJsDark": "./spotIcon/svgJs/dark/instoPrivateClientProduct-0.js",
-        "pngLight": "./spotIcon/png/light/instoPrivateClientProduct-0.png",
-        "pngDark": "./spotIcon/png/dark/instoPrivateClientProduct-0.png"
+        "svgLight": "./spotIcon/svg/light/instoPrivateClientProduct-1.svg",
+        "svgDark": "./spotIcon/svg/dark/instoPrivateClientProduct-1.svg",
+        "svgThemed": "./spotIcon/svg/themeable/instoPrivateClientProduct-1.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/instoPrivateClientProduct-1.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/instoPrivateClientProduct-1.js",
+        "pngLight": "./spotIcon/png/light/instoPrivateClientProduct-1.png",
+        "pngDark": "./spotIcon/png/dark/instoPrivateClientProduct-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28932:477": {
       "type": "spotIcon",
@@ -31591,22 +31591,22 @@
     "28955:91": {
       "type": "spotRectangle",
       "name": "instoApiKey",
-      "hash": "Xn5cZASJItYJNJ4Tu2Q62xCSvXGj/2HqnersoNlOotQ=",
+      "hash": "TJHIzwzNSHlcG5IIthWf6RE9AodmieRj0d6iCf9tuzQ=",
       "width": 240,
       "height": 120,
       "description": "API, key, access, account, connect, unlock, gain, trust",
       "createdAt": "2026-03-20T17:10:13.588Z",
-      "lastUpdated": "2026-03-20T17:10:13.588Z",
+      "lastUpdated": "2026-04-01T17:18:37.388Z",
       "outputs": {
-        "svgLight": "./spotRectangle/svg/light/instoApiKey-0.svg",
-        "svgDark": "./spotRectangle/svg/dark/instoApiKey-0.svg",
-        "svgThemed": "./spotRectangle/svg/themeable/instoApiKey-0.svg",
-        "svgJsLight": "./spotRectangle/svgJs/light/instoApiKey-0.js",
-        "svgJsDark": "./spotRectangle/svgJs/dark/instoApiKey-0.js",
-        "pngLight": "./spotRectangle/png/light/instoApiKey-0.png",
-        "pngDark": "./spotRectangle/png/dark/instoApiKey-0.png"
+        "svgLight": "./spotRectangle/svg/light/instoApiKey-1.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoApiKey-1.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/instoApiKey-1.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/instoApiKey-1.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/instoApiKey-1.js",
+        "pngLight": "./spotRectangle/png/light/instoApiKey-1.png",
+        "pngDark": "./spotRectangle/png/dark/instoApiKey-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28956:112": {
       "type": "spotRectangle",
