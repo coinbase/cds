@@ -866,7 +866,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'socialShare',
     'socialReshare',
     'beginningArrow',
-    'endArrow'
+    'endArrow',
+    'overPredictions',
+    'underPredictions'
   ],
   'reverse': [
     'undo',
@@ -1019,7 +1021,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'pillCapsule',
     'singlecloud',
     'rain',
-    'autoCar'
+    'autoCar',
+    'column'
   ],
   'profile': [
     'account',
@@ -6545,5 +6548,21 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'stocks': [
     'pieChartWithArrow'
+  ],
+  'over': [
+    'overPredictions'
+  ],
+  'predictions': [
+    'overPredictions',
+    'underPredictions'
+  ],
+  'column': [
+    'column'
+  ],
+  'editing': [
+    'column'
+  ],
+  'under': [
+    'underPredictions'
   ]
 };
