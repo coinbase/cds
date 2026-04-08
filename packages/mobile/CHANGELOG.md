@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.1 (4/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: Add styles APIs to Tour and TourStep components. [[#592](https://github.com/coinbase/cds/pull/592)]
+
 ## 8.64.0 (4/2/2026 PST)
 
 #### 🚀 Updates
