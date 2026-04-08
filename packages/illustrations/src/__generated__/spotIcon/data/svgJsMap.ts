@@ -247,8 +247,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/idVerification-3.js').content,
   },
   instantAccess: {
-    light: () => require('../svgJs/light/instantAccess-0.js').content,
-    dark: () => require('../svgJs/dark/instantAccess-0.js').content,
+    light: () => require('../svgJs/light/instantAccess-1.js').content,
+    dark: () => require('../svgJs/dark/instantAccess-1.js').content,
   },
   institutionalProduct: {
     light: () => require('../svgJs/light/institutionalProduct-2.js').content,
@@ -299,16 +299,16 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoDataMarketplace-0.js').content,
   },
   instoDelegate: {
-    light: () => require('../svgJs/light/instoDelegate-0.js').content,
-    dark: () => require('../svgJs/dark/instoDelegate-0.js').content,
+    light: () => require('../svgJs/light/instoDelegate-1.js').content,
+    dark: () => require('../svgJs/dark/instoDelegate-1.js').content,
   },
   instoDerivativesProduct: {
     light: () => require('../svgJs/light/instoDerivativesProduct-0.js').content,
     dark: () => require('../svgJs/dark/instoDerivativesProduct-0.js').content,
   },
   instoFast: {
-    light: () => require('../svgJs/light/instoFast-0.js').content,
-    dark: () => require('../svgJs/dark/instoFast-0.js').content,
+    light: () => require('../svgJs/light/instoFast-1.js').content,
+    dark: () => require('../svgJs/dark/instoFast-1.js').content,
   },
   instoHelpCenterProduct: {
     light: () => require('../svgJs/light/instoHelpCenterProduct-0.js').content,
@@ -343,8 +343,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoPrimeProduct-0.js').content,
   },
   instoPrivateClientProduct: {
-    light: () => require('../svgJs/light/instoPrivateClientProduct-0.js').content,
-    dark: () => require('../svgJs/dark/instoPrivateClientProduct-0.js').content,
+    light: () => require('../svgJs/light/instoPrivateClientProduct-1.js').content,
+    dark: () => require('../svgJs/dark/instoPrivateClientProduct-1.js').content,
   },
   instoProductCoinbaseCard: {
     light: () => require('../svgJs/light/instoProductCoinbaseCard-0.js').content,
@@ -363,8 +363,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoProductWallet-0.js').content,
   },
   instoRecurringPurchases: {
-    light: () => require('../svgJs/light/instoRecurringPurchases-0.js').content,
-    dark: () => require('../svgJs/dark/instoRecurringPurchases-0.js').content,
+    light: () => require('../svgJs/light/instoRecurringPurchases-1.js').content,
+    dark: () => require('../svgJs/dark/instoRecurringPurchases-1.js').content,
   },
   instoRewardsProduct: {
     light: () => require('../svgJs/light/instoRewardsProduct-0.js').content,

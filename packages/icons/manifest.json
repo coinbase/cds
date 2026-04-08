@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-03-11T23:48:44.571Z",
-  "lastUnicode": 986250,
+  "lastUpdated": "2026-04-08T18:18:15.584Z",
+  "lastUnicode": 986268,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25010,10 +25010,10 @@
       "nodeId": "6796:434",
       "name": "usdc",
       "description": "usdc, fixed, cost, coin",
-      "assetsHash": "lW+SKq28Vb/CeW9QF1+UIjdD45agwkQj+Rudrj6aCcs=",
+      "assetsHash": "ti/zDelLoRMg0aG8aheAaautuXCqd4+35cej4sBL2pg=",
       "nameHash": "unyR+X6Yjg/+8ELuMq3RljOPpo+LRmiVMNevUxTlCeE=",
       "createdAt": "2026-03-02T18:06:44.854Z",
-      "lastUpdated": "2026-03-02T18:06:44.854Z",
+      "lastUpdated": "2026-04-06T17:50:41.493Z",
       "svgs": [
         {
           "name": "usdc-24-inactive",
@@ -25144,6 +25144,147 @@
           "active": true,
           "size": 12,
           "unicode": 986233
+        }
+      ]
+    },
+    {
+      "nodeId": "7488:450",
+      "name": "overPredictions",
+      "description": "over, predictions, arrow",
+      "assetsHash": "6JXNTnCHexanTxBEw+Mhwism4EzKfiGt8JFQDSPsyUo=",
+      "nameHash": "WF0yddy9uaEjWsExIkMQz8tX97jw7ViRMh6WUsS2DO0=",
+      "createdAt": "2026-04-06T17:50:41.459Z",
+      "lastUpdated": "2026-04-06T17:50:41.459Z",
+      "svgs": [
+        {
+          "name": "overPredictions-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986262
+        },
+        {
+          "name": "overPredictions-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986261
+        },
+        {
+          "name": "overPredictions-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986260
+        },
+        {
+          "name": "overPredictions-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986259
+        },
+        {
+          "name": "overPredictions-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986258
+        },
+        {
+          "name": "overPredictions-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986257
+        }
+      ]
+    },
+    {
+      "nodeId": "7480:86",
+      "name": "column",
+      "description": "column, editing,",
+      "assetsHash": "1CvGCEdw1Ox3Q7IklXQ/OleTrJmdY/6rHc16XC+Hi3k=",
+      "nameHash": "kyaXGumpcmxI0yVU70wFgV78BjbsNVDOj2xpHtm/74g=",
+      "createdAt": "2026-04-06T17:50:41.467Z",
+      "lastUpdated": "2026-04-06T17:50:41.467Z",
+      "svgs": [
+        {
+          "name": "column-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986256
+        },
+        {
+          "name": "column-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986255
+        },
+        {
+          "name": "column-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986254
+        },
+        {
+          "name": "column-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986253
+        },
+        {
+          "name": "column-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986252
+        },
+        {
+          "name": "column-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986251
+        }
+      ]
+    },
+    {
+      "nodeId": "7488:425",
+      "name": "underPredictions",
+      "description": "under, predictions, arrow",
+      "assetsHash": "XcBreC1xuGfEkgKtr37zeD2a+3quGjTD9G0Ms+VT8Qw=",
+      "nameHash": "5pcAqvWVi0lZaF6WwGGwi1Evuxqha4tPYToU8Bg1M0E=",
+      "createdAt": "2026-04-06T17:50:41.471Z",
+      "lastUpdated": "2026-04-06T17:50:41.471Z",
+      "svgs": [
+        {
+          "name": "underPredictions-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986268
+        },
+        {
+          "name": "underPredictions-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986267
+        },
+        {
+          "name": "underPredictions-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986266
+        },
+        {
+          "name": "underPredictions-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986265
+        },
+        {
+          "name": "underPredictions-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986264
+        },
+        {
+          "name": "underPredictions-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986263
         }
       ]
     }
