@@ -1,4 +1,5 @@
 import { getExpoSDKVersion } from '@expo/config';
+import { withProjectBuildGradle } from '@expo/config-plugins';
 import type { ExpoConfig } from '@expo/config-types';
 
 const profile = process.env.APP_PROFILE ?? ('debug' as const);
@@ -99,5 +100,18 @@ const expo: ExpoConfig = {
 };
 
 export default {
-  expo,
+  // TODO(cds-v9): remove this Gradle resolution override.
+  expo: withProjectBuildGradle(expo, (config) => {
+    config.modResults.contents += `
+subprojects {
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.annotation:annotation:1.9.1'
+            force 'androidx.annotation:annotation-jvm:1.9.1'
+        }
+    }
+}
+`;
+    return config;
+  }),
 };
