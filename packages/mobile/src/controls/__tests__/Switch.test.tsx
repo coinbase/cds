@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
+import { toBeAccessibleIgnoreEngineDisabledOptions } from '../../utils/a11yTestHelpers';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Switch } from '../Switch';
 
@@ -41,16 +42,7 @@ describe('Switch.test', () => {
         <Switch onChange={jest.fn()}>test label</Switch>
       </DefaultThemeProvider>,
     );
-    expect(screen.getByRole('switch')).toBeAccessible({
-      // disable 'disabled-state-required' since it's flagging passing disabled
-      // to Interactable and unclear if we're lacking a11y affordances here
-      customViolationHandler: (violations) => {
-        return violations.filter(
-          (v) =>
-            v.problem !== "This component has a disabled state but it isn't exposed to the user",
-        );
-      },
-    });
+    expect(screen.getByRole('switch')).toBeAccessible(toBeAccessibleIgnoreEngineDisabledOptions);
   });
 
   it('renders label', () => {

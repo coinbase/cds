@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.2 (4/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Mobile Cell testID missing in iOS. [[#568](https://github.com/coinbase/cds/pull/568)]
+
 ## 8.64.1 (4/7/2026 PST)
 
 #### 🐞 Fixes
