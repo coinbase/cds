@@ -21,15 +21,6 @@ export type PercentageBarSeries = Omit<BarSeries, 'data' | 'stackId' | 'xAxisId'
   data: number | Array<number | null>;
 };
 
-type PercentageBarChartOmittedBarChartKeys =
-  | 'series'
-  | 'stacked'
-  | 'layout'
-  | 'roundBaseline'
-  | 'inset'
-  | 'enableScrubbing'
-  | 'onScrubberPositionChange';
-
 /**
  *
  * Renders stacked bars whose segments always sum to 100% at each group index.
@@ -40,7 +31,13 @@ type PercentageBarChartOmittedBarChartKeys =
  */
 export type PercentageBarChartBaseProps = Omit<
   BarChartBaseProps,
-  PercentageBarChartOmittedBarChartKeys
+  | 'series'
+  | 'stacked'
+  | 'layout'
+  | 'roundBaseline'
+  | 'inset'
+  | 'enableScrubbing'
+  | 'onScrubberPositionChange'
 > & {
   /**
    * Series representing segment types across groups. Each series' `data` is either a number
@@ -68,7 +65,16 @@ export type PercentageBarChartBaseProps = Omit<
 };
 
 export type PercentageBarChartProps = PercentageBarChartBaseProps &
-  Omit<BarChartProps, PercentageBarChartOmittedBarChartKeys>;
+  Omit<
+    BarChartProps,
+    | 'series'
+    | 'stacked'
+    | 'layout'
+    | 'roundBaseline'
+    | 'inset'
+    | 'enableScrubbing'
+    | 'onScrubberPositionChange'
+  >;
 
 export const PercentageBarChart = memo(
   forwardRef<View, PercentageBarChartProps>(
