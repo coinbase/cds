@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/test';
-import { IconButton } from '../IconButton';
+import { IconButton, iconButtonClassNames } from '../IconButton';
 
 const name = 'arrowsHorizontal';
 
@@ -222,6 +222,20 @@ describe('IconButton', () => {
     expect(button).not.toHaveAttribute('data-transparent');
     expect(button).toHaveAttribute('data-variant', 'secondary');
     expect(button).toHaveAttribute('data-compact', 'true');
+  });
+
+  describe('static classNames', () => {
+    it('applies static class names to component elements', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveClass(iconButtonClassNames.root);
+      expect(screen.getByTestId('icon-base-glyph')).toHaveClass(iconButtonClassNames.icon);
+    });
   });
 
   describe('styles and classNames', () => {

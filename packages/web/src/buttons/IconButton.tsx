@@ -6,6 +6,7 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import type { StylesAndClassNames } from '../types';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
@@ -13,7 +14,16 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
+/**
+ * Static class names for IconButton component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const iconButtonClassNames = {
+  /** Root button element */
+  root: 'cds-IconButton',
+  /** Inner icon glyph element */
+  icon: 'cds-IconButton-icon',
+} as const;
 
 export const iconButtonDefaultElement = 'button';
 
@@ -36,23 +46,14 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
      * @default primary
      */
     variant?: IconButtonVariant;
-    /** Custom inline styles for individual elements of the IconButton component */
-    styles?: {
-      /** Inner icon glyph element */
-      icon?: React.CSSProperties;
-    };
-    /** Custom class names for individual elements of the IconButton component */
-    classNames?: {
-      /** Inner icon glyph element */
-      icon?: string;
-    };
   }
 >;
 
 export type IconButtonProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   IconButtonBaseProps
->;
+> &
+  StylesAndClassNames<typeof iconButtonClassNames>;
 
 type IconButtonComponent = (<AsComponent extends React.ElementType = IconButtonDefaultElement>(
   props: IconButtonProps<AsComponent>,
@@ -132,10 +133,11 @@ export const IconButton: IconButtonComponent = memo(
           borderRadius={borderRadius}
           borderWidth={borderWidth}
           className={cx(
-            COMPONENT_STATIC_CLASSNAME,
+            iconButtonClassNames.root,
             flush && flushSpaceCss,
             flush === 'start' && flushStartCss,
             flush === 'end' && flushEndCss,
+            classNames?.root,
             className,
           )}
           color={colorValue}
@@ -162,7 +164,7 @@ export const IconButton: IconButtonComponent = memo(
           ) : (
             <Icon
               active={active}
-              classNames={{ icon: classNames?.icon }}
+              classNames={{ icon: cx(iconButtonClassNames.icon, classNames?.icon) }}
               color="currentColor"
               name={name}
               size={iconSize}

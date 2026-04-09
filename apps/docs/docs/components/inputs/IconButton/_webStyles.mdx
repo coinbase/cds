@@ -1,0 +1,21 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { IconButton } from '@coinbase/cds-web/buttons';
+
+import webStylesData from ':docgen/web/buttons/IconButton/styles-data';
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <IconButton
+      accessibilityLabel="Horizontal arrows"
+      classNames={classNames}
+      name="arrowsHorizontal"
+    />
+  )}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="IconButton" styles={webStylesData} />
