@@ -1,9 +1,15 @@
 import React from 'react';
 import { names } from '@coinbase/cds-icons/names';
+import { css } from '@linaria/core';
 
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { IconButton, type IconButtonBaseProps } from '../IconButton';
+
+const rotatedIconCss = css`
+  transform: rotate(45deg);
+  transition: transform 200ms ease-in-out;
+`;
 
 const iconName = 'arrowsHorizontal';
 const accessibilityLabel = 'Horizontal arrows';
@@ -103,11 +109,11 @@ export const Default = () => (
       </HStack>
       <HStack alignItems="center" gap={4}>
         <IconButton
-          accessibilityLabel="Custom class via classNames.icon"
-          classNames={{ icon: 'custom-icon-class' }}
+          accessibilityLabel="Rotated icon via classNames.icon"
+          classNames={{ icon: rotatedIconCss }}
           name={iconName}
         />
-        <Text font="body">Custom class via classNames.icon</Text>
+        <Text font="body">Rotated icon via classNames.icon</Text>
       </HStack>
     </VStack>
     <VStack gap={2}>
