@@ -36,10 +36,26 @@ type ContentHeaderProps = {
    * Will be shown instead of banner when in dark mode.
    */
   bannerDark?: React.ReactNode;
+  /**
+   * Height of the banner container in pixels.
+   * @default 200
+   */
+  bannerHeight?: number;
+  /** Hide the "View as Markdown" and "Copy for LLM" links */
+  hideLlmLinks?: boolean;
 };
 
 export const ContentHeader = memo(
-  ({ title, description, webMetadata, mobileMetadata, banner, bannerDark }: ContentHeaderProps) => {
+  ({
+    title,
+    description,
+    webMetadata,
+    mobileMetadata,
+    banner,
+    bannerDark,
+    bannerHeight = 200,
+    hideLlmLinks,
+  }: ContentHeaderProps) => {
     const { platform } = usePlatformContext();
     const { colorScheme } = useDocsTheme();
 
@@ -61,7 +77,7 @@ export const ContentHeader = memo(
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">
         {activeBanner && (
-          <VStack display={{ base: 'flex', phone: 'none' }} height={200} width="100%">
+          <VStack display={{ base: 'flex', phone: 'none' }} height={bannerHeight} width="100%">
             {typeof activeBanner === 'string' ? (
               <img
                 alt={`${title} banner`}
@@ -86,6 +102,7 @@ export const ContentHeader = memo(
           <MetadataLinks
             changelog={changelog}
             figma={figma}
+            hideLlmLinks={hideLlmLinks}
             source={source}
             storybook={storybook}
           />

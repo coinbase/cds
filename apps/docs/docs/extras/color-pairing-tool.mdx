@@ -1,0 +1,20 @@
+---
+id: color-pairing-tool
+title: Color Pairing Tool
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { ColorPairingTool } from '@site/src/components/page/ColorPairingTool';
+
+<VStack gap={5}>
+<ContentHeader
+  title="Color Pairing Tool"
+  description="Upload any image to extract colors, find the closest CDS spectrum primitives, and check WCAG accessibility contrast automatically."
+  banner="/img/campaignCardBanners/color-pairing-tool.svg"
+  bannerDark="/img/campaignCardBanners/color-pairing-tool_dark.svg"
+/>
+
+<ColorPairingTool />
+</VStack>
