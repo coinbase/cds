@@ -7,8 +7,9 @@ import { Pressable } from '@coinbase/cds-web/system';
 
 const SPECTRUM_COLOR_FAMILIES = [
   'blue',
+    'teal',
   'green',
-  'teal',
+
   'chartreuse',
   'yellow',
   'orange',
