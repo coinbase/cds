@@ -56,11 +56,11 @@ describe('PercentageBarChart', () => {
         <PercentageBarChart
           animate={false}
           height={80}
+          layout="vertical"
           series={[
             { id: 'a', data: [60, 50], color: 'green' },
             { id: 'b', data: [40, 50], color: 'orange' },
           ]}
-          layout="vertical"
           testID="percentage-bar-vertical"
           width={400}
           xAxis={{ data: ['Q1', 'Q2'] }}

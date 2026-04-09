@@ -228,11 +228,11 @@ const DataExample = () => {
   const theme = useTheme();
   return (
     <PercentageBarChart
-      height={100}
       showXAxis
       showYAxis
       barMinSize={12}
       borderRadius={8}
+      height={100}
       series={[
         { id: 'a', data: [40, null, 20], label: 'A', color: theme.color.fgPositive },
         { id: 'b', data: [-10, 60, 30], label: 'B', color: theme.color.fgWarning },
@@ -442,27 +442,27 @@ const Animations = () => {
 
   return (
     <VStack gap={2}>
-      <HStack justifyContent="flex-end" alignItems="center" gap={1}>
+      <HStack alignItems="center" gap={1} justifyContent="flex-end">
         <Switch checked={animate} onChange={() => setAnimate((v) => !v)}>
           Animate
         </Switch>
       </HStack>
       <PercentageBarChart
-        animate={animate}
         legend
         showXAxis
         showYAxis
+        animate={animate}
         barMinSize={14}
         borderRadius={48}
         height={220}
         inset={{ left: 24, right: 0, top: 0, bottom: 0 }}
         legendPosition="top"
+        series={series}
+        stackGap={2}
         transitions={{
           enter: { type: 'timing', duration: 400, staggerDelay: 0.2 },
           update: { type: 'timing', duration: 300 },
         }}
-        series={series}
-        stackGap={2}
         xAxis={{
           showTickMarks: true,
           tickLabelFormatter: (value) => `${value}%`,
