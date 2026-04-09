@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { toBeAccessibleIgnoreEngineDisabledOptions } from '../../utils/a11yTestHelpers';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import type { CalendarProps } from '../Calendar';
 import { Calendar } from '../Calendar';
@@ -20,16 +21,7 @@ describe('Calendar', () => {
 
     render(<CalendarExample maxDate={maxDate} minDate={minDate} seedDate={seedDate} />);
 
-    expect(screen.getByTestId(testID)).toBeAccessible({
-      // Disable 'disabled-state-required' since it's flagging passing disabled
-      // to Interactable and unclear if we're lacking a11y affordances here.
-      customViolationHandler: (violations) => {
-        return violations.filter(
-          (v) =>
-            v.problem !== "This component has a disabled state but it isn't exposed to the user",
-        );
-      },
-    });
+    expect(screen.getByTestId(testID)).toBeAccessible(toBeAccessibleIgnoreEngineDisabledOptions);
   });
 
   it('renders current month by default', () => {

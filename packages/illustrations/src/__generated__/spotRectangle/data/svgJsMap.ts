@@ -455,16 +455,16 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoAboutOnchain-0.js').content,
   },
   instoApiKey: {
-    light: () => require('../svgJs/light/instoApiKey-0.js').content,
-    dark: () => require('../svgJs/dark/instoApiKey-0.js').content,
+    light: () => require('../svgJs/light/instoApiKey-1.js').content,
+    dark: () => require('../svgJs/dark/instoApiKey-1.js').content,
   },
   instoConsensusWaitingForApprovals: {
     light: () => require('../svgJs/light/instoConsensusWaitingForApprovals-0.js').content,
     dark: () => require('../svgJs/dark/instoConsensusWaitingForApprovals-0.js').content,
   },
   instoCryptoAndMore: {
-    light: () => require('../svgJs/light/instoCryptoAndMore-1.js').content,
-    dark: () => require('../svgJs/dark/instoCryptoAndMore-1.js').content,
+    light: () => require('../svgJs/light/instoCryptoAndMore-2.js').content,
+    dark: () => require('../svgJs/dark/instoCryptoAndMore-2.js').content,
   },
   instoCurrency: {
     light: () => require('../svgJs/light/instoCurrency-0.js').content,
@@ -475,8 +475,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoDesignateSigner-0.js').content,
   },
   instoEmptyTrading: {
-    light: () => require('../svgJs/light/instoEmptyTrading-0.js').content,
-    dark: () => require('../svgJs/dark/instoEmptyTrading-0.js').content,
+    light: () => require('../svgJs/light/instoEmptyTrading-1.js').content,
+    dark: () => require('../svgJs/dark/instoEmptyTrading-1.js').content,
   },
   instoEthStakingMovement: {
     light: () => require('../svgJs/light/instoEthStakingMovement-1.js').content,

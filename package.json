@@ -89,7 +89,7 @@
   "resolutionComments": {
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
     "framer-motion@^10.18.0": "Export missing types",
-    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`",
+    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`. Handle tar v7 compatibility (tar v7 sets __esModule:true with no default export).",
     "react-native": "[Managed by CMR] Fixes bug presenting a modal on iOS.",
     "react-native-gesture-handler": "[Managed by CMR] Fix performance regression. Can remove once upgrading to version 2.18.0",
     "expo-splash-screen": "[Managed by CMR] Adds support for transitions and bottom images in the splash screen. We aim to upstream some of those improvements to Expo.",
