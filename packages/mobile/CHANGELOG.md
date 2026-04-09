@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.3 (4/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Stepper animation with react-spring ^10.0.1. [[#603](https://github.com/coinbase/cds/pull/603)]
+
 ## 8.64.2 (4/8/2026 PST)
 
 #### 🐞 Fixes
