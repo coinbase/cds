@@ -1,6 +1,7 @@
 import { Text } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { toBeAccessibleIgnoreEngineDisabledOptions } from '../../utils/a11yTestHelpers';
 import { debounce } from '../../utils/debounce';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { IconButton } from '../IconButton';
@@ -56,16 +57,7 @@ describe('IconButton', () => {
     fireEvent.press(screen.getByRole('button'));
 
     expect(spy).not.toHaveBeenCalled();
-    expect(screen.getByRole('button')).toBeAccessible({
-      // disable 'disabled-state-required' since it's flagging passing disabled
-      // to Interactable and unclear if we're lacking a11y affordances here
-      customViolationHandler: (violations) => {
-        return violations.filter(
-          (v) =>
-            v.problem !== "This component has a disabled state but it isn't exposed to the user",
-        );
-      },
-    });
+    expect(screen.getByRole('button')).toBeAccessible(toBeAccessibleIgnoreEngineDisabledOptions);
   });
 
   it('disables user interaction when loading', () => {

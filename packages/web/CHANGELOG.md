@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.3 (4/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Stepper animation with react-spring ^10.0.1. [[#603](https://github.com/coinbase/cds/pull/603)]
+
+## 8.64.2 ((4/8/2026, 11:26 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.64.1 (4/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: Add styles and classNames APIs to Tour and TourStep components. [[#592](https://github.com/coinbase/cds/pull/592)]
+
 ## 8.64.0 (4/2/2026 PST)
 
 #### 🚀 Updates

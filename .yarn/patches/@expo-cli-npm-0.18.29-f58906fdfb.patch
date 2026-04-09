@@ -24,3 +24,29 @@ index 06d6d1e11802ed88388444b10acd83834e079f50..c4409c566377897eacdb78aea4a8fd78
              if (bundleId) {
                  return bundleId;
              }
+diff --git a/build/src/utils/npm.js b/build/src/utils/npm.js
+index a49faac0ba81f0a00d19e8427434cf013c9b4769..cb9c81ae46f1e2637bbb5410412b578225064818 100644
+--- a/build/src/utils/npm.js
++++ b/build/src/utils/npm.js
+@@ -171,7 +171,7 @@ async function extractNpmTarballAsync(stream, props) {
+     transformStream.on("data", (chunk)=>{
+         hash.update(chunk);
+     });
+-    await pipeline(stream, transformStream, _tar().default.extract({
++    await pipeline(stream, transformStream, (_tar().default ?? _tar()).extract({
+         cwd,
+         filter,
+         onentry: (0, _createFileTransform.createEntryResolver)(name),
+diff --git a/build/src/utils/tar.js b/build/src/utils/tar.js
+index 8bf12d812646724089f6cd265b16093e8f518570..9575eaeae41fe05105ab0c2af2ee3d11dce659bf 100644
+--- a/build/src/utils/tar.js
++++ b/build/src/utils/tar.js
+@@ -86,7 +86,7 @@ async function extractAsync(input, output) {
+     debug(`Extracting ${input} to ${output} using JS tar module`);
+     // tar node module has previously had problems with big files, and seems to
+     // be slower, so only use it as a backup.
+-    await _tar().default.extract({
++    await (_tar().default ?? _tar()).extract({
+         file: input,
+         cwd: output
+     });

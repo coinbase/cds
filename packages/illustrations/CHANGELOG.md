@@ -8,6 +8,53 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.37.0 (4/8/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-04-08. [[#597](https://github.com/coinbase/cds/pull/597)]
+
+##### ⭐️ Updated (24)
+
+###### Pictogram (3)
+
+- download
+- instoRestaking
+- instoApyInterest
+
+###### HeroSquare (8)
+
+- instoPrivateKey
+- instoStakingMissedReturns
+- instoCoinbaseOneProtectedCrypto
+- instoDocumentSuccess
+- instoOpenEmail
+- instoRequestSent
+- instoKeyGenerationComplete
+- instoOnChain
+
+###### SpotIcon (5)
+
+- instoFast
+- instoDelegate
+- instoPrivateClientProduct
+- instantAccess
+- instoRecurringPurchases
+
+###### SpotRectangle (3)
+
+- instoApiKey
+- instoEmptyTrading
+- instoCryptoAndMore
+
+###### SpotSquare (5)
+
+- instoUbiKey
+- instoAuthenticatorProgress
+- instantUnstaking
+- instoAuthenticatorProgress
+- instoWaiting
+
 ## 4.36.0 (3/27/2026 PST)
 
 #### 🚀 Updates

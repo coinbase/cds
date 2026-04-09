@@ -13,6 +13,8 @@ import webPropsToc from ':docgen/web/tour/Tour/toc-props';
 import mobilePropsToc from ':docgen/mobile/tour/Tour/toc-props';
 import WebPropsTable from './_webPropsTable.mdx';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import webMetadata from './webMetadata.json';
@@ -23,8 +25,12 @@ import mobileMetadata from './mobileMetadata.json';
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}
+    webStyles={<WebStyles />}
+    webStylesToc={webStylesToc}
     mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
+    mobileStyles={<MobileStyles />}
+    mobileStylesToc={mobileStylesToc}
     webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
     webPropsToc={webPropsToc}
