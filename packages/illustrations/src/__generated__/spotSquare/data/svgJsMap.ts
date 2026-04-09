@@ -643,12 +643,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/inrTrade-0.js').content,
   },
   instantUnstaking: {
-    light: () => require('../svgJs/light/instantUnstaking-0.js').content,
-    dark: () => require('../svgJs/dark/instantUnstaking-0.js').content,
+    light: () => require('../svgJs/light/instantUnstaking-1.js').content,
+    dark: () => require('../svgJs/dark/instantUnstaking-1.js').content,
   },
   instoAuthenticatorProgress: {
-    light: () => require('../svgJs/light/instoAuthenticatorProgress-1.js').content,
-    dark: () => require('../svgJs/dark/instoAuthenticatorProgress-1.js').content,
+    light: () => require('../svgJs/light/instoAuthenticatorProgress-2.js').content,
+    dark: () => require('../svgJs/dark/instoAuthenticatorProgress-2.js').content,
   },
   instoDappWallet: {
     light: () => require('../svgJs/light/instoDappWallet-1.js').content,
@@ -683,12 +683,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoStaking-0.js').content,
   },
   instoUbiKey: {
-    light: () => require('../svgJs/light/instoUbiKey-0.js').content,
-    dark: () => require('../svgJs/dark/instoUbiKey-0.js').content,
+    light: () => require('../svgJs/light/instoUbiKey-1.js').content,
+    dark: () => require('../svgJs/dark/instoUbiKey-1.js').content,
   },
   instoWaiting: {
-    light: () => require('../svgJs/light/instoWaiting-1.js').content,
-    dark: () => require('../svgJs/dark/instoWaiting-1.js').content,
+    light: () => require('../svgJs/light/instoWaiting-2.js').content,
+    dark: () => require('../svgJs/dark/instoWaiting-2.js').content,
   },
   insuranceProtection: {
     light: () => require('../svgJs/light/insuranceProtection-4.js').content,
