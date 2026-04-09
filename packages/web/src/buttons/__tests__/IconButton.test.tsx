@@ -223,4 +223,26 @@ describe('IconButton', () => {
     expect(button).toHaveAttribute('data-variant', 'secondary');
     expect(button).toHaveAttribute('data-compact', 'true');
   });
+
+  describe('styles and classNames', () => {
+    it('applies styles.icon to the inner icon glyph element', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} styles={{ icon: { fontSize: '99px' } }} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({ fontSize: '99px' });
+    });
+
+    it('applies classNames.icon to the inner icon glyph element', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton classNames={{ icon: 'custom-icon-class' }} name={name} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveClass('custom-icon-class');
+    });
+  });
 });

@@ -92,6 +92,25 @@ export const Default = () => (
       />
     </VStack>
     <VStack gap={2}>
+      <Text font="title3">Icon Glyph Styles</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          accessibilityLabel="Custom color via styles.icon"
+          name={iconName}
+          styles={{ icon: { color: 'dodgerblue' } }}
+        />
+        <Text font="body">Custom color via styles.icon</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          accessibilityLabel="Custom class via classNames.icon"
+          classNames={{ icon: 'custom-icon-class' }}
+          name={iconName}
+        />
+        <Text font="body">Custom class via classNames.icon</Text>
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
       <Text font="title3">Variants</Text>
       {variants.map((variant, index) => (
         <HStack key={index} alignItems="center" gap={4}>

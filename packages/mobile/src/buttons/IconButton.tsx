@@ -1,5 +1,11 @@
 import { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type PressableStateCallbackType, type View, type ViewStyle } from 'react-native';
+import {
+  type PressableStateCallbackType,
+  type StyleProp,
+  type TextStyle,
+  type View,
+  type ViewStyle,
+} from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
@@ -39,6 +45,11 @@ export type IconButtonBaseProps = SharedProps &
      * @default primary
      */
     variant?: IconButtonVariant;
+    /** Custom styles for individual elements of the IconButton component */
+    styles?: {
+      /** Inner icon glyph Text element */
+      icon?: StyleProp<TextStyle>;
+    };
   };
 
 export type IconButtonProps = IconButtonBaseProps;
@@ -65,6 +76,7 @@ export const IconButton = memo(
       loading,
       progressCircleSize,
       style,
+      styles,
       accessibilityHint,
       accessibilityLabel,
       ...props
@@ -134,6 +146,7 @@ export const IconButton = memo(
             name={name}
             size={iconSize}
             style={sizingStyle}
+            styles={{ icon: styles?.icon }}
           />
         )}
       </Pressable>

@@ -129,6 +129,17 @@ const IconButtonScreen = () => {
         </Box>
       </Example>
 
+      <Example inline title="Icon Glyph Styles">
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+          <IconButton
+            accessibilityLabel="Custom color via styles.icon"
+            name={iconName}
+            styles={{ icon: { color: 'dodgerblue' } }}
+          />
+          <Text font="body">Custom color via styles.icon</Text>
+        </Box>
+      </Example>
+
       <Example inline title="Loading">
         <VStack gap={3}>
           <Box>

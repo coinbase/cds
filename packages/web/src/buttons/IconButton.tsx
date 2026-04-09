@@ -36,6 +36,16 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
      * @default primary
      */
     variant?: IconButtonVariant;
+    /** Custom inline styles for individual elements of the IconButton component */
+    styles?: {
+      /** Inner icon glyph element */
+      icon?: React.CSSProperties;
+    };
+    /** Custom class names for individual elements of the IconButton component */
+    classNames?: {
+      /** Inner icon glyph element */
+      icon?: string;
+    };
   }
 >;
 
@@ -94,6 +104,8 @@ export const IconButton: IconButtonComponent = memo(
         progressCircleSize,
         accessibilityLabel,
         accessibilityHint,
+        styles,
+        classNames,
         ...props
       } = mergedProps;
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
@@ -148,7 +160,14 @@ export const IconButton: IconButtonComponent = memo(
               weight="thin"
             />
           ) : (
-            <Icon active={active} color="currentColor" name={name} size={iconSize} />
+            <Icon
+              active={active}
+              classNames={{ icon: classNames?.icon }}
+              color="currentColor"
+              name={name}
+              size={iconSize}
+              styles={{ icon: styles?.icon }}
+            />
           )}
         </Pressable>
       );
