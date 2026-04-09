@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <style>
+    .cpt-checker-a { fill: rgb(var(--gray15)) }
+    .cpt-checker-b { fill: rgb(var(--gray10)) }
+  </style>
+  <rect width="20" height="20" class="cpt-checker-a"/>
+  <rect x="20" y="20" width="20" height="20" class="cpt-checker-a"/>
+  <rect x="20" width="20" height="20" class="cpt-checker-b"/>
+  <rect y="20" width="20" height="20" class="cpt-checker-b"/>
+</svg>

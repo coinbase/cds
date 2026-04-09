@@ -846,6 +846,24 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Extras',
+      customProps: {
+        icon: 'sparkle',
+        kbar: {
+          icon: 'sparkle',
+          description: 'Extra tools and resources',
+        },
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'extras/color-pairing-tool',
+          label: 'Color Pairing Tool',
+        },
+      ],
+    },
+    {
+      type: 'category',
       label: `Changelogs`,
       customProps: {
         icon: 'continuous',
