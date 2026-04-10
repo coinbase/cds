@@ -4,10 +4,10 @@ description: |
   End-to-end workflow for adding a jscodeshift migration to packages/migrator: clarify symbol and
   target behavior, decide web vs mobile vs shared transforms, research real usage with Sourcegraph MCP,
   split automatable vs manual cases (confirm with user), implement codemods and TODO markers, add
-  fixtures and tests, register presets when applicable. Use when the user asks to add a CDS migrator
-  transform, codemod, jscodeshift migration, major-upgrade migration (e.g. v8-to-v9), or a
-  **standalone** codemod not tied to a version bump. Also when migrating consumer imports/APIs for a
-  CDS release.
+  tests (inline-first, a few OSS-safe paired fixtures), register presets when applicable. Use when the
+  user asks to add a CDS migrator transform, codemod, jscodeshift migration, major-upgrade migration
+  (e.g. v8-to-v9), or a **standalone** codemod not tied to a version bump. Also when migrating
+  consumer imports/APIs for a CDS release.
 allowed-tools: Read, Grep, Glob, StrReplace, Bash(yarn nx run:*), call_mcp_tool
 argument-hint: '<symbol or API change> — <target behavior> — [preset or standalone] — [web|mobile|both] — [optional: Sourcegraph scope / repos / queries the user supplies]'
 ---
@@ -19,7 +19,7 @@ Adds or updates a **jscodeshift** transform under `packages/migrator/src/transfo
 **Where to put files** is **not** always a “version” folder. Choose a subdirectory (or root) that fits the work:
 
 - **Major / preset migrations** often use a version-style folder (`v9/`, `v10/`, …) aligned with a preset such as `v8-to-v9`.
-- **Other codemods** (rename, internal API move, one-off cleanup) can live under any clear grouping the team agrees on (`v9/` still, a feature folder, or directly under `transforms/` like `example-transform.ts`).
+- **Other codemods** (rename, internal API move, one-off cleanup) can live under any clear grouping the team agrees on (`v9/` still, a feature folder, or directly under `transforms/`).
 
 Follow the steps in order unless the user already locked scope.
 
@@ -46,7 +46,7 @@ If anything is ambiguous, ask the user before coding.
 
 1. **Web-only** (e.g. CSS, DOM, `@coinbase/cds-web`): single transform, typically under `transforms/<subdir>/<name>-web.ts` or a neutral name if only web is affected.
 2. **Mobile-only** (e.g. React Native, `@coinbase/cds-mobile`): single transform for mobile.
-3. **Both** with **different** replacement rules (e.g. `DimensionValue` → web local alias vs RN import): **two** transforms (`…-web.ts`, `…-mobile.ts`) plus optional **`…-shared.ts`** for pure helpers (no jscodeshift import in shared if workers load it—keep shared logic environment-safe; follow existing layout-type splits).
+3. **Both** with **different** replacement rules (e.g. `DimensionValue` → web local alias vs RN import): **two** transforms (`…-web.ts`, `…-mobile.ts`).
 4. **Both** with **identical** AST changes: one transform is enough.
 
 Document in the transform file header **what** is migrated and **what is not** (re-exports, `require`, dynamic import, etc.).
@@ -60,6 +60,8 @@ Document in the transform file header **what** is migrated and **what is not** (
 3. **This monorepo**: Supplement with `grep` / `Glob` under `packages/` when the migration touches CDS itself or when the user asks for in-repo usage.
 
 Record a short list of **patterns you actually saw** in the results (import style, re-exports, edge cases)—derived from discovery, not from a checklist in this doc.
+
+**OSS hygiene**: Research may reference internal repos or paths. Anything **committed** to this repo (fixtures, test comments, JSDoc) must stay **generic**: neutral component names, no internal hostnames or file paths, no product codenames. Describe fixtures as “representative pattern” or “composite example” only—see §6.
 
 ---
 
@@ -81,32 +83,60 @@ From research, build a table:
 
 **Patterns**:
 
-- Default export: `export default function transformer(file, api, options)`; eslint may require `// eslint-disable-next-line no-restricted-exports` for default export.
+- Default export: `export default function transformer(file, api, options)` (required by jscodeshift; `no-restricted-exports` is off for `packages/migrator/src/transforms/**/*.ts` in root `eslint.config.mjs`).
 - Import **`transformLogger`**, **`addTodoComment`**, **`hasMigrationTodo`** from `transform-utils`. Typical depths: **`../../utils/transform-utils`** from `transforms/<subdir>/<name>.ts`; **`../utils/transform-utils`** from `transforms/<name>.ts`. If you nest deeper under `transforms/`, add one `../` per extra level.
 - **Package scope from jscodeshift `options`**: When matching or rewriting **`@<scope>/cds-…`** import paths, use **`getPackageScopeFromOptions(options)`** from **`../../utils/package-scope`** (same depth pattern as `transform-utils`). The cds-migrator CLI forwards **`--packageScope`** / **`-ps`** into `options.packageScope` (`coinbase` or `@coinbase` both normalize to `@coinbase`). **If set**, only rewrite modules under that scope; **if omitted**, match any scope (e.g. regex like `@…/cds-common/…`). State this in the transform’s file header so consumers know they can narrow runs. Reference: `packages/migrator/src/transforms/v9/migrate-use-merge-refs.ts` and `packages/migrator/src/utils/package-scope.ts`.
-- Prefer **constants** and small helpers; for shared module strings (e.g. allowed import sources), centralize in a `*-shared.ts` sibling when web/mobile share rules.
+- Prefer **constants** and small helpers in the transform file. Use **`packages/migrator/src/utils/`** for shared plumbing (logging, package scope, import helpers); keep **migration-specific** rules and rewrites in the transform itself rather than in extra modules that only exist to share logic between codemods.
 - **Idempotency**: second run should no-op when migration is complete.
 - **TODO path**: for dynamic or ambiguous AST, insert a standard CDS migration TODO via `addTodoComment` and log with `transformLogger.warn`.
 
-Reference examples in-repo: major-style folder `transforms/v9/` (`migrate-use-merge-refs.ts`, `button-variant-values.ts`, `migrate-layout-types-*.ts`); root-level `example-transform.ts` shows a transform not under a version subfolder.
+Reference examples in-repo: `transforms/v9/` (`migrate-use-merge-refs.ts`, `button-variant-values.ts`, `migrate-layout-types-*.ts`).
 
 ---
 
 ## 6 — Tests and fixtures
 
-1. **Fixtures directory**: colocate with the transform, e.g. `packages/migrator/src/transforms/<subdir>/__testfixtures__/<suite-name>/` with paired `*.input.tsx` and `*.output.tsx` (names aligned with scenario). Deeper trees may need different relative paths in tests.
-2. **Tests**: `packages/migrator/src/transforms/<subdir>/__tests__/<name>.test.ts` using `readTransformFixture` from `../../../test-utils/readTransformFixture` when `__tests__/` is one level under `transforms/<subdir>/` (three hops up to `src/`). **Re-check** `readTransformFixture` and any local imports if `<subdir>` depth changes.
-3. Mock **`console.log` / `console.warn`** if transforms log during tests (see existing migrator tests).
-4. Cover: happy paths that match **patterns the user’s research identified**, every scope or import shape they asked you to support, idempotency, no-op when nothing to migrate, edge cases the user approved. For **scope-aware** transforms, pass **`packageScope`** in the third argument to `applyTransform` when testing the narrowed behavior (e.g. `applyTransform(transform, { packageScope: '@coinbase' }, { source }, { parser: 'tsx' })`).
-5. **`__testfixtures__` is in `.prettierignore`**—outputs must match the codemod exactly; do not rely on Prettier rewriting fixtures.
+**Goal**: exhaustive **behavior** coverage with **minimal** on-disk goldens. Follow what `transforms/v9/__tests__/` does today.
+
+### Inline-first (default)
+
+1. **Test file**: `packages/migrator/src/transforms/<subdir>/__tests__/<name>.test.ts`.
+2. **Most cases** live **inline** as string sources. Prefer **`runInlineTest(transform, options, { path: '…', source: \`…\` }, expectedString, tsxTestOptions)`** from **`jscodeshift/src/testUtils`** for the full transformed output (or **`''`** when the codemod should no-op). Avoid **`applyTransform`** + fragment `expect`s unless there is a rare reason not to pin an exact golden.
+3. **Imports**: **`tsxTestOptions`** from **`../../../test-utils/codemodTestUtils`** (path depth matches one `__tests__/` folder under `transforms/<subdir>/`). That module currently exports only **`tsxTestOptions`** (`{ parser: 'tsx' }`).
+4. Mock **`console.log` / `console.warn`** when transforms log during tests (see existing v9 tests).
+
+Cover: patterns from the user’s research, **idempotency**, **no-op** when nothing migrates, **scope-aware** behavior (`packageScope` / `-ps`) via `runInlineTest(transform, { packageScope: '@coinbase' }, …)`.
+
+### Paired file fixtures (sparingly)
+
+Use **at most one or two** paired **`foo.input.tsx` / `foo.output.tsx`** per transform suite for **larger composite** examples (multi-import layouts, full component excerpts). Everything else stays inline.
+
+1. **Directory**: `packages/migrator/src/transforms/<subdir>/__testfixtures__/<suite-name>/` (e.g. `<suite-name>` matches the transform id: `button-variant-values`, `migrate-use-merge-refs`).
+2. **Run paired tests** with **`runTest(__dirname, '<transform-name>', {}, '<suite-name>/<base>', tsxTestOptions)`** — the prefix is **`suite-folder/base`** without extension.
+3. **List E2E cases explicitly** in the test file, e.g. `const E2E_PAIRED_PREFIXES = ['button-variant-values/e2e-survey-confirmation-panel', …] as const` and **`it.each(E2E_PAIRED_PREFIXES)('%s', (prefix) => { runTest(…); })`**. Do not assume a filesystem discovery helper exists.
+
+### OSS-safe comments
+
+- Fixture files and test JSDoc must **not** cite internal hosts, confidential repos, real consumer file paths, or product-specific component names used in research.
+- Prefer short comments like **“Representative pattern: …”** or **“Composite … props”** and **fictional** export names (`SurveyConfirmationPanel`, `ChatToolbarActions`, not internal codenames).
+- Sourcegraph remains valuable **during development**; keep findings out of committed strings unless they are already public (e.g. this monorepo).
+
+### Prettier
+
+**`__testfixtures__` is in `.prettierignore`**—golden outputs must match the codemod’s **`toSource()`** exactly.
 
 **Run until green**:
 
 ```bash
 yarn nx run migrator:test --testPathPattern='<your-test-pattern>'
 yarn nx run migrator:typecheck
-yarn nx format:write --files=<changed non-fixture files>
+yarn nx format:write --projects=migrator
+# or format only non-fixture sources, e.g.:
+# yarn nx format:write --files=<changed files excluding __testfixtures__>
+yarn nx run migrator:lint
 ```
+
+Reference tests: `transforms/v9/__tests__/button-variant-values.test.ts`, `migrate-use-merge-refs.test.ts`, `migrate-layout-types-web.test.ts`, `migrate-layout-types-mobile.test.ts`.
 
 ---
 
@@ -127,7 +157,7 @@ yarn nx format:write --files=<changed non-fixture files>
 - [ ] User confirmed automatable vs manual cases.
 - [ ] Web/mobile split matches real replacement behavior.
 - [ ] Coverage matches **sources, scopes, and cases** the user specified (anything out of scope is documented).
-- [ ] Tests + fixtures added; `migrator:test` and `migrator:typecheck` pass; formatting applied to non-fixture sources.
+- [ ] Tests: **inline cases** for edges + **0–2** paired E2E fixtures; **OSS-safe** names/comments; `migrator:test`, `migrator:lint`, and `migrator:typecheck` pass; formatting applied (non-fixture sources as needed).
 - [ ] If the transform is preset-backed: manifest entry added and `file` matches the real path under `transforms/` (no mismatch between folder name and `file`). If standalone: team knows how to invoke it (CLI / docs).
 - [ ] Transform header documents limitations (`export … from`, `require`, dynamic import, etc.).
 - [ ] If the transform is **scope-aware**: behavior with and without `options.packageScope` / CLI `-ps` is documented and covered by tests where relevant.

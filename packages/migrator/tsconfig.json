@@ -8,7 +8,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "**/__testfixtures__/**"
+    "**/*/__testfixtures__/**"
   ],
   "references": []
 }

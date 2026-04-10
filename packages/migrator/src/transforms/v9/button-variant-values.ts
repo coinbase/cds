@@ -5,13 +5,16 @@
  *   - "tertiary"        → "inverse"   (old tertiary used bgInverse; v9 gives tertiary new semantics)
  *   - "foregroundMuted"  → "secondary" (foregroundMuted deprecated per design)
  *
- * Only targets components imported from `@<scope>/cds-web` or `@<scope>/cds-mobile`. Use CLI
- * `-ps` / `--package-scope` to limit to one scope, or omit to match every scope.
+ * Only targets components imported from `@<scope>/cds-web/buttons`, deeper paths under
+ * `cds-web/buttons/…` (e.g. `buttons/Button`), and the same for `cds-mobile`. v8 does not
+ * export Button/IconButton from the package root (`@<scope>/cds-web` / `@<scope>/cds-mobile`),
+ * so those imports are ignored.
+ * Use CLI `-ps` / `--package-scope` to limit to one scope, or omit to match every scope.
  * Adds TODO comments for dynamic variant expressions that need manual review.
  */
 import type { API, FileInfo, Options } from 'jscodeshift';
 
-import { escapeRegExp, getPackageScopeFromOptions } from '../../utils/package-scope';
+import { getPackageScopeFromOptions, scopedModulePathRegexPrefix } from '../../utils/package-scope';
 import { addTodoComment, hasMigrationTodo, transformLogger } from '../../utils/transform-utils';
 
 const VARIANT_MAP: Record<string, string> = {
@@ -19,24 +22,20 @@ const VARIANT_MAP: Record<string, string> = {
   foregroundMuted: 'secondary',
 };
 
-const CDS_WEB_OR_MOBILE_PACKAGE_RE = /^@[^/]+\/(cds-web|cds-mobile)$/;
-
-function buildCdsWebOrMobilePackageRe(packageScope: string | undefined): RegExp {
-  if (packageScope) {
-    return new RegExp(`^${escapeRegExp(packageScope)}/(cds-web|cds-mobile)$`);
-  }
-  return CDS_WEB_OR_MOBILE_PACKAGE_RE;
+/** v8 buttons live under `…/buttons` (barrel or deep imports); package root has no Button API. */
+function buildCdsWebOrMobileButtonsImportRe(packageScope: string | undefined): RegExp {
+  const prefix = scopedModulePathRegexPrefix(packageScope);
+  return new RegExp(`${prefix}/(cds-web|cds-mobile)/buttons(?:/[^/]+)*$`);
 }
 
 const TARGET_COMPONENTS = ['Button', 'IconButton'];
 
-// eslint-disable-next-line no-restricted-exports -- jscodeshift requires default export
 export default function transformer(file: FileInfo, api: API, options: Options) {
   const j = api.jscodeshift;
   const root = j(file.source);
 
   const packageScope = getPackageScopeFromOptions(options);
-  const cdsPackageRe = buildCdsWebOrMobilePackageRe(packageScope);
+  const cdsPackageRe = buildCdsWebOrMobileButtonsImportRe(packageScope);
 
   const cdsComponentLocalNames = new Set<string>();
 

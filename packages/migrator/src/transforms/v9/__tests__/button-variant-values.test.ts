@@ -1,118 +1,246 @@
-import { applyTransform } from 'jscodeshift/src/testUtils';
+import { runInlineTest, runTest } from 'jscodeshift/src/testUtils';
 
-import { readTransformFixture } from '../../../test-utils/readTransformFixture';
+import { tsxTestOptions } from '../../../test-utils/codemodTestUtils';
 import transform from '../button-variant-values';
 
 const FIXTURE_SUITE = 'button-variant-values';
 
-function applyButtonVariantTransform(
-  source: string,
-  jscodeshiftOptions: Record<string, unknown> = {},
-) {
-  return applyTransform(transform, jscodeshiftOptions, { source }, { parser: 'tsx' });
-}
-
-function readFixture(name: string) {
-  return readTransformFixture(__dirname, FIXTURE_SUITE, `${name}.tsx`);
-}
+/** Only consumer-style E2E goldens (all other cases are inline below). */
+const E2E_PAIRED_PREFIXES = [
+  `${FIXTURE_SUITE}/e2e-survey-confirmation-panel`,
+  `${FIXTURE_SUITE}/e2e-chat-toolbar-actions`,
+] as const;
 
 describe('button-variant-values', () => {
-  describe('string literal rewrites', () => {
-    it('rewrites variant="tertiary" to variant="inverse" on Button from @coinbase/cds-web', () => {
-      const input = `
-import { Button } from '@coinbase/cds-web';
+  it('rewrites variant="tertiary" to variant="inverse" on Button from @coinbase/cds-web/buttons', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'web-buttons.tsx',
+        source: `
+import { Button } from '@coinbase/cds-web/buttons';
 const App = () => <Button variant="tertiary">Click</Button>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('variant="inverse"');
-      expect(output).not.toContain('variant="tertiary"');
-    });
-
-    it('rewrites variant="foregroundMuted" to variant="secondary" on Button from @coinbase/cds-web', () => {
-      const input = `
-import { Button } from '@coinbase/cds-web';
-const App = () => <Button variant="foregroundMuted">Click</Button>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('variant="secondary"');
-      expect(output).not.toContain('variant="foregroundMuted"');
-    });
-
-    it('rewrites variant="tertiary" to variant="inverse" on Button from a non-@coinbase scope', () => {
-      const input = `
-import { Button } from '@example/cds-web';
-const App = () => <Button variant="tertiary">Click</Button>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('variant="inverse"');
-      expect(output).not.toContain('variant="tertiary"');
-    });
-
-    it('skips non-matching scope when --package-scope is set', () => {
-      const input = `
-import { Button } from '@example/cds-web';
-const App = () => <Button variant="tertiary">Click</Button>;
-`;
-      expect(applyButtonVariantTransform(input, { packageScope: '@coinbase' })).toBe('');
-    });
-
-    it('rewrites variant="tertiary" to variant="inverse" on IconButton from @coinbase/cds-mobile', () => {
-      const input = `
-import { IconButton } from '@coinbase/cds-mobile';
-const App = () => <IconButton variant="tertiary" icon="plus" />;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('variant="inverse"');
-      expect(output).not.toContain('variant="tertiary"');
-    });
-
-    it('rewrites variant="foregroundMuted" to variant="secondary" on IconButton from @coinbase/cds-mobile', () => {
-      const input = `
-import { IconButton } from '@coinbase/cds-mobile';
-const App = () => <IconButton variant="foregroundMuted" icon="plus" />;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('variant="secondary"');
-      expect(output).not.toContain('variant="foregroundMuted"');
-    });
+`,
+      },
+      `
+import { Button } from '@coinbase/cds-web/buttons';
+const App = () => <Button variant="inverse">Click</Button>;
+`,
+      tsxTestOptions,
+    );
   });
 
-  describe('dynamic expressions', () => {
-    it('adds a TODO comment for dynamic variant expressions', () => {
-      const input = `
+  it('does not rewrite Button imported from package root @coinbase/cds-web (not a v8 export)', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'root-web.tsx',
+        source: `
 import { Button } from '@coinbase/cds-web';
-const App = ({ v }) => <Button variant={v}>Click</Button>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('TODO(cds-migration)');
-      expect(output).toContain('variant values changed in v9');
-    });
+const App = () => <Button variant="tertiary">Click</Button>;
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
+  });
 
-    it('does not add duplicate TODO if already present', () => {
-      const input = `
-import { Button } from '@coinbase/cds-web';
+  it('does not rewrite IconButton imported from package root @coinbase/cds-mobile (not a v8 export)', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'root-mobile.tsx',
+        source: `
+import { IconButton } from '@coinbase/cds-mobile';
+const App = () => <IconButton variant="tertiary" name="plus" />;
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
+  });
+
+  it('rewrites variant="foregroundMuted" to variant="secondary" on Button from @coinbase/cds-web/buttons', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'fg-muted.tsx',
+        source: `
+import { Button } from '@coinbase/cds-web/buttons';
+const App = () => <Button variant="foregroundMuted">Click</Button>;
+`,
+      },
+      `
+import { Button } from '@coinbase/cds-web/buttons';
+const App = () => <Button variant="secondary">Click</Button>;
+`,
+      tsxTestOptions,
+    );
+  });
+
+  it('rewrites variant="tertiary" to variant="inverse" on Button from a non-@coinbase scope', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'example-scope.tsx',
+        source: `
+import { Button } from '@example/cds-web/buttons';
+const App = () => <Button variant="tertiary">Click</Button>;
+`,
+      },
+      `
+import { Button } from '@example/cds-web/buttons';
+const App = () => <Button variant="inverse">Click</Button>;
+`,
+      tsxTestOptions,
+    );
+  });
+
+  it('skips non-matching scope when --package-scope is set', () => {
+    runInlineTest(
+      transform,
+      { packageScope: '@coinbase' },
+      {
+        path: 'scope.tsx',
+        source: `
+import { Button } from '@example/cds-web/buttons';
+const App = () => <Button variant="tertiary">Click</Button>;
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
+  });
+
+  it('rewrites variant="tertiary" to variant="inverse" on IconButton from @coinbase/cds-mobile', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'icon-tertiary.tsx',
+        source: `
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+const App = () => <IconButton variant="tertiary" name="plus" />;
+`,
+      },
+      `
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+const App = () => <IconButton variant="inverse" name="plus" />;
+`,
+      tsxTestOptions,
+    );
+  });
+
+  it('rewrites variant="foregroundMuted" to variant="secondary" on IconButton from @coinbase/cds-mobile', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'icon-fg-muted.tsx',
+        source: `
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+const App = () => <IconButton variant="foregroundMuted" name="plus" />;
+`,
+      },
+      `
+import { IconButton } from '@coinbase/cds-mobile/buttons';
+const App = () => <IconButton variant="secondary" name="plus" />;
+`,
+      tsxTestOptions,
+    );
+  });
+
+  it('adds a TODO comment for dynamic variant expressions', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'dynamic.tsx',
+        source: `
+import { Button } from '@coinbase/cds-web/buttons';
+const App = ({ v }) => <Button variant={v}>Click</Button>;
+`,
+      },
+      `
+import { Button } from '@coinbase/cds-web/buttons';
+const App = ({ v }) => // TODO(cds-migration): Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.
+<Button variant={v}>Click</Button>;
+`,
+      tsxTestOptions,
+    );
+  });
+
+  it('does not add duplicate TODO if already present', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'dup-todo.tsx',
+        source: `
+import { Button } from '@coinbase/cds-web/buttons';
 const App = ({ v }) =>
   // TODO(cds-migration): Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.
   <Button variant={v}>Click</Button>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toBe('');
-    });
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
   });
 
-  describe('skipped cases', () => {
-    it('returns empty string for files with no CDS imports', () => {
-      const input = `
+  it('returns empty string when there are no CDS button imports (local relative path)', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'local-button.tsx',
+        source: `
 import { Button } from './MyButton';
 const App = () => <Button variant="tertiary">Click</Button>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toBe('');
-    });
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
+  });
 
-    it('does not modify non-CDS Button components', () => {
-      const input = `
-import { Button } from '@coinbase/cds-web';
+  it('returns empty string when there are no CDS button imports (non-CDS path)', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'local-components.tsx',
+        source: `import React from 'react';
+import { Button } from './components/Button';
+
+export function CustomToolbar() {
+  return (
+    <div>
+      <Button variant="tertiary">Cancel</Button>
+      <Button variant="foregroundMuted">Dismiss</Button>
+    </div>
+  );
+}
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
+  });
+
+  it('does not modify non-CDS Button components', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'third-party.tsx',
+        source: `
+import { Button } from '@coinbase/cds-web/buttons';
 import { Button as ThirdPartyButton } from 'third-party-lib';
 const App = () => (
   <>
@@ -120,15 +248,30 @@ const App = () => (
     <ThirdPartyButton variant="tertiary">Other</ThirdPartyButton>
   </>
 );
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('<Button variant="inverse"');
-      expect(output).toContain('<ThirdPartyButton variant="tertiary"');
-    });
+`,
+      },
+      `
+import { Button } from '@coinbase/cds-web/buttons';
+import { Button as ThirdPartyButton } from 'third-party-lib';
+const App = () => (
+  <>
+    <Button variant="inverse">CDS</Button>
+    <ThirdPartyButton variant="tertiary">Other</ThirdPartyButton>
+  </>
+);
+`,
+      tsxTestOptions,
+    );
+  });
 
-    it('does not modify already-correct variant values', () => {
-      const input = `
-import { Button } from '@coinbase/cds-web';
+  it('does not modify already-correct variant values', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'already-correct.tsx',
+        source: `
+import { Button } from '@coinbase/cds-web/buttons';
 const App = () => (
   <>
     <Button variant="primary">A</Button>
@@ -136,67 +279,71 @@ const App = () => (
     <Button variant="secondary">C</Button>
   </>
 );
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toBe('');
-    });
+`,
+      },
+      '',
+      tsxTestOptions,
+    );
   });
 
-  describe('aliased imports', () => {
-    it('transforms aliased CDS Button imports', () => {
-      const input = `
-import { Button as CdsButton } from '@coinbase/cds-web';
+  it('transforms aliased CDS Button imports', () => {
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'alias.tsx',
+        source: `
+import { Button as CdsButton } from '@coinbase/cds-web/buttons';
 const App = () => <CdsButton variant="tertiary">Click</CdsButton>;
-`;
-      const output = applyButtonVariantTransform(input);
-      expect(output).toContain('variant="inverse"');
-      expect(output).not.toContain('variant="tertiary"');
-    });
+`,
+      },
+      `
+import { Button as CdsButton } from '@coinbase/cds-web/buttons';
+const App = () => <CdsButton variant="inverse">Click</CdsButton>;
+`,
+      tsxTestOptions,
+    );
   });
 
-  describe('idempotency', () => {
-    it('produces the same result when run twice', () => {
-      const input = `
-import { Button, IconButton } from '@coinbase/cds-web';
+  it('produces the same result when run twice', () => {
+    /** Output after one pass on the idempotent test input (second pass must no-op). */
+    const BUTTON_ICONBUTTON_FIRST_PASS = `
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
 const App = () => (
   <>
-    <Button variant="tertiary">A</Button>
-    <IconButton variant="foregroundMuted" icon="plus" />
+    <Button variant="inverse">A</Button>
+    <IconButton variant="secondary" name="plus" />
   </>
 );
 `;
-      const firstPass = applyButtonVariantTransform(input);
-      const secondPass = applyButtonVariantTransform(firstPass);
-      expect(secondPass).toBe('');
-    });
+    runInlineTest(
+      transform,
+      {},
+      {
+        path: 'idempotent.tsx',
+        source: `
+import { Button, IconButton } from '@coinbase/cds-web/buttons';
+const App = () => (
+  <>
+    <Button variant="tertiary">A</Button>
+    <IconButton variant="foregroundMuted" name="plus" />
+  </>
+);
+`,
+      },
+      BUTTON_ICONBUTTON_FIRST_PASS,
+      tsxTestOptions,
+    );
+    runInlineTest(
+      transform,
+      {},
+      { path: 'idempotent-pass2.tsx', source: BUTTON_ICONBUTTON_FIRST_PASS },
+      '',
+      tsxTestOptions,
+    );
   });
 
-  describe('e2e fixtures', () => {
-    it('transforms mixed variants correctly', () => {
-      const input = readFixture('mixed-variants.input');
-      const expected = readFixture('mixed-variants.output');
-      const output = applyButtonVariantTransform(input);
-      expect(output.trim()).toEqual(expected.trim());
-    });
-
-    it('adds TODO for dynamic expressions', () => {
-      const input = readFixture('dynamic-expression.input');
-      const expected = readFixture('dynamic-expression.output');
-      const output = applyButtonVariantTransform(input);
-      expect(output.trim()).toEqual(expected.trim());
-    });
-
-    it('skips files with no CDS imports', () => {
-      const input = readFixture('no-cds-imports.input');
-      const output = applyButtonVariantTransform(input);
-      expect(output).toBe('');
-    });
-
-    it('transforms aliased imports correctly', () => {
-      const input = readFixture('aliased-imports.input');
-      const expected = readFixture('aliased-imports.output');
-      const output = applyButtonVariantTransform(input);
-      expect(output.trim()).toEqual(expected.trim());
-    });
+  it.each(E2E_PAIRED_PREFIXES)('%s', (prefix) => {
+    runTest(__dirname, 'button-variant-values', {}, prefix, tsxTestOptions);
   });
 });

@@ -27,3 +27,19 @@ export function getPackageScopeFromOptions(options: Options): string | undefined
   const n = normalizePackageScope(raw);
   return n || undefined;
 }
+
+/**
+ * Regex **source** for the start of an npm import path when matching `@scope/pkg/…`.
+ *
+ * - With CLI `--packageScope`: only that scope, e.g. `^@coinbase`
+ * - Without: any single npm scope, `^@[^/]+`
+ *
+ * Append further path segments with a leading `/`, e.g.
+ * `` `${scopedModulePathRegexPrefix(scope)}/cds-common/types$` ``.
+ */
+export function scopedModulePathRegexPrefix(packageScope: string | undefined): string {
+  if (packageScope) {
+    return `^${escapeRegExp(packageScope)}`;
+  }
+  return '^@[^/]+';
+}

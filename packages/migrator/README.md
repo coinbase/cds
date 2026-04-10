@@ -219,8 +219,9 @@ packages/migrator/
 │   ├── presets/                   # Preset configurations (auto-discovered!)
 │   │   └── v8-to-v9/
 │   │       └── manifest.json
-│   ├── transforms/                # Standalone transforms
-│   │   └── example-transform.ts
+│   ├── transforms/                # Jscodeshift codemods (e.g. versioned v9/)
+│   │   └── v9/
+│   │       └── migrate-use-merge-refs.ts
 │   └── utils/                     # Shared utilities
 └── package.json
 ```

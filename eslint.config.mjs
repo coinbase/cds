@@ -479,4 +479,17 @@ export default tseslint.config(
       ...testRules,
     },
   },
+  {
+    files: ['packages/migrator/**/*.test.{ts,tsx}'],
+    rules: {
+      'jest/expect-expect': 'off',
+    },
+  },
+  {
+    files: ['packages/migrator/src/transforms/**/*.ts'],
+    ignores: ['packages/migrator/src/transforms/**/__tests__/**'],
+    rules: {
+      'no-restricted-exports': 'off',
+    },
+  },
 );
