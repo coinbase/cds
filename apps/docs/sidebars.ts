@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'getting-started/templates/templates',
         // 'getting-started/api-overview/api-overview',
         'getting-started/theming/theming',
+        'getting-started/colors',
         'getting-started/styling/styling',
         'getting-started/playground',
         'getting-started/ai-overview',
