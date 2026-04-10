@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'getting-started/templates/templates',
         // 'getting-started/api-overview/api-overview',
         'getting-started/theming/theming',
+        'getting-started/colors',
         'getting-started/styling/styling',
         'getting-started/playground',
         'getting-started/ai-overview',
@@ -841,6 +842,24 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'guides/v8-migration-guide',
           label: 'v8 Migration Guide',
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Extras',
+      customProps: {
+        icon: 'sparkle',
+        kbar: {
+          icon: 'sparkle',
+          description: 'Extra tools and resources',
+        },
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'extras/color-pairing-tool',
+          label: 'Color Pairing Tool',
         },
       ],
     },

@@ -17,72 +17,72 @@ type MetadataLinksProps = {
   changelog?: string;
   /** URL to Figma */
   figma?: string;
+  /** Hide the "View as Markdown" and "Copy for LLM" links */
+  hideLlmLinks?: boolean;
 };
 
 /**
- * Displays metadata links (Source, Storybook, Changelog, Figma) and LLM doc buttons.
+ * Displays metadata links (Source, Storybook, Changelog, Figma) and View as Markdown.
  */
-export const MetadataLinks = memo(({ source, storybook, changelog, figma }: MetadataLinksProps) => {
-  const { platform } = usePlatformContext();
-  const toast = useToast();
-  const location = useLocation();
+export const MetadataLinks = memo(
+  ({ source, storybook, changelog, figma, hideLlmLinks }: MetadataLinksProps) => {
+    const { platform } = usePlatformContext();
+    const toast = useToast();
+    const location = useLocation();
 
-  // Parse the current URL to determine doc type and title
-  const llmDocUrl = useMemo(() => {
-    const pathname = location.pathname;
-    const parts = pathname.split('/').filter(Boolean);
+    const llmDocUrl = useMemo(() => {
+      const pathname = location.pathname;
+      const parts = pathname.split('/').filter(Boolean);
 
-    // Extract doc type (first segment) and title (last segment) from URL
-    // e.g., /components/Button -> { docType: 'components', title: 'Button' }
-    // e.g., /components/layout/AccordionItem -> { docType: 'components', title: 'AccordionItem' }
-    // e.g., /hooks/useTheme -> { docType: 'hooks', title: 'useTheme' }
-    // e.g., /getting-started/installation -> { docType: 'getting-started', title: 'installation' }
-    const docType = parts.length >= 2 ? parts[0] : 'components';
-    const title = parts.length >= 2 ? parts[parts.length - 1] : 'unknown';
+      const docType = parts.length >= 2 ? parts[0] : 'components';
+      const title = parts.length >= 2 ? parts[parts.length - 1] : 'unknown';
 
-    return `/llms/${platform}/${docType}/${title}.txt`;
-  }, [location.pathname, platform]);
+      return `/llms/${platform}/${docType}/${title}.txt`;
+    }, [location.pathname, platform]);
 
-  const handleCopyLLMDoc = useCallback(async () => {
-    try {
-      const response = await fetch(llmDocUrl);
-      if (!response.ok) {
-        throw new Error('Failed to fetch LLM doc');
+    const handleCopyLLMDoc = useCallback(async () => {
+      try {
+        const response = await fetch(llmDocUrl);
+        if (!response.ok) {
+          throw new Error('Failed to fetch LLM doc');
+        }
+        const text = await response.text();
+        await navigator.clipboard.writeText(text);
+        toast.show('Copied to clipboard');
+      } catch (error) {
+        console.error('Failed to copy LLM doc:', error);
+        toast.show('Failed to copy to clipboard');
       }
-      const text = await response.text();
-      await navigator.clipboard.writeText(text);
-      toast.show('Copied to clipboard');
-    } catch (error) {
-      console.error('Failed to copy LLM doc:', error);
-      toast.show('Failed to copy to clipboard');
-    }
-  }, [llmDocUrl, toast]);
+    }, [llmDocUrl, toast]);
 
-  return (
-    <HStack flexWrap="wrap" gap={1}>
-      {source && (
-        <LinkChip href={source} startIcon="gitHubLogo">
-          Source
-        </LinkChip>
-      )}
-      {storybook && <LinkChip href={storybook}>Storybook</LinkChip>}
-      {changelog && <LinkChip href={changelog}>Changelog</LinkChip>}
-      {figma && (
-        <Tooltip content="Internal only">
-          <LinkChip endIcon="lock" href={figma}>
-            Figma
+    return (
+      <HStack flexWrap="wrap" gap={1}>
+        {source && (
+          <LinkChip href={source} startIcon="gitHubLogo">
+            Source
           </LinkChip>
-        </Tooltip>
-      )}
-      <Chip
-        compact
-        accessibilityLabel="Copy component documentation for LLM"
-        onClick={handleCopyLLMDoc}
-        start={<Icon color="fg" name="copy" size="s" />}
-      >
-        Copy for LLM
-      </Chip>
-      <LinkChip href={llmDocUrl}>View as Markdown</LinkChip>
-    </HStack>
-  );
-});
+        )}
+        {storybook && <LinkChip href={storybook}>Storybook</LinkChip>}
+        {changelog && <LinkChip href={changelog}>Changelog</LinkChip>}
+        {figma && (
+          <Tooltip content="Internal only">
+            <LinkChip endIcon="lock" href={figma}>
+              Figma
+            </LinkChip>
+          </Tooltip>
+        )}
+        {!hideLlmLinks && (
+          <Chip
+            compact
+            accessibilityLabel="Copy component documentation for LLM"
+            onClick={handleCopyLLMDoc}
+            start={<Icon color="fg" name="copy" size="s" />}
+          >
+            Copy for LLM
+          </Chip>
+        )}
+        {!hideLlmLinks && <LinkChip href={llmDocUrl}>View as Markdown</LinkChip>}
+      </HStack>
+    );
+  },
+);
