@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.17.0 (4/9/2026 PST)
+
+#### 🚀 Updates
+
+- Update svg map for latest icon release.
+
 ## 4.16.0 (3/30/2026 PST)
 
 #### 🚀 Updates
