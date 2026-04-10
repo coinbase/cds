@@ -1,13 +1,9 @@
 ---
 name: cds-migrator-transform
 description: |
-  End-to-end workflow for adding a jscodeshift migration to packages/migrator: clarify symbol and
-  target behavior, decide web vs mobile vs shared transforms, research real usage with Sourcegraph MCP,
-  split automatable vs manual cases (confirm with user), implement codemods and TODO markers, add
-  tests (inline-first, a few OSS-safe paired fixtures), register presets when applicable. Use when the
-  user asks to add a CDS migrator transform, codemod, jscodeshift migration, major-upgrade migration
-  (e.g. v8-to-v9), or a **standalone** codemod not tied to a version bump. Also when migrating
-  consumer imports/APIs for a CDS release.
+  Use when a CDS change in **cds-web**, **cds-common**, **cds-mobile**, **web-visualization**, or
+  **mobile-visualization** needs a **jscodeshift** migration in `packages/migrator` to update callers or
+  mitigate breaking API or import moves (add or change a transform, tests, or preset entry).
 allowed-tools: Read, Grep, Glob, StrReplace, Bash(yarn nx run:*), call_mcp_tool
 argument-hint: '<symbol or API change> — <target behavior> — [preset or standalone] — [web|mobile|both] — [optional: Sourcegraph scope / repos / queries the user supplies]'
 ---
