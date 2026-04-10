@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.64.4 (4/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix Toast enter animation in React 19 StrictMode. [[#607](https://github.com/coinbase/cds/pull/607)]
+
 ## 8.64.3 (4/8/2026 PST)
 
 #### 🐞 Fixes
