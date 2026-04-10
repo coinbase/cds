@@ -130,14 +130,24 @@ const IconButtonScreen = () => {
       </Example>
 
       <Example inline title="Icon Glyph Styles">
-        <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
-          <IconButton
-            accessibilityLabel="Custom color via styles.icon"
-            name={iconName}
-            styles={{ icon: { color: 'dodgerblue' } }}
-          />
-          <Text font="body">Custom color via styles.icon</Text>
-        </Box>
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Custom color via styles.icon"
+              name={iconName}
+              styles={{ icon: { color: 'dodgerblue' } }}
+            />
+            <Text font="body">Custom color via styles.icon</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Rotated icon via styles.icon"
+              name={iconName}
+              styles={{ icon: { transform: [{ rotate: '45deg' }] } }}
+            />
+            <Text font="body">Rotated icon via styles.icon</Text>
+          </Box>
+        </VStack>
       </Example>
 
       <Example inline title="Loading">
