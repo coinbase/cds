@@ -3,8 +3,9 @@ import React, {
   memo,
   useCallback,
   useContext,
-  useEffect,
   useImperativeHandle,
+  useRef,
+  useState,
 } from 'react';
 import {
   animateInBottomConfig,
@@ -19,7 +20,7 @@ import {
 } from '@coinbase/cds-common/overlays/ToastProvider';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
-import { m as motion, useAnimation } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { Button } from '../buttons/Button';
 import { IconButton } from '../buttons/IconButton';
@@ -86,25 +87,34 @@ export const Toast = memo(
       ...props
     } = mergedProps;
     const { pauseTimer, resumeTimer } = useContext(ToastContext);
-    const animationControls = useAnimation();
+    const [motionState, setMotionState] = useState<'enter' | 'exit'>('enter');
+    const exitResolverRef = useRef<((value: boolean) => void) | null>(null);
 
     const motionProps = useMotionProps({
       enterConfigs: [animateInOpacityConfig, animateInBottomConfig],
       exitConfigs: [animateOutOpacityConfig, animateOutBottomConfig],
-      animate: animationControls,
+      animate: motionState,
       style: { bottom: bottomOffset },
     });
 
-    useEffect(() => {
-      void animationControls.start('enter');
-    }, [animationControls]);
+    const handleAnimationComplete = useCallback(
+      (definition: string) => {
+        if (definition === 'exit') {
+          onDidHide?.();
+          exitResolverRef.current?.(true);
+          exitResolverRef.current = null;
+        }
+      },
+      [onDidHide],
+    );
 
-    const handleClose = useCallback(async (): Promise<boolean> => {
+    const handleClose = useCallback((): Promise<boolean> => {
       onWillHide?.();
-      await animationControls.start('exit');
-      onDidHide?.();
-      return true;
-    }, [onWillHide, onDidHide, animationControls]);
+      return new Promise((resolve) => {
+        exitResolverRef.current = resolve;
+        setMotionState('exit');
+      });
+    }, [onWillHide]);
 
     useImperativeHandle(
       ref,
@@ -121,7 +131,12 @@ export const Toast = memo(
 
     return (
       <Portal containerId={toastContainerId} disablePortal={disablePortal}>
-        <motion.div {...motionProps} className={baseCss} data-testid={`${testID}-motion`}>
+        <motion.div
+          {...motionProps}
+          className={baseCss}
+          data-testid={`${testID}-motion`}
+          onAnimationComplete={handleAnimationComplete}
+        >
           <Box
             justifyContent="center"
             onMouseEnter={pauseTimer} // persist toast when hovering
