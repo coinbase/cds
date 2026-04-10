@@ -1,6 +1,6 @@
 ---
-name: development-react-components
-description: USE THIS whenever you are working on CDS React components
+name: components.best-practices
+description: Use this skill whenever working on CDS React components in any package.
 user-invocable: false
 ---
 

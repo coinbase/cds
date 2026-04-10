@@ -36,7 +36,7 @@ Within the current mapping file:
 
 2. **Identify Property Types Correctly**
    Before analyzing mappings, study the Figma metadata you found:
-   - **ALWAYS** reference the guidelines for writing code connect mappings here: .cursor/rules/code-connect.mdc
+   - **ALWAYS** reference the guidelines for writing code connect mappings in the `figma.connect-best-practices` SKILL
    - **Component Properties**: Boolean toggles, dropdowns/enums in the properties panel
    - **Property Values**: Options within enum properties (e.g., "disabled" is a value of "state")
    - **Text Layers**: Named text layers that need `figma.textContent()`

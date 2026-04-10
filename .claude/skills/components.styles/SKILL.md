@@ -1,22 +1,10 @@
 ---
-name: component-styles
-description: Guidelines writing styles API (styles, classNames, and static classNames) for a CDS component.
-model: claude-sonnet-4-6
-disable-model-invocation: true
+name: components.styles
+description: Guidelines writing styles API (styles, classNames, and static classNames) for a CDS component. Use this skill when adding customization options to a React component via `styles` or `classNames` props or when needing to update the docsite with component styles documentation.
+argument-hint: <ComponentName> [additional context] (e.g., "Button", "LineChart add real-time examples")
 ---
 
-# Component Styles
-
-Add styles API (styles, classNames, and static classNames) to a CDS component.
-
-**Usage:** `/component-styles <ComponentName> [additional context]`
-
-Examples:
-
-- `/component-styles SlideButton`
-- `/component-styles Button add static classnames for sub elements`
-- `/component-styles Select add styles documentation`
-- `/component-styles Avatar mobile only`
+Goal: Add styles API (styles, classNames, and static classNames) to a CDS component and/or update the component documentation with styles documentation.
 
 If no component name is provided, ask the user which component they want to add styles to.
 
@@ -349,12 +337,10 @@ After adding the styles API to the component, update the documentation:
    yarn nx run docs:docgen
    ```
 
-2. **Create or update the styles documentation** following the `/component-docs` command guidelines:
+2. **Create or update the styles documentation** use the `components.write-docs` SKILL for general knowledge on how to write component documentation:
    - Create `_webStyles.mdx` with ComponentStylesTable and StylesExplorer
    - Create `_mobileStyles.mdx` with ComponentStylesTable (if mobile)
    - Update `index.mdx` to import and render the styles tables
-
-See `.cursor/commands/component-docs.md` for detailed documentation templates.
 
 ## Final Checklist
 
@@ -370,5 +356,5 @@ Before completing, verify:
 - [ ] Special rendering conditions documented in JSDoc
 - [ ] Tests added for static classNames (web only) - see Step 4.4
 - [ ] Ran `yarn nx run docs:docgen` to regenerate styles data
-- [ ] Documentation updated (see `/component-docs` command)
+- [ ] Documentation updated to include new component styles information
 - [ ] Updated this file's "Approved Selector Names" table if new selectors were added

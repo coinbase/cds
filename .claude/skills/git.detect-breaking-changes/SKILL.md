@@ -1,6 +1,6 @@
 ---
-name: detect-breaking-changes
-description: Analyzes the previous N commits for breaking changes across the CDS public API surface
+name: git.detect-breaking-changes
+description: Analyzes the previous N commits for breaking changes across the CDS public API surface. Use this skill when you need to check if any recent changes will cause breaking changes in the CDS public API surface.
 allowed-tools: Bash(git log:*), Bash(git show:*), Bash(git diff:*), Bash(git rev-parse:*), Read, Glob, Grep
 argument-hint: [Number of commits to review]
 model: opus
