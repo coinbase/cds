@@ -1,5 +1,5 @@
 ---
-name: github-repo-manager
+name: git.repo-manager
 description: Instructions to manage a local cache of GitHub repositories. This would typically done in cases where the user want to perform research/analysis on a repository. Invoke whenever you need to clone a repo that isn't present locally, bring an existing clone up to date, or remove a repo from the cache. This skill handles only the mechanical filesystem/git operations — not research, analysis, or anything about the repo's contents.
 allowed-tools: Bash(git clone *), Bash(git pull *), Bash(rm -rf temp/repo-cache/*), Bash(test -d temp/repo-cache/*)
 user-invocable: false

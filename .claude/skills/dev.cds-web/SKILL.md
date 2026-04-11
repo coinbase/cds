@@ -1,5 +1,5 @@
 ---
-name: development-cds-web
+name: dev.cds-web
 description: USE THIS when asked to work on a new or existing (WEB) CDS React component in packages/web
 ---
 
