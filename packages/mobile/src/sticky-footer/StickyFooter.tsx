@@ -1,7 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import { View } from 'react-native';
 
-import { useSafeBottomPadding } from '../hooks/useSafeBottomPadding';
 import { Box, type BoxProps } from '../layout';
 
 export type StickyFooterProps = BoxProps & {
