@@ -12,8 +12,8 @@ import { Text } from '../../typography/Text';
 export type ModalHeaderBaseProps = Omit<BoxBaseProps, 'children'> & {
   /** Handles back button press */
   onBackButtonClick?: (event: GestureResponderEvent) => void;
-  /** Title of the Modal */
-  title?: string;
+  /** Title of the Modal. Accepts a string or ReactNode. When a string is provided, it is rendered with the `font` prop (default `headline`). */
+  title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -58,6 +58,7 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
     alignItems = 'center',
     paddingX = 3,
     paddingY = 2,
+    font = 'headline',
     title,
     onBackButtonClick,
     backAccessibilityLabel,
@@ -89,10 +90,12 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
         )}
       </Box>
       <Box alignItems="center" flexBasis={0} flexGrow={6} justifyContent="center">
-        {title && (
-          <Text align="center" font="headline">
+        {typeof title === 'string' ? (
+          <Text align="center" font={font}>
             {title}
           </Text>
+        ) : (
+          title
         )}
       </Box>
       <Box alignItems="flex-end" flexBasis={0} flexGrow={1}>

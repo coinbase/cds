@@ -17,8 +17,8 @@ import { Text } from '../../typography/Text';
 export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
   /** Handles back button press */
   onBackButtonClick?: React.MouseEventHandler;
-  /** Title of the Modal */
-  title?: string;
+  /** Title of the Modal. Accepts a string or ReactNode. When a string is provided, it is rendered with the `font` prop (default `headline`). */
+  title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -64,6 +64,7 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
     alignItems = 'center',
     paddingX = 3,
     paddingY = 2,
+    font = 'headline',
     title,
     onBackButtonClick,
     backAccessibilityLabel,
@@ -105,16 +106,12 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
         emptyPlaceholder
       )}
       <Box alignItems="center" flexGrow={1} justifyContent="center" paddingX={2}>
-        {title && (
-          <Text
-            as="h2"
-            display="block"
-            font="headline"
-            id={accessibilityLabelledBy}
-            textAlign="center"
-          >
+        {typeof title === 'string' ? (
+          <Text as="h2" display="block" font={font} id={accessibilityLabelledBy} textAlign="center">
             {title}
           </Text>
+        ) : (
+          title
         )}
       </Box>
       {!hideCloseButton && (
