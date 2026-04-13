@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.6.0 (4/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add PercentageBarChart component. [[#550](https://github.com/coinbase/cds/pull/550)]
+
 ## 3.5.0 (4/13/2026 PST)
 
 #### 🚀 Updates
