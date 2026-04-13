@@ -23,26 +23,7 @@ const checkboxCss = css`
   border-width: 0;
 `;
 
-/**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- *
- * @example
- * // Instead of:
- * <CheckboxGroup selectedValues={new Set(['value1'])} onChange={onChange}>
- *   <Checkbox value="value1">Option 1</Checkbox>
- * </CheckboxGroup>
- *
- * // Use:
- * <ControlGroup
- *   role="group"
- *   ControlComponent={Checkbox}
- *   options={[{ value: 'value1', children: 'Option 1' }]}
- *   value={['value1']}
- *   onChange={onChange}xw
- * />
- */
-export type CheckboxGroupBaseProps<CheckboxValue extends string | number> = FilteredHTMLAttributes<
+type CheckboxGroupBaseProps<CheckboxValue extends string | number> = FilteredHTMLAttributes<
   FieldsetHTMLAttributes<HTMLFieldSetElement>,
   'onChange'
 > &
@@ -59,12 +40,7 @@ export type CheckboxGroupBaseProps<CheckboxValue extends string | number> = Filt
     style?: React.CSSProperties;
   };
 
-/**
- * @deprecated CheckboxGroup is deprecated. Use ControlGroup with role="group" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
-export type CheckboxGroupProps<CheckboxValue extends string> =
-  CheckboxGroupBaseProps<CheckboxValue>;
+type CheckboxGroupProps<CheckboxValue extends string> = CheckboxGroupBaseProps<CheckboxValue>;
 
 // Follows behavior describe in https://www.w3.org/TR/wai-aria-practices/examples/checkbox/checkbox-2/checkbox-2.html
 const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxValue extends string>(
