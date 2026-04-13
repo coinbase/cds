@@ -11,8 +11,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../../buttons';
 import { Box, VStack } from '../../layout';
 import { LoremIpsum } from '../../layout/__stories__/LoremIpsum';
-import type { AnnouncementCardProps } from '../AnnouncementCard';
-import { AnnouncementCard as AnnouncementCardComponent } from '../AnnouncementCard';
 import { Card } from '../Card';
 import { CardGroup } from '../CardGroup';
 import { DataCard as DataCardComponent } from '../DataCard';
@@ -30,18 +28,6 @@ const cardParameters = {
   wrapperProps: { background: 'bg', borderedBottom: true },
 } as const;
 const builder = storyBuilder({ parameters: cardParameters });
-
-/* -------------------------------------------------------------------------- */
-/*                             Announcement Cards                             */
-/* -------------------------------------------------------------------------- */
-const announcementCardBuilder = builder(AnnouncementCardComponent);
-
-export const AnnouncementCard = announcementCardBuilder.build(
-  announcementCards[0] as AnnouncementCardProps,
-);
-export const AnnouncementCards = announcementCardBuilder.buildSheet(
-  announcementCards as AnnouncementCardProps[],
-);
 
 /* -------------------------------------------------------------------------- */
 /*                             FeatureEntry Cards                             */
