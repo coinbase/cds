@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
@@ -11,7 +10,7 @@ import {
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
-import { getNormalizedStagger } from '../utils/bar';
+import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 
 import type { BarComponentProps } from './Bar';
 
@@ -59,31 +58,38 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [transitions?.enter, animate, normalizedStagger],
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
+      [transitions?.enter, animate],
     );
-    const rawEnterOpacityTransition = useMemo(() => {
-      if (transitions?.enterOpacity === undefined) {
-        return enterTransition === null ? null : defaultBarEnterOpacityTransition;
-      }
-      return getTransition(transitions.enterOpacity, animate, defaultBarEnterOpacityTransition);
-    }, [transitions?.enterOpacity, animate, enterTransition]);
-    const enterOpacityTransition = useMemo(
-      () => withStaggerDelayTransition(rawEnterOpacityTransition, normalizedStagger),
-      [rawEnterOpacityTransition, normalizedStagger],
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
     );
-    const resolvedEnterOpacityTransition = useMemo(() => {
+    const enterOpacityTransition = useMemo(() => {
+      if (transitions?.enterOpacity === undefined && enterTransition === null) return null;
+
+      const enterOpacityTransition: BarTransition | null = getTransition(
+        transitions?.enterOpacity,
+        animate,
+        defaultBarEnterOpacityTransition,
+      );
+
       if (!enterOpacityTransition) return null;
-      if (!enterTransition) return enterOpacityTransition;
-      // Keep opacity aligned with geometry staggering when fade delay isn't explicitly set.
+
       return {
         ...enterOpacityTransition,
-        delay: enterOpacityTransition.delay ?? enterTransition.delay,
+        delay: enterOpacityTransition.delay ?? enterTransition?.delay,
+        staggerDelay: enterOpacityTransition.staggerDelay ?? enterTransition?.staggerDelay,
       };
-    }, [enterOpacityTransition, enterTransition]);
+    }, [transitions?.enterOpacity, animate, enterTransition]);
+    const enterOpacityTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterOpacityTransition, normalizedStagger),
+      [enterOpacityTransition, normalizedStagger],
+    );
     const updateTransition = useMemo(
       () =>
         withStaggerDelayTransition(
@@ -131,30 +137,21 @@ export const DefaultBar = memo<DefaultBarProps>(
       minSize,
     ]);
 
-    const shouldAnimateEnterOpacity = animate && resolvedEnterOpacityTransition !== null;
-
     return (
-      <motion.g
-        animate={{ opacity: 1 }}
-        initial={shouldAnimateEnterOpacity ? { opacity: 0 } : false}
-        transition={
-          shouldAnimateEnterOpacity ? (resolvedEnterOpacityTransition ?? undefined) : undefined
-        }
-      >
-        <Path
-          {...props}
-          animate={animate}
-          clipRect={null}
-          d={d}
-          fill={fill}
-          fillOpacity={fillOpacity}
-          initialPath={initialPath}
-          transitions={{
-            enter: enterTransition,
-            update: updateTransition,
-          }}
-        />
-      </motion.g>
+      <Path
+        {...props}
+        animate={animate}
+        clipRect={null}
+        d={d}
+        fill={fill}
+        fillOpacity={fillOpacity}
+        initialPath={initialPath}
+        transitions={{
+          enter: enterTransitionWithStagger,
+          enterOpacity: enterOpacityTransitionWithStagger,
+          update: updateTransition,
+        }}
+      />
     );
   },
 );

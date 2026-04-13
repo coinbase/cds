@@ -69,7 +69,7 @@ export type BarProps = BarBaseProps & {
      * Transition for the initial enter opacity animation.
      * Uses a default subtle fade when undefined (unless `enter` is disabled).
      * @note falls back to `enter` timing offsets (`delay` and `staggerDelay`) when not provided.
-     * Set to `null` to disable enter opacity animation.
+     * Set to `null` to disable enter opacity animation. Automatically set to null if enter transition is disabled.
      */
     enterOpacity?: BarTransition | null;
     /**

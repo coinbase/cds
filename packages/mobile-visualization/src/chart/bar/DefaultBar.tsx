@@ -1,7 +1,5 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
+import { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
@@ -11,8 +9,8 @@ import {
   getBarPath,
   withStaggerDelayTransition,
 } from '../utils';
-import { getNormalizedStagger } from '../utils/bar';
-import { buildTransition, defaultTransition, getTransition } from '../utils/transition';
+import { type BarTransition, getNormalizedStagger } from '../utils/bar';
+import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -52,31 +50,38 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [transitions?.enter, animate, normalizedStagger],
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
+      [transitions?.enter, animate],
     );
-    const rawEnterOpacityTransition = useMemo(() => {
-      if (transitions?.enterOpacity === undefined) {
-        return enterTransition === null ? null : defaultBarEnterOpacityTransition;
-      }
-      return getTransition(transitions.enterOpacity, animate, defaultBarEnterOpacityTransition);
-    }, [transitions?.enterOpacity, animate, enterTransition]);
-    const enterOpacityTransition = useMemo(
-      () => withStaggerDelayTransition(rawEnterOpacityTransition, normalizedStagger),
-      [rawEnterOpacityTransition, normalizedStagger],
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
     );
-    const resolvedEnterOpacityTransition = useMemo(() => {
+    const enterOpacityTransition = useMemo(() => {
+      if (transitions?.enterOpacity === undefined && enterTransition === null) return null;
+
+      const enterOpacityTransition: BarTransition | null = getTransition(
+        transitions?.enterOpacity,
+        animate,
+        defaultBarEnterOpacityTransition,
+      );
+
       if (!enterOpacityTransition) return null;
-      if (!enterTransition) return enterOpacityTransition;
-      // Keep opacity aligned with geometry staggering when fade delay isn't explicitly set.
+
       return {
         ...enterOpacityTransition,
-        delay: enterOpacityTransition.delay ?? enterTransition.delay,
+        delay: enterOpacityTransition.delay ?? enterTransition?.delay,
+        staggerDelay: enterOpacityTransition.staggerDelay ?? enterTransition?.staggerDelay,
       };
-    }, [enterOpacityTransition, enterTransition]);
+    }, [transitions?.enterOpacity, animate, enterTransition]);
+    const enterOpacityTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterOpacityTransition, normalizedStagger),
+      [enterOpacityTransition, normalizedStagger],
+    );
     const updateTransition = useMemo(
       () =>
         withStaggerDelayTransition(
@@ -89,23 +94,6 @@ export const DefaultBar = memo<DefaultBarProps>(
         ),
       [transitions?.update, transition, animate, normalizedStagger],
     );
-
-    const enterOpacity = useSharedValue(animate && resolvedEnterOpacityTransition !== null ? 0 : 1);
-    const hasAnimatedEnterOpacity = useRef(false);
-
-    useEffect(() => {
-      if (hasAnimatedEnterOpacity.current) {
-        return;
-      }
-      hasAnimatedEnterOpacity.current = true;
-
-      if (!animate || resolvedEnterOpacityTransition === null) {
-        enterOpacity.value = 1;
-        return;
-      }
-
-      enterOpacity.value = buildTransition(1, resolvedEnterOpacityTransition);
-    }, [animate, resolvedEnterOpacityTransition, enterOpacity]);
 
     const initialPath = useMemo(() => {
       if (!animate) return;
@@ -142,22 +130,21 @@ export const DefaultBar = memo<DefaultBarProps>(
     ]);
 
     return (
-      <Group opacity={enterOpacity}>
-        <Path
-          animate={animate}
-          clipPath={null}
-          d={d}
-          fill={stroke ? 'none' : defaultFill}
-          fillOpacity={fillOpacity}
-          initialPath={initialPath}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-          transitions={{
-            enter: enterTransition,
-            update: updateTransition,
-          }}
-        />
-      </Group>
+      <Path
+        animate={animate}
+        clipPath={null}
+        d={d}
+        fill={stroke ? 'none' : defaultFill}
+        fillOpacity={fillOpacity}
+        initialPath={initialPath}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        transitions={{
+          enter: enterTransitionWithStagger,
+          enterOpacity: enterOpacityTransitionWithStagger,
+          update: updateTransition,
+        }}
+      />
     );
   },
 );
