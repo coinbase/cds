@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from scripts/codegen/main.ts
+ * Generated from libs/codegen
  */
 export const routes = [
   {
@@ -140,11 +140,6 @@ export const routes = [
       require('@coinbase/cds-mobile/carousel/__stories__/Carousel.stories').default,
   },
   {
-    key: 'CarouselMedia',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/media/__stories__/CarouselMedia.stories').default,
-  },
-  {
     key: 'CartesianChart',
     getComponent: () =>
       require('@coinbase/cds-mobile/visualizations/chart/__stories__/CartesianChart.stories')
@@ -190,6 +185,17 @@ export const routes = [
     key: 'Combobox',
     getComponent: () =>
       require('@coinbase/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
+  },
+  {
+    key: 'ComponentConfigProvider',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/system/__stories__/ComponentConfigProvider.stories').default,
+  },
+  {
+    key: 'ComponentConfigProviderCustom',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/system/__stories__/ComponentConfigProviderCustom.stories')
+        .default,
   },
   {
     key: 'ContainedAssetCard',

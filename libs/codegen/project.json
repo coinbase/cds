@@ -38,6 +38,12 @@
       "options": {
         "cwd": "libs/codegen"
       }
+    },
+    "icon-svg-map": {
+      "command": "tsx ./src/icons/generateIconSvgMap.ts",
+      "options": {
+        "cwd": "libs/codegen"
+      }
     }
   }
 }
