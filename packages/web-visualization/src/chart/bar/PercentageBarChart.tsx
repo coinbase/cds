@@ -4,30 +4,18 @@ import type { BarChartBaseProps, BarChartProps } from './BarChart';
 import { BarChart } from './BarChart';
 import type { BarSeries } from './BarStack';
 
-/**
- * Series configuration for PercentageBarChart.
- * Each series represents one segment type across all groups (determined by array index).
- * Values at each index are normalized so all series at that index sum to 100%.
- *
- * @see PercentageBarChart
- */
+/** Extended series type that supports single data values. */
 export type PercentageBarSeries = Omit<BarSeries, 'data' | 'stackId' | 'xAxisId' | 'yAxisId'> & {
   /**
-   * Non-negative values per group, or a single number as shorthand for one group only.
-   * When multiple groups exist, a numeric value applies only to the first category (same as a one-element array).
-   * Normalized per group so all series at each index sum to 100%.
+   * Data for this series.
+   *
+   * Can be either:
+   * - Single number: `1400`
+   * - Array of numbers: `[10, 15, 20]`
    */
   data: number | Array<number | null>;
 };
 
-/**
- *
- * Renders stacked bars whose segments always sum to 100% at each group index.
- * Values are normalized internally so any set of non-negative numbers can be passed.
- * Groups are determined by array index — category labels are provided via
- * `yAxis.data` (horizontal layout, default) or `xAxis.data` (vertical layout).
- * The value axis is fixed to a 0–100% scale.
- */
 export type PercentageBarChartBaseProps = Omit<
   BarChartBaseProps,
   | 'series'
@@ -39,11 +27,10 @@ export type PercentageBarChartBaseProps = Omit<
   | 'onScrubberPositionChange'
 > & {
   /**
-   * Series representing segment types across groups. Each series' `data` is either a number
-   * (first group only) or an array of one value per group (by index). Values are normalized to 100% per group.
-   * Use non-negative values only.
+   * Configuration objects that define how to visualize the data.
+   * Each series contains its own data.
    */
-  series: PercentageBarSeries[];
+  series?: PercentageBarSeries[];
   /**
    * Chart layout - describes the direction bars/areas grow.
    * - 'vertical': Bars grow vertically. X is category axis, Y is value axis.
@@ -57,10 +44,24 @@ export type PercentageBarChartBaseProps = Omit<
    */
   roundBaseline?: BarChartBaseProps['roundBaseline'];
   /**
-   * Padding inside the chart drawing area (number or per-side object).
+   * Inset around the entire chart (outside the axes).
    * @default 0
    */
   inset?: BarChartBaseProps['inset'];
+};
+
+/**
+ * Returns the value for a group index from numeric shorthand or per-group series data.
+ * @param data - A single number (group `0` only) or an array of values per group.
+ * @param groupIndex - The group index to read.
+ * @returns The clamped value for that group, or `null` when the value is `null`, undefined, or out of range.
+ */
+const unwrapSeriesDataValue = (
+  data: PercentageBarSeries['data'],
+  groupIndex: number,
+): number | null => {
+  const raw = typeof data === 'number' ? (groupIndex === 0 ? data : null) : data[groupIndex];
+  return raw != null ? Math.max(0, raw) : null;
 };
 
 export type PercentageBarChartProps = PercentageBarChartBaseProps &
@@ -92,43 +93,39 @@ export const PercentageBarChart = memo(
       ref,
     ) => {
       const barSeries = useMemo(() => {
-        const getVal = (data: number | Array<number | null>, i: number) =>
-          Math.max(0, (typeof data === 'number' ? (i === 0 ? data : null) : data[i]) ?? 0);
-        const groupCount =
-          series.length === 0
-            ? 0
-            : Math.max(...series.map(({ data }) => (typeof data === 'number' ? 1 : data.length)));
-        const totals = Array.from({ length: groupCount }, (_, i) =>
-          series.reduce((sum, { data }) => sum + getVal(data, i), 0),
+        const groupCount = Math.max(
+          0,
+          ...(series?.map(({ data }) => (typeof data === 'number' ? 1 : data.length)) ?? []),
         );
-        return series.map(({ data, ...rest }) => ({
-          ...rest,
-          data: Array.from({ length: groupCount }, (_, i) =>
-            totals[i] > 0 ? (getVal(data, i) / totals[i]) * 100 : null,
-          ),
+
+        const totals = Array.from(
+          { length: groupCount },
+          (_, i) =>
+            series?.reduce((sum, { data }) => sum + (unwrapSeriesDataValue(data, i) ?? 0), 0) ?? 0,
+        );
+
+        return series?.map((s) => ({
+          ...s,
+          data: Array.from({ length: groupCount }, (_, i) => {
+            const val = unwrapSeriesDataValue(s.data, i);
+            return val != null && totals[i] > 0 ? (val / totals[i]) * 100 : null;
+          }),
         }));
       }, [series]);
 
       const isHorizontalLayout = layout === 'horizontal';
-      const axisConfig = useMemo(
-        () => ({
-          xAxis: isHorizontalLayout
-            ? {
-                domain: { min: 0, max: 100 },
-                domainLimit: 'strict' as const,
-                ...xAxis,
-              }
-            : { categoryPadding: 0, ...xAxis },
-          yAxis: isHorizontalLayout
-            ? { categoryPadding: 0, ...yAxis }
-            : {
-                domain: { min: 0, max: 100 },
-                domainLimit: 'strict' as const,
-                ...yAxis,
-              },
-        }),
-        [isHorizontalLayout, xAxis, yAxis],
-      );
+
+      const xAxisConfig: BarChartProps['xAxis'] = useMemo(() => {
+        return isHorizontalLayout
+          ? { domain: { min: 0, max: 100 }, domainLimit: 'strict', ...xAxis }
+          : { categoryPadding: 0, ...xAxis };
+      }, [isHorizontalLayout, xAxis]);
+
+      const yAxisConfig: BarChartProps['yAxis'] = useMemo(() => {
+        return isHorizontalLayout
+          ? { categoryPadding: 0, ...yAxis }
+          : { domain: { min: 0, max: 100 }, domainLimit: 'strict', ...yAxis };
+      }, [isHorizontalLayout, yAxis]);
 
       return (
         <BarChart
@@ -139,8 +136,8 @@ export const PercentageBarChart = memo(
           roundBaseline={roundBaseline}
           series={barSeries}
           testID={testID}
-          xAxis={axisConfig.xAxis}
-          yAxis={axisConfig.yAxis}
+          xAxis={xAxisConfig}
+          yAxis={yAxisConfig}
           {...props}
         >
           {children}

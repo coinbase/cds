@@ -266,8 +266,8 @@ const Basics = () => (
   <PercentageBarChart
     height={16}
     series={[
-      { id: 'a', data: 60, label: 'Segment A', color: 'var(--color-fgPositive)' },
-      { id: 'b', data: 40, label: 'Segment B', color: 'var(--color-fgNegative)' },
+      { id: 'a', data: 70, label: 'Segment A', color: 'var(--color-fgPositive)' },
+      { id: 'b', data: 45, label: 'Segment B', color: 'var(--color-fgNegative)' },
     ]}
   />
 );
@@ -278,7 +278,7 @@ const StackGap = () => (
     series={[
       { id: 'a', data: 40, label: 'A', color: 'var(--color-fgPositive)' },
       { id: 'b', data: 35, label: 'B', color: 'var(--color-fgWarning)' },
-      { id: 'c', data: 25, label: 'C', color: 'var(--color-accentBoldPurple)' },
+      { id: 'c', data: 20, label: 'C', color: 'var(--color-accentBoldPurple)' },
     ]}
     stackGap={6}
   />
@@ -291,7 +291,7 @@ const BorderRadius = () => (
     series={[
       { id: 'a', data: 45, color: 'rgb(var(--purple30))', label: 'A' },
       { id: 'b', data: 30, color: 'rgb(var(--blue30))', label: 'B' },
-      { id: 'c', data: 25, color: 'rgb(var(--teal30))', label: 'C' },
+      { id: 'c', data: 20, color: 'rgb(var(--teal30))', label: 'C' },
     ]}
     stackGap={2}
   />
@@ -348,11 +348,10 @@ const MinimumBarSize = () => (
     barMinSize={16}
     height={16}
     series={[
-      { id: 'a', data: 60, label: 'Segment A', color: 'var(--color-fgPositive)' },
-      { id: 'b', data: 40, label: 'Segment B', color: 'var(--color-fgNegative)' },
+      { id: 'a', data: 99, label: 'Segment A', color: 'var(--color-fgPositive)' },
+      { id: 'b', data: 0.001, label: 'Segment B', color: 'var(--color-fgNegative)' },
     ]}
     stackGap={2}
-    transitions={{ enter: { type: 'tween', duration: 2, delay: 1 } }}
   />
 );
 
@@ -427,6 +426,7 @@ const TaxesStyleConfirmedVsNeedReview = () => {
 const SlantedStackGap = () => (
   <PercentageBarChart
     BarComponent={SlantedStackBar}
+    animate={false}
     barMinSize={12}
     borderRadius={24}
     height={12}

@@ -186,8 +186,8 @@ const Basics = () => {
     <PercentageBarChart
       height={16}
       series={[
-        { id: 'a', data: 60, label: 'Segment A', color: theme.color.fgPositive },
-        { id: 'b', data: 40, label: 'Segment B', color: theme.color.fgNegative },
+        { id: 'a', data: 70, label: 'Segment A', color: theme.color.fgPositive },
+        { id: 'b', data: 45, label: 'Segment B', color: theme.color.fgNegative },
       ]}
     />
   );
@@ -201,7 +201,7 @@ const StackGap = () => {
       series={[
         { id: 'a', data: 40, label: 'A', color: theme.color.fgPositive },
         { id: 'b', data: 35, label: 'B', color: theme.color.fgWarning },
-        { id: 'c', data: 25, label: 'C', color: theme.color.accentBoldPurple },
+        { id: 'c', data: 20, label: 'C', color: theme.color.accentBoldPurple },
       ]}
       stackGap={6}
     />
@@ -217,7 +217,7 @@ const BorderRadius = () => {
       series={[
         { id: 'a', data: 45, color: `rgb(${theme.spectrum.purple30})`, label: 'A' },
         { id: 'b', data: 30, color: `rgb(${theme.spectrum.blue30})`, label: 'B' },
-        { id: 'c', data: 25, color: `rgb(${theme.spectrum.teal30})`, label: 'C' },
+        { id: 'c', data: 20, color: `rgb(${theme.spectrum.teal30})`, label: 'C' },
       ]}
       stackGap={2}
     />
@@ -283,11 +283,10 @@ const MinimumBarSize = () => {
       barMinSize={16}
       height={16}
       series={[
-        { id: 'a', data: 60, label: 'Segment A', color: theme.color.fgPositive },
-        { id: 'b', data: 40, label: 'Segment B', color: theme.color.fgNegative },
+        { id: 'a', data: 99, label: 'Segment A', color: theme.color.fgPositive },
+        { id: 'b', data: 0.001, label: 'Segment B', color: theme.color.fgNegative },
       ]}
       stackGap={2}
-      transitions={{ enter: { type: 'timing', duration: 2000, delay: 1000 } }}
     />
   );
 };
@@ -687,6 +686,7 @@ const SlantedStackGap = () => {
   return (
     <PercentageBarChart
       BarComponent={SlantedStackBar}
+      animate={false}
       barMinSize={12}
       borderRadius={24}
       height={12}
