@@ -14,7 +14,7 @@ import {
 } from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 
-export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
+export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children' | 'title'> & {
   /** Handles back button press */
   onBackButtonClick?: React.MouseEventHandler;
   /** Title of the Modal. Accepts a string or ReactNode. When a string is provided, it is rendered with the `font` prop (default `headline`). */
@@ -56,7 +56,7 @@ export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
 };
 
 export type ModalHeaderProps = ModalHeaderBaseProps &
-  Omit<HStackProps<HStackDefaultElement>, 'children'>;
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
 export const ModalHeader = (_props: ModalHeaderProps) => {
   const mergedProps = useComponentConfig('ModalHeader', _props);

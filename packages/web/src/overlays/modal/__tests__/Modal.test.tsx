@@ -98,7 +98,7 @@ const MockModal = ({
   backAccessibilityHint,
   closeAccessibilityLabel,
   closeAccessibilityHint,
-}: Partial<ModalProps & MockModalProps & ModalHeaderProps>) => {
+}: Partial<Omit<ModalProps, 'title'> & MockModalProps & ModalHeaderProps>) => {
   const [visible, setVisible] = useState(externalVisible);
 
   const handleClose = useCallback(() => {
