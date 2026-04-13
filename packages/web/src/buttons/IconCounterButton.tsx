@@ -14,11 +14,6 @@ import { Text } from '../typography/Text';
 export type IconCounterButtonBaseProps = {
   /** Name of the icon or a ReactNode */
   icon: Exclude<React.ReactNode, 'string'> | IconName;
-  /**
-   * @deprecated Use `size` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v8
-   */
-  iconSize?: IconSize;
   /** Size for given icon. */
   size?: IconSize;
   /** Whether the icon is active */
@@ -62,8 +57,7 @@ export const IconCounterButton = memo(
     const mergedProps = useComponentConfig('IconCounterButton', _props);
     const {
       icon,
-      iconSize = 's',
-      size = iconSize,
+      size = 's',
       active,
       count = 0,
       color = 'fg',
