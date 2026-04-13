@@ -1,11 +1,18 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';
+import {
+  defaultBarEnterOpacityTransition,
+  defaultBarEnterTransition,
+  getBarPath,
+  withStaggerDelayTransition,
+} from '../utils';
 import { getNormalizedStagger } from '../utils/bar';
-import { defaultTransition, getTransition } from '../utils/transition';
+import { buildTransition, defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -51,6 +58,25 @@ export const DefaultBar = memo<DefaultBarProps>(
         ),
       [transitions?.enter, animate, normalizedStagger],
     );
+    const rawEnterOpacityTransition = useMemo(() => {
+      if (transitions?.enterOpacity === undefined) {
+        return enterTransition === null ? null : defaultBarEnterOpacityTransition;
+      }
+      return getTransition(transitions.enterOpacity, animate, defaultBarEnterOpacityTransition);
+    }, [transitions?.enterOpacity, animate, enterTransition]);
+    const enterOpacityTransition = useMemo(
+      () => withStaggerDelayTransition(rawEnterOpacityTransition, normalizedStagger),
+      [rawEnterOpacityTransition, normalizedStagger],
+    );
+    const resolvedEnterOpacityTransition = useMemo(() => {
+      if (!enterOpacityTransition) return null;
+      if (!enterTransition) return enterOpacityTransition;
+      // Keep opacity aligned with geometry staggering when fade delay isn't explicitly set.
+      return {
+        ...enterOpacityTransition,
+        delay: enterOpacityTransition.delay ?? enterTransition.delay,
+      };
+    }, [enterOpacityTransition, enterTransition]);
     const updateTransition = useMemo(
       () =>
         withStaggerDelayTransition(
@@ -63,6 +89,23 @@ export const DefaultBar = memo<DefaultBarProps>(
         ),
       [transitions?.update, transition, animate, normalizedStagger],
     );
+
+    const enterOpacity = useSharedValue(animate && resolvedEnterOpacityTransition !== null ? 0 : 1);
+    const hasAnimatedEnterOpacity = useRef(false);
+
+    useEffect(() => {
+      if (hasAnimatedEnterOpacity.current) {
+        return;
+      }
+      hasAnimatedEnterOpacity.current = true;
+
+      if (!animate || resolvedEnterOpacityTransition === null) {
+        enterOpacity.value = 1;
+        return;
+      }
+
+      enterOpacity.value = buildTransition(1, resolvedEnterOpacityTransition);
+    }, [animate, resolvedEnterOpacityTransition, enterOpacity]);
 
     const initialPath = useMemo(() => {
       if (!animate) return;
@@ -99,20 +142,22 @@ export const DefaultBar = memo<DefaultBarProps>(
     ]);
 
     return (
-      <Path
-        animate={animate}
-        clipPath={null}
-        d={d}
-        fill={stroke ? 'none' : defaultFill}
-        fillOpacity={fillOpacity}
-        initialPath={initialPath}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        transitions={{
-          enter: enterTransition,
-          update: updateTransition,
-        }}
-      />
+      <Group opacity={enterOpacity}>
+        <Path
+          animate={animate}
+          clipPath={null}
+          d={d}
+          fill={stroke ? 'none' : defaultFill}
+          fillOpacity={fillOpacity}
+          initialPath={initialPath}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          transitions={{
+            enter: enterTransition,
+            update: updateTransition,
+          }}
+        />
+      </Group>
     );
   },
 );
