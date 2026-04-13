@@ -1,22 +1,11 @@
 ---
-name: component-docs
-description: Guidelines for creating or updating documentation for a CDS component on the docsite (apps/docs/).
+name: components.write-docs
+description: Guidelines for creating or updating documentation for a CDS component on the docsite (apps/docs/). Use this skill after creating or making updates to a CDS React component to write high quality documentaiton in the CDS docsite.
 argument-hint: <ComponentName> [additional context] (e.g., "Button", "LineChart add real-time examples")
 model: claude-sonnet-4-6
-disable-model-invocation: true
 ---
 
-# Component Documentation
-
-Create or update documentation for a CDS component on the docsite (apps/docs/).
-
-**Usage:** `/component-docs <ComponentName> [additional context]`
-
-Examples:
-
-- `/component-docs Button`
-- `/component-docs LineChart add examples for real-time data updates`
-- `/component-docs Avatar needs accessibility improvements`
+Goal: Create or update documentation for a CDS component on the docsite (apps/docs/).
 
 If no component name is provided, ask the user which component they want to document.
 
@@ -49,7 +38,7 @@ Review these before writing to ensure consistency in style, structure, and depth
 When writing examples, reference these files for valid values:
 
 - **Icon names** (`packages/icons/src/IconName.ts`) - All valid icon names (e.g., `'checkmark'`, `'close'`, `'warning'`)
-- **Design tokens** - Follow `.cursor/rules/react-component-development.mdc` for valid CDS design token values (Color, Space, BorderRadius, Font, etc.)
+- **Design tokens** - Use the `components.best-practices` SKILL for knowledge on valid CDS design token values (Color, Space, BorderRadius, Font, etc.)
 
 ## Step 2: Research Phase (for new docs or major updates)
 
@@ -686,7 +675,7 @@ Before completing, verify:
 - [ ] All imports use correct source categories
 - [ ] Component description is clear and helpful
 - [ ] Added storybook/figma links if story files exist or links are provided
-- [ ] Design token values are valid (reference `.cursor/rules/react-component-development.mdc`)
+- [ ] Design token values are valid (followed `components.best-practices` SKILL)
 
 ## Additional Notes
 

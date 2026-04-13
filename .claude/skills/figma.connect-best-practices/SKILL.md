@@ -1,6 +1,6 @@
 ---
-name: code-connect-best-practice
-description: Guidelines for writing Figma Code Connect property mappings. Use when working on Figma Code Connect files, which typically end in .figma.tsx.
+name: figma.connect-best-practices
+description: Guidelines for writing Figma Code Connect property mappings. Use this skill when working on Figma Code Connect files, which typically end in .figma.tsx.
 ---
 
 # Guidelines for writing Figma Code Connect mappings

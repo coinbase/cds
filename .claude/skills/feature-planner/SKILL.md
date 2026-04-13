@@ -92,7 +92,6 @@ The plan should include:
   - **Existing patterns to follow** — Reference specific existing files the engineer should model their work after (e.g., "follow the pattern in `Switch.tsx` for controlled/uncontrolled behavior"). Note which existing utilities, hooks, or base components to reuse.
 - **Suggested implementation steps** — A numbered list of steps an engineer would follow, in order. Each step should be concrete and actionable.
 - **Test strategy** — Key test cases the engineer should cover, organized by category (unit tests, accessibility, integration). Reference existing test files as patterns to follow.
-- **Relevant skills** — List any CDS skills the engineer should invoke when implementing (e.g., `/development-cds-web` for a new web component).
 - **Open questions for the engineer** — Anything that requires a technical decision the designer can't make (e.g., "should this use framer-motion or CSS transitions?"). Keep this section focused — only include genuine technical trade-offs, not things you could reasonably decide yourself.
 - **What's NOT in scope** — Explicitly call out visual design details (exact colors, spacing, typography) as something to be finalized in a follow-up session between the engineer and designer. This avoids premature decisions. Note: this section is about deferring _visual_ decisions — it should NOT be used to skip technical depth. The plan should be as technically detailed as possible while keeping visual design open.
 
