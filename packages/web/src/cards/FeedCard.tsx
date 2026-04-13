@@ -13,7 +13,7 @@ import { CardFooter } from './CardFooter';
 import { CardHeader } from './CardHeader';
 import { LikeButton, type LikeButtonBaseProps } from './LikeButton';
 
-export type FeedCardBaseProps = Pick<CardBodyBaseProps, 'image' | 'pictogram' | 'spotSquare'> &
+type FeedCardBaseProps = Pick<CardBodyBaseProps, 'image' | 'pictogram' | 'spotSquare'> &
   CardBaseProps & {
     /** Image url for Avatar */
     avatar?: string;
@@ -37,11 +37,7 @@ export type FeedCardBaseProps = Pick<CardBodyBaseProps, 'image' | 'pictogram' | 
     cta?: ButtonBaseProps;
   };
 
-/**
- * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
-export type FeedCardProps = FeedCardBaseProps;
+type FeedCardProps = FeedCardBaseProps;
 
 /**
  * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
