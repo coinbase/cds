@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.5.0 (4/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add enter opacity transition to bars. [[#612](https://github.com/coinbase/cds/pull/612)]
+
 ## 3.4.0 (4/1/2026 PST)
 
 #### 🐞 Fixes

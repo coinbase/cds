@@ -3,13 +3,14 @@ import React, { memo, useMemo } from 'react';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
 import {
+  defaultBarEnterOpacityTransition,
   defaultBarEnterTransition,
   defaultTransition,
   getBarPath,
   getTransition,
   withStaggerDelayTransition,
 } from '../utils';
-import { getNormalizedStagger } from '../utils/bar';
+import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 
 import type { BarComponentProps } from './Bar';
 
@@ -57,11 +58,37 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [transitions?.enter, animate, normalizedStagger],
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
+      [transitions?.enter, animate],
+    );
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
+    );
+    const enterOpacityTransition = useMemo(() => {
+      if (transitions?.enterOpacity === undefined && enterTransition === null) return null;
+
+      const enterOpacityTransition: BarTransition | null = getTransition(
+        transitions?.enterOpacity,
+        animate,
+        defaultBarEnterOpacityTransition,
+      );
+
+      if (!enterOpacityTransition) return null;
+
+      return {
+        ...enterOpacityTransition,
+        delay: enterOpacityTransition.delay ?? enterTransition?.delay,
+        staggerDelay: enterOpacityTransition.staggerDelay ?? enterTransition?.staggerDelay,
+      };
+    }, [transitions?.enterOpacity, animate, enterTransition]);
+    const enterOpacityTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterOpacityTransition, normalizedStagger),
+      [enterOpacityTransition, normalizedStagger],
     );
     const updateTransition = useMemo(
       () =>
@@ -120,7 +147,8 @@ export const DefaultBar = memo<DefaultBarProps>(
         fillOpacity={fillOpacity}
         initialPath={initialPath}
         transitions={{
-          enter: enterTransition,
+          enter: enterTransitionWithStagger,
+          enterOpacity: enterOpacityTransitionWithStagger,
           update: updateTransition,
         }}
       />
