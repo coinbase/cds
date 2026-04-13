@@ -10,7 +10,7 @@ function CloseButton() {
   return (
     <IconButton
       transparent
-      aria-label={translate({
+      accessibilityLabel={translate({
         id: 'theme.docs.sidebar.closeSidebarButtonAriaLabel',
         message: 'Close navigation bar',
         description: 'The ARIA label for close button of mobile sidebar',

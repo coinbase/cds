@@ -2488,6 +2488,7 @@ __metadata:
     react-native-svg: "npm:14.1.0"
     react-test-renderer: "npm:^18.3.1"
     type-fest: "npm:^2.19.0"
+    zustand: "npm:^5.0.12"
   peerDependencies:
     "@react-navigation/native": ^6.1.6
     "@react-navigation/native-stack": ^6.9.26
@@ -2671,6 +2672,7 @@ __metadata:
     storybook-addon-performance: "npm:^0.16.1"
     typescript: "npm:~5.9.2"
     vite: "npm:^7.1.2"
+    zustand: "npm:^5.0.12"
     zx: "npm:^8.1.9"
   peerDependencies:
     framer-motion: ^10.18.0
@@ -2733,7 +2735,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
+"@coinbase/eslint-plugin-cds@workspace:^, @coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
   version: 0.0.0-use.local
   resolution: "@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
   dependencies:
@@ -2772,6 +2774,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@coinbase/mobile-visreg@workspace:packages/mobile-visreg":
+  version: 0.0.0-use.local
+  resolution: "@coinbase/mobile-visreg@workspace:packages/mobile-visreg"
+  dependencies:
+    "@percy/cli": "npm:^1.31.1"
+  languageName: unknown
+  linkType: soft
+
 "@coinbase/static-assets@workspace:libs/static-assets":
   version: 0.0.0-use.local
   resolution: "@coinbase/static-assets@workspace:libs/static-assets"
@@ -2790,7 +2800,6 @@ __metadata:
     "@react-navigation/native": "npm:^6.1.6"
     "@react-navigation/stack": "npm:^6.3.16"
     "@types/react": "npm:^18.3.12"
-    detox: "npm:^20.14.8"
     lodash: "npm:^4.17.21"
     react-native-safe-area-context: "npm:4.10.5"
   peerDependencies:
@@ -2803,28 +2812,6 @@ __metadata:
     react: ^18.3.1
     react-native: ^0.74.5
     react-native-safe-area-context: ^4.10.5
-  languageName: unknown
-  linkType: soft
-
-"@coinbase/ui-mobile-visreg@workspace:^, @coinbase/ui-mobile-visreg@workspace:packages/ui-mobile-visreg":
-  version: 0.0.0-use.local
-  resolution: "@coinbase/ui-mobile-visreg@workspace:packages/ui-mobile-visreg"
-  dependencies:
-    "@babel/core": "npm:^7.28.0"
-    "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
-    "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
-    "@percy/cli": "npm:^1.31.1"
-    "@percy/client": "npm:^1.31.1"
-    "@percy/sdk-utils": "npm:^1.31.1"
-    detox: "npm:^20.14.8"
-    lodash: "npm:^4.17.21"
-  peerDependencies:
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
-    detox: ^20.14.8
   languageName: unknown
   linkType: soft
 
@@ -4907,7 +4894,7 @@ __metadata:
 
 "@expo/cli@patch:@expo/cli@npm:0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch::locator=design-system%40workspace%3A.":
   version: 0.18.29
-  resolution: "@expo/cli@patch:@expo/cli@npm%3A0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch::version=0.18.29&hash=42d2e2&locator=design-system%40workspace%3A."
+  resolution: "@expo/cli@patch:@expo/cli@npm%3A0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch::version=0.18.29&hash=560293&locator=design-system%40workspace%3A."
   dependencies:
     "@babel/runtime": "npm:^7.20.0"
     "@expo/code-signing-certificates": "npm:0.0.5"
@@ -4988,7 +4975,7 @@ __metadata:
     ws: "npm:^8.12.1"
   bin:
     expo-internal: build/bin/cli
-  checksum: 10c0/501c68baff6444e5264086fcf6ff3d16a63dd3c712277d1e32c1ae6c8bd9e758bc0921535a676fb5250f587fd8e5843f368d8d3712edbff7730f67b1050ae1c5
+  checksum: 10c0/3916aadeda3be6a5946dda940946aeb295650bafab403b1ed3645c352ab34a3b4256827be8e7201565a6426d19abfbeebf8139e2f436ffd96bc7eff5a9c948a2
   languageName: node
   linkType: hard
 
@@ -7152,7 +7139,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@percy/client@npm:1.31.1, @percy/client@npm:^1.31.1":
+"@percy/client@npm:1.31.1":
   version: 1.31.1
   resolution: "@percy/client@npm:1.31.1"
   dependencies:
@@ -7236,7 +7223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@percy/sdk-utils@npm:1.31.1, @percy/sdk-utils@npm:^1.31.1":
+"@percy/sdk-utils@npm:1.31.1":
   version: 1.31.1
   resolution: "@percy/sdk-utils@npm:1.31.1"
   checksum: 10c0/0a393d8abacbef4e17d41c32bdbf69a7b49851b3d5a2589a29ce1ae09b33f8a39f5e5d38137169de4e98b66568247609258648f8655af4997169cdc7802d1e30
@@ -10742,6 +10729,13 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10c0/f11a1ccfed540723dddd7cb496543ad40a2f663f22ff825e9b220f0bae86db8b1ced2184ee41d3fb358b019ad6519e39481b06386db91ebb859003ad1d54fe6a
+  languageName: node
+  linkType: hard
+
+"@types/culori@npm:^4":
+  version: 4.0.1
+  resolution: "@types/culori@npm:4.0.1"
+  checksum: 10c0/f25fcf01fe709d2fce569892eae71a268b19cf85a7c8f6bf6b041f02f232e5a7d1218e8213349d6b2a458be9f61158ed1e1893e7b81e2ee4a7cebc2a172b7ebb
   languageName: node
   linkType: hard
 
@@ -14714,17 +14708,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bn.js@npm:^4.0.0, bn.js@npm:^4.1.0, bn.js@npm:^4.11.9":
-  version: 4.12.0
-  resolution: "bn.js@npm:4.12.0"
-  checksum: 10c0/9736aaa317421b6b3ed038ff3d4491935a01419ac2d83ddcfebc5717385295fcfcf0c57311d90fe49926d0abbd7a9dbefdd8861e6129939177f7e67ebc645b21
-  languageName: node
-  linkType: hard
-
-"bn.js@npm:^5.0.0, bn.js@npm:^5.1.1":
-  version: 5.2.0
-  resolution: "bn.js@npm:5.2.0"
-  checksum: 10c0/67e17b1934d9c7a73aed9b89222dc8c1c8e3aff46cca6609b8c2ab04fa22c6b8db42c7774b039d09fa63136d8866b777ab88af0d64d8ea3839a94e69193a6b13
+"bn.js@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "bn.js@npm:5.2.3"
+  checksum: 10c0/eef19cb9cf5e91e91e3e0f036b799ce6c72f79463c3934d62991c3dcdb58f6c94dc3d806495d9b0bf31cd121870ed79bb2115cea71b56c03e794fb71485031fa
   languageName: node
   linkType: hard
 
@@ -17353,6 +17340,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"culori@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "culori@npm:4.0.2"
+  checksum: 10c0/5d3c952b947ac5915409bab513e1d2e8bd813caa491af8ded0c769fdc1186a5ff61fb3c59fc8edf5393237d92074dbc54a492e6e99cb039dd6535d5d96106bfe
+  languageName: node
+  linkType: hard
+
 "currently-unhandled@npm:^0.4.1":
   version: 0.4.1
   resolution: "currently-unhandled@npm:0.4.1"
@@ -18106,6 +18100,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.2"
     "@babel/template": "npm:^7.20.7"
     "@babel/types": "npm:^7.20.7"
+    "@coinbase/eslint-plugin-cds": "workspace:^"
     "@coinbase/eslint-plugin-internal": "workspace:^"
     "@figma/code-connect": "npm:^1.3.13"
     "@graphql-tools/jest-transform": "npm:^2.0.0"
@@ -18155,7 +18150,6 @@ __metadata:
     babel-plugin-replace-ts-export-assignment: "npm:^0.0.2"
     chalk: "npm:^4.1.2"
     depcheck: "patch:depcheck@npm%3A1.4.7#.yarn/patches/depcheck-npm-1.4.7-d4cc813cc3.patch"
-    detox: "npm:^20.14.8"
     diff: "npm:^5.1.0"
     dotenv-webpack: "npm:7.0.3"
     eslint: "npm:^9.22.0"
@@ -18477,12 +18471,14 @@ __metadata:
     "@react-three/drei": "npm:^9.122.0"
     "@react-three/fiber": "npm:^8.18.0"
     "@stackblitz/sdk": "npm:^1.11.0"
+    "@types/culori": "npm:^4"
     "@types/lz-string": "npm:^1.5.0"
     "@types/react": "npm:^18.3.12"
     "@types/react-dom": "npm:^18.3.1"
     "@types/three": "npm:0.177.0"
     babel-loader: "npm:^10.0.0"
     css-loader: "npm:^7.1.2"
+    culori: "npm:^4.0.2"
     framer-motion: "npm:^10.18.0"
     html-webpack-plugin: "npm:^5.6.3"
     kbar: "npm:^0.1.0-beta.45"
@@ -29119,7 +29115,6 @@ __metadata:
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-mobile-visualization": "workspace:^"
     "@coinbase/ui-mobile-playground": "workspace:^"
-    "@coinbase/ui-mobile-visreg": "workspace:^"
     "@config-plugins/detox": "npm:^6.0.0"
     "@expo-google-fonts/inter": "npm:^0.3.0"
     "@expo-google-fonts/source-code-pro": "npm:^0.3.0"
@@ -37096,15 +37091,15 @@ __metadata:
   linkType: hard
 
 "tar@npm:^7.5.12":
-  version: 7.5.12
-  resolution: "tar@npm:7.5.12"
+  version: 7.5.13
+  resolution: "tar@npm:7.5.13"
   dependencies:
     "@isaacs/fs-minipass": "npm:^4.0.0"
     chownr: "npm:^3.0.0"
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/3825c5974f5fde792981f47ee9ffea021ee7f4b552b7ab95eeb98e5dfadfd5a5d5861f01fb772e2e5637a41980d3c019fd6cdad1be48b462b886abd7fe0fa17c
+  checksum: 10c0/5c65b8084799bde7a791593a1c1a45d3d6ee98182e3700b24c247b7b8f8654df4191642abbdb07ff25043d45dcff35620827c3997b88ae6c12040f64bed5076b
   languageName: node
   linkType: hard
 
@@ -40592,9 +40587,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^5.0.1":
-  version: 5.0.6
-  resolution: "zustand@npm:5.0.6"
+"zustand@npm:^5.0.1, zustand@npm:^5.0.12":
+  version: 5.0.12
+  resolution: "zustand@npm:5.0.12"
   peerDependencies:
     "@types/react": ">=18.0.0"
     immer: ">=9.0.6"
@@ -40609,7 +40604,7 @@ __metadata:
       optional: true
     use-sync-external-store:
       optional: true
-  checksum: 10c0/28e0c83978173741fe0d1f8c8d51b2708d6ad3d49968585c179a6ece45b7b149e489f89af9764b56dced842efe2914d89d5ba2d3890e026a4e4b072308fcd11c
+  checksum: 10c0/304c1dfb6033d758ddc7606c15df8566e6cace83ee4eeec721e8975f7813fd4cca2c68ff6b3eaa1841a9e53f0cf8486007217479785eccb845e3596de4df7f1e
   languageName: node
   linkType: hard
 

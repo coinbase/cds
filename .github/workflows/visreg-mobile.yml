@@ -1,0 +1,313 @@
+name: Mobile Visreg
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Percy branch name override (defaults to current git branch)'
+        required: false
+        default: ''
+
+concurrency:
+  group: Visreg-Mobile-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+env:
+  CI: true
+
+jobs:
+  check:
+    name: Check if visreg should run
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.evaluate.outputs.should_run }}
+      content_hash: ${{ steps.hash.outputs.hash }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Fetch master for merge-base
+        if: github.event_name == 'pull_request'
+        run: git fetch -f --no-tags origin master:master --depth=100
+
+      - name: Compute visreg content hash
+        id: hash
+        if: github.event_name == 'pull_request'
+        run: |
+          HASH=$(git ls-tree -r HEAD -- packages/common packages/mobile packages/mobile-visualization | sha256sum | cut -d' ' -f1)
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+
+      - name: Check visreg result cache
+        id: cache-check
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: mobile-visreg-v1-${{ steps.hash.outputs.hash }}
+          lookup-only: true
+
+      - name: Evaluate should run
+        id: evaluate
+        run: |
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+            echo "Non-PR event, always running visreg"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'visreg-mobile') }}" == "true" ]]; then
+            echo "visreg-mobile label present, running visreg"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ steps.cache-check.outputs.cache-hit }}" == "true" ]]; then
+            echo "Cache hit - visreg already passed with these exact files, skipping"
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          elif node packages/mobile-visreg/scripts/shouldRunVisreg.mjs; then
+            echo "Relevant changes detected, running visreg"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No relevant changes, skipping visreg"
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  ios:
+    name: Visreg iOS
+    needs: [check]
+    if: needs.check.outputs.should_run == 'true'
+    runs-on: macos-latest
+    environment: production
+    outputs:
+      percy_url: ${{ steps.percy-upload.outputs.percy_url }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - uses: ./.github/actions/setup
+
+      - name: Set Percy branch
+        run: |
+          BRANCH_INPUT="${{ inputs.branch }}"
+          if [[ -n "$BRANCH_INPUT" ]]; then
+            echo "PERCY_BRANCH=$BRANCH_INPUT" >> "$GITHUB_ENV"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "PERCY_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+          else
+            echo "PERCY_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Install Maestro
+        run: node packages/mobile-visreg/src/setup.mjs
+
+      - name: Add Maestro to PATH
+        run: echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Prepare iOS app (extract prebuild + patch JS bundle)
+        run: yarn nx run mobile-app:patch-bundle-ios
+
+      - name: Boot iOS simulator
+        run: |
+          STATE=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 16") | .state' | head -n 1)
+          if [ "$STATE" != "Booted" ]; then
+            xcrun simctl boot "iPhone 16"
+          fi
+          xcrun simctl bootstatus booted
+          sleep 30
+
+      - name: Install app on simulator
+        run: xcrun simctl install booted apps/mobile-app/prebuilds/ios-release-hermes.app
+
+      - name: Capture screenshots
+        run: yarn nx run mobile-visreg:ios
+        env:
+          # Give the XCUITest driver extra time to attach on cold CI runners.
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 180000
+
+      - name: Upload Maestro test report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: maestro-report-ios
+          path: |
+            packages/mobile-visreg/maestro-report.html
+            packages/mobile-visreg/maestro-test-output/
+          if-no-files-found: ignore
+
+      - name: Upload to Percy
+        id: percy-upload
+        if: always()
+        run: |
+          OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
+          echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
+          PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
+          PERCY_PARALLEL_NONCE: ${{ github.run_id }}
+          PERCY_PARALLEL_TOTAL: 1
+
+      - name: Create visreg cache marker
+        if: success() && github.event_name == 'pull_request'
+        run: touch .visreg-cache-marker
+
+      - name: Save visreg result cache
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: mobile-visreg-v1-${{ needs.check.outputs.content_hash }}
+
+  # android:
+  #   name: Visreg Android
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #   if: >
+  #     github.event_name == 'push' ||
+  #     github.event_name == 'workflow_dispatch' ||
+  #     contains(github.event.pull_request.labels.*.name, 'visreg-mobile')
+  #   steps:
+  #     - name: Harden the runner (Audit all outbound calls)
+  #       uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+  #       with:
+  #         egress-policy: audit
+  #     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+  #       with:
+  #         fetch-depth: 1
+  #         ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+  #     - uses: ./.github/actions/setup
+
+  #     - name: Set Percy branch
+  #       run: |
+  #         BRANCH_INPUT="${{ inputs.branch }}"
+  #         if [[ -n "$BRANCH_INPUT" ]]; then
+  #           echo "PERCY_BRANCH=$BRANCH_INPUT" >> "$GITHUB_ENV"
+  #         elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+  #           echo "PERCY_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+  #         else
+  #           echo "PERCY_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
+  #         fi
+
+  #     - name: Install Maestro
+  #       run: node packages/mobile-visreg/src/setup.mjs
+
+  #     - name: Add Maestro to PATH
+  #       run: echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+  #     - name: Prepare Android app (extract prebuild + patch JS bundle)
+  #       run: yarn nx run mobile-app:patch-bundle-android
+
+  #     # Enable KVM hardware acceleration for the Android emulator.
+  #     # Without this, the emulator runs in software emulation mode, which takes 6+ minutes to boot
+  #     # and is significantly more flaky. Ubuntu GHA runners support KVM but it must be explicitly
+  #     # unlocked via udev rules before use.
+  #     # Ref: https://github.com/marketplace/actions/android-emulator-runner
+  #     - name: Enable KVM
+  #       run: |
+  #         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+  #         sudo udevadm control --reload-rules
+  #         sudo udevadm trigger --name-match=kvm
+
+  #     - name: Start Android emulator + run visreg
+  #       uses: reactivecircus/android-emulator-runner@v2
+  #       with:
+  #         api-level: 30
+  #         arch: x86_64
+  #         profile: pixel_7_pro
+  #         avd-name: cds_detox
+  #         # -no-window -gpu swiftshader_indirect: headless software rendering (no display available in CI)
+  #         # -no-boot-anim -noaudio -camera-back none: disable unused subsystems to speed up boot
+  #         # -no-snapshot: disable snapshot load and save entirely (clean state every run)
+  #         emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+  #         disable-animations: true
+  #         script: |
+  #           # Enable Demo Mode to freeze status bar (avoids false Percy diffs)
+  #           adb shell settings put global sysui_demo_allowed 1
+  #           adb shell am broadcast -a com.android.systemui.demo -e command enter
+  #           adb shell am broadcast -a com.android.systemui.demo -e command clock --es hhmm 1200
+  #           adb shell am broadcast -a com.android.systemui.demo -e command battery --es level 100 --es plugged false
+  #           adb shell am broadcast -a com.android.systemui.demo -e command network --es mobile show --es level 4 --es wifi show
+
+  #           # sys.boot_completed=1 fires before all services are ready; wait for
+  #           # the package manager specifically before attempting install.
+  #           while ! adb shell pm list packages > /dev/null 2>&1; do echo "Waiting for package manager..."; sleep 1; done
+
+  #           adb install -r apps/mobile-app/prebuilds/android-release-hermes/binary.apk
+
+  #           # Copy Maestro debug artifacts after the run so they can be uploaded after the emulator shuts down
+  #           yarn nx run mobile-visreg:android; cp -r ~/.maestro/tests /tmp/maestro-debug || true
+
+  #     - name: Upload Maestro debug artifacts
+  #       if: always()
+  #       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+  #       with:
+  #         name: maestro-debug-android
+  #         path: /tmp/maestro-debug/
+  #         if-no-files-found: ignore
+
+  #     - name: Upload to Percy
+  #       if: always()
+  #       run: yarn nx run mobile-visreg:visreg-upload
+  #       env:
+  #         PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
+  #         PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
+  #         PERCY_PARALLEL_NONCE: ${{ github.run_id }}
+  #         PERCY_PARALLEL_TOTAL: 2
+
+  comment-pr:
+    name: Comment Percy Link
+    needs: [ios]
+    if: always() && github.event_name == 'pull_request' && needs.ios.result == 'success' && needs.ios.outputs.percy_url != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Post Percy link on PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERCY_URL: ${{ needs.ios.outputs.percy_url }}
+        run: |
+          EXISTING=$(gh api \
+            repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("https://percy.io")))] | last | .body // ""')
+
+          if [ "$EXISTING" = "$PERCY_URL" ]; then
+            echo "Percy URL unchanged, skipping comment."
+            exit 0
+          fi
+
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body "$PERCY_URL" \
+            --edit-last 2>/dev/null || \
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body "$PERCY_URL"

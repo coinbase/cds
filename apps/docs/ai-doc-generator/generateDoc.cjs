@@ -69,6 +69,41 @@ const getMetadata = (dirPath, platform) => {
 };
 
 /**
+ * Check if a component supports multiple platforms
+ */
+const isMultiPlatform = (dirPath) => {
+  const hasWebMetadata = fs.existsSync(path.join(dirPath, 'webMetadata.json'));
+  const hasMobileMetadata = fs.existsSync(path.join(dirPath, 'mobileMetadata.json'));
+  return hasWebMetadata && hasMobileMetadata;
+};
+
+/**
+ * Generate the docs site URL for a component/guide
+ * @param {string} docPath - Path to the doc directory
+ * @param {string} platform - 'web' or 'mobile'
+ * @param {string} docsDir - Base docs directory
+ * @returns {string} - Full URL to the live docs
+ */
+const generateDocsUrl = (docPath, platform, docsDir) => {
+  const BASE_URL = 'https://cds.coinbase.com';
+  const relativePath = path.relative(docsDir, docPath);
+
+  // Remove .mdx extension if present (for standalone files) and convert to URL path
+  const urlPath = relativePath
+    .replace(/\.mdx$/, '')
+    .split(path.sep)
+    .join('/');
+  let url = `${BASE_URL}/${urlPath}/`;
+
+  // Add platform query param for mobile multi-platform docs
+  if (platform === 'mobile' && isMultiPlatform(docPath)) {
+    url += '?platform=mobile';
+  }
+
+  return url;
+};
+
+/**
  * Get props table content for components
  * @param {string} dirPath - Component directory
  * @param {string} platform - 'web' or 'mobile'
@@ -233,7 +268,12 @@ const generateDoc = (platform, docPath, options = {}) => {
 
   // Handle standalone files (e.g., introduction.mdx, playground.mdx)
   if (!fs.statSync(docPath).isDirectory()) {
-    return fs.readFileSync(docPath, 'utf-8');
+    const docsDir = path.resolve(__dirname, '../docs');
+    const content = fs.readFileSync(docPath, 'utf-8');
+    const docsUrl = generateDocsUrl(docPath, platform, docsDir);
+
+    // Add live docs URL at the top
+    return `**📖 Live documentation:** ${docsUrl}\n\n${content}`;
   }
 
   // For directories, check what type of doc this is by what files exist
@@ -245,8 +285,15 @@ const generateDoc = (platform, docPath, options = {}) => {
     return null;
   }
 
+  // Get the docs directory for URL generation
+  const docsDir = path.resolve(__dirname, '../docs');
+
   // Build the document sections
   let content = `# ${name}\n\n`;
+
+  // Add live docs URL
+  const docsUrl = generateDocsUrl(docPath, platform, docsDir);
+  content += `**📖 Live documentation:** ${docsUrl}\n\n`;
 
   if (metadata.description) {
     content += `${metadata.description}\n\n`;

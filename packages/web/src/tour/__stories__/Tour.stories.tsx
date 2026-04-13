@@ -304,3 +304,26 @@ export const TourWithStringLiteralId = () => {
     </Tour>
   );
 };
+
+export const TourWithCustomStyles = () => {
+  const [activeTourStep, setActiveTourStep] = useState<TourStepValue | null>(null);
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      styles={{
+        stepContainer: {
+          border: '2px solid var(--color-fg)',
+          padding: 'var(--space-2)',
+          borderRadius: 'var(--borderRadius-600)',
+        },
+        stepArrow: {
+          display: 'none',
+        },
+      }}
+    >
+      <TourExample stagger ids={['step1', 'step2', 'step3', 'step4']} />
+    </Tour>
+  );
+};

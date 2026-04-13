@@ -9,18 +9,24 @@ export type TabValue<TabId extends string = string> = {
   disabled?: boolean;
 };
 
-export type TabsOptions<TabId extends string = string> = {
+export type TabsOptions<
+  TabId extends string = string,
+  TTab extends TabValue<TabId> = TabValue<TabId>,
+> = {
   /** The array of tabs data. */
-  tabs: TabValue<TabId>[];
+  tabs: TTab[];
   /** React state for the currently active tab. Setting it to `null` results in no active tab. */
-  activeTab: TabValue<TabId> | null;
+  activeTab: TTab | null;
   /** Callback that is fired when the active tab changes. Use this callback to update the `activeTab` state. */
-  onChange: (activeTab: TabValue<TabId> | null) => void;
+  onChange: (activeTab: TTab | null) => void;
   /** Disable interactions on all the tabs. */
   disabled?: boolean;
 };
 
-export type TabsApi<TabId extends string = string> = Omit<TabsOptions<TabId>, 'onChange'> & {
+export type TabsApi<
+  TabId extends string = string,
+  TTab extends TabValue<TabId> = TabValue<TabId>,
+> = Omit<TabsOptions<TabId, TTab>, 'onChange'> & {
   /** Update the currently active tab to the tab with `tabId`. */
   updateActiveTab: (tabId: TabId | null) => void;
   /** Update the currently active tab to the next enabled tab in the tabs array. Does nothing if the last tab is already active. */
@@ -30,15 +36,15 @@ export type TabsApi<TabId extends string = string> = Omit<TabsOptions<TabId>, 'o
 };
 
 /** A controlled hook for managing tabs state, such as the currently active tab. */
-export const useTabs = <TabId extends string>({
+export const useTabs = <TabId extends string, TTab extends TabValue<TabId> = TabValue<TabId>>({
   tabs,
   activeTab,
   disabled,
   onChange,
-}: TabsOptions<TabId>): TabsApi<TabId> => {
+}: TabsOptions<TabId, TTab>): TabsApi<TabId, TTab> => {
   const updateActiveTab = useCallback(
     (tabId: TabId | null) => {
-      let newActiveTab: TabValue<TabId> | null = null;
+      let newActiveTab: TTab | null = null;
       if (typeof tabId === 'string' && tabId !== '') {
         newActiveTab = tabs.find((tab) => tab.id === tabId) ?? tabs[0];
       }
@@ -48,7 +54,7 @@ export const useTabs = <TabId extends string>({
   );
 
   const goNextTab = useCallback(() => {
-    if (!activeTab || activeTab === tabs.at(-1)) return;
+    if (!activeTab || activeTab === tabs[tabs.length - 1]) return;
     const activeTabIndex = tabs.indexOf(activeTab);
     // Find next tab that isn't disabled
     for (let i = activeTabIndex + 1; i < tabs.length; i++) {

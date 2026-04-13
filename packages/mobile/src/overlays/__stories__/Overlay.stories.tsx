@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Modal } from 'react-native';
 
 import { Button } from '../../buttons/Button';
@@ -23,16 +23,10 @@ const OverlayScreen = () => {
     });
   }, [animateOverlayOut, setVisibleToOff]);
 
-  useEffect(() => {
-    openModal();
-
-    return () => closeModal();
-  }, [closeModal, openModal]);
-
   return (
     <ExampleScreen>
       <Example>
-        <Button onPress={openModal}>Open Overlay</Button>
+        <Button onPress={openModal}>Open</Button>
         <Modal
           hardwareAccelerated
           statusBarTranslucent

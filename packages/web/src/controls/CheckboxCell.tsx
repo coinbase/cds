@@ -3,6 +3,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 import { Pressable, type PressableProps } from '../system/Pressable';
@@ -21,6 +22,11 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = Omit<
     'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
   > & {
     checked?: boolean;
+    /**
+     * Sets the outer checkbox control size in pixels.
+     * @default theme.controlSize.checkboxSize
+     */
+    controlSize?: number;
     title: React.ReactNode;
     description?: React.ReactNode;
     onChange?: (inputChangeEvent: React.ChangeEvent<HTMLInputElement>) => void;
@@ -68,7 +74,11 @@ const baseCss = css`
 `;
 
 const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
-  {
+  _props: CheckboxCellProps<CheckboxValue>,
+  ref: React.ForwardedRef<HTMLLabelElement>,
+) {
+  const mergedProps = useComponentConfig('CheckboxCell', _props);
+  const {
     title,
     description,
     checked,
@@ -87,13 +97,12 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     noScaleOnPress = true,
     readOnly,
     indeterminate,
+    controlSize,
     className,
     classNames,
     styles,
     ...props
-  }: CheckboxCellProps<CheckboxValue>,
-  ref: React.ForwardedRef<HTMLLabelElement>,
-) {
+  } = mergedProps;
   const generatedTitleId = useId();
   const generatedDescriptionId = useId();
 
@@ -142,6 +151,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
           aria-describedby={ariaDescribedBy}
           aria-labelledby={ariaLabelledBy}
           checked={!!checked}
+          controlSize={controlSize}
           disabled={disabled}
           indeterminate={indeterminate}
           onChange={onChange}

@@ -66,8 +66,10 @@ export const LottieSheet = () => {
         <SearchInput
           compact
           accessibilityLabel="Filter Lottie animations by name"
+          clearIconAccessibilityLabel="Clear search"
           onChangeText={searchOnChange}
           placeholder="Animation name"
+          startIconAccessibilityLabel="Search"
           type="text"
           value={query}
         />

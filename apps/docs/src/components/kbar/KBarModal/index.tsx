@@ -32,7 +32,12 @@ const KBarModal = memo(function KBarModal() {
             <Icon color="fg" name="magnifyingGlass" size="s" />
             <KBarSearch className={styles.searchInput} />
           </HStack>
-          <IconButton transparent aria-label="close" name="close" onClick={handleRequestClose} />
+          <IconButton
+            transparent
+            accessibilityLabel="Close search"
+            name="close"
+            onClick={handleRequestClose}
+          />
         </HStack>
         <Divider />
         <KBarResults />

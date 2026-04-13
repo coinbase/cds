@@ -23,6 +23,33 @@ const Basic = () => {
   );
 };
 
+const Shrunken = () => {
+  const [text, setText] = useState('Value');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        height={32}
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder="Placeholder"
+        value={text}
+      />
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        height={24}
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder="Placeholder"
+        value={text}
+      />
+    </VStack>
+  );
+};
+
 const HideStartIcon = () => {
   const [text, setText] = useState('');
 
@@ -112,6 +139,7 @@ export const Default = () => (
         />
       }
     />
+    <Shrunken />
   </VStack>
 );
 

@@ -8,6 +8,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -150,133 +151,130 @@ export type InputStackProps = Omit<
   InputStackBaseProps;
 
 export const InputStack = memo(
-  forwardRef<HTMLElement, InputStackProps>(
-    (
-      {
-        width = '100%',
-        prependNode,
-        endNode,
-        appendNode,
-        startNode,
-        disabled = false,
-        inputNode,
-        helperTextNode,
-        borderWidth = 100,
-        focusedBorderWidth = borderWidth,
-        variant = 'foregroundMuted',
-        labelNode,
-        testID = '',
-        focused = false,
-        borderRadius = 200,
-        height,
-        disableFocusedStyle,
-        enableColorSurge,
-        labelVariant = 'outside',
-        blendStyles,
-        inputBackground = 'bg',
-        ...props
-      },
-      ref,
-    ) => {
-      const focusedVariant = useMemo(
-        () => (focused && variant !== 'positive' && variant !== 'negative' ? 'primary' : variant),
-        [focused, variant],
-      );
+  forwardRef<HTMLElement, InputStackProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('InputStack', _props);
+    const {
+      width = '100%',
+      prependNode,
+      endNode,
+      appendNode,
+      startNode,
+      disabled = false,
+      inputNode,
+      helperTextNode,
+      borderWidth = 100,
+      focusedBorderWidth = borderWidth,
+      variant = 'foregroundMuted',
+      labelNode,
+      testID = '',
+      focused = false,
+      borderRadius = 200,
+      height,
+      disableFocusedStyle,
+      enableColorSurge,
+      labelVariant = 'outside',
+      blendStyles,
+      inputBackground = 'bg',
+      ...props
+    } = mergedProps;
+    const focusedVariant = useMemo(
+      () => (focused && variant !== 'positive' && variant !== 'negative' ? 'primary' : variant),
+      [focused, variant],
+    );
 
-      const inputBorderRadius = useMemo(() => {
-        return {
-          ...(prependNode
-            ? {
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-              }
-            : {}),
-          ...(appendNode
-            ? {
-                borderTopRightRadius: 0,
-                borderBottomRightRadius: 0,
-              }
-            : {}),
-        };
-      }, [prependNode, appendNode]);
+    const inputBorderRadius = useMemo(() => {
+      return {
+        ...(prependNode
+          ? {
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+            }
+          : {}),
+        ...(appendNode
+          ? {
+              borderTopRightRadius: 0,
+              borderBottomRightRadius: 0,
+            }
+          : {}),
+      };
+    }, [prependNode, appendNode]);
 
-      const borderColorFocused = useMemo(() => {
-        if (disableFocusedStyle) {
-          return 'transparent';
-        }
+    const borderColorFocused = useMemo(() => {
+      if (disableFocusedStyle) {
+        return 'transparent';
+      }
 
-        if (variant === 'positive' || variant === 'negative') {
-          return `var(--color-${variantColorMap[variant]})`;
-        }
-
-        // all variants except for positive/negative receive the primary focus color
-        return 'var(--color-bgPrimary)';
-      }, [disableFocusedStyle, variant]);
-
-      const borderColorUnfocused = useMemo(() => {
-        if (variant === 'secondary') {
-          return 'transparent';
-        }
-
+      if (variant === 'positive' || variant === 'negative') {
         return `var(--color-${variantColorMap[variant]})`;
-      }, [variant]);
+      }
 
-      const inputAreaStyles = useMemo(() => {
-        return {
-          '--border-color-unfocused': borderColorUnfocused,
-          '--border-color-focused': borderColorFocused,
-          '--border-width-focused': `var(--borderWidth-${focusedBorderWidth})`,
-          ...inputBorderRadius,
-        };
-      }, [borderColorUnfocused, borderColorFocused, focusedBorderWidth, inputBorderRadius]);
+      // all variants except for positive/negative receive the primary focus color
+      return 'var(--color-bgPrimary)';
+    }, [disableFocusedStyle, variant]);
 
-      return (
-        <VStack
-          gap={inputStackGap}
-          opacity={disabled ? accessibleOpacityDisabled : 1}
-          testID={testID}
-          width={width}
-          {...props}
-        >
-          {!!labelNode &&
-            labelVariant === 'outside' &&
-            (typeof labelNode === 'string' ? <InputLabel>{labelNode}</InputLabel> : labelNode)}
-          <HStack>
-            {!!prependNode && <>{prependNode}</>}
-            <div className={inputAreaContainerCss}>
-              <Interactable
-                ref={ref}
-                as="span"
-                background={variant === 'secondary' ? 'bgSecondary' : inputBackground}
-                blendStyles={blendStyles}
-                borderRadius={borderRadius}
-                borderWidth={borderWidth}
-                className={cx(baseCss, focused && persistedFocusCss)}
-                disabled={disabled}
-                height={height}
-                style={inputAreaStyles}
-                testID="input-interactable-area"
-              >
-                {!!focused && !!enableColorSurge && (
-                  <ColorSurge background={variantColorMap[focusedVariant]} />
-                )}
-                {!!startNode && <>{startNode}</>}
-                {!!labelNode && labelVariant === 'inside' ? (
-                  <VStack flexGrow={1}>
-                    {labelNode}
-                    {inputNode}
-                  </VStack>
-                ) : (
-                  inputNode
-                )}
-                {!!endNode && <>{endNode}</>}
-              </Interactable>
-            </div>
-            {!!appendNode && <>{appendNode}</>}
-          </HStack>
-          {!!helperTextNode && <>{helperTextNode}</>}
-        </VStack>
-      );
-    },
-  ),
+    const borderColorUnfocused = useMemo(() => {
+      if (variant === 'secondary') {
+        return 'transparent';
+      }
+
+      return `var(--color-${variantColorMap[variant]})`;
+    }, [variant]);
+
+    const inputAreaStyles = useMemo(() => {
+      return {
+        '--border-color-unfocused': borderColorUnfocused,
+        '--border-color-focused': borderColorFocused,
+        '--border-width-focused': `var(--borderWidth-${focusedBorderWidth})`,
+        ...inputBorderRadius,
+      };
+    }, [borderColorUnfocused, borderColorFocused, focusedBorderWidth, inputBorderRadius]);
+
+    return (
+      <VStack
+        gap={inputStackGap}
+        opacity={disabled ? accessibleOpacityDisabled : 1}
+        testID={testID}
+        width={width}
+        {...props}
+      >
+        {!!labelNode &&
+          labelVariant === 'outside' &&
+          (typeof labelNode === 'string' ? <InputLabel>{labelNode}</InputLabel> : labelNode)}
+        <HStack>
+          {!!prependNode && <>{prependNode}</>}
+          <div className={inputAreaContainerCss}>
+            <Interactable
+              ref={ref}
+              as="span"
+              background={variant === 'secondary' ? 'bgSecondary' : inputBackground}
+              blendStyles={blendStyles}
+              borderRadius={borderRadius}
+              borderWidth={borderWidth}
+              className={cx(baseCss, focused && persistedFocusCss)}
+              disabled={disabled}
+              height={height}
+              style={inputAreaStyles}
+              testID="input-interactable-area"
+            >
+              {!!focused && !!enableColorSurge && (
+                <ColorSurge background={variantColorMap[focusedVariant]} />
+              )}
+              {!!startNode && <>{startNode}</>}
+              {!!labelNode && labelVariant === 'inside' ? (
+                <VStack flexGrow={1}>
+                  {labelNode}
+                  {inputNode}
+                </VStack>
+              ) : (
+                inputNode
+              )}
+              {!!endNode && <>{endNode}</>}
+            </Interactable>
+          </div>
+          {!!appendNode && <>{appendNode}</>}
+        </HStack>
+        {!!helperTextNode && <>{helperTextNode}</>}
+      </VStack>
+    );
+  }),
 );

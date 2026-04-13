@@ -3,8 +3,9 @@ import React, {
   memo,
   useCallback,
   useContext,
-  useEffect,
   useImperativeHandle,
+  useRef,
+  useState,
 } from 'react';
 import {
   animateInBottomConfig,
@@ -19,10 +20,11 @@ import {
 } from '@coinbase/cds-common/overlays/ToastProvider';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
-import { m as motion, useAnimation } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { Button } from '../buttons/Button';
 import { IconButton } from '../buttons/IconButton';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { ColorSurge } from '../motion/ColorSurge';
@@ -69,117 +71,128 @@ const toastCss = css`
 export const toastTestId = 'cds-toast';
 
 export const Toast = memo(
-  forwardRef<ToastRefHandle, ToastProps>(
-    (
-      {
-        text,
-        action,
-        onWillHide,
-        onDidHide,
-        disablePortal = false,
-        hideCloseButton = false,
-        testID = toastTestId,
-        bottomOffset = 'var(--space-4)',
-        closeButtonAccessibilityProps = closeButtonAccessibilityDefaults,
-        variant,
-        ...props
+  forwardRef<ToastRefHandle, ToastProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('Toast', _props);
+    const {
+      text,
+      action,
+      onWillHide,
+      onDidHide,
+      disablePortal = false,
+      hideCloseButton = false,
+      testID = toastTestId,
+      bottomOffset = 'var(--space-4)',
+      closeButtonAccessibilityProps = closeButtonAccessibilityDefaults,
+      variant,
+      ...props
+    } = mergedProps;
+    const { pauseTimer, resumeTimer } = useContext(ToastContext);
+    const [motionState, setMotionState] = useState<'enter' | 'exit'>('enter');
+    const exitResolverRef = useRef<((value: boolean) => void) | null>(null);
+
+    const motionProps = useMotionProps({
+      enterConfigs: [animateInOpacityConfig, animateInBottomConfig],
+      exitConfigs: [animateOutOpacityConfig, animateOutBottomConfig],
+      animate: motionState,
+      style: { bottom: bottomOffset },
+    });
+
+    const handleAnimationComplete = useCallback(
+      (definition: string) => {
+        if (definition === 'exit') {
+          onDidHide?.();
+          exitResolverRef.current?.(true);
+          exitResolverRef.current = null;
+        }
       },
-      ref,
-    ) => {
-      const { pauseTimer, resumeTimer } = useContext(ToastContext);
-      const animationControls = useAnimation();
+      [onDidHide],
+    );
 
-      const motionProps = useMotionProps({
-        enterConfigs: [animateInOpacityConfig, animateInBottomConfig],
-        exitConfigs: [animateOutOpacityConfig, animateOutBottomConfig],
-        animate: animationControls,
-        style: { bottom: bottomOffset },
+    const handleClose = useCallback((): Promise<boolean> => {
+      onWillHide?.();
+      return new Promise((resolve) => {
+        exitResolverRef.current = resolve;
+        setMotionState('exit');
       });
+    }, [onWillHide]);
 
-      useEffect(() => {
-        void animationControls.start('enter');
-      }, [animationControls]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        hide: handleClose,
+      }),
+      [handleClose],
+    );
 
-      const handleClose = useCallback(async (): Promise<boolean> => {
-        onWillHide?.();
-        await animationControls.start('exit');
-        onDidHide?.();
-        return true;
-      }, [onWillHide, onDidHide, animationControls]);
+    const handleActionPress = useCallback(() => {
+      action?.onPress();
+      void handleClose();
+    }, [action, handleClose]);
 
-      useImperativeHandle(
-        ref,
-        () => ({
-          hide: handleClose,
-        }),
-        [handleClose],
-      );
-
-      const handleActionPress = useCallback(() => {
-        action?.onPress();
-        void handleClose();
-      }, [action, handleClose]);
-
-      return (
-        <Portal containerId={toastContainerId} disablePortal={disablePortal}>
-          <motion.div {...motionProps} className={baseCss} data-testid={`${testID}-motion`}>
-            <Box
-              justifyContent="center"
-              onMouseEnter={pauseTimer} // persist toast when hovering
-              onMouseLeave={resumeTimer}
-              padding={2}
-              role="alert"
-              testID={testID}
-              width="100%"
-              {...props}
+    return (
+      <Portal containerId={toastContainerId} disablePortal={disablePortal}>
+        <motion.div
+          {...motionProps}
+          className={baseCss}
+          data-testid={`${testID}-motion`}
+          onAnimationComplete={handleAnimationComplete}
+        >
+          <Box
+            justifyContent="center"
+            onMouseEnter={pauseTimer} // persist toast when hovering
+            onMouseLeave={resumeTimer}
+            padding={2}
+            role="alert"
+            testID={testID}
+            width="100%"
+            {...props}
+          >
+            <HStack
+              alignItems="center"
+              background="bgAlternate"
+              borderRadius={200}
+              className={toastCss}
+              elevation={2}
+              maxWidth={550}
+              overflow="hidden"
+              paddingEnd={1}
+              paddingStart={3}
+              paddingY={1}
+              position="relative"
             >
-              <HStack
-                alignItems="center"
-                background="bgAlternate"
-                borderRadius={200}
-                className={toastCss}
-                elevation={2}
-                maxWidth={550}
-                overflow="hidden"
-                paddingEnd={1}
-                paddingStart={3}
-                paddingY={1}
-                position="relative"
-              >
-                {/* avoid pushing contents off screen */}
-                <Box flexShrink={1} paddingEnd={2} paddingY={1}>
-                  <Text as="p" display="block" font="headline" tabIndex={0}>
-                    {text}
-                  </Text>
-                </Box>
-                <ColorSurge background={variant} />
-                <HStack>
-                  {!!action && (
-                    <Button
-                      compact
-                      transparent
-                      onClick={handleActionPress}
-                      testID={action.testID ?? 'toast-action'}
-                    >
-                      {action.label}
-                    </Button>
-                  )}
-                  {!hideCloseButton && (
-                    <IconButton
-                      transparent
-                      name="close"
-                      onClick={handleClose}
-                      testID={`${testID}-close-button`}
-                      variant="foregroundMuted"
-                      {...closeButtonAccessibilityProps}
-                    />
-                  )}
-                </HStack>
+              {/* avoid pushing contents off screen */}
+              <Box flexShrink={1} paddingEnd={2} paddingY={1}>
+                <Text as="p" display="block" font="headline" tabIndex={0}>
+                  {text}
+                </Text>
+              </Box>
+              <ColorSurge background={variant} />
+              <HStack>
+                {!!action && (
+                  <Button
+                    compact
+                    transparent
+                    onClick={handleActionPress}
+                    testID={action.testID ?? 'toast-action'}
+                  >
+                    {action.label}
+                  </Button>
+                )}
+                {!hideCloseButton && (
+                  <IconButton
+                    transparent
+                    name="close"
+                    onClick={handleClose}
+                    testID={`${testID}-close-button`}
+                    variant="foregroundMuted"
+                    {...closeButtonAccessibilityProps}
+                  />
+                )}
               </HStack>
-            </Box>
-          </motion.div>
-        </Portal>
-      );
-    },
-  ),
+            </HStack>
+          </Box>
+        </motion.div>
+      </Portal>
+    );
+  }),
 );

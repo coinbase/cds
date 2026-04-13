@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useSelectionCellBorderStyle } from '../hooks/useSelectionCellBorderStyle';
 import { useTheme } from '../hooks/useTheme';
@@ -27,7 +28,7 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title'> &
+} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title' | 'dotSize'> &
   Omit<PressableBaseProps, 'children' | 'noScaleOnPress'>;
 
 export type CheckboxCellProps<CheckboxValue extends string> =
@@ -47,7 +48,11 @@ export type CheckboxCellProps<CheckboxValue extends string> =
   };
 
 const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
-  {
+  _props: CheckboxCellProps<CheckboxValue>,
+  ref: React.ForwardedRef<View>,
+) {
+  const mergedProps = useComponentConfig('CheckboxCell', _props);
+  const {
     title,
     description,
     checked,
@@ -61,6 +66,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     background = 'bg',
     borderColor = 'bgLine',
     controlColor,
+    controlSize,
     accessibilityLabel,
     accessibilityHint,
     testID,
@@ -77,9 +83,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
     readOnly,
     styles,
     ...props
-  }: CheckboxCellProps<CheckboxValue>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   const theme = useTheme();
   const [layout, setLayout] = useLayout();
   const [pressed, setPressed] = useState(false);
@@ -219,6 +223,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
             accessible={false}
             checked={!!checked}
             controlColor={controlColor}
+            controlSize={controlSize}
             disabled={disabled}
             indeterminate={indeterminate}
             pointerEvents="none"

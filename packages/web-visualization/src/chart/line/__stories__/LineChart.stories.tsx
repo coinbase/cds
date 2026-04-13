@@ -942,6 +942,7 @@ function Compact() {
 
       return (
         <ListCell
+          accessibilityLabel="Compact chart"
           description={isPhone ? undefined : assets.btc.symbol}
           detail={formatPrice(parseFloat(prices[0]))}
           intermediary={

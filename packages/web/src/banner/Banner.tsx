@@ -19,6 +19,7 @@ import type {
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
@@ -90,27 +91,97 @@ export type BannerProps = BannerBaseProps &
   Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
 export const Banner = memo(
-  forwardRef(
-    (
-      {
-        variant,
-        startIcon,
-        startIconActive,
-        onClose,
-        primaryAction,
-        secondaryAction,
-        title,
-        children,
-        showDismiss = false,
-        testID,
-        style,
-        className,
-        numberOfLines = 3,
-        label,
-        styleVariant = 'contextual',
-        startIconAccessibilityLabel,
-        closeAccessibilityLabel = 'close',
-        borderRadius = styleVariant === 'contextual' ? 400 : undefined,
+  forwardRef((_props: BannerProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    const mergedProps = useComponentConfig('Banner', _props);
+    const {
+      variant,
+      startIcon,
+      startIconActive,
+      onClose,
+      primaryAction,
+      secondaryAction,
+      title,
+      children,
+      showDismiss = false,
+      testID,
+      style,
+      className,
+      numberOfLines = 3,
+      label,
+      styleVariant = 'contextual',
+      startIconAccessibilityLabel,
+      closeAccessibilityLabel = 'close',
+      borderRadius = styleVariant === 'contextual' ? 400 : undefined,
+      margin,
+      marginY,
+      marginX,
+      marginTop,
+      marginBottom,
+      marginStart,
+      marginEnd,
+      width = '100%',
+      ...props
+    } = mergedProps;
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const titleId = useId();
+
+    const accessibilityLabelledBy = typeof title === 'string' ? titleId : undefined;
+
+    // Setup color configs
+    const {
+      iconColor,
+      textColor,
+      background,
+      primaryActionColor,
+      secondaryActionColor,
+      iconButtonColor,
+      borderColor,
+    }: BannerVariantStyle = variants[variant];
+
+    // Events
+    const handleOnDismiss = useCallback(() => {
+      setIsCollapsed(true);
+      onClose?.();
+    }, [onClose]);
+
+    const clonedPrimaryAction = useMemo(() => {
+      if (!isValidElement<LinkProps<LinkDefaultElement>>(primaryAction)) return null;
+
+      if (primaryAction.type === Link) {
+        return React.cloneElement(primaryAction, {
+          font: 'label1',
+          color: primaryActionColor,
+          testID: `${testID}-action--primary`,
+          ...primaryAction.props,
+        });
+      } else {
+        return React.cloneElement(primaryAction, {
+          testID: `${testID}-action--primary`,
+          ...primaryAction.props,
+        });
+      }
+    }, [primaryAction, primaryActionColor, testID]);
+
+    const clonedSecondaryAction = useMemo(() => {
+      if (!isValidElement<LinkProps<LinkDefaultElement>>(secondaryAction)) return null;
+
+      if (secondaryAction.type === Link) {
+        return React.cloneElement(secondaryAction, {
+          font: 'label1',
+          color: secondaryActionColor,
+          testID: `${testID}-action--secondary`,
+          ...secondaryAction.props,
+        });
+      } else {
+        return React.cloneElement(secondaryAction, {
+          testID: `${testID}-action--secondary`,
+          ...secondaryAction.props,
+        });
+      }
+    }, [secondaryAction, secondaryActionColor, testID]);
+
+    const marginStyles = useMemo(
+      () => ({
         margin,
         marginY,
         marginX,
@@ -118,206 +189,127 @@ export const Banner = memo(
         marginBottom,
         marginStart,
         marginEnd,
-        width = '100%',
-        ...props
-      }: BannerProps,
-      ref: React.ForwardedRef<HTMLDivElement>,
-    ) => {
-      const [isCollapsed, setIsCollapsed] = useState(false);
-      const titleId = useId();
+      }),
+      [margin, marginX, marginY, marginStart, marginEnd, marginTop, marginBottom],
+    );
 
-      const accessibilityLabelledBy = typeof title === 'string' ? titleId : undefined;
+    const borderBox = useMemo(
+      () => <Box background={borderColor} pin="left" width={4} />,
+      [borderColor],
+    );
 
-      // Setup color configs
-      const {
-        iconColor,
-        textColor,
-        background,
-        primaryActionColor,
-        secondaryActionColor,
-        iconButtonColor,
-        borderColor,
-      }: BannerVariantStyle = variants[variant];
-
-      // Events
-      const handleOnDismiss = useCallback(() => {
-        setIsCollapsed(true);
-        onClose?.();
-      }, [onClose]);
-
-      const clonedPrimaryAction = useMemo(() => {
-        if (!isValidElement<LinkProps<LinkDefaultElement>>(primaryAction)) return null;
-
-        if (primaryAction.type === Link) {
-          return React.cloneElement(primaryAction, {
-            font: 'label1',
-            color: primaryActionColor,
-            testID: `${testID}-action--primary`,
-            ...primaryAction.props,
-          });
-        } else {
-          return React.cloneElement(primaryAction, {
-            testID: `${testID}-action--primary`,
-            ...primaryAction.props,
-          });
-        }
-      }, [primaryAction, primaryActionColor, testID]);
-
-      const clonedSecondaryAction = useMemo(() => {
-        if (!isValidElement<LinkProps<LinkDefaultElement>>(secondaryAction)) return null;
-
-        if (secondaryAction.type === Link) {
-          return React.cloneElement(secondaryAction, {
-            font: 'label1',
-            color: secondaryActionColor,
-            testID: `${testID}-action--secondary`,
-            ...secondaryAction.props,
-          });
-        } else {
-          return React.cloneElement(secondaryAction, {
-            testID: `${testID}-action--secondary`,
-            ...secondaryAction.props,
-          });
-        }
-      }, [secondaryAction, secondaryActionColor, testID]);
-
-      const marginStyles = useMemo(
-        () => ({
-          margin,
-          marginY,
-          marginX,
-          marginTop,
-          marginBottom,
-          marginStart,
-          marginEnd,
-        }),
-        [margin, marginX, marginY, marginStart, marginEnd, marginTop, marginBottom],
-      );
-
-      const borderBox = useMemo(
-        () => <Box background={borderColor} pin="left" width={4} />,
-        [borderColor],
-      );
-
-      const content = (
-        <Box
-          position="relative"
-          width={width}
-          {...(!showDismiss && marginStyles)}
-          height="fit-content"
+    const content = (
+      <Box
+        position="relative"
+        width={width}
+        {...(!showDismiss && marginStyles)}
+        height="fit-content"
+      >
+        <HStack
+          ref={ref}
+          background={background}
+          borderRadius={borderRadius}
+          className={className}
+          flexGrow={1}
+          gap={1}
+          minWidth={bannerMinWidth}
+          paddingX={styleVariant === 'contextual' ? 2 : 3}
+          paddingY={2}
+          style={style}
+          testID={testID}
+          {...props}
         >
-          <HStack
-            ref={ref}
-            background={background}
-            borderRadius={borderRadius}
-            className={className}
+          {/** Start */}
+          <Box paddingX={0.5} paddingY={0.25}>
+            <Icon
+              accessibilityLabel={startIconAccessibilityLabel}
+              active={startIconActive}
+              color={iconColor}
+              name={startIcon}
+              size="s"
+              testID={`${testID}-icon`}
+            />
+          </Box>
+          <VStack
+            flexDirection={contentResponsiveConfig}
             flexGrow={1}
-            gap={1}
-            minWidth={bannerMinWidth}
-            paddingX={styleVariant === 'contextual' ? 2 : 3}
-            paddingY={2}
-            style={style}
-            testID={testID}
-            {...props}
+            gap={2}
+            justifyContent="space-between"
+            testID={`${testID}-inner-end-box`}
           >
-            {/** Start */}
-            <Box paddingX={0.5} paddingY={0.25}>
-              <Icon
-                accessibilityLabel={startIconAccessibilityLabel}
-                active={startIconActive}
-                color={iconColor}
-                name={startIcon}
-                size="s"
-                testID={`${testID}-icon`}
-              />
-            </Box>
-            <VStack
-              flexDirection={contentResponsiveConfig}
-              flexGrow={1}
-              gap={2}
-              justifyContent="space-between"
-              testID={`${testID}-inner-end-box`}
-            >
-              {/** Middle */}
-              <VStack gap={2} testID={`${testID}-content-box`}>
-                <VStack gap={0.5}>
-                  {typeof title === 'string' ? (
-                    <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
-                      {title}
-                    </Text>
-                  ) : (
-                    title
-                  )}
-                  {typeof children === 'string' ? (
-                    <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
-                      {children}
-                    </Text>
-                  ) : (
-                    children
-                  )}
-                </VStack>
-                {typeof label === 'string' ? (
-                  <Text color="fgMuted" font="legal" numberOfLines={2}>
-                    {label}
+            {/** Middle */}
+            <VStack gap={2} testID={`${testID}-content-box`}>
+              <VStack gap={0.5}>
+                {typeof title === 'string' ? (
+                  <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
+                    {title}
                   </Text>
                 ) : (
-                  label
+                  title
+                )}
+                {typeof children === 'string' ? (
+                  <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
+                    {children}
+                  </Text>
+                ) : (
+                  children
                 )}
               </VStack>
-              {/** Actions */}
-              {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-                <HStack
-                  alignItems="center"
-                  className={actionContainerCss}
-                  gap={2}
-                  testID={`${testID}-action`}
-                >
-                  {clonedPrimaryAction}
-                  {clonedSecondaryAction}
-                </HStack>
+              {typeof label === 'string' ? (
+                <Text color="fgMuted" font="legal" numberOfLines={2}>
+                  {label}
+                </Text>
+              ) : (
+                label
               )}
             </VStack>
-            {/** Dismissable action */}
-            {showDismiss && (
-              <Box alignItems="flex-start" padding={0.5}>
-                <Pressable
-                  accessibilityLabel={closeAccessibilityLabel}
-                  background="transparent"
-                  borderRadius={1000}
-                  onClick={handleOnDismiss}
-                  role="button"
-                  testID={`${testID}-dismiss-btn`}
-                >
-                  <Icon color={iconButtonColor} name="close" size="s" />
-                </Pressable>
-              </Box>
+            {/** Actions */}
+            {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
+              <HStack
+                alignItems="center"
+                className={actionContainerCss}
+                gap={2}
+                testID={`${testID}-action`}
+              >
+                {clonedPrimaryAction}
+                {clonedSecondaryAction}
+              </HStack>
             )}
-          </HStack>
-          {styleVariant === 'global' && !showDismiss && borderBox}
-        </Box>
-      );
+          </VStack>
+          {/** Dismissable action */}
+          {showDismiss && (
+            <Box alignItems="flex-start" padding={0.5}>
+              <Pressable
+                accessibilityLabel={closeAccessibilityLabel}
+                background="transparent"
+                borderRadius={1000}
+                onClick={handleOnDismiss}
+                role="button"
+                testID={`${testID}-dismiss-btn`}
+              >
+                <Icon color={iconButtonColor} name="close" size="s" />
+              </Pressable>
+            </Box>
+          )}
+        </HStack>
+        {styleVariant === 'global' && !showDismiss && borderBox}
+      </Box>
+    );
 
-      return showDismiss ? (
-        <Box
-          display="block"
-          height="fit-content"
-          position="relative"
-          width={width}
-          {...marginStyles}
+    return showDismiss ? (
+      <Box display="block" height="fit-content" position="relative" width={width} {...marginStyles}>
+        <Collapsible
+          accessibilityLabelledBy={accessibilityLabelledBy}
+          collapsed={isCollapsed}
+          id={`${titleId}--controller`}
+          testID={`${testID}-collapsible`}
         >
-          <Collapsible
-            accessibilityLabelledBy={accessibilityLabelledBy}
-            collapsed={isCollapsed}
-            id={`${titleId}--controller`}
-            testID={`${testID}-collapsible`}
-          >
-            {content}
-          </Collapsible>
-          {styleVariant === 'global' && borderBox}
-        </Box>
-      ) : (
-        content
-      );
-    },
-  ),
+          {content}
+        </Collapsible>
+        {styleVariant === 'global' && borderBox}
+      </Box>
+    ) : (
+      content
+    );
+  }),
 );

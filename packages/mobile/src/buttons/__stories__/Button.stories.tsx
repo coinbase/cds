@@ -25,6 +25,14 @@ const buttonStories: Omit<ButtonProps, 'children'>[] = [
   { disabled: true },
   { loading: true },
   { loading: true, compact: true },
+  { loading: true, transparent: true },
+  { loading: true, transparent: true, compact: true },
+  { loading: true, variant: 'secondary' },
+  { loading: true, variant: 'secondary', compact: true },
+  { loading: true, variant: 'positive' },
+  { loading: true, variant: 'positive', compact: true },
+  { loading: true, variant: 'negative' },
+  { loading: true, variant: 'negative', compact: true },
   { startIcon: 'backArrow' },
   { endIcon: 'backArrow' },
   { startIcon: 'backArrow', endIcon: 'forwardArrow' },
@@ -101,6 +109,24 @@ const ButtonScreen = () => {
         >
           Hello world
         </Button>
+      </Example>
+      <Example inline title="Small">
+        <HStack gap={2}>
+          <Button height={32} paddingY={0}>
+            I am a button
+          </Button>
+          <Button loading height={32} paddingY={0}>
+            I am a button
+          </Button>
+        </HStack>
+        <HStack gap={2}>
+          <Button compact height={24} paddingY={0} progressCircleSize={16}>
+            I am a button
+          </Button>
+          <Button compact loading height={24} paddingY={0} progressCircleSize={16}>
+            I am a button
+          </Button>
+        </HStack>
       </Example>
     </ExampleScreen>
   );

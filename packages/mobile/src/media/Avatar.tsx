@@ -11,6 +11,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
@@ -58,8 +59,9 @@ export type AvatarBaseProps = SharedProps &
 
 export type AvatarProps = AvatarBaseProps & Omit<BoxProps, 'children'>;
 
-export const Avatar = memo(
-  ({
+export const Avatar = memo((_props: AvatarProps) => {
+  const mergedProps = useComponentConfig('Avatar', _props);
+  const {
     alt,
     src,
     shape = 'circle',
@@ -72,130 +74,129 @@ export const Avatar = memo(
     accessibilityLabel,
     style,
     ...props
-  }: AvatarProps) => {
-    const imgSrc = src ?? fallbackImageSrc;
-    const shapeStyle = shapeStyles[shape];
-    const theme = useTheme();
-    const avatarSize = theme.avatarSize[size];
-    const placeholderLetter = name?.charAt(0);
-    const isLargestSize = size.includes('xx');
-    const isCustomSize = typeof dangerouslySetSize !== 'undefined';
-    const isCustomSizeAndSmall = isCustomSize && dangerouslySetSize <= smallAvatarSize;
-    const shouldUseSmallFont = isCustomSizeAndSmall || size === 's' || size === 'm';
-    const spectrumColor = colorSchemeMap[colorScheme];
-    const colorSchemeRgb = `rgb(${theme.spectrum[spectrumColor]})`;
+  } = mergedProps;
+  const imgSrc = src ?? fallbackImageSrc;
+  const shapeStyle = shapeStyles[shape];
+  const theme = useTheme();
+  const avatarSize = theme.avatarSize[size];
+  const placeholderLetter = name?.charAt(0);
+  const isLargestSize = size.includes('xx');
+  const isCustomSize = typeof dangerouslySetSize !== 'undefined';
+  const isCustomSizeAndSmall = isCustomSize && dangerouslySetSize <= smallAvatarSize;
+  const shouldUseSmallFont = isCustomSizeAndSmall || size === 's' || size === 'm';
+  const spectrumColor = colorSchemeMap[colorScheme];
+  const colorSchemeRgb = `rgb(${theme.spectrum[spectrumColor]})`;
 
-    const fallbackTextColor = useMemo(
-      () => getAccessibleColor({ background: colorSchemeRgb }),
-      [colorSchemeRgb],
-    );
+  const fallbackTextColor = useMemo(
+    () => getAccessibleColor({ background: colorSchemeRgb }),
+    [colorSchemeRgb],
+  );
 
-    const computedSize = dangerouslySetSize ?? avatarSize;
-    const shouldShowAvatarImage = !!src || !name;
-    // only show a border for normal and fallback image treatments
-    const hasBorder = shouldShowAvatarImage && borderColor && shape !== 'hexagon';
+  const computedSize = dangerouslySetSize ?? avatarSize;
+  const shouldShowAvatarImage = !!src || !name;
+  // only show a border for normal and fallback image treatments
+  const hasBorder = shouldShowAvatarImage && borderColor && shape !== 'hexagon';
 
-    const containerStyle = useMemo(
-      () => [hasBorder && styles.border, shapeStyle, style],
-      [hasBorder, shapeStyle, style],
-    );
+  const containerStyle = useMemo(
+    () => [hasBorder && styles.border, shapeStyle, style],
+    [hasBorder, shapeStyle, style],
+  );
 
-    const avatarText = useMemo(() => {
-      if (isLargestSize || (isCustomSize && !isCustomSizeAndSmall)) {
-        return (
-          <Text
-            align="center"
-            dangerouslySetColor={fallbackTextColor}
-            font="title2"
-            textTransform="uppercase"
-          >
-            {placeholderLetter}
-          </Text>
-        );
-      }
-      if (shouldUseSmallFont) {
-        return (
-          <Text
-            align="center"
-            dangerouslySetColor={fallbackTextColor}
-            font="caption"
-            textTransform="uppercase"
-          >
-            {placeholderLetter}
-          </Text>
-        );
-      }
-
+  const avatarText = useMemo(() => {
+    if (isLargestSize || (isCustomSize && !isCustomSizeAndSmall)) {
       return (
         <Text
           align="center"
           dangerouslySetColor={fallbackTextColor}
-          font="body"
+          font="title2"
           textTransform="uppercase"
         >
           {placeholderLetter}
         </Text>
       );
-    }, [
-      isLargestSize,
-      isCustomSize,
-      isCustomSizeAndSmall,
-      fallbackTextColor,
-      placeholderLetter,
-      shouldUseSmallFont,
-    ]);
-
-    const coloredFallback = useMemo(
-      () => (
-        <Box
-          alignItems="center"
-          dangerouslySetBackground={colorSchemeRgb}
-          height="100%"
-          justifyContent="center"
-          style={shapeStyle}
-          testID={coloredFallbackTestID}
-          width="100%"
+    }
+    if (shouldUseSmallFont) {
+      return (
+        <Text
+          align="center"
+          dangerouslySetColor={fallbackTextColor}
+          font="caption"
+          textTransform="uppercase"
         >
-          {avatarText}
-        </Box>
-      ),
-      [avatarText, shapeStyle, colorSchemeRgb],
-    );
+          {placeholderLetter}
+        </Text>
+      );
+    }
 
     return (
-      <Box
-        accessibilityLabel={accessibilityLabel}
-        borderColor={borderColor}
-        dangerouslySetBackground={imgSrc}
-        flexGrow={0}
-        flexShrink={0}
-        height={computedSize}
-        overflow="hidden"
-        position="relative"
-        style={containerStyle}
-        testID={testID}
-        width={computedSize}
-        {...props}
+      <Text
+        align="center"
+        dangerouslySetColor={fallbackTextColor}
+        font="body"
+        textTransform="uppercase"
       >
-        <Box style={styles.contentWrapper}>
-          {shouldShowAvatarImage ? (
-            <RemoteImage
-              alt={alt}
-              height={computedSize}
-              resizeMode="cover"
-              shape={shape}
-              source={{ uri: imgSrc }}
-              testID={`${testID ?? ''}-image`}
-              width={computedSize}
-            />
-          ) : (
-            coloredFallback
-          )}
-        </Box>
-      </Box>
+        {placeholderLetter}
+      </Text>
     );
-  },
-);
+  }, [
+    isLargestSize,
+    isCustomSize,
+    isCustomSizeAndSmall,
+    fallbackTextColor,
+    placeholderLetter,
+    shouldUseSmallFont,
+  ]);
+
+  const coloredFallback = useMemo(
+    () => (
+      <Box
+        alignItems="center"
+        dangerouslySetBackground={colorSchemeRgb}
+        height="100%"
+        justifyContent="center"
+        style={shapeStyle}
+        testID={coloredFallbackTestID}
+        width="100%"
+      >
+        {avatarText}
+      </Box>
+    ),
+    [avatarText, shapeStyle, colorSchemeRgb],
+  );
+
+  return (
+    <Box
+      accessibilityLabel={accessibilityLabel}
+      borderColor={borderColor}
+      dangerouslySetBackground={imgSrc}
+      flexGrow={0}
+      flexShrink={0}
+      height={computedSize}
+      overflow="hidden"
+      position="relative"
+      style={containerStyle}
+      testID={testID}
+      width={computedSize}
+      {...props}
+    >
+      <Box style={styles.contentWrapper}>
+        {shouldShowAvatarImage ? (
+          <RemoteImage
+            alt={alt}
+            height={computedSize}
+            resizeMode="cover"
+            shape={shape}
+            source={{ uri: imgSrc }}
+            testID={`${testID ?? ''}-image`}
+            width={computedSize}
+          />
+        ) : (
+          coloredFallback
+        )}
+      </Box>
+    </Box>
+  );
+});
 
 const styles = StyleSheet.create({
   border: {

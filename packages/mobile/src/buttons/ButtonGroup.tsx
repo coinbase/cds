@@ -6,6 +6,7 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type GroupDirection } from '../layout';
 
 import type { ButtonBaseProps } from './Button';
@@ -25,13 +26,9 @@ export type ButtonGroupBaseProps = SharedProps &
 
 export type ButtonGroupProps = ButtonGroupBaseProps;
 
-export const ButtonGroup = memo(function ButtonGroup({
-  accessibilityLabel,
-  block,
-  children,
-  testID,
-  direction,
-}: ButtonGroupProps) {
+export const ButtonGroup = memo((_props: ButtonGroupProps) => {
+  const mergedProps = useComponentConfig('ButtonGroup', _props);
+  const { accessibilityLabel, block, children, testID, direction } = mergedProps;
   const isVertical = direction === 'vertical';
 
   return (

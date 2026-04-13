@@ -18,8 +18,12 @@ import {
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 
-import type { BoxProps, HStackProps } from '../layout';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import type { BoxBaseProps, BoxProps, HStackProps } from '../layout';
 import { Box, HStack } from '../layout';
+
+import { DefaultTab } from './DefaultTab';
+import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -48,50 +52,69 @@ export type TabsActiveIndicatorProps = {
   activeTabRect: Rect;
 } & BoxProps;
 
-export type TabComponentProps<TabId extends string = string> = TabValue<TabId> & {
+export type TabComponentProps<
+  TabId extends string = string,
+  TTab extends TabValue<TabId> = TabValue<TabId>,
+> = Omit<TTab, 'Component' | 'id'> & {
+  id: TabId;
   style?: StyleProp<ViewStyle>;
 };
 
-export type TabComponent<TabId extends string = string> = React.FC<TabComponentProps<TabId>>;
+export type TabComponent<
+  TabId extends string = string,
+  TTab extends TabValue<TabId> = TabValue<TabId>,
+> = React.FC<TabComponentProps<TabId, TTab>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-export type TabsBaseProps<TabId extends string = string> = {
-  /** The array of tabs data. Each tab may optionally define a custom Component to render. */
-  tabs: (TabValue<TabId> & { Component?: TabComponent<TabId> })[];
-  /** The default Component to render each tab. */
-  TabComponent: TabComponent<TabId>;
-  /** The default Component to render the tabs active indicator. */
-  TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
-  /** Background color passed to the TabsActiveIndicatorComponent. */
-  activeBackground?: ThemeVars.Color;
-  /** Optional callback to receive the active tab element. */
-  onActiveTabElementChange?: (element: View | null) => void;
-  /** Custom styles for individual elements of the Tabs component */
-  styles?: {
-    /** Root container element */
-    root?: StyleProp<ViewStyle>;
-    /** Tab element */
-    tab?: StyleProp<ViewStyle>;
-    /** Active indicator element */
-    activeIndicator?: StyleProp<ViewStyle>;
+export type TabsBaseProps<
+  TabId extends string = string,
+  TTab extends TabValue<TabId> = TabValue<TabId>,
+> = Omit<BoxBaseProps, 'onChange'> &
+  Omit<TabsOptions<TabId, TTab>, 'tabs'> & {
+    /** The array of tabs data. Each tab may optionally define a custom Component to render. */
+    tabs: (TTab & { Component?: TabComponent<TabId, TTab> })[];
+    /** The default Component to render each tab. */
+    TabComponent?: TabComponent<TabId, TTab>;
+    /** The default Component to render the tabs active indicator. */
+    TabsActiveIndicatorComponent?: TabsActiveIndicatorComponent;
+    /** Background color passed to the TabsActiveIndicatorComponent. */
+    activeBackground?: ThemeVars.Color;
+    /** Optional callback to receive the active tab element. */
+    onActiveTabElementChange?: (element: View | null) => void;
   };
-} & Omit<TabsOptions<TabId>, 'tabs'>;
 
-export type TabsProps<TabId extends string = string> = TabsBaseProps<TabId> &
-  Omit<HStackProps, 'onChange'>;
+export type TabsProps<
+  TabId extends string = string,
+  TTab extends TabValue<TabId> = TabValue<TabId>,
+> = TabsBaseProps<TabId, TTab> &
+  Omit<HStackProps, 'onChange'> & {
+    /** Custom styles for individual elements of the Tabs component */
+    styles?: {
+      /** Root container element */
+      root?: StyleProp<ViewStyle>;
+      /** Tab element */
+      tab?: StyleProp<ViewStyle>;
+      /** Active indicator element */
+      activeIndicator?: StyleProp<ViewStyle>;
+    };
+  };
 
-type TabsFC = <TabId extends string = string>(
-  props: TabsProps<TabId> & { ref?: React.ForwardedRef<View> },
+type TabsFC = <TabId extends string = string, TTab extends TabValue<TabId> = TabValue<TabId>>(
+  props: TabsProps<TabId, TTab> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
 const TabsComponent = memo(
   forwardRef(
-    <TabId extends string>(
-      {
+    <TabId extends string, TTab extends TabValue<TabId> = TabValue<TabId>>(
+      _props: TabsProps<TabId, TTab>,
+      ref: React.ForwardedRef<View>,
+    ) => {
+      const mergedProps = useComponentConfig('Tabs', _props);
+      const {
         tabs,
-        TabComponent,
-        TabsActiveIndicatorComponent,
+        TabComponent = DefaultTab,
+        TabsActiveIndicatorComponent = DefaultTabsActiveIndicator,
         activeBackground,
         activeTab,
         disabled,
@@ -108,15 +131,14 @@ const TabsComponent = memo(
         borderTopRightRadius,
         borderBottomLeftRadius,
         borderBottomRightRadius,
+        testID,
         ...props
-      }: TabsProps<TabId>,
-      ref: React.ForwardedRef<View>,
-    ) => {
+      } = mergedProps;
       const tabsContainerRef = useRef<View>(null);
       useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
 
       const refMap = useRefMap<View>();
-      const api = useTabs<TabId>({ tabs, activeTab, disabled, onChange });
+      const api = useTabs<TabId, TTab>({ tabs, activeTab, disabled, onChange });
 
       const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
       const previousActiveRef = useRef(activeTab);
@@ -158,6 +180,7 @@ const TabsComponent = memo(
           position={position}
           role={role}
           style={styles?.root ? [style, styles.root] : style}
+          testID={testID}
           {...props}
         >
           <TabsContext.Provider value={api as TabsApi<string>}>
@@ -170,12 +193,13 @@ const TabsComponent = memo(
               borderTopLeftRadius={borderTopLeftRadius}
               borderTopRightRadius={borderTopRightRadius}
               style={styles?.activeIndicator}
+              testID={testID ? `${testID}-active-indicator` : undefined}
             />
-            {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
+            {tabs.map(({ id, Component: CustomTabComponent, ...props }) => {
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab disabled={tabDisabled} id={id} style={styles?.tab} {...props} />
+                  <RenderedTab id={id} style={styles?.tab} {...props} />
                 </TabContainer>
               );
             })}
@@ -194,6 +218,7 @@ export const TabsActiveIndicator = ({
   activeTabRect,
   position = 'absolute',
   style,
+  testID = 'tabs-active-indicator',
   ...props
 }: TabsActiveIndicatorProps) => {
   const previousActiveTabRect = useRef(activeTabRect);
@@ -224,7 +249,7 @@ export const TabsActiveIndicator = ({
       position={position}
       role="none"
       style={[animatedBoxStyle, style]}
-      testID="tabs-active-indicator"
+      testID={testID}
       {...props}
     />
   );

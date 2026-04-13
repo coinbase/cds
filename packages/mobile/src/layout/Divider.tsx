@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 import type { BoxProps } from './Box';
@@ -22,11 +23,9 @@ export type DividerBaseProps = {
 
 export type DividerProps = DividerBaseProps & BoxProps;
 
-export const Divider = memo(function Divider({
-  color = 'bgLine',
-  direction = 'horizontal',
-  ...boxProps
-}: DividerProps) {
+export const Divider = memo((_props: DividerProps) => {
+  const mergedProps = useComponentConfig('Divider', _props);
+  const { color = 'bgLine', direction = 'horizontal', ...boxProps } = mergedProps;
   const theme = useTheme();
   const style = useMemo(
     () => [

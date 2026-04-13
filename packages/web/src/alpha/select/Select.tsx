@@ -1,8 +1,18 @@
-import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
 
 import { cx } from '../../cx';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHasMounted } from '../../hooks/useHasMounted';
 import { Box } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
@@ -60,7 +70,11 @@ type SelectComponent = <
 const SelectBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: SelectProps<Type, SelectOptionValue>,
+      ref: React.Ref<SelectRef>,
+    ) => {
+      const mergedProps = useComponentConfig('Select', _props);
+      const {
         value,
         type = 'single' as Type,
         options,
@@ -92,6 +106,7 @@ const SelectBase = memo(
         media,
         end,
         align,
+        font,
         bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
@@ -104,9 +119,7 @@ const SelectBase = memo(
         className,
         classNames,
         testID,
-      }: SelectProps<Type, SelectOptionValue>,
-      ref: React.Ref<SelectRef>,
-    ) => {
+      } = mergedProps;
       const hasMounted = useHasMounted();
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
@@ -131,6 +144,43 @@ const SelectBase = memo(
         ref: refs.floating,
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
+
+      const pendingTypeAheadKeyRef = useRef<string | null>(null);
+
+      const handleControlKeyDown = useCallback(
+        (event: React.KeyboardEvent) => {
+          if (disabled || open) return;
+          if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+          const key = event.key;
+          if (/^[a-z]$/.test(key)) {
+            pendingTypeAheadKeyRef.current = key;
+            setOpen(true);
+          }
+        },
+        [disabled, open, setOpen],
+      );
+
+      useEffect(() => {
+        if (!open || !pendingTypeAheadKeyRef.current) return;
+
+        const key = pendingTypeAheadKeyRef.current;
+        pendingTypeAheadKeyRef.current = null;
+
+        const floatingEl = refs.floating.current;
+        if (!floatingEl) return;
+
+        const optionRole = accessibilityRoles?.option ?? 'option';
+        const options = floatingEl.querySelectorAll(`[role="${optionRole}"]`);
+        const matchingOption = Array.from(options).find((option) => {
+          const firstLetterMatch = option.textContent?.match(/[a-z]/i);
+          return firstLetterMatch?.[0]?.toLowerCase() === key;
+        });
+
+        if (matchingOption) {
+          (matchingOption as HTMLElement).focus();
+        }
+      }, [open, refs.floating, accessibilityRoles?.option]);
 
       const rootStyles = useMemo(
         () => ({
@@ -263,12 +313,14 @@ const SelectBase = memo(
             compact={compact}
             disabled={disabled}
             endNode={endNode}
+            font={font}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             label={label}
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
+            onKeyDown={handleControlKeyDown}
             open={open}
             options={options}
             placeholder={placeholder}

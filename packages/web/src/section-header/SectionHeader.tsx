@@ -2,6 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import type { IconName } from '@coinbase/cds-icons';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -30,8 +31,9 @@ export type SectionHeaderProps = Polymorphic.ExtendableProps<
 >;
 
 export const SectionHeader = memo(
-  forwardRef(function SectionHeader(
-    {
+  forwardRef(function SectionHeader(_props: SectionHeaderProps, ref: React.Ref<HTMLDivElement>) {
+    const mergedProps = useComponentConfig('SectionHeader', _props);
+    const {
       title,
       start,
       icon,
@@ -45,9 +47,7 @@ export const SectionHeader = memo(
       paddingX = 4,
       paddingY = 2,
       ...props
-    }: SectionHeaderProps,
-    ref: React.Ref<HTMLDivElement>,
-  ) {
+    } = mergedProps;
     return (
       <HStack
         ref={ref}

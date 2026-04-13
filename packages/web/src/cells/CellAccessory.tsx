@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { PaddingProps } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { isRtl } from '../utils/isRtl';
@@ -22,9 +23,11 @@ export type CellAccessoryProps = CellAccessoryBaseProps & BoxProps<BoxDefaultEle
 
 export const CellAccessory = memo(
   forwardRef(function CellAccessory(
-    { type, ...props }: CellAccessoryProps,
+    _props: CellAccessoryProps,
     ref: React.ForwardedRef<HTMLDivElement>,
   ) {
+    const mergedProps = useComponentConfig('CellAccessory', _props);
+    const { type, ...props } = mergedProps;
     let icon;
 
     if (type === 'more') {

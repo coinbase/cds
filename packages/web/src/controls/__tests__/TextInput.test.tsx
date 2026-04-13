@@ -45,6 +45,16 @@ describe('TextInput', () => {
     expect(screen.getByRole('textbox')).toHaveValue(value);
   });
 
+  it('passes font to native input', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput font="label1" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveStyle('font-size: var(--fontSize-label1);');
+  });
+
   it('renders a label', () => {
     const testID = 'label-testid';
     const labelText = 'Example label';

@@ -80,6 +80,7 @@ export const StylesExplorer = memo(({ selectors, children }: StylesExplorerProps
             {selectors.map((selector) => (
               <ListCell
                 key={selector.selector}
+                accessibilityLabel={selector.selector}
                 accessory={activeSelector === selector.selector ? 'selected' : 'unselected'}
                 description={selector.description}
                 onClick={() => handleSelectorClick(selector.selector)}

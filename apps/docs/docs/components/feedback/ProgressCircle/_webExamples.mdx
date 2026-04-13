@@ -8,6 +8,65 @@
 </HStack>
 ```
 
+## Indeterminate
+
+Use the `indeterminate` prop when progress is unknown (e.g. loading). The circle shows a spinning partial arc with no percentage text. This is the recommended replacement for the deprecated [Spinner](/components/feedback/Spinner) in loading contexts such as [IconButton](/components/inputs/IconButton) or button loading states.
+
+When `indeterminate` is true, the default color is `fgMuted`; you can override `color` as needed. Always provide `accessibilityLabel` so screen readers announce the loading state.
+
+### Thickness (weight)
+
+Indeterminate uses the same `weight` prop as determinate progress. The default is **`"normal"`** (4px stroke). Use `"thin"` (2px), `"semiheavy"` (8px), or `"heavy"` (12px) to change thickness.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" alignItems="center">
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">Default (normal)</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">weight="thin"</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} weight="thin" />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">weight="semiheavy"</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} weight="semiheavy" />
+  </VStack>
+</HStack>
+```
+
+### Progress (arc length)
+
+When `indeterminate` is true, the **`progress` prop controls the length of the visible arc** (how much of the circle is drawn), not a completion percentage. It defaults to `0.75` (a 270° arc). Override it to change the arc length—e.g. `0.5` for a half circle or `0.25` for a shorter arc.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" alignItems="center">
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">progress=0.25</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate progress={0.25} size={56} />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">progress=0.5</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate progress={0.5} size={56} />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">progress=0.75 (default)</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate progress={0.75} size={56} />
+  </VStack>
+</HStack>
+```
+
+### Sizes and color
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" alignItems="center">
+  <ProgressCircle accessibilityLabel="Loading" indeterminate size={32} />
+  <ProgressCircle accessibilityLabel="Loading" indeterminate size={56} />
+  <ProgressCircle accessibilityLabel="Loading" indeterminate size={100} />
+  <ProgressCircle accessibilityLabel="Loading" indeterminate color="bgPrimary" size={56} />
+</HStack>
+```
+
 ## Thin
 
 ```jsx live

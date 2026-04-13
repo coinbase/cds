@@ -3,6 +3,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useDimensions } from '../hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps, VStack } from '../layout';
 import { breakpoints } from '../styles/media';
@@ -97,8 +98,9 @@ export type SidebarBaseProps = BoxBaseProps & {
 
 export type SidebarProps = SidebarBaseProps & Omit<BoxProps<SidebarDefaultElement>, 'children'>;
 
-export const Sidebar: React.FC<SidebarProps> = memo(
-  ({
+export const Sidebar: React.FC<SidebarProps> = memo((_props) => {
+  const mergedProps = useComponentConfig('Sidebar', _props);
+  const {
     logo,
     children,
     collapsed,
@@ -113,104 +115,102 @@ export const Sidebar: React.FC<SidebarProps> = memo(
     style,
     styles,
     ...props
-  }) => {
-    const { ref, currentBreakpoint } = useDimensions(breakpointConfig);
-    /**
-     * Calculates collapsed state which will be passed to the Sidebar Context Provider
-     * Priority is as follows: First, respect what is set explicitly on SidebarItem,
-     * Next, do what is set explicitly on Sidebar. And finally if autoCollapse is
-     * set and we're within or outside the defined breakpoint, collapse or expand
-     * */
-    const computedCollapse =
-      collapsed ?? (autoCollapse ? currentBreakpoint === 'collapsed' : false);
-    const defaultWidth = computedCollapse
-      ? sidebarWidth.default.collapsed
-      : sidebarWidth.default.expanded;
-    const computedWidth = variant === 'default' ? defaultWidth : sidebarWidth.condensed;
+  } = mergedProps;
+  const { ref, currentBreakpoint } = useDimensions(breakpointConfig);
+  /**
+   * Calculates collapsed state which will be passed to the Sidebar Context Provider
+   * Priority is as follows: First, respect what is set explicitly on SidebarItem,
+   * Next, do what is set explicitly on Sidebar. And finally if autoCollapse is
+   * set and we're within or outside the defined breakpoint, collapse or expand
+   * */
+  const computedCollapse = collapsed ?? (autoCollapse ? currentBreakpoint === 'collapsed' : false);
+  const defaultWidth = computedCollapse
+    ? sidebarWidth.default.collapsed
+    : sidebarWidth.default.expanded;
+  const computedWidth = variant === 'default' ? defaultWidth : sidebarWidth.condensed;
 
-    const sidebarContext = useMemo(
-      () => ({ collapsed: computedCollapse, variant }),
-      [computedCollapse, variant],
-    );
+  const sidebarContext = useMemo(
+    () => ({ collapsed: computedCollapse, variant }),
+    [computedCollapse, variant],
+  );
 
-    const liWrappedChildren = useMemo(
-      () => Children.map(children, (child) => <li className={liCss}>{child}</li>),
-      [children],
-    );
+  const liWrappedChildren = useMemo(
+    () => Children.map(children, (child) => <li className={liCss}>{child}</li>),
+    [children],
+  );
 
-    // only center logo and end content on condensed sidebar
-    const logoContainerProps = useMemo(
-      () =>
-        ({
-          paddingTop: 1,
-          paddingStart: variant === 'default' ? 1 : 0,
-          paddingBottom: 4,
-          alignSelf: variant === 'default' ? undefined : 'center',
-          alignItems: variant === 'default' ? undefined : 'center',
-        }) satisfies BoxBaseProps,
-      [variant],
-    );
+  // only center logo and end content on condensed sidebar
+  const logoContainerProps = useMemo(
+    () =>
+      ({
+        paddingTop: 1,
+        paddingStart: variant === 'default' ? 1 : 0,
+        paddingBottom: 4,
+        alignSelf: variant === 'default' ? undefined : 'center',
+        alignItems: variant === 'default' ? undefined : 'center',
+      }) satisfies BoxBaseProps,
+    [variant],
+  );
 
-    return (
-      <SidebarProvider value={sidebarContext}>
-        <VStack
-          borderedEnd
-          accessibilityLabel={accessibilityLabel}
-          as={sidebarDefaultElement}
-          background="bg"
-          bottom="0"
-          className={cx(className, classNames?.root)}
-          height="100%"
-          justifyContent="space-between"
-          left="0"
-          minWidth={computedWidth}
-          paddingX={variant === 'default' ? 2 : 1.5}
-          paddingY={2}
-          position="sticky"
-          style={{ ...style, ...styles?.root }}
-          testID={testID}
-          top="0"
-          width={width ?? computedWidth}
-          zIndex={zIndex.navigation}
-          {...props}
-        >
-          <VStack>
-            {logo && (
-              <VStack
-                {...logoContainerProps}
-                className={classNames?.logo}
-                style={styles?.logo}
-                testID="sidebar-logo"
-              >
-                {typeof logo === 'function' ? logo(!!computedCollapse) : logo}
-              </VStack>
-            )}
+  return (
+    <SidebarProvider value={sidebarContext}>
+      <VStack
+        borderedEnd
+        accessibilityLabel={accessibilityLabel}
+        as={sidebarDefaultElement}
+        background="bg"
+        bottom="0"
+        className={cx(className, classNames?.root)}
+        height="100%"
+        justifyContent="space-between"
+        left="0"
+        minWidth={computedWidth}
+        paddingX={variant === 'default' ? 2 : 1.5}
+        paddingY={2}
+        position="sticky"
+        style={{ ...style, ...styles?.root }}
+        testID={testID}
+        top="0"
+        width={width ?? computedWidth}
+        zIndex={zIndex.navigation}
+        {...props}
+      >
+        <VStack>
+          {logo && (
             <VStack
-              as="ul"
-              className={cx(ulCss, classNames?.content)}
-              gap={0.5}
-              marginStart={variant === 'default' ? -0.5 : undefined}
-              style={styles?.content}
+              {...logoContainerProps}
+              className={classNames?.logo}
+              style={styles?.logo}
+              testID="sidebar-logo"
             >
-              {liWrappedChildren}
+              {typeof logo === 'function' ? logo(!!computedCollapse) : logo}
             </VStack>
-          </VStack>
-          {!!renderEnd && (
-            <Box
-              alignSelf={variant === 'default' ? 'flex-start' : 'center'}
-              className={classNames?.end}
-              paddingTop={4}
-              style={styles?.end}
-              testID="sidebar-end"
-            >
-              {renderEnd(!!computedCollapse)}
-            </Box>
           )}
+          <VStack
+            as="ul"
+            className={cx(ulCss, classNames?.content)}
+            gap={0.5}
+            marginStart={variant === 'default' ? -0.5 : undefined}
+            style={styles?.content}
+          >
+            {liWrappedChildren}
+          </VStack>
         </VStack>
-        <span ref={ref} className={breakpointObserverCss} />
-      </SidebarProvider>
-    );
-  },
-);
+        {!!renderEnd && (
+          <Box
+            alignSelf={variant === 'default' ? 'flex-start' : 'center'}
+            className={classNames?.end}
+            paddingTop={4}
+            style={styles?.end}
+            testID="sidebar-end"
+          >
+            {renderEnd(!!computedCollapse)}
+          </Box>
+        )}
+      </VStack>
+      <span ref={ref} className={breakpointObserverCss} />
+    </SidebarProvider>
+  );
+});
 
 Sidebar.displayName = 'Sidebar';

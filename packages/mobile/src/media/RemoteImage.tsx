@@ -15,6 +15,7 @@ import { SvgCssUri } from 'react-native-svg/css';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { AspectRatio, AvatarSize, FixedValue, Shape } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 
 type SourceProp = string | ImageProps['source'];
@@ -133,24 +134,26 @@ const shapeBorderRadius: Record<NonNullable<BaseRemoteImageProps['shape']>, numb
   hexagon: 0,
 };
 
-export const RemoteImage = memo(function RemoteImage({
-  width,
-  height,
-  aspectRatio,
-  shape = 'square',
-  shouldApplyDarkModeEnhacements,
-  darkModeEnhancementsApplied,
-  source,
-  size = 'm',
-  style,
-  borderColor,
-  borderRadius,
-  onError,
-  onLoad,
-  fallbackAccessibilityLabel,
-  fallbackAccessibilityHint,
-  ...props
-}: RemoteImageProps) {
+export const RemoteImage = memo(function RemoteImage(_props: RemoteImageProps) {
+  const mergedProps = useComponentConfig('RemoteImage', _props);
+  const {
+    width,
+    height,
+    aspectRatio,
+    shape = 'square',
+    shouldApplyDarkModeEnhacements,
+    darkModeEnhancementsApplied,
+    source,
+    size = 'm',
+    style,
+    borderColor,
+    borderRadius,
+    onError,
+    onLoad,
+    fallbackAccessibilityLabel,
+    fallbackAccessibilityHint,
+    ...props
+  } = mergedProps;
   const shapeRadius = shapeBorderRadius[shape];
   const { activeColorScheme, avatarSize } = useTheme();
 

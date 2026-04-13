@@ -6,6 +6,7 @@ import { css, type LinariaClassName } from '@linaria/core';
 
 import type { CellSpacing } from '../cells/Cell';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 
 import { TableContext } from './context/TableContext';
 
@@ -21,9 +22,8 @@ export type TableCellSpacing = {
   outer?: CellSpacing;
 };
 
-export type TableProps = SharedProps &
-  Pick<SharedAccessibilityProps, 'accessibilityLabelledBy' | 'accessibilityLabel'> &
-  Omit<React.HTMLAttributes<HTMLTableElement>, 'dangerouslySetInnerHTML'> & {
+export type TableBaseProps = SharedProps &
+  Pick<SharedAccessibilityProps, 'accessibilityLabelledBy' | 'accessibilityLabel'> & {
     /**
      * The variant prop allows clients to use a
      * CDS approved style for their Table.
@@ -53,6 +53,10 @@ export type TableProps = SharedProps &
     height?: DimensionValue;
     /** Set a maximum height. */
     maxHeight?: DimensionValue;
+  };
+
+export type TableProps = TableBaseProps &
+  Omit<React.HTMLAttributes<HTMLTableElement>, 'dangerouslySetInnerHTML'> & {
     /**
      * @danger This is an escape hatch. It is not intended to be used normally.
      */
@@ -178,7 +182,11 @@ const tableVariantStyles: Record<TableVariant, LinariaClassName> = {
 };
 
 const TableWithRef = forwardRef<HTMLTableElement, TableProps>(function TableWithRef(
-  {
+  _props: TableProps,
+  ref,
+) {
+  const mergedProps = useComponentConfig('Table', _props);
+  const {
     children,
     variant = 'default',
     bordered,
@@ -192,9 +200,7 @@ const TableWithRef = forwardRef<HTMLTableElement, TableProps>(function TableWith
     accessibilityLabel,
     className,
     ...props
-  },
-  ref,
-) {
+  } = mergedProps;
   const api = useMemo(() => ({ variant, cellSpacing, compact }), [variant, cellSpacing, compact]);
   const fixed = tableLayout === 'fixed';
   const containerStyles = useMemo(

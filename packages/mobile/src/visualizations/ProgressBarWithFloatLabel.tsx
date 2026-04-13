@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   I18nManager,
@@ -8,16 +8,21 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
 import type { Placement } from '@coinbase/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { Box, VStack } from '../layout';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
 import { type ProgressBaseProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
+
+const getEndTranslateX = (containerWidth: number, textWidth: number, progress: number) =>
+  I18nManager.isRTL
+    ? Math.min(containerWidth - textWidth, containerWidth - containerWidth * progress)
+    : Math.max(0, containerWidth * progress - textWidth);
 
 export type ProgressBarFloatLabelProps = Pick<
   ProgressBarWithFloatLabelProps,
@@ -28,73 +33,53 @@ const ProgressBarFloatLabel = memo(
   ({
     label,
     disabled,
-    progress,
+    progress = 0,
     disableAnimateOnMount,
     labelPlacement,
     styles,
   }: ProgressBarFloatLabelProps) => {
     const [textWidth, setTextWidth] = useState<number>(-1);
-    const { addPreviousValue: addPreviousPercent } = usePreviousValues<number>([
-      disableAnimateOnMount ? progress : 0,
-    ]);
     const [size, onLayout] = useLayout();
     const containerWidth = size.width;
-    const [hasAnimationMounted, setHasAnimationMounted] = useState(!disableAnimateOnMount);
-    const animatedProgress = useMemo(() => new Animated.Value(0), []);
-
-    addPreviousPercent(progress);
+    const animatedTranslateX = useRef(new Animated.Value(0));
 
     const { value: labelNum, render: renderLabel } = getProgressBarLabelParts(label);
 
     useEffect(() => {
-      if (containerWidth > 0 && textWidth > -1) {
-        if (!hasAnimationMounted && disableAnimateOnMount) {
-          animatedProgress.setValue(progress);
-          setHasAnimationMounted(true);
-        } else {
-          Animated.timing(
-            animatedProgress,
-            convertMotionConfig({
-              toValue: progress,
-              ...animateProgressBaseSpec,
-              useNativeDriver: true,
-            }),
-          )?.start();
-        }
+      if (containerWidth <= 0 || textWidth < 0) return;
+
+      const targetTranslateX = getEndTranslateX(containerWidth, textWidth, progress);
+
+      if (disableAnimateOnMount) {
+        animatedTranslateX.current.setValue(targetTranslateX);
+      } else {
+        Animated.timing(
+          animatedTranslateX.current,
+          convertMotionConfig({
+            toValue: targetTranslateX,
+            ...animateProgressBaseSpec,
+            useNativeDriver: true,
+          }),
+        ).start();
       }
-    }, [
-      progress,
-      containerWidth,
-      textWidth,
-      animatedProgress,
-      disableAnimateOnMount,
-      hasAnimationMounted,
-    ]);
+    }, [progress, containerWidth, textWidth, disableAnimateOnMount]);
 
     const handleTextLayout = useCallback((event: LayoutChangeEvent) => {
       setTextWidth(event.nativeEvent.layout.width);
     }, []);
+
+    const hasDimensions = containerWidth > 0 && textWidth > -1;
 
     const containerStyle = useMemo(() => [styles?.labelContainer], [styles?.labelContainer]);
 
     const labelStyle = useMemo(
       () => [
         {
-          opacity: hasAnimationMounted ? 1 : 0,
-          transform: [
-            {
-              translateX: animatedProgress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [
-                  I18nManager.isRTL ? containerWidth - textWidth : 0,
-                  I18nManager.isRTL ? 0 : containerWidth - textWidth,
-                ],
-              }),
-            },
-          ],
+          opacity: hasDimensions ? 1 : 0,
+          transform: [{ translateX: animatedTranslateX.current }],
         },
       ],
-      [containerWidth, textWidth, hasAnimationMounted, animatedProgress],
+      [hasDimensions],
     );
 
     return (
@@ -129,7 +114,7 @@ const ProgressBarFloatLabel = memo(
   },
 );
 
-export type ProgressBarWithFloatLabelProps = Pick<
+export type ProgressBarWithFloatLabelBaseProps = Pick<
   ProgressBaseProps,
   'progress' | 'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
@@ -140,6 +125,9 @@ export type ProgressBarWithFloatLabelProps = Pick<
    * @default above
    * */
   labelPlacement?: Extract<Placement, 'above' | 'below'>;
+};
+
+export type ProgressBarWithFloatLabelProps = ProgressBarWithFloatLabelBaseProps & {
   style?: StyleProp<ViewStyle>;
   /** Custom styles for individual elements of the ProgressBarWithFloatLabel component */
   styles?: {
@@ -154,8 +142,9 @@ export type ProgressBarWithFloatLabelProps = Pick<
 
 export const ProgressBarWithFloatLabel: React.FC<
   React.PropsWithChildren<ProgressBarWithFloatLabelProps>
-> = memo(
-  ({
+> = memo((_props: React.PropsWithChildren<ProgressBarWithFloatLabelProps>) => {
+  const mergedProps = useComponentConfig('ProgressBarWithFloatLabel', _props);
+  const {
     label,
     labelPlacement = 'above',
     progress,
@@ -165,26 +154,25 @@ export const ProgressBarWithFloatLabel: React.FC<
     testID,
     style,
     styles,
-  }) => {
-    const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
+  } = mergedProps;
+  const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
-    const progressBarFloatLabel = (
-      <ProgressBarFloatLabel
-        disableAnimateOnMount={disableAnimateOnMount}
-        disabled={disabled}
-        label={label}
-        labelPlacement={labelPlacement}
-        progress={progress}
-        styles={styles}
-      />
-    );
+  const progressBarFloatLabel = (
+    <ProgressBarFloatLabel
+      disableAnimateOnMount={disableAnimateOnMount}
+      disabled={disabled}
+      label={label}
+      labelPlacement={labelPlacement}
+      progress={progress}
+      styles={styles}
+    />
+  );
 
-    return (
-      <VStack style={rootStyle} testID={testID}>
-        {labelPlacement === 'above' && progressBarFloatLabel}
-        {children}
-        {labelPlacement === 'below' && progressBarFloatLabel}
-      </VStack>
-    );
-  },
-);
+  return (
+    <VStack style={rootStyle} testID={testID}>
+      {labelPlacement === 'above' && progressBarFloatLabel}
+      {children}
+      {labelPlacement === 'below' && progressBarFloatLabel}
+    </VStack>
+  );
+});

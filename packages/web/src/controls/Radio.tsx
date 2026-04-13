@@ -9,6 +9,7 @@ import {
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
 import { useMotionProps } from '../motion/useMotionProps';
@@ -18,13 +19,15 @@ import { Control, type ControlBaseProps } from './Control';
 const DotSvg = ({
   color = 'black',
   width = 20,
+  dotSize = (2 * width) / 3,
 }: {
   color?: React.CSSProperties['color'];
   width?: number;
+  dotSize?: number;
 }) => {
   return (
     <svg fill="none" height={width} viewBox={`0 0 ${width} ${width}`} width={width}>
-      <circle cx="50%" cy="50%" fill={color} r={width / 3} />
+      <circle cx="50%" cy="50%" fill={color} r={dotSize / 2} />
     </svg>
   );
 };
@@ -32,8 +35,6 @@ const DotSvg = ({
 const baseCss = css`
   position: relative;
   appearance: radio;
-  width: var(--controlSize-radioSize);
-  height: var(--controlSize-radioSize);
 
   border-style: solid;
   border-radius: var(--borderRadius-1000);
@@ -62,12 +63,26 @@ export type RadioBaseProps<RadioValue extends string> = ControlBaseProps<RadioVa
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
+  /**
+   * Sets the outer radio control size in pixels.
+   * @default theme.controlSize.radioSize
+   */
+  controlSize?: number;
+  /**
+   * Sets the inner dot size in pixels.
+   * @default 2/3 of controlSize
+   */
+  dotSize?: number;
 };
 
 export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
 const RadioWithRef = forwardRef(function RadioWithRef<RadioValue extends string>(
-  {
+  _props: RadioProps<RadioValue>,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) {
+  const mergedProps = useComponentConfig('Radio', _props);
+  const {
     children,
     controlColor = 'bgPrimary',
     checked = false,
@@ -75,12 +90,12 @@ const RadioWithRef = forwardRef(function RadioWithRef<RadioValue extends string>
     borderColor = checked ? controlColor : 'bgLineHeavy',
     borderWidth = 100,
     elevation,
+    controlSize,
+    dotSize,
     ...props
-  }: RadioProps<RadioValue>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+  } = mergedProps;
   const theme = useTheme();
-  const iconWidth = theme.controlSize.radioSize;
+  const iconWidth = controlSize ?? theme.controlSize.radioSize;
 
   const innerContainerMotionProps = useMotionProps({
     enterConfigs: [checkboxOpacityEnterConfig, checkboxScaleEnterConfig],
@@ -107,12 +122,13 @@ const RadioWithRef = forwardRef(function RadioWithRef<RadioValue extends string>
         flexShrink={0}
         justifyContent="center"
         role="presentation"
+        style={{ width: iconWidth, height: iconWidth }}
       >
         <motion.div {...innerContainerMotionProps}>
           {checked && (
             // setting inner dot to match color of the radio outline
             <Box color={controlColor} testID="radio-icon">
-              <DotSvg color="currentColor" width={iconWidth} />
+              <DotSvg color="currentColor" dotSize={dotSize} width={iconWidth} />
             </Box>
           )}
         </motion.div>

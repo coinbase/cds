@@ -9,6 +9,7 @@ import {
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout';
@@ -18,9 +19,6 @@ import { Control, type ControlBaseProps } from './Control';
 
 const checkboxCss = css`
   position: relative;
-  width: var(--controlSize-checkboxSize);
-  height: var(--controlSize-checkboxSize);
-
   border-style: solid;
 
   transition:
@@ -50,12 +48,21 @@ export type CheckboxBaseProps<CheckboxValue extends string> = ControlBaseProps<C
    * @default 100
    */
   borderWidth?: ThemeVars.BorderWidth;
+  /**
+   * Sets the outer checkbox control size in pixels.
+   * @default theme.controlSize.checkboxSize
+   */
+  controlSize?: number;
 };
 
 export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;
 
 const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extends string>(
-  {
+  _props: CheckboxProps<CheckboxValue>,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) {
+  const mergedProps = useComponentConfig('Checkbox', _props);
+  const {
     children,
     checked,
     indeterminate,
@@ -65,13 +72,12 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extend
     borderRadius = 100,
     borderWidth = 100,
     elevation,
+    controlSize,
     ...props
-  }: CheckboxProps<CheckboxValue>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+  } = mergedProps;
   const filled = checked || indeterminate;
   const theme = useTheme();
-  const checkboxSize = theme.controlSize.checkboxSize;
+  const checkboxSize = controlSize ?? theme.controlSize.checkboxSize;
   const iconPadding = checkboxSize / 5;
   const iconSize = checkboxSize - iconPadding;
 
@@ -116,6 +122,7 @@ const CheckboxWithRef = forwardRef(function CheckboxWithRef<CheckboxValue extend
         flexShrink={0}
         justifyContent="center"
         role="presentation"
+        style={{ width: checkboxSize, height: checkboxSize }}
         testID="checkbox-outer"
       >
         <motion.div {...innerContainerMotionProps} data-testid="checkbox-inner">

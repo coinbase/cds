@@ -8,7 +8,7 @@ import { Drawer } from '../drawer/Drawer';
 
 import { navOptions, SideDrawerContent } from './Drawers';
 
-const SidebarDrawerContentFallback = () => {
+const SidebarDrawerContentFallback = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <VStack height="100%" justifyContent="space-between" padding={2} paddingBottom={4}>
       <VStack alignItems="center" gap={2}>
@@ -22,13 +22,15 @@ const SidebarDrawerContentFallback = () => {
           <Fallback key={label} height={30} shape="square" width="100%" />
         ))}
       </VStack>
-      <Fallback height={50} shape="squircle" width="100%" />
+      <Button block compact onPress={handleClose} variant="secondary">
+        Cancel
+      </Button>
     </VStack>
   );
 };
 
 const SideDrawerWithFallback = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pin'>) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const setIsVisibleToOn = useCallback(() => setIsVisible(true), []);
   const setIsVisibleToOff = useCallback(() => setIsVisible(false), []);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +49,7 @@ const SideDrawerWithFallback = ({ pin = 'left' }: Pick<DrawerBaseProps, 'pin'>) 
         <Drawer onCloseComplete={setIsVisibleToOff} pin={pin}>
           {({ handleClose }) =>
             isLoading ? (
-              <SidebarDrawerContentFallback />
+              <SidebarDrawerContentFallback handleClose={handleClose} />
             ) : (
               <SideDrawerContent handleClose={handleClose} />
             )

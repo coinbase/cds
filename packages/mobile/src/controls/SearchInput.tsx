@@ -5,15 +5,15 @@ import type {
   NativeSyntheticEvent,
   TextInput as RNTextInput,
   TextInputFocusEventData,
-  TextInputProps as RNTextInputProps,
 } from 'react-native';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import type { IconName } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { InputIconButton } from './InputIconButton';
-import { TextInput, type TextInputBaseProps } from './TextInput';
+import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -21,11 +21,13 @@ export type SearchInputBaseProps = Pick<
   | 'accessibilityLabel'
   | 'accessibilityLabelledBy'
   | 'bordered'
+  | 'borderRadius'
   | 'compact'
   | 'disabled'
   | 'enableColorSurge'
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
+  | 'font'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'
@@ -71,148 +73,145 @@ export type SearchInputBaseProps = Pick<
 };
 
 export type SearchInputProps = SearchInputBaseProps &
-  RNTextInputProps & {
+  TextInputProps & {
     /** Callback is fired when the clear icon is pressed */
     onClear?: (event: GestureResponderEvent) => void;
     /**
      * Callback is fired when backArrow is pressed.
      * If disableBackArrow is true, this will do nothing
-     * */
+     */
     onBack?: (event: GestureResponderEvent) => void;
     /**
      * If this is set to true, the start icon won't toggle between backArrow and Search.
      * The start icon will always be a search icon
-     * @default false
-     * */
+     */
     disableBackArrow?: boolean;
-  } & Required<Pick<RNTextInputProps, 'onChangeText' | 'value'>>;
+  };
 
 export const SearchInput = memo(
-  forwardRef(
-    (
-      {
-        value,
-        testID,
-        onSearch,
-        onBack,
-        onChangeText,
-        onClear,
-        onFocus,
-        onBlur,
-        disabled,
-        disableBackArrow = false,
-        hideStartIcon = false,
-        hideEndIcon,
-        startIcon,
-        end,
-        startIconAccessibilityLabel = 'Back',
-        clearIconAccessibilityLabel = 'Clear text',
-        ...props
-      }: SearchInputProps,
-      ref: ForwardedRef<RNTextInput>,
-    ) => {
-      const [startIconName, setStartIconName] = useState<IconName>(startIcon ?? 'search');
-      const internalRef = useRef<RNTextInput>(null);
-      const refs = useMergeRefs(ref, internalRef);
+  forwardRef((_props: SearchInputProps, ref: ForwardedRef<RNTextInput>) => {
+    const mergedProps = useComponentConfig('SearchInput', _props);
+    const {
+      value,
+      testID,
+      onSearch,
+      onBack,
+      onChangeText,
+      onClear,
+      onFocus,
+      onBlur,
+      disabled,
+      disableBackArrow,
+      hideStartIcon,
+      hideEndIcon,
+      startIcon,
+      end,
+      startIconAccessibilityLabel = 'Back',
+      clearIconAccessibilityLabel = 'Clear text',
+      borderRadius = 1000,
+      ...props
+    } = mergedProps;
+    const [startIconName, setStartIconName] = useState<IconName>(startIcon ?? 'search');
+    const internalRef = useRef<RNTextInput>(null);
+    const refs = useMergeRefs(ref, internalRef);
 
-      const handleOnFocus = useCallback(
-        (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-          onFocus?.(e);
+    const handleOnFocus = useCallback(
+      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        onFocus?.(e);
 
-          if (!disableBackArrow && startIcon === undefined) {
-            setStartIconName('backArrow');
-          }
-        },
-        [disableBackArrow, onFocus, startIcon],
-      );
+        if (!disableBackArrow && startIcon === undefined) {
+          setStartIconName('backArrow');
+        }
+      },
+      [disableBackArrow, onFocus, startIcon],
+    );
 
-      const handleOnBlur = useCallback(
-        (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-          onBlur?.(e);
+    const handleOnBlur = useCallback(
+      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        onBlur?.(e);
 
-          if (startIcon === undefined) {
-            setStartIconName('search');
-          }
-        },
-        [onBlur, startIcon],
-      );
+        if (startIcon === undefined) {
+          setStartIconName('search');
+        }
+      },
+      [onBlur, startIcon],
+    );
 
-      /**
-       * This is triggered when 'Enter', when Search IconButton is pressed, or when
-       * clearing
-       */
-      const handleOnSearch = useCallback(() => {
-        onSearch?.(value?.toString() ?? '');
+    /**
+     * This is triggered when 'Enter', when Search IconButton is pressed, or when
+     * clearing
+     */
+    const handleOnSearch = useCallback(() => {
+      onSearch?.(value?.toString() ?? '');
 
+      internalRef.current?.focus();
+    }, [onSearch, value]);
+
+    const handleOnClear = useCallback(
+      (e: GestureResponderEvent) => {
+        onClear?.(e);
         internalRef.current?.focus();
-      }, [onSearch, value]);
+        onChangeText?.('');
+        onSearch?.('');
+      },
+      [onClear, onChangeText, onSearch],
+    );
 
-      const handleOnClear = useCallback(
-        (e: GestureResponderEvent) => {
-          onClear?.(e);
-          internalRef.current?.focus();
-          onChangeText?.('');
-          onSearch?.('');
-        },
-        [onClear, onChangeText, onSearch],
-      );
+    const handleOnBack = useCallback(
+      (e: GestureResponderEvent) => {
+        onBack?.(e);
+        internalRef.current?.blur();
+      },
+      [onBack],
+    );
 
-      const handleOnBack = useCallback(
-        (e: GestureResponderEvent) => {
-          onBack?.(e);
-          internalRef.current?.blur();
-        },
-        [onBack],
-      );
+    const determineStartIconAccessibilityLabel = useMemo(
+      () => (startIconName === 'backArrow' ? startIconAccessibilityLabel : undefined),
+      [startIconAccessibilityLabel, startIconName],
+    );
 
-      const determineStartIconAccessibilityLabel = useMemo(
-        () => (startIconName === 'backArrow' ? startIconAccessibilityLabel : undefined),
-        [startIconAccessibilityLabel, startIconName],
-      );
-
-      return (
-        <TextInput
-          ref={refs}
-          accessibilityRole="search"
-          borderRadius={1000}
-          disabled={disabled}
-          end={
-            end ??
-            (!!value && !hideEndIcon && (
-              <Box paddingEnd={0.5}>
-                <InputIconButton
-                  accessibilityLabel={clearIconAccessibilityLabel}
-                  name="close"
-                  onPress={handleOnClear}
-                  testID={testID && `${testID}-close-iconbtn`}
-                />
-              </Box>
-            ))
-          }
-          keyboardType="web-search"
-          onBlur={handleOnBlur}
-          onChangeText={onChangeText}
-          onFocus={handleOnFocus}
-          onSubmitEditing={handleOnSearch}
-          start={
-            !hideStartIcon && (
+    return (
+      <TextInput
+        ref={refs}
+        accessibilityRole="search"
+        borderRadius={borderRadius}
+        disabled={disabled}
+        end={
+          end ??
+          (!!value && !hideEndIcon && (
+            <Box paddingEnd={0.5}>
               <InputIconButton
-                accessibilityElementsHidden // The pressable wrapper will be accessible, not the icon
-                accessibilityLabel={determineStartIconAccessibilityLabel} // A11y props will get passed to the pressable wrapper
-                disabled={disabled}
-                importantForAccessibility="no"
-                name={startIconName}
-                onPress={startIconName === 'backArrow' ? handleOnBack : handleOnSearch}
-                testID={testID && `${testID}-searchinput-iconbtn`}
+                accessibilityLabel={clearIconAccessibilityLabel}
+                name="close"
+                onPress={handleOnClear}
+                testID={testID && `${testID}-close-iconbtn`}
               />
-            )
-          }
-          testID={testID}
-          value={value}
-          variant="secondary"
-          {...props}
-        />
-      );
-    },
-  ),
+            </Box>
+          ))
+        }
+        keyboardType="web-search"
+        onBlur={handleOnBlur}
+        onChangeText={onChangeText}
+        onFocus={handleOnFocus}
+        onSubmitEditing={handleOnSearch}
+        start={
+          !hideStartIcon && (
+            <InputIconButton
+              accessibilityElementsHidden // The pressable wrapper will be accessible, not the icon
+              accessibilityLabel={determineStartIconAccessibilityLabel} // A11y props will get passed to the pressable wrapper
+              disabled={disabled}
+              importantForAccessibility="no"
+              name={startIconName}
+              onPress={startIconName === 'backArrow' ? handleOnBack : handleOnSearch}
+              testID={testID && `${testID}-searchinput-iconbtn`}
+            />
+          )
+        }
+        testID={testID}
+        value={value}
+        variant="secondary"
+        {...props}
+      />
+    );
+  }),
 );

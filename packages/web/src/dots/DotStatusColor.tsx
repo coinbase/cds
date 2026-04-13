@@ -10,6 +10,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { handlePreventPropagation } from '../utils/eventHandlers';
 
@@ -48,8 +49,9 @@ export type DotStatusColorBaseProps = SharedProps &
 
 export type DotStatusColorProps = DotStatusColorBaseProps;
 
-export const DotStatusColor = memo(
-  ({
+export const DotStatusColor = memo((_props: DotStatusColorProps) => {
+  const mergedProps = useComponentConfig('DotStatusColor', _props);
+  const {
     variant,
     pin,
     size = 's',
@@ -58,35 +60,34 @@ export const DotStatusColor = memo(
     testID,
     accessibilityLabel,
     ...props
-  }: DotStatusColorProps) => {
-    const { color } = useTheme();
+  } = mergedProps;
+  const { color } = useTheme();
 
-    const pinStyles = getTransform(pin, overlap);
+  const pinStyles = getTransform(pin, overlap);
 
-    const styles = useMemo(() => {
-      const variantColor = variantColorMap[variant];
-      return {
-        borderRadius: 'var(--borderRadius-1000)',
-        width: `var(--iconSize-${size})`,
-        height: `var(--iconSize-${size})`,
-        backgroundColor: color[variantColor],
-        alignItems: 'center',
-        justifyContent: 'center',
-        ...pinStyles,
-      };
-    }, [color, pinStyles, size, variant]);
+  const styles = useMemo(() => {
+    const variantColor = variantColorMap[variant];
+    return {
+      borderRadius: 'var(--borderRadius-1000)',
+      width: `var(--iconSize-${size})`,
+      height: `var(--iconSize-${size})`,
+      backgroundColor: color[variantColor],
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...pinStyles,
+    };
+  }, [color, pinStyles, size, variant]);
 
-    return (
-      <div aria-label={accessibilityLabel} className={baseCss} data-testid={testID} {...props}>
-        {children}
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
+  return (
+    <div aria-label={accessibilityLabel} className={baseCss} data-testid={testID} {...props}>
+      {children}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
         jsx-a11y/no-static-element-interactions */}
-        <div
-          data-testid="dotstatuscolor-inner-container"
-          onClick={handlePreventPropagation}
-          style={styles}
-        />
-      </div>
-    );
-  },
-);
+      <div
+        data-testid="dotstatuscolor-inner-container"
+        onClick={handlePreventPropagation}
+        style={styles}
+      />
+    </div>
+  );
+});

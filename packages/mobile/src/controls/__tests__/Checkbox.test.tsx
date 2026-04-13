@@ -48,6 +48,21 @@ describe('Checkbox', () => {
     expect(screen.getByTestId('mock-checkbox')).toBeAccessible();
   });
 
+  it('applies controlSize to checkbox container', () => {
+    render(
+      <DefaultThemeProvider>
+        <Checkbox checked controlSize={60} testID="test-checkbox">
+          Checked
+        </Checkbox>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-checkbox')).toHaveStyle({
+      width: 60,
+      height: 60,
+    });
+  });
+
   it('renders a minus icon when indeterminate', () => {
     render(
       <DefaultThemeProvider>

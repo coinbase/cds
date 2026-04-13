@@ -103,7 +103,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const indicator = screen.getByTestId('tabs-active-indicator');
+    const indicator = screen.getByTestId(`${TEST_ID}-active-indicator`);
     const style = indicator.getAttribute('style');
     expect(style).toContain('--height: 40px');
     expect(style).toContain('width: 68px');
@@ -139,7 +139,7 @@ describe('SegmentedTabs', () => {
     );
     fireEvent.click(screen.getByTestId('sell-tab'));
 
-    const indicator = screen.getByTestId('tabs-active-indicator');
+    const indicator = screen.getByTestId(`${TEST_ID}-active-indicator`);
     const style = indicator.getAttribute('style');
     expect(style).toContain('--height: 40px');
     expect(style).toContain('width: 68px');
@@ -218,7 +218,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const indicator = screen.getByTestId('tabs-active-indicator');
+    const indicator = screen.getByTestId(`${TEST_ID}-active-indicator`);
     const style = indicator.getAttribute('style');
     expect(style).toContain('--height: 40px');
     expect(style).toContain('width: 68px');
@@ -241,7 +241,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryByTestId('tabs-active-indicator')).not.toBeInTheDocument();
+    expect(screen.queryByTestId(`${TEST_ID}-active-indicator`)).not.toBeInTheDocument();
   });
 
   it('positions indicator correctly with horizontal padding', () => {
@@ -272,7 +272,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const indicator = screen.getByTestId('tabs-active-indicator');
+    const indicator = screen.getByTestId(`${TEST_ID}-active-indicator`);
     const style = indicator.getAttribute('style');
     expect(style).toContain('transform: translateX(24px) translateZ(0)');
     expect(style).toContain('left: 0');

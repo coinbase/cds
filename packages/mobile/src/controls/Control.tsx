@@ -15,6 +15,7 @@ import {
 } from '@coinbase/cds-common/tokens/interactable';
 import { isDevelopment } from '@coinbase/cds-utils';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import type { InteractableBaseProps } from '../system';
 import type { TextProps } from '../typography/Text';
@@ -34,6 +35,8 @@ export type ControlIconProps = SharedProps & {
   borderRadius?: ThemeVars.BorderRadius;
   borderWidth?: ThemeVars.BorderWidth;
   elevation?: ElevationLevels;
+  controlSize?: number;
+  dotSize?: number;
   animatedScaleValue: Animated.Value;
   animatedOpacityValue: Animated.Value;
   accessible?: boolean;
@@ -71,6 +74,15 @@ export type ControlBaseProps<ControlValue extends string> = Omit<
     controlColor?: ThemeVars.Color;
     /** Sets the elevation/drop shadow of the control. */
     elevation?: ElevationLevels;
+    /**
+     * Sets the control size in pixels.
+     */
+    controlSize?: number;
+    /**
+     * Sets the inner dot size in pixels.
+     * @default 2/3 of controlSize
+     */
+    dotSize?: number;
     style?: ViewStyle;
   };
 
@@ -87,7 +99,11 @@ export type ControlProps<ControlValue extends string> = Omit<
 };
 
 const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
-  {
+  _props: ControlProps<ControlValue>,
+  ref: React.ForwardedRef<View>,
+) {
+  const mergedProps = useComponentConfig('Control', _props);
+  const {
     testID,
     label,
     checked,
@@ -111,10 +127,10 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     borderColor,
     borderRadius,
     borderWidth,
+    controlSize,
+    dotSize,
     ...props
-  }: ControlProps<ControlValue>,
-  ref: React.ForwardedRef<View>,
-) {
+  } = mergedProps;
   const theme = useTheme();
 
   if (isDevelopment() && accessible && !label && !accessibilityLabel) {
@@ -230,7 +246,9 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
           borderWidth={borderWidth}
           checked={checked}
           controlColor={controlColor}
+          controlSize={controlSize}
           disabled={pressDisabled}
+          dotSize={dotSize}
           elevation={elevation}
           indeterminate={indeterminate}
           pressed={pressed}
@@ -264,7 +282,9 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       borderWidth,
       checked,
       controlColor,
+      controlSize,
       disabled,
+      dotSize,
       elevation,
       getLabelStyle,
       iconWrapperStyles,

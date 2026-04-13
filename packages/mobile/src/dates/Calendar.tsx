@@ -22,6 +22,7 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useA11y } from '../hooks/useA11y';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useScreenReaderStatus } from '../hooks/useScreenReaderStatus';
 import { Icon } from '../icons/Icon';
 import { Box, type BoxBaseProps } from '../layout/Box';
@@ -291,254 +292,251 @@ export type CalendarProps = CalendarBaseProps &
   };
 
 export const Calendar = memo(
-  forwardRef<CalendarRefHandle, CalendarProps>(
-    (
-      {
-        selectedDate,
-        seedDate,
-        onPressDate,
-        disabled,
-        hideControls,
-        disabledDates,
-        highlightedDates,
-        minDate,
-        maxDate,
-        disabledDateError = 'Date unavailable',
-        nextArrowAccessibilityLabel = 'Go to next month',
-        previousArrowAccessibilityLabel = 'Go to previous month',
-        todayAccessibilityHint = 'Today',
-        highlightedDateAccessibilityHint = 'Highlighted',
-        style,
-        styles,
-        ...props
-      },
+  forwardRef<CalendarRefHandle, CalendarProps>((_props, ref) => {
+    const mergedProps = useComponentConfig('Calendar', _props);
+    const {
+      selectedDate,
+      seedDate,
+      onPressDate,
+      disabled,
+      hideControls,
+      disabledDates,
+      highlightedDates,
+      minDate,
+      maxDate,
+      disabledDateError = 'Date unavailable',
+      nextArrowAccessibilityLabel = 'Go to next month',
+      previousArrowAccessibilityLabel = 'Go to previous month',
+      todayAccessibilityHint = 'Today',
+      highlightedDateAccessibilityHint = 'Highlighted',
+      style,
+      styles,
+      ...props
+    } = mergedProps;
+    const { setA11yFocus, announceForA11y } = useA11y();
+    const today = useMemo(() => getMidnightDate(new Date()), []);
+    const todayTime = useMemo(() => today.getTime(), [today]);
+
+    // Determine default calendar seed date: use whichever comes first between maxDate and today
+    const defaultSeedDate = useMemo<Date>(() => {
+      if (selectedDate) {
+        return selectedDate;
+      }
+      if (seedDate) {
+        return seedDate;
+      }
+      if (maxDate) {
+        const maxDateTime = getMidnightDate(maxDate).getTime();
+        const todayTime = today.getTime();
+        return maxDateTime < todayTime ? maxDate : today;
+      }
+      return today;
+    }, [selectedDate, seedDate, maxDate, today]);
+
+    const [calendarSeedDate, setCalendarSeedDate] = useState<Date>(defaultSeedDate);
+
+    const initialFocusRef = useRef<View>(null);
+    const calendarMonth = useMemo(
+      () => generateCalendarMonth(calendarSeedDate),
+      [calendarSeedDate],
+    );
+
+    const selectedTime = useMemo(
+      () => (selectedDate ? getMidnightDate(selectedDate).getTime() : null),
+      [selectedDate],
+    );
+
+    const disabledTimes = useMemo(
+      () => new Set(getTimesFromDatesAndRanges(disabledDates || [])),
+      [disabledDates],
+    );
+
+    const focusTargetTime = useMemo(
+      () => selectedTime || (seedDate ? getMidnightDate(seedDate).getTime() : null) || todayTime,
+      [selectedTime, seedDate, todayTime],
+    );
+
+    useImperativeHandle(
       ref,
-    ) => {
-      const { setA11yFocus, announceForA11y } = useA11y();
-      const today = useMemo(() => getMidnightDate(new Date()), []);
-      const todayTime = useMemo(() => today.getTime(), [today]);
+      () => ({
+        focusInitialDate: () => {
+          if (disabled || !initialFocusRef.current) {
+            return;
+          }
+          setA11yFocus(initialFocusRef);
+        },
+      }),
+      [disabled, setA11yFocus],
+    );
 
-      // Determine default calendar seed date: use whichever comes first between maxDate and today
-      const defaultSeedDate = useMemo<Date>(() => {
-        if (selectedDate) {
-          return selectedDate;
-        }
-        if (seedDate) {
-          return seedDate;
-        }
-        if (maxDate) {
-          const maxDateTime = getMidnightDate(maxDate).getTime();
-          const todayTime = today.getTime();
-          return maxDateTime < todayTime ? maxDate : today;
-        }
-        return today;
-      }, [selectedDate, seedDate, maxDate, today]);
+    const minTime = useMemo(() => minDate && getMidnightDate(minDate).getTime(), [minDate]);
 
-      const [calendarSeedDate, setCalendarSeedDate] = useState<Date>(defaultSeedDate);
+    const maxTime = useMemo(() => maxDate && getMidnightDate(maxDate).getTime(), [maxDate]);
 
-      const initialFocusRef = useRef<View>(null);
-      const calendarMonth = useMemo(
-        () => generateCalendarMonth(calendarSeedDate),
-        [calendarSeedDate],
+    const highlightedTimes = useMemo(
+      () => new Set(getTimesFromDatesAndRanges(highlightedDates || [])),
+      [highlightedDates],
+    );
+
+    const handleGoNextMonth = useCallback(() => {
+      setCalendarSeedDate((s) => {
+        const next = new Date(s.getFullYear(), s.getMonth() + 1, 1);
+        announceForA11y(next.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
+        return next;
+      });
+    }, [setCalendarSeedDate, announceForA11y]);
+
+    const handleGoPreviousMonth = useCallback(() => {
+      setCalendarSeedDate((s) => {
+        const prev = new Date(s.getFullYear(), s.getMonth() - 1, 1);
+        announceForA11y(prev.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
+        return prev;
+      });
+    }, [setCalendarSeedDate, announceForA11y]);
+
+    const disableGoNextMonth = useMemo(() => {
+      if (disabled) {
+        return true;
+      }
+      const firstDateOfNextMonth = new Date(
+        calendarSeedDate.getFullYear(),
+        calendarSeedDate.getMonth() + 1,
+        1,
       );
+      return maxTime ? maxTime < firstDateOfNextMonth.getTime() : false;
+    }, [maxTime, calendarSeedDate, disabled]);
 
-      const selectedTime = useMemo(
-        () => (selectedDate ? getMidnightDate(selectedDate).getTime() : null),
-        [selectedDate],
+    const disableGoPreviousMonth = useMemo(() => {
+      if (disabled) {
+        return true;
+      }
+      const lastDateOfPreviousMonth = new Date(
+        calendarSeedDate.getFullYear(),
+        calendarSeedDate.getMonth(),
+        0,
       );
+      return minTime ? minTime > lastDateOfPreviousMonth.getTime() : false;
+    }, [minTime, calendarSeedDate, disabled]);
 
-      const disabledTimes = useMemo(
-        () => new Set(getTimesFromDatesAndRanges(disabledDates || [])),
-        [disabledDates],
-      );
+    // Split calendar month into weeks
+    const calendarWeeks = useMemo(() => {
+      const weeks: [string, Date[]][] = [];
+      for (let i = 0; i < calendarMonth.length; i += DAYS_OF_WEEK.length) {
+        const weekDates = calendarMonth.slice(i, i + DAYS_OF_WEEK.length);
+        weeks.push([`week-${calendarMonth[i].getTime()}`, weekDates]);
+      }
+      return weeks;
+    }, [calendarMonth]);
 
-      const focusTargetTime = useMemo(
-        () => selectedTime || (seedDate ? getMidnightDate(seedDate).getTime() : null) || todayTime,
-        [selectedTime, seedDate, todayTime],
-      );
-
-      useImperativeHandle(
-        ref,
-        () => ({
-          focusInitialDate: () => {
-            if (disabled || !initialFocusRef.current) {
-              return;
-            }
-            setA11yFocus(initialFocusRef);
-          },
+    const monthYearLabel = useMemo(
+      () =>
+        calendarSeedDate.toLocaleDateString('en-US', {
+          month: 'long',
+          year: 'numeric',
         }),
-        [disabled, setA11yFocus],
-      );
+      [calendarSeedDate],
+    );
 
-      const minTime = useMemo(() => minDate && getMidnightDate(minDate).getTime(), [minDate]);
+    const previousArrowAccessibilityState = useMemo(
+      () => ({ disabled: !!disableGoPreviousMonth }),
+      [disableGoPreviousMonth],
+    );
+    const nextArrowAccessibilityState = useMemo(
+      () => ({ disabled: !!disableGoNextMonth }),
+      [disableGoNextMonth],
+    );
 
-      const maxTime = useMemo(() => maxDate && getMidnightDate(maxDate).getTime(), [maxDate]);
-
-      const highlightedTimes = useMemo(
-        () => new Set(getTimesFromDatesAndRanges(highlightedDates || [])),
-        [highlightedDates],
-      );
-
-      const handleGoNextMonth = useCallback(() => {
-        setCalendarSeedDate((s) => {
-          const next = new Date(s.getFullYear(), s.getMonth() + 1, 1);
-          announceForA11y(next.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
-          return next;
-        });
-      }, [setCalendarSeedDate, announceForA11y]);
-
-      const handleGoPreviousMonth = useCallback(() => {
-        setCalendarSeedDate((s) => {
-          const prev = new Date(s.getFullYear(), s.getMonth() - 1, 1);
-          announceForA11y(prev.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
-          return prev;
-        });
-      }, [setCalendarSeedDate, announceForA11y]);
-
-      const disableGoNextMonth = useMemo(() => {
-        if (disabled) {
-          return true;
-        }
-        const firstDateOfNextMonth = new Date(
-          calendarSeedDate.getFullYear(),
-          calendarSeedDate.getMonth() + 1,
-          1,
-        );
-        return maxTime ? maxTime < firstDateOfNextMonth.getTime() : false;
-      }, [maxTime, calendarSeedDate, disabled]);
-
-      const disableGoPreviousMonth = useMemo(() => {
-        if (disabled) {
-          return true;
-        }
-        const lastDateOfPreviousMonth = new Date(
-          calendarSeedDate.getFullYear(),
-          calendarSeedDate.getMonth(),
-          0,
-        );
-        return minTime ? minTime > lastDateOfPreviousMonth.getTime() : false;
-      }, [minTime, calendarSeedDate, disabled]);
-
-      // Split calendar month into weeks
-      const calendarWeeks = useMemo(() => {
-        const weeks: [string, Date[]][] = [];
-        for (let i = 0; i < calendarMonth.length; i += DAYS_OF_WEEK.length) {
-          const weekDates = calendarMonth.slice(i, i + DAYS_OF_WEEK.length);
-          weeks.push([`week-${calendarMonth[i].getTime()}`, weekDates]);
-        }
-        return weeks;
-      }, [calendarMonth]);
-
-      const monthYearLabel = useMemo(
-        () =>
-          calendarSeedDate.toLocaleDateString('en-US', {
-            month: 'long',
-            year: 'numeric',
-          }),
-        [calendarSeedDate],
-      );
-
-      const previousArrowAccessibilityState = useMemo(
-        () => ({ disabled: !!disableGoPreviousMonth }),
-        [disableGoPreviousMonth],
-      );
-      const nextArrowAccessibilityState = useMemo(
-        () => ({ disabled: !!disableGoNextMonth }),
-        [disableGoNextMonth],
-      );
-
-      return (
-        <VStack
-          opacity={disabled ? accessibleOpacityDisabled : undefined}
-          style={[style, styles?.root]}
-          {...props}
+    return (
+      <VStack
+        opacity={disabled ? accessibleOpacityDisabled : undefined}
+        style={[style, styles?.root]}
+        {...props}
+      >
+        <HStack
+          alignItems="center"
+          justifyContent="space-between"
+          paddingBottom={2}
+          paddingStart={1.5}
+          style={styles?.header}
         >
-          <HStack
-            alignItems="center"
-            justifyContent="space-between"
-            paddingBottom={2}
-            paddingStart={1.5}
-            style={styles?.header}
-          >
-            <Text accessibilityRole="header" font="headline" style={styles?.title}>
-              {monthYearLabel}
-            </Text>
-            {!hideControls && (
-              <HStack gap={1} style={styles?.navigation}>
-                <CalendarPressable
-                  accessibilityLabel={previousArrowAccessibilityLabel}
-                  accessibilityRole="button"
-                  accessibilityState={previousArrowAccessibilityState}
-                  disabled={disableGoPreviousMonth}
-                  feedback="light"
-                  onPress={disableGoPreviousMonth ? undefined : handleGoPreviousMonth}
-                >
-                  <Icon color="fg" name="backArrow" size="s" />
-                </CalendarPressable>
-                <CalendarPressable
-                  accessibilityLabel={nextArrowAccessibilityLabel}
-                  accessibilityRole="button"
-                  accessibilityState={nextArrowAccessibilityState}
-                  disabled={disableGoNextMonth}
-                  feedback="light"
-                  onPress={disableGoNextMonth ? undefined : handleGoNextMonth}
-                >
-                  <Icon color="fg" name="forwardArrow" size="s" />
-                </CalendarPressable>
-              </HStack>
-            )}
-          </HStack>
-
-          <VStack gap={1} style={styles?.content}>
-            <HStack aria-hidden={true} gap={1} justifyContent="space-between" paddingBottom={1}>
-              {DAYS_OF_WEEK.map((day) => (
-                <Box
-                  key={day}
-                  alignItems="center"
-                  height={CALENDAR_DAY_DIMENSION}
-                  justifyContent="center"
-                  width={CALENDAR_DAY_DIMENSION}
-                >
-                  <Text font="body" userSelect="none">
-                    {day.charAt(0)}
-                  </Text>
-                </Box>
-              ))}
+          <Text accessibilityRole="header" font="headline" style={styles?.title}>
+            {monthYearLabel}
+          </Text>
+          {!hideControls && (
+            <HStack gap={1} style={styles?.navigation}>
+              <CalendarPressable
+                accessibilityLabel={previousArrowAccessibilityLabel}
+                accessibilityRole="button"
+                accessibilityState={previousArrowAccessibilityState}
+                disabled={disableGoPreviousMonth}
+                feedback="light"
+                onPress={disableGoPreviousMonth ? undefined : handleGoPreviousMonth}
+              >
+                <Icon color="fg" name="backArrow" size="s" />
+              </CalendarPressable>
+              <CalendarPressable
+                accessibilityLabel={nextArrowAccessibilityLabel}
+                accessibilityRole="button"
+                accessibilityState={nextArrowAccessibilityState}
+                disabled={disableGoNextMonth}
+                feedback="light"
+                onPress={disableGoNextMonth ? undefined : handleGoNextMonth}
+              >
+                <Icon color="fg" name="forwardArrow" size="s" />
+              </CalendarPressable>
             </HStack>
-            {calendarWeeks.map(([weekId, week]) => (
-              <HStack key={weekId} gap={1} justifyContent="space-between">
-                {week.map((date) => {
-                  const time = date.getTime();
-                  return (
-                    <CalendarDay
-                      key={time}
-                      ref={time === focusTargetTime ? initialFocusRef : undefined}
-                      active={time === selectedTime}
-                      date={date}
-                      disabled={
-                        disabled ||
-                        (minTime !== undefined && minTime !== null && time < minTime) ||
-                        (maxTime !== undefined && maxTime !== null && time > maxTime) ||
-                        disabledTimes.has(time)
-                      }
-                      disabledError={disabledDateError}
-                      highlighted={highlightedTimes.has(time)}
-                      highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
-                      isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
-                      isToday={time === todayTime}
-                      onPress={onPressDate}
-                      style={styles?.day}
-                      todayAccessibilityHint={todayAccessibilityHint}
-                    />
-                  );
-                })}
-              </HStack>
+          )}
+        </HStack>
+
+        <VStack gap={1} style={styles?.content}>
+          <HStack aria-hidden={true} gap={1} justifyContent="space-between" paddingBottom={1}>
+            {DAYS_OF_WEEK.map((day) => (
+              <Box
+                key={day}
+                alignItems="center"
+                height={CALENDAR_DAY_DIMENSION}
+                justifyContent="center"
+                width={CALENDAR_DAY_DIMENSION}
+              >
+                <Text font="body" userSelect="none">
+                  {day.charAt(0)}
+                </Text>
+              </Box>
             ))}
-          </VStack>
+          </HStack>
+          {calendarWeeks.map(([weekId, week]) => (
+            <HStack key={weekId} gap={1} justifyContent="space-between">
+              {week.map((date) => {
+                const time = date.getTime();
+                return (
+                  <CalendarDay
+                    key={time}
+                    ref={time === focusTargetTime ? initialFocusRef : undefined}
+                    active={time === selectedTime}
+                    date={date}
+                    disabled={
+                      disabled ||
+                      (minTime !== undefined && minTime !== null && time < minTime) ||
+                      (maxTime !== undefined && maxTime !== null && time > maxTime) ||
+                      disabledTimes.has(time)
+                    }
+                    disabledError={disabledDateError}
+                    highlighted={highlightedTimes.has(time)}
+                    highlightedDateAccessibilityHint={highlightedDateAccessibilityHint}
+                    isCurrentMonth={date.getMonth() === calendarSeedDate.getMonth()}
+                    isToday={time === todayTime}
+                    onPress={onPressDate}
+                    style={styles?.day}
+                    todayAccessibilityHint={todayAccessibilityHint}
+                  />
+                );
+              })}
+            </HStack>
+          ))}
         </VStack>
-      );
-    },
-  ),
+      </VStack>
+    );
+  }),
 );
 
 Calendar.displayName = 'Calendar';

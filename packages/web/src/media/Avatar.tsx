@@ -5,6 +5,7 @@ import type { AvatarFallbackColor, AvatarShape, SharedProps } from '@coinbase/cd
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
@@ -142,8 +143,9 @@ export type AvatarBaseProps = SharedProps & {
 
 export type AvatarProps = AvatarBaseProps & BoxProps<BoxDefaultElement>;
 
-export const Avatar = memo(
-  ({
+export const Avatar = memo((_props: AvatarProps) => {
+  const mergedProps = useComponentConfig('Avatar', _props);
+  const {
     src,
     shape = 'circle',
     size = 'l',
@@ -157,121 +159,120 @@ export const Avatar = memo(
     className,
     style,
     ...props
-  }: AvatarProps) => {
-    const avatarSize = `var(--avatarSize-${size})`;
-    const userProvidedSize = style?.width ?? style?.height ?? dangerouslySetSize;
-    const computedSize = userProvidedSize ?? avatarSize;
+  } = mergedProps;
+  const avatarSize = `var(--avatarSize-${size})`;
+  const userProvidedSize = style?.width ?? style?.height ?? dangerouslySetSize;
+  const computedSize = userProvidedSize ?? avatarSize;
 
-    const avatarText = useMemo(() => {
-      const placeholderLetter = name?.charAt(0);
+  const avatarText = useMemo(() => {
+    const placeholderLetter = name?.charAt(0);
 
-      // to maintain backwards compatibility with the dangerouslySetSize prop (now deprecated)
-      // we want to make sure the placeholder letter responds nicely with the set size
-      // we do this by picking an arbitrary constant to scale the text by
-      // we intentionally are not doing the same treatment for sizes set with the inline style prop
-      if (dangerouslySetSize) {
-        return (
-          <Text
-            as="p"
-            color="fgInverse"
-            display="block"
-            font="title2"
-            style={{ transform: `scale(${dangerouslySetSize * 0.02})` }}
-            textAlign="center"
-            transform="uppercase"
-          >
-            {placeholderLetter}
-          </Text>
-        );
-      }
-
-      const largeStandardSizes: AvatarSize[] = ['xxxl', 'xxl'];
-      const showLargerFont = largeStandardSizes.includes(size);
+    // to maintain backwards compatibility with the dangerouslySetSize prop (now deprecated)
+    // we want to make sure the placeholder letter responds nicely with the set size
+    // we do this by picking an arbitrary constant to scale the text by
+    // we intentionally are not doing the same treatment for sizes set with the inline style prop
+    if (dangerouslySetSize) {
       return (
         <Text
           as="p"
           color="fgInverse"
           display="block"
-          font={showLargerFont ? 'title2' : 'body'}
+          font="title2"
+          style={{ transform: `scale(${dangerouslySetSize * 0.02})` }}
           textAlign="center"
           transform="uppercase"
         >
           {placeholderLetter}
         </Text>
       );
-    }, [name, size, dangerouslySetSize]);
+    }
 
-    const shouldShowBorder = Boolean((src || !name) && borderColor);
-
-    const dimensionProps = useMemo(
-      () => ({ width: computedSize, height: computedSize }),
-      [computedSize],
-    );
-
-    const avatarInlineStyles = useMemo<React.CSSProperties>(
-      () => ({
-        width: computedSize,
-        height: computedSize,
-        '--avatar-borderColor': shouldShowBorder
-          ? `var(--color-${borderColor})`
-          : 'var(--color-transparent)',
-        ...style,
-      }),
-      [computedSize, style, shouldShowBorder, borderColor],
-    );
-
+    const largeStandardSizes: AvatarSize[] = ['xxxl', 'xxl'];
+    const showLargerFont = largeStandardSizes.includes(size);
     return (
-      // set position required to place the HexagonBorder elements properly
-      <Box
-        className={cx(COMPONENT_STATIC_CLASSNAME, wrapperCss)}
-        data-colorscheme={colorScheme}
-        position="relative"
-        testID={`${testID}-wrapper`}
-        {...props}
+      <Text
+        as="p"
+        color="fgInverse"
+        display="block"
+        font={showLargerFont ? 'title2' : 'body'}
+        textAlign="center"
+        transform="uppercase"
       >
-        <Box
-          className={cx(avatarCss, borderRadiusCss[shape], className)}
-          data-bordered={shouldShowBorder}
-          data-selected={selected}
-          data-shape={shape}
-          flexGrow={0}
-          flexShrink={0}
-          position="relative"
-          style={avatarInlineStyles}
-          testID={testID}
-        >
-          <Box className={contentWrapperCss}>
-            {/* render the Remote image when neither a src URL or name is passed in */}
-            {!!src || !name ? (
-              <RemoteImage
-                {...dimensionProps}
-                alt={alt}
-                shape={shape}
-                source={src || fallbackImageSrc}
-              />
-            ) : (
-              <Box
-                {...dimensionProps}
-                alignItems="center"
-                background="currentColor"
-                className={borderRadiusCss[shape]}
-                justifyContent="center"
-                position="relative"
-                testID={`${testID}-fallback`}
-              >
-                {avatarText}
-              </Box>
-            )}
-          </Box>
-        </Box>
-        {/* The selected emphasis is applied with an offset HexagonBorder element since the actual box shadow would be hidden by the clip path */}
-        {shape === 'hexagon' && selected && (
-          <HexagonBorder offset size={size} strokeColor="currentColor" />
-        )}
-        {shape === 'hexagon' && shouldShowBorder && (
-          <HexagonBorder size={size} strokeColor={`var(--color-${borderColor})`} />
-        )}
-      </Box>
+        {placeholderLetter}
+      </Text>
     );
-  },
-);
+  }, [name, size, dangerouslySetSize]);
+
+  const shouldShowBorder = Boolean((src || !name) && borderColor);
+
+  const dimensionProps = useMemo(
+    () => ({ width: computedSize, height: computedSize }),
+    [computedSize],
+  );
+
+  const avatarInlineStyles = useMemo<React.CSSProperties>(
+    () => ({
+      width: computedSize,
+      height: computedSize,
+      '--avatar-borderColor': shouldShowBorder
+        ? `var(--color-${borderColor})`
+        : 'var(--color-transparent)',
+      ...style,
+    }),
+    [computedSize, style, shouldShowBorder, borderColor],
+  );
+
+  return (
+    // set position required to place the HexagonBorder elements properly
+    <Box
+      className={cx(COMPONENT_STATIC_CLASSNAME, wrapperCss)}
+      data-colorscheme={colorScheme}
+      position="relative"
+      testID={`${testID}-wrapper`}
+      {...props}
+    >
+      <Box
+        className={cx(avatarCss, borderRadiusCss[shape], className)}
+        data-bordered={shouldShowBorder}
+        data-selected={selected}
+        data-shape={shape}
+        flexGrow={0}
+        flexShrink={0}
+        position="relative"
+        style={avatarInlineStyles}
+        testID={testID}
+      >
+        <Box className={contentWrapperCss}>
+          {/* render the Remote image when neither a src URL or name is passed in */}
+          {!!src || !name ? (
+            <RemoteImage
+              {...dimensionProps}
+              alt={alt}
+              shape={shape}
+              source={src || fallbackImageSrc}
+            />
+          ) : (
+            <Box
+              {...dimensionProps}
+              alignItems="center"
+              background="currentColor"
+              className={borderRadiusCss[shape]}
+              justifyContent="center"
+              position="relative"
+              testID={`${testID}-fallback`}
+            >
+              {avatarText}
+            </Box>
+          )}
+        </Box>
+      </Box>
+      {/* The selected emphasis is applied with an offset HexagonBorder element since the actual box shadow would be hidden by the clip path */}
+      {shape === 'hexagon' && selected && (
+        <HexagonBorder offset size={size} strokeColor="currentColor" />
+      )}
+      {shape === 'hexagon' && shouldShowBorder && (
+        <HexagonBorder size={size} strokeColor={`var(--color-${borderColor})`} />
+      )}
+    </Box>
+  );
+});

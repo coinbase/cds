@@ -8,10 +8,11 @@ import { css } from '@linaria/core';
 import { Cell } from '../cells/Cell';
 import type { CellMediaType } from '../cells/CellMedia';
 import { MediaFallback } from '../cells/MediaFallback';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Fallback } from '../layout';
 
 import { useTableCellSpacing, useTableCellTag, useTableContext } from './hooks/useTable';
-import type { TableCellProps } from './TableCell';
+import type { TableCellBaseProps, TableCellProps } from './TableCell';
 
 const visuallyHiddenCss = css`
   position: absolute;
@@ -25,7 +26,7 @@ const visuallyHiddenCss = css`
   border: 0;
 `;
 
-export type TableCellFallbackProps = {
+export type TableCellFallbackBaseProps = {
   /** Display title shimmer. */
   title?: boolean;
   /** Display subtitle shimmer. */
@@ -37,7 +38,14 @@ export type TableCellFallbackProps = {
 } & SharedProps &
   FallbackRectWidthProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Pick<TableCellProps, 'width' | 'outerSpacing' | 'innerSpacing' | 'as'>;
+  Pick<TableCellBaseProps, 'width' | 'outerSpacing' | 'innerSpacing'>;
+
+type TableCellFallbackSharedProps = React.TdHTMLAttributes<HTMLTableCellElement> &
+  React.ThHTMLAttributes<HTMLTableCellElement>;
+
+export type TableCellFallbackProps = TableCellFallbackBaseProps &
+  Omit<TableCellFallbackSharedProps, 'dangerouslySetInnerHTML' | 'title'> &
+  Pick<TableCellProps, 'as'>;
 
 const tableCellCss = css`
   padding: 0;
@@ -46,8 +54,9 @@ const tableCellCss = css`
   border: none;
 `;
 
-export const TableCellFallback = memo(
-  ({
+export const TableCellFallback = memo((_props: TableCellFallbackProps) => {
+  const mergedProps = useComponentConfig('TableCellFallback', _props);
+  const {
     title,
     start,
     end,
@@ -60,60 +69,59 @@ export const TableCellFallback = memo(
     rectWidthVariant,
     accessibilityLabel = 'Loading Cell',
     ...props
-  }: TableCellFallbackProps) => {
-    const TableCellComponent = useTableCellTag(as);
-    // Depending on compact value
-    const { compact } = useTableContext();
-    const textPaddingTop = !compact && title ? 1 : 0.5;
-    const cellGap = compact ? 0.5 : 1;
+  } = mergedProps;
+  const TableCellComponent = useTableCellTag(as);
+  // Depending on compact value
+  const { compact } = useTableContext();
+  const textPaddingTop = !compact && title ? 1 : 0.5;
+  const cellGap = compact ? 0.5 : 1;
 
-    // Depends on tableSpacing value
-    const tableCellSpacing = useTableCellSpacing();
-    const cellOuterSpacing = outerSpacing ?? tableCellSpacing?.outer;
-    const cellInnerSpacing = innerSpacing ?? tableCellSpacing?.inner;
+  // Depends on tableSpacing value
+  const tableCellSpacing = useTableCellSpacing();
+  const cellOuterSpacing = outerSpacing ?? tableCellSpacing?.outer;
+  const cellInnerSpacing = innerSpacing ?? tableCellSpacing?.inner;
 
-    return (
-      <TableCellComponent className={tableCellCss} data-testid={testID} {...props}>
-        <Cell
-          accessory={
-            end && <MediaFallback aria-hidden testID="table-cell-fallback-accessory" type={end} />
-          }
-          gap={cellGap}
-          innerSpacing={cellInnerSpacing}
-          media={
-            start && <MediaFallback aria-hidden testID="table-cell-fallback-media" type={start} />
-          }
-          outerSpacing={cellOuterSpacing}
-          position="relative"
-        >
-          {accessibilityLabel && <span className={visuallyHiddenCss}>{accessibilityLabel}</span>}
-          {title && (
-            <Fallback
-              aria-hidden
-              percentage
-              disableRandomRectWidth={disableRandomRectWidth}
-              height={24}
-              rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
-              testID="table-cell-fallback-title"
-              width={45}
-            />
-          )}
-          {subtitle && (
-            <Fallback
-              aria-hidden
-              percentage
-              disableRandomRectWidth={disableRandomRectWidth}
-              height={16}
-              paddingTop={textPaddingTop}
-              rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
-              testID="table-cell-fallback-subtitle"
-              width={35}
-            />
-          )}
-        </Cell>
-      </TableCellComponent>
-    );
-  },
-);
+  return (
+    <TableCellComponent className={tableCellCss} data-testid={testID} {...props}>
+      <Cell
+        accessory={
+          end && <MediaFallback aria-hidden testID="table-cell-fallback-accessory" type={end} />
+        }
+        gap={cellGap}
+        innerSpacing={cellInnerSpacing}
+        media={
+          start && <MediaFallback aria-hidden testID="table-cell-fallback-media" type={start} />
+        }
+        outerSpacing={cellOuterSpacing}
+        position="relative"
+      >
+        {accessibilityLabel && <span className={visuallyHiddenCss}>{accessibilityLabel}</span>}
+        {title && (
+          <Fallback
+            aria-hidden
+            percentage
+            disableRandomRectWidth={disableRandomRectWidth}
+            height={24}
+            rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
+            testID="table-cell-fallback-title"
+            width={45}
+          />
+        )}
+        {subtitle && (
+          <Fallback
+            aria-hidden
+            percentage
+            disableRandomRectWidth={disableRandomRectWidth}
+            height={16}
+            paddingTop={textPaddingTop}
+            rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
+            testID="table-cell-fallback-subtitle"
+            width={35}
+          />
+        )}
+      </Cell>
+    </TableCellComponent>
+  );
+});
 
 TableCellFallback.displayName = 'TableCellFallback';

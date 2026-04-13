@@ -26,6 +26,7 @@ import {
 } from 'framer-motion';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -709,8 +710,9 @@ const defaultPageChangeAccessibilityLabel = (activePageIndex: number, totalPages
 
 export const Carousel = memo(
   forwardRef<CarouselImperativeHandle, CarouselProps>(
-    (
-      {
+    (_props: CarouselProps, ref: React.ForwardedRef<CarouselImperativeHandle>) => {
+      const mergedProps = useComponentConfig('Carousel', _props);
+      const {
         children,
         title,
         hideNavigation,
@@ -737,9 +739,7 @@ export const Carousel = memo(
         autoplayInterval = 3000,
         paginationVariant,
         ...props
-      }: CarouselProps,
-      ref: React.ForwardedRef<CarouselImperativeHandle>,
-    ) => {
+      } = mergedProps;
       const animationApi = useAnimation();
       const carouselScrollX = useMotionValue(0);
       const dragControls = useDragControls();

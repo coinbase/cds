@@ -1,6 +1,8 @@
 import React, { memo } from 'react';
 import { css } from '@linaria/core';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
 import { Box, type BoxProps } from './Box';
 
 export type DividerBaseProps = {
@@ -24,22 +26,22 @@ const directionCss: {
   `,
 } as const;
 
-export const Divider = memo(
-  ({ color, direction = 'horizontal', background = 'bgLine', ...boxProps }: DividerProps) => {
-    return (
-      <Box alignItems="stretch" alignSelf="stretch" {...boxProps}>
-        <Box
-          aria-orientation={direction}
-          as="hr"
-          background={color ?? background}
-          className={directionCss[direction]}
-          flexGrow={1}
-          marginY={0}
-          role="separator"
-        />
-      </Box>
-    );
-  },
-);
+export const Divider = memo((_props: DividerProps) => {
+  const mergedProps = useComponentConfig('Divider', _props);
+  const { color, direction = 'horizontal', background = 'bgLine', ...boxProps } = mergedProps;
+  return (
+    <Box alignItems="stretch" alignSelf="stretch" {...boxProps}>
+      <Box
+        aria-orientation={direction}
+        as="hr"
+        background={color ?? background}
+        className={directionCss[direction]}
+        flexGrow={1}
+        marginY={0}
+        role="separator"
+      />
+    </Box>
+  );
+});
 
 Divider.displayName = 'Divider';

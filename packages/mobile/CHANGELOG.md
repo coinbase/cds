@@ -8,6 +8,87 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Undo test refactors from #568. [[#611](https://github.com/coinbase/cds/pull/611)]
+
+## 8.64.4 ((4/10/2026, 01:20 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.64.3 (4/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Stepper animation with react-spring ^10.0.1. [[#603](https://github.com/coinbase/cds/pull/603)]
+
+## 8.64.2 (4/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Mobile Cell testID missing in iOS. [[#568](https://github.com/coinbase/cds/pull/568)]
+
+## 8.64.1 (4/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: Add styles APIs to Tour and TourStep components. [[#592](https://github.com/coinbase/cds/pull/592)]
+
+## 8.64.0 (4/2/2026 PST)
+
+#### 🚀 Updates
+
+- Added DefaultTab and DefaultTabActiveIndicator and deprecate types used by TabNavigation. [[#558](https://github.com/coinbase/cds/pull/558)]
+
+## 8.63.0 ((4/1/2026, 03:43 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.62.1 ((4/1/2026, 12:25 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.62.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Add ComponentConfigProvider. [[#507](https://github.com/coinbase/cds/pull/507)]
+
+## 8.61.0 (3/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support Button and IconButton size customization. [[#565](https://github.com/coinbase/cds/pull/565)]
+
+#### 📘 Misc
+
+- Deprecate Card and its sub-components. [[#562](https://github.com/coinbase/cds/pull/562)]
+
+#### 📘 Misc
+
+- Chore: deprecate CardGroup. [[#560](https://github.com/coinbase/cds/pull/560)]
+
+## 8.60.0 (3/29/2026 PST)
+
+#### 🚀 Updates
+
+- Add indeterminate ProgressCircle. [[#501](https://github.com/coinbase/cds/pull/501)]
+
+## 8.59.0 (3/27/2026 PST)
+
+#### 🚀 Updates
+
+- Support controlSize on Checkbox and Radio. [[#546](https://github.com/coinbase/cds/pull/546)]
+
+## 8.58.0 (3/25/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support font prop on inputs. [[#545](https://github.com/coinbase/cds/pull/545)]
+- Feat: support borderRadius on SearchInput. [[#545](https://github.com/coinbase/cds/pull/545)]
+
 ## 8.57.1 ((3/24/2026, 01:14 PM PST))
 
 This is an artificial version bump with no new change.

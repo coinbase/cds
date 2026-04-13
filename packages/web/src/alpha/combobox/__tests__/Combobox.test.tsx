@@ -23,20 +23,6 @@ const defaultProps: ComboboxProps<'single' | 'multi'> = {
   label: 'Test Combobox',
 };
 
-// Mock floating-ui to simplify testing
-jest.mock('@floating-ui/react-dom', () => ({
-  useFloating: () => ({
-    refs: {
-      setReference: jest.fn(),
-      setFloating: jest.fn(),
-      reference: { current: null },
-      floating: { current: null },
-    },
-    floatingStyles: {},
-  }),
-  flip: () => ({}),
-}));
-
 jest.mock('../../../overlays/Portal', () => ({
   Portal: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="portal-container">{children}</div>
@@ -113,6 +99,16 @@ describe('Combobox', () => {
 
       const input = screen.getByRole('textbox');
       expect(input).toBeInTheDocument();
+    });
+
+    it('passes font to the search input', () => {
+      render(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} defaultOpen font="label1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('textbox')).toHaveStyle('font-size: var(--fontSize-label1);');
     });
 
     it('filters options based on search text', async () => {

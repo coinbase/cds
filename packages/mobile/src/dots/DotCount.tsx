@@ -30,6 +30,7 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';
 import { useTheme } from '../hooks/useTheme';
@@ -101,8 +102,9 @@ export type DotCountProps = DotCountBaseProps & {
   };
 };
 
-export const DotCount = memo(
-  ({
+export const DotCount = memo((_props: DotCountProps) => {
+  const mergedProps = useComponentConfig('DotCount', _props);
+  const {
     children,
     pin,
     variant = 'negative',
@@ -112,111 +114,110 @@ export const DotCount = memo(
     style,
     styles,
     ...props
-  }: DotCountProps) => {
-    const theme = useTheme();
-    const [childrenSize, onChildrenLayout] = useDotsLayout();
-    const transforms = useDotPinStyles(
-      childrenSize,
-      { width: dotCountSize + dotTextPaddingHorizontal, height: dotCountSize } as LayoutRectangle,
-      overlap,
-    );
+  } = mergedProps;
+  const theme = useTheme();
+  const [childrenSize, onChildrenLayout] = useDotsLayout();
+  const transforms = useDotPinStyles(
+    childrenSize,
+    { width: dotCountSize + dotTextPaddingHorizontal, height: dotCountSize } as LayoutRectangle,
+    overlap,
+  );
 
-    const opacityAnimatedValue = useSharedValue(opacityEnter.fromValue);
-    const scaleAnimatedValue = useSharedValue(scaleEnter.fromValue);
-    const [shouldUnmount, setShouldUnmount] = useState(count === 0);
-    const [countInternal, setCountInternal] = useState(count);
-    const prevCount = usePreviousValue<number>(count);
+  const opacityAnimatedValue = useSharedValue(opacityEnter.fromValue);
+  const scaleAnimatedValue = useSharedValue(scaleEnter.fromValue);
+  const [shouldUnmount, setShouldUnmount] = useState(count === 0);
+  const [countInternal, setCountInternal] = useState(count);
+  const prevCount = usePreviousValue<number>(count);
 
-    const pinStyles: ViewStyle = useMemo(() => {
-      if (pin && transforms !== null) {
-        const [vertical, horizontal] = (pin as string).split('-');
+  const pinStyles: ViewStyle = useMemo(() => {
+    if (pin && transforms !== null) {
+      const [vertical, horizontal] = (pin as string).split('-');
 
-        return getTransform(
-          transforms[horizontal as DotPinStylesKey],
-          transforms[vertical as DotPinStylesKey],
-        );
-      }
-      return {};
-    }, [pin, transforms]);
+      return getTransform(
+        transforms[horizontal as DotPinStylesKey],
+        transforms[vertical as DotPinStylesKey],
+      );
+    }
+    return {};
+  }, [pin, transforms]);
 
-    const containerStyles = useMemo(() => {
-      return [
-        styleSheet.container,
-        {
-          borderColor: theme.color.bgSecondary,
-          backgroundColor: theme.color[variantColorMap[variant]],
-        },
-      ];
-    }, [theme.color, variant]);
-
-    // avoid displaying 0 during animations and preserve exit animation
-    useEffect(() => {
-      if (count !== 0) {
-        setCountInternal(count);
-      }
-    }, [count]);
-
-    useAnimatedReaction(
-      () => count,
-      (result) => {
-        // play enter animation
-        if ((prevCount === 0 || prevCount === undefined) && result > 0) {
-          runOnJS(setShouldUnmount)(false);
-          opacityAnimatedValue.value = withMotionTiming(opacityEnter);
-          scaleAnimatedValue.value = withMotionTiming(scaleEnter);
-        }
-
-        // play exit animation
-        if (prevCount && prevCount > 0 && result === 0) {
-          opacityAnimatedValue.value = withMotionTiming(opacityExit, () => {
-            runOnJS(setShouldUnmount)(true);
-          });
-          scaleAnimatedValue.value = withMotionTiming(scaleExit);
-        }
+  const containerStyles = useMemo(() => {
+    return [
+      styleSheet.container,
+      {
+        borderColor: theme.color.bgSecondary,
+        backgroundColor: theme.color[variantColorMap[variant]],
       },
-      [count, childrenSize],
-    );
+    ];
+  }, [theme.color, variant]);
 
-    const animatedStyles = useAnimatedStyle(() => {
-      return {
-        opacity: Number(opacityAnimatedValue.value),
-        transform: [{ scale: Number(scaleAnimatedValue.value) }],
-      };
-    });
+  // avoid displaying 0 during animations and preserve exit animation
+  useEffect(() => {
+    if (count !== 0) {
+      setCountInternal(count);
+    }
+  }, [count]);
 
-    const dotCountContainerStyle = useMemo(
-      () => [containerStyles, animatedStyles, styles?.container],
-      [containerStyles, animatedStyles, styles?.container],
-    );
+  useAnimatedReaction(
+    () => count,
+    (result) => {
+      // play enter animation
+      if ((prevCount === 0 || prevCount === undefined) && result > 0) {
+        runOnJS(setShouldUnmount)(false);
+        opacityAnimatedValue.value = withMotionTiming(opacityEnter);
+        scaleAnimatedValue.value = withMotionTiming(scaleEnter);
+      }
 
-    const textStyles = useMemo(
-      () => [{ paddingHorizontal: dotTextPaddingHorizontal }, styles?.text],
-      [styles?.text],
-    );
+      // play exit animation
+      if (prevCount && prevCount > 0 && result === 0) {
+        opacityAnimatedValue.value = withMotionTiming(opacityExit, () => {
+          runOnJS(setShouldUnmount)(true);
+        });
+        scaleAnimatedValue.value = withMotionTiming(scaleExit);
+      }
+    },
+    [count, childrenSize],
+  );
 
-    const rootStyles = useMemo(() => [style, styles?.root], [styles?.root, style]);
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      opacity: Number(opacityAnimatedValue.value),
+      transform: [{ scale: Number(scaleAnimatedValue.value) }],
+    };
+  });
 
-    // only check childrenSize when children is defined
-    const shouldShow = children !== undefined ? childrenSize !== null : true;
+  const dotCountContainerStyle = useMemo(
+    () => [containerStyles, animatedStyles, styles?.container],
+    [containerStyles, animatedStyles, styles?.container],
+  );
 
-    return (
-      <View style={rootStyles} {...props}>
-        <View onLayout={onChildrenLayout} testID={`${props.testID}-children`}>
-          {children}
-        </View>
-        {!shouldUnmount && shouldShow && (
-          <View style={pinStyles}>
-            <Animated.View style={dotCountContainerStyle} testID="dotcount-container">
-              <Text color="fgInverse" font="caption" style={textStyles}>
-                {parseDotCountMaxOverflow(countInternal, max)}
-              </Text>
-            </Animated.View>
-          </View>
-        )}
+  const textStyles = useMemo(
+    () => [{ paddingHorizontal: dotTextPaddingHorizontal }, styles?.text],
+    [styles?.text],
+  );
+
+  const rootStyles = useMemo(() => [style, styles?.root], [styles?.root, style]);
+
+  // only check childrenSize when children is defined
+  const shouldShow = children !== undefined ? childrenSize !== null : true;
+
+  return (
+    <View style={rootStyles} {...props}>
+      <View onLayout={onChildrenLayout} testID={`${props.testID}-children`}>
+        {children}
       </View>
-    );
-  },
-);
+      {!shouldUnmount && shouldShow && (
+        <View style={pinStyles}>
+          <Animated.View style={dotCountContainerStyle} testID="dotcount-container">
+            <Text color="fgInverse" font="caption" style={textStyles}>
+              {parseDotCountMaxOverflow(countInternal, max)}
+            </Text>
+          </Animated.View>
+        </View>
+      )}
+    </View>
+  );
+});
 
 const styleSheet = StyleSheet.create({
   container: {

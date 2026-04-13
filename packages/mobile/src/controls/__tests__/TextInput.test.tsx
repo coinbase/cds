@@ -2,6 +2,7 @@ import { Animated, StyleSheet } from 'react-native';
 import { focusedInputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { TextInput } from '../TextInput';
@@ -67,6 +68,24 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(testID).props.value).toBe(value);
+  });
+
+  it('passes font to native input', () => {
+    const testID = 'textinput-id';
+    render(
+      <DefaultThemeProvider>
+        <TextInput font="label1" testID={testID} />
+      </DefaultThemeProvider>,
+    );
+
+    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(testID).props.style);
+    expect(flattenedStyle).toEqual(
+      expect.objectContaining({
+        fontSize: defaultTheme.fontSize.label1,
+        minHeight: defaultTheme.lineHeight.label1,
+        fontWeight: defaultTheme.fontWeight.label1,
+      }),
+    );
   });
 
   it('renders a label', () => {

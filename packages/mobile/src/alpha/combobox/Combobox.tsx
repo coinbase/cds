@@ -13,6 +13,7 @@ import { KeyboardAvoidingView, Platform, type TextInput, View } from 'react-nati
 import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
@@ -66,7 +67,7 @@ export type ComboboxControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = SelectControlProps<Type, SelectOptionValue> &
-  Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput'> & {
+  Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput' | 'font'> & {
     /** Search text value */
     searchText: string;
     /** Search text change handler */
@@ -166,7 +167,11 @@ const ComboboxControlContextAdapter = memo(
 const ComboboxBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      {
+      _props: ComboboxProps<Type, SelectOptionValue>,
+      ref: React.Ref<ComboboxRef>,
+    ) => {
+      const mergedProps = useComponentConfig('Combobox', _props);
+      const {
         type = 'single' as Type,
         value,
         onChange,
@@ -191,10 +196,9 @@ const ComboboxBase = memo(
         ComboboxControlComponent = DefaultComboboxControl,
         SelectDropdownComponent = DefaultSelectDropdown,
         hideSearchInput,
+        font,
         ...props
-      }: ComboboxProps<Type, SelectOptionValue>,
-      ref: React.Ref<ComboboxRef>,
-    ) => {
+      } = mergedProps;
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
@@ -261,11 +265,12 @@ const ComboboxBase = memo(
               ComboboxControlComponent={ComboboxControlComponent}
               SelectControlComponent={SelectControlComponent}
               controlRef={controlRef}
+              font={font}
               searchInputRef={searchInputRef}
             />
           );
         },
-        [ComboboxControlComponent, SelectControlComponent, searchInputRef],
+        [ComboboxControlComponent, SelectControlComponent, font, searchInputRef],
       );
 
       const ComboboxDropdown = useCallback(
@@ -306,6 +311,7 @@ const ComboboxBase = memo(
                   startNode={startNode}
                   variant={variant}
                   {...props}
+                  font={font}
                   label={null}
                   styles={undefined}
                 />
@@ -321,6 +327,7 @@ const ComboboxBase = memo(
           align,
           closeButtonLabel,
           endNode,
+          font,
           handleTrayVisibilityChange,
           label,
           placeholder,

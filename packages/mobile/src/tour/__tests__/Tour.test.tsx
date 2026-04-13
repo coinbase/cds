@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Text } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Tour, type TourProps } from '../Tour';
+import { TourStep } from '../TourStep';
 
 const StepOne = () => {
   const { goNextTourStep } = useTourContext();
@@ -104,5 +105,43 @@ describe('Tour', () => {
     );
 
     expect(screen.getByText('Step 2')).toBeTruthy();
+  });
+
+  describe('styles', () => {
+    it('applies styles.stepArrow to the arrow element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} styles={{ stepArrow: { backgroundColor: 'blue' } }} />
+        </DefaultThemeProvider>,
+      );
+      const arrowEl = screen.getByTestId('tour-step-arrow');
+      expect(arrowEl).toHaveStyle({ backgroundColor: 'blue' });
+    });
+
+    it('applies styles.stepContainer to the step container element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} styles={{ stepContainer: { borderRadius: 8 } }} />
+        </DefaultThemeProvider>,
+      );
+      const stepContainerEl = screen.getByTestId('tour-step-container');
+      expect(stepContainerEl).toHaveStyle({ borderRadius: 8 });
+    });
+
+    it('applies styles.mask to the mask element', async () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} styles={{ mask: { backgroundColor: 'blue' } }}>
+            <TourStep id="step1">
+              <View />
+            </TourStep>
+          </Tour>
+        </DefaultThemeProvider>,
+      );
+      await waitFor(() => {
+        const maskEl = screen.getByTestId('tour-mask');
+        expect(maskEl).toHaveStyle({ backgroundColor: 'blue' });
+      });
+    });
   });
 });

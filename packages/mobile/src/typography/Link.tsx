@@ -2,6 +2,7 @@ import React, { memo, useCallback } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useWebBrowserOpener } from '../hooks/useWebBrowserOpener';
 
 import { Text, type TextBaseProps, type TextProps } from './Text';
@@ -41,8 +42,9 @@ export type LinkBaseProps = SharedProps &
 
 export type LinkProps = LinkBaseProps & TextProps;
 
-export const Link = memo(
-  ({
+export const Link = memo((_props: LinkProps) => {
+  const mergedProps = useComponentConfig('Link', _props);
+  const {
     children,
     to,
     color = 'fgPrimary',
@@ -55,38 +57,37 @@ export const Link = memo(
     accessibilityLabel,
     testID,
     ...props
-  }: LinkProps) => {
-    const openUrl = useWebBrowserOpener();
+  } = mergedProps;
+  const openUrl = useWebBrowserOpener();
 
-    const openUrlOnPress = useCallback(
-      (event: GestureResponderEvent) => {
-        onPress?.(event);
-        if (to === undefined) return;
-        void openUrl(to, {
-          forceOpenOutsideApp,
-          preventRedirectionIntoApp,
-          readerMode,
-        });
-      },
-      [openUrl, to, onPress, forceOpenOutsideApp, preventRedirectionIntoApp, readerMode],
-    );
+  const openUrlOnPress = useCallback(
+    (event: GestureResponderEvent) => {
+      onPress?.(event);
+      if (to === undefined) return;
+      void openUrl(to, {
+        forceOpenOutsideApp,
+        preventRedirectionIntoApp,
+        readerMode,
+      });
+    },
+    [openUrl, to, onPress, forceOpenOutsideApp, preventRedirectionIntoApp, readerMode],
+  );
 
-    return (
-      <Text
-        accessibilityHint={accessibilityLabel}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="link"
-        color={color}
-        font={font}
-        onPress={openUrlOnPress}
-        testID={testID}
-        underline={underline}
-        {...props}
-      >
-        {children}
-      </Text>
-    );
-  },
-);
+  return (
+    <Text
+      accessibilityHint={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="link"
+      color={color}
+      font={font}
+      onPress={openUrlOnPress}
+      testID={testID}
+      underline={underline}
+      {...props}
+    >
+      {children}
+    </Text>
+  );
+});
 
 Link.displayName = 'Link';

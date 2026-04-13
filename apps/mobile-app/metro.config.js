@@ -24,7 +24,6 @@ const aliases = {
     __dirname,
     '../../packages/ui-mobile-playground/src',
   ),
-  '@coinbase/ui-mobile-visreg': path.resolve(__dirname, '../../packages/ui-mobile-visreg/src'),
 };
 const pkgCache = {};
 

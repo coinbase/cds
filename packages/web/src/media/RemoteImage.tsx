@@ -9,6 +9,7 @@ import type { AspectRatio, Shape } from '@coinbase/cds-common/types/Shape';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxProps } from '../layout/Box';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-RemoteImage';
@@ -83,8 +84,9 @@ export type RemoteImageBaseProps = Omit<BoxProps<'img'>, 'aspectRatio'> & {
 
 export type RemoteImageProps = RemoteImageBaseProps;
 
-export const RemoteImage = memo(
-  ({
+export const RemoteImage = memo((_props: RemoteImageProps) => {
+  const mergedProps = useComponentConfig('RemoteImage', _props);
+  const {
     width,
     height,
     aspectRatio,
@@ -98,47 +100,46 @@ export const RemoteImage = memo(
     borderWidth = borderColor ? 200 : undefined,
     style,
     ...props
-  }: RemoteImageProps) => {
-    const styles = useMemo(
-      () =>
-        ({
-          aspectRatio: aspectRatio ? aspectRatio.join(' / ') : undefined,
-          ...style,
-        }) as const,
-      [aspectRatio, style],
-    );
-    // If height and width are not provided, we default to avatarSize
-    const computedHeight = useMemo(
-      () => (width || height ? height : `var(--avatarSize-${size})`),
-      [width, height, size],
-    );
-    const computedWidth = useMemo(
-      () => (width || height ? width : `var(--avatarSize-${size})`),
-      [width, height, size],
-    );
+  } = mergedProps;
+  const styles = useMemo(
+    () =>
+      ({
+        aspectRatio: aspectRatio ? aspectRatio.join(' / ') : undefined,
+        ...style,
+      }) as const,
+    [aspectRatio, style],
+  );
+  // If height and width are not provided, we default to avatarSize
+  const computedHeight = useMemo(
+    () => (width || height ? height : `var(--avatarSize-${size})`),
+    [width, height, size],
+  );
+  const computedWidth = useMemo(
+    () => (width || height ? width : `var(--avatarSize-${size})`),
+    [width, height, size],
+  );
 
-    return (
-      <Box
-        alt={alt}
-        as="img"
-        borderColor={borderColor}
-        borderWidth={borderWidth}
-        className={cx(
-          COMPONENT_STATIC_CLASSNAME,
-          baseCss,
-          shape === 'hexagon' && hexagonOverflowCss,
-          resizeCss[resizeMode],
-          borderRadiusCss[shape],
-          !source && fallbackCss,
-          className,
-        )}
-        data-shape={shape}
-        height={computedHeight}
-        src={source}
-        style={styles}
-        width={computedWidth}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <Box
+      alt={alt}
+      as="img"
+      borderColor={borderColor}
+      borderWidth={borderWidth}
+      className={cx(
+        COMPONENT_STATIC_CLASSNAME,
+        baseCss,
+        shape === 'hexagon' && hexagonOverflowCss,
+        resizeCss[resizeMode],
+        borderRadiusCss[shape],
+        !source && fallbackCss,
+        className,
+      )}
+      data-shape={shape}
+      height={computedHeight}
+      src={source}
+      style={styles}
+      width={computedWidth}
+      {...props}
+    />
+  );
+});
