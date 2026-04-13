@@ -6,7 +6,7 @@ import { Card, MessagingCard } from '@coinbase/cds-web/cards';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Tag } from '@coinbase/cds-web/tag';
 import { Text } from '@coinbase/cds-web/typography';
-import { LineChart, Scrubber, SolidLine } from '@coinbase/cds-web-visualization';
+import { LineChart, Scrubber, SolidLine } from '@coinbase/cds-web/visualizations/chart';
 
 import CheckerboardSvg from './checkerboard.svg';
 import { aaTextColor } from './colorUtils';
