@@ -46,14 +46,6 @@ type LinearGradientProps = {
    */
   colors: NonNullable<string>[];
   /**
-   * Sets layout position between SVG and children. Set it to false when gradient should overlay children content.
-   *
-   * @deprecated Use the `elevated` prop instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v6
-   * @default true
-   */
-  isBelowChildren?: boolean;
-  /**
    * @default false
    * Linear gradient will overlay the children content when true
    */
@@ -73,7 +65,6 @@ export function LinearGradient({
   end,
   stops = defaultStops,
   colors,
-  isBelowChildren = true,
   elevated,
   angle = 180,
   style,
@@ -108,7 +99,7 @@ export function LinearGradient({
     );
   }, [colors, start, end, angle, stops]);
 
-  const items = isBelowChildren || !elevated ? [svg, children] : [children, svg];
+  const items = !elevated ? [svg, children] : [children, svg];
   return (
     <View pointerEvents={pointerEvents} style={style} testID={testID}>
       {items}
