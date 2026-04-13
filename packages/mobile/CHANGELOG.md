@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Undo test refactors from #568. [[#611](https://github.com/coinbase/cds/pull/611)]
+
 ## 8.64.4 ((4/10/2026, 01:20 PM PST))
 
 This is an artificial version bump with no new change.
