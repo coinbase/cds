@@ -411,6 +411,11 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
+    key: 'ModalCustomHeader',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/ModalCustomHeader.stories').default,
+  },
+  {
     key: 'ModalCustomPadding',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/ModalCustomPadding.stories').default,
