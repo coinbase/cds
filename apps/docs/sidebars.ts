@@ -627,6 +627,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/charts/PercentageBarChart/percentageBarChart',
+              label: 'PercentageBarChart',
+            },
+            {
+              type: 'doc',
               id: 'components/charts/CartesianChart/cartesianChart',
               label: 'CartesianChart',
             },

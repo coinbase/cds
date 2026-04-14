@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.18.0 (4/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add route for PercentageBarChart. [[#550](https://github.com/coinbase/cds/pull/550)]
+
 ## 4.17.0 (4/9/2026 PST)
 
 #### 🚀 Updates

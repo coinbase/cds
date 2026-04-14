@@ -70,6 +70,7 @@ module.exports = {
     'cells/ListCell',
     'chart/area/AreaChart',
     'chart/bar/BarChart',
+    'chart/bar/PercentageBarChart',
     'chart/CartesianChart',
     'chart/legend/Legend',
     'chart/line/LineChart',
