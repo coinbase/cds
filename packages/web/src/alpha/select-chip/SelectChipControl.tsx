@@ -124,9 +124,7 @@ const SelectChipControlComponent = memo(
 
       const endNode = useMemo(() => {
         return (
-          customEndNode ?? (
-            <AnimatedCaret active color="fg" rotate={open ? 0 : 180} size="xs" />
-          )
+          customEndNode ?? <AnimatedCaret active color="fg" rotate={open ? 0 : 180} size="xs" />
         );
       }, [customEndNode, open]);
 

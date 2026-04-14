@@ -1,11 +1,12 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { TourStepArrowComponentProps } from '@coinbase/cds-common/tour/useTour';
 
 import { Box } from '../layout/Box';
 
+import type { TourStepArrowComponentProps } from './Tour';
+
 export const DefaultTourStepArrow = memo(
   forwardRef<HTMLDivElement, TourStepArrowComponentProps>(
-    ({ placement, arrow, style }, ref: React.ForwardedRef<HTMLDivElement>) => {
+    ({ placement, arrow, style, className }, ref: React.ForwardedRef<HTMLDivElement>) => {
       const width = 24;
       const height = 24;
       const hideArrow = (arrow?.centerOffset ?? 0) > 0;
@@ -27,6 +28,7 @@ export const DefaultTourStepArrow = memo(
         <Box
           ref={ref}
           background="bgInverse"
+          className={className}
           height={height}
           style={arrowStyles}
           testID="tour-step-arrow"

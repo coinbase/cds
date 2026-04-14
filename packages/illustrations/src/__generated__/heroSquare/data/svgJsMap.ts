@@ -931,12 +931,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoAddBankAccount-0.js').content,
   },
   instoCoinbaseOneProtectedCrypto: {
-    light: () => require('../svgJs/light/instoCoinbaseOneProtectedCrypto-0.js').content,
-    dark: () => require('../svgJs/dark/instoCoinbaseOneProtectedCrypto-0.js').content,
+    light: () => require('../svgJs/light/instoCoinbaseOneProtectedCrypto-1.js').content,
+    dark: () => require('../svgJs/dark/instoCoinbaseOneProtectedCrypto-1.js').content,
   },
   instoDocumentSuccess: {
-    light: () => require('../svgJs/light/instoDocumentSuccess-0.js').content,
-    dark: () => require('../svgJs/dark/instoDocumentSuccess-0.js').content,
+    light: () => require('../svgJs/light/instoDocumentSuccess-1.js').content,
+    dark: () => require('../svgJs/dark/instoDocumentSuccess-1.js').content,
   },
   instoEarnGlobe: {
     light: () => require('../svgJs/light/instoEarnGlobe-0.js').content,
@@ -959,20 +959,20 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoGovernance-0.js').content,
   },
   instoKeyGenerationComplete: {
-    light: () => require('../svgJs/light/instoKeyGenerationComplete-0.js').content,
-    dark: () => require('../svgJs/dark/instoKeyGenerationComplete-0.js').content,
+    light: () => require('../svgJs/light/instoKeyGenerationComplete-1.js').content,
+    dark: () => require('../svgJs/dark/instoKeyGenerationComplete-1.js').content,
   },
   instoKeyGenerationPending: {
     light: () => require('../svgJs/light/instoKeyGenerationPending-0.js').content,
     dark: () => require('../svgJs/dark/instoKeyGenerationPending-0.js').content,
   },
   instoOnChain: {
-    light: () => require('../svgJs/light/instoOnChain-1.js').content,
-    dark: () => require('../svgJs/dark/instoOnChain-1.js').content,
+    light: () => require('../svgJs/light/instoOnChain-2.js').content,
+    dark: () => require('../svgJs/dark/instoOnChain-2.js').content,
   },
   instoOpenEmail: {
-    light: () => require('../svgJs/light/instoOpenEmail-0.js').content,
-    dark: () => require('../svgJs/dark/instoOpenEmail-0.js').content,
+    light: () => require('../svgJs/light/instoOpenEmail-1.js').content,
+    dark: () => require('../svgJs/dark/instoOpenEmail-1.js').content,
   },
   instoPhoneUnknown: {
     light: () => require('../svgJs/light/instoPhoneUnknown-0.js').content,
@@ -983,12 +983,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoPrimeStaking-0.js').content,
   },
   instoPrivateKey: {
-    light: () => require('../svgJs/light/instoPrivateKey-0.js').content,
-    dark: () => require('../svgJs/dark/instoPrivateKey-0.js').content,
+    light: () => require('../svgJs/light/instoPrivateKey-1.js').content,
+    dark: () => require('../svgJs/dark/instoPrivateKey-1.js').content,
   },
   instoRequestSent: {
-    light: () => require('../svgJs/light/instoRequestSent-0.js').content,
-    dark: () => require('../svgJs/dark/instoRequestSent-0.js').content,
+    light: () => require('../svgJs/light/instoRequestSent-1.js').content,
+    dark: () => require('../svgJs/dark/instoRequestSent-1.js').content,
   },
   instoSecurityKeyAuth: {
     light: () => require('../svgJs/light/instoSecurityKeyAuth-0.js').content,
@@ -999,8 +999,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/instoStaking-0.js').content,
   },
   instoStakingMissedReturns: {
-    light: () => require('../svgJs/light/instoStakingMissedReturns-0.js').content,
-    dark: () => require('../svgJs/dark/instoStakingMissedReturns-0.js').content,
+    light: () => require('../svgJs/light/instoStakingMissedReturns-1.js').content,
+    dark: () => require('../svgJs/dark/instoStakingMissedReturns-1.js').content,
   },
   instoWallet: {
     light: () => require('../svgJs/light/instoWallet-0.js').content,

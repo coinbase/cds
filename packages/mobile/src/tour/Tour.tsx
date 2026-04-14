@@ -1,21 +1,19 @@
-import React, { useCallback, useRef } from 'react';
-import { Modal, View } from 'react-native';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { Modal, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/TourContext';
-import type {
-  TourOptions,
-  TourStepArrowComponent,
-  TourStepValue,
-} from '@coinbase/cds-common/tour/useTour';
+import type { TourOptions, TourStepValue } from '@coinbase/cds-common/tour/useTour';
 import { useTour } from '@coinbase/cds-common/tour/useTour';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import {
   type AutoPlacementOptions,
+  type Coords,
   type OffsetOptions,
+  type Placement,
   type ShiftOptions,
 } from '@floating-ui/core';
 import {
@@ -36,6 +34,21 @@ import { DefaultTourStepArrow } from './DefaultTourStepArrow';
 const overlayContentContextValue: OverlayContentContextValue = {
   isTour: true,
 };
+
+// ------------ SUBCOMPONENT PROP TYPES ------------
+export type TourStepArrowComponentProps = {
+  arrow?: Partial<Coords> & {
+    centerOffset: number;
+    alignmentOffset?: number;
+  };
+  placement: Placement;
+  style?: StyleProp<ViewStyle>;
+};
+
+// ------------ SUBCOMPONENT TYPES ------------
+export type TourStepArrowComponent = React.ForwardRefExoticComponent<
+  TourStepArrowComponentProps & { ref?: React.Ref<any> }
+>;
 
 export type TourMaskComponentProps = {
   /**
@@ -95,6 +108,17 @@ export type TourBaseProps<TourStepId extends string = string> = SharedProps &
      * attributes https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/rx.
      */
     tourMaskBorderRadius?: string | number;
+    /** Custom styles for individual elements of the Tour component */
+    styles?: {
+      /** Root element */
+      root?: StyleProp<ViewStyle>;
+      /** The opaque overlay/mask that emphasizes current step */
+      mask?: StyleProp<ViewStyle>;
+      /** A step's arrow element */
+      stepArrow?: StyleProp<ViewStyle>;
+      /** A step element's positioned container */
+      stepContainer?: StyleProp<ViewStyle>;
+    };
   };
 
 export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId>;
@@ -115,6 +139,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     hideOverlay,
     tourMaskPadding,
     tourMaskBorderRadius,
+    styles,
     accessibilityLabel,
     accessibilityLabelledBy,
     id,
@@ -126,11 +151,26 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
 
   const tourStepArrowRef = useRef<View>(null);
   const RenderedTourStep = activeTourStep?.Component;
-  const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
+  // activeTourStep.ArrowComponent references old, deprecated type in cds-common
+  const RenderedTourStepArrow =
+    (activeTourStep?.ArrowComponent as TourStepArrowComponent) ?? TourStepArrowComponent;
 
   const [animation, animationApi] = useSpring(
     () => ({ from: { opacity: 0 }, config: springConfig.slow }),
     [],
+  );
+
+  // StyleSheet.flatten is needed because styles?.mask/stepContainer are StyleProp<ViewStyle>,
+  // which may be arrays. Unlike RN's Animated.View, react-spring's animated.View only accepts
+  // plain style objects, so we must flatten before merging with the spring animation values.
+  const maskStyles = useMemo(
+    () => ({ ...animation, ...StyleSheet.flatten(styles?.mask) }) as typeof animation,
+    [animation, styles?.mask],
+  );
+
+  const stepContainerStyles = useMemo(
+    () => ({ ...animation, ...StyleSheet.flatten(styles?.stepContainer) }) as typeof animation,
+    [animation, styles?.stepContainer],
   );
 
   const {
@@ -209,10 +249,11 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
             animationType="none"
             id={id}
             presentationStyle="overFullScreen"
+            style={styles?.root}
             testID={testID}
           >
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
-              <animated.View style={animation}>
+              <animated.View style={maskStyles} testID="tour-mask">
                 <TourMaskComponent
                   activeTourStepTarget={activeTourStepTarget as View}
                   borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
@@ -221,12 +262,12 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               </animated.View>
             )}
             <View ref={refs.setFloating} collapsable={false} style={floatingStyles}>
-              <animated.View style={animation}>
+              <animated.View style={stepContainerStyles} testID="tour-step-container">
                 <RenderedTourStepArrow
                   ref={tourStepArrowRef}
                   arrow={arrow}
                   placement={placement}
-                  style={activeTourStep?.arrowStyle}
+                  style={styles?.stepArrow}
                 />
                 <RenderedTourStep {...activeTourStep} />
               </animated.View>

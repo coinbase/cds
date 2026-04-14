@@ -1,0 +1,37 @@
+{
+  "import": "import { PercentageBarChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/bar/PercentageBarChart.tsx",
+  "description": "A bar chart component for comparing share or mix across categories as percentages. Supports horizontal and vertical orientations, 100% stacked bars, and a fixed 0–100% value axis.",
+  "relatedComponents": [
+    {
+      "label": "BarChart",
+      "url": "/components/charts/BarChart/"
+    },
+    {
+      "label": "CartesianChart",
+      "url": "/components/charts/CartesianChart/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/charts/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/charts/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
+}

@@ -3,8 +3,13 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
-import { defaultBarEnterTransition, getBarPath, withStaggerDelayTransition } from '../utils';
-import { getNormalizedStagger } from '../utils/bar';
+import {
+  defaultBarEnterOpacityTransition,
+  defaultBarEnterTransition,
+  getBarPath,
+  withStaggerDelayTransition,
+} from '../utils';
+import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
@@ -45,11 +50,37 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [transitions?.enter, animate, normalizedStagger],
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
+      [transitions?.enter, animate],
+    );
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
+    );
+    const enterOpacityTransition = useMemo(() => {
+      if (transitions?.enterOpacity === undefined && enterTransition === null) return null;
+
+      const enterOpacityTransition: BarTransition | null = getTransition(
+        transitions?.enterOpacity,
+        animate,
+        defaultBarEnterOpacityTransition,
+      );
+
+      if (!enterOpacityTransition) return null;
+
+      return {
+        ...enterOpacityTransition,
+        delay: enterOpacityTransition.delay ?? enterTransition?.delay,
+        staggerDelay: enterOpacityTransition.staggerDelay ?? enterTransition?.staggerDelay,
+      };
+    }, [transitions?.enterOpacity, animate, enterTransition]);
+    const enterOpacityTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterOpacityTransition, normalizedStagger),
+      [enterOpacityTransition, normalizedStagger],
     );
     const updateTransition = useMemo(
       () =>
@@ -109,7 +140,8 @@ export const DefaultBar = memo<DefaultBarProps>(
         stroke={stroke}
         strokeWidth={strokeWidth}
         transitions={{
-          enter: enterTransition,
+          enter: enterTransitionWithStagger,
+          enterOpacity: enterOpacityTransitionWithStagger,
           update: updateTransition,
         }}
       />

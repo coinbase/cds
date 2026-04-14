@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { type CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -7,7 +7,6 @@ import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/To
 import type {
   TourOptions,
   TourScrollOptions,
-  TourStepArrowComponent,
   TourStepValue,
 } from '@coinbase/cds-common/tour/useTour';
 import { useTour } from '@coinbase/cds-common/tour/useTour';
@@ -18,8 +17,10 @@ import {
   autoPlacement,
   type AutoPlacementOptions,
   autoUpdate,
+  type Coords,
   offset,
   type OffsetOptions,
+  type Placement,
   shift,
   type ShiftOptions,
   useFloating,
@@ -27,14 +28,31 @@ import {
 import { css } from '@linaria/core';
 import { animated, config as springConfig, useSpring } from '@react-spring/web';
 
+import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useScrollBlocker } from '../hooks/useScrollBlocker';
 import { FocusTrap } from '../overlays/FocusTrap';
 import { Portal } from '../overlays/Portal';
 import { modalContainerId } from '../overlays/PortalProvider';
+import type { StylesAndClassNames } from '../types';
 
 import { DefaultTourMask } from './DefaultTourMask';
 import { DefaultTourStepArrow } from './DefaultTourStepArrow';
+
+/**
+ * Static class names for Calendar component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const tourClassNames = {
+  /** Root element */
+  root: 'cds-Tour',
+  /** The opaque overlay/mask that emphasizes current step */
+  mask: 'cds-Tour-mask',
+  /** A step's arrow element */
+  stepArrow: 'cds-Tour-stepArrow',
+  /** A step element's positioned container */
+  stepContainer: 'cds-Tour-stepContainer',
+} as const;
 
 const overlayContentContextValue: OverlayContentContextValue = {
   isTour: true,
@@ -49,6 +67,17 @@ const containerCss = css`
   width: 100vw;
   height: 100vh;
 `;
+
+// ------------ SUBCOMPONENT PROP TYPES ------------
+export type TourStepArrowComponentProps = {
+  arrow?: Partial<Coords> & {
+    centerOffset: number;
+    alignmentOffset?: number;
+  };
+  placement: Placement;
+  style?: CSSProperties;
+  className?: string;
+};
 
 export type TourMaskComponentProps = {
   /**
@@ -65,6 +94,11 @@ export type TourMaskComponentProps = {
    */
   borderRadius?: string | number;
 };
+
+// ------------ SUBCOMPONENT TYPES ------------
+export type TourStepArrowComponent = React.ForwardRefExoticComponent<
+  TourStepArrowComponentProps & { ref?: React.Ref<any> }
+>;
 
 export type TourMaskComponent = React.FC<TourMaskComponentProps>;
 
@@ -122,7 +156,8 @@ export type TourBaseProps<TourStepId extends string = string> = SharedProps &
     disableAutoScroll?: boolean;
   };
 
-export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId> & {};
+export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId> &
+  StylesAndClassNames<typeof tourClassNames>;
 
 const defaultScrollOptions: TourScrollOptions = {
   behavior: 'smooth',
@@ -201,14 +236,19 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     scrollOptions = defaultScrollOptions,
     disablePortal,
     disableAutoScroll,
+    classNames,
+    styles,
     accessibilityLabel,
     accessibilityLabelledBy,
     id,
     testID,
   } = mergedProps;
   const tourStepArrowRef = useRef<HTMLDivElement>(null);
+  // let individual step data override global custom components
   const RenderedTourStep = activeTourStep?.Component;
-  const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
+  // activeTourStep.ArrowComponent references old, deprecated type in cds-common
+  const RenderedTourStepArrow =
+    (activeTourStep?.ArrowComponent as TourStepArrowComponent) ?? TourStepArrowComponent;
 
   // This state is used to store the active tour step target element.
   // const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | null>(null);
@@ -217,6 +257,14 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
   const [animation, animationApi] = useSpring(
     () => ({ from: { opacity: 0 }, config: springConfig.slow }),
     [],
+  );
+
+  const tourMaskStyles = useMemo(
+    () => ({
+      ...animation,
+      ...styles?.mask,
+    }),
+    [animation, styles?.mask],
   );
 
   const {
@@ -233,6 +281,14 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     ],
     whileElementsMounted: autoUpdate,
   });
+
+  const stepContainerStyle = useMemo(
+    () => ({
+      ...animation,
+      ...styles?.stepContainer,
+    }),
+    [animation, styles?.stepContainer],
+  );
 
   const handleChange = useCallback(
     (tourStep: TourStepValue<TourStepId> | null) => {
@@ -315,13 +371,17 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               aria-label={accessibilityLabel}
               aria-labelledby={accessibilityLabelledBy}
               aria-modal="true"
-              className={containerCss}
+              className={cx(tourClassNames.root, containerCss, classNames?.root)}
               data-testid={testID}
               id={id}
               role="dialog"
+              style={styles?.root}
             >
               {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
-                <animated.div style={animation}>
+                <animated.div
+                  className={cx(tourClassNames.mask, classNames?.mask)}
+                  style={tourMaskStyles}
+                >
                   <TourMaskComponent
                     activeTourStepTargetRect={(
                       activeTourStepTarget as HTMLElement
@@ -333,12 +393,16 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               )}
               <div ref={refs.setFloating} style={floatingStyles}>
                 <FocusTrap>
-                  <animated.div style={animation}>
+                  <animated.div
+                    className={cx(tourClassNames.stepContainer, classNames?.stepContainer)}
+                    style={stepContainerStyle}
+                  >
                     <RenderedTourStepArrow
                       ref={tourStepArrowRef}
                       arrow={arrow}
+                      className={cx(tourClassNames.stepArrow, classNames?.stepArrow)}
                       placement={placement}
-                      style={activeTourStep?.arrowStyle}
+                      style={styles?.stepArrow}
                     />
                     <RenderedTourStep {...activeTourStep} />
                   </animated.div>

@@ -99,7 +99,7 @@ Follow this systematic approach:
    - If the theme of the research goal cannot be found within the project source code, abandon the research task
 
 2. **Environment Preparation**
-   - Use the `github-repo-manager` skill (`.claude/skills/github-repo-manager/SKILL.md`) to ensure the project's repository is cloned and up to date in `temp/repo-cache/`.
+   - Use the `git.repo-manager` skill (`.claude/skills/git.repo-manager/SKILL.md`) to ensure the project's repository is cloned and up to date in `temp/repo-cache/`.
    - Only manage the single repository you are researching.
 
 3. **Deep Technical Analysis**

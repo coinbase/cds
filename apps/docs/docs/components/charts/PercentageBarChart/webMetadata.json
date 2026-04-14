@@ -1,0 +1,30 @@
+{
+  "import": "import { PercentageBarChart } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/bar/PercentageBarChart.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chart-percentagebarchart--all",
+  "description": "A bar chart component for comparing share or mix across categories as percentages. Supports horizontal and vertical orientations, 100% stacked bars, and a fixed 0–100% value axis.",
+  "relatedComponents": [
+    {
+      "label": "BarChart",
+      "url": "/components/charts/BarChart/"
+    },
+    {
+      "label": "CartesianChart",
+      "url": "/components/charts/CartesianChart/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/charts/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/charts/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

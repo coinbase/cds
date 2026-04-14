@@ -346,9 +346,8 @@ const StepperBase = memo(
       const previousActiveStepIndex = usePreviousValue(activeStepIndex) ?? -1;
 
       const [progressSprings, progressSpringsApi] = useSprings(steps.length, (index) => ({
-        progress: complete ? 1 : 0,
+        from: { progress: complete ? 1 : 0 },
         config: progressSpringConfig,
-        immediate: !animate || (disableAnimateOnMount && !hasMounted),
       }));
 
       useEffect(() => {

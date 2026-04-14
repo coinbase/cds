@@ -4894,7 +4894,7 @@ __metadata:
 
 "@expo/cli@patch:@expo/cli@npm:0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch::locator=design-system%40workspace%3A.":
   version: 0.18.29
-  resolution: "@expo/cli@patch:@expo/cli@npm%3A0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch::version=0.18.29&hash=42d2e2&locator=design-system%40workspace%3A."
+  resolution: "@expo/cli@patch:@expo/cli@npm%3A0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch::version=0.18.29&hash=560293&locator=design-system%40workspace%3A."
   dependencies:
     "@babel/runtime": "npm:^7.20.0"
     "@expo/code-signing-certificates": "npm:0.0.5"
@@ -4975,7 +4975,7 @@ __metadata:
     ws: "npm:^8.12.1"
   bin:
     expo-internal: build/bin/cli
-  checksum: 10c0/501c68baff6444e5264086fcf6ff3d16a63dd3c712277d1e32c1ae6c8bd9e758bc0921535a676fb5250f587fd8e5843f368d8d3712edbff7730f67b1050ae1c5
+  checksum: 10c0/3916aadeda3be6a5946dda940946aeb295650bafab403b1ed3645c352ab34a3b4256827be8e7201565a6426d19abfbeebf8139e2f436ffd96bc7eff5a9c948a2
   languageName: node
   linkType: hard
 
@@ -10729,6 +10729,13 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10c0/f11a1ccfed540723dddd7cb496543ad40a2f663f22ff825e9b220f0bae86db8b1ced2184ee41d3fb358b019ad6519e39481b06386db91ebb859003ad1d54fe6a
+  languageName: node
+  linkType: hard
+
+"@types/culori@npm:^4":
+  version: 4.0.1
+  resolution: "@types/culori@npm:4.0.1"
+  checksum: 10c0/f25fcf01fe709d2fce569892eae71a268b19cf85a7c8f6bf6b041f02f232e5a7d1218e8213349d6b2a458be9f61158ed1e1893e7b81e2ee4a7cebc2a172b7ebb
   languageName: node
   linkType: hard
 
@@ -17333,6 +17340,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"culori@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "culori@npm:4.0.2"
+  checksum: 10c0/5d3c952b947ac5915409bab513e1d2e8bd813caa491af8ded0c769fdc1186a5ff61fb3c59fc8edf5393237d92074dbc54a492e6e99cb039dd6535d5d96106bfe
+  languageName: node
+  linkType: hard
+
 "currently-unhandled@npm:^0.4.1":
   version: 0.4.1
   resolution: "currently-unhandled@npm:0.4.1"
@@ -18457,12 +18471,14 @@ __metadata:
     "@react-three/drei": "npm:^9.122.0"
     "@react-three/fiber": "npm:^8.18.0"
     "@stackblitz/sdk": "npm:^1.11.0"
+    "@types/culori": "npm:^4"
     "@types/lz-string": "npm:^1.5.0"
     "@types/react": "npm:^18.3.12"
     "@types/react-dom": "npm:^18.3.1"
     "@types/three": "npm:0.177.0"
     babel-loader: "npm:^10.0.0"
     css-loader: "npm:^7.1.2"
+    culori: "npm:^4.0.2"
     framer-motion: "npm:^10.18.0"
     html-webpack-plugin: "npm:^5.6.3"
     kbar: "npm:^0.1.0-beta.45"
@@ -37075,15 +37091,15 @@ __metadata:
   linkType: hard
 
 "tar@npm:^7.5.12":
-  version: 7.5.12
-  resolution: "tar@npm:7.5.12"
+  version: 7.5.13
+  resolution: "tar@npm:7.5.13"
   dependencies:
     "@isaacs/fs-minipass": "npm:^4.0.0"
     chownr: "npm:^3.0.0"
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/3825c5974f5fde792981f47ee9ffea021ee7f4b552b7ab95eeb98e5dfadfd5a5d5861f01fb772e2e5637a41980d3c019fd6cdad1be48b462b886abd7fe0fa17c
+  checksum: 10c0/5c65b8084799bde7a791593a1c1a45d3d6ee98182e3700b24c247b7b8f8654df4191642abbdb07ff25043d45dcff35620827c3997b88ae6c12040f64bed5076b
   languageName: node
   linkType: hard
 

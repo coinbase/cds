@@ -539,5 +539,8 @@ export const names: IconName[] = [
   'webhooks',
   'usdc',
   'pieChartWithArrow',
-  'filterLineStack'
+  'filterLineStack',
+  'overPredictions',
+  'column',
+  'underPredictions'
 ];

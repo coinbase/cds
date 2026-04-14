@@ -1,0 +1,209 @@
+---
+name: dev.cds-mobile
+description: USE THIS when asked to work on a new or existing (MOBILE) CDS React component in packages/mobile
+---
+
+<!-- TODO: nested AGENTS.md files should work but they seem a little flaky at the moment. Intelligent mdc files are working better -->
+
+# CDS Mobile Package Guidelines
+
+Mobile-specific patterns for `@coinbase/cds-mobile`.
+
+## Component Config Adoption (Mobile)
+
+Use this guidance when adding `ComponentConfigProvider` defaults for the specific component you are editing.
+
+### Required implementation pattern
+
+1. Register the component in `packages/mobile/src/core/componentConfig.ts` using its `*BaseProps`:
+
+```ts
+import type { MyComponentBaseProps } from '../category/MyComponent';
+
+export type ComponentConfig = {
+  MyComponent?: ConfigResolver<MyComponentBaseProps>;
+};
+```
+
+1. Adopt `useComponentConfig` in the component and destructure from merged props:
+
+```tsx
+import { useComponentConfig } from '../hooks/useComponentConfig';
+
+export const MyComponent = memo((_props: MyComponentProps) => {
+  const mergedProps = useComponentConfig('MyComponent', _props);
+  const { style, ...props } = mergedProps;
+
+  return <Pressable style={style} {...props} />;
+});
+```
+
+### Rules to preserve behavior
+
+- Provider config supplies defaults only; local props must continue to win.
+- Use `_props` as the input variable and `mergedProps` as the configured output.
+- Type resolver entries with `*BaseProps` (not full `*Props`).
+- Keep scope to prop-level theming defaults; do not alter component behavior or control flow.
+- When practical during the same change, prefer arrow-function component declarations.
+
+## Styling with StyleSheet
+
+Use `StyleSheet.create` for static styles and `useTheme()` for dynamic values:
+
+```tsx
+import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
+
+const styles = StyleSheet.create({
+  container: { position: 'relative', width: '100%' },
+});
+
+// Dynamic styles via theme hook
+const theme = useTheme();
+const dynamicStyle = {
+  backgroundColor: theme.color.bgPrimary,
+  padding: theme.space[2],
+};
+
+<View style={[styles.container, dynamicStyle, style]} />;
+```
+
+### Inline styles
+
+- Mobile components should all expose a `style` and `styles` object props for overriding default styles.
+- As styling is a concern of that specific component, the `style` and `styles` props should never be on the `*BaseProps` type.
+- `styles` can be used for granular overrides on child elements within the component.
+- **Always** merge styles into a react-native style array with `useMemo` in the correct order (default styles => `style` prop => `styles[ELEMENT_NAME]` prop).
+
+**Example:**
+
+```tsx
+type ComponentProps = ComponentBaseProps & {
+  style?: StyleProp<ViewStyle>;
+  styles?: {
+    root?: StyleProp<ViewStyle>;
+    label?: StyleProp<TextStyle>;
+  };
+};
+
+const theme = useTheme();
+const containerStyles = useMemo(
+  () => [
+    { backgroundColor: theme.color.bgPrimary }, // default styles
+    style, // from props
+    styles.root, // from props
+  ],
+  [theme.color.bgPrimary, animatedStyles, style]
+);
+
+// Apply to component
+<Box style={containerStyles}>
+```
+
+## Animation
+
+### React Native Reanimated
+
+```tsx
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+const opacity = useSharedValue(0);
+const animatedStyle = useAnimatedStyle(() => ({
+  opacity: opacity.value,
+  transform: [{ translateY: withTiming(opacity.value * -8) }],
+}));
+
+<Animated.View style={animatedStyle} />;
+```
+
+We DO NOT use React-Spring anymore for animations on mobile.
+
+## Gesture Handling
+
+Use `react-native-gesture-handler`:
+
+```tsx
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+
+const panGesture = useMemo(
+  () =>
+    Gesture.Pan()
+      .onStart(() => {
+        /* ... */
+      })
+      .onUpdate(({ translationX }) => {
+        /* ... */
+      })
+      .onEnd(({ translationX, velocityX }) => {
+        /* ... */
+      })
+      .withTestId(testID)
+      .runOnJS(true),
+  [dependencies],
+);
+
+<GestureDetector gesture={panGesture}>
+  <Animated.View>{/* ... */}</Animated.View>
+</GestureDetector>;
+```
+
+## Layout Measurement
+
+Use `onLayout` callback instead of ResizeObserver:
+
+```tsx
+const [size, onLayout] = useLayout();
+<View onLayout={onLayout} />
+
+// Or inline
+<View onLayout={(e) => setHeight(e.nativeEvent.layout.height)} />
+```
+
+## Accessibility
+
+- Use appropriate accessibilityLabel, accessibilityHint, and accessibilityRole, accessibilityState props
+- Support screen readers (VoiceOver and TalkBack)
+- Ensure touch targets meet minimum size requirements (44x44 points)
+
+**Example:** Use React Native accessibility props:
+
+```tsx
+<View
+  accessible
+  accessibilityRole="adjustable"
+  accessibilityLabel="Product carousel"
+  accessibilityLiveRegion="polite"
+>
+  <Pressable
+    accessibilityState={{ selected: isActive, disabled }}
+    accessibilityActions={[{ name: 'activate' }]}
+    onAccessibilityAction={handleAccessibilityAction}
+  />
+</View>
+```
+
+### Screen Reader Content
+
+```tsx
+// Hide visual content from screen readers
+<View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+  {/* Animated/visual content */}
+</View>
+
+// Provide accessible alternative
+<Text
+  importantForAccessibility="yes"
+  accessibilityLiveRegion="polite"
+  style={{ color: 'transparent', position: 'absolute' }}
+>
+  {accessibleLabel}
+</Text>
+```
+
+## Reference Components
+
+- **SlideButton**: gesture handling, spring animations, accessibility actions
+- **RollingNumber**: Reanimated, measurement patterns, screen reader content
+- **Select** (alpha/): controlled/uncontrolled, Drawer integration
+- **Stepper**: direction-based defaults, shared logic from cds-common
+- **Tour**: animations, complexity
+- **DatePicker**: complexity
