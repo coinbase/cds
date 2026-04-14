@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.65.0 (4/14/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Updating the active states for chips + bgTertiary Light Mode. [[#585](https://github.com/chrislkaufman/cds/pull/585)]
+
 ## 8.64.0 (4/2/2026 PST)
 
 #### 🚀 Updates
