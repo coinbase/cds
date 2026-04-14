@@ -106,13 +106,20 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
         emptyPlaceholder
       )}
       <Box alignItems="center" flexGrow={1} justifyContent="center" paddingX={2}>
-        {typeof title === 'string' ? (
-          <Text as="h2" display="block" font={font} id={accessibilityLabelledBy} textAlign="center">
-            {title}
-          </Text>
-        ) : (
-          title
-        )}
+        {title &&
+          (typeof title === 'string' ? (
+            <Text
+              as="h2"
+              display="block"
+              font={font}
+              id={accessibilityLabelledBy}
+              textAlign="center"
+            >
+              {title}
+            </Text>
+          ) : (
+            title
+          ))}
       </Box>
       {!hideCloseButton && (
         <Box justifyContent="flex-end">

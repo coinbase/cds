@@ -90,13 +90,14 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
         )}
       </Box>
       <Box alignItems="center" flexBasis={0} flexGrow={6} justifyContent="center">
-        {typeof title === 'string' ? (
-          <Text align="center" font={font}>
-            {title}
-          </Text>
-        ) : (
-          title
-        )}
+        {title &&
+          (typeof title === 'string' ? (
+            <Text align="center" font={font}>
+              {title}
+            </Text>
+          ) : (
+            title
+          ))}
       </Box>
       <Box alignItems="flex-end" flexBasis={0} flexGrow={1}>
         {!hideCloseButton && (
