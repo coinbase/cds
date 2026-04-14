@@ -59,6 +59,10 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
     paddingX = 3,
     paddingY = 2,
     font = 'headline',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
     title,
     onBackButtonClick,
     backAccessibilityLabel,
@@ -92,7 +96,14 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
       <Box alignItems="center" flexBasis={0} flexGrow={6} justifyContent="center">
         {title &&
           (typeof title === 'string' ? (
-            <Text align="center" font={font}>
+            <Text
+              align="center"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
+            >
               {title}
             </Text>
           ) : (

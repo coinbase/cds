@@ -24,7 +24,12 @@ export default function ModalCustomHeaderScreen() {
       <Example title="Custom Font Title">
         <Button onPress={handleCustomFontOpen}>Open</Button>
         <Modal onRequestClose={handleCustomFontClose} visible={customFontVisible}>
-          <ModalHeader closeAccessibilityLabel="Close" font="title1" title="Large Title Modal" />
+          <ModalHeader
+            closeAccessibilityLabel="Close"
+            font="title1"
+            fontSize="display3"
+            title="Large Title Modal"
+          />
           <ModalBody>
             <LoremIpsum />
           </ModalBody>

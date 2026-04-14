@@ -87,6 +87,7 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
     <HStack
       alignItems={alignItems}
       borderedBottom={!hideDividers}
+      font={font}
       paddingX={paddingX}
       paddingY={paddingY}
       {...props}
@@ -111,7 +112,7 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
             <Text
               as="h2"
               display="block"
-              font={font}
+              font="inherit"
               id={accessibilityLabelledBy}
               textAlign="center"
             >

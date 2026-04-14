@@ -302,7 +302,12 @@ export const CustomFontModal = () => {
     <>
       <Button onClick={() => setVisible(true)}>Open Modal</Button>
       <Modal onRequestClose={() => setVisible(false)} visible={visible}>
-        <ModalHeader closeAccessibilityLabel="Close" font="title1" title="Large Title Modal" />
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          font="title1"
+          fontSize="display2"
+          title="Large Title Modal"
+        />
         <ModalBody tabIndex={0} testID="modal-body">
           <LoremIpsum />
         </ModalBody>
