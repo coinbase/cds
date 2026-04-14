@@ -17,7 +17,7 @@ import { Text } from '../../typography/Text';
 export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children' | 'title'> & {
   /** Handles back button press */
   onBackButtonClick?: React.MouseEventHandler;
-  /** Title of the Modal. Accepts a string or ReactNode. When a string is provided, it is rendered with the `font` prop (default `headline`). */
+  /** Title of the Modal */
   title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.

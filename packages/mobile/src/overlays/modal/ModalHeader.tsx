@@ -12,7 +12,7 @@ import { Text } from '../../typography/Text';
 export type ModalHeaderBaseProps = Omit<BoxBaseProps, 'children'> & {
   /** Handles back button press */
   onBackButtonClick?: (event: GestureResponderEvent) => void;
-  /** Title of the Modal. Accepts a string or ReactNode. When a string is provided, it is rendered with the `font` prop (default `headline`). */
+  /** Title of the Modal */
   title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.
