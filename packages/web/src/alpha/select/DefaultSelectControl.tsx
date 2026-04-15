@@ -454,6 +454,7 @@ const DefaultSelectControlComponent = memo(
               flexGrow={1}
               height="100%"
               justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
+              paddingStart={2}
               style={styles?.controlEndNode}
             >
               {customEndNode ? (
