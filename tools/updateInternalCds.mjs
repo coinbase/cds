@@ -1,12 +1,12 @@
 /**
- * ONE-TIME SETUP TOOL (historical)
+ * Injects the add-cds7-exports.js build step into every package's
+ * project.json build:prod configuration. Run this after syncing from
+ * upstream (coinbase/cds) to ensure new packages or reset project.json
+ * files include the v7 export injection step.
  *
- * This script was used to inject the add-cds7-exports.js build step into
- * every package's project.json build:prod configuration. It only needed to
- * run once when CDS 8 introduced v7 backward-compatibility exports.
- *
- * The add-cds7-exports.js script has its own version gate and will
- * automatically no-op for packages beyond the v7 compatibility window.
+ * Note: add-cds7-exports.js has a version gate that automatically
+ * no-ops for packages beyond the v7 compatibility window (CDS 9+),
+ * so it is safe to leave these references in place indefinitely.
  *
  * TODO: Remove this file and the project.json references to
  * add-cds7-exports.js once CDS 8.x is fully end-of-life.

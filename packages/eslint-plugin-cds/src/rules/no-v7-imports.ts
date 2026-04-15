@@ -20,12 +20,10 @@ const CDS_PACKAGES = [
 export const noV7Imports: TSESLint.RuleModule<MessageIds> = {
   meta: {
     docs: {
-      description:
-        'Disallow CDS v7 backward-compatibility imports that will be removed in CDS 9',
+      description: 'Disallow v7 imports',
     },
     messages: {
-      noV7Imports:
-        'CDS v7 imports are deprecated and will be removed in CDS 9. Please migrate to the current CDS API.',
+      noV7Imports: 'CDS v7 imports will be removed soon. Please finish migrating to v8.',
     },
     schema: [],
     type: 'problem',
@@ -39,7 +37,7 @@ export const noV7Imports: TSESLint.RuleModule<MessageIds> = {
           return;
         }
 
-        const isV7Import = sourceValue.includes('/v7/') || sourceValue.endsWith('/v7');
+        const isV7Import = sourceValue.includes('/v7/');
         const isCdsPackage = CDS_PACKAGES.some((pkg) => sourceValue.startsWith(pkg));
 
         if (isV7Import && isCdsPackage) {

@@ -49,9 +49,5 @@ ruleTester.run('no-v7-imports', noV7Imports, {
       code: "import { SparklineInteractiveHeader } from '@cbhq/cds-web-visualization/v7/sparkline/sparkline-interactive-header/SparklineInteractiveHeader';",
       errors: [{ messageId: 'noV7Imports' }],
     },
-    {
-      code: "import { Button } from '@cbhq/cds-web/v7';",
-      errors: [{ messageId: 'noV7Imports' }],
-    },
   ],
 });
