@@ -502,7 +502,7 @@ describe('usePathTransition', () => {
     expect(stopMock).toHaveBeenCalled();
   });
 
-  it('should maintain previous path reference across renders', () => {
+  it('supports multiple consecutive path updates', () => {
     const path1 = 'M0,0L10,10';
     const path2 = 'M0,0L20,20';
     const path3 = 'M0,0L30,30';
@@ -528,7 +528,7 @@ describe('usePathTransition', () => {
     expect(result.current).toBeDefined();
   });
 
-  it('should update previousPathRef onComplete', () => {
+  it('supports a new path transition after animation onComplete', () => {
     const { animate } = require('framer-motion');
     let onCompleteCallback: (() => void) | undefined;
 
@@ -561,7 +561,7 @@ describe('usePathTransition', () => {
       onCompleteCallback();
     }
 
-    // Should be able to handle another path change
+    // Motion value already reflects the target path; another change should start a new transition
     rerender({ path: 'M0,0L30,30' });
 
     expect(animate).toHaveBeenCalled();

@@ -130,7 +130,7 @@ export const usePathTransition = ({
   transition?: Transition;
 }): MotionValue<string> => {
   const transitionRef = useRef<{
-    enter: Transition | null | undefined;
+    enter?: Transition | null;
     update: Transition | null;
   }>({
     enter: transitions?.enter,
