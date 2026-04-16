@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.6.1 (4/16/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support strict mode on charts. [[#618](https://github.com/coinbase/cds/pull/618)]
+
 ## 3.6.0 (4/13/2026 PST)
 
 #### 🚀 Updates

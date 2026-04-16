@@ -1,4 +1,6 @@
+import * as React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
+import type { MotionValue } from 'framer-motion';
 
 import { defaultTransition, getTransition, usePathTransition } from '../transition';
 
@@ -143,6 +145,83 @@ describe('usePathTransition', () => {
 
     expect(result.current).toBeDefined();
     expect(result.current.get()).toBeDefined();
+  });
+
+  it('preserves motion value identity across rerenders with the same currentPath', () => {
+    const currentPath = 'M0,0L10,10';
+
+    const { result, rerender } = renderHook(() =>
+      usePathTransition({
+        currentPath,
+      }),
+    );
+
+    const first = result.current;
+    rerender();
+    expect(result.current).toBe(first);
+  });
+
+  it('supports React Strict Mode when currentPath changes', () => {
+    const Strict = (props: { path: string; children?: React.ReactNode }) =>
+      React.createElement(React.StrictMode, null, props.children);
+
+    const { result, rerender } = renderHook<{ path: string }, MotionValue<string>>(
+      ({ path }) => usePathTransition({ currentPath: path }),
+      {
+        wrapper: Strict,
+        initialProps: { path: 'M0,0L10,10' },
+      },
+    );
+
+    rerender({ path: 'M0,0L20,20' });
+
+    expect(result.current.get()).toBe('M0,0L20,20');
+  });
+
+  it('starts the next interpolation from the current motion value when a transition is interrupted', () => {
+    const { animate } = require('framer-motion');
+    const { interpolatePath } = require('d3-interpolate-path');
+
+    animate
+      .mockImplementationOnce(
+        (_from: unknown, _to: unknown, config: { onUpdate?: (t: number) => void }) => {
+          if (config?.onUpdate) {
+            config.onUpdate(0.49);
+          }
+          return { cancel: jest.fn(), stop: jest.fn() };
+        },
+      )
+      .mockImplementationOnce(
+        (
+          _from: unknown,
+          _to: unknown,
+          config: { onUpdate?: (t: number) => void; onComplete?: () => void },
+        ) => {
+          if (config?.onUpdate) {
+            config.onUpdate(1);
+          }
+          if (config?.onComplete) {
+            config.onComplete();
+          }
+          return { cancel: jest.fn(), stop: jest.fn() };
+        },
+      );
+
+    const path1 = 'M0,0L10,10';
+    const path2 = 'M0,0L20,20';
+    const path3 = 'M0,0L30,30';
+
+    const { rerender } = renderHook(({ path }) => usePathTransition({ currentPath: path }), {
+      initialProps: { path: path1 },
+    });
+
+    interpolatePath.mockClear();
+    rerender({ path: path2 });
+    expect(interpolatePath).toHaveBeenCalledWith(path1, path2);
+
+    interpolatePath.mockClear();
+    rerender({ path: path3 });
+    expect(interpolatePath).toHaveBeenCalledWith(path1, path3);
   });
 
   it('should handle path updates', () => {
