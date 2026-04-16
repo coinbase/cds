@@ -74,6 +74,60 @@ function Example() {
 }
 ```
 
+## With PercentageBarChart
+
+`PercentageBarChart` can be passed directly as the `children` of a `DataCard` to visualize part-to-whole data alongside a title and subtitle.
+
+```jsx
+function Example() {
+  const theme = useTheme();
+
+  function PredictionCard({ question, subtitle, yesValue }) {
+    const noValue = 100 - yesValue;
+
+    return (
+      <DataCard layout="vertical" subtitle={subtitle} title={question}>
+        <Box paddingTop={2}>
+          <PercentageBarChart
+            barMinSize={8}
+            borderRadius={8}
+            height={48}
+            legend={<Legend paddingTop={2} />}
+            series={[
+              { id: 'yes', data: yesValue, label: 'Yes', color: theme.color.fgPositive },
+              { id: 'no', data: noValue, label: 'No', color: theme.color.fgNegative },
+            ]}
+            stackGap={4}
+          />
+        </Box>
+      </DataCard>
+    );
+  }
+
+  return (
+    <VStack gap={2}>
+      <DataCard layout="vertical" subtitle="Top holdings" title="Portfolio Allocation">
+        <Box paddingTop={2}>
+          <PercentageBarChart
+            barMinSize={8}
+            borderRadius={8}
+            height={48}
+            legend={<Legend paddingTop={2} />}
+            series={[
+              { id: 'btc', data: 55, label: 'BTC', color: assets.btc.color },
+              { id: 'eth', data: 30, label: 'ETH', color: assets.eth.color },
+              { id: 'sushi', data: 15, label: 'SUSHI', color: assets.sushi.color },
+            ]}
+            stackGap={4}
+          />
+        </Box>
+      </DataCard>
+      <PredictionCard question="Will BTC reach $200k?" subtitle="Closes Dec 31" yesValue={62} />
+    </VStack>
+  );
+}
+```
+
 ## Layout Variations
 
 Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
