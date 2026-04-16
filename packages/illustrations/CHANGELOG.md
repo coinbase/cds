@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (1)
+
+###### HeroSquare (1)
+
+- cbmega
+
 ## 4.37.0 (4/8/2026 PST)
 
 #### 🚀 Updates
