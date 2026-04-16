@@ -5,6 +5,7 @@ import { NewAnimatePresence } from '../../animation/NewAnimatePresence';
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
+import { VStack } from '../../layout';
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 import { media } from '../../styles/media';
 import { Overlay } from '../overlay/Overlay';
@@ -106,12 +107,19 @@ export const ModalWrapper = memo(
               {...props}
             >
               <>
-                {!hideOverlay && (
+                {!hideOverlay ? (
                   <Overlay
                     animated
                     className={cx(!dangerouslyDisableResponsiveness && modalOverlayResponsiveCss)}
                     onClick={!disableOverlayPress ? onOverlayPress : undefined}
                     testID="modal-overlay"
+                  />
+                ) : (
+                  <VStack
+                    background="transparent"
+                    onClick={!disableOverlayPress ? onOverlayPress : undefined}
+                    pin="all"
+                    position="fixed"
                   />
                 )}
                 {/* NOTE: Add position or zIndex to children to avoid displaying under overlay

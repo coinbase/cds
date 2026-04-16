@@ -154,6 +154,7 @@ module.exports = {
     'overlays/modal/FullscreenModalLayout',
     'overlays/modal/FullscreenModalHeader',
     'overlays/overlay/Overlay',
+    'overlays/popover/PopoverPanel',
     'overlays/PortalProvider',
     'overlays/Toast',
     'overlays/tray/Tray',
