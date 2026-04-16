@@ -2,6 +2,10 @@
 
 Pass `content` for the panel body and `children` as the trigger. The trigger toggles open and closed on press; the panel applies focus management and escape-to-close behavior.
 
+:::tip Use an interactive element as the trigger
+Always pass a natively interactive element — such as [`Button`](/components/buttons/Button/), [`IconButton`](/components/buttons/IconButton/), or an `<a>` tag — as `children`. Non-interactive elements (plain `div`, `span`, `Text`) are not reachable by keyboard and are invisible to assistive technology, which breaks accessibility.
+:::
+
 ```jsx live
 function BasicExample() {
   return (
