@@ -2236,7 +2236,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   '🔐': [
     'setPinCode',
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   'order': [
     'orderHistory',
@@ -4573,32 +4574,39 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'lock': [
     'lock',
-    'key'
+    'key',
+    'baseLock'
   ],
   'no access': [
-    'lock'
+    'lock',
+    'baseLock'
   ],
   'latch': [
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   'blocked': [
     'lock',
-    'block'
+    'block',
+    'baseLock'
   ],
   '🔒': [
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   '🔑': [
     'lock',
     'unlock',
     'key',
-    'securityKey'
+    'securityKey',
+    'baseLock'
   ],
   '🗝': [
     'lock',
-    'unlock'
+    'unlock',
+    'baseLock'
   ],
   'peer to peer': [
     'blockchain'
