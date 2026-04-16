@@ -10,7 +10,7 @@ import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { Modal } from '../Modal';
 import { ModalBody } from '../ModalBody';
 import { ModalFooter } from '../ModalFooter';
-import { ModalHeader } from '../ModalHeader';
+import { ModalHeader, type ModalHeaderProps } from '../ModalHeader';
 
 type LoremIpsumProps = {
   title?: string;
@@ -47,19 +47,11 @@ type ModalA11yProps = {
   accessibilityLabel?: string;
 };
 
-type ModalHeaderProps = {
-  title?: string;
-  backAccessibilityLabel?: string;
-  backAccessibilityHint?: string;
-  closeAccessibilityLabel?: string;
-  closeAccessibilityHint?: string;
-  onBackButtonClick?: () => void;
-};
-
 const MockModal = ({
   onRequestClose,
   onDidClose,
   onBackButtonClick,
+  font,
   title = 'Basic Modal',
   visible: externalVisible = false,
   testID,
@@ -111,6 +103,7 @@ const MockModal = ({
           backAccessibilityLabel={backAccessibilityLabel}
           closeAccessibilityHint={closeAccessibilityHint}
           closeAccessibilityLabel={closeAccessibilityLabel}
+          font={font}
           onBackButtonClick={onBackButtonClick}
           title={title}
         />
@@ -251,6 +244,31 @@ describe('Modal', () => {
     fireEvent.press(screen.getByText('Open Modal'));
 
     expect(await screen.findByText(title)).toBeTruthy();
+  });
+
+  it('renders ReactNode title', async () => {
+    render(
+      <DefaultThemeProvider>
+        <MockModal title={<Text testID="custom-title">Custom Title</Text>} />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(await screen.findByTestId('custom-title')).toBeTruthy();
+    expect(screen.getByText('Custom Title')).toBeTruthy();
+  });
+
+  it('applies custom font prop to title text', async () => {
+    render(
+      <DefaultThemeProvider>
+        <MockModal font="title1" title="Styled Title" />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(await screen.findByText('Styled Title')).toBeTruthy();
   });
 
   it('renders modal body', async () => {
