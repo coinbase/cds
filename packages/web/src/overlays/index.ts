@@ -10,6 +10,7 @@ export * from './modal/ModalFooter';
 export * from './modal/ModalHeader';
 export * from './overlay/Overlay';
 export * from './popover/Popover';
+export * from './popover/PopoverPanel';
 export * from './popover/PopoverProps';
 export * from './popover/usePopper';
 export * from './PortalProvider';

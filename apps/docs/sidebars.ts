@@ -487,6 +487,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/overlay/PopoverPanel/popoverPanel',
+              label: 'PopoverPanel',
+            },
+            {
+              type: 'doc',
               id: 'components/overlay/PortalProvider/portalProvider',
               label: 'PortalProvider',
             },

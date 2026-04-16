@@ -63,8 +63,8 @@ import type { ModalFooterBaseProps } from '../overlays/modal/ModalFooter';
 import type { ModalHeaderBaseProps } from '../overlays/modal/ModalHeader';
 import type { ModalWrapperBaseProps } from '../overlays/modal/ModalWrapper';
 import type { OverlayBaseProps } from '../overlays/overlay/Overlay';
+import type { PopoverPanelBaseProps } from '../overlays/popover/PopoverPanel';
 import type { ToastBaseProps } from '../overlays/Toast';
-import type { TooltipContentBaseProps } from '../overlays/tooltip/TooltipContent';
 import type { TooltipBaseProps } from '../overlays/tooltip/TooltipProps';
 import type { TrayBaseProps } from '../overlays/tray/Tray';
 import type { PageFooterBaseProps } from '../page/PageFooter';
@@ -154,6 +154,7 @@ export type ComponentConfig = {
   PageFooter?: ConfigResolver<PageFooterBaseProps>;
   PageHeader?: ConfigResolver<PageHeaderBaseProps>;
   Pagination?: ConfigResolver<PaginationBaseProps>;
+  PopoverPanel?: ConfigResolver<PopoverPanelBaseProps>;
   ProgressBar?: ConfigResolver<ProgressBaseProps>;
   ProgressBarWithFixedLabels?: ConfigResolver<ProgressBarWithFixedLabelsBaseProps>;
   ProgressBarWithFloatLabel?: ConfigResolver<ProgressBarWithFloatLabelBaseProps>;
@@ -186,7 +187,6 @@ export type ComponentConfig = {
   Tile?: ConfigResolver<TileBaseProps>;
   TileButton?: ConfigResolver<TileButtonBaseProps>;
   Tooltip?: ConfigResolver<TooltipBaseProps>;
-  TooltipContent?: ConfigResolver<TooltipContentBaseProps>;
   Toast?: ConfigResolver<ToastBaseProps>;
   Tour?: ConfigResolver<TourBaseProps>;
   Tray?: ConfigResolver<TrayBaseProps>;

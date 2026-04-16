@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.66.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Deprecate Dropdown and add PopoverPanel component. [[#566](https://github.com/coinbase/cds/pull/566)]
+
 ## 8.65.0 (4/16/2026 PST)
 
 #### 🚀 Updates

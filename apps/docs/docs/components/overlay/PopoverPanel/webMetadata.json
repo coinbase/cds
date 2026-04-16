@@ -1,0 +1,30 @@
+{
+  "import": "import { PopoverPanel } from '@coinbase/cds-web/overlays'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/popover/PopoverPanel.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-overlay-popoverpanel--default",
+  "description": "PopoverPanel anchors an elevated floating panel to a trigger element.",
+  "relatedComponents": [
+    {
+      "label": "Modal",
+      "url": "/components/overlay/Modal/"
+    },
+    {
+      "label": "Tooltip",
+      "url": "/components/overlay/Tooltip/"
+    },
+    {
+      "label": "FocusTrap",
+      "url": "/components/overlay/FocusTrap/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    },
+    {
+      "name": "react-dom",
+      "version": "^18.3.1"
+    }
+  ]
+}
