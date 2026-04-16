@@ -3,7 +3,7 @@ import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common
 import { type PopoverBaseProps } from '../overlays/popover/PopoverProps';
 
 /**
- * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type DropdownRef = {
@@ -12,7 +12,7 @@ export type DropdownRef = {
 };
 
 /**
- * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type DropdownInternalProps = DropdownProps & {
@@ -20,7 +20,7 @@ export type DropdownInternalProps = DropdownProps & {
 };
 
 /**
- * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type DropdownBaseProps = SharedProps &
@@ -77,7 +77,7 @@ export type DropdownBaseProps = SharedProps &
   };
 
 /**
- * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type DropdownProps = DropdownBaseProps & {
@@ -97,7 +97,7 @@ export type DropdownProps = DropdownBaseProps & {
 };
 
 /**
- * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type DropdownRefProps = {

@@ -9,7 +9,6 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../../cx';
-import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { VStack, type VStackBaseProps } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 
@@ -19,64 +18,76 @@ const popoverPanelContentClassName = 'cds-popover-panel-content';
 
 export type PopoverPanelContentBaseProps = Pick<
   VStackBaseProps,
-  'height' | 'width' | 'maxHeight' | 'maxWidth' | 'minWidth'
+  | 'height'
+  | 'width'
+  | 'maxHeight'
+  | 'maxWidth'
+  | 'minWidth'
+  | 'borderRadius'
+  | 'background'
+  | 'overflow'
 > & {
   placement?: Placement;
-  children: React.ReactNode;
 };
 
 export type PopoverPanelContentProps = PopoverPanelContentBaseProps & {
   style?: React.CSSProperties;
   className?: string;
+  children: React.ReactNode;
 };
 
 const MotionVStack = motion(VStack);
 
 export const PopoverPanelContent = memo(
-  forwardRef<HTMLDivElement, PopoverPanelContentProps>((_props, ref) => {
-    const mergedProps = useComponentConfig('PopoverPanelContent', _props);
-    const {
-      children,
-      placement,
-      minWidth = 'min-content',
-      style,
-      className,
-      ...props
-    } = mergedProps;
-    const isHorizontal = placement?.includes('left') || placement?.includes('right');
-    const translate = isHorizontal ? 'x' : 'y';
+  forwardRef<HTMLDivElement, PopoverPanelContentProps>(
+    (
+      {
+        children,
+        placement,
+        minWidth = 'min-content',
+        borderRadius = 400,
+        background = 'bg',
+        overflow = 'auto',
+        style,
+        className,
+        ...props
+      },
+      ref,
+    ) => {
+      const isHorizontal = placement?.includes('left') || placement?.includes('right');
+      const translate = isHorizontal ? 'x' : 'y';
 
-    const motionProps = useMotionProps({
-      enterConfigs: [
-        animateDropdownOpacityInConfig,
-        { ...animateDropdownTransformInConfig, property: translate },
-      ],
-      exitConfigs: [
-        animateDropdownOpacityOutConfig,
-        { ...animateDropdownTransformOutConfig, property: translate },
-      ],
-      exit: 'exit',
-    });
+      const motionProps = useMotionProps({
+        enterConfigs: [
+          animateDropdownOpacityInConfig,
+          { ...animateDropdownTransformInConfig, property: translate },
+        ],
+        exitConfigs: [
+          animateDropdownOpacityOutConfig,
+          { ...animateDropdownTransformOutConfig, property: translate },
+        ],
+        exit: 'exit',
+      });
 
-    return (
-      <MotionVStack
-        ref={ref}
-        bordered
-        background="bg"
-        borderRadius={400}
-        className={cx(popoverPanelContentClassName, className)}
-        elevation={2}
-        minWidth={minWidth}
-        overflow="auto"
-        role="dialog"
-        style={style}
-        tabIndex={0}
-        zIndex={zIndex.dropdown}
-        {...props}
-        {...motionProps}
-      >
-        {children}
-      </MotionVStack>
-    );
-  }),
+      return (
+        <MotionVStack
+          ref={ref}
+          bordered
+          background={background}
+          borderRadius={borderRadius}
+          className={cx(popoverPanelContentClassName, className)}
+          elevation={2}
+          minWidth={minWidth}
+          overflow={overflow}
+          role="dialog"
+          style={style}
+          zIndex={zIndex.dropdown}
+          {...props}
+          {...motionProps}
+        >
+          {children}
+        </MotionVStack>
+      );
+    },
+  ),
 );

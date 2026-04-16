@@ -1,5 +1,5 @@
 {
-  "import": "import { PopoverPanel } from '@coinbase/cds-web/popover'",
+  "import": "import { PopoverPanel } from '@coinbase/cds-web/overlays'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/popover/PopoverPanel.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-overlay-popoverpanel--default",
   "description": "PopoverPanel anchors an elevated floating panel to a trigger element.",

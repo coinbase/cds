@@ -53,10 +53,6 @@ export const customComponentConfig: ComponentConfig = {
     invertColorScheme: false,
   },
 
-  TooltipContent: {
-    background: 'bgSecondary',
-  },
-
   Radio: (props) => ({
     background: 'bg',
     borderWidth: props.checked ? 200 : 100,

@@ -14,13 +14,15 @@ import { css } from '@linaria/core';
 import { cx } from '../../cx';
 import { useBreakpoints } from '../../hooks/useBreakpoints';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
+import type { StylesAndClassNames } from '../../types';
 import { FocusTrap } from '../FocusTrap';
 import { ModalWrapper } from '../modal/ModalWrapper';
 
 import { Popover } from './Popover';
 import { PopoverPanelContent, type PopoverPanelContentBaseProps } from './PopoverPanelContent';
 import type { PopoverBaseProps, PopoverContentPositionConfig } from './PopoverProps';
-import { useResponsivePanelMaxHeight } from './useResponsivePanelMaxHeight';
+
+const POPOVER_PANEL_MAX_HEIGHT = 300;
 
 export type PopoverPanelRef = {
   openPopover: () => void;
@@ -29,35 +31,35 @@ export type PopoverPanelRef = {
 
 export type PopoverPanelRenderContent = (api: { closePopover: () => void }) => React.ReactNode;
 
-export type PopoverPanelBaseProps = Pick<
-  PopoverBaseProps,
-  | 'children'
-  | 'showOverlay'
-  | 'contentPosition'
-  | 'block'
-  | 'disableTypeFocus'
-  | 'controlledElementAccessibilityProps'
-  | 'respectNegativeTabIndex'
-> &
-  SharedProps &
+export type PopoverPanelBaseProps = SharedProps &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
+  > &
+  Pick<
+    PopoverBaseProps,
+    | 'showOverlay'
+    | 'contentPosition'
+    | 'block'
+    | 'disableTypeFocus'
+    | 'controlledElementAccessibilityProps'
+    | 'respectNegativeTabIndex'
+    | 'disableAutoFocus'
+    | 'focusTabIndexElements'
+    | 'autoFocusDelay'
   > & {
     /**
      * Enable to have PopoverPanel render its content inside a Modal as opposed to a relatively positioned Popover.
      * Ideal for mobile or smaller devices.
      */
     enableMobileModal?: boolean;
-    /**
-     * Width of the panel as a percentage string or number converted to pixels.
-     */
+    /** Width of the panel. */
     panelWidth?: PopoverPanelContentBaseProps['width'];
-    /** Minimum width of the panel as a percentage string or number converted to pixels. */
+    /** Minimum width of the panel. */
     minPanelWidth?: PopoverPanelContentBaseProps['minWidth'];
-    /** Maximum width of the panel as a percentage string or number converted to pixels. */
+    /** Maximum width of the panel. */
     maxPanelWidth?: PopoverPanelContentBaseProps['maxWidth'];
-    /** Height of the panel as a percentage string or number converted to pixels. */
+    /** Height of the panel. */
     panelHeight?: PopoverPanelContentBaseProps['height'];
     /** Can optionally pass a maxHeight.
      * @default 300
@@ -91,29 +93,24 @@ export type PopoverPanelBaseProps = Pick<
     content: React.ReactNode | PopoverPanelRenderContent;
   };
 
-export type PopoverPanelProps = PopoverPanelBaseProps & {
-  style?: React.CSSProperties;
-  styles?: {
-    /** Inline styles for the elevated panel surface (`PopoverPanelContent`). */
-    content?: React.CSSProperties;
-    /** Inline styles for the wrapper around `children` (the `Popover` root in floating layout, or the trigger `Box` in the mobile modal). */
-    triggerContainer?: React.CSSProperties;
-  };
-  className?: string;
-  classNames?: {
-    /** Additional class name merged onto the panel surface (`PopoverPanelContent`). */
-    content?: string;
-    /** Additional class name merged onto the wrapper around `children` (same targets as `styles.triggerContainer`). */
-    triggerContainer?: string;
-  };
+export const popoverPanelClassNames = {
+  /** Elevated panel surface (`PopoverPanelContent`). */
+  content: 'cds-PopoverPanel-content',
+  /** Wrapper around `children` (the `Popover` root in floating layout, or the trigger `div` in the mobile modal). */
+  triggerContainer: 'cds-PopoverPanel-triggerContainer',
 };
+
+export type PopoverPanelProps = PopoverPanelBaseProps &
+  StylesAndClassNames<typeof popoverPanelClassNames> & {
+    style?: React.CSSProperties;
+    className?: string;
+    children: React.ReactNode;
+  };
 
 export type PopoverPanelInternalProps = Omit<PopoverPanelProps, 'content'> & {
   content: React.ReactNode;
   visible: boolean;
 };
-
-export const POPOVER_PANEL_MAX_HEIGHT = 300;
 const NOOP = () => {};
 
 const defaultPopoverContentPositionConfig: PopoverContentPositionConfig = {
@@ -169,6 +166,10 @@ const MobilePopoverPanel = memo(
         className,
         classNames,
         onBlur,
+        testID,
+        disableAutoFocus,
+        focusTabIndexElements,
+        autoFocusDelay,
       },
       ref,
     ) => {
@@ -179,10 +180,15 @@ const MobilePopoverPanel = memo(
       return (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
-          className={cx(block ? blockCss : triggerContainerCss, classNames?.triggerContainer)}
+          className={cx(
+            block ? blockCss : triggerContainerCss,
+            popoverPanelClassNames.triggerContainer,
+            className,
+            classNames?.triggerContainer,
+          )}
           onBlur={onBlur}
           onClick={disabled ? undefined : onOpen}
-          style={styles?.triggerContainer}
+          style={{ ...style, ...styles?.triggerContainer }}
         >
           {children}
           <ModalWrapper
@@ -191,11 +197,14 @@ const MobilePopoverPanel = memo(
             hideOverlay={!showOverlay}
             onClick={handleCaptureEvents}
             onOverlayPress={onClose}
-            testID="popover-panel-modal"
+            testID={testID}
             visible={visible}
             {...controlledElementAccessibilityProps}
           >
             <FocusTrap
+              autoFocusDelay={autoFocusDelay}
+              disableAutoFocus={disableAutoFocus}
+              focusTabIndexElements={focusTabIndexElements}
               onEscPress={onClose}
               respectNegativeTabIndex={respectNegativeTabIndex}
               restoreFocusOnUnmount={restoreFocusOnUnmount}
@@ -232,7 +241,7 @@ const FloatingPopoverPanel = memo(
         panelWidth: width,
         minPanelWidth: minWidth,
         maxPanelWidth: maxWidth,
-        maxPanelHeight: maxHeight,
+        maxPanelHeight: maxHeight = POPOVER_PANEL_MAX_HEIGHT,
         panelHeight: height,
         testID,
         disablePortal,
@@ -249,7 +258,6 @@ const FloatingPopoverPanel = memo(
       },
       ref,
     ) => {
-      const [panelContentRef, panelBounds] = useMeasure();
       const [triggerRef, triggerBounds] = useMeasure();
 
       const combinedContentPosition = useMemo(
@@ -257,21 +265,12 @@ const FloatingPopoverPanel = memo(
         [contentPosition],
       );
 
-      const { panelMaxHeight } = useResponsivePanelMaxHeight({
-        gap: combinedContentPosition.gap,
-        panelBounds,
-        maxHeight,
-        visible,
-        placement: combinedContentPosition.placement,
-      });
-
       const memoizedContent = useMemo(
         () => (
           <PopoverPanelContent
-            ref={panelContentRef}
             className={classNames?.content}
             height={height}
-            maxHeight={panelMaxHeight}
+            maxHeight={maxHeight}
             maxWidth={maxWidth}
             minWidth={minWidth}
             placement={combinedContentPosition.placement}
@@ -282,10 +281,9 @@ const FloatingPopoverPanel = memo(
           </PopoverPanelContent>
         ),
         [
-          panelContentRef,
           classNames?.content,
           height,
-          panelMaxHeight,
+          maxHeight,
           maxWidth,
           minWidth,
           combinedContentPosition.placement,
@@ -302,7 +300,12 @@ const FloatingPopoverPanel = memo(
         <Popover
           ref={triggerRef}
           block={block}
-          className={cx(!block && triggerContainerCss, className, classNames?.triggerContainer)}
+          className={cx(
+            !block && triggerContainerCss,
+            popoverPanelClassNames.triggerContainer,
+            className,
+            classNames?.triggerContainer,
+          )}
           content={disabled ? undefined : memoizedContent}
           contentPosition={combinedContentPosition}
           disablePortal={disablePortal}

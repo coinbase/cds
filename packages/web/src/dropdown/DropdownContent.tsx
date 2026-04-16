@@ -18,7 +18,7 @@ import type { DropdownProps } from './DropdownProps';
 const dropdownStaticClassName = 'cds-dropdown';
 
 /**
- * @deprecated Use PopoverPanelContent instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanelContent within a PopoverPanel for interactive overlay content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type DropdownContentProps = {
@@ -29,7 +29,7 @@ export type DropdownContentProps = {
 const MotionVStack = motion(VStack);
 
 /**
- * @deprecated Use PopoverPanelContent instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanelContent within a PopoverPanel for interactive overlay content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const DropdownContent = memo(

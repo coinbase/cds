@@ -219,7 +219,7 @@ const PopoverDropdown = memo(
 );
 
 /**
- * @deprecated Use PopoverPanel instead. This will be removed in a future major release.
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const Dropdown = memo(

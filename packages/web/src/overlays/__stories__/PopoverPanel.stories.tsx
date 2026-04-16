@@ -1,18 +1,17 @@
 import { useRef } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Button } from '../../../buttons/Button';
-import { HStack } from '../../../layout/HStack';
-import { VStack } from '../../../layout/VStack';
-import { Text } from '../../../typography/Text';
-import { PortalProvider } from '../../PortalProvider';
-import { PopoverPanel, type PopoverPanelRef } from '../PopoverPanel';
+import { Button } from '../../buttons/Button';
+import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
+import { Text } from '../../typography/Text';
+import { PopoverPanel, type PopoverPanelRef } from '../popover/PopoverPanel';
+import { PortalProvider } from '../PortalProvider';
 
 const meta: Meta<typeof PopoverPanel> = {
   title: 'Components/Overlay/PopoverPanel',
   component: PopoverPanel,
   parameters: {
-    a11y: { test: 'off' },
     layout: 'padded',
   },
   decorators: [
@@ -26,11 +25,9 @@ const meta: Meta<typeof PopoverPanel> = {
 
 export default meta;
 
-type Story = StoryObj<typeof PopoverPanel>;
-
 const panelAccessibilityLabel = 'Storybook PopoverPanel';
 
-function DefaultStory() {
+export const Default = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -41,7 +38,9 @@ function DefaultStory() {
         content={
           <VStack gap={2} padding={3}>
             <Text font="headline">Panel title</Text>
-            <Text color="fgMuted">Floating panel anchored to the trigger.</Text>
+            <Text color="fgMuted" font="body">
+              Floating panel anchored to the trigger.
+            </Text>
             <Button compact onClick={() => panelRef.current?.closePopover()} variant="secondary">
               Close from content
             </Button>
@@ -53,13 +52,9 @@ function DefaultStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const Default: Story = {
-  render: () => <DefaultStory />,
 };
 
-function MobileStory() {
+export const Mobile = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -84,13 +79,9 @@ function MobileStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const Mobile: Story = {
-  render: () => <MobileStory />,
 };
 
-function WithOverlayStory() {
+export const WithOverlay = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -113,13 +104,9 @@ function WithOverlayStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const WithOverlay: Story = {
-  render: () => <WithOverlayStory />,
 };
 
-function TopPlacementStory() {
+export const TopPlacement = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -142,13 +129,9 @@ function TopPlacementStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const TopPlacement: Story = {
-  render: () => <TopPlacementStory />,
 };
 
-function DisablePortalStory() {
+export const DisablePortal = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -174,13 +157,9 @@ function DisablePortalStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const DisablePortal: Story = {
-  render: () => <DisablePortalStory />,
 };
 
-function SizingStory() {
+export const Sizing = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -206,13 +185,9 @@ function SizingStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const Sizing: Story = {
-  render: () => <SizingStory />,
 };
 
-function RenderContentWithCloseStory() {
+export const RenderContentWithClose = () => {
   return (
     <HStack gap={4} padding={4}>
       <PopoverPanel
@@ -233,13 +208,9 @@ function RenderContentWithCloseStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const RenderContentWithClose: Story = {
-  render: () => <RenderContentWithCloseStory />,
 };
 
-function ImperativeRefStory() {
+export const ImperativeRef = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -264,13 +235,9 @@ function ImperativeRefStory() {
       </PopoverPanel>
     </VStack>
   );
-}
-
-export const ImperativeRef: Story = {
-  render: () => <ImperativeRefStory />,
 };
 
-function DisabledStory() {
+export const Disabled = () => {
   return (
     <HStack gap={4} padding={4}>
       <PopoverPanel
@@ -287,13 +254,9 @@ function DisabledStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const Disabled: Story = {
-  render: () => <DisabledStory />,
 };
 
-function CustomStylesStory() {
+export const CustomStyles = () => {
   const panelRef = useRef<PopoverPanelRef>(null);
 
   return (
@@ -327,8 +290,4 @@ function CustomStylesStory() {
       </PopoverPanel>
     </HStack>
   );
-}
-
-export const CustomStyles: Story = {
-  render: () => <CustomStylesStory />,
 };
