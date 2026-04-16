@@ -249,8 +249,16 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): SharedValue<SkPath> => {
-  const updateTransition = transitions?.update !== undefined ? transitions.update : transition;
-  const enterTransition = transitions?.enter;
+  const transitionRef = useRef<{
+    enter?: Transition | null;
+    update: Transition | null;
+  }>({
+    enter: transitions?.enter,
+    update: transitions?.update !== undefined ? transitions.update : transition,
+  });
+  transitionRef.current.enter = transitions?.enter;
+  transitionRef.current.update =
+    transitions?.update !== undefined ? transitions.update : transition;
 
   const targetPathRef = useRef(initialPath ?? currentPath);
   const isFirstAnimation = useRef(!!initialPath);
@@ -274,10 +282,8 @@ export const usePathTransition = ({
 
       targetPathRef.current = currentPath;
 
-      const activeTransition =
-        isFirstAnimation.current && enterTransition !== undefined
-          ? enterTransition
-          : updateTransition;
+      const { enter, update } = transitionRef.current;
+      const activeTransition = isFirstAnimation.current && enter !== undefined ? enter : update;
 
       isFirstAnimation.current = false;
 
@@ -308,8 +314,6 @@ export const usePathTransition = ({
     }
   }, [
     currentPath,
-    updateTransition,
-    enterTransition,
     progress,
     normalizedStartShared,
     normalizedEndShared,

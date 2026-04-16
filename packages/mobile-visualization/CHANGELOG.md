@@ -10,7 +10,9 @@ All notable changes to this project will be documented in this file.
 
 ## 3.6.1 (4/16/2026 PST)
 
-This is an artificial version bump with no new change.
+#### 🐞 Fixes
+
+- Fix: stabilize chart path transitions. [[#618](https://github.com/coinbase/cds/pull/618)]
 
 ## 3.6.0 (4/13/2026 PST)
 
