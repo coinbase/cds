@@ -542,5 +542,6 @@ export const names: IconName[] = [
   'filterLineStack',
   'overPredictions',
   'column',
-  'underPredictions'
+  'underPredictions',
+  'baseLock'
 ];

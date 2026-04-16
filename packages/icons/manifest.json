@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-08T18:18:15.584Z",
-  "lastUnicode": 986268,
+  "lastUpdated": "2026-04-16T18:23:36.872Z",
+  "lastUnicode": 986274,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25285,6 +25285,53 @@
           "active": true,
           "size": 12,
           "unicode": 986263
+        }
+      ]
+    },
+    {
+      "nodeId": "7528:276",
+      "name": "baseLock",
+      "description": "lock, no access, latch, blocked, 🔒, 🔐, 🔑, 🗝",
+      "assetsHash": "E5JXsgGevW1u7IDIzj1UNa5a/ktGcAD65+e4weds7O8=",
+      "nameHash": "2dm2KfcTXzWGTd/LFCfwJ90DuAWwL0b77qSEZgNujUA=",
+      "createdAt": "2026-04-15T16:50:05.216Z",
+      "lastUpdated": "2026-04-15T16:50:05.216Z",
+      "svgs": [
+        {
+          "name": "baseLock-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986274
+        },
+        {
+          "name": "baseLock-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986273
+        },
+        {
+          "name": "baseLock-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986272
+        },
+        {
+          "name": "baseLock-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986271
+        },
+        {
+          "name": "baseLock-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986270
+        },
+        {
+          "name": "baseLock-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986269
         }
       ]
     }
