@@ -4,6 +4,8 @@ import { defaultTransition, getTransition, usePathTransition } from '../transiti
 
 // Mock framer-motion
 jest.mock('framer-motion', () => {
+  const React = require('react');
+
   const mockMotionValue = (initial: any) => {
     let value = initial;
     const listeners: Array<(v: any) => void> = [];
@@ -24,7 +26,13 @@ jest.mock('framer-motion', () => {
   };
 
   return {
-    useMotionValue: jest.fn((initial) => mockMotionValue(initial)),
+    useMotionValue: jest.fn((initial) => {
+      const motionValueRef = React.useRef(null as ReturnType<typeof mockMotionValue> | null);
+      if (motionValueRef.current === null) {
+        motionValueRef.current = mockMotionValue(initial);
+      }
+      return motionValueRef.current;
+    }),
     animate: jest.fn((_from, _to, config) => {
       // Simulate instant completion: call onUpdate with final value, then onComplete
       if (config?.onUpdate) {
@@ -340,6 +348,52 @@ describe('usePathTransition', () => {
 
     // Should have called animate again
     expect(animate.mock.calls.length).toBeGreaterThan(animateCallCount);
+  });
+
+  it('does not stop active animation when only transition object identity changes', () => {
+    const { animate } = require('framer-motion');
+    const stopMock = jest.fn();
+    animate.mockImplementation((_from: any, _to: any, config: any) => {
+      if (config?.onUpdate) {
+        config.onUpdate(0.5);
+      }
+      return {
+        cancel: jest.fn(),
+        stop: stopMock,
+      };
+    });
+
+    const { rerender } = renderHook(
+      ({ path, transitionConfig }) =>
+        usePathTransition({
+          currentPath: path,
+          transitions: {
+            update: transitionConfig,
+          },
+        }),
+      {
+        initialProps: {
+          path: 'M0,0L10,10',
+          transitionConfig: { type: 'spring' as const, stiffness: 300, damping: 30 },
+        },
+      },
+    );
+
+    // Start an animation to path2
+    rerender({
+      path: 'M0,0L20,20',
+      transitionConfig: { type: 'spring' as const, stiffness: 300, damping: 30 },
+    });
+    const animateCallCount = animate.mock.calls.length;
+
+    // Same path target, new transition object identity
+    rerender({
+      path: 'M0,0L20,20',
+      transitionConfig: { type: 'spring' as const, stiffness: 300, damping: 30 },
+    });
+
+    expect(animate.mock.calls.length).toBe(animateCallCount);
+    expect(stopMock).not.toHaveBeenCalled();
   });
 
   it('should cleanup animation on unmount', () => {
