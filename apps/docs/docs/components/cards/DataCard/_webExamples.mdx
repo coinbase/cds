@@ -162,6 +162,104 @@ function Example() {
 }
 ```
 
+## With PercentageBarChart
+
+`PercentageBarChart` can be passed directly as the `children` of a `DataCard` to visualize part-to-whole data alongside a title and subtitle.
+
+```jsx live
+function Example() {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 4), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const PredictionLegendEntry = memo(function PredictionLegendEntry({ seriesId, label, color }) {
+    const { series } = useCartesianChartContext();
+    const percentage = series.find((s) => s.id === seriesId)?.data?.[0] ?? 0;
+
+    return (
+      <Chip
+        compact
+        styles={{
+          root: {
+            borderColor: color,
+            borderWidth: 2,
+            background: `color-mix(in srgb, ${color} 12%, transparent)`,
+          },
+        }}
+      >
+        <HStack alignItems="center" gap={0.5} style={{ color }}>
+          <Text color="currentColor" font="label1">
+            {label}
+          </Text>
+          <Text color="currentColor" font="label1">
+            &middot;
+          </Text>
+          <RollingNumber
+            color="currentColor"
+            font="label1"
+            format={{ style: 'percent', maximumFractionDigits: 0 }}
+            value={percentage / 100}
+          />
+        </HStack>
+      </Chip>
+    );
+  });
+
+  const PredictionCard = useMemo(
+    () =>
+      memo(function PredictionCard({ question, subtitle, yesValue }) {
+        const noValue = 100 - yesValue;
+
+        return (
+          <DataCard layout="vertical" subtitle={subtitle} title={question}>
+            <Box paddingTop={2}>
+              <PercentageBarChart
+                barMinSize={8}
+                borderRadius={8}
+                height={56}
+                legend={<Legend EntryComponent={PredictionLegendEntry} paddingTop={2} />}
+                series={[
+                  { id: 'yes', data: yesValue, label: 'Yes', color: 'var(--color-fgPositive)' },
+                  { id: 'no', data: noValue, label: 'No', color: 'var(--color-fgNegative)' },
+                ]}
+                stackGap={4}
+              />
+            </Box>
+          </DataCard>
+        );
+      }),
+    [],
+  );
+
+  const btcYes = 50 + Math.sin(tick * 0.05) * 49;
+
+  return (
+    <VStack gap={2} width={480}>
+      <DataCard layout="vertical" subtitle="Top holdings" title="Portfolio Allocation">
+        <Box paddingTop={2}>
+          <PercentageBarChart
+            barMinSize={8}
+            borderRadius={8}
+            height={48}
+            legend={<Legend paddingTop={2} />}
+            series={[
+              { id: 'btc', data: 55, label: 'BTC', color: assets.btc.color },
+              { id: 'eth', data: 30, label: 'ETH', color: assets.eth.color },
+              { id: 'sushi', data: 15, label: 'SUSHI', color: assets.sushi.color },
+            ]}
+            stackGap={4}
+          />
+        </Box>
+      </DataCard>
+      <PredictionCard question="Will BTC reach $200k?" subtitle="Closes Dec 31" yesValue={btcYes} />
+    </VStack>
+  );
+}
+```
+
 ## Layout Variations
 
 Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
