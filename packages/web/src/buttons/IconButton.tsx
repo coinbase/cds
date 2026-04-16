@@ -6,10 +6,10 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import type { StylesAndClassNames } from '../types';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
