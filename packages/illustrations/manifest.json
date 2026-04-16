@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-04-08T18:35:15.991Z",
+  "lastUpdated": "2026-04-16T19:14:44.724Z",
   "colors": {
     "light": [
       {
@@ -31845,6 +31845,26 @@
         "svgJsDark": "./pictogram/svgJs/dark/inrTrade-0.js",
         "pngLight": "./pictogram/png/light/inrTrade-0.png",
         "pngDark": "./pictogram/png/dark/inrTrade-0.png"
+      },
+      "version": 0
+    },
+    "29466:21": {
+      "type": "heroSquare",
+      "name": "cbmega",
+      "hash": "jzfg2tXWY6sJYvgTXX/CLgq8Qn1WIOIkblY/D6Ku7oE=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, mega, cbmega",
+      "createdAt": "2026-04-16T19:09:39.933Z",
+      "lastUpdated": "2026-04-16T19:09:53.197Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/cbmega-0.svg",
+        "svgDark": "./heroSquare/svg/dark/cbmega-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/cbmega-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/cbmega-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/cbmega-0.js",
+        "pngLight": "./heroSquare/png/light/cbmega-0.png",
+        "pngDark": "./heroSquare/png/dark/cbmega-0.png"
       },
       "version": 0
     }
