@@ -45,8 +45,13 @@ const blockCss = css`
 `;
 
 /**
- * Popover is the internal recommended base component used for any overlay that is laid out with respect to a subject.
- * It is purposely a flexible component and is reserved for CDS internal usage.
+ * Low-level primitive that positions an arbitrary `content` node relative to a subject (trigger) element.
+ * It handles placement, portal rendering, and open/close wiring, but intentionally renders `content` as-is —
+ * it does not provide a styled surface, animation, or focus management.
+ *
+ * For a fully composed overlay with an animated elevated panel and focus trap, use {@link PopoverPanel} instead.
+ *
+ * @internal Reserved for CDS internal use only.
  */
 export const Popover = memo(
   forwardRef<HTMLDivElement, PopoverProps>(
