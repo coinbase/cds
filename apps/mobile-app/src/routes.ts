@@ -411,6 +411,11 @@ export const routes = [
       require('@cbhq/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
+    key: 'ModalCustomHeader',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/ModalCustomHeader.stories').default,
+  },
+  {
     key: 'ModalCustomPadding',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/ModalCustomPadding.stories').default,

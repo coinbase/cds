@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.65.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Add customization to text for ModalHeader. [[#613](https://github.com/coinbase/cds/pull/613)]
+
 ## 8.64.5 ((4/16/2026, 06:50 AM PST))
 
 This is an artificial version bump with no new change.
