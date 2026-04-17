@@ -4,11 +4,37 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execSync } = require('node:child_process');
 
-// Get a package name and a target directory as an argument
-// Download the latest v7 of that package
-// Extract it into the target directory
-// Edit the v7 global styles or icon fonts as necessary
-// Edit the package.json exports field
+// =============================================================================
+// add-cds7-exports.js — Backward-Compatible v7 Export Bundler
+// =============================================================================
+//
+// PURPOSE:
+//   During the CDS 8 release cycle, this script bundles the previous-generation
+//   (v7-era) package alongside the current build output. This allows consumers
+//   to gradually migrate by importing components via a /v7 subpath:
+//
+//     import { Button } from '@cbhq/cds-web/v7'
+//
+// HOW IT WORKS:
+//   1. Downloads the v7-era package from the internal npm registry
+//      (version ranges defined in packageVersionMap below).
+//   2. Extracts it into the esm/v7/ directory of the current build.
+//   3. Rewrites all internal import paths to use /v7 subpaths.
+//   4. Applies package-specific patches (icon font renaming, elevation
+//      theme backward-compat wrappers, web global styles).
+//   5. Merges v7 export entries into the host package.json "exports" field.
+//
+// LIFECYCLE:
+//   - Runs as the final step of build:prod in each package's project.json.
+//   - Automatically no-ops when the host package moves beyond the v7
+//     compatibility window (v7SourceMajor + 1), i.e., CDS 9 and later.
+//   - Once CDS 8.x is fully end-of-life, this script and its project.json
+//     references can be removed entirely.
+//
+// USAGE:
+//   node add-cds7-exports.js <@cbhq/package-name>
+//   (must be run from the package's root directory)
+// =============================================================================
 
 const args = process.argv.slice(2);
 const packageName = args[0]; // '@cbhq/cds-common'
@@ -17,7 +43,12 @@ const PACKAGE_ROOT = process.cwd();
 if (!PACKAGE_ROOT.includes('packages'))
   throw Error('Run this script from the target package root.');
 
-/** Do not change this! */
+/**
+ * Order in which import paths are rewritten inside extracted v7 source files.
+ * DO NOT reorder — longer prefixes (e.g. '@cbhq/cds-web-visualization') must
+ * appear before shorter ones that share the same prefix ('@cbhq/cds-web') to
+ * prevent partial matches during string replacement.
+ */
 const packageUpdateOrder = [
   '@cbhq/cds-common',
   '@cbhq/cds-icons',
@@ -31,6 +62,19 @@ const packageUpdateOrder = [
   '@cbhq/cds-utils',
 ];
 
+/**
+ * Maps each CDS package to the version range of its v7-era predecessor.
+ * These versions are downloaded from the internal npm registry and bundled
+ * under the /v7 export path.
+ *
+ * The major number from each spec also drives the version gate: v7 exports
+ * are only injected while the host package is at (v7SourceMajor + 1). Once
+ * it reaches (v7SourceMajor + 2) or beyond, the script skips injection.
+ *
+ * Example: '@cbhq/cds-web': '^7' means:
+ *   - v7.x.x is bundled during CDS 8 (major 8 = 7 + 1) ✓
+ *   - CDS 9 (major 9 = 7 + 2) → script exits as no-op   ✓
+ */
 const packageVersionMap = {
   '@cbhq/cds-common': '^7',
   '@cbhq/cds-icons': '^4',
@@ -74,6 +118,33 @@ if (!packageName) {
 ${grayColor}node add-cds7-exports.js <packageName>${resetColor}
 `);
   process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
+// Version gate: skip v7 export injection when the host package has moved
+// beyond the v7 compatibility window.
+// ---------------------------------------------------------------------------
+const v7VersionSpec = packageVersionMap[packageName];
+if (!v7VersionSpec) {
+  console.log(
+    `${yellowColor}${packageName} is not configured for v7 export injection. Skipping.${resetColor}`,
+  );
+  process.exit(0);
+}
+
+const hostPackageJson = JSON.parse(
+  fs.readFileSync(path.join(PACKAGE_ROOT, 'package.json'), 'utf-8'),
+);
+const currentMajor = parseInt(hostPackageJson.version.split('.')[0], 10);
+const v7SourceMajor = parseInt(v7VersionSpec.replace(/^\^/, ''), 10);
+
+if (currentMajor > v7SourceMajor + 1) {
+  console.log(
+    `${greenColor}Skipping v7 export injection for ${packageName}@${hostPackageJson.version}: ` +
+      `current major (${currentMajor}) is beyond the v7 compatibility window ` +
+      `(v7 source: ${v7VersionSpec}).${resetColor}`,
+  );
+  process.exit(0);
 }
 
 const esmDir = path.join(PACKAGE_ROOT, 'esm');
