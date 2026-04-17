@@ -390,3 +390,28 @@ jobs:
           else
             echo "❌ Live publish: **FAILED**" >> $GITHUB_STEP_SUMMARY
           fi
+
+  notify-slack:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    needs: [detect-changes, dry-run-publish, publish]
+    if: >-
+      always() &&
+      vars.SLACK_PUBLISH_ALERTS_ENABLED == 'true' &&
+      (github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      (needs.detect-changes.result == 'failure' ||
+      needs.dry-run-publish.result == 'failure' ||
+      needs.publish.result == 'failure')
+    steps:
+      - name: Post failure to Slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844 # v1.23.0
+        with:
+          payload: |
+            {
+              "username": "CDS Publish",
+              "icon_emoji": ":red_circle:",
+              "text": "${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run == 'true')) && '*Failed dry run of publishing NPM packages*' || '*Failed to publish NPM packages*' }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
