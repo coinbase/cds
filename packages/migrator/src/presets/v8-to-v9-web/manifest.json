@@ -32,6 +32,11 @@
       "description": "Rename interactable CSS custom properties: --interactable-* → --inter-* (CSS/SCSS/HTML files)",
       "file": "v9/migrate-interactable-css-vars-css",
       "type": "script"
+    },
+    {
+      "name": "theme-provider-isolated",
+      "description": "Add isolated prop to all ThemeProvider usages to preserve v8 behavior of injecting the full theme CSS variables",
+      "file": "v9/theme-provider-isolated"
     }
   ]
 }
