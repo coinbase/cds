@@ -411,7 +411,7 @@ jobs:
             {
               "username": "CDS Publish",
               "icon_emoji": ":red_circle:",
-              "text": "${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run == 'true')) && '*Failed dry run of publishing NPM packages*' || '*Failed to publish NPM packages*' }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
+              "text": "*TESTING*: ${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run == 'true')) && '*Failed dry run of publishing NPM packages*' || '*Failed to publish NPM packages*' }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
