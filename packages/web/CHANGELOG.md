@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.66.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Deprecate Dropdown and add PopoverPanel component. [[#566](https://github.com/coinbase/cds/pull/566)]
+
+## 8.65.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Add customization to text for ModalHeader. [[#613](https://github.com/coinbase/cds/pull/613)]
+
+## 8.64.5 (4/16/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: remove extra padding on combobox input. [[#617](https://github.com/coinbase/cds/pull/617)]
+
 ## 8.64.4 (4/10/2026 PST)
 
 #### 🐞 Fixes

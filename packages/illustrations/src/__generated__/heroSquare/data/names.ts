@@ -81,6 +81,7 @@ const names: HeroSquareName[] = [
   'cbbtc',
   'cbdoge',
   'cbltc',
+  'cbmega',
   'cbxrp',
   'chickenFishSystemError',
   'claimCryptoUsername',

@@ -86,6 +86,7 @@ const MockModal = ({
   onRequestClose,
   onDidClose,
   onBackButtonClick,
+  font,
   title = 'Basic Modal',
   visible: externalVisible = false,
   testID,
@@ -97,7 +98,7 @@ const MockModal = ({
   backAccessibilityHint,
   closeAccessibilityLabel,
   closeAccessibilityHint,
-}: Partial<ModalProps & MockModalProps & ModalHeaderProps>) => {
+}: Partial<Omit<ModalProps, 'title'> & MockModalProps & ModalHeaderProps>) => {
   const [visible, setVisible] = useState(externalVisible);
 
   const handleClose = useCallback(() => {
@@ -129,6 +130,7 @@ const MockModal = ({
           backAccessibilityLabel={backAccessibilityLabel}
           closeAccessibilityHint={closeAccessibilityHint}
           closeAccessibilityLabel={closeAccessibilityLabel}
+          font={font}
           onBackButtonClick={onBackButtonClick}
           title={title}
         />
@@ -359,6 +361,31 @@ describe('Modal', () => {
     expect(screen.getByText(TITLE)).not.toBeVisible();
 
     await waitFor(() => expect(screen.getByText(TITLE)).toBeVisible());
+  });
+
+  it('renders ReactNode title', async () => {
+    render(
+      <DefaultThemeProvider>
+        <MockModal
+          visible
+          onRequestClose={jest.fn()}
+          title={<span data-testid="custom-title">Custom Title</span>}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByTestId('custom-title')).toBeVisible());
+    expect(screen.getByTestId('custom-title')).toHaveTextContent('Custom Title');
+  });
+
+  it('applies custom font prop to title text', async () => {
+    render(
+      <DefaultThemeProvider>
+        <MockModal visible font="title1" onRequestClose={jest.fn()} title="Styled Title" />
+      </DefaultThemeProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText('Styled Title')).toBeVisible());
   });
 
   it('renders modal body', async () => {

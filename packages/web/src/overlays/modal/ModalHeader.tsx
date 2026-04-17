@@ -14,11 +14,11 @@ import {
 } from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 
-export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
+export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children' | 'title'> & {
   /** Handles back button press */
   onBackButtonClick?: React.MouseEventHandler;
   /** Title of the Modal */
-  title?: string;
+  title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -56,7 +56,7 @@ export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children'> & {
 };
 
 export type ModalHeaderProps = ModalHeaderBaseProps &
-  Omit<HStackProps<HStackDefaultElement>, 'children'>;
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
 export const ModalHeader = (_props: ModalHeaderProps) => {
   const mergedProps = useComponentConfig('ModalHeader', _props);
@@ -64,6 +64,7 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
     alignItems = 'center',
     paddingX = 3,
     paddingY = 2,
+    font = 'headline',
     title,
     onBackButtonClick,
     backAccessibilityLabel,
@@ -86,6 +87,7 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
     <HStack
       alignItems={alignItems}
       borderedBottom={!hideDividers}
+      font={font}
       paddingX={paddingX}
       paddingY={paddingY}
       {...props}
@@ -105,17 +107,20 @@ export const ModalHeader = (_props: ModalHeaderProps) => {
         emptyPlaceholder
       )}
       <Box alignItems="center" flexGrow={1} justifyContent="center" paddingX={2}>
-        {title && (
-          <Text
-            as="h2"
-            display="block"
-            font="headline"
-            id={accessibilityLabelledBy}
-            textAlign="center"
-          >
-            {title}
-          </Text>
-        )}
+        {title &&
+          (typeof title === 'string' ? (
+            <Text
+              as="h2"
+              display="block"
+              font="inherit"
+              id={accessibilityLabelledBy}
+              textAlign="center"
+            >
+              {title}
+            </Text>
+          ) : (
+            title
+          ))}
       </Box>
       {!hideCloseButton && (
         <Box justifyContent="flex-end">

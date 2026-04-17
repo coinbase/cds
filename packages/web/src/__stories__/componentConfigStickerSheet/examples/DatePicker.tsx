@@ -4,7 +4,7 @@ import { DatePicker } from '@cbhq/cds-web/dates/DatePicker';
 import { VStack } from '@cbhq/cds-web/layout/VStack';
 
 export const DatePickerExample = memo(() => {
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date | null>(new Date(2012, 5, 17));
   const [dateError, setDateError] = useState<DateInputValidationError | null>(null);
   return (
     <VStack style={{ gap: 16 }} width="100%">

@@ -218,6 +218,10 @@ const PopoverDropdown = memo(
   ),
 );
 
+/**
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const Dropdown = memo(
   forwardRef<DropdownRef, DropdownProps>((_props, ref) => {
     const mergedProps = useComponentConfig('Dropdown', _props);
