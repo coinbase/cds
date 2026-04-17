@@ -295,7 +295,6 @@ const DefaultSelectControlComponent = memo(
                     borderWidth={0}
                     classNames={{ content: selectedOptionChipContentCss }}
                     disabled={option.disabled}
-                    invertColorScheme={false}
                     maxWidth={200}
                     onClick={(event) => handleUnselectValue(event, index)}
                   >
@@ -306,7 +305,7 @@ const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+                <InputChip compact borderWidth={0} end={null}>
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </InputChip>
               )}

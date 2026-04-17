@@ -244,7 +244,6 @@ export const DefaultSelectControlComponent = memo(
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
                     disabled={disabled || option.disabled}
-                    invertColorScheme={false}
                     maxWidth={200}
                     onPress={(event) => {
                       event?.stopPropagation();
@@ -256,7 +255,7 @@ export const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+                <InputChip compact borderWidth={0} end={null}>
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </InputChip>
               )}

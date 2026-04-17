@@ -141,7 +141,6 @@ export const SelectChip = memo(
                 />
               )
             }
-            inverted={false}
             onPress={handleChipPress}
             testID={testID}
             {...props}

@@ -23,7 +23,6 @@ const TabComponent = <TabId extends string = string>({
     <MediaChip
       accessibilityState={{ selected: isActive }}
       background={isActive ? 'bgTertiary' : 'bgSecondary'}
-      inverted={false}
       onPress={handleClick}
       {...tabProps}
     >

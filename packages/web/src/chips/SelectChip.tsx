@@ -109,7 +109,6 @@ export const SelectChip = memo(
           background={active ? 'bgTertiary' : 'bgSecondary'}
           disabled={disabled}
           end={end ?? <AnimatedCaret active color="fg" rotate={isOpen ? 0 : 180} size="xs" />}
-          inverted={false}
           onClick={handleOpenMenu}
           testID={testID}
           {...props}

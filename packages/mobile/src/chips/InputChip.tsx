@@ -14,7 +14,6 @@ export const InputChip = memo(
       value,
       children = value,
       accessibilityLabel = typeof children === 'string' ? `Remove ${children}` : 'Remove option',
-      invertColorScheme = false,
       testID = 'input-chip',
       ...props
     } = mergedProps;
@@ -32,7 +31,6 @@ export const InputChip = memo(
             testID={testID ? `${testID}-close-icon` : 'input-chip-close-icon'}
           />
         }
-        invertColorScheme={invertColorScheme}
         {...props}
       >
         {children}
