@@ -3230,5 +3230,11 @@ export const glyphMap = {
   'underPredictions-16-active': '󰲙',
   'underPredictions-16-inactive': '󰲚',
   'underPredictions-24-active': '󰲛',
-  'underPredictions-24-inactive': '󰲜'
+  'underPredictions-24-inactive': '󰲜',
+  'baseLock-12-active': '󰲝',
+  'baseLock-12-inactive': '󰲞',
+  'baseLock-16-active': '󰲟',
+  'baseLock-16-inactive': '󰲠',
+  'baseLock-24-active': '󰲡',
+  'baseLock-24-inactive': '󰲢'
 };

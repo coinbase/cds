@@ -600,22 +600,24 @@ const Example: React.FC<
 
 export const Miscellaneous = () => {
   return (
-    <VStack gap={2}>
-      <Example title="Multiple Types">
-        <MultipleChart />
-      </Example>
-      <Example title="Earnings History">
-        <EarningsHistory />
-      </Example>
-      <Example title="Price With Volume">
-        <PriceWithVolume />
-      </Example>
-      <Example title="Prediction Market">
-        <PredictionMarket />
-      </Example>
-      <Example title="Trading Trends">
-        <TradingTrends />
-      </Example>
-    </VStack>
+    <React.StrictMode>
+      <VStack gap={2}>
+        <Example title="Multiple Types">
+          <MultipleChart />
+        </Example>
+        <Example title="Earnings History">
+          <EarningsHistory />
+        </Example>
+        <Example title="Price With Volume">
+          <PriceWithVolume />
+        </Example>
+        <Example title="Prediction Market">
+          <PredictionMarket />
+        </Example>
+        <Example title="Trading Trends">
+          <TradingTrends />
+        </Example>
+      </VStack>
+    </React.StrictMode>
   );
 };

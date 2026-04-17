@@ -290,6 +290,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/cbltc-0.js').content,
     dark: () => require('../svgJs/dark/cbltc-0.js').content,
   },
+  cbmega: {
+    light: () => require('../svgJs/light/cbmega-0.js').content,
+    dark: () => require('../svgJs/dark/cbmega-0.js').content,
+  },
   cbxrp: {
     light: () => require('../svgJs/light/cbxrp-0.js').content,
     dark: () => require('../svgJs/dark/cbxrp-0.js').content,

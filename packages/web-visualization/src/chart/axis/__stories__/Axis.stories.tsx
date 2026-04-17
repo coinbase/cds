@@ -501,52 +501,54 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
 
 export const All = () => {
   return (
-    <VStack gap={3}>
-      <Example title="Basic">
-        <Simple />
-      </Example>
-      <Example title="Time of Day">
-        <TimeOfDayAxesExample />
-      </Example>
-      <Example title="Multiple Axes on Same Side">
-        <MultipleYAxesExample />
-      </Example>
-      <Example title="Strict Domain Limit">
-        <DomainLimitType limit="strict" />
-      </Example>
-      <Example title="Nice Domain Limit">
-        <DomainLimitType limit="nice" />
-      </Example>
-      <Example title="Band Axis Grid Alignment">
-        <BandAxisGridAlignment />
-      </Example>
-      <Example
-        description={
-          <Text color="fgMuted" font="body">
-            Using a function to filter which ticks are shown on a band scale.
-          </Text>
-        }
-        title="Band Scale - Tick Filtering"
-      >
-        <BandScaleTickFiltering />
-      </Example>
-      <Example title="Band Scale - Explicit Ticks">
-        <BandScaleExplicitTicks />
-      </Example>
-      <Example title="Line Chart on Band Scale - Grid Positions">
-        <HStack gap={2} style={{ flexWrap: 'wrap' }}>
-          <LineChartOnBandScale bandGridLinePlacement="edges" />
-          <LineChartOnBandScale bandGridLinePlacement="start" />
-          <LineChartOnBandScale bandGridLinePlacement="middle" />
-          <LineChartOnBandScale bandGridLinePlacement="end" />
-        </HStack>
-      </Example>
-      <Example title="Axes on All Sides">
-        <AxesOnAllSides />
-      </Example>
-      <Example title="Custom Tick Mark Sizes">
-        <CustomTickMarkSizes />
-      </Example>
-    </VStack>
+    <React.StrictMode>
+      <VStack gap={3}>
+        <Example title="Basic">
+          <Simple />
+        </Example>
+        <Example title="Time of Day">
+          <TimeOfDayAxesExample />
+        </Example>
+        <Example title="Multiple Axes on Same Side">
+          <MultipleYAxesExample />
+        </Example>
+        <Example title="Strict Domain Limit">
+          <DomainLimitType limit="strict" />
+        </Example>
+        <Example title="Nice Domain Limit">
+          <DomainLimitType limit="nice" />
+        </Example>
+        <Example title="Band Axis Grid Alignment">
+          <BandAxisGridAlignment />
+        </Example>
+        <Example
+          description={
+            <Text color="fgMuted" font="body">
+              Using a function to filter which ticks are shown on a band scale.
+            </Text>
+          }
+          title="Band Scale - Tick Filtering"
+        >
+          <BandScaleTickFiltering />
+        </Example>
+        <Example title="Band Scale - Explicit Ticks">
+          <BandScaleExplicitTicks />
+        </Example>
+        <Example title="Line Chart on Band Scale - Grid Positions">
+          <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+            <LineChartOnBandScale bandGridLinePlacement="edges" />
+            <LineChartOnBandScale bandGridLinePlacement="start" />
+            <LineChartOnBandScale bandGridLinePlacement="middle" />
+            <LineChartOnBandScale bandGridLinePlacement="end" />
+          </HStack>
+        </Example>
+        <Example title="Axes on All Sides">
+          <AxesOnAllSides />
+        </Example>
+        <Example title="Custom Tick Mark Sizes">
+          <CustomTickMarkSizes />
+        </Example>
+      </VStack>
+    </React.StrictMode>
   );
 };

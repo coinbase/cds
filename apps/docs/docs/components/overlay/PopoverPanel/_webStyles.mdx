@@ -1,0 +1,59 @@
+import { useEffect, useRef } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { PortalProvider } from '@coinbase/cds-web/overlays';
+import { PopoverPanel } from '@coinbase/cds-web/overlays';
+
+import webStylesData from ':docgen/web/overlays/popover/PopoverPanel/styles-data';
+
+export const PopoverPanelStylesExample = ({ classNames }) => {
+  const panelRef = useRef(null);
+
+useEffect(() => {
+if (classNames.content) {
+panelRef.current?.openPopover();
+} else {
+panelRef.current?.closePopover();
+}
+
+}, [classNames]);
+
+return (
+
+<PortalProvider>
+  <VStack gap={2}>
+    <Text color="fgMuted" font="label2">
+      Select a selector to highlight it. The panel opens automatically.
+    </Text>
+    <PopoverPanel
+      ref={panelRef}
+      accessibilityLabel="Styles explorer"
+      classNames={classNames}
+      enableMobileModal
+      content={
+        <VStack gap={2} padding={3}>
+          <Text>Panel body</Text>
+          <Button compact onClick={() => panelRef.current?.closePopover()} variant="secondary">
+            Close
+          </Button>
+        </VStack>
+      }
+    >
+      <Button>Open trigger</Button>
+    </PopoverPanel>
+  </VStack>
+</PortalProvider>
+); };
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <PopoverPanelStylesExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="PopoverPanel" styles={webStylesData} />

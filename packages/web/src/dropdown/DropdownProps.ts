@@ -2,15 +2,27 @@ import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common
 
 import { type PopoverBaseProps } from '../overlays/popover/PopoverProps';
 
+/**
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type DropdownRef = {
   openMenu: () => void;
   closeMenu: () => void;
 };
 
+/**
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type DropdownInternalProps = DropdownProps & {
   visible: boolean;
 };
 
+/**
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type DropdownBaseProps = SharedProps &
   Pick<
     PopoverBaseProps,
@@ -64,6 +76,10 @@ export type DropdownBaseProps = SharedProps &
     restoreFocusOnUnmount?: boolean;
   };
 
+/**
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type DropdownProps = DropdownBaseProps & {
   /**
    * Width of input as a percentage string or number converted to pixels.
@@ -80,6 +96,10 @@ export type DropdownProps = DropdownBaseProps & {
   maxHeight?: React.CSSProperties['maxHeight'];
 };
 
+/**
+ * @deprecated Use PopoverPanel for interactive overlays with arbitrary content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type DropdownRefProps = {
   openMenu: () => void;
   closeMenu: () => void;

@@ -1,18 +1,11 @@
-import React, { memo, useEffect, useId, useMemo, useState } from 'react';
+import React, { memo, useId, useMemo } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { Button, IconButton } from '@coinbase/cds-web/buttons';
-import { Switch } from '@coinbase/cds-web/controls';
+import { IconButton } from '@coinbase/cds-web/buttons';
 import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { RollingNumber } from '@coinbase/cds-web/numbers';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { useCartesianChartContext } from '../../ChartProvider';
-import {
-  DefaultLegendEntry,
-  DefaultLegendShape,
-  Legend,
-  type LegendEntryProps,
-} from '../../legend';
+import { DefaultLegendEntry, DefaultLegendShape } from '../../legend';
 import { Path } from '../../Path';
 import { getBarPath } from '../../utils';
 import type { BarComponentProps } from '..';
@@ -454,177 +447,6 @@ const DottedBarChartLevel = () => (
   />
 );
 
-function randomShares(): number[] {
-  const raw = [Math.random() + 0.1, Math.random() + 0.1, Math.random() + 0.1];
-  const sum = raw[0] + raw[1] + raw[2];
-  return raw.map((v) => Math.max(1, Math.round((v / sum) * 100)));
-}
-
-function generateAnimationData(): number[][] {
-  return [randomShares(), randomShares(), randomShares()];
-}
-
-const Animations = () => {
-  const [animate, setAnimate] = useState(true);
-  const [data, setData] = useState<number[][]>(generateAnimationData);
-
-  useEffect(() => {
-    const id = setInterval(() => setData(generateAnimationData()), 800);
-    return () => clearInterval(id);
-  }, []);
-
-  const series = useMemo<PercentageBarSeries[]>(
-    () => [
-      { id: 'btc', data: data.map((q) => q[0]), label: 'BTC', color: assets.btc.color },
-      { id: 'eth', data: data.map((q) => q[1]), label: 'ETH', color: assets.eth.color },
-      { id: 'other', data: data.map((q) => q[2]), label: 'Other', color: 'var(--color-fgMuted)' },
-    ],
-    [data],
-  );
-
-  return (
-    <VStack gap={2}>
-      <HStack alignItems="center" gap={1} justifyContent="flex-end">
-        <Switch checked={animate} onChange={() => setAnimate((v) => !v)}>
-          Animate
-        </Switch>
-      </HStack>
-      <PercentageBarChart
-        legend
-        showXAxis
-        showYAxis
-        animate={animate}
-        barMinSize={14}
-        borderRadius={48}
-        height={220}
-        inset={{ left: 24, right: 0, top: 0, bottom: 0 }}
-        legendPosition="top"
-        series={series}
-        stackGap={2}
-        transitions={{
-          enter: { type: 'tween', staggerDelay: 0.5 },
-          update: { type: 'tween' },
-        }}
-        xAxis={{
-          showTickMarks: true,
-          tickLabelFormatter: (value) => `${value}%`,
-        }}
-        yAxis={{
-          categoryPadding: 0.75,
-          data: ['Q1 2025', 'Q2 2025', 'Q3 2025'],
-          position: 'left',
-          requestedTickCount: 5,
-          showTickMarks: true,
-        }}
-      />
-    </VStack>
-  );
-};
-
-/** Fake "projected value" copy: scales with live % so subtitles stay in sync with the bar. */
-const liveFeedSubtitleBase = 100;
-const liveFeedYesDollarsPerPercentPoint = (182 - liveFeedSubtitleBase) / 50;
-const liveFeedNoDollarsPerPercentPoint = (222 - liveFeedSubtitleBase) / 50;
-
-function getLiveFeedProjectedValue(seriesId: string, percentage: number): number | undefined {
-  const inverseShare = 100 - percentage;
-  if (seriesId === 'yes') {
-    return Math.round(liveFeedSubtitleBase + inverseShare * liveFeedYesDollarsPerPercentPoint);
-  }
-  if (seriesId === 'no') {
-    return Math.round(liveFeedSubtitleBase + inverseShare * liveFeedNoDollarsPerPercentPoint);
-  }
-  return undefined;
-}
-
-const liveFeedCurrencyFormat = {
-  style: 'currency' as const,
-  currency: 'USD',
-  maximumFractionDigits: 0,
-};
-
-const LiveFeedCTALegendEntry = memo(function LiveFeedCTALegendEntry({
-  seriesId,
-  label,
-  color,
-}: LegendEntryProps) {
-  const { series } = useCartesianChartContext();
-  const seriesData = series.find((s) => s.id === seriesId);
-  const percentage = (seriesData?.data as number[])?.[0] ?? 0;
-  const projectedValue = getLiveFeedProjectedValue(seriesId, percentage);
-
-  return (
-    <Button
-      compact
-      borderRadius={200}
-      style={{ backgroundColor: color, borderColor: color }}
-      width="25%"
-    >
-      <VStack alignItems="center" gap={0.25}>
-        <HStack alignItems="center" gap={0.5}>
-          <Text color="fgInverse" font="label1">
-            {label} {'· '}
-          </Text>
-          <RollingNumber
-            color="fgInverse"
-            font="label1"
-            format={{ style: 'percent', maximumFractionDigits: 0 }}
-            value={percentage / 100}
-          />
-        </HStack>
-        {projectedValue != null && (
-          <HStack alignItems="center" gap={0.5}>
-            <Text color="fgInverse" font="legal">
-              ${liveFeedSubtitleBase} →
-            </Text>
-            <RollingNumber
-              color="fgInverse"
-              font="legal"
-              format={liveFeedCurrencyFormat}
-              value={projectedValue}
-            />
-          </HStack>
-        )}
-      </VStack>
-    </Button>
-  );
-});
-
-const LiveUpdatingData = () => {
-  const [tick, setTick] = useState(0);
-
-  const yesValue = 50 + Math.sin(tick * 0.05) * 49;
-  const noValue = 50 - Math.sin(tick * 0.05) * 49;
-
-  const series: PercentageBarSeries[] = [
-    { id: 'yes', data: yesValue, label: 'Yes', color: 'var(--color-fgPositive)' },
-    { id: 'no', data: noValue, label: 'No', color: 'var(--color-fgNegative)' },
-  ];
-
-  useEffect(() => {
-    const id = setInterval(() => setTick((t) => t + 4), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <PercentageBarChart
-      barMinSize={16}
-      borderRadius={1000}
-      height={64}
-      legend={
-        <Legend
-          EntryComponent={LiveFeedCTALegendEntry}
-          justifyContent="space-evenly"
-          paddingTop={1}
-        />
-      }
-      legendPosition="bottom"
-      series={series}
-      stackGap={2}
-    />
-  );
-};
-
 const VerticalMix = () => {
   const series: PercentageBarSeries[] = [
     {
@@ -761,19 +583,6 @@ export const All = () => {
       </Example>
       <Example title="Dotted bar (chart BarComponent)">
         <DottedBarChartLevel />
-      </Example>
-      <Example title="Animations">
-        <Animations />
-      </Example>
-      <Example
-        description={
-          <Text color="fgMuted" font="body">
-            Bars and legend reanimate when data changes
-          </Text>
-        }
-        title="Live-updating Data"
-      >
-        <LiveUpdatingData />
       </Example>
       <Example title="Vertical Mix">
         <VerticalMix />

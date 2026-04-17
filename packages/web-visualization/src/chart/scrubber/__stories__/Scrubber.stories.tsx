@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, StrictMode, useCallback, useMemo, useRef } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import type { Rect } from '@coinbase/cds-common/types';
 import { Button } from '@coinbase/cds-web/buttons';
@@ -814,64 +814,66 @@ const MatchupBeaconLabels = () => {
 
 export const All = () => {
   return (
-    <VStack gap={4}>
-      <Example title="Basic">
-        <BasicScrubber />
-      </Example>
-      <Example title="Series Filter">
-        <SeriesFilter />
-      </Example>
-      <Example title="With Labels">
-        <WithLabels />
-      </Example>
-      <Example title="Idle Pulse">
-        <IdlePulse />
-      </Example>
-      <Example title="Imperative Pulse">
-        <ImperativePulse />
-      </Example>
-      <Example title="Beacon Stroke">
-        <BeaconStroke />
-      </Example>
-      <Example title="Custom Beacon">
-        <CustomBeacon />
-      </Example>
-      <Example title="Custom Beacon Label">
-        <CustomBeaconLabel />
-      </Example>
-      <Example title="Beacon Labels">
-        <PercentageBeaconLabels />
-      </Example>
-      <Example title="Beacon Labels - Left Side Preferred">
-        <PercentageBeaconLabels preferredSide="left" />
-      </Example>
-      <Example title="Hide Beacon Labels">
-        <HideBeaconLabels />
-      </Example>
-      <Example title="Label Elevated">
-        <LabelElevated />
-      </Example>
-      <Example title="Custom Label Component">
-        <CustomLabelComponent />
-      </Example>
-      <Example title="Label Fonts">
-        <LabelFonts />
-      </Example>
-      <Example title="Label Bounds Inset">
-        <LabelBoundsInset />
-      </Example>
-      <Example title="Custom Line">
-        <CustomLine />
-      </Example>
-      <Example title="Hidden Scrubber When Idle">
-        <HiddenScrubberWhenIdle />
-      </Example>
-      <Example title="Hide Overlay">
-        <HideOverlay />
-      </Example>
-      <Example title="Matchup Beacon Labels">
-        <MatchupBeaconLabels />
-      </Example>
-    </VStack>
+    <StrictMode>
+      <VStack gap={4}>
+        <Example title="Basic">
+          <BasicScrubber />
+        </Example>
+        <Example title="Series Filter">
+          <SeriesFilter />
+        </Example>
+        <Example title="With Labels">
+          <WithLabels />
+        </Example>
+        <Example title="Idle Pulse">
+          <IdlePulse />
+        </Example>
+        <Example title="Imperative Pulse">
+          <ImperativePulse />
+        </Example>
+        <Example title="Beacon Stroke">
+          <BeaconStroke />
+        </Example>
+        <Example title="Custom Beacon">
+          <CustomBeacon />
+        </Example>
+        <Example title="Custom Beacon Label">
+          <CustomBeaconLabel />
+        </Example>
+        <Example title="Beacon Labels">
+          <PercentageBeaconLabels />
+        </Example>
+        <Example title="Beacon Labels - Left Side Preferred">
+          <PercentageBeaconLabels preferredSide="left" />
+        </Example>
+        <Example title="Hide Beacon Labels">
+          <HideBeaconLabels />
+        </Example>
+        <Example title="Label Elevated">
+          <LabelElevated />
+        </Example>
+        <Example title="Custom Label Component">
+          <CustomLabelComponent />
+        </Example>
+        <Example title="Label Fonts">
+          <LabelFonts />
+        </Example>
+        <Example title="Label Bounds Inset">
+          <LabelBoundsInset />
+        </Example>
+        <Example title="Custom Line">
+          <CustomLine />
+        </Example>
+        <Example title="Hidden Scrubber When Idle">
+          <HiddenScrubberWhenIdle />
+        </Example>
+        <Example title="Hide Overlay">
+          <HideOverlay />
+        </Example>
+        <Example title="Matchup Beacon Labels">
+          <MatchupBeaconLabels />
+        </Example>
+      </VStack>
+    </StrictMode>
   );
 };

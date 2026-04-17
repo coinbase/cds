@@ -129,63 +129,50 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): MotionValue<string> => {
-  const updateTransition = transitions?.update !== undefined ? transitions.update : transition;
-  const enterTransition = transitions?.enter;
-
-  const previousPathRef = useRef(initialPath ?? currentPath);
-  const targetPathRef = useRef(initialPath ?? currentPath);
-  const animationRef = useRef<AnimationPlaybackControls | null>(null);
+  const transitionRef = useRef<{
+    enter?: Transition | null;
+    update: Transition | null;
+  }>({
+    enter: transitions?.enter,
+    update: transitions?.update !== undefined ? transitions.update : transition,
+  });
   const isFirstAnimation = useRef(!!initialPath);
 
   const animatedPath = useMotionValue(initialPath ?? currentPath);
+  transitionRef.current.enter = transitions?.enter;
+  transitionRef.current.update =
+    transitions?.update !== undefined ? transitions.update : transition;
 
   useEffect(() => {
-    if (targetPathRef.current !== currentPath) {
-      const currentVisualPath = animatedPath.get();
-
-      if (animationRef.current) {
-        animationRef.current.stop();
-        animationRef.current = null;
-        previousPathRef.current = currentVisualPath;
-      }
-
-      targetPathRef.current = currentPath;
-
-      const activeTransition =
-        isFirstAnimation.current && enterTransition !== undefined
-          ? enterTransition
-          : updateTransition;
-
-      isFirstAnimation.current = false;
-
-      if (activeTransition === null) {
-        animatedPath.set(currentPath);
-        previousPathRef.current = currentPath;
-        animationRef.current = null;
-        return;
-      }
-
-      const pathInterpolator = interpolatePath(previousPathRef.current, currentPath);
-
-      animationRef.current = animate(0, 1, {
-        ...(activeTransition as ValueAnimationTransition<number>),
-        onUpdate: (latest) => {
-          animatedPath.set(pathInterpolator(latest));
-        },
-        onComplete: () => {
-          animatedPath.set(currentPath);
-          previousPathRef.current = currentPath;
-          animationRef.current = null;
-        },
-      });
+    const fromPath = animatedPath.get();
+    if (fromPath === currentPath) {
+      return;
     }
 
+    const { enter, update } = transitionRef.current;
+    const activeTransition = isFirstAnimation.current && enter !== undefined ? enter : update;
+    isFirstAnimation.current = false;
+
+    if (activeTransition === null) {
+      animatedPath.set(currentPath);
+      return;
+    }
+
+    const pathInterpolator = interpolatePath(fromPath, currentPath);
+    const playback: AnimationPlaybackControls = animate(0, 1, {
+      ...(activeTransition as ValueAnimationTransition<number>),
+      onUpdate: (latest) => {
+        animatedPath.set(pathInterpolator(latest));
+      },
+      onComplete: () => {
+        animatedPath.set(currentPath);
+      },
+    });
+
     return () => {
-      if (animationRef.current) {
-        animationRef.current.stop();
-      }
+      playback?.stop();
     };
-  }, [currentPath, updateTransition, enterTransition, animatedPath]);
+  }, [currentPath, animatedPath]);
 
   return animatedPath;
 };

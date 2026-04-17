@@ -18,6 +18,10 @@ type UseResponsiveHeightParams = {
 
 const BOTTOM_GUTTER_SPACE: ThemeVars.Space = 2;
 
+/**
+ * @deprecated Import `useResponsivePanelMaxHeight` from `@coinbase/cds-web/popover` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export function useResponsiveHeight({
   gap,
   dropdownBounds,
