@@ -36,7 +36,7 @@ If you do not have either, MUST NEVER proceed with the task.
    - Study the React props for the component(s)
 
 3. **Generate Code Connect Mapping File**
-   - ALWAYS reference the guidelines for writing code connect mappings here: .cursor/rules/code-connect.mdc
+   - ALWAYS reference the guidelines for writing code connect mappings in the `figma.connect-best-practices` SKILL
    - Create the mapping file for the component
    - Provide a brief description of the mappings you created when you are done.
    - ALWAYS check to make sure there are no EsLint errors or warnings in your new mapping file.

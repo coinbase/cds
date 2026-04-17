@@ -99,8 +99,7 @@ export const DefaultComboboxControl = memo(
                 }}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                 style={{
-                  paddingLeft: 0,
-                  paddingRight: 0,
+                  padding: 0,
                   height: !hasValue ? (compact ? 40 : 48) : undefined,
                   minWidth: 0,
                   flexGrow: 1,

@@ -385,6 +385,11 @@ export const routes = [
     getComponent: () => require('@cbhq/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
+    key: 'ModalCustomHeader',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/overlays/__stories__/ModalCustomHeader.stories').default,
+  },
+  {
     key: 'ModalCustomPadding',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/ModalCustomPadding.stories').default,
@@ -488,6 +493,12 @@ export const routes = [
   {
     key: 'PatternError',
     getComponent: () => require('@cbhq/cds-mobile/system/__stories__/PatternError.stories').default,
+  },
+  {
+    key: 'PercentageBarChart',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/bar/__stories__/PercentageBarChart.stories')
+        .default,
   },
   {
     key: 'PeriodSelector',

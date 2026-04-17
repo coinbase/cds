@@ -13,7 +13,7 @@ export type ModalHeaderBaseProps = Omit<BoxBaseProps, 'children'> & {
   /** Handles back button press */
   onBackButtonClick?: (event: GestureResponderEvent) => void;
   /** Title of the Modal */
-  title?: string;
+  title?: React.ReactNode;
   /**
    * Sets an accessible label for the back button.
    * On web, maps to `aria-label` and defines a string value that labels an interactive element.
@@ -58,6 +58,11 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
     alignItems = 'center',
     paddingX = 3,
     paddingY = 2,
+    font = 'headline',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
     title,
     onBackButtonClick,
     backAccessibilityLabel,
@@ -89,11 +94,21 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
         )}
       </Box>
       <Box alignItems="center" flexBasis={0} flexGrow={6} justifyContent="center">
-        {title && (
-          <Text align="center" font="headline">
-            {title}
-          </Text>
-        )}
+        {title &&
+          (typeof title === 'string' ? (
+            <Text
+              align="center"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
+            >
+              {title}
+            </Text>
+          ) : (
+            title
+          ))}
       </Box>
       <Box alignItems="flex-end" flexBasis={0} flexGrow={1}>
         {!hideCloseButton && (

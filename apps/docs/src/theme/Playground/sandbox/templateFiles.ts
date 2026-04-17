@@ -33,7 +33,9 @@ export const PACKAGE_JSON = JSON.stringify(
       '@cbhq/cds-common': 'latest',
       '@cbhq/cds-icons': 'latest',
       '@cbhq/cds-illustrations': 'latest',
-      '@cbhq/cds-web-visualization': 'beta',
+      '@cbhq/cds-lottie-files': 'latest',
+      '@cbhq/cds-utils': 'latest',
+      '@cbhq/cds-web-visualization': 'latest',
       'framer-motion': '^10.18.0',
     },
     devDependencies: {

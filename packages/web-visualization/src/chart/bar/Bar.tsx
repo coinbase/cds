@@ -47,6 +47,7 @@ export type BarProps = BarBaseProps & {
    *
    * @default transitions = {{
    *   enter: { type: 'spring', stiffness: 900, damping: 120, mass: 4, staggerDelay: 0.25 },
+   *   enterOpacity: { type: 'tween', duration: 0.2 },
    *   update: { type: 'spring', stiffness: 900, damping: 120, mass: 4 }
    * }}
    *
@@ -64,6 +65,13 @@ export type BarProps = BarBaseProps & {
      * Set to `null` to disable.
      */
     enter?: BarTransition | null;
+    /**
+     * Transition for the initial enter opacity animation.
+     * Uses a default subtle fade when undefined (unless `enter` is disabled).
+     * @note falls back to `enter` timing offsets (`delay` and `staggerDelay`) when not provided.
+     * Set to `null` to disable enter opacity animation. Automatically set to null if enter transition is disabled.
+     */
+    enterOpacity?: BarTransition | null;
     /**
      * Transition for subsequent data update animations.
      * Set to `null` to disable.

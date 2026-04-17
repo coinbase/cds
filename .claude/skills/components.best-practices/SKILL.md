@@ -1,0 +1,186 @@
+---
+name: components.best-practices
+description: Use this skill whenever working on CDS React components in any package.
+user-invocable: false
+---
+
+# React Component Development Rules
+
+## Component Development Workflow
+
+1. Research similar reference components and given requirements/description
+2. Optionally, ask clarifying questions about the component's requirements & behavior
+3. Implement the component with unit tests & stories on web first before proceeding to mobile if both platforms were requested.
+4. Never write figma code connect files unless explicitly instructed to do so.
+5. Follow remaining general coding standards and guidelines you've been given.
+
+## Reference Components
+
+These high quality components demonstrate proper use of patterns/conventions:
+
+- **Select** (alpha/): generics, controlled/uncontrolled, compound architecture
+- **Stepper**: props-based defaults, metadata generics, compound components
+- **Carousel** (web): compound components, imperative handle, context + hook
+- **RollingNumber**: animation config extraction, measurement patterns
+- **SlideButton** (mobile): gesture handling, spring animations, accessibility actions
+
+## Organization
+
+### File Structure
+
+Every main CDS component should live within its own folder:
+
+```
+ComponentName/
+├── ComponentName.tsx       # Main component file
+├── SubComponent.tsx        # Supporting component (if needed)
+├── index.ts                # Re-exports for public API
+├── __stories__/            # Storybook stories
+│   └── ComponentName.stories.tsx
+├── __tests__/              # Unit tests
+│   └── ComponentName.test.tsx
+├── __figma__/              # Figma Code Connect files
+│   └── ComponentName.figma.tsx
+```
+
+### Component Categories
+
+Organize components into category folders:
+
+- `buttons` - Button, IconButton, SlideButton
+- `controls` - TextInput, Select, Checkbox, Radio, Switch
+- `cards` - Card, DataCard, ContentCard
+- `overlays` - Modal, Toast, Alert, Drawer
+- `layout` - Box, Stack, Divider
+- `typography` - Text, Heading
+- `icons` - Icon
+- `navigation` - Tabs, Breadcrumb
+
+## Component Conventions
+
+- **Memoize**: Always memoize components with React's memo HOC
+- **refs**: All components should accept a ref via React's forwardRef pattern
+- **Props documentation**: Every prop that does not have a falsy default must have JSDoc comments with `@default` tags
+- **Type exports**: Export both a `*BaseProps` and `*Props` type (e.g., `ButtonBaseProps`, `ButtonProps`)
+- **Style overrides**: All components MUST support a way to override styles (varries by web/mobile platform)
+- **testID**: Support `testID` prop on root element for every component
+- **Use design tokens**: Reference packages/common/src/core/theme.ts:57-331 as the definitive source for available token names
+- **Padding over margin**: Use padding in combination with flex gap to achieve spacing instead of margin.
+
+## Design Token System
+
+### Token Categories
+
+Design tokens are defined in `packages/common/src/core/theme.ts`:
+
+- **Color**: fg, fgMuted, fgInverse, fgPrimary, bgPrimary, bgSecondary, bgNegative, bgPositive, etc.
+- **Space**: 0, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10 (8px base unit)
+- **IconSize**: xs (12px), s (16px), m (24px), l (32px)
+- **AvatarSize**: s, m, l, xl, xxl, xxxl
+- **BorderWidth**: 0, 100, 200, 300, 400, 500
+- **BorderRadius**: 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000
+- **Font**: display1-3, title1-4, headline, body, label1-2, caption, legal
+- **Shadow**: elevation1, elevation2
+
+### Semantic Color System
+
+Colors use a spectrum system with hue + step notation:
+
+- **Hues**: blue, green, orange, yellow, gray, indigo, pink, purple, red, teal, chartreuse
+- **Steps**: 0, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100
+- **Example**: blue60 = Coinbase brand blue (#0052FF)
+
+Semantic tokens map to spectrum colors and adapt to light/dark mode:
+
+- `fgPrimary`: blue60 (light) / blue70 (dark)
+- `bgPrimary`: blue60 (light) / blue70 (dark)
+- `bgNegative`: red60 (both modes)
+- `bgPositive`: green60 (both modes)
+
+### Space Scale
+
+```typescript
+space: {
+  '0': 0,      // 0px
+  '0.25': 2,   // 2px
+  '0.5': 4,    // 4px
+  '0.75': 6,   // 6px
+  '1': 8,      // 8px - base unit
+  '1.5': 12,   // 12px
+  '2': 16,     // 16px
+  '3': 24,     // 24px
+  '4': 32,     // 32px
+  '5': 40,     // 40px
+  // ... up to 10 (80px)
+}
+```
+
+## Component Patterns
+
+### Compound Components
+
+- Break components down into discrete subcomponents (i.e. "slots")
+- Use this pattern for complex components with clear, distinct parts
+- Accept optional subcomponent props with sensible defaults using `*Component`/`Default*` naming:
+  ```ts
+  NavigationComponent = DefaultCarouselNavigation,
+  PaginationComponent = DefaultCarouselPagination,
+  ```
+- The names of classNames/styles keys must line up with the name of the subcomponents (e.g. `classNames.pagination`, `styles.pagination`).
+- Examples: Stepper, Carousel, Select (alpha)
+
+**Benefits:**
+
+- Complete customization without forking
+- Sensible defaults for common use case
+- Exported subcomponents for consumers to customize/wrap themselves
+
+### Context + Hook Pattern
+
+- Pair contexts with `use*Context()` hooks that throw descriptive errors on misuse:
+  ```ts
+  export const useCarouselContext = () => {
+    const context = useContext(CarouselContext);
+    if (!context) throw new Error('useCarouselContext must be used within Carousel');
+    return context;
+  };
+  ```
+
+### Controlled/Uncontrolled Components
+
+- Support both patterns for input components; validate and throw if consumer mixes them (e.g., provides `value` but not `onChange`)
+- Use internal state with prop override: `const open = openProp ?? openInternal;`
+
+### Generics for Type Safety
+
+- Use generics for components with dynamic value types:
+  ```ts
+  type SelectComponent = <Type extends SelectType, Value extends string>(
+    props: SelectProps<Type, Value>,
+  ) => React.ReactElement;
+  ```
+- Examples: Select (alpha), Stepper
+
+### BaseProps & Props
+
+- Component modules encapsulate two prop Types: `*BaseProps` (platform-agnostic) and `*Props` (extends BaseProps with platform and component specific properties like `className`, `classNames`, `styles`, etc.)
+- Reuse other components' Types via utilities: `Pick` being preferred then secondarily `Omit`/`Exclude`
+- Compose prop types using Typescript intersections (`&`) in this order: (1) full types (2) Picks (3) Omits (4) other type literal(s):
+  ```ts
+  type MyComponentProps = BoxBaseProps &
+    Pick<OtherComponentProps, 'someProp'> &
+    Omit<AnotherComponentProps, 'otherProp'> & {
+      propA: string;
+      propB: number;
+    };
+  ```
+- When accepting components as props, define the contract types (`*Props`, `*Component`) in the main component file. These child component contracts do not use the `*BaseProps` pattern—only the main component needs BaseProps/Props separation. Default implementations can extend the contract with additional props in their own file:
+
+  ```ts
+  // In MyComponent.tsx - defines the contract
+  type ChildProps = { id: string; label: ReactNode };
+  type ChildComponent = React.FC<ChildProps>;
+
+  // In DefaultChild.tsx - extends for default implementation
+  type DefaultChildProps = SharedProps & Omit<HStackProps, 'children'> & ChildProps;
+  ```

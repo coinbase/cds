@@ -6,4 +6,5 @@ export * from './BarStack';
 export * from './BarStackGroup';
 export * from './DefaultBar';
 export * from './DefaultBarStack';
+export * from './PercentageBarChart';
 // codegen:end
