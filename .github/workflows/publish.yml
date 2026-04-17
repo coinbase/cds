@@ -262,7 +262,9 @@ jobs:
 
       - name: Update npm
         run: |
-          npm install -g npm@latest
+          # Pinned: Node 22.22.2's bundled npm breaks `npm i -g npm@latest` (promise-retry).
+          # See https://github.com/npm/cli/issues/9151 and https://github.com/nodejs/node/issues/62425
+          npm install -g npm@11.11.0
 
       - name: Check if version exists on npm
         id: version-check
