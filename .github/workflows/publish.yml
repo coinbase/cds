@@ -398,10 +398,10 @@ jobs:
     if: >-
       always() &&
       vars.SLACK_PUBLISH_ALERTS_ENABLED == 'true' &&
-      (github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name == github.repository) &&
+      (github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.dry-run != 'true')) &&
       (needs.detect-changes.result == 'failure' ||
-      needs.dry-run-publish.result == 'failure' ||
       needs.publish.result == 'failure')
     steps:
       - name: Post failure to Slack
@@ -410,8 +410,7 @@ jobs:
           payload: |
             {
               "username": "CDS Publish",
-              "icon_emoji": ":red_circle:",
-              "text": "*TESTING*: ${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run == 'true')) && '*Failed dry run of publishing NPM packages*' || '*Failed to publish NPM packages*' }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
+              "text": ":red_circle: Failed to publish NPM packages, <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|see details here>.\ncc @design-systems-eng-oncall"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
