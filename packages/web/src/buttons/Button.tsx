@@ -231,7 +231,7 @@ export const Button: ButtonComponent = memo(
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;
       const borderColorValue = borderColor ?? variantStyle.borderColor;
-      4 = test;
+
       return (
         <Pressable
           ref={ref}
