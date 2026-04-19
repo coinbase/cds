@@ -43,6 +43,14 @@ export type LineBaseProps = {
    */
   areaType?: 'gradient' | 'solid' | 'dotted';
   /**
+   * Baseline value for the area.
+   * When set, overrides the default baseline.
+   *
+   * @deprecated this prop does not work as expected. Use 'baseline' on axis config instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v4
+   */
+  areaBaseline?: number;
+  /**
    * Component to render the line.
    * Takes precedence over the type prop if provided.
    */

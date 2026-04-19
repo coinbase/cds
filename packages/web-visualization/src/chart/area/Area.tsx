@@ -45,6 +45,14 @@ export type AreaBaseProps = {
    */
   fillOpacity?: PathBaseProps['fillOpacity'];
   /**
+   * Baseline value for the gradient.
+   * When set, overrides the default baseline.
+   *
+   * @deprecated this prop does not work as expected. Use 'baseline' on axis config instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v4
+   */
+  baseline?: number;
+  /**
    * Gradient configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
@@ -60,7 +68,7 @@ export type AreaProps = AreaBaseProps & Pick<PathProps, 'transitions' | 'transit
 
 export type AreaComponentProps = Pick<
   AreaProps,
-  'fill' | 'fillOpacity' | 'gradient' | 'animate' | 'transitions' | 'transition'
+  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transitions' | 'transition'
 > & {
   /**
    * Path of the area

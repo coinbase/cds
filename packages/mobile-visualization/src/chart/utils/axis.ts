@@ -71,7 +71,8 @@ export type AxisConfig = {
    */
   range: AxisBounds;
   /**
-   * Data for the axis
+   * Data for the axis.
+   * @note only used by the category axis.
    */
   data?: string[] | number[];
   /**
@@ -88,10 +89,18 @@ export type AxisConfig = {
   domainLimit: 'nice' | 'strict';
 };
 
+export type CartesianAxisConfig = AxisConfig & {
+  /**
+   * Baseline of the axis.
+   * @note only used by the value axis.
+   */
+  baseline?: number;
+};
+
 /**
  * Axis configuration without computed bounds (used for input)
  */
-export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
+export type CartesianAxisConfigProps = Omit<CartesianAxisConfig, 'domain' | 'range'> & {
   /**
    * Unique identifier for this axis.
    */
@@ -127,13 +136,6 @@ export type CartesianAxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
    * This replaces the previous rangeOffset approach and provides more flexibility for range customization.
    */
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
-};
-
-export type CartesianAxisConfig = AxisConfig & {
-  /**
-   * From axis props when set. Meaningful when this axis is the chart’s value axis for the current layout.
-   */
-  baseline?: number;
 };
 
 type AxisDomainConfig = CartesianAxisConfigProps['domain'];
