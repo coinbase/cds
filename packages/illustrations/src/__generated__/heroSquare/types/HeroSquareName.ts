@@ -75,6 +75,7 @@ export type HeroSquareName =
   | 'cbbtc'
   | 'cbdoge'
   | 'cbltc'
+  | 'cbmega'
   | 'cbxrp'
   | 'chickenFishSystemError'
   | 'claimCryptoUsername'

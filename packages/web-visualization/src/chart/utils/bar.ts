@@ -84,6 +84,15 @@ export const defaultBarEnterTransition: BarTransition = {
 };
 
 /**
+ * Default bar enter opacity transition.
+ * `{ type: 'tween', duration: 0.2 }`
+ */
+export const defaultBarEnterOpacityTransition: BarTransition = {
+  type: 'tween',
+  duration: 0.2,
+};
+
+/**
  * Calculates the size adjustment needed for bars when accounting for gaps between them.
  * This function helps determine how much to reduce each bar's width to accommodate
  * the specified gap size between multiple bars in a group.

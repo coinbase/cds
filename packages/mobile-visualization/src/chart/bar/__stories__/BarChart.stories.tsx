@@ -1144,7 +1144,6 @@ function BuyVsSellExample() {
             },
           ]}
           stackGap={stackGap}
-          transitions={{ enter: { type: 'timing', duration: 5000, delay: 2000 } }}
           xAxis={{ domainLimit: 'strict', ...xAxis }}
           yAxis={{ categoryPadding: 0, ...yAxis }}
           {...props}

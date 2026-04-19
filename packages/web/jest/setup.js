@@ -22,6 +22,7 @@ jest.mock('@floating-ui/react-dom', () => {
     autoPlacement: () => ({}),
     autoUpdate: jest.fn(),
     flip: () => ({}),
+    limitShift: () => ({}),
     offset: () => ({}),
     shift: () => ({}),
   };

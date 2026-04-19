@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import { forwardRef, memo } from 'react';
 import {
   animateDropdownOpacityInConfig,
   animateDropdownOpacityOutConfig,
@@ -7,16 +7,20 @@ import {
 } from '@coinbase/cds-common/animation/dropdown';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { DimensionValue } from '@coinbase/cds-common/types';
-import type { Placement } from '@popperjs/core';
 import { m as motion } from 'framer-motion';
 
 import { VStack } from '../layout/VStack';
 import { useMotionProps } from '../motion/useMotionProps';
+import type { Placement } from '../overlays/popover/PopoverProps';
 
 import type { DropdownProps } from './DropdownProps';
 
 const dropdownStaticClassName = 'cds-dropdown';
 
+/**
+ * @deprecated Use PopoverPanelContent within a PopoverPanel for interactive overlay content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type DropdownContentProps = {
   height?: DimensionValue;
   placement?: Placement;
@@ -24,6 +28,10 @@ export type DropdownContentProps = {
 
 const MotionVStack = motion(VStack);
 
+/**
+ * @deprecated Use PopoverPanelContent within a PopoverPanel for interactive overlay content, or Select / SelectChip when presenting a list of selectable options. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const DropdownContent = memo(
   forwardRef<HTMLDivElement, DropdownContentProps>(
     ({ children, placement, minWidth = 'min-content', ...props }, ref) => {

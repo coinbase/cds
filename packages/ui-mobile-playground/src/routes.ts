@@ -521,6 +521,12 @@ export const routes = [
       require('@coinbase/cds-mobile/system/__stories__/PatternError.stories').default,
   },
   {
+    key: 'PercentageBarChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/bar/__stories__/PercentageBarChart.stories')
+        .default,
+  },
+  {
     key: 'PeriodSelector',
     getComponent: () =>
       require('@coinbase/cds-mobile-visualization/chart/__stories__/PeriodSelector.stories')

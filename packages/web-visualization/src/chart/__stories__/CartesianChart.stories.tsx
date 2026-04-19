@@ -8,6 +8,7 @@ import { Icon } from '@coinbase/cds-web/icons';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
+import { Pressable } from '@coinbase/cds-web/system';
 import { SegmentedTabs } from '@coinbase/cds-web/tabs';
 import { Text } from '@coinbase/cds-web/typography';
 import { AnimatePresence, m as motion } from 'framer-motion';
@@ -27,7 +28,7 @@ import {
 import { Line, type LineComponentProps } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { defaultTransition, isCategoricalScale } from '../utils';
-import { BarPlot, CartesianChart, type ChartTextChildren, Scrubber } from '../';
+import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
   component: CartesianChart,
@@ -70,6 +71,212 @@ type PredictionRowProps = {
   isSelected: boolean;
   onSelect: () => void;
   controlColor: 'accentBoldBlue' | 'accentBoldGreen';
+};
+
+const PredictionRow = ({
+  seriesData,
+  currentPrice,
+  isSelected,
+  onSelect,
+  controlColor,
+}: PredictionRowProps) => (
+  <Pressable alignItems="center" gap={3} justifyContent="space-between" onClick={onSelect}>
+    <Text font="headline">{seriesData.label}</Text>
+    <LineChart
+      curve="natural"
+      enableScrubbing={false}
+      height={6}
+      inset={0}
+      series={[seriesData]}
+      width={60}
+    />
+    <HStack alignItems="center" gap={2}>
+      <Text font="title4">{currentPrice}¢</Text>
+      <Radio checked={isSelected} controlColor={controlColor} onChange={() => {}} tabIndex={-1} />
+    </HStack>
+  </Pressable>
+);
+
+const CustomYAxis = memo(() => {
+  return (
+    <YAxis
+      showGrid
+      GridLineComponent={SolidLine}
+      requestedTickCount={2}
+      tickLabelFormatter={(value) => `${Math.round(value)}%`}
+    />
+  );
+});
+
+const PredictionMarket = () => {
+  const tabs = [
+    { id: '1H', label: '1H' },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+
+  const eaglesData = useMemo(
+    () => [
+      48, 48.2, 48.8, 49.1, 49.5, 50.2, 50.8, 51.1, 51.3, 51.5, 51.8, 51.6, 51.4, 51.7, 51.9, 51.5,
+      51.3, 51.1, 50.9, 50.7, 50.5, 50.8, 51.0, 50.6, 50.3, 49.8, 49.5, 49.2, 48.9, 49.1, 49.4,
+      49.7, 50.0, 50.2, 49.9, 49.6, 49.3, 49.0, 48.7, 48.9, 49.2, 49.5, 49.8, 50.1, 50.3, 51.0,
+      51.7, 52.4, 53.1, 54,
+    ],
+    [],
+  );
+
+  const seriesConfig = useMemo(
+    () => [
+      {
+        id: 'eagles',
+        data: eaglesData,
+        label: 'Eagles',
+        color: 'var(--color-accentBoldBlue)',
+        controlColor: 'accentBoldBlue' as const,
+      },
+      {
+        id: 'ravens',
+        data: eaglesData.map((price) => 100 - price),
+        label: 'Ravens',
+        color: 'var(--color-accentBoldGreen)',
+        controlColor: 'accentBoldGreen' as const,
+      },
+    ],
+    [eaglesData],
+  );
+
+  const [selectedSeriesId, setSelectedSeriesId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
+
+  const handleSeriesClick = useCallback((seriesId: string) => {
+    setSelectedSeriesId((prev) => (prev === seriesId ? null : seriesId));
+  }, []);
+
+  const getSeriesOpacity = (seriesId: string) => {
+    if (selectedSeriesId === null) {
+      return 1;
+    }
+    return selectedSeriesId === seriesId ? 1 : 0.3;
+  };
+
+  const scrubbedSeries = useMemo(() => {
+    return selectedSeriesId ? [selectedSeriesId] : undefined;
+  }, [selectedSeriesId]);
+
+  const chartAccessibilityLabel = useMemo(() => {
+    const lastIndex = eaglesData.length - 1;
+    const teamA = eaglesData[lastIndex];
+    const teamB = 100 - teamA;
+
+    return `Prediction market chart with ${eaglesData.length} data points. Latest odds: Team A ${teamA.toFixed(
+      1,
+    )}%, Team B ${teamB.toFixed(1)}%.`;
+  }, [eaglesData]);
+
+  const [scrubberLabel, setScrubberLabel] = useState<string | null>(null);
+  const updateScrubberLabel = useCallback(
+    (scrubberPosition: number | undefined) => {
+      if (
+        scrubberPosition === null ||
+        scrubberPosition === undefined ||
+        scrubberPosition >= eaglesData.length
+      )
+        return null;
+
+      const timestamp = Date.now() - (eaglesData.length - 1 - scrubberPosition) * 60000;
+      const date = new Date(timestamp);
+      setScrubberLabel(
+        date.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }),
+      );
+    },
+    [eaglesData.length],
+  );
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (dataIndex: number) => {
+      const teamA = eaglesData[dataIndex];
+      const teamB = 100 - teamA;
+      return `At position ${dataIndex + 1} of ${eaglesData.length}: Team A ${teamA.toFixed(
+        1,
+      )}%, Team B ${teamB.toFixed(1)}%.`;
+    },
+    [eaglesData],
+  );
+
+  return (
+    <VStack gap={4} style={{ margin: 'calc(var(--space-1) * -2.5)' }}>
+      <VStack paddingTop={2} paddingX={2}>
+        <Text as="h1" font="title1">
+          Super Bowl LX
+        </Text>
+        <Text color="fgMuted" font="title2">
+          Eagles vs. Ravens
+        </Text>
+      </VStack>
+      <CartesianChart
+        enableScrubbing
+        accessibilityLabel={chartAccessibilityLabel}
+        height={300}
+        inset={{ top: 40, right: 0, bottom: 32, left: 0 }}
+        onScrubberPositionChange={updateScrubberLabel}
+        paddingEnd={2}
+        series={seriesConfig}
+        xAxis={{
+          // Add a bit of margin within the chart's range (pixels)
+          range: ({ max, min }) => ({ min, max: max - 32 }),
+        }}
+        yAxis={{
+          domain: { min: 40, max: 60 },
+        }}
+      >
+        {seriesConfig.map((series) => (
+          <Line
+            key={series.id}
+            curve="natural"
+            opacity={getSeriesOpacity(series.id)}
+            seriesId={series.id}
+            showArea={selectedSeriesId !== null && selectedSeriesId === series.id}
+          />
+        ))}
+        <CustomYAxis />
+        <Scrubber
+          accessibilityLabel={getScrubberAccessibilityLabel}
+          label={scrubberLabel}
+          seriesIds={scrubbedSeries}
+        />
+      </CartesianChart>
+      <Box paddingX={2}>
+        <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+      </Box>
+      <Divider />
+      <VStack gap={3} paddingX={2}>
+        <HStack alignItems="center" gap={2}>
+          <Text as="h2" font="title3">
+            Make a prediction
+          </Text>
+        </HStack>
+        <VStack gap={2}>
+          {seriesConfig.map((series) => (
+            <PredictionRow
+              key={series.id}
+              controlColor={series.controlColor}
+              currentPrice={series.data[series.data.length - 1]}
+              isSelected={selectedSeriesId === series.id}
+              onSelect={() => handleSeriesClick(series.id)}
+              seriesData={series}
+            />
+          ))}
+        </VStack>
+      </VStack>
+    </VStack>
+  );
 };
 
 const EarningsHistory = () => {
@@ -710,22 +917,27 @@ const Example: React.FC<
 
 export const Miscellaneous = () => {
   return (
-    <VStack gap={2}>
-      <Example title="Multiple Types">
-        <MultipleChart />
-      </Example>
-      <Example title="Earnings History">
-        <EarningsHistory />
-      </Example>
-      <Example title="Price With Volume">
-        <PriceWithVolume />
-      </Example>
-      <Example title="Trading Trends">
-        <TradingTrends />
-      </Example>
-      <Example title="Advanced">
-        <Advanced />
-      </Example>
-    </VStack>
+    <React.StrictMode>
+      <VStack gap={2}>
+        <Example title="Multiple Types">
+          <MultipleChart />
+        </Example>
+        <Example title="Earnings History">
+          <EarningsHistory />
+        </Example>
+        <Example title="Price With Volume">
+          <PriceWithVolume />
+        </Example>
+        <Example title="Prediction Market">
+          <PredictionMarket />
+        </Example>
+        <Example title="Trading Trends">
+          <TradingTrends />
+        </Example>
+        <Example title="Advanced">
+          <Advanced />
+        </Example>
+      </VStack>
+    </React.StrictMode>
   );
 };

@@ -487,6 +487,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/overlay/PopoverPanel/popoverPanel',
+              label: 'PopoverPanel',
+            },
+            {
+              type: 'doc',
               id: 'components/overlay/PortalProvider/portalProvider',
               label: 'PortalProvider',
             },
@@ -624,6 +629,11 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'components/charts/BarChart/barChart',
               label: 'BarChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/charts/PercentageBarChart/percentageBarChart',
+              label: 'PercentageBarChart',
             },
             {
               type: 'doc',
