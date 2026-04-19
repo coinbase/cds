@@ -16,6 +16,11 @@
       "name": "migrate-layout-types-mobile",
       "description": "Migrate layout types from @coinbase/cds-common to @coinbase/cds-mobile",
       "file": "v9/migrate-layout-types-mobile"
+    },
+    {
+      "name": "migrate-visualization-imports",
+      "description": "Migrate @coinbase/cds-mobile-visualization imports to @coinbase/cds-mobile/visualizations sub-paths",
+      "file": "v9/migrate-visualization-imports"
     }
   ]
 }
