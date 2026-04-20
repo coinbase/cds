@@ -109,7 +109,8 @@
     "actions/*",
     "apps/*",
     "libs/*",
-    "packages/*"
+    "packages/*",
+    "tools"
   ],
   "devDependencies": {
     "@babel/cli": "^7.20.7",

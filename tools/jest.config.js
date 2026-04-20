@@ -6,7 +6,10 @@ const config = {
   transform: {
     '^.+\\.(js|mjs|ts)$': [
       'babel-jest',
-      { presets: ['@babel/preset-env', '@babel/preset-typescript'] },
+      {
+        presets: ['@babel/preset-env', '@babel/preset-typescript'],
+        plugins: ['babel-plugin-transform-import-meta'],
+      },
     ],
   },
   moduleFileExtensions: ['mjs', 'js', 'ts'],
