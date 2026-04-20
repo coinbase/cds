@@ -2204,7 +2204,7 @@ __metadata:
     "@types/inquirer": "npm:^9.0.7"
     "@types/jscodeshift": "npm:^0.11.10"
     commander: "npm:^11.1.0"
-    fast-glob: "npm:^3.3.3"
+    fast-glob: "npm:^3.2.11"
     jscodeshift: "npm:^0.15.1"
   bin:
     cds-migrate: ./cjs/cli.js
@@ -17422,7 +17422,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.7, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.1, fast-glob@npm:^3.3.2, fast-glob@npm:^3.3.3":
+"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.7, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.1, fast-glob@npm:^3.3.2":
   version: 3.3.3
   resolution: "fast-glob@npm:3.3.3"
   dependencies:
