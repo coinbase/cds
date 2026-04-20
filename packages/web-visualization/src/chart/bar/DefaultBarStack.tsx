@@ -3,6 +3,7 @@ import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import {
+  type BarTransition,
   defaultBarEnterTransition,
   defaultTransition,
   getBarPath,
@@ -28,6 +29,7 @@ export type DefaultBarStackProps = BarStackComponentProps & {
 
 /**
  * Default stack component that renders children in a group with animated clip path.
+ * Enter opacity is handled by {@link DefaultBar} only so stack + bar opacity are not multiplied.
  */
 export const DefaultBarStack = memo<DefaultBarStackProps>(
   ({
@@ -55,11 +57,12 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [transitions?.enter, animate, normalizedStagger],
+        getTransition(transitions?.enter, animate, defaultBarEnterTransition) as BarTransition | null,
+      [transitions?.enter, animate],
+    );
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
     );
     const updateTransition = useMemo(
       () =>
@@ -98,7 +101,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       currentPath: clipPathData,
       initialPath: initialClipPathData,
       transitions: {
-        enter: enterTransition,
+        enter: enterTransitionWithStagger,
         update: updateTransition,
       },
     });
