@@ -200,10 +200,9 @@ describe('getBars horizontal barMinSize from baseline (regression)', () => {
   function linearValueScale(domain: [number, number], range: [number, number]) {
     const [d0, d1] = domain;
     const [r0, r1] = range;
-    return Object.assign(
-      (v: number) => r0 + ((v - d0) / (d1 - d0)) * (r1 - r0),
-      { domain: () => domain },
-    ) as any;
+    return Object.assign((v: number) => r0 + ((v - d0) / (d1 - d0)) * (r1 - r0), {
+      domain: () => domain,
+    }) as any;
   }
 
   const WIDE_CHART_WIDTH = 1008;

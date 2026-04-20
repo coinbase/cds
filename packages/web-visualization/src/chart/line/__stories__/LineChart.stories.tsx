@@ -1855,9 +1855,9 @@ export const All = () => {
         <Example
           description={
             <Text color="fgMuted" font="body">
-              No <code>axis</code> on the gradient: horizontal layout defaults to the value axis (x).
-              The stroke and scrubber beacon should track color along rainfall (bar length), not month
-              order.
+              No <code>axis</code> on the gradient: horizontal layout defaults to the value axis
+              (x). The stroke and scrubber beacon should track color along rainfall (bar length),
+              not month order.
             </Text>
           }
           title="Horizontal line gradient (implicit axis)"
