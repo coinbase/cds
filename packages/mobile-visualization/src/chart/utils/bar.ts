@@ -438,6 +438,7 @@ export function getStackInitialClipRect(
  * @param barMinSize - Minimum bar size in pixels
  * @param baseline - Value-axis baseline in data space
  * @param baselinePx - Pixel position of the value-axis baseline on the value axis
+ * @param layout - Chart layout
  * @returns New array of bars with adjusted valuePos and length
  */
 function applyBarMinSize(
@@ -445,6 +446,7 @@ function applyBarMinSize(
   barMinSize: number,
   baseline: number,
   baselinePx: number,
+  layout: CartesianChartLayout,
 ): BarData[] {
   if (!barMinSize || bars.length === 0) return bars;
 
@@ -511,34 +513,70 @@ function applyBarMinSize(
       return top <= baseline && bottom !== top;
     });
 
-    // Restack bars above baseline (growing away from it in the positive direction)
-    let currentAbove = baselinePx;
-    for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
-      const bar = barsAboveBaseline[i];
-      const newValuePos = currentAbove - bar.length;
-      newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
-      if (i > 0) {
-        const nextBar = barsAboveBaseline[i - 1];
-        const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
-        const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
-        const originalGap =
-          originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
-        currentAbove = newValuePos - originalGap;
+    // Restack bars above baseline (positive data side).
+    // vertical → grow up (−Y from baseline); horizontal → grow right (+X from baseline).
+    if (layout === 'vertical') {
+      let currentAbove = baselinePx;
+      for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
+        const bar = barsAboveBaseline[i];
+        const newValuePos = currentAbove - bar.length;
+        newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
+        if (i > 0) {
+          const nextBar = barsAboveBaseline[i - 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
+          currentAbove = newValuePos - originalGap;
+        }
+      }
+    } else {
+      let currentEdge = baselinePx;
+      for (let i = 0; i < barsAboveBaseline.length; i++) {
+        const bar = barsAboveBaseline[i];
+        newPositions.set(bar.seriesId, { valuePos: currentEdge, length: bar.length });
+        if (i < barsAboveBaseline.length - 1) {
+          const nextBar = barsAboveBaseline[i + 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
+          currentEdge = currentEdge + bar.length + originalGap;
+        }
       }
     }
 
-    // Restack bars below baseline (growing away from it in the negative direction)
-    let currentBelow = baselinePx;
-    for (let i = 0; i < barsBelowBaseline.length; i++) {
-      const bar = barsBelowBaseline[i];
-      newPositions.set(bar.seriesId, { valuePos: currentBelow, length: bar.length });
-      if (i < barsBelowBaseline.length - 1) {
-        const nextBar = barsBelowBaseline[i + 1];
-        const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
-        const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
-        const originalGap =
-          originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
-        currentBelow = currentBelow + bar.length + originalGap;
+    // Restack bars below baseline (negative data side).
+    // vertical → grow down (+Y); horizontal → grow left (−X).
+    if (layout === 'vertical') {
+      let currentBelow = baselinePx;
+      for (let i = 0; i < barsBelowBaseline.length; i++) {
+        const bar = barsBelowBaseline[i];
+        newPositions.set(bar.seriesId, { valuePos: currentBelow, length: bar.length });
+        if (i < barsBelowBaseline.length - 1) {
+          const nextBar = barsBelowBaseline[i + 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
+          currentBelow = currentBelow + bar.length + originalGap;
+        }
+      }
+    } else {
+      const sortedBelow = [...barsBelowBaseline].sort((a, b) => b.valuePos - a.valuePos);
+      let currentEdge = baselinePx;
+      for (let i = sortedBelow.length - 1; i >= 0; i--) {
+        const bar = sortedBelow[i];
+        const newValuePos = currentEdge - bar.length;
+        newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
+        if (i > 0) {
+          const nextBar = sortedBelow[i - 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
+          currentEdge = newValuePos - originalGap;
+        }
       }
     }
   }
@@ -985,7 +1023,7 @@ export function getBars(params: {
 
   // Apply barMinSize constraints
   if (barMinSize) {
-    allBars = applyBarMinSize(allBars, barMinSize, baseline, baselinePx);
+    allBars = applyBarMinSize(allBars, barMinSize, baseline, baselinePx, layout);
   }
 
   allBars = applyBorderRadiusLogic(allBars, layout, stackGap);
