@@ -2548,3 +2548,813 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=4238
   props,
   example: (props) => <Icon name="coinbaseOneCard" {...props} />,
 });
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-397', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="airdropAlt" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-370', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="airdropCoins" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-384', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="airdropParachute" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-722', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="alien" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-800', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="apothecary" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-956', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="apple" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56214-24', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="appleLogo" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-93', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="arrowsUpDown" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1178', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="atSign" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-670', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="atomScience" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-969', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="ballot" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1230', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="ballotbox" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-761', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="bandage" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-29', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseApps" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-81', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseFeed" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-144', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseNotification" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=65584-1373', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseQuickBuy" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-14', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseSquare" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-42', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseTransact" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-55', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseWallet" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-110', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseball" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-123', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="basketball" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=57839-24', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="beaker" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=77025-15', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="beginningArrow" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=57839-38', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="block" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-162', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="boxing" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-774', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="bug" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-618', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="building" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-28', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="calendarBlank" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1113', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="calendarDates" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1073', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="calendarHeart" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1086', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="calendarMoney" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1099', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="calendarStar" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=54347-25', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="chatRequests" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-71', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="chess" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-657', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="city" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-527', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="cloudPartial" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-2', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="coinsCrypto" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56404-11', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="commentPlus" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=54347-80', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="compose" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-709', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="computerChip" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=74076-4', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="concierge" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-631', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="corporation" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=59433-10', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="creatorCoin" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-19', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="cricket" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-67', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="crystalBallInsight" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=57839-11', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="dataStack" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56855-1831', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="earnRewards" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-540', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="earthquake" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-943', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="educationBook" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-930', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="educationPencil" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=77025-2', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="endArrow" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-344', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="entertainment" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-644', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="factory" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-240', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="filmStrip" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=77025-644', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="filterLineStack" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-149', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="football" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56404-1568', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="fscsProtection" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-292', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="gaming" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-136', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="golf" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-592', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="greenEnergy" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=57767-11', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="grid" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-84', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="hockey" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-826', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="hospital" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-787', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="hospitalCross" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-436', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="hurricane" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56413-10', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="leadChart" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56413-23', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="leadCoin" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-488', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="lightning" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-41', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="loop" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1165', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="medal" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-201', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="microphoneCordless" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-696', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="microscope" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-97', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="mma" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-80', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="moneyCardCoin" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-58', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="motorsport" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-214', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="musicArticles" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-839', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="needle" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-579', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="oil" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=80181-17', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="overPredictions" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56411-1587', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="passKey" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56411-1552', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="peopleStar" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-15', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="pieChartData" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-852', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="pillBottle" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-813', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="pillCapsule" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-266', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="playbutton" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=54391-10', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="plusMinus" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-904', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="podiumStar" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1008', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="politicsBuilding" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1034', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="politicsCandidate" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1021', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="politicsFlag" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1047', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="politicsGavel" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-982', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="politicsPodium" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-995', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="politicsStar" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1191', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="quotation" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-449', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="rain" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-878', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="ratingsCheck" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-891', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="ratingsChecks" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-917', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="ratingsStar" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1152', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="ribbon" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=67848-38', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="robot" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-305', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="rottenTomato" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56404-1555', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="savingsBank" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-748', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="scienceAtom" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-683', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="scienceBeaker" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-735', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="scienceMoon" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-318', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="shoe" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-54', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="singleCoin" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-227', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="singleNote" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-423', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="singlecloud" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-410', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="snow" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-45', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="soccer" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1217', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="speechBubble" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1060', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="stableCoin" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-357', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="stablecoinStack" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1126', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="starAward" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1204', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="starBubble" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1139', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="starTrophy" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-6', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="strategy" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-32', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tennis" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-501', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="thermometer" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-188', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tokenLaunchCoin" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-175', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tokenLaunchRocket" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=62581-10', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tokenSales" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-514', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tornado" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-331', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tshirt" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-253', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tv" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-279', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="tvStand" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-462', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="umbrella" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=80181-4', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="underPredictions" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=64511-16', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="unfollowPeople" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-865', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="virus" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=73630-4', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="webhooks" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-475', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="wind" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56214-37', {
+  imports: ["import { Icon } from '@coinbase/cds-web/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="xLogo" {...props} />,
+});
