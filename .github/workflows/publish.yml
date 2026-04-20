@@ -31,6 +31,10 @@ permissions:
 jobs:
   # Determine which packages to build/publish
   detect-changes:
+    # Skip on branch creation (e.g. cutting a new release-N.x branch). GitHub
+    # treats every file as changed on first push, so the paths filter above
+    # would match even though no new commits have landed on the branch yet.
+    if: ${{ !github.event.created }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
