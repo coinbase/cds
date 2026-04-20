@@ -46,6 +46,7 @@ export async function getWorkspaceData() {
 
 function determineNextVersion(logs, currentVersion) {
   const isAlpha = currentVersion.startsWith('0.');
+  const isPrerelease = semver.prerelease(currentVersion) !== null;
   let major = 0;
   let minor = 0;
   let patch = 0;
@@ -59,6 +60,13 @@ function determineNextVersion(logs, currentVersion) {
       patch += 1;
     }
   });
+
+  if (isPrerelease) {
+    if (major > 0 || minor > 0 || patch > 0) {
+      return semver.inc(currentVersion, 'prerelease');
+    }
+    return null;
+  }
 
   if (major > 0) {
     return semver.inc(currentVersion, isAlpha ? 'minor' : 'major');

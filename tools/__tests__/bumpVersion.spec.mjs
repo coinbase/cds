@@ -136,4 +136,42 @@ describe('bumpVersion', () => {
       bumpVersion('web', { bump: 'patch', message: 'Fix bug', pr: 'abc' }),
     ).rejects.toThrow('Invalid pr: abc');
   });
+
+  describe('prerelease (RC) versions', () => {
+    const RC_PKG = { name: '@coinbase/cds-web', version: '9.0.0-rc.1' };
+
+    beforeEach(() => {
+      fs.promises.readFile.mockImplementation((filePath) => {
+        if (String(filePath).includes('package.json')) {
+          return Promise.resolve(JSON.stringify(RC_PKG));
+        }
+        return Promise.resolve('# Changelog\n');
+      });
+    });
+
+    it('increments the RC number for a patch bump', async () => {
+      await bumpVersion('web', { bump: 'patch', message: 'Fix RC bug' });
+      const { pkgCall } = getWriteCalls();
+      expect(JSON.parse(pkgCall[1]).version).toBe('9.0.0-rc.2');
+    });
+
+    it('increments the RC number for a minor bump', async () => {
+      await bumpVersion('web', { bump: 'minor', message: 'Add feature to RC' });
+      const { pkgCall } = getWriteCalls();
+      expect(JSON.parse(pkgCall[1]).version).toBe('9.0.0-rc.2');
+    });
+
+    it('increments the RC number for a major bump', async () => {
+      await bumpVersion('web', { bump: 'major', message: 'Breaking change in RC' });
+      const { pkgCall } = getWriteCalls();
+      expect(JSON.parse(pkgCall[1]).version).toBe('9.0.0-rc.2');
+    });
+
+    it('writes an Unreleased entry and skips package.json write for bump=none', async () => {
+      await bumpVersion('web', { bump: 'none', message: 'Update RC docs' });
+      const { pkgCall, changelogCalls } = getWriteCalls();
+      expect(pkgCall).toBeUndefined();
+      expect(changelogCalls[changelogCalls.length - 1][1]).toContain('## Unreleased');
+    });
+  });
 });
