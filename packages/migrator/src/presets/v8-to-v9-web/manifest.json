@@ -1,5 +1,5 @@
 {
-  "preset": "v8-to-v9",
+  "preset": "v8-to-v9-web",
   "description": "Upgrade from CDS v8 to v9 (web)",
   "transforms": [
     {
@@ -21,6 +21,17 @@
       "name": "migrate-visualization-imports",
       "description": "Migrate @coinbase/cds-web-visualization imports to @coinbase/cds-web/visualizations sub-paths",
       "file": "v9/migrate-visualization-imports"
+    },
+    {
+      "name": "migrate-interactable-css-vars",
+      "description": "Rename interactable CSS custom properties: --interactable-* → --inter-* (JS/TS files only)",
+      "file": "v9/migrate-interactable-css-vars"
+    },
+    {
+      "name": "migrate-interactable-css-vars-css",
+      "description": "Rename interactable CSS custom properties: --interactable-* → --inter-* (CSS/SCSS/HTML files)",
+      "file": "v9/migrate-interactable-css-vars-css",
+      "type": "script"
     }
   ]
 }

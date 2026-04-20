@@ -1,5 +1,5 @@
 {
-  "preset": "v8-to-v9",
+  "preset": "v8-to-v9-mobile",
   "description": "Upgrade from CDS v8 to v9 (mobile)",
   "transforms": [
     {

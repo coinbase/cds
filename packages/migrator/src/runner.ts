@@ -15,6 +15,18 @@ import type { Transform } from './types';
 // In CommonJS, __dirname is automatically available
 declare const __dirname: string;
 
+/**
+ * Directories excluded from all transforms — both jscodeshift and script types.
+ * Script transforms receive these as `--ignore=<pattern>` CLI args so that a
+ * single source of truth governs what gets skipped.
+ */
+export const RUNNER_IGNORE_PATTERNS = [
+  '**/node_modules/**',
+  '**/.next/**',
+  '**/dist/**',
+  '**/build/**',
+];
+
 type RunMigrationOptions = {
   preset?: string; // Optional - not needed for direct transform execution
   path: string;
@@ -72,7 +84,6 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
     // Transforms are in src/transforms/, built to esm/transforms/
     const transformsDir = path.join(__dirname, 'transforms');
     const fullTransformPath = path.join(transformsDir, transformFile);
-    const extensions = transform.extensions || 'tsx,ts,jsx,js';
 
     // Check if transform file exists before running
     if (!fs.existsSync(fullTransformPath)) {
@@ -89,28 +100,37 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
     }
 
     try {
-      // Build jscodeshift arguments for npx
-      const jscodeshiftArgs = [
-        'jscodeshift',
-        ...(dryRun ? ['--dry'] : []),
-        '--parser=tsx',
-        `--extensions=${extensions}`,
-        '--ignore-pattern=**/node_modules/**',
-        '--ignore-pattern=**/.next/**',
-        '--ignore-pattern=**/dist/**',
-        '--ignore-pattern=**/build/**',
-        `--transform=${fullTransformPath}`,
-        ...(packageScope ? [`--packageScope=${packageScope}`] : []),
-        targetPath,
-      ];
+      if (transform.type === 'script') {
+        const scriptArgs = [
+          fullTransformPath,
+          targetPath,
+          ...(dryRun ? ['--dry'] : []),
+          ...RUNNER_IGNORE_PATTERNS.map((p) => `--ignore=${p}`),
+        ];
+        console.log(`    Command: node ${scriptArgs.join(' ')}\n`);
+        execFileSync('node', scriptArgs, { stdio: 'inherit', cwd: process.cwd() });
+      } else {
+        // Build jscodeshift arguments for npx
+        const extensions = transform.extensions || 'tsx,ts,jsx,js';
+        const jscodeshiftArgs = [
+          'jscodeshift',
+          ...(dryRun ? ['--dry'] : []),
+          '--parser=tsx',
+          `--extensions=${extensions}`,
+          ...RUNNER_IGNORE_PATTERNS.map((p) => `--ignore-pattern=${p}`),
+          `--transform=${fullTransformPath}`,
+          ...(packageScope ? [`--packageScope=${packageScope}`] : []),
+          targetPath,
+        ];
 
-      console.log(`    Command: npx ${jscodeshiftArgs.join(' ')}\n`);
+        console.log(`    Command: npx ${jscodeshiftArgs.join(' ')}\n`);
 
-      // execFileSync: first arg is command, second arg is array of arguments
-      execFileSync('npx', jscodeshiftArgs, {
-        stdio: 'inherit',
-        cwd: process.cwd(),
-      });
+        // execFileSync: first arg is command, second arg is array of arguments
+        execFileSync('npx', jscodeshiftArgs, {
+          stdio: 'inherit',
+          cwd: process.cwd(),
+        });
+      }
 
       console.log(`\n  ✓ Transform completed: ${transform.name}`);
       logger.success(`Transform completed: ${transform.name}`);

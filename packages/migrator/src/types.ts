@@ -2,25 +2,38 @@
  * Types for CDS migration tools
  */
 
-export type Transform = {
-  /**
-   * Name of the transform
-   */
+/**
+ * A jscodeshift transform — the default. Runs via `npx jscodeshift` against
+ * JS/TS source files.
+ */
+export type JscodeshiftTransform = {
+  type?: 'jscodeshift';
   name: string;
-  /**
-   * Description of what the transform does
-   */
   description: string;
-  /**
-   * Path to the transform file (relative to transforms directory)
-   */
+  /** Path to the transform file relative to the transforms directory (no extension). */
   file: string;
   /**
-   * File extensions to process (comma-separated)
+   * File extensions to process (comma-separated).
    * @default "tsx,ts,jsx,js"
    */
   extensions?: string;
 };
+
+/**
+ * A Node.js script transform. Runs via `node <script> <targetPath> [--dry]`.
+ * The script is responsible for finding and processing its own file types
+ * (e.g. CSS, SCSS, HTML) and must export nothing at the module level that
+ * would conflict with being run as a script.
+ */
+export type ScriptTransform = {
+  type: 'script';
+  name: string;
+  description: string;
+  /** Path to the compiled script relative to the transforms directory (no extension). */
+  file: string;
+};
+
+export type Transform = JscodeshiftTransform | ScriptTransform;
 
 /**
  * Preset manifest structure
