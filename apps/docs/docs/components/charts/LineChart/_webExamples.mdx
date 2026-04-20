@@ -388,6 +388,147 @@ function Points() {
 }
 ```
 
+## Animations
+
+You can configure chart transitions using `transitions`. The `transitions` prop accepts an object with `enter` (the clip-path reveal animation) and `update` (data change morph animation) keys. Set either to `null` to disable that animation phase. You can also disable all animations by setting `animate` on LineChart to `false`.
+
+```jsx live
+function Transitions() {
+  const dataCount = 20;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const domainLimit = 20000;
+  const updateInterval = 500;
+
+  const myTransitionConfig = { type: 'spring', stiffness: 700, damping: 20 };
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= -maxDataOffset) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(-maxDataOffset, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MyGradient = memo((props) => {
+    const areaGradient = {
+      stops: ({ min, max }) => [
+        { offset: min, color: negativeColor, opacity: 1 },
+        { offset: 0, color: negativeColor, opacity: 0 },
+        { offset: 0, color: positiveColor, opacity: 0 },
+        { offset: max, color: positiveColor, opacity: 1 },
+      ],
+    };
+
+    return <DottedArea {...props} gradient={areaGradient} />;
+  });
+
+  function CustomTransitionsChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const tickLabelFormatter = useCallback(
+      (value) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        }).format(value),
+      [],
+    );
+
+    const valueAtIndexFormatter = useCallback(
+      (dataIndex) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(data[dataIndex]),
+      [data],
+    );
+
+    const lineGradient = {
+      stops: [
+        { offset: 0, color: negativeColor },
+        { offset: 0, color: positiveColor },
+      ],
+    };
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: lineGradient,
+          },
+        ]}
+        yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+        aria-hidden="true"
+      >
+        <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+        <Line
+          showArea
+          AreaComponent={MyGradient}
+          seriesId="prices"
+          strokeWidth={3}
+          transitions={{ update: myTransitionConfig }}
+        />
+        <Scrubber
+          hideOverlay
+          label={valueAtIndexFormatter}
+          transitions={{ update: myTransitionConfig }}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <CustomTransitionsChart />;
+}
+```
+
 ## Accessibility
 
 You can use `accessibilityLabel` on both the chart and the scrubber to provide descriptive labels. The chart's label gives an overview, while the scrubber's label provides specific information about the current data point being viewed.
@@ -512,6 +653,187 @@ Using `showXAxis` and `showYAxis` allows you to display the axes. For more infor
     showTickMarks: true,
   }}
 />
+```
+
+### Gradients
+
+Gradients can be applied to the y-axis (default) or x-axis. Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
+
+Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
+
+```jsx live
+function Gradients() {
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            borderRadius={1000}
+            height={{ base: 16, tablet: 24, desktop: 24 }}
+            onClick={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(var(--${color}20))`,
+              border: `2px solid rgb(var(--${color}50))`,
+              outlineColor: `rgb(var(--${color}80))`,
+              outline:
+                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
+            }}
+            width={{ base: 16, tablet: 24, desktop: 24 }}
+          />
+        ))}
+      </HStack>
+      <LineChart
+        showYAxis
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        points
+        series={[
+          {
+            id: 'continuousGradient',
+            data: data,
+            gradient: {
+              stops: [
+                { offset: 0, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: Math.max(...data), color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+          {
+            id: 'discreteGradient',
+            data: data.map((d) => d + 50),
+            // You can create a "discrete" gradient by having multiple stops at the same offset
+            gradient: {
+              stops: ({ min, max }) => [
+                // Allows a function which accepts min/max or direct array
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}50))` },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}50))`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}20))`,
+                },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+          {
+            id: 'xAxisGradient',
+            data: data.map((d) => d + 100),
+            gradient: {
+              // You can also configure by the x-axis.
+              axis: 'x',
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))`, opacity: 0 },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))`, opacity: 1 },
+              ],
+            },
+          },
+        ]}
+        strokeWidth={4}
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+You can even pass in a separate gradient for your `Line` and `Area` components.
+
+```jsx live
+function GainLossChart() {
+  const data = useMemo(() => [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8], []);
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  const tickLabelFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  // Line gradient: hard color change at 0 (full opacity for line)
+  const lineGradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
+  };
+
+  const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${tickLabelFormatter(data[data.length - 1])}`;
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (index) => {
+      const value = data[index];
+      const status = value >= 0 ? 'gain' : 'loss';
+      return `Position ${index + 1} of ${data.length}: ${tickLabelFormatter(value)} ${status}`;
+    },
+    [data, tickLabelFormatter],
+  );
+
+  const GradientDottedArea = memo((props) => (
+    <DottedArea
+      {...props}
+      gradient={{
+        stops: ({ min, max }) => [
+          { offset: min, color: negativeColor, opacity: 0.4 },
+          { offset: 0, color: negativeColor, opacity: 0 },
+          { offset: 0, color: positiveColor, opacity: 0 },
+          { offset: max, color: positiveColor, opacity: 0.4 },
+        ],
+      }}
+    />
+  ));
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      accessibilityLabel={chartAccessibilityLabel}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          gradient: lineGradient,
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
+    >
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Line showArea AreaComponent={GradientDottedArea} seriesId="prices" strokeWidth={3} />
+      <Scrubber hideOverlay accessibilityLabel={getScrubberAccessibilityLabel} />
+    </CartesianChart>
+  );
+}
 ```
 
 ### Legend
