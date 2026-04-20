@@ -1,4 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTheme } from '@coinbase/cds-mobile';
 import { Button } from '@coinbase/cds-mobile/buttons/Button';
 import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton';
 import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
@@ -259,6 +260,58 @@ function AreaExample({
   );
 }
 
+function SessionBaselineAreaTransitionsExample() {
+  const theme = useTheme();
+  const [resetKey, setResetKey] = useState(0);
+  const [data, setData] = useState(generateInitialData());
+  const handleReset = useCallback(() => {
+    setData(generateInitialData());
+    setResetKey((k) => k + 1);
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((d) => [...d.slice(1), generateNextValue(d[d.length - 1])]);
+    }, updateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const baseline = data[0];
+
+  return (
+    <VStack gap={2}>
+      <AreaChart
+        key={resetKey}
+        enableScrubbing
+        showLines
+        height={200}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'values',
+            data,
+            type: 'gradient',
+            gradient: {
+              stops: [
+                { offset: baseline, color: theme.color.fgNegative },
+                { offset: baseline, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        yAxis={{ baseline: baseline, domain: { min: 0, max: 100 } }}
+      >
+        <Scrubber hideOverlay idlePulse />
+      </AreaChart>
+      <Box paddingX={2}>
+        <Button compact onPress={handleReset} variant="secondary">
+          Reset
+        </Button>
+      </Box>
+    </VStack>
+  );
+}
+
 // --- Bar Chart Components ---
 
 const barCategories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -460,6 +513,11 @@ function ExampleNavigator() {
         category: 'Area',
         title: 'Imperative Pulse',
         component: <AreaExample imperative resettable={false} transitions={updateOnly} />,
+      },
+      {
+        category: 'Area',
+        title: 'Session baseline',
+        component: <SessionBaselineAreaTransitionsExample />,
       },
       {
         category: 'Bar',

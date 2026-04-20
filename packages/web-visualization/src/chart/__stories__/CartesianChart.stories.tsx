@@ -1,33 +1,21 @@
 import React, { memo, useCallback, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
-import { Icon } from '@coinbase/cds-web/icons';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-web/system';
-import { SegmentedTabs } from '@coinbase/cds-web/tabs';
 import { Text } from '@coinbase/cds-web/typography';
-import { AnimatePresence, m as motion } from 'framer-motion';
-import type { DateTimeFormatOptions } from 'intl';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import {
-  DefaultReferenceLineLabel,
-  DottedLine,
-  ReferenceLine,
-  type ReferenceLineLabelComponentProps,
-  SolidLine,
-  type SolidLineProps,
-} from '../line';
-import { Line, type LineComponentProps } from '../line/Line';
+import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
+import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { defaultTransition, isCategoricalScale } from '../utils';
+import { isCategoricalScale } from '../utils';
 import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
@@ -410,7 +398,7 @@ const EarningsHistory = () => {
 
 const PriceWithVolume = () => {
   const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
-  const btcData = [...btcCandles].reverse().slice(0, 180);
+  const btcData = btcCandles.slice(0, 180).reverse();
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
   const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -460,12 +448,6 @@ const PriceWithVolume = () => {
       )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`;
     },
     [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume],
-  );
-
-  const scrubberLabel = useCallback(
-    (dataIndex: number) =>
-      `${formatPrice(btcPrices[dataIndex])} ${formatDate(btcDates[dataIndex])}`,
-    [btcDates, btcPrices, formatDate, formatPrice],
   );
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
@@ -533,11 +515,7 @@ const PriceWithVolume = () => {
         />
         <BarPlot seriesIds={['volume']} />
         <Line showArea seriesId="prices" />
-        <Scrubber
-          accessibilityLabel={getScrubberAccessibilityLabel}
-          label={scrubberLabel}
-          seriesIds={['prices']}
-        />
+        <Scrubber accessibilityLabel={getScrubberAccessibilityLabel} seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
   );
@@ -608,301 +586,6 @@ function TradingTrends() {
   );
 }
 
-type AdvancedPeriod = keyof typeof sparklineInteractiveData;
-
-const advancedTabs: TabValue[] = [
-  { id: 'hour', label: '1H' },
-  { id: 'day', label: '1D' },
-  { id: 'week', label: '1W' },
-  { id: 'month', label: '1M' },
-  { id: 'year', label: '1Y' },
-  { id: 'all', label: 'All' },
-];
-
-type ChartType = 'area' | 'line';
-type ChartScaleType = 'linear' | 'log';
-
-const chartTypeTabs: TabValue<ChartType>[] = [
-  { id: 'area', label: <Icon active color="currentColor" name="lineChartCrypto" size="s" /> },
-  { id: 'line', label: <Icon active color="currentColor" name="chartLine" size="s" /> },
-];
-
-const chartScaleTypeTabs: TabValue<ChartScaleType>[] = [
-  { id: 'linear', label: 'Linear' },
-  { id: 'log', label: 'Log' },
-];
-
-const getFormattingConfigForPeriod = (period: AdvancedPeriod): DateTimeFormatOptions => {
-  switch (period) {
-    case 'hour':
-    case 'day':
-      return {
-        hour: 'numeric',
-        minute: 'numeric',
-      };
-
-    case 'week':
-    case 'month':
-      return {
-        month: 'numeric',
-        day: 'numeric',
-      };
-
-    default:
-      return {
-        month: 'numeric',
-        year: 'numeric',
-      };
-  }
-};
-
-const chartTransition = { enter: null };
-
-const DottedReferenceLine = memo((props: LineComponentProps) => (
-  <DottedLine
-    {...props}
-    animate={true}
-    stroke="var(--color-fg)"
-    strokeDasharray="0 16"
-    strokeWidth={3}
-    transitions={chartTransition}
-  />
-));
-
-export const Advanced = () => {
-  const [activeTab, setActiveTab] = useState<TabValue>(advancedTabs[3]);
-  const [chartType, setChartType] = useState<TabValue<ChartType>>(chartTypeTabs[0]);
-  const [scaleType, setScaleType] = useState<TabValue<ChartScaleType>>(chartScaleTypeTabs[0]);
-
-  const sparklineTimePeriodData = useMemo(
-    () => sparklineInteractiveData[activeTab.id as AdvancedPeriod],
-    [activeTab.id],
-  );
-
-  const prices = useMemo(
-    () => sparklineTimePeriodData.map((point) => point.value),
-    [sparklineTimePeriodData],
-  );
-  const dates = useMemo(
-    () => sparklineTimePeriodData.map((point) => point.date),
-    [sparklineTimePeriodData],
-  );
-
-  const startingPrice = prices[0] ?? 0;
-
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }, []);
-
-  const formatLabel = useCallback(
-    (dataIndex: number) => {
-      const price = prices[dataIndex];
-      const date = dates[dataIndex];
-      if (price === undefined || date === undefined) return '';
-
-      return (
-        <>
-          <tspan style={{ fontWeight: 'bold' }}>{formatPrice(price)}</tspan> {formatDate(date)}
-        </>
-      );
-    },
-    [dates, formatDate, formatPrice, prices],
-  );
-
-  const PriceLabel = memo((props: ReferenceLineLabelComponentProps) => (
-    <DefaultReferenceLineLabel
-      {...props}
-      background="var(--color-bgSecondary)"
-      borderRadius={12.5}
-      color="var(--color-fg)"
-      dx={12}
-      font="label1"
-      horizontalAlignment="left"
-      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
-    />
-  ));
-
-  const getScrubberAccessibilityLabel = useCallback(
-    (index: number) => `${formatPrice(prices[index])} ${formatDate(dates[index])}`,
-    [dates, formatDate, formatPrice, prices],
-  );
-
-  const formatXAxisDate = useCallback(
-    (index: number) => {
-      if (!dates[index]) return '';
-      const date = dates[index];
-      const formatConfig = getFormattingConfigForPeriod(activeTab.id as AdvancedPeriod);
-
-      if (activeTab.id === 'hour' || activeTab.id === 'day') {
-        return date.toLocaleTimeString('en-US', formatConfig);
-      } else {
-        return date.toLocaleDateString('en-US', formatConfig);
-      }
-    },
-    [dates, activeTab.id],
-  );
-
-  const handleChartTypeChange = useCallback((chartType: TabValue<ChartType> | null) => {
-    setChartType(chartType ?? chartTypeTabs[0]);
-  }, []);
-
-  const handlePeriodChange = useCallback((period: TabValue | null) => {
-    setActiveTab(period ?? advancedTabs[0]);
-  }, []);
-
-  const handleScaleTypeChange = useCallback((scaleType: TabValue<ChartScaleType> | null) => {
-    setScaleType(scaleType ?? chartScaleTypeTabs[0]);
-  }, []);
-
-  const series = useMemo(
-    () => [
-      {
-        id: 'pricesArea',
-        data: prices,
-        color: assets.btc.color,
-        gradient: {
-          stops: [
-            { offset: startingPrice, color: 'var(--color-fgNegative)' },
-            { offset: startingPrice, color: 'var(--color-fgPositive)' },
-          ],
-        },
-        yAxisId: 'pricesArea',
-      },
-      {
-        id: 'pricesLine',
-        data: prices,
-        color: assets.btc.color,
-        yAxisId: 'pricesLine',
-      },
-    ],
-    [prices, startingPrice],
-  );
-
-  return (
-    <VStack gap={2}>
-      <CartesianChart
-        enableScrubbing
-        height={300}
-        series={series}
-        xAxis={{
-          scaleType: 'band',
-        }}
-        yAxis={[
-          {
-            id: 'pricesArea',
-            baseline: startingPrice,
-            scaleType: scaleType.id,
-            domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
-            range: ({ min, max }) => ({ min: min, max }),
-          },
-          {
-            id: 'pricesLine',
-            scaleType: scaleType.id,
-            domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
-            range: ({ min, max }) => ({ min: min, max }),
-          },
-        ]}
-      >
-        <XAxis tickLabelFormatter={formatXAxisDate} />
-        <YAxis showGrid axisId="pricesLine" tickLabelFormatter={formatPrice} width={80} />
-        <AnimatePresence key="animations" initial={false}>
-          {chartType.id === 'area' && (
-            <motion.g
-              key="area"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              transition={defaultTransition}
-            >
-              <Area fillOpacity={0.5} seriesId="pricesArea" transitions={chartTransition} />
-              <Line seriesId="pricesArea" transitions={chartTransition} />
-            </motion.g>
-          )}
-          {chartType.id === 'line' && (
-            <motion.g
-              key="line"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              transition={defaultTransition}
-            >
-              <Line
-                showArea
-                areaType="dotted"
-                seriesId="pricesLine"
-                transitions={chartTransition}
-              />
-            </motion.g>
-          )}
-        </AnimatePresence>
-        <ReferenceLine
-          LabelComponent={PriceLabel}
-          LineComponent={DottedReferenceLine}
-          dataY={startingPrice}
-          label={formatPrice(startingPrice)}
-          yAxisId="pricesLine"
-        />
-        <Scrubber
-          hideOverlay
-          idlePulse
-          labelElevated
-          accessibilityLabel={getScrubberAccessibilityLabel}
-          label={formatLabel}
-          seriesIds={[chartType.id === 'area' ? 'pricesArea' : 'pricesLine']}
-        />
-      </CartesianChart>
-      <HStack gap={2}>
-        <SegmentedTabs
-          accessibilityLabel="Switch chart type"
-          activeTab={chartType}
-          borderRadius={300}
-          gap={0.5}
-          onChange={handleChartTypeChange}
-          padding={0.5}
-          styles={{
-            activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
-          }}
-          tabs={chartTypeTabs}
-          width="fit-content"
-        />
-        <SegmentedTabs
-          accessibilityLabel="Switch chart scale type"
-          activeTab={scaleType}
-          borderRadius={300}
-          gap={0.5}
-          onChange={handleScaleTypeChange}
-          padding={0.5}
-          styles={{
-            activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
-          }}
-          tabs={chartScaleTypeTabs}
-          width="fit-content"
-        />
-        <SegmentedTabs
-          accessibilityLabel="Switch chart time period"
-          activeTab={activeTab}
-          borderRadius={300}
-          gap={0.5}
-          onChange={handlePeriodChange}
-          padding={0.5}
-          styles={{
-            activeIndicator: { borderRadius: 'var(--borderRadius-200)' },
-          }}
-          tabs={advancedTabs}
-          width="fit-content"
-        />
-      </HStack>
-    </VStack>
-  );
-};
-
 const Example: React.FC<
   React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
 > = ({ children, title, description }) => {
@@ -933,9 +616,6 @@ export const Miscellaneous = () => {
         </Example>
         <Example title="Trading Trends">
           <TradingTrends />
-        </Example>
-        <Example title="Advanced">
-          <Advanced />
         </Example>
       </VStack>
     </React.StrictMode>

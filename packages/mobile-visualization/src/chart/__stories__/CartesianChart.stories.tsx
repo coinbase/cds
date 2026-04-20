@@ -1,45 +1,23 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, ScrollView, StyleSheet } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { IconButton } from '@coinbase/cds-mobile/buttons';
-import { ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Icon } from '@coinbase/cds-mobile/icons';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { SegmentedTabs } from '@coinbase/cds-mobile/tabs';
 import { Text } from '@coinbase/cds-mobile/typography';
-import {
-  Circle,
-  FontWeight,
-  Group,
-  Skia,
-  type SkTextStyle,
-  TextAlign,
-} from '@shopify/react-native-skia';
-import type { DateTimeFormatOptions } from 'intl';
+import { Circle, Group, Skia } from '@shopify/react-native-skia';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Line, type LineComponentProps } from '../line/Line';
+import { Line } from '../line/Line';
 import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
 import { ChartText } from '../text';
 import { type GradientDefinition, isCategoricalScale } from '../utils';
-import {
-  CartesianChart,
-  DefaultReferenceLineLabel,
-  DottedArea,
-  DottedLine,
-  ReferenceLine,
-  type ReferenceLineLabelComponentProps,
-  SolidLine,
-  type SolidLineProps,
-} from '../';
+import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
 
 const defaultChartHeight = 250;
 
@@ -241,7 +219,7 @@ const EarningsHistory = () => {
   );
 };
 
-const btcData = [...btcCandles].reverse().slice(0, 180);
+const btcData = btcCandles.slice(0, 180).reverse();
 
 const btcPrices = btcData.map((candle) => parseFloat(candle.close));
 const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -258,13 +236,6 @@ const PriceWithVolumeChart = memo(
     onScrubberPositionChange: (index: number | undefined) => void;
   }) => {
     const theme = useTheme();
-
-    const formatPrice = useCallback((price: number) => {
-      return `$${price.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`;
-    }, []);
 
     const formatPriceInThousands = useCallback((price: number) => {
       return `$${(price / 1000).toLocaleString('en-US', {
@@ -286,27 +257,25 @@ const PriceWithVolumeChart = memo(
 
     const scrubberLabel = useCallback(
       (dataIndex: number) => {
-        return `${formatPrice(btcPrices[dataIndex])} ${formatDate(btcDates[dataIndex])}`;
+        return formatDate(btcDates[dataIndex]);
       },
-      [formatDate, formatPrice],
+      [formatDate],
     );
 
     const chartAccessibilityLabel = useMemo(() => {
       const lastIndex = btcPrices.length - 1;
-      return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPrice(
+      return `Bitcoin chart. Current date ${formatDate(btcDates[lastIndex])}. Current price ${formatPriceInThousands(
         btcPrices[lastIndex],
       )}. Current volume ${formatVolume(btcVolumes[lastIndex])}.`;
-    }, [formatDate, formatPrice, formatVolume]);
+    }, [formatDate, formatPriceInThousands, formatVolume]);
 
     const getScrubberAccessibilityLabel = useCallback(
       (dataIndex: number) =>
-        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPrice(
+        `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPriceInThousands(
           btcPrices[dataIndex],
         )}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
-      [formatDate, formatPrice, formatVolume],
+      [formatDate, formatPriceInThousands, formatVolume],
     );
-
-    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
     return (
       <CartesianChart
@@ -329,7 +298,7 @@ const PriceWithVolumeChart = memo(
             yAxisId: 'volume',
           },
         ]}
-        xAxis={{ scaleType: 'band' }}
+        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 8 }) }}
         yAxis={[
           {
             id: 'price',
@@ -341,13 +310,7 @@ const PriceWithVolumeChart = memo(
           },
         ]}
       >
-        <YAxis
-          showGrid
-          GridLineComponent={ThinSolidLine}
-          axisId="price"
-          tickLabelFormatter={formatPriceInThousands}
-          width={80}
-        />
+        <YAxis showGrid axisId="price" tickLabelFormatter={formatPriceInThousands} width={20} />
         <BarPlot seriesIds={['volume']} />
         <Line showArea seriesId="prices" />
         <Scrubber label={scrubberLabel} seriesIds={['prices']} />
@@ -483,299 +446,6 @@ function TradingTrends() {
   );
 }
 
-type AdvancedPeriod = keyof typeof sparklineInteractiveData;
-type ChartType = 'area' | 'line';
-type ChartScaleType = 'linear' | 'log';
-
-const advancedTabs: TabValue[] = [
-  { id: 'hour', label: '1H' },
-  { id: 'day', label: '1D' },
-  { id: 'week', label: '1W' },
-  { id: 'month', label: '1M' },
-  { id: 'year', label: '1Y' },
-  { id: 'all', label: 'All' },
-];
-
-const chartTypeTabs: TabValue<ChartType>[] = [
-  { id: 'area', label: <Icon active name="lineChartCrypto" size="s" /> },
-  { id: 'line', label: <Icon active name="chartLine" size="s" /> },
-];
-
-const chartScaleTypeTabs: TabValue<ChartScaleType>[] = [
-  { id: 'linear', label: 'Linear' },
-  { id: 'log', label: 'Log' },
-];
-
-const chartTransition = { enter: null };
-
-const DottedReferenceLine = memo((props: LineComponentProps) => (
-  <DottedLine
-    {...props}
-    animate={true}
-    dashIntervals={[0, 16]}
-    strokeWidth={3}
-    transitions={chartTransition}
-  />
-));
-
-const getFormattingConfigForPeriod = (period: AdvancedPeriod): DateTimeFormatOptions => {
-  switch (period) {
-    case 'hour':
-    case 'day':
-      return {
-        hour: 'numeric',
-        minute: 'numeric',
-      };
-    case 'week':
-    case 'month':
-      return {
-        month: 'numeric',
-        day: 'numeric',
-      };
-    default:
-      return {
-        month: 'numeric',
-        year: 'numeric',
-      };
-  }
-};
-
-const Advanced = memo(() => {
-  const theme = useTheme();
-  const fontMgr = useMemo(() => Skia.TypefaceFontProvider.Make(), []);
-
-  const [activeTab, setActiveTab] = useState<TabValue>(advancedTabs[3]);
-  const [chartType, setChartType] = useState<TabValue<ChartType>>(chartTypeTabs[0]);
-  const [scaleType, setScaleType] = useState<TabValue<ChartScaleType>>(chartScaleTypeTabs[0]);
-
-  const sparklineTimePeriodData = useMemo(
-    () => sparklineInteractiveData[activeTab.id as AdvancedPeriod],
-    [activeTab.id],
-  );
-
-  const prices = useMemo(
-    () => sparklineTimePeriodData.map((point) => point.value),
-    [sparklineTimePeriodData],
-  );
-  const dates = useMemo(
-    () => sparklineTimePeriodData.map((point) => point.date),
-    [sparklineTimePeriodData],
-  );
-
-  const startingPrice = prices[0] ?? 0;
-
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }, []);
-
-  const formatLabel = useCallback(
-    (dataIndex: number) => {
-      const price = prices[dataIndex];
-      const date = dates[dataIndex];
-      if (price === undefined || date === undefined) return '';
-
-      const regularStyle: SkTextStyle = {
-        fontFamilies: ['Inter'],
-        fontSize: 14,
-        fontStyle: { weight: FontWeight.Normal },
-        color: Skia.Color(theme.color.fgMuted),
-      };
-      const boldStyle: SkTextStyle = {
-        ...regularStyle,
-        fontStyle: { weight: FontWeight.Bold },
-      };
-      const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontMgr);
-      builder.pushStyle(boldStyle);
-      builder.addText(formatPrice(price));
-      builder.pushStyle(regularStyle);
-      builder.addText(` ${formatDate(date)}`);
-      const paragraph = builder.build();
-      paragraph.layout(512);
-      return paragraph;
-    },
-    [dates, fontMgr, formatDate, formatPrice, prices, theme.color.fgMuted],
-  );
-
-  const PriceLabel = memo((props: ReferenceLineLabelComponentProps) => (
-    <DefaultReferenceLineLabel
-      {...props}
-      background={theme.color.bgSecondary}
-      borderRadius={12.5}
-      color={theme.color.fg}
-      dx={12}
-      font="label1"
-      horizontalAlignment="left"
-      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
-    />
-  ));
-
-  const getScrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      const price = prices[index];
-      const date = dates[index];
-      if (price === undefined || date === undefined) return '';
-      return `${formatPrice(price)} ${formatDate(date)}`;
-    },
-    [dates, formatDate, formatPrice, prices],
-  );
-
-  const formatXAxisDate = useCallback(
-    (index: number) => {
-      if (!dates[index]) return '';
-      const date = dates[index];
-      const formatConfig = getFormattingConfigForPeriod(activeTab.id as AdvancedPeriod);
-
-      if (activeTab.id === 'hour' || activeTab.id === 'day') {
-        return date.toLocaleTimeString('en-US', formatConfig);
-      }
-      return date.toLocaleDateString('en-US', formatConfig);
-    },
-    [activeTab.id, dates],
-  );
-
-  const handleChartTypeChange = useCallback((selectedChartType: TabValue<ChartType> | null) => {
-    setChartType(selectedChartType ?? chartTypeTabs[0]);
-  }, []);
-
-  const handleScaleTypeChange = useCallback(
-    (selectedScaleType: TabValue<ChartScaleType> | null) => {
-      setScaleType(selectedScaleType ?? chartScaleTypeTabs[0]);
-    },
-    [],
-  );
-
-  const handlePeriodChange = useCallback((period: TabValue | null) => {
-    setActiveTab(period ?? advancedTabs[0]);
-  }, []);
-
-  const series = useMemo(
-    () => [
-      {
-        id: 'pricesArea',
-        data: prices,
-        color: assets.btc.color,
-        gradient: {
-          stops: [
-            { offset: startingPrice, color: theme.color.fgNegative },
-            { offset: startingPrice, color: theme.color.fgPositive },
-          ],
-        },
-        yAxisId: 'pricesArea',
-      },
-      {
-        id: 'pricesLine',
-        data: prices,
-        color: assets.btc.color,
-        yAxisId: 'pricesLine',
-      },
-    ],
-    [prices, startingPrice, theme.color.fgNegative, theme.color.fgPositive],
-  );
-
-  return (
-    <VStack gap={2}>
-      <CartesianChart
-        enableScrubbing
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
-        height={300}
-        series={series}
-        xAxis={{
-          scaleType: 'band',
-        }}
-        yAxis={[
-          {
-            id: 'pricesArea',
-            baseline: startingPrice,
-            scaleType: scaleType.id,
-            domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
-            range: ({ min, max }) => ({ min: min, max }),
-          },
-          {
-            id: 'pricesLine',
-            scaleType: scaleType.id,
-            domainLimit: scaleType.id === 'log' ? 'strict' : 'nice',
-            range: ({ min, max }) => ({ min: min, max }),
-          },
-        ]}
-      >
-        <XAxis tickLabelFormatter={formatXAxisDate} />
-        <YAxis showGrid axisId="pricesLine" tickLabelFormatter={formatPrice} width={80} />
-        {chartType.id === 'area' ? (
-          <>
-            <Area fillOpacity={0.5} seriesId="pricesArea" transitions={chartTransition} />
-            <Line seriesId="pricesArea" transitions={chartTransition} />
-          </>
-        ) : (
-          <Line showArea areaType="dotted" seriesId="pricesLine" transitions={chartTransition} />
-        )}
-        <ReferenceLine
-          LabelComponent={PriceLabel}
-          LineComponent={DottedReferenceLine}
-          dataY={startingPrice}
-          label={formatPrice(startingPrice)}
-          stroke={theme.color.fg}
-          yAxisId="pricesLine"
-        />
-        <Scrubber
-          hideOverlay
-          idlePulse
-          labelElevated
-          label={formatLabel}
-          seriesIds={[chartType.id === 'area' ? 'pricesArea' : 'pricesLine']}
-        />
-      </CartesianChart>
-      <HStack gap={2}>
-        <SegmentedTabs
-          accessibilityLabel="Switch chart type"
-          activeTab={chartType}
-          borderRadius={300}
-          gap={0.5}
-          onChange={handleChartTypeChange}
-          padding={0.5}
-          styles={{
-            activeIndicator: { borderRadius: theme.borderRadius[200] },
-          }}
-          tabs={chartTypeTabs}
-          width="fit-content"
-        />
-        <SegmentedTabs
-          accessibilityLabel="Switch chart scale type"
-          activeTab={scaleType}
-          borderRadius={300}
-          gap={0.5}
-          onChange={handleScaleTypeChange}
-          padding={0.5}
-          styles={{
-            activeIndicator: { borderRadius: theme.borderRadius[200] },
-          }}
-          tabs={chartScaleTypeTabs}
-          width="fit-content"
-        />
-        <SegmentedTabs
-          accessibilityLabel="Switch chart time period"
-          activeTab={activeTab}
-          borderRadius={300}
-          gap={0.5}
-          onChange={handlePeriodChange}
-          padding={0.5}
-          styles={{
-            activeIndicator: { borderRadius: theme.borderRadius[200] },
-          }}
-          tabs={advancedTabs}
-          width="fit-content"
-        />
-      </HStack>
-    </VStack>
-  );
-});
-
 const ScatterplotWithCustomLabels = memo(() => {
   const theme = useTheme();
   const dataPoints = useMemo(
@@ -852,61 +522,31 @@ const ScatterplotWithCustomLabels = memo(() => {
   );
 });
 
-function ExampleNavigator() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const examples = useMemo(
-    () => [
-      { title: 'Line Styles', component: <LineStyles /> },
-      { title: 'Multiple Types', component: <MultipleChart /> },
-      { title: 'Earnings History', component: <EarningsHistory /> },
-      { title: 'Price With Volume', component: <PriceWithVolume /> },
-      { title: 'Trading Trends', component: <TradingTrends /> },
-      { title: 'Advanced', component: <Advanced /> },
-      { title: 'Scatterplot with Custom Labels', component: <ScatterplotWithCustomLabels /> },
-    ],
-    [],
-  );
-
-  const currentExample = examples[currentIndex];
-
-  const handlePrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
-  }, [examples.length]);
-
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % examples.length);
-  }, [examples.length]);
-
+const ChartStories = () => {
   return (
-    <ExampleScreen paddingX={0}>
-      <VStack gap={4}>
-        <HStack alignItems="center" justifyContent="space-between" padding={2}>
-          <IconButton
-            accessibilityHint="Navigate to previous example"
-            accessibilityLabel="Previous"
-            name="arrowLeft"
-            onPress={handlePrevious}
-            variant="secondary"
-          />
-          <VStack alignItems="center">
-            <Text font="title3">{currentExample.title}</Text>
-            <Text color="fgMuted" font="label1">
-              {currentIndex + 1} / {examples.length}
-            </Text>
-          </VStack>
-          <IconButton
-            accessibilityHint="Navigate to next example"
-            accessibilityLabel="Next"
-            name="arrowRight"
-            onPress={handleNext}
-            variant="secondary"
-          />
-        </HStack>
-        <Box padding={1}>{currentExample.component}</Box>
-      </VStack>
-    </ExampleScreen>
+    <ScrollView>
+      <ExampleScreen>
+        <Example title="Line Styles">
+          <LineStyles />
+        </Example>
+        <Example title="Multiple Types">
+          <MultipleChart />
+        </Example>
+        <Example title="Earnings History">
+          <EarningsHistory />
+        </Example>
+        <Example title="Price With Volume">
+          <PriceWithVolume />
+        </Example>
+        <Example title="Trading Trends">
+          <TradingTrends />
+        </Example>
+        <Example title="Scatterplot with Custom Labels">
+          <ScatterplotWithCustomLabels />
+        </Example>
+      </ExampleScreen>
+    </ScrollView>
   );
-}
+};
 
-export default ExampleNavigator;
+export default ChartStories;
