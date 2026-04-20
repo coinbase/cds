@@ -4,7 +4,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { Group, Skia, usePathInterpolation } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getStackGroups } from '../utils';
+import { getStackGroups, shouldAnimateBarPlotClipTransition } from '../utils';
 import { buildTransition, instantTransition } from '../utils/transition';
 
 import type { BarSeries } from './BarStack';
@@ -97,7 +97,7 @@ export const BarPlot = memo<BarPlotProps>(
       if (!drawingArea) return;
       const nextPath = makeClipPath(drawingArea);
       setClipPaths((prev) => ({ from: prev.to, to: nextPath }));
-      if (drawingArea.width || !drawingArea.height) {
+      if (!shouldAnimateBarPlotClipTransition(drawingArea)) {
         clipProgress.value = 1;
       } else {
         clipProgress.value = 0;
