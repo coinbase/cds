@@ -1,3 +1,5 @@
+# Notifies Slack when a PR is ready for review or merged (any base branch).
+# Gated by org variable SLACK_PR_NOTIFICATIONS_ENABLED; skips pull requests from forks.
 name: Slack Pull Request Notifications
 
 on:

@@ -1,4 +1,5 @@
 ---
+# Publishes @coinbase/* packages to public npm registry (https://registry.npmjs.org).
 name: Publish Packages to NPM
 
 on:
@@ -413,4 +414,5 @@ jobs:
               "text": ":red_circle: Failed to publish NPM packages, <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|see details here>.\ncc @design-systems-eng-oncall"
             }
         env:
+          # Accessible from https://api.slack.com/apps
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
