@@ -55,10 +55,7 @@ describe('projectsNeedingVersion', () => {
   });
 
   it('excludes a project whose CHANGELOG.md is in changedFiles (already bumped)', async () => {
-    getChangedFiles.mockResolvedValue([
-      'packages/web/src/Button.tsx',
-      'packages/web/CHANGELOG.md',
-    ]);
+    getChangedFiles.mockResolvedValue(['packages/web/src/Button.tsx', 'packages/web/CHANGELOG.md']);
     getAffectedPackages.mockResolvedValue({ web: { data: { root: 'packages/web' } } });
     const result = await projectsNeedingVersion(logInfo);
     expect(result).toEqual([]);
