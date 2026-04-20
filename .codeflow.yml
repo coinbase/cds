@@ -1,8 +1,14 @@
 secure:
   required_reviews: 1
   codeowners_enabled: true
+  # NOTE: Codeflow does not support glob patterns; long-lived support branches
+  # must be enumerated explicitly. When cutting a new `release-N.x` branch
+  # (see `frontend/cds/docs/release/patching-old-versions.md`), add it here so
+  # publishes from that branch flow through Codeflow to the internal NPM
+  # registry.
   branches:
     - master
+    - release-8.x
   auto_assign_reviewers: true
   upstream_repository: coinbase/cds
 build:
