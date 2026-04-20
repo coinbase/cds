@@ -15,9 +15,23 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Fetch master
-      if: github.ref != 'refs/heads/master'
-      run: git fetch -f --no-tags origin master:master
+    - name: Compute base branch
+      id: base-branch
+      run: |
+        # For pull_request events, GITHUB_BASE_REF is the target branch.
+        # For push events on a release branch, CB_GHA_BRANCH (or GITHUB_REF_NAME) is the branch.
+        if echo "${GITHUB_BASE_REF:-}" | grep -qE '^release-[0-9]+\.x$'; then
+          echo "name=${GITHUB_BASE_REF}" >> "$GITHUB_OUTPUT"
+        elif echo "${CB_GHA_BRANCH:-${GITHUB_REF_NAME:-}}" | grep -qE '^release-[0-9]+\.x$'; then
+          echo "name=${CB_GHA_BRANCH:-${GITHUB_REF_NAME}}" >> "$GITHUB_OUTPUT"
+        else
+          echo "name=master" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+
+    - name: Fetch base branch
+      if: github.ref != format('refs/heads/{0}', steps.base-branch.outputs.name)
+      run: git fetch -f --no-tags origin ${{ steps.base-branch.outputs.name }}:${{ steps.base-branch.outputs.name }}
       shell: bash
 
     - name: Setup Node
@@ -47,4 +61,4 @@ runs:
       id: set-base-and-head
       uses: nrwl/nx-set-shas@826660b82addbef3abff5fa871492ebad618c9e1 # v4.3.3
       with:
-        main-branch-name: 'master'
+        main-branch-name: ${{ steps.base-branch.outputs.name }}
