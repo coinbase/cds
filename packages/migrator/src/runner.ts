@@ -105,7 +105,7 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
           fullTransformPath,
           targetPath,
           ...(dryRun ? ['--dry'] : []),
-          ...RUNNER_IGNORE_PATTERNS.map((p) => `--ignore=${p}`),
+          ...RUNNER_IGNORE_PATTERNS.map((p) => `--ignore-pattern=${p}`),
         ];
         console.log(`    Command: node ${scriptArgs.join(' ')}\n`);
         execFileSync('node', scriptArgs, { stdio: 'inherit', cwd: process.cwd() });

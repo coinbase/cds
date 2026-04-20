@@ -61,14 +61,15 @@ export const DEFAULT_IGNORE_PATTERNS = [
 ];
 
 /**
- * Parses `--ignore=<pattern>` entries from a CLI args array.
+ * Parses `--ignore-pattern=<pattern>` entries from a CLI args array.
+ * Uses the same flag name as jscodeshift for consistency.
  * Falls back to `DEFAULT_IGNORE_PATTERNS` when none are provided, so the
  * script behaves sensibly when run directly without the CLI runner.
  */
 export function parseIgnorePatterns(args: string[]): string[] {
   const fromArgs = args
-    .filter((a) => a.startsWith('--ignore='))
-    .map((a) => a.slice('--ignore='.length));
+    .filter((a) => a.startsWith('--ignore-pattern='))
+    .map((a) => a.slice('--ignore-pattern='.length));
   return fromArgs.length > 0 ? fromArgs : DEFAULT_IGNORE_PATTERNS;
 }
 
@@ -131,7 +132,7 @@ if (require.main === module) {
 
   if (!targetPath) {
     console.error(
-      'Usage: migrate-interactable-css-vars-css <target-path> [--dry] [--ignore=<pattern>...]',
+      'Usage: migrate-interactable-css-vars-css <target-path> [--dry] [--ignore-pattern=<pattern>...]',
     );
     process.exit(1);
   }

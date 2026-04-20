@@ -95,25 +95,29 @@ describe('applyRenames', () => {
 // ---------------------------------------------------------------------------
 
 describe('parseIgnorePatterns', () => {
-  it('returns DEFAULT_IGNORE_PATTERNS when no --ignore= args are present', () => {
+  it('returns DEFAULT_IGNORE_PATTERNS when no --ignore-pattern= args are present', () => {
     expect(parseIgnorePatterns([])).toEqual(DEFAULT_IGNORE_PATTERNS);
     expect(parseIgnorePatterns(['--dry'])).toEqual(DEFAULT_IGNORE_PATTERNS);
   });
 
-  it('parses a single --ignore= arg', () => {
-    expect(parseIgnorePatterns(['--ignore=**/dist/**'])).toEqual(['**/dist/**']);
+  it('parses a single --ignore-pattern= arg', () => {
+    expect(parseIgnorePatterns(['--ignore-pattern=**/dist/**'])).toEqual(['**/dist/**']);
   });
 
-  it('parses multiple --ignore= args', () => {
+  it('parses multiple --ignore-pattern= args', () => {
     expect(
-      parseIgnorePatterns(['--ignore=**/node_modules/**', '--ignore=**/.next/**', '--dry']),
+      parseIgnorePatterns([
+        '--ignore-pattern=**/node_modules/**',
+        '--ignore-pattern=**/.next/**',
+        '--dry',
+      ]),
     ).toEqual(['**/node_modules/**', '**/.next/**']);
   });
 
-  it('ignores args that do not start with --ignore=', () => {
-    expect(parseIgnorePatterns(['--dry', '--ignore=**/dist/**', '--unknown=foo'])).toEqual([
-      '**/dist/**',
-    ]);
+  it('ignores args that do not start with --ignore-pattern=', () => {
+    expect(
+      parseIgnorePatterns(['--dry', '--ignore-pattern=**/dist/**', '--unknown=foo']),
+    ).toEqual(['**/dist/**']);
   });
 });
 
