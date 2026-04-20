@@ -210,51 +210,6 @@ Using `showXAxis` and `showYAxis` allows you to display the axes. For more infor
 />
 ```
 
-### Curve
-
-You can compare different curve interpolation strategies on a per-series basis.
-
-```jsx live
-<AreaChart
-  legend
-  showLines
-  showYAxis
-  height={{ base: 180, tablet: 220, desktop: 260 }}
-  series={[
-    {
-      id: 'linear',
-      label: 'Linear',
-      data: [10, 22, 20, 30, 28, 42, 40],
-      color: 'var(--color-fg)',
-      curve: 'linear',
-      fillOpacity: 0.12,
-      legendShape: 'square',
-    },
-    {
-      id: 'natural',
-      label: 'Natural',
-      data: [9, 18, 26, 24, 36, 34, 46],
-      color: 'var(--color-fgPositive)',
-      curve: 'natural',
-      fillOpacity: 0.12,
-      legendShape: 'pill',
-    },
-    {
-      id: 'step',
-      label: 'Step',
-      data: [7, 12, 19, 19, 31, 31, 43],
-      color: 'var(--color-fgWarning)',
-      curve: 'stepAfter',
-      fillOpacity: 0.12,
-      legendShape: 'squircle',
-    },
-  ]}
-  yAxis={{
-    showGrid: true,
-  }}
-/>
-```
-
 ### Gradient
 
 You can build threshold-based gradients with hard transitions by reusing stop offsets.
@@ -286,89 +241,6 @@ You can build threshold-based gradients with hard transitions by reusing stop of
     showGrid: true,
     domain: { min: -10, max: 10 },
     tickLabelFormatter: (value) => `${value}%`,
-  }}
-/>
-```
-
-### Legend
-
-Legend entries are driven by each series' `label`, `color`, and `legendShape`.
-
-```jsx live
-<AreaChart
-  legend
-  legendPosition="right"
-  showLines
-  showYAxis
-  height={{ base: 190, tablet: 230, desktop: 270 }}
-  series={[
-    {
-      id: 'retained',
-      label: 'Retained',
-      data: [62, 64, 63, 66, 68, 70],
-      color: 'var(--color-fgPositive)',
-      legendShape: 'pill',
-    },
-    {
-      id: 'new',
-      label: 'New',
-      data: [24, 28, 31, 29, 34, 36],
-      color: 'var(--color-fgWarning)',
-      legendShape: 'circle',
-      type: 'dotted',
-    },
-    {
-      id: 'churned',
-      label: 'Churned',
-      data: [14, 12, 11, 13, 10, 9],
-      color: 'var(--color-fgNegative)',
-      legendShape: 'square',
-      fillOpacity: 0.2,
-    },
-  ]}
-  xAxis={{
-    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  }}
-  yAxis={{
-    showGrid: true,
-  }}
-/>
-```
-
-### Line
-
-`showLines` can be combined with chart-level and series-level line styling.
-
-```jsx live
-<AreaChart
-  legend
-  showLines
-  showYAxis
-  lineType="dotted"
-  strokeWidth={3}
-  height={{ base: 180, tablet: 220, desktop: 260 }}
-  series={[
-    {
-      id: 'historical',
-      label: 'Historical',
-      data: [48, 52, 57, 60, 66, 70, 74],
-      color: 'var(--color-fg)',
-      type: 'gradient',
-      lineType: 'solid',
-      legendShape: 'square',
-    },
-    {
-      id: 'forecast',
-      label: 'Forecast',
-      data: [46, 50, 54, 58, 64, 72, 82],
-      color: 'var(--color-fgPositive)',
-      type: 'dotted',
-      LineComponent: (props) => <DottedLine {...props} strokeDasharray="2 8" />,
-      legendShape: 'pill',
-    },
-  ]}
-  yAxis={{
-    showGrid: true,
   }}
 />
 ```
@@ -477,7 +349,3 @@ function CustomBaseline() {
   );
 }
 ```
-
-### Forecast Range (todo)
-
-You can pair tuple data with a projected line to communicate uncertainty and expected direction together.
