@@ -1852,16 +1852,7 @@ export const All = () => {
         <Example title="Horizontal Line">
           <HorizontalLine />
         </Example>
-        <Example
-          description={
-            <Text color="fgMuted" font="body">
-              No <code>axis</code> on the gradient: horizontal layout defaults to the value axis
-              (x). The stroke and scrubber beacon should track color along rainfall (bar length),
-              not month order.
-            </Text>
-          }
-          title="Horizontal line gradient (implicit axis)"
-        >
+        <Example title="Horizontal line gradient (implicit axis)">
           <HorizontalLineGradientImplicitAxis />
         </Example>
       </VStack>
