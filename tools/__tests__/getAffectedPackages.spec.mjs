@@ -1,11 +1,11 @@
-import { getAffectedPackages } from './getAffectedPackages';
-import { getCurrentCIBranch } from './getCurrentCIBranch';
-import { getPublishableProjects } from './getPublishableProjects';
+import { getAffectedPackages } from '../ci/getAffectedPackages';
+import { getCurrentCIBranch } from '../ci/getCurrentCIBranch';
+import { getPublishableProjects } from '../ci/getPublishableProjects';
 
-jest.mock('./getCurrentCIBranch', () => ({ getCurrentCIBranch: jest.fn() }));
-jest.mock('./getPublishableProjects', () => ({ getPublishableProjects: jest.fn() }));
-jest.mock('./getChangedFiles', () => ({ getChangedFiles: jest.fn() }));
-jest.mock('./logging', () => ({
+jest.mock('../ci/getCurrentCIBranch', () => ({ getCurrentCIBranch: jest.fn() }));
+jest.mock('../ci/getPublishableProjects', () => ({ getPublishableProjects: jest.fn() }));
+jest.mock('../ci/getChangedFiles', () => ({ getChangedFiles: jest.fn() }));
+jest.mock('../ci/logging', () => ({
   logError: jest.fn(),
 }));
 

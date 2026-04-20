@@ -2,7 +2,7 @@ import {
   getMajorFromReleaseBranch,
   isReleaseBranch,
   isMasterOrReleaseBranch,
-} from './isReleaseBranch.mjs';
+} from '../ci/isReleaseBranch.mjs';
 
 describe('isReleaseBranch', () => {
   it.each([
