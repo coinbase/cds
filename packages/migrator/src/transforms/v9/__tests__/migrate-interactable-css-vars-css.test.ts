@@ -115,9 +115,9 @@ describe('parseIgnorePatterns', () => {
   });
 
   it('ignores args that do not start with --ignore-pattern=', () => {
-    expect(
-      parseIgnorePatterns(['--dry', '--ignore-pattern=**/dist/**', '--unknown=foo']),
-    ).toEqual(['**/dist/**']);
+    expect(parseIgnorePatterns(['--dry', '--ignore-pattern=**/dist/**', '--unknown=foo'])).toEqual([
+      '**/dist/**',
+    ]);
   });
 });
 

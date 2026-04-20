@@ -51,7 +51,7 @@ export const FILE_PATTERNS = ['**/*.css', '**/*.scss', '**/*.html'];
 /**
  * Fallback ignore patterns used when the script is invoked directly (not via
  * the cds-migrate CLI). When invoked through the CLI runner, ignore patterns
- * are forwarded as `--ignore=<pattern>` args and take precedence over this list.
+ * are forwarded as `--ignore-pattern=<pattern>` args and take precedence over this list.
  */
 export const DEFAULT_IGNORE_PATTERNS = [
   '**/node_modules/**',
