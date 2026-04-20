@@ -50,7 +50,11 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const enterTransition = useMemo(
       () =>
-        getTransition(transitions?.enter, animate, defaultBarEnterTransition) as BarTransition | null,
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
       [transitions?.enter, animate],
     );
     const enterTransitionWithStagger = useMemo(
