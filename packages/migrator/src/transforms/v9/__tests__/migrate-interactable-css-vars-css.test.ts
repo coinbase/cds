@@ -3,8 +3,8 @@ import os from 'os';
 import path from 'path';
 
 import {
-  DEFAULT_IGNORE_PATTERNS,
   applyRenames,
+  DEFAULT_IGNORE_PATTERNS,
   parseIgnorePatterns,
   processDirectory,
   VAR_RENAMES,
