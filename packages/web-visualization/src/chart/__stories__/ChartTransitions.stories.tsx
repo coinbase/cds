@@ -136,34 +136,6 @@ const TransitionAreaChart = memo<{
   </CartesianChart>
 ));
 
-const TransitionSessionBaselineAreaChart = memo<{ data: number[] }>(({ data }) => {
-  const baseline = data[0];
-  return (
-    <CartesianChart
-      enableScrubbing
-      height={{ base: 200, tablet: 225, desktop: 250 }}
-      inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
-      series={[
-        {
-          id: 'values',
-          data,
-          gradient: {
-            stops: [
-              { offset: baseline, color: 'var(--color-fgNegative)' },
-              { offset: baseline, color: 'var(--color-fgPositive)' },
-            ],
-          },
-        },
-      ]}
-      yAxis={{ baseline, domain: { min: 0, max: 100 } }}
-    >
-      <Area seriesId="values" type="gradient" />
-      <Line seriesId="values" />
-      <Scrubber hideOverlay idlePulse />
-    </CartesianChart>
-  );
-});
-
 const MultiLineChart = memo<{
   data1: number[];
   data2: number[];
@@ -307,9 +279,33 @@ function SessionBaselineAreaTransitionsExample() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const baseline = data[0];
+
   return (
     <VStack gap={2}>
-      <TransitionSessionBaselineAreaChart key={resetKey} data={data} />
+      <CartesianChart
+        key={resetKey}
+        enableScrubbing
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'values',
+            data,
+            gradient: {
+              stops: [
+                { offset: baseline, color: 'var(--color-fgNegative)' },
+                { offset: baseline, color: 'var(--color-fgPositive)' },
+              ],
+            },
+          },
+        ]}
+        yAxis={{ baseline, domain: { min: 0, max: 100 } }}
+      >
+        <Area seriesId="values" type="gradient" />
+        <Line seriesId="values" />
+        <Scrubber hideOverlay idlePulse />
+      </CartesianChart>
       <Box>
         <Button onClick={handleReset}>Reset</Button>
       </Box>
