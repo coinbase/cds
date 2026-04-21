@@ -48,7 +48,7 @@ export type LineBaseProps = SharedProps & {
    * When set, overrides the default baseline.
    *
    * @deprecated this prop has no functionality. Use 'baseline' on axis config instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v4
+   * @deprecationExpectedRemoval v5
    */
   areaBaseline?: number;
   /**
