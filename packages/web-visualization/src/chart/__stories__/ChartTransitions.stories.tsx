@@ -30,6 +30,7 @@ export default {
 
 const dataCount = 15;
 const updateInterval = 2500;
+const rapidUpdateInterval = 800;
 
 function generateNextValue(previousValue: number) {
   const step = Math.random() * 30 - 15;
@@ -66,6 +67,10 @@ const slowSpringBoth: PathProps['transitions'] = {
 const staggeredBoth: BarProps['transitions'] = {
   enter: { type: 'tween', duration: 0.75, staggerDelay: 0.25 },
   update: { type: 'spring', stiffness: 300, damping: 20, staggerDelay: 0.15 },
+};
+const slowTimingBoth: PathProps['transitions'] = {
+  enter: { type: 'tween', duration: 2 },
+  update: { type: 'tween', duration: 2 },
 };
 
 const TransitionLineChart = memo<{
@@ -312,6 +317,53 @@ function BarExample({
   );
 }
 
+function RapidLineExample({ transitions }: { transitions: PathProps['transitions'] }) {
+  const [data, setData] = useState(generateInitialData);
+  const [resetKey, setResetKey] = useState(0);
+  const handleReset = useCallback(() => setResetKey((k) => k + 1), []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((current) => {
+        const last = current[current.length - 1];
+        return [...current.slice(1), generateNextValue(last)];
+      });
+    }, rapidUpdateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <TransitionLineChart key={resetKey} data={data} transitions={transitions} />
+      <Box>
+        <Button onClick={handleReset}>Reset</Button>
+      </Box>
+    </VStack>
+  );
+}
+
+function RapidBarExample({ transitions }: { transitions: PathProps['transitions'] }) {
+  const [data, setData] = useState(generateBarData);
+  const [resetKey, setResetKey] = useState(0);
+  const handleReset = useCallback(() => setResetKey((k) => k + 1), []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData(generateBarData());
+    }, rapidUpdateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <TransitionBarChart key={resetKey} data={data} transitions={transitions} />
+      <Box>
+        <Button onClick={handleReset}>Reset</Button>
+      </Box>
+    </VStack>
+  );
+}
+
 function MultiLineExample({ transitions }: { transitions: PathProps['transitions'] }) {
   const [data1, setData1] = useState(generateInitialData);
   const [data2, setData2] = useState(generateInitialData);
@@ -370,7 +422,7 @@ export const Transitions = () => {
       <Example category="Line" title="Both Disabled">
         <LineExample transitions={bothDisabled} />
       </Example>
-      <Example category="Line" title="Custom">
+      <Example category="Line" title="Custom 2">
         <LineExample
           points
           pointTransitions={customEnterUpdateBeacon}
@@ -404,6 +456,12 @@ export const Transitions = () => {
       </Example>
       <Example category="Bar" title="Staggered Both">
         <BarExample transitions={staggeredBoth} />
+      </Example>
+      <Example category="Line" title="Rapid Interrupts">
+        <RapidLineExample transitions={slowTimingBoth} />
+      </Example>
+      <Example category="Bar" title="Rapid Interrupts">
+        <RapidBarExample transitions={slowTimingBoth} />
       </Example>
     </VStack>
   );
