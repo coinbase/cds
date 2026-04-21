@@ -97,8 +97,12 @@ export const BarPlot = memo<BarPlotProps>(
       if (!drawingArea) return;
       const nextPath = makeClipPath(drawingArea);
       setClipPaths((prev) => ({ from: prev.to, to: nextPath }));
-      clipProgress.value = 0;
-      clipProgress.value = buildTransition(1, animate ? clipUpdateTransition : null);
+      if (drawingArea.width || !drawingArea.height) {
+        clipProgress.value = 1;
+      } else {
+        clipProgress.value = 0;
+        clipProgress.value = buildTransition(1, animate ? clipUpdateTransition : null);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [drawingArea, animate, clipUpdateTransition]);
 
@@ -109,6 +113,10 @@ export const BarPlot = memo<BarPlotProps>(
     );
 
     if (!drawingArea) return;
+
+    // Clip path animation for bar is just for chart size changes, not for
+    // enter transition. One caveat, bar update transitions are staggered
+    // but clip path is not, so some bars could be clipped in rare cases
 
     return (
       <Group clip={animatedClipPath}>
