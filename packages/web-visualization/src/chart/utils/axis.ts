@@ -133,8 +133,6 @@ export type CartesianAxisConfigProps = Omit<CartesianAxisConfig, 'domain' | 'ran
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
 };
 
-type AxisDomainConfig = CartesianAxisConfigProps['domain'];
-
 const includeBaselineInBounds = (bounds: AxisBounds, baseline: number): AxisBounds => {
   if (baseline < bounds.min) return { ...bounds, min: baseline };
   if (baseline > bounds.max) return { ...bounds, max: baseline };
@@ -142,9 +140,9 @@ const includeBaselineInBounds = (bounds: AxisBounds, baseline: number): AxisBoun
 };
 
 export const withBaselineDomain = (
-  domain: AxisDomainConfig,
+  domain: CartesianAxisConfigProps['domain'],
   baseline: number = 0,
-): AxisDomainConfig => {
+): CartesianAxisConfigProps['domain'] => {
   if (typeof domain === 'function') return domain;
   if (domain?.min !== undefined && domain?.max !== undefined) return domain;
 
