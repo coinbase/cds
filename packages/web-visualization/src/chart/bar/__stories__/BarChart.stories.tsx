@@ -719,74 +719,6 @@ export const All = () => {
             <BarPlot />
           </CartesianChart>
         </Example>
-        <Example title="Axis Baseline">
-          <BarChart
-            showXAxis
-            showYAxis
-            height={260}
-            series={[
-              {
-                id: 'net-flow',
-                data: [112, 97, 121, 103, 129, 118, 94],
-              },
-            ]}
-            xAxis={{
-              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            }}
-            yAxis={{
-              baseline: 100,
-              domain: { min: 80, max: 140 },
-              showGrid: true,
-            }}
-          />
-        </Example>
-        <Example title="Axis Baseline Threshold">
-          <VStack gap={2}>
-            <BarChart
-              showYAxis
-              height={200}
-              inset={0}
-              series={[
-                {
-                  id: 'axis-baseline-threshold-vertical',
-                  data: baselineThresholdData,
-                  gradient: {
-                    stops: [
-                      { offset: 30, color: 'var(--color-fgNegative)' },
-                      { offset: 30, color: 'var(--color-fgPositive)' },
-                    ],
-                  },
-                },
-              ]}
-              yAxis={{
-                showGrid: true,
-                baseline: 30,
-              }}
-            />
-            <BarChart
-              showXAxis
-              height={200}
-              inset={0}
-              layout="horizontal"
-              series={[
-                {
-                  id: 'axis-baseline-threshold-horizontal',
-                  data: baselineThresholdData,
-                  gradient: {
-                    stops: [
-                      { offset: 30, color: 'var(--color-fgNegative)' },
-                      { offset: 30, color: 'var(--color-fgPositive)' },
-                    ],
-                  },
-                },
-              ]}
-              xAxis={{
-                showGrid: true,
-                baseline: 30,
-              }}
-            />
-          </VStack>
-        </Example>
         <Example title="Positive and Negative Cash Flow">
           <PositiveAndNegativeCashFlow />
         </Example>
@@ -1150,6 +1082,74 @@ export const All = () => {
               data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             }}
           />
+        </Example>
+        <Example title="Axis Baseline">
+          <BarChart
+            showXAxis
+            showYAxis
+            height={260}
+            series={[
+              {
+                id: 'net-flow',
+                data: [112, 97, 121, 103, 129, 118, 94],
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              baseline: 100,
+              domain: { min: 80, max: 140 },
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example title="Axis Baseline Threshold">
+          <VStack gap={2}>
+            <BarChart
+              showYAxis
+              height={200}
+              inset={0}
+              series={[
+                {
+                  id: 'axis-baseline-threshold-vertical',
+                  data: baselineThresholdData,
+                  gradient: {
+                    stops: [
+                      { offset: 30, color: 'var(--color-fgNegative)' },
+                      { offset: 30, color: 'var(--color-fgPositive)' },
+                    ],
+                  },
+                },
+              ]}
+              yAxis={{
+                showGrid: true,
+                baseline: 30,
+              }}
+            />
+            <BarChart
+              showXAxis
+              height={200}
+              inset={0}
+              layout="horizontal"
+              series={[
+                {
+                  id: 'axis-baseline-threshold-horizontal',
+                  data: baselineThresholdData,
+                  gradient: {
+                    stops: [
+                      { offset: 30, color: 'var(--color-fgNegative)' },
+                      { offset: 30, color: 'var(--color-fgPositive)' },
+                    ],
+                  },
+                },
+              ]}
+              xAxis={{
+                showGrid: true,
+                baseline: 30,
+              }}
+            />
+          </VStack>
         </Example>
       </VStack>
     </React.StrictMode>

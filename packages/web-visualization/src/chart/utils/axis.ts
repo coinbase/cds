@@ -91,8 +91,12 @@ export type AxisConfig = {
 
 export type CartesianAxisConfig = AxisConfig & {
   /**
-   * Baseline of the axis.
-   * @note only used by the value axis.
+   * Baseline value used as the origin for numeric series on this axis.
+   * Only applies when this axis is the value axis for the current chart layout.
+   * - Non-stacked numeric series render from `[baseline, value]`.
+   * - Multi-series stacks are normalized around this baseline before stacking.
+   *
+   * @default 0 for value axes, undefined for category axes
    */
   baseline?: number;
 };
@@ -105,15 +109,6 @@ export type CartesianAxisConfigProps = Omit<CartesianAxisConfig, 'domain' | 'ran
    * Unique identifier for this axis.
    */
   id: string;
-  /**
-   * Baseline value used as the origin for numeric series on this axis.
-   * Only applies when this axis is the value axis for the current chart layout.
-   * - Non-stacked numeric series render from `[baseline, value]`.
-   * - Multi-series stacks are normalized around this baseline before stacking.
-   *
-   * @default 0 for value axes, undefined for category axes
-   */
-  baseline?: number;
   /**
    * Domain configuration for the axis (data space).
    *
