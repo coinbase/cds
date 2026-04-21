@@ -264,10 +264,15 @@ describe('getStackedSeriesData', () => {
       { id: 'series2', data: [4, 5, 6], xAxisId: 'xB' },
     ];
 
-    const result = getStackedSeriesData(series, 'horizontal', [
-      { id: 'xA', baseline: 10 },
-      { id: 'xB', baseline: 3 },
-    ] as CartesianAxisConfigProps[], []);
+    const result = getStackedSeriesData(
+      series,
+      'horizontal',
+      [
+        { id: 'xA', baseline: 10 },
+        { id: 'xB', baseline: 3 },
+      ] as CartesianAxisConfigProps[],
+      [],
+    );
 
     expect(result.get('series1')).toEqual([
       [10, 11],
@@ -288,9 +293,12 @@ describe('getStackedSeriesData', () => {
       { id: 'series3', data: [60], stackId: 'stack1' },
     ];
 
-    const result = getStackedSeriesData(series, 'horizontal', [
-      { id: 'DEFAULT_AXIS_ID', baseline: 30 },
-    ] as CartesianAxisConfigProps[], []);
+    const result = getStackedSeriesData(
+      series,
+      'horizontal',
+      [{ id: 'DEFAULT_AXIS_ID', baseline: 30 }] as CartesianAxisConfigProps[],
+      [],
+    );
 
     expect(result.get('series1')).toEqual([[20, 30]]);
     expect(result.get('series2')).toEqual([[30, 40]]);
@@ -433,9 +441,12 @@ describe('getChartRange', () => {
       { id: 'series3', data: [60], stackId: 'stack1' },
     ];
 
-    const result = getChartRange(series, 'horizontal', [
-      { id: 'DEFAULT_AXIS_ID', baseline: 30 },
-    ] as CartesianAxisConfigProps[], []);
+    const result = getChartRange(
+      series,
+      'horizontal',
+      [{ id: 'DEFAULT_AXIS_ID', baseline: 30 }] as CartesianAxisConfigProps[],
+      [],
+    );
 
     expect(result).toEqual({ min: 20, max: 70 });
   });
