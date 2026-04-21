@@ -258,6 +258,66 @@ describe('getStackedSeriesData', () => {
     ]);
   });
 
+  it('should apply axis baseline map to non-stacked numeric series in horizontal layout', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [11, 12, 13], xAxisId: 'xA' },
+      { id: 'series2', data: [4, 5, 6], xAxisId: 'xB' },
+    ];
+
+    const result = getStackedSeriesData(series, 'horizontal', [
+      { id: 'xA', baseline: 10 },
+      { id: 'xB', baseline: 3 },
+    ] as CartesianAxisConfigProps[], []);
+
+    expect(result.get('series1')).toEqual([
+      [10, 11],
+      [10, 12],
+      [10, 13],
+    ]);
+    expect(result.get('series2')).toEqual([
+      [3, 4],
+      [3, 5],
+      [3, 6],
+    ]);
+  });
+
+  it('should stack numeric series around x-axis baseline values in horizontal layout', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [20], stackId: 'stack1' },
+      { id: 'series2', data: [40], stackId: 'stack1' },
+      { id: 'series3', data: [60], stackId: 'stack1' },
+    ];
+
+    const result = getStackedSeriesData(series, 'horizontal', [
+      { id: 'DEFAULT_AXIS_ID', baseline: 30 },
+    ] as CartesianAxisConfigProps[], []);
+
+    expect(result.get('series1')).toEqual([[20, 30]]);
+    expect(result.get('series2')).toEqual([[30, 40]]);
+    expect(result.get('series3')).toEqual([[40, 70]]);
+  });
+
+  it('should not stack series with different xAxisId in horizontal layout', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [1, 2, 3], stackId: 'stack1', xAxisId: 'left' },
+      { id: 'series2', data: [4, 5, 6], stackId: 'stack1', xAxisId: 'right' },
+    ];
+
+    const result = getStackedSeriesData(series, 'horizontal', [], []);
+
+    expect(result.size).toBe(2);
+    expect(result.get('series1')).toEqual([
+      [0, 1],
+      [0, 2],
+      [0, 3],
+    ]);
+    expect(result.get('series2')).toEqual([
+      [0, 4],
+      [0, 5],
+      [0, 6],
+    ]);
+  });
+
   it('should handle null values in data', () => {
     const series: Series[] = [{ id: 'series1', data: [1, null, 3] }];
 
@@ -362,6 +422,20 @@ describe('getChartRange', () => {
     const result = getChartRange(series, 'vertical', [], [
       { id: 'DEFAULT_AXIS_ID', baseline: 30 },
     ] as CartesianAxisConfigProps[]);
+
+    expect(result).toEqual({ min: 20, max: 70 });
+  });
+
+  it('should calculate range from baseline-centered stacked data in horizontal layout', () => {
+    const series: Series[] = [
+      { id: 'series1', data: [20], stackId: 'stack1' },
+      { id: 'series2', data: [40], stackId: 'stack1' },
+      { id: 'series3', data: [60], stackId: 'stack1' },
+    ];
+
+    const result = getChartRange(series, 'horizontal', [
+      { id: 'DEFAULT_AXIS_ID', baseline: 30 },
+    ] as CartesianAxisConfigProps[], []);
 
     expect(result).toEqual({ min: 20, max: 70 });
   });
