@@ -15,33 +15,6 @@ inputs:
 runs:
   using: composite
   steps:
-    # nx-set-shas (below) determines which projects are "affected" by comparing
-    # the current HEAD against a base branch. For pull_request events, GitHub
-    # provides GITHUB_BASE_REF (the PR target). For push events there is no
-    # equivalent — nx-set-shas falls back to main-branch-name, which must be
-    # set correctly. Without this step, a push to a release-N.x branch would
-    # compare against master and incorrectly mark most of the repo as affected.
-    - name: Compute base branch
-      id: base-branch
-      run: |
-        if echo "${GITHUB_BASE_REF:-}" | grep -qE '^release-[0-9]+\.x$'; then
-          echo "name=${GITHUB_BASE_REF}" >> "$GITHUB_OUTPUT"
-        elif echo "${CB_GHA_BRANCH:-${GITHUB_REF_NAME:-}}" | grep -qE '^release-[0-9]+\.x$'; then
-          echo "name=${CB_GHA_BRANCH:-${GITHUB_REF_NAME}}" >> "$GITHUB_OUTPUT"
-        else
-          echo "name=master" >> "$GITHUB_OUTPUT"
-        fi
-      shell: bash
-
-    # actions/checkout does a shallow clone of the current branch only.
-    # nx-set-shas needs the base branch to be available locally so it can run
-    # `git merge-base` to find the common ancestor. Without this fetch,
-    # nx-set-shas cannot resolve the base SHA and the affected computation fails.
-    - name: Fetch base branch
-      if: github.ref != format('refs/heads/{0}', steps.base-branch.outputs.name)
-      run: git fetch -f --no-tags origin ${{ steps.base-branch.outputs.name }}:${{ steps.base-branch.outputs.name }}
-      shell: bash
-
     - name: Setup Node
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
@@ -67,8 +40,11 @@ runs:
 
     # Sets NX_BASE and NX_HEAD environment variables used by `nx affected` to
     # limit CI to only the projects touched by this PR or push.
+    # For push events, main-branch-name tells nx-set-shas which branch to look
+    # up the last successful CI run on. For pull_request events it reads the PR
+    # payload directly and ignores this value.
     - name: Set base and head
       id: set-base-and-head
       uses: nrwl/nx-set-shas@826660b82addbef3abff5fa871492ebad618c9e1 # v4.3.3
       with:
-        main-branch-name: ${{ steps.base-branch.outputs.name }}
+        main-branch-name: ${{ github.ref_name }}
