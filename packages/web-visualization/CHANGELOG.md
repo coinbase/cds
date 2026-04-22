@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Update Legend JSDocs. [[#636](https://github.com/coinbase/cds/pull/636)]
+
 ## 3.6.2 (4/20/2026 PST)
 
 This is an artificial version bump with no new change.
