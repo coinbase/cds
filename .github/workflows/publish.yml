@@ -18,7 +18,7 @@ on:
   push:
     branches:
       - master
-      - 'release-*.x'
+      - 'release-[0-9]+.x'
     paths:
       - 'packages/*/package.json'
   pull_request:
