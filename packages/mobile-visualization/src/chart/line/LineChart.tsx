@@ -150,6 +150,7 @@ export const LineChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
         id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
@@ -160,6 +161,7 @@ export const LineChart = memo(
         domain: yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
@@ -171,6 +173,7 @@ export const LineChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
       };
 
       const yAxisConfig: Partial<CartesianAxisConfigProps> = {
@@ -180,6 +183,7 @@ export const LineChart = memo(
         domain: yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
       };
 
       const categoryAxisData = layout === 'horizontal' ? yData : xData;

@@ -268,4 +268,24 @@ describe('AreaChart', () => {
     expect(svg.querySelector('[data-axis="y"]')).toBeInTheDocument();
     expect(screen.getByText('A')).toBeInTheDocument();
   });
+
+  it('does not pass baseline to AreaComponent (value-axis baseline is read from context in subcomponents)', () => {
+    const CustomArea = jest.fn((props: AreaComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <AreaChart
+          AreaComponent={CustomArea}
+          animate={false}
+          height={300}
+          series={[{ id: 'baseline-series', data: [12, 15, 18] }]}
+          width={500}
+          yAxis={{ baseline: 10, domain: { min: 0, max: 20 } }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomArea).toHaveBeenCalled();
+    expect(CustomArea.mock.calls[0][0]).not.toHaveProperty('baseline');
+  });
 });

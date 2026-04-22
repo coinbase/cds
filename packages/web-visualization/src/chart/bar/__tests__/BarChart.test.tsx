@@ -190,4 +190,76 @@ describe('BarChart', () => {
     const hasWideBar = CustomBar.mock.calls.some(([props]) => props.width > props.height);
     expect(hasWideBar).toBe(true);
   });
+
+  it('uses value-axis baseline for non-stacked bar tuples', () => {
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          animate={false}
+          height={300}
+          series={[{ id: 'baseline-series', data: [20, 30] }]}
+          width={500}
+          xAxis={{ data: ['A', 'B'] }}
+          yAxis={{ baseline: 10, domain: { min: 0, max: 40 } }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomBar).toHaveBeenCalled();
+    expect(CustomBar.mock.calls[0][0].dataY).toEqual([10, 20]);
+  });
+
+  it('uses value-axis baseline for single-series stack groups', () => {
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          animate={false}
+          height={300}
+          series={[{ id: 'baseline-series', data: [20, 30], stackId: 'stack-a' }]}
+          width={500}
+          xAxis={{ data: ['A', 'B'] }}
+          yAxis={{ baseline: 10, domain: { min: 0, max: 40 } }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(CustomBar).toHaveBeenCalled();
+    expect(CustomBar.mock.calls[0][0].dataY).toEqual([10, 20]);
+  });
+
+  it('stacks bars around non-zero axis baseline', () => {
+    const CustomBar = jest.fn((props: BarComponentProps) => <path d={props.d} />);
+
+    render(
+      <DefaultThemeProvider>
+        <BarChart
+          BarComponent={CustomBar}
+          animate={false}
+          height={300}
+          series={[
+            { id: 'series-a', data: [20], stackId: 'stack-a' },
+            { id: 'series-b', data: [40], stackId: 'stack-a' },
+            { id: 'series-c', data: [60], stackId: 'stack-a' },
+          ]}
+          width={500}
+          xAxis={{ data: ['A'] }}
+          yAxis={{ baseline: 30, domain: { min: 0, max: 80 } }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const dataBySeries = new Map(
+      CustomBar.mock.calls.map(([props]) => [props.seriesId, props.dataY] as const),
+    );
+
+    expect(dataBySeries.get('series-a')).toEqual([20, 30]);
+    expect(dataBySeries.get('series-b')).toEqual([30, 40]);
+    expect(dataBySeries.get('series-c')).toEqual([40, 70]);
+  });
 });

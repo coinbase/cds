@@ -9,6 +9,7 @@ import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   type ChartPathCurveType,
   evaluateGradientAtValue,
+  getGradientAxis,
   getGradientConfig,
   getLineData,
   getLinePath,
@@ -45,6 +46,9 @@ export type LineBaseProps = SharedProps & {
   /**
    * Baseline value for the area.
    * When set, overrides the default baseline.
+   *
+   * @deprecated this prop has no functionality. Use 'baseline' on axis config instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v5
    */
   areaBaseline?: number;
   /**
@@ -162,7 +166,6 @@ export const Line = memo<LineProps>(
     curve = 'bump',
     type = 'solid',
     areaType = 'gradient',
-    areaBaseline,
     stroke: strokeProp,
     strokeOpacity,
     onPointClick,
@@ -264,15 +267,17 @@ export const Line = memo<LineProps>(
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
 
-      const gradientScale = gradient.axis === 'x' ? xScale : yScale;
-      const stops = getGradientConfig(gradient, xScale, yScale);
+      const gradientAxis = getGradientAxis(gradient, layout);
+      const gradientScale = gradientAxis === 'x' ? xScale : yScale;
+      const stops = getGradientConfig(gradient, xScale, yScale, layout);
       if (!stops) return;
 
       return {
+        axis: gradientAxis,
         scale: gradientScale,
         stops,
       };
-    }, [gradient, xScale, yScale]);
+    }, [gradient, xScale, yScale, layout]);
 
     if (!xScale || !yScale || !path) return;
 
@@ -281,7 +286,6 @@ export const Line = memo<LineProps>(
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
-            baseline={areaBaseline}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
@@ -314,9 +318,9 @@ export const Line = memo<LineProps>(
 
               let pointFill = stroke;
 
-              if (gradientConfig && gradient) {
+              if (gradientConfig) {
                 // Match gradient sampling to the chart axis roles for each layout.
-                const gradientAxis = gradient.axis ?? 'y';
+                const gradientAxis = gradientConfig.axis;
                 const dataValue =
                   gradientAxis === 'x'
                     ? categoryAxisIsX

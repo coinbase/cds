@@ -264,6 +264,55 @@ function AreaExample({
   );
 }
 
+function SessionBaselineAreaTransitionsExample() {
+  const [resetKey, setResetKey] = useState(0);
+  const [data, setData] = useState(generateInitialData);
+  const handleReset = useCallback(() => {
+    setData(generateInitialData());
+    setResetKey((k) => k + 1);
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setData((d) => [...d.slice(1), generateNextValue(d[d.length - 1])]);
+    }, updateInterval);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const baseline = data[0];
+
+  return (
+    <VStack gap={2}>
+      <CartesianChart
+        key={resetKey}
+        enableScrubbing
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'values',
+            data,
+            gradient: {
+              stops: [
+                { offset: baseline, color: 'var(--color-fgNegative)' },
+                { offset: baseline, color: 'var(--color-fgPositive)' },
+              ],
+            },
+          },
+        ]}
+        yAxis={{ baseline, domain: { min: 0, max: 100 } }}
+      >
+        <Area seriesId="values" type="gradient" />
+        <Line seriesId="values" />
+        <Scrubber hideOverlay idlePulse />
+      </CartesianChart>
+      <Box>
+        <Button onClick={handleReset}>Reset</Button>
+      </Box>
+    </VStack>
+  );
+}
+
 const barCategories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 function generateBarData() {
@@ -441,6 +490,9 @@ export const Transitions = () => {
       </Example>
       <Example category="Area" title="Imperative Pulse">
         <AreaExample imperative resettable={false} transitions={updateOnly} />
+      </Example>
+      <Example category="Area" title="Session baseline">
+        <SessionBaselineAreaTransitionsExample />
       </Example>
       <Example category="Bar" title="Enter Only">
         <BarExample transitions={enterOnly} />

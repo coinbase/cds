@@ -19,6 +19,8 @@ module.exports = {
       'Components/LottieStatusAnimation: Default',
       'Components/Loaders/MaterialSpinner: Material Spinner Default',
       'Components/Chart/CartesianChart: Transitions',
+      // Visreg tested in other story, this is for manual testing
+      'Components/Chart/CartesianChart: Advanced',
     ],
     include: [
       // 'Core Components/SparklineInteractive:*',
