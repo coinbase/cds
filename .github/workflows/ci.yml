@@ -37,8 +37,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Validate Lockfile
         run: yarn tsx ./tools/ci/validators/validateLockfile.ts
@@ -61,8 +60,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Lint
         run: yarn nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=0
@@ -77,8 +75,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Format
         run: yarn nx format:check  --verbose --base=$NX_BASE --head=$NX_HEAD
@@ -93,8 +90,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Test
         run: yarn nx affected --target=test --base=$NX_BASE --head=$NX_HEAD
@@ -109,8 +105,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Install Playwright
         run: |
@@ -130,8 +125,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Typecheck
         run: yarn nx affected --target=typecheck --base=$NX_BASE --head=$NX_HEAD
@@ -146,8 +140,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Build
         run: yarn nx affected --exclude=mobile-app --target=build --base=$NX_BASE --head=$NX_HEAD
@@ -164,8 +157,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
 
       # Get the merge-base SHA for cache key (PR only)
@@ -262,8 +254,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
 
       # MASTER ONLY
@@ -320,8 +311,7 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
-          filter: tree:0
+          fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Lint Styles
         run: yarn nx affected --target=lint-styles --base=$NX_BASE --head=$NX_HEAD
