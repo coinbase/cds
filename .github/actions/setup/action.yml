@@ -15,6 +15,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Fetch master
+      if: github.ref != 'refs/heads/master'
+      run: git fetch -f --no-tags origin master:master
+      shell: bash
+
     - name: Setup Node
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
