@@ -56,7 +56,7 @@ const DefaultTabComponent = <TabId extends string = string>({
     <MediaChip
       ref={chipRef}
       aria-selected={isActive}
-      invertColorScheme={isActive}
+      background={isActive ? 'bgTertiary' : 'bgSecondary'}
       onClick={handleClick}
       role="tab"
       width="max-content"

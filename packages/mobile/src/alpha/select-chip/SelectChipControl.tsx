@@ -123,23 +123,12 @@ const SelectChipControlComponent = memo(
 
       const endNode = useMemo(() => {
         return (
-          customEndNode ?? (
-            <AnimatedCaret
-              active
-              color={hasValue ? 'fgInverse' : 'fg'}
-              rotate={open ? 0 : 180}
-              size="xs"
-            />
-          )
+          customEndNode ?? <AnimatedCaret active color="fg" rotate={open ? 0 : 180} size="xs" />
         );
-      }, [customEndNode, open, hasValue]);
-
-      const color = useMemo(() => {
-        return hasValue ? 'fgInverse' : 'fg';
-      }, [hasValue]);
+      }, [customEndNode, open]);
 
       const background = useMemo(() => {
-        return hasValue ? 'bgInverse' : 'bgSecondary';
+        return hasValue ? 'bgTertiary' : 'bgSecondary';
       }, [hasValue]);
 
       return (
@@ -148,7 +137,7 @@ const SelectChipControlComponent = memo(
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
           background={background}
-          color={color}
+          color="fg"
           compact={compact}
           disabled={disabled}
           end={endNode}

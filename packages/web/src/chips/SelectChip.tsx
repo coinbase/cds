@@ -106,9 +106,9 @@ export const SelectChip = memo(
         <MediaChip
           ref={mergedRefs}
           noScaleOnPress
+          background={active ? 'bgTertiary' : 'bgSecondary'}
           disabled={disabled}
           end={end ?? <AnimatedCaret active color="fg" rotate={isOpen ? 0 : 180} size="xs" />}
-          inverted={active}
           onClick={handleOpenMenu}
           testID={testID}
           {...props}

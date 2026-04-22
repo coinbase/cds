@@ -124,23 +124,12 @@ const SelectChipControlComponent = memo(
 
       const endNode = useMemo(() => {
         return (
-          customEndNode ?? (
-            <AnimatedCaret
-              active
-              color={hasValue ? 'fgInverse' : 'fg'}
-              rotate={open ? 0 : 180}
-              size="xs"
-            />
-          )
+          customEndNode ?? <AnimatedCaret active color="fg" rotate={open ? 0 : 180} size="xs" />
         );
-      }, [customEndNode, hasValue, open]);
-
-      const color = useMemo(() => {
-        return hasValue ? 'fgInverse' : 'fg';
-      }, [hasValue]);
+      }, [customEndNode, open]);
 
       const background = useMemo(() => {
-        return hasValue ? 'bgInverse' : 'bgSecondary';
+        return hasValue ? 'bgTertiary' : 'bgSecondary';
       }, [hasValue]);
 
       return (
@@ -151,7 +140,7 @@ const SelectChipControlComponent = memo(
           aria-haspopup={ariaHaspopup}
           background={background}
           className={className}
-          color={color}
+          color="fg"
           compact={compact}
           disabled={disabled}
           end={endNode}

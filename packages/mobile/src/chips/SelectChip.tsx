@@ -127,6 +127,7 @@ export const SelectChip = memo(
             accessibilityLabel={accessibilityLabel ?? value}
             accessibilityRole="menu"
             accessibilityState={{ disabled }}
+            background={active ? 'bgTertiary' : 'bgSecondary'}
             disabled={disabled}
             end={
               end ?? (
@@ -140,7 +141,6 @@ export const SelectChip = memo(
                 />
               )
             }
-            inverted={active}
             onPress={handleChipPress}
             testID={testID}
             {...props}
