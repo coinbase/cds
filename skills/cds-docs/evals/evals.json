@@ -1,0 +1,29 @@
+{
+  "skill_name": "cds-docs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We’re on web React and need to add CDS theming to an existing Vite app that doesn’t have ThemeProvider yet. What do I need to import and wrap, and what’s the minimal setup? Don’t paste the whole doc—just what I need to do in code and any gotchas.",
+      "expected_output": "Agent treats this as web, loads the routes index (MCP or curl for web), fetches the relevant getting-started/theming (and installation if needed) pages, then gives concise implementation guidance grounded in those docs—not a long documentation quote.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "For React Native in this repo, I need to use the mobile CDS Button. What’s the import path and the main props I should know about? Double-check the mobile index before answering.",
+      "expected_output": "Agent chooses mobile, fetches mobile routes index first, then the mobile Button doc (path from index), and answers with imports/API from fetched content. Does not guess web API or skip the index.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I’m not sure if my project is web or mobile—`package.json` has both react and react-native-ish deps in a monorepo. I want to add a CDS `Text` component. Figure out which package applies to the subfolder I’ll paste next: `packages/my-app/`. (Assume you can read that path.) Then tell me the right import and how to use `Text` for a headline.",
+      "expected_output": "Agent inspects the repo to infer web vs mobile for the given path, loads the correct platform index, fetches the Text component doc for that platform, and responds with accurate imports/usage. If ambiguous, asks one clear question or documents the assumption.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Change the page layout from vertical sections to tabs.",
+      "expected_output": "User never mentions CDS or documentation. Agent still infers web vs mobile from the repo (or asks one short question if needed), loads the platform routes index, then fetches only the CDS pages needed for a tabbed layout (e.g. tab/navigation components or patterns from the index—exact names may differ by platform), and proposes or implements changes grounded in those docs. Does not invent component APIs or skip the index because the request was vague.",
+      "files": []
+    }
+  ]
+}

@@ -6,7 +6,6 @@ description: |
   charts, or data visualization.
 license: Apache-2.0
 metadata:
-  author: ruikun.hao@coinbase.com
   version: '1.0.1'
 ---
 
