@@ -44,6 +44,10 @@ const Example: React.FC<
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
+
 const PositiveAndNegativeCashFlow = () => {
   const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
   const gains = [
@@ -1040,6 +1044,112 @@ export const All = () => {
         </Example>
         <Example title="Population Pyramid">
           <PopulationPyramid />
+        </Example>
+        <Example title="Horizontal stacked">
+          <BarChart
+            showXAxis
+            showYAxis
+            stacked
+            height={300}
+            layout="horizontal"
+            series={[
+              {
+                id: 'category-a',
+                data: [20, 30, 25, 35, 28, 32, 27],
+                gradient: {
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: '#3b82f6' },
+                    { offset: max, color: '#8b5cf6' },
+                  ],
+                },
+              },
+              {
+                id: 'category-b',
+                data: [15, 25, 20, 30, 22, 28, 23],
+                gradient: {
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: '#10b981' },
+                    { offset: max, color: '#059669' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              requestedTickCount: 5,
+              showGrid: true,
+            }}
+            yAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+          />
+        </Example>
+        <Example title="Axis Baseline">
+          <BarChart
+            showXAxis
+            showYAxis
+            height={260}
+            series={[
+              {
+                id: 'net-flow',
+                data: [112, 97, 121, 103, 129, 118, 94],
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              baseline: 100,
+              domain: { min: 80, max: 140 },
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example title="Axis Baseline Threshold">
+          <VStack gap={2}>
+            <BarChart
+              showYAxis
+              height={200}
+              inset={0}
+              series={[
+                {
+                  id: 'axis-baseline-threshold-vertical',
+                  data: baselineThresholdData,
+                  gradient: {
+                    stops: [
+                      { offset: 30, color: 'var(--color-fgNegative)' },
+                      { offset: 30, color: 'var(--color-fgPositive)' },
+                    ],
+                  },
+                },
+              ]}
+              yAxis={{
+                showGrid: true,
+                baseline: 30,
+              }}
+            />
+            <BarChart
+              showXAxis
+              height={200}
+              inset={0}
+              layout="horizontal"
+              series={[
+                {
+                  id: 'axis-baseline-threshold-horizontal',
+                  data: baselineThresholdData,
+                  gradient: {
+                    stops: [
+                      { offset: 30, color: 'var(--color-fgNegative)' },
+                      { offset: 30, color: 'var(--color-fgPositive)' },
+                    ],
+                  },
+                },
+              ]}
+              xAxis={{
+                showGrid: true,
+                baseline: 30,
+              }}
+            />
+          </VStack>
         </Example>
       </VStack>
     </React.StrictMode>

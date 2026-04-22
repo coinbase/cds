@@ -1,3 +1,5 @@
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+
 import {
   evaluateGradientAtValue,
   getGradientConfig,
@@ -69,7 +71,7 @@ describe('getGradientConfig with band scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(2);
   });
@@ -89,7 +91,7 @@ describe('evaluateGradientAtValue with band scale', () => {
       ],
     };
 
-    const stops = getGradientConfig(gradient, bandScale, bandScale) ?? [];
+    const stops = getGradientConfig(gradient, bandScale, bandScale, 'vertical') ?? [];
 
     // First index should be closer to red
     const color0 = evaluateGradientAtValue(stops, 0, bandScale);
@@ -199,12 +201,40 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(3);
     expect(result?.[0].offset).toBe(0);
     expect(result?.[1].offset).toBeCloseTo(0.5);
     expect(result?.[2].offset).toBe(1);
+  });
+
+  it('should use horizontal layout default (x axis) when gradient axis is omitted', () => {
+    const stopColorStart = defaultTheme.lightColor.fgNegative;
+    const stopColorEnd = defaultTheme.lightColor.fgPositive;
+    const localXScale = getNumericScale({
+      scaleType: 'linear',
+      domain: { min: 0, max: 4 },
+      range: { min: 0, max: 400 },
+    });
+    const localYScale = getNumericScale({
+      scaleType: 'linear',
+      domain: { min: 0, max: 100 },
+      range: { min: 400, max: 0 },
+    });
+
+    const gradient: GradientDefinition = {
+      stops: [
+        { offset: 0, color: stopColorStart },
+        { offset: 4, color: stopColorEnd },
+      ],
+    };
+
+    const result = getGradientConfig(gradient, localXScale, localYScale, 'horizontal');
+    expect(result).toBeTruthy();
+    expect(result).toHaveLength(2);
+    expect(result?.[0].offset).toBe(0);
+    expect(result?.[1].offset).toBe(1);
   });
 
   it('should handle gradient with custom stops', () => {
@@ -216,7 +246,7 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result?.[0].offset).toBe(0);
     expect(result?.[1].offset).toBeCloseTo(0.3);
@@ -231,7 +261,7 @@ describe('getGradientConfig with numeric scale', () => {
       ],
     };
 
-    const result = getGradientConfig(gradient, xScale, yScale);
+    const result = getGradientConfig(gradient, xScale, yScale, 'vertical');
     expect(result).toBeTruthy();
     expect(result).toHaveLength(2);
     expect(result?.[0].offset).toBe(0);

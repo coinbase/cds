@@ -3,7 +3,7 @@ import type { SharedValue } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
 import type { SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
-import type { AxisConfig } from './axis';
+import type { CartesianAxisConfig } from './axis';
 import type { Series } from './chart';
 import type { ChartScaleFunction, SerializableScale } from './scale';
 
@@ -65,12 +65,12 @@ export type CartesianChartContextValue = {
    * Get x-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
-  getXAxis: (id?: string) => AxisConfig | undefined;
+  getXAxis: (id?: string) => CartesianAxisConfig | undefined;
   /**
    * Get y-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
-  getYAxis: (id?: string) => AxisConfig | undefined;
+  getYAxis: (id?: string) => CartesianAxisConfig | undefined;
   /**
    * Get x-axis scale function by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.

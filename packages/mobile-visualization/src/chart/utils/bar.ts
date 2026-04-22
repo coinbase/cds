@@ -180,7 +180,8 @@ type BarData = BarBaseProps & {
  * @param bars - Array of bar items with current valuePos and length
  * @param stackGap - Gap size in pixels between adjacent bars
  * @param layout - The layout of the chart
- * @param baseline - Pixel position of the zero value on the value axis
+ * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @returns New array of bars with adjusted valuePos and length
  */
 function applyStackGap(
@@ -188,6 +189,7 @@ function applyStackGap(
   stackGap: number,
   layout: CartesianChartLayout,
   baseline: number,
+  baselinePx: number,
 ): BarData[] {
   if (!stackGap || bars.length <= 1) return bars;
 
@@ -195,11 +197,11 @@ function applyStackGap(
 
   const barsAboveBaseline = bars.filter((bar) => {
     const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
-    return bottom >= 0 && top !== bottom && bar.shouldApplyGap;
+    return bottom >= baseline && top !== bottom && bar.shouldApplyGap;
   });
   const barsBelowBaseline = bars.filter((bar) => {
     const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
-    return top <= 0 && bottom !== top && bar.shouldApplyGap;
+    return top <= baseline && bottom !== top && bar.shouldApplyGap;
   });
 
   const applyGapGroup = (group: BarData[], growing: boolean) => {
@@ -213,7 +215,7 @@ function applyStackGap(
       ? [...group].sort((a, b) => b.valuePos - a.valuePos)
       : [...group].sort((a, b) => a.valuePos - b.valuePos);
 
-    let currentEdge = baseline;
+    let currentEdge = baselinePx;
     sortedBars.forEach((bar, index) => {
       const newLength = bar.length * (1 - lengthReduction);
       let newValuePos: number;
@@ -254,28 +256,30 @@ function applyStackGap(
  * @param bars - Array of bar items with final valuePos, length, and dataValue
  * @param initialBarMinSizes - Per-bar initial sizes in pixels for entrance animation
  * @param stackGap - Gap between adjacent bars in pixels
- * @param baseline - Pixel position of the zero value on the value axis
+ * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param layout - The layout of the chart
- * @returns Array of origin positions (one per bar, parallel to input), all defaulting to baseline
+ * @returns Array of origin positions (one per bar, parallel to input), all defaulting to baselinePx
  */
 function getBarOrigins(
   bars: BarData[],
   initialBarMinSizes: number[],
   stackGap: number,
   baseline: number,
+  baselinePx: number,
   layout: CartesianChartLayout,
 ): number[] {
-  const result = bars.map(() => baseline);
+  const result = bars.map(() => baselinePx);
   if (bars.length === 0 || initialBarMinSizes.every((size) => !size)) return result;
 
   const isPositive = (bar: BarData) => {
     const [lo, hi] = [...bar.dataValue].sort((a, b) => a - b);
-    return lo >= 0 && hi !== lo;
+    return lo >= baseline && hi !== lo;
   };
 
   const isNegative = (bar: BarData) => {
     const [lo, hi] = [...bar.dataValue].sort((a, b) => a - b);
-    return hi <= 0 && hi !== lo;
+    return hi <= baseline && hi !== lo;
   };
 
   const positiveBars = bars
@@ -286,7 +290,7 @@ function getBarOrigins(
     );
 
   if (layout === 'vertical') {
-    let currentPositive = baseline;
+    let currentPositive = baselinePx;
     positiveBars.forEach(({ i }, idx) => {
       const initialSize = initialBarMinSizes[i] ?? 0;
       currentPositive -= initialSize;
@@ -296,7 +300,7 @@ function getBarOrigins(
       }
     });
   } else {
-    let currentPositive = baseline;
+    let currentPositive = baselinePx;
     positiveBars.forEach(({ i }, idx) => {
       const initialSize = initialBarMinSizes[i] ?? 0;
       result[i] = currentPositive;
@@ -317,7 +321,7 @@ function getBarOrigins(
     );
 
   if (layout === 'vertical') {
-    let currentNegative = baseline;
+    let currentNegative = baselinePx;
     negativeBars.forEach(({ i }, idx) => {
       const initialSize = initialBarMinSizes[i] ?? 0;
       result[i] = currentNegative;
@@ -327,7 +331,7 @@ function getBarOrigins(
       }
     });
   } else {
-    let currentNegative = baseline;
+    let currentNegative = baselinePx;
     negativeBars.forEach(({ i }, idx) => {
       const initialSize = initialBarMinSizes[i] ?? 0;
       currentNegative -= initialSize;
@@ -432,15 +436,17 @@ export function getStackInitialClipRect(
  *
  * @param bars - Array of bar items with current valuePos and length
  * @param barMinSize - Minimum bar size in pixels
- * @param layout - The layout of the chart
- * @param baseline - Pixel position of the zero value on the value axis
+ * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
+ * @param layout - Chart layout
  * @returns New array of bars with adjusted valuePos and length
  */
 function applyBarMinSize(
   bars: BarData[],
   barMinSize: number,
-  layout: CartesianChartLayout,
   baseline: number,
+  baselinePx: number,
+  layout: CartesianChartLayout,
 ): BarData[] {
   if (!barMinSize || bars.length === 0) return bars;
 
@@ -500,41 +506,77 @@ function applyBarMinSize(
     // independent of the current valuePos (which hasn't been repositioned yet).
     const barsAboveBaseline = stackedSortedBars.filter((bar) => {
       const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
-      return layout === 'vertical' ? bottom >= 0 && top !== bottom : top <= 0 && top !== bottom;
+      return bottom >= baseline && top !== bottom;
     });
     const barsBelowBaseline = stackedSortedBars.filter((bar) => {
       const [bottom, top] = [...bar.dataValue].sort((a, b) => a - b);
-      return layout === 'vertical' ? top <= 0 && top !== bottom : bottom >= 0 && top !== bottom;
+      return top <= baseline && bottom !== top;
     });
 
-    // Restack bars above baseline (growing away from it in the positive direction)
-    let currentAbove = baseline;
-    for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
-      const bar = barsAboveBaseline[i];
-      const newValuePos = currentAbove - bar.length;
-      newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
-      if (i > 0) {
-        const nextBar = barsAboveBaseline[i - 1];
-        const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
-        const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
-        const originalGap =
-          originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
-        currentAbove = newValuePos - originalGap;
+    // Restack bars above baseline (positive data side).
+    // vertical → grow up (−Y from baseline); horizontal → grow right (+X from baseline).
+    if (layout === 'vertical') {
+      let currentAbove = baselinePx;
+      for (let i = barsAboveBaseline.length - 1; i >= 0; i--) {
+        const bar = barsAboveBaseline[i];
+        const newValuePos = currentAbove - bar.length;
+        newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
+        if (i > 0) {
+          const nextBar = barsAboveBaseline[i - 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
+          currentAbove = newValuePos - originalGap;
+        }
+      }
+    } else {
+      let currentEdge = baselinePx;
+      for (let i = 0; i < barsAboveBaseline.length; i++) {
+        const bar = barsAboveBaseline[i];
+        newPositions.set(bar.seriesId, { valuePos: currentEdge, length: bar.length });
+        if (i < barsAboveBaseline.length - 1) {
+          const nextBar = barsAboveBaseline[i + 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
+          currentEdge = currentEdge + bar.length + originalGap;
+        }
       }
     }
 
-    // Restack bars below baseline (growing away from it in the negative direction)
-    let currentBelow = baseline;
-    for (let i = 0; i < barsBelowBaseline.length; i++) {
-      const bar = barsBelowBaseline[i];
-      newPositions.set(bar.seriesId, { valuePos: currentBelow, length: bar.length });
-      if (i < barsBelowBaseline.length - 1) {
-        const nextBar = barsBelowBaseline[i + 1];
-        const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
-        const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
-        const originalGap =
-          originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
-        currentBelow = currentBelow + bar.length + originalGap;
+    // Restack bars below baseline (negative data side).
+    // vertical → grow down (+Y); horizontal → grow left (−X).
+    if (layout === 'vertical') {
+      let currentBelow = baselinePx;
+      for (let i = 0; i < barsBelowBaseline.length; i++) {
+        const bar = barsBelowBaseline[i];
+        newPositions.set(bar.seriesId, { valuePos: currentBelow, length: bar.length });
+        if (i < barsBelowBaseline.length - 1) {
+          const nextBar = barsBelowBaseline[i + 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalNext.valuePos - (originalCurrent.valuePos + originalCurrent.length);
+          currentBelow = currentBelow + bar.length + originalGap;
+        }
+      }
+    } else {
+      const sortedBelow = [...barsBelowBaseline].sort((a, b) => b.valuePos - a.valuePos);
+      let currentEdge = baselinePx;
+      for (let i = sortedBelow.length - 1; i >= 0; i--) {
+        const bar = sortedBelow[i];
+        const newValuePos = currentEdge - bar.length;
+        newPositions.set(bar.seriesId, { valuePos: newValuePos, length: bar.length });
+        if (i > 0) {
+          const nextBar = sortedBelow[i - 1];
+          const originalCurrent = bars.find((b) => b.seriesId === bar.seriesId)!;
+          const originalNext = bars.find((b) => b.seriesId === nextBar.seriesId)!;
+          const originalGap =
+            originalCurrent.valuePos - (originalNext.valuePos + originalNext.length);
+          currentEdge = newValuePos - originalGap;
+        }
       }
     }
   }
@@ -558,7 +600,8 @@ function applyBarMinSize(
  * @param layout - The layout of the chart
  * @param indexPos - Pixel position along the categorical (index) axis
  * @param thickness - Bar thickness in pixels
- * @param baseline - Pixel position of the zero value on the value axis
+ * @param baseline - Value-axis baseline in data space
+ * @param baselinePx - Pixel position of the value-axis baseline on the value axis
  * @returns Updated bars and stackBounds; unchanged if stackSize >= stackMinSize
  */
 function applyStackMinSize(
@@ -570,6 +613,7 @@ function applyStackMinSize(
   indexPos: number,
   thickness: number,
   baseline: number,
+  baselinePx: number,
 ): { bars: BarData[]; stackBounds: Rect } {
   if (!stackMinSize || stackSize >= stackMinSize) return { bars, stackBounds };
   if (bars.length === 0) return { bars, stackBounds };
@@ -585,10 +629,10 @@ function applyStackMinSize(
     let newValuePos: number;
     const newLength = stackMinSize;
 
-    if (bottom >= 0 && top !== bottom) {
+    if (bottom >= baseline && top !== bottom) {
       // Bar is on the positive side: vertical→expands upward (↑), horizontal→expands rightward (→)
       newValuePos = layout === 'vertical' ? bar.valuePos - sizeIncrease : bar.valuePos;
-    } else if (top <= 0 && top !== bottom) {
+    } else if (top <= baseline && top !== bottom) {
       // Bar is on the negative side: vertical→expands downward (↓), horizontal→expands leftward (←)
       newValuePos = layout === 'vertical' ? bar.valuePos : bar.valuePos - sizeIncrease;
     } else {
@@ -615,18 +659,18 @@ function applyStackMinSize(
     // For horizontal: positive bars are right of baseline (larger X), negative bars are left (smaller X)
     const barsOnPositiveSide =
       layout === 'vertical'
-        ? sortedBars.filter((bar) => bar.valuePos + bar.length <= baseline)
-        : sortedBars.filter((bar) => bar.valuePos >= baseline);
+        ? sortedBars.filter((bar) => bar.valuePos + bar.length <= baselinePx)
+        : sortedBars.filter((bar) => bar.valuePos >= baselinePx);
     const barsOnNegativeSide =
       layout === 'vertical'
-        ? sortedBars.filter((bar) => bar.valuePos >= baseline)
-        : sortedBars.filter((bar) => bar.valuePos + bar.length <= baseline);
+        ? sortedBars.filter((bar) => bar.valuePos >= baselinePx)
+        : sortedBars.filter((bar) => bar.valuePos + bar.length <= baselinePx);
 
     const newPositions = new Map<string, { valuePos: number; length: number }>();
 
     if (layout === 'vertical') {
       // Stack from baseline upward (decreasing valuePos) for positive bars
-      let currentPos = baseline;
+      let currentPos = baselinePx;
       for (let i = barsOnPositiveSide.length - 1; i >= 0; i--) {
         const bar = barsOnPositiveSide[i];
         const newLength = bar.length * barScaleFactor;
@@ -639,7 +683,7 @@ function applyStackMinSize(
         }
       }
       // Stack from baseline downward (increasing valuePos) for negative bars
-      let currentPosBelow = baseline;
+      let currentPosBelow = baselinePx;
       for (let i = 0; i < barsOnNegativeSide.length; i++) {
         const bar = barsOnNegativeSide[i];
         const newLength = bar.length * barScaleFactor;
@@ -652,7 +696,7 @@ function applyStackMinSize(
       }
     } else {
       // Stack from baseline rightward (increasing valuePos) for positive bars
-      let currentPos = baseline;
+      let currentPos = baselinePx;
       for (let i = 0; i < barsOnPositiveSide.length; i++) {
         const bar = barsOnPositiveSide[i];
         const newLength = bar.length * barScaleFactor;
@@ -664,7 +708,7 @@ function applyStackMinSize(
         }
       }
       // Stack from baseline leftward (decreasing valuePos) for negative bars
-      let currentPosLeft = baseline;
+      let currentPosLeft = baselinePx;
       for (let i = barsOnNegativeSide.length - 1; i >= 0; i--) {
         const bar = barsOnNegativeSide[i];
         const newLength = bar.length * barScaleFactor;
@@ -762,20 +806,28 @@ function applyBorderRadiusLogic(
 export const EPSILON = 1e-4;
 
 /**
- * Computes and clamps the stack baseline position on the value axis.
+ * Computes and clamps the value-axis baseline position in pixels.
  *
- * - If the full domain is positive, baseline is domain min.
- * - If the full domain is negative, baseline is domain max.
- * - If the domain crosses zero, baseline is 0.
+ * When `baseline` (data space) is omitted, the baseline is chosen heuristically from the scale domain:
+ * - If the full domain is positive, use domain min.
+ * - If the full domain is negative, use domain max.
+ * - If the domain crosses zero, use `0`.
+ * When `baseline` is set, that value is used as the data-space baseline instead.
+ *
+ * @param valueScale - Scale for the value axis
+ * @param stackRect - Bounding rect of the stack in pixels
+ * @param layout - Chart layout
+ * @param baseline - Optional value-axis baseline in data space
  */
-export function getStackBaseline(
+export function getBaselinePx(
   valueScale: ChartScaleFunction,
   stackRect: Rect,
   layout: CartesianChartLayout,
+  baseline?: number,
 ): number {
   const [domainMin, domainMax] = valueScale.domain();
-  const baselineValue = domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0;
-  const baselinePos = valueScale(baselineValue);
+  const baselineInData = baseline ?? (domainMin >= 0 ? domainMin : domainMax <= 0 ? domainMax : 0);
+  const baselinePos = valueScale(baselineInData);
 
   if (layout === 'vertical') {
     return Math.max(
@@ -828,7 +880,8 @@ function getStackSizeForLayout(layout: CartesianChartLayout, stackRect: Rect): n
  * @param params.seriesGradients - Precomputed gradient configs per series (undefined entries are skipped)
  * @param params.roundBaseline - Whether to round the face touching the baseline
  * @param params.layout - The layout of the chart
- * @param params.baseline - Pixel position of the zero value on the value axis
+ * @param params.baseline - Value-axis baseline in data space
+ * @param params.baselinePx - Pixel position of the value-axis baseline on the value axis
  * @param params.stackGap - Gap between adjacent bars in pixels
  * @param params.barMinSize - Minimum individual bar size in pixels
  * @param params.stackMinSize - Minimum total stack size in pixels
@@ -846,7 +899,8 @@ export function getBars(params: {
   seriesGradients: SeriesGradientEntry[];
   roundBaseline?: boolean;
   layout: CartesianChartLayout;
-  baseline: number;
+  baseline?: number;
+  baselinePx: number;
   stackGap?: number;
   barMinSize?: number;
   stackMinSize?: number;
@@ -868,7 +922,8 @@ export function getBars(params: {
     seriesGradients,
     roundBaseline,
     layout,
-    baseline,
+    baseline = 0,
+    baselinePx,
     stackGap,
     barMinSize,
     stackMinSize,
@@ -895,11 +950,15 @@ export function getBars(params: {
 
     const [bottom, top] = [...value].sort((a, b) => a - b);
 
-    const edgeBottom = valueScale(bottom) ?? baseline;
-    const edgeTop = valueScale(top) ?? baseline;
+    const edgeBottom = valueScale(bottom) ?? baselinePx;
+    const edgeTop = valueScale(top) ?? baselinePx;
 
-    const roundTop = roundBaseline || Math.abs(edgeTop - baseline) >= EPSILON;
-    const roundBottom = roundBaseline || Math.abs(edgeBottom - baseline) >= EPSILON;
+    const roundTop =
+      roundBaseline ||
+      (Math.abs(top - baseline) >= EPSILON && Math.abs(edgeTop - baselinePx) >= EPSILON);
+    const roundBottom =
+      roundBaseline ||
+      (Math.abs(bottom - baseline) >= EPSILON && Math.abs(edgeBottom - baselinePx) >= EPSILON);
 
     const length = Math.abs(edgeBottom - edgeTop);
     const valuePos = Math.min(edgeBottom, edgeTop);
@@ -959,12 +1018,12 @@ export function getBars(params: {
 
   // Apply proportional gap distribution to maintain total stack length
   if (stackGap && allBars.length > 1) {
-    allBars = applyStackGap(allBars, stackGap, layout, baseline);
+    allBars = applyStackGap(allBars, stackGap, layout, baseline, baselinePx);
   }
 
   // Apply barMinSize constraints
   if (barMinSize) {
-    allBars = applyBarMinSize(allBars, barMinSize, layout, baseline);
+    allBars = applyBarMinSize(allBars, barMinSize, baseline, baselinePx, layout);
   }
 
   allBars = applyBorderRadiusLogic(allBars, layout, stackGap);
@@ -991,6 +1050,7 @@ export function getBars(params: {
       indexPos,
       thickness,
       baseline,
+      baselinePx,
     );
     allBars = result.bars;
 
@@ -1002,7 +1062,14 @@ export function getBars(params: {
   }
 
   const initialBarMinSizes = getInitialBarMinSizes(allBars, barMinSize, stackMinSize);
-  const barOrigins = getBarOrigins(allBars, initialBarMinSizes, stackGap ?? 0, baseline, layout);
+  const barOrigins = getBarOrigins(
+    allBars,
+    initialBarMinSizes,
+    stackGap ?? 0,
+    baseline,
+    baselinePx,
+    layout,
+  );
 
   return allBars.map((bar, i) => ({
     ...bar,

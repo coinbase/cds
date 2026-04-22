@@ -1,4 +1,4 @@
-CartesianChart is a customizable, SVG based component that can be used to display a variety of data in a x/y coordinate space. The underlying logic is handled by D3.
+CartesianChart is a customizable, `@shopify/react-native-skia` based component that can be used to display a variety of data in a x/y coordinate space. The underlying logic is handled by D3.
 
 ## Basics
 
@@ -682,7 +682,7 @@ function PriceWithVolume() {
   const theme = useTheme();
 
   const [scrubIndex, setScrubIndex] = useState(null);
-  const btcData = btcCandles.slice(0, 180).reverse();
+  const btcData = [...btcCandles].reverse().slice(0, 180);
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
   const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -722,11 +722,23 @@ function PriceWithVolume() {
       ? (currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1]
       : 0;
 
-  const accessibilityLabel = useMemo(() => {
+  const chartAccessibilityLabel = useMemo(() => {
     if (scrubIndex === null)
       return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
     return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
   }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (dataIndex: number) =>
+      `Bitcoin on ${formatDate(btcDates[dataIndex])}. Price ${formatPrice(btcPrices[dataIndex])}. Volume ${formatVolume(btcVolumes[dataIndex])}.`,
+    [btcDates, btcPrices, btcVolumes, formatDate, formatPrice, formatVolume],
+  );
+
+  const scrubberLabel = useCallback(
+    (dataIndex: number) =>
+      `${formatPrice(btcPrices[dataIndex])} ${formatDate(btcDates[dataIndex])}`,
+    [btcDates, btcPrices, formatDate, formatPrice],
+  );
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -754,7 +766,7 @@ function PriceWithVolume() {
       <CartesianChart
         enableScrubbing
         onScrubberPositionChange={setScrubIndex}
-        height={150}
+        height={250}
         series={[
           {
             id: 'prices',
@@ -780,8 +792,9 @@ function PriceWithVolume() {
             range: ({ min, max }) => ({ min: max - 32, max }),
           },
         ]}
-        accessibilityLabel={accessibilityLabel}
+        accessibilityLabel={chartAccessibilityLabel}
         aria-labelledby={headerId}
+        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         inset={{ top: 8, left: 8, right: 0, bottom: 0 }}
       >
         <YAxis
@@ -793,7 +806,7 @@ function PriceWithVolume() {
         />
         <BarPlot seriesIds={['volume']} />
         <Line seriesId="prices" showArea />
-        <Scrubber seriesIds={['prices']} />
+        <Scrubber label={scrubberLabel} seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
   );

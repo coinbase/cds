@@ -274,10 +274,11 @@ describe('LineChart', () => {
     expect(stops.length).toBe(3);
   });
 
-  it('renders x-axis gradients when gradient axis is x', () => {
+  it('applies x-axis gradients to point colors when gradient axis is x', () => {
     render(
       <DefaultThemeProvider>
         <LineChart
+          points
           animate={false}
           height={400}
           series={[
@@ -300,9 +301,44 @@ describe('LineChart', () => {
     );
 
     const svg = screen.getByTestId('line-chart-x-gradient');
-    const gradient = svg.querySelector('linearGradient');
-    expect(gradient).toBeInTheDocument();
-    expect(gradient?.getAttribute('x1')).not.toBe(gradient?.getAttribute('x2'));
+    const points = Array.from(svg.querySelectorAll('[data-component="line-points-group"] circle'));
+    expect(points).toHaveLength(5);
+    expect(points.at(0)?.getAttribute('fill')).toBe('#ff0000');
+    expect(points.at(-1)?.getAttribute('fill')).toBe('#00ff00');
+  });
+
+  it('defaults gradients to the x-axis in horizontal layout when axis is omitted', () => {
+    render(
+      <DefaultThemeProvider>
+        <LineChart
+          points
+          animate={false}
+          height={400}
+          layout="horizontal"
+          series={[
+            {
+              id: 'test',
+              data: [10, 20, 30],
+              gradient: {
+                stops: [
+                  { offset: 10, color: '#ff0000', opacity: 0 },
+                  { offset: 30, color: '#00ff00', opacity: 1 },
+                ],
+              },
+            },
+          ]}
+          testID="line-chart-horizontal-default-gradient-axis"
+          width={600}
+          yAxis={{ data: [100, 200, 300] }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const svg = screen.getByTestId('line-chart-horizontal-default-gradient-axis');
+    const points = Array.from(svg.querySelectorAll('[data-component="line-points-group"] circle'));
+    expect(points).toHaveLength(3);
+    expect(points.at(0)?.getAttribute('fill')).toBe('#ff0000');
+    expect(points.at(-1)?.getAttribute('fill')).toBe('#00ff00');
   });
 
   it('renders dotted lines when type is dotted', () => {

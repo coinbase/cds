@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
-import { CartesianChart } from '../../CartesianChart';
-import { DottedLine, Line } from '../../line';
+import {
+  DefaultReferenceLineLabel,
+  DottedLine,
+  ReferenceLine,
+  type ReferenceLineLabelComponentProps,
+} from '../../line';
 import { Scrubber } from '../../scrubber/Scrubber';
-import { Area, AreaChart } from '..';
+import { AreaChart } from '..';
 
 export default {
   title: 'Components/Chart/AreaChart',
@@ -23,6 +28,101 @@ const Example: React.FC<
       {description}
       {children}
     </VStack>
+  );
+};
+
+const CustomBaseline = () => {
+  const candles = [...btcCandles].reverse().slice(0, 180);
+  const prices = candles.map((candle) => parseFloat(candle.close));
+  const dates = candles.map((candle) => new Date(parseInt(candle.start, 10) * 1000));
+
+  const startingPrice = prices[0];
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatLabel = useCallback(
+    (dataIndex: number) => {
+      const price = prices[dataIndex];
+      const date = dates[dataIndex];
+
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{formatPrice(price)}</tspan> {formatDate(date)}
+        </>
+      );
+    },
+    [dates, formatDate, formatPrice, prices],
+  );
+
+  const PriceLabel = memo((props: ReferenceLineLabelComponentProps) => (
+    <DefaultReferenceLineLabel
+      {...props}
+      background="var(--color-bgSecondary)"
+      borderRadius={12.5}
+      color="var(--color-fg)"
+      dx={12}
+      font="label1"
+      horizontalAlignment="left"
+      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+    />
+  ));
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (index: number) => `${formatPrice(prices[index])} ${formatDate(dates[index])}`,
+    [dates, formatDate, formatPrice, prices],
+  );
+
+  return (
+    <AreaChart
+      enableScrubbing
+      showLines
+      showYAxis
+      fillOpacity={0.5}
+      height={300}
+      series={[
+        {
+          id: 'prices',
+          data: prices,
+          gradient: {
+            stops: [
+              { offset: startingPrice, color: 'var(--color-fgNegative)' },
+              { offset: startingPrice, color: 'var(--color-fgPositive)' },
+            ],
+          },
+        },
+      ]}
+      yAxis={{
+        baseline: startingPrice,
+        showGrid: true,
+        tickLabelFormatter: formatPrice,
+        domain: { min: 70000, max: 120000 },
+        width: 80,
+        ticks: [80000, 100000, 120000],
+      }}
+    >
+      <Scrubber
+        labelElevated
+        accessibilityLabel={getScrubberAccessibilityLabel}
+        label={formatLabel}
+      />
+      <ReferenceLine
+        LabelComponent={PriceLabel}
+        LineComponent={(props) => (
+          <DottedLine {...props} stroke="var(--color-fg)" strokeDasharray="0 16" strokeWidth={3} />
+        )}
+        dataY={startingPrice}
+        label={formatPrice(startingPrice)}
+      />
+    </AreaChart>
   );
 };
 
@@ -150,6 +250,9 @@ export const All = () => {
           >
             <Scrubber />
           </AreaChart>
+        </Example>
+        <Example title="Custom Baseline">
+          <CustomBaseline />
         </Example>
       </VStack>
     </React.StrictMode>

@@ -7,7 +7,12 @@ import {
   type CartesianChartProps,
 } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
-import { type CartesianAxisConfigProps, defaultStackId, type Series } from '../utils';
+import {
+  type CartesianAxisConfigProps,
+  defaultStackId,
+  type Series,
+  withBaselineDomain,
+} from '../utils';
 
 import { Area, type AreaProps } from './Area';
 
@@ -134,6 +139,7 @@ export const AreaChart = memo(
             yAxisId: s.yAxisId,
             stackId: s.stackId,
             gradient: s.gradient,
+            legendShape: s.legendShape,
           }),
         );
       }, [series]);
@@ -153,6 +159,7 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
         id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
@@ -163,38 +170,31 @@ export const AreaChart = memo(
         domain: yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
         id: yAxisId,
         ...yAxisVisualProps
       } = yAxis || {};
-
-      const hasNegativeValues = useMemo(() => {
-        if (!series) return false;
-        return series.some((s) =>
-          s.data?.some(
-            (value: number | null | [number, number]) =>
-              (typeof value === 'number' && value < 0) ||
-              (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
-          ),
-        );
-      }, [series]);
+      const isHorizontalLayout = chartProps.layout === 'horizontal';
+      const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
 
       const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
-        domain: xDomain,
+        domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
+        baseline: xBaseline,
       };
 
-      // Set default min domain to 0 for area chart, but only if there are no negative values
       const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,
-        domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
+        domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
+        baseline: yBaseline,
       };
 
       return (

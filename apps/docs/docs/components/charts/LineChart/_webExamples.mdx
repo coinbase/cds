@@ -17,45 +17,6 @@ The only prop required is `series`, which takes an array of series objects. Each
 />
 ```
 
-## Layout
-
-Lines can be rendered horizontally or vertically by setting the `layout` prop.
-
-```jsx live
-function HorizontalLine() {
-  const dataset = [
-    { month: 'Jan', seoul: 21 },
-    { month: 'Feb', seoul: 28 },
-    { month: 'Mar', seoul: 41 },
-    { month: 'Apr', seoul: 73 },
-    { month: 'May', seoul: 99 },
-    { month: 'June', seoul: 144 },
-    { month: 'July', seoul: 319 },
-    { month: 'Aug', seoul: 249 },
-    { month: 'Sept', seoul: 131 },
-    { month: 'Oct', seoul: 55 },
-    { month: 'Nov', seoul: 48 },
-    { month: 'Dec', seoul: 25 },
-  ];
-
-  return (
-    <LineChart
-      height={400}
-      layout="horizontal"
-      series={[
-        { id: 'seoul', data: dataset.map((d) => d.seoul), color: 'var(--color-accentBoldBlue)' },
-      ]}
-      showXAxis
-      showYAxis
-      xAxis={{ label: 'rainfall (mm)' }}
-      yAxis={{
-        data: dataset.map((d) => d.month),
-      }}
-    />
-  );
-}
-```
-
 LineChart also supports multiple lines, interaction, and axes.
 Other props, such as `areaType` can be applied to the chart as a whole or per series.
 

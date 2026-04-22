@@ -177,6 +177,55 @@ function HorizontalLine() {
   );
 }
 
+function HorizontalLineGradientImplicitAxis() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+  const values = dataset.map((d) => d.seoul);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={400}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          data: values,
+          gradient: {
+            stops: [
+              { offset: min, color: 'var(--color-accentBoldBlue)' },
+              { offset: max, color: 'var(--color-accentBoldYellow)' },
+            ],
+          },
+        },
+      ]}
+      xAxis={{ label: 'rainfall (mm)' }}
+      yAxis={{
+        data: dataset.map((d) => d.month),
+      }}
+    >
+      <Scrubber hideOverlay />
+    </LineChart>
+  );
+}
+
 function DataFormat() {
   const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
   const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
@@ -1802,6 +1851,9 @@ export const All = () => {
         </Example>
         <Example title="Horizontal Line">
           <HorizontalLine />
+        </Example>
+        <Example title="Horizontal line gradient (implicit axis)">
+          <HorizontalLineGradientImplicitAxis />
         </Example>
       </VStack>
     </StrictMode>

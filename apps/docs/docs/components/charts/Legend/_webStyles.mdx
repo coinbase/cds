@@ -1,0 +1,67 @@
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Legend, LineChart } from '@coinbase/cds-web-visualization';
+
+import webStylesData from ':docgen/web-visualization/chart/legend/Legend/styles-data';
+
+## Explorer
+
+### Bottom
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <LineChart
+      showArea
+      height={200}
+      legend={<Legend classNames={classNames} />}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'pageViews',
+          data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+          color: 'rgb(var(--green40))',
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+          color: 'rgb(var(--purple40))',
+          label: 'Unique Visitors',
+          areaType: 'dotted',
+        },
+      ]}
+    />
+  )}
+</StylesExplorer>
+
+### Right
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <LineChart
+      showArea
+      height={150}
+      legend={<Legend classNames={classNames} flexDirection="column" />}
+      legendPosition="right"
+      series={[
+        {
+          id: 'pageViews',
+          data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+          color: 'rgb(var(--green40))',
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+          color: 'rgb(var(--purple40))',
+          label: 'Unique Visitors',
+          areaType: 'dotted',
+        },
+      ]}
+    />
+  )}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Legend" styles={webStylesData} />
