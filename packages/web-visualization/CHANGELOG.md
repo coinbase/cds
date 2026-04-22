@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 
 - Feat: add chart baseline support. [[#502](https://github.com/coinbase/cds/pull/502)]
 
+#### 📘 Misc
+
+- Update Legend JSDocs. [[#636](https://github.com/coinbase/cds/pull/636)]
+
 ## 3.6.2 (4/20/2026 PST)
 
 This is an artificial version bump with no new change.
