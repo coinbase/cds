@@ -1,0 +1,50 @@
+{
+  "skill_name": "cds-code",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a profile card to our dashboard showing the user's avatar, display name, and email address. Below it, show three settings-style menu rows for 'Account settings', 'Notifications', and 'Sign out' — each with a right-side disclosure arrow.",
+      "expected_output": "A React component using Avatar, VStack/HStack for layout, and ListCell with accessory=\"disclosure\" for each settings row. All spacing and colors use CDS tokens — no raw pixel values or hex colors. Import paths are valid CDS exports.",
+      "files": [],
+      "expectations": [
+        "Uses Avatar for the user photo",
+        "Uses ListCell with accessory=\"arrow\" for the three settings rows",
+        "No hardcoded hex, rgb, or raw color values anywhere in the output code",
+        "No raw pixel values used for spacing or border radius (e.g., no '16px', '8px' as literal strings)",
+        "Uses VStack or HStack for layout composition",
+        "All CDS import paths are valid subpath exports (no invented deep paths like /layout/Box)",
+        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need a 'Create team' modal with a text input for the team name, a dropdown to pick the team size (Small / Medium / Large), and Save / Cancel buttons in the footer.",
+      "expected_output": "A React component using Modal, ModalHeader, ModalBody, ModalFooter, TextInput, Select (from alpha subpath), and Button. The footer has a primary Save button and a secondary Cancel button. No style={{ ... }} used for properties that have CDS prop equivalents. Import paths are valid.",
+      "files": [],
+      "expectations": [
+        "Uses Modal, ModalHeader, ModalBody, and ModalFooter to compose the dialog",
+        "Uses TextInput for the team name field",
+        "Uses Select (from the alpha subpath) for the team size dropdown with Small/Medium/Large options",
+        "ModalFooter receives a primary Button (Save) and a secondary variant Button (Cancel)",
+        "No style prop used for padding, color, gap, or other values that have CDS style prop equivalents",
+        "Select is imported from the correct alpha subpath (e.g., @coinbase/cds-web/alpha/select or equivalent)",
+        "No raw pixel values or hex/rgb colors in the output",
+        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Build a banner that shows a warning message 'You have unsaved changes' with a 'Save now' link action. Below it, show a progress bar at 60% completion and a spinner for a secondary loading operation.",
+      "expected_output": "A React component using Banner with variant=\"warning\", ProgressBar at progress={0.6} or progress={60}, and ProgressCircle with indeterminate. Visualization components are imported from the visualization package. No hex/rgb colors anywhere.",
+      "files": [],
+      "expectations": [
+        "Uses Banner with variant=\"warning\" for the unsaved changes message",
+        "Uses ProgressBar with a progress value representing 60% for the determinate progress indicator",
+        "Uses ProgressCircle with the indeterminate prop for the spinner",
+        "ProgressBar and ProgressCircle are imported from @coinbase/cds-web/visualizations (the correct subpath), not from a generic top-level import or the separate @coinbase/cds-web-visualization package",
+        "No hardcoded hex, rgb, or raw color values in the output",
+        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+      ]
+    }
+  ]
+}
