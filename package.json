@@ -51,8 +51,8 @@
   },
   "packageManager": "yarn@4.9.2",
   "scripts": {
-    "bump-version": "tsx tools/bumpVersion.ts",
-    "changelog": "tsx tools/bumpVersion.ts",
+    "bump-version": "node tools/bumpVersion.mjs",
+    "changelog": "node tools/bumpVersion.mjs",
     "clean-nx-dir": "rm -rf .nx || true",
     "clean-packemon-outs": "rm -rf packages/*/{dts,lib,esm,cjs} || true",
     "clean-dist-outs": "rm -rf packages/*/dist || true",
@@ -109,7 +109,8 @@
     "actions/*",
     "apps/*",
     "libs/*",
-    "packages/*"
+    "packages/*",
+    "tools"
   ],
   "devDependencies": {
     "@babel/cli": "^7.20.7",
