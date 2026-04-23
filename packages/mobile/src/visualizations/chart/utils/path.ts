@@ -355,6 +355,9 @@ export const getBarPath = (
  *   2  // 2px radius dots
  * );
  * ```
+ *
+ * @deprecated Prefer a shader for dotted areas instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
  */
 export const getDottedAreaPath = (
   bounds: { x: number; y: number; width: number; height: number },
