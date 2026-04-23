@@ -6,9 +6,9 @@ When the user describes a UI need, reach for these first:
 
 | Need                            | Use                                                                |
 | ------------------------------- | ------------------------------------------------------------------ |
-| Page or section title           | `TextTitle1`–`TextTitle4`                                          |
-| Body copy                       | `TextBody`                                                         |
-| Muted helper text               | `TextBody` with `color="foregroundMuted"`                          |
+| Page or section title           | `Text` with `font="title1"` – `font="title4"`                     |
+| Body copy                       | `Text` with `font="body"`                                          |
+| Muted helper text               | `Text` with `font="body"` and `color="fgMuted"`                   |
 | Submit / confirm action         | `Button variant="primary"`                                         |
 | Cancel / close action           | `Button variant="secondary"`                                       |
 | Destructive action              | `Button variant="negative"`                                        |
@@ -93,9 +93,16 @@ Use the detailed sections below only when you need clarification; they intention
 
 ## 2. Typography
 
-- Use the `TextTitle*` and `TextBody` families for headings and body copy.
-- Components are polymorphic via `as` and support common text props (`color`, `textAlign`, `textTransform`, etc.).
-- **Always refer to** `design_system/typography.md` **for the canonical typography guidance.**
+- Use the generic **`Text`** component with a `font` prop for all text rendering — do **not** use the derivative shorthand components (`TextTitle1`, `TextTitle2`, `TextTitle3`, `TextTitle4`, `TextHeadline`, `TextBody`, `TextLabel1`, `TextLabel2`, etc.). Those are v7 patterns.
+- The `font` prop accepts CDS type-scale tokens: `"title1"` – `"title4"`, `"headline"`, `"body"`, `"label1"`, `"label2"`, `"caption"`, etc.
+- For muted/secondary text, use `color="fgMuted"` (not `"foregroundMuted"`).
+- `Text` is polymorphic via `as` and supports common text props (`color`, `textAlign`, `textTransform`, etc.).
+
+**Example:**
+```tsx
+<Text font="title3">Display Name</Text>
+<Text font="body" color="fgMuted">user@example.com</Text>
+```
 
 ---
 
