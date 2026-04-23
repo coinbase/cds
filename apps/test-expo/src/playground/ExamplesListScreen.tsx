@@ -53,14 +53,10 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
     });
 
   return (
-    <Box
-      background="bg"
-      flexGrow={1}
-      style={{ paddingBottom: bottom }}
-      testID="mobile-playground-home-screen"
-    >
+    <Box background="bg" flexGrow={1} testID="mobile-playground-home-screen">
       <FlatList
         ItemSeparatorComponent={null}
+        contentContainerStyle={{ paddingBottom: bottom }}
         data={data}
         initialNumToRender={14}
         renderItem={renderItem}
