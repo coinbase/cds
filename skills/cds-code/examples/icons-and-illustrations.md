@@ -49,16 +49,16 @@ import {
 </VStack>;
 ```
 
-## Illustration scaling with `dimension` and `scaleMultiplier`
+## Illustration dimensions
 
 ```tsx
 import { VStack } from '@coinbase/cds-web/layout'; // or '@coinbase/cds-mobile/layout'
 import { Pictogram, SpotIcon } from '@coinbase/cds-web/illustrations'; // or '@coinbase/cds-mobile/illustrations'
 
 <VStack gap={2}>
-  <Pictogram name="shield" scaleMultiplier={1.5} />
-  <Pictogram name="shield" dimension="48x48" scaleMultiplier={2.5} />
-  <SpotIcon name="shield" scaleMultiplier={1.5} />
-  <SpotIcon name="shield" dimension="24x24" scaleMultiplier={1.5} />
+  <Pictogram name="shield" dimension="48x48" />
+  <Pictogram name="shield" dimension="64x64" />
+  <SpotIcon name="shield" dimension="32x32" />
+  <SpotIcon name="shield" dimension="24x24" />
 </VStack>;
 ```

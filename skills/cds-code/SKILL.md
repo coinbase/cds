@@ -58,6 +58,8 @@ For all frontend coding tasks, you must follow these steps.
 
 Use `guidelines/components.md` to help identify the appropriate CDS components for the task.
 
+If the task involves icons, also follow `guidelines/icons.md` and use `scripts/discover-cds-icons.mjs` to search icon names. If the task involves illustrations, also follow `guidelines/illustrations.md` and use `scripts/discover-cds-illustrations.mjs` to search illustration names.
+
 The guidelines file will cover most use cases, but you may optionally browse the CDS docs for the full list of supported CDS components.
 
 If no CDS component fits your use case, you may fall back to the following options in this order of priority:
@@ -70,7 +72,7 @@ Always inform the user which CDS components you are planning to use before movin
 
 ### Step 2: Optionally read component docs
 
-For any CDS component you plan to use, read their cooresponding documentation (see `Part 1` for more details on docs setup).
+For any CDS component you plan to use, read their corresponding documentation (see `Part 1` for more details on docs setup).
 
 ### Step 3: Execute the task (writing frontend code)
 
