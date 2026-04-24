@@ -14,7 +14,9 @@ const variantAliases = {
   herosquare: 'heroSquare',
 };
 
-const invokedScript = path.relative(process.cwd(), process.argv[1] ?? '') || 'skills/cds-code/scripts/discover-cds-illustrations.mjs';
+const invokedScript =
+  path.relative(process.cwd(), process.argv[1] ?? '') ||
+  'skills/cds-code/scripts/discover-cds-illustrations.mjs';
 
 const usage = `Usage:
   node ${invokedScript} <query> [--variant <variant>] [--project-root <absolute-path>] [--limit <number>] [--all]
@@ -98,7 +100,7 @@ async function findProjectRoot(startPath = process.cwd()) {
     const packageJsonPath = path.join(current, 'package.json');
     const nodeModulesPath = path.join(current, 'node_modules');
 
-    if (await pathExists(packageJsonPath) && await pathExists(nodeModulesPath)) {
+    if ((await pathExists(packageJsonPath)) && (await pathExists(nodeModulesPath))) {
       return current;
     }
 
@@ -188,11 +190,7 @@ function levenshteinDistance(a, b) {
     curr[0] = i;
     for (let j = 1; j <= b.length; j += 1) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      curr[j] = Math.min(
-        prev[j] + 1,
-        curr[j - 1] + 1,
-        prev[j - 1] + cost,
-      );
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
     }
     for (let j = 0; j <= b.length; j += 1) prev[j] = curr[j];
   }
@@ -215,19 +213,21 @@ function scoreCandidate(query, candidate, descriptionExactMatch) {
   const tokenMatchCount = queryTokens.filter((token) =>
     candidateTokens.some((candidateToken) => candidateToken.startsWith(token)),
   ).length;
-  const typoMatch = queryNorm.length >= 4
-    && candidateNorm[0] === queryNorm[0]
-    && Math.abs(candidateNorm.length - queryNorm.length) <= 2
-    && distance <= 2;
+  const typoMatch =
+    queryNorm.length >= 4 &&
+    candidateNorm[0] === queryNorm[0] &&
+    Math.abs(candidateNorm.length - queryNorm.length) <= 2 &&
+    distance <= 2;
 
   const useDescriptionBoost = descriptionExactMatch && queryNorm.length >= 4;
-  const hasMeaningfulMatch = useDescriptionBoost
-    || startsWith
-    || includesRaw
-    || includesNorm
-    || tokenMatchCount > 0
-    || subsequenceMatch
-    || typoMatch;
+  const hasMeaningfulMatch =
+    useDescriptionBoost ||
+    startsWith ||
+    includesRaw ||
+    includesNorm ||
+    tokenMatchCount > 0 ||
+    subsequenceMatch ||
+    typoMatch;
 
   if (!hasMeaningfulMatch) return 0;
 
@@ -244,7 +244,7 @@ function scoreCandidate(query, candidate, descriptionExactMatch) {
   if (queryNorm.length > 2) {
     const maxEditDistance = Math.max(1, Math.floor(queryNorm.length / 4));
     if (distance <= maxEditDistance) {
-      score += 24 - (distance * 8);
+      score += 24 - distance * 8;
     }
   }
 
@@ -284,10 +284,11 @@ function printMatches(matches, limit, showAll) {
   }
 
   const output = showAll ? matches : matches.slice(0, limit);
-  const showingSuffix = showAll || output.length === matches.length
-    ? ''
-    : ` (showing top ${output.length})`;
-  console.log(`Found ${matches.length} illustration match${matches.length === 1 ? '' : 'es'}${showingSuffix}:`);
+  const showingSuffix =
+    showAll || output.length === matches.length ? '' : ` (showing top ${output.length})`;
+  console.log(
+    `Found ${matches.length} illustration match${matches.length === 1 ? '' : 'es'}${showingSuffix}:`,
+  );
   for (const match of output) {
     console.log(`${match.variant}:${match.name}`);
   }
@@ -313,7 +314,9 @@ async function main() {
   if (variant && !resolvedVariant) {
     console.error(`Error: unsupported variant "${variant}".`);
     console.error(usage);
-    console.error('Supported variants (any casing): Pictogram, SpotIcon, SpotSquare, SpotRectangle, HeroSquare');
+    console.error(
+      'Supported variants (any casing): Pictogram, SpotIcon, SpotSquare, SpotRectangle, HeroSquare',
+    );
     process.exitCode = 1;
     return;
   }
@@ -345,7 +348,9 @@ async function main() {
         selectedVariant,
       );
 
-      const descriptionMatches = new Set(Array.isArray(descriptionMap[query]) ? descriptionMap[query] : []);
+      const descriptionMatches = new Set(
+        Array.isArray(descriptionMap[query]) ? descriptionMap[query] : [],
+      );
       for (const name of names) {
         const isDescriptionMatch = descriptionMatches.has(name);
         const score = scoreCandidate(query, name, isDescriptionMatch);
@@ -361,11 +366,16 @@ async function main() {
     }
   }
 
-  const dedupedMatches = [...new Map(
-    matches
-      .sort((a, b) => b.score - a.score || a.variant.localeCompare(b.variant) || a.name.localeCompare(b.name))
-      .map((entry) => [`${entry.variant}:${entry.name}`, entry]),
-  ).values()];
+  const dedupedMatches = [
+    ...new Map(
+      matches
+        .sort(
+          (a, b) =>
+            b.score - a.score || a.variant.localeCompare(b.variant) || a.name.localeCompare(b.name),
+        )
+        .map((entry) => [`${entry.variant}:${entry.name}`, entry]),
+    ).values(),
+  ];
 
   printMatches(dedupedMatches, limit, showAll);
 }

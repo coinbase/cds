@@ -5,7 +5,9 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const invokedScript = path.relative(process.cwd(), process.argv[1] ?? '') || 'skills/cds-code/scripts/discover-cds-icons.mjs';
+const invokedScript =
+  path.relative(process.cwd(), process.argv[1] ?? '') ||
+  'skills/cds-code/scripts/discover-cds-icons.mjs';
 
 const usage = `Usage:
   node ${invokedScript} <query> [--project-root <absolute-path>] [--limit <number>] [--all]
@@ -68,7 +70,7 @@ async function findProjectRoot(startPath = process.cwd()) {
     const packageJsonPath = path.join(current, 'package.json');
     const nodeModulesPath = path.join(current, 'node_modules');
 
-    if (await pathExists(packageJsonPath) && await pathExists(nodeModulesPath)) {
+    if ((await pathExists(packageJsonPath)) && (await pathExists(nodeModulesPath))) {
       return current;
     }
 
@@ -155,11 +157,7 @@ function levenshteinDistance(a, b) {
     curr[0] = i;
     for (let j = 1; j <= b.length; j += 1) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      curr[j] = Math.min(
-        prev[j] + 1,
-        curr[j - 1] + 1,
-        prev[j - 1] + cost,
-      );
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
     }
     for (let j = 0; j <= b.length; j += 1) prev[j] = curr[j];
   }
@@ -182,19 +180,21 @@ function scoreCandidate(query, candidate, descriptionExactMatch) {
   const tokenMatchCount = queryTokens.filter((token) =>
     candidateTokens.some((candidateToken) => candidateToken.startsWith(token)),
   ).length;
-  const typoMatch = queryNorm.length >= 4
-    && candidateNorm[0] === queryNorm[0]
-    && Math.abs(candidateNorm.length - queryNorm.length) <= 2
-    && distance <= 2;
+  const typoMatch =
+    queryNorm.length >= 4 &&
+    candidateNorm[0] === queryNorm[0] &&
+    Math.abs(candidateNorm.length - queryNorm.length) <= 2 &&
+    distance <= 2;
 
   const useDescriptionBoost = descriptionExactMatch && queryNorm.length >= 4;
-  const hasMeaningfulMatch = useDescriptionBoost
-    || startsWith
-    || includesRaw
-    || includesNorm
-    || tokenMatchCount > 0
-    || subsequenceMatch
-    || typoMatch;
+  const hasMeaningfulMatch =
+    useDescriptionBoost ||
+    startsWith ||
+    includesRaw ||
+    includesNorm ||
+    tokenMatchCount > 0 ||
+    subsequenceMatch ||
+    typoMatch;
 
   if (!hasMeaningfulMatch) return 0;
 
@@ -212,7 +212,7 @@ function scoreCandidate(query, candidate, descriptionExactMatch) {
   if (queryNorm.length > 2) {
     const maxEditDistance = Math.max(1, Math.floor(queryNorm.length / 4));
     if (distance <= maxEditDistance) {
-      score += 24 - (distance * 8);
+      score += 24 - distance * 8;
     }
   }
 
@@ -235,22 +235,18 @@ function printMatches(matches, limit, showAll) {
   }
 
   const output = showAll ? matches : matches.slice(0, limit);
-  const showingSuffix = showAll || output.length === matches.length
-    ? ''
-    : ` (showing top ${output.length})`;
-  console.log(`Found ${matches.length} icon match${matches.length === 1 ? '' : 'es'}${showingSuffix}:`);
+  const showingSuffix =
+    showAll || output.length === matches.length ? '' : ` (showing top ${output.length})`;
+  console.log(
+    `Found ${matches.length} icon match${matches.length === 1 ? '' : 'es'}${showingSuffix}:`,
+  );
   for (const match of output) {
     console.log(match.name);
   }
 }
 
 async function main() {
-  const {
-    query,
-    projectRoot: argProjectRoot,
-    showAll,
-    limit,
-  } = parseArgs(process.argv.slice(2));
+  const { query, projectRoot: argProjectRoot, showAll, limit } = parseArgs(process.argv.slice(2));
 
   if (!query) {
     console.error('Error: missing query.');
@@ -279,7 +275,10 @@ async function main() {
   let descriptionMap;
   try {
     const namesModule = await importFromProject(`${cdsIconsPackage}/names`, projectRoot);
-    const descriptionMapModule = await importFromProject(`${cdsIconsPackage}/descriptionMap`, projectRoot);
+    const descriptionMapModule = await importFromProject(
+      `${cdsIconsPackage}/descriptionMap`,
+      projectRoot,
+    );
     names = namesModule.names ?? namesModule.default;
     descriptionMap = descriptionMapModule.descriptionMap ?? descriptionMapModule.default;
   } catch (error) {
@@ -295,7 +294,9 @@ async function main() {
     return;
   }
 
-  const descriptionMatches = new Set(Array.isArray(descriptionMap[query]) ? descriptionMap[query] : []);
+  const descriptionMatches = new Set(
+    Array.isArray(descriptionMap[query]) ? descriptionMap[query] : [],
+  );
   const matches = names
     .map((name) => {
       const isDescriptionMatch = descriptionMatches.has(name);
