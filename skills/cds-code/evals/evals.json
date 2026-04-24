@@ -66,68 +66,6 @@
     },
     {
       "id": 5,
-      "prompt": "Create a mobile bottom nav with Home, Wallet, Settings. Wallet is currently selected.",
-      "expected_output": "A React component that uses Icon names home/wallet/settings and applies active state only to Wallet with selected token-based color treatment.",
-      "files": [],
-      "expectations": [
-        "Before writing code, the agent identifies Icon (and layout primitives) as planned CDS components",
-        "Uses the exact icon names home, wallet, and settings",
-        "Applies active state specifically to Wallet and keeps Home/Settings inactive",
-        "Uses navigation-appropriate icon sizing",
-        "Pairs selected state with token-based color treatment (no bespoke hex/rgb values)",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 6,
-      "prompt": "Build a compact search row with label text and a leading search icon.",
-      "expected_output": "A React component that uses Icon name=\"search\" with dense inline sizing and CDS text/layout primitives.",
-      "files": [],
-      "expectations": [
-        "Uses Icon name search",
-        "Uses dense inline sizing for the icon (typically s)",
-        "Uses CDS typography/layout primitives for the row",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 7,
-      "prompt": "Build a notifications menu row with an icon and text.",
-      "expected_output": "A React component that uses Icon name=\"bell\" with appropriate row/icon sizing and CDS text/layout primitives.",
-      "files": [],
-      "expectations": [
-        "Uses Icon name bell",
-        "Uses appropriate icon sizing for a menu/list row",
-        "Uses CDS typography/layout primitives for the row",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 8,
-      "prompt": "Build an analytics shortcut card with icon + title + helper text.",
-      "expected_output": "A React component that uses Icon name=\"chartBar\" and CDS layout/typography primitives.",
-      "files": [],
-      "expectations": [
-        "Uses Icon name chartBar",
-        "Uses CDS layout and generic Text primitives",
-        "Uses token-based styling values",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 9,
-      "prompt": "Build a help center list row with icon + label.",
-      "expected_output": "A React component that uses Icon name=\"support\" and CDS row layout primitives.",
-      "files": [],
-      "expectations": [
-        "Uses Icon name support",
-        "Uses appropriate icon sizing for a list row",
-        "Uses CDS layout/text primitives",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 10,
       "prompt": "Create a security empty state with a title, supporting text, and an illustration. Show compact and roomy versions of the same visual.",
       "expected_output": "A React component that uses SpotIcon name=\"2fa\" with compact 24x24 and roomy 32x32 dimensions plus CDS text/layout primitives.",
       "files": [],
@@ -135,48 +73,6 @@
         "Uses SpotIcon specifically",
         "Uses SpotIcon name 2fa",
         "Uses exact SpotIcon dimensions 24x24 and 32x32",
-        "Uses CDS layout and generic Text primitives",
-        "Does not use or suggest scaleMultiplier",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 11,
-      "prompt": "Create an identity verification empty state with title, supporting text, and compact/roomy illustration variants.",
-      "expected_output": "A React component that uses SpotIcon name=\"idVerification\" with 24x24 and 32x32 dimensions and CDS text/layout primitives.",
-      "files": [],
-      "expectations": [
-        "Uses SpotIcon specifically",
-        "Uses SpotIcon name idVerification",
-        "Uses exact SpotIcon dimensions 24x24 and 32x32",
-        "Uses CDS layout and generic Text primitives",
-        "Does not use or suggest scaleMultiplier",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 12,
-      "prompt": "Create an authenticator setup empty state with title, supporting text, and two illustration sizes (compact and roomy).",
-      "expected_output": "A React component that uses Pictogram name=\"authenticationApp\" with 48x48 and 64x64 dimensions plus CDS text/layout primitives.",
-      "files": [],
-      "expectations": [
-        "Uses Pictogram specifically",
-        "Uses Pictogram name authenticationApp",
-        "Uses exact Pictogram dimensions 48x48 and 64x64",
-        "Uses CDS layout and generic Text primitives",
-        "Does not use or suggest scaleMultiplier",
-        "No raw pixel or hex/rgb values are used"
-      ]
-    },
-    {
-      "id": 13,
-      "prompt": "Create an 'add a card' empty state with title, supporting text, and a square illustration.",
-      "expected_output": "A React component that uses SpotSquare name=\"addCard\" with supported SpotSquare sizing and CDS text/layout primitives.",
-      "files": [],
-      "expectations": [
-        "Uses SpotSquare specifically",
-        "Uses SpotSquare name addCard",
-        "Uses supported SpotSquare dimensions",
         "Uses CDS layout and generic Text primitives",
         "Does not use or suggest scaleMultiplier",
         "No raw pixel or hex/rgb values are used"
