@@ -12,7 +12,13 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
-import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
+import {
+  type AnimatedProp,
+  Group,
+  Paint,
+  Rect,
+  type SkParagraph,
+} from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../index';
 import { useCartesianChartContext } from '../ChartProvider';
@@ -434,7 +440,7 @@ export const Scrubber = memo(
       if (!isReady) return;
 
       return (
-        <Group opacity={scrubberOpacity}>
+        <Group layer={<Paint opacity={scrubberOpacity} />}>
           {!hideOverlay && (
             <Rect
               color={theme.color.bg}
