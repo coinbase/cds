@@ -43,8 +43,13 @@ runs:
       run: yarn --immutable
       shell: bash
 
+    # Sets NX_BASE and NX_HEAD environment variables used by `nx affected` to
+    # limit CI to only the projects touched by this PR or push.
+    # For push events, main-branch-name tells nx-set-shas which branch to look
+    # up the last successful CI run on. For pull_request events it reads the PR
+    # payload directly and ignores this value.
     - name: Set base and head
       id: set-base-and-head
       uses: nrwl/nx-set-shas@826660b82addbef3abff5fa871492ebad618c9e1 # v4.3.3
       with:
-        main-branch-name: 'master'
+        main-branch-name: ${{ github.ref_name }}

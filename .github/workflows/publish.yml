@@ -19,6 +19,7 @@ on:
   push:
     branches:
       - master
+      - 'release-[0-9]+.x'
     paths:
       - 'packages/*/package.json'
   pull_request:
@@ -31,6 +32,10 @@ permissions:
 jobs:
   # Determine which packages to build/publish
   detect-changes:
+    # Skip on branch creation (e.g. cutting a new release-N.x branch). GitHub
+    # treats every file as changed on first push, so the paths filter above
+    # would match even though no new commits have landed on the branch yet.
+    if: ${{ !github.event.created }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -328,11 +333,22 @@ jobs:
           echo "📦 Package name from package.json: $PACKAGE_NAME"
           echo "📦 Package version: $PACKAGE_VERSION"
 
-          # Detect prerelease version and extract tag
-          if echo "$PACKAGE_VERSION" | grep -qE '\-'; then
+          # Determine dist-tag:
+          #   release-N.x branch → --tag vN   (e.g. release-8.x → --tag v8)
+          #   prerelease version  → --tag <prerelease> (e.g. 1.0.0-beta.1 → --tag beta)
+          #   master              → no --tag flag (publishes as latest)
+          CURRENT_BRANCH="${{ github.ref_name }}"
+          if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
+            MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
+            NPM_TAG="v${MAJOR}"
+            echo "🏷️  Publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
+            npm publish ./package.tgz --access public \
+              --tag "$NPM_TAG" \
+              --registry https://registry.npmjs.org
+          elif echo "$PACKAGE_VERSION" | grep -qE '\-'; then
             # Extract prerelease tag (e.g., "beta" from "1.0.0-beta.1")
             PRERELEASE_TAG=$(echo "$PACKAGE_VERSION" | sed -E 's/.*-([^.]+).*/\1/')
-            echo "🏷️  Detected prerelease version, using tag: $PRERELEASE_TAG"
+            echo "🏷️  Detected prerelease version, using dist-tag: $PRERELEASE_TAG"
             npm publish ./package.tgz --access public \
               --tag "$PRERELEASE_TAG" \
               --registry https://registry.npmjs.org

@@ -5,38 +5,19 @@ import execa from 'execa';
 import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
+import { fileURLToPath } from 'url';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { projectsNeedingVersion } from './ci/getProjectsNeedingVersion';
-import { color, log, logInfo, logNewLine, logWarn } from './ci/logging';
+import { projectsNeedingVersion } from './ci/getProjectsNeedingVersion.ts';
+import { getCurrentCIBranch } from './ci/getCurrentCIBranch.ts';
+import { isReleaseBranch } from './ci/isReleaseBranch.mjs';
+import { color, log, logInfo, logNewLine, logWarn } from './ci/logging.ts';
 
 const UNRELEASED_HEADER = '## Unreleased';
 const TEMPLATE_TOKEN = '<!-- template-start -->';
 
-export type VersionBump = 'major' | 'minor' | 'patch' | 'none';
-
-interface LogEntry {
-  bump: VersionBump;
-  pr?: string;
-  message: string;
-}
-
-interface PrefillOptions {
-  message?: string;
-  bump?: VersionBump;
-  pr?: string;
-}
-
-interface VersionOptions {
-  project?: string;
-  all?: boolean;
-  message?: string;
-  bump?: VersionBump;
-  pr?: string;
-}
-
-export async function getRemoteRepoUrl(): Promise<string> {
+export async function getRemoteRepoUrl() {
   if (process.env.CB_GHA_REPO) {
     return `https://github.com/${process.env.CB_GHA_REPO}`;
   }
@@ -63,8 +44,9 @@ export async function getWorkspaceData() {
   );
 }
 
-function determineNextVersion(logs: LogEntry[], currentVersion: string): string | null {
+function determineNextVersion(logs, currentVersion) {
   const isAlpha = currentVersion.startsWith('0.');
+  const isPrerelease = semver.prerelease(currentVersion) !== null;
   let major = 0;
   let minor = 0;
   let patch = 0;
@@ -78,6 +60,13 @@ function determineNextVersion(logs: LogEntry[], currentVersion: string): string 
       patch += 1;
     }
   });
+
+  if (isPrerelease) {
+    if (major > 0 || minor > 0 || patch > 0) {
+      return semver.inc(currentVersion, 'prerelease');
+    }
+    return null;
+  }
 
   if (major > 0) {
     return semver.inc(currentVersion, isAlpha ? 'minor' : 'major');
@@ -94,7 +83,7 @@ function determineNextVersion(logs: LogEntry[], currentVersion: string): string 
   return null;
 }
 
-function sentenceCase(message: string): string {
+function sentenceCase(message) {
   let msg = message.trim();
 
   if (!msg.startsWith('`')) {
@@ -108,9 +97,9 @@ function sentenceCase(message: string): string {
   return msg;
 }
 
-async function formatLogs(logs: LogEntry[], version: string | null): Promise<string> {
+async function formatLogs(logs, version) {
   const repoUrl = await getRemoteRepoUrl();
-  const groups: Record<VersionBump, string[]> = {
+  const groups = {
     major: ['#### 💥 Breaking', ''],
     minor: ['#### 🚀 Updates', ''],
     patch: ['#### 🐞 Fixes', ''],
@@ -127,7 +116,7 @@ async function formatLogs(logs: LogEntry[], version: string | null): Promise<str
     groups[logItem.bump || 'none'].push(`- ${line}`);
   });
 
-  const block: string[] = [
+  const block = [
     version
       ? `## ${version} (${new Date().toLocaleString('en-US', {
           timeZone: 'America/Los_Angeles',
@@ -147,38 +136,34 @@ async function formatLogs(logs: LogEntry[], version: string | null): Promise<str
   return block.join('\n');
 }
 
-async function gatherLogs(
-  projectName: string,
-  logs: LogEntry[],
-  prefills?: PrefillOptions,
-): Promise<boolean> {
+async function gatherLogs(projectName, logs, prefills) {
   let addingLogs = true;
   while (addingLogs) {
-    const bump = await select<VersionBump>({
+    const bump = await select({
       message: 'Type of change?',
       choices: [
         {
-          value: 'major' as VersionBump,
+          value: 'major',
           name: `Breaking ${color.muted('→ backwards incompatible changes')}`,
         },
         {
-          value: 'minor' as VersionBump,
+          value: 'minor',
           name: `Update ${color.muted('→ new features, updated functionality')}`,
         },
         {
-          value: 'patch' as VersionBump,
+          value: 'patch',
           name: `Fix ${color.muted('→ bug fixes, types, linting, chores')}`,
         },
         {
-          value: 'none' as VersionBump,
+          value: 'none',
           name: `Tests ${color.muted('→ increased testing and code coverage')}`,
         },
         {
-          value: 'patch' as VersionBump,
+          value: 'patch',
           name: `Dependencies ${color.muted('→ added, upgraded, or removed deps')}`,
         },
         {
-          value: 'none' as VersionBump,
+          value: 'none',
           name: `Internal ${color.muted('→ documentation, CI & pipeline changes')}`,
         },
       ],
@@ -187,13 +172,13 @@ async function gatherLogs(
     const message = await input({
       message: 'Changelog message?',
       default: prefills?.message,
-      validate: (value: string) => (!value ? 'Cannot be empty' : true),
+      validate: (value) => (!value ? 'Cannot be empty' : true),
     });
 
     const pr = await input({
       message: 'PR number (e.g. 123)?',
       default: '',
-      validate: (value: string) => (value && !value.match(/^\d+$/) ? 'Must be a number' : true),
+      validate: (value) => (value && !value.match(/^\d+$/) ? 'Must be a number' : true),
     });
 
     const again = await confirm({
@@ -224,11 +209,7 @@ async function gatherLogs(
   return false;
 }
 
-async function updateChangelog(
-  projectRoot: string,
-  logs: LogEntry[],
-  nextVersion: string | null,
-): Promise<string | null> {
+async function updateChangelog(projectRoot, logs, nextVersion) {
   const logPath = path.join(projectRoot, 'CHANGELOG.md');
 
   if (!fs.existsSync(logPath)) {
@@ -271,7 +252,7 @@ async function updateChangelog(
   return nextVersion;
 }
 
-export async function bumpVersion(optionalProjectName?: string, prefills?: PrefillOptions) {
+export async function bumpVersion(optionalProjectName, prefills) {
   const workspace = await getWorkspaceData();
   const unversionedPackages = await projectsNeedingVersion(logInfo);
   let projectNameSelected = optionalProjectName;
@@ -301,14 +282,11 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
 
     const pkgPath = path.join(projectRoot, 'package.json');
 
-    const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8')) as {
-      name: string;
-      version: string;
-    };
+    const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8'));
 
     log('Gathering changelog entries');
 
-    const logs: LogEntry[] = [];
+    const logs = [];
     let again = false;
     const bump = prefills?.bump;
     const message = prefills?.message;
@@ -359,7 +337,7 @@ export async function bumpVersion(optionalProjectName?: string, prefills?: Prefi
   }
 }
 
-function parseArgs(): VersionOptions {
+function parseArgs() {
   const argv = yargs(hideBin(process.argv))
     .usage('Usage: $0 [options] [project]')
     .option('all', {
@@ -397,10 +375,10 @@ function parseArgs(): VersionOptions {
     .parseSync();
 
   return {
-    project: (argv._[0] as string) || (argv.project as string),
+    project: argv._[0] || argv.project,
     all: argv.all,
     message: argv.message,
-    bump: argv.bump as VersionBump | undefined,
+    bump: argv.bump,
     pr: argv.pr,
   };
 }
@@ -410,12 +388,14 @@ async function main() {
 
   let lastCommitMessage = '';
   try {
+    const currentBranch = getCurrentCIBranch();
+    const base = isReleaseBranch(currentBranch) ? currentBranch : 'master';
     lastCommitMessage = execSync(
-      'git log -1 --no-merges --pretty=%B $(git merge-base master HEAD)..HEAD',
+      `git log -1 --no-merges --pretty=%B $(git merge-base ${base} HEAD)..HEAD`,
       { encoding: 'utf-8' },
     ).trim();
   } catch (e) {
-    logInfo((e as Error)?.message);
+    logInfo(e?.message);
   }
 
   const message = options.message || lastCommitMessage;
@@ -428,7 +408,7 @@ async function main() {
   });
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main()
     .then(() => {
       process.exit(0);
