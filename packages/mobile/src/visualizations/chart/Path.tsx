@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import { memo, useEffect, useMemo } from 'react';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AnimatedProp,
@@ -232,7 +232,7 @@ export const Path = memo<PathProps>((props) => {
   const rect = clipRect ?? context.drawingArea;
   const animate = animateProp ?? context.animate;
 
-  const isReady = !!context.getXScale();
+  const isReady = !!context.getXScale() && !!context.getYScale();
 
   const enterTransition = useMemo(
     () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),
@@ -255,15 +255,9 @@ export const Path = memo<PathProps>((props) => {
   }, [animate, transitions?.enterOpacity]);
   const animateEnterOpacity = Boolean(enterOpacityTransition);
   const enterOpacity = useSharedValue(animateEnterOpacity ? 0 : 1);
-  const hasAnimatedEnterOpacity = useRef(false);
 
   useEffect(() => {
-    if (hasAnimatedEnterOpacity.current) {
-      return;
-    }
-
     if (!animateEnterOpacity) {
-      hasAnimatedEnterOpacity.current = true;
       enterOpacity.value = 1;
       return;
     }
@@ -272,13 +266,11 @@ export const Path = memo<PathProps>((props) => {
       return;
     }
 
-    if (enterOpacityTransition === undefined || enterOpacityTransition === null) {
+    if (enterOpacityTransition == null) {
       enterOpacity.value = 1;
-      hasAnimatedEnterOpacity.current = true;
       return;
     }
 
-    hasAnimatedEnterOpacity.current = true;
     enterOpacity.value = buildTransition(1, enterOpacityTransition);
   }, [animateEnterOpacity, isReady, enterOpacityTransition, enterOpacity]);
 

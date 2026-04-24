@@ -40,7 +40,7 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'paragraphAlignment'
 > & {
   /**
-   * Bounds inset for label to prevent cutoff at chart edges.
+   * Bounds inset for the label to prevent cutoff at chart edges.
    * Can be a number (applied to all sides) or a ChartInset object.
    * @default { top: 4, bottom: 20, left: 12, right: 12 } when elevated is true, otherwise undefined
    */
