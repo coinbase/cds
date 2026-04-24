@@ -11,6 +11,8 @@ Use this guide when the task needs CDS icons.
   - `node skills/cds-code/scripts/discover-cds-icons.mjs <query> --project-root /absolute/path/to/app`
 - Browse the full icon list in CDS docs if needed: [https://cds.coinbase.com/components/media/Icon/#icons](https://cds.coinbase.com/components/media/Icon/#icons)
 
+If the script is unavailable, use **cds-docs** (`skills/cds-docs`): route index → Icon docs.
+
 ## Size guidance
 
 - Supported sizes: `xs`, `s`, `m`, `l`

@@ -10,12 +10,12 @@ Use this guide when the task needs CDS illustrations.
   - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --all`
   - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --variant Pictogram`
   - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --project-root /absolute/path/to/app`
-- Use CDS docs (or CDS MCP `list-cds-routes`) when you need to browse the full catalog
+
+If the script is unavailable, use **cds-docs** (`skills/cds-docs`): route index → Pictogram/SpotIcon/SpotSquare/HeroSquare docs.
 
 ## Variants
 
-- Component names: `Pictogram`, `SpotIcon`, `SpotSquare`, `SpotRectangle`, `HeroSquare`
-- CLI `--variant` accepts any casing (`Pictogram` and `pictogram` both work)
+Components: `Pictogram`, `SpotIcon`, `SpotSquare`, `SpotRectangle`, `HeroSquare`
 
 ## Dimension guidance
 
