@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const invokedScript =
   path.relative(process.cwd(), process.argv[1] ?? '') ||
-    'skills/cds-code/scripts/discover-cds-icons.mjs';
+  'skills/cds-code/scripts/discover-cds-icons.mjs';
 
 const usage = `Usage: node ${invokedScript} <query> [--project-root <path>]
 Example: node ${invokedScript} shield`;

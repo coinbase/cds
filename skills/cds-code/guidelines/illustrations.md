@@ -4,14 +4,17 @@ Use this guide when the task needs CDS illustrations.
 
 ## Find illustrations
 
-- Start with script search:
-  - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query>`
-  - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --limit 12`
-  - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --all`
-  - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --variant Pictogram`
-  - `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --project-root /absolute/path/to/app`
+Use the discovery script (`scripts/discover-cds-illustrations.mjs`) to list all availabe illustrations in the installed version of CDS.
 
-If the script is unavailable, use **cds-docs** (`skills/cds-docs`): route index → Pictogram/SpotIcon/SpotSquare/HeroSquare docs.
+Sample usage:
+
+- `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query>`
+- `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --limit 12`
+- `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --all`
+- `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --variant Pictogram`
+- `node skills/cds-code/scripts/discover-cds-illustrations.mjs <query> --project-root /absolute/path/to/app`
+
+If you are unable to run the script, retrieve the appropriate pages from the CDS docs.
 
 ## Variants
 

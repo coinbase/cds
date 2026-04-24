@@ -10,7 +10,7 @@ npx skills add https://github.com/coinbase/cds --skill cds-docs
 
 ## Running evaluations
 
-Use the `skill-creator` skill to run the evals. These serve as a
+Use the `skill-creator` skill to run the evals.
 
 First install the skill-creator skill if it is not already:
 

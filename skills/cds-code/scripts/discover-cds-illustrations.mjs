@@ -16,7 +16,7 @@ const variantAliases = {
 
 const invokedScript =
   path.relative(process.cwd(), process.argv[1] ?? '') ||
-    'skills/cds-code/scripts/discover-cds-illustrations.mjs';
+  'skills/cds-code/scripts/discover-cds-illustrations.mjs';
 
 const usage = `Usage: node ${invokedScript} <query> [--variant <v>] [--project-root <path>]
 Variants: ${variants.join(', ')}
@@ -190,7 +190,10 @@ async function main() {
         matches.push({ variant: v, name, nameHit, tags });
       }
     } catch (error) {
-      console.error(`Warning: variant "${v}" (${pkg}):`, error instanceof Error ? error.message : error);
+      console.error(
+        `Warning: variant "${v}" (${pkg}):`,
+        error instanceof Error ? error.message : error,
+      );
     }
   }
   const deduped = [...new Map(matches.map((e) => [`${e.variant}:${e.name}`, e])).values()];

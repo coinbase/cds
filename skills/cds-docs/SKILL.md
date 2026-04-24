@@ -8,10 +8,9 @@ description: |
   only the pages you need to reason and implement correctly. Prefer the CDS MCP server
   (`list-cds-routes`, `get-cds-doc`); if MCP is unavailable, use curl against
   https://cds.coinbase.com/llms/....
-allowed-tools: Bash(curl *)
 license: Apache-2.0
 metadata:
-  version: '1.0.0'
+  version: '2.0.0'
 ---
 
 # CDS Documentation Skill

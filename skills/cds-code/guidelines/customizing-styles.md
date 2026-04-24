@@ -1,6 +1,6 @@
 # Customizing styles
 
-Prefer using CDS Design Tokens as values over hardcoded values.
+Prefer using CDS Design Tokens as values over hardcoded values. Examples:
 
 - On web, prefer `marginTop: 'var(--space-0_5)'` over `marginTop: '4px'`.
 - On web, prefer `borderRadius: 'var(--borderRadius-200)'` over `borderRadius: '8px'`.

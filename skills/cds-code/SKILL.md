@@ -14,7 +14,6 @@ metadata:
 
 1. Part 1: Initialization | Follow these steps once per session, before you write any code
 2. Part 2: Workflow | Follow these steps for all frontend coding tasks
-3. Part 3: Example Code | Contains references to example CDS code for optional reference
 
 ## Part 1: Initialization
 
@@ -26,7 +25,7 @@ For any CDS documentation needs, you will need to use either of the following to
 If neither are available you may let the user know but still continue on with the task as documentation is helpful but not required.
 
 - Activate the `cds-docs` skill OR...
-- If the `cds-docs` skill is not configured, try calling the CDS MCP server `list-cds-routes` tool directly.
+- If the `cds-docs` skill is not configured, try calling the CDS MCP server `list-cds-routes` tool.
 
 ### Environment Detection
 
@@ -57,10 +56,15 @@ For all frontend coding tasks, you must follow these steps.
 ### Step 1: Identify the appropriate components
 
 Use `guidelines/components.md` to help identify the appropriate CDS components for the task.
+The guidelines file will cover most use cases, but you may optionally browse the CDS docs for the full list of supported CDS components.
+
+If you decide your task will require icons (`Icon` or `IconButton`) or illustrations (`SpotSquare`, `Pictogram`, `HeroSquare`, etc.) please read the corresponding guidelines files for more details.
+
+| Icons                 | Illustrations                 |
+| --------------------- | ----------------------------- |
+| `guidelines/icons.md` | `guidelines/illustrations.md` |
 
 If the task involves icons, also follow `guidelines/icons.md` and use `scripts/discover-cds-icons.mjs` to search icon names. If the task involves illustrations, also follow `guidelines/illustrations.md` and use `scripts/discover-cds-illustrations.mjs` to search illustration names.
-
-The guidelines file will cover most use cases, but you may optionally browse the CDS docs for the full list of supported CDS components.
 
 If no CDS component fits your use case, you may fall back to the following options in this order of priority:
 
@@ -68,11 +72,11 @@ If no CDS component fits your use case, you may fall back to the following optio
 2. build your own custom React component
 3. use the native platform's JSX elements for bespoke UI
 
-Always inform the user which CDS components you are planning to use before moving on to `Step 2`.
+**IMPORTANT:** Always inform the user which CDS components you are planning to use before moving on to `Step 2`.
 
 ### Step 2: Optionally read component docs
 
-For any CDS component you plan to use, read their corresponding documentation (see `Part 1` for more details on docs setup).
+For any CDS component you plan to use, retrieve and read their documentation (see `Part 1` for more details on docs setup).
 
 ### Step 3: Execute the task (writing frontend code)
 
@@ -99,7 +103,7 @@ Example misuse of custom styles and their style props alternatives:
 
 If you need to further customize the style of a rendered CDS component or a specific style is not support via style props, you may reference: `guidelines/customizing-styles.md`.
 
-## Step 4: Validate changes
+### Step 4: Validate changes
 
 Your task will be complete if:
 
@@ -128,10 +132,3 @@ Common mistakes to avoid:
 - Inventing deep subpaths like `<pkg>/layout/Box` or `<pkg>/buttons/Button` when the actual export is `<pkg>/layout` or `<pkg>/buttons`.
 - Guessing a package scope when the project uses a different one.
 - Assuming that the CDS docs examples use the same package name as the target project -- they may differ.
-
-## Part 3: Example code
-
-The `examples` directory contains sample CDS code to help you if you feel you need it.
-
-- For an example of an entire screen/widget composition see `examples/screen-and-widget-composition.md`
-- For samples renders Icons and Illustrations see `examples/icons-and-illustrations.md`
