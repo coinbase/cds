@@ -62,12 +62,13 @@ import {
   type DottedLineProps,
   Line,
   LineChart,
+  type LineChartProps,
   ReferenceLine,
   SolidLine,
   type SolidLineProps,
 } from '..';
 
-function MultipleLine() {
+function MultipleLine(props: LineChartProps) {
   const theme = useTheme();
   const pages = useMemo(
     () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
@@ -125,6 +126,7 @@ function MultipleLine() {
         showGrid: true,
         tickLabelFormatter: numberFormatter,
       }}
+      {...props}
     >
       <Scrubber />
     </LineChart>
@@ -1994,6 +1996,10 @@ function ExampleNavigator() {
       {
         title: 'Multiple Lines',
         component: <MultipleLine />,
+      },
+      {
+        title: 'Multiple Lines No Animations',
+        component: <MultipleLine animate={false} />,
       },
       {
         title: 'Data Format',
