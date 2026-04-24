@@ -6,9 +6,9 @@ When the user describes a UI need, reach for these first:
 
 | Need                            | Use                                                                |
 | ------------------------------- | ------------------------------------------------------------------ |
-| Page or section title           | `Text` with `font="title1"` – `font="title4"`                     |
+| Page or section title           | `Text` with `font="title1"` – `font="title4"`                      |
 | Body copy                       | `Text` with `font="body"`                                          |
-| Muted helper text               | `Text` with `font="body"` and `color="fgMuted"`                   |
+| Muted helper text               | `Text` with `font="body"` and `color="fgMuted"`                    |
 | Submit / confirm action         | `Button variant="primary"`                                         |
 | Cancel / close action           | `Button variant="secondary"`                                       |
 | Destructive action              | `Button variant="negative"`                                        |
@@ -71,9 +71,10 @@ Use the detailed sections below only when you need clarification; they intention
 
 ### `VStack` / `HStack`
 
-- **What they are:** Vertical and horizontal flex stacks.
+- **What they are:** Vertical and horizontal flex stacks — thin wrappers around `Box` with a fixed flex direction.
 - **Use when:** You’re just stacking items with consistent spacing.
 - Prefer these over `Box` when the intent is purely vertical/horizontal stacking.
+- They accept **all the same layout props as `Box`** (padding, gap, background, borderRadius, etc.) — so never wrap `<Box paddingX={2}><VStack>` when you can just write `<VStack paddingX={2}>`.
 
 ### `Divider`
 
@@ -99,6 +100,7 @@ Use the detailed sections below only when you need clarification; they intention
 - `Text` is polymorphic via `as` and supports common text props (`color`, `textAlign`, `textTransform`, etc.).
 
 **Example:**
+
 ```tsx
 <Text font="title3">Display Name</Text>
 <Text font="body" color="fgMuted">user@example.com</Text>
