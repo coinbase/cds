@@ -17,7 +17,7 @@
         "Uses VStack or HStack for layout composition",
         "All CDS import paths are valid subpath exports (no invented deep paths like /layout/Box)",
         "Before writing any code, the agent explicitly states which CDS components it plans to use"
-      ],
+      ]
     },
     {
       "id": 2,
@@ -33,7 +33,7 @@
         "Select is imported from the correct alpha subpath (e.g., @cbhq/cds-web/alpha/select or equivalent)",
         "No raw pixel values or hex/rgb colors in the output",
         "Before writing any code, the agent explicitly states which CDS components it plans to use"
-      ],
+      ]
     },
     {
       "id": 3,
@@ -48,7 +48,7 @@
         "ProgressBar and ProgressCircle are imported from @cbhq/cds-web/visualizations (the correct subpath), not from a generic top-level import or the separate @cbhq/cds-web-visualization package",
         "No hardcoded hex, rgb, or raw color values in the output",
         "Before writing any code, the agent explicitly states which CDS components it plans to use"
-      ],
+      ]
     }
   ]
 }
