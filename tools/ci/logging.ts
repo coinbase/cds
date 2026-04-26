@@ -2,7 +2,7 @@ import chalkImport from 'chalk';
 import { readFileSync } from 'node:fs';
 import { EOL } from 'node:os';
 import { basename } from 'node:path';
-import { isCI } from './isCI';
+import { isCI } from './isCI.ts';
 
 export type LogParam = string | string[] | Record<string, unknown>;
 

@@ -1,5 +1,5 @@
 import glob from 'fast-glob';
-import { logInfo as logInfoBase, logPlain } from './logging';
+import { logInfo as logInfoBase, logPlain } from './logging.ts';
 
 export function printFileList(list: string[] | Set<string>, logInfo = logInfoBase) {
   list.forEach((item) => {

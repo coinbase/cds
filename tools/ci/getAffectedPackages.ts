@@ -1,6 +1,6 @@
-import { getChangedFiles } from './getChangedFiles';
-import { getCurrentCIBranch } from './getCurrentCIBranch';
-import { getPublishableProjects } from './getPublishableProjects';
+import { getChangedFiles } from './getChangedFiles.ts';
+import { getCurrentCIBranch } from './getCurrentCIBranch.ts';
+import { getPublishableProjects } from './getPublishableProjects.ts';
 
 // WARNING: This list is not comprehensive and may be missing configuration files
 const BUMP_REGEX =

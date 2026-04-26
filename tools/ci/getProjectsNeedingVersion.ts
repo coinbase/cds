@@ -1,7 +1,7 @@
-import { getChangedFiles } from './getChangedFiles';
-import { getCurrentCIBranch } from './getCurrentCIBranch';
-import { logInfo as logInfoBase, logSuccess } from './logging';
-import { getAffectedPackages, PackageVersionCheckOptions } from './getAffectedPackages';
+import { getChangedFiles } from './getChangedFiles.ts';
+import { getCurrentCIBranch } from './getCurrentCIBranch.ts';
+import { logInfo as logInfoBase, logSuccess } from './logging.ts';
+import { getAffectedPackages, type PackageVersionCheckOptions } from './getAffectedPackages.ts';
 
 export async function projectsNeedingVersion(
   logInfo: typeof logInfoBase,

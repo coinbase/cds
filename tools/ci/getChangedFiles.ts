@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
-import { logInfo as logInfoBase } from './logging';
-import { printFileList } from './findFiles';
-import { getBase } from './getBase';
+import { logInfo as logInfoBase } from './logging.ts';
+import { printFileList } from './findFiles.ts';
+import { getBase } from './getBase.ts';
 
 export async function getChangedFiles(verbose = true, logInfo = logInfoBase): Promise<string[]> {
   if (verbose) {
