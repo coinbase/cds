@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Remove `react-native-linear-gradient` dependency. [[#643](https://github.com/coinbase/cds/pull/643)]
+
 ## 8.66.0 ((4/16/2026, 01:57 PM PST))
 
 This is an artificial version bump with no new change.
