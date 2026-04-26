@@ -2470,7 +2470,6 @@ __metadata:
     react-native-accessibility-engine: "npm:^3.2.0"
     react-native-gesture-handler: "npm:2.16.2"
     react-native-inappbrowser-reborn: "npm:3.7.0"
-    react-native-linear-gradient: "npm:2.8.3"
     react-native-navigation-bar-color: "npm:2.0.2"
     react-native-reanimated: "npm:3.14.0"
     react-native-safe-area-context: "npm:4.10.5"
@@ -2488,7 +2487,6 @@ __metadata:
     react-native: ^0.74.5
     react-native-gesture-handler: ^2.16.2
     react-native-inappbrowser-reborn: ^3.7.0
-    react-native-linear-gradient: ^2.8.3
     react-native-navigation-bar-color: ^2.0.2
     react-native-reanimated: ^3.14.0
     react-native-safe-area-context: ^4.10.5
@@ -33186,16 +33184,6 @@ __metadata:
   peerDependencies:
     react-native: ">=0.56"
   checksum: 10c0/b14d564925eec2c95fc6f8931b68f9ae7c418b5ccad2494748282ee9f7460f7094eec3c6e3a6304062124277624c0f6f647f41a7950ab263b7ebb7c6b0d50d4d
-  languageName: node
-  linkType: hard
-
-"react-native-linear-gradient@npm:2.8.3":
-  version: 2.8.3
-  resolution: "react-native-linear-gradient@npm:2.8.3"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/cd41bf28e9f468173f1e5e768685128ebf8bbf9077710e43b63482c1a76f37bff8ab3d1d6adfd7b4d54e648672356c02bea46c47cdbdb1844ebe5c5caf720114
   languageName: node
   linkType: hard
 
