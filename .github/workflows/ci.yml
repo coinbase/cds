@@ -40,11 +40,11 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Validate Lockfile
-        run: yarn tsx ./tools/ci/validators/validateLockfile.ts
+        run: node ./tools/ci/validators/validateLockfile.mjs
       - name: Validate Patches
-        run: yarn tsx ./tools/ci/validators/validatePatches.ts
+        run: node ./tools/ci/validators/validatePatches.mjs
       - name: Validate Versioned
-        run: yarn tsx ./tools/ci/validators/validateVersioned.ts
+        run: node ./tools/ci/validators/validateVersioned.mjs
       - name: Validate CDS Versions
         run: yarn tsx ./tools/validateCDSVersions.ts
       - name: Validate Constraints

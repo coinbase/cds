@@ -17,4 +17,4 @@ const config = {
   cacheDirectory: '../.nx/cache/tools/jestTransforms',
 };
 
-module.exports = config;
+export default config;

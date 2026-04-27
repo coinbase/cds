@@ -1,23 +1,16 @@
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 
-import { getFileHash } from '../getFileHash';
-import {
-  LogOutStream,
-  LogParam,
-  color,
-  logInfo as logInfoBase,
-  logSuccess,
-  logError as logErrorBase,
-} from '../logging';
+import { getFileHash } from '../getFileHash.mjs';
+import { color, logInfo as logInfoBase, logSuccess, logError as logErrorBase } from '../logging.mjs';
 
 const LOCK_PATH = path.join(process.cwd(), 'yarn.lock');
 
-export async function validateLockfile(outputStream: LogOutStream) {
-  const logInfo = (msg: LogParam) => {
+export async function validateLockfile(outputStream) {
+  const logInfo = (msg) => {
     logInfoBase(msg, outputStream);
   };
-  const logError = (msg: LogParam) => {
+  const logError = (msg) => {
     logErrorBase(msg, outputStream);
   };
 

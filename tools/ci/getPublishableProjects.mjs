@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { createProjectGraphAsync } from '@nx/devkit';
-import { logError } from './logging.ts';
+import { logError } from './logging.mjs';
 
 export async function getPublishableProjects() {
   try {

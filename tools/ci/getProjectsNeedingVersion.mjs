@@ -1,12 +1,9 @@
-import { getChangedFiles } from './getChangedFiles.ts';
-import { getCurrentCIBranch } from './getCurrentCIBranch.ts';
-import { logInfo as logInfoBase, logSuccess } from './logging.ts';
-import { getAffectedPackages, type PackageVersionCheckOptions } from './getAffectedPackages.ts';
+import { getChangedFiles } from './getChangedFiles.mjs';
+import { getCurrentCIBranch } from './getCurrentCIBranch.mjs';
+import { logInfo as logInfoBase, logSuccess } from './logging.mjs';
+import { getAffectedPackages } from './getAffectedPackages.mjs';
 
-export async function projectsNeedingVersion(
-  logInfo: typeof logInfoBase,
-  options: Partial<PackageVersionCheckOptions> = {},
-) {
+export async function projectsNeedingVersion(logInfo, options = {}) {
   if (getCurrentCIBranch() === 'master') {
     logInfo('Skipping version check on master branch');
     return [];
