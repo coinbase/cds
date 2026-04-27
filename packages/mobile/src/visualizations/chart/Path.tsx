@@ -120,6 +120,7 @@ export type PathProps = PathBaseProps &
     transition?: Transition;
     /**
      * The SVG path data string.
+     * @note d only supports transitions for string values, not animated values.
      */
     d?: AnimatedProp<string | undefined>;
     /**
