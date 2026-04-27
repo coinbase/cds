@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.20.0 (4/27/2026 PST)
+
+#### 🚀 Updates
+
+- Update icon svg map. [[#645](https://github.com/coinbase/cds/pull/645)]
+
 ## 4.19.0 (4/20/2026 PST)
 
 #### 🚀 Updates

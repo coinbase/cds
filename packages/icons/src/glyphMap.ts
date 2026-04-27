@@ -3236,5 +3236,17 @@ export const glyphMap = {
   'baseLock-16-active': '󰲟',
   'baseLock-16-inactive': '󰲠',
   'baseLock-24-active': '󰲡',
-  'baseLock-24-inactive': '󰲢'
+  'baseLock-24-inactive': '󰲢',
+  'caretExpand-12-active': '󰲩',
+  'caretExpand-12-inactive': '󰲪',
+  'caretExpand-16-active': '󰲫',
+  'caretExpand-16-inactive': '󰲬',
+  'caretExpand-24-active': '󰲭',
+  'caretExpand-24-inactive': '󰲮',
+  'caretCollapse-12-active': '󰲣',
+  'caretCollapse-12-inactive': '󰲤',
+  'caretCollapse-16-active': '󰲥',
+  'caretCollapse-16-inactive': '󰲦',
+  'caretCollapse-24-active': '󰲧',
+  'caretCollapse-24-inactive': '󰲨'
 };

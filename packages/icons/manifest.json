@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-16T18:23:36.872Z",
-  "lastUnicode": 986274,
+  "lastUpdated": "2026-04-27T15:11:29.808Z",
+  "lastUnicode": 986286,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25332,6 +25332,100 @@
           "active": true,
           "size": 12,
           "unicode": 986269
+        }
+      ]
+    },
+    {
+      "nodeId": "7591:96",
+      "name": "caretExpand",
+      "description": "",
+      "assetsHash": "B9l0NXTPMAH2R/HHxgyyCAxCkkMcf1BcW6IXmoxZ0K0=",
+      "nameHash": "JgalWMLFJwbyumLTJdBxUidgHqIbLluAghA7+VH6nSc=",
+      "createdAt": "2026-04-27T14:27:25.601Z",
+      "lastUpdated": "2026-04-27T14:27:25.601Z",
+      "svgs": [
+        {
+          "name": "caretExpand-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986286
+        },
+        {
+          "name": "caretExpand-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986285
+        },
+        {
+          "name": "caretExpand-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986284
+        },
+        {
+          "name": "caretExpand-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986283
+        },
+        {
+          "name": "caretExpand-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986282
+        },
+        {
+          "name": "caretExpand-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986281
+        }
+      ]
+    },
+    {
+      "nodeId": "7591:158",
+      "name": "caretCollapse",
+      "description": "",
+      "assetsHash": "BqSJdNbe8tNToUDJ/0uM/I5iS0uBJOQKZZFS2iHIAAM=",
+      "nameHash": "Qm3qIkteu7AORjqWLZ1QUPnWVP3ltUUApMT6oyxxakI=",
+      "createdAt": "2026-04-27T14:27:25.611Z",
+      "lastUpdated": "2026-04-27T14:27:25.611Z",
+      "svgs": [
+        {
+          "name": "caretCollapse-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986280
+        },
+        {
+          "name": "caretCollapse-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986279
+        },
+        {
+          "name": "caretCollapse-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986278
+        },
+        {
+          "name": "caretCollapse-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986277
+        },
+        {
+          "name": "caretCollapse-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986276
+        },
+        {
+          "name": "caretCollapse-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986275
         }
       ]
     }
