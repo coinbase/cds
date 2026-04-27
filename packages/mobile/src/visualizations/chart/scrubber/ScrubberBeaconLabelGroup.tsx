@@ -56,7 +56,7 @@ const PositionedLabel = memo<{
     labelFont,
   }) => {
     const opacity = useDerivedValue(
-      () => (positions.value[index] !== null && positions.value[index] !== undefined ? 1 : 0),
+      () => (positions.value[index] !== null ? 1 : 0),
       [positions, index],
     );
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
@@ -288,7 +288,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       });
 
       const measuredHeights = Object.values(labelDimensions).map((dim) => dim.height);
-      const measuredWidths = Object.values(labelDimensions).map((dim) => dim.width);
       const maxLabelHeight =
         measuredHeights.length > 0 ? Math.max(...measuredHeights) : drawingArea.height;
 
