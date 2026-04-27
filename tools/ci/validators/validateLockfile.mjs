@@ -2,7 +2,12 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 
 import { getFileHash } from '../getFileHash.mjs';
-import { color, logInfo as logInfoBase, logSuccess, logError as logErrorBase } from '../logging.mjs';
+import {
+  color,
+  logInfo as logInfoBase,
+  logSuccess,
+  logError as logErrorBase,
+} from '../logging.mjs';
 
 const LOCK_PATH = path.join(process.cwd(), 'yarn.lock');
 

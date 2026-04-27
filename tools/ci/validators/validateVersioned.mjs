@@ -1,4 +1,9 @@
-import { color, logInfo as logInfoBase, logWarn as logWarnBase, logError as logErrorBase } from '../logging.mjs';
+import {
+  color,
+  logInfo as logInfoBase,
+  logWarn as logWarnBase,
+  logError as logErrorBase,
+} from '../logging.mjs';
 import { projectsNeedingVersion } from '../getProjectsNeedingVersion.mjs';
 
 export function validateVersioned(options = {}) {

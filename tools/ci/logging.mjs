@@ -78,9 +78,7 @@ function doLog(decoratorFunc, data, stream, { addLogGroup, isDebug } = {}) {
   const sanitizedData = sanitize(data);
   const isJson = sanitizedData && typeof sanitizedData === 'object';
 
-  const message = isJson
-    ? JSON.stringify(sanitizedData, null, 3)
-    : sanitizedData.toString();
+  const message = isJson ? JSON.stringify(sanitizedData, null, 3) : sanitizedData.toString();
 
   if (addLogGroup) {
     stream?.write(`::group::${decoratorFunc(message)} ${EOL}`);

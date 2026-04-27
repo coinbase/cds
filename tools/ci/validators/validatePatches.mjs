@@ -3,7 +3,12 @@ import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 
-import { color, logInfo as logInfoBase, logSuccess, logError as logErrorBase } from '../logging.mjs';
+import {
+  color,
+  logInfo as logInfoBase,
+  logSuccess,
+  logError as logErrorBase,
+} from '../logging.mjs';
 
 const PATCHES_PATH = '.yarn/patches';
 
