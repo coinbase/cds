@@ -56,7 +56,7 @@ const PositionedLabel = memo<{
     labelFont,
   }) => {
     const opacity = useDerivedValue(
-      () => (position !== null && position !== undefined ? 1 : 0),
+      () => (positions.value[index] !== null && positions.value[index] !== undefined ? 1 : 0),
       [positions, index],
     );
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
@@ -291,12 +291,10 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       const measuredWidths = Object.values(labelDimensions).map((dim) => dim.width);
       const maxLabelHeight =
         measuredHeights.length > 0 ? Math.max(...measuredHeights) : drawingArea.height;
-      const maxLabelWidth =
-        measuredWidths.length > 0 ? Math.max(...measuredWidths) : drawingArea.width;
 
       const validPositions = desiredPositions.filter((pos) => pos !== null);
 
-      // Only stack labels that have measured bounds so collision resolution matches what we render.
+      // Only stack labels that have measured bounds
       const dimensions = validPositions
         .map((pos) => {
           const trackedDimensions = labelDimensions[pos.seriesId];
@@ -348,18 +346,11 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       const pixelX =
         dataX.value !== undefined && xScale ? applySerializableScale(dataX.value, xScale) : 0;
 
-      const measuredWidths = Object.values(labelDimensions).map((dim) => dim.width);
-      const measuredMaxWidth = measuredWidths.length > 0 ? Math.max(...measuredWidths) : 0;
-      // Until any label is measured, assume labels could span the chart width so left/right flip
-      // can run immediately instead of using Math.max() === -Infinity (always prefer default side).
-      const maxWidthForSide =
-        measuredMaxWidth > 0
-          ? measuredMaxWidth
-          : Math.max(0, drawingArea.width - labelHorizontalOffset);
+      const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
       const position = getLabelPosition(
         pixelX,
-        maxWidthForSide,
+        maxWidth,
         drawingArea,
         labelHorizontalOffset,
         labelPreferredSide,
