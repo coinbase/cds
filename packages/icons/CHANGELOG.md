@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (2)
+
+- caretExpand
+- caretCollapse
+
 ## 5.15.0 (4/16/2026 PST)
 
 #### 🚀 Updates

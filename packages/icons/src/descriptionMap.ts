@@ -1022,7 +1022,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'singlecloud',
     'rain',
     'autoCar',
-    'column'
+    'column',
+    'caretExpand',
+    'caretCollapse'
   ],
   'profile': [
     'account',
