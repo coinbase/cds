@@ -232,7 +232,7 @@ export const Path = memo<PathProps>((props) => {
   const rect = clipRect ?? context.drawingArea;
   const animate = animateProp ?? context.animate;
 
-  const isReady = !!context.getXScale() && !!context.getYScale();
+  const isReady = !!context.getXScale();
 
   const enterTransition = useMemo(
     () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),
@@ -266,7 +266,7 @@ export const Path = memo<PathProps>((props) => {
       return;
     }
 
-    if (enterOpacityTransition == null) {
+    if (enterOpacityTransition === undefined || enterOpacityTransition === null) {
       enterOpacity.value = 1;
       return;
     }
