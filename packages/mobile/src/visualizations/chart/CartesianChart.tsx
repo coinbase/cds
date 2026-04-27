@@ -1,10 +1,5 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  type LayoutChangeEvent,
-  type StyleProp,
-  type View,
-  type ViewStyle,
-} from 'react-native';
+import { type LayoutChangeEvent, type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
@@ -93,7 +88,9 @@ function useChartLayout(): [Rect, (event: LayoutChangeEvent) => void] {
 
   useEffect(() => {
     return () => {
-      if (containerLayoutRafRef.current !== null) cancelAnimationFrame(containerLayoutRafRef.current);
+      if (containerLayoutRafRef.current !== null) {
+        cancelAnimationFrame(containerLayoutRafRef.current);
+      }
     };
   }, []);
 
