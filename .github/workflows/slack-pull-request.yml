@@ -1,0 +1,54 @@
+# Notifies Slack when a PR is ready for review or merged (any base branch).
+# Gated by org variable SLACK_PR_NOTIFICATIONS_ENABLED; skips pull requests from forks.
+name: Slack Pull Request Notifications
+
+on:
+  pull_request:
+    types: [ready_for_review, closed]
+
+permissions:
+  contents: read
+
+jobs:
+  notify-slack:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    if: >-
+      vars.SLACK_PR_NOTIFICATIONS_ENABLED == 'true' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (github.event.action == 'ready_for_review' ||
+      (github.event.action == 'closed' && github.event.pull_request.merged == true))
+    steps:
+      - name: Build Slack payload
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg username "CDS PR" \
+            --arg action "${EVENT_ACTION}" \
+            --arg merged "${PR_MERGED}" \
+            --arg num "${PR_NUM}" \
+            --arg title "${PR_TITLE}" \
+            --arg url "${PR_URL}" \
+            '
+            (if $action == "ready_for_review" then
+              ":eyes: *PR #" + $num + " ready for review:* " + $title + "\n<" + $url + "|View PR>"
+            elif $action == "closed" and ($merged | ascii_downcase) == "true" then
+              ":white_check_mark: *PR #" + $num + " merged:* " + $title + "\n<" + $url + "|View PR>"
+            else
+              error("unexpected pull_request event for Slack job")
+            end) as $text |
+            {username: $username, text: $text}
+            ' >"${GITHUB_WORKSPACE}/slack-pr-payload.json"
+
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844 # v1.23.0
+        with:
+          payload-file-path: slack-pr-payload.json
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

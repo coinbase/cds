@@ -1,6 +1,8 @@
-AreaChart is a cartesian chart variant that allows for easy visualization of stacked data.
+AreaChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) that has some unique features over [LineChart](/components/charts/LineChart), such as the ability to stack areas on top of each other and a default value-axis minimum that follows the baseline (`0` when baseline is not set). Charts are built using SVGs.
 
-## Basic Example
+## Basics
+
+The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` array of numbers.
 
 ```jsx live
 <AreaChart
@@ -22,7 +24,11 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
 />
 ```
 
-## Simple
+## Data
+
+### Positive and Negative
+
+Area grows from the baseline to each value, allowing for both positive and negative data to be shown. Also, you can set `baseline` to any value you'd like.
 
 ```jsx live
 <AreaChart
@@ -30,65 +36,17 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
   inset={0}
   series={[
     {
-      id: 'prices',
-      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+      id: 'area',
+      data: [-40, -28, -21, -5, 48, -5, -28, 2, -29, -48, 18, -30, -29, 8],
+      gradient: {
+        stops: [
+          { offset: 0, color: 'var(--color-fgNegative)' },
+          { offset: 0, color: 'var(--color-fgPositive)' },
+        ],
+      },
     },
   ]}
-  type="gradient"
-  showLines
-/>
-```
-
-## Stacking
-
-You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/charts/CartesianChart/#series-stacks) for more details.
-
-```jsx live
-<AreaChart
-  showLines
-  stacked
-  curve="natural"
-  height={{ base: 150, tablet: 200, desktop: 250 }}
-  inset={0}
-  series={[
-    {
-      id: 'currentRewards',
-      data: [
-        100, 150, 200, 280, 380, 500, 650, 820, 1020, 1250, 1510, 1800, 2120, 2470, 2850, 3260,
-        3700, 4170,
-      ],
-      color: 'var(--color-fg)',
-    },
-    {
-      id: 'potentialRewards',
-      data: [
-        150, 220, 300, 400, 520, 660, 820, 1000, 1200, 1420, 1660, 1920, 2200, 2500, 2820, 3160,
-        3520, 3900,
-      ],
-      color: 'var(--color-fgPositive)',
-      LineComponent: DottedLine,
-    },
-  ]}
-  AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
   type="dotted"
-/>
-```
-
-## Negative Values
-
-When an area chart contains negative values, the baseline automatically adjusts to zero instead of the bottom of the chart. The area fills from the data line to the zero baseline, properly showing both positive and negative regions.
-
-```jsx live
-<AreaChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
-  inset={0}
-  series={[
-    {
-      id: 'pageViews',
-      data: [24, 13, -98, 39, 48, 38, 43],
-    },
-  ]}
-  AreaComponent={(props) => <SolidArea {...props} opacity={0.4} />}
   showLines
   showYAxis
   yAxis={{
@@ -97,7 +55,98 @@ When an area chart contains negative values, the baseline automatically adjusts 
 />
 ```
 
-## Area Styles
+### Range
+
+You can pass in `[min, max]` tuples as data points to render an area that span a range of values.
+
+```jsx live
+<AreaChart
+  legend={<Legend seriesIds={['marketCap']} />}
+  showXAxis
+  showYAxis
+  height={250}
+  series={[
+    {
+      id: 'marketCap',
+      label: 'Market Cap',
+      data: [5.4, 5.8, 6.1, 5.9, 6.0, 6.3],
+      showLines: true,
+      fillOpacity: 0,
+    },
+    {
+      id: 'confidenceInterval',
+      label: 'Confidence Interval',
+      data: [
+        [5.3, 5.5],
+        [5.6, 6.0],
+        [5.8, 6.2],
+        [5.8, 6.1],
+        [5.9, 6.3],
+        [6.2, 6.5],
+      ],
+      fillOpacity: 0.3,
+    },
+  ]}
+  xAxis={{
+    showLine: true,
+    showTickMarks: true,
+    data: ['January', 'February', 'March', 'April', 'May', 'June'],
+  }}
+  yAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+    domain: { min: 5.0, max: 7.0 },
+    tickLabelFormatter: (val) => `$${val}B`,
+  }}
+>
+  <Line seriesId="marketCap" />
+</AreaChart>
+```
+
+## Stacking
+
+You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/charts/CartesianChart/#series-stacks) for more info on stacking.
+
+```jsx live
+<AreaChart
+  showLines
+  stacked
+  curve="natural"
+  legend
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 0, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'currentRewards',
+      data: [
+        100, 150, 200, 280, 380, 500, 650, 820, 1020, 1250, 1510, 1800, 2120, 2470, 2850, 3260,
+        3700, 4170,
+      ],
+      color: 'var(--color-fg)',
+      legendShape: 'squircle',
+      label: 'Current Rewards',
+    },
+    {
+      id: 'potentialRewards',
+      data: [
+        150, 220, 300, 400, 520, 660, 820, 1000, 1200, 1420, 1660, 1920, 2200, 2500, 2820, 3160,
+        3520, 3900,
+      ],
+      color: 'var(--color-fgPositive)',
+      LineComponent: (props) => <DottedLine {...props} strokeDasharray="6 6" />,
+      legendShape: 'squircle',
+      label: 'Potential Rewards',
+    },
+  ]}
+  AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
+  type="dotted"
+/>
+```
+
+## Styling
+
+### Areas
 
 You can have different area styles for each series.
 
@@ -130,374 +179,173 @@ You can have different area styles for each series.
 />
 ```
 
-## Animations
-
-You can configure chart transitions using the `transitions` prop. Also, you can toggle animations by setting `animate` to `true` or `false`.
-
-```jsx live
-function AnimatedStackedAreas() {
-  const dataCount = 20;
-  const minYValue = 5000;
-  const maxDataOffset = 15000;
-  const minStepOffset = 2500;
-  const maxStepOffset = 10000;
-  const updateInterval = 500;
-  const seriesSpacing = 2000;
-
-  const seriesConfig = [
-    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
-    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
-    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
-    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
-    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
-    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
-    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
-  ];
-
-  const domainLimit = maxDataOffset + seriesConfig.length * seriesSpacing;
-
-  function generateNextValue(previousValue) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataOffset) {
-      direction = -1;
-    } else if (previousValue <= minYValue) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(minYValue, Math.min(maxDataOffset, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = minYValue + Math.random() * (maxDataOffset - minYValue);
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  const MemoizedDottedArea = memo((props) => (
-    <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
-  ));
-
-  function AnimatedChart(props) {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 0;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const series = seriesConfig.map((config, index) => ({
-      id: config.id,
-      label: config.label,
-      color: config.color,
-      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
-    }));
-
-    return (
-      <AreaChart
-        overflow="visible"
-        stacked
-        height={{ base: 200, tablet: 250, desktop: 300 }}
-        series={series}
-        type="dotted"
-        showLines
-        AreaComponent={MemoizedDottedArea}
-        transitions={{
-          enter: { type: 'spring', stiffness: 700, damping: 80 },
-          update: { type: 'spring', stiffness: 700, damping: 20 },
-        }}
-        inset={0}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-          width: 0,
-          tickLabelFormatter: () => '',
-          domain: { min: 0, max: domainLimit },
-        }}
-        {...props}
-      />
-    );
-  }
-
-  function AnimatedChartExample() {
-    const animatedStates = [
-      { id: 'on', label: 'On' },
-      { id: 'off', label: 'Off' },
-    ];
-    const [animatedState, setAnimatedState] = useState(animatedStates[0]);
-
-    return (
-      <VStack gap={2}>
-        <HStack justifyContent="flex-end" gap={2} alignItems="center">
-          <Text as="h3" font="headline">
-            Animations
-          </Text>
-          <SegmentedTabs
-            activeTab={animatedState}
-            onChange={setAnimatedState}
-            tabs={animatedStates}
-          />
-        </HStack>
-        <AnimatedChart animate={animatedState.id === 'on'} />
-      </VStack>
-    );
-  }
-
-  return <AnimatedChartExample />;
-}
-```
-
-## Gradients
-
-You can use the `gradient` prop on `series` or `Area` components to enable gradients.
-
-Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
-
-Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
-
-```jsx live
-function ContinuousGradient() {
-  const spectrumColors = [
-    'blue',
-    'green',
-    'orange',
-    'yellow',
-    'gray',
-    'indigo',
-    'pink',
-    'purple',
-    'red',
-    'teal',
-    'chartreuse',
-  ];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-
-  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={1} justifyContent="flex-end" flexWrap="wrap">
-        {spectrumColors.map((color) => (
-          <Pressable
-            key={color}
-            onClick={() => setCurrentSpectrumColor(color)}
-            accessibilityLabel={`Select ${color}`}
-            style={{
-              backgroundColor: `rgb(var(--${color}20))`,
-              border: `2px solid rgb(var(--${color}50))`,
-              outlineColor: `rgb(var(--${color}80))`,
-              outline:
-                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
-            }}
-            width={{ base: 16, tablet: 24, desktop: 24 }}
-            height={{ base: 16, tablet: 24, desktop: 24 }}
-            borderRadius={1000}
-          />
-        ))}
-      </HStack>
-      <AreaChart
-        enableScrubbing
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            gradient: {
-              stops: ({ min, max }) => [
-                // Allows a function which accepts min/max or direct array
-                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
-                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
-              ],
-            },
-          },
-        ]}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-        }}
-      >
-        <Scrubber />
-      </AreaChart>
-    </VStack>
-  );
-}
-```
-
-### Discrete
-
-You can set multiple stops at the same offset to create a discrete gradient.
-
-```jsx live
-function DiscreteGradient() {
-  const spectrumColors = [
-    'blue',
-    'green',
-    'orange',
-    'yellow',
-    'gray',
-    'indigo',
-    'pink',
-    'purple',
-    'red',
-    'teal',
-    'chartreuse',
-  ];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-
-  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={1} justifyContent="flex-end" flexWrap="wrap">
-        {spectrumColors.map((color) => (
-          <Pressable
-            key={color}
-            onClick={() => setCurrentSpectrumColor(color)}
-            accessibilityLabel={`Select ${color}`}
-            style={{
-              backgroundColor: `rgb(var(--${color}20))`,
-              border: `2px solid rgb(var(--${color}50))`,
-              outlineColor: `rgb(var(--${color}80))`,
-              outline:
-                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
-            }}
-            width={{ base: 16, tablet: 24, desktop: 24 }}
-            height={{ base: 16, tablet: 24, desktop: 24 }}
-            borderRadius={1000}
-          />
-        ))}
-      </HStack>
-      <AreaChart
-        enableScrubbing
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            gradient: {
-              stops: ({ min, max }) => [
-                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
-                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}80))` },
-                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}50))` },
-                {
-                  offset: min + ((max - min) / 3) * 2,
-                  color: `rgb(var(--${currentSpectrumColor}50))`,
-                },
-                {
-                  offset: min + ((max - min) / 3) * 2,
-                  color: `rgb(var(--${currentSpectrumColor}20))`,
-                },
-                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
-              ],
-            },
-          },
-        ]}
-        showLines
-        strokeWidth={4}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-        }}
-        fillOpacity={0.5}
-      >
-        <Scrubber />
-      </AreaChart>
-    </VStack>
-  );
-}
-```
-
 ### Axes
 
-By default, gradients will be applied to the y-axis. You can apply a gradient to the x-axis by setting `axis` to `x` in the gradient definition.
+Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/charts/XAxis) and [YAxis](/components/charts/YAxis).
 
 ```jsx live
-function XAxisGradient() {
-  const spectrumColors = [
-    'blue',
-    'green',
-    'orange',
-    'yellow',
-    'gray',
-    'indigo',
-    'pink',
-    'purple',
-    'red',
-    'teal',
-    'chartreuse',
-  ];
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+<AreaChart
+  showLines
+  showXAxis
+  showYAxis
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+    tickLabelFormatter: (dataX) => `Day ${dataX}`,
+  }}
+  yAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+  }}
+  fillOpacity={0.5}
+/>
+```
 
-  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+### Gradient
+
+You can build threshold-based gradients with hard transitions by reusing stop offsets.
+
+```jsx live
+<AreaChart
+  showLines
+  showYAxis
+  height={{ base: 180, tablet: 220, desktop: 260 }}
+  series={[
+    {
+      id: 'netFlow',
+      label: 'Net Flow',
+      data: [-9, -7, -3, -1, 2, 5, 3, -2, 1, 6, 8, 4],
+      gradient: {
+        stops: ({ min, max }) => [
+          { offset: min, color: 'var(--color-fgNegative)', opacity: 0.45 },
+          { offset: -2, color: 'var(--color-fgNegative)', opacity: 0.45 },
+          { offset: -2, color: 'var(--color-fgWarning)', opacity: 0.45 },
+          { offset: 2, color: 'var(--color-fgWarning)', opacity: 0.45 },
+          { offset: 2, color: 'var(--color-fgPositive)', opacity: 0.45 },
+          { offset: max, color: 'var(--color-fgPositive)', opacity: 0.45 },
+        ],
+      },
+      type: 'gradient',
+    },
+  ]}
+  yAxis={{
+    showGrid: true,
+    domain: { min: -10, max: 10 },
+    tickLabelFormatter: (value) => `${value}%`,
+  }}
+/>
+```
+
+## Composed Examples
+
+### Custom Baseline
+
+You can combine a custom baseline with a scrubber label that shows both price and date.
+
+```jsx live
+function CustomBaseline() {
+  const candles = [...btcCandles].reverse().slice(0, 180);
+  const prices = candles.map((candle) => parseFloat(candle.close));
+  const dates = candles.map((candle) => new Date(parseInt(candle.start, 10) * 1000));
+
+  const startingPrice = prices[0];
+
+  const formatPrice = useCallback((price) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatDate = useCallback((date) => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }, []);
+
+  const formatLabel = useCallback(
+    (dataIndex) => {
+      const price = prices[dataIndex];
+      const date = dates[dataIndex];
+
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{formatPrice(price)}</tspan> {formatDate(date)}
+        </>
+      );
+    },
+    [dates, formatDate, formatPrice, prices],
+  );
+
+  const PriceLabel = memo((props) => (
+    <DefaultReferenceLineLabel
+      {...props}
+      background="var(--color-bgSecondary)"
+      borderRadius={12.5}
+      color="var(--color-fg)"
+      dx={12}
+      font="label1"
+      horizontalAlignment="left"
+      inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+    />
+  ));
+
+  const chartAccessibilityLabel = `Bitcoin area chart with custom baseline. Current price: ${formatPrice(
+    prices[prices.length - 1],
+  )}. Use arrow keys to navigate.`;
+
+  const getScrubberAccessibilityLabel = useCallback(
+    (index) => `${formatPrice(prices[index])} ${formatDate(dates[index])}`,
+    [dates, formatDate, formatPrice, prices],
+  );
 
   return (
-    <VStack gap={2}>
-      <HStack gap={1} justifyContent="flex-end" flexWrap="wrap">
-        {spectrumColors.map((color) => (
-          <Pressable
-            key={color}
-            onClick={() => setCurrentSpectrumColor(color)}
-            accessibilityLabel={`Select ${color}`}
-            style={{
-              backgroundColor: `rgb(var(--${color}20))`,
-              border: `2px solid rgb(var(--${color}50))`,
-              outlineColor: `rgb(var(--${color}80))`,
-              outline:
-                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
-            }}
-            width={{ base: 16, tablet: 24, desktop: 24 }}
-            height={{ base: 16, tablet: 24, desktop: 24 }}
-            borderRadius={1000}
-          />
-        ))}
-      </HStack>
-      <AreaChart
-        enableScrubbing
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            gradient: {
-              axis: 'x',
-              stops: ({ min, max }) => [
-                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))`, opacity: 0 },
-                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))`, opacity: 1 },
-              ],
-            },
+    <AreaChart
+      enableScrubbing
+      showLines
+      showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      fillOpacity={0.5}
+      height={300}
+      series={[
+        {
+          id: 'prices',
+          data: prices,
+          gradient: {
+            stops: [
+              { offset: startingPrice, color: 'var(--color-fgNegative)' },
+              { offset: startingPrice, color: 'var(--color-fgPositive)' },
+            ],
           },
-        ]}
-        showYAxis
-        yAxis={{
-          showGrid: true,
-        }}
-      >
-        <Scrubber />
-      </AreaChart>
-    </VStack>
+        },
+      ]}
+      yAxis={{
+        baseline: startingPrice,
+        showGrid: true,
+        tickLabelFormatter: formatPrice,
+        domain: { min: 70000, max: 120000 },
+        width: 80,
+        ticks: [80000, 100000, 120000],
+      }}
+    >
+      <Scrubber label={formatLabel} labelElevated />
+      <ReferenceLine
+        LabelComponent={PriceLabel}
+        LineComponent={(props) => (
+          <DottedLine {...props} stroke="var(--color-fg)" strokeDasharray="0 16" strokeWidth={3} />
+        )}
+        dataY={startingPrice}
+        label={formatPrice(startingPrice)}
+      />
+    </AreaChart>
   );
 }
 ```

@@ -4,8 +4,8 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Series } from '../utils';
-import { EPSILON, getBars, getStackBaseline, getStackOrigin } from '../utils/bar';
-import { getGradientConfig } from '../utils/gradient';
+import { EPSILON, getBars, getBaselinePx, getStackOrigin } from '../utils/bar';
+import { getGradientAxis, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
@@ -173,35 +173,32 @@ export const BarStack = memo<BarStackProps>(
     transitions,
     transition,
   }) => {
-    const { layout, getSeriesData, getXAxis, getYAxis } = useCartesianChartContext();
+    const { layout, getSeriesData, getXAxis, getYAxis, getXScale, getYScale } =
+      useCartesianChartContext();
 
     const xAxis = getXAxis(xAxisId);
     const yAxis = getYAxis(yAxisId);
+    const xScale = getXScale(xAxisId);
+    const yScale = getYScale(yAxisId);
 
-    const baseline = useMemo(() => {
-      return getStackBaseline(valueScale, rect, layout);
-    }, [rect, valueScale, layout]);
+    const baseline = useMemo(
+      () => (layout === 'vertical' ? yAxis : xAxis)?.baseline,
+      [layout, yAxis, xAxis],
+    );
+
+    const baselinePx = useMemo(() => {
+      return getBaselinePx(valueScale, rect, layout, baseline);
+    }, [rect, valueScale, layout, baseline]);
 
     const seriesGradients = useMemo(() => {
       return series.map((s) => {
         if (!s.gradient) return null;
+        if (!xScale || !yScale) return null;
 
-        const evalScale =
-          s.gradient.axis === 'x'
-            ? layout === 'vertical'
-              ? indexScale
-              : valueScale
-            : layout === 'vertical'
-              ? valueScale
-              : indexScale;
+        const gradientAxis = getGradientAxis(s.gradient, layout);
+        const evalScale = gradientAxis === 'x' ? xScale : yScale;
 
-        // We need to pass original xScale/yScale to getGradientConfig for legacy reasons
-        // For now let's assume getGradientConfig can handle these scales if we pass them correctly.
-        const stops = getGradientConfig(
-          s.gradient,
-          layout === 'vertical' ? indexScale : valueScale,
-          layout === 'vertical' ? valueScale : indexScale,
-        );
+        const stops = getGradientConfig(s.gradient, xScale, yScale, layout);
         if (!stops) return null;
 
         return {
@@ -211,7 +208,7 @@ export const BarStack = memo<BarStackProps>(
           stops,
         };
       });
-    }, [series, indexScale, valueScale, layout]);
+    }, [series, xScale, yScale, layout]);
 
     const categoryAxis = layout === 'vertical' ? xAxis : yAxis;
     const categoryData =
@@ -241,6 +238,7 @@ export const BarStack = memo<BarStackProps>(
           roundBaseline,
           layout,
           baseline,
+          baselinePx,
           stackGap,
           barMinSize,
           stackMinSize,
@@ -254,18 +252,19 @@ export const BarStack = memo<BarStackProps>(
       [
         series,
         seriesData,
-        stackGap,
-        barMinSize,
-        stackMinSize,
-        indexPos,
-        baseline,
-        thickness,
         categoryIndex,
         categoryValue,
+        indexPos,
+        thickness,
         valueScale,
         seriesGradients,
         roundBaseline,
         layout,
+        baseline,
+        baselinePx,
+        stackGap,
+        barMinSize,
+        stackMinSize,
         borderRadius,
         defaultFillOpacity,
         defaultStroke,
@@ -277,8 +276,8 @@ export const BarStack = memo<BarStackProps>(
     const stackRect = useMemo(() => {
       if (bars.length === 0) {
         return {
-          x: layout === 'vertical' ? indexPos : baseline,
-          y: layout === 'vertical' ? baseline : indexPos,
+          x: layout === 'vertical' ? indexPos : baselinePx,
+          y: layout === 'vertical' ? baselinePx : indexPos,
           width: layout === 'vertical' ? thickness : 0,
           height: layout === 'vertical' ? 0 : thickness,
         };
@@ -288,15 +287,15 @@ export const BarStack = memo<BarStackProps>(
       const maxX = Math.max(...bars.map((b) => b.x + b.width));
       const maxY = Math.max(...bars.map((b) => b.y + b.height));
       return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
-    }, [bars, baseline, indexPos, layout, thickness]);
+    }, [bars, baselinePx, indexPos, layout, thickness]);
 
     const stackOrigin = useMemo(
       () =>
         getStackOrigin(
           bars.map((b) => b.origin),
           bars.map((b) => b.minSize ?? 0),
-        ) ?? baseline,
-      [bars, baseline],
+        ) ?? baselinePx,
+      [bars, baselinePx],
     );
 
     const barElements = bars.map((bar, index) => (
@@ -326,8 +325,8 @@ export const BarStack = memo<BarStackProps>(
 
     const edge = layout === 'vertical' ? stackRect.y : stackRect.x;
     const size = layout === 'vertical' ? stackRect.height : stackRect.width;
-    const stackRoundLower = roundBaseline || Math.abs(edge - baseline) >= EPSILON;
-    const stackRoundHigher = roundBaseline || Math.abs(edge + size - baseline) >= EPSILON;
+    const stackRoundLower = roundBaseline || Math.abs(edge - baselinePx) >= EPSILON;
+    const stackRoundHigher = roundBaseline || Math.abs(edge + size - baselinePx) >= EPSILON;
     const stackRoundTop = layout === 'vertical' ? stackRoundLower : stackRoundHigher;
     const stackRoundBottom = layout === 'vertical' ? stackRoundHigher : stackRoundLower;
 

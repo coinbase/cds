@@ -6,7 +6,6 @@ description: |
   `figma.com/design/...?...node-id=...` while working in a frontend application context.
 license: Apache-2.0
 metadata:
-  author: ruikun.hao@cbhq.com
   version: '1.0.1'
 ---
 

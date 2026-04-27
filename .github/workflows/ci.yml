@@ -6,10 +6,12 @@ on:
     branches:
       - master
       - 'cds-v[0-9]*'
+      - 'release-[0-9]+.x'
   pull_request:
     branches:
       - master
       - 'cds-v[0-9]*'
+      - 'release-[0-9]+.x'
 
 concurrency:
   group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}

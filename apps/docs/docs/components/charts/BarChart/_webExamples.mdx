@@ -1,3 +1,5 @@
+BarChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) for comparing discrete categories, with a default value-axis minimum that follows the baseline (`0` when baseline is not set).
+
 ## Basics
 
 Bar charts are a useful component for comparing discrete categories of data.
@@ -449,7 +451,7 @@ You can pass in `[min, max]` tuples as data points to render bars that span a ra
 
 ```jsx live
 function PriceRange() {
-  const candles = btcCandles.slice(0, 180).reverse();
+  const candles = [...btcCandles].reverse().slice(0, 180);
   const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]);
 
   const min = Math.min(...data.map(([low]) => low));
@@ -925,7 +927,7 @@ function Candlesticks() {
   const infoTextId = useId();
   const infoTextRef = React.useRef(null);
   const selectedIndexRef = React.useRef(null);
-  const stockData = btcCandles.slice(0, 90).reverse();
+  const stockData = [...btcCandles].reverse().slice(0, 90);
   const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
 
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);

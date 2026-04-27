@@ -45,6 +45,9 @@ export type LineBaseProps = {
   /**
    * Baseline value for the area.
    * When set, overrides the default baseline.
+   *
+   * @deprecated this prop has no functionality. Use 'baseline' on axis config instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v5
    */
   areaBaseline?: number;
   /**
@@ -139,7 +142,6 @@ export const Line = memo<LineProps>(
     curve = 'bump',
     type = 'solid',
     areaType = 'gradient',
-    areaBaseline,
     stroke: strokeProp,
     strokeOpacity,
     showArea,
@@ -261,7 +263,6 @@ export const Line = memo<LineProps>(
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
-            baseline={areaBaseline}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
