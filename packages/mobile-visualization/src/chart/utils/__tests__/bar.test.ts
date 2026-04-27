@@ -1,8 +1,8 @@
 import {
   getBars,
   getBarSizeAdjustment,
+  getBaselinePx,
   getNormalizedStagger,
-  getStackBaseline,
   getStackGroups,
   getStackOrigin,
 } from '../bar';
@@ -91,7 +91,7 @@ describe('getStackGroups', () => {
   });
 });
 
-describe('getStackBaseline', () => {
+describe('getBaselinePx', () => {
   const rect = { x: 10, y: 20, width: 100, height: 200 };
 
   function createValueScale(domain: [number, number], map: (value: number) => number | undefined) {
@@ -100,28 +100,33 @@ describe('getStackBaseline', () => {
 
   it('uses domain min for fully positive vertical domains', () => {
     const valueScale = createValueScale([5, 15], (value) => 220 - value * 10);
-    expect(getStackBaseline(valueScale, rect, 'vertical')).toBe(170);
+    expect(getBaselinePx(valueScale, rect, 'vertical')).toBe(170);
   });
 
   it('uses domain max for fully negative horizontal domains', () => {
     const valueScale = createValueScale([-20, -5], (value) => 60 + value);
-    expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(55);
+    expect(getBaselinePx(valueScale, rect, 'horizontal')).toBe(55);
   });
 
   it('uses zero for domains that cross zero', () => {
     const valueScale = createValueScale([-10, 10], (value) => 120 + value * 5);
-    expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(110);
+    expect(getBaselinePx(valueScale, rect, 'horizontal')).toBe(110);
   });
 
   it('clamps vertical baseline to chart bounds when scale output is outside rect', () => {
     const valueScale = createValueScale([-5, 5], () => -1000);
-    expect(getStackBaseline(valueScale, rect, 'vertical')).toBe(rect.y);
+    expect(getBaselinePx(valueScale, rect, 'vertical')).toBe(rect.y);
   });
 
   it('uses orientation-aware fallback when scale returns undefined', () => {
     const valueScale = createValueScale([-5, 5], () => undefined);
-    expect(getStackBaseline(valueScale, rect, 'vertical')).toBe(rect.y + rect.height);
-    expect(getStackBaseline(valueScale, rect, 'horizontal')).toBe(rect.x);
+    expect(getBaselinePx(valueScale, rect, 'vertical')).toBe(rect.y + rect.height);
+    expect(getBaselinePx(valueScale, rect, 'horizontal')).toBe(rect.x);
+  });
+
+  it('uses explicit baseline value when provided', () => {
+    const valueScale = createValueScale([-10, 50], (value) => 300 - value * 2);
+    expect(getBaselinePx(valueScale, rect, 'vertical', 30)).toBe(220);
   });
 });
 
@@ -187,6 +192,103 @@ describe('getStackOrigin', () => {
   });
 });
 
+describe('getBars horizontal barMinSize from baseline (regression)', () => {
+  /**
+   * Applying the vertical "above baseline" restack to horizontal stacks once shifted
+   * the whole stack left by ~its full width (e.g. x ≈ -1008 with a [0, 1008] value range).
+   */
+  function linearValueScale(domain: [number, number], range: [number, number]) {
+    const [d0, d1] = domain;
+    const [r0, r1] = range;
+    return Object.assign((v: number) => r0 + ((v - d0) / (d1 - d0)) * (r1 - r0), {
+      domain: () => domain,
+    }) as any;
+  }
+
+  const WIDE_CHART_WIDTH = 1008;
+
+  it('anchors a buy/sell-style percentage stack at x=0 on a wide linear range (barMinSize + stackGap)', () => {
+    const valueScale = linearValueScale([0, 100], [0, WIDE_CHART_WIDTH]);
+    const bars = getBars({
+      series: [
+        { id: 'buy', data: [76], stackId: 'bs' },
+        { id: 'sell', data: [24], stackId: 'bs' },
+      ] as any,
+      seriesData: {
+        buy: [[0, 76]],
+        sell: [[76, 100]],
+      },
+      categoryIndex: 0,
+      categoryValue: 0,
+      indexPos: 0,
+      thickness: 6,
+      valueScale,
+      seriesGradients: [],
+      roundBaseline: false,
+      layout: 'horizontal',
+      baseline: 0,
+      baselinePx: 0,
+      stackGap: 4,
+      barMinSize: 6,
+      defaultFill: '#000',
+      borderRadius: 0,
+      defaultFillOpacity: 1,
+      defaultStroke: undefined,
+      defaultStrokeWidth: undefined,
+      defaultBarComponent: undefined,
+    });
+
+    expect(bars).toHaveLength(2);
+    const buyBar = bars.find((b) => b.seriesId === 'buy')!;
+    const sellBar = bars.find((b) => b.seriesId === 'sell')!;
+
+    expect(buyBar.x).toBeCloseTo(0, 4);
+    expect(buyBar.x).toBeGreaterThanOrEqual(-0.01);
+    expect(sellBar.x).toBeGreaterThan(buyBar.x);
+
+    const minX = Math.min(...bars.map((b) => b.x));
+    const maxX = Math.max(...bars.map((b) => b.x + b.width));
+    expect(minX).toBeCloseTo(0, 4);
+    expect(maxX).toBeCloseTo(WIDE_CHART_WIDTH, 4);
+  });
+
+  it('does not push a horizontal stack to negative x when only the trailing segment needs barMinSize', () => {
+    const valueScale = linearValueScale([0, 100], [0, WIDE_CHART_WIDTH]);
+    const bars = getBars({
+      series: [
+        { id: 'big', data: [99.9], stackId: 's' },
+        { id: 'tiny', data: [0.1], stackId: 's' },
+      ] as any,
+      seriesData: {
+        big: [[0, 99.9]],
+        tiny: [[99.9, 100]],
+      },
+      categoryIndex: 0,
+      categoryValue: 0,
+      indexPos: 0,
+      thickness: 6,
+      valueScale,
+      seriesGradients: [],
+      roundBaseline: false,
+      layout: 'horizontal',
+      baseline: 0,
+      baselinePx: 0,
+      stackGap: 2,
+      barMinSize: 24,
+      defaultFill: '#000',
+      borderRadius: 0,
+      defaultFillOpacity: 1,
+      defaultStroke: undefined,
+      defaultStrokeWidth: undefined,
+      defaultBarComponent: undefined,
+    });
+
+    expect(Math.min(...bars.map((b) => b.x))).toBeGreaterThanOrEqual(-0.01);
+    const bigBar = bars.find((b) => b.seriesId === 'big')!;
+    expect(bigBar.x).toBeCloseTo(0, 4);
+  });
+});
+
 describe('getBars stackMinSize entrance behavior', () => {
   const valueScale = Object.assign((value: number) => value, {
     domain: () => [0, 10] as [number, number],
@@ -215,6 +317,7 @@ describe('getBars stackMinSize entrance behavior', () => {
       roundBaseline: false,
       layout: 'horizontal',
       baseline: 0,
+      baselinePx: 0,
       stackGap: 0,
       barMinSize,
       stackMinSize,

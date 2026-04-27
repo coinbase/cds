@@ -26,6 +26,9 @@ import { DefaultBarStack } from '../DefaultBarStack';
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
 const defaultChartHeight = 250;
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
 
 const PositiveAndNegativeCashFlow = () => {
   const theme = useTheme();
@@ -625,7 +628,7 @@ const BandGridPositionExample = ({
 
 // --- Composed Examples ---
 
-const candlestickStockData = btcCandles.slice(0, 90).reverse();
+const candlestickStockData = [...btcCandles].reverse().slice(0, 90);
 
 const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
   const formatPrice = useCallback((price: string) => {
@@ -948,7 +951,7 @@ const SunlightChart = () => {
 };
 
 const PriceRange = () => {
-  const candles = btcCandles.slice(0, 180).reverse();
+  const candles = [...btcCandles].reverse().slice(0, 180);
   const data: [number, number][] = useMemo(
     () => candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]),
     [candles],
@@ -995,6 +998,84 @@ const HorizontalBarChart = () => {
   );
 };
 
+const AxisBaselineExample = () => {
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      accessibilityLabel="Bar chart with custom axis baseline at 100."
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'net-flow',
+          data: [112, 97, 121, 103, 129, 118, 94],
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        baseline: 100,
+        domain: { min: 80, max: 140 },
+        showGrid: true,
+      }}
+    />
+  );
+};
+
+const AxisBaselineThresholdExample = () => {
+  const theme = useTheme();
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showYAxis
+        accessibilityLabel="Bar chart with threshold baseline at 30."
+        height={220}
+        inset={0}
+        series={[
+          {
+            id: 'axis-baseline-threshold-vertical',
+            data: baselineThresholdData,
+            gradient: {
+              stops: [
+                { offset: 30, color: theme.color.fgNegative },
+                { offset: 30, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+          baseline: 30,
+        }}
+      />
+      <BarChart
+        showXAxis
+        accessibilityLabel="Horizontal bar chart with threshold baseline at 30."
+        height={220}
+        inset={0}
+        layout="horizontal"
+        series={[
+          {
+            id: 'axis-baseline-threshold-horizontal',
+            data: baselineThresholdData,
+            gradient: {
+              stops: [
+                { offset: 30, color: theme.color.fgNegative },
+                { offset: 30, color: theme.color.fgPositive },
+              ],
+            },
+          },
+        ]}
+        xAxis={{
+          showGrid: true,
+          baseline: 30,
+        }}
+      />
+    </VStack>
+  );
+};
 function BuyVsSellExample() {
   function BuyVsSellLegend({ buy, sell }: { buy: number; sell: number }) {
     const theme = useTheme();
@@ -1203,6 +1284,14 @@ function ExampleNavigator() {
       {
         title: 'Negative Values with Top Axis',
         component: <NegativeValuesWithTopAxis />,
+      },
+      {
+        title: 'Axis Baseline',
+        component: <AxisBaselineExample />,
+      },
+      {
+        title: 'Axis Baseline Threshold',
+        component: <AxisBaselineThresholdExample />,
       },
       {
         title: 'Positive and Negative Cash Flow',

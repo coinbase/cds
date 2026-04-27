@@ -1,9 +1,10 @@
 import { memo, useMemo } from 'react';
-import { Group } from '@shopify/react-native-skia';
+import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
 import {
+  type BarTransition,
   defaultBarEnterTransition,
   getNormalizedStagger,
   getStackInitialClipRect,
@@ -41,11 +42,16 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
 
     const enterTransition = useMemo(
       () =>
-        withStaggerDelayTransition(
-          getTransition(transitions?.enter, animate, defaultBarEnterTransition),
-          normalizedStagger,
-        ),
-      [animate, transitions?.enter, normalizedStagger],
+        getTransition(
+          transitions?.enter,
+          animate,
+          defaultBarEnterTransition,
+        ) as BarTransition | null,
+      [transitions?.enter, animate],
+    );
+    const enterTransitionWithStagger = useMemo(
+      () => withStaggerDelayTransition(enterTransition, normalizedStagger),
+      [enterTransition, normalizedStagger],
     );
     const updateTransition = useMemo(
       () =>
@@ -86,10 +92,15 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     const animatedClipPath = usePathTransition({
       currentPath: targetPath,
       initialPath,
-      transitions: { enter: enterTransition, update: updateTransition },
+      transitions: { enter: enterTransitionWithStagger, update: updateTransition },
     });
 
-    const clipPath = animate ? animatedClipPath : targetPath;
+    const staticClipPath = useMemo(
+      () => Skia.Path.MakeFromSVGString(targetPath) ?? Skia.Path.Make(),
+      [targetPath],
+    );
+
+    const clipPath = animate ? animatedClipPath : staticClipPath;
 
     return <Group clip={clipPath}>{children}</Group>;
   },

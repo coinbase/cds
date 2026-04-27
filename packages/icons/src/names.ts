@@ -543,5 +543,7 @@ export const names: IconName[] = [
   'overPredictions',
   'column',
   'underPredictions',
-  'baseLock'
+  'baseLock',
+  'caretExpand',
+  'caretCollapse'
 ];

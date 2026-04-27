@@ -6,8 +6,8 @@ import { useCartesianChartContext } from '../ChartProvider';
 import {
   type ChartScaleFunction,
   evaluateGradientAtValue,
+  getGradientAxis,
   getGradientConfig,
-  type Series,
   useScrubberContext,
 } from '../utils';
 
@@ -76,11 +76,11 @@ const BeaconWithData = memo<BeaconWithDataProps>(
 
         if (xScale && yScale) {
           const categoryAxisIsX = layout !== 'horizontal';
-          const gradientScale = gradient.axis === 'x' ? xScale : yScale;
-          const stops = getGradientConfig(gradient, xScale, yScale);
+          const gradientAxis = getGradientAxis(gradient, layout);
+          const gradientScale = gradientAxis === 'x' ? xScale : yScale;
+          const stops = getGradientConfig(gradient, xScale, yScale, layout);
 
           if (stops) {
-            const gradientAxis = gradient.axis ?? 'y';
             // Determine the correct data value to evaluate against based on gradient axis and layout
             let evalValue: number;
             if (gradientAxis === 'x') {

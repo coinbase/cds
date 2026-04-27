@@ -47,6 +47,9 @@ export type AreaBaseProps = {
   /**
    * Baseline value for the gradient.
    * When set, overrides the default baseline.
+   *
+   * @deprecated this prop has no functionality. Use 'baseline' on axis config instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v5
    */
   baseline?: number;
   /**
@@ -95,7 +98,6 @@ export const Area = memo<AreaProps>(
     AreaComponent: AreaComponentProp,
     fill: fillProp,
     fillOpacity = 1,
-    baseline,
     connectNulls,
     gradient: gradientProp,
     transitions,
@@ -170,7 +172,6 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         animate={animate}
-        baseline={baseline}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

@@ -63,20 +63,14 @@ export type LegendEntryProps = {
    * Custom class name for the root element.
    */
   className?: string;
-  /**
-   * Custom class names for the component parts.
-   */
+  /** Custom class names for individual elements of the LegendEntry component */
   classNames?: {
-    /**
-     * Custom class name for the root element.
-     */
+    /** Root element */
     root?: string;
-    /**
-     * Custom class name for the shape element.
-     */
+    /** Shape element */
     shape?: string;
     /**
-     * Custom class name for the label element.
+     * Label element
      * @note not applied when label is a ReactNode.
      */
     label?: string;
@@ -85,20 +79,14 @@ export type LegendEntryProps = {
    * Custom styles for the root element.
    */
   style?: React.CSSProperties;
-  /**
-   * Custom styles for the component parts.
-   */
+  /** Custom styles for individual elements of the LegendEntry component */
   styles?: {
-    /**
-     * Custom styles for the root element.
-     */
+    /** Root element */
     root?: React.CSSProperties;
-    /**
-     * Custom styles for the shape element.
-     */
+    /** Shape element */
     shape?: React.CSSProperties;
     /**
-     * Custom styles for the label element.
+     * Label element
      * @note not applied when label is a ReactNode.
      */
     label?: React.CSSProperties;
@@ -133,46 +121,30 @@ export type LegendBaseProps = Omit<BoxBaseProps, 'children'> & {
 
 export type LegendProps = Omit<BoxProps<BoxDefaultElement>, 'children'> &
   LegendBaseProps & {
-    /**
-     * Custom class names for the component parts.
-     */
+    /** Custom class names for individual elements of the Legend component */
     classNames?: {
-      /**
-       * Custom class name for the root element.
-       */
+      /** Root element */
       root?: string;
-      /**
-       * Custom class name for each entry element.
-       */
+      /** Entry element */
       entry?: string;
-      /**
-       * Custom class name for the shape element within each entry.
-       */
+      /** Entry shape element */
       entryShape?: string;
       /**
-       * Custom class name for the label element within each entry.
+       * Entry label element
        * @note not applied when label is a ReactNode.
        */
       entryLabel?: string;
     };
-    /**
-     * Custom styles for the component parts.
-     */
+    /** Custom styles for individual elements of the Legend component */
     styles?: {
-      /**
-       * Custom styles for the root element.
-       */
+      /** Root element */
       root?: React.CSSProperties;
-      /**
-       * Custom styles for each entry element.
-       */
+      /** Entry element */
       entry?: React.CSSProperties;
-      /**
-       * Custom styles for the shape element within each entry.
-       */
+      /** Entry shape element */
       entryShape?: React.CSSProperties;
       /**
-       * Custom styles for the label element within each entry.
+       * Entry label element
        * @note not applied when label is a ReactNode.
        */
       entryLabel?: React.CSSProperties;

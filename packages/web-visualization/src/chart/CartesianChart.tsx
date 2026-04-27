@@ -9,7 +9,7 @@ import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/Scrubbe
 import { CartesianChartProvider } from './ChartProvider';
 import { Legend } from './legend';
 import {
-  type AxisConfig,
+  type CartesianAxisConfig,
   type CartesianAxisConfigProps,
   type CartesianChartContextValue,
   type CartesianChartLayout,
@@ -67,11 +67,9 @@ export type CartesianChartBaseProps = BoxBaseProps &
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
      *
-     * @note `layout="horizontal"` supports only one y-axis config.
+     * @note Multiple y-axis configs are only supported when `layout="vertical"`.
      */
-    yAxis?:
-      | Partial<Omit<CartesianAxisConfigProps, 'data'>>
-      | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
+    yAxis?: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[];
     /**
      * Inset around the entire chart (outside the axes).
      */
@@ -216,7 +214,7 @@ export const CartesianChart = memo(
       }, [chartHeight, chartWidth, calculatedInset, axisPadding]);
 
       const { xAxes, xScales } = useMemo(() => {
-        const axes = new Map<string, AxisConfig>();
+        const axes = new Map<string, CartesianAxisConfig>();
         const scales = new Map<string, ChartScaleFunction>();
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
           return { xAxes: axes, xScales: scales };
@@ -234,13 +232,14 @@ export const CartesianChart = memo(
           const dataDomain = getCartesianAxisDomain(axisParam, relevantSeries, 'x', layout);
           const range = getAxisRange(axisParam, chartRect, 'x');
 
-          const axisConfig: AxisConfig = {
+          const axisConfig: CartesianAxisConfig = {
             scaleType: axisParam.scaleType,
             domain: dataDomain,
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
             domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'nice' : 'strict'),
+            baseline: axisParam.baseline,
           };
 
           // Create the scale
@@ -273,7 +272,7 @@ export const CartesianChart = memo(
       }, [xAxisConfig, series, chartRect, layout]);
 
       const { yAxes, yScales } = useMemo(() => {
-        const axes = new Map<string, AxisConfig>();
+        const axes = new Map<string, CartesianAxisConfig>();
         const scales = new Map<string, ChartScaleFunction>();
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
           return { yAxes: axes, yScales: scales };
@@ -291,13 +290,14 @@ export const CartesianChart = memo(
           const dataDomain = getCartesianAxisDomain(axisParam, relevantSeries, 'y', layout);
           const range = getAxisRange(axisParam, chartRect, 'y');
 
-          const axisConfig: AxisConfig = {
+          const axisConfig: CartesianAxisConfig = {
             scaleType: axisParam.scaleType,
             domain: dataDomain,
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
             domainLimit: axisParam.domainLimit ?? (layout === 'horizontal' ? 'strict' : 'nice'),
+            baseline: axisParam.baseline,
           };
 
           // Create the scale
@@ -340,8 +340,8 @@ export const CartesianChart = memo(
 
       const stackedDataMap = useMemo(() => {
         if (!series) return new Map<string, Array<[number, number] | null>>();
-        return calculateStackedSeriesData(series);
-      }, [series]);
+        return calculateStackedSeriesData(series, layout, xAxisConfig, yAxisConfig);
+      }, [series, layout, xAxisConfig, yAxisConfig]);
 
       const getStackedSeriesData = useCallback(
         (seriesId?: string) => {
