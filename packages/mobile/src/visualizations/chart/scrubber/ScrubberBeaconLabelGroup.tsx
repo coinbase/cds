@@ -44,7 +44,7 @@ const PositionedLabel = memo<{
   ({
     index,
     positions,
-    position: side,
+    position,
     isIdle,
     updateTransition,
     label,
@@ -55,18 +55,12 @@ const PositionedLabel = memo<{
     labelHorizontalOffset,
     labelFont,
   }) => {
-    const opacity = useDerivedValue(() => {
-      const position = positions.value[index];
-      return position !== null && position !== undefined ? 1 : 0;
-    }, [positions, index]);
-    const x = useDerivedValue(() => {
-      const position = positions.value[index];
-      return position?.x ?? 0;
-    }, [positions, index]);
-    const targetY = useDerivedValue(() => {
-      const position = positions.value[index];
-      return position?.y ?? 0;
-    }, [positions, index]);
+    const opacity = useDerivedValue(
+      () => (position !== null && position !== undefined ? 1 : 0),
+      [positions, index],
+    );
+    const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
+    const targetY = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
     const idleAnimatedY = useSharedValue<number | null>(null);
     useAnimatedReaction(
@@ -108,12 +102,12 @@ const PositionedLabel = memo<{
     );
 
     const dx = useDerivedValue(() => {
-      return side.value === 'right' ? labelHorizontalOffset : -labelHorizontalOffset;
-    }, [side, labelHorizontalOffset]);
+      return position.value === 'right' ? labelHorizontalOffset : -labelHorizontalOffset;
+    }, [position, labelHorizontalOffset]);
 
     const horizontalAlignment = useDerivedValue(
-      () => (side.value === 'right' ? 'left' : 'right'),
-      [side],
+      () => (position.value === 'right' ? 'left' : 'right'),
+      [position],
     );
 
     return (
