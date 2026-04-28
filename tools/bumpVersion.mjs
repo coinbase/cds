@@ -9,10 +9,10 @@ import { fileURLToPath } from 'url';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { projectsNeedingVersion } from './ci/getProjectsNeedingVersion.ts';
-import { getCurrentCIBranch } from './ci/getCurrentCIBranch.ts';
+import { projectsNeedingVersion } from './ci/getProjectsNeedingVersion.mjs';
+import { getCurrentCIBranch } from './ci/getCurrentCIBranch.mjs';
 import { isReleaseBranch } from './ci/isReleaseBranch.mjs';
-import { color, log, logInfo, logNewLine, logWarn } from './ci/logging.ts';
+import { color, log, logInfo, logNewLine, logWarn } from './ci/logging.mjs';
 
 const UNRELEASED_HEADER = '## Unreleased';
 const TEMPLATE_TOKEN = '<!-- template-start -->';

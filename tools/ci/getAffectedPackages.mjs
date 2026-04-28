@@ -1,6 +1,6 @@
-import { getChangedFiles } from './getChangedFiles';
-import { getCurrentCIBranch } from './getCurrentCIBranch';
-import { getPublishableProjects } from './getPublishableProjects';
+import { getChangedFiles } from './getChangedFiles.mjs';
+import { getCurrentCIBranch } from './getCurrentCIBranch.mjs';
+import { getPublishableProjects } from './getPublishableProjects.mjs';
 
 // WARNING: This list is not comprehensive and may be missing configuration files
 const BUMP_REGEX =
@@ -12,20 +12,13 @@ const IGNORE_CHANGED_FILES_REGEX =
 
 const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$|__stories__)/;
 
-export type PackageVersionCheckOptions = {
-  projectsWithNoSrcFolder: string[];
-  exclude: string[];
-  onlyPublishable: boolean;
-  changedFiles?: string[];
-};
-
-export async function getAffectedPackages(options: Partial<PackageVersionCheckOptions> = {}) {
+export async function getAffectedPackages(options = {}) {
   if (getCurrentCIBranch() === 'master') {
     return {};
   }
 
-  const projectsWithNoSrcFolder: string[] = options.projectsWithNoSrcFolder ?? [];
-  const excludedProjects: string[] = options.exclude ?? [];
+  const projectsWithNoSrcFolder = options.projectsWithNoSrcFolder ?? [];
+  const excludedProjects = options.exclude ?? [];
 
   const [changedFiles, projects] = await Promise.all([
     options.changedFiles ?? getChangedFiles(false),

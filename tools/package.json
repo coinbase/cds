@@ -1,6 +1,7 @@
 {
   "name": "tools",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "babel-plugin-transform-import-meta": "^2.3.3"
   }

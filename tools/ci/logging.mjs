@@ -2,9 +2,7 @@ import chalkImport from 'chalk';
 import { readFileSync } from 'node:fs';
 import { EOL } from 'node:os';
 import { basename } from 'node:path';
-import { isCI } from './isCI';
-
-export type LogParam = string | string[] | Record<string, unknown>;
+import { isCI } from './isCI.mjs';
 
 const chalk = new chalkImport.Instance({ level: 3 });
 Object.defineProperty(globalThis, 'navigator', {
@@ -17,14 +15,14 @@ Object.defineProperty(globalThis, 'navigator', {
 
 const filteredKeywords = ['password', 'keyPass'];
 
-function filterKeys(object: Record<string, unknown>) {
+function filterKeys(object) {
   filteredKeywords.forEach((key) => {
     // eslint-disable-next-line no-param-reassign
     delete object[key];
   });
 }
 
-export function sanitizeString(str: string) {
+export function sanitizeString(str) {
   const words = str.split(' ');
   const needsToBeRedacted = words.some((word) => {
     const isPath = word.includes('/');
@@ -45,17 +43,17 @@ export function sanitizeString(str: string) {
   return str;
 }
 
-function sanitizeRecursive(value: LogParam): LogParam {
+function sanitizeRecursive(value) {
   if (typeof value === 'string') {
     return sanitizeString(value);
   }
 
   if (Array.isArray(value)) {
-    return value.map(sanitizeRecursive) as string[];
+    return value.map(sanitizeRecursive);
   }
 
   if (typeof value === 'object') {
-    const objectValue = { ...value } as Record<string, LogParam>;
+    const objectValue = { ...value };
     filterKeys(objectValue);
 
     for (const key of Object.keys(objectValue)) {
@@ -68,27 +66,19 @@ function sanitizeRecursive(value: LogParam): LogParam {
   return value;
 }
 
-function sanitize(value: LogParam) {
-  return sanitizeRecursive(value ? (JSON.parse(JSON.stringify(value)) as LogParam) : value);
+function sanitize(value) {
+  return sanitizeRecursive(value ? JSON.parse(JSON.stringify(value)) : value);
 }
 
-export function logNewLine(stream: { write: (chunk: string) => void } = process.stdout) {
+export function logNewLine(stream = process.stdout) {
   return stream.write(EOL);
 }
 
-export type LogOutStream = { write: (chunk: string) => void };
-function doLog(
-  decoratorFunc: (data: string) => string,
-  data: LogParam,
-  stream?: LogOutStream,
-  { addLogGroup, isDebug }: { addLogGroup?: boolean; isDebug?: boolean } = {},
-) {
+function doLog(decoratorFunc, data, stream, { addLogGroup, isDebug } = {}) {
   const sanitizedData = sanitize(data);
   const isJson = sanitizedData && typeof sanitizedData === 'object';
 
-  const message: string = isJson
-    ? JSON.stringify(sanitizedData, null, 3)
-    : sanitizedData.toString();
+  const message = isJson ? JSON.stringify(sanitizedData, null, 3) : sanitizedData.toString();
 
   if (addLogGroup) {
     stream?.write(`::group::${decoratorFunc(message)} ${EOL}`);
@@ -99,39 +89,39 @@ function doLog(
   }
 }
 
-export function log(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function log(data, outputStream = process.stdout) {
   doLog(chalk.white, data, outputStream);
 }
 
-export function logPlain(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logPlain(data, outputStream = process.stdout) {
   doLog((d) => d, data, outputStream);
 }
 
-export function logInfo(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logInfo(data, outputStream = process.stdout) {
   doLog(chalk.white, data, outputStream);
 }
 
-export function logDebug(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logDebug(data, outputStream = process.stdout) {
   return doLog(chalk.dim, data, outputStream, { isDebug: true });
 }
 
-export function logSuccess(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logSuccess(data, outputStream = process.stdout) {
   return doLog(chalk.green, data, outputStream);
 }
 
-export function logWarn(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logWarn(data, outputStream = process.stdout) {
   return doLog(chalk.yellow, data, outputStream);
 }
 
-export function logWarns(data: string[], outputStream: LogOutStream = process.stdout) {
+export function logWarns(data, outputStream = process.stdout) {
   return doLog(chalk.yellow, data.join(EOL), outputStream);
 }
 
-export function logError(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logError(data, outputStream = process.stdout) {
   return doLog(chalk.red, data, outputStream);
 }
 
-export function logVerbose(data: LogParam, outputStream: LogOutStream = process.stdout) {
+export function logVerbose(data, outputStream = process.stdout) {
   return doLog(
     chalk.dim,
     data,
@@ -139,7 +129,7 @@ export function logVerbose(data: LogParam, outputStream: LogOutStream = process.
   );
 }
 
-export function logFile(file: string, loggingFn: (data: LogParam) => void) {
+export function logFile(file, loggingFn) {
   const filename = basename(file);
   loggingFn(`======= Begin ${filename} file =======`);
   readFileSync(file, 'utf-8')

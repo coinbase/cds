@@ -1,23 +1,20 @@
 import {
-  LogOutStream,
-  LogParam,
   color,
   logInfo as logInfoBase,
   logWarn as logWarnBase,
   logError as logErrorBase,
-} from '../logging';
-import { projectsNeedingVersion } from '../getProjectsNeedingVersion';
-import { PackageVersionCheckOptions } from '../getAffectedPackages';
+} from '../logging.mjs';
+import { projectsNeedingVersion } from '../getProjectsNeedingVersion.mjs';
 
-export function validateVersioned(options: Partial<PackageVersionCheckOptions> = {}) {
-  return async function (outputStream: LogOutStream) {
-    const logInfo = (msg: LogParam) => {
+export function validateVersioned(options = {}) {
+  return async function (outputStream) {
+    const logInfo = (msg) => {
       logInfoBase(msg, outputStream);
     };
-    const logWarn = (msg: LogParam) => {
+    const logWarn = (msg) => {
       logWarnBase(msg, outputStream);
     };
-    const logError = (msg: LogParam) => {
+    const logError = (msg) => {
       logErrorBase(msg, outputStream);
     };
     const unversionedPackages = await projectsNeedingVersion(logInfo, options);

@@ -1,13 +1,13 @@
 import glob from 'fast-glob';
-import { logInfo as logInfoBase, logPlain } from './logging';
+import { logInfo as logInfoBase, logPlain } from './logging.mjs';
 
-export function printFileList(list: string[] | Set<string>, logInfo = logInfoBase) {
+export function printFileList(list, logInfo = logInfoBase) {
   list.forEach((item) => {
     logInfo(`  - ${item}`);
   });
 }
 
-export async function findFiles(projectRoot: string, globs: string[]): Promise<string[]> {
+export async function findFiles(projectRoot, globs) {
   logPlain(`Finding files within ${projectRoot} using glob: ${globs.join(', ')}`);
 
   const files = await glob(globs, {

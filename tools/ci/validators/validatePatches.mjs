@@ -4,17 +4,15 @@ import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 
 import {
-  LogOutStream,
-  LogParam,
   color,
   logInfo as logInfoBase,
   logSuccess,
   logError as logErrorBase,
-} from '../logging';
+} from '../logging.mjs';
 
 const PATCHES_PATH = '.yarn/patches';
 
-function parsePatchedDependenciesSet(str: string) {
+function parsePatchedDependenciesSet(str) {
   return str
     .replace(/"/g, '')
     .split('\n')
@@ -28,11 +26,11 @@ function parsePatchedDependenciesSet(str: string) {
     }, new Set());
 }
 
-export async function validatePatches(outputStream: LogOutStream) {
-  const logInfo = (msg: LogParam) => {
+export async function validatePatches(outputStream) {
+  const logInfo = (msg) => {
     logInfoBase(msg, outputStream);
   };
-  const logError = (msg: LogParam) => {
+  const logError = (msg) => {
     logErrorBase(msg, outputStream);
   };
   logInfo('Validating that all yarn patches are being used');
@@ -42,11 +40,11 @@ export async function validatePatches(outputStream: LogOutStream) {
     return;
   }
 
-  let result: string = '';
+  let result = '';
   try {
     result = execSync('yarn info --all --name-only --recursive --json').toString();
   } catch (error) {
-    logError((error as Error)?.message);
+    logError(error?.message);
     process.exit(1);
   }
 
