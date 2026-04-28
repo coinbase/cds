@@ -7,25 +7,19 @@ import semver from 'semver';
 const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
 
 /** These packages are forced to be the same version! If you update this list,
- * you must also update the list in /tools/validateCDSVersions.ts
+ * you must also update the list in /tools/validateCDSVersions.mjs
  */
 const PACKAGES_TO_SYNC_VERSION = ['web', 'mobile', 'common', 'mcp-server'];
 
-async function getPkgVersion(pkgJsonPath: string) {
-  const pkg = JSON.parse(await fs.promises.readFile(pkgJsonPath, 'utf8')) as {
-    version: string;
-    name: string;
-  };
+async function getPkgVersion(pkgJsonPath) {
+  const pkg = JSON.parse(await fs.promises.readFile(pkgJsonPath, 'utf8'));
 
   return pkg.version;
 }
 
-async function updatePkgVersion(pkgPath: string, highestVersion: string) {
+async function updatePkgVersion(pkgPath, highestVersion) {
   // Update package.json
-  const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8')) as {
-    version: string;
-    name: string;
-  };
+  const pkg = JSON.parse(await fs.promises.readFile(pkgPath, 'utf8'));
 
   pkg.version = `${highestVersion}`;
   await fs.promises.writeFile(pkgPath, `${JSON.stringify(pkg, null, 2).trimEnd()}\n`);
@@ -33,7 +27,7 @@ async function updatePkgVersion(pkgPath: string, highestVersion: string) {
   console.info(chalk.green(`Updated ${pkgPath} version to ${highestVersion}`));
 }
 
-async function getHighestVersion(pkgJsonPaths: string[]) {
+async function getHighestVersion(pkgJsonPaths) {
   let highestVersion = '0.0.0';
   await Promise.all(
     pkgJsonPaths.map(async (pkgPath) => {
@@ -47,7 +41,7 @@ async function getHighestVersion(pkgJsonPaths: string[]) {
   return highestVersion;
 }
 
-async function updateChangelog(pkgPath: string, highestVersion: string) {
+async function updateChangelog(pkgPath, highestVersion) {
   // Get file information
   const pkgBasePath = path.dirname(pkgPath);
   // Update CHANGELOG
@@ -128,4 +122,7 @@ async function updatePkgsForGenericBump() {
   console.info(chalk.green(`Versions updated successfully!`));
 }
 
-void updatePkgsForGenericBump();
+updatePkgsForGenericBump().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

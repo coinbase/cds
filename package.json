@@ -59,7 +59,7 @@
     "reset-nx-daemon": "nx reset",
     "clean": "yarn clean-nx-dir && yarn clean-packemon-outs && yarn clean-dist-outs && yarn reset-nx-daemon",
     "clean-expo": "rm -rf apps/mobile-app/ios && rm -rf apps/mobile-app/android && rm -rf apps/mobile-app/.expo",
-    "release": "tsx tools/ci/validators/validateVersioned.ts && yarn nx run codegen:update-packages-generic-bump && tsx ./tools/validateCDSVersions.ts",
+    "release": "node tools/ci/validators/validateVersioned.mjs && yarn nx run codegen:update-packages-generic-bump && node ./tools/validateCDSVersions.mjs",
     "generate-tarballs": "node tools/generateTarballs.mjs",
     "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs",
     "code-connect:publish": "yarn code-connect:publish:web && yarn code-connect:publish:mobile",

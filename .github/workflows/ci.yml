@@ -47,7 +47,7 @@ jobs:
       - name: Validate Versioned
         run: node ./tools/ci/validators/validateVersioned.mjs
       - name: Validate CDS Versions
-        run: yarn tsx ./tools/validateCDSVersions.ts
+        run: yarn node ./tools/validateCDSVersions.mjs
       - name: Validate Constraints
         run: yarn constraints || exit 1
 

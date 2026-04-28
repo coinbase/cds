@@ -12,20 +12,17 @@ const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
 
 if (!MONOREPO_ROOT) throw Error('MONOREPO_ROOT is undefined');
 
-async function getPkgVersion(pkgJsonPath: string) {
+async function getPkgVersion(pkgJsonPath) {
   const pkgPath = path.dirname(pkgJsonPath);
   const pkgName = path.basename(pkgPath);
-  const pkg = JSON.parse(await fs.promises.readFile(pkgJsonPath, 'utf8')) as {
-    version: string;
-    name: string;
-  };
+  const pkg = JSON.parse(await fs.promises.readFile(pkgJsonPath, 'utf8'));
 
   console.info(chalk.gray(`${pkgName} version is ${pkg.version}.`));
 
   return pkg.version;
 }
 
-async function getChangelogVersion(changelogPath: string) {
+async function getChangelogVersion(changelogPath) {
   const changelogContent = fs.readFileSync(changelogPath, 'utf8');
   const versionHeaderRegex = /##\s(\d.*?)\s/;
   const versionHeaderMatch = changelogContent.match(versionHeaderRegex);
@@ -95,4 +92,7 @@ async function validateCDSVersions() {
   }
 }
 
-void validateCDSVersions();
+validateCDSVersions().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
