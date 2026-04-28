@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.66.2 (4/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix SegmentedTab color not applied during Suspense transition. [[#650](https://github.com/coinbase/cds/pull/650)]
+
 ## 8.66.1 ((4/27/2026, 12:59 PM PST))
 
 This is an artificial version bump with no new change.
