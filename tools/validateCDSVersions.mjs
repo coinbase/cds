@@ -4,13 +4,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /** These packages are forced to be the same version! If you update this list,
- * you must also update the list in /libs/codegen/src/release/updatePkgsForGenericBump.ts
+ * you must also update the list in /libs/codegen/src/release/updatePkgsForGenericBump.mjs
  */
 const PACKAGES_TO_SYNC_VERSION = ['web', 'mobile', 'common', 'mcp-server'];
 
-const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
-
-if (!MONOREPO_ROOT) throw Error('MONOREPO_ROOT is undefined');
+const MONOREPO_ROOT = process.cwd();
 
 async function getPkgVersion(pkgJsonPath) {
   const pkgPath = path.dirname(pkgJsonPath);

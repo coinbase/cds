@@ -28,7 +28,7 @@
       }
     },
     "update-packages-generic-bump": {
-      "command": "yarn node ./src/release/updatePkgsForGenericBump.mjs",
+      "command": "node ./src/release/updatePkgsForGenericBump.mjs",
       "options": {
         "cwd": "libs/codegen"
       }
