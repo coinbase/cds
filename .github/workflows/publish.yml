@@ -20,6 +20,7 @@ on:
     branches:
       - master
       - 'release-[0-9]+.x'
+      - 'cds-v9-master'
     paths:
       - 'packages/*/package.json'
   pull_request:
