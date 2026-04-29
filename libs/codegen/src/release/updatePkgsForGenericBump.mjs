@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import semver from 'semver';
 
-const MONOREPO_ROOT = process.cwd();
+const MONOREPO_ROOT = process.env.NX_WORKSPACE_ROOT;
 
 /** These packages are forced to be the same version! If you update this list,
  * you must also update the list in /tools/validateCDSVersions.mjs
