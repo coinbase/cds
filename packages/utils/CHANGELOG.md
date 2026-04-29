@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 
 #### 📘 Misc
 
+- Temporary unreleased changes - undo prior to CDS 9 release.
+
+## Unreleased
+
+#### 📘 Misc
+
 - Chore: Updated numerous deprecation annotation messages.
 
 ## 2.3.5 (12/17/2025 PST)

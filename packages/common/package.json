@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-common",
-  "version": "8.66.2",
+  "version": "9.0.0-rc.1",
   "description": "Coinbase Design System - Common",
   "repository": {
     "type": "git",

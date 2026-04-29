@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
 ## 3.3.4 (12/17/2025 PST)
 
 #### 🐞 Fixes

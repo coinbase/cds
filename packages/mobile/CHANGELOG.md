@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.0.0 (4/28/2026 PST)
+
+#### 💥 Breaking
+
+- Feat: CDS 9 release candidate 1.
+
 ## 8.66.2 ((4/28/2026, 01:06 PM PST))
 
 This is an artificial version bump with no new change.

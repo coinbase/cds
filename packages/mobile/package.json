@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-mobile",
-  "version": "8.66.2",
+  "version": "9.0.0-rc.1",
   "description": "Coinbase Design System - Mobile",
   "repository": {
     "type": "git",

@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Temporary unreleased changes - undo prior to CDS 9 release.
+
 ## 3.7.0 (4/20/2026 PST)
 
 #### 🚀 Updates

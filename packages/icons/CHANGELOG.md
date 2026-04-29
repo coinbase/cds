@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
 ## 5.16.0 (4/27/2026 PST)
 
 #### 🚀 Updates
