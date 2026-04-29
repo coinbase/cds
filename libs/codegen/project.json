@@ -28,9 +28,9 @@
       }
     },
     "update-packages-generic-bump": {
-      "command": "node ./src/release/updatePkgsForGenericBump.mjs",
+      "command": "node {projectRoot}/src/release/updatePkgsForGenericBump.mjs",
       "options": {
-        "cwd": "libs/codegen"
+        "cwd": "{workspaceRoot}"
       }
     },
     "mobile-routes": {

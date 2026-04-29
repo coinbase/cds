@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 9.0.0 (4/28/2026 PST)
+## 9.0.0-rc.1 (4/28/2026 PST)
 
 #### 💥 Breaking
 
