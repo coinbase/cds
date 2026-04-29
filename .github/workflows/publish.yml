@@ -243,7 +243,25 @@ jobs:
         if: steps.version-check.outputs.should-publish == 'true'
         run: |
           cd packages/${{ matrix.package }}
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_BRANCH="${{ github.base_ref || github.ref_name }}"
+          NPM_TAG_ARGS=()
+
+          if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
+            MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
+            NPM_TAG="v${MAJOR}"
+            echo "🏷️  Dry run publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
+            NPM_TAG_ARGS=(--tag "$NPM_TAG")
+          elif echo "$PACKAGE_VERSION" | grep -qE '\-'; then
+            PRERELEASE_TAG=$(echo "$PACKAGE_VERSION" | sed -E 's/.*-([^.]+).*/\1/')
+            echo "🏷️  Dry run detected prerelease version, using dist-tag: $PRERELEASE_TAG"
+            NPM_TAG_ARGS=(--tag "$PRERELEASE_TAG")
+          else
+            echo "🏷️  Dry run publishing as latest"
+          fi
+
           npm publish --dry-run --access public \
+            "${NPM_TAG_ARGS[@]}" \
             --registry https://registry.npmjs.org
           echo "✅ Dry run successful for ${{ matrix.package }}"
 
