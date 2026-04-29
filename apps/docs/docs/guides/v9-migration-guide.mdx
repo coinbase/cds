@@ -1,0 +1,346 @@
+---
+id: v9-migration-guide
+title: v9 Upgrade Guide
+slug: /guides/v9-upgrade-guide
+hide_title: true
+---
+
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { DeprecationTable } from '@site/src/components/page/DeprecationTable';
+import { StandalonePlatformSwitcher } from '@site/src/components/page/PlatformSwitcher';
+import { VStack, HStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography/Text';
+import { Tag } from '@coinbase/cds-web/tag/Tag';
+
+import {
+  componentDeprecations,
+  hookFunctionDeprecations,
+  tokenConstantDeprecations,
+  typeDeprecations,
+} from '@site/src/data/v9Deprecations';
+
+import WebInstallCommands from './_v9WebInstallCommands.mdx';
+import MobileInstallCommands from './_v9MobileInstallCommands.mdx';
+import WebPeerDependencies from './_v9WebPeerDependencies.mdx';
+import MobilePeerDependencies from './_v9MobilePeerDependencies.mdx';
+
+<VStack gap={5}>
+<ContentHeader title="v9 Upgrade Guide" />
+
+<MDXSection>
+<MDXArticle>
+
+## 👋 Introduction
+
+CDS 9 builds on the foundation laid in v8 and focuses on stability, modernization, and addressing specific debt that improves future maintainability.
+
+Highlights of this release:
+
+- 🔮 React 19 support on web (with backwards compatibility for React 18)
+- 📱 React Native 0.81 / Expo SDK 54 support on mobile
+- 📐 Eliminates hard-coded fixed widths/heights from all components to improve customizability and themeability
+- 🎯 Consolidates standalone visualization packages in order to simplify the CDS ecosystem
+- 🌬️ NEW migrator tool (`@coinbase/cds-migrator`) to help with this and future upgrades
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## 📦 Packages
+
+The following CDS packages are receiving new versions:
+
+- `@coinbase/cds-common@9.0.0-rc.2`
+- `@coinbase/cds-web@9.0.0-rc.2`
+- `@coinbase/cds-mobile@9.0.0-rc.2`
+- `@coinbase/cds-mcp-server@9.0.0-rc.2`
+- `@coinbase/cds-migrator@1.0.0`{' '} <Tag colorScheme="blue">New</Tag>
+
+:::tip Release Candidate Status
+CDS 9 is currently in release candidate status. There are no breaking changes planned prior to the official release of 9.0.0. So it is safe to upgrade to `9.0.0-rc.2` if you want to get an early start.
+:::
+
+In CDS 9, we are deprecating the standalone visualization packages. See the [Deprecated packages](#packages) for more details.
+
+- `@coinbase/cds-web-visualization`{' '} <Tag colorScheme="red">Deprecated</Tag>
+- `@coinbase/cds-mobile-visualization`{' '} <Tag colorScheme="red">Deprecated</Tag>
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## ✅ Upgrade Steps
+
+### 1. Prerequisites
+
+CDS 9 no longer bundles the v7 shim (`cds-web/v7`/`cds-mobile/v7`).
+Incremental upgrade strategies, which this pattern enabled, are no longer recommended.
+Starting with CDS 9, major releases will minimize breaking changes relateive to the prior version, making major upgrades possible to land in a single PR, even for large monorepos.
+
+Before upgrading to v9:
+
+1. Search your codebase for any remaining `cds-web/v7` / `cds-mobile/v7` imports.
+2. Complete any partial migrations from the v7 shim to proper CDS 8 imports by following the [v8 Migration Guide](./v8-migration-guide).
+3. Once all v7 imports are eliminated, you can upgrade to v9.
+
+```tsx
+// ❌ Before (still on v8 with incremental migration)
+import { Button } from '@coinbase/cds-web/v7/buttons/Button';
+
+// ✅ After (must complete before upgrading to v9)
+import { Button } from '@coinbase/cds-web/buttons/Button';
+```
+
+### 2. Update Packages
+
+<StandalonePlatformSwitcher.Root>
+  <VStack>
+    <HStack alignItems="center" justifyContent="space-between" width="100%">
+      <Text font="title3">Updgrade CDS Packages</Text>
+      <StandalonePlatformSwitcher.Toggle accessibilityLabel="Select package platform" />
+    </HStack>
+    <Text font="body">Update the CDS packages your app uses to v9.</Text>
+    <StandalonePlatformSwitcher.Content platform="web">
+      <WebInstallCommands />
+    </StandalonePlatformSwitcher.Content>
+    <StandalonePlatformSwitcher.Content platform="mobile">
+      <MobileInstallCommands />
+    </StandalonePlatformSwitcher.Content>
+  </VStack>
+</StandalonePlatformSwitcher.Root>
+
+<StandalonePlatformSwitcher.Root>
+  <VStack>
+    <HStack alignItems="center" justifyContent="space-between" width="100%">
+      <Text font="title3">Update CDS Peer Dependencies</Text>
+      <StandalonePlatformSwitcher.Toggle accessibilityLabel="Select peer dependency platform" />
+    </HStack>
+    <StandalonePlatformSwitcher.Content platform="web">
+      <WebPeerDependencies />
+    </StandalonePlatformSwitcher.Content>
+    <StandalonePlatformSwitcher.Content platform="mobile">
+      <MobilePeerDependencies />
+    </StandalonePlatformSwitcher.Content>
+  </VStack>
+</StandalonePlatformSwitcher.Root>
+
+<br />
+
+### 3. Run Automated Codemods
+
+The new `@coinbase/cds-migrator` will help expedite your upgrade to CDS 9.
+It encapsulates individual changes in **transforms**, and groups related transforms into versioned **presets**.
+For upgrades from CDS 8 to CDS 9, use the `v8-to-v9` preset.
+
+For detailed CLI documentation and individual transform/preset details, see the [package README](https://github.com/coinbase/cds/blob/cds-v9-master/packages/migrator/README.md).
+
+:::tip Proactive Codemods
+We will continually publish new transforms and presets to proactively address deprecations in preparation of the following major release.
+:::
+
+#### Running the codemods
+
+```bash
+# Preview all changes (recommended first step)
+npx @coinbase/cds-migrator ./src -p v8-to-v9 --dry-run
+
+# Review the generated migration.log
+cat migration.log
+
+# Apply the migration
+npx @coinbase/cds-migrator ./src -p v8-to-v9
+```
+
+You can also run a single transform:
+
+```bash
+npx @coinbase/cds-migrator ./src -t button-variant-values --dry-run
+```
+
+The migrator tool records what it has already run in `.cds-migration-history.json` and leaves `// TODO [cds-migrator:<transform-name>]` comments in the source code for cases that may need manual review.
+
+#### Manual upgrade effort
+
+The CDS 9 codemods should address the vast majority of potential incompatibility issues, however there are a few specific edge cases that may require manual attention.
+
+- Tightening some TypeScript types (`Carousel`, `Drawer`, `Tray`, `Modal`, `TableCell.end`, etc.)
+- Updating custom Stepper progress UIs and `SlideButton` slot components to use Reanimated / `framer-motion` instead of `react-spring`
+- See [Breaking Change Overview](#-breaking-change-overview) for more details
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## 💥 Breaking Change Overview
+
+### Hard-Coded Dimensions Removed
+
+CDS 9 removes hard-coded fixed heights and widths from all components. Components are now driven by their content, your layout, or theme tokens. As a side effect, several constants and utilities that exposed those fixed pixel values are deprecated (see [New Deprecations](#new-deprecations)). Review any surfaces that depended on CDS components occupying fixed dimensions, since those layouts may need small visual adjustments after upgrading.
+
+### Packages & Imports
+
+- **v7 import paths dropped** — `@coinbase/cds-web/v7` and `@coinbase/cds-mobile/v7` are no longer bundled. Apps must finish their CDS 8 upgrade before jumping to CDS 9.
+- **Visualization packages merged** — deep paths on `@coinbase/cds-(web|mobile)-visualization` may no longer resolve. Use the new `@coinbase/cds-(web|mobile)/visualizations/*` exports.
+
+### Cutting react-spring references
+
+CDS is migrating away from `react-spring`, which is poorly maintained and has been the source of recurring bugs.
+The implementation detail leaked into the public API of two components — `Stepper` and `SlideButton`.
+These APIs need to be adjusted before CDS can transition to the preferred animation libraries, `framer-motion` and `react-native-reanimated`.
+
+#### Stepper <Tag colorScheme="blue">Web</Tag> <Tag colorScheme="green">Mobile</Tag>
+
+If you supply a custom step / progress UI to `Stepper`, the `progress` prop is now a plain `number` between `0` and `1` instead of a `react-spring` value. For built-in progress animation, configure timing via the new `progressTimingConfig` / `defaultProgressTimingConfig` props. The legacy `progressSpringConfig` prop is ignored on this animation path.
+
+```tsx
+// ❌ Before (v8) — progress was a SpringValue<number>
+const CustomProgress = ({ progress }: { progress: SpringValue<number> }) => (
+  <animated.div style={{ width: progress.to((p) => `${p * 100}%`) }} />
+);
+
+// ✅ After (v9) — progress is a number between 0 and 1
+const CustomProgress = ({ progress }: { progress: number }) => (
+  <div style={{ width: `${progress * 100}%` }} />
+);
+
+// Built-in animation timing
+<Stepper
+  progressTimingConfig={{ duration: 0.4, ease: 'easeInOut' }}
+  // progressSpringConfig is ignored in v9
+/>;
+```
+
+#### SlideButton <Tag colorScheme="green">Mobile</Tag>
+
+Custom `SlideButtonBackgroundComponent` and `SlideButtonHandleComponent` slots now receive `progress` as a Reanimated `SharedValue<number>` instead of a `react-spring` `SpringValue<number>`. Any custom slot that drove animation with spring helpers must switch to Reanimated.
+
+```tsx
+// ❌ Before (v8)
+import { SpringValue } from '@react-spring/native';
+const BackgroundComponent = ({ progress }: { progress: SpringValue<number> }) => {
+  // animated.View, react-spring helpers...
+};
+
+// ✅ After (v9)
+import Animated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
+
+const BackgroundComponent = ({ progress }: { progress: SharedValue<number> }) => {
+  const style = useAnimatedStyle(() => ({ opacity: progress.value }));
+  return <Animated.View style={style} />;
+};
+```
+
+**Spring config:** `animationConfig` on `DefaultSlideButtonHandle` is deprecated. Use `slideButtonSpringConfig` together with Reanimated's `withSpring`.
+
+**Layout:** `SlideButton` now applies default heights (`40` for compact, `56` for regular) and derives the handle's `minWidth` from `height`. If you previously omitted `height` and relied on the old interactable-height + spring-driven sizing, double-check the rendered layout — you may need to set `height` explicitly to preserve v8 behavior.
+
+### TypeScript Type Changes
+
+A handful of CDS types have been tightened to better reflect runtime behavior or to align with React 19's updated typedefs.
+These changes are runtime-compatible but may surface as TypeScript errors after you upgrade.
+
+:::tip Tip
+In most cases, removing explicit type annotations and letting TypeScript infer the type from CDS is the simplest fix.
+:::
+
+#### React.FC type removed for render-children types <Tag colorScheme="blue">Web</Tag><Tag colorScheme="green">Mobile</Tag>
+
+The following components' render functions are now typed as `(props) => ReactNode` instead of using the deprecated `React.FC` type:
+
+- `CarouselItem`
+- `Drawer`
+- `Tray`
+- `Modal`
+
+#### `TableCell.end` and `SelectOptionGroupComponent.accessory` <Tag colorScheme="blue">Web</Tag>
+
+Both components' props now require a stricter type: `React.ReactElement<CellAccessoryProps>`.
+
+```tsx
+// ❌ Before (v8) — was previously typed as ReactElement/ReactNode
+<TableCell end={<div>123</div>} />;
+
+// ✅ After (v9)
+import { CellTextAccessory } from '@coinbase/cds-web/cells';
+<TableCell end={<CellTextAccessory text="123" />} />;
+```
+
+#### Input `onFocus` / `onBlur` Event Types <Tag colorScheme="green">Mobile</Tag>
+
+Certain mobile component APIs that accept focus/blur event handlers now use simpler typing
+
+```tsx
+// ❌ Before (v8)
+import type { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+const onFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+  /* ... */
+};
+
+// ✅ After (v9)
+import type { FocusEvent } from 'react-native';
+const onFocus = (e: FocusEvent) => {
+  /* ... */
+};
+```
+
+### Removed APIs (Dropped Deprecations)
+
+The following `@deprecated` APIs are **fully removed** in v9.
+
+| Package                               | Dropped deprecations                                                                                                                                                       |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <Tag colorScheme="gray">Common</Tag>  | `emptyObject`, `StickyFooterProps`                                                                                                                                         |
+| <Tag colorScheme="blue">Web</Tag>     | `AnnouncementCardProps`, `FeatureEntryCardProps`, `RadioGroupProps`, `CheckboxGroupProps`, `FeedCardProps`, `IconCounterButton.iconSize`                                   |
+| <Tag colorScheme="green">Mobile</Tag> | `AnnouncementCardProps`, `FeatureEntryCardProps`, `RadioGroupProps`, `CheckboxGroupProps`, `FeedCardProps`, `LinearGradient.isBelowChildren`, `IconCounterButton.iconSize` |
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## ⚠️ New Deprecations
+
+The following APIs are **still available in v9** but are scheduled for removal in CDS 10. Migrators and/or AI agents will be released following the v9 launch to help with each. You can also start migrating manually using the guidance below.
+
+### Packages
+
+| Package                                  | Notes                                                                                                                      |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **`@coinbase/cds-web-visualization`**    | Use `@coinbase/cds-web/visualizations/{chart,sparkline}` instead. Remove the dependency once your imports are migrated.    |
+| **`@coinbase/cds-mobile-visualization`** | Use `@coinbase/cds-mobile/visualizations/{chart,sparkline}` instead. Remove the dependency once your imports are migrated. |
+
+:::tip Codemod
+The CDS migrator's `v8-to-v9` preset will update these packages' import paths for you.
+:::
+
+### Components
+
+<DeprecationTable rows={componentDeprecations} />
+
+### Hooks & Functions
+
+<DeprecationTable rows={hookFunctionDeprecations} />
+
+### Tokens & Constants
+
+The following tokens were fixed pixel values that pin component sizing. With v9 removing hard-coded heights/widths, they are no longer published. Define your own values or rely on layout-driven sizing.
+
+<DeprecationTable rows={tokenConstantDeprecations} />
+
+### Types
+
+<DeprecationTable rows={typeDeprecations} />
+
+</MDXArticle>
+</MDXSection>
+
+</VStack>

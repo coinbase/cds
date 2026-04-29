@@ -850,6 +850,11 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'doc',
+          id: 'guides/v9-migration-guide',
+          label: 'v9 Upgrade Guide',
+        },
+        {
+          type: 'doc',
           id: 'guides/v8-migration-guide',
           label: 'v8 Migration Guide',
         },
