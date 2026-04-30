@@ -168,7 +168,7 @@ const App = ({ v }) => <Button variant={v}>Click</Button>;
       },
       `
 import { Button } from '@coinbase/cds-web/buttons';
-const App = ({ v }) => // TODO(cds-migration): Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.
+const App = ({ v }) => // TODO [cds-migrator:button-variant-values]: Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.
 <Button variant={v}>Click</Button>;
 `,
       tsxTestOptions,
@@ -184,7 +184,7 @@ const App = ({ v }) => // TODO(cds-migration): Button variant values changed in 
         source: `
 import { Button } from '@coinbase/cds-web/buttons';
 const App = ({ v }) =>
-  // TODO(cds-migration): Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.
+  // TODO [cds-migrator:button-variant-values]: Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.
   <Button variant={v}>Click</Button>;
 `,
       },

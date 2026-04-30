@@ -5,8 +5,10 @@
  * It avoids complex dependencies and ES module issues.
  */
 
-// Re-export just the essential functions transforms need
-export { TODO_PREFIX } from './constants';
+import { TODO_PREFIX } from './constants';
+
+// Re-export just the essential constants transforms need
+export { TODO_PREFIX };
 
 /**
  * Simple logger for transforms
@@ -31,8 +33,14 @@ export const transformLogger = {
 /**
  * Add TODO comment to JSX attribute
  */
-export function addTodoComment(j: any, path: any, message: string, context?: string): void {
-  const comment = j.commentLine(` TODO(cds-migration): ${message}`, true, false);
+export function addTodoComment(
+  j: any,
+  path: any,
+  transformName: string,
+  message: string,
+  context?: string,
+): void {
+  const comment = j.commentLine(` ${TODO_PREFIX}:${transformName}]: ${message}`, true, false);
   const comments = [comment];
 
   if (context) {
@@ -48,7 +56,5 @@ export function addTodoComment(j: any, path: any, message: string, context?: str
  */
 export function hasMigrationTodo(path: any): boolean {
   const comments = path.value.comments || [];
-  return comments.some(
-    (comment: any) => comment.value && comment.value.includes('TODO(cds-migration)'),
-  );
+  return comments.some((comment: any) => comment.value && comment.value.includes(TODO_PREFIX));
 }

@@ -21,6 +21,7 @@ const VARIANT_MAP: Record<string, string> = {
   tertiary: 'inverse',
   foregroundMuted: 'secondary',
 };
+const TRANSFORM_NAME = 'button-variant-values';
 
 /** v8 buttons live under `…/buttons` (barrel or deep imports); package root has no Button API. */
 function buildCdsWebOrMobileButtonsImportRe(packageScope: string | undefined): RegExp {
@@ -98,6 +99,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
           addTodoComment(
             j,
             path,
+            TRANSFORM_NAME,
             'Button variant values changed in v9: "tertiary" is now "inverse", "foregroundMuted" is now "secondary". Check if this dynamic value needs updating.',
           );
 
