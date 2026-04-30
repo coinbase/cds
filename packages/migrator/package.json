@@ -33,6 +33,7 @@
   "dependencies": {
     "commander": "^11.1.0",
     "fast-glob": "^3.2.11",
+    "inquirer": "^12.1.0",
     "jscodeshift": "^0.15.1"
   },
   "devDependencies": {

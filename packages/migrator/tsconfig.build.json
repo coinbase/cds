@@ -11,6 +11,7 @@
     "**/__tests__/**",
     "**/__mocks__/**",
     "**/__fixtures__/**",
+    "**/__testfixtures__/**",
     "**/*.stories.*",
     "**/*.test.*",
     "**/*.spec.*"

@@ -81,7 +81,7 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
     const transformFile = transformFilePath.endsWith('.js')
       ? transformFilePath
       : `${transformFilePath}.js`;
-    // Transforms are in src/transforms/, built to esm/transforms/
+    // Transforms are in src/transforms/, built to cjs/transforms/
     const transformsDir = path.join(__dirname, 'transforms');
     const fullTransformPath = path.join(transformsDir, transformFile);
 

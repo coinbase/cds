@@ -242,7 +242,7 @@ yarn nx run migrator:lint
 
 # Test the CLI
 cd packages/migrator
-node esm/cli.js
+node cjs/cli.js
 ```
 
 ### Adding New Presets
