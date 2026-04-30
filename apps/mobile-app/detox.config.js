@@ -1,13 +1,9 @@
-function isBuildkite() {
-  return !!process.env.BUILDKITE;
-}
-
 function isGithubActions() {
   return !!process.env.GITHUB_ACTIONS;
 }
 
 function isCI() {
-  return !!process.env.CI || isBuildkite() || isGithubActions();
+  return !!process.env.CI || isGithubActions();
 }
 
 /**

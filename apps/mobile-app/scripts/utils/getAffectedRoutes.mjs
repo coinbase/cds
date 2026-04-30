@@ -96,7 +96,7 @@ const isFileVisregRelevant = (file, sourceDirectories) => {
  * ui-mobile-playground route keys that were affected by the changed files.
  */
 export const getAffectedRoutes = async (log = false) => {
-  const baseBranch = process.env.BUILDKITE_PULL_REQUEST_BASE_BRANCH || 'master';
+  const baseBranch = process.env.GITHUB_BASE_REF || process.env.BASE_BRANCH || 'master';
   const changedFiles = getChangedFilesOnBranch('HEAD', baseBranch);
   const workspaceDependencies = getWorkspaceDependencies(pkg.dependencies);
 
