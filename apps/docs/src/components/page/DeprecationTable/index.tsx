@@ -54,7 +54,7 @@ export const DeprecationTable = memo(({ rows }: DeprecationTableProps) => {
         {rows.map(({ deprecated, notes, packages }, index) => (
           <tr key={`${String(deprecated)}-${index}`}>
             <td className={styles.deprecationTableCell}>
-              <Text as="span" mono font="body">
+              <Text mono as="span" font="body">
                 {deprecated}
               </Text>
             </td>
