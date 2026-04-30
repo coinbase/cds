@@ -12,8 +12,6 @@ import webVisualizationPackageJson from '../../packages/web-visualization/packag
 
 import docgenConfig from './docgen.config';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 if (
   !(
     commonPackageJson.version === mobilePackageJson.version &&
@@ -143,12 +141,6 @@ const config: Config = {
 
   headTags: [
     {
-      tagName: 'script',
-      attributes: {},
-      innerHTML:
-        'window.dataLayer = window.dataLayer || []; window.gtag = typeof window.gtag === "function" ? window.gtag : function(){ window.dataLayer.push(arguments); };',
-    },
-    {
       tagName: 'link',
       attributes: { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     },
@@ -169,13 +161,9 @@ const config: Config = {
     [
       '@docusaurus/preset-classic',
       {
-        ...(isProduction
-          ? {
-              gtag: {
-                trackingID: 'G-VDXKBBVGVN',
-              },
-            }
-          : {}),
+        gtag: {
+          trackingID: 'G-VDXKBBVGVN',
+        },
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
