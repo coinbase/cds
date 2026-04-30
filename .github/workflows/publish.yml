@@ -60,7 +60,7 @@ jobs:
         run: |
           # Define all publishable packages (those with publish.Dockerfile
           # and not private: true)
-          ALL_PACKAGES="common,eslint-plugin-cds,icons,illustrations,lottie-files,mcp-server,mobile,mobile-visualization,utils,web,web-visualization"
+          ALL_PACKAGES="common,eslint-plugin-cds,icons,illustrations,lottie-files,mcp-server,migrator,mobile,mobile-visualization,utils,web,web-visualization"
 
           # Function to convert comma-separated list to JSON array
           csv_to_json() {

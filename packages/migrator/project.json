@@ -5,7 +5,16 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+        },
+        "prod": {
+          "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+        }
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
@@ -15,12 +24,6 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "packages/migrator/jest.config.js"
-      }
     },
     "typecheck": {
       "executor": "nx:run-commands",

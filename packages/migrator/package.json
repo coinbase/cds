@@ -27,8 +27,8 @@
   "sideEffects": false,
   "files": [
     "dts",
-    "esm",
-    "CHANGELOG"
+    "cjs",
+    "CHANGELOG.md"
   ],
   "dependencies": {
     "commander": "^11.1.0",
