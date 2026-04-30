@@ -321,7 +321,7 @@ export const coinbaseTheme = {
     bgNegativeWash: `rgb(${lightSpectrum.red0})`,
     bgPositive: `rgb(${lightSpectrum.green60})`,
     bgPositiveWash: `rgb(${lightSpectrum.green0})`,
-    bgWarning: `rgb(${lightSpectrum.orange40})`,
+    bgWarning: `rgb(${lightSpectrum.orange60})`,
     bgWarningWash: `rgb(${lightSpectrum.orange0})`,
     currentColor: 'currentColor',
     // Line
@@ -372,7 +372,7 @@ export const coinbaseTheme = {
     bgNegativeWash: `rgb(${darkSpectrum.red0})`,
     bgPositive: `rgb(${darkSpectrum.green60})`,
     bgPositiveWash: `rgb(${darkSpectrum.green0})`,
-    bgWarning: `rgb(${darkSpectrum.yellow50})`,
+    bgWarning: `rgb(${darkSpectrum.orange60})`,
     bgWarningWash: `rgb(${darkSpectrum.orange0})`,
     currentColor: 'currentColor',
     // Line
