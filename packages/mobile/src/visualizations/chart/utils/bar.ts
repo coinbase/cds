@@ -4,7 +4,6 @@ import type { BarBaseProps, BarComponent } from '../bar/Bar';
 import type { BarSeries } from '../bar/BarStack';
 
 import { defaultAxisId as fallbackAxisId } from './axis';
-import type { Series } from './chart';
 import type { CartesianChartLayout } from './context';
 import type { GradientDefinition, GradientStop } from './gradient';
 import { evaluateGradientAtValue } from './gradient';

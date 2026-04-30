@@ -394,7 +394,6 @@ export const Path = memo<PathProps>((props) => {
       strokeWidth={strokeWidth}
       transitions={{
         enter: enterTransition,
-        enterOpacity: enterOpacityTransition,
         update: updateTransition,
       }}
     >
