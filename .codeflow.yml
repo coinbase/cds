@@ -2,19 +2,19 @@ secure:
   required_reviews: 1
   codeowners_enabled: true
   # NOTE: Codeflow does not support glob patterns; long-lived support branches
-  # must be enumerated explicitly. When cutting a new `release-N.x` branch
-  # (see `frontend/cds/docs/release/patching-old-versions.md`), add it here so
-  # publishes from that branch flow through Codeflow to the internal NPM
-  # registry.
+  # must be enumerated explicitly. When cutting a new LTS (`release-N.x`) or pre-release branch add it here
   branches:
     - master
     - release-8.x
     - cds-v9-master
   auto_assign_reviewers: true
+  # Marks
   upstream_repository: coinbase/cds
 build:
   engines:
     # Apps
+    # Deployed from internal mirror repo (cds-public)
+    # Sync job automatically runs every 1-2 hours
     - BaldurECR:
         name: cds-next-docs
         path: ./apps/docs/production.Dockerfile
@@ -31,7 +31,18 @@ build:
         name: cds-storybook-dev
         path: ./apps/storybook/development.Dockerfile
         autobuild: false
+    # Static assets
+    # Deployed from internal mirror repo (cds-public)
+    # Sync job automatically runs every 1-2 hours
+    - BaldurECR:
+        name: static-assets
+        path: ./libs/static-assets/static-assets.Dockerfile
+        autobuild_files:
+          - packages/illustrations/package.json
     # Packages
+    # Deployed from internally maintained repo (cds-internal)
+    # Commits from this repo (coinbase/cds) are manually synced (see cds-repo-sync.mjs in frontend/cds) to this repo
+    # where they are deployed by Codeflow
     - BaldurNode:
         name: package-common
         path: ./packages/common/publish.Dockerfile
@@ -105,14 +116,6 @@ build:
         expire_tmp_tags_after_days: 1
         expire_all_after_days: 2
     - BaldurNode:
-        name: package-ui-scorecard
-        path: ./packages/ui-scorecard/publish.Dockerfile
-        autobuild_files:
-          - packages/ui-scorecard/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
         name: package-utils
         path: ./packages/utils/publish.Dockerfile
         autobuild_files:
@@ -136,9 +139,3 @@ build:
         expire_keep_tags_after_days: 1
         expire_tmp_tags_after_days: 1
         expire_all_after_days: 2
-    # Static assets
-    - BaldurECR:
-        name: static-assets
-        path: ./libs/static-assets/static-assets.Dockerfile
-        autobuild_files:
-          - packages/illustrations/package.json
