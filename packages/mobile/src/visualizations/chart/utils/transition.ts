@@ -271,47 +271,75 @@ export const usePathTransition = ({
   const normalizedEndShared = useSharedValue(initialSkiaPath);
   const fallbackPathShared = useSharedValue(initialSkiaPath);
   const result = useSharedValue(initialSkiaPath);
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (targetPathRef.current !== currentPath) {
-      let fromPath = targetPathRef.current;
-      if (interpolatorRef.current) {
-        const p = Math.min(Math.max(progress.value, 0), 1);
-        fromPath = interpolatorRef.current(p);
-      }
+    if (targetPathRef.current === currentPath) {
+      return;
+    }
 
-      targetPathRef.current = currentPath;
+    let fromPath = targetPathRef.current;
+    if (interpolatorRef.current) {
+      const p = Math.min(Math.max(progress.value, 0), 1);
+      fromPath = interpolatorRef.current(p);
+    }
 
-      const { enter, update } = transitionRef.current;
-      const activeTransition = isFirstAnimation.current && enter !== undefined ? enter : update;
+    targetPathRef.current = currentPath;
 
-      isFirstAnimation.current = false;
+    const { enter, update } = transitionRef.current;
+    const isFirstAnim = isFirstAnimation.current;
+    const activeTransition = isFirstAnim && enter !== undefined ? enter : update;
 
-      if (activeTransition === null) {
-        const targetPath = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
-        interpolatorRef.current = null;
-        normalizedStartShared.value = targetPath;
-        normalizedEndShared.value = targetPath;
-        fallbackPathShared.value = targetPath;
-        progress.value = 1;
-        result.value = targetPath;
-        notifyChange(result);
-        return;
-      }
+    isFirstAnimation.current = false;
 
-      const pathInterpolator = interpolatePath(fromPath, currentPath);
-      interpolatorRef.current = pathInterpolator;
+    if (activeTransition === null) {
+      const targetPath = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+      interpolatorRef.current = null;
+      normalizedStartShared.value = targetPath;
+      normalizedEndShared.value = targetPath;
+      fallbackPathShared.value = targetPath;
+      progress.value = 1;
+      result.value = targetPath;
+      notifyChange(result);
+      return;
+    }
 
-      normalizedStartShared.value =
-        Skia.Path.MakeFromSVGString(pathInterpolator(pathInterpolationEpsilon)) ?? Skia.Path.Make();
-      normalizedEndShared.value =
-        Skia.Path.MakeFromSVGString(pathInterpolator(1 - pathInterpolationEpsilon)) ??
-        Skia.Path.Make();
-      fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+    const pathInterpolator = interpolatePath(fromPath, currentPath);
+    interpolatorRef.current = pathInterpolator;
 
+    normalizedStartShared.value =
+      Skia.Path.MakeFromSVGString(pathInterpolator(pathInterpolationEpsilon)) ?? Skia.Path.Make();
+    normalizedEndShared.value =
+      Skia.Path.MakeFromSVGString(pathInterpolator(1 - pathInterpolationEpsilon)) ??
+      Skia.Path.Make();
+    fallbackPathShared.value = Skia.Path.MakeFromSVGString(currentPath) ?? Skia.Path.Make();
+
+    const kickoff = () => {
       progress.value = 0;
       progress.value = buildTransition(1, activeTransition);
+    };
+
+    // Initial enter: defer the kickoff one frame. In Reanimated v4 / worklets
+    // v0.5.2, valueSetter's rAF chain doesn't advance for animation builders
+    // assigned during the first React commit — the animation is set up but
+    // never ticks. Deferring to the next frame puts us in the "warm" state
+    // that updates already enjoy, and the rAF chain runs.
+    if (isFirstAnim) {
+      animationFrameRef.current = requestAnimationFrame(kickoff);
+      return;
     }
+
+    // Cancel any deferred initial kickoff that hasn't fired yet so its stale
+    // enter transition doesn't overwrite this update animation.
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    // Subsequent kickoff (data update or post-layout-settle re-render) — runs
+    // synchronously since the cold-state window only applies to the very first
+    // React commit.
+    kickoff();
   }, [
     currentPath,
     progress,
