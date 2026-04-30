@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.0.0-rc.2 (4/30/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: bar chart animation regression. [[#655](https://github.com/coinbase/cds/pull/655)]
+
 ## 9.0.0-rc.1 (4/28/2026 PST)
 
 #### 💥 Breaking
