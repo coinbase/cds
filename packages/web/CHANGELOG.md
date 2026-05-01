@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.68.0 (5/1/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update bgWarning to orange60. [[#659](https://github.com/coinbase/cds/pull/659)]
+
 ## 8.67.0 (5/1/2026 PST)
 
 #### 🚀 Updates
