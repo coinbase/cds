@@ -43,6 +43,10 @@ Within the current mapping file:
    - **Instance Layers**: Named instances that need `figma.instance()` or `figma.children()`
    - **Nested Properties**: Properties exposed from child layers (marked with ↳ in Figma)
 
+   **For every `figma.textContent()` usage in the mapping file**, call `get_metadata` on the referenced layer's node ID and confirm the metadata reports it as a `<text>` node. If it is an `<instance>`, `<frame>`, `<symbol>`, or any other non-text type, `figma.textContent()` will fail at runtime. Use a hardcoded placeholder string instead.
+
+   **For every `figma.children()` usage**, check whether all variants of the component have a child layer with that exact name. If different variants use different layer names for the same logical prop, the mapping needs to be split into variant-specific `figma.connect()` calls.
+
 3. **Read the React component source**
    - Find and read the component's TypeScript source file, including any of its sub-components' source files
    - Study the React props for the component(s)

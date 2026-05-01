@@ -54,6 +54,26 @@ title: figma.textContent('Title'),
 
 **Key difference**: Use `figma.string()` when text is controlled by a Figma component property. Use `figma.textContent()` when text lives as content in a text layer that designers override directly.
 
+**CRITICAL: `figma.textContent()` only works on actual TEXT layers — never on component instances.**
+
+Before using `figma.textContent('LayerName')`, always call `get_metadata` on that layer's node ID to verify its type. In the metadata response, the node must appear as a `<text>` element. If it appears as `<instance>`, `<symbol>`, `<frame>`, or any other non-text type, `figma.textContent()` will fail at runtime in Figma with a "Layer not found" error even though the layer name is correct.
+
+When the target layer is a component instance (e.g. a reusable text component), use a hardcoded placeholder string instead:
+
+```tsx
+// ❌ Wrong: 'string.label' is a component instance, not a text layer
+label: figma.boolean('show label', {
+  true: figma.textContent('string.label'),
+  false: undefined,
+}),
+
+// ✅ Correct: use a placeholder string when the layer is an instance
+label: figma.boolean('show label', {
+  true: 'Your label here.',
+  false: undefined,
+}),
+```
+
 - figma.instance() - For instance-swap properties (component slots)
 
 Use
@@ -158,6 +178,31 @@ figma.connect(ComponentName, 'figma-url', {
 });
 ```
 
+**Use variant-specific connects when child layer names differ across variants.**
+
+`figma.children('LayerName')` only matches layers with that exact name. If different variants use different layer names for the same logical prop (e.g. `Button` for the single-action variant and `ButtonGroup` for the multi-action variant), a single `figma.children()` call will silently produce nothing for the non-matching variants. Split into separate connects with `variant: { ... }` filters:
+
+```tsx
+// ❌ Wrong: 'ButtonGroup' doesn't exist in the single-action variant
+figma.connect(Footer, url, {
+  props: { action: figma.children('ButtonGroup') },
+  example: ({ action }) => <Footer action={action} />,
+});
+
+// ✅ Correct: separate connects for each variant
+figma.connect(Footer, url, {
+  variant: { '# of actions': '1' },
+  props: { action: figma.children('Button') },
+  example: ({ action }) => <Footer action={action} />,
+});
+
+figma.connect(Footer, url, {
+  variant: { '# of actions': '2' },
+  props: { action: figma.children('ButtonGroup') },
+  example: ({ action }) => <Footer action={action} />,
+});
+```
+
 ## Common Mapping Mistakes
 
 ### 1. Text Content vs Text Properties
@@ -190,7 +235,27 @@ disabled: figma.enum('state', {
 });
 ```
 
-### 3. Property Name Formatting
+### 3. Using `figma.textContent()` on a Component Instance
+
+**Problem**: `figma.textContent()` is called with a layer name that belongs to a component instance, not a raw text layer. The mapping appears valid but fails at runtime in Figma with "Layer not found".
+
+**How to detect**: Call `get_metadata` on the layer node ID. If the response shows `<instance ...>` instead of `<text ...>`, `figma.textContent()` will not work.
+
+```tsx
+// ❌ Wrong: 'string.label' is a component instance — textContent silently fails
+label: figma.boolean('show label', {
+  true: figma.textContent('string.label'),
+  false: undefined,
+}),
+
+// ✅ Correct: use a hardcoded placeholder string
+label: figma.boolean('show label', {
+  true: 'Your label here.',
+  false: undefined,
+}),
+```
+
+### 4. Property Name Formatting
 
 **Problem**: Property names in Figma often have spaces and must match exactly.
 
