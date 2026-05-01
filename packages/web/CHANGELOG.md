@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.67.0 (5/1/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Add legalText prop to PageFooter component. [[#661](https://github.com/coinbase/cds/pull/661)]
+
 ## 8.66.2 (4/28/2026 PST)
 
 #### 🐞 Fixes
