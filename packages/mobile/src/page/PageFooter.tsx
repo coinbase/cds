@@ -6,6 +6,8 @@ import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxProps } from '../layout/Box';
+import { VStack } from '../layout/VStack';
+import { Text } from '../typography/Text';
 
 export type PageFooterBaseProps = SharedProps &
   PositionStyles & {
@@ -16,6 +18,10 @@ export type PageFooterBaseProps = SharedProps &
      * Set the background color of the box.
      */
     background?: ThemeVars.Color;
+    /**
+     * Optional legal text rendered below the action in a pre-styled caption. Centered on mobile.
+     */
+    legalText?: string;
   };
 
 export type PageFooterProps = PageFooterBaseProps & BoxProps;
@@ -23,18 +29,27 @@ export type PageFooterProps = PageFooterBaseProps & BoxProps;
 export const PageFooter = memo(
   forwardRef((_props: PageFooterProps, ref: React.ForwardedRef<View>) => {
     const mergedProps = useComponentConfig('PageFooter', _props);
-    const { action, ...props } = mergedProps;
+    const { action, legalText, ...props } = mergedProps;
     return (
       <Box
         ref={ref}
         accessibilityRole="toolbar"
         alignItems="center"
-        height={pageFooterHeight}
+        height={legalText ? undefined : pageFooterHeight}
         paddingX={3}
         paddingY={1.5}
         {...props}
       >
-        {action}
+        {legalText ? (
+          <VStack alignItems="center" gap={2}>
+            {action}
+            <Text color="fgMuted" font="legal">
+              {legalText}
+            </Text>
+          </VStack>
+        ) : (
+          action
+        )}
       </Box>
     );
   }),

@@ -77,4 +77,13 @@ describe('PageFooter', () => {
     render(<PageFooter {...defaultProps} />);
     expect(screen.getByRole('contentinfo')).toHaveStyle('background: bgPrimaryWash');
   });
+
+  it('renders legalText below the action', () => {
+    render(
+      <DefaultThemeProvider>
+        <PageFooter action={<Button>Save</Button>} legalText="Legal text" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByText('Legal text')).toBeInTheDocument();
+  });
 });

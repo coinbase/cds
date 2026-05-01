@@ -6,7 +6,9 @@ import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
 import type { Polymorphic } from '../core/polymorphism';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
+import { Text } from '../typography/Text';
 
 export type PageFooterBaseProps = SharedProps &
   PositionStyles & {
@@ -17,6 +19,10 @@ export type PageFooterBaseProps = SharedProps &
      * Set the background color of the box.
      */
     background?: ThemeVars.Color;
+    /**
+     * Optional legal text rendered below the action in a pre-styled caption. Right-aligned on desktop, centered on mobile/responsive web.
+     */
+    legalText?: string;
   };
 
 export const pageFooterPaddingX: ResponsiveProps<StaticStyleProps>['paddingX'] = {
@@ -31,6 +37,12 @@ export const pageFooterJustifyContent: ResponsiveProps<StaticStyleProps>['justif
   desktop: 'flex-end',
 } as const;
 
+const legalTextAlignItems: ResponsiveProps<StaticStyleProps>['alignItems'] = {
+  phone: 'center',
+  tablet: 'flex-end',
+  desktop: 'flex-end',
+} as const;
+
 export type PageFooterProps = Polymorphic.ExtendableProps<
   BoxProps<BoxDefaultElement>,
   PageFooterBaseProps
@@ -40,7 +52,8 @@ export const PageFooter = memo(
     const mergedProps = useComponentConfig('PageFooter', _props);
     const {
       action,
-      height = pageFooterHeight,
+      legalText,
+      height = legalText ? undefined : pageFooterHeight,
       justifyContent = pageFooterJustifyContent,
       paddingX = pageFooterPaddingX,
       paddingY = 1.5,
@@ -57,7 +70,16 @@ export const PageFooter = memo(
         role={role}
         {...props}
       >
-        {action}
+        {legalText ? (
+          <VStack alignItems={legalTextAlignItems} gap={2}>
+            {action}
+            <Text color="fgMuted" font="legal">
+              {legalText}
+            </Text>
+          </VStack>
+        ) : (
+          action
+        )}
       </Box>
     );
   }),
