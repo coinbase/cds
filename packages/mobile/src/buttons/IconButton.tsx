@@ -139,7 +139,7 @@ export const IconButton = memo(
               indeterminate
               color={colorValue}
               size={progressCircleSize ?? iconSizeValue}
-              styles={{ root: styles?.progressCircle }}
+              style={styles?.progressCircle}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />

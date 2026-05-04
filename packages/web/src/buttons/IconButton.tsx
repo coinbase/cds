@@ -158,12 +158,10 @@ export const IconButton: IconButtonComponent = memo(
             <ProgressCircle
               indeterminate
               accessibilityLabel="Loading"
-              classNames={{
-                root: cx(iconButtonClassNames.progressCircle, classNames?.progressCircle),
-              }}
+              className={cx(iconButtonClassNames.progressCircle, classNames?.progressCircle)}
               color="currentColor"
               size={progressCircleSize ?? iconSizeValue}
-              styles={{ root: styles?.progressCircle }}
+              style={styles?.progressCircle}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />
