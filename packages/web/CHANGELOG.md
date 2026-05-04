@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.71.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add icon glyph and progress circle styles to IconButton. [[#606](https://github.com/coinbase/cds/pull/606)]
+
 ## 8.70.0 (5/8/2026 PST)
 
 #### 🚀 Updates
