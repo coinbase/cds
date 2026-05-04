@@ -47,8 +47,12 @@ export type IconButtonBaseProps = SharedProps &
     variant?: IconButtonVariant;
     /** Custom styles for individual elements of the IconButton component */
     styles?: {
+      /** Root Pressable element */
+      root?: StyleProp<ViewStyle>;
       /** Inner icon glyph Text element */
       icon?: StyleProp<TextStyle>;
+      /** Loading progress circle element */
+      progressCircle?: StyleProp<ViewStyle>;
     };
   };
 
@@ -107,8 +111,9 @@ export const IconButton = memo(
       (state: PressableStateCallbackType) => [
         sizingStyle,
         typeof style === 'function' ? style(state) : style,
+        styles?.root,
       ],
-      [sizingStyle, style],
+      [sizingStyle, style, styles?.root],
     );
 
     return (
@@ -134,6 +139,7 @@ export const IconButton = memo(
               indeterminate
               color={colorValue}
               size={progressCircleSize ?? iconSizeValue}
+              styles={{ root: styles?.progressCircle }}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />

@@ -23,6 +23,8 @@ export const iconButtonClassNames = {
   root: 'cds-IconButton',
   /** Inner icon glyph element */
   icon: 'cds-IconButton-icon',
+  /** Loading progress circle element */
+  progressCircle: 'cds-IconButton-progressCircle',
 } as const;
 
 export const iconButtonDefaultElement = 'button';
@@ -156,8 +158,12 @@ export const IconButton: IconButtonComponent = memo(
             <ProgressCircle
               indeterminate
               accessibilityLabel="Loading"
+              classNames={{
+                root: cx(iconButtonClassNames.progressCircle, classNames?.progressCircle),
+              }}
               color="currentColor"
               size={progressCircleSize ?? iconSizeValue}
+              styles={{ root: styles?.progressCircle }}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />
