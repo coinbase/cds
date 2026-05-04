@@ -155,20 +155,11 @@ const IconButtonScreen = () => {
           <Box alignItems="center" flexDirection="row" gap={2}>
             <IconButton
               loading
-              accessibilityLabel="Reduced opacity progress circle via styles.progressCircle"
+              accessibilityLabel="Reduced opacity progress circle"
               name={iconName}
               styles={{ progressCircle: { opacity: 0.3 } }}
             />
-            <Text font="body">Reduced opacity via styles.progressCircle</Text>
-          </Box>
-          <Box alignItems="center" flexDirection="row" gap={2}>
-            <IconButton
-              loading
-              accessibilityLabel="Custom border radius via styles.progressCircle"
-              name={iconName}
-              styles={{ progressCircle: { transform: [{ rotate: '45deg' }] } }}
-            />
-            <Text font="body">Rotated via styles.progressCircle</Text>
+            <Text font="body">Reduced opacity</Text>
           </Box>
         </VStack>
       </Example>
