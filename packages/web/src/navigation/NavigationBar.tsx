@@ -132,20 +132,21 @@ export const NavigationBar = memo((_props: NavigationBarProps) => {
       {...props}
     >
       <HStack alignItems="center" gap={columnGap ?? { base: 2, phone: 1 }} overflow="auto">
-        <Collapsible
-          collapsed={!start}
-          dangerouslyDisableOverflowHidden={dangerouslyDisableOverflowHidden}
-          direction="horizontal"
-        >
-          <HStack
-            alignItems="center"
-            className={cx(navigationBarClassNames.start, classNames?.start)}
-            paddingEnd={columnGap ?? { base: 2, phone: 1 }}
-            style={styles?.start}
+        {startNode != null && (
+          <Collapsible
+            collapsed={!start}
+            dangerouslyDisableOverflowHidden={dangerouslyDisableOverflowHidden}
+            direction="horizontal"
           >
-            {startNode}
-          </HStack>
-        </Collapsible>
+            <HStack
+              alignItems="center"
+              className={cx(navigationBarClassNames.start, classNames?.start)}
+              style={styles?.start}
+            >
+              {startNode}
+            </HStack>
+          </Collapsible>
+        )}
         <HStack
           alignItems="center"
           className={cx(navigationBarClassNames.content, classNames?.content)}
