@@ -40,17 +40,6 @@ export type CollapsibleBaseProps = SharedProps &
      * Max width of the content. Overflow content will be scrollable.
      */
     maxWidth?: BoxProps<BoxDefaultElement>['maxWidth'];
-    /**
-     * Controls how the element is hidden after the collapse animation completes.
-     *
-     * - `'visibility-hidden'` (default) — applies `visibility: hidden`. The element remains
-     *   in the layout flow and continues to occupy space, but its children are not focusable.
-     * - `'display-none'` — applies `display: none`. The element is fully removed from the
-     *   layout flow (e.g. no longer contributes flex gap) and its children are not focusable.
-     *
-     * @default 'visibility-hidden'
-     */
-    collapsedStyle?: 'visibility-hidden' | 'display-none';
   };
 
 export type CollapsibleProps = CollapsibleBaseProps;
@@ -69,7 +58,6 @@ export const Collapsible = memo(
       id,
       role = 'region',
       dangerouslyDisableOverflowHidden = false,
-      collapsedStyle = 'visibility-hidden',
       // Spacing
       padding,
       paddingBottom,
@@ -95,29 +83,23 @@ export const Collapsible = memo(
         : { maxHeight };
     }, [direction, maxWidth, maxHeight]);
 
-    // Tracks the hidden state after the collapse animation completes.
-    // Initialized to collapsed so the element starts in the correct hidden state.
-    // Restored immediately when expanding so the animation has content to reveal.
-    const [isHidden, setIsHidden] = useState(collapsed);
-    if (!collapsed && isHidden) {
-      setIsHidden(false);
+    // display: none is applied after the collapse animation completes so the element no longer
+    // participates in layout and its children are not focusable. It is restored immediately when
+    // expanding so the animation has content to reveal.
+    const [isDisplayNone, setIsDisplayNone] = useState(collapsed);
+    if (!collapsed && isDisplayNone) {
+      setIsDisplayNone(false);
     }
 
     const handleAnimationComplete = useCallback(() => {
       if (collapsed) {
-        setIsHidden(true);
+        setIsDisplayNone(true);
       }
     }, [collapsed]);
 
     const style = useMemo(() => {
-      if (!isHidden) return motionStyle;
-      return {
-        ...motionStyle,
-        ...(collapsedStyle === 'display-none'
-          ? { display: 'none' }
-          : { visibility: 'hidden' as const }),
-      };
-    }, [motionStyle, isHidden, collapsedStyle]);
+      return isDisplayNone ? { ...motionStyle, display: 'none' } : motionStyle;
+    }, [motionStyle, isDisplayNone]);
 
     return (
       <motion.div

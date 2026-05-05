@@ -134,7 +134,6 @@ export const NavigationBar = memo((_props: NavigationBarProps) => {
       <HStack alignItems="center" overflow="auto">
         <Collapsible
           collapsed={!start}
-          collapsedStyle="display-none"
           dangerouslyDisableOverflowHidden={dangerouslyDisableOverflowHidden}
           direction="horizontal"
         >
