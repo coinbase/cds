@@ -65,7 +65,7 @@ describe('Collapsible', () => {
 
     fireEvent.click(screen.getByText('Click me!'));
     await waitFor(() => {
-      expect(screen.getByTestId('mock-collapse')).toHaveStyle('visibility: visible');
+      expect(screen.getByTestId('mock-collapse')).not.toHaveStyle('visibility: hidden');
     });
     await waitFor(() => {
       expect(screen.getByText('Collapsible Content')).toBeVisible();

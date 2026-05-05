@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.69.0 (5/5/2026 PST)
+
+#### 🚀 Updates
+
+- Fix: NavigationBar no longer reserves space for absent start content. [[#664](https://github.com/coinbase/cds/pull/664)]
+- Add collapsedStyle prop to Collapsible.[[#664](https://github.com/coinbase/cds/pull/664)]
+
 ## 8.68.0 (5/1/2026 PST)
 
 #### 🚀 Updates
