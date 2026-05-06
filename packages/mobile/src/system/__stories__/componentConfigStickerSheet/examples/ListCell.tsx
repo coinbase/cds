@@ -32,6 +32,7 @@ export const ListCellExample = memo(() => {
         subtitle="XRP"
         title="XRP"
       />
+      <ListCell title="Short" />
     </VStack>
   );
 });
