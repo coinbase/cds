@@ -4,11 +4,7 @@ import {
   type OverlayContentContextValue,
 } from '@cbhq/cds-common/overlays/OverlayContentContext';
 import { TourContext, type TourContextValue } from '@cbhq/cds-common/tour/TourContext';
-import type {
-  TourOptions,
-  TourScrollOptions,
-  TourStepValue,
-} from '@cbhq/cds-common/tour/useTour';
+import type { TourOptions, TourScrollOptions, TourStepValue } from '@cbhq/cds-common/tour/useTour';
 import { useTour } from '@cbhq/cds-common/tour/useTour';
 import type { Rect, SharedProps } from '@cbhq/cds-common/types';
 import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
@@ -117,7 +113,11 @@ export type TourBaseProps<TourStepId extends string = string> = SharedProps &
      */
     TourStepArrowComponent?: TourStepArrowComponent;
     /**
-     * Hide overlay when tour is active
+     * Hide the overlay/mask while the tour is active. The step still renders
+     * but as a non-modal coachmark: the underlying page stays scrollable and
+     * interactive (the root forwards `pointer-events`), `aria-modal` is
+     * omitted, focus is not trapped, and the step container is focused on
+     * activation so keyboard users can still reach it.
      */
     hideOverlay?: boolean;
     /**
@@ -345,17 +345,54 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     ],
   );
 
-  // Manages scroll locking for the tour's duration. `useEffect` is used to
-  // guarantee that scroll is re-enabled when the tour is closed or unmounted.
-  useEffect(() => {
-    if (activeTourStep?.id) {
-      blockScroll(true);
-    }
+  const isOverlayHidden = activeTourStep?.hideOverlay ?? hideOverlay;
 
-    return () => {
-      blockScroll(false);
-    };
-  }, [activeTourStep, animationApi, blockScroll, disableAutoScroll, scrollOptions]);
+  // Scroll is only locked while a modal step is active. Hidden-overlay steps
+  // intentionally leave the page scrollable. `useEffect` guarantees scroll is
+  // re-enabled on close, unmount, or transition to a hidden-overlay step.
+  useEffect(() => {
+    if (!activeTourStep?.id || isOverlayHidden) return;
+    blockScroll(true);
+    return () => blockScroll(false);
+  }, [activeTourStep?.id, isOverlayHidden, blockScroll]);
+
+  // When the overlay is hidden there is no FocusTrap; move focus to the step
+  // container so keyboard users land inside the coachmark.
+  const stepContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (isOverlayHidden && activeTourStep?.id) {
+      stepContainerRef.current?.focus();
+    }
+  }, [isOverlayHidden, activeTourStep?.id]);
+
+  const rootStyle = useMemo(
+    () => (isOverlayHidden ? { pointerEvents: 'none' as const, ...styles?.root } : styles?.root),
+    [isOverlayHidden, styles?.root],
+  );
+
+  const floatingDivStyle = useMemo(
+    () =>
+      isOverlayHidden ? { ...floatingStyles, pointerEvents: 'auto' as const } : floatingStyles,
+    [isOverlayHidden, floatingStyles],
+  );
+
+  const renderStepContainer = () => (
+    <animated.div
+      ref={stepContainerRef}
+      className={cx(tourClassNames.stepContainer, classNames?.stepContainer)}
+      style={stepContainerStyle}
+      tabIndex={isOverlayHidden ? -1 : undefined}
+    >
+      <RenderedTourStepArrow
+        ref={tourStepArrowRef}
+        arrow={arrow}
+        className={cx(tourClassNames.stepArrow, classNames?.stepArrow)}
+        placement={placement}
+        style={styles?.stepArrow}
+      />
+      {RenderedTourStep && <RenderedTourStep {...activeTourStep} />}
+    </animated.div>
+  );
 
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
@@ -370,14 +407,14 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
             <div
               aria-label={accessibilityLabel}
               aria-labelledby={accessibilityLabelledBy}
-              aria-modal="true"
+              aria-modal={isOverlayHidden ? undefined : 'true'}
               className={cx(tourClassNames.root, containerCss, classNames?.root)}
               data-testid={testID}
               id={id}
               role="dialog"
-              style={styles?.root}
+              style={rootStyle}
             >
-              {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
+              {!isOverlayHidden && activeTourStepTarget && (
                 <animated.div
                   className={cx(tourClassNames.mask, classNames?.mask)}
                   style={tourMaskStyles}
@@ -391,22 +428,12 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
                   />
                 </animated.div>
               )}
-              <div ref={refs.setFloating} style={floatingStyles}>
-                <FocusTrap>
-                  <animated.div
-                    className={cx(tourClassNames.stepContainer, classNames?.stepContainer)}
-                    style={stepContainerStyle}
-                  >
-                    <RenderedTourStepArrow
-                      ref={tourStepArrowRef}
-                      arrow={arrow}
-                      className={cx(tourClassNames.stepArrow, classNames?.stepArrow)}
-                      placement={placement}
-                      style={styles?.stepArrow}
-                    />
-                    <RenderedTourStep {...activeTourStep} />
-                  </animated.div>
-                </FocusTrap>
+              <div ref={refs.setFloating} style={floatingDivStyle}>
+                {isOverlayHidden ? (
+                  renderStepContainer()
+                ) : (
+                  <FocusTrap>{renderStepContainer()}</FocusTrap>
+                )}
               </div>
             </div>
           </Portal>
