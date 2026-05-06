@@ -66,7 +66,7 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   positive: 'bgPositive',
   negative: 'bgNegative',
   foreground: 'bgInverse',
-  foregroundMuted: 'bgLineHeavy',
+  foregroundMuted: 'bgLine',
   secondary: 'bgSecondary',
 };
 
@@ -204,12 +204,19 @@ export const InputStack = memo(
         return 'transparent';
       }
 
+      if (variant === 'secondary') {
+        return 'transparent';
+      }
+
+      if (variant === 'foreground' || variant === 'foregroundMuted') {
+        return 'var(--color-bgInverse)';
+      }
+
       if (variant === 'positive' || variant === 'negative') {
         return `var(--color-${variantColorMap[variant]})`;
       }
 
-      // all variants except for positive/negative receive the primary focus color
-      return 'var(--color-bgPrimary)';
+      return `var(--color-${variantColorMap[variant]})`;
     }, [disableFocusedStyle, variant]);
 
     const borderColorUnfocused = useMemo(() => {
@@ -229,6 +236,18 @@ export const InputStack = memo(
       };
     }, [borderColorUnfocused, borderColorFocused, focusedBorderWidth, inputBorderRadius]);
 
+    const resolvedInputBackground = useMemo(() => {
+      if (variant === 'secondary') {
+        return 'bgSecondary';
+      }
+
+      if (variant === 'negative' && inputBackground === 'bg') {
+        return 'bgNegativeWash';
+      }
+
+      return inputBackground;
+    }, [variant, inputBackground]);
+
     return (
       <VStack
         gap={inputStackGap}
@@ -246,7 +265,7 @@ export const InputStack = memo(
             <Interactable
               ref={ref}
               as="span"
-              background={variant === 'secondary' ? 'bgSecondary' : inputBackground}
+              background={resolvedInputBackground}
               blendStyles={blendStyles}
               borderRadius={borderRadius}
               borderWidth={borderWidth}

@@ -95,7 +95,7 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   positive: 'fgPositive',
   negative: 'fgNegative',
   foreground: 'fg',
-  foregroundMuted: 'fgMuted',
+  foregroundMuted: 'bgLine',
   secondary: 'bgSecondary',
 };
 
@@ -127,6 +127,17 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
   } = mergedProps;
   const theme = useTheme();
   const [inputAreaSize, onInputAreaLayout] = useLayout();
+  const resolvedInputBackground = useMemo(() => {
+    if (variant === 'secondary') {
+      return 'bgSecondary';
+    }
+
+    if (variant === 'negative' && inputBackground === 'bg') {
+      return 'bgNegativeWash';
+    }
+
+    return inputBackground;
+  }, [variant, inputBackground]);
 
   const inputAreaStyle: ViewStyle = useMemo(() => {
     const inputBorderRadius: ViewStyle = {
@@ -149,13 +160,12 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
         variant === 'secondary'
           ? 'transparent'
           : theme.color[
-              variant === 'foregroundMuted' || !variant ? 'bgLineHeavy' : variantColorMap[variant]
+              variant === 'foregroundMuted' || !variant ? 'bgLine' : variantColorMap[variant]
             ],
       borderWidth: theme.borderWidth[borderWidth],
       flexDirection: 'row',
       flexGrow: 1,
-      backgroundColor:
-        variant === 'secondary' ? theme.color.bgSecondary : theme.color[inputBackground],
+      backgroundColor: theme.color[resolvedInputBackground],
       borderRadius: theme.borderRadius[borderRadius],
       overflow: 'hidden',
       ...inputBorderRadius,
@@ -168,7 +178,7 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
     theme.borderWidth,
     theme.borderRadius,
     borderWidth,
-    inputBackground,
+    resolvedInputBackground,
     borderRadius,
   ]);
 

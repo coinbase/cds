@@ -263,7 +263,7 @@ describe('TextInput', () => {
     );
 
     const inputArea = screen.getByTestId('input-interactable-area');
-    expect(inputArea).toHaveStyle('--border-color-focused: var(--color-bgPrimary)');
+    expect(inputArea).toHaveStyle('--border-color-focused: var(--color-bgInverse)');
     expect(inputArea).toHaveStyle('--border-width-focused: var(--borderWidth-200)');
   });
 

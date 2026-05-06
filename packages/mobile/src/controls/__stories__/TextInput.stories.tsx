@@ -436,50 +436,32 @@ const InputScreen = () => {
           placeholder="Placeholder"
         />
       </Example>
-      <Example inline title="TextInput with inside label">
-        <MockTextInput label="Username" labelVariant="inside" placeholder="john.doe@coinbase.com" />
-      </Example>
-      <Example inline title="TextInput with inside label and start node">
-        <MockTextInput
-          label="Username"
-          labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
-          start={<InputIconButton transparent name="search" />}
-        />
-      </Example>
-      <Example inline title="TextInput with inside label and end node">
-        <MockTextInput
-          end={<InputIconButton transparent name="lightningBolt" />}
-          label="Username"
-          labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
-        />
-      </Example>
-      <Example inline title="TextInput with inside label and both nodes">
-        <MockTextInput
-          end={<InputIconButton transparent name="close" />}
-          label="Username"
-          labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
-          start={<InputIconButton transparent name="search" />}
-        />
-      </Example>
-      <Example inline title="TextInput with inside label and compact">
-        <MockTextInput
-          compact
-          label="Username"
-          labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
-        />
-      </Example>
-      <Example inline title="TextInput with inside label and error state">
-        <MockTextInput
-          helperText="Error: Your favorite color is not orange"
-          label="Error state"
-          labelVariant="inside"
-          placeholder="Enter your favorite color"
-          variant="negative"
-        />
+      <Example inline title="TextInput inside label (Figma + existing variations)">
+        <Box width="100%">
+          <VStack gap={2} width="100%">
+            <Text color="fgMuted" font="caption">
+              Figma inside-label states
+            </Text>
+            <VStack gap={1} width="100%">
+              <Text color="fgMuted" font="caption">
+                Default
+              </Text>
+              <MockTextInput label="Label" labelVariant="inside" placeholder="Placeholder" />
+              <Text color="fgMuted" font="caption">
+                Filled
+              </Text>
+              <MockTextInput label="Label" labelVariant="inside" value="Text" />
+              <Text color="fgMuted" font="caption">
+                Read only
+              </Text>
+              <MockTextInput label="Label" labelVariant="inside" readOnly value="Text" />
+              <Text color="fgMuted" font="caption">
+                Negative
+              </Text>
+              <MockTextInput label="Label" labelVariant="inside" value="Text" variant="negative" />
+            </VStack>
+          </VStack>
+        </Box>
       </Example>
       <Example inline title="TextInput with custom label">
         <MockTextInput
