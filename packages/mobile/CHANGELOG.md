@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.69.1 (5/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support BoxBaseProps in mobile ListCell. [[#667](https://github.com/coinbase/cds/pull/666)]
+
 ## 8.69.0 ((5/5/2026, 02:27 PM PST))
 
 This is an artificial version bump with no new change.
