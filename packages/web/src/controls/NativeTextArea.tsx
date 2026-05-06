@@ -32,7 +32,7 @@ const baseCss = css`
   }
 
   &:-webkit-autofill {
-    border-radius: var(--borderRadius-200);
+    border-radius: var(--borderRadius-400);
   }
 `;
 

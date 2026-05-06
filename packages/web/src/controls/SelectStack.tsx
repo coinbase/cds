@@ -30,6 +30,8 @@ const variantToHelperTextColor: Record<
   secondary: 'fgMuted',
 };
 
+const defaultSelectBorderRadius: ThemeVars.BorderRadius = 400;
+
 export const SelectStack = memo(
   forwardRef<HTMLElement, SelectStackProps>(function SelectStack(
     {
@@ -86,6 +88,7 @@ export const SelectStack = memo(
         }
         labelVariant={labelVariant}
         variant={variant}
+        borderRadius={defaultSelectBorderRadius}
         width="100%"
       />
     );
