@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustration-tasks:generate-svgjs-map
  */
 
 import type { PictogramName } from '../types/PictogramName';

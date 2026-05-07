@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustration-tasks:generate-svgjs-map
  */
 
 import type { SpotSquareName } from '../types/SpotSquareName';
@@ -111,7 +111,7 @@ const versionMap: Record<SpotSquareName, number> = {
   guideStartInvesting: 5,
   guideCryptoBeginner: 5,
   guideBullCase: 4,
-  defiEarnAnnouncement: 6,
+  defiEarnAnnouncement: 7,
   cryptoApps: 7,
   confirmIDCard: 6,
   confirmAddress: 5,
@@ -231,7 +231,7 @@ const versionMap: Record<SpotSquareName, number> = {
   baseConnectMedium: 0,
   basePeopleMedium: 0,
   baseMintNftMedium: 0,
-  baseCheckMedium: 0,
+  baseCheckMedium: 1,
   baseChartMedium: 1,
   basePiechartMedium: 0,
   baseCoinCryptoMedium: 0,
@@ -271,7 +271,7 @@ const versionMap: Record<SpotSquareName, number> = {
   instoEthStakingRewards: 0,
   instoStaking: 0,
   instoEthStaking: 0,
-  instoAuthenticatorProgress: 2,
+  instoAuthenticatorProgress: 3,
   instoUbiKey: 1,
   instoSideChainSide: 0,
   instoSecurityKey: 1,

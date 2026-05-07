@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustration-tasks:generate-svgjs-map
  */
 
 import type { PictogramName } from '../types/PictogramName';
@@ -147,7 +147,7 @@ const versionMap: Record<PictogramName, number> = {
   coinbaseOneFiat: 3,
   waitingForConsensus: 3,
   reviewAndAdd: 3,
-  browserMultiPlatform: 7,
+  browserMultiPlatform: 8,
   finance: 3,
   crypto101: 4,
   walletPassword: 4,
@@ -440,7 +440,7 @@ const versionMap: Record<PictogramName, number> = {
   baseErrorButterflySmall: 0,
   baseMintNftSmall: 1,
   baseTargetSmall: 1,
-  baseErrorSmall: 0,
+  baseErrorSmall: 1,
   baseDiamondSmall: 0,
   baseSecuritySmall: 0,
   basePeopleSmall: 0,

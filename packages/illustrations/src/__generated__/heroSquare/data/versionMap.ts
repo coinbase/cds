@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustration-tasks:generate-svgjs-map
  */
 
 import type { HeroSquareName } from '../types/HeroSquareName';
@@ -380,7 +380,7 @@ const versionMap: Record<HeroSquareName, number> = {
   cbxrp: 0,
   cbltc: 0,
   cbdoge: 0,
-  baseErrorButterfly: 0,
+  baseErrorButterfly: 1,
   baseConnectLarge: 1,
   baseRewardsCalmLarge: 1,
   baseLoadingLarge: 1,

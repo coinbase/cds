@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustration-tasks:generate-svgjs-map
  */
 
 import type { SpotRectangleName } from '../types/SpotRectangleName';
@@ -55,7 +55,7 @@ const versionMap: Record<SpotRectangleName, number> = {
   switchAdvancedToSimpleTrading: 5,
   linkCoinbaseWallet: 7,
   portfolioOverview: 4,
-  sendCryptoFaster: 4,
+  sendCryptoFaster: 5,
   uob: 4,
   highFees: 5,
   governance: 4,
