@@ -7,6 +7,7 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
+import type { ResponsiveProp } from '../styles/styleProps';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
@@ -40,15 +41,15 @@ const buttonDisabledCss = css`
 export type SegmentedTabBaseProps<TabId extends string = string> = PressableBaseProps &
   TabValue<TabId> & {
     /**
-     * Text color when the SegmentedTab is active.
-     * @default negativeForeground
+     * Text color when active.
+     * @default fgInverse
      */
-    activeColor?: ThemeVars.Color;
+    activeColor?: ResponsiveProp<ThemeVars.Color>;
     /**
-     * Text color when the SegmentedTab is inactive.
-     * @default foreground
+     * Text color when inactive.
+     * @default fg
      */
-    color?: ThemeVars.Color;
+    color?: ResponsiveProp<ThemeVars.Color>;
   };
 
 export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {

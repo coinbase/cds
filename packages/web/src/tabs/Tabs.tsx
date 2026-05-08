@@ -18,6 +18,7 @@ import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
+import type { ResponsiveProp } from '../styles/styleProps';
 
 import { DefaultTab } from './DefaultTab';
 import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
@@ -65,6 +66,10 @@ export type TabComponentProps<
   className?: string;
   style?: React.CSSProperties;
   'data-rendered-tab'?: boolean;
+  /** Inactive label color (from `Tabs` when set). */
+  color?: ResponsiveProp<ThemeVars.Color>;
+  /** Active label color (from `Tabs` when set). */
+  activeColor?: ResponsiveProp<ThemeVars.Color>;
 };
 
 export type TabComponent<
@@ -77,8 +82,9 @@ export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 export type TabsBaseProps<
   TabId extends string = string,
   TTab extends TabValue<TabId> = TabValue<TabId>,
-> = Omit<BoxBaseProps, 'onChange'> &
-  Omit<TabsOptions<TabId, TTab>, 'tabs'> & {
+> = Omit<BoxBaseProps, 'color' | 'onChange'> &
+  Omit<TabsOptions<TabId, TTab>, 'tabs'> &
+  Pick<TabComponentProps<TabId, TTab>, 'color' | 'activeColor'> & {
     /** The array of tabs data. Each tab may optionally define a custom Component to render. */
     tabs: (TTab & { Component?: TabComponent<TabId, TTab> })[];
     /** The default Component to render each tab. */
@@ -95,7 +101,7 @@ export type TabsProps<
   TabId extends string = string,
   TTab extends TabValue<TabId> = TabValue<TabId>,
 > = TabsBaseProps<TabId, TTab> &
-  Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'> & {
+  Omit<HStackProps<HStackDefaultElement>, 'color' | 'onChange' | 'ref'> & {
     /** Custom styles for individual elements of the Tabs component */
     styles?: {
       /** Root element */
@@ -132,7 +138,9 @@ const TabsComponent = memo(
         TabComponent = DefaultTab,
         TabsActiveIndicatorComponent = DefaultTabsActiveIndicator,
         activeBackground,
+        activeColor,
         activeTab,
+        color,
         onActiveTabElementChange,
         disabled,
         onChange,
@@ -247,6 +255,7 @@ const TabsComponent = memo(
           borderTopLeftRadius={borderTopLeftRadius}
           borderTopRightRadius={borderTopRightRadius}
           className={cx(className, classNames?.root)}
+          color={color}
           onKeyDown={handleTabsContainerKeyDown}
           opacity={disabled ? accessibleOpacityDisabled : 1}
           position={position}
@@ -272,6 +281,8 @@ const TabsComponent = memo(
             {tabs.map((props) => {
               const RenderedTab = props.Component ?? TabComponent;
               const renderedTabProps = {
+                activeColor,
+                color,
                 ...props,
                 'data-rendered-tab': true,
                 className: classNames?.tab,

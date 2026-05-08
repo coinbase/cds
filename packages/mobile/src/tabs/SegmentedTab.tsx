@@ -23,13 +23,13 @@ export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabI
   Pick<TextBaseProps, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'> &
   Omit<PressableBaseProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
     /**
-     * Text color when the SegmentedTab is active.
-     * @default negativeForeground
+     * Text color when active.
+     * @default fgInverse
      */
     activeColor?: ThemeVars.Color;
     /**
-     * Text color when the SegmentedTab is inactive.
-     * @default foreground
+     * Text color when inactive.
+     * @default fg
      */
     color?: ThemeVars.Color;
   };

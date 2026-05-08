@@ -25,7 +25,7 @@ export type DefaultTabLabelProps = Partial<Pick<DotCountBaseProps, 'count' | 'ma
 
 export type DefaultTabProps<TabId extends string = string> = Omit<
   PressableProps,
-  'children' | 'onPress' | 'style'
+  'children' | 'onPress' | 'style' | 'color'
 > &
   TabComponentProps<TabId, TabValue<TabId> & DefaultTabLabelProps> & {
     /** Callback that is fired when the tab is pressed, after the active tab updates. */
@@ -50,6 +50,8 @@ const DefaultTabComponent = memo(
         accessibilityLabel,
         style,
         testID,
+        color = 'fg',
+        activeColor = 'fgPrimary',
         ...props
       }: DefaultTabProps<TabId>,
       ref: React.ForwardedRef<View>,
@@ -95,7 +97,7 @@ const DefaultTabComponent = memo(
           {...props}
         >
           <HStack alignItems="center" gap={0.5}>
-            <Text color={isActive ? 'fgPrimary' : 'fg'} font="headline" style={labelPaddingStyle}>
+            <Text color={isActive ? activeColor : color} font="headline" style={labelPaddingStyle}>
               {label}
             </Text>
             {!!count && <DotCount count={count} max={max} />}
