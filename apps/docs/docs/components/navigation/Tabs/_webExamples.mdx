@@ -2,7 +2,7 @@ Tabs manages which tab is active and positions the animated indicator. For the c
 
 ## Basics
 
-Out of the box, **`Tabs`** uses **`DefaultTab`** for each row (headline text, optional [DotCount](/components/other/DotCount/) via `count` / `max` on each tab) and **`DefaultTabsActiveIndicator`** for the animated underline. **`activeBackground`** sets the **underline color** (it is forwarded to the indicator as its `background` token).
+Out of the box, **`Tabs`** uses **`DefaultTab`** for each row (headline text, optional [DotCount](/components/other/DotCount/) via `count` / `max` on each tab) and **`DefaultTabsActiveIndicator`** for the animated underline. Set **`color`** / **`activeColor`** on **`Tabs`** for inactive / active label tokens, and **`activeBackground`** for the underline (forwarded to the indicator as its **`background`** token).
 
 ```jsx live
 function Example() {
@@ -107,6 +107,41 @@ function Example() {
 }
 ```
 
+## Accessibility
+
+Provide a descriptive **`accessibilityLabel`** on **`Tabs`** for the tab list. **`DefaultTab`** sets `aria-controls` / `aria-selected` for each tab; pair tabs with **`role="tabpanel"`** regions in your page content when you switch panels.
+
+## Styling
+
+### Colors
+
+You can set **`color`** and **`activeColor`** for label tokens, and **`activeBackground`** for the underline.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeBackground="fg"
+      activeColor="fg"
+      activeTab={activeTab}
+      background="bg"
+      color="fgMuted"
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+    />
+  );
+}
+```
+
 ## Custom `TabComponent`
 
 Use **`useTabsContext`** inside your own tab button.
@@ -205,7 +240,3 @@ function Example() {
   );
 }
 ```
-
-## Accessibility
-
-Provide a descriptive **`accessibilityLabel`** on **`Tabs`** for the tab list. **`DefaultTab`** sets `aria-controls` / `aria-selected` for each tab; pair tabs with **`role="tabpanel"`** regions in your page content when you switch panels.
