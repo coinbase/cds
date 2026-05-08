@@ -15,13 +15,13 @@ export const TabsExample = memo(() => {
 
   return (
     <Tabs
+      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
       accessibilityLabel="Market views"
       activeTab={activeTab}
       background="bg"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
-      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
     />
   );
 });
