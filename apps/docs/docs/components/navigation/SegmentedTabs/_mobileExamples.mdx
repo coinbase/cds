@@ -150,6 +150,8 @@ function Example() {
 }
 ```
 
+### Colors
+
 You can set `color` and `activeColor` to change the color of the labels.
 
 ```jsx
@@ -157,6 +159,7 @@ function Example() {
   const tabs = [
     { id: 'buy', label: 'Buy' },
     { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
   ];
   const [activeTab, updateActiveTab] = useState(tabs[0]);
   const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
