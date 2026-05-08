@@ -16,6 +16,7 @@ import { InputChipExample } from './examples/InputChip';
 import { ListCellExample } from './examples/ListCell';
 import { SearchExample } from './examples/Search';
 import { SegmentedTabsExample } from './examples/SegmentedTabs';
+import { TabsExample } from './examples/Tabs';
 import { SelectExample } from './examples/Select';
 import { SelectChipExample } from './examples/SelectChip';
 import { TagExample } from './examples/Tag';
@@ -32,6 +33,9 @@ export const StickerSheet = memo(() => {
           </Container>
           <Container title="Segmented Tabs">
             <SegmentedTabsExample />
+          </Container>
+          <Container title="Tabs">
+            <TabsExample />
           </Container>
           <Container title="Select Input (SelectOption)">
             <SelectExample />

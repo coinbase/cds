@@ -131,4 +131,10 @@ export const customComponentConfig: ComponentConfig = {
       ...(spacingVariant === 'normal' ? { minHeight: 36 } : {}),
     };
   },
+
+  Tabs: {
+    activeColor: 'fg',
+    color: 'fgMuted',
+    activeBackground: 'fg',
+  },
 };
