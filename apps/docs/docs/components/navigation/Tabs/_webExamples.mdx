@@ -15,22 +15,14 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Example tabs"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
-      // default value; can be omitted.
-      TabComponent={DefaultTab}
       tabs={tabs}
-      // default value; can be omitted.
-      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
     />
   );
 }
 ```
-
-You can omit `TabComponent` explicitly: **`Tabs`** defaults it to **`DefaultTab`**.
 
 ### No initial selection
 
@@ -45,9 +37,7 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Example tabs"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
@@ -70,9 +60,7 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Mail folders"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
@@ -96,9 +84,7 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Example tabs"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
@@ -131,12 +117,10 @@ function Example() {
       activeBackground="fg"
       activeColor="fg"
       activeTab={activeTab}
-      background="bg"
       color="fgMuted"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
-      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
     />
   );
 }
@@ -172,7 +156,7 @@ function Example() {
   }, []);
 
   const ActiveIndicator = useCallback(
-    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
+    (props) => <TabsActiveIndicator {...props} background="bgPositive" bottom={0} height={2} />,
     [],
   );
 
