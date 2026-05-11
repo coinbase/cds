@@ -92,7 +92,7 @@ export const Tag = memo(
       alignItems = 'center',
       gap = 0.5,
       justifyContent = 'center',
-      paddingX: paddingXProp,
+      paddingX,
       paddingY = 0.25,
       font,
       fontFamily,
@@ -123,7 +123,7 @@ export const Tag = memo(
         display={display}
         gap={gap}
         justifyContent={justifyContent}
-        paddingX={paddingXProp ?? tagHorizontalSpacing[intent]}
+        paddingX={paddingX ?? tagHorizontalSpacing[intent]}
         paddingY={paddingY}
         style={boxStyles}
         testID={testID}

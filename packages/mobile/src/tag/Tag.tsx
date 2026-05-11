@@ -85,7 +85,7 @@ export const Tag = memo(
       flexDirection = 'row',
       gap = 0.5,
       justifyContent = 'center',
-      paddingX: paddingXProp,
+      paddingX,
       paddingY = 0.25,
       font,
       fontFamily,
@@ -110,7 +110,7 @@ export const Tag = memo(
         flexDirection={flexDirection}
         gap={gap}
         justifyContent={justifyContent}
-        paddingX={paddingXProp ?? tagHorizontalSpacing[intent]}
+        paddingX={paddingX ?? tagHorizontalSpacing[intent]}
         paddingY={paddingY}
         testID={testID}
         {...props}
