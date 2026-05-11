@@ -131,4 +131,11 @@ export const customComponentConfig: ComponentConfig = {
       ...(spacingVariant === 'normal' ? { minHeight: 36 } : {}),
     };
   },
+
+  Tag: {
+    paddingY: 0.5,
+    paddingX: 1,
+    font: 'caption',
+    emphasis: 'low',
+  },
 };
