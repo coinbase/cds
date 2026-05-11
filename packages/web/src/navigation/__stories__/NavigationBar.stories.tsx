@@ -491,3 +491,41 @@ export const NavigationBarWithCustomStyles = () => {
     </VStack>
   );
 };
+
+export const NavigationBarStartToggle = () => {
+  const [showStart, setShowStart] = useState(false);
+
+  const handleToggle = useCallback(() => {
+    setShowStart((prev) => !prev);
+  }, []);
+
+  return (
+    <VStack alignItems="flex-start" gap={4}>
+      <Text as="h1" display="block" font="title1">
+        Start slot toggle
+      </Text>
+      <Text as="p" display="block" font="body">
+        Toggle the back button to see it animate in and out. When absent, no leading gap is reserved
+        before the page title.
+      </Text>
+      <NavigationBar
+        end={
+          <HStack alignItems="center" gap={1}>
+            <IconButton accessibilityLabel="Notifications" name="bell" />
+            <Avatar size="xl" />
+          </HStack>
+        }
+        start={
+          showStart ? (
+            <IconButton compact accessibilityLabel="Back" name="backArrow" variant="secondary" />
+          ) : undefined
+        }
+      >
+        <NavigationTitle>Page Title</NavigationTitle>
+      </NavigationBar>
+      <Button onClick={handleToggle} variant="secondary">
+        {showStart ? 'Hide' : 'Show'} back button
+      </Button>
+    </VStack>
+  );
+};

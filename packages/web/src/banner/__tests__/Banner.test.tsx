@@ -51,7 +51,7 @@ describe('Banner Actions', () => {
 
     // After dismiss is pressed, banner should be collapsed
     await waitFor(() => {
-      expect(screen.getByTestId(collapsibleTestID)).toHaveStyle('visibility: hidden');
+      expect(screen.getByTestId(collapsibleTestID)).toHaveStyle('display: none');
     });
   });
 });

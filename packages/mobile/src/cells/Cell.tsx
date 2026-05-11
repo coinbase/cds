@@ -33,7 +33,8 @@ export type CellSpacing = Pick<
   | 'marginStart'
 >;
 
-export type CellBaseProps = SharedProps &
+export type CellBaseProps = BoxBaseProps &
+  SharedProps &
   LinkableProps &
   Pick<PressableProps, 'blendStyles'> & {
     accessory?: React.ReactElement<CellAccessoryProps>;

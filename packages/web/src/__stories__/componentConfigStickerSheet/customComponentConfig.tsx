@@ -128,4 +128,10 @@ export const customComponentConfig: ComponentConfig = {
     labelColor: 'fgMuted',
     labelFont: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
   }),
+  ListCell: (props) => {
+    const spacingVariant = props.spacingVariant ?? (props.compact ? 'compact' : 'normal');
+    return {
+      ...(spacingVariant === 'normal' ? { minHeight: 36 } : {}),
+    };
+  },
 };

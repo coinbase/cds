@@ -369,6 +369,7 @@ export const StickerSheet = memo(() => {
                 subtitle="XRP"
                 title="XRP"
               />
+              <ListCell title="Short" />
             </VStack>
           </Container>
 

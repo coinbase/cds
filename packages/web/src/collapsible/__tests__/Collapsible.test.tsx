@@ -60,12 +60,12 @@ describe('Collapsible', () => {
         <TestCollapsible />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('mock-collapse')).toHaveStyle('visibility: hidden');
+    expect(screen.getByTestId('mock-collapse')).toHaveStyle('display: none');
     expect(screen.getByText('Collapsible Content')).not.toBeVisible();
 
     fireEvent.click(screen.getByText('Click me!'));
     await waitFor(() => {
-      expect(screen.getByTestId('mock-collapse')).toHaveStyle('visibility: visible');
+      expect(screen.getByTestId('mock-collapse')).not.toHaveStyle('display: none');
     });
     await waitFor(() => {
       expect(screen.getByText('Collapsible Content')).toBeVisible();
@@ -73,7 +73,7 @@ describe('Collapsible', () => {
 
     fireEvent.click(screen.getByText('Click me!'));
     await waitFor(() => {
-      expect(screen.getByTestId('mock-collapse')).toHaveStyle('visibility: hidden');
+      expect(screen.getByTestId('mock-collapse')).toHaveStyle('display: none');
     });
     await waitFor(() => {
       expect(screen.getByText('Collapsible Content')).not.toBeVisible();

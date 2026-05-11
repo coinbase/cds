@@ -83,30 +83,23 @@ export const Collapsible = memo(
         : { maxHeight };
     }, [direction, maxWidth, maxHeight]);
 
-    // visibility is used to prevent child content from being focusable when collapsed
-    const [visibility, setVisibility] = useState<
-      Extract<React.CSSProperties['visibility'], 'visible' | 'hidden'>
-    >(collapsed ? 'hidden' : 'visible');
-    // update the visibility to "visible" when the content is expanding
-    if (!collapsed && visibility !== 'visible') {
-      setVisibility('visible');
+    // display: none is applied after the collapse animation completes so the element no longer
+    // participates in layout and its children are not focusable. It is restored immediately when
+    // expanding so the animation has content to reveal.
+    const [isDisplayNone, setIsDisplayNone] = useState(collapsed);
+    if (!collapsed && isDisplayNone) {
+      setIsDisplayNone(false);
     }
 
-    // when the animation completes, set the visibility to "hidden" if the content should be collapsed
-    // this is to prevent children of the Collapsible element from being focusable in this state
     const handleAnimationComplete = useCallback(() => {
       if (collapsed) {
-        setVisibility('hidden');
+        setIsDisplayNone(true);
       }
     }, [collapsed]);
 
-    // merge visible style with the computed framer-motion styles
     const style = useMemo(() => {
-      return {
-        ...motionStyle,
-        visibility,
-      };
-    }, [visibility, motionStyle]);
+      return isDisplayNone ? { ...motionStyle, display: 'none' } : motionStyle;
+    }, [motionStyle, isDisplayNone]);
 
     return (
       <motion.div
