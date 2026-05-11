@@ -17,7 +17,6 @@ export const TabsExample = memo(() => {
   return (
     <VStack className="no-a11y-checks">
       <Tabs
-        TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
         accessibilityLabel="Market views"
         activeTab={activeTab}
         background="bg"

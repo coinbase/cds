@@ -15,7 +15,6 @@ export const TabsExample = memo(() => {
 
   return (
     <Tabs
-      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
       accessibilityLabel="Market views"
       activeTab={activeTab}
       background="bg"
