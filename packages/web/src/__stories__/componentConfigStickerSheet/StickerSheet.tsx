@@ -36,6 +36,7 @@ import { SelectChipExample } from './examples/SelectChip';
 import { StepperHorizontalBasicExample } from './examples/StepperHorizontal';
 import { StepperVerticalCustomExample } from './examples/StepperVertical';
 import { TableExample } from './examples/TableExample';
+import { TabsExample } from './examples/Tabs';
 import { TextInputExample } from './examples/TextInput';
 import { ToastExample } from './examples/ToastExample';
 import { Container } from './Container';
@@ -61,11 +62,14 @@ export const StickerSheet = memo(() => {
             <ControlsExample />
           </Container>
 
-          <HStack>
+          <VStack gap={2}>
             <Container title="Segmented Tabs">
               <SegmentedTabsExample />
             </Container>
-          </HStack>
+            <Container title="Tabs">
+              <TabsExample />
+            </Container>
+          </VStack>
 
           <HStack gap={2}>
             <Container width={160}>

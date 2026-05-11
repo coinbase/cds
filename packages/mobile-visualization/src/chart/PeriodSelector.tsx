@@ -127,10 +127,9 @@ export const LiveTabLabel = memo(
   ),
 );
 
-// Custom tab component with primary color for active state
 const PeriodSelectorTab: TabComponent = memo(
   forwardRef((props: SegmentedTabProps, ref: React.ForwardedRef<any>) => (
-    <SegmentedTab ref={ref} activeColor="fgPrimary" font="label1" {...props} />
+    <SegmentedTab ref={ref} font="label1" {...props} />
   )),
 );
 
@@ -146,6 +145,7 @@ export const PeriodSelector = memo(
       {
         background = 'transparent',
         activeBackground = 'bgPrimaryWash',
+        activeColor = 'fgPrimary',
         width = '100%',
         justifyContent = 'space-between',
         TabComponent = PeriodSelectorTab,
@@ -159,6 +159,7 @@ export const PeriodSelector = memo(
         TabComponent={TabComponent}
         TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
         activeBackground={activeBackground}
+        activeColor={activeColor}
         background={background}
         justifyContent={justifyContent}
         width={width}

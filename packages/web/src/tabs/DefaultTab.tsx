@@ -41,7 +41,10 @@ const labelPaddingCss = css`
   padding-bottom: calc(var(--space-2) - 2px); /* Account for the 2px tab indicator */
 `;
 
-export type DefaultTabProps<TabId extends string = string> = Omit<PressableBaseProps, 'onClick'> &
+export type DefaultTabProps<TabId extends string = string> = Omit<
+  PressableBaseProps,
+  'onClick' | 'color'
+> &
   TabComponentProps<TabId, TabValue<TabId> & DefaultTabLabelProps> & {
     /** Callback that is fired when the tab is pressed, after the active tab updates. */
     onClick?: (id: TabId) => void;
@@ -63,6 +66,8 @@ const DefaultTabComponent = memo(
         max,
         accessibilityLabel,
         className,
+        color = 'fg',
+        activeColor = 'fgPrimary',
         ...props
       }: DefaultTabProps<TabId>,
       ref: React.ForwardedRef<HTMLButtonElement>,
@@ -98,7 +103,7 @@ const DefaultTabComponent = memo(
             <Text
               as="h2"
               className={labelPaddingCss}
-              color={isActive ? 'fgPrimary' : 'fg'}
+              color={isActive ? activeColor : color}
               display="block"
               font="headline"
             >

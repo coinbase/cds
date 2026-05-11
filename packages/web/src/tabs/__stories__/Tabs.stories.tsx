@@ -203,7 +203,6 @@ export const WithTabPanels = () => {
       </Text>
       <Tabs
         TabComponent={DefaultTab}
-        TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
         accessibilityLabel="Content sections"
         activeBackground="bg"
         activeTab={activeTab}

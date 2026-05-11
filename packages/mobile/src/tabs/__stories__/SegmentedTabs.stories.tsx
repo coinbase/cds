@@ -250,6 +250,14 @@ const SegmentedTabsScreen = () => (
     />
     <CustomStylesExample />
     <IconLabelsExample />
+    <SegmentedTabsExample
+      activeBackground="bgPositiveWash"
+      activeColor="bgPositive"
+      color="fgMuted"
+      defaultActiveTab={basicSegments[0]}
+      tabs={basicSegments}
+      title="Label Colors"
+    />
   </ExampleScreen>
 );
 

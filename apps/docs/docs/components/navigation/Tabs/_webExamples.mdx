@@ -1,8 +1,8 @@
-Tabs manages which tab is active and positions the animated indicator. For the common **underline** pattern, pass **`TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}`** and rely on the default **`TabComponent` (`DefaultTab`)**. Use a custom **`TabComponent`** when you need layout or content beyond what `DefaultTab` provides. For **pill / segmented** controls, use [SegmentedTabs](/components/navigation/SegmentedTabs) instead.
+Tabs manages which tab is active and positions the animated indicator. For **pill / segmented** controls, use [SegmentedTabs](/components/navigation/SegmentedTabs) instead.
 
 ## Basics
 
-Out of the box, **`Tabs`** uses **`DefaultTab`** for each row (headline text, optional [DotCount](/components/other/DotCount/) via `count` / `max` on each tab) and **`DefaultTabsActiveIndicator`** for the animated underline. **`activeBackground`** sets the **underline color** (it is forwarded to the indicator as its `background` token).
+Out of the box, **`Tabs`** uses **`DefaultTab`** for each row (headline text, optional [DotCount](/components/other/DotCount/) via `count` / `max` on each tab) and **`DefaultTabsActiveIndicator`** for the animated underline. Set **`color`** / **`activeColor`** on **`Tabs`** for inactive / active label tokens, and **`activeBackground`** for the underline (forwarded to the indicator as its **`background`** token).
 
 ```jsx live
 function Example() {
@@ -15,22 +15,14 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Example tabs"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
-      // default value; can be omitted.
-      TabComponent={DefaultTab}
       tabs={tabs}
-      // default value; can be omitted.
-      TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
     />
   );
 }
 ```
-
-You can omit `TabComponent` explicitly: **`Tabs`** defaults it to **`DefaultTab`**.
 
 ### No initial selection
 
@@ -45,9 +37,7 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Example tabs"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
@@ -70,9 +60,7 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Mail folders"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
@@ -96,9 +84,40 @@ function Example() {
   return (
     <Tabs
       accessibilityLabel="Example tabs"
-      activeBackground="bgPrimary"
       activeTab={activeTab}
-      background="bg"
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+## Accessibility
+
+Provide a descriptive **`accessibilityLabel`** on **`Tabs`** for the tab list. **`DefaultTab`** sets `aria-controls` / `aria-selected` for each tab; pair tabs with **`role="tabpanel"`** regions in your page content when you switch panels.
+
+## Styling
+
+### Colors
+
+You can set **`color`** and **`activeColor`** for label tokens, and **`activeBackground`** for the underline.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeBackground="fg"
+      activeColor="fg"
+      activeTab={activeTab}
+      color="fgMuted"
       gap={4}
       onChange={setActiveTab}
       tabs={tabs}
@@ -137,7 +156,7 @@ function Example() {
   }, []);
 
   const ActiveIndicator = useCallback(
-    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
+    (props) => <TabsActiveIndicator {...props} background="bgPositive" bottom={0} height={2} />,
     [],
   );
 
@@ -205,7 +224,3 @@ function Example() {
   );
 }
 ```
-
-## Accessibility
-
-Provide a descriptive **`accessibilityLabel`** on **`Tabs`** for the tab list. **`DefaultTab`** sets `aria-controls` / `aria-selected` for each tab; pair tabs with **`role="tabpanel"`** regions in your page content when you switch panels.

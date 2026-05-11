@@ -132,6 +132,12 @@ export const customComponentConfig: ComponentConfig = {
     };
   },
 
+  Tabs: {
+    activeColor: 'fg',
+    color: 'fgMuted',
+    activeBackground: 'fg',
+  },
+
   Tag: {
     paddingY: 0.5,
     paddingX: 1,

@@ -149,6 +149,33 @@ function Example() {
 }
 ```
 
+### Colors
+
+You can set `color` and `activeColor` to change the color of the labels.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      color="fgMuted"
+      activeColor="bgPositive"
+      activeBackground="bgPositiveWash"
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
 ### Labels
 
 Labels can be customized with any `ReactNode`, including instances of `Icon`.

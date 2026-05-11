@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.70.0 (5/8/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support active color on Tabs. [[#669](https://github.com/coinbase/cds/pull/669)]
+
 ## 8.69.1 (5/6/2026 PST)
 
 #### 🐞 Fixes
