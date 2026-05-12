@@ -51,9 +51,13 @@ local.properties
 .nx
 .next
 cjs/
+!packages/illustrations/src/__generated__/**/svgJs/cjs/
+!packages/illustrations/src/__generated__/**/svgJs/cjs/**
 dts/
 lib/
 esm/
+!packages/illustrations/src/__generated__/**/svgJs/esm/
+!packages/illustrations/src/__generated__/**/svgJs/esm/**
 mjs/
 *.tsbuildinfo
 /.cache-loader
