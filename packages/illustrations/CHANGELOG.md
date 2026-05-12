@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.39.0 (5/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Add themed svgjs in esm format. [[#670](https://github.com/coinbase/cds/pull/670)]
+
 ## 4.38.0 (4/16/2026 PST)
 
 #### 🚀 Updates
