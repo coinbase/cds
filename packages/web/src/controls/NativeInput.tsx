@@ -8,6 +8,8 @@ import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxProps } from '../layout';
 
+const autofillBorderRadius = 'var(--borderRadius-400)';
+
 const baseCss = css`
   min-width: 0;
   flex-grow: 2;
@@ -37,7 +39,7 @@ const baseCss = css`
   }
 
   &[readonly]:not(:disabled) {
-    background-color: var(--color-bgSecondary);
+    background-color: var(--color-bgSecondaryWash);
   }
 
   /* stylelint-disable a11y/no-display-none */
@@ -65,7 +67,7 @@ const baseCss = css`
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus,
   &:-webkit-autofill:active {
-    border-radius: var(--borderRadius-200);
+    border-radius: ${autofillBorderRadius};
     -webkit-text-fill-color: var(--color-fg);
     transition: background-color 0s ease-in-out 5000s;
   }

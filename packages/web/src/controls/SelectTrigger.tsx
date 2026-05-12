@@ -18,6 +18,7 @@ import { SelectStack } from './SelectStack';
 const selectTriggerMinHeight = 56;
 const selectTriggerCompactMinHeight = 40;
 const selectTriggerInsideLabelMinHeight = 62;
+const selectTriggerBorderRadius = 400;
 
 export type SelectTriggerProps = Omit<
   SelectBaseProps,
@@ -129,7 +130,7 @@ export const SelectTrigger = memo(
           ) : null}
           <HStack
             alignItems="center"
-            borderRadius={200}
+            borderRadius={selectTriggerBorderRadius}
             height="100%"
             justifyContent="space-between"
             minWidth={0}

@@ -62,38 +62,78 @@ export const Basic = function Basic() {
 };
 
 export const InsideLabel = function InsideLabel() {
+  const figmaStates = [
+    {
+      title: 'Default',
+      node: <TextInput label="Label" labelVariant="inside" placeholder="Placeholder" />,
+    },
+    {
+      title: 'Filled',
+      node: (
+        <TextInput label="Label" labelVariant="inside" onChange={() => undefined} value="Text" />
+      ),
+    },
+    {
+      title: 'Read only',
+      node: <TextInput label="Label" labelVariant="inside" readOnly value="Text" />,
+    },
+    {
+      title: 'Negative',
+      node: <TextInput label="Label" labelVariant="inside" value="Text" variant="negative" />,
+    },
+  ] as const;
+
   return (
-    <VStack gap={2}>
-      <TextInput label="Inside Label" labelVariant="inside" placeholder="Placeholder" />
-      <TextInput
-        label="Secondary Start"
-        labelVariant="inside"
-        placeholder="Placeholder"
-        start={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
-        variant="secondary"
-      />
-      <TextInput
-        end={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
-        label=" Secondary End"
-        labelVariant="inside"
-        placeholder="Placeholder"
-        variant="secondary"
-      />
-      <TextInput
-        compact
-        label="Compact+Inside"
-        labelVariant="inside"
-        placeholder="Placeholder"
-        variant="secondary"
-      />
-      <TextInput
-        helperText="Error: Your favorite color is not orange"
-        label="Error state"
-        labelVariant="inside"
-        placeholder="Enter your favorite color"
-        variant="negative"
-      />
-    </VStack>
+    <Box paddingX={2} paddingY={1} width={'100%'}>
+      <VStack gap={2} width={'100%'}>
+        <Text color="fgMuted" font="caption">
+          Figma inside-label states
+        </Text>
+        <Box display="grid" gap={2} gridTemplateColumns="repeat(2, minmax(0, 1fr))">
+          {figmaStates.map((state) => (
+            <VStack key={state.title} gap={0.5}>
+              <Text color="fgMuted" font="caption">
+                {state.title}
+              </Text>
+              {state.node}
+            </VStack>
+          ))}
+        </Box>
+
+        <Text color="fgMuted" font="caption" paddingTop={1}>
+          Existing inside-label variations
+        </Text>
+        <TextInput label="Inside Label" labelVariant="inside" placeholder="Placeholder" />
+        <TextInput
+          label="Secondary Start"
+          labelVariant="inside"
+          placeholder="Placeholder"
+          start={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
+          variant="secondary"
+        />
+        <TextInput
+          end={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
+          label=" Secondary End"
+          labelVariant="inside"
+          placeholder="Placeholder"
+          variant="secondary"
+        />
+        <TextInput
+          compact
+          label="Compact+Inside"
+          labelVariant="inside"
+          placeholder="Placeholder"
+          variant="secondary"
+        />
+        <TextInput
+          helperText="Error: Your favorite color is not orange"
+          label="Error state"
+          labelVariant="inside"
+          placeholder="Enter your favorite color"
+          variant="negative"
+        />
+      </VStack>
+    </Box>
   );
 };
 

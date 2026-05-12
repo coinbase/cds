@@ -5,7 +5,7 @@ import { Text, type TextProps } from '../typography/Text';
 export type InputLabelProps = TextProps<'label'>;
 
 export const InputLabel = memo(function InputLabel({
-  color = 'fg',
+  color = 'fgMuted',
   disabled = false,
   ...props
 }: InputLabelProps) {
