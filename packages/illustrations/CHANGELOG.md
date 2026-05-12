@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.40.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: refactor illustrations package. [[#675](https://github.com/coinbase/cds/pull/675)]
+
 ## 4.39.0 (5/12/2026 PST)
 
 #### 🚀 Updates
