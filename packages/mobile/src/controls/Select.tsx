@@ -29,6 +29,7 @@ import { useSelect } from './useSelect';
 const selectTriggerMinHeight = 56;
 const selectTriggerCompactMinHeight = 40;
 const selectTriggerInsideLabelMinHeight = 24;
+const selectTriggerBorderRadius = 400;
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
@@ -180,6 +181,7 @@ export const Select = memo(
               <InputStack
                 animated
                 borderFocusedStyle={borderFocusedStyle}
+                borderRadius={selectTriggerBorderRadius}
                 borderStyle={borderUnfocusedStyle}
                 disabled={disabled}
                 endNode={
@@ -209,7 +211,7 @@ export const Select = memo(
                 inputNode={
                   <HStack
                     alignItems="center"
-                    borderRadius={200}
+                    borderRadius={selectTriggerBorderRadius}
                     flexBasis={1}
                     flexGrow={1}
                     flexShrink={1}

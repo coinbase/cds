@@ -5,7 +5,7 @@ import { Text } from '../typography/Text';
 import type { HelperTextProps } from './HelperText';
 
 export const InputLabel = memo(function InputLabel({
-  color = 'fg',
+  color = 'fgMuted',
   font = 'label1',
   ...props
 }: HelperTextProps) {

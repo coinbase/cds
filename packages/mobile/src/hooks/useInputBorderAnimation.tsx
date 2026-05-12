@@ -29,7 +29,7 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   positive: 'bgPositive',
   negative: 'bgNegative',
   foreground: 'bgInverse',
-  foregroundMuted: 'bgLineHeavy',
+  foregroundMuted: 'bgLine',
   secondary: 'bgSecondary',
 };
 

@@ -18,7 +18,6 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import type {
   SharedAccessibilityProps,
@@ -133,6 +132,8 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
+const defaultTextInputBorderRadius: InputStackBaseProps['borderRadius'] = 400;
+
 export const TextInput = memo(
   forwardRef((_props: TextInputProps, ref: ForwardedRef<RNTextInput>) => {
     const mergedProps = useComponentConfig('TextInput', _props);
@@ -153,7 +154,7 @@ export const TextInput = memo(
       compact,
       suffix = '',
       accessibilityLabel,
-      borderRadius,
+      borderRadius = defaultTextInputBorderRadius,
       enableColorSurge = false,
       helperTextErrorIconAccessibilityLabel = 'error',
       bordered = true,
@@ -165,7 +166,7 @@ export const TextInput = memo(
     } = mergedProps;
     const theme = useTheme();
     const [focused, setFocused] = useState(false);
-    const focusedVariant = useInputVariant(focused, variant);
+    const focusedVariant = variant;
     const internalRef = useRef<RNTextInput>(null);
     const refs = useMergeRefs(ref, internalRef);
     const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
@@ -237,7 +238,7 @@ export const TextInput = memo(
 
     const readOnlyInputBackground = useMemo(() => {
       if (!disabled && editableInputAddonProps.readOnly) {
-        return 'bgSecondary';
+        return 'bgSecondaryWash';
       }
       return undefined;
     }, [disabled, editableInputAddonProps.readOnly]);

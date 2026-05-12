@@ -26,6 +26,7 @@ import {
 const LABEL_VARIANT_INSIDE_HEIGHT = 32;
 const COMPACT_HEIGHT = 40;
 const DEFAULT_HEIGHT = 56;
+const selectControlBorderRadius = 400;
 
 const noFocusOutlineCss = css`
   &:focus,
@@ -246,7 +247,7 @@ const DefaultSelectControlComponent = memo(
             <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)} tabIndex={-1}>
               <InputLabel
                 className={classNames?.controlLabelNode}
-                color="fg"
+                color="fgMuted"
                 paddingBottom={0}
                 paddingStart={2}
                 style={styles?.controlLabelNode}
@@ -257,7 +258,7 @@ const DefaultSelectControlComponent = memo(
           ) : typeof label === 'string' ? (
             <InputLabel
               className={classNames?.controlLabelNode}
-              color="fg"
+              color="fgMuted"
               style={styles?.controlLabelNode}
             >
               {label}
@@ -491,6 +492,7 @@ const DefaultSelectControlComponent = memo(
         <InputStack
           ref={ref}
           blendStyles={interactableBlendStyles}
+          borderRadius={selectControlBorderRadius}
           borderWidth={borderWidth}
           disabled={disabled}
           endNode={endNode}

@@ -132,13 +132,6 @@ export type TextInputBaseProps = NativeInputBaseProps &
 
 export type TextInputProps = TextInputBaseProps & NativeInputProps;
 
-const useInputVariant = (focused: boolean, variant: InputVariant) => {
-  return useMemo(
-    () => (focused && variant !== 'positive' && variant !== 'negative' ? 'primary' : variant),
-    [focused, variant],
-  );
-};
-
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
   positive: 'fgPositive',
@@ -147,6 +140,8 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   foregroundMuted: 'fgMuted',
   secondary: 'fg',
 };
+
+const defaultTextInputBorderRadius: InputStackBaseProps['borderRadius'] = 400;
 
 export const TextInput = memo(
   forwardRef(function TextInput(_props: TextInputProps, ref: React.ForwardedRef<HTMLInputElement>) {
@@ -170,7 +165,7 @@ export const TextInput = memo(
       suffix = '',
       onFocus,
       onBlur,
-      borderRadius = 200,
+      borderRadius = defaultTextInputBorderRadius,
       height,
       inputNode,
       bordered = true,
@@ -183,7 +178,7 @@ export const TextInput = memo(
       ...nativeInputRestProps
     } = mergedProps;
     const [focused, setFocused] = useState(false);
-    const focusedVariant = useInputVariant(focused, variant);
+    const focusedVariant = variant;
     const internalRef = useRef<HTMLInputElement>();
     const refs = useMergeRefs(ref, internalRef);
 
@@ -228,7 +223,7 @@ export const TextInput = memo(
     // Define a distinct read-only style to differentiate it from the disabled style.
     const readOnlyInputBackground = useMemo(() => {
       if (!disabled && nativeInputRestProps.readOnly) {
-        return 'bgSecondary';
+        return 'bgSecondaryWash';
       }
       return undefined;
     }, [disabled, nativeInputRestProps.readOnly]);

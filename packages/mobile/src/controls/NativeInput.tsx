@@ -11,6 +11,8 @@ import type { TextBaseProps } from '../typography/Text';
 
 import type { TextInputBaseProps } from './TextInput';
 
+const defaultNativeInputBorderRadius: ThemeVars.BorderRadius = 400;
+
 export type NativeInputProps = {
   /**
    * Text Align Input
@@ -90,13 +92,15 @@ export const NativeInput = memo(
           ...containerSpacing,
           ...(!disabled &&
             editableInputAddonProps.readOnly && {
-              backgroundColor: theme.color.bgSecondary,
+              backgroundColor: theme.color.bgSecondaryWash,
+              borderRadius: theme.borderRadius[defaultNativeInputBorderRadius],
             }),
         };
       }, [
         containerSpacing,
         theme.space,
         theme.color,
+        theme.borderRadius,
         compact,
         editableInputAddonProps.readOnly,
         disabled,
