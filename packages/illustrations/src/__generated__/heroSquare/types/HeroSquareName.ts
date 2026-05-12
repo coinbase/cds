@@ -215,6 +215,7 @@ export type HeroSquareName =
   | 'gamer'
   | 'gasFeesNetworkFees'
   | 'generative'
+  | 'genniusLaunch'
   | 'getStartedInMinutes'
   | 'globalTransactions'
   | 'governance'

@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-04-16T19:14:44.724Z",
+  "lastUpdated": "2026-05-12T17:24:23.572Z",
   "colors": {
     "light": [
       {
@@ -38,18 +38,6 @@
         },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
-      },
-      {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0F"
-        },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
@@ -172,6 +160,18 @@
         "cssVarGetter": "var(--illustration-accent-1)"
       },
       {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0F"
+        },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
+      },
+      {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "light",
@@ -220,18 +220,6 @@
         },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
-      },
-      {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
@@ -352,6 +340,18 @@
         },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#464B55"
+        },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
@@ -31865,6 +31865,26 @@
         "svgJsDark": "./heroSquare/svgJs/dark/cbmega-0.js",
         "pngLight": "./heroSquare/png/light/cbmega-0.png",
         "pngDark": "./heroSquare/png/dark/cbmega-0.png"
+      },
+      "version": 0
+    },
+    "29955:47": {
+      "type": "heroSquare",
+      "name": "genniusLaunch",
+      "hash": "Wjil+YVYGkCQcQrPScK3Lwgq90hZfVBURV83TFCG0Og=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, mega, gennius",
+      "createdAt": "2026-05-12T15:44:35.131Z",
+      "lastUpdated": "2026-05-12T16:24:30.929Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/genniusLaunch-0.svg",
+        "svgDark": "./heroSquare/svg/dark/genniusLaunch-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/genniusLaunch-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/genniusLaunch-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/genniusLaunch-0.js",
+        "pngLight": "./heroSquare/png/light/genniusLaunch-0.png",
+        "pngDark": "./heroSquare/png/dark/genniusLaunch-0.png"
       },
       "version": 0
     }
