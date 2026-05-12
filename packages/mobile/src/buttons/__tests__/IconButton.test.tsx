@@ -142,4 +142,17 @@ describe('IconButton', () => {
     // Should be "loading" when no accessibility label is provided
     expect(button.props.accessibilityLabel).toBe(', loading');
   });
+
+  it('applies styles.icon to the inner icon glyph', () => {
+    const customIconStyle = { fontSize: 99 };
+    const { UNSAFE_getAllByType } = render(
+      <DefaultThemeProvider>
+        <IconButton name={name} styles={{ icon: customIconStyle }} />
+      </DefaultThemeProvider>,
+    );
+
+    const [iconText] = UNSAFE_getAllByType(Text);
+    // Mobile Icon builds iconStyle as [baseStyles, styles?.icon]
+    expect(iconText.props.style[1]).toEqual(customIconStyle);
+  });
 });

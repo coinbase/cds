@@ -16,6 +16,8 @@ import mobilePropsToc from ':docgen/mobile/buttons/IconButton/toc-props';
 
 import WebPropsTable from './_webPropsTable.mdx';
 import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 
@@ -27,18 +29,22 @@ import mobileMetadata from './mobileMetadata.json';
     title="IconButton"
     description="A button that renders an official icon as content instead of text."
     webMetadata={webMetadata}
-    mobileMetadata={mobileMetadata} 
+    mobileMetadata={mobileMetadata}
     banner={<IconButtonBanner />}
   />
 
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
     webExamples={<WebExamples />}
     mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
     mobileExamples={<MobileExamples />}
     webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
     webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
     mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
   />
 </VStack>

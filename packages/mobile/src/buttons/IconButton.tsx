@@ -1,5 +1,11 @@
 import { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type PressableStateCallbackType, type View, type ViewStyle } from 'react-native';
+import {
+  type PressableStateCallbackType,
+  type StyleProp,
+  type TextStyle,
+  type View,
+  type ViewStyle,
+} from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
@@ -39,6 +45,15 @@ export type IconButtonBaseProps = SharedProps &
      * @default primary
      */
     variant?: IconButtonVariant;
+    /** Custom styles for individual elements of the IconButton component */
+    styles?: {
+      /** Root Pressable element */
+      root?: StyleProp<ViewStyle>;
+      /** Inner icon glyph Text element */
+      icon?: StyleProp<TextStyle>;
+      /** Loading progress circle element */
+      progressCircle?: StyleProp<ViewStyle>;
+    };
   };
 
 export type IconButtonProps = IconButtonBaseProps;
@@ -65,6 +80,7 @@ export const IconButton = memo(
       loading,
       progressCircleSize,
       style,
+      styles,
       accessibilityHint,
       accessibilityLabel,
       ...props
@@ -95,8 +111,9 @@ export const IconButton = memo(
       (state: PressableStateCallbackType) => [
         sizingStyle,
         typeof style === 'function' ? style(state) : style,
+        styles?.root,
       ],
-      [sizingStyle, style],
+      [sizingStyle, style, styles?.root],
     );
 
     return (
@@ -122,6 +139,7 @@ export const IconButton = memo(
               indeterminate
               color={colorValue}
               size={progressCircleSize ?? iconSizeValue}
+              style={styles?.progressCircle}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />
@@ -134,6 +152,7 @@ export const IconButton = memo(
             name={name}
             size={iconSize}
             style={sizingStyle}
+            styles={{ icon: styles?.icon }}
           />
         )}
       </Pressable>
