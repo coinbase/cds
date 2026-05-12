@@ -1,9 +1,19 @@
 import React from 'react';
 import { names } from '@coinbase/cds-icons/names';
+import { css } from '@linaria/core';
 
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { IconButton, type IconButtonBaseProps } from '../IconButton';
+
+const rotatedIconCss = css`
+  transform: rotate(45deg);
+  transition: transform 200ms ease-in-out;
+`;
+
+const positiveProgressCircleCss = css`
+  color: var(--color-fgPositive);
+`;
 
 const iconName = 'arrowsHorizontal';
 const accessibilityLabel = 'Horizontal arrows';
@@ -90,6 +100,46 @@ export const Default = () => (
         name={iconName}
         style={{ backgroundColor: 'red', transform: 'scale(0.5)' }}
       />
+    </VStack>
+    <VStack gap={2}>
+      <Text font="title3">Icon Glyph Styles</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          accessibilityLabel="Custom color via styles.icon"
+          name={iconName}
+          styles={{ icon: { color: 'dodgerblue' } }}
+        />
+        <Text font="body">Custom color via styles.icon</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          accessibilityLabel="Rotated icon via classNames.icon"
+          classNames={{ icon: rotatedIconCss }}
+          name={iconName}
+        />
+        <Text font="body">Rotated icon via classNames.icon</Text>
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text font="title3">Progress Circle Styles</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          loading
+          accessibilityLabel="Reduced opacity progress circle via styles.progressCircle"
+          name={iconName}
+          styles={{ progressCircle: { opacity: 0.3 } }}
+        />
+        <Text font="body">Reduced opacity via styles.progressCircle</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          loading
+          accessibilityLabel="fgPositive progress circle via classNames.progressCircle"
+          classNames={{ progressCircle: positiveProgressCircleCss }}
+          name={iconName}
+        />
+        <Text font="body">fgPositive color via classNames.progressCircle</Text>
+      </HStack>
     </VStack>
     <VStack gap={2}>
       <Text font="title3">Variants</Text>

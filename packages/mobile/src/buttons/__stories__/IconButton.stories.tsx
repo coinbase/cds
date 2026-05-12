@@ -129,6 +129,41 @@ const IconButtonScreen = () => {
         </Box>
       </Example>
 
+      <Example inline title="Icon Glyph Styles">
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Custom color via styles.icon"
+              name={iconName}
+              styles={{ icon: { color: 'dodgerblue' } }}
+            />
+            <Text font="body">Custom color via styles.icon</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Rotated icon via styles.icon"
+              name={iconName}
+              styles={{ icon: { transform: [{ rotate: '45deg' }] } }}
+            />
+            <Text font="body">Rotated icon via styles.icon</Text>
+          </Box>
+        </VStack>
+      </Example>
+
+      <Example inline title="Progress Circle Styles">
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              loading
+              accessibilityLabel="Reduced opacity progress circle"
+              name={iconName}
+              styles={{ progressCircle: { opacity: 0.3 } }}
+            />
+            <Text font="body">Reduced opacity</Text>
+          </Box>
+        </VStack>
+      </Example>
+
       <Example inline title="Loading">
         <VStack gap={3}>
           <Box>

@@ -9,11 +9,23 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
+/**
+ * Static class names for IconButton component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const iconButtonClassNames = {
+  /** Root button element */
+  root: 'cds-IconButton',
+  /** Inner icon glyph element */
+  icon: 'cds-IconButton-icon',
+  /** Loading progress circle element */
+  progressCircle: 'cds-IconButton-progressCircle',
+} as const;
 
 export const iconButtonDefaultElement = 'button';
 
@@ -42,7 +54,8 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
 export type IconButtonProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   IconButtonBaseProps
->;
+> &
+  StylesAndClassNames<typeof iconButtonClassNames>;
 
 type IconButtonComponent = (<AsComponent extends React.ElementType = IconButtonDefaultElement>(
   props: IconButtonProps<AsComponent>,
@@ -94,6 +107,8 @@ export const IconButton: IconButtonComponent = memo(
         progressCircleSize,
         accessibilityLabel,
         accessibilityHint,
+        styles,
+        classNames,
         ...props
       } = mergedProps;
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
@@ -120,10 +135,11 @@ export const IconButton: IconButtonComponent = memo(
           borderRadius={borderRadius}
           borderWidth={borderWidth}
           className={cx(
-            COMPONENT_STATIC_CLASSNAME,
+            iconButtonClassNames.root,
             flush && flushSpaceCss,
             flush === 'start' && flushStartCss,
             flush === 'end' && flushEndCss,
+            classNames?.root,
             className,
           )}
           color={colorValue}
@@ -142,13 +158,22 @@ export const IconButton: IconButtonComponent = memo(
             <ProgressCircle
               indeterminate
               accessibilityLabel="Loading"
+              className={cx(iconButtonClassNames.progressCircle, classNames?.progressCircle)}
               color="currentColor"
               size={progressCircleSize ?? iconSizeValue}
+              style={styles?.progressCircle}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />
           ) : (
-            <Icon active={active} color="currentColor" name={name} size={iconSize} />
+            <Icon
+              active={active}
+              classNames={{ icon: cx(iconButtonClassNames.icon, classNames?.icon) }}
+              color="currentColor"
+              name={name}
+              size={iconSize}
+              styles={{ icon: styles?.icon }}
+            />
           )}
         </Pressable>
       );

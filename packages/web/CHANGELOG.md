@@ -8,11 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.71.0 (5/11/2026 PST)
+## 8.72.0 (5/12/2026 PST)
 
 #### 🚀 Updates
 
 - Feat: support key Tag props in component configs. [[#671](https://github.com/coinbase/cds/pull/671)]
+
+## 8.71.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add icon glyph and progress circle styles to IconButton. [[#606](https://github.com/coinbase/cds/pull/606)]
 
 ## 8.70.0 (5/8/2026 PST)
 
