@@ -850,6 +850,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/generative-2.js').content,
     dark: () => require('../svgJs/dark/generative-2.js').content,
   },
+  genniusLaunch: {
+    light: () => require('../svgJs/light/genniusLaunch-0.js').content,
+    dark: () => require('../svgJs/dark/genniusLaunch-0.js').content,
+  },
   getStartedInMinutes: {
     light: () => require('../svgJs/light/getStartedInMinutes-4.js').content,
     dark: () => require('../svgJs/dark/getStartedInMinutes-4.js').content,

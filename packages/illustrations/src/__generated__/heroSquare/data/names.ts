@@ -221,6 +221,7 @@ const names: HeroSquareName[] = [
   'gamer',
   'gasFeesNetworkFees',
   'generative',
+  'genniusLaunch',
   'getStartedInMinutes',
   'globalTransactions',
   'governance',

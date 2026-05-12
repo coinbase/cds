@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-04-16T19:14:44.724Z",
+  "lastUpdated": "2026-05-12T17:24:23.572Z",
   "colors": {
     "light": [
       {
@@ -8,10 +8,7 @@
         "name": "gray-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DC"
-        },
+        "paint": { "type": "solid", "value": "#CED2DC" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
       },
@@ -20,10 +17,7 @@
         "name": "positive",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#3CC28A"
-        },
+        "paint": { "type": "solid", "value": "#3CC28A" },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
       },
@@ -32,34 +26,16 @@
         "name": "accent-4",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#73A2FF"
-        },
+        "paint": { "type": "solid", "value": "#73A2FF" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
-      },
-      {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0F"
-        },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
         "name": "black",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -68,10 +44,7 @@
         "name": "accent-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
+        "paint": { "type": "solid", "value": "#5DE2F8" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -80,10 +53,7 @@
         "name": "invert",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0E"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0E" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -92,10 +62,7 @@
         "name": "gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DB"
-        },
+        "paint": { "type": "solid", "value": "#CED2DB" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -104,10 +71,7 @@
         "name": "accent-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ED702F"
-        },
+        "paint": { "type": "solid", "value": "#ED702F" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -116,10 +80,7 @@
         "name": "white",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -128,10 +89,7 @@
         "name": "invert-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFE" },
         "cssVarSetter": "--illustration-invert-2",
         "cssVarGetter": "var(--illustration-invert-2)"
       },
@@ -140,10 +98,7 @@
         "name": "base-gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B1B7C3"
-        },
+        "paint": { "type": "solid", "value": "#B1B7C3" },
         "cssVarSetter": "--illustration-base-gray",
         "cssVarGetter": "var(--illustration-base-gray)"
       },
@@ -152,10 +107,7 @@
         "name": "negative",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
+        "paint": { "type": "solid", "value": "#E13947" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -164,22 +116,25 @@
         "name": "accent-1",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFD200"
-        },
+        "paint": { "type": "solid", "value": "#FFD200" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0A0B0F" },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FF"
-        },
+        "paint": { "type": "solid", "value": "#0052FF" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       }
@@ -190,10 +145,7 @@
         "name": "gray-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
       },
@@ -202,10 +154,7 @@
         "name": "positive",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#44C28D"
-        },
+        "paint": { "type": "solid", "value": "#44C28D" },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
       },
@@ -214,34 +163,16 @@
         "name": "accent-4",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#84AAFD"
-        },
+        "paint": { "type": "solid", "value": "#84AAFD" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
-      },
-      {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
         "name": "black",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -250,10 +181,7 @@
         "name": "accent-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
+        "paint": { "type": "solid", "value": "#45D9F5" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -262,10 +190,7 @@
         "name": "invert",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -274,10 +199,7 @@
         "name": "gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -286,10 +208,7 @@
         "name": "accent-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F07836"
-        },
+        "paint": { "type": "solid", "value": "#F07836" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -298,10 +217,7 @@
         "name": "white",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -310,10 +226,7 @@
         "name": "invert-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-invert-2",
         "cssVarGetter": "var(--illustration-invert-2)"
       },
@@ -322,10 +235,7 @@
         "name": "base-gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#727886"
-        },
+        "paint": { "type": "solid", "value": "#727886" },
         "cssVarSetter": "--illustration-base-gray",
         "cssVarGetter": "var(--illustration-base-gray)"
       },
@@ -334,10 +244,7 @@
         "name": "negative",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
+        "paint": { "type": "solid", "value": "#F0616D" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -346,22 +253,25 @@
         "name": "accent-1",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ECD069"
-        },
+        "paint": { "type": "solid", "value": "#ECD069" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#464B55" },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
       },
       {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#578BFA"
-        },
+        "paint": { "type": "solid", "value": "#578BFA" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       }
@@ -31865,6 +31775,26 @@
         "svgJsDark": "./heroSquare/svgJs/dark/cbmega-0.js",
         "pngLight": "./heroSquare/png/light/cbmega-0.png",
         "pngDark": "./heroSquare/png/dark/cbmega-0.png"
+      },
+      "version": 0
+    },
+    "29955:47": {
+      "type": "heroSquare",
+      "name": "genniusLaunch",
+      "hash": "Wjil+YVYGkCQcQrPScK3Lwgq90hZfVBURV83TFCG0Og=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, mega, gennius",
+      "createdAt": "2026-05-12T15:44:35.131Z",
+      "lastUpdated": "2026-05-12T16:24:30.929Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/genniusLaunch-0.svg",
+        "svgDark": "./heroSquare/svg/dark/genniusLaunch-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/genniusLaunch-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/genniusLaunch-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/genniusLaunch-0.js",
+        "pngLight": "./heroSquare/png/light/genniusLaunch-0.png",
+        "pngDark": "./heroSquare/png/dark/genniusLaunch-0.png"
       },
       "version": 0
     }

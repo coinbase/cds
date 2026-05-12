@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (1)
+
+###### HeroSquare (1)
+
+- genniusLaunch
+
 ## 4.38.0 (4/16/2026 PST)
 
 #### 🚀 Updates
