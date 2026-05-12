@@ -684,6 +684,11 @@ export const routes = [
       require('@coinbase/cds-mobile/illustrations/__stories__/SpotSquare.stories').default,
   },
   {
+    key: 'ThemedIllustrations',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/illustrations/__stories__/ThemedIllustrations.stories').default,
+  },
+  {
     key: 'StepperHorizontal',
     getComponent: () =>
       require('@coinbase/cds-mobile/stepper/__stories__/StepperHorizontal.stories').default,

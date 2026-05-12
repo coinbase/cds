@@ -21,6 +21,8 @@ export const ThemeProvider = ({ theme, activeColorScheme, children }: ThemeProvi
   const themeApi = useMemo(() => {
     const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
     const activeColorKey = activeColorScheme === 'dark' ? 'darkColor' : 'lightColor';
+    const activeIllustrationKey =
+      activeColorScheme === 'dark' ? 'darkIllustrationColor' : 'lightIllustrationColor';
     const inverseSpectrumKey = activeColorScheme === 'dark' ? 'lightSpectrum' : 'darkSpectrum';
     const inverseColorKey = activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
 
@@ -49,6 +51,7 @@ export const ThemeProvider = ({ theme, activeColorScheme, children }: ThemeProvi
       activeColorScheme: activeColorScheme,
       spectrum: theme[activeSpectrumKey],
       color: theme[activeColorKey],
+      illustrationColor: theme[activeIllustrationKey],
     };
   }, [theme, activeColorScheme]);
 

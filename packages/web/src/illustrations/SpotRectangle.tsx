@@ -1,3 +1,4 @@
+import spotRectangleSvgEsmMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/svgEsmMap';
 import spotRectangleVersionMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/versionMap';
 
 import {
@@ -18,6 +19,10 @@ export type SpotRectangleBaseProps = IllustrationBaseProps<'spotRectangle'> &
 
 export type SpotRectangleProps = SpotRectangleBaseProps;
 
-export const SpotRectangle = createIllustration('spotRectangle', spotRectangleVersionMap);
+export const SpotRectangle = createIllustration(
+  'spotRectangle',
+  spotRectangleVersionMap,
+  spotRectangleSvgEsmMap,
+);
 
 export type { SpotRectangleName } from '@coinbase/cds-illustrations';

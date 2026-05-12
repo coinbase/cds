@@ -10,6 +10,10 @@ const isCI = process.env.CI === 'true';
 const config = {
   preset: '../../jest.preset.js',
   displayName: 'cds-web',
+  moduleNameMapper: {
+    // Mock svgEsmMap modules — each entry's themeable() returns a Promise resolving to mock SVG.
+    svgEsmMap: '<rootDir>/jest/svgEsmMapMock.js',
+  },
   setupFiles: ['<rootDir>/jest/setup.js'],
   coveragePathIgnorePatterns: [
     '<rootDir>/src/styles',

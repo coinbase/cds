@@ -1,3 +1,4 @@
+import spotSquareSvgEsmMap from '@coinbase/cds-illustrations/__generated__/spotSquare/data/svgEsmMap';
 import spotSquareVersionMap from '@coinbase/cds-illustrations/__generated__/spotSquare/data/versionMap';
 
 import {
@@ -7,7 +8,11 @@ import {
   type IllustrationDimensionsMap,
 } from './createIllustration';
 
-export const SpotSquare = createIllustration('spotSquare', spotSquareVersionMap);
+export const SpotSquare = createIllustration(
+  'spotSquare',
+  spotSquareVersionMap,
+  spotSquareSvgEsmMap,
+);
 
 export type SpotSquareBaseProps = IllustrationBaseProps<'spotSquare'> &
   IllustrationA11yProps & {

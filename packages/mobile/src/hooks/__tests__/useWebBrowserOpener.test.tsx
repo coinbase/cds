@@ -13,6 +13,7 @@ const DEFAULT_OPEN_WEB_BROWSER_OPTIONS = {
     activeColorScheme: 'light' as const,
     color: defaultTheme.lightColor,
     spectrum: defaultTheme.lightSpectrum,
+    illustrationColor: defaultTheme.lightIllustrationColor,
   },
 };
 
