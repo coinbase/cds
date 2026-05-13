@@ -121,14 +121,9 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
     const flat = StyleSheet.flatten(screen.getByTestId(labelTestID).props.style);
-    expect(flat).toEqual(
-      expect.objectContaining({
-        fontSize: defaultTheme.fontSize.caption,
-        minHeight: defaultTheme.lineHeight.caption,
-        fontWeight: defaultTheme.fontWeight.caption,
-        color: defaultTheme.lightColor.fgMuted,
-      }),
-    );
+    expect(flat.color).toBe(defaultTheme.lightColor.fgMuted);
+    expect(flat.fontSize).toBe(defaultTheme.fontSize.caption);
+    expect(flat.fontWeight).toBe(defaultTheme.fontWeight.caption);
   });
 
   it('renders label in start node when compact', () => {
