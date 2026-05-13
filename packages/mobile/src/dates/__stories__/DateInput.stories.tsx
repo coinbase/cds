@@ -23,27 +23,40 @@ const sharedProps = {
   requiredError: 'This field is required',
 };
 
-export const Examples = () => {
-  const [date, setDate] = useState<Date | null>(today);
+const DateInputExample = ({
+  initialDate = today,
+  ...props
+}: Omit<
+  React.ComponentProps<typeof DateInput>,
+  'date' | 'onChangeDate' | 'error' | 'onErrorDate'
+> & {
+  initialDate?: Date | null;
+}) => {
+  const [date, setDate] = useState<Date | null>(initialDate);
   const [error, setError] = useState<DateInputValidationError | null>(null);
-  const props = { date, onChangeDate: setDate, error, onErrorDate: setError };
+
+  return (
+    <DateInput {...props} date={date} error={error} onChangeDate={setDate} onErrorDate={setError} />
+  );
+};
+
+export const Examples = () => {
   return (
     <ExampleScreen>
       <Example>
         <Group gap={8} paddingEnd={8}>
-          <DateInput {...sharedProps} {...props} />
+          <DateInputExample {...sharedProps} />
           <LocaleProvider locale="ES-es">
-            <DateInput {...sharedProps} {...props} />
+            <DateInputExample {...sharedProps} />
           </LocaleProvider>
           <ThemeProvider activeColorScheme="dark" theme={defaultTheme}>
-            <DateInput {...sharedProps} {...props} />
+            <DateInputExample {...sharedProps} />
           </ThemeProvider>
-          <DateInput compact {...sharedProps} {...props} />
-          <DateInput {...sharedProps} {...props} maxDate={today} minDate={oneDayAgo} />
-          <DateInput {...sharedProps} {...props} separator="-" />
-          <DateInput
+          <DateInputExample compact {...sharedProps} />
+          <DateInputExample {...sharedProps} maxDate={today} minDate={oneDayAgo} />
+          <DateInputExample {...sharedProps} separator="-" />
+          <DateInputExample
             {...sharedProps}
-            {...props}
             accessibilityLabel="Date of birth"
             labelNode={
               <HStack alignItems="center">
@@ -54,17 +67,16 @@ export const Examples = () => {
               </HStack>
             }
           />
-          <DateInput
+          <DateInputExample
             {...sharedProps}
-            {...props}
             end={<Icon active name="camera" padding={2} size="m" />}
             placeholder="Hello world"
             start={<Icon name="blockchain" padding={2} size="m" />}
           />
-          <DateInput disabled {...sharedProps} {...props} />
-          <DateInput bordered={false} {...sharedProps} {...props} />
-          <DateInput bordered={false} focusedBorderWidth={200} {...sharedProps} {...props} />
-          <DateInput required {...sharedProps} {...props} />
+          <DateInputExample disabled {...sharedProps} />
+          <DateInputExample bordered={false} {...sharedProps} />
+          <DateInputExample bordered={false} focusedBorderWidth={200} {...sharedProps} />
+          <DateInputExample required {...sharedProps} />
         </Group>
       </Example>
     </ExampleScreen>

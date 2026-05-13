@@ -21,6 +21,7 @@ import { isSelectOptionGroup } from './Select';
 const LABEL_VARIANT_INSIDE_HEIGHT = 24;
 const COMPACT_HEIGHT = 40;
 const DEFAULT_HEIGHT = 56;
+const selectControlBorderRadius = 400;
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -193,7 +194,7 @@ export const DefaultSelectControlComponent = memo(
               style={styles?.controlLabelNode}
             >
               <InputLabel
-                color="fg"
+                color="fgMuted"
                 paddingEnd={0}
                 paddingStart={labelVariant === 'inside' ? 2 : 0}
                 paddingY={labelVariant === 'inside' || compact ? 0 : 0.5}
@@ -396,6 +397,7 @@ export const DefaultSelectControlComponent = memo(
       return (
         <InputStack
           borderFocusedStyle={borderFocusedStyle}
+          borderRadius={selectControlBorderRadius}
           borderStyle={borderUnfocusedStyle}
           borderWidth={borderWidth}
           disabled={disabled}
