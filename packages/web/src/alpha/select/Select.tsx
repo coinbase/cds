@@ -120,6 +120,13 @@ const SelectBase = memo(
         classNames,
         testID,
       } = mergedProps;
+
+      if (type === 'multi' && !Array.isArray(value))
+        throw Error('Select component value must be an array when "type" is "multi".');
+
+      if (type === 'single' && Array.isArray(value))
+        throw Error('Select component value must not be an array when "type" is "single".');
+
       const hasMounted = useHasMounted();
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
