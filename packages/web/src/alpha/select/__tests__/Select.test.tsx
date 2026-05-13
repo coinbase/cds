@@ -524,6 +524,46 @@ describe('Select', () => {
 
       consoleError.mockRestore();
     });
+
+    it('throws error when multi select receives a non-array value', () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      expect(() => {
+        render(
+          <DefaultThemeProvider>
+            <Select
+              // @ts-expect-error Runtime guard test for invalid value shape.
+              value="option1"
+              onChange={jest.fn()}
+              options={mockOptions}
+              type="multi"
+            />
+          </DefaultThemeProvider>,
+        );
+      }).toThrow('Select component value must be an array when "type" is "multi".');
+
+      consoleError.mockRestore();
+    });
+
+    it('throws error when single select receives an array value', () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      expect(() => {
+        render(
+          <DefaultThemeProvider>
+            <Select
+              // @ts-expect-error Runtime guard test for invalid value shape.
+              value={['option1']}
+              onChange={jest.fn()}
+              options={mockOptions}
+              type="single"
+            />
+          </DefaultThemeProvider>,
+        );
+      }).toThrow('Select component value must not be an array when "type" is "single".');
+
+      consoleError.mockRestore();
+    });
   });
 
   describe('Keyboard Navigation', () => {
