@@ -153,6 +153,8 @@ export const TextInput = memo(
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
+      labelFont = 'label1',
+      labelColor = 'fg',
       accessibilityLabel,
       helperText = '',
       variant = 'foregroundMuted',
@@ -367,6 +369,8 @@ export const TextInput = memo(
                     labelVariant === 'inside' && insideLabelCss,
                     labelVariant === 'inside' && !!start && insideLabelCssStartCss,
                   )}
+                  color={labelColor}
+                  font={labelFont}
                   htmlFor={shouldSetLabelId ? labelId : undefined}
                   testID={testIDMap?.label ?? ''}
                 >
@@ -391,7 +395,11 @@ export const TextInput = memo(
                   (labelNode
                     ? labelNode
                     : !!label && (
-                        <InputLabel htmlFor={shouldSetLabelId ? labelId : undefined}>
+                        <InputLabel
+                          color={labelColor}
+                          font={labelFont}
+                          htmlFor={shouldSetLabelId ? labelId : undefined}
+                        >
                           {label}
                         </InputLabel>
                       ))}

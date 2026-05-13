@@ -40,9 +40,18 @@ export const TextInputExample = memo(() => {
           labelVariant="inside"
           onChange={(e) => setValue(e.target.value)}
           placeholder="Input with icon button"
+          style={{ flexGrow: 1 }}
           value={value}
         />
       </HStack>
+      <TextInput
+        readOnly
+        label="Label"
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Read only input"
+        style={{ flexGrow: 1 }}
+        value={value}
+      />
     </>
   );
 });
