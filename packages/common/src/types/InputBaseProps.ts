@@ -28,4 +28,8 @@ export type SharedInputProps = {
    * showing positive/negative messages
    */
   helperText?: string | React.ReactNode;
+  /**
+   * When true, the value cannot be edited but the control may remain focusable (unlike `disabled`).
+   */
+  readOnly?: boolean;
 };

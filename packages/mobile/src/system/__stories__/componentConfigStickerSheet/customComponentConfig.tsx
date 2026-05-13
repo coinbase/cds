@@ -31,6 +31,7 @@ export const customComponentConfig: ComponentConfig = {
   },
 
   TextInput: ({ label, labelNode, readOnly, ...props }) => ({
+    labelColor: 'fgMuted',
     labelFont: 'label2',
     bordered: false,
     inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',

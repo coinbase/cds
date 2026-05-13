@@ -88,14 +88,10 @@ export type NativeInputBaseProps = BoxBaseProps & {
    * @default start
    * */
   align?: TextAlignProps['align'];
-  /**
-   * When true, the value cannot be edited but the input may remain focusable (unlike `disabled`).
-   */
-  readOnly?: boolean;
 };
 
 export type NativeInputProps = NativeInputBaseProps &
-  Omit<BoxProps<'input'>, 'readOnly'> &
+  BoxProps<'input'> &
   SharedProps &
   Pick<
     SharedAccessibilityProps,

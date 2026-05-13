@@ -105,14 +105,10 @@ export type TextInputBaseProps = SharedProps &
      * @default true
      */
     bordered?: boolean;
-    /**
-     * When true, the value cannot be edited but the input may remain focusable (unlike `disabled`).
-     */
-    readOnly?: boolean;
   };
 
 export type TextInputProps = TextInputBaseProps &
-  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign' | 'readOnly'> & {
+  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign'> & {
     value?: RNTextInputProps['value'];
     onChange?: RNTextInputProps['onChange'];
     onChangeText?: RNTextInputProps['onChangeText'];
