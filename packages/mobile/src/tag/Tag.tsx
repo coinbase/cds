@@ -19,11 +19,12 @@ import type {
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Box, type BoxProps } from '../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 export type TagBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Omit<BoxBaseProps, 'children' | 'color' | 'background'> & {
     /** Children to render within the Tag. */
     children: React.ReactNode;
     /**
@@ -84,7 +85,13 @@ export const Tag = memo(
       flexDirection = 'row',
       gap = 0.5,
       justifyContent = 'center',
+      paddingX,
       paddingY = 0.25,
+      font,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
       testID = 'cds-tag',
       ...props
     } = mergedProps;
@@ -103,7 +110,7 @@ export const Tag = memo(
         flexDirection={flexDirection}
         gap={gap}
         justifyContent={justifyContent}
-        paddingX={tagHorizontalSpacing[intent]}
+        paddingX={paddingX ?? tagHorizontalSpacing[intent]}
         paddingY={paddingY}
         testID={testID}
         {...props}
@@ -116,7 +123,11 @@ export const Tag = memo(
 
         <Text
           dangerouslySetColor={color}
-          font={tagFontMap[intent]}
+          font={font ?? tagFontMap[intent]}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          lineHeight={lineHeight}
           numberOfLines={1}
           testID={`${testID}--text`}
         >

@@ -137,4 +137,11 @@ export const customComponentConfig: ComponentConfig = {
     color: 'fgMuted',
     activeBackground: 'fg',
   },
+
+  Tag: {
+    paddingY: 0.5,
+    paddingX: 1,
+    font: 'caption',
+    emphasis: 'low',
+  },
 };
