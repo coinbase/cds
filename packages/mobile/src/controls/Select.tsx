@@ -98,7 +98,14 @@ export const Select = memo(
       const [isSelectTrayOpen, toggleSelectTray] = useState(false);
       const toggleSelectTrayOff = useCallback(() => toggleSelectTray(false), [toggleSelectTray]);
       const toggleSelectTrayOn = useCallback(() => toggleSelectTray(true), [toggleSelectTray]);
-      const focusedVariant = useInputVariant(!!isSelectTrayOpen, variant);
+      const defaultFocusedVariant = useInputVariant(!!isSelectTrayOpen, variant);
+      const focusedVariant = useMemo(() => {
+        if (variant === 'foreground' || variant === 'foregroundMuted') {
+          return 'foreground';
+        }
+
+        return defaultFocusedVariant;
+      }, [defaultFocusedVariant, variant]);
       const sanitizedValue = defaultValue === '' ? undefined : defaultValue;
       const internalRef = useRef(null);
       const refs = useMergeRefs(ref, internalRef);

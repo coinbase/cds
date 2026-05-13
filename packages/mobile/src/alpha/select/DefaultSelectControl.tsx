@@ -158,12 +158,18 @@ export const DefaultSelectControlComponent = memo(
         value,
       ]);
 
-      // Prop value doesn't have default value because it affects the color of the
-      // animated caret
-      const focusedVariant = useInputVariant(!!open, variant ?? 'foregroundMuted');
+      const resolvedVariant = variant ?? 'foregroundMuted';
+      const defaultFocusedVariant = useInputVariant(!!open, resolvedVariant);
+      const focusedVariant = useMemo(() => {
+        if (resolvedVariant === 'foreground' || resolvedVariant === 'foregroundMuted') {
+          return 'foreground';
+        }
+
+        return defaultFocusedVariant;
+      }, [defaultFocusedVariant, resolvedVariant]);
       const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
         !!open,
-        variant ?? 'foregroundMuted',
+        resolvedVariant,
         focusedVariant,
         bordered,
         borderWidth,
