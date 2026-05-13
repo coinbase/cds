@@ -267,6 +267,28 @@ describe('TextInput', () => {
     expect(inputArea).toHaveStyle('--border-width-focused: var(--borderWidth-200)');
   });
 
+  it('disables focus border styling when readOnly', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput readOnly />
+      </DefaultThemeProvider>,
+    );
+
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(inputArea).toHaveStyle('--border-color-focused: transparent');
+  });
+
+  it('disables focus border styling when disabled', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput disabled />
+      </DefaultThemeProvider>,
+    );
+
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(inputArea).toHaveStyle('--border-color-focused: transparent');
+  });
+
   it('focuses input when start node is pressed', () => {
     const onFocus = jest.fn();
     const startNodeText = 'Start';

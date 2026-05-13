@@ -164,11 +164,20 @@ export const TextInput = memo(
     } = mergedProps;
     const theme = useTheme();
     const [focused, setFocused] = useState(false);
-    const focusedVariant = variant;
+    const isReadOnly = !!editableInputProps.readOnly;
+    const disableFocusedStyle = disabled || isReadOnly;
+    const shouldShowFocusedState = focused && !disableFocusedStyle;
+    const focusedVariant = useMemo(() => {
+      if (variant === 'foreground' || variant === 'foregroundMuted') {
+        return 'foreground';
+      }
+
+      return variant;
+    }, [variant]);
     const internalRef = useRef<RNTextInput>(null);
     const refs = useMergeRefs(ref, internalRef);
     const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
-      focused,
+      shouldShowFocusedState,
       variant,
       focusedVariant,
       bordered,
@@ -180,7 +189,7 @@ export const TextInput = memo(
       ...editableInputProps,
       onFocus: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
         editableInputProps?.onFocus?.(e);
-        setFocused(true);
+        setFocused(!disableFocusedStyle);
       },
       onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
         editableInputProps?.onBlur?.(e);
@@ -189,11 +198,11 @@ export const TextInput = memo(
     };
 
     const handleNodePress = useCallback(() => {
-      if (!editableInputAddonProps.readOnly) {
-        setFocused(true);
-        internalRef.current?.focus();
-      }
-    }, [setFocused, internalRef, editableInputAddonProps.readOnly]);
+      if (disableFocusedStyle) return;
+
+      setFocused(true);
+      internalRef.current?.focus();
+    }, [disableFocusedStyle]);
 
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
@@ -235,11 +244,11 @@ export const TextInput = memo(
     }, [start]);
 
     const readOnlyInputBackground = useMemo(() => {
-      if (!disabled && editableInputAddonProps.readOnly) {
+      if (!disabled && isReadOnly) {
         return 'bgSecondaryWash';
       }
       return undefined;
-    }, [disabled, editableInputAddonProps.readOnly]);
+    }, [disabled, isReadOnly]);
 
     return (
       <InputStack
@@ -275,7 +284,7 @@ export const TextInput = memo(
             </HStack>
           )
         }
-        focused={focused}
+        focused={shouldShowFocusedState}
         focusedBorderWidth={focusedBorderWidth}
         helperTextNode={
           !!helperText &&

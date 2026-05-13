@@ -175,7 +175,10 @@ export const TextInput = memo(
       inputBackground,
       ...nativeInputRestProps
     } = mergedProps;
+    const isReadOnly = !!nativeInputRestProps.readOnly;
+    const disableFocusedStyle = disabled || isReadOnly;
     const [focused, setFocused] = useState(false);
+    const shouldShowFocusedState = focused && !disableFocusedStyle;
     const focusedVariant = variant;
     const internalRef = useRef<HTMLInputElement>();
     const refs = useMergeRefs(ref, internalRef);
@@ -197,11 +200,13 @@ export const TextInput = memo(
 
     const handleOnFocus = useCallback(
       (e: React.FocusEvent<HTMLInputElement>) => {
-        setFocused(true);
+        setFocused(!disableFocusedStyle);
         onFocus?.(e);
-        internalRef.current?.addEventListener('wheel', preventWheelScroll);
+        if (!disableFocusedStyle) {
+          internalRef.current?.addEventListener('wheel', preventWheelScroll);
+        }
       },
-      [onFocus, internalRef, preventWheelScroll],
+      [disableFocusedStyle, onFocus, internalRef, preventWheelScroll],
     );
 
     const handleOnBlur = useCallback(
@@ -214,9 +219,11 @@ export const TextInput = memo(
     );
 
     const handleNodePress = useCallback(() => {
+      if (disableFocusedStyle) return;
+
       setFocused(true);
       internalRef.current?.focus();
-    }, [setFocused, internalRef]);
+    }, [disableFocusedStyle]);
 
     // Define a distinct read-only style to differentiate it from the disabled style.
     const readOnlyInputBackground = useMemo(() => {
@@ -290,11 +297,15 @@ export const TextInput = memo(
     ]);
 
     return (
-      <TextInputFocusVariantContext.Provider value={focused ? focusedVariant : undefined}>
+      <TextInputFocusVariantContext.Provider
+        value={shouldShowFocusedState ? focusedVariant : undefined}
+      >
         <InputStack
           borderRadius={borderRadius}
           borderWidth={bordered ? 100 : 0}
-          disableFocusedStyle={!bordered && typeof focusedBorderWidth === 'undefined'}
+          disableFocusedStyle={
+            disableFocusedStyle || (!bordered && typeof focusedBorderWidth === 'undefined')
+          }
           disabled={disabled}
           enableColorSurge={enableColorSurge}
           endNode={
@@ -316,7 +327,7 @@ export const TextInput = memo(
               </HStack>
             )
           }
-          focused={focused}
+          focused={shouldShowFocusedState}
           focusedBorderWidth={focusedBorderWidth}
           height={height}
           helperTextNode={

@@ -336,6 +336,44 @@ describe('TextInput', () => {
     );
   });
 
+  it('uses inverse focused border color for foreground-muted variant', () => {
+    const testID = 'input-testid';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          testID={testID}
+          variant="foregroundMuted"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent(screen.getByTestId(testID), 'focus');
+    const focusedBorderOverlayStyle = getFocusedBorderOverlayStyle();
+    expect(focusedBorderOverlayStyle).toEqual(
+      expect.objectContaining({ borderColor: defaultTheme.lightColor.bgInverse }),
+    );
+  });
+
+  it('does not show focused border styling when readOnly', () => {
+    const testID = 'input-readonly-testid';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          readOnly
+          testID={testID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent(screen.getByTestId(testID), 'focus');
+    const focusedBorderOverlayStyle = getFocusedBorderOverlayStyle();
+    expect(focusedBorderOverlayStyle).toBeUndefined();
+  });
+
   it('renders label outside by default', () => {
     const labelTestID = 'label-test';
     render(
