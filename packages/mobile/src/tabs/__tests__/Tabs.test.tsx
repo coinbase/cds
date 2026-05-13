@@ -9,7 +9,13 @@ import { Tabs } from '../Tabs';
 describe('Tabs', () => {
   it('allows per-tab color and activeColor to override Tabs defaults', () => {
     const tabs = [
-      { id: 'one', label: 'One', testID: 'tab-one', color: 'fgPositive', activeColor: 'fgNegative' },
+      {
+        id: 'one',
+        label: 'One',
+        testID: 'tab-one',
+        color: 'fgPositive',
+        activeColor: 'fgNegative',
+      },
       { id: 'two', label: 'Two', testID: 'tab-two' },
     ];
 
