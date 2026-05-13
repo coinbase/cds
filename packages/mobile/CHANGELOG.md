@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
+#### 🐞 Fixes
+
+- Fix: tabs props spreaidng order. [[#679](https://github.com/coinbase/cds/pull/679)]
+
 ## 8.72.0 (5/12/2026 PST)
 
 #### 🚀 Updates
