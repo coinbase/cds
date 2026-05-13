@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.21.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add illustration theming via applyTheme prop. [[#672](https://github.com/coinbase/cds/pull/672)]
+
 ## 4.20.0 (4/27/2026 PST)
 
 #### 🚀 Updates
