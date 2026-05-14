@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.74.2 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: unreliable version check. [[#684](https://github.com/coinbase/cds/pull/684)]
+
 ## 8.74.1 (5/14/2026 PST)
 
 #### 🐞 Fixes
