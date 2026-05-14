@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.74.1 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust tabs default tab label padding. [[#682](https://github.com/coinbase/cds/pull/682)]
+
 ## 8.74.0 (5/13/2026 PST)
 
 #### 🚀 Updates
