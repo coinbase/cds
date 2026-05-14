@@ -161,7 +161,7 @@ export function createIllustration<Variant extends IllustrationVariant>(
     }
 
     // Default CDN path — used when applyTheme is false.
-    return version ? (
+    return version !== undefined ? (
       <img
         alt={alt}
         data-testid={testID}
