@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.75.0 (5/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support selectionColor on Inputs. [[#688](https://github.com/coinbase/cds/pull/688)]
+
 ## 8.74.2 (5/14/2026 PST)
 
 #### 🐞 Fixes
