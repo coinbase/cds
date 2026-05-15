@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.0.0-rc.3 ((5/15/2026, 01:54 PM PST))
+
+#### 🚀 Updates
+
+- Feat: support illustration theming. [[#689](https://github.com/coinbase/cds/pull/689)]
+
 ## 9.0.0-rc.2 (4/30/2026 PST)
 
 #### 🐞 Fixes
