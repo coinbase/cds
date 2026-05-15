@@ -204,8 +204,8 @@ export const TextInput = memo(
         ...(labelVariant === 'inside' &&
           hasLabel &&
           !compact && {
-            paddingBottom: 0,
             paddingTop: 0,
+            paddingBottom: theme.space[1],
           }),
       }),
       [start, theme.space, labelVariant, hasLabel, compact],
@@ -315,29 +315,33 @@ export const TextInput = memo(
             ? labelNode
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  <Box
-                    {...(labelVariant === 'inside' && {
-                      paddingStart: start ? 0.5 : 2,
-                      paddingEnd: 2,
-                      background: readOnlyInputBackground,
-                    })}
-                  >
-                    {labelNode ? (
-                      labelNode
-                    ) : (
-                      <InputLabel
-                        color={labelColor}
-                        font={labelFont}
-                        testID={testIDMap?.label ?? ''}
-                        {...(labelVariant === 'inside' && {
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                        })}
-                      >
-                        {label}
-                      </InputLabel>
-                    )}
-                  </Box>
+                  {labelVariant === 'inside' && labelNode ? (
+                    <Box
+                      background={readOnlyInputBackground}
+                      paddingEnd={2}
+                      paddingStart={start ? 0.5 : 2}
+                      paddingTop={1}
+                    >
+                      {labelNode}
+                    </Box>
+                  ) : labelVariant === 'inside' ? (
+                    <InputLabel
+                      background={readOnlyInputBackground}
+                      color={labelColor}
+                      font={labelFont}
+                      paddingBottom={0}
+                      paddingEnd={2}
+                      paddingStart={start ? 0.5 : 2}
+                      paddingTop={1}
+                      testID={testIDMap?.label ?? ''}
+                    >
+                      {label}
+                    </InputLabel>
+                  ) : (
+                    <InputLabel color={labelColor} font={labelFont} testID={testIDMap?.label ?? ''}>
+                      {label}
+                    </InputLabel>
+                  )}
                 </Pressable>
               ))
         }
