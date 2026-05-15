@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.74.3 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: prevent flickering when illustration palette changes on web. [[#685](https://github.com/coinbase/cds/pull/685)]
+
 ## 8.74.2 (5/14/2026 PST)
 
 #### 🐞 Fixes
