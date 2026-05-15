@@ -18,6 +18,10 @@ All notable changes to this project will be documented in this file.
 
 - Fix: set proper height for TextInput for inside labelVariant. [[#688](https://github.com/coinbase/cds/pull/688)]
 
+## 8.74.3 ((5/14/2026, 05:35 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.74.2 ((5/14/2026, 10:50 AM PST))
 
 This is an artificial version bump with no new change.

@@ -113,11 +113,8 @@ export function createIllustration<Variant extends IllustrationVariant>(
     useEffect(() => {
       let cancelled = false;
       const themeableLoader = svgEsmConfig?.[name]?.themeable;
-      const shouldLoad = applyTheme && illustrationColor && themeableLoader;
 
-      setSvgMarkup(null);
-
-      if (shouldLoad) {
+      if (applyTheme && themeableLoader) {
         themeableLoader()
           .then((svg) => {
             if (!cancelled) setSvgMarkup(svg);
@@ -126,13 +123,17 @@ export function createIllustration<Variant extends IllustrationVariant>(
             if (isDevelopment()) {
               console.error(`Failed to load themeable illustration ${name}:`, err);
             }
+            // Clear stale markup on failure so we don't display the wrong illustration.
+            if (!cancelled) setSvgMarkup(null);
           });
       }
 
       return () => {
         cancelled = true;
       };
-    }, [name, version, applyTheme, illustrationColor]);
+      // The SVG source is the same regardless of the active palette — illustrationColor
+      // only affects the CSS variables emitted by ThemeProvider, not the file to load.
+    }, [name, version, applyTheme]);
 
     const { width, height } = useMemo(() => {
       let size = defaultSize;
@@ -141,7 +142,7 @@ export function createIllustration<Variant extends IllustrationVariant>(
       return size;
     }, [dimension, scaleMultiplier]);
 
-    if (applyTheme) {
+    if (applyTheme && illustrationColor) {
       if (svgMarkup) {
         // The SVG retains its var(--illustration-*) tokens. ThemeProvider emits the resolved
         // --illustration-* CSS vars so the browser applies them through normal cascade.
