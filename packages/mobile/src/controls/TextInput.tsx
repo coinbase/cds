@@ -108,7 +108,7 @@ export type TextInputBaseProps = SharedProps &
   };
 
 export type TextInputProps = TextInputBaseProps &
-  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign'> & {
+  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign' | 'selectionColor'> & {
     value?: RNTextInputProps['value'];
     onChange?: RNTextInputProps['onChange'];
     onChangeText?: RNTextInputProps['onChangeText'];
@@ -305,6 +305,7 @@ export const TextInput = memo(
             containerSpacing={containerSpacing}
             disabled={disabled}
             font={font}
+            selectionColor={variantColorMap[focusedVariant]}
             testID={testID}
             {...editableInputAddonProps}
           />

@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
 import type { InputVariant, SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
@@ -68,7 +69,7 @@ const insideLabelCssStartCss = css`
   padding-inline-start: var(--space-0_5);
 `;
 
-export type TextInputBaseProps = NativeInputBaseProps &
+export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
   SharedInputProps &
   Pick<
     InputStackBaseProps,
@@ -130,14 +131,7 @@ export type TextInputBaseProps = NativeInputBaseProps &
     labelNode?: React.ReactNode;
   };
 
-export type TextInputProps = TextInputBaseProps & NativeInputProps;
-
-const useInputVariant = (focused: boolean, variant: InputVariant) => {
-  return useMemo(
-    () => (focused && variant !== 'positive' && variant !== 'negative' ? 'primary' : variant),
-    [focused, variant],
-  );
-};
+export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor'>;
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
@@ -259,6 +253,7 @@ export const TextInput = memo(
           accessibilityLabel={accessibilityLabel ?? label}
           align={align}
           aria-invalid={variant === 'negative'}
+          caretColor={variantColorMap[focusedVariant]}
           compact={compact}
           containerSpacing={nativeInputContainerCss}
           data-compact={compact}
@@ -280,14 +275,15 @@ export const TextInput = memo(
       helperTextId,
       accessibilityLabel,
       label,
-      hasLabel,
       align,
-      font,
       variant,
+      focusedVariant,
       compact,
+      hasLabel,
       labelVariant,
       start,
       disabled,
+      font,
       shouldSetLabelId,
       labelId,
       handleOnBlur,
