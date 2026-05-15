@@ -30,15 +30,11 @@ export const customComponentConfig: ComponentConfig = {
     };
   },
 
-  TextInput: ({ label, labelNode, ...props }) => ({
-    labelNode:
-      (labelNode ?? label) ? (
-        <Text color="fgMuted" font="label2">
-          {label}
-        </Text>
-      ) : undefined,
+  TextInput: ({ label, labelNode, readOnly, ...props }) => ({
+    labelColor: 'fgMuted',
+    labelFont: 'label2',
     bordered: false,
-    inputBackground: 'bgAlternate',
+    inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
     font: props.compact ? 'label2' : 'body',
     variant: 'foregroundMuted',
     focusedBorderWidth: 100,

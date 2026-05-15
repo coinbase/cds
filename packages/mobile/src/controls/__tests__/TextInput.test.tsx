@@ -106,6 +106,26 @@ describe('TextInput', () => {
     expect(screen.getByTestId(testID)).toHaveTextContent(labelText);
   });
 
+  it('passes labelFont and labelColor to the outside label', () => {
+    const labelTestID = 'label-font-color-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          label="Fees"
+          labelColor="fgMuted"
+          labelFont="caption"
+          testIDMap={{ label: labelTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+    const flat = StyleSheet.flatten(screen.getByTestId(labelTestID).props.style);
+    expect(flat.color).toBe(defaultTheme.lightColor.fgMuted);
+    expect(flat.fontSize).toBe(defaultTheme.fontSize.caption);
+    expect(flat.fontWeight).toBe(defaultTheme.fontWeight.caption);
+  });
+
   it('renders label in start node when compact', () => {
     const testID = 'start-testid';
     const labelText = 'Example label';

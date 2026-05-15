@@ -136,6 +136,8 @@ export const TextInput = memo(
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
+      labelFont = 'label1',
+      labelColor = 'fg',
       helperText = '',
       variant = 'foregroundMuted',
       testID,
@@ -324,6 +326,8 @@ export const TextInput = memo(
                       labelNode
                     ) : (
                       <InputLabel
+                        color={labelColor}
+                        font={labelFont}
                         testID={testIDMap?.label ?? ''}
                         {...(labelVariant === 'inside' && {
                           paddingTop: 0,
@@ -356,7 +360,14 @@ export const TextInput = memo(
                 onPress={handleNodePress}
               >
                 <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
-                  {compact && (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
+                  {compact &&
+                    (labelNode
+                      ? labelNode
+                      : !!label && (
+                          <InputLabel color={labelColor} font={labelFont}>
+                            {label}
+                          </InputLabel>
+                        ))}
                   {!!start && (
                     <TextInputFocusVariantContext.Provider value={focusedVariant}>
                       {inaccessibleStart}

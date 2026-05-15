@@ -14,8 +14,12 @@ build:
   engines:
     # Apps
     # Deployed from internal mirror repo (cds-public)
-    # Sync job automatically runs every 1-2 hours
+    # Sync GHA automatically runs every 1-2 hours
     - BaldurECR:
+        # production docsite
+        # build/deploy managed by Codeflow (see "AWS Config" tab for bucket name)
+        # for bucket config see aws-resources: projects/frontend/cds-public.gps.yml
+        # for DNS mapping see entry-gateway: config/public.production.aws.use1/cds.coinbase.com.yml
         name: cds-next-docs
         path: ./apps/docs/production.Dockerfile
         autobuild: true
@@ -24,6 +28,10 @@ build:
         path: ./apps/docs/development.Dockerfile
         autobuild: false
     - BaldurECR:
+        # production storybook
+        # build/deploy managed by Codeflow (see "AWS Config" tab for bucket name)
+        # for bucket config see aws-resources: projects/frontend/cds-public.gps.yml
+        # for DNS mapping see entry-gateway: config/public.production.aws.use1/cds-storybook.coinbase.com.yml
         name: cds-storybook
         path: ./apps/storybook/production.Dockerfile
         autobuild: true
@@ -33,7 +41,7 @@ build:
         autobuild: false
     # Static assets
     # Deployed from internal mirror repo (cds-public)
-    # Sync job automatically runs every 1-2 hours
+    # Sync GHA automatically runs every 1-2 hours
     - BaldurECR:
         name: static-assets
         path: ./libs/static-assets/static-assets.Dockerfile
@@ -46,6 +54,7 @@ build:
     - BaldurNode:
         name: package-common
         path: ./packages/common/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/common/package.json
         expire_keep_tags_after_days: 1
@@ -54,6 +63,7 @@ build:
     - BaldurNode:
         name: package-eslint-plugin-cds
         path: ./packages/eslint-plugin-cds/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/eslint-plugin-cds/package.json
         expire_keep_tags_after_days: 1
@@ -62,6 +72,7 @@ build:
     - BaldurNode:
         name: package-icons
         path: ./packages/icons/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/icons/package.json
         expire_keep_tags_after_days: 1
@@ -70,6 +81,7 @@ build:
     - BaldurNode:
         name: package-illustrations
         path: ./packages/illustrations/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/illustrations/package.json
         expire_keep_tags_after_days: 1
@@ -78,6 +90,7 @@ build:
     - BaldurNode:
         name: package-lottie-files
         path: ./packages/lottie-files/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/lottie-files/package.json
         expire_keep_tags_after_days: 1
@@ -86,6 +99,7 @@ build:
     - BaldurNode:
         name: package-mcp-server
         path: ./packages/mcp-server/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/mcp-server/package.json
         expire_keep_tags_after_days: 1
@@ -94,6 +108,7 @@ build:
     - BaldurNode:
         name: package-mobile
         path: ./packages/mobile/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/mobile/package.json
         expire_keep_tags_after_days: 1
@@ -102,6 +117,7 @@ build:
     - BaldurNode:
         name: package-mobile-visualization
         path: ./packages/mobile-visualization/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/mobile-visualization/package.json
         expire_keep_tags_after_days: 1
@@ -118,6 +134,7 @@ build:
     - BaldurNode:
         name: package-utils
         path: ./packages/utils/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/utils/package.json
         expire_keep_tags_after_days: 1
@@ -126,6 +143,7 @@ build:
     - BaldurNode:
         name: package-web
         path: ./packages/web/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/web/package.json
         expire_keep_tags_after_days: 1
@@ -134,6 +152,7 @@ build:
     - BaldurNode:
         name: package-web-visualization
         path: ./packages/web-visualization/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/web-visualization/package.json
         expire_keep_tags_after_days: 1

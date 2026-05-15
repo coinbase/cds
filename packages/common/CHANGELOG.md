@@ -18,6 +18,28 @@ This is an artificial version bump with no new change.
 
 - Feat: CDS 9 release candidate 1.
 
+## 8.74.3 ((5/14/2026, 05:35 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.2 ((5/14/2026, 10:50 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.1 ((5/14/2026, 07:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.0 ((5/13/2026, 01:19 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
 ## 8.72.0 ((5/12/2026, 02:00 PM PST))
 
 This is an artificial version bump with no new change.

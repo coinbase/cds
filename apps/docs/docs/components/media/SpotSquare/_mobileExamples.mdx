@@ -21,3 +21,27 @@ If `dimension` and `scaleMultiplier` are both provided the component will scale 
 ```jsx
 <SpotSquare name="yieldCenterUSDC" dimension="120x120" scaleMultiplier={1.5} />
 ```
+
+## Theming
+
+Use the `applyTheme` prop to enable dynamic theming. When set, the illustration is colored by the active `ThemeProvider`'s illustration palette instead of using the hardcoded light or dark variant.
+
+```jsx
+const customTheme = {
+  ...defaultTheme,
+  lightIllustrationColor: {
+    ...defaultTheme.lightIllustrationColor,
+    primary: 'rgb(220, 38, 38)',
+    accent1: 'rgb(124, 58, 237)',
+  },
+  darkIllustrationColor: {
+    ...defaultTheme.darkIllustrationColor,
+    primary: 'rgb(248, 113, 113)',
+    accent1: 'rgb(167, 139, 250)',
+  },
+};
+
+<ThemeProvider activeColorScheme="light" theme={customTheme}>
+  <SpotSquare applyTheme name="yieldCenterUSDC" />
+</ThemeProvider>;
+```

@@ -19,6 +19,10 @@ export type ThemeConfig = {
   lightColor?: { [key in ThemeVars.Color]: string };
   /** The dark color palette. */
   darkColor?: { [key in ThemeVars.Color]: string };
+  /** The light illustration color palette. */
+  lightIllustrationColor?: { [key in ThemeVars.IllustrationColor]: string };
+  /** The dark illustration color palette. */
+  darkIllustrationColor?: { [key in ThemeVars.IllustrationColor]: string };
   /** The space values, used for margin and padding. */
   space: { [key in ThemeVars.Space]: number };
   /** The icon size values. */
@@ -54,4 +58,6 @@ export type Theme = ThemeConfig & {
   spectrum: { [key in ThemeVars.SpectrumColor]: string };
   /** The light or dark color palette, as appropriate based on the activeColorScheme. */
   color: { [key in ThemeVars.Color]: string };
+  /** The illustration color palette for the active color scheme. Undefined when the theme does not define illustration colors. */
+  illustrationColor?: { [key in ThemeVars.IllustrationColor]: string };
 };

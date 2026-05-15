@@ -28,6 +28,8 @@ export type SearchInputBaseProps = Pick<
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
   | 'font'
+  | 'labelFont'
+  | 'labelColor'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'

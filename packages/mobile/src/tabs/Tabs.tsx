@@ -213,11 +213,11 @@ const TabsComponent = memo(
               const { id, Component: CustomTabComponent, ...tabRest } = tabProps;
               const RenderedTab = CustomTabComponent ?? TabComponent;
               const renderedTabProps = {
-                ...tabRest,
                 activeColor,
                 color,
                 id,
                 style: styles?.tab,
+                ...tabRest,
               };
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>

@@ -21,3 +21,37 @@ If `dimension` and `scaleMultiplier` are both provided the component will scale 
 ```jsx live
 <SpotRectangle name="creditCardExcitement" dimension="240x120" scaleMultiplier={1.5} />
 ```
+
+## Theming
+
+Use the `applyTheme` prop to enable dynamic theming. When set, the illustration is inlined into the page and colored by the active `ThemeProvider`'s illustration palette.
+
+```jsx live
+<SpotRectangle applyTheme name="creditCardExcitement" />
+```
+
+To apply a custom brand palette, set `lightIllustrationColor` and `darkIllustrationColor` on your theme:
+
+```jsx live
+function ThemedSpotRectangle() {
+  const customTheme = {
+    ...defaultTheme,
+    lightIllustrationColor: {
+      ...defaultTheme.lightIllustrationColor,
+      primary: 'rgb(220, 38, 38)',
+      accent1: 'rgb(124, 58, 237)',
+    },
+    darkIllustrationColor: {
+      ...defaultTheme.darkIllustrationColor,
+      primary: 'rgb(248, 113, 113)',
+      accent1: 'rgb(167, 139, 250)',
+    },
+  };
+
+  return (
+    <ThemeProvider activeColorScheme="light" theme={customTheme}>
+      <SpotRectangle applyTheme name="creditCardExcitement" />
+    </ThemeProvider>
+  );
+}
+```

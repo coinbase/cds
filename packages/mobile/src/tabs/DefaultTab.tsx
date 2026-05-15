@@ -73,14 +73,6 @@ const DefaultTabComponent = memo(
         [id, onPress, updateActiveTab],
       );
 
-      const labelPaddingStyle = useMemo(
-        () => ({
-          paddingTop: theme.space[2],
-          paddingBottom: theme.space[2] - 2,
-        }),
-        [theme.space],
-      );
-
       return (
         <Pressable
           ref={ref}
@@ -97,7 +89,7 @@ const DefaultTabComponent = memo(
           {...props}
         >
           <HStack alignItems="center" gap={0.5}>
-            <Text color={isActive ? activeColor : color} font="headline" style={labelPaddingStyle}>
+            <Text color={isActive ? activeColor : color} font="headline" paddingY={2}>
               {label}
             </Text>
             {!!count && <DotCount count={count} max={max} />}

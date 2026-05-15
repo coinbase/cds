@@ -37,6 +37,15 @@ export const TextInputExample = memo(() => {
         labelVariant="inside"
         onChangeText={setValue}
         placeholder="Input with icon button"
+        style={{ flexGrow: 1 }}
+        value={value}
+      />
+      <TextInput
+        readOnly
+        label="Label"
+        onChangeText={setValue}
+        placeholder="Read only input"
+        style={{ flexGrow: 1 }}
         value={value}
       />
     </>

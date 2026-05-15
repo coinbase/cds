@@ -18,6 +18,36 @@ This is an artificial version bump with no new change.
 
 - Feat: CDS 9 release candidate 1.
 
+## 8.74.3 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: prevent flickering when illustration palette changes on web. [[#685](https://github.com/coinbase/cds/pull/685)]
+
+## 8.74.2 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: unreliable version check. [[#684](https://github.com/coinbase/cds/pull/684)]
+
+## 8.74.1 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust tabs default tab label padding. [[#682](https://github.com/coinbase/cds/pull/682)]
+
+## 8.74.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add illustration theming via applyTheme prop. [[#672](https://github.com/coinbase/cds/pull/672)]
+
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
 ## 8.72.0 (5/12/2026 PST)
 
 #### 🚀 Updates
