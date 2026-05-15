@@ -204,8 +204,8 @@ export const TextInput = memo(
         ...(labelVariant === 'inside' &&
           hasLabel &&
           !compact && {
+            paddingBottom: 0,
             paddingTop: 0,
-            paddingBottom: theme.space[1],
           }),
       }),
       [start, theme.space, labelVariant, hasLabel, compact],
@@ -321,7 +321,6 @@ export const TextInput = memo(
                       background={readOnlyInputBackground}
                       paddingEnd={2}
                       paddingStart={start ? 0.5 : 2}
-                      paddingTop={1}
                     >
                       {labelNode}
                     </Box>
@@ -330,10 +329,9 @@ export const TextInput = memo(
                       background={readOnlyInputBackground}
                       color={labelColor}
                       font={labelFont}
-                      paddingBottom={0}
                       paddingEnd={2}
                       paddingStart={start ? 0.5 : 2}
-                      paddingTop={1}
+                      paddingY={0}
                       testID={testIDMap?.label ?? ''}
                     >
                       {label}
