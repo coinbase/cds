@@ -14,8 +14,12 @@ build:
   engines:
     # Apps
     # Deployed from internal mirror repo (cds-public)
-    # Sync job automatically runs every 1-2 hours
+    # Sync GHA automatically runs every 1-2 hours
     - BaldurECR:
+        # production docsite
+        # build/deploy managed by Codeflow (see "AWS Config" tab for bucket name)
+        # for bucket config see aws-resources: projects/frontend/cds-public.gps.yml
+        # for DNS mapping see entry-gateway: config/public.production.aws.use1/cds.coinbase.com.yml
         name: cds-next-docs
         path: ./apps/docs/production.Dockerfile
         autobuild: true
@@ -24,6 +28,10 @@ build:
         path: ./apps/docs/development.Dockerfile
         autobuild: false
     - BaldurECR:
+        # production storybook
+        # build/deploy managed by Codeflow (see "AWS Config" tab for bucket name)
+        # for bucket config see aws-resources: projects/frontend/cds-public.gps.yml
+        # for DNS mapping see entry-gateway: config/public.production.aws.use1/cds-storybook.coinbase.com.yml
         name: cds-storybook
         path: ./apps/storybook/production.Dockerfile
         autobuild: true
@@ -33,7 +41,7 @@ build:
         autobuild: false
     # Static assets
     # Deployed from internal mirror repo (cds-public)
-    # Sync job automatically runs every 1-2 hours
+    # Sync GHA automatically runs every 1-2 hours
     - BaldurECR:
         name: static-assets
         path: ./libs/static-assets/static-assets.Dockerfile
