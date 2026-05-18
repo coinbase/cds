@@ -42,12 +42,12 @@ packages/mobile-visreg/
 
 All targets are run from the repo root via `yarn nx run mobile-visreg:<target>`.
 
-| Target    | Command                             | Description                                               |
-| --------- | ----------------------------------- | --------------------------------------------------------- |
-| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                            |
-| `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS test-expo app on iOS     |
-| `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS test-expo app on Android |
-| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy              |
+| Target    | Command                             | Description                                                |
+| --------- | ----------------------------------- | ---------------------------------------------------------- |
+| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                             |
+| `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS mobile-app app on iOS     |
+| `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS mobile-app app on Android |
+| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy               |
 
 ## Prerequisites
 
@@ -83,8 +83,8 @@ yarn nx run mobile-visreg:setup
 > **Important**: Use the **release** build, not debug. Debug builds use the Expo Dev Client shell which intercepts deep links before React Navigation can handle them, preventing navigation to component routes.
 
 ```bash
-yarn nx run test-expo:patch-bundle-ios
-xcrun simctl install booted apps/test-expo/prebuilds/ios-release/testexpo.app
+yarn nx run mobile-app:patch-bundle-ios
+xcrun simctl install booted apps/mobile-app/prebuilds/ios-release/mobileapp.app
 ```
 
 ### 4. Capture screenshots
@@ -112,7 +112,7 @@ Routes must be explicitly opted in to visreg. To add a new route:
 
 1. Open `config/enabled-routes.mjs`
 2. Add the route name (must match the debug route name registered in the app) to the `enabledRoutes` array
-3. Verify the deep-link works: `xcrun simctl openurl booted cds:///Debug<RouteName>`
+3. Verify the deep-link works: `xcrun simctl openurl booted mobileapp:///Debug<RouteName>`
 4. Run `yarn nx run mobile-visreg:ios` and confirm a screenshot is captured for the new route
 
 ## Single-route iteration
@@ -123,15 +123,15 @@ For fast iteration on a single component, run only that route without regenerati
 # Via the Maestro CLI directly
 cd packages/mobile-visreg
 maestro test flows/capture-route.yaml \
-  --env APP_ID=com.ui-systems.ios-release-hermes \
-  --env SCHEME=cds \
+  --env APP_ID=com.anonymous.mobile-app \
+  --env SCHEME=mobileapp \
   --env ROUTE_NAME=Button \
   --env PLATFORM_SUFFIX=_ios
 
 # Via run.mjs
 node src/run.mjs \
-  --appId com.ui-systems.ios-release-hermes \
-  --scheme cds \
+  --appId com.anonymous.mobile-app \
+  --scheme mobileapp \
   --route Button \
   --output ./visreg-screenshots
 ```
@@ -190,7 +190,7 @@ Visit the project dashboard at percy.io. The first upload establishes the baseli
 ## Verification checklist
 
 1. Build the iOS release app and install it on a simulator
-2. Verify deep-linking: `xcrun simctl openurl booted cds:///DebugButton`
+2. Verify deep-linking: `xcrun simctl openurl booted mobileapp:///DebugButton`
 3. Run `yarn nx run mobile-visreg:ios` — confirm screenshots appear in `visreg-screenshots/`
 4. Verify screenshots show the correct component (not the component list or a blank screen)
 5. Set `PERCY_TOKEN` and run `yarn nx run mobile-visreg:upload` — verify the build appears in the Percy dashboard

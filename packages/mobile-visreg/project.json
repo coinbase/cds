@@ -11,13 +11,13 @@
       }
     },
     "ios": {
-      "command": "node ./src/run.mjs --appId com.anonymous.test-expo --scheme testexpo --platform ios --platform-suffix _ios",
+      "command": "node ./src/run.mjs --appId com.anonymous.mobile-app --scheme mobileapp --platform ios --platform-suffix _ios",
       "options": {
         "cwd": "packages/mobile-visreg"
       }
     },
     "android": {
-      "command": "node ./src/run.mjs --appId com.anonymous.testexpo --scheme testexpo --platform android --platform-suffix _android",
+      "command": "node ./src/run.mjs --appId com.anonymous.mobileapp --scheme mobileapp --platform android --platform-suffix _android",
       "options": {
         "cwd": "packages/mobile-visreg"
       }

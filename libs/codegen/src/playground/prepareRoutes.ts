@@ -58,11 +58,11 @@ export async function prepare() {
       path: route.consumerPath,
     }));
 
-    // Write to test-expo for Expo demo app
+    // Write to mobile-app for Expo demo app
     await writeFile({
       data: { routes: consumerRoutes },
       template: 'mobileRoutes.ejs',
-      dest: `apps/test-expo/src/routes.ts`,
+      dest: `apps/mobile-app/src/routes.ts`,
     });
   } catch (err) {
     if (err instanceof Error) {
