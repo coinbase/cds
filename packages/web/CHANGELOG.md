@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.75.1 (5/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: android web tray footer cut off. [[#694](https://github.com/coinbase/cds/pull/694)]
+
 ## 8.75.0 (5/15/2026 PST)
 
 #### 🚀 Updates
