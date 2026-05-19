@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.75.2 (5/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: unstable svg sizing caused by flexbox. [[#696](https://github.com/coinbase/cds/pull/696)]
+
 ## 8.75.1 (5/19/2026 PST)
 
 #### 🐞 Fixes
