@@ -48,8 +48,13 @@ const setContext = (overrides = {}) => {
 
 const lengthOf = (prop: unknown): number => {
   if (Array.isArray(prop)) return prop.length;
-  if (prop && typeof prop === 'object' && 'value' in prop && Array.isArray((prop as { value: unknown }).value)) {
-    return ((prop as { value: unknown[] }).value).length;
+  if (
+    prop &&
+    typeof prop === 'object' &&
+    'value' in prop &&
+    Array.isArray((prop as { value: unknown }).value)
+  ) {
+    return (prop as { value: unknown[] }).value.length;
   }
   return -1;
 };
