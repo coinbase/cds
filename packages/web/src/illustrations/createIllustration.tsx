@@ -23,7 +23,7 @@ import { css } from '@linaria/core';
 
 import { useTheme } from '../hooks/useTheme';
 
-const svgWrapperCss = css`
+const inlineSvgCss = css`
   display: inline-block;
   flex: none;
 `;
@@ -156,7 +156,7 @@ export function createIllustration<Variant extends IllustrationVariant>(
           <div
             dangerouslySetInnerHTML={{ __html: svgMarkup }}
             aria-label={alt || undefined}
-            className={svgWrapperCss}
+            className={inlineSvgCss}
             data-testid={testID}
             role={alt ? 'img' : 'presentation'}
             style={{ width, height }}
