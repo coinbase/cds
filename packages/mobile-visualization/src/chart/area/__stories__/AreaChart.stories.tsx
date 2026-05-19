@@ -1,8 +1,9 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { Button } from '@coinbase/cds-mobile/buttons/Button';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { VStack } from '@coinbase/cds-mobile/layout';
+import { Box, VStack } from '@coinbase/cds-mobile/layout';
 
 import {
   DefaultReferenceLineLabel,
@@ -254,6 +255,37 @@ const AxisBaselineThresholdExample = () => {
   );
 };
 
+// Regression repro for CDS-2065. The default baseline is 0; alternating between
+// an all-positive dataset (2 gradient stops) and a negative-crossing dataset
+// (3 gradient stops) causes the Gradient component to swap stop counts between
+// renders. Before the fix this crashed with `ReanimatedError: Positions array
+// must have the same size as colors array`.
+const positiveOnlyData = [10, 25, 15, 40, 30, 50, 35];
+const crossesBaselineData = [-20, 25, -15, 40, -30, 50, 35];
+
+const BaselineCrossingExample = () => {
+  const [crosses, setCrosses] = useState(false);
+  const data = crosses ? crossesBaselineData : positiveOnlyData;
+  return (
+    <VStack gap={2}>
+      <AreaChart
+        showLines
+        showYAxis
+        accessibilityLabel="Area chart toggling across the y-axis baseline"
+        height={220}
+        series={[{ id: 'flow', data }]}
+        type="gradient"
+        yAxis={{ baseline: 0, showGrid: true }}
+      />
+      <Box paddingX={2}>
+        <Button compact onPress={() => setCrosses((c) => !c)} variant="secondary">
+          Toggle baseline crossing
+        </Button>
+      </Box>
+    </VStack>
+  );
+};
+
 const AreaChartStories = () => {
   return (
     <ExampleScreen>
@@ -286,6 +318,9 @@ const AreaChartStories = () => {
         >
           <Scrubber />
         </AreaChart>
+      </Example>
+      <Example title="Baseline Crossing (CDS-2065 repro)">
+        <BaselineCrossingExample />
       </Example>
       <Example title="Axis Baseline">
         <AreaChart
