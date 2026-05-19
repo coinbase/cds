@@ -10,7 +10,7 @@
       "path": "apps/storybook"
     },
     {
-      "path": "apps/test-expo"
+      "path": "apps/expo-app"
     },
     {
       "path": "apps/vite-app"

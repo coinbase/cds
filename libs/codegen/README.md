@@ -6,7 +6,7 @@ A collection of code generation scripts for the CDS monorepo.
 
 ### `yarn nx run codegen:mobile-routes`
 
-Scans all mobile story files (`packages/**/mobile/src/**/__stories__/*.stories.tsx`) and generates the route table for `apps/test-expo/src/routes.ts`.
+Scans all mobile story files (`packages/**/mobile/src/**/__stories__/*.stories.tsx`) and generates the route table for `apps/expo-app/src/routes.ts`.
 
 Run this when adding or removing mobile component stories.
 
@@ -16,7 +16,7 @@ Run this when adding or removing mobile component stories.
 
 ### `yarn nx run codegen:icon-svg-map`
 
-Reads every SVG file from `packages/icons/src/svgs/` and generates a static map at `apps/test-expo/src/__generated__/iconSvgMap.ts`. The map keys are `iconName-size-state` (e.g. `account-24-active`) and each value holds the raw SVG string, used by test-expo to render icons directly via `react-native-svg`.
+Reads every SVG file from `packages/icons/src/svgs/` and generates a static map at `apps/expo-app/src/__generated__/iconSvgMap.ts`. The map keys are `iconName-size-state` (e.g. `account-24-active`) and each value holds the raw SVG string, used by expo-app to render icons directly via `react-native-svg`.
 
 Run this when icons are added, removed, or updated in `packages/icons`.
 

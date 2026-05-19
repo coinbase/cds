@@ -53,8 +53,8 @@ yarn nx run docs:dev
 
 ```sh
 # Launch local debug builds
-yarn nx run test-expo:launch:ios-debug
-yarn nx run test-expo:launch:android-debug
+yarn nx run expo-app:launch:ios-debug
+yarn nx run expo-app:launch:android-debug
 ```
 
 ## Contributing

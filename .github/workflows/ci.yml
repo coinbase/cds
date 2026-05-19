@@ -144,7 +144,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Build
-        run: yarn nx affected --exclude=test-expo --target=build --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=expo-app --target=build --base=$NX_BASE --head=$NX_HEAD
 
   depcheck:
     name: Depcheck

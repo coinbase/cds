@@ -152,17 +152,15 @@ web-build/
 ios
 android
 
-# failed detox test screenshots
-apps/mobile-app/artifacts
-apps/mobile-app/prebuilds/android-*
-!apps/mobile-app/prebuilds/android-release-*.zip
-!apps/mobile-app/credentials/android-release-*.keystore
-# temporary build directory for native compilation
-apps/mobile-app/build/
-apps/test-expo/prebuilds/android-*
-!apps/test-expo/prebuilds/android-release-*.zip
-# temporary build directory for native compilation
-apps/test-expo/build/
+# expo-app generated artifacts
+apps/expo-app/artifacts
+apps/expo-app/build/
+# we expect developers to generate their own debug builds for local development
+apps/expo-app/prebuilds/ios-debug/
+apps/expo-app/prebuilds/android-debug/
+# android release builds are too large to be committed at this time
+# committed prebuilds are especially important for running visreg in CI so we will need to figure out a solution when we turn android tests back on
+apps/expo-app/prebuilds/android-release/
 
 #reassure
 **/.reassure/*

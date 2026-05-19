@@ -125,7 +125,7 @@ jobs:
         run: echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Prepare iOS app (extract prebuild + patch JS bundle)
-        run: yarn nx run test-expo:patch-bundle-ios
+        run: yarn nx run expo-app:patch-bundle-ios
 
       - name: Boot iOS simulator
         run: |
@@ -137,7 +137,7 @@ jobs:
           sleep 30
 
       - name: Install app on simulator
-        run: xcrun simctl install booted apps/test-expo/prebuilds/ios-release/testexpo.app
+        run: xcrun simctl install booted apps/expo-app/prebuilds/ios-release/expoapp.app
 
       - name: Capture screenshots
         run: yarn nx run mobile-visreg:ios
@@ -220,7 +220,7 @@ jobs:
   #       run: echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
   #     - name: Prepare Android app (extract prebuild + patch JS bundle)
-  #       run: yarn nx run mobile-app:patch-bundle-android
+  #       run: yarn nx run expo-app:patch-bundle-android
 
   #     # Enable KVM hardware acceleration for the Android emulator.
   #     # Without this, the emulator runs in software emulation mode, which takes 6+ minutes to boot
@@ -257,7 +257,7 @@ jobs:
   #           # the package manager specifically before attempting install.
   #           while ! adb shell pm list packages > /dev/null 2>&1; do echo "Waiting for package manager..."; sleep 1; done
 
-  #           adb install -r apps/mobile-app/prebuilds/android-release-hermes/binary.apk
+  #           adb install -r apps/expo-app/prebuilds/android-release-hermes/binary.apk
 
   #           # Copy Maestro debug artifacts after the run so they can be uploaded after the emulator shuts down
   #           yarn nx run mobile-visreg:android; cp -r ~/.maestro/tests /tmp/maestro-debug || true

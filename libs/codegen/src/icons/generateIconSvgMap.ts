@@ -5,7 +5,7 @@ import { getSourcePath } from '../utils/getSourcePath';
 import { writeFile } from '../utils/writeFile';
 
 const SVG_SOURCE_DIR = 'packages/icons/src/svgs';
-const OUTPUT_PATH = 'apps/test-expo/src/__generated__/iconSvgMap.ts';
+const OUTPUT_PATH = 'apps/expo-app/src/__generated__/iconSvgMap.ts';
 
 const HEADER = `/**
  * DO NOT MODIFY

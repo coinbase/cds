@@ -17,7 +17,7 @@ module.exports = {
   ignore:
     isTestEnv || isDetoxEnv
       ? []
-      : // TO DO: The mobile-app release builds break if we ignore stories
+      : // TO DO: The expo-app release builds break if we ignore stories
         [
           // '**/__stories__/**',
           '**/__tests__/**',
