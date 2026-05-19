@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.8.1 (5/18/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix(CDS-2065): keep Gradient colors in sync with positions on stop count changes. [[#3455](https://github.com/coinbase/cds/pull/3455)]
+
 ## 3.8.0 (5/8/2026 PST)
 
 #### 🚀 Updates
