@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
@@ -388,7 +389,7 @@ export type SelectControlProps<
   Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
   Pick<
     InputStackBaseProps,
-    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode' | 'inputBackground'
   > &
   SelectState<Type, SelectOptionValue> & {
     /**
@@ -440,6 +441,15 @@ export type SelectControlProps<
     ariaHaspopup?: AriaHasPopupType;
     /** Whether to use compact styling for the control */
     compact?: boolean;
+    /**
+     * When true, the value cannot be changed and the menu will not open (similar to a read-only text field).
+     * Unlike `disabled`, this does not reduce the control’s opacity.
+     */
+    readOnly?: boolean;
+    /** Typography token for the field label. */
+    labelFont?: ThemeVars.Font;
+    /** Color token for the field label. */
+    labelColor?: ThemeVars.Color;
     /** Inline styles for the control element */
     style?: React.CSSProperties;
     /** Custom styles for individual elements of the control */
@@ -500,11 +510,18 @@ export type SelectBaseProps<
     | 'startNode'
     | 'variant'
     | 'disabled'
+    | 'readOnly'
     | 'labelVariant'
     | 'endNode'
     | 'align'
     | 'font'
     | 'bordered'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
+    | 'height'
+    | 'inputBackground'
+    | 'labelColor'
+    | 'labelFont'
   > &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> &
   Pick<

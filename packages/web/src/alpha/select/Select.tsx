@@ -82,6 +82,7 @@ const SelectBase = memo(
         open: openProp,
         setOpen: setOpenProp,
         disabled,
+        readOnly,
         disableClickOutsideClose,
         placeholder,
         helperText,
@@ -108,6 +109,12 @@ const SelectBase = memo(
         align,
         font,
         bordered = true,
+        borderWidth,
+        focusedBorderWidth,
+        height,
+        inputBackground,
+        labelColor,
+        labelFont,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -149,7 +156,7 @@ const SelectBase = memo(
 
       const handleControlKeyDown = useCallback(
         (event: React.KeyboardEvent) => {
-          if (disabled || open) return;
+          if (disabled || readOnly || open) return;
           if (event.ctrlKey || event.metaKey || event.altKey) return;
 
           const key = event.key;
@@ -158,7 +165,7 @@ const SelectBase = memo(
             setOpen(true);
           }
         },
-        [disabled, open, setOpen],
+        [disabled, readOnly, open, setOpen],
       );
 
       useEffect(() => {
@@ -308,15 +315,21 @@ const SelectBase = memo(
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}
+            borderWidth={borderWidth}
             className={classNames?.control}
             classNames={controlClassNames}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
             font={font}
+            focusedBorderWidth={focusedBorderWidth}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+            height={height}
+            inputBackground={inputBackground}
             label={label}
+            labelColor={labelColor}
+            labelFont={labelFont}
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
@@ -324,6 +337,7 @@ const SelectBase = memo(
             open={open}
             options={options}
             placeholder={placeholder}
+            readOnly={readOnly}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
             setOpen={setOpen}
             startNode={startNode}
@@ -347,7 +361,7 @@ const SelectBase = memo(
               clearAllLabel={clearAllLabel}
               compact={compact}
               controlRef={refs.reference as React.MutableRefObject<HTMLElement>}
-              disabled={disabled}
+              disabled={disabled || !!readOnly}
               emptyOptionsLabel={emptyOptionsLabel}
               end={end}
               hideSelectAll={hideSelectAll}
