@@ -5,7 +5,8 @@
     "rootDir": "src"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../mobile/src/visualizations/__tests__/Gradient.test.tsx"
   ],
   "exclude": [],
   "references": [

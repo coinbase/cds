@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react-native';
 import { scaleLinear } from 'd3-scale';
 
-import { Gradient } from '../Gradient';
+import { Gradient } from '../chart/gradient/Gradient';
 
 jest.mock('@shopify/react-native-skia', () => ({
   LinearGradient: jest.fn(() => null),
@@ -12,12 +12,12 @@ jest.mock('@shopify/react-native-skia', () => ({
 
 jest.mock('react-native-reanimated', () => jest.requireActual('react-native-reanimated/mock'));
 
-jest.mock('../../ChartProvider', () => ({
+jest.mock('../chart/ChartProvider', () => ({
   useCartesianChartContext: jest.fn(),
 }));
 
 const { LinearGradient } = jest.requireMock('@shopify/react-native-skia');
-const { useCartesianChartContext } = jest.requireMock('../../ChartProvider');
+const { useCartesianChartContext } = jest.requireMock('../chart/ChartProvider');
 
 beforeEach(() => {
   LinearGradient.mockClear();
