@@ -6,7 +6,6 @@ secure:
   branches:
     - master
     - release-8.x
-    - cds-v9-master
   auto_assign_reviewers: true
   # Marks
   upstream_repository: coinbase/cds
