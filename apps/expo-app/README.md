@@ -4,8 +4,8 @@ Expo-based demo app for testing CDS mobile components. Used as the visual regres
 
 ## Nx targets
 
-| Command                                                 | Description                                                                             |
-| ------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Command                                                | Description                                                                             |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
 | `yarn nx run expo-app:ios`                             | Build (if needed), install, launch, and start Metro — full dev loop for iOS (debug)     |
 | `yarn nx run expo-app:ios --configuration=release`     | Install and launch the release build artifact (no Metro)                                |
 | `yarn nx run expo-app:android`                         | Build (if needed), install, launch, and start Metro — full dev loop for Android (debug) |
@@ -21,8 +21,8 @@ Expo-based demo app for testing CDS mobile components. Used as the visual regres
 
 ## Build configurations
 
-| Configuration        | Platform | Profile | Target    | Output                                      |
-| -------------------- | -------- | ------- | --------- | ------------------------------------------- |
+| Configuration        | Platform | Profile | Target    | Output                                     |
+| -------------------- | -------- | ------- | --------- | ------------------------------------------ |
 | `ios-debug`          | iOS      | Debug   | Simulator | `prebuilds/ios-debug/expoapp.tar.gz`       |
 | `ios-release`        | iOS      | Release | Simulator | `prebuilds/ios-release/expoapp.tar.gz`     |
 | `ios-debug-device`   | iOS      | Debug   | Device    | `prebuilds/ios-debug-device/expoapp.ipa`   |

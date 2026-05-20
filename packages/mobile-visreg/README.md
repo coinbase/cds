@@ -42,12 +42,12 @@ packages/mobile-visreg/
 
 All targets are run from the repo root via `yarn nx run mobile-visreg:<target>`.
 
-| Target    | Command                             | Description                                               |
-| --------- | ----------------------------------- | --------------------------------------------------------- |
-| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                            |
+| Target    | Command                             | Description                                              |
+| --------- | ----------------------------------- | -------------------------------------------------------- |
+| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                           |
 | `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS expo-app app on iOS     |
 | `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS expo-app app on Android |
-| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy              |
+| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy             |
 
 ## Prerequisites
 

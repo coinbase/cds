@@ -29,8 +29,8 @@ It is a native module build of your application that is:
 
 ### How do I rebuild a debug build?
 
-| Platform | Profile - engine type | Command                                     |
-| -------- | --------------------- | ------------------------------------------- |
+| Platform | Profile - engine type | Command                                    |
+| -------- | --------------------- | ------------------------------------------ |
 | ios      | local - hermes        | `yarn nx run expo-app:build:ios-debug`     |
 | android  | local -hermes         | `yarn nx run expo-app:build:android-debug` |
 

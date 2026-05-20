@@ -23,8 +23,8 @@ npm install -g eas-cli
 
 See more info about mobile builds [here](/apps/expo-app/docs/building-mobile.md).
 
-| Platform | Profile - engine type | Command                                       |
-| -------- | --------------------- | --------------------------------------------- |
+| Platform | Profile - engine type | Command                                      |
+| -------- | --------------------- | -------------------------------------------- |
 | ios      | debug - hermes        | `yarn nx run expo-app:build:ios-debug`       |
 | ios      | release - hermes      | `yarn nx run expo-app:build:ios-release`     |
 | android  | debug - hermes        | `yarn nx run expo-app:build:android-debug`   |
@@ -36,8 +36,8 @@ See more info about mobile builds [here](/apps/expo-app/docs/building-mobile.md)
 
 **Note: You can skip this if you've already launched the build in your [prebuilds](/apps/expo-app/prebuilds) in your simulator.**
 
-| Platform | Profile - engine type | Command                                        |
-| -------- | --------------------- | ---------------------------------------------- |
+| Platform | Profile - engine type | Command                                       |
+| -------- | --------------------- | --------------------------------------------- |
 | ios      | debug - hermes        | `yarn nx run expo-app:launch:ios-debug`       |
 | ios      | release - hermes      | `yarn nx run expo-app:launch:ios-release`     |
 | android  | debug - hermes        | `yarn nx run expo-app:launch:android-debug`   |
