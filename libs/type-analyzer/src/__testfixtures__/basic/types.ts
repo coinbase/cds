@@ -23,6 +23,6 @@ export type ParentProps = {
   parent: string;
 };
 
-export interface ChildProps extends ParentProps {
+export type ChildProps = ParentProps & {
   child?: number;
-}
+};
