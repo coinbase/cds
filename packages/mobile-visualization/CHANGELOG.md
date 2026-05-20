@@ -16,6 +16,12 @@ All notable changes to this project will be documented in this file.
 
 - Visualization/chart components have been migrated to cds-mobile and re-exported for backwards compatibility. As a result, deep import paths will not resolve correctly on this version. Please import from the barrel file modules instead or migrate to the same components in cds-mobile.
 
+## 3.8.1 (5/18/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix(CDS-2065): keep Gradient colors in sync with positions on stop count changes. [[#3455](https://github.com/coinbase/cds/pull/3455)]
+
 ## 3.8.0 (5/8/2026 PST)
 
 #### 🚀 Updates

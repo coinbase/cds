@@ -92,7 +92,6 @@ jobs:
     needs: [check]
     if: needs.check.outputs.should_run == 'true'
     runs-on: macos-latest
-    environment: production
     outputs:
       percy_url: ${{ steps.percy-upload.outputs.percy_url }}
     steps:
@@ -185,7 +184,6 @@ jobs:
   # android:
   #   name: Visreg Android
   #   runs-on: ubuntu-latest
-  #   environment: production
   #   if: >
   #     github.event_name == 'push' ||
   #     github.event_name == 'workflow_dispatch' ||

@@ -16,6 +16,18 @@ For more details and to help upgrading from CDS 8 using our automated migration 
 
 There are no new changes/features for the MCP server in this release.
 
+## 8.75.2 ((5/19/2026, 01:13 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.1 ((5/19/2026, 07:30 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.0 ((5/15/2026, 01:46 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.74.3 ((5/14/2026, 05:35 PM PST))
 
 This is an artificial version bump with no new change.

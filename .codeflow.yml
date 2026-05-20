@@ -125,6 +125,7 @@ build:
     - BaldurNode:
         name: package-ui-scorecard
         path: ./packages/ui-scorecard/publish.Dockerfile
+        architecture: amd64
         autobuild_files:
           - packages/ui-scorecard/package.json
         expire_keep_tags_after_days: 1

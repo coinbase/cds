@@ -19,8 +19,14 @@ import type {
   SpotSquareName,
 } from '@coinbase/cds-illustrations';
 import { isDevelopment } from '@coinbase/cds-utils';
+import { css } from '@linaria/core';
 
 import { useTheme } from '../hooks/useTheme';
+
+const inlineSvgCss = css`
+  display: inline-block;
+  flex: none;
+`;
 
 const STATIC_ASSETS_CDN = 'https://static-assets.coinbase.com/ui-infra/illustration/v1';
 
@@ -150,9 +156,10 @@ export function createIllustration<Variant extends IllustrationVariant>(
           <div
             dangerouslySetInnerHTML={{ __html: svgMarkup }}
             aria-label={alt || undefined}
+            className={inlineSvgCss}
             data-testid={testID}
             role={alt ? 'img' : 'presentation'}
-            style={{ width, height, display: 'inline-block' }}
+            style={{ width, height }}
           />
         );
       }

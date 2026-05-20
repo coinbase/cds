@@ -35,13 +35,18 @@ export type NativeInputProps = {
    * @default body
    */
   font?: ThemeVars.Font;
+  /**
+   * Color of the selection (including caret).
+   * @default fgPrimary
+   */
+  selectionColor?: ThemeVars.Color;
 } & SharedProps &
   Pick<TextInputBaseProps, 'compact'> &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
   > &
-  Omit<TextInputProps, 'textAlign'>;
+  Omit<TextInputProps, 'textAlign' | 'selectionColor'>;
 
 export const NativeInput = memo(
   forwardRef(
@@ -55,6 +60,7 @@ export const NativeInput = memo(
         font = 'body',
         accessibilityLabel,
         compact,
+        selectionColor = 'fgPrimary',
         style,
         ...editableInputAddonProps
       }: NativeInputProps,
@@ -125,6 +131,7 @@ export const NativeInput = memo(
           editable={!disabled}
           keyboardAppearance={theme.activeColorScheme}
           placeholderTextColor={theme.color.fgMuted}
+          selectionColor={theme.color[selectionColor]}
           style={inputRootStyles}
           testID={testID}
           textAlign={textAlign !== 'unset' ? textAlign : undefined}

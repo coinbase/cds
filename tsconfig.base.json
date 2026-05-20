@@ -24,6 +24,12 @@
     "strict": true,
     "target": "es2020",
     "paths": {
+      "@cds/type-analyzer": [
+        "libs/type-analyzer/src"
+      ],
+      "@cds/type-analyzer/*": [
+        "libs/type-analyzer/src/*"
+      ],
       "@coinbase/cds-common": [
         "packages/common/src"
       ],

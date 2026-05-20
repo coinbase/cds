@@ -1,4 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
@@ -92,6 +93,11 @@ export type NativeInputBaseProps = BoxBaseProps & {
    * @default start
    * */
   align?: TextAlignProps['align'];
+  /**
+   * Color of the caret (cursor).
+   * @default fgPrimary
+   */
+  caretColor?: ThemeVars.Color;
 };
 
 export type NativeInputProps = NativeInputBaseProps &
@@ -124,6 +130,7 @@ export const NativeInput = memo(
       accessibilityHint,
       compact,
       className,
+      caretColor = 'fgPrimary',
       style,
       ...props
     }: NativeInputProps,
@@ -138,9 +145,10 @@ export const NativeInput = memo(
       () => ({
         textAlign: align,
         colorScheme: activeColorScheme,
+        caretColor: `var(--color-${caretColor})`,
         ...style,
       }),
-      [align, activeColorScheme, style],
+      [align, activeColorScheme, caretColor, style],
     );
 
     return (

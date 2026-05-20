@@ -86,7 +86,7 @@ export const Gradient = memo<GradientProps>(
       axis === 'x' ? { x: rangeEnd, y: drawingArea.y } : { x: drawingArea.x, y: rangeEnd };
 
     // Extract colors and positions for LinearGradient.
-    const colors = useMemo(
+    const targetColors = useMemo(
       () => (stops ?? []).map((stop) => getColorWithOpacity(stop.color, stop.opacity ?? 1)),
       [stops],
     );
@@ -96,6 +96,11 @@ export const Gradient = memo<GradientProps>(
     const startY = useSharedValue(targetStart.y);
     const endX = useSharedValue(targetEnd.x);
     const endY = useSharedValue(targetEnd.y);
+
+    // colors lives on the worklet so it flips in lockstep with positions; updating
+    // it via useMemo on the JS thread races the worklet-driven positions and Skia
+    // can paint mismatched array sizes when the stop count changes.
+    const currentColors = useSharedValue<string[]>(targetColors);
 
     const fromPositions = useSharedValue(targetPositions);
     const toPositions = useSharedValue(targetPositions);
@@ -117,6 +122,7 @@ export const Gradient = memo<GradientProps>(
         endX.value = targetEnd.x;
         endY.value = targetEnd.y;
 
+        currentColors.value = targetColors;
         fromPositions.value = [...targetPositions];
         toPositions.value = [...targetPositions];
         positionsProgress.value = 1;
@@ -130,11 +136,13 @@ export const Gradient = memo<GradientProps>(
 
       const canAnimatePositions = toPositions.value.length === targetPositions.length;
       if (canAnimatePositions) {
+        currentColors.value = targetColors;
         fromPositions.value = [...toPositions.value];
         toPositions.value = [...targetPositions];
         positionsProgress.value = 0;
         positionsProgress.value = buildTransition(1, transition);
       } else {
+        currentColors.value = targetColors;
         fromPositions.value = [...targetPositions];
         toPositions.value = [...targetPositions];
         positionsProgress.value = 1;
@@ -145,11 +153,13 @@ export const Gradient = memo<GradientProps>(
       targetStart.y,
       targetEnd.x,
       targetEnd.y,
+      targetColors,
       targetPositions,
       startX,
       startY,
       endX,
       endY,
+      currentColors,
       fromPositions,
       toPositions,
       positionsProgress,
@@ -169,6 +179,8 @@ export const Gradient = memo<GradientProps>(
         y: endY.value,
       };
     }, [endX, endY]);
+
+    const colors = useDerivedValue(() => currentColors.value, [currentColors]);
 
     const positions = useDerivedValue(() => {
       const from = fromPositions.value;

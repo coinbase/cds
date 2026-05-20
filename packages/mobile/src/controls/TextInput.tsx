@@ -106,7 +106,7 @@ export type TextInputBaseProps = SharedProps &
   };
 
 export type TextInputProps = TextInputBaseProps &
-  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign'> & {
+  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign' | 'selectionColor'> & {
     value?: RNTextInputProps['value'];
     onChange?: RNTextInputProps['onChange'];
     onChangeText?: RNTextInputProps['onChangeText'];
@@ -304,6 +304,7 @@ export const TextInput = memo(
             containerSpacing={containerSpacing}
             disabled={disabled}
             font={font}
+            selectionColor={variantColorMap[focusedVariant]}
             testID={testID}
             {...editableInputAddonProps}
           />
@@ -314,30 +315,31 @@ export const TextInput = memo(
             ? labelNode
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  <Box
-                    {...(labelVariant === 'inside' && {
-                      paddingTop: 1,
-                      paddingStart: start ? 0.5 : 2,
-                      paddingEnd: 2,
-                      background: readOnlyInputBackground,
-                    })}
-                  >
-                    {labelNode ? (
-                      labelNode
-                    ) : (
-                      <InputLabel
-                        color={labelColor}
-                        font={labelFont}
-                        testID={testIDMap?.label ?? ''}
-                        {...(labelVariant === 'inside' && {
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                        })}
-                      >
-                        {label}
-                      </InputLabel>
-                    )}
-                  </Box>
+                  {labelVariant === 'inside' && labelNode ? (
+                    <Box
+                      background={readOnlyInputBackground}
+                      paddingEnd={2}
+                      paddingStart={start ? 0.5 : 2}
+                    >
+                      {labelNode}
+                    </Box>
+                  ) : labelVariant === 'inside' ? (
+                    <InputLabel
+                      background={readOnlyInputBackground}
+                      color={labelColor}
+                      font={labelFont}
+                      paddingEnd={2}
+                      paddingStart={start ? 0.5 : 2}
+                      paddingY={0}
+                      testID={testIDMap?.label ?? ''}
+                    >
+                      {label}
+                    </InputLabel>
+                  ) : (
+                    <InputLabel color={labelColor} font={labelFont} testID={testIDMap?.label ?? ''}>
+                      {label}
+                    </InputLabel>
+                  )}
                 </Pressable>
               ))
         }

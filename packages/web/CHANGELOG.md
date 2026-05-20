@@ -27,6 +27,24 @@ For more details and to help upgrading from CDS 8 using our automated migration 
 - Migrated full set of components from web-visualization package to new `visualizations/chart` and `visualizations/sparkline` sub-paths.
 - Read our upgrade guilde for more details!
 
+## 8.75.2 (5/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: unstable svg sizing caused by flexbox. [[#696](https://github.com/coinbase/cds/pull/696)]
+
+## 8.75.1 (5/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: android web tray footer cut off. [[#694](https://github.com/coinbase/cds/pull/694)]
+
+## 8.75.0 (5/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support selectionColor on Inputs. [[#688](https://github.com/coinbase/cds/pull/688)]
+
 ## 8.74.3 (5/14/2026 PST)
 
 #### 🐞 Fixes

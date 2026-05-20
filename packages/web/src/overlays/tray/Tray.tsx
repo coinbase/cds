@@ -443,7 +443,7 @@ export const Tray = memo(
           <Box
             ref={trayRef}
             className={cx(trayClassNames.root, classNames?.root)}
-            height="100vh"
+            height="100dvh"
             pin="all"
             position="fixed"
             style={styles?.root}
