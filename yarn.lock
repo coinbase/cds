@@ -2322,6 +2322,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@cds/type-analyzer@workspace:libs/type-analyzer":
+  version: 0.0.0-use.local
+  resolution: "@cds/type-analyzer@workspace:libs/type-analyzer"
+  languageName: unknown
+  linkType: soft
+
 "@coinbase/cds-common@workspace:^, @coinbase/cds-common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@coinbase/cds-common@workspace:packages/common"
