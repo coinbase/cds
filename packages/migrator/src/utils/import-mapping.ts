@@ -7,7 +7,7 @@
  * call sites that import from a wrapper or re-exporting package are processed
  * the same way as direct CDS imports.
  *
- * Rewriting is prefix-based with `/` boundary enforcement:
+ * Mapping is prefix-based with `/` boundary enforcement:
  *   rewrite { from: '@cbhq/shared/cds', to: '@cbhq/cds-web' }
  *   input    '@cbhq/shared/cds/buttons/Button'
  *   output   '@cbhq/cds-web/buttons/Button'

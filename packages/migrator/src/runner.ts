@@ -8,12 +8,12 @@ import { execFileSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-import { createLogger, recordTransformRun } from './utils/index';
 import {
+  type ImportMapping,
   mergeImportMappings,
   parseImportMappings,
-  type ImportMapping,
 } from './utils/import-mapping';
+import { createLogger, recordTransformRun } from './utils/index';
 import { normalizePackageScope } from './utils/package-scope';
 import { loadRepoConfig } from './utils/repo-config';
 import type { Transform } from './types';
