@@ -127,7 +127,7 @@ npx @coinbase/cds-migrator ./src -t button-variant-values -ps coinbase
 npx @coinbase/cds-migrator ./src -t button-variant-values --package-scope @coinbase
 ```
 
-#### `-ir, --import-rewrite <rewrite...>`
+#### `-im, --import-mapping <mapping...>`
 
 Rewrite an import source prefix **before** any transform regex runs. Use this when a wrapper or re-exporting package stands between your call sites and CDS (e.g. `@acme/shared/cds/buttons/Button` instead of `@coinbase/cds-web/buttons/Button`).
 
@@ -224,20 +224,20 @@ Place a `cds-migrator.config.json` at your repo root (or at the migration target
 ```json
 {
   "packageScope": "cbhq",
-  "importRewrites": [{ "from": "@acme/shared/cds", "to": "@coinbase/cds-web" }]
+  "importMappings": [{ "from": "@acme/shared/cds", "to": "@coinbase/cds-web" }]
 }
 ```
 
 **Fields:**
 
-| Field            | Type             | Equivalent CLI flag | Description                                 |
-| ---------------- | ---------------- | ------------------- | ------------------------------------------- |
-| `packageScope`   | `string`         | `-ps`               | Default npm scope filter                    |
-| `importRewrites` | `{ from, to }[]` | `-ir`               | Import prefix rewrites for wrapper packages |
+| Field            | Type             | Equivalent CLI flag | Description                                        |
+| ---------------- | ---------------- | ------------------- | -------------------------------------------------- |
+| `packageScope`   | `string`         | `-ps`               | Default npm scope filter                           |
+| `importMappings` | `{ from, to }[]` | `-im`               | Import source prefix mappings for wrapper packages |
 
 **Precedence:** CLI flags override config file values. If the same `from` key appears in both, the CLI value wins.
 
-**Scope consistency:** If `packageScope` is set (here or via CLI), the `to` value of every `importRewrite` must resolve to a path under that same scope — otherwise the rewrite fires but the resulting path won't match the transform regex and the file will be skipped silently. When in doubt, omit `packageScope` so the regex matches any npm scope.
+**Scope consistency:** If `packageScope` is set (here or via CLI), the `to` value of every `importMapping` must resolve to a path under that same scope — otherwise the rewrite fires but the resulting path won't match the transform regex and the file will be skipped silently. When in doubt, omit `packageScope` so the regex matches any npm scope.
 
 The migrator searches for the config file at `<targetPath>/cds-migrator.config.json`, then falls back to `<cwd>/cds-migrator.config.json`. Throws if the file exists but contains malformed JSON.
 

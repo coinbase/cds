@@ -127,7 +127,7 @@ npx @coinbase/cds-migrator ./src -t components/button-variant
 
 If your repo re-exports CDS through a wrapper package (e.g. `@acme/shared/cds/buttons/Button` instead of `@coinbase/cds-web/buttons/Button`), transforms will skip those call sites by default because they don't match the CDS package names.
 
-Use `--import-rewrite` to tell the migrator to treat one import prefix as another **before** testing any transform regex:
+Use `-im` to tell the migrator to treat one import prefix as another **before** testing any transform regex:
 
 ```bash
 # One-off via CLI flag
@@ -144,7 +144,7 @@ Or drop a **`cds-migrator.config.json`** at your repo root so every run picks it
 ```json
 {
   "packageScope": "coinbase",
-  "importRewrites": [{ "from": "@acme/shared/cds", "to": "@coinbase/cds-web" }]
+  "importMappings": [{ "from": "@acme/shared/cds", "to": "@coinbase/cds-web" }]
 }
 ```
 
@@ -252,7 +252,7 @@ packages/migrator/
 │   │   └── v9/
 │   │       └── migrate-use-merge-refs.ts
 │   └── utils/                     # Shared utilities
-│       ├── import-rewrite.ts      #   Import prefix rewrites (-ir / config)
+│       ├── import-mapping.ts      #   Import prefix rewrites (-ir / config)
 │       ├── package-scope.ts       #   Package scope filtering (-ps)
 │       └── ...
 └── package.json

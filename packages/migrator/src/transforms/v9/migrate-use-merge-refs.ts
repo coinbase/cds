@@ -32,7 +32,7 @@
 
 import type { API, ASTPath, FileInfo, Identifier, Options } from 'jscodeshift';
 
-import { applyImportRewrites, getImportRewritesFromOptions } from '../../utils/import-rewrite';
+import { applyImportMappings, getImportMappingsFromOptions } from '../../utils/import-mapping';
 import {
   escapeRegExp,
   getPackageScopeFromOptions,
@@ -311,7 +311,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
   const root = j(file.source);
 
   const packageScope = getPackageScopeFromOptions(options);
-  const rewrites = getImportRewritesFromOptions(options);
+  const rewrites = getImportMappingsFromOptions(options);
   const scopePrefix = scopedModulePathRegexPrefix(packageScope);
   const mergeRefsModuleRe = new RegExp(
     `${scopePrefix}/cds-common/(hooks\\/useMergeRefs|utils\\/mergeRefs)$`,
@@ -323,7 +323,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
 
   root.find(j.ImportDeclaration).forEach((path) => {
     if (path.value.source && j.StringLiteral.check(path.value.source)) {
-      const resolvedSource = applyImportRewrites(path.value.source.value, rewrites);
+      const resolvedSource = applyImportMappings(path.value.source.value, rewrites);
       const next = rewriteCdsCommonHooksUseMergeRefsToUtils(resolvedSource, packageScope);
       if (next) {
         const prev = path.value.source.value;
@@ -343,7 +343,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
     const src = path.value.source;
     if (src && j.StringLiteral.check(src)) {
       const next = rewriteCdsCommonHooksUseMergeRefsToUtils(
-        applyImportRewrites(src.value, rewrites),
+        applyImportMappings(src.value, rewrites),
         packageScope,
       );
       if (next) {
@@ -362,7 +362,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
 
   root.find(j.StringLiteral).forEach((path) => {
     const next = rewriteCdsCommonHooksUseMergeRefsToUtils(
-      applyImportRewrites(path.value.value, rewrites),
+      applyImportMappings(path.value.value, rewrites),
       packageScope,
     );
     if (next) {

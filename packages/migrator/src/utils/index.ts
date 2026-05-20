@@ -6,5 +6,5 @@ export * from './config-loader';
 export * from './constants';
 export * from './logger';
 export * from './migration-history';
-export * from './import-rewrite';
+export * from './import-mapping';
 export * from './repo-config';

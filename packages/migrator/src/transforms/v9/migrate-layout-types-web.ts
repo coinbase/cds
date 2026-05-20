@@ -17,7 +17,7 @@
 import type { API, FileInfo, Options } from 'jscodeshift';
 
 import { ensureImportSpecifiers } from '../../utils/ensure-import-specifiers';
-import { applyImportRewrites, getImportRewritesFromOptions } from '../../utils/import-rewrite';
+import { applyImportMappings, getImportMappingsFromOptions } from '../../utils/import-mapping';
 import { getPackageScopeFromOptions, scopedModulePathRegexPrefix } from '../../utils/package-scope';
 import { transformLogger } from '../../utils/transform-utils';
 
@@ -70,7 +70,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
   const root = j(file.source);
 
   const packageScope = getPackageScopeFromOptions(options);
-  const rewrites = getImportRewritesFromOptions(options);
+  const rewrites = getImportMappingsFromOptions(options);
 
   const hasLocalDimensionValueType =
     root.find(j.TSTypeAliasDeclaration, { id: { name: 'DimensionValue' } }).length > 0;
@@ -80,7 +80,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
     const src = path.value.source;
     if (
       !j.StringLiteral.check(src) ||
-      !isCommonLayoutTypeSource(applyImportRewrites(src.value, rewrites), packageScope)
+      !isCommonLayoutTypeSource(applyImportMappings(src.value, rewrites), packageScope)
     ) {
       return;
     }
@@ -107,7 +107,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
     const src = path.value.source;
     if (
       !j.StringLiteral.check(src) ||
-      !isCommonLayoutTypeSource(applyImportRewrites(src.value, rewrites), packageScope)
+      !isCommonLayoutTypeSource(applyImportMappings(src.value, rewrites), packageScope)
     ) {
       return;
     }

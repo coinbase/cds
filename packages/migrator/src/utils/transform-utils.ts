@@ -54,8 +54,7 @@ export function addTodoComment(
     j.JSXExpressionContainer.check(path.value) ||
     j.JSXFragment.check(path.value);
 
-  const parentIsJsxElement =
-    path.parent != null && j.JSXElement.check(path.parent.value);
+  const parentIsJsxElement = path.parent != null && j.JSXElement.check(path.parent.value);
 
   if (isJsxNode && parentIsJsxElement) {
     // Recast does not print innerComments on synthetic JSXEmptyExpression nodes,

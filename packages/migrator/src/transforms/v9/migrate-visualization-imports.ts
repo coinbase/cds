@@ -28,7 +28,7 @@
  */
 import type { API, FileInfo, Options } from 'jscodeshift';
 
-import { applyImportRewrites, getImportRewritesFromOptions } from '../../utils/import-rewrite';
+import { applyImportMappings, getImportMappingsFromOptions } from '../../utils/import-mapping';
 import { escapeRegExp, getPackageScopeFromOptions } from '../../utils/package-scope';
 import { transformLogger } from '../../utils/transform-utils';
 
@@ -62,12 +62,12 @@ function rewriteStringLiteralSource(
   vizRe: RegExp,
   filePath: string,
   line: number | undefined,
-  rewrites: ReturnType<typeof getImportRewritesFromOptions>,
+  rewrites: ReturnType<typeof getImportMappingsFromOptions>,
 ): boolean {
   const src = node.source;
   if (!j.StringLiteral.check(src)) return false;
   const srcLiteral = src as { value: string };
-  const next = rewritePath(applyImportRewrites(srcLiteral.value, rewrites), vizRe);
+  const next = rewritePath(applyImportMappings(srcLiteral.value, rewrites), vizRe);
   if (!next) return false;
   transformLogger.success(`Updated import path: ${srcLiteral.value} → ${next}`, filePath, line);
   srcLiteral.value = next;
@@ -79,7 +79,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
   const root = j(file.source);
 
   const packageScope = getPackageScopeFromOptions(options);
-  const rewrites = getImportRewritesFromOptions(options);
+  const rewrites = getImportMappingsFromOptions(options);
   const vizRe = buildVisualizationRe(packageScope);
 
   let hasChanges = false;
