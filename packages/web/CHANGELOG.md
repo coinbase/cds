@@ -8,21 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 9.0.0-rc.3 ((5/15/2026, 01:54 PM PST))
+## 9.0.0 (5/20/2026 PST)
 
-#### 🚀 Updates
+CDS 9 is here!!
 
-- Feat: support illustration theming. [[#689](https://github.com/coinbase/cds/pull/689)]
-
-## 9.0.0-rc.2 ((4/30/2026, 08:17 AM PST))
-
-This is an artificial version bump with no new change.
-
-## 9.0.0-rc.1 (4/28/2026 PST)
+For more details and to help upgrading from CDS 8 using our automated migration tool, see our official [upgrade guide](https://cds.coinbase.com/guides/v9-upgrade-guide)!
 
 #### 💥 Breaking
 
-- Feat: CDS 9 release candidate 1.
+- Nested ThemeProviders will not inject the full set of CSS variables by default. You can opt in to the old behavior by setting the `isolated` prop to `false`.
+- Removed remaining instances of fixed height/width values across all components which may cause subtle layout shifts in your app.
+- Some component props’ types have narrowed in response to React 19 upgrade.
+- Read our upgrade guilde for more details!
+
+#### 🚀 Updates
+
+- React 19 support! React 18 is still supported for backwards compatibility.
+- Migrated full set of components from web-visualization package to new `visualizations/chart` and `visualizations/sparkline` sub-paths.
+- Read our upgrade guilde for more details!
 
 ## 8.74.3 (5/14/2026 PST)
 

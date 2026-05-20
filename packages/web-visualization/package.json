@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-web-visualization",
-  "version": "3.8.0",
+  "version": "4.0.0",
   "description": "Coinbase Design System - Web Sparkline",
   "deprecated": "Use @coinbase/cds-web/visualizations/chart and @coinbase/cds-web/visualizations/sparkline instead.",
   "repository": {
