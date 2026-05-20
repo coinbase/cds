@@ -9,7 +9,13 @@ import fs from 'fs';
 import path from 'path';
 
 import { createLogger, recordTransformRun } from './utils/index';
+import {
+  mergeImportRewrites,
+  parseImportRewrites,
+  type ImportRewrite,
+} from './utils/import-rewrite';
 import { normalizePackageScope } from './utils/package-scope';
+import { loadRepoConfig } from './utils/repo-config';
 import type { Transform } from './types';
 
 // In CommonJS, __dirname is automatically available
@@ -34,6 +40,11 @@ type RunMigrationOptions = {
   transformsToRun: Transform[];
   /** Forwarded to jscodeshift as `--packageScope` for scope-targeted transforms. */
   packageScope?: string;
+  /**
+   * Raw rewrite strings from the CLI (`'<from>=<to>'` format). Merged with any
+   * `cds-migrator.config.json` found at the target path; CLI wins on conflicts.
+   */
+  importRewrite?: string[];
 };
 
 export async function runMigration(options: RunMigrationOptions): Promise<void> {
@@ -43,8 +54,22 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
     dryRun,
     transformsToRun,
     packageScope: packageScopeRaw,
+    importRewrite: importRewriteCli,
   } = options;
   const packageScope = packageScopeRaw ? normalizePackageScope(packageScopeRaw) : undefined;
+
+  // Merge import rewrites: config file provides defaults, CLI flags override.
+  const repoConfig = loadRepoConfig(targetPath);
+  const configRewrites: ImportRewrite[] = repoConfig?.importRewrites ?? [];
+  const cliRewrites: ImportRewrite[] = importRewriteCli
+    ? parseImportRewrites(importRewriteCli)
+    : [];
+  const importRewrites = mergeImportRewrites(configRewrites, cliRewrites);
+
+  // Fall back to config-file packageScope when not set via CLI.
+  const resolvedPackageScope =
+    packageScope ??
+    (repoConfig?.packageScope ? normalizePackageScope(repoConfig.packageScope) : undefined);
 
   console.log(`\n🔄 Running migration...\n`);
 
@@ -53,8 +78,13 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
   logger.info(`Starting migration${preset ? ` (${preset})` : ''}`);
   logger.info(`Target path: ${targetPath}`);
   logger.info(`Mode: ${dryRun ? 'Dry Run' : 'Apply Changes'}`);
-  if (packageScope) {
-    logger.info(`Package scope: ${packageScope} (only matching imports are rewritten)`);
+  if (resolvedPackageScope) {
+    logger.info(`Package scope: ${resolvedPackageScope} (only matching imports are rewritten)`);
+  }
+  if (importRewrites.length > 0) {
+    for (const { from, to } of importRewrites) {
+      logger.info(`Import rewrite: ${from} → ${to}`);
+    }
   }
 
   if (transformsToRun.length === 0) {
@@ -119,7 +149,12 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
           `--extensions=${extensions}`,
           ...RUNNER_IGNORE_PATTERNS.map((p) => `--ignore-pattern=${p}`),
           `--transform=${fullTransformPath}`,
-          ...(packageScope ? [`--packageScope=${packageScope}`] : []),
+          ...(resolvedPackageScope ? [`--packageScope=${resolvedPackageScope}`] : []),
+          // Serialize aliases as a JSON array so transforms can parse them with
+          // getImportRewritesFromOptions without any additional string splitting.
+          ...(importRewrites.length > 0
+            ? [`--importRewrites=${JSON.stringify(importRewrites)}`]
+            : []),
           targetPath,
         ];
 

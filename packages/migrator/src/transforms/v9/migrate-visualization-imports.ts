@@ -28,6 +28,7 @@
  */
 import type { API, FileInfo, Options } from 'jscodeshift';
 
+import { applyImportRewrites, getImportRewritesFromOptions } from '../../utils/import-rewrite';
 import { escapeRegExp, getPackageScopeFromOptions } from '../../utils/package-scope';
 import { transformLogger } from '../../utils/transform-utils';
 
@@ -61,13 +62,15 @@ function rewriteStringLiteralSource(
   vizRe: RegExp,
   filePath: string,
   line: number | undefined,
+  rewrites: ReturnType<typeof getImportRewritesFromOptions>,
 ): boolean {
   const src = node.source;
   if (!j.StringLiteral.check(src)) return false;
-  const next = rewritePath(src.value, vizRe);
+  const srcLiteral = src as { value: string };
+  const next = rewritePath(applyImportRewrites(srcLiteral.value, rewrites), vizRe);
   if (!next) return false;
-  transformLogger.success(`Updated import path: ${src.value} → ${next}`, filePath, line);
-  src.value = next;
+  transformLogger.success(`Updated import path: ${srcLiteral.value} → ${next}`, filePath, line);
+  srcLiteral.value = next;
   return true;
 }
 
@@ -76,12 +79,22 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
   const root = j(file.source);
 
   const packageScope = getPackageScopeFromOptions(options);
+  const rewrites = getImportRewritesFromOptions(options);
   const vizRe = buildVisualizationRe(packageScope);
 
   let hasChanges = false;
 
   root.find(j.ImportDeclaration).forEach((path) => {
-    if (rewriteStringLiteralSource(j, path.value, vizRe, file.path, path.value.loc?.start.line)) {
+    if (
+      rewriteStringLiteralSource(
+        j,
+        path.value,
+        vizRe,
+        file.path,
+        path.value.loc?.start.line,
+        rewrites,
+      )
+    ) {
       hasChanges = true;
     }
   });
@@ -89,14 +102,30 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
   root.find(j.ExportNamedDeclaration).forEach((path) => {
     if (
       path.value.source &&
-      rewriteStringLiteralSource(j, path.value, vizRe, file.path, path.value.loc?.start.line)
+      rewriteStringLiteralSource(
+        j,
+        path.value,
+        vizRe,
+        file.path,
+        path.value.loc?.start.line,
+        rewrites,
+      )
     ) {
       hasChanges = true;
     }
   });
 
   root.find(j.ExportAllDeclaration).forEach((path) => {
-    if (rewriteStringLiteralSource(j, path.value, vizRe, file.path, path.value.loc?.start.line)) {
+    if (
+      rewriteStringLiteralSource(
+        j,
+        path.value,
+        vizRe,
+        file.path,
+        path.value.loc?.start.line,
+        rewrites,
+      )
+    ) {
       hasChanges = true;
     }
   });

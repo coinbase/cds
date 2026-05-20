@@ -23,6 +23,7 @@
  */
 import type { API, FileInfo, Options } from 'jscodeshift';
 
+import { applyImportRewrites, getImportRewritesFromOptions } from '../../utils/import-rewrite';
 import { getPackageScopeFromOptions, scopedModulePathRegexPrefix } from '../../utils/package-scope';
 import { transformLogger } from '../../utils/transform-utils';
 
@@ -38,6 +39,7 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
   const root = j(file.source);
 
   const packageScope = getPackageScopeFromOptions(options);
+  const rewrites = getImportRewritesFromOptions(options);
   const cdsWebRe = buildCdsWebImportRe(packageScope);
 
   const localNames = new Set<string>();
@@ -46,7 +48,8 @@ export default function transformer(file: FileInfo, api: API, options: Options) 
     .find(j.ImportDeclaration)
     .filter((path) => {
       const src = path.value.source;
-      return j.StringLiteral.check(src) && cdsWebRe.test(src.value);
+      if (!j.StringLiteral.check(src)) return false;
+      return cdsWebRe.test(applyImportRewrites(src.value, rewrites));
     })
     .forEach((path) => {
       path.value.specifiers?.forEach((specifier) => {

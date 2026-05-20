@@ -82,6 +82,7 @@ npx @coinbase/cds-migrator ./src -t button-variant -t input-size --dry-run
 - 🌊 **Dry-Run Mode** - Preview all changes before applying
 - 📊 **Comprehensive Logging** - Track successes, warnings, and manual TODOs
 - 💬 **TODO Comments** - Automatically marks code that needs manual review
+- 🔀 **Import Rewrites** - Cover wrapper packages that re-export CDS so transforms apply to call sites that don't import from CDS directly
 
 ## How It Works
 
@@ -122,6 +123,33 @@ npx @coinbase/cds-migrator ./src -t button-variant-values -t input-size-values
 npx @coinbase/cds-migrator ./src -t components/button-variant
 ```
 
+### Wrapper Packages / Import Rewrites
+
+If your repo re-exports CDS through a wrapper package (e.g. `@acme/shared/cds/buttons/Button` instead of `@coinbase/cds-web/buttons/Button`), transforms will skip those call sites by default because they don't match the CDS package names.
+
+Use `--import-rewrite` to tell the migrator to treat one import prefix as another **before** testing any transform regex:
+
+```bash
+# One-off via CLI flag
+npx @coinbase/cds-migrator ./src -p v8-to-v9 -ir '@acme/shared/cds=@coinbase/cds-web'
+
+# Multiple rewrites
+npx @coinbase/cds-migrator ./src -p v8-to-v9 \
+  -ir '@acme/shared/cds=@coinbase/cds-web' \
+  -ir '@acme/ui/cds=@coinbase/cds-web'
+```
+
+Or drop a **`cds-migrator.config.json`** at your repo root so every run picks it up automatically—no flag required:
+
+```json
+{
+  "packageScope": "coinbase",
+  "importRewrites": [{ "from": "@acme/shared/cds", "to": "@coinbase/cds-web" }]
+}
+```
+
+CLI flags always take precedence over the config file when the same `from` key appears in both. The rewrite affects only **import matching**—it never changes the import path written to disk.
+
 ### Fully Interactive
 
 Omit flags to be prompted for everything:
@@ -153,6 +181,7 @@ your-project/
 ├── src/
 │   ├── .cds-migration-history.json  # ← Tracks applied migrations (commit this!)
 │   └── ... (your modified files)
+├── cds-migrator.config.json         # ← Optional: standing defaults (commit this!)
 └── migration.log                    # ← Detailed log (review then delete)
 ```
 
@@ -223,6 +252,9 @@ packages/migrator/
 │   │   └── v9/
 │   │       └── migrate-use-merge-refs.ts
 │   └── utils/                     # Shared utilities
+│       ├── import-rewrite.ts      #   Import prefix rewrites (-ir / config)
+│       ├── package-scope.ts       #   Package scope filtering (-ps)
+│       └── ...
 └── package.json
 ```
 

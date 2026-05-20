@@ -219,6 +219,9 @@ async function setupMigration(args: CliArgs) {
     if (args.packageScope) {
       console.log(`  Package scope: ${args.packageScope}`);
     }
+    if (args.importRewrite && args.importRewrite.length > 0) {
+      console.log(`  Import rewrites: ${args.importRewrite.join(', ')}`);
+    }
     console.log(`  Transforms: ${filtered.length}\n`);
 
     return {
@@ -227,6 +230,7 @@ async function setupMigration(args: CliArgs) {
       dryRun: args.dryRun || false,
       transformsToRun: filtered,
       packageScope: args.packageScope,
+      importRewrite: args.importRewrite,
     };
   }
 
@@ -301,6 +305,9 @@ async function setupMigration(args: CliArgs) {
   if (args.packageScope) {
     console.log(`  Package scope: ${args.packageScope}`);
   }
+  if (args.importRewrite && args.importRewrite.length > 0) {
+    console.log(`  Import rewrites: ${args.importRewrite.join(', ')}`);
+  }
   console.log(`  Transforms: ${filtered.length}\n`);
 
   return {
@@ -309,6 +316,7 @@ async function setupMigration(args: CliArgs) {
     dryRun: args.dryRun || false,
     transformsToRun: filtered,
     packageScope: args.packageScope,
+    importRewrite: args.importRewrite,
   };
 }
 
