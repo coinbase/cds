@@ -119,5 +119,9 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxVa
   props: CheckboxGroupProps<CheckboxValue> & { ref?: React.Ref<HTMLFieldSetElement> },
 ) => React.ReactElement;
 
+/**
+ * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="group" instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const CheckboxGroup = memo(CheckboxGroupWithRef) as typeof CheckboxGroupWithRef &
   React.MemoExoticComponent<typeof CheckboxGroupWithRef>;
