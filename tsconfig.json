@@ -25,6 +25,9 @@
       "path": "libs/docusaurus-plugin-kbar"
     },
     {
+      "path": "libs/type-analyzer"
+    },
+    {
       "path": "libs/web-utils"
     },
     {
