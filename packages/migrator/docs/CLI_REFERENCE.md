@@ -148,6 +148,18 @@ npx @coinbase/cds-migrator ./src -p v8-to-v9 -ps coinbase -ir '@acme/shared/cds=
 
 The rewrite applies **only to import matching**—it never changes the import path written to disk.
 
+**Interaction with `--package-scope`:** `packageScope` constrains the regex used to match the **rewritten** path, so the `to` value must resolve to a path under that scope. If they disagree the rewrite silently has no effect:
+
+```
+# ✓ consistent — to resolves under the same scope as packageScope
+-ps coinbase -ir '@acme/shared/cds=@coinbase/cds-web'
+
+# ✗ mismatch — to is @coinbase but scope filter is @cbhq, match never fires
+-ps cbhq -ir '@acme/shared/cds=@coinbase/cds-web'
+```
+
+When in doubt, omit `-ps` — the regex then matches any npm scope.
+
 Rewrites are also accepted via `cds-migrator.config.json` (see [Repo Config File](#repo-config-file-cds-migratorconfig-json)). CLI values win on conflicts.
 
 #### `--clear-history`
@@ -224,6 +236,8 @@ Place a `cds-migrator.config.json` at your repo root (or at the migration target
 | `importRewrites` | `{ from, to }[]` | `-ir`               | Import prefix rewrites for wrapper packages |
 
 **Precedence:** CLI flags override config file values. If the same `from` key appears in both, the CLI value wins.
+
+**Scope consistency:** If `packageScope` is set (here or via CLI), the `to` value of every `importRewrite` must resolve to a path under that same scope — otherwise the rewrite fires but the resulting path won't match the transform regex and the file will be skipped silently. When in doubt, omit `packageScope` so the regex matches any npm scope.
 
 The migrator searches for the config file at `<targetPath>/cds-migrator.config.json`, then falls back to `<cwd>/cds-migrator.config.json`. Throws if the file exists but contains malformed JSON.
 
