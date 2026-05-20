@@ -64,16 +64,16 @@ describe('analyzeType', () => {
     expect(result.groups.filter((group) => group.name === 'ExtraProps')).toHaveLength(1);
   });
 
-  it('handles interface extends chains', () => {
+  it('handles type alias intersection chains', () => {
     const result = analyzeType({
       filePath: fixtureFile,
       symbolName: 'ChildProps',
     });
 
     expect(result.properties.map((property) => property.name)).toEqual(['child', 'parent']);
-    expect(result.groups.map((group) => group.name)).toEqual(['ParentProps', 'ChildProps']);
+    expect(result.groups.map((group) => group.name)).toEqual(['ParentProps', 'inline']);
     expect(getProperty(result, 'parent')?.origins[0]?.groupName).toBe('ParentProps');
-    expect(getProperty(result, 'child')?.origins[0]?.groupName).toBe('ChildProps');
+    expect(getProperty(result, 'child')?.origins[0]?.groupName).toBe('inline');
   });
 
   it('analyzes SlideButtonHandleProps with expected origin buckets', () => {
