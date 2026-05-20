@@ -16,10 +16,6 @@ All notable changes to this project will be documented in this file.
 
 - Visualization/chart components have been migrated to cds-web and re-exported for backwards compatibility. As a result, deep import paths will not resolve correctly on this version. Please import from the barrel file modules instead or migrate to the same components in cds-web.
 
-#### 📘 Misc
-
-- Temporary unreleased changes - undo prior to CDS 9 release.
-
 ## 3.8.0 (5/8/2026 PST)
 
 #### 🚀 Updates
