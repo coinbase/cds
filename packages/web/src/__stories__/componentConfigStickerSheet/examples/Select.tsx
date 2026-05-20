@@ -15,35 +15,41 @@ const selectOptions = [
 export const SelectExample = memo(() => {
   const [selectValue, setSelectValue] = useState<string | null>(null);
 
-  // Select stories run with a11y test off due to a known nested-interactive issue
-
   return (
-    <VStack className="no-a11y-checks">
+    <VStack alignItems="stretch" className="no-a11y-checks" gap={2} width="100%">
+      <Select
+        label="Label"
+        onChange={setSelectValue}
+        options={selectOptions}
+        placeholder="Outside label"
+        style={{ width: '100%' }}
+        value={selectValue}
+      />
+      <Select
+        label="Label"
+        labelVariant="inside"
+        onChange={setSelectValue}
+        options={selectOptions}
+        placeholder="Default input"
+        style={{ width: '100%' }}
+        value={selectValue}
+      />
       <Select
         compact
         label="Label"
-        labelVariant="inside"
         onChange={setSelectValue}
         options={selectOptions}
-        placeholder="Select an option"
-        style={{ flexGrow: 1 }}
+        placeholder="Compact input"
+        style={{ width: '100%' }}
         value={selectValue}
       />
       <Select
-        label="Label"
-        labelVariant="inside"
-        onChange={setSelectValue}
-        options={selectOptions}
-        placeholder="Select an option"
-        style={{ flexGrow: 1 }}
-        value={selectValue}
-      />
-      <Select
+        readOnly
         label="Label"
         onChange={setSelectValue}
         options={selectOptions}
-        placeholder="Select an option"
-        style={{ flexGrow: 1 }}
+        placeholder="Read only input"
+        style={{ width: '100%' }}
         value={selectValue}
       />
     </VStack>

@@ -51,7 +51,7 @@ export const customComponentConfig: ComponentConfig = {
 
   Radio: (props) => ({
     background: 'bg',
-    borderWidth: props.checked ? 200 : 100,
+    borderWidth: props.checked ? 200 : 200,
     borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
     controlColor: 'bgPrimary',
     dotSize: 20 / 3,
@@ -117,7 +117,7 @@ export const customComponentConfig: ComponentConfig = {
   Select: (props) => ({
     bordered: false,
     variant: 'foregroundMuted',
-    inputBackground: 'bgAlternate',
+    inputBackground: props.readOnly || props.disabled ? 'bgSecondary' : 'bgAlternate',
     focusedBorderWidth: 100,
     height: props.compact ? 24 : props.labelVariant === 'inside' ? 40 : 32,
     font: props.compact ? 'label2' : 'body',

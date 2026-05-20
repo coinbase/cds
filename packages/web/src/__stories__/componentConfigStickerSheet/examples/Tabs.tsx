@@ -1,6 +1,5 @@
 import { memo, useState } from 'react';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { DefaultTabsActiveIndicator } from '@coinbase/cds-web/tabs/DefaultTabsActiveIndicator';
 import { Tabs } from '@coinbase/cds-web/tabs/Tabs';
 
 import { VStack } from '../../../layout';
