@@ -127,7 +127,7 @@ npx @coinbase/cds-migrator ./src -t button-variant-values -ps coinbase
 npx @coinbase/cds-migrator ./src -t button-variant-values --package-scope @coinbase
 ```
 
-#### `-im, --import-mapping <mapping...>`
+#### `--import-mapping <mapping...>`
 
 Rewrite an import source prefix **before** any transform regex runs. Use this when a wrapper or re-exporting package stands between your call sites and CDS (e.g. `@acme/shared/cds/buttons/Button` instead of `@coinbase/cds-web/buttons/Button`).
 
@@ -233,7 +233,7 @@ Place a `cds-migrator.config.json` at your repo root (or at the migration target
 | Field            | Type             | Equivalent CLI flag | Description                                        |
 | ---------------- | ---------------- | ------------------- | -------------------------------------------------- |
 | `packageScope`   | `string`         | `-ps`               | Default npm scope filter                           |
-| `importMappings` | `{ from, to }[]` | `-im`               | Import source prefix mappings for wrapper packages |
+| `importMappings` | `{ from, to }[]` | `--import-mapping`  | Import source prefix mappings for wrapper packages |
 
 **Precedence:** CLI flags override config file values. If the same `from` key appears in both, the CLI value wins.
 

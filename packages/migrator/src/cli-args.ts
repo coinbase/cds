@@ -50,7 +50,7 @@ export function parseCliArgs(): CliArgs {
       'Only rewrite imports from this npm scope (e.g. coinbase or @coinbase). Omit to include every scope',
     )
     .option(
-      '-im, --import-mapping <mapping...>',
+      '--import-mapping <mapping...>',
       "Map an import source prefix to another before transforms run (format: '<from>=<to>', repeatable). " +
         "Example: '@acme/shared/cds=@coinbase/cds-web'. Merged with cds-migrator.config.json; CLI wins on conflicts.",
     );

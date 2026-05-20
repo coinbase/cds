@@ -127,7 +127,7 @@ npx @coinbase/cds-migrator ./src -t components/button-variant
 
 If your repo re-exports CDS through a wrapper package (e.g. `@acme/shared/cds/buttons/Button` instead of `@coinbase/cds-web/buttons/Button`), transforms will skip those call sites by default because they don't match the CDS package names.
 
-Use `-im` to tell the migrator to treat one import prefix as another **before** testing any transform regex:
+Use `--import-mapping` to tell the migrator to treat one import prefix as another **before** testing any transform regex:
 
 ```bash
 # One-off via CLI flag
