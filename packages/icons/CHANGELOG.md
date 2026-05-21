@@ -8,8 +8,6 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-
-
 ##### ⭐️ Added (4)
 
 - parlaysEmpty
@@ -17,7 +15,11 @@ All notable changes to this project will be documented in this file.
 - addModuleUI
 - openBook
 
-## Unreleased
+## 5.17.0 (5/21/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026/05/21. [[#712](https://github.com/coinbase/cds/pull/712)]
 
 #### 📘 Misc
 
