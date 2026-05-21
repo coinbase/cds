@@ -111,7 +111,7 @@ export const IconButton: IconButtonComponent = memo(
       const resolvedPadding = useResolveResponsiveProp(padding);
 
       const pressableStyle = useMemo(() => {
-        if (!flush || !resolvedPadding) return undefined;
+        if (!flush || !resolvedPadding) return style;
         const negativeMargin = -theme.space[resolvedPadding];
         return {
           ...style,
