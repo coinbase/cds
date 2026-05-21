@@ -202,4 +202,66 @@ describe('Tour', () => {
       });
     });
   });
+
+  describe('hideOverlay', () => {
+    it('drops aria-modal and routes pointer events when hideOverlay is true', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} hideOverlay />
+        </DefaultThemeProvider>,
+      );
+
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).not.toHaveAttribute('aria-modal');
+      expect(dialog).toHaveStyle({ pointerEvents: 'none' });
+
+      const stepContainer = document.querySelector('.cds-Tour-stepContainer');
+      const floatingEl = stepContainer?.parentElement;
+      expect(floatingEl).toHaveStyle({ pointerEvents: 'auto' });
+    });
+
+    it('does not render the mask when hideOverlay is true', async () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} hideOverlay>
+            <TourStep id="step1">
+              <div />
+            </TourStep>
+          </Tour>
+        </DefaultThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Step 1')).toBeInTheDocument();
+      });
+      expect(document.querySelector('.cds-Tour-mask')).toBeNull();
+    });
+
+    it('per-step hideOverlay overrides the prop value', () => {
+      const stepsWithHidden = [{ ...mockTour[0], hideOverlay: true }, mockTour[1], mockTour[2]];
+      render(
+        <DefaultThemeProvider>
+          <Tour
+            {...exampleProps}
+            activeTourStep={stepsWithHidden[0]}
+            hideOverlay={false}
+            steps={stepsWithHidden}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).not.toHaveAttribute('aria-modal');
+    });
+
+    it('keeps aria-modal when hideOverlay is false (default)', () => {
+      render(
+        <DefaultThemeProvider>
+          <Tour {...exampleProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
+    });
+  });
 });
