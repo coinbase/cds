@@ -253,7 +253,7 @@ export const InputStack = memo(
       };
     }, [borderColorUnfocused, borderColorFocused, focusedBorderWidth, inputBorderRadius]);
 
-    const rootStyles = useMemo(() => ({ style, ...styles?.root }), [style, styles?.root]);
+    const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
 
     return (
       <VStack
