@@ -58,6 +58,7 @@ export const IconButton = memo(
       name,
       active,
       variant = 'secondary',
+      alignSelf = 'flex-start', // prevents stretching when placed in a flex container
       transparent,
       compact = true,
       background,
@@ -94,7 +95,7 @@ export const IconButton = memo(
         accessibilityHint={accessibilityHint}
         accessibilityLabel={loading ? `${accessibilityLabel ?? ''}, loading` : accessibilityLabel}
         alignItems="center"
-        alignSelf="flex-start"
+        alignSelf={alignSelf}
         background={backgroundValue}
         borderColor={borderColorValue}
         borderRadius={borderRadius}

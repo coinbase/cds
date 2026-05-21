@@ -13,7 +13,6 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
-import { Spinner } from '../loaders';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
@@ -21,6 +20,9 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 const defaultProgressCircleSize = 24;
 
 export const styles = StyleSheet.create({
+  base: {
+    alignSelf: 'flex-start', // prevents stretching when placed in a flex container
+  },
   inline: {
     width: 'auto',
   },
@@ -153,6 +155,7 @@ export const Button = memo(
 
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => [
+        styles.base,
         sizingStyle,
         typeof style === 'function' ? style(state) : style,
       ],
