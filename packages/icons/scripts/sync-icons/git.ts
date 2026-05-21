@@ -18,17 +18,25 @@ const error = (message: string, ...args: unknown[]) => {
 };
 
 /**
- * Validates that the repo is on a clean master/main branch, then creates a new
- * `icons/YYYY-MM-DD` branch for the sync.
+ * Resolves the default remote branch name (master or main) by checking which
+ * one exists on origin.
+ */
+const resolveDefaultBranch = (exec: ReturnType<typeof createExec>, repoName: string): string => {
+  const remoteBranches = exec('git branch -r');
+  if (remoteBranches.includes('origin/master')) return 'master';
+  if (remoteBranches.includes('origin/main')) return 'main';
+  error(`Could not find "master" or "main" branch on origin for the "${repoName}" repo`);
+  throw new Error('unreachable');
+};
+
+/**
+ * Validates that the repo has a clean working tree, then creates a new
+ * `icons/YYYY-MM-DD` branch from the latest `origin/<defaultBranch>`.
+ * The caller does not need to be on master/main first.
  */
 export const ensureCleanBranch = (dirname: string) => {
   const repoName = path.basename(dirname);
   const exec = createExec(dirname);
-
-  console.log(`Checking the current branch for the "${repoName}" repo...`);
-  const gitBranch = exec('git branch --show-current');
-  if (gitBranch !== 'master' && gitBranch !== 'main')
-    error(`The "${repoName}" repo is not on the "master" or "main" branch`);
 
   console.log(`Checking the status of the "${repoName}" repo...`);
   const gitStatus = exec('git status --short');
@@ -52,36 +60,19 @@ export const ensureCleanBranch = (dirname: string) => {
     error(`There was an error fetching the "origin" remote for the "${repoName}" repo:`, err);
   }
 
-  const defaultBranch = gitBranch; // master or main
-  console.log(
-    `Checking for changes on the local ${defaultBranch} branch that are not on origin/${defaultBranch}...`,
-  );
-  const gitBranchChanges = exec(`git log origin/${defaultBranch}..${defaultBranch}`);
-  if (gitBranchChanges.length > 0)
-    error(
-      `The "${repoName}" repo has changes on the local ${defaultBranch} branch that are not on origin/${defaultBranch}`,
-    );
+  const defaultBranch = resolveDefaultBranch(exec, repoName);
+  console.log(`Using "${defaultBranch}" as the default branch for the "${repoName}" repo...`);
 
-  console.log(
-    `Checking for changes on origin/${defaultBranch} that are not on the local ${defaultBranch} branch...`,
-  );
-  const gitOriginChanges = exec(`git log ${defaultBranch}..origin/${defaultBranch}`);
-  if (gitOriginChanges.length > 0)
-    error(
-      `The "${repoName}" repo has changes on origin/${defaultBranch} that are not on the local ${defaultBranch} branch`,
-    );
-
-  // Create the target branch
+  // Create the target branch from the latest origin/<defaultBranch>
   try {
     console.log(`Attempting to delete branch ${targetBranchName}...`);
     exec(`git branch -D ${targetBranchName}`);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (err) {
+  } catch {
     // Branch may not exist, that's ok
   }
-  console.log(`Creating new branch ${targetBranchName}...`);
-  exec(`git checkout -b ${targetBranchName}`);
-  return targetBranchName;
+  console.log(`Creating new branch ${targetBranchName} from origin/${defaultBranch}...`);
+  exec(`git checkout -b ${targetBranchName} origin/${defaultBranch}`);
+  return { branchName: targetBranchName, defaultBranch };
 };
 
 export const commitAndPushChanges = (dirname: string, commitMessage: string) => {

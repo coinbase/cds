@@ -15,9 +15,9 @@
  *   FIGMA_ACCESS_TOKEN  Required. Figma personal access token.
  */
 
+import { getFileComponentSets } from '@cds/figma-api';
 import fs from 'node:fs';
 import path from 'node:path';
-import { getFileComponentSets } from '@cds/figma-api';
 
 // The Figma CDS component-library file key — this is where the Icon component
 // instances live in Figma, distinct from the icons asset file used by sync-icons.

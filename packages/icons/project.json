@@ -40,6 +40,14 @@
     },
     "sync-icons": {
       "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": [
+            "figma-api"
+          ],
+          "target": "build"
+        }
+      ],
       "options": {
         "command": "tsx ./scripts/sync-icons/index.ts",
         "cwd": "packages/icons"

@@ -1,10 +1,10 @@
+import { downloadSvgImage } from '@cds/figma-api';
 import { execSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { optimize as svgoOptimize, type Output as SvgoOutput } from 'svgo';
 import { webfont } from 'webfont';
-import { downloadSvgImage } from '@cds/figma-api';
 
 import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
@@ -154,13 +154,13 @@ const main = async () => {
     fs.writeFileSync(config.manifestPath, JSON.stringify(emptyManifest));
 
   console.log('Preparing target repo branch...');
-  const newBranchName = ensureCleanBranch(config.repoRoot);
+  const { branchName: newBranchName, defaultBranch } = ensureCleanBranch(config.repoRoot);
 
   process.on('exit', (code) => {
     if (code === 0) return;
     // Clean up the working branch if the icons sync fails
     console.log('Icons sync failed, deleting working branch...');
-    execSync(`git checkout master && git branch -D ${newBranchName}`, {
+    execSync(`git checkout ${defaultBranch} && git branch -D ${newBranchName}`, {
       cwd: config.repoRoot,
     });
   });
