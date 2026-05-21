@@ -30,6 +30,7 @@ const defaultProgressCircleSize = 24;
 const baseCss = css`
   text-decoration: none;
   display: inline-flex;
+  height: fit-content;
   text-align: center;
   vertical-align: middle;
   align-items: center;
