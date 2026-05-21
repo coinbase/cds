@@ -20,9 +20,6 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 const defaultProgressCircleSize = 24;
 
 export const styles = StyleSheet.create({
-  base: {
-    alignSelf: 'flex-start', // prevents stretching when placed in a flex container
-  },
   inline: {
     width: 'auto',
   },
@@ -155,7 +152,6 @@ export const Button = memo(
 
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => [
-        styles.base,
         sizingStyle,
         typeof style === 'function' ? style(state) : style,
       ],
