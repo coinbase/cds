@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-27T15:11:29.808Z",
-  "lastUnicode": 986286,
+  "lastUpdated": "2026-05-21T21:55:32.529Z",
+  "lastUnicode": 986310,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25426,6 +25426,194 @@
           "active": true,
           "size": 12,
           "unicode": 986275
+        }
+      ]
+    },
+    {
+      "nodeId": "7672:83",
+      "name": "openBook",
+      "description": "book, open, book, order, tutorials, text, walkthrough",
+      "assetsHash": "IZ/9L9NwC2eFTZDnQ/0x7QUrnCSO3FcDgnzv4ISS11g=",
+      "nameHash": "DFTcYMdhZJhLHULpKNHCVRGCDPvNHUYHgE+m6MrM/Uw=",
+      "createdAt": "2026-05-21T14:58:15.450Z",
+      "lastUpdated": "2026-05-21T15:14:03.289Z",
+      "svgs": [
+        {
+          "name": "openBook-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986298
+        },
+        {
+          "name": "openBook-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986297
+        },
+        {
+          "name": "openBook-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986296
+        },
+        {
+          "name": "openBook-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986295
+        },
+        {
+          "name": "openBook-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986294
+        },
+        {
+          "name": "openBook-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986293
+        }
+      ]
+    },
+    {
+      "nodeId": "7672:76",
+      "name": "parlaysEmpty",
+      "description": "parlays, ticket, empty, new, blank",
+      "assetsHash": "a5SVJpcZIHKXm7TuygnMMbw+7IND9lD+LAkbA/JzIz4=",
+      "nameHash": "iPhlZCePg6YPDV2B3J/Jq72C/nzcOLRw6B2WSCfXQds=",
+      "createdAt": "2026-05-21T14:58:15.462Z",
+      "lastUpdated": "2026-05-21T14:58:15.462Z",
+      "svgs": [
+        {
+          "name": "parlaysEmpty-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986310
+        },
+        {
+          "name": "parlaysEmpty-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986309
+        },
+        {
+          "name": "parlaysEmpty-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986308
+        },
+        {
+          "name": "parlaysEmpty-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986307
+        },
+        {
+          "name": "parlaysEmpty-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986306
+        },
+        {
+          "name": "parlaysEmpty-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986305
+        }
+      ]
+    },
+    {
+      "nodeId": "7672:69",
+      "name": "parlaysAdd",
+      "description": "parlays, ticket, add, new, create",
+      "assetsHash": "oELvQsSpoS+IgpEU00/2ShX8HBYR9oEEjcLcRZqDl2s=",
+      "nameHash": "6VktFlJvMl2L2lHi8YrAN/aOjAjIop4RN/DqvDe8euY=",
+      "createdAt": "2026-05-21T14:58:15.467Z",
+      "lastUpdated": "2026-05-21T14:58:15.467Z",
+      "svgs": [
+        {
+          "name": "parlaysAdd-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986304
+        },
+        {
+          "name": "parlaysAdd-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986303
+        },
+        {
+          "name": "parlaysAdd-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986302
+        },
+        {
+          "name": "parlaysAdd-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986301
+        },
+        {
+          "name": "parlaysAdd-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986300
+        },
+        {
+          "name": "parlaysAdd-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986299
+        }
+      ]
+    },
+    {
+      "nodeId": "7671:62",
+      "name": "addModuleUI",
+      "description": "module, add, ui, advanced, modular, interface",
+      "assetsHash": "UrBft2a2fIvy9mT3jL/qX6lRZTr3ct7CtYJX33fLBvs=",
+      "nameHash": "uXaZceG9L3Upi/YQ620ZQom1rD1P33uYvu1h8RIaBn4=",
+      "createdAt": "2026-05-21T14:58:51.337Z",
+      "lastUpdated": "2026-05-21T14:58:51.337Z",
+      "svgs": [
+        {
+          "name": "addModuleUI-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986292
+        },
+        {
+          "name": "addModuleUI-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986291
+        },
+        {
+          "name": "addModuleUI-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986290
+        },
+        {
+          "name": "addModuleUI-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986289
+        },
+        {
+          "name": "addModuleUI-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986288
+        },
+        {
+          "name": "addModuleUI-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986287
         }
       ]
     }
