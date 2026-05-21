@@ -8,6 +8,15 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (4)
+
+- parlaysEmpty
+- parlaysAdd
+- addModuleUI
+- openBook
+
 ## Unreleased
 
 #### 📘 Misc

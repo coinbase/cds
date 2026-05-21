@@ -545,5 +545,9 @@ export const names: IconName[] = [
   'underPredictions',
   'baseLock',
   'caretExpand',
-  'caretCollapse'
+  'caretCollapse',
+  'openBook',
+  'parlaysEmpty',
+  'parlaysAdd',
+  'addModuleUI'
 ];
