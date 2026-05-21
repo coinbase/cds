@@ -8,18 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.17.0 (5/21/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026/05/21. [[#712](https://github.com/coinbase/cds/pull/712)]
+
 ##### ⭐️ Added (4)
 
 - parlaysEmpty
 - parlaysAdd
 - addModuleUI
 - openBook
-
-## 5.17.0 (5/21/2026 PST)
-
-#### 🚀 Updates
-
-- Feat: Publish icons 2026/05/21. [[#712](https://github.com/coinbase/cds/pull/712)]
 
 #### 📘 Misc
 
