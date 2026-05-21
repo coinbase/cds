@@ -52,7 +52,6 @@ function readValidIconNames(repoRoot: string): Set<string> {
   return names;
 }
 
-
 // ─── File generation ──────────────────────────────────────────────────────────
 
 type Target = {
@@ -137,9 +136,8 @@ export async function syncIconCodeConnect(repoRoot: string) {
     .sort((a, b) => toIconName(a.name).localeCompare(toIconName(b.name)));
   console.log(`  Found ${iconSets.length} icon component sets.`);
 
-   const validIconNames = readValidIconNames(repoRoot);
+  const validIconNames = readValidIconNames(repoRoot);
   console.log(`  Loaded ${validIconNames.size} valid icon names from IconName.ts`);
-  
 
   console.log('\nGenerating Code Connect files…');
   for (const target of targets) {
