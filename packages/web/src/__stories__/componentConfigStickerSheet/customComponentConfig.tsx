@@ -58,7 +58,7 @@ export const customComponentConfig: ComponentConfig = {
 
   Radio: (props) => ({
     background: 'bg',
-    borderWidth: props.checked ? 200 : 100,
+    borderWidth: 200,
     borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
     controlColor: 'bgPrimary',
     dotSize: 20 / 3,
