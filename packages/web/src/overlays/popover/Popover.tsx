@@ -127,7 +127,7 @@ export const Popover = memo(
         return middlewareList;
       }, [computedSkid, getOffsetGap, computedGap, isAutoPlacement, rawPlacement]);
 
-      const { refs, floatingStyles } = useFloating({
+      const { refs, floatingStyles, placement } = useFloating({
         placement: isAutoPlacement ? undefined : (rawPlacement as FloatingPlacement),
         strategy,
         middleware,
@@ -156,6 +156,7 @@ export const Popover = memo(
             ref={refs.setFloating}
             onClick={handleCaptureEvents}
             onMouseDown={handleCaptureEvents}
+            data-placement={placement}
             style={{
               ...floatingStyles,
               zIndex: zIndex.dropdown,
