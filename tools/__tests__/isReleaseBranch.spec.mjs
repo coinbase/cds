@@ -56,8 +56,8 @@ describe('getMajorFromReleaseBranch', () => {
 
 describe('getNpmDistTagFromReleaseBranch', () => {
   it('returns an npm-valid dist-tag for release branches', () => {
-    expect(getNpmDistTagFromReleaseBranch('release-8.x')).toBe('release-8');
-    expect(getNpmDistTagFromReleaseBranch('release-10.x')).toBe('release-10');
+    expect(getNpmDistTagFromReleaseBranch('release-8.x')).toBe('v8-lts');
+    expect(getNpmDistTagFromReleaseBranch('release-10.x')).toBe('v10-lts');
   });
 
   it('throws for non-release branches', () => {
