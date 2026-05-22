@@ -243,8 +243,34 @@ jobs:
         if: steps.version-check.outputs.should-publish == 'true'
         run: |
           cd packages/${{ matrix.package }}
-          npm publish --dry-run --access public \
-            --registry https://registry.npmjs.org
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+          # Use base branch for PRs, ref name for workflow_dispatch
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CURRENT_BRANCH="${{ github.base_ref }}"
+          else
+            CURRENT_BRANCH="${{ github.ref_name }}"
+          fi
+
+          # Match dist-tag logic from the live publish job
+          if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
+            MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
+            NPM_TAG="v${MAJOR}"
+            echo "🏷️  Dry run from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
+            npm publish --dry-run --access public \
+              --tag "$NPM_TAG" \
+              --registry https://registry.npmjs.org
+          elif echo "$PACKAGE_VERSION" | grep -qE '\-'; then
+            PRERELEASE_TAG=$(echo "$PACKAGE_VERSION" | sed -E 's/.*-([^.]+).*/\1/')
+            echo "🏷️  Detected prerelease version, using dist-tag: $PRERELEASE_TAG"
+            npm publish --dry-run --access public \
+              --tag "$PRERELEASE_TAG" \
+              --registry https://registry.npmjs.org
+          else
+            echo "🏷️  Dry run as latest"
+            npm publish --dry-run --access public \
+              --registry https://registry.npmjs.org
+          fi
           echo "✅ Dry run successful for ${{ matrix.package }}"
 
   # Actual publish (push to master or manual trigger, not dry-run)
