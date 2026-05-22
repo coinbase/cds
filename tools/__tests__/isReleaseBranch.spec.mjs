@@ -1,5 +1,6 @@
 import {
   getMajorFromReleaseBranch,
+  getNpmDistTagFromReleaseBranch,
   isReleaseBranch,
   isMasterOrReleaseBranch,
 } from '../ci/isReleaseBranch.mjs';
@@ -50,5 +51,16 @@ describe('getMajorFromReleaseBranch', () => {
   it('throws for non-release branches', () => {
     expect(() => getMajorFromReleaseBranch('master')).toThrow();
     expect(() => getMajorFromReleaseBranch('release-8')).toThrow();
+  });
+});
+
+describe('getNpmDistTagFromReleaseBranch', () => {
+  it('returns an npm-valid dist-tag for release branches', () => {
+    expect(getNpmDistTagFromReleaseBranch('release-8.x')).toBe('release-8');
+    expect(getNpmDistTagFromReleaseBranch('release-10.x')).toBe('release-10');
+  });
+
+  it('throws for non-release branches', () => {
+    expect(() => getNpmDistTagFromReleaseBranch('master')).toThrow();
   });
 });

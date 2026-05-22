@@ -252,10 +252,10 @@ jobs:
             CURRENT_BRANCH="${{ github.ref_name }}"
           fi
 
-          # Match dist-tag logic from the live publish job
+          # release-N.x → --tag release-N (vN is rejected by npm 11 as a semver range)
           if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
             MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
-            NPM_TAG="v${MAJOR}"
+            NPM_TAG="release-${MAJOR}"
             echo "🏷️  Dry run from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
             npm publish --dry-run --access public \
               --tag "$NPM_TAG" \
@@ -361,13 +361,13 @@ jobs:
           echo "📦 Package version: $PACKAGE_VERSION"
 
           # Determine dist-tag:
-          #   release-N.x branch → --tag vN   (e.g. release-8.x → --tag v8)
+          #   release-N.x branch → --tag release-N (e.g. release-8.x → --tag release-8)
           #   prerelease version  → --tag <prerelease> (e.g. 1.0.0-beta.1 → --tag beta)
           #   master              → no --tag flag (publishes as latest)
           CURRENT_BRANCH="${{ github.ref_name }}"
           if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
             MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
-            NPM_TAG="v${MAJOR}"
+            NPM_TAG="release-${MAJOR}"
             echo "🏷️  Publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
             npm publish ./package.tgz --access public \
               --tag "$NPM_TAG" \
