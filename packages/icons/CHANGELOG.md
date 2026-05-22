@@ -8,6 +8,30 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (4)
+
+- addModuleUI
+- openBook
+- parlaysAdd
+- parlaysEmpty
+
+##### ⭐️ Updated (12)
+
+- upload
+- metaverse
+- baseTransact
+- singleCoin
+- unfollowPeople
+- baseWallet
+- rocket
+- music
+- exclamationMark
+- gif
+- noWifi
+- twitterLogo
+
 ## Unreleased
 
 #### 📘 Misc
