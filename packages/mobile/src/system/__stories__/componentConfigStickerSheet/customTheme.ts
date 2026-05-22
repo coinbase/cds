@@ -517,7 +517,7 @@ export const customTheme = {
     title4: 20,
     headline: 16,
     body: 16,
-    label1: 12,
+    label1: 16,
     label2: 16,
     caption: 12,
     legal: 12,
