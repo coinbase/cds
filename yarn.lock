@@ -1989,6 +1989,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@cds/figma-api@workspace:^, @cds/figma-api@workspace:libs/figma-api":
+  version: 0.0.0-use.local
+  resolution: "@cds/figma-api@workspace:libs/figma-api"
+  dependencies:
+    "@babel/core": "npm:^7.28.0"
+    "@babel/preset-env": "npm:^7.28.0"
+    "@babel/preset-react": "npm:^7.28.5"
+    "@babel/preset-typescript": "npm:^7.27.1"
+    "@figma/rest-api-spec": "npm:^0.34.0"
+  languageName: unknown
+  linkType: soft
+
 "@cds/type-analyzer@workspace:libs/type-analyzer":
   version: 0.0.0-use.local
   resolution: "@cds/type-analyzer@workspace:libs/type-analyzer"
@@ -2034,8 +2046,11 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
+    "@cds/figma-api": "workspace:^"
     chalk: "npm:^4.1.2"
+    dotenv: "npm:^16.4.7"
     prettier: "npm:^3.6.2"
+    svgo: "npm:^3.0.2"
   languageName: unknown
   linkType: soft
 
@@ -4994,6 +5009,13 @@ __metadata:
   bin:
     figma: bin/figma
   checksum: 10c0/5e8127a49d8648c9085c2295f99ebf369ab3bf441e8d0a5cea85dd6da5b07847d2f3fc736da7b71a5fb8a80006f0a6f68cb6f572c3f86df87cb94209d56c16ba
+  languageName: node
+  linkType: hard
+
+"@figma/rest-api-spec@npm:^0.34.0":
+  version: 0.34.0
+  resolution: "@figma/rest-api-spec@npm:0.34.0"
+  checksum: 10c0/0492739dc569417528ebc3dccd739824db9bd8428797f543c1fecfd4fbe582a90e7807c9c3e70708a491fcae87f3d83015b6885619eac8bd8ba3324cc0051056
   languageName: node
   linkType: hard
 
@@ -15424,10 +15446,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.3, dotenv@npm:^16.3.1, dotenv@npm:^16.4.4":
-  version: 16.5.0
-  resolution: "dotenv@npm:16.5.0"
-  checksum: 10c0/5bc94c919fbd955bf0ba44d33922a1e93d1078e64a1db5c30faeded1d996e7a83c55332cb8ea4fae5a9ca4d0be44cbceb95c5811e70f9f095298df09d1997dd9
+"dotenv@npm:^16.0.3, dotenv@npm:^16.3.1, dotenv@npm:^16.4.4, dotenv@npm:^16.4.7":
+  version: 16.6.1
+  resolution: "dotenv@npm:16.6.1"
+  checksum: 10c0/15ce56608326ea0d1d9414a5c8ee6dcf0fffc79d2c16422b4ac2268e7e2d76ff5a572d37ffe747c377de12005f14b3cc22361e79fc7f1061cce81f77d2c973dc
   languageName: node
   linkType: hard
 

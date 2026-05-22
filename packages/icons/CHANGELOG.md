@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Added dev dependencies and internal documentation. [[#713](https://github.com/coinbase/cds/pull/713)]
+
 ## 5.17.0 (5/22/2026 PST)
 
 #### 🚀 Updates
