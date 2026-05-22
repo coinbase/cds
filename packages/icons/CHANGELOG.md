@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.17.0 (5/22/2026 PST)
 
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-05-22. [[#715](https://github.com/coinbase/cds/pull/715)]
 
 ##### ⭐️ Added (4)
 
@@ -31,8 +35,6 @@ All notable changes to this project will be documented in this file.
 - gif
 - noWifi
 - twitterLogo
-
-## Unreleased
 
 #### 📘 Misc
 
