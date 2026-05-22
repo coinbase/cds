@@ -115,12 +115,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=6967
   example: (props) => <Icon name="apothecary" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13936', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="appSwitcher" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-956', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -137,6 +131,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="application" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13936', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="appSwitcher" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12805', {
@@ -157,12 +157,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="arrowRight" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12740', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="arrowUp" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12766', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -179,6 +173,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="arrowsVertical" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12740', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="arrowUp" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15106', {
@@ -205,16 +205,16 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="astronautHelmet" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1178', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="atSign" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-670', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="atomScience" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-1178', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="atSign" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16565', {
@@ -277,6 +277,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=5681
   example: (props) => <Icon name="baseApps" {...props} />,
 });
 
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-110', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="baseball" {...props} />,
+});
+
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56816-81', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -311,12 +317,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=5681
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="baseWallet" {...props} />,
-});
-
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-110', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="baseball" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-123', {
@@ -625,13 +625,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="cashSingaporeDollar" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56411-1533', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12051', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="cashSwissFranc" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12051', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=56411-1533', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="cashSwissFranc" {...props} />,
@@ -649,16 +649,16 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="cashTurkishLira" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11999', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="cashUSD" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12012', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="cashUaeDirham" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11999', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="cashUSD" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11986', {
@@ -1363,16 +1363,16 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="eye" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13000', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="faceScan" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14365', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="faces" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13000', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="faceScan" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-644', {
@@ -1387,13 +1387,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="faucet" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13598', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13351', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="faucet" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13351', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-13598', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="faucet" {...props} />,
@@ -1573,13 +1573,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="ghost" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14352', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14183', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="ghost" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14183', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14352', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="ghost" {...props} />,
@@ -1591,13 +1591,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="gif" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15275', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15015', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="giftBox" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15015', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15275', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="giftBox" {...props} />,
@@ -1615,13 +1615,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="gitHubLogo" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15262', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16305', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="globe" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16305', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15262', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="globe" {...props} />,
@@ -1663,12 +1663,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="hamburger" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16812', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="hammer" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16825', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -1676,6 +1670,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16838', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="hammer" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16812', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="hammer" {...props} />,
@@ -2107,16 +2107,16 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="nftSale" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16187', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="noWifi" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15549', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="nodeProduct" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16187', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="noWifi" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-579', {
@@ -2161,12 +2161,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=8018
   example: (props) => <Icon name="overPredictions" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12909', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="pFPS" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16161', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -2209,22 +2203,16 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="pause" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11791', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="pay" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11921', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="pay" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15510', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11791', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
-  example: (props) => <Icon name="payProduct" {...props} />,
+  example: (props) => <Icon name="pay" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11908', {
@@ -2243,6 +2231,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="paypal" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15510', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="payProduct" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16122', {
@@ -2287,6 +2281,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="perpetualSwap" {...props} />,
 });
 
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12909', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="pFPS" {...props} />,
+});
+
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14924', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -2297,6 +2297,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=6609
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="pieChartData" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=76831-2', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="pieChartWithArrow" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-852', {
@@ -2317,12 +2323,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="pin" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16942', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="planet" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16955', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -2330,6 +2330,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16968', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="planet" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16942', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="planet" {...props} />,
@@ -2419,16 +2425,16 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="privateClientProduct" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15471', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="proProduct" {...props} />,
-});
-
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16083', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="profile" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15471', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="proProduct" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16070', {
@@ -2617,13 +2623,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="royalty" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15184', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14859', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="royalty" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14859', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15184', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="royalty" {...props} />,
@@ -2749,6 +2755,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="signinProduct" {...props} />,
 });
 
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-423', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="singlecloud" {...props} />,
+});
+
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=66093-54', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -2759,12 +2771,6 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=6967
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="singleNote" {...props} />,
-});
-
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=69679-423', {
-  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
-  props,
-  example: (props) => <Icon name="singlecloud" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-12896', {
@@ -3019,13 +3025,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="sun" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16890', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16916', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="support" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16916', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16890', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="support" {...props} />,
@@ -3043,13 +3049,13 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="taxes" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11726', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11739', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="taxesReceipt" {...props} />,
 });
 
-figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11739', {
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-11726', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="taxesReceipt" {...props} />,
