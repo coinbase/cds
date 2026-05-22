@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.75.3 (5/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: update tray drag position live on iOS during swipe. [[#719](https://github.com/coinbase/cds/pull/719)]
+
 ## 8.75.2 ((5/19/2026, 01:13 PM PST))
 
 This is an artificial version bump with no new change.
