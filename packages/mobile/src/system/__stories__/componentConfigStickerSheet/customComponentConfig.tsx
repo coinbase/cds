@@ -1,5 +1,4 @@
 import type { ComponentConfig } from '../../../core/componentConfig';
-import { Text } from '../../../typography/Text';
 
 export const customComponentConfig: ComponentConfig = {
   Banner: {
@@ -8,18 +7,23 @@ export const customComponentConfig: ComponentConfig = {
 
   Button: (props) => ({
     borderRadius: 200,
-    height: props.compact ? 24 : 32,
+    paddingX: props.compact ? 2 : 4,
+    paddingY: props.compact ? 1 : 2,
     font: props.compact ? 'label1' : 'headline',
-    progressCircleSize: props.compact ? 12 : 16,
-    paddingY: 0,
+    ...(props.variant === 'tertiary'
+      ? {
+          background: 'bgAlternate',
+          color: 'fg',
+          borderColor: 'bgAlternate',
+        }
+      : {}),
   }),
 
   IconButton: (props) => {
     const isCompact = props.compact ?? true;
     return {
       borderRadius: 200,
-      height: isCompact ? 24 : 32,
-      width: isCompact ? 24 : 32,
+      padding: isCompact ? 1.5 : 2,
       ...(props.variant === 'tertiary'
         ? {
             background: 'bgAlternate',

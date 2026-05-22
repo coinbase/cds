@@ -94,6 +94,7 @@ const hiddenCss = css`
 `;
 
 const middleNodeCss = css`
+  display: flex;
   position: relative;
 `;
 
