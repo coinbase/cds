@@ -15,3 +15,8 @@ export function getMajorFromReleaseBranch(branch) {
   }
   return parseInt(match[1], 10);
 }
+
+/** npm dist-tag for release branches (bare vN is rejected as a semver range in npm 11+) */
+export function getNpmDistTagFromReleaseBranch(branch) {
+  return `v${getMajorFromReleaseBranch(branch)}-lts`;
+}

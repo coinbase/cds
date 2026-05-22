@@ -248,7 +248,7 @@ jobs:
 
           if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
             MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
-            NPM_TAG="v${MAJOR}"
+            NPM_TAG="v${MAJOR}-lts"
             echo "🏷️  Dry run publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
             NPM_TAG_ARGS=(--tag "$NPM_TAG")
           elif echo "$PACKAGE_VERSION" | grep -qE '\-'; then
@@ -352,13 +352,13 @@ jobs:
           echo "📦 Package version: $PACKAGE_VERSION"
 
           # Determine dist-tag:
-          #   release-N.x branch → --tag vN   (e.g. release-8.x → --tag v8)
+          #   release-N.x branch → --tag vN-lts (e.g. release-8.x → --tag v8-lts)
           #   prerelease version  → --tag <prerelease> (e.g. 1.0.0-beta.1 → --tag beta)
           #   master              → no --tag flag (publishes as latest)
           CURRENT_BRANCH="${{ github.ref_name }}"
           if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
             MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
-            NPM_TAG="v${MAJOR}"
+            NPM_TAG="v${MAJOR}-lts"
             echo "🏷️  Publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
             npm publish ./package.tgz --access public \
               --tag "$NPM_TAG" \
