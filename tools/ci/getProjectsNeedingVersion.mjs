@@ -1,9 +1,28 @@
+import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
 import { getChangedFiles } from './getChangedFiles.mjs';
 import { getCurrentCIBranch } from './getCurrentCIBranch.mjs';
 import { logInfo as logInfoBase, logSuccess } from './logging.mjs';
 import { getAffectedPackages } from './getAffectedPackages.mjs';
+
+const TEMPLATE_TOKEN = '<!-- template-start -->';
+
+function hasUnversionedTemplateContent(changelogPath) {
+  if (!fs.existsSync(changelogPath)) return false;
+  const content = fs.readFileSync(changelogPath, 'utf8');
+
+  const templateIndex = content.indexOf(TEMPLATE_TOKEN);
+  if (templateIndex === -1) return false;
+
+  const afterTemplate = content.slice(templateIndex + TEMPLATE_TOKEN.length);
+  const nextSectionMatch = afterTemplate.match(/\n## /);
+  const templateContent = nextSectionMatch
+    ? afterTemplate.slice(0, nextSectionMatch.index)
+    : afterTemplate;
+
+  return templateContent.trim().length > 0;
+}
 
 function getPendingChangedFiles() {
   const result = spawnSync('git', ['--no-pager', 'diff', '--name-only', '--relative', 'HEAD'], {
@@ -46,10 +65,15 @@ export async function projectsNeedingVersion(logInfo, options = {}) {
   }
 
   const unversionedPackages = Object.keys(changedPackages).filter((projectName) => {
-    const changelogPath = `${changedPackages[projectName].data.root}/CHANGELOG.md`;
+    const projectRoot = changedPackages[projectName].data.root;
+    const changelogPath = `${projectRoot}/CHANGELOG.md`;
     const changelogChanged = changedFiles.includes(changelogPath);
 
     if (!changelogChanged) {
+      return true;
+    }
+
+    if (hasUnversionedTemplateContent(changelogPath)) {
       return true;
     }
 
