@@ -154,9 +154,9 @@ export const Popover = memo(
         () => (
           <div
             ref={refs.setFloating}
+            data-placement={placement}
             onClick={handleCaptureEvents}
             onMouseDown={handleCaptureEvents}
-            data-placement={placement}
             style={{
               ...floatingStyles,
               zIndex: zIndex.dropdown,
@@ -184,8 +184,9 @@ export const Popover = memo(
         ),
         [
           refs.setFloating,
-          floatingStyles,
           handleCaptureEvents,
+          placement,
+          floatingStyles,
           autoFocusDelay,
           disableAutoFocus,
           disableFocusTrap,
