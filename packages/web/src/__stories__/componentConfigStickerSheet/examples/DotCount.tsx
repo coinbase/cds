@@ -10,7 +10,7 @@ export const DotCountExample = memo(() => {
     <HStack alignItems="flex-start" gap={2}>
       {dotCounts.map((count) => (
         <DotCount key={count} count={count} pin="top-end">
-          <IconButton accessibilityLabel="Notifications" transparent iconSize="m" name="bell" />
+          <IconButton transparent accessibilityLabel="Notifications" iconSize="m" name="bell" />
         </DotCount>
       ))}
     </HStack>
