@@ -8,10 +8,10 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@coinbase/cds-common": "^8",
+    "@coinbase/cds-common": "^9",
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
-    "@coinbase/cds-mobile": "^8",
+    "@coinbase/cds-mobile": "^9",
     "@expo-google-fonts/inter": "^0.3.0",
     "@react-navigation/native": "6.1.17",
     "@react-navigation/native-stack": "6.9.26",
@@ -21,7 +21,7 @@
     "expo-splash-screen": "31.0.13",
     "expo-status-bar": "3.0.9",
     "lottie-react-native": "7.3.1",
-    "react": "19.1.0",
+    "react": "19.1.2",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "2.28.0",
     "react-native-inappbrowser-reborn": "3.7.0",
@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@types/react": "~19.0.0",
-    "typescript": "~5.3.0"
+    "@types/react": "~19.1.2",
+    "typescript": "~5.9.2"
   },
   "private": true,
   "packageManager": "yarn@4.9.2"

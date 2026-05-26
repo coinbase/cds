@@ -517,7 +517,7 @@ export const customTheme = {
     title4: '20px',
     headline: '16px',
     body: '16px',
-    label1: '12px',
+    label1: '16px',
     label2: '16px',
     caption: '12px',
     legal: '12px',

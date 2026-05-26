@@ -52,10 +52,11 @@ yarn nx run docs:dev
 ### Mobile App
 
 ```sh
-# Launch local debug builds
-yarn nx run expo-app:launch:ios-debug
-yarn nx run expo-app:launch:android-debug
+yarn nx run expo-app:ios
+yarn nx run expo-app:android
 ```
+
+See [apps/expo-app/README.md](apps/expo-app/README.md) for details.
 
 ## Contributing
 

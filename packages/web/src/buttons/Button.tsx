@@ -94,6 +94,7 @@ const hiddenCss = css`
 `;
 
 const middleNodeCss = css`
+  display: flex;
   position: relative;
 `;
 
@@ -210,6 +211,7 @@ export const Button: ButtonComponent = memo(
         margin = 0,
         minWidth = 'auto',
         style,
+        textAlign = 'center',
         ...props
       } = mergedProps;
       const theme = useTheme();
@@ -306,6 +308,7 @@ export const Button: ButtonComponent = memo(
               fontWeight={fontWeight}
               lineHeight={lineHeight}
               numberOfLines={numberOfLines}
+              textAlign={textAlign}
             >
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>
