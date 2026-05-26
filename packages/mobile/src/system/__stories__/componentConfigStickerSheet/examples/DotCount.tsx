@@ -1,20 +1,19 @@
 import React, { memo } from 'react';
 
+import { IconButton } from '../../../../buttons/IconButton';
 import { DotCount } from '../../../../dots/DotCount';
-import { Icon } from '../../../../icons/Icon';
+import { HStack } from '../../../../layout/HStack';
+
+const dotCounts = [3, 12, 100];
 
 export const DotCountExample = memo(() => {
   return (
-    <>
-      <DotCount count={3}>
-        <Icon name="bell" size="m" />
-      </DotCount>
-      <DotCount count={12}>
-        <Icon name="bell" size="m" />
-      </DotCount>
-      <DotCount count={100} max={99}>
-        <Icon name="bell" size="m" />
-      </DotCount>
-    </>
+    <HStack gap={2}>
+      {dotCounts.map((count) => (
+        <DotCount key={count} count={count} pin="top-end">
+          <IconButton transparent accessibilityLabel="Notifications" iconSize="m" name="bell" />
+        </DotCount>
+      ))}
+    </HStack>
   );
 });
