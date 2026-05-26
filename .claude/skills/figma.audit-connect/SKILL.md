@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 ## Task: Audit Figma Code Connect Mapping
 
-Audit the specificed Figma Code Connect mapping file.
+Audit the specified Figma Code Connect mapping file.
 
-ALWAYS refresh your memory of the React Code Connect documentation here: https://developers.figma.com/docs/code-connect/react/
+Before starting, load the `figma.connect-best-practices` SKILL — it contains the canonical rules for every property mapping type (`figma.boolean`, `figma.enum`, `figma.string`, `figma.textContent`, `figma.instance`, `figma.children`, `figma.nestedProps`) and common pitfalls. Do not duplicate that guidance here; refer to it.
 
 ### Inputs
 
@@ -21,52 +21,68 @@ Search for the mapping file and end your task if you cannot find it.
 
 Within the current mapping file:
 
-- Study all the property mappings defined in `props: { ... }` of the code connect mapping file.
-- Study the figma variants covered (indicated by use of `variant: { ... }`)
-  - variants should be defined as separate `figma.connect` calls with the same component.
+- Study all the property mappings defined in `props: { ... }` of each `figma.connect()` call
+- Note which Figma variants are covered (indicated by `variant: { ... }`)
+- Note the Figma URL(s) used — you will need these to call the MCP tools
 
 ### Steps
 
 1. **Retrieve Figma component data**
-   - ALWAYS call Figma MCP: `get_metadata` to understand the actual component structure:
-     - What are the actual property names? (they often have spaces: "show start")
-     - What are property values vs separate properties?
-     - Is this a component or a component set with variants?
-   - Then call Figma MCP: `get_design_context` with the code connect disabled option enabled to get even more metadata
 
-2. **Identify Property Types Correctly**
-   Before analyzing mappings, study the Figma metadata you found:
-   - **ALWAYS** reference the guidelines for writing code connect mappings in the `figma.connect-best-practices` SKILL
-   - **Component Properties**: Boolean toggles, dropdowns/enums in the properties panel
-   - **Property Values**: Options within enum properties (e.g., "disabled" is a value of "state")
-   - **Text Layers**: Named text layers that need `figma.textContent()`
-   - **Instance Layers**: Named instances that need `figma.instance()` or `figma.children()`
-   - **Nested Properties**: Properties exposed from child layers (marked with ↳ in Figma)
+   Call the Figma MCP **`get_context_for_code_connect`** tool with the fileKey and nodeId from the Figma URL in the mapping file. This is the primary tool for Code Connect authoring. It returns:
+   - Every component property with its exact name, type (`BOOLEAN`, `VARIANT`, `TEXT`), and key
+   - All variant option values for `VARIANT` properties
+   - The full descendant tree showing which layers reference which properties, and which variants each descendant appears in
 
-   **For every `figma.textContent()` usage in the mapping file**, call `get_metadata` on the referenced layer's node ID and confirm the metadata reports it as a `<text>` node. If it is an `<instance>`, `<frame>`, `<symbol>`, or any other non-text type, `figma.textContent()` will fail at runtime. Use a hardcoded placeholder string instead.
+   This output is the ground truth for your audit. Use it to understand:
+   - What the exact Figma property names are (they often contain spaces and ordinal words like "show 3rd step")
+   - Which properties are direct vs. exposed from child layers (the `↳` prefix indicates nested/exposed properties)
+   - Which component set variants exist and what their option values are
+   - Which descendant layers are text nodes vs. instance nodes
 
-   **For every `figma.children()` usage**, check whether all variants of the component have a child layer with that exact name. If different variants use different layer names for the same logical prop, the mapping needs to be split into variant-specific `figma.connect()` calls.
+2. **Optional: `get_design_context` for visual context**
 
-3. **Read the React component source**
-   - Find and read the component's TypeScript source file, including any of its sub-components' source files
-   - Study the React props for the component(s)
+   If you need to visually inspect what the component looks like (e.g. to understand a variant you're unsure about), call `get_design_context` with `disableCodeConnect: true`. This returns a screenshot and reference code. It is not a substitute for `get_context_for_code_connect` — it does not return structured property metadata — but it can help when the property names alone aren't enough to understand the design intent.
 
-4. **Analyze Property Coverage**
-   Create a mapping analysis table, where each row is a property from the Figma `get_metadata` structure:
+3. **Secondary checks with `get_metadata`**
 
-   | Figma Property | Related React Prop(s) | Mapped? | Mapping Method | Notes |
-   | -------------- | --------------------- | ------- | -------------- | ----- |
+   Use `get_metadata` **only** as a targeted follow-up for specific layer-type verification — not as a general overview tool. The specific case where it's needed:
+
+   **For every `figma.textContent('LayerName')` in the mapping file:** call `get_metadata` on that layer's node ID (found in the `descendants` of the `get_context_for_code_connect` output). Confirm the response shows `<text ...>`. If it shows `<instance>`, `<frame>`, `<symbol>`, or any other non-text type, `figma.textContent()` will fail silently at runtime — flag this as an error and suggest a hardcoded placeholder string instead.
+
+4. **Read the React component source**
+   - Find and read the component's TypeScript source file and any relevant sub-component source files
+   - Study the available React props
+
+5. **Analyze Property Coverage**
+
+   Using the `get_context_for_code_connect` output as your source of truth, create a mapping analysis table where each row is a Figma property:
+
+   | Figma Property | Type | Related React Prop(s) | Mapped? | Mapping Method | Notes |
+   | -------------- | ---- | --------------------- | ------- | -------------- | ----- |
 
    For each Figma property, indicate:
    - ✅ Fully mapped
    - ⚠️ Partially mapped (explain gap)
-   - ❌ Not mapped (explain why it should/shouldn't be)
+   - ❌ Not mapped (explain why it should or shouldn't be)
 
-5. **Generate Report**
+   Also check variant coverage: does the mapping file have a `figma.connect()` call for every combination of `VARIANT` properties? Missing variant connects will cause Figma to show the wrong snippet for some design states.
+
+6. **Check for common mistakes** (reference `figma.connect-best-practices` for full detail)
+   - `figma.string('propName')` used on a TEXT property that doesn't appear in the component's formal variant names — this passes TypeScript but fails publish with "property does not exist"
+   - `figma.textContent('LayerName')` used on a layer that is an `<instance>` not a `<text>` node
+   - `figma.children('LayerName')` where the layer name differs across variants — needs split `figma.connect()` calls with `variant: { ... }` filters
+   - Properties with the `↳` prefix mapped directly with `figma.string()` instead of `figma.nestedProps()`
+   - Boolean props using `figma.boolean('disabled')` when `disabled` is actually a _value_ of a `state` enum, not its own property
+   - **Intermediate props that aren't real component props** — e.g. `show3rd: figma.boolean('show 3rd step')` where `show3rd` is not a React prop. These should be assembled into a real prop value using `figma.boolean()` branching instead
+   - **`example` function with a body** — an `example` that builds intermediate variables before returning JSX is a sign that the props design needs refactoring. The `example` should almost always be a direct JSX return. Note: `figma.boolean()` returns an opaque descriptor, not a JS boolean — `figma.boolean('x') ? a : b` always evaluates as truthy and cannot be used for conditional logic outside `figma.boolean()`'s own `true`/`false` branches
+
+7. **Generate Report**
+
    Provide a summary with:
-   - **Coverage**: X/Y properties mapped
-   - **Missing Mappings**: List any unmapped Figma properties that should be mapped
-   - **Missing Variants**: List any component variants that are not covered by the current state of the mapping file.
-   - **Incorrect Mappings**: List any mappings whose type doesn't match the actual property type from the Figma metadata
-   - **Unnecessary Mappings**: Any mappings that don't correspond to Figma properties
-   - **Recommended Changes**: Prioritized list of improvements with code snippets. Before suggesting any specific code changes, ensure you have read the latest React Code Connect documentation, linked above.
+   - **Coverage**: X/Y Figma properties mapped
+   - **Missing Mappings**: Unmapped properties that should be mapped, with suggested mapping method
+   - **Missing Variants**: Component variant combinations not covered by the current `figma.connect()` calls
+   - **Incorrect Mappings**: Mappings whose type or method doesn't match the actual Figma property type
+   - **Unnecessary Mappings**: Mappings that don't correspond to any Figma property
+   - **Recommended Changes**: Prioritized list of improvements with concrete code snippets

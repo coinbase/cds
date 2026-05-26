@@ -43,6 +43,8 @@ figma.boolean('has label', {
 label: figma.string('label'),
 ```
 
+**CRITICAL: Before using `figma.string('propName')`, confirm the property name is a real Figma component property.** The `get_design_context` tool generates a props interface that includes both formal component properties AND text layer values — you cannot tell them apart by looking at the generated code alone. A string property is only valid if its name appears in the variant names returned by `get_metadata` (e.g. `name="..., label=foo, ..."`) or is otherwise explicitly listed as a component property. If it doesn't appear there, it is a text layer value and `figma.string()` will fail validation with "The property does not exist on the Figma component". Use `figma.textContent()` or a hardcoded placeholder instead.
+
 - figma.textContent() - For text layer content (when text is stored in a layer, not a property)
 
 A common pattern in Figma design systems is to override text content directly on instances rather than using component properties. Use `figma.textContent()` to extract the actual text from a named text layer.
@@ -76,8 +78,7 @@ label: figma.boolean('show label', {
 
 - figma.instance() - For instance-swap properties (component slots)
 
-Use
-figma.instance() returns the JSX from another figma.connect() call that you can use in the example.
+`figma.instance()` returns the JSX from another figma.connect() call that you can use in the example.
 This is useful for components that accept a node of another React component as a prop.
 
 In the example below, Button accepts an instance of Icon as the icon prop.
@@ -91,6 +92,52 @@ figma.connect(Button, 'https://...', {
   example: ({ icon }) => {
     return <Button icon={icon}>Instance prop Example</Button>;
   },
+});
+```
+
+**Exposed instance-swap properties (the `↳` prefix):** When `get_context_for_code_connect` returns an INSTANCE_SWAP property whose name begins with `↳` (e.g. `↳ start`, `↳ startCompact`, `↳ media`), pass the **full name including the `↳` character** to `figma.instance()`:
+
+```tsx
+// ↳ start is an exposed (nested) instance-swap property
+startNode: figma.boolean('show start', {
+  true: figma.instance('↳ start'),   // ✅ include the ↳
+  false: undefined,
+}),
+
+// ❌ Wrong: stripping the ↳ means the property name doesn't match
+startNode: figma.boolean('show start', {
+  true: figma.instance('start'),
+  false: undefined,
+}),
+```
+
+Do **not** use `figma.nestedProps()` for INSTANCE_SWAP properties — `figma.nestedProps()` is only for nested TEXT or VARIANT properties. The `↳` prefix on an INSTANCE_SWAP simply means it is exposed from a child layer; `figma.instance('↳ name')` is the correct and complete mapping.
+
+**When the same slot uses different instance-swap properties across variants** (e.g. `↳ start` in the non-compact variant and `↳ startCompact` in the compact variant), split into separate `figma.connect()` calls with `variant: { ... }` filters:
+
+```tsx
+// Non-compact: uses the ↳ start slot
+figma.connect(SelectChip, URL, {
+  variant: { compact: 'false' },
+  props: {
+    startNode: figma.boolean('show start', {
+      true: figma.instance('↳ start'),
+      false: undefined,
+    }),
+  },
+  example: (props) => <SelectChip {...props} />,
+});
+
+// Compact: uses the ↳ startCompact slot
+figma.connect(SelectChip, URL, {
+  variant: { compact: 'true' },
+  props: {
+    startNode: figma.boolean('show start', {
+      true: figma.instance('↳ startCompact'),
+      false: undefined,
+    }),
+  },
+  example: (props) => <SelectChip {...props} />,
 });
 ```
 
@@ -126,12 +173,13 @@ In Figma's properties panel, you may see properties with the `↳` symbol (e.g.,
 These prop kinds are **NOT validated** at all:
 
 - `figma.nestedProps()` - layer name and inner property mappings are not checked
-- `figma.instance()` - layer/instance name is not checked
 - `figma.textContent()` - layer name is not checked
+
+`figma.instance()` behavior depends on context: when used at the top level of `props`, it may be validated against formal Figma instance-swap component properties. When nested inside a `figma.boolean()` branch, validation behavior is inconsistent across CLI versions — treat it as potentially validated. If you receive a "property not found" error for an instance name, replace it with a hardcoded JSX placeholder.
 
 Additionally, validation does **not recurse** into boolean `true`/`false` branch values.
 
-This can result in technically incorrect mappings being published to Figma withoug being caught during validation.
+This can result in technically incorrect mappings being published to Figma without being caught during validation.
 
 **Incorrect approach** (will pass validation but fail at runtime):
 
@@ -156,7 +204,11 @@ subtitle: figma.boolean('show subtitle', {
 // In example: use subtitle.text
 ```
 
-**Tip:** When in doubt about whether a property is direct or nested, check if it has the `↳` symbol in Figma's properties panel. If it does, you likely need `figma.nestedProps()` or `figma.textContent()`.
+**Tip:** When in doubt about whether a property is direct or nested, check if it has the `↳` symbol in Figma's properties panel or in the `get_context_for_code_connect` output. If it does, pick the mapping based on the property **type**:
+
+- `↳` + **TEXT** → `figma.textContent('layerName')` (verify the layer is a `<text>` node first)
+- `↳` + **VARIANT/BOOLEAN** → `figma.nestedProps('layerName', { ... })`
+- `↳` + **INSTANCE_SWAP** → `figma.instance('↳ propertyName')` (include the `↳` in the string)
 
 ## Multi-Variant Support
 
@@ -205,16 +257,24 @@ figma.connect(Footer, url, {
 
 ## Common Mapping Mistakes
 
-### 1. Text Content vs Text Properties
+### 1. Using `figma.string()` for text layer content instead of a component property
 
-**Problem**: Using `figma.string()` when the text is a layer name, not a property.
+**Problem**: Using `figma.string('propName')` when `propName` is text layer content, not a formal Figma component property. This passes TypeScript checks but fails at publish time with "The property does not exist on the Figma component".
+
+**How this happens**: `get_design_context` generates a props interface that includes BOTH formal component properties AND text layer values (e.g. `value?: string` for a text layer showing "USD"). There is no visual difference in the generated code — you must verify externally.
+
+**How to detect**: Check whether the property name appears in the variant names from `get_metadata`. Formal component properties appear in variant names like `name="..., label=foo, ..."`. If the name is absent from all variant names, it is a text layer value, not a component property.
 
 ```tsx
-// ❌ Wrong: 'value' is a text layer name, not a property
-children: figma.string('value');
+// ❌ Wrong: 'value' is text layer content, not a component property
+//           → fails publish: "The property 'value' does not exist on the Figma component"
+label: figma.string('value');
 
-// ✅ Correct: Use textContent for text layers
-children: figma.textContent('value');
+// ✅ Correct: use figma.textContent() if the layer is a <text> node
+label: figma.textContent('value');
+
+// ✅ Also correct: hardcode a placeholder when the property isn't mappable
+label: 'Select an option';
 ```
 
 ### 2. Property Values vs Properties
@@ -257,15 +317,51 @@ label: figma.boolean('show label', {
 
 ### 4. Property Name Formatting
 
-**Problem**: Property names in Figma often have spaces and must match exactly.
+**Problem**: Property names in Figma often have spaces or special characters and must match exactly.
 
 ```tsx
 // ❌ Wrong: camelCase doesn't match Figma property name
 showStart: figma.boolean('showStart');
 
 // ✅ Correct: Use exact Figma property name with spaces
-start: figma.boolean('show start', {
-  true: figma.instance('start'),
+startNode: figma.boolean('show start', {
+  true: figma.instance('↳ start'), // include ↳ if that's how the property appears in Figma
   false: undefined,
 });
 ```
+
+### 5. Intermediate props that aren't real component props
+
+**Problem**: Adding entries to `props` that don't correspond to real React component props, then assembling the actual value in the `example` body. This makes the `example` harder to read and the intermediate keys are misleading.
+
+```tsx
+// ❌ Wrong: show3rd, showTitle are not Stepper props — they're intermediate values
+props: {
+  showTitle: figma.boolean('show title'),
+  show3rd: figma.boolean('show 3rd step'),
+},
+example: ({ showTitle, show3rd }) => {
+  const label = showTitle ? 'Title' : undefined;
+  const steps = [{ id: 'step-1', label }, ...(show3rd ? [{ id: 'step-3', label }] : [])];
+  return <Stepper steps={steps} />;
+},
+```
+
+**Correct approach**: assemble the full prop value inside `figma.boolean()` branching so `example` receives a real component prop:
+
+```tsx
+// ✅ Correct: steps is a real Stepper prop; example is a direct JSX return
+props: {
+  steps: figma.boolean('show title', {
+    true: [{ id: 'step-1', label: 'Title' }, { id: 'step-2', label: 'Title' }, { id: 'step-3', label: 'Title' }],
+    false: [{ id: 'step-1' }, { id: 'step-2' }, { id: 'step-3' }],
+  }),
+},
+example: ({ steps }) => (
+  <Stepper activeStepId="step-2" direction="horizontal" steps={steps} />
+),
+```
+
+**Note**: `figma.boolean()` returns an opaque descriptor, not a JS boolean. You cannot write `figma.boolean('x') ? a : b` — the descriptor is always truthy. All branching must live inside the `figma.boolean()` call's `true`/`false` values.
+
+**Goal**: The `example` function should be a direct JSX return in the vast majority of cases. If you find yourself writing a function body with intermediate variables, the `props` design needs rethinking.
