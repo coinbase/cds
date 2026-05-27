@@ -2,13 +2,13 @@ import { memo, useState } from 'react';
 import { InputIconButton } from '@coinbase/cds-web/controls/InputIconButton';
 import { TextInput } from '@coinbase/cds-web/controls/TextInput';
 
-import { HStack } from '../../../layout';
+import { HStack, VStack } from '../../../layout';
 
 export const TextInputExample = memo(() => {
   const [value, setValue] = useState('');
 
   return (
-    <>
+    <VStack alignItems="stretch" gap={1} width="100%">
       <TextInput
         label="Label"
         onChange={(e) => setValue(e.target.value)}
@@ -33,7 +33,7 @@ export const TextInputExample = memo(() => {
         value={value}
       />
       {/* We are disabling this a11y check for contrast */}
-      <HStack className="no-a11y-checks">
+      <HStack alignSelf="stretch" className="no-a11y-checks" width="100%">
         <TextInput
           end={<InputIconButton transparent accessibilityLabel="Clear input" name="close" />}
           label="Label"
@@ -52,6 +52,6 @@ export const TextInputExample = memo(() => {
         style={{ flexGrow: 1 }}
         value={value}
       />
-    </>
+    </VStack>
   );
 });

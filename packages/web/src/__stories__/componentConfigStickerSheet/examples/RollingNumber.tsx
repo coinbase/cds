@@ -1,58 +1,62 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
+import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { RollingNumber } from '@coinbase/cds-web/numbers/RollingNumber';
 
+type TrendValue = 'positive' | 'negative';
+
+const currencyFormat = {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+} as const;
+
+const stickerSheetTrends: Record<TrendValue, number> = {
+  positive: 42.18,
+  negative: -33.52,
+} as const;
+
+const rollingNumberPrefixStyles = {
+  prefix: {
+    paddingRight: 'var(--space-1)',
+  },
+} as const;
+
 export const RollingNumberExample = memo(() => {
-  const [{ price, difference }, setPriceState] = useState({
-    price: 12345.67,
-    difference: 0,
-  });
-  const onNext = useCallback(
-    () =>
-      setPriceState((p) => {
-        const delta = (Math.random() - 0.5) * 200; // +/- 100
-        const next = Math.max(0, p.price + delta);
-        const price = Math.round(next * 100) / 100;
-        return { price, difference: price - p.price };
-      }),
-    [],
-  );
+  const [trend, setTrend] = useState<TrendValue>('positive');
 
-  useEffect(() => {
-    onNext();
-    const interval = setInterval(() => {
-      onNext();
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [onNext]);
+  const onToggleTrend = useCallback(() => {
+    setTrend((current) => (current === 'positive' ? 'negative' : 'positive'));
+  }, []);
 
+  const difference = stickerSheetTrends[trend];
   const trendColor = difference >= 0 ? 'fgPositive' : 'fgNegative';
 
   return (
-    <RollingNumber
-      accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
-      color={trendColor}
-      font="body"
-      format={{
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }}
-      prefix={
-        difference >= 0 ? (
-          <Icon color={trendColor} name="diagonalUpArrow" size="xs" />
-        ) : (
-          <Icon color={trendColor} name="diagonalDownArrow" size="xs" />
-        )
-      }
-      styles={{
-        prefix: {
-          paddingRight: 'var(--space-1)',
-        },
-      }}
-      suffix={`(${((Math.abs(difference) / price) * 100).toFixed(2)}%)`}
-      value={Math.abs(difference)}
-    />
+    <HStack alignItems="center" gap={1}>
+      <RollingNumber
+        accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
+        color={trendColor}
+        font="body"
+        format={currencyFormat}
+        prefix={
+          difference >= 0 ? (
+            <Icon color={trendColor} name="diagonalUpArrow" size="xs" />
+          ) : (
+            <Icon color={trendColor} name="diagonalDownArrow" size="xs" />
+          )
+        }
+        styles={rollingNumberPrefixStyles}
+        value={Math.abs(difference)}
+      />
+      <IconButton
+        transparent
+        accessibilityLabel="Update number"
+        name="refresh"
+        onClick={onToggleTrend}
+      />
+    </HStack>
   );
 });
