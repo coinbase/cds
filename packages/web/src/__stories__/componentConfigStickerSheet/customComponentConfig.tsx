@@ -126,10 +126,19 @@ export const customComponentConfig: ComponentConfig = {
     labelFont: 'label2',
     bordered: false,
     inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
-    font: props.compact ? 'label2' : 'body',
+    font: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
     variant: 'foregroundMuted',
     focusedBorderWidth: 100,
-    ...(props.compact && props.align === 'end' ? { labelFont: 'label1' } : {}),
+    ...(props.compact
+      ? {
+          styles: {
+            controlInputNode: {
+              paddingTop: 'var(--space-1)',
+              paddingBottom: 'var(--space-1)',
+            },
+          },
+        }
+      : {}),
   }),
 
   ListCell: (props) => {

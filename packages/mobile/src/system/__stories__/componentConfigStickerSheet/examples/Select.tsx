@@ -34,6 +34,15 @@ export const SelectExample = memo(() => {
         value={selectValue}
       />
       <Select
+        compact
+        align="end"
+        label="Label"
+        onChange={setSelectValue}
+        options={stickerSheetSelectOptions}
+        placeholder="Compact end align"
+        value={selectValue}
+      />
+      <Select
         readOnly
         label="Label"
         onChange={setSelectValue}

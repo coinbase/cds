@@ -1,5 +1,7 @@
 import type { ComponentConfig } from '../../../core/componentConfig';
 
+import { customTheme } from './customTheme';
+
 export const customComponentConfig: ComponentConfig = {
   Banner: {
     borderRadius: 0,
@@ -119,10 +121,19 @@ export const customComponentConfig: ComponentConfig = {
     labelFont: 'label2',
     bordered: false,
     inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
-    font: props.compact ? 'label2' : 'body',
+    font: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
     variant: 'foregroundMuted',
     focusedBorderWidth: 100,
-    ...(props.compact && props.align === 'end' ? { labelFont: 'label1' } : {}),
+    ...(props.compact
+      ? {
+          styles: {
+            controlInputNode: {
+              paddingTop: customTheme.space[1],
+              paddingBottom: customTheme.space[1],
+            },
+          },
+        }
+      : {}),
   }),
 
   ListCell: (props) => {

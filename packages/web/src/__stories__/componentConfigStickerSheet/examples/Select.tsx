@@ -46,6 +46,16 @@ export const SelectExample = memo(() => {
         value={selectValue}
       />
       <Select
+        compact
+        align="end"
+        label="Label"
+        onChange={setSelectValue}
+        options={selectOptions}
+        placeholder="Compact end align"
+        style={{ flexGrow: 1 }}
+        value={selectValue}
+      />
+      <Select
         readOnly
         label="Label"
         onChange={setSelectValue}
