@@ -33,6 +33,7 @@ const selectControlDefaultPaddingCss = css`
   padding: var(--space-2);
 `;
 
+/** Inside label: space-1 above label and below value, space-2 horizontal (matches TextInput totals). */
 const selectControlInsidePaddingCss = css`
   padding-top: var(--space-1);
   padding-bottom: var(--space-1);
@@ -153,6 +154,7 @@ const DefaultSelectControlComponent = memo(
       // horizontal/inline label is used for compact selesct exepct for multi-selects
       // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
+      const shouldShowInsideLabel = labelVariant === 'inside' && !compact && !!label;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -289,44 +291,56 @@ const DefaultSelectControlComponent = memo(
         [helperText, variant, classNames?.controlHelperTextNode, styles?.controlHelperTextNode],
       );
 
-      const labelNode = useMemo(
+      const labelNode = useMemo(() => {
+        if (shouldShowInsideLabel || shouldShowCompactLabel) {
+          return null;
+        }
+
+        return typeof label === 'string' ? (
+          <InputLabel
+            className={classNames?.controlLabelNode}
+            color={labelColor}
+            font={labelFont}
+            paddingY={0.5}
+            style={styles?.controlLabelNode}
+          >
+            {label}
+          </InputLabel>
+        ) : (
+          label
+        );
+      }, [
+        shouldShowInsideLabel,
+        shouldShowCompactLabel,
+        classNames?.controlLabelNode,
+        styles?.controlLabelNode,
+        label,
+        labelColor,
+        labelFont,
+      ]);
+
+      const insideLabelNode = useMemo(
         () =>
-          // labelVariant has no effect when compact is true
-          labelVariant === 'inside' && !compact ? (
-            <Pressable noScaleOnPress onClick={handleToggleOpen} tabIndex={-1}>
-              <InputLabel
-                className={classNames?.controlLabelNode}
-                color={labelColor}
-                font={labelFont}
-                style={styles?.controlLabelNode}
-              >
-                {label}
-              </InputLabel>
-            </Pressable>
-          ) : typeof label === 'string' ? (
+          shouldShowInsideLabel && typeof label === 'string' ? (
             <InputLabel
               className={classNames?.controlLabelNode}
               color={labelColor}
               font={labelFont}
-              // remove default vertical padding when label is the compact/inline version
-              paddingY={shouldShowCompactLabel ? 0 : 0.5}
+              paddingY={0}
               style={styles?.controlLabelNode}
             >
               {label}
             </InputLabel>
-          ) : (
+          ) : shouldShowInsideLabel ? (
             label
-          ),
+          ) : null,
         [
-          labelVariant,
-          compact,
+          shouldShowInsideLabel,
           classNames?.controlLabelNode,
           styles?.controlLabelNode,
           label,
           labelColor,
           labelFont,
-          shouldShowCompactLabel,
-          handleToggleOpen,
         ],
       );
 
@@ -449,35 +463,65 @@ const DefaultSelectControlComponent = memo(
             )}
             {shouldShowCompactLabel ? (
               <HStack alignItems="center" paddingEnd={1}>
-                {labelNode}
+                {typeof label === 'string' ? (
+                  <InputLabel color={labelColor} font={labelFont} paddingY={0}>
+                    {label}
+                  </InputLabel>
+                ) : (
+                  label
+                )}
               </HStack>
             ) : null}
-            <HStack
-              alignItems="center"
-              flexGrow={1}
-              flexShrink={1}
-              height="100%"
-              justifyContent="space-between"
-              minWidth={0}
-              width="100%"
-            >
-              <VStack
-                ref={valueNodeContainerRef}
-                alignItems={align}
-                className={classNames?.controlValueNode}
+            {shouldShowInsideLabel ? (
+              <VStack flexGrow={1} minWidth={0} width="100%">
+                {insideLabelNode}
+                <HStack alignItems="center" flexGrow={1} minWidth={0} width="100%">
+                  <VStack
+                    ref={valueNodeContainerRef}
+                    alignItems={align}
+                    className={classNames?.controlValueNode}
+                    flexGrow={1}
+                    flexShrink={1}
+                    flexWrap="wrap"
+                    gap={1}
+                    justifyContent="flex-start"
+                    minWidth={0}
+                    overflow="hidden"
+                    style={styles?.controlValueNode}
+                  >
+                    {valueNode}
+                    {contentNode}
+                  </VStack>
+                </HStack>
+              </VStack>
+            ) : (
+              <HStack
+                alignItems="center"
                 flexGrow={1}
                 flexShrink={1}
-                flexWrap="wrap"
-                gap={1}
-                justifyContent="flex-start"
+                height="100%"
+                justifyContent="space-between"
                 minWidth={0}
-                overflow="hidden"
-                style={styles?.controlValueNode}
+                width="100%"
               >
-                {valueNode}
-                {contentNode}
-              </VStack>
-            </HStack>
+                <VStack
+                  ref={valueNodeContainerRef}
+                  alignItems={align}
+                  className={classNames?.controlValueNode}
+                  flexGrow={1}
+                  flexShrink={1}
+                  flexWrap="wrap"
+                  gap={1}
+                  justifyContent="flex-start"
+                  minWidth={0}
+                  overflow="hidden"
+                  style={styles?.controlValueNode}
+                >
+                  {valueNode}
+                  {contentNode}
+                </VStack>
+              </HStack>
+            )}
           </Pressable>
         ),
         [
@@ -498,7 +542,11 @@ const DefaultSelectControlComponent = memo(
           onKeyDown,
           startNode,
           shouldShowCompactLabel,
-          labelNode,
+          shouldShowInsideLabel,
+          insideLabelNode,
+          label,
+          labelColor,
+          labelFont,
           align,
           valueNode,
           contentNode,
@@ -564,7 +612,7 @@ const DefaultSelectControlComponent = memo(
           helperTextNode={helperTextNode}
           inputBackground={resolvedInputBackground}
           inputNode={inputNode}
-          labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelNode={labelNode}
           labelVariant={labelVariant}
           variant={variant}
           {...props}

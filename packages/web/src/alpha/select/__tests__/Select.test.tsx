@@ -715,6 +715,19 @@ describe('Select', () => {
     });
   });
 
+  describe('inside label layout', () => {
+    it('renders a single trigger without nesting the inside label in a button', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} labelVariant="inside" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+      expect(screen.getByText('Test Select')).toBeInTheDocument();
+    });
+  });
+
   describe('readOnly', () => {
     it('does not apply disabled opacity styling', () => {
       render(
