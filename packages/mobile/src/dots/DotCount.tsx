@@ -90,7 +90,7 @@ export type DotCountBaseProps = SharedProps &
      * Fixed height of the DotCount badge container. Width grows based on content length.
      * @default 24
      */
-    height?: number;
+    height?: BoxBaseProps['height'];
   };
 
 export type DotCountProps = DotCountBaseProps & {
@@ -205,6 +205,11 @@ export const DotCount = memo((_props: DotCountProps) => {
 
   const rootStyles = useMemo(() => [style, styles?.root], [styles?.root, style]);
 
+  const displayCount = useMemo(
+    () => parseDotCountMaxOverflow(countInternal, max),
+    [countInternal, max],
+  );
+
   // only check childrenSize when children is defined
   const shouldShow = children !== undefined ? childrenSize !== null : true;
 
@@ -247,7 +252,7 @@ export const DotCount = memo((_props: DotCountProps) => {
               lineHeight={lineHeight}
               style={styles?.text}
             >
-              {parseDotCountMaxOverflow(countInternal, max)}
+              {displayCount}
             </Text>
           </AnimatedBox>
         </View>

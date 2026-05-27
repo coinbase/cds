@@ -69,7 +69,7 @@ export type DotCountBaseProps = SharedProps &
      * Fixed height of the DotCount badge container. Width grows based on content length.
      * @default 24
      */
-    height?: number;
+    height?: BoxBaseProps['height'];
   };
 
 export type DotCountProps = DotCountBaseProps & {
@@ -153,6 +153,11 @@ export const DotCount = memo((_props: DotCountProps) => {
     [styles?.root, style],
   );
 
+  const displayCount = useMemo(
+    () => parseDotCountMaxOverflow(count, max),
+    [count, max],
+  );
+
   return (
     <div
       aria-label={accessibilityLabel}
@@ -197,7 +202,7 @@ export const DotCount = memo((_props: DotCountProps) => {
               style={styles?.text}
               textAlign="center"
             >
-              {parseDotCountMaxOverflow(count, max)}
+              {displayCount}
             </Text>
           </MotionBox>
         )}
