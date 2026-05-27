@@ -518,10 +518,8 @@ const DefaultSelectControlComponent = memo(
 
       const inputStackStyles = useMemo(
         () => ({
-          paddingTop:
-            compact || labelVariant === 'inside' ? 'var(--space-1)' : 'var(--space-2)',
-          paddingBottom:
-            compact || labelVariant === 'inside' ? 'var(--space-1)' : 'var(--space-2)',
+          paddingTop: compact || labelVariant === 'inside' ? 'var(--space-1)' : 'var(--space-2)',
+          paddingBottom: compact || labelVariant === 'inside' ? 'var(--space-1)' : 'var(--space-2)',
           paddingLeft: 'var(--space-2)',
           paddingRight: 'var(--space-2)',
         }),
