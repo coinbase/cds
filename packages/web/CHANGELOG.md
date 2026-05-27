@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.1.1 (5/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support inside label variant on select. [[#726](https://github.com/coinbase/cds/pull/726)]
+
 ## 9.1.0 (5/26/2026 PST)
 
 #### 🚀 Updates
