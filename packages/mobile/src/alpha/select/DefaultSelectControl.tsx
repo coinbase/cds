@@ -77,6 +77,7 @@ export const DefaultSelectControlComponent = memo(
         : SelectOptionValue | null;
 
       const theme = useTheme();
+      // When compact, labelVariant is ignored
       const labelVariant = compact ? undefined : labelVariantProp;
       const isMultiSelect = type === 'multi';
       const shouldShowCompactLabel = compact && label && !isMultiSelect;

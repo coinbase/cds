@@ -100,6 +100,7 @@ const DefaultSelectControlComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
+      // When compact, labelVariant is ignored
       const labelVariant = compact ? undefined : labelVariantProp;
       // horizontal/inline label is used for compact selesct exepct for multi-selects
       // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
