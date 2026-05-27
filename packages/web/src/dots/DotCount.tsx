@@ -153,10 +153,7 @@ export const DotCount = memo((_props: DotCountProps) => {
     [styles?.root, style],
   );
 
-  const displayCount = useMemo(
-    () => parseDotCountMaxOverflow(count, max),
-    [count, max],
-  );
+  const displayCount = useMemo(() => parseDotCountMaxOverflow(count, max), [count, max]);
 
   return (
     <div
