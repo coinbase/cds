@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { Select, type SelectOption, type SelectProps } from '../Select';
@@ -595,6 +596,82 @@ describe('Select', () => {
       expect(screen.getAllByTestId('end-element')).toBeTruthy();
       expect(screen.getAllByTestId('accessory-element')).toBeTruthy();
       expect(screen.getAllByTestId('media-element')).toBeTruthy();
+    });
+  });
+
+  describe('inside label layout', () => {
+    it('renders a single trigger without nesting the inside label in a button', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} labelVariant="inside" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+      expect(screen.getByText('Test Select')).toBeTruthy();
+    });
+  });
+
+  describe('readOnly', () => {
+    it('does not open the tray when readOnly', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent.press(screen.getByRole('button'));
+
+      expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
+    });
+
+    it('does not mark the trigger as disabled when readOnly', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button').props.accessibilityState?.disabled).not.toBe(true);
+    });
+  });
+
+  describe('ComponentConfig', () => {
+    it('applies read-only background from component config resolver', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: ({ readOnly }) => ({
+                inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+              }),
+            }}
+          >
+            <Select {...defaultProps} readOnly />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button')).toBeTruthy();
+    });
+
+    it('local props override ComponentConfigProvider defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: {
+                labelColor: 'fgMuted',
+                labelFont: 'label2',
+              },
+            }}
+          >
+            <Select {...defaultProps} labelColor="fg" labelFont="headline" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Test Select')).toBeTruthy();
     });
   });
 

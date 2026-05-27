@@ -1,4 +1,13 @@
-import React, { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { View } from 'react-native';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
@@ -62,6 +71,7 @@ const SelectBase = memo(
         open: openProp,
         setOpen: setOpenProp,
         disabled,
+        readOnly,
         disableClickOutsideClose,
         placeholder,
         helperText,
@@ -88,6 +98,12 @@ const SelectBase = memo(
         align,
         font,
         bordered = true,
+        borderWidth,
+        focusedBorderWidth,
+        height,
+        inputBackground,
+        labelColor,
+        labelFont,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -102,6 +118,23 @@ const SelectBase = memo(
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
+      const isInteractionBlocked = disabled || readOnly;
+
+      const handleSetOpen = useCallback(
+        (next: boolean | ((currentOpen: boolean) => boolean)) => {
+          if (isInteractionBlocked) {
+            return;
+          }
+          setOpen(next);
+        },
+        [isInteractionBlocked, setOpen],
+      );
+
+      useEffect(() => {
+        if (isInteractionBlocked && open) {
+          setOpen(false);
+        }
+      }, [isInteractionBlocked, open, setOpen]);
 
       if (
         (typeof openProp === 'undefined' && typeof setOpenProp !== 'undefined') ||
@@ -180,21 +213,28 @@ const SelectBase = memo(
             align={align}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}
+            borderWidth={borderWidth}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
+            focusedBorderWidth={focusedBorderWidth}
             font={font}
+            height={height}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+            inputBackground={inputBackground}
             label={label}
+            labelColor={labelColor}
+            labelFont={labelFont}
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
             open={open}
             options={options}
             placeholder={placeholder}
+            readOnly={readOnly}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-            setOpen={setOpen}
+            setOpen={handleSetOpen}
             startNode={startNode}
             style={styles?.control}
             styles={controlStyles}
@@ -219,10 +259,10 @@ const SelectBase = memo(
             label={label}
             media={media}
             onChange={onChange}
-            open={open}
+            open={open && !readOnly}
             options={options}
             selectAllLabel={selectAllLabel}
-            setOpen={setOpen}
+            setOpen={handleSetOpen}
             styles={dropdownStyles}
             type={type}
             value={value}

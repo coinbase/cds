@@ -6,17 +6,40 @@ import { VStack } from '../../../../layout/VStack';
 import { stickerSheetSelectOptions } from './constants';
 
 export const SelectExample = memo(() => {
-  const [value, setValue] = useState<string | null>('btc');
-  const [secondaryValue, setSecondaryValue] = useState<string | null>(null);
+  const [selectValue, setSelectValue] = useState<string | null>(null);
 
   return (
     <VStack gap={1} width="100%">
-      <Select label="Asset" onChange={setValue} options={stickerSheetSelectOptions} value={value} />
       <Select
-        label="Asset (empty)"
-        onChange={setSecondaryValue}
+        label="Label"
+        onChange={setSelectValue}
         options={stickerSheetSelectOptions}
-        value={secondaryValue}
+        placeholder="Outside label"
+        value={selectValue}
+      />
+      <Select
+        label="Label"
+        labelVariant="inside"
+        onChange={setSelectValue}
+        options={stickerSheetSelectOptions}
+        placeholder="Inside label"
+        value={selectValue}
+      />
+      <Select
+        compact
+        label="Label"
+        onChange={setSelectValue}
+        options={stickerSheetSelectOptions}
+        placeholder="Compact input"
+        value={selectValue}
+      />
+      <Select
+        readOnly
+        label="Label"
+        onChange={setSelectValue}
+        options={stickerSheetSelectOptions}
+        placeholder="Read only input"
+        value={selectValue}
       />
     </VStack>
   );

@@ -442,6 +442,29 @@ describe('DefaultSelectControl', () => {
       expect(screen.getByText('First Option')).toBeTruthy();
     });
 
+    it('renders a single trigger for inside label variant', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+    });
+
+    it('does not open when readOnly', () => {
+      const setOpen = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} readOnly setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent.press(screen.getByRole('button'));
+
+      expect(setOpen).not.toHaveBeenCalled();
+    });
+
     it('handles duplicate values in multi-select mode', () => {
       process.env.NODE_ENV = 'development';
       const duplicateOptions: SelectOption[] = [

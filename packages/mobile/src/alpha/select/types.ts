@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { AccessibilityRole, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { CellAccessoryProps } from '../../cells/CellAccessory';
@@ -245,8 +246,11 @@ export type SelectControlProps<
     | 'endNode'
     | 'borderWidth'
     | 'focusedBorderWidth'
+    | 'height'
+    | 'inputBackground'
   > &
   Pick<TextInputBaseProps, 'font'> &
+  Pick<SharedInputProps, 'labelColor' | 'labelFont' | 'readOnly'> &
   SelectState<Type, SelectOptionValue> & {
     /**
      * Alignment of the value node.
@@ -419,6 +423,13 @@ export type SelectBaseProps<
     | 'align'
     | 'font'
     | 'bordered'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
+    | 'height'
+    | 'inputBackground'
+    | 'labelColor'
+    | 'labelFont'
+    | 'readOnly'
   > &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &
   Pick<
