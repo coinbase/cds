@@ -2,7 +2,6 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 import {
   type LayoutRectangle,
   type StyleProp,
-  StyleSheet,
   type TextStyle,
   View,
   type ViewStyle,
@@ -29,11 +28,15 @@ import type {
   SharedAccessibilityProps,
   SharedProps,
 } from '@coinbase/cds-common/types';
+import {
+  MAX_OVERFLOW_COUNT,
+  parseDotCountMaxOverflow,
+} from '@coinbase/cds-common/utils/parseDotCountMaxOverflow';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';
-import { useTheme } from '../hooks/useTheme';
+import { Box, type BoxBaseProps } from '../layout/Box';
 import { convertMotionConfigs } from '../motion/convertMotionConfig';
 import { withMotionTiming } from '../motion/withMotionTiming';
 import { Text } from '../typography/Text';
@@ -41,13 +44,10 @@ import { Text } from '../typography/Text';
 import { getTransform } from './dotStyles';
 import { useDotsLayout } from './useDotsLayout';
 
-// If a badge count is greater than max (optional, defaults at 99), it should
-// truncate the numbers so its x+.
-export const MAX_OVERFLOW_COUNT = 99;
+// Re-exporting for backwards compatibility
+export { MAX_OVERFLOW_COUNT, parseDotCountMaxOverflow };
 
-export const parseDotCountMaxOverflow = (count: number, max: number = MAX_OVERFLOW_COUNT) => {
-  return count <= max ? count : `${max}+`;
-};
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const [opacityEnter, opacityExit, scaleEnter, scaleExit] = convertMotionConfigs([
   dotOpacityEnterConfig,
@@ -64,7 +64,8 @@ export type DotCountBaseProps = SharedProps &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
-  > & {
+  > &
+  Omit<BoxBaseProps, 'children' | 'background' | 'pin' | 'style' | 'height'> & {
     /**
      * The number value to be shown in the dot. If count is <= 0, dot will not show up.
      *  */
@@ -86,17 +87,10 @@ export type DotCountBaseProps = SharedProps &
     /** Indicates what shape Dot is overlapping */
     overlap?: DotOverlap;
     /**
-     * An optional fixed height of the DotCount component.
-     * Width grows based on content length.
+     * Fixed height of the DotCount badge container. Width grows based on content length.
      * @default 24
-     * */
-    height?: number;
-    /**
-     * An optional fixed width of the DotCount component.
-     * By default, width grows based on content length.
-     * @default auto
-     * */
-    width?: number;
+     */
+    height?: BoxBaseProps['height'];
   };
 
 export type DotCountProps = DotCountBaseProps & {
@@ -122,12 +116,28 @@ export const DotCount = memo((_props: DotCountProps) => {
     max,
     height = dotCountSize,
     width,
+    testID = 'dot-count',
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    accessibilityHint,
     overlap,
     style,
     styles,
+    alignItems = 'center',
+    justifyContent = 'center',
+    paddingX = 0.75,
+    borderWidth = 100,
+    borderRadius = 400,
+    borderColor = 'bgSecondary',
+    font = 'caption',
+    color = 'fgInverse',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    overflow = 'hidden',
     ...props
   } = mergedProps;
-  const theme = useTheme();
   const [childrenSize, onChildrenLayout] = useDotsLayout();
   const transforms = useDotPinStyles(
     childrenSize,
@@ -152,22 +162,6 @@ export const DotCount = memo((_props: DotCountProps) => {
     }
     return {};
   }, [pin, transforms]);
-
-  const containerStyles = useMemo(() => {
-    return [
-      styleSheet.container,
-      {
-        height,
-        minWidth: height,
-        width,
-        paddingHorizontal: theme.space[0.75],
-        borderWidth: theme.borderWidth[100],
-        borderRadius: theme.borderRadius[400],
-        borderColor: theme.color.bgSecondary,
-        backgroundColor: theme.color[variantColorMap[variant]],
-      },
-    ];
-  }, [height, width, theme.space, theme.borderWidth, theme.borderRadius, theme.color, variant]);
 
   // avoid displaying 0 during animations and preserve exit animation
   useEffect(() => {
@@ -205,37 +199,64 @@ export const DotCount = memo((_props: DotCountProps) => {
   });
 
   const dotCountContainerStyle = useMemo(
-    () => [containerStyles, animatedStyles, styles?.container],
-    [containerStyles, animatedStyles, styles?.container],
+    () => [animatedStyles, styles?.container],
+    [animatedStyles, styles?.container],
   );
 
   const rootStyles = useMemo(() => [style, styles?.root], [styles?.root, style]);
+
+  const displayCount = useMemo(
+    () => parseDotCountMaxOverflow(countInternal, max),
+    [countInternal, max],
+  );
 
   // only check childrenSize when children is defined
   const shouldShow = children !== undefined ? childrenSize !== null : true;
 
   return (
-    <View style={rootStyles} {...props}>
-      <View onLayout={onChildrenLayout} testID={`${props.testID}-children`}>
+    <View
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+      style={rootStyles}
+      testID={testID}
+    >
+      <View onLayout={onChildrenLayout} testID={`${testID}-children`}>
         {children}
       </View>
       {!shouldUnmount && shouldShow && (
         <View style={pinStyles}>
-          <Animated.View style={dotCountContainerStyle} testID="dotcount-container">
-            <Text color="fgInverse" font="caption" style={styles?.text}>
-              {parseDotCountMaxOverflow(countInternal, max)}
+          <AnimatedBox
+            animated
+            alignItems={alignItems}
+            background={variantColorMap[variant]}
+            borderColor={borderColor}
+            borderRadius={borderRadius}
+            borderWidth={borderWidth}
+            height={height}
+            justifyContent={justifyContent}
+            minWidth={height}
+            overflow={overflow}
+            paddingX={paddingX}
+            style={dotCountContainerStyle}
+            testID="dotcount-container"
+            width={width}
+            {...props}
+          >
+            <Text
+              color={color}
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
+              style={styles?.text}
+            >
+              {displayCount}
             </Text>
-          </Animated.View>
+          </AnimatedBox>
         </View>
       )}
     </View>
   );
-});
-
-const styleSheet = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-  },
 });

@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.1.0 (5/26/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support DotCount theming. [[#723](https://github.com/coinbase/cds/pull/723)]
+
+#### 🐞 Fixes
+
+- Fix: DotCount border mixing with background color. [[#723](https://github.com/coinbase/cds/pull/723)]
+
 ## 9.0.2 ((5/22/2026, 09:54 AM PST))
 
 This is an artificial version bump with no new change.

@@ -1,12 +1,26 @@
 import { act } from 'react';
+import { dotCountSize } from '@coinbase/cds-common/tokens/dot';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Icon } from '../../icons/Icon';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
-import { DotCount } from '../DotCount';
+import { DotCount, type DotCountProps } from '../DotCount';
 
 const DOTCOUNT_TESTID = 'dot-count-test';
+
+const renderDotCount = (props: DotCountProps) =>
+  render(
+    <DefaultThemeProvider>
+      <DotCount {...props} />
+    </DefaultThemeProvider>,
+  );
+
+const triggerChildrenLayout = (testID = DOTCOUNT_TESTID) => {
+  fireEvent(screen.getByTestId(`${testID}-children`), 'layout', {
+    nativeEvent: { layout: { height: 16, width: 16 } },
+  });
+};
 
 describe('DotCount', () => {
   beforeEach(() => {
@@ -38,16 +52,8 @@ describe('DotCount', () => {
   });
 
   it('renders a secondary border in light mode', () => {
-    render(
-      <DefaultThemeProvider>
-        <DotCount count={1} testID={DOTCOUNT_TESTID} variant="negative" />
-      </DefaultThemeProvider>,
-    );
-
-    // Trigger onLayout for the icon
-    fireEvent(screen.getByTestId(`${DOTCOUNT_TESTID}-children`), 'layout', {
-      nativeEvent: { layout: { height: 16, width: 16 } },
-    });
+    renderDotCount({ count: 1, testID: DOTCOUNT_TESTID, variant: 'negative' });
+    triggerChildrenLayout();
 
     expect(screen.getByTestId('dotcount-container')).toHaveStyle({
       borderColor: defaultTheme.lightColor.bgSecondary,
@@ -55,32 +61,66 @@ describe('DotCount', () => {
     });
   });
 
-  it('renders correct count when count equals 1', () => {
-    render(
-      <DefaultThemeProvider>
-        <DotCount count={1} testID={DOTCOUNT_TESTID} variant="negative" />
-      </DefaultThemeProvider>,
-    );
+  it('applies default box props to the count container', () => {
+    renderDotCount({ count: 1, testID: DOTCOUNT_TESTID, variant: 'negative' });
 
-    // Trigger onLayout for the icon
-    fireEvent(screen.getByTestId(`${DOTCOUNT_TESTID}-children`), 'layout', {
-      nativeEvent: { layout: { height: 16, width: 16 } },
+    expect(screen.getByTestId('dotcount-container')).toHaveStyle({
+      alignItems: 'center',
+      backgroundColor: defaultTheme.lightColor.bgNegative,
+      borderColor: defaultTheme.lightColor.bgSecondary,
+      borderRadius: defaultTheme.borderRadius[400],
+      borderWidth: defaultTheme.borderWidth[100],
+      height: dotCountSize,
+      justifyContent: 'center',
+      minWidth: dotCountSize,
+      paddingEnd: defaultTheme.space[0.75],
+      paddingStart: defaultTheme.space[0.75],
     });
+  });
+
+  it('forwards box props to the count container', () => {
+    renderDotCount({
+      borderRadius: 200,
+      borderWidth: 200,
+      count: 1,
+      paddingX: 2,
+      testID: DOTCOUNT_TESTID,
+      variant: 'negative',
+    });
+
+    expect(screen.getByTestId('dotcount-container')).toHaveStyle({
+      borderRadius: defaultTheme.borderRadius[200],
+      borderWidth: defaultTheme.borderWidth[200],
+      paddingEnd: defaultTheme.space[2],
+      paddingStart: defaultTheme.space[2],
+    });
+  });
+
+  it('applies custom styles to container and text', () => {
+    renderDotCount({
+      count: 1,
+      styles: {
+        container: { opacity: 0.5 },
+        text: { letterSpacing: 2 },
+      },
+      testID: DOTCOUNT_TESTID,
+      variant: 'negative',
+    });
+
+    expect(screen.getByTestId('dotcount-container')).toHaveStyle({ opacity: 0.5 });
+    expect(screen.getByText('1')).toHaveStyle({ letterSpacing: 2 });
+  });
+
+  it('renders correct count when count equals 1', () => {
+    renderDotCount({ count: 1, testID: DOTCOUNT_TESTID, variant: 'negative' });
+    triggerChildrenLayout();
 
     expect(screen.getByText('1')).toBeTruthy();
   });
 
   it('renders correct count when count  0', () => {
-    render(
-      <DefaultThemeProvider>
-        <DotCount count={0} testID={DOTCOUNT_TESTID} variant="negative" />
-      </DefaultThemeProvider>,
-    );
-
-    // Trigger onLayout for the icon
-    fireEvent(screen.getByTestId(`${DOTCOUNT_TESTID}-children`), 'layout', {
-      nativeEvent: { layout: { height: 16, width: 16 } },
-    });
+    renderDotCount({ count: 0, testID: DOTCOUNT_TESTID, variant: 'negative' });
+    triggerChildrenLayout();
 
     expect(screen.queryByText('0')).toBeNull();
   });
@@ -95,16 +135,8 @@ describe('DotCount', () => {
   });
 
   it('renders count 99+ when count > 99', () => {
-    render(
-      <DefaultThemeProvider>
-        <DotCount count={120} testID={DOTCOUNT_TESTID} variant="negative" />
-      </DefaultThemeProvider>,
-    );
-
-    // Trigger onLayout for the icon
-    fireEvent(screen.getByTestId(`${DOTCOUNT_TESTID}-children`), 'layout', {
-      nativeEvent: { layout: { height: 16, width: 16 } },
-    });
+    renderDotCount({ count: 120, testID: DOTCOUNT_TESTID, variant: 'negative' });
+    triggerChildrenLayout();
 
     expect(screen.getByText('99+')).toBeTruthy();
   });

@@ -151,4 +151,11 @@ export const customComponentConfig: ComponentConfig = {
     font: 'caption',
     emphasis: 'low',
   },
+
+  DotCount: {
+    height: 16,
+    // Design is 1.5 but this causes the badge to be too wide for some single-digit counts
+    paddingX: 1,
+    paddingY: 0,
+  },
 };
