@@ -46,7 +46,7 @@ export const SelectExample = memo(() => {
         value={selectValue}
       />
       <Select
-        disabled
+        readOnly
         label="Label"
         onChange={setSelectValue}
         options={selectOptions}

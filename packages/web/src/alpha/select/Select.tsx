@@ -82,6 +82,7 @@ const SelectBase = memo(
         open: openProp,
         setOpen: setOpenProp,
         disabled,
+        readOnly,
         disableClickOutsideClose,
         placeholder,
         helperText,
@@ -108,6 +109,12 @@ const SelectBase = memo(
         align,
         font,
         bordered = true,
+        borderWidth,
+        focusedBorderWidth,
+        height,
+        inputBackground,
+        labelColor,
+        labelFont,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -124,6 +131,23 @@ const SelectBase = memo(
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
+      const isInteractionBlocked = disabled || readOnly;
+
+      const handleSetOpen = useCallback(
+        (next: boolean | ((open: boolean) => boolean)) => {
+          if (isInteractionBlocked) {
+            return;
+          }
+          setOpen(next);
+        },
+        [isInteractionBlocked, setOpen],
+      );
+
+      useEffect(() => {
+        if (isInteractionBlocked && open) {
+          setOpen(false);
+        }
+      }, [isInteractionBlocked, open, setOpen]);
 
       if (
         (typeof openProp === 'undefined' && typeof setOpenProp !== 'undefined') ||
@@ -134,13 +158,13 @@ const SelectBase = memo(
         );
 
       const { refs, floatingStyles } = useFloating({
-        open,
+        open: isInteractionBlocked ? false : open,
         middleware: [flip()],
         placement: 'bottom-start',
         whileElementsMounted: autoUpdate,
       });
 
-      useClickOutside(() => !disableClickOutsideClose && setOpen(false), {
+      useClickOutside(() => !disableClickOutsideClose && handleSetOpen(false), {
         ref: refs.floating,
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
@@ -149,16 +173,16 @@ const SelectBase = memo(
 
       const handleControlKeyDown = useCallback(
         (event: React.KeyboardEvent) => {
-          if (disabled || open) return;
+          if (isInteractionBlocked || open) return;
           if (event.ctrlKey || event.metaKey || event.altKey) return;
 
           const key = event.key;
           if (/^[a-z]$/.test(key)) {
             pendingTypeAheadKeyRef.current = key;
-            setOpen(true);
+            handleSetOpen(true);
           }
         },
-        [disabled, open, setOpen],
+        [isInteractionBlocked, open, handleSetOpen],
       );
 
       useEffect(() => {
@@ -308,7 +332,13 @@ const SelectBase = memo(
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}
+            borderWidth={borderWidth}
             className={classNames?.control}
+            focusedBorderWidth={focusedBorderWidth}
+            height={height}
+            inputBackground={inputBackground}
+            labelColor={labelColor}
+            labelFont={labelFont}
             classNames={controlClassNames}
             compact={compact}
             disabled={disabled}
@@ -324,8 +354,9 @@ const SelectBase = memo(
             open={open}
             options={options}
             placeholder={placeholder}
+            readOnly={readOnly}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-            setOpen={setOpen}
+            setOpen={handleSetOpen}
             startNode={startNode}
             style={styles?.control}
             styles={controlStyles}
@@ -354,10 +385,10 @@ const SelectBase = memo(
               label={label}
               media={media}
               onChange={onChange}
-              open={hasMounted && open}
+              open={hasMounted && open && !readOnly}
               options={options}
               selectAllLabel={selectAllLabel}
-              setOpen={setOpen}
+              setOpen={handleSetOpen}
               styles={dropdownStyles}
               type={type}
               value={value}

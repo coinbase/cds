@@ -121,15 +121,15 @@ export const customComponentConfig: ComponentConfig = {
     height: props.compact ? 24 : 32,
   }),
 
-  Select: (props) => ({
-    bordered: false,
-    variant: 'foregroundMuted',
-    inputBackground: 'bgAlternate',
-    focusedBorderWidth: 100,
-    height: props.compact ? 24 : props.labelVariant === 'inside' ? 40 : 32,
-    font: props.compact ? 'label2' : 'body',
+  Select: ({ readOnly, ...props }) => ({
     labelColor: 'fgMuted',
-    labelFont: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
+    labelFont: 'label2',
+    bordered: false,
+    inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+    font: props.compact ? 'label2' : 'body',
+    variant: 'foregroundMuted',
+    focusedBorderWidth: 100,
+    ...(props.compact && props.align === 'end' ? { labelFont: 'label1' } : {}),
   }),
 
   ListCell: (props) => {
