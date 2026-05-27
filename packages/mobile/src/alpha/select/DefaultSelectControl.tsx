@@ -50,7 +50,7 @@ export const DefaultSelectControlComponent = memo(
         variant,
         helperText,
         label,
-        labelVariant,
+        labelVariant: labelVariantProp,
         contentNode,
         startNode,
         endNode: customEndNode,
@@ -77,6 +77,7 @@ export const DefaultSelectControlComponent = memo(
         : SelectOptionValue | null;
 
       const theme = useTheme();
+      const labelVariant = compact ? undefined : labelVariantProp;
       const isMultiSelect = type === 'multi';
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const shouldShowInsideLabel = labelVariant === 'inside' && !compact && label;
