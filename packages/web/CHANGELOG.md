@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.1.2 (5/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Add data attribute to popover container. [[#717](https://github.com/coinbase/cds/pull/717)]
+
 ## 9.1.1 (5/27/2026 PST)
 
 #### 🐞 Fixes
