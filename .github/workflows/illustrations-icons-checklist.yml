@@ -3,6 +3,9 @@ name: Enforce illustrations/icons checklist
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+    paths:
+      - 'packages/illustrations/src/**'
+      - 'packages/icons/src/**'
 
 permissions:
   contents: read
@@ -29,9 +32,9 @@ jobs:
               { owner, repo, pull_number, per_page: 100 }
             );
 
-            const relevant = files.some(f => /^packages\/(illustrations|icons)\//.test(f.filename));
+            const relevant = files.some(f => /^packages\/(illustrations|icons)\/src\//.test(f.filename));
             if (!relevant) {
-              core.info('No changes under packages/illustrations or packages/icons. Skipping.');
+              core.info('No changes under packages/illustrations/src or packages/icons/src. Skipping.');
               return;
             }
 
