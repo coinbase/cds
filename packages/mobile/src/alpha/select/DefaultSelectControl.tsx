@@ -61,9 +61,9 @@ export const DefaultSelectControlComponent = memo(
         labelColor = 'fg',
         labelFont = 'label1',
         bordered = true,
-        borderWidth: borderWidthProp,
-        focusedBorderWidth: focusedBorderWidthProp,
-        inputBackground,
+        borderWidth = bordered ? 100 : 0,
+        focusedBorderWidth = bordered ? undefined : 200,
+        inputBackground = !disabled && readOnly ? 'bgSecondary' : 'bg',
         borderRadius,
         maxSelectedOptionsToShow = 3,
         accessibilityHint,
@@ -82,17 +82,7 @@ export const DefaultSelectControlComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
 
-      const borderWidth = borderWidthProp ?? (bordered ? 100 : 0);
-      const focusedBorderWidth = focusedBorderWidthProp ?? (bordered ? undefined : 200);
       const isInteractionBlocked = disabled || readOnly;
-
-      const readOnlyInputBackground = useMemo(() => {
-        if (!disabled && readOnly) {
-          return 'bgSecondary';
-        }
-        return undefined;
-      }, [disabled, readOnly]);
-      const resolvedInputBackground = readOnlyInputBackground ?? inputBackground;
 
       const handleToggleOpen = useCallback(() => {
         if (isInteractionBlocked) {
@@ -100,6 +90,12 @@ export const DefaultSelectControlComponent = memo(
         }
         setOpen((currentOpen) => !currentOpen);
       }, [isInteractionBlocked, setOpen]);
+
+      const caretColor = useMemo((): ThemeVars.Color => {
+        if (disabled) return 'fgMuted';
+        if (!open) return 'fg';
+        return variant ? variantColor[variant] : 'fgPrimary';
+      }, [disabled, open, variant]);
 
       const theme = useTheme();
       // When compact, labelVariant is ignored
@@ -456,15 +452,12 @@ export const DefaultSelectControlComponent = memo(
               {customEndNode ? (
                 customEndNode
               ) : (
-                <AnimatedCaret
-                  color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
-                  rotate={open ? 0 : 180}
-                />
+                <AnimatedCaret color={caretColor} rotate={open ? 0 : 180} />
               )}
             </HStack>
           </Pressable>
         ),
-        [styles?.controlEndNode, disabled, customEndNode, open, variant, handleToggleOpen],
+        [styles?.controlEndNode, disabled, customEndNode, open, caretColor, handleToggleOpen],
       );
 
       const inputStackStyles: StyleProp<ViewStyle> = useMemo(
@@ -488,7 +481,7 @@ export const DefaultSelectControlComponent = memo(
           focused={open && !readOnly}
           focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
-          inputBackground={resolvedInputBackground}
+          inputBackground={inputBackground}
           inputNode={inputNode}
           labelNode={labelNode}
           labelVariant={labelVariant}
