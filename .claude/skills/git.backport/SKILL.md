@@ -29,20 +29,25 @@ Store this as `ORIGINAL_BRANCH`. You will check out this branch at the very end,
 ## Step 1 — Validate inputs
 
 1. **Fetch** from origin to ensure remote refs are up to date:
+
    ```
    git fetch origin
    ```
 
 2. Confirm `COMMIT_SHA` resolves using the remote ref (do NOT check it out locally):
+
    ```
    git rev-parse --verify <COMMIT_SHA>^{commit}
    ```
+
    If it still fails after fetching, stop and tell the user the SHA could not be resolved. Checkout `ORIGINAL_BRANCH` before stopping.
 
 3. Confirm `origin/<TARGET_BRANCH>` exists on the remote:
+
    ```
    git rev-parse --verify origin/<TARGET_BRANCH>
    ```
+
    Always use the remote ref (`origin/<TARGET_BRANCH>`) as the source of truth — do not rely on a local checkout of the target branch. If the remote ref does not exist, stop and tell the user. Checkout `ORIGINAL_BRANCH` before stopping.
 
 4. Check the working tree is clean (`git status --porcelain`). If it is not clean, stop and tell the user to stash or commit their in-progress work before proceeding. Do NOT checkout `ORIGINAL_BRANCH` in this case (they're already on it and have local changes).
@@ -58,6 +63,7 @@ git show --stat <COMMIT_SHA>
 ```
 
 Print:
+
 - The commit subject
 - The author and date
 - The list of files changed with their stat line
@@ -75,6 +81,7 @@ git remote get-url origin
 Convert SSH form (`git@github.com:org/repo.git`) or HTTPS form to a base URL: `https://github.com/org/repo`.
 
 Build two links:
+
 - **Commit link:** `https://github.com/org/repo/commit/<COMMIT_SHA>`
 - **Original PR link:** Look for a `(#NNN)` pattern in the commit subject line. If found, build `https://github.com/org/repo/pull/NNN`. If the pattern is absent, omit the PR link and note that it could not be determined automatically.
 
@@ -137,7 +144,7 @@ git push -u origin backport/<SHORT_SHA>-to-<TARGET_BRANCH>
 ```markdown
 ## Summary
 
-Backport of commit [`<SHORT_SHA>`](<commit-link>) from `master`[, originally merged via [#NNN](<pr-link>)].
+Backport of commit [`<SHORT_SHA>`](commit-link) from `master`[, originally merged via [#NNN](pr-link)].
 
 <one or two plain-language bullet points summarising what the commit does, derived from the commit message and changed files — do not just copy the commit message verbatim>
 
@@ -161,6 +168,7 @@ gh pr create \
 ```
 
 If `gh pr create` fails due to missing authentication:
+
 - Tell the user that `gh` is not authenticated for this host
 - Print the URL that `git push` echoed (looks like `https://github.com/org/repo/pull/new/<branch>`) so they can open the PR manually
 - Print the suggested PR title and body so they can paste them in
@@ -172,6 +180,7 @@ git checkout <ORIGINAL_BRANCH>
 ```
 
 Then report to the user:
+
 - The new commit SHA on the backport branch (`git rev-parse backport/<SHORT_SHA>-to-<TARGET_BRANCH>`)
 - The PR URL (or the manual URL + body if `gh` was not authenticated)
 - That they are back on `<ORIGINAL_BRANCH>`
@@ -180,7 +189,7 @@ Then report to the user:
 
 ## Step 7 — Diagnose the conflict (do NOT resolve it)
 
-Your goal here is to explain *why* the conflict happened so the user can resolve it themselves. Do NOT attempt to modify any files or re-run the cherry-pick. Use remote refs for all file inspection — never check out anything locally.
+Your goal here is to explain _why_ the conflict happened so the user can resolve it themselves. Do NOT attempt to modify any files or re-run the cherry-pick. Use remote refs for all file inspection — never check out anything locally.
 
 ### 7a — Identify what the commit changed
 
@@ -203,16 +212,19 @@ This gives you `MERGE_BASE`.
 For each file in the cherry-picked commit, inspect using remote refs only:
 
 1. **What the commit changed** (the patch being applied):
+
    ```
    git show <COMMIT_SHA> -- <file>
    ```
 
 2. **How the file looks on TARGET_BRANCH** (the destination — use remote ref):
+
    ```
    git show origin/<TARGET_BRANCH>:<file>
    ```
 
 3. **How the file looked at the merge base**:
+
    ```
    git show <MERGE_BASE>:<file>
    ```
@@ -226,13 +238,13 @@ For each file in the cherry-picked commit, inspect using remote refs only:
 
 Determine the most likely cause:
 
-| Cause | Signs |
-|---|---|
-| **Code deleted on TARGET_BRANCH** | The lines the commit modifies no longer exist in the target file |
-| **Code moved or refactored** | The lines exist but in a different function, class, or file |
-| **Conflicting parallel change** | TARGET_BRANCH already modified the same lines differently |
-| **File renamed or deleted** | The file does not exist on TARGET_BRANCH at all |
-| **API / import change** | The commit references a symbol that was renamed or removed on the release branch |
+| Cause                             | Signs                                                                            |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| **Code deleted on TARGET_BRANCH** | The lines the commit modifies no longer exist in the target file                 |
+| **Code moved or refactored**      | The lines exist but in a different function, class, or file                      |
+| **Conflicting parallel change**   | TARGET_BRANCH already modified the same lines differently                        |
+| **File renamed or deleted**       | The file does not exist on TARGET_BRANCH at all                                  |
+| **API / import change**           | The commit references a symbol that was renamed or removed on the release branch |
 
 ### 7e — Return to original branch, then report
 
