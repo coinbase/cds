@@ -400,7 +400,6 @@ export type SelectControlProps<
     | 'labelVariant'
     | 'testID'
     | 'endNode'
-    | 'height'
     | 'inputBackground'
     | 'borderRadius'
   > &
@@ -522,7 +521,6 @@ export type SelectBaseProps<
     | 'bordered'
     | 'borderWidth'
     | 'focusedBorderWidth'
-    | 'height'
     | 'inputBackground'
     | 'labelColor'
     | 'labelFont'

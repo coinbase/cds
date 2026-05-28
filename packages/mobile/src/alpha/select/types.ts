@@ -246,7 +246,6 @@ export type SelectControlProps<
     | 'endNode'
     | 'borderWidth'
     | 'focusedBorderWidth'
-    | 'height'
     | 'inputBackground'
     | 'borderRadius'
   > &
@@ -426,7 +425,6 @@ export type SelectBaseProps<
     | 'bordered'
     | 'borderWidth'
     | 'focusedBorderWidth'
-    | 'height'
     | 'inputBackground'
     | 'labelColor'
     | 'labelFont'

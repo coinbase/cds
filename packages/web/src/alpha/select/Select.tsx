@@ -111,7 +111,6 @@ const SelectBase = memo(
         bordered = true,
         borderWidth,
         focusedBorderWidth,
-        height,
         inputBackground,
         labelColor,
         labelFont,
@@ -315,9 +314,9 @@ const SelectBase = memo(
             align={align}
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
-            bordered={bordered}
             borderRadius={borderRadius}
             borderWidth={borderWidth}
+            bordered={bordered}
             className={classNames?.control}
             classNames={controlClassNames}
             compact={compact}
@@ -325,7 +324,6 @@ const SelectBase = memo(
             endNode={endNode}
             focusedBorderWidth={focusedBorderWidth}
             font={font}
-            height={height}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             inputBackground={inputBackground}
@@ -333,13 +331,13 @@ const SelectBase = memo(
             labelColor={labelColor}
             labelFont={labelFont}
             labelVariant={labelVariant}
-            readOnly={readOnly}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
             onKeyDown={handleControlKeyDown}
             open={open}
             options={options}
             placeholder={placeholder}
+            readOnly={readOnly}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
             setOpen={setOpen}
             startNode={startNode}

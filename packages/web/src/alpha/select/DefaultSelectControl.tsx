@@ -86,7 +86,6 @@ const DefaultSelectControlComponent = memo(
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
-        height,
         inputBackground = !disabled && readOnly ? 'bgSecondary' : 'bg',
         borderRadius,
         maxSelectedOptionsToShow = 6,
@@ -569,7 +568,6 @@ const DefaultSelectControlComponent = memo(
           endNode={endNode}
           focused={open && !readOnly}
           focusedBorderWidth={focusedBorderWidth}
-          height={height}
           helperTextNode={helperTextNode}
           inputBackground={inputBackground}
           inputNode={inputNode}
