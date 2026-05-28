@@ -5,6 +5,10 @@ import { Box, type BoxProps } from '../layout';
 
 export type StickyFooterProps = BoxProps & {
   /**
+   * Compact variant of StickyFooter
+   */
+  compact?: boolean;
+  /**
    * Whether to apply a box shadow to the StickyFooter element.
    * @deprecated Use `elevation` instead. This will be removed in a future major release.
    * @deprecationExpectedRemoval v8
@@ -22,7 +26,9 @@ export const StickyFooter = memo(
         testID = 'sticky-footer',
         role = 'toolbar',
         accessibilityLabel = 'footer',
-        padding = 2,
+        compact,
+        paddingX = 3,
+        paddingTop = compact ? 2 : 3,
         flexShrink = 0,
         ...props
       }: StickyFooterProps,
@@ -34,7 +40,8 @@ export const StickyFooter = memo(
           accessibilityLabel={accessibilityLabel}
           elevation={elevation}
           flexShrink={flexShrink}
-          padding={padding}
+          paddingTop={paddingTop}
+          paddingX={paddingX}
           role={role}
           testID={testID}
           {...props}

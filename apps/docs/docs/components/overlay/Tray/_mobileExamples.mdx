@@ -17,7 +17,7 @@ function BasicTray() {
           onCloseComplete={setIsTrayVisibleOff}
           title="Example title"
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" paddingX={3}>
+            <StickyFooter background="bgElevation2">
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -232,7 +232,7 @@ function FullBleedHeaderScrollableTray() {
         <Tray
           accessibilityLabel="Section header"
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -348,7 +348,7 @@ function PreventDismissTray() {
           onCloseComplete={setIsTrayVisibleOff}
           title="Example title"
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" paddingX={3}>
+            <StickyFooter background="bgElevation2">
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -757,7 +757,7 @@ function ResponsiveTray({
     footer ??
     (footerLabel
       ? ({ handleClose }: { handleClose: () => void }) => (
-          <StickyFooter background="bgElevation2" paddingX={3}>
+          <StickyFooter background="bgElevation2">
             <Button block onPress={handleClose}>
               {footerLabel}
             </Button>

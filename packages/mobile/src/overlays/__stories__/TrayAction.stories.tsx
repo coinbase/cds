@@ -146,7 +146,7 @@ export const WithStickyFooter = () => {
           ref={trayRef}
           disableCapturePanGestureToDismiss
           footer={({ handleClose }) => (
-            <StickyFooter paddingX={3}>
+            <StickyFooter>
               <Button block onPress={handleClose}>
                 Button
               </Button>

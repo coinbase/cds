@@ -260,7 +260,7 @@ export const DatePicker = memo(
           <Tray
             accessibilityRole="none"
             footer={({ handleClose }) => (
-              <StickyFooter paddingTop={3} paddingX={3} role="none">
+              <StickyFooter role="none">
                 <Button
                   block
                   compact
