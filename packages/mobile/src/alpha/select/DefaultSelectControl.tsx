@@ -89,12 +89,6 @@ export const DefaultSelectControlComponent = memo(
         setOpen((currentOpen) => !currentOpen);
       }, [isInteractionBlocked, setOpen]);
 
-      const caretColor = useMemo((): ThemeVars.Color => {
-        if (disabled) return 'fgMuted';
-        if (!open) return 'fg';
-        return variant ? variantColor[variant] : 'fgPrimary';
-      }, [disabled, open, variant]);
-
       const theme = useTheme();
       // When compact, labelVariant is ignored
       const labelVariant = compact ? undefined : labelVariantProp;
@@ -447,15 +441,11 @@ export const DefaultSelectControlComponent = memo(
               paddingStart={2}
               style={styles?.controlEndNode}
             >
-              {customEndNode ? (
-                customEndNode
-              ) : (
-                <AnimatedCaret color={caretColor} rotate={open ? 0 : 180} />
-              )}
+              {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
             </HStack>
           </Pressable>
         ),
-        [styles?.controlEndNode, disabled, customEndNode, open, caretColor, handleToggleOpen],
+        [styles?.controlEndNode, disabled, customEndNode, open, handleToggleOpen],
       );
 
       const inputStackStyles: StyleProp<ViewStyle> = useMemo(
