@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.2.0 (5/28/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: improve Select theming support. [[#733](https://github.com/coinbase/cds/pull/733)]
+- Feat: add readOnly support to Select. [[#733](https://github.com/coinbase/cds/pull/733)]
+
 ## 9.1.2 ((5/28/2026, 06:59 AM PST))
 
 This is an artificial version bump with no new change.
