@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useCallback, useMemo } from 'react';
 import { Pressable, type StyleProp, TouchableOpacity, type ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
@@ -46,6 +46,7 @@ export const DefaultSelectControlComponent = memo(
         open,
         placeholder,
         disabled,
+        readOnly,
         setOpen,
         variant,
         helperText,
@@ -57,10 +58,16 @@ export const DefaultSelectControlComponent = memo(
         compact,
         align = 'start',
         font = 'body',
+        labelColor = 'fg',
+        labelFont = 'label1',
         bordered = true,
-        borderWidth = bordered ? 100 : 0,
-        focusedBorderWidth = bordered ? undefined : 200,
+        borderWidth: borderWidthProp,
+        focusedBorderWidth: focusedBorderWidthProp,
+        height,
+        inputBackground,
+        borderRadius,
         maxSelectedOptionsToShow = 3,
+        accessibilityHint,
         accessibilityLabel,
         hiddenSelectedOptionsLabel = 'more',
         removeSelectedOptionAccessibilityLabel = 'Remove',
@@ -75,6 +82,25 @@ export const DefaultSelectControlComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
+
+      const borderWidth = borderWidthProp ?? (bordered ? 100 : 0);
+      const focusedBorderWidth = focusedBorderWidthProp ?? (bordered ? undefined : 200);
+      const isInteractionBlocked = disabled || readOnly;
+
+      const readOnlyInputBackground = useMemo(() => {
+        if (!disabled && readOnly) {
+          return 'bgSecondary';
+        }
+        return undefined;
+      }, [disabled, readOnly]);
+      const resolvedInputBackground = readOnlyInputBackground ?? inputBackground;
+
+      const handleToggleOpen = useCallback(() => {
+        if (isInteractionBlocked) {
+          return;
+        }
+        setOpen((currentOpen) => !currentOpen);
+      }, [isInteractionBlocked, setOpen]);
 
       const theme = useTheme();
       // When compact, labelVariant is ignored
@@ -193,28 +219,52 @@ export const DefaultSelectControlComponent = memo(
 
         if (typeof label === 'string') {
           return (
-            <InputLabel color="fg" paddingY={0.5} style={styles?.controlLabelNode}>
+            <InputLabel
+              color={labelColor}
+              font={labelFont}
+              paddingY={0.5}
+              style={styles?.controlLabelNode}
+            >
               {label}
             </InputLabel>
           );
         }
 
         return label;
-      }, [shouldShowInsideLabel, shouldShowCompactLabel, label, styles?.controlLabelNode]);
+      }, [
+        shouldShowInsideLabel,
+        shouldShowCompactLabel,
+        label,
+        labelColor,
+        labelFont,
+        styles?.controlLabelNode,
+      ]);
 
       const inlineLabelNode = useMemo(() => {
         if (!shouldShowInsideLabel && !shouldShowCompactLabel) return null;
 
         if (typeof label === 'string') {
           return (
-            <InputLabel color="fg" paddingY={0} style={styles?.controlLabelNode}>
+            <InputLabel
+              color={labelColor}
+              font={labelFont}
+              paddingY={0}
+              style={styles?.controlLabelNode}
+            >
               {label}
             </InputLabel>
           );
         }
 
         return label;
-      }, [shouldShowInsideLabel, shouldShowCompactLabel, label, styles?.controlLabelNode]);
+      }, [
+        shouldShowInsideLabel,
+        shouldShowCompactLabel,
+        label,
+        labelColor,
+        labelFont,
+        styles?.controlLabelNode,
+      ]);
 
       const valueAlignment = useMemo(
         () => (align === 'end' ? 'flex-end' : align === 'center' ? 'center' : 'flex-start'),
@@ -255,10 +305,14 @@ export const DefaultSelectControlComponent = memo(
                     disabled={disabled || option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
-                    onPress={(event) => {
-                      event?.stopPropagation();
-                      onChange?.(option.value as ValueType);
-                    }}
+                    onPress={
+                      isInteractionBlocked
+                        ? undefined
+                        : (event) => {
+                            event?.stopPropagation();
+                            onChange?.(option.value as ValueType);
+                          }
+                    }
                   >
                     {option.label ?? option.description ?? option.value ?? ''}
                   </InputChip>
@@ -294,6 +348,7 @@ export const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel,
         disabled,
         onChange,
+        isInteractionBlocked,
       ]);
 
       // onBlur/onFocus on ViewProps allow null returns but TouchableOpacity's onBlur/onFocus props do not.
@@ -302,14 +357,14 @@ export const DefaultSelectControlComponent = memo(
         () => (
           <TouchableOpacity
             ref={ref}
+            accessibilityHint={accessibilityHint}
             accessibilityLabel={computedControlAccessibilityLabel}
             accessibilityRole="button"
             disabled={disabled}
             onBlur={onBlur ?? undefined}
             onFocus={onFocus ?? undefined}
-            onPress={() => setOpen((s) => !s)}
+            onPress={handleToggleOpen}
             style={[{ flexGrow: 1 }, styles?.controlInputNode]}
-            {...props}
           >
             <HStack
               alignItems="center"
@@ -367,6 +422,7 @@ export const DefaultSelectControlComponent = memo(
         ),
         [
           ref,
+          accessibilityHint,
           computedControlAccessibilityLabel,
           disabled,
           onBlur,
@@ -374,7 +430,6 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
-          props,
           startNode,
           shouldShowCompactLabel,
           shouldShowInsideLabel,
@@ -382,7 +437,7 @@ export const DefaultSelectControlComponent = memo(
           valueAlignment,
           valueNode,
           contentNode,
-          setOpen,
+          handleToggleOpen,
         ],
       );
 
@@ -391,7 +446,7 @@ export const DefaultSelectControlComponent = memo(
           <Pressable
             accessible={customEndNode ? true : false}
             disabled={disabled}
-            onPress={() => setOpen((s) => !s)}
+            onPress={handleToggleOpen}
           >
             <HStack
               alignItems="center"
@@ -410,7 +465,7 @@ export const DefaultSelectControlComponent = memo(
             </HStack>
           </Pressable>
         ),
-        [styles?.controlEndNode, disabled, customEndNode, open, variant, setOpen],
+        [styles?.controlEndNode, disabled, customEndNode, open, variant, handleToggleOpen],
       );
 
       const inputStackStyles: StyleProp<ViewStyle> = useMemo(
@@ -426,18 +481,22 @@ export const DefaultSelectControlComponent = memo(
       return (
         <InputStack
           borderFocusedStyle={borderFocusedStyle}
+          borderRadius={borderRadius}
           borderStyle={borderUnfocusedStyle}
           borderWidth={borderWidth}
           disabled={disabled}
           endNode={endNode}
-          focused={open}
+          focused={open && !readOnly}
           focusedBorderWidth={focusedBorderWidth}
+          height={height}
           helperTextNode={helperTextNode}
+          inputBackground={resolvedInputBackground}
           inputNode={inputNode}
           labelNode={labelNode}
           labelVariant={labelVariant}
           onBlur={onBlur}
           onFocus={onFocus}
+          style={style}
           styles={{ input: inputStackStyles }}
           variant={variant}
           {...props}

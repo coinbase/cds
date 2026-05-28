@@ -1,5 +1,6 @@
 import type React from 'react';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
+import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { CellAccessoryProps } from '../../cells/CellAccessory';
@@ -393,8 +394,17 @@ export type SelectControlProps<
   Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
   Pick<
     InputStackBaseProps,
-    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+    | 'disabled'
+    | 'startNode'
+    | 'variant'
+    | 'labelVariant'
+    | 'testID'
+    | 'endNode'
+    | 'height'
+    | 'inputBackground'
+    | 'borderRadius'
   > &
+  Pick<SharedInputProps, 'labelColor' | 'labelFont' | 'readOnly'> &
   SelectState<Type, SelectOptionValue> & {
     /**
      * Alignment of the value node.
@@ -510,6 +520,14 @@ export type SelectBaseProps<
     | 'align'
     | 'font'
     | 'bordered'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
+    | 'height'
+    | 'inputBackground'
+    | 'labelColor'
+    | 'labelFont'
+    | 'readOnly'
+    | 'borderRadius'
   > &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> &
   Pick<

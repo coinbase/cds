@@ -62,6 +62,7 @@ const SelectBase = memo(
         open: openProp,
         setOpen: setOpenProp,
         disabled,
+        readOnly,
         disableClickOutsideClose,
         placeholder,
         helperText,
@@ -88,6 +89,13 @@ const SelectBase = memo(
         align,
         font,
         bordered = true,
+        borderWidth,
+        focusedBorderWidth,
+        height,
+        inputBackground,
+        labelColor,
+        labelFont,
+        borderRadius,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -97,7 +105,6 @@ const SelectBase = memo(
         style,
         styles,
         testID,
-        ...props
       } = mergedProps;
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
@@ -180,17 +187,25 @@ const SelectBase = memo(
             align={align}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}
+            borderRadius={borderRadius}
+            borderWidth={borderWidth}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
+            focusedBorderWidth={focusedBorderWidth}
             font={font}
+            height={height}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+            inputBackground={inputBackground}
             label={label}
+            labelColor={labelColor}
+            labelFont={labelFont}
             labelVariant={labelVariant}
+            readOnly={readOnly}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
-            open={open}
+            open={open && !readOnly}
             options={options}
             placeholder={placeholder}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
@@ -219,7 +234,7 @@ const SelectBase = memo(
             label={label}
             media={media}
             onChange={onChange}
-            open={open}
+            open={open && !readOnly}
             options={options}
             selectAllLabel={selectAllLabel}
             setOpen={setOpen}

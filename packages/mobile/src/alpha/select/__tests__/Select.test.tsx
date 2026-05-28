@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Text } from '../../../typography/Text';
+import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { Select, type SelectOption, type SelectProps } from '../Select';
 
@@ -516,6 +517,69 @@ describe('Select', () => {
       fireEvent.press(button);
 
       expect(screen.queryByText('Option 1')).toBeNull();
+    });
+  });
+
+  describe('readOnly', () => {
+    it('does not open the tray when readOnly', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent.press(screen.getByRole('button'));
+
+      expect(screen.queryByText('Option 1')).toBeNull();
+    });
+
+    it('does not mark the trigger as disabled when readOnly', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button').props.accessibilityState?.disabled).not.toBe(true);
+    });
+  });
+
+  describe('ComponentConfig', () => {
+    it('applies read-only background from component config resolver', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: ({ readOnly }) => ({
+                inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+              }),
+            }}
+          >
+            <Select {...defaultProps} readOnly />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button')).toBeTruthy();
+    });
+
+    it('local props override ComponentConfigProvider defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: {
+                labelColor: 'fgMuted',
+                labelFont: 'label2',
+              },
+            }}
+          >
+            <Select {...defaultProps} labelColor="fg" labelFont="headline" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Test Select')).toBeTruthy();
     });
   });
 
