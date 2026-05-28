@@ -85,9 +85,7 @@ export const DefaultSelectControlComponent = memo(
       const isInteractionBlocked = disabled || readOnly;
 
       const handleToggleOpen = useCallback(() => {
-        if (isInteractionBlocked) {
-          return;
-        }
+        if (isInteractionBlocked) return;
         setOpen((currentOpen) => !currentOpen);
       }, [isInteractionBlocked, setOpen]);
 

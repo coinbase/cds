@@ -106,9 +106,7 @@ const DefaultSelectControlComponent = memo(
       const disableFocusedStyle = !bordered && focusedBorderWidth === 200;
 
       const handleToggleOpen = useCallback(() => {
-        if (isInteractionBlocked) {
-          return;
-        }
+        if (isInteractionBlocked) return;
         setOpen((currentOpen) => !currentOpen);
       }, [isInteractionBlocked, setOpen]);
 
