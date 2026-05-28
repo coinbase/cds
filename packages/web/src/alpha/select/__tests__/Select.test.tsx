@@ -797,7 +797,9 @@ describe('Select', () => {
 
       const inputArea = screen.getByTestId('input-interactable-area');
       expect(inputArea).toHaveStyle({ backgroundColor: 'var(--color-bgPrimary)' });
-      expect(screen.getByText(defaultProps.label as string)).toHaveStyle({ color: 'var(--color-fg)' });
+      expect(screen.getByText(defaultProps.label as string)).toHaveStyle({
+        color: 'var(--color-fg)',
+      });
     });
   });
 
