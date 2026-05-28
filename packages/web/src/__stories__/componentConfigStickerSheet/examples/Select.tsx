@@ -55,6 +55,15 @@ export const SelectExample = memo(() => {
         style={{ flexGrow: 1 }}
         value={selectValue}
       />
+      <Select
+        readOnly
+        label="Label"
+        onChange={setSelectValue}
+        options={selectOptions}
+        placeholder="Read only select"
+        style={{ flexGrow: 1 }}
+        value={selectValue}
+      />
     </VStack>
   );
 });

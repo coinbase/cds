@@ -91,7 +91,6 @@ const SelectBase = memo(
         bordered = true,
         borderWidth,
         focusedBorderWidth,
-        height,
         inputBackground,
         labelColor,
         labelFont,
@@ -194,7 +193,6 @@ const SelectBase = memo(
             endNode={endNode}
             focusedBorderWidth={focusedBorderWidth}
             font={font}
-            height={height}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             inputBackground={inputBackground}
