@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { Text } from '../../../typography/Text';
 import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
+import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { Select, type SelectOption, type SelectProps } from '../Select';
 

@@ -786,17 +786,18 @@ describe('Select', () => {
             value={{
               Select: {
                 inputBackground: 'bgAlternate',
-                height: 32,
+                labelColor: 'fgMuted',
               },
             }}
           >
-            <Select {...defaultProps} height={48} inputBackground="bgPrimary" />
+            <Select {...defaultProps} inputBackground="bgPrimary" labelColor="fg" />
           </ComponentConfigProvider>
         </DefaultThemeProvider>,
       );
 
       const inputArea = screen.getByTestId('input-interactable-area');
-      expect(inputArea).toHaveStyle({ '--height': '48px' });
+      expect(inputArea).toHaveStyle({ backgroundColor: 'var(--color-bgPrimary)' });
+      expect(screen.getByText(defaultProps.label as string)).toHaveStyle({ color: 'var(--color-fg)' });
     });
   });
 
