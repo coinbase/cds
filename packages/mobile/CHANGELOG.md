@@ -15,6 +15,12 @@ All notable changes to this project will be documented in this file.
 - Feat: improve Select theming support. [[#733](https://github.com/coinbase/cds/pull/733)]
 - Feat: add readOnly support to Select. [[#733](https://github.com/coinbase/cds/pull/733)]
 
+## 9.1.3 (5/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust StickyFooter padding to match design. [[#728](https://github.com/coinbase/cds/pull/728)]
+
 ## 9.1.2 ((5/28/2026, 06:59 AM PST))
 
 This is an artificial version bump with no new change.
