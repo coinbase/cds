@@ -27,7 +27,7 @@ export const Default = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter paddingX={3}>
+            <StickyFooter>
               <Button block onPress={handleClose} variant="secondary">
                 Got it
               </Button>
@@ -108,7 +108,7 @@ export const WithProgressBar = () => {
                   </VStack>
                 </HStack>
               </VStack>
-              <StickyFooter paddingX={3}>
+              <StickyFooter>
                 <Button block onPress={handleClose} variant="secondary">
                   Got it
                 </Button>

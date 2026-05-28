@@ -31,7 +31,7 @@ figma.connect(
           {isTrayVisible && (
             <Tray
               footer={({ handleClose }) => (
-                <StickyFooter background="bgElevation2" paddingX={3}>
+                <StickyFooter background="bgElevation2">
                   <Button block onPress={handleClose}>
                     Close
                   </Button>
@@ -116,7 +116,7 @@ figma.connect(
             <Tray
               accessibilityLabel={title}
               footer={({ handleClose }) => (
-                <StickyFooter background="bgElevation2" paddingX={3}>
+                <StickyFooter background="bgElevation2">
                   <Button block onPress={handleClose}>
                     Close
                   </Button>
@@ -197,7 +197,7 @@ figma.connect(
           {isTrayVisible && (
             <Tray
               footer={({ handleClose }) => (
-                <StickyFooter background="bgElevation2" paddingX={3}>
+                <StickyFooter background="bgElevation2">
                   <Button block onPress={handleClose}>
                     Close
                   </Button>

@@ -19,9 +19,13 @@ figma.connect(
       //   none: 'none',
       // }),
       elevated: figma.boolean('floating'),
-      // compact: figma.boolean('compact'),
+      compact: figma.boolean('compact'),
       children: figma.children(['Button', 'ButtonGroup']),
     },
-    example: (props) => <StickyFooter elevated={props.elevated}>{props.children}</StickyFooter>,
+    example: (props) => (
+      <StickyFooter compact={props.compact} elevated={props.elevated}>
+        {props.children}
+      </StickyFooter>
+    ),
   },
 );
