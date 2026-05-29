@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-05-22T12:00:02.869Z",
-  "lastUnicode": 986310,
+  "lastUpdated": "2026-05-29T15:16:01.472Z",
+  "lastUnicode": 986316,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25614,6 +25614,53 @@
           "active": true,
           "size": 12,
           "unicode": 986287
+        }
+      ]
+    },
+    {
+      "nodeId": "7717:54",
+      "name": "ipoChart",
+      "description": "IPO, initial, public, offering, DPO, free, markets, listing, listings, chart, bar",
+      "assetsHash": "nbtBA60V+LlLJhJPR/3WAHtAcTfnIMWRVrCjM6iPPEc=",
+      "nameHash": "j9GWCpasMQpizJhT6kgCkln36C+2xuWQlgJebrPUvHc=",
+      "createdAt": "2026-05-27T17:28:07.378Z",
+      "lastUpdated": "2026-05-27T17:28:07.378Z",
+      "svgs": [
+        {
+          "name": "ipoChart-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986316
+        },
+        {
+          "name": "ipoChart-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986315
+        },
+        {
+          "name": "ipoChart-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986314
+        },
+        {
+          "name": "ipoChart-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986313
+        },
+        {
+          "name": "ipoChart-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986312
+        },
+        {
+          "name": "ipoChart-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986311
         }
       ]
     }

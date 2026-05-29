@@ -304,6 +304,7 @@ export type IconName =
  | 'interest'
  | 'invisible'
  | 'invoice'
+ | 'ipoChart'
  | 'key'
  | 'keyboard'
  | 'laptop'

@@ -31,6 +31,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   example: (props) => <Icon name="add" {...props} />,
 });
 
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=82755-4', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="addModuleUI" {...props} />,
+});
+
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-16786', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -2125,6 +2131,12 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=6967
   example: (props) => <Icon name="oil" {...props} />,
 });
 
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=82755-43', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="openBook" {...props} />,
+});
+
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-14664', {
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
@@ -2171,6 +2183,18 @@ figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=2945
   imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
   props,
   example: (props) => <Icon name="paperclip" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=82755-17', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="parlaysAdd" {...props} />,
+});
+
+figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=82755-30', {
+  imports: ["import { Icon } from '@coinbase/cds-mobile/icons/Icon'"],
+  props,
+  example: (props) => <Icon name="parlaysEmpty" {...props} />,
 });
 
 figma.connect(Icon, 'https://figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/?node-id=29452-15536', {

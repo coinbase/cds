@@ -549,5 +549,6 @@ export const names: IconName[] = [
   'openBook',
   'parlaysEmpty',
   'parlaysAdd',
-  'addModuleUI'
+  'addModuleUI',
+  'ipoChart'
 ];
