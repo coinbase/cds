@@ -1,0 +1,20 @@
+{
+  "skill_name": "figma.enumerate-component-urls",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Give me a Figma URL for every CDS Core component in this file: https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=34-179. Output format: [Name]: URL to component set. For pages with multiple component sets use the component set name; for pages with only one use the page name.",
+      "expected_output": "A grouped markdown list of 70+ CDS components with correct Figma node URLs, organized under section headers (Layout, Actions, Inputs, etc.). Single-set pages use page node IDs; multi-set pages use component set node IDs. Dot-prefixed helper sets are excluded."
+    },
+    {
+      "id": 2,
+      "prompt": "I'm doing a Code Connect refresh for CDS-2144. Can you enumerate all the Figma component set URLs from https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g so I can audit which components have Code Connect wired up?",
+      "expected_output": "Complete list of component set URLs from the CDS Figma file, usable for cross-referencing against existing .figma.tsx Code Connect files. Should include all public component sets, grouped by section, with correct node IDs."
+    },
+    {
+      "id": 3,
+      "prompt": "What's the Figma node URL for the Tray component in the CDS components file (k5CtyJccNQUGMI5bI4lJ2g)?",
+      "expected_output": "URL pointing to node-id=74148-11495 (the Tray component set inside the 'Tray component' section), with an explanation that it required drilling into a nested SECTION container rather than being a top-level child of the page."
+    }
+  ]
+}
