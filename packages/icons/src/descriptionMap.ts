@@ -1562,7 +1562,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartLine',
     'lineChartCrypto',
     'candlesticks',
-    'leadChart'
+    'leadChart',
+    'ipoChart'
   ],
   'candles': [
     'chartCandles'
@@ -6615,5 +6616,35 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'interface': [
     'addModuleUI'
+  ],
+  'IPO': [
+    'ipoChart'
+  ],
+  'initial': [
+    'ipoChart'
+  ],
+  'public': [
+    'ipoChart'
+  ],
+  'offering': [
+    'ipoChart'
+  ],
+  'DPO': [
+    'ipoChart'
+  ],
+  'free': [
+    'ipoChart'
+  ],
+  'markets': [
+    'ipoChart'
+  ],
+  'listing': [
+    'ipoChart'
+  ],
+  'listings': [
+    'ipoChart'
+  ],
+  'bar': [
+    'ipoChart'
   ]
 };

@@ -3272,5 +3272,11 @@ export const glyphMap = {
   'addModuleUI-16-active': '󰲱',
   'addModuleUI-16-inactive': '󰲲',
   'addModuleUI-24-active': '󰲳',
-  'addModuleUI-24-inactive': '󰲴'
+  'addModuleUI-24-inactive': '󰲴',
+  'ipoChart-12-active': '󰳇',
+  'ipoChart-12-inactive': '󰳈',
+  'ipoChart-16-active': '󰳉',
+  'ipoChart-16-inactive': '󰳊',
+  'ipoChart-24-active': '󰳋',
+  'ipoChart-24-inactive': '󰳌'
 };
