@@ -1,0 +1,413 @@
+{
+  "runNote": "Re-running after interruption will automatically skip completed/skipped components and retry rate-limited ones.",
+  "summary": {
+    "total": 80,
+    "completed": 0,
+    "skipped": 0,
+    "rateLimited": 0,
+    "failed": 0,
+    "pending": 80
+  },
+  "components": {
+    "Accordion": {
+      "status": "pending",
+      "section": "Layout",
+      "platform": "both"
+    },
+    "Carousel": {
+      "status": "pending",
+      "section": "Layout",
+      "platform": "both"
+    },
+    "Card Carousel": {
+      "status": "pending",
+      "section": "Layout",
+      "platform": "both"
+    },
+    "Divider (Horizontal)": {
+      "status": "pending",
+      "section": "Layout",
+      "platform": "both"
+    },
+    "Divider (Vertical)": {
+      "status": "pending",
+      "section": "Layout",
+      "platform": "both"
+    },
+    "MultiContentModule": {
+      "status": "pending",
+      "section": "Layout",
+      "platform": "web"
+    },
+    "Button": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "ButtonGroup": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "IconButton": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "IconButtonGroup": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "Link": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "SlideButton": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "TileButton": {
+      "status": "pending",
+      "section": "Actions",
+      "platform": "both"
+    },
+    "Checkbox": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "CheckboxCell": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "CheckboxGroup": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "DatePicker": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "web"
+    },
+    "InputChip": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "NativeTextArea": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "Numpad": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "mobile"
+    },
+    "RadioButton": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "RadioCell": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "RadioGroup": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "SearchInput (Desktop)": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "web"
+    },
+    "SearchInput (Mobile)": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "mobile"
+    },
+    "Select": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "SelectChip": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "Switch": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "TextInput": {
+      "status": "pending",
+      "section": "Inputs",
+      "platform": "both"
+    },
+    "Avatar": {
+      "status": "pending",
+      "section": "Media",
+      "platform": "both"
+    },
+    "AvatarButton": {
+      "status": "pending",
+      "section": "Media",
+      "platform": "both"
+    },
+    "DotSymbol": {
+      "status": "pending",
+      "section": "Media",
+      "platform": "both"
+    },
+    "Content Card": {
+      "status": "pending",
+      "section": "Cards",
+      "platform": "both"
+    },
+    "Data Card": {
+      "status": "pending",
+      "section": "Cards",
+      "platform": "both"
+    },
+    "Media Card": {
+      "status": "pending",
+      "section": "Cards",
+      "platform": "both"
+    },
+    "Messaging Card": {
+      "status": "pending",
+      "section": "Cards",
+      "platform": "both"
+    },
+    "List Cells": {
+      "status": "pending",
+      "section": "Content Display",
+      "platform": "both"
+    },
+    "Rolling Numbers": {
+      "status": "pending",
+      "section": "Content Display",
+      "platform": "both"
+    },
+    "TableCell": {
+      "status": "pending",
+      "section": "Content Display",
+      "platform": "web"
+    },
+    "TableHeader": {
+      "status": "pending",
+      "section": "Content Display",
+      "platform": "web"
+    },
+    "AssetProgressCircle": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "Banner": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "DotCount": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "Fallback": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "ProgressBar": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "ProgressCircle": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "Tag": {
+      "status": "pending",
+      "section": "Status + Feedback",
+      "platform": "both"
+    },
+    "Alert": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Coachmark": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Dropdown (ListCell)": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Dropdown (Radio)": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Dropdown (Custom)": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "FullScreenModal": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Modal": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "StickyFooter": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Toast": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "Tooltip": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "web"
+    },
+    "Tray": {
+      "status": "pending",
+      "section": "Overlay",
+      "platform": "both"
+    },
+    "BottomTabBar": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "mobile"
+    },
+    "BrowserBar": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "mobile"
+    },
+    "NavigationBar": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "NavLink": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "NavLinkGroup": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "PageFooter": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "PageHeader": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "Responsive PageHeader": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "Pagination": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "SectionHeader": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "SegmentedTabs": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "Sidebar": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "Sidebar Item": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "Sidebar Label": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "web"
+    },
+    "Stepper (Horizontal)": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "Stepper (Vertical)": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "TabbedChips": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "TabNavigation": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "both"
+    },
+    "TopNavBar": {
+      "status": "pending",
+      "section": "Navigation",
+      "platform": "mobile"
+    },
+    "Bar Chart": {
+      "status": "pending",
+      "section": "Graphs",
+      "platform": "web"
+    },
+    "Percentage Bar Chart": {
+      "status": "pending",
+      "section": "Graphs",
+      "platform": "web"
+    },
+    "Line Charts": {
+      "status": "pending",
+      "section": "Graphs",
+      "platform": "web"
+    }
+  }
+}
