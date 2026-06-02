@@ -120,20 +120,25 @@ The rule is simple: if `name.startswith('.')`, skip it.
 
 Figma node IDs use `:` internally (`60:512`) but URLs use `-` (`node-id=60-512`).
 
-**Which node ID to use in the URL:**
+**Always link to the component node — never the page node.**
 
-| Situation                                   | Use in URL                     | Name entry                                |
-| ------------------------------------------- | ------------------------------ | ----------------------------------------- |
-| Page has exactly **1** public component set | The **page** node ID           | The page name (stripped of `↳` and emoji) |
-| Page has **2+** public component sets       | Each **component set** node ID | The component set name                    |
+Every entry must point to the actual component, whether it's a `COMPONENT_SET`
+(has variants) or a bare `COMPONENT` (no variants). Both are valid link targets.
+The only thing that's wrong is using a `CANVAS` (page) node ID — that lands on
+the whole page rather than the component.
 
-This mirrors Figma's own "use the filename" convention for single-set pages —
-linking to the page is cleaner and more stable than linking to the set inside it.
+| Situation | Use in URL | Name entry |
+|---|---|---|
+| Page has **1** public component (set or standalone) | That component's node ID | The page name (stripped of `↳` and emoji) |
+| Page has **2+** public components | Each component's node ID | The component/set name |
+
+If you're unsure of a node's type, check via the REST API — `type` will be
+`COMPONENT_SET`, `COMPONENT`, or `CANVAS`. Skip `CANVAS` IDs.
 
 **URL template:**
 
 ```
-https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id={id-with-dashes}
+https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id={component-set-id-with-dashes}
 ```
 
 ---
