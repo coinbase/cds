@@ -13,6 +13,9 @@
       "dom",
       "esnext"
     ],
+    "types": [
+      "@figma/code-connect/figma-types"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
