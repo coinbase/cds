@@ -9,7 +9,7 @@ const instance = figma.selectedInstance;
 const text = instance.getString('label');
 
 // Whether an action button is shown (Figma VARIANT "true"/"false")
-const hasAction = instance.getEnum('action', { 'true': true, 'false': false });
+const hasAction = instance.getEnum('action', { true: true, false: false });
 
 // Action button label from nested Button > string.button sub-component
 let actionLabel = 'Action';
@@ -22,7 +22,7 @@ if (actionLabelHandle && actionLabelHandle.type === 'TEXT') {
 }
 
 // Figma close=false → code hideCloseButton=true (inverted mapping)
-const hideCloseButton = instance.getEnum('close', { 'true': false, 'false': true });
+const hideCloseButton = instance.getEnum('close', { true: false, false: true });
 
 // eslint-disable-next-line no-restricted-exports
 export default {

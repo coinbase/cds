@@ -22,14 +22,16 @@ const description = descriptionHandle?.textContent ?? 'Tooltip description';
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<Tooltip
-  ${type === 'title + body'
-    ? figma.code`content={
+  ${
+    type === 'title + body'
+      ? figma.code`content={
     <VStack gap={1}>
       <Text font="label2">${title}</Text>
       <Text color="fgMuted" font="label2">${description}</Text>
     </VStack>
   }`
-    : figma.code`content="${description}"`}
+      : figma.code`content="${description}"`
+  }
 >
   {/* trigger element */}
 </Tooltip>`,

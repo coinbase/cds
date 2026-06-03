@@ -33,7 +33,7 @@ if (showTrend) {
 // type: VARIANT → layout prop (chart/progress bar → vertical, progress circle → horizontal)
 // also determines which visualization is rendered as children
 const type = instance.getEnum('type', {
-  'chart': 'chart',
+  chart: 'chart',
   'progress bar': 'progress-bar',
   'progress circle': 'progress-circle',
 });

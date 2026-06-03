@@ -35,8 +35,8 @@ const mediaPlacement = instance.getEnum('media placement', {
 
 // show dismiss: VARIANT with string "true"/"false" values
 const showDismiss = instance.getEnum('show dismiss', {
-  'true': true,
-  'false': false,
+  true: true,
+  false: false,
 });
 
 // media is an INSTANCE_SWAP property

@@ -7,11 +7,12 @@ const instance = figma.selectedInstance;
 
 // Placeholder text lives in the nested string.search input child instance
 const placeholderHandle = instance.findText('search-input-label', { traverseInstances: true });
-const placeholder = placeholderHandle && placeholderHandle.textContent ? placeholderHandle.textContent : 'Search';
+const placeholder =
+  placeholderHandle && placeholderHandle.textContent ? placeholderHandle.textContent : 'Search';
 
 // compact and disabled are VARIANT types with string "true"/"false" values
-const compact = instance.getEnum('compact', { 'true': true, 'false': false });
-const disabled = instance.getEnum('disabled', { 'true': true, 'false': false });
+const compact = instance.getEnum('compact', { true: true, false: false });
+const disabled = instance.getEnum('disabled', { true: true, false: false });
 
 // state (default, active, focus, typing, hover) and show cursor are interaction-only states with no code equivalent
 

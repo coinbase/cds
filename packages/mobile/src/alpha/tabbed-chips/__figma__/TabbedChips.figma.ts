@@ -6,7 +6,7 @@ import figma from 'figma';
 const instance = figma.selectedInstance;
 
 // compact: VARIANT "true"/"false" → compact boolean prop
-const compact = instance.getEnum('compact', { 'true': true, 'false': false });
+const compact = instance.getEnum('compact', { true: true, false: false });
 
 // platform: VARIANT "mobile"/"desktop" → no code equivalent (Figma design-only distinction)
 // overflowing: BOOLEAN → no code equivalent (internal scroll overflow state managed by the component)

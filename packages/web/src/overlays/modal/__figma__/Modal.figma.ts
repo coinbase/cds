@@ -7,8 +7,8 @@ const instance = figma.selectedInstance;
 
 // Controls whether ModalHeader is rendered (Figma: "show header" variant)
 const showHeader = instance.getEnum('show header', {
-  'true': true,
-  'false': false,
+  true: true,
+  false: false,
 });
 
 // Controls whether ModalFooter is rendered (Figma: "show footer" boolean)
@@ -28,17 +28,25 @@ if (contentInstance && contentInstance.type === 'INSTANCE') {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<Modal visible onRequestClose={() => {}}>
-  ${showHeader ? figma.code`<ModalHeader
+  ${
+    showHeader
+      ? figma.code`<ModalHeader
     closeAccessibilityLabel="Close"
     title="${title}"
-  />` : ''}
+  />`
+      : ''
+  }
   <ModalBody>
     ${contentCode}
   </ModalBody>
-  ${showFooter ? figma.code`<ModalFooter
+  ${
+    showFooter
+      ? figma.code`<ModalFooter
     primaryAction={<Button onClick={() => {}}>Confirm</Button>}
     secondaryAction={<Button onClick={() => {}} variant="secondary">Cancel</Button>}
-  />` : ''}
+  />`
+      : ''
+  }
 </Modal>`,
   imports: [
     'import { Modal, ModalHeader, ModalBody, ModalFooter } from "@coinbase/cds-web"',

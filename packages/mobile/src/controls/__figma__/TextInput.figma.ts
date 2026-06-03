@@ -11,27 +11,27 @@ const label = instance.getString('↳ label string');
 // state maps to variant for semantic states (positive/negative) or readOnly;
 // default, filled, active, active typing are interaction-only states with no direct code equivalent
 const state = instance.getEnum('state', {
-  'default': 'default',
-  'filled': 'filled',
-  'active': 'active',
+  default: 'default',
+  filled: 'filled',
+  active: 'active',
   'active typing': 'active typing',
-  'positive': 'positive',
-  'negative': 'negative',
+  positive: 'positive',
+  negative: 'negative',
   'read-only': 'read-only',
 });
 const variant = state === 'positive' ? 'positive' : state === 'negative' ? 'negative' : undefined;
 const readOnly = state === 'read-only';
 
 // disabled and compact are VARIANT types with string "true"/"false" values
-const disabled = instance.getEnum('disabled', { 'true': true, 'false': false });
-const compact = instance.getEnum('compact', { 'true': true, 'false': false });
+const disabled = instance.getEnum('disabled', { true: true, false: false });
+const compact = instance.getEnum('compact', { true: true, false: false });
 
 // label inside controls labelVariant prop
-const labelInside = instance.getEnum('label inside', { 'true': true, 'false': false });
+const labelInside = instance.getEnum('label inside', { true: true, false: false });
 const labelVariant = labelInside ? 'inside' : undefined;
 
 // right align text maps to the align prop
-const rightAlignText = instance.getEnum('right align text', { 'true': true, 'false': false });
+const rightAlignText = instance.getEnum('right align text', { true: true, false: false });
 const align = rightAlignText ? 'end' : undefined;
 
 // start icon shown when show start is true (INSTANCE_SWAP)

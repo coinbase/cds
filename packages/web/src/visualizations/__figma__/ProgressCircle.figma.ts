@@ -24,7 +24,7 @@ const progress = instance.getEnum('progress', {
   '50%': 0.5,
   '75%': 0.75,
   '100%': 1,
-  'custom': 0.5,
+  custom: 0.5,
 });
 
 // "progress label" controls visibility of the percentage text inside the circle.

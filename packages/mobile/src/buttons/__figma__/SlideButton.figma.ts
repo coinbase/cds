@@ -15,8 +15,8 @@ const checked = instance.getEnum('Position', {
 
 // compact maps the Figma string variant "true"/"false" to a boolean prop
 const compact = instance.getEnum('compact', {
-  'false': false,
-  'true': true,
+  false: false,
+  true: true,
 });
 
 // Retrieve the unchecked and checked label text from the nested string.slide button instance

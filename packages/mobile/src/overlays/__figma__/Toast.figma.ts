@@ -9,7 +9,7 @@ const instance = figma.selectedInstance;
 const text = instance.getString('label');
 
 // Whether an action button is shown (Figma VARIANT "true"/"false")
-const hasAction = instance.getEnum('action', { 'true': true, 'false': false });
+const hasAction = instance.getEnum('action', { true: true, false: false });
 
 // Action button label from nested Button > string.button sub-component
 let actionLabel = 'Action';

@@ -12,21 +12,21 @@ const type = instance.getEnum('type', {
 });
 
 // disabled: VARIANT "true"/"false" → disabled boolean prop
-const disabled = instance.getEnum('disabled', { 'true': true, 'false': false });
+const disabled = instance.getEnum('disabled', { true: true, false: false });
 
 // compact: VARIANT "true"/"false" → compact boolean prop
-const compact = instance.getEnum('compact', { 'true': true, 'false': false });
+const compact = instance.getEnum('compact', { true: true, false: false });
 
 // state: only 'positive' and 'negative' map to the variant prop
 // default, active-mobile, active-desktop, filled, hover, read-only are interaction/display states with no code equivalent
 const state = instance.getEnum('state', {
-  'default': 'default',
+  default: 'default',
   'active-mobile': 'default',
   'active-desktop': 'default',
-  'filled': 'default',
-  'hover': 'default',
-  'positive': 'positive',
-  'negative': 'negative',
+  filled: 'default',
+  hover: 'default',
+  positive: 'positive',
+  negative: 'negative',
   'read-only': 'default',
 });
 const variant = state !== 'default' ? state : undefined;

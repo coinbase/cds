@@ -13,9 +13,9 @@ const label = labelHandle && labelHandle.textContent ? labelHandle.textContent :
 const showLabel = instance.getBoolean('show label');
 
 // checked, disabled, and indeterminate are VARIANT types with string "true"/"false" values
-const checked = instance.getEnum('checked', { 'true': true, 'false': false });
-const disabled = instance.getEnum('disabled', { 'true': true, 'false': false });
-const indeterminate = instance.getEnum('indeterminate', { 'true': true, 'false': false });
+const checked = instance.getEnum('checked', { true: true, false: false });
+const disabled = instance.getEnum('disabled', { true: true, false: false });
+const indeterminate = instance.getEnum('indeterminate', { true: true, false: false });
 
 // state (active, hover, pressed, focus) are interaction-only states with no code equivalent
 

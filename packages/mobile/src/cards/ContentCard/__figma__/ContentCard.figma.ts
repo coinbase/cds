@@ -40,17 +40,29 @@ if (showFooter && footerActionInstance && footerActionInstance.type === 'INSTANC
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<ContentCard>
-  ${showHeader ? figma.code`<ContentCardHeader
+  ${
+    showHeader
+      ? figma.code`<ContentCardHeader
     title="${headerTitle}"
     ${headerSubtitle ? figma.code`subtitle="${headerSubtitle}"` : ''}
-  />` : ''}
-  ${showBody ? figma.code`<ContentCardBody
+  />`
+      : ''
+  }
+  ${
+    showBody
+      ? figma.code`<ContentCardBody
     ${bodyTitle ? figma.code`title="${bodyTitle}"` : ''}
     ${bodyDescription ? figma.code`description="${bodyDescription}"` : ''}
-  />` : ''}
-  ${showFooter ? figma.code`<ContentCardFooter>
+  />`
+      : ''
+  }
+  ${
+    showFooter
+      ? figma.code`<ContentCardFooter>
     ${footerActionCode}
-  </ContentCardFooter>` : ''}
+  </ContentCardFooter>`
+      : ''
+  }
 </ContentCard>`,
   imports: [
     'import { ContentCard, ContentCardHeader, ContentCardBody, ContentCardFooter } from "@coinbase/cds-mobile"',

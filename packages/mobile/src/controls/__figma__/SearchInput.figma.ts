@@ -7,12 +7,12 @@ const instance = figma.selectedInstance;
 
 // --- property extractions ---
 const compact = instance.getEnum('compact', {
-  'true': true,
-  'false': false,
+  true: true,
+  false: false,
 });
 const disabled = instance.getEnum('disabled', {
-  'true': true,
-  'false': false,
+  true: true,
+  false: false,
 });
 // placeholder text is stored in the nested string.search input instance's text layer
 const placeholderHandle = instance.findText('search-input-label', { traverseInstances: true });

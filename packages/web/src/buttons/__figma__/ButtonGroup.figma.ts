@@ -7,7 +7,7 @@ const instance = figma.selectedInstance;
 
 // orientation maps to direction (vertical) and block (full-width)
 const orientation = instance.getEnum('orientation', {
-  'stacked': 'stacked',
+  stacked: 'stacked',
   'side-by-side: hug': 'hug',
   'side-by-side:full-width': 'full-width',
 });

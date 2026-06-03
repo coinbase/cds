@@ -20,8 +20,7 @@ const detail =
   instance.findText('Detail', { traverseInstances: true, path: ['end/subdetail'] })?.textContent ??
   'Detail';
 const subdetail =
-  instance
-    .findText('SubDetail', { traverseInstances: true, path: ['end/subdetail'] })
+  instance.findText('SubDetail', { traverseInstances: true, path: ['end/subdetail'] })
     ?.textContent ?? 'Subdetail';
 
 // --- Media (start slot) ---

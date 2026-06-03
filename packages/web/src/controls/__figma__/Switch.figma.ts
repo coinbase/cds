@@ -10,8 +10,8 @@ const showLabel = instance.getBoolean('show label');
 const label = instance.getString('↳ label');
 
 // checked and disabled are VARIANT types with string "true"/"false" values
-const checked = instance.getEnum('checked', { 'true': true, 'false': false });
-const disabled = instance.getEnum('disabled', { 'true': true, 'false': false });
+const checked = instance.getEnum('checked', { true: true, false: false });
+const disabled = instance.getEnum('disabled', { true: true, false: false });
 
 // state (active, hover, pressed, focus) are interaction-only states with no code equivalent
 

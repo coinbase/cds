@@ -12,12 +12,12 @@ const showDescription = instance.getBoolean('show description');
 const showIllustration = instance.getBoolean('show illustration');
 
 // Variant properties — bordered is a string VARIANT ("true"/"false") in Figma
-const bordered = instance.getEnum('bordered', { 'true': true, 'false': false });
+const bordered = instance.getEnum('bordered', { true: true, false: false });
 const actionType = instance.getEnum('action type', {
-  'button': 'button',
+  button: 'button',
   'button group': 'button group',
   'button + secondary content': 'button + secondary content',
-  'none': 'none',
+  none: 'none',
 });
 
 // Illustration (pictogram prop) — only included when show illustration is true

@@ -15,8 +15,8 @@ const type = instance.getEnum('type', {
 // stepper (VARIANT): 'false' | 'true'
 // When true, the horizontal stepper fills the title slot instead of the title text
 const showStepper = instance.getEnum('stepper', {
-  'false': false,
-  'true': true,
+  false: false,
+  true: true,
 });
 
 // Overall slot visibility
@@ -79,9 +79,7 @@ let closeCode;
 if (showClose || showIconButtons) {
   // Collect all connected icon-buttons; for L2 with a visible start, the first
   // connected icon-button is the left back button — slice it off to get end icons only
-  const iconButtons = instance.findConnectedInstances(
-    (n) => n.codeConnectId() === 'icon-button',
-  );
+  const iconButtons = instance.findConnectedInstances((n) => n.codeConnectId() === 'icon-button');
   const endIconButtons = type === 'L2' && showStart ? iconButtons.slice(1) : iconButtons;
   const endIconButton = endIconButtons[endIconButtons.length - 1];
   if (endIconButton && endIconButton.type === 'INSTANCE') {

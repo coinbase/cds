@@ -127,10 +127,10 @@ Every entry must point to the actual component, whether it's a `COMPONENT_SET`
 The only thing that's wrong is using a `CANVAS` (page) node ID — that lands on
 the whole page rather than the component.
 
-| Situation | Use in URL | Name entry |
-|---|---|---|
+| Situation                                           | Use in URL               | Name entry                                |
+| --------------------------------------------------- | ------------------------ | ----------------------------------------- |
 | Page has **1** public component (set or standalone) | That component's node ID | The page name (stripped of `↳` and emoji) |
-| Page has **2+** public components | Each component's node ID | The component/set name |
+| Page has **2+** public components                   | Each component's node ID | The component/set name                    |
 
 If you're unsure of a node's type, check via the REST API — `type` will be
 `COMPONENT_SET`, `COMPONENT`, or `CANVAS`. Skip `CANVAS` IDs.

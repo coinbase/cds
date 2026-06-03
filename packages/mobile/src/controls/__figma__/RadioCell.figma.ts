@@ -10,15 +10,15 @@ const title = instance.getString('title text');
 const hasDescription = instance.getBoolean('description');
 const descriptionText = instance.getString('description text');
 const disabled = instance.getEnum('state', {
-  'default': false,
-  'focused': false,
-  'hovered': false,
-  'pressed': false,
-  'disabled': true,
+  default: false,
+  focused: false,
+  hovered: false,
+  pressed: false,
+  disabled: true,
 });
 const checked = instance.getEnum('selected', {
-  'true': true,
-  'false': false,
+  true: true,
+  false: false,
 });
 
 // eslint-disable-next-line no-restricted-exports

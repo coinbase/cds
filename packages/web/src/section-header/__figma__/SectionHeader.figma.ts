@@ -11,7 +11,7 @@ const title = titleNode && titleNode.type === 'TEXT' ? titleNode.textContent : '
 
 // "type" variant determines whether/how balance is shown
 const type = instance.getEnum('type', {
-  'default': 'default',
+  default: 'default',
   'with balance (right)': 'right',
   'with balance (bottom)': 'bottom',
 });

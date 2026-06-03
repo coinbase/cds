@@ -12,11 +12,11 @@ const label = instance.getString('label');
 const required = instance.getBoolean('↳ required');
 
 // show calendar maps to the defaultOpen prop
-const defaultOpen = instance.getEnum('show calendar', { 'false': false, 'true': true });
+const defaultOpen = instance.getEnum('show calendar', { false: false, true: true });
 
 // disabled and compact are VARIANT types with string "true"/"false" values
-const disabled = instance.getEnum('disabled', { 'false': false, 'true': true });
-const compact = instance.getEnum('compact', { 'false': false, 'true': true });
+const disabled = instance.getEnum('disabled', { false: false, true: true });
+const compact = instance.getEnum('compact', { false: false, true: true });
 
 // state (default, focused, typing, filled, error) are interaction-only states with no direct code equivalent
 // date (TEXT) is a visual display of the typed input value and does not map to the date: Date | null prop

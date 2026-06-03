@@ -9,20 +9,20 @@ const instance = figma.selectedInstance;
 const placeholder = instance.getString('↳ value');
 
 // compact: VARIANT "true"/"false" → compact boolean prop
-const compact = instance.getEnum('compact', { 'true': true, 'false': false });
+const compact = instance.getEnum('compact', { true: true, false: false });
 
 // state: disabled maps to disabled prop; other states are interaction-only
 const disabled = instance.getEnum('state', {
-  'default': false,
-  'focused': false,
-  'hovered': false,
-  'pressed': false,
-  'open': false,
-  'disabled': true,
+  default: false,
+  focused: false,
+  hovered: false,
+  pressed: false,
+  open: false,
+  disabled: true,
 });
 
 // show start: whether the startNode slot is populated
-const showStart = instance.getEnum('show start', { 'true': true, 'false': false });
+const showStart = instance.getEnum('show start', { true: true, false: false });
 
 // The start element uses different instance swaps for compact vs regular mode
 const startCompact = instance.getInstanceSwap('↳ startCompact');

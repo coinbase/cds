@@ -22,9 +22,7 @@ export default {
   role="group"
   value={selectedValues}
 />`,
-  imports: [
-    'import { Checkbox, ControlGroup } from "@coinbase/cds-mobile"',
-  ],
+  imports: ['import { Checkbox, ControlGroup } from "@coinbase/cds-mobile"'],
   id: 'checkbox-group-mobile',
   metadata: { nestable: false },
 };
