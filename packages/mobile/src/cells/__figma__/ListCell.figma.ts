@@ -1,0 +1,73 @@
+// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=62311-39845
+// source=packages/mobile/src/cells/ListCell.tsx
+// component=ListCell
+import figma from 'figma';
+
+const instance = figma.selectedInstance;
+
+// --- Text content (read from named text layers) ---
+const title = instance.findText('Title')?.textContent ?? 'Title';
+
+const showSubtitle = instance.getBoolean('show subtitle');
+const subtitle = instance.findText('Subtitle')?.textContent ?? 'Subtitle';
+
+const showDescription = instance.getBoolean('show description');
+const description = instance.findText('Description')?.textContent ?? 'Description';
+
+// --- End area: detail / subdetail text (inside the nested end/subdetail instance) ---
+const showEnd = instance.getBoolean('show end');
+const detail =
+  instance.findText('Detail', { traverseInstances: true, path: ['end/subdetail'] })?.textContent ??
+  'Detail';
+const subdetail =
+  instance
+    .findText('SubDetail', { traverseInstances: true, path: ['end/subdetail'] })
+    ?.textContent ?? 'Subdetail';
+
+// --- Media (start slot) ---
+const showMedia = instance.getBoolean('show start');
+const mediaInstance = instance.getInstanceSwap('↳ media');
+let mediaCode;
+if (showMedia && mediaInstance && mediaInstance.type === 'INSTANCE') {
+  mediaCode = mediaInstance.executeTemplate().example;
+}
+
+// --- Accessory ---
+// The ↳ accessory INSTANCE_SWAP maps to the string-typed `accessory` code prop
+// ('arrow' | 'more' | 'selected' | 'unselected'). The Figma instance name cannot be
+// automatically converted to the string value, so "arrow" is used as a representative placeholder.
+const showAccessory = instance.getBoolean('show accessory');
+
+// --- State ---
+const state = instance.getEnum('state', {
+  default: 'default',
+  focus: 'focus',
+  hovered: 'hovered',
+  pressed: 'pressed',
+  selected: 'selected',
+  disabled: 'disabled',
+});
+const selected = state === 'selected';
+const disabled = state === 'disabled';
+
+// --- Helper text ---
+const showHelperText = instance.getBoolean('show helper text');
+
+// eslint-disable-next-line no-restricted-exports
+export default {
+  example: figma.code`<ListCell
+  title="${title}"
+  ${showSubtitle ? figma.code`subtitle="${subtitle}"` : ''}
+  ${showDescription ? figma.code`description="${description}"` : ''}
+  ${showEnd ? figma.code`detail="${detail}"` : ''}
+  ${showEnd ? figma.code`subdetail="${subdetail}"` : ''}
+  ${showMedia && mediaCode ? figma.code`media={${mediaCode}}` : ''}
+  ${showAccessory ? 'accessory="arrow"' : ''}
+  ${selected ? 'selected' : ''}
+  ${disabled ? 'disabled' : ''}
+  ${showHelperText ? 'helperText="Helper text"' : ''}
+/>`,
+  imports: ['import { ListCell } from "@coinbase/cds-mobile"'],
+  id: 'list-cell-mobile',
+  metadata: { nestable: false },
+};

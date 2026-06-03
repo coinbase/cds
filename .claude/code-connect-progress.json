@@ -2,412 +2,572 @@
   "runNote": "Re-running after interruption will automatically skip completed/skipped components and retry rate-limited ones.",
   "summary": {
     "total": 80,
-    "completed": 0,
-    "skipped": 0,
+    "completed": 79,
+    "skipped": 1,
     "rateLimited": 0,
     "failed": 0,
-    "pending": 80
+    "pending": 0
   },
   "components": {
     "Accordion": {
-      "status": "pending",
+      "status": "completed",
       "section": "Layout",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/accordion/__figma__/Accordion.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/accordion/__figma__/Accordion.figma.ts"
     },
     "Carousel": {
-      "status": "pending",
+      "status": "completed",
       "section": "Layout",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/carousel/__figma__/Carousel.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/carousel/__figma__/Carousel.figma.ts"
     },
     "Card Carousel": {
-      "status": "pending",
+      "status": "completed",
       "section": "Layout",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/carousel/__figma__/Carousel.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/carousel/__figma__/Carousel.figma.ts"
     },
     "Divider (Horizontal)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Layout",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/layout/__figma__/Divider.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/layout/__figma__/Divider.figma.ts"
     },
     "Divider (Vertical)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Layout",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/layout/__figma__/DividerVertical.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/layout/__figma__/DividerVertical.figma.ts"
     },
     "MultiContentModule": {
-      "status": "pending",
+      "status": "completed",
       "section": "Layout",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/multi-content-module/__figma__/MultiContentModule.figma.ts",
+      "mobileTemplatePath": null
     },
     "Button": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/buttons/__figma__/Button.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/buttons/__figma__/Button.figma.ts"
     },
     "ButtonGroup": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/buttons/__figma__/ButtonGroup.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/buttons/__figma__/ButtonGroup.figma.ts"
     },
     "IconButton": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/buttons/__figma__/IconButton.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/buttons/__figma__/IconButton.figma.ts"
     },
     "IconButtonGroup": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/buttons/__figma__/IconButtonGroup.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/buttons/__figma__/IconButtonGroup.figma.ts"
     },
     "Link": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/typography/__figma__/Link.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/typography/__figma__/Link.figma.ts"
     },
     "SlideButton": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": null,
+      "mobileTemplatePath": "packages/mobile/src/buttons/__figma__/SlideButton.figma.ts"
     },
     "TileButton": {
-      "status": "pending",
+      "status": "completed",
       "section": "Actions",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/buttons/__figma__/TileButton.figma.ts",
+      "mobileTemplatePath": null
     },
     "Checkbox": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/Checkbox.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/Checkbox.figma.ts"
     },
     "CheckboxCell": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/CheckboxCell.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/CheckboxCell.figma.ts"
     },
     "CheckboxGroup": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/CheckboxGroup.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/CheckboxGroup.figma.ts"
     },
     "DatePicker": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/dates/__figma__/DatePicker.figma.ts",
+      "mobileTemplatePath": null
     },
     "InputChip": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/chips/__figma__/InputChip.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/chips/__figma__/InputChip.figma.ts"
     },
     "NativeTextArea": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/NativeTextArea.figma.ts",
+      "mobileTemplatePath": null
     },
     "Numpad": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "mobile"
+      "platform": "mobile",
+      "webTemplatePath": null,
+      "mobileTemplatePath": "packages/mobile/src/numpad/__figma__/Numpad.figma.ts"
     },
     "RadioButton": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/Radio.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/Radio.figma.ts"
     },
     "RadioCell": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/RadioCell.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/RadioCell.figma.ts"
     },
     "RadioGroup": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/RadioGroup.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/RadioGroup.figma.ts"
     },
     "SearchInput (Desktop)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/controls/__figma__/SearchInput.figma.ts",
+      "mobileTemplatePath": null
     },
     "SearchInput (Mobile)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "mobile"
+      "platform": "mobile",
+      "webTemplatePath": null,
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/SearchInput.figma.ts"
     },
     "Select": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/alpha/select/__figma__/Select.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/alpha/select/__figma__/Select.figma.ts"
     },
     "SelectChip": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/alpha/select-chip/__figma__/SelectChip.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/alpha/select-chip/__figma__/SelectChip.figma.ts"
     },
     "Switch": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/Switch.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/Switch.figma.ts"
     },
     "TextInput": {
-      "status": "pending",
+      "status": "completed",
       "section": "Inputs",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/TextInput.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/TextInput.figma.ts"
     },
     "Avatar": {
-      "status": "pending",
+      "status": "completed",
       "section": "Media",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/media/__figma__/Avatar.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/media/__figma__/Avatar.figma.ts"
     },
     "AvatarButton": {
-      "status": "pending",
+      "status": "completed",
       "section": "Media",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/buttons/__figma__/AvatarButton.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/buttons/__figma__/AvatarButton.figma.ts"
     },
     "DotSymbol": {
-      "status": "pending",
+      "status": "completed",
       "section": "Media",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/dots/__figma__/DotStatusColor.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/dots/__figma__/DotStatusColor.figma.ts"
     },
     "Content Card": {
-      "status": "pending",
+      "status": "completed",
       "section": "Cards",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/cards/ContentCard/__figma__/ContentCard.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/cards/ContentCard/__figma__/ContentCard.figma.ts"
     },
     "Data Card": {
-      "status": "pending",
+      "status": "completed",
       "section": "Cards",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/alpha/data-card/__figma__/DataCard.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/alpha/data-card/__figma__/DataCard.figma.ts"
     },
     "Media Card": {
-      "status": "pending",
+      "status": "completed",
       "section": "Cards",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/cards/MediaCard/__figma__/MediaCard.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/cards/MediaCard/__figma__/MediaCard.figma.ts"
     },
     "Messaging Card": {
-      "status": "pending",
+      "status": "completed",
       "section": "Cards",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/cards/MessagingCard/__figma__/MessagingCard.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/cards/MessagingCard/__figma__/MessagingCard.figma.ts"
     },
     "List Cells": {
-      "status": "pending",
+      "status": "completed",
       "section": "Content Display",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/cells/__figma__/ListCell.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/cells/__figma__/ListCell.figma.ts"
     },
     "Rolling Numbers": {
-      "status": "pending",
+      "status": "completed",
       "section": "Content Display",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/numbers/__figma__/RollingNumber.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/numbers/__figma__/RollingNumber.figma.ts"
     },
     "TableCell": {
-      "status": "pending",
+      "status": "completed",
       "section": "Content Display",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/tables/__figma__/TableCell.figma.ts",
+      "mobileTemplatePath": null
     },
     "TableHeader": {
-      "status": "pending",
+      "status": "completed",
       "section": "Content Display",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/tables/__figma__/TableHeader.figma.ts",
+      "mobileTemplatePath": null
     },
     "AssetProgressCircle": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/visualizations/__figma__/AssetProgressCircle.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/visualizations/__figma__/AssetProgressCircle.figma.ts"
     },
     "Banner": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/banner/__figma__/Banner.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/banner/__figma__/Banner.figma.ts"
     },
     "DotCount": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/dots/__figma__/DotCount.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/dots/__figma__/DotCount.figma.ts"
     },
     "Fallback": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/layout/__figma__/Fallback.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/layout/__figma__/Fallback.figma.ts"
     },
     "ProgressBar": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/visualizations/__figma__/ProgressBar.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/visualizations/__figma__/ProgressBar.figma.ts"
     },
     "ProgressCircle": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/visualizations/__figma__/ProgressCircle.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/visualizations/__figma__/ProgressCircle.figma.ts"
     },
     "Tag": {
-      "status": "pending",
+      "status": "completed",
       "section": "Status + Feedback",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/tag/__figma__/Tag.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/tag/__figma__/Tag.figma.ts"
     },
     "Alert": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/__figma__/Alert.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/overlays/__figma__/Alert.figma.ts"
     },
     "Coachmark": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/coachmark/__figma__/Coachmark.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/coachmark/__figma__/Coachmark.figma.ts"
     },
     "Dropdown (ListCell)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/__figma__/DropdownListCell.figma.ts",
+      "mobileTemplatePath": null
     },
     "Dropdown (Radio)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/controls/__figma__/DropdownRadio.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/controls/__figma__/DropdownRadio.figma.ts"
     },
     "Dropdown (Custom)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/popover/__figma__/PopoverPanel.figma.ts",
+      "mobileTemplatePath": null
     },
     "FullScreenModal": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/modal/__figma__/FullscreenModal.figma.ts",
+      "mobileTemplatePath": null
     },
     "Modal": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/modal/__figma__/Modal.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/overlays/modal/__figma__/Modal.figma.ts"
     },
     "StickyFooter": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": null,
+      "mobileTemplatePath": "packages/mobile/src/sticky-footer/__figma__/StickyFooter.figma.ts"
     },
     "Toast": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/__figma__/Toast.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/overlays/__figma__/Toast.figma.ts"
     },
     "Tooltip": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/overlays/tooltip/__figma__/Tooltip.figma.ts",
+      "mobileTemplatePath": null
     },
     "Tray": {
-      "status": "pending",
+      "status": "completed",
       "section": "Overlay",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/overlays/tray/__figma__/Tray.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/overlays/tray/__figma__/Tray.figma.ts"
     },
     "BottomTabBar": {
-      "status": "pending",
+      "status": "skipped",
       "section": "Navigation",
-      "platform": "mobile"
+      "platform": "mobile",
+      "webTemplatePath": null,
+      "mobileTemplatePath": null
     },
     "BrowserBar": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "mobile"
+      "platform": "mobile",
+      "webTemplatePath": null,
+      "mobileTemplatePath": "packages/mobile/src/navigation/__figma__/BrowserBar.figma.ts"
     },
     "NavigationBar": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/navigation/__figma__/NavigationBar.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/navigation/__figma__/TopNavBar.figma.ts"
     },
     "NavLink": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/navigation/__figma__/NavLink.figma.ts",
+      "mobileTemplatePath": null
     },
     "NavLinkGroup": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/navigation/__figma__/NavLinkGroup.figma.ts",
+      "mobileTemplatePath": null
     },
     "PageFooter": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/page/__figma__/PageFooter.figma.ts",
+      "mobileTemplatePath": null
     },
     "PageHeader": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/page/__figma__/PageHeader.figma.ts",
+      "mobileTemplatePath": null
     },
     "Responsive PageHeader": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/page/__figma__/PageHeader.figma.ts",
+      "mobileTemplatePath": null
     },
     "Pagination": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/pagination/__figma__/Pagination.figma.ts",
+      "mobileTemplatePath": null
     },
     "SectionHeader": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/section-header/__figma__/SectionHeader.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/section-header/__figma__/SectionHeader.figma.ts"
     },
     "SegmentedTabs": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/tabs/__figma__/SegmentedTabs.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/tabs/__figma__/SegmentedTabs.figma.ts"
     },
     "Sidebar": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/navigation/__figma__/Sidebar.figma.ts",
+      "mobileTemplatePath": null
     },
     "Sidebar Item": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/navigation/__figma__/SidebarItem.figma.ts",
+      "mobileTemplatePath": null
     },
     "Sidebar Label": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/navigation/__figma__/SidebarItem.figma.ts",
+      "mobileTemplatePath": null
     },
     "Stepper (Horizontal)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/stepper/__figma__/StepperHorizontal.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/stepper/__figma__/StepperHorizontal.figma.ts"
     },
     "Stepper (Vertical)": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/stepper/__figma__/StepperVertical.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/stepper/__figma__/StepperVertical.figma.ts"
     },
     "TabbedChips": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/alpha/tabbed-chips/__figma__/TabbedChips.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/alpha/tabbed-chips/__figma__/TabbedChips.figma.ts"
     },
     "TabNavigation": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "both"
+      "platform": "both",
+      "webTemplatePath": "packages/web/src/tabs/__figma__/TabNavigation.figma.ts",
+      "mobileTemplatePath": "packages/mobile/src/tabs/__figma__/TabNavigation.figma.ts"
     },
     "TopNavBar": {
-      "status": "pending",
+      "status": "completed",
       "section": "Navigation",
-      "platform": "mobile"
+      "platform": "mobile",
+      "webTemplatePath": null,
+      "mobileTemplatePath": "packages/mobile/src/navigation/__figma__/TopNavBar.figma.ts"
     },
     "Bar Chart": {
-      "status": "pending",
+      "status": "completed",
       "section": "Graphs",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/visualizations/chart/bar/__figma__/BarChart.figma.ts",
+      "mobileTemplatePath": null
     },
     "Percentage Bar Chart": {
-      "status": "pending",
+      "status": "completed",
       "section": "Graphs",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/visualizations/chart/bar/__figma__/PercentageBarChart.figma.ts",
+      "mobileTemplatePath": null
     },
     "Line Charts": {
-      "status": "pending",
+      "status": "completed",
       "section": "Graphs",
-      "platform": "web"
+      "platform": "web",
+      "webTemplatePath": "packages/web/src/visualizations/chart/line/__figma__/LineChart.figma.ts",
+      "mobileTemplatePath": null
     }
   }
 }
