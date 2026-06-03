@@ -262,14 +262,25 @@ phase('Generate')
 // allResults holds results from THIS run only
 const allResults = []
 const BATCH_SIZE = 4
+let rateLimitHit = false
+
+// Precompute counts from previous runs — used for progress writes and early-exit return
+const prevCompletedCount = Array.from(alreadyDone).filter(n => previouslySaved[n] && previouslySaved[n].status === 'completed').length
+const prevSkippedCount = Array.from(alreadyDone).filter(n => previouslySaved[n] && previouslySaved[n].status === 'skipped').length
 
 for (let i = 0; i < toProcess.length; i += BATCH_SIZE) {
+  // Stop dispatching new batches the moment a rate limit was seen in a prior batch.
+  // The current batch's parallel() already resolved naturally before we got here.
+  if (rateLimitHit) break
+
   const batch = toProcess.slice(i, i + BATCH_SIZE)
   const batchNum = Math.floor(i / BATCH_SIZE) + 1
   const totalBatches = Math.ceil(toProcess.length / BATCH_SIZE)
 
   log('Batch ' + batchNum + '/' + totalBatches + ': ' + batch.map(c => c.name).join(', '))
 
+  // parallel() awaits all agents in this batch before continuing — any rate-limited
+  // agent returns immediately with status:"rate_limited" so the batch still finishes.
   const batchResults = await parallel(batch.map(comp => () =>
     agent(buildComponentPrompt(comp), {
       label: comp.name,
@@ -284,7 +295,8 @@ for (let i = 0; i < toProcess.length; i += BATCH_SIZE) {
 
   const rateLimitedInBatch = validResults.filter(r => r.status === 'rate_limited')
   if (rateLimitedInBatch.length > 0) {
-    log('WARNING — rate limited in batch ' + batchNum + ': ' + rateLimitedInBatch.map(r => r.componentName).join(', ') + '. These will remain pending until the next run.')
+    rateLimitHit = true
+    log('Rate limit hit in batch ' + batchNum + ' (' + rateLimitedInBatch.map(r => r.componentName).join(', ') + '). No further batches will be dispatched.')
   }
 
   // Build combined component map: previous run's completed/skipped + this run's results so far
@@ -311,15 +323,12 @@ for (let i = 0; i < toProcess.length; i += BATCH_SIZE) {
     return acc
   }, {})
 
-  const prevCompleted = Array.from(alreadyDone).filter(n => previouslySaved[n] && previouslySaved[n].status === 'completed').length
-  const prevSkipped = Array.from(alreadyDone).filter(n => previouslySaved[n] && previouslySaved[n].status === 'skipped').length
-
   const batchProgressData = {
     runNote: 'Re-running after interruption will automatically skip completed/skipped components and retry rate-limited ones.',
     summary: {
       total: COMPONENTS.length,
-      completed: prevCompleted + completedThisRun,
-      skipped: prevSkipped + skippedThisRun,
+      completed: prevCompletedCount + completedThisRun,
+      skipped: prevSkippedCount + skippedThisRun,
       rateLimited: rateLimitedThisRun,
       failed: failedThisRun,
       pending: COMPONENTS.length - alreadyDoneCount - allResults.length,
@@ -333,7 +342,32 @@ for (let i = 0; i < toProcess.length; i += BATCH_SIZE) {
   )
 }
 
-log('Generation complete. ' + allResults.length + ' processed this run, ' + alreadyDoneCount + ' carried from previous runs.')
+log('Generation ' + (rateLimitHit ? 'stopped early (rate limit)' : 'complete') + '. ' + allResults.length + ' processed this run, ' + alreadyDoneCount + ' carried from previous runs.')
+
+// ─── Early exit on rate limit ────────────────────────────────────────────────
+// Progress is already saved after each batch. Skip the Linear report so we don't
+// post a misleading "complete" summary, and tell the user when to retry.
+if (rateLimitHit) {
+  const completedThisRun = allResults.filter(r => r.status === 'completed').length
+  const skippedThisRun = allResults.filter(r => r.status === 'skipped').length
+  const rateLimitedThisRun = allResults.filter(r => r.status === 'rate_limited').length
+  const failedThisRun = allResults.filter(r => r.status === 'failed').length
+  const totalCompleted = prevCompletedCount + completedThisRun
+  const totalSkipped = prevSkippedCount + skippedThisRun
+
+  log('Progress saved to .claude/code-connect-progress.json. Re-run the workflow in ~2 minutes to resume automatically — completed and skipped components will not be re-processed.')
+
+  return {
+    total: COMPONENTS.length,
+    completedAllRuns: totalCompleted,
+    skippedAllRuns: totalSkipped,
+    rateLimitedThisRun: rateLimitedThisRun,
+    failedThisRun: failedThisRun,
+    stillPending: COMPONENTS.length - totalCompleted - totalSkipped - rateLimitedThisRun - failedThisRun,
+    rateLimitHit: true,
+    message: 'Figma MCP rate limit reached (20 tool calls/min). Progress is saved — re-run the workflow in ~2 minutes to resume from where it left off.',
+  }
+}
 
 // ─── Phase 3: Report ────────────────────────────────────────────────────────
 phase('Report')
@@ -352,9 +386,7 @@ allResults.forEach(r => {
   if (r.status === 'failed') allFailedResults.push(r)
 })
 
-// Count previously-done
-const prevCompletedCount = Array.from(alreadyDone).filter(n => previouslySaved[n] && previouslySaved[n].status === 'completed').length
-const prevSkippedCount = Array.from(alreadyDone).filter(n => previouslySaved[n] && previouslySaved[n].status === 'skipped').length
+// prevCompletedCount / prevSkippedCount declared in Phase 2 scope above
 const totalCompleted = prevCompletedCount + allCompletedNames.size
 const totalSkipped = prevSkippedCount + allSkippedResults.length
 
