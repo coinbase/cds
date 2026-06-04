@@ -47,8 +47,8 @@ export default {
   ${c0}${c1}${c2}${c3}${c4}${c5}${c6}${c7}${c8}
 </Sidebar>`,
   imports: [
-    'import { Sidebar } from "@coinbase/cds-web"',
-    'import { LogoMark } from "@coinbase/cds-web"',
+    'import { Sidebar } from "@coinbase/cds-web/navigation"',
+    'import { LogoMark } from "@coinbase/cds-web/icons"',
   ],
   id: 'sidebar',
   metadata: { nestable: false },

@@ -38,7 +38,7 @@ export default {
   ${indeterminate ? 'indeterminate' : figma.code`progress={${progress}}`}
   ${!progressLabel ? 'hideContent' : ''}
 />`,
-  imports: ['import { ProgressCircle } from "@coinbase/cds-mobile"'],
+  imports: ['import { ProgressCircle } from "@coinbase/cds-mobile/visualizations"'],
   id: 'progress-circle-mobile',
   metadata: { nestable: true },
 };

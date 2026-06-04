@@ -19,7 +19,7 @@ export default {
   ]}
   activeStepId="step-1"
 />`,
-  imports: ['import { Stepper } from "@coinbase/cds-mobile"'],
+  imports: ['import { Stepper } from "@coinbase/cds-mobile/stepper"'],
   id: 'stepper-horizontal',
   metadata: { nestable: false },
 };

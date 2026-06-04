@@ -60,7 +60,7 @@ export default {
   ${showDescription ? figma.code`description="${description}"` : ''}
   ${endCode ? figma.code`end={${endCode}}` : ''}
 />`,
-  imports: ['import { SectionHeader } from "@coinbase/cds-mobile"'],
+  imports: ['import { SectionHeader } from "@coinbase/cds-mobile/section-header"'],
   id: 'section-header-mobile',
   metadata: { nestable: true },
 };

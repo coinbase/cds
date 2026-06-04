@@ -7,9 +7,9 @@ const instance = figma.selectedInstance;
 
 // --- Section header ---
 const showSectionTitle = instance.getBoolean('show section title');
+const sectionTitleHandle = instance.findText('section-title-label', { traverseInstances: true });
 const sectionTitleText =
-  instance.findText('section-title-label', { traverseInstances: true })?.textContent ??
-  'Section Title';
+  sectionTitleHandle.type === 'TEXT' ? sectionTitleHandle.textContent : 'Section Title';
 
 // --- List cells ---
 // Resolve connected ListCell instances for a representative example (first two shown).
@@ -34,9 +34,10 @@ export default {
   <Button>Open</Button>
 </PopoverPanel>`,
   imports: [
-    'import { PopoverPanel, SectionHeader } from "@coinbase/cds-web"',
-    'import { ListCell } from "@coinbase/cds-web"',
-    'import { Button } from "@coinbase/cds-web"',
+    'import { PopoverPanel } from "@coinbase/cds-web/overlays"',
+    'import { SectionHeader } from "@coinbase/cds-web/section-header"',
+    'import { ListCell } from "@coinbase/cds-web/cells"',
+    'import { Button } from "@coinbase/cds-web/buttons"',
   ],
   id: 'dropdown-list-cell',
   metadata: { nestable: false },

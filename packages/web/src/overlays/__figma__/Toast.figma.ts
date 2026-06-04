@@ -31,7 +31,7 @@ export default {
   ${hasAction ? figma.code`action={{ label: "${actionLabel}", onPress: () => {} }}` : ''}
   ${hideCloseButton ? 'hideCloseButton' : ''}
 />`,
-  imports: ['import { Toast } from "@coinbase/cds-web"'],
+  imports: ['import { Toast } from "@coinbase/cds-web/overlays"'],
   id: 'toast',
   metadata: { nestable: false },
 };

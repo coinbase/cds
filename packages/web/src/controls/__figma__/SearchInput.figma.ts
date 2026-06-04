@@ -7,8 +7,7 @@ const instance = figma.selectedInstance;
 
 // Placeholder text lives in the nested string.search input child instance
 const placeholderHandle = instance.findText('search-input-label', { traverseInstances: true });
-const placeholder =
-  placeholderHandle && placeholderHandle.textContent ? placeholderHandle.textContent : 'Search';
+const placeholder = placeholderHandle.type === 'TEXT' ? placeholderHandle.textContent : 'Search';
 
 // compact and disabled are VARIANT types with string "true"/"false" values
 const compact = instance.getEnum('compact', { true: true, false: false });
@@ -25,7 +24,7 @@ export default {
   onChangeText={() => {}}
   value=""
 />`,
-  imports: ['import { SearchInput } from "@coinbase/cds-web"'],
+  imports: ['import { SearchInput } from "@coinbase/cds-web/controls"'],
   id: 'search-input-desktop',
   metadata: { nestable: false },
 };

@@ -39,7 +39,7 @@ export default {
   onChange={handleChange}
   ${isDisabled ? 'disabled' : ''}
 />`,
-  imports: ['import { SegmentedTabs } from "@coinbase/cds-web"'],
+  imports: ['import { SegmentedTabs } from "@coinbase/cds-web/tabs"'],
   id: 'segmented-tabs',
   metadata: { nestable: true },
 };

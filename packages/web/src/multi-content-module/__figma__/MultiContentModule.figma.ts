@@ -64,7 +64,7 @@ export default {
 >
   ${childrenCode}
 </MultiContentModule>`,
-  imports: ['import { MultiContentModule } from "@coinbase/cds-web"'],
+  imports: ['import { MultiContentModule } from "@coinbase/cds-web/multi-content-module"'],
   id: 'multi-content-module',
   metadata: { nestable: false },
 };

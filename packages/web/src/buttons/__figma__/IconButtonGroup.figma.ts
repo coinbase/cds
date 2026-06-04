@@ -27,7 +27,7 @@ export default {
   example: figma.code`<ButtonGroup>
   ${iconBtn1Code}${iconBtn2Code}
 </ButtonGroup>`,
-  imports: ['import { ButtonGroup } from "@coinbase/cds-web"'],
+  imports: ['import { ButtonGroup } from "@coinbase/cds-web/buttons"'],
   id: 'icon-button-group',
   metadata: { nestable: false },
 };

@@ -27,7 +27,7 @@ export default {
 >
   <Button>Open panel</Button>
 </PopoverPanel>`,
-  imports: ['import { PopoverPanel } from "@coinbase/cds-web"'],
+  imports: ['import { PopoverPanel } from "@coinbase/cds-web/overlays"'],
   id: 'dropdown-custom',
   metadata: { nestable: false },
 };

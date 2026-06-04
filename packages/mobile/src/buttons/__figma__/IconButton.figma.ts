@@ -37,7 +37,7 @@ export default {
   ${isLoading ? 'loading' : ''}
   ${isDisabled ? 'disabled' : ''}
 />`,
-  imports: ['import { IconButton } from "@coinbase/cds-mobile"'],
+  imports: ['import { IconButton } from "@coinbase/cds-mobile/buttons"'],
   id: 'icon-button-mobile',
   metadata: { nestable: true },
 };

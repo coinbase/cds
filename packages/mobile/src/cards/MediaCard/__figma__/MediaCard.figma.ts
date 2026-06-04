@@ -47,7 +47,7 @@ export default {
   ${mediaCode ? figma.code`media={${mediaCode}}` : ''}
   ${hasMedia && imagePlacement === 'start' ? 'mediaPlacement="start"' : ''}
 />`,
-  imports: ['import { MediaCard } from "@coinbase/cds-mobile"'],
+  imports: ['import { MediaCard } from "@coinbase/cds-mobile/cards"'],
   id: 'media-card-mobile',
   metadata: { nestable: false },
 };

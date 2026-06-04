@@ -17,7 +17,7 @@ const height = isCircle ? 40 : 20;
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<Fallback shape="${shape}" width={${width}} height={${height}} />`,
-  imports: ['import { Fallback } from "@coinbase/cds-web"'],
+  imports: ['import { Fallback } from "@coinbase/cds-web/layout"'],
   id: 'fallback',
   metadata: { nestable: true },
 };

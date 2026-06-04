@@ -26,12 +26,12 @@ const colorScheme = instance.getEnum('colorScheme', {
 
 // Label text lives inside the nested string.promo tags or string.info tags sub-component
 const labelHandle = instance.findText('tag-label', { traverseInstances: true });
-const label = labelHandle?.textContent ?? 'Tag';
+const label = labelHandle.type === 'TEXT' ? labelHandle.textContent : 'Tag';
 
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<Tag intent="${intent}" emphasis="${emphasis}" colorScheme="${colorScheme}">${label}</Tag>`,
-  imports: ['import { Tag } from "@coinbase/cds-mobile"'],
+  imports: ['import { Tag } from "@coinbase/cds-mobile/tag"'],
   id: 'tag-mobile',
   metadata: { nestable: true },
 };

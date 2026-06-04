@@ -36,7 +36,7 @@ export default {
     {/* carousel item content */}
   </CarouselItem>
 </Carousel>`,
-  imports: ['import { Carousel, CarouselItem } from "@coinbase/cds-mobile"'],
+  imports: ['import { Carousel, CarouselItem } from "@coinbase/cds-mobile/carousel"'],
   id: 'card-carousel-mobile',
   metadata: { nestable: false },
 };

@@ -20,7 +20,7 @@ export default {
   ${isCompact ? 'compact' : ''}
   ${isDisabled ? 'disabled' : ''}
 />`,
-  imports: ['import { AvatarButton } from "@coinbase/cds-mobile"'],
+  imports: ['import { AvatarButton } from "@coinbase/cds-mobile/buttons"'],
   id: 'avatar-button-mobile',
   metadata: { nestable: true },
 };

@@ -32,9 +32,9 @@ export default {
   }
 />`,
   imports: [
-    'import { ProgressCircle } from "@coinbase/cds-mobile"',
-    'import { Box } from "@coinbase/cds-mobile"',
-    'import { RemoteImage } from "@coinbase/cds-mobile"',
+    'import { ProgressCircle } from "@coinbase/cds-mobile/visualizations"',
+    'import { Box } from "@coinbase/cds-mobile/layout"',
+    'import { RemoteImage } from "@coinbase/cds-mobile/media"',
   ],
   id: 'asset-progress-circle-mobile',
   metadata: { nestable: true },

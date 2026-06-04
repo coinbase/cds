@@ -37,15 +37,17 @@ const showSecondaryAction = instance.getBoolean('↳ show secondary action');
 
 // Title text lives inside the nested 'string.banner(alpha)' sub-component
 const titleHandle = instance.findText('title', { traverseInstances: true });
-const title = titleHandle?.textContent ?? 'Banner title';
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Banner title';
 
 // Description text lives inside the nested 'string.banner(alpha)' sub-component
 const descriptionHandle = instance.findText('description', { traverseInstances: true });
-const description = descriptionHandle?.textContent ?? 'Banner description';
+const description =
+  descriptionHandle.type === 'TEXT' ? descriptionHandle.textContent : 'Banner description';
 
 // Timestamp text is a direct descendant of Banner; maps to the 'label' prop
 const timestampHandle = instance.findText('timestamp');
-const timestamp = timestampHandle?.textContent ?? 'Last updated today at 3:33pm';
+const timestamp =
+  timestampHandle.type === 'TEXT' ? timestampHandle.textContent : 'Last updated today at 3:33pm';
 
 // Primary and secondary actions — resolve dynamically via Code Connect to capture Link text/variant
 const linkInstances = instance.findConnectedInstances((n) => n.codeConnectId() === 'link');
@@ -81,7 +83,7 @@ export default {
 >
   ${description}
 </Banner>`,
-  imports: ['import { Banner } from "@coinbase/cds-web"'],
+  imports: ['import { Banner } from "@coinbase/cds-web/banner"'],
   id: 'banner',
   metadata: { nestable: false },
 };

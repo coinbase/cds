@@ -19,7 +19,7 @@ export default {
   activeTab={{ id: 'tab1', label: 'Tab 1' }}
   onChange={handleChange}
 />`,
-  imports: ['import { Tabs } from "@coinbase/cds-web"'],
+  imports: ['import { Tabs } from "@coinbase/cds-web/tabs"'],
   id: 'tab-navigation',
   metadata: { nestable: false },
 };

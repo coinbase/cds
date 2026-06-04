@@ -14,7 +14,7 @@ const color = instance.getEnum('type', {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<Divider direction="vertical" color="${color}" />`,
-  imports: ['import { Divider } from "@coinbase/cds-web"'],
+  imports: ['import { Divider } from "@coinbase/cds-web/layout"'],
   id: 'divider-vertical',
   metadata: { nestable: true },
 };

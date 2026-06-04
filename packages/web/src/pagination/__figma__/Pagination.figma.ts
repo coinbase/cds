@@ -21,7 +21,7 @@ export default {
   onChange={(page) => {}}
   totalPages={${totalPages}}
 />`,
-  imports: ['import { Pagination } from "@coinbase/cds-web"'],
+  imports: ['import { Pagination } from "@coinbase/cds-web/pagination"'],
   id: 'pagination',
   metadata: { nestable: false },
 };

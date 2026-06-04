@@ -7,7 +7,7 @@ const instance = figma.selectedInstance;
 
 // Title is a static text layer with no bound Figma property
 const titleHandle = instance.findText('title');
-const title = titleHandle.textContent;
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Title';
 
 // Subtitle is conditionally shown
 const showSubtitle = instance.getBoolean('show subtitle');
@@ -43,7 +43,7 @@ export default {
     ${panelCode}
   </AccordionItem>
 </Accordion>`,
-  imports: ['import { Accordion, AccordionItem } from "@coinbase/cds-web"'],
+  imports: ['import { Accordion, AccordionItem } from "@coinbase/cds-web/accordion"'],
   id: 'accordion',
   metadata: { nestable: false },
 };

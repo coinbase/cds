@@ -23,7 +23,7 @@ export default {
     { id: 'tab-3', label: 'Tab 3' },
   ]}
 />`,
-  imports: ['import { TabbedChips } from "@coinbase/cds-web/alpha/tabbed-chips"'],
+  imports: ['import { TabbedChips } from "@coinbase/cds-web/alpha"'],
   id: 'tabbed-chips',
   metadata: { nestable: false },
 };

@@ -65,7 +65,7 @@ export default {
   ${actionCode ? figma.code`action={${actionCode}}` : ''}
   ${showDismiss ? 'onDismissButtonClick={() => {}}' : ''}
 />`,
-  imports: ['import { MessagingCard } from "@coinbase/cds-web"'],
+  imports: ['import { MessagingCard } from "@coinbase/cds-web/cards"'],
   id: 'messaging-card',
   metadata: { nestable: false },
 };

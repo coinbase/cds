@@ -6,11 +6,14 @@ import figma from 'figma';
 const instance = figma.selectedInstance;
 
 // title: TEXT descendant → title prop (required)
-const title = instance.findText('title').textContent;
+const titleHandle = instance.findText('title');
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Title';
 
 // show subtitle: BOOLEAN → conditionally include subtitle prop
 const showSubtitle = instance.getBoolean('show subtitle');
-const subtitle = showSubtitle ? instance.findText('subtitle').textContent : undefined;
+const subtitleHandle = instance.findText('subtitle');
+const subtitle =
+  showSubtitle && subtitleHandle.type === 'TEXT' ? subtitleHandle.textContent : undefined;
 
 // show media + ↳ media: BOOLEAN + INSTANCE_SWAP → thumbnail prop
 const showMedia = instance.getBoolean('show media');
@@ -71,7 +74,7 @@ export default {
 >
   ${childCode}
 </DataCard>`,
-  imports: ['import { DataCard } from "@coinbase/cds-mobile/alpha"'],
+  imports: ['import { DataCard } from "@coinbase/cds-mobile/alpha/data-card"'],
   id: 'data-card-mobile',
   metadata: { nestable: false },
 };

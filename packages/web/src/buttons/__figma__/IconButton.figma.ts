@@ -37,7 +37,7 @@ export default {
   ${isLoading ? 'loading' : ''}
   ${isDisabled ? 'disabled' : ''}
 />`,
-  imports: ['import { IconButton } from "@coinbase/cds-web"'],
+  imports: ['import { IconButton } from "@coinbase/cds-web/buttons"'],
   id: 'icon-button',
   metadata: { nestable: true },
 };

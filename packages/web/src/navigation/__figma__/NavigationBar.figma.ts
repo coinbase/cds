@@ -96,8 +96,8 @@ export default {
   ${childrenCode ?? ''}
 </NavigationBar>`,
   imports: [
-    'import { NavigationBar } from "@coinbase/cds-web"',
-    'import { HStack } from "@coinbase/cds-web"',
+    'import { NavigationBar } from "@coinbase/cds-web/navigation"',
+    'import { HStack } from "@coinbase/cds-web/layout"',
   ],
   id: 'navigation-bar',
   metadata: { nestable: false },

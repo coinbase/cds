@@ -41,7 +41,7 @@ export default {
   ${startCode ? figma.code`start={${startCode}}` : ''}
   ${endCode ? figma.code`end={${endCode}}` : ''}
 />`,
-  imports: ['import { TableCell } from "@coinbase/cds-web"'],
+  imports: ['import { TableCell } from "@coinbase/cds-web/tables"'],
   id: 'table-cell',
   metadata: { nestable: true },
 };

@@ -32,9 +32,9 @@ export default {
   }
 />`,
   imports: [
-    'import { ProgressCircle } from "@coinbase/cds-web"',
-    'import { Box } from "@coinbase/cds-web"',
-    'import { RemoteImage } from "@coinbase/cds-web"',
+    'import { ProgressCircle } from "@coinbase/cds-web/visualizations"',
+    'import { Box } from "@coinbase/cds-web/layout"',
+    'import { RemoteImage } from "@coinbase/cds-web/media"',
   ],
   id: 'asset-progress-circle',
   metadata: { nestable: true },

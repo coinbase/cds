@@ -28,7 +28,7 @@ export default {
   ${showMedia ? figma.code`media={<>{/* media content */}</>}` : ''}
   ${dismissable ? 'onClose={() => {}}' : ''}
 />`,
-  imports: ['import { Coachmark } from "@coinbase/cds-mobile"'],
+  imports: ['import { Coachmark } from "@coinbase/cds-mobile/coachmark"'],
   id: 'coachmark-mobile',
   metadata: { nestable: false },
 };

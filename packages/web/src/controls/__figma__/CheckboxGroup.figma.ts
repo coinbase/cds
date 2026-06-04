@@ -21,7 +21,7 @@ export default {
   role="group"
   value={selectedValues}
 />`,
-  imports: ['import { Checkbox, ControlGroup } from "@coinbase/cds-web"'],
+  imports: ['import { Checkbox, ControlGroup } from "@coinbase/cds-web/controls"'],
   id: 'checkbox-group',
   metadata: { nestable: false },
 };

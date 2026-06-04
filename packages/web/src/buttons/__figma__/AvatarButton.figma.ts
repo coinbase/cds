@@ -28,7 +28,7 @@ export default {
   ${isSelected ? 'selected' : ''}
   ${isDisabled ? 'disabled' : ''}
 />`,
-  imports: ['import { AvatarButton } from "@coinbase/cds-web"'],
+  imports: ['import { AvatarButton } from "@coinbase/cds-web/buttons"'],
   id: 'avatar-button',
   metadata: { nestable: true },
 };

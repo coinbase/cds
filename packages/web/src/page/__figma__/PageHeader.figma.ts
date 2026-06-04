@@ -61,7 +61,7 @@ if (showStepper) {
   }
 } else if (showPageTitle) {
   const pageTitleHandle = instance.findText('Page title');
-  titleText = pageTitleHandle?.textContent ?? 'Page title';
+  titleText = pageTitleHandle.type === 'TEXT' ? pageTitleHandle.textContent : 'Page title';
 }
 
 // ---- Resolve `end` slot ----
@@ -107,8 +107,8 @@ export default {
   ${endCode ? figma.code`end={${endCode}}` : ''}
 />`,
   imports: [
-    'import { PageHeader } from "@coinbase/cds-web"',
-    'import { HStack } from "@coinbase/cds-web"',
+    'import { PageHeader } from "@coinbase/cds-web/page"',
+    'import { HStack } from "@coinbase/cds-web/layout"',
   ],
   id: 'page-header',
   metadata: { nestable: false },

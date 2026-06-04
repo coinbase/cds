@@ -21,7 +21,7 @@ export default {
   title="${title}"
   ${isDisabled ? 'disabled' : ''}
 />`,
-  imports: ['import { TileButton } from "@coinbase/cds-web"'],
+  imports: ['import { TileButton } from "@coinbase/cds-web/buttons"'],
   id: 'tile-button',
   metadata: { nestable: false },
 };

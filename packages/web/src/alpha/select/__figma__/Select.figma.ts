@@ -70,7 +70,7 @@ export default {
   value={null}
   onChange={() => {}}
 />`,
-  imports: ['import { Select } from "@coinbase/cds-web"'],
+  imports: ['import { Select } from "@coinbase/cds-web/alpha/select"'],
   id: 'select',
   metadata: { nestable: false },
 };

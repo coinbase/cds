@@ -31,7 +31,7 @@ export default {
   ${secondaryContentCode ? figma.code`secondaryContent={${secondaryContentCode}}` : ''}
   ${showSecondaryContentDivider ? 'showSecondaryContentDivider' : ''}
 />`,
-  imports: ['import { FullscreenModal } from "@coinbase/cds-web"'],
+  imports: ['import { FullscreenModal } from "@coinbase/cds-web/overlays"'],
   id: 'fullscreen-modal',
   metadata: { nestable: false },
 };

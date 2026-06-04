@@ -37,6 +37,12 @@ yarn install
 yarn nx run icons:sync-icons
 ```
 
+> As part of the sync, `sync-icons` also regenerates the Figma Code Connect mappings by calling `sync-icon-code-connect`. This writes one parser-less template file per icon (`<iconName>.figma.ts`) into `packages/web/src/icons/__figma__/` and `packages/mobile/src/icons/__figma__/`, replacing any previously generated templates. It can also be run on its own:
+>
+> ```sh
+> yarn nx run icons:sync-icon-code-connect
+> ```
+
 5. Open a PR in [github.com/coinbase/cds](https://github.com/coinbase/cds). Title the PR exactly the same as the commit message: `feat: Publish icons YYYY-MM-DD`. Take note of the PR number for the next step
 
 6. Update the icons package changelog by completing the prompts as shown below

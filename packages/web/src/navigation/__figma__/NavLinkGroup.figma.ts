@@ -25,8 +25,8 @@ export default {
   ${c1}${c2}${c3}${c4}${c5}${c6}
 </HStack>`,
   imports: [
-    'import { HStack } from "@coinbase/cds-web"',
-    'import { NavLink } from "@coinbase/cds-web"',
+    'import { HStack } from "@coinbase/cds-web/layout"',
+    'import { NavLink } from "@coinbase/cds-web/navigation"',
   ],
   id: 'nav-link-group',
   metadata: { nestable: false },

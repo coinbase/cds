@@ -27,7 +27,7 @@ export default {
   text="${text}"
   ${hasAction ? figma.code`action={{ label: "${actionLabel}", onPress: () => {} }}` : ''}
 />`,
-  imports: ['import { Toast } from "@coinbase/cds-mobile"'],
+  imports: ['import { Toast } from "@coinbase/cds-mobile/overlays"'],
   id: 'toast-mobile',
   metadata: { nestable: false },
 };

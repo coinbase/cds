@@ -36,7 +36,7 @@ export default {
   progress={${progress}}
   ${disabled ? 'disabled' : ''}
 />`,
-  imports: ['import { ProgressBar } from "@coinbase/cds-web"'],
+  imports: ['import { ProgressBar } from "@coinbase/cds-web/visualizations"'],
   id: 'progress-bar',
   metadata: { nestable: false },
 };

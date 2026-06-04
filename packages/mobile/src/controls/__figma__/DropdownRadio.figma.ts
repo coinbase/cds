@@ -25,7 +25,7 @@ export default {
   role="radiogroup"
   value={selectedValue}
 />`,
-  imports: ['import { ControlGroup, RadioCell } from "@coinbase/cds-mobile"'],
+  imports: ['import { ControlGroup, RadioCell } from "@coinbase/cds-mobile/controls"'],
   id: 'dropdown-radio-mobile',
   metadata: { nestable: false },
 };

@@ -32,7 +32,7 @@ export default {
   value="option"
   onChange={(value, isChecked) => {}}
 />`,
-  imports: ['import { CheckboxCell } from "@coinbase/cds-mobile"'],
+  imports: ['import { CheckboxCell } from "@coinbase/cds-mobile/cells"'],
   id: 'checkbox-cell',
   metadata: { nestable: true },
 };

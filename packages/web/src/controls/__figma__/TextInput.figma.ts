@@ -75,7 +75,7 @@ export default {
   ${startCode ? figma.code`start={${startCode}}` : ''}
   ${endCode ? figma.code`end={${endCode}}` : ''}
 />`,
-  imports: ['import { TextInput } from "@coinbase/cds-web"'],
+  imports: ['import { TextInput } from "@coinbase/cds-web/controls"'],
   id: 'text-input',
   metadata: { nestable: false },
 };

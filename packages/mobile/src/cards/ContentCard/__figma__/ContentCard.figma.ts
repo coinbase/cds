@@ -15,20 +15,21 @@ const headerTitleText = instance.findText('description', {
   traverseInstances: true,
   path: ['.cardHeader'],
 });
-const headerTitle = headerTitleText?.textContent ?? '';
+const headerTitle = headerTitleText.type === 'TEXT' ? headerTitleText.textContent : '';
 
 const headerSubtitleText = instance.findText('metaData', { traverseInstances: true });
-const headerSubtitle = headerSubtitleText?.textContent;
+const headerSubtitle =
+  headerSubtitleText.type === 'TEXT' ? headerSubtitleText.textContent : undefined;
 
 // Body text content (accessed via layer traversal through nested instances)
 const bodyTitleText = instance.findText('title', { traverseInstances: true });
-const bodyTitle = bodyTitleText?.textContent;
+const bodyTitle = bodyTitleText.type === 'TEXT' ? bodyTitleText.textContent : undefined;
 
 const bodyDescText = instance.findText('description', {
   traverseInstances: true,
   path: ['.CardBody'],
 });
-const bodyDescription = bodyDescText?.textContent;
+const bodyDescription = bodyDescText.type === 'TEXT' ? bodyDescText.textContent : undefined;
 
 // Footer action button — resolved dynamically from the nested Button instance
 const footerActionInstance = instance.findInstance('action', { traverseInstances: true });
@@ -65,7 +66,7 @@ export default {
   }
 </ContentCard>`,
   imports: [
-    'import { ContentCard, ContentCardHeader, ContentCardBody, ContentCardFooter } from "@coinbase/cds-mobile"',
+    'import { ContentCard, ContentCardHeader, ContentCardBody, ContentCardFooter } from "@coinbase/cds-mobile/cards/ContentCard"',
   ],
   id: 'content-card-mobile',
   metadata: { nestable: false },

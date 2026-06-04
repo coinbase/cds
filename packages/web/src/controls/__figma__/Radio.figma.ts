@@ -31,7 +31,7 @@ export default {
 >
   ${showLabel ? label : ''}
 </Radio>`,
-  imports: ['import { Radio } from "@coinbase/cds-web"'],
+  imports: ['import { Radio } from "@coinbase/cds-web/controls"'],
   id: 'radio-button',
   metadata: { nestable: true },
 };

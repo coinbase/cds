@@ -25,7 +25,7 @@ export default {
   ${disabled ? 'disabled' : ''}
   ${required ? 'required' : ''}
 />`,
-  imports: ['import { NativeTextArea } from "@coinbase/cds-web"'],
+  imports: ['import { NativeTextArea } from "@coinbase/cds-web/controls"'],
   id: 'native-text-area',
   metadata: { nestable: true },
 };

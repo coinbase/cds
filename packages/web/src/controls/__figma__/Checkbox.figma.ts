@@ -7,7 +7,7 @@ const instance = figma.selectedInstance;
 
 // Label text lives inside the nested string.checkbox child instance
 const labelHandle = instance.findText('label-option', { traverseInstances: true });
-const label = labelHandle && labelHandle.textContent ? labelHandle.textContent : 'Label';
+const label = labelHandle.type === 'TEXT' ? labelHandle.textContent : 'Label';
 
 // show label controls whether children (label text) are rendered
 const showLabel = instance.getBoolean('show label');
@@ -28,7 +28,7 @@ export default {
 >
   ${showLabel ? label : ''}
 </Checkbox>`,
-  imports: ['import { Checkbox } from "@coinbase/cds-web"'],
+  imports: ['import { Checkbox } from "@coinbase/cds-web/controls"'],
   id: 'checkbox',
   metadata: { nestable: true },
 };

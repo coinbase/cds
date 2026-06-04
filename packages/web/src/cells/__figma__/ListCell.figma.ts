@@ -6,22 +6,30 @@ import figma from 'figma';
 const instance = figma.selectedInstance;
 
 // --- Text content (read from named text layers) ---
-const title = instance.findText('Title')?.textContent ?? 'Title';
+const titleHandle = instance.findText('Title');
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Title';
 
 const showSubtitle = instance.getBoolean('show subtitle');
-const subtitle = instance.findText('Subtitle')?.textContent ?? 'Subtitle';
+const subtitleHandle = instance.findText('Subtitle');
+const subtitle = subtitleHandle.type === 'TEXT' ? subtitleHandle.textContent : 'Subtitle';
 
 const showDescription = instance.getBoolean('show description');
-const description = instance.findText('Description')?.textContent ?? 'Description';
+const descriptionHandle = instance.findText('Description');
+const description =
+  descriptionHandle.type === 'TEXT' ? descriptionHandle.textContent : 'Description';
 
 // --- End area: detail / subdetail text (inside the nested end/subdetail instance) ---
 const showEnd = instance.getBoolean('show end');
-const detail =
-  instance.findText('Detail', { traverseInstances: true, path: ['end/subdetail'] })?.textContent ??
-  'Detail';
-const subdetail =
-  instance.findText('SubDetail', { traverseInstances: true, path: ['end/subdetail'] })
-    ?.textContent ?? 'Subdetail';
+const detailHandle = instance.findText('Detail', {
+  traverseInstances: true,
+  path: ['end/subdetail'],
+});
+const detail = detailHandle.type === 'TEXT' ? detailHandle.textContent : 'Detail';
+const subdetailHandle = instance.findText('SubDetail', {
+  traverseInstances: true,
+  path: ['end/subdetail'],
+});
+const subdetail = subdetailHandle.type === 'TEXT' ? subdetailHandle.textContent : 'Subdetail';
 
 // --- Media (start slot) ---
 const showMedia = instance.getBoolean('show start');
@@ -66,7 +74,7 @@ export default {
   ${disabled ? 'disabled' : ''}
   ${showHelperText ? 'helperText="Helper text"' : ''}
 />`,
-  imports: ['import { ListCell } from "@coinbase/cds-web"'],
+  imports: ['import { ListCell } from "@coinbase/cds-web/cells"'],
   id: 'list-cell',
   metadata: { nestable: false },
 };

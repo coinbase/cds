@@ -7,7 +7,7 @@ const instance = figma.selectedInstance;
 
 // Button label lives inside the nested string.button child instance
 const labelHandle = instance.findText('button-label', { traverseInstances: true });
-const label = labelHandle && labelHandle.textContent ? labelHandle.textContent : 'Button';
+const label = labelHandle.type === 'TEXT' ? labelHandle.textContent : 'Button';
 
 // variant maps directly — Figma uses the same lowercase values as code
 const variant = instance.getEnum('variant', {
@@ -74,7 +74,7 @@ export default {
 >
   ${label}
 </Button>`,
-  imports: ['import { Button } from "@coinbase/cds-web"'],
+  imports: ['import { Button } from "@coinbase/cds-web/buttons"'],
   id: 'button',
   metadata: { nestable: true },
 };

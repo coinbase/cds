@@ -54,7 +54,7 @@ export default {
   ${showIllustration ? figma.code`pictogram="warning"` : ''}
   onRequestClose={() => {}}
 />`,
-  imports: ['import { Alert } from "@coinbase/cds-mobile"'],
+  imports: ['import { Alert } from "@coinbase/cds-mobile/overlays"'],
   id: 'alert-mobile',
   metadata: { nestable: false },
 };

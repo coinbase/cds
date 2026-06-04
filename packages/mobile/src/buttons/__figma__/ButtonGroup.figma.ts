@@ -54,7 +54,7 @@ export default {
   example: figma.code`<ButtonGroup${direction ? figma.code` direction="${direction}"` : ''}${block ? ' block' : ''}>
   ${singleCode}${topCode}${leftCode}${middleCode}${rightCode}${bottomCode}
 </ButtonGroup>`,
-  imports: ['import { ButtonGroup } from "@coinbase/cds-mobile"'],
+  imports: ['import { ButtonGroup } from "@coinbase/cds-mobile/buttons"'],
   id: 'button-group-mobile',
   metadata: { nestable: false },
 };

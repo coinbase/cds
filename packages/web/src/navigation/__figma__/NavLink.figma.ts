@@ -20,7 +20,7 @@ const active = instance.getEnum('state', {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<NavLink${active ? ' active' : ''}>${label}</NavLink>`,
-  imports: ['import { NavLink } from "@coinbase/cds-web"'],
+  imports: ['import { NavLink } from "@coinbase/cds-web/navigation"'],
   id: 'nav-link',
   metadata: { nestable: true },
 };

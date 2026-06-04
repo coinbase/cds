@@ -42,7 +42,7 @@ export default {
   ${disabled ? 'disabled' : ''}
   ${startCode ? figma.code`start={${startCode}}` : ''}
 >${showLabel ? label : ''}</InputChip>`,
-  imports: ['import { InputChip } from "@coinbase/cds-mobile"'],
+  imports: ['import { InputChip } from "@coinbase/cds-mobile/chips"'],
   id: 'input-chip-mobile',
   metadata: { nestable: true },
 };

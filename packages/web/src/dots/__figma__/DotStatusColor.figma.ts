@@ -23,7 +23,7 @@ const size = instance.getEnum('size', {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<DotStatusColor variant="${variant}" size="${size}" />`,
-  imports: ['import { DotStatusColor } from "@coinbase/cds-web"'],
+  imports: ['import { DotStatusColor } from "@coinbase/cds-web/dots"'],
   id: 'dot-status-color',
   metadata: { nestable: true },
 };

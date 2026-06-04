@@ -23,7 +23,7 @@ export default {
 >
   ${showLabel ? label : ''}
 </Switch>`,
-  imports: ['import { Switch } from "@coinbase/cds-mobile"'],
+  imports: ['import { Switch } from "@coinbase/cds-mobile/controls"'],
   id: 'switch',
   metadata: { nestable: true },
 };

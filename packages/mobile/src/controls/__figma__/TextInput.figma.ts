@@ -75,7 +75,7 @@ export default {
   ${startCode ? figma.code`start={${startCode}}` : ''}
   ${endCode ? figma.code`end={${endCode}}` : ''}
 />`,
-  imports: ['import { TextInput } from "@coinbase/cds-mobile"'],
+  imports: ['import { TextInput } from "@coinbase/cds-mobile/controls"'],
   id: 'text-input-mobile',
   metadata: { nestable: false },
 };

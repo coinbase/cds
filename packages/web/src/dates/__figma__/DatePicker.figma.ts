@@ -34,7 +34,7 @@ export default {
   ${disabled ? 'disabled' : ''}
   ${compact ? 'compact' : ''}
 />`,
-  imports: ['import { DatePicker } from "@coinbase/cds-web"'],
+  imports: ['import { DatePicker } from "@coinbase/cds-web/dates"'],
   id: 'date-picker',
   metadata: { nestable: false },
 };

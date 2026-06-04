@@ -31,7 +31,7 @@ export default {
   value="option"
   onChange={(value, checked) => {}}
 />`,
-  imports: ['import { RadioCell } from "@coinbase/cds-mobile"'],
+  imports: ['import { RadioCell } from "@coinbase/cds-mobile/cells"'],
   id: 'radio-cell',
   metadata: { nestable: true },
 };

@@ -22,7 +22,7 @@ export default {
   role="radiogroup"
   value={selectedValue}
 />`,
-  imports: ['import { ControlGroup, Radio } from "@coinbase/cds-mobile"'],
+  imports: ['import { ControlGroup, Radio } from "@coinbase/cds-mobile/controls"'],
   id: 'radio-group-mobile',
   metadata: { nestable: false },
 };

@@ -23,7 +23,7 @@ export default {
   ${active ? 'active' : ''}
   ${collapsed ? 'collapsed' : ''}
 />`,
-  imports: ['import { SidebarItem } from "@coinbase/cds-web"'],
+  imports: ['import { SidebarItem } from "@coinbase/cds-web/navigation"'],
   id: 'sidebar-item',
   metadata: { nestable: true },
 };

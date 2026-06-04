@@ -28,7 +28,7 @@ export default {
   onChangeText={(text) => {}}
   value=""
 />`,
-  imports: ['import { SearchInput } from "@coinbase/cds-mobile"'],
+  imports: ['import { SearchInput } from "@coinbase/cds-mobile/controls"'],
   id: 'search-input-mobile',
   metadata: { nestable: true },
 };

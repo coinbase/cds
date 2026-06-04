@@ -13,11 +13,12 @@ const type = instance.getEnum('type', {
 
 // Title text lives inside the nested 'string.tooltip' sub-component
 const titleHandle = instance.findText('title-option', { traverseInstances: true });
-const title = titleHandle?.textContent ?? 'Title';
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Title';
 
 // Body/description text lives inside the nested 'string.tooltip' sub-component
 const descriptionHandle = instance.findText('body-option', { traverseInstances: true });
-const description = descriptionHandle?.textContent ?? 'Tooltip description';
+const description =
+  descriptionHandle.type === 'TEXT' ? descriptionHandle.textContent : 'Tooltip description';
 
 // eslint-disable-next-line no-restricted-exports
 export default {
@@ -35,7 +36,11 @@ export default {
 >
   {/* trigger element */}
 </Tooltip>`,
-  imports: ['import { Tooltip, VStack, Text } from "@coinbase/cds-web"'],
+  imports: [
+    'import { Tooltip } from "@coinbase/cds-web/overlays"',
+    'import { VStack } from "@coinbase/cds-web/layout"',
+    'import { Text } from "@coinbase/cds-web/typography"',
+  ],
   id: 'tooltip',
   metadata: { nestable: false },
 };

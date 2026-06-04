@@ -26,7 +26,7 @@ export default {
   ]}
   activeStepId="step-1"
 />`,
-  imports: ['import { Stepper } from "@coinbase/cds-web"'],
+  imports: ['import { Stepper } from "@coinbase/cds-web/stepper"'],
   id: 'stepper-vertical',
   metadata: { nestable: false },
 };

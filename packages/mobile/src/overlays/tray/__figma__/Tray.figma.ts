@@ -11,7 +11,7 @@ const instance = figma.selectedInstance;
 
 // Extract title from the nested SectionHeader's text layer
 const titleHandle = instance.findText('section-title-label', { traverseInstances: true });
-const title = titleHandle?.textContent ?? '';
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : '';
 
 // Extract content from the swappable placeholder inside the active variant
 const contentInstance = instance.findInstance('🔄 Swap', { traverseInstances: true });
@@ -28,7 +28,7 @@ export default {
 >
   ${contentCode}
 </Tray>`,
-  imports: ['import { Tray } from "@coinbase/cds-mobile"'],
+  imports: ['import { Tray } from "@coinbase/cds-mobile/overlays"'],
   id: 'tray-mobile',
   metadata: { nestable: false },
 };

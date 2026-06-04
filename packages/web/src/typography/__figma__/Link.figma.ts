@@ -39,7 +39,7 @@ export default {
 >
   ${label}
 </Link>`,
-  imports: ['import { Link } from "@coinbase/cds-web"'],
+  imports: ['import { Link } from "@coinbase/cds-web/typography"'],
   id: 'link',
   metadata: { nestable: true },
 };

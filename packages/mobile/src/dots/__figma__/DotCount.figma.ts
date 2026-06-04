@@ -15,7 +15,7 @@ const count = instance.getEnum('type', {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<DotCount count={${count}} />`,
-  imports: ['import { DotCount } from "@coinbase/cds-mobile"'],
+  imports: ['import { DotCount } from "@coinbase/cds-mobile/dots"'],
   id: 'dot-count-mobile',
   metadata: { nestable: true },
 };

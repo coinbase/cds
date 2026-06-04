@@ -16,7 +16,7 @@ const showFooter = instance.getBoolean('show footer');
 
 // Header title text from the nested .Header descendant text layer
 const titleHandle = instance.findText('title', { traverseInstances: true });
-const title = titleHandle?.textContent ?? 'Modal Title';
+const title = titleHandle.type === 'TEXT' ? titleHandle.textContent : 'Modal Title';
 
 // Content area from the swappable body placeholder
 const contentInstance = instance.getInstanceSwap('🔄 replace me');
@@ -49,8 +49,8 @@ export default {
   }
 </Modal>`,
   imports: [
-    'import { Modal, ModalHeader, ModalBody, ModalFooter } from "@coinbase/cds-web"',
-    'import { Button } from "@coinbase/cds-web"',
+    'import { Modal, ModalHeader, ModalBody, ModalFooter } from "@coinbase/cds-web/overlays"',
+    'import { Button } from "@coinbase/cds-web/buttons"',
   ],
   id: 'modal',
   metadata: { nestable: false },

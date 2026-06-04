@@ -21,10 +21,12 @@ const compact = instance.getEnum('compact', {
 
 // Retrieve the unchecked and checked label text from the nested string.slide button instance
 const uncheckedLabelHandle = instance.findText('default', { traverseInstances: true });
-const uncheckedLabel = uncheckedLabelHandle?.textContent;
+const uncheckedLabel =
+  uncheckedLabelHandle.type === 'TEXT' ? uncheckedLabelHandle.textContent : undefined;
 
 const checkedLabelHandle = instance.findText('loading', { traverseInstances: true });
-const checkedLabel = checkedLabelHandle?.textContent;
+const checkedLabel =
+  checkedLabelHandle.type === 'TEXT' ? checkedLabelHandle.textContent : undefined;
 
 // eslint-disable-next-line no-restricted-exports
 export default {
@@ -35,7 +37,7 @@ export default {
   ${checkedLabel ? figma.code`checkedLabel="${checkedLabel}"` : ''}
   ${compact ? 'compact' : ''}
 />`,
-  imports: ['import { SlideButton } from "@coinbase/cds-mobile"'],
+  imports: ['import { SlideButton } from "@coinbase/cds-mobile/buttons"'],
   id: 'slide-button-mobile',
   metadata: { nestable: false },
 };

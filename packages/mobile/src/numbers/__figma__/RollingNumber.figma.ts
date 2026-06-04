@@ -13,7 +13,7 @@ export default {
   value={12345.67}
   format={{ style: 'currency', currency: 'USD' }}
 />`,
-  imports: ['import { RollingNumber } from "@coinbase/cds-mobile"'],
+  imports: ['import { RollingNumber } from "@coinbase/cds-mobile/numbers/RollingNumber"'],
   id: 'rolling-number-mobile',
   metadata: { nestable: false },
 };

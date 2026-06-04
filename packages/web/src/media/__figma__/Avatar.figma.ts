@@ -53,7 +53,7 @@ export default {
   ${showSrc ? figma.code`src="https://example.com/avatar.jpg"` : ''}
   ${showName && colorScheme !== 'blue' ? figma.code`colorScheme="${colorScheme}"` : ''}
 />`,
-  imports: ['import { Avatar } from "@coinbase/cds-web"'],
+  imports: ['import { Avatar } from "@coinbase/cds-web/media"'],
   id: 'avatar',
   metadata: { nestable: true },
 };

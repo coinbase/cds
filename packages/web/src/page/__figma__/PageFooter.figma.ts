@@ -26,7 +26,7 @@ export default {
   action={${actionCode}}
   ${showLegalText ? figma.code`legalText="Your legal text here"` : ''}
 />`,
-  imports: ['import { PageFooter } from "@coinbase/cds-web"'],
+  imports: ['import { PageFooter } from "@coinbase/cds-web/page"'],
   id: 'page-footer',
   metadata: { nestable: false },
 };
