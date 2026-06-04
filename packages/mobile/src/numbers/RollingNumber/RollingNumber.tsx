@@ -704,7 +704,6 @@ export const RollingNumber = memo(
           accessibilityLiveRegion={accessibilityLiveRegion}
           importantForAccessibility="yes"
           style={[baseStylesheet.screenReaderOnly, styles?.text]}
-          testID="rolling-number-sr-only"
           {...textProps}
         >
           {`${accessibilityLabelPrefix ?? ''}

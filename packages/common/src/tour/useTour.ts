@@ -47,12 +47,15 @@ export type TourStepArrowComponentProps = {
 /**
  * The TourStepArrowComponent forwards a ref to the underlying element.
  * This is required for the positioning library to work correctly.
+ *
+ * Accepts both the legacy `React.forwardRef`-produced component shape and the
+ * React 19 ref-as-prop callable form so consumers can pass either pattern.
  * @deprecated Import from `@coinbase/cds-web` or `@coinbase/cds-mobile` instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
-export type TourStepArrowComponent = React.ForwardRefExoticComponent<
-  TourStepArrowComponentProps & { ref?: React.Ref<any> }
->;
+export type TourStepArrowComponent =
+  | React.ForwardRefExoticComponent<TourStepArrowComponentProps & { ref?: React.Ref<any> }>
+  | ((props: TourStepArrowComponentProps & { ref?: React.Ref<any> }) => React.ReactNode);
 
 export type TourStepComponent = React.FC<Omit<TourStepValue, 'Component'>>;
 

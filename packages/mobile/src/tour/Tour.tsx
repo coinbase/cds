@@ -47,9 +47,9 @@ export type TourStepArrowComponentProps = {
 };
 
 // ------------ SUBCOMPONENT TYPES ------------
-export type TourStepArrowComponent = React.FC<
-  TourStepArrowComponentProps & { ref?: React.Ref<any> }
->;
+export type TourStepArrowComponent = (
+  props: TourStepArrowComponentProps & { ref?: React.Ref<any> },
+) => React.ReactNode;
 
 export type TourMaskComponentProps = {
   /**
@@ -67,7 +67,7 @@ export type TourMaskComponentProps = {
   borderRadius?: string | number;
 };
 
-export type TourMaskComponent = React.FC<TourMaskComponentProps>;
+export type TourMaskComponent = (props: TourMaskComponentProps) => React.ReactNode;
 
 export type TourBaseProps<TourStepId extends string = string> = SharedProps &
   TourOptions<TourStepId> &
@@ -153,7 +153,10 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
 
   const tourStepArrowRef = useRef<View>(null);
   const RenderedTourStep = activeTourStep?.Component;
-  // activeTourStep.ArrowComponent references old, deprecated type in cds-common
+  // activeTourStep.ArrowComponent comes from the platform-agnostic cds-common type whose
+  // TourStepArrowComponentProps (`style: Record<string, string | number>`) is web-flavored;
+  // mobile's TourStepArrowComponentProps uses `StyleProp<ViewStyle>`. The cast is structurally
+  // unavoidable until cds-common's TourStepArrowComponentProps is split per platform.
   const RenderedTourStepArrow =
     (activeTourStep?.ArrowComponent as TourStepArrowComponent) ?? TourStepArrowComponent;
 

@@ -88,15 +88,28 @@ export function isPressable(node: TestInstance): boolean {
 }
 
 /**
- * Check if a node is a Text element. Returns false for wrapper components
- * that contain a leaf Text (e.g. CDS `Text` wrapping `RNText`).
+ * Check if a node is a Text element. Filters out the CDS `Text` wrapper when
+ * it sits directly above its host `RNText` and forwards the same a11y-defining
+ * props verbatim, so a single logical Text is matched once at the host. Outer
+ * Text nodes that own distinct a11y semantics (e.g. `onPress`, `accessibilityRole`)
+ * are preserved so legitimate nested Text compositions still surface violations.
  */
 export function isText(node: TestInstance): boolean {
   if (!isTextType(node.type)) {
     return false;
   }
-  const textsInTree = node.findAll((n) => isTextType(n.type));
-  return textsInTree.length === 1;
+  const directChildText = node.children.find(
+    (c): c is TestInstance => typeof c !== 'string' && isTextType(c.type),
+  );
+  if (
+    directChildText &&
+    directChildText.props.onPress === node.props.onPress &&
+    directChildText.props.accessibilityRole === node.props.accessibilityRole &&
+    directChildText.props.accessibilityLabel === node.props.accessibilityLabel
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**

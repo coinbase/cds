@@ -1,4 +1,5 @@
-import { Animated, StyleSheet } from 'react-native';
+import { createRef } from 'react';
+import { Animated, StyleSheet, type TextInput as RNTextInput } from 'react-native';
 import { focusedInputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -51,6 +52,23 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(testID)).toBeAccessible();
+  });
+
+  it('forwards ref to the underlying RNTextInput', () => {
+    const testID = 'textinput-ref-test';
+    const ref = createRef<RNTextInput>();
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          ref={ref}
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          testID={testID}
+        />
+      </DefaultThemeProvider>,
+    );
+    expect(ref.current).not.toBeNull();
+    expect(screen.getByTestId(testID)).toBeTruthy();
   });
 
   it('renders a TextInput', () => {
