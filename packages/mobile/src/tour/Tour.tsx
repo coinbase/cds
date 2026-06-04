@@ -153,12 +153,13 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
 
   const tourStepArrowRef = useRef<View>(null);
   const RenderedTourStep = activeTourStep?.Component;
-  // activeTourStep.ArrowComponent comes from the platform-agnostic cds-common type whose
-  // TourStepArrowComponentProps (`style: Record<string, string | number>`) is web-flavored;
-  // mobile's TourStepArrowComponentProps uses `StyleProp<ViewStyle>`. The cast is structurally
-  // unavoidable until cds-common's TourStepArrowComponentProps is split per platform.
+  // activeTourStep.ArrowComponent is typed by cds-common, which still uses the legacy
+  // `React.ForwardRefExoticComponent<…>` shape (kept intact because cds-web has not yet
+  // migrated off `React.forwardRef`). Mobile has migrated to React 19's ref-as-prop callable
+  // shape; runtime is equivalent under React 19. The cast also bridges the platform-agnostic
+  // style prop in common (`Record<string, string | number>`) with mobile's `StyleProp<ViewStyle>`.
   const RenderedTourStepArrow =
-    (activeTourStep?.ArrowComponent as TourStepArrowComponent) ?? TourStepArrowComponent;
+    (activeTourStep?.ArrowComponent as unknown as TourStepArrowComponent) ?? TourStepArrowComponent;
 
   const [animation, animationApi] = useSpring(
     () => ({ from: { opacity: 0 }, config: springConfig.slow }),
