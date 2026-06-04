@@ -1,13 +1,15 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 
-import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { RollingNumber } from '../RollingNumber/RollingNumber';
 
 const getSrOnlyText = (live: 'polite' | 'assertive') => {
-  const nodes = screen.UNSAFE_queryAllByType(Text);
-  return nodes.find((n) => n.props.accessibilityLiveRegion === live) ?? null;
+  const node = screen.queryByTestId('rolling-number-sr-only');
+  if (node && node.props.accessibilityLiveRegion === live) {
+    return node;
+  }
+  return null;
 };
 
 const normalize = (s: unknown) => String(s).replace(/\s+/g, ' ').trim();

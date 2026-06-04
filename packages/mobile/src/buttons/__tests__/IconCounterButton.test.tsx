@@ -4,7 +4,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { Pressable } from '../../system';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { IconCounterButton } from '../IconCounterButton';
 
@@ -25,7 +24,7 @@ describe('IconCounterButton', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.UNSAFE_queryAllByType(Pressable)).toHaveLength(1);
+    expect(screen.getAllByRole('button')).toHaveLength(1);
   });
 
   it('calls onPress when pressed', () => {

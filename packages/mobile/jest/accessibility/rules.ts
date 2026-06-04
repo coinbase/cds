@@ -48,7 +48,7 @@ const ALLOWED_CHECKED_VALUES_MESSAGE = ALLOWED_CHECKED_VALUES.join(' or ');
  */
 const pressableRoleRequired: Rule = {
   id: 'pressable-role-required',
-  matcher: (node) => isPressable(node.type),
+  matcher: (node) => isPressable(node),
   assertion: (node) => ALLOWED_PRESSABLE_ROLES.includes(node.props.accessibilityRole),
   help: {
     problem:
@@ -63,7 +63,7 @@ const pressableRoleRequired: Rule = {
  */
 const pressableAccessibleRequired: Rule = {
   id: 'pressable-accessible-required',
-  matcher: (node) => isPressable(node.type),
+  matcher: (node) => isPressable(node),
   assertion: (node) => node.props.accessible !== false,
   help: {
     problem: 'This button is not accessible (selectable) to the user',
@@ -78,7 +78,7 @@ const pressableAccessibleRequired: Rule = {
  */
 const pressableLabelRequired: Rule = {
   id: 'pressable-label-required',
-  matcher: (node) => isPressable(node.type),
+  matcher: (node) => isPressable(node),
   assertion: (node) => {
     const textNode = findTextNode(node);
     const textContent = textNode?.props?.children;
@@ -163,7 +163,7 @@ const adjustableValueRequired: Rule = {
  */
 const linkRoleRequired: Rule = {
   id: 'link-role-required',
-  matcher: (node) => isText(node.type),
+  matcher: (node) => isText(node),
   assertion: (node) => {
     const { onPress, accessibilityRole } = node.props;
     if (onPress) {
@@ -183,7 +183,7 @@ const linkRoleRequired: Rule = {
  */
 const linkRoleMisused: Rule = {
   id: 'link-role-misused',
-  matcher: (node) => isText(node.type),
+  matcher: (node) => isText(node),
   assertion: (node) => {
     const { onPress, accessibilityRole } = node.props;
     if (!onPress) {
@@ -203,7 +203,7 @@ const linkRoleMisused: Rule = {
  */
 const noEmptyText: Rule = {
   id: 'no-empty-text',
-  matcher: (node) => isText(node.type),
+  matcher: (node) => isText(node),
   assertion: (node) => !!node.props?.children,
   help: {
     problem: "This text node doesn't contain text and so no accessibility label can be inferred",

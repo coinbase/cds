@@ -188,11 +188,14 @@ describe('Button', () => {
       </DefaultThemeProvider>,
     );
 
-    const text = screen.UNSAFE_getByType(Text);
-    expect(text.props.font).toBe('body');
-    expect(text.props.fontFamily).toBe('title4');
-    expect(text.props.fontSize).toBe('caption');
-    expect(text.props.fontWeight).toBe('label1');
-    expect(text.props.lineHeight).toBe('display3');
+    const textWrapper = screen
+      .UNSAFE_getAllByProps({ testID: 'text-headline' })
+      .find((node) => 'font' in node.props && 'fontFamily' in node.props);
+    expect(textWrapper).toBeTruthy();
+    expect(textWrapper!.props.font).toBe('body');
+    expect(textWrapper!.props.fontFamily).toBe('title4');
+    expect(textWrapper!.props.fontSize).toBe('caption');
+    expect(textWrapper!.props.fontWeight).toBe('label1');
+    expect(textWrapper!.props.lineHeight).toBe('display3');
   });
 });
