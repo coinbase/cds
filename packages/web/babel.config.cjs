@@ -41,8 +41,10 @@ module.exports = {
         '**/__tests__/**',
         '**/__mocks__/**',
         '**/__fixtures__/**',
+        '**/__figma__/**',
         '**/*.stories.*',
         '**/*.test.*',
         '**/*.spec.*',
+        '**/*.figma.*',
       ],
 };
