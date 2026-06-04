@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { Text as NativeText } from 'react-native';
 
 import { Text, type TextBaseProps, type TextProps } from './Text';
@@ -20,9 +20,12 @@ export type TextTitle2Props = TextProps;
  * @deprecationExpectedRemoval v10
  */
 export const TextTitle2 = memo(
-  forwardRef<NativeText, TextTitle2Props>(
-    ({ accessibilityRole = 'header', font = 'title2', ...props }, ref) => (
-      <Text ref={ref} accessibilityRole={accessibilityRole} font={font} {...props} />
-    ),
-  ),
+  ({
+    ref,
+    accessibilityRole = 'header',
+    font = 'title2',
+    ...props
+  }: TextTitle2Props & {
+    ref?: React.Ref<NativeText>;
+  }) => <Text ref={ref} accessibilityRole={accessibilityRole} font={font} {...props} />,
 );

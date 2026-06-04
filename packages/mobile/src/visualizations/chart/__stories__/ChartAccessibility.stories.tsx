@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import type { View } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
@@ -503,7 +503,13 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
   );
 
   const BTCTab: TabComponent = memo(
-    forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
+    ({
+      ref,
+      label,
+      ...props
+    }: SegmentedTabProps & {
+      ref?: React.Ref<View>;
+    }) => {
       const { activeTab } = useTabsContext();
       const isActive = activeTab?.id === props.id;
       return (
@@ -517,7 +523,7 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
           {...props}
         />
       );
-    }),
+    },
   );
   const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
     <PeriodSelectorActiveIndicator

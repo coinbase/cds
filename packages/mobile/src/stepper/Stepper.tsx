@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { WithTimingConfig } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
@@ -274,209 +274,209 @@ type StepperComponent = <Metadata extends Record<string, unknown> = Record<strin
 ) => React.ReactElement;
 
 const StepperBase = memo(
-  forwardRef(
-    <Metadata extends Record<string, unknown> = Record<string, unknown>>(
-      _props: StepperProps<Metadata>,
-      ref: React.Ref<View>,
-    ) => {
-      const mergedProps = useComponentConfig('Stepper', _props);
-      const {
-        direction,
-        activeStepId,
-        steps,
-        complete,
-        style,
-        completedStepAccessibilityLabel = 'Complete',
-        styles,
-        gap = direction === 'vertical' ? undefined : horizontalStepGap,
-        accessibilityLabel: accessibilityLabelProp,
-        StepperStepComponent = direction === 'vertical'
-          ? (DefaultStepperStepVertical as StepperStepComponent<Metadata>)
-          : (DefaultStepperStepHorizontal as StepperStepComponent<Metadata>),
-        StepperSubstepContainerComponent = direction === 'vertical'
-          ? (DefaultStepperSubstepContainerVertical as StepperSubstepContainerComponent<Metadata>)
-          : (DefaultStepperSubstepContainerHorizontal as StepperSubstepContainerComponent<Metadata>),
-        // never show labels below the steps on mobile
-        StepperLabelComponent = direction === 'vertical'
-          ? (DefaultStepperLabelVertical as StepperLabelComponent<Metadata>)
-          : null,
-        StepperProgressComponent = direction === 'vertical'
-          ? (DefaultStepperProgressVertical as StepperProgressComponent<Metadata>)
-          : (DefaultStepperProgressHorizontal as StepperProgressComponent<Metadata>),
-        StepperIconComponent = direction === 'vertical'
-          ? (DefaultStepperIconVertical as StepperIconComponent<Metadata>)
-          : null,
-        StepperHeaderComponent = direction === 'vertical'
-          ? null
-          : (DefaultStepperHeaderHorizontal as StepperHeaderComponent<Metadata>),
-        progressTimingConfig = defaultProgressTimingConfig,
-        animate = true,
-        disableAnimateOnMount,
-        ...props
-      } = mergedProps;
-      const flatStepIds = useMemo(() => flattenSteps(steps).map((step) => step.id), [steps]);
+  <Metadata extends Record<string, unknown> = Record<string, unknown>>({
+    ref,
+    ..._props
+  }: StepperProps<Metadata> & {
+    ref?: React.Ref<View>;
+  }) => {
+    const mergedProps = useComponentConfig('Stepper', _props);
+    const {
+      direction,
+      activeStepId,
+      steps,
+      complete,
+      style,
+      completedStepAccessibilityLabel = 'Complete',
+      styles,
+      gap = direction === 'vertical' ? undefined : horizontalStepGap,
+      accessibilityLabel: accessibilityLabelProp,
+      StepperStepComponent = direction === 'vertical'
+        ? (DefaultStepperStepVertical as StepperStepComponent<Metadata>)
+        : (DefaultStepperStepHorizontal as StepperStepComponent<Metadata>),
+      StepperSubstepContainerComponent = direction === 'vertical'
+        ? (DefaultStepperSubstepContainerVertical as StepperSubstepContainerComponent<Metadata>)
+        : (DefaultStepperSubstepContainerHorizontal as StepperSubstepContainerComponent<Metadata>),
+      // never show labels below the steps on mobile
+      StepperLabelComponent = direction === 'vertical'
+        ? (DefaultStepperLabelVertical as StepperLabelComponent<Metadata>)
+        : null,
+      StepperProgressComponent = direction === 'vertical'
+        ? (DefaultStepperProgressVertical as StepperProgressComponent<Metadata>)
+        : (DefaultStepperProgressHorizontal as StepperProgressComponent<Metadata>),
+      StepperIconComponent = direction === 'vertical'
+        ? (DefaultStepperIconVertical as StepperIconComponent<Metadata>)
+        : null,
+      StepperHeaderComponent = direction === 'vertical'
+        ? null
+        : (DefaultStepperHeaderHorizontal as StepperHeaderComponent<Metadata>),
+      progressTimingConfig = defaultProgressTimingConfig,
+      animate = true,
+      disableAnimateOnMount,
+      ...props
+    } = mergedProps;
+    const flatStepIds = useMemo(() => flattenSteps(steps).map((step) => step.id), [steps]);
 
-      // Derive activeStep from activeStepId
-      const activeStep = useMemo(() => {
-        if (!activeStepId) return null;
-        return flattenSteps(steps).find((step) => step.id === activeStepId) || null;
-      }, [activeStepId, steps]);
+    // Derive activeStep from activeStepId
+    const activeStep = useMemo(() => {
+      if (!activeStepId) return null;
+      return flattenSteps(steps).find((step) => step.id === activeStepId) || null;
+    }, [activeStepId, steps]);
 
-      const [activeStepLabelElement, setActiveStepLabelElement] = useState<View | null>(null);
+    const [activeStepLabelElement, setActiveStepLabelElement] = useState<View | null>(null);
 
-      const activeFlatStepIndex = activeStep ? flatStepIds.indexOf(activeStep.id) : -1;
+    const activeFlatStepIndex = activeStep ? flatStepIds.indexOf(activeStep.id) : -1;
 
-      const { rootStyle, stepStyles } = useMemo(() => {
-        const { root, ...stepStyles } = styles ?? {};
-        const rootStyle = [style, root];
-        return { rootStyle, stepStyles };
-      }, [styles, style]);
+    const { rootStyle, stepStyles } = useMemo(() => {
+      const { root, ...stepStyles } = styles ?? {};
+      const rootStyle = [style, root];
+      return { rootStyle, stepStyles };
+    }, [styles, style]);
 
-      const accessibilityLabel = useMemo(() => {
-        if (accessibilityLabelProp) return accessibilityLabelProp;
-        if (!activeStep) return 'No active step';
+    const accessibilityLabel = useMemo(() => {
+      if (accessibilityLabelProp) return accessibilityLabelProp;
+      if (!activeStep) return 'No active step';
 
-        const pagination = `${activeFlatStepIndex + 1} of ${flatStepIds.length}`;
-        const stepLabel = typeof activeStep.label === 'string' ? activeStep.label : null;
-        const baseLabel =
-          activeStep.accessibilityLabel ?? stepLabel ?? `Step ${activeFlatStepIndex + 1}`;
-        return `${baseLabel} ${pagination}`;
-      }, [activeStep, activeFlatStepIndex, flatStepIds.length, accessibilityLabelProp]);
+      const pagination = `${activeFlatStepIndex + 1} of ${flatStepIds.length}`;
+      const stepLabel = typeof activeStep.label === 'string' ? activeStep.label : null;
+      const baseLabel =
+        activeStep.accessibilityLabel ?? stepLabel ?? `Step ${activeFlatStepIndex + 1}`;
+      return `${baseLabel} ${pagination}`;
+    }, [activeStep, activeFlatStepIndex, flatStepIds.length, accessibilityLabelProp]);
 
-      /*
-        Due to the possibility of null sub components, the root elements ends up being the best experience in certain cases.
-        Specifically, a horizontal stepper or a vertical stepper with no labels.
-      */
-      const isRootAccessible = direction === 'horizontal' || StepperLabelComponent === null;
+    /*
+      Due to the possibility of null sub components, the root elements ends up being the best experience in certain cases.
+      Specifically, a horizontal stepper or a vertical stepper with no labels.
+    */
+    const isRootAccessible = direction === 'horizontal' || StepperLabelComponent === null;
 
-      const activeStepIndex = useMemo(() => {
-        return activeStepId
-          ? steps.findIndex(
-              (step) =>
-                step.id === activeStepId || containsStep({ step, targetStepId: activeStepId }),
-            )
-          : -1;
-      }, [activeStepId, steps]);
+    const activeStepIndex = useMemo(() => {
+      return activeStepId
+        ? steps.findIndex(
+            (step) =>
+              step.id === activeStepId || containsStep({ step, targetStepId: activeStepId }),
+          )
+        : -1;
+    }, [activeStepId, steps]);
 
-      // The effective cascade target: when complete, fill all steps up to the last one.
-      // Otherwise, fill up to activeStepIndex.
-      const cascadeTarget = complete ? steps.length - 1 : activeStepIndex;
+    // The effective cascade target: when complete, fill all steps up to the last one.
+    // Otherwise, fill up to activeStepIndex.
+    const cascadeTarget = complete ? steps.length - 1 : activeStepIndex;
 
-      // Cascade animation state: advances one step at a time toward cascadeTarget.
-      // When disableAnimateOnMount is false (default), start unfilled (-1) so the
-      // cascade animates bars one-at-a-time up to the target on mount.
-      const [filledStepIndex, setFilledStepIndex] = useState(() =>
-        disableAnimateOnMount ? cascadeTarget : -1,
-      );
-      const targetStepIndexRef = useRef(cascadeTarget);
+    // Cascade animation state: advances one step at a time toward cascadeTarget.
+    // When disableAnimateOnMount is false (default), start unfilled (-1) so the
+    // cascade animates bars one-at-a-time up to the target on mount.
+    const [filledStepIndex, setFilledStepIndex] = useState(() =>
+      disableAnimateOnMount ? cascadeTarget : -1,
+    );
+    const targetStepIndexRef = useRef(cascadeTarget);
 
-      useEffect(() => {
-        targetStepIndexRef.current = cascadeTarget;
+    useEffect(() => {
+      targetStepIndexRef.current = cascadeTarget;
 
-        if (!animate) {
-          setFilledStepIndex(cascadeTarget);
-          return;
-        }
+      if (!animate) {
+        setFilledStepIndex(cascadeTarget);
+        return;
+      }
 
-        // Advance one step immediately to kick off the cascade
+      // Advance one step immediately to kick off the cascade
+      setFilledStepIndex((prev) => {
+        if (prev === cascadeTarget) return prev;
+        return prev < cascadeTarget ? prev + 1 : prev - 1;
+      });
+
+      // Continue advancing on a fixed interval for fluid, overlapping springs
+      const interval = setInterval(() => {
         setFilledStepIndex((prev) => {
-          if (prev === cascadeTarget) return prev;
-          return prev < cascadeTarget ? prev + 1 : prev - 1;
+          const target = targetStepIndexRef.current;
+          if (prev === target) return prev;
+          return prev < target ? prev + 1 : prev - 1;
         });
+      }, cascadeStaggerMs);
 
-        // Continue advancing on a fixed interval for fluid, overlapping springs
-        const interval = setInterval(() => {
-          setFilledStepIndex((prev) => {
-            const target = targetStepIndexRef.current;
-            if (prev === target) return prev;
-            return prev < target ? prev + 1 : prev - 1;
-          });
-        }, cascadeStaggerMs);
+      return () => clearInterval(interval);
+    }, [cascadeTarget, animate]);
 
-        return () => clearInterval(interval);
-      }, [cascadeTarget, animate]);
+    // Compute progress for each step: 1 if filled, 0 if not
+    const getStepProgress = useCallback(
+      (index: number) => {
+        if (!animate) {
+          if (complete) return 1;
+          if (activeStepIndex < 0) return 0;
+          return index <= activeStepIndex ? 1 : 0;
+        }
+        if (filledStepIndex < 0) return 0;
+        return index <= filledStepIndex ? 1 : 0;
+      },
+      [complete, animate, activeStepIndex, filledStepIndex],
+    );
 
-      // Compute progress for each step: 1 if filled, 0 if not
-      const getStepProgress = useCallback(
-        (index: number) => {
-          if (!animate) {
-            if (complete) return 1;
-            if (activeStepIndex < 0) return 0;
-            return index <= activeStepIndex ? 1 : 0;
-          }
-          if (filledStepIndex < 0) return 0;
-          return index <= filledStepIndex ? 1 : 0;
-        },
-        [complete, animate, activeStepIndex, filledStepIndex],
-      );
+    return (
+      <VStack
+        ref={ref}
+        accessibilityLabel={accessibilityLabel}
+        accessible={isRootAccessible}
+        style={rootStyle}
+        {...props}
+      >
+        {StepperHeaderComponent && (
+          <StepperHeaderComponent
+            activeStep={activeStep}
+            complete={complete}
+            disableAnimateOnMount={disableAnimateOnMount}
+            flatStepIds={flatStepIds}
+            style={styles?.header}
+          />
+        )}
+        <Box flexDirection={direction === 'vertical' ? 'column' : 'row'} gap={gap}>
+          {steps.map((step, index) => {
+            const isDescendentActive = activeStepId
+              ? containsStep({ step, targetStepId: activeStepId })
+              : false;
+            const RenderedStepComponent = step.Component ?? StepperStepComponent;
 
-      return (
-        <VStack
-          ref={ref}
-          accessibilityLabel={accessibilityLabel}
-          accessible={isRootAccessible}
-          style={rootStyle}
-          {...props}
-        >
-          {StepperHeaderComponent && (
-            <StepperHeaderComponent
-              activeStep={activeStep}
-              complete={complete}
-              disableAnimateOnMount={disableAnimateOnMount}
-              flatStepIds={flatStepIds}
-              style={styles?.header}
-            />
-          )}
-          <Box flexDirection={direction === 'vertical' ? 'column' : 'row'} gap={gap}>
-            {steps.map((step, index) => {
-              const isDescendentActive = activeStepId
-                ? containsStep({ step, targetStepId: activeStepId })
-                : false;
-              const RenderedStepComponent = step.Component ?? StepperStepComponent;
+            if (!RenderedStepComponent) return null;
 
-              if (!RenderedStepComponent) return null;
-
-              return (
-                <RenderedStepComponent
-                  key={step.id}
-                  StepperIconComponent={StepperIconComponent}
-                  StepperLabelComponent={StepperLabelComponent}
-                  StepperProgressComponent={StepperProgressComponent}
-                  StepperStepComponent={StepperStepComponent}
-                  StepperSubstepContainerComponent={StepperSubstepContainerComponent}
-                  active={!complete && activeStepId ? step.id === activeStepId : false}
-                  activeStepId={activeStepId}
-                  activeStepLabelElement={activeStepLabelElement}
-                  animate={animate}
-                  complete={complete}
-                  completedStepAccessibilityLabel={completedStepAccessibilityLabel}
-                  depth={0}
-                  disableAnimateOnMount={disableAnimateOnMount}
-                  flatStepIds={flatStepIds}
-                  isDescendentActive={isDescendentActive}
-                  parentStep={null}
-                  progress={getStepProgress(index)}
-                  progressTimingConfig={progressTimingConfig}
-                  setActiveStepLabelElement={setActiveStepLabelElement}
-                  step={step}
-                  styles={stepStyles}
-                  visited={
-                    activeStepId
-                      ? isStepVisited({
-                          step,
-                          activeStepId,
-                          flatStepIds,
-                        })
-                      : false
-                  }
-                />
-              );
-            })}
-          </Box>
-        </VStack>
-      );
-    },
-  ),
+            return (
+              <RenderedStepComponent
+                key={step.id}
+                StepperIconComponent={StepperIconComponent}
+                StepperLabelComponent={StepperLabelComponent}
+                StepperProgressComponent={StepperProgressComponent}
+                StepperStepComponent={StepperStepComponent}
+                StepperSubstepContainerComponent={StepperSubstepContainerComponent}
+                active={!complete && activeStepId ? step.id === activeStepId : false}
+                activeStepId={activeStepId}
+                activeStepLabelElement={activeStepLabelElement}
+                animate={animate}
+                complete={complete}
+                completedStepAccessibilityLabel={completedStepAccessibilityLabel}
+                depth={0}
+                disableAnimateOnMount={disableAnimateOnMount}
+                flatStepIds={flatStepIds}
+                isDescendentActive={isDescendentActive}
+                parentStep={null}
+                progress={getStepProgress(index)}
+                progressTimingConfig={progressTimingConfig}
+                setActiveStepLabelElement={setActiveStepLabelElement}
+                step={step}
+                styles={stepStyles}
+                visited={
+                  activeStepId
+                    ? isStepVisited({
+                        step,
+                        activeStepId,
+                        flatStepIds,
+                      })
+                    : false
+                }
+              />
+            );
+          })}
+        </Box>
+      </VStack>
+    );
+  },
 );
 
 export const Stepper = StepperBase as StepperComponent;

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type { ForwardedRef } from 'react';
 import type {
   BlurEvent,
@@ -91,7 +91,12 @@ export type SearchInputProps = SearchInputBaseProps &
   };
 
 export const SearchInput = memo(
-  forwardRef((_props: SearchInputProps, ref: ForwardedRef<RNTextInput>) => {
+  ({
+    ref,
+    ..._props
+  }: SearchInputProps & {
+    ref?: React.Ref<RNTextInput>;
+  }) => {
     const mergedProps = useComponentConfig('SearchInput', _props);
     const {
       value,
@@ -215,5 +220,5 @@ export const SearchInput = memo(
         {...props}
       />
     );
-  }),
+  },
 );

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { View } from 'react-native';
 import Animated, {
@@ -120,85 +120,83 @@ export const SlideButtonHandleUnchecked = memo(
 );
 
 export const DefaultSlideButtonHandle = memo(
-  forwardRef<View, SlideButtonHandleProps>(
-    (
-      {
-        checked,
-        compact,
-        disabled,
-        style,
-        variant = 'primary',
-        startUncheckedNode,
-        endCheckedNode,
-        checkedLabel,
-        borderRadius,
-        borderTopLeftRadius,
-        borderTopRightRadius,
-        borderBottomLeftRadius,
-        borderBottomRightRadius,
-        ...props
-      },
-      ref,
-    ) => {
-      const backgroundColor = variants[variant].background;
+  ({
+    ref,
+    checked,
+    compact,
+    disabled,
+    style,
+    variant = 'primary',
+    startUncheckedNode,
+    endCheckedNode,
+    checkedLabel,
+    borderRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+    ...props
+  }: SlideButtonHandleProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const backgroundColor = variants[variant].background;
 
-      const checkedOpacity = useSharedValue(checked ? 1 : 0);
-      const uncheckedOpacity = useSharedValue(checked ? 0 : 1);
+    const checkedOpacity = useSharedValue(checked ? 1 : 0);
+    const uncheckedOpacity = useSharedValue(checked ? 0 : 1);
 
-      useEffect(() => {
-        if (checked) {
-          uncheckedOpacity.value = withSpring(0, slideButtonSpringConfig);
-          checkedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
-        } else {
-          checkedOpacity.value = 0;
-          uncheckedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
-        }
-      }, [checked, checkedOpacity, uncheckedOpacity]);
+    useEffect(() => {
+      if (checked) {
+        uncheckedOpacity.value = withSpring(0, slideButtonSpringConfig);
+        checkedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
+      } else {
+        checkedOpacity.value = 0;
+        uncheckedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
+      }
+    }, [checked, checkedOpacity, uncheckedOpacity]);
 
-      const containerStyle = useMemo(() => [styles.base, style], [style]);
-      const animatedCheckedStyle = useAnimatedStyle(
-        () => ({ opacity: checkedOpacity.value }),
-        [checkedOpacity],
-      );
-      const animatedUncheckedStyle = useAnimatedStyle(
-        () => ({ opacity: uncheckedOpacity.value }),
-        [uncheckedOpacity],
-      );
+    const containerStyle = useMemo(() => [styles.base, style], [style]);
+    const animatedCheckedStyle = useAnimatedStyle(
+      () => ({ opacity: checkedOpacity.value }),
+      [checkedOpacity],
+    );
+    const animatedUncheckedStyle = useAnimatedStyle(
+      () => ({ opacity: uncheckedOpacity.value }),
+      [uncheckedOpacity],
+    );
 
-      return (
-        <Pressable
-          ref={ref}
-          noScaleOnPress
-          background={backgroundColor}
-          borderBottomLeftRadius={borderBottomLeftRadius}
-          borderBottomRightRadius={borderBottomRightRadius}
-          borderRadius={borderRadius}
-          borderTopLeftRadius={borderTopLeftRadius}
-          borderTopRightRadius={borderTopRightRadius}
-          contentStyle={containerStyle}
-          disabled={disabled}
-          loading={checked}
-          {...props}
-        >
-          <Animated.View style={[styles.absoluteContainer, animatedCheckedStyle]}>
-            <SlideButtonHandleChecked
-              compact={compact}
-              disabled={disabled}
-              end={endCheckedNode}
-              label={checkedLabel}
-              variant={variant}
-            />
-          </Animated.View>
-          <Animated.View style={[styles.absoluteContainer, animatedUncheckedStyle]}>
-            <SlideButtonHandleUnchecked
-              compact={compact}
-              disabled={disabled}
-              start={startUncheckedNode}
-              variant={variant}
-            />
-          </Animated.View>
-        </Pressable>
-      );
-    },
-  ),
+    return (
+      <Pressable
+        ref={ref}
+        noScaleOnPress
+        background={backgroundColor}
+        borderBottomLeftRadius={borderBottomLeftRadius}
+        borderBottomRightRadius={borderBottomRightRadius}
+        borderRadius={borderRadius}
+        borderTopLeftRadius={borderTopLeftRadius}
+        borderTopRightRadius={borderTopRightRadius}
+        contentStyle={containerStyle}
+        disabled={disabled}
+        loading={checked}
+        {...props}
+      >
+        <Animated.View style={[styles.absoluteContainer, animatedCheckedStyle]}>
+          <SlideButtonHandleChecked
+            compact={compact}
+            disabled={disabled}
+            end={endCheckedNode}
+            label={checkedLabel}
+            variant={variant}
+          />
+        </Animated.View>
+        <Animated.View style={[styles.absoluteContainer, animatedUncheckedStyle]}>
+          <SlideButtonHandleUnchecked
+            compact={compact}
+            disabled={disabled}
+            start={startUncheckedNode}
+            variant={variant}
+          />
+        </Animated.View>
+      </Pressable>
+    );
+  },
 );

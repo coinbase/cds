@@ -47,7 +47,7 @@ export type TourStepArrowComponentProps = {
 };
 
 // ------------ SUBCOMPONENT TYPES ------------
-export type TourStepArrowComponent = React.ForwardRefExoticComponent<
+export type TourStepArrowComponent = React.FC<
   TourStepArrowComponentProps & { ref?: React.Ref<any> }
 >;
 

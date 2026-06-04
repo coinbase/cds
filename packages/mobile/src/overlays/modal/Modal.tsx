@@ -1,12 +1,4 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from 'react';
+import React, { memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { Modal as RNModal, Platform, StatusBar, StyleSheet } from 'react-native';
 import type { ModalProps as RNModalProps, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -50,7 +42,12 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Modal = memo(
-  forwardRef<ModalRefBaseProps, ModalProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: ModalProps & {
+    ref?: React.Ref<ModalRefBaseProps>;
+  }) => {
     const mergedProps = useComponentConfig('Modal', _props);
     const props = mergedProps;
     const {
@@ -134,7 +131,7 @@ export const Modal = memo(
         </RNModal>
       </OverlayContentContext.Provider>
     );
-  }),
+  },
 );
 
 const styles = StyleSheet.create({

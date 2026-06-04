@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
@@ -28,7 +28,12 @@ export type PageFooterBaseProps = SharedProps &
 export type PageFooterProps = PageFooterBaseProps & BoxProps;
 
 export const PageFooter = memo(
-  forwardRef((_props: PageFooterProps, ref: React.ForwardedRef<View>) => {
+  ({
+    ref,
+    ..._props
+  }: PageFooterProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('PageFooter', _props);
     const { action, legalText, ...props } = mergedProps;
     return (
@@ -53,5 +58,5 @@ export const PageFooter = memo(
         )}
       </Box>
     );
-  }),
+  },
 );

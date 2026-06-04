@@ -1,6 +1,5 @@
 import React, {
   cloneElement,
-  forwardRef,
   isValidElement,
   memo,
   useCallback,
@@ -132,7 +131,12 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
 };
 
 export const TextInput = memo(
-  forwardRef((_props: TextInputProps, ref: ForwardedRef<RNTextInput>) => {
+  ({
+    ref,
+    ..._props
+  }: TextInputProps & {
+    ref?: React.Ref<RNTextInput>;
+  }) => {
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
@@ -384,5 +388,5 @@ export const TextInput = memo(
         width={width}
       />
     );
-  }),
+  },
 );

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 
 import type { ChipBaseProps } from '../../chips/ChipProps';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
@@ -33,37 +33,37 @@ export type SelectChipProps<
  * Supports both single and multi selection via Select's `type` prop.
  */
 const SelectChipComponent = memo(
-  forwardRef(
-    <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      _props: SelectChipProps<Type, SelectOptionValue>,
-      ref: React.Ref<SelectRef>,
-    ) => {
-      const mergedProps = useComponentConfig('SelectChip', _props);
-      const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
-      const SelectChipControlComponent = useCallback(
-        (props: SelectControlProps<Type, SelectOptionValue>) => {
-          return (
-            <SelectChipControl
-              displayValue={displayValue}
-              invertColorScheme={invertColorScheme}
-              maxWidth={maxWidth}
-              numberOfLines={numberOfLines}
-              {...props}
-            />
-          );
-        },
-        [displayValue, invertColorScheme, maxWidth, numberOfLines],
-      );
+  <Type extends SelectType = 'single', SelectOptionValue extends string = string>({
+    ref,
+    ..._props
+  }: SelectChipProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<SelectRef>;
+  }) => {
+    const mergedProps = useComponentConfig('SelectChip', _props);
+    const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
+    const SelectChipControlComponent = useCallback(
+      (props: SelectControlProps<Type, SelectOptionValue>) => {
+        return (
+          <SelectChipControl
+            displayValue={displayValue}
+            invertColorScheme={invertColorScheme}
+            maxWidth={maxWidth}
+            numberOfLines={numberOfLines}
+            {...props}
+          />
+        );
+      },
+      [displayValue, invertColorScheme, maxWidth, numberOfLines],
+    );
 
-      return (
-        <Select<Type, SelectOptionValue>
-          ref={ref}
-          SelectControlComponent={SelectChipControlComponent}
-          {...props}
-        />
-      );
-    },
-  ),
+    return (
+      <Select<Type, SelectOptionValue>
+        ref={ref}
+        SelectControlComponent={SelectChipControlComponent}
+        {...props}
+      />
+    );
+  },
 );
 
 SelectChipComponent.displayName = 'SelectChip';

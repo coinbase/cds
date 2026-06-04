@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import {
   type GestureResponderEvent,
   Pressable,
@@ -38,66 +38,64 @@ type DefaultTabComponent = <TabId extends string = string>(
 ) => React.ReactElement;
 
 const DefaultTabComponent = memo(
-  forwardRef(
-    <TabId extends string>(
-      {
-        id,
-        label,
-        disabled: disabledProp,
-        onPress,
-        count,
-        max,
-        accessibilityLabel,
-        style,
-        testID,
-        color = 'fg',
-        activeColor = 'fgPrimary',
-        ...props
-      }: DefaultTabProps<TabId>,
-      ref: React.ForwardedRef<View>,
-    ) => {
-      const theme = useTheme();
-      const {
-        activeTab,
-        updateActiveTab,
-        disabled: allTabsDisabled,
-      } = useTabsContext<TabId, TabValue<TabId> & DefaultTabLabelProps>();
-      const isActive = activeTab?.id === id;
-      const isDisabled = disabledProp || allTabsDisabled;
+  <TabId extends string>({
+    ref,
+    id,
+    label,
+    disabled: disabledProp,
+    onPress,
+    count,
+    max,
+    accessibilityLabel,
+    style,
+    testID,
+    color = 'fg',
+    activeColor = 'fgPrimary',
+    ...props
+  }: DefaultTabProps<TabId> & {
+    ref?: React.Ref<View>;
+  }) => {
+    const theme = useTheme();
+    const {
+      activeTab,
+      updateActiveTab,
+      disabled: allTabsDisabled,
+    } = useTabsContext<TabId, TabValue<TabId> & DefaultTabLabelProps>();
+    const isActive = activeTab?.id === id;
+    const isDisabled = disabledProp || allTabsDisabled;
 
-      const handlePress = useCallback(
-        (event: GestureResponderEvent) => {
-          updateActiveTab(id);
-          onPress?.(id, event);
-        },
-        [id, onPress, updateActiveTab],
-      );
+    const handlePress = useCallback(
+      (event: GestureResponderEvent) => {
+        updateActiveTab(id);
+        onPress?.(id, event);
+      },
+      [id, onPress, updateActiveTab],
+    );
 
-      return (
-        <Pressable
-          ref={ref}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole="tab"
-          accessibilityState={{ disabled: isDisabled, selected: isActive }}
-          disabled={isDisabled}
-          onPress={handlePress}
-          style={[
-            disabledProp && !allTabsDisabled ? { opacity: accessibleOpacityDisabled } : undefined,
-            style,
-          ]}
-          testID={testID}
-          {...props}
-        >
-          <HStack alignItems="center" gap={0.5}>
-            <Text color={isActive ? activeColor : color} font="headline" paddingY={2}>
-              {label}
-            </Text>
-            {!!count && <DotCount count={count} max={max} />}
-          </HStack>
-        </Pressable>
-      );
-    },
-  ),
+    return (
+      <Pressable
+        ref={ref}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="tab"
+        accessibilityState={{ disabled: isDisabled, selected: isActive }}
+        disabled={isDisabled}
+        onPress={handlePress}
+        style={[
+          disabledProp && !allTabsDisabled ? { opacity: accessibleOpacityDisabled } : undefined,
+          style,
+        ]}
+        testID={testID}
+        {...props}
+      >
+        <HStack alignItems="center" gap={0.5}>
+          <Text color={isActive ? activeColor : color} font="headline" paddingY={2}>
+            {label}
+          </Text>
+          {!!count && <DotCount count={count} max={max} />}
+        </HStack>
+      </Pressable>
+    );
+  },
 );
 
 DefaultTabComponent.displayName = 'DefaultTab';

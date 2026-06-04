@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import {
   type LayoutChangeEvent,
   type StyleProp,
@@ -404,7 +404,12 @@ export type RollingNumberProps = TextProps &
   };
 
 export const RollingNumber = memo(
-  forwardRef<View, RollingNumberProps>((_props: RollingNumberProps, ref) => {
+  ({
+    ref,
+    ..._props
+  }: RollingNumberProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('RollingNumber', _props);
     const {
       value,
@@ -736,5 +741,5 @@ export const RollingNumber = memo(
         </HStack>
       </HStack>
     );
-  }),
+  },
 );

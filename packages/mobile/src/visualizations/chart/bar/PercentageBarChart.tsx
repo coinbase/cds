@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import type { BarChartBaseProps, BarChartProps } from './BarChart';
@@ -78,76 +78,74 @@ export type PercentageBarChartProps = PercentageBarChartBaseProps &
   >;
 
 export const PercentageBarChart = memo(
-  forwardRef<View, PercentageBarChartProps>(
-    (
-      {
-        series,
-        layout = 'horizontal',
-        roundBaseline = true,
-        inset = 0,
-        transitions,
-        xAxis,
-        yAxis,
-        testID,
-        children,
-        ...props
-      },
-      ref,
-    ) => {
-      const barSeries = useMemo(() => {
-        const groupCount = Math.max(
-          0,
-          ...(series?.map(({ data }) => (typeof data === 'number' ? 1 : data.length)) ?? []),
-        );
-
-        const totals = Array.from(
-          { length: groupCount },
-          (_, i) =>
-            series?.reduce((sum, { data }) => sum + (unwrapSeriesDataValue(data, i) ?? 0), 0) ?? 0,
-        );
-
-        return series?.map((s) => ({
-          ...s,
-          data: Array.from({ length: groupCount }, (_, i) => {
-            const val = unwrapSeriesDataValue(s.data, i);
-            return val != null && totals[i] > 0 ? (val / totals[i]) * 100 : null;
-          }),
-        }));
-      }, [series]);
-
-      const isHorizontalLayout = layout === 'horizontal';
-
-      const xAxisConfig: BarChartProps['xAxis'] = useMemo(() => {
-        return isHorizontalLayout
-          ? { domain: { min: 0, max: 100 }, domainLimit: 'strict', ...xAxis }
-          : { categoryPadding: 0, ...xAxis };
-      }, [isHorizontalLayout, xAxis]);
-
-      const yAxisConfig: BarChartProps['yAxis'] = useMemo(() => {
-        return isHorizontalLayout
-          ? { categoryPadding: 0, ...yAxis }
-          : { domain: { min: 0, max: 100 }, domainLimit: 'strict', ...yAxis };
-      }, [isHorizontalLayout, yAxis]);
-
-      return (
-        <BarChart
-          ref={ref}
-          stacked
-          inset={inset}
-          layout={layout}
-          roundBaseline={roundBaseline}
-          series={barSeries}
-          testID={testID}
-          transitions={transitions}
-          xAxis={xAxisConfig}
-          yAxis={yAxisConfig}
-          {...props}
-        >
-          {children}
-        </BarChart>
+  ({
+    ref,
+    series,
+    layout = 'horizontal',
+    roundBaseline = true,
+    inset = 0,
+    transitions,
+    xAxis,
+    yAxis,
+    testID,
+    children,
+    ...props
+  }: PercentageBarChartProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const barSeries = useMemo(() => {
+      const groupCount = Math.max(
+        0,
+        ...(series?.map(({ data }) => (typeof data === 'number' ? 1 : data.length)) ?? []),
       );
-    },
-  ),
+
+      const totals = Array.from(
+        { length: groupCount },
+        (_, i) =>
+          series?.reduce((sum, { data }) => sum + (unwrapSeriesDataValue(data, i) ?? 0), 0) ?? 0,
+      );
+
+      return series?.map((s) => ({
+        ...s,
+        data: Array.from({ length: groupCount }, (_, i) => {
+          const val = unwrapSeriesDataValue(s.data, i);
+          return val != null && totals[i] > 0 ? (val / totals[i]) * 100 : null;
+        }),
+      }));
+    }, [series]);
+
+    const isHorizontalLayout = layout === 'horizontal';
+
+    const xAxisConfig: BarChartProps['xAxis'] = useMemo(() => {
+      return isHorizontalLayout
+        ? { domain: { min: 0, max: 100 }, domainLimit: 'strict', ...xAxis }
+        : { categoryPadding: 0, ...xAxis };
+    }, [isHorizontalLayout, xAxis]);
+
+    const yAxisConfig: BarChartProps['yAxis'] = useMemo(() => {
+      return isHorizontalLayout
+        ? { categoryPadding: 0, ...yAxis }
+        : { domain: { min: 0, max: 100 }, domainLimit: 'strict', ...yAxis };
+    }, [isHorizontalLayout, yAxis]);
+
+    return (
+      <BarChart
+        ref={ref}
+        stacked
+        inset={inset}
+        layout={layout}
+        roundBaseline={roundBaseline}
+        series={barSeries}
+        testID={testID}
+        transitions={transitions}
+        xAxis={xAxisConfig}
+        yAxis={yAxisConfig}
+        {...props}
+      >
+        {children}
+      </BarChart>
+    );
+  },
 );
 
 PercentageBarChart.displayName = 'PercentageBarChart';

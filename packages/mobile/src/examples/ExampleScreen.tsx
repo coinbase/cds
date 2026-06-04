@@ -62,46 +62,50 @@ export const Example = ({
   );
 };
 
-export const ExampleScreen = React.forwardRef<ScrollView, React.PropsWithChildren<BoxBaseProps>>(
-  ({ children, ...boxProps }, ref) => {
-    const theme = useTheme();
+export const ExampleScreen = ({
+  ref,
+  children,
+  ...boxProps
+}: React.PropsWithChildren<BoxBaseProps> & {
+  ref?: React.Ref<ScrollView>;
+}) => {
+  const theme = useTheme();
 
-    // Use ref to track count - this avoids stale closure issues when multiple
-    // Example components mount simultaneously
-    const exampleCountRef = useRef(0);
-    const registerExample = useCallback(() => {
-      exampleCountRef.current += 1;
-      return exampleCountRef.current;
-    }, []);
+  // Use ref to track count - this avoids stale closure issues when multiple
+  // Example components mount simultaneously
+  const exampleCountRef = useRef(0);
+  const registerExample = useCallback(() => {
+    exampleCountRef.current += 1;
+    return exampleCountRef.current;
+  }, []);
 
-    const context = useMemo(() => ({ registerExample }), [registerExample]);
-    return (
-      <ExampleContext.Provider value={context}>
-        <Box
-          borderedTop
-          background="bg"
-          borderColor="bgLineHeavy"
-          paddingX={gutter}
-          testID="mobile-playground-screen"
-          {...boxProps}
+  const context = useMemo(() => ({ registerExample }), [registerExample]);
+  return (
+    <ExampleContext.Provider value={context}>
+      <Box
+        borderedTop
+        background="bg"
+        borderColor="bgLineHeavy"
+        paddingX={gutter}
+        testID="mobile-playground-screen"
+        {...boxProps}
+      >
+        <ScrollView
+          ref={ref}
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="always"
+          persistentScrollbar={false}
+          showsVerticalScrollIndicator={false}
+          style={{
+            backgroundColor: theme.color.bg,
+            height: '100%',
+            paddingTop: theme.space[2],
+          }}
         >
-          <ScrollView
-            ref={ref}
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyboardShouldPersistTaps="always"
-            persistentScrollbar={false}
-            showsVerticalScrollIndicator={false}
-            style={{
-              backgroundColor: theme.color.bg,
-              height: '100%',
-              paddingTop: theme.space[2],
-            }}
-          >
-            {children}
-          </ScrollView>
-        </Box>
-      </ExampleContext.Provider>
-    );
-  },
-);
+          {children}
+        </ScrollView>
+      </Box>
+    </ExampleContext.Provider>
+  );
+};
 ExampleScreen.displayName = 'ExampleScreen';

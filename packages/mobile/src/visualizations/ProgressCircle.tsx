@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, type StyleProp, StyleSheet, type View, type ViewStyle } from 'react-native';
 import type { CircleProps } from 'react-native-svg';
 import { Circle, G, Svg } from 'react-native-svg';
@@ -151,7 +151,12 @@ const ProgressCircleInner = memo(
 );
 
 export const ProgressCircle = memo(
-  forwardRef((_props: ProgressCircleProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: ProgressCircleProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('ProgressCircle', _props);
     const {
       indeterminate,
@@ -300,7 +305,7 @@ export const ProgressCircle = memo(
         }}
       </VisualizationContainer>
     );
-  }),
+  },
 );
 
 const styleSheet = StyleSheet.create({

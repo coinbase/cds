@@ -1,12 +1,4 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { memo, useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import {
   type StyleProp,
   StyleSheet,
@@ -54,23 +46,29 @@ export type CalendarPressableBaseProps = PressableBaseProps & {
 };
 
 const CalendarPressable = memo(
-  forwardRef<View, CalendarPressableBaseProps>(
-    ({ background = 'transparent', borderRadius = 1000, children, ...props }, ref) => {
-      return (
-        <Pressable
-          ref={ref}
-          background={background}
-          borderRadius={borderRadius}
-          contentStyle={styles.pressable}
-          height={CALENDAR_DAY_DIMENSION}
-          width={CALENDAR_DAY_DIMENSION}
-          {...props}
-        >
-          {children}
-        </Pressable>
-      );
-    },
-  ),
+  ({
+    ref,
+    background = 'transparent',
+    borderRadius = 1000,
+    children,
+    ...props
+  }: CalendarPressableBaseProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    return (
+      <Pressable
+        ref={ref}
+        background={background}
+        borderRadius={borderRadius}
+        contentStyle={styles.pressable}
+        height={CALENDAR_DAY_DIMENSION}
+        width={CALENDAR_DAY_DIMENSION}
+        {...props}
+      >
+        {children}
+      </Pressable>
+    );
+  },
 );
 
 CalendarPressable.displayName = 'CalendarPressable';
@@ -110,112 +108,110 @@ const getDayAccessibilityLabel = (date: Date, locale = 'en-US') =>
   })}`;
 
 const CalendarDay = memo(
-  forwardRef<View, CalendarDayProps>(
-    (
-      {
-        date,
-        active,
-        disabled,
-        highlighted,
-        isToday,
-        isCurrentMonth,
-        onPress,
-        disabledError,
-        todayAccessibilityHint,
-        highlightedDateAccessibilityHint,
-        style,
-      },
-      ref,
-    ) => {
-      const { locale } = useLocale();
-      const handlePress = useCallback(() => onPress?.(date), [date, onPress]);
-      const accessibilityLabel = useMemo(
-        () => getDayAccessibilityLabel(date, locale),
-        [date, locale],
+  ({
+    ref,
+    date,
+    active,
+    disabled,
+    highlighted,
+    isToday,
+    isCurrentMonth,
+    onPress,
+    disabledError,
+    todayAccessibilityHint,
+    highlightedDateAccessibilityHint,
+    style,
+  }: CalendarDayProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const { locale } = useLocale();
+    const handlePress = useCallback(() => onPress?.(date), [date, onPress]);
+    const accessibilityLabel = useMemo(
+      () => getDayAccessibilityLabel(date, locale),
+      [date, locale],
+    );
+    const accessibilityState = useMemo(
+      () => ({ disabled: !!disabled, selected: !!active }),
+      [disabled, active],
+    );
+
+    // Period between phrases gives screen readers a clear pause (e.g. "Today. Date unavailable").
+    const accessibilityHint = useMemo(() => {
+      const hints = [
+        isToday ? todayAccessibilityHint : undefined,
+        highlighted ? highlightedDateAccessibilityHint : undefined,
+        disabled ? disabledError : undefined,
+      ]
+        .filter(Boolean)
+        .join('. ');
+      return hints || undefined;
+    }, [
+      disabled,
+      highlighted,
+      isToday,
+      todayAccessibilityHint,
+      highlightedDateAccessibilityHint,
+      disabledError,
+    ]);
+
+    const isScreenReaderEnabled = useScreenReaderStatus();
+
+    // Expose disabled to the tooltip's accessibilityState so screen readers on both platforms
+    // announce the day button as disabled. We only set disabled when a screen reader is active:
+    // on some platforms a11y disabled is equivalent to the top-level disabled prop, so always
+    // setting it would block tooltip interactivity for users not using SRs.
+    const tooltipAccessibilityState = useMemo(
+      () => ({ disabled: isScreenReaderEnabled }),
+      [isScreenReaderEnabled],
+    );
+
+    if (!isCurrentMonth) {
+      return (
+        <Box aria-hidden={true} height={CALENDAR_DAY_DIMENSION} width={CALENDAR_DAY_DIMENSION} />
       );
-      const accessibilityState = useMemo(
-        () => ({ disabled: !!disabled, selected: !!active }),
-        [disabled, active],
-      );
+    }
 
-      // Period between phrases gives screen readers a clear pause (e.g. "Today. Date unavailable").
-      const accessibilityHint = useMemo(() => {
-        const hints = [
-          isToday ? todayAccessibilityHint : undefined,
-          highlighted ? highlightedDateAccessibilityHint : undefined,
-          disabled ? disabledError : undefined,
-        ]
-          .filter(Boolean)
-          .join('. ');
-        return hints || undefined;
-      }, [
-        disabled,
-        highlighted,
-        isToday,
-        todayAccessibilityHint,
-        highlightedDateAccessibilityHint,
-        disabledError,
-      ]);
+    const dayButton = (
+      <CalendarPressable
+        ref={ref}
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="button"
+        accessibilityState={accessibilityState}
+        background={active && !disabled ? 'bgPrimary' : undefined}
+        borderColor={isToday ? 'bgPrimary' : undefined}
+        bordered={isToday}
+        disabled={disabled}
+        feedback={disabled ? 'none' : 'light'}
+        onPress={handlePress}
+        style={style}
+      >
+        <Text
+          accessible={false}
+          align="center"
+          color={active && !disabled ? 'fgInverse' : highlighted ? 'fgPrimary' : undefined}
+          font="body"
+        >
+          {date.getDate()}
+        </Text>
+      </CalendarPressable>
+    );
 
-      const isScreenReaderEnabled = useScreenReaderStatus();
-
-      // Expose disabled to the tooltip's accessibilityState so screen readers on both platforms
-      // announce the day button as disabled. We only set disabled when a screen reader is active:
-      // on some platforms a11y disabled is equivalent to the top-level disabled prop, so always
-      // setting it would block tooltip interactivity for users not using SRs.
-      const tooltipAccessibilityState = useMemo(
-        () => ({ disabled: isScreenReaderEnabled }),
-        [isScreenReaderEnabled],
-      );
-
-      if (!isCurrentMonth) {
-        return (
-          <Box aria-hidden={true} height={CALENDAR_DAY_DIMENSION} width={CALENDAR_DAY_DIMENSION} />
-        );
-      }
-
-      const dayButton = (
-        <CalendarPressable
-          ref={ref}
+    if (disabled) {
+      return (
+        <Tooltip
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
-          accessibilityRole="button"
-          accessibilityState={accessibilityState}
-          background={active && !disabled ? 'bgPrimary' : undefined}
-          borderColor={isToday ? 'bgPrimary' : undefined}
-          bordered={isToday}
-          disabled={disabled}
-          feedback={disabled ? 'none' : 'light'}
-          onPress={handlePress}
-          style={style}
+          accessibilityState={tooltipAccessibilityState}
+          content={disabledError}
         >
-          <Text
-            accessible={false}
-            align="center"
-            color={active && !disabled ? 'fgInverse' : highlighted ? 'fgPrimary' : undefined}
-            font="body"
-          >
-            {date.getDate()}
-          </Text>
-        </CalendarPressable>
+          {dayButton}
+        </Tooltip>
       );
+    }
 
-      if (disabled) {
-        return (
-          <Tooltip
-            accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
-            accessibilityState={tooltipAccessibilityState}
-            content={disabledError}
-          >
-            {dayButton}
-          </Tooltip>
-        );
-      }
-
-      return dayButton;
-    },
-  ),
+    return dayButton;
+  },
 );
 
 CalendarDay.displayName = 'CalendarDay';
@@ -292,7 +288,12 @@ export type CalendarProps = CalendarBaseProps &
   };
 
 export const Calendar = memo(
-  forwardRef<CalendarRefHandle, CalendarProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: CalendarProps & {
+    ref?: React.Ref<CalendarRefHandle>;
+  }) => {
     const mergedProps = useComponentConfig('Calendar', _props);
     const {
       selectedDate,
@@ -536,7 +537,7 @@ export const Calendar = memo(
         </VStack>
       </VStack>
     );
-  }),
+  },
 );
 
 Calendar.displayName = 'Calendar';

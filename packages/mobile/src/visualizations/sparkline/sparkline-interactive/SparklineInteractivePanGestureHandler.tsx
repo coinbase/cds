@@ -26,8 +26,7 @@ export type SparklineInteractivePanGestureHandlerProps<Period extends string> = 
   children: React.ReactNode;
 };
 
-// Generics do not work with React.memo or forwardRef
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
+// Generics do not work with React.memo
 export const SparklineInteractivePanGestureHandler = function SparklineInteractivePanGestureHandler<
   Period extends string,
 >({

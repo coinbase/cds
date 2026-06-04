@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, type ReactElement, useMemo } from 'react';
+import React, { memo, type ReactElement, useMemo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
@@ -48,37 +48,42 @@ export type GroupProps = GroupBaseProps<BoxProps>;
  * @deprecationExpectedRemoval v8
  * @danger Make sure to add a `key` prop to each item.
  */
-export const Group = memo(
-  forwardRef<View, GroupProps>(function Group(
-    { children, direction = 'vertical', divider, gap, renderItem, ...boxProps },
-    forwardedRef,
-  ) {
-    const contents = useMemo(
-      () =>
-        flattenAndJoinNodes({
-          children,
-          gap,
-          divider,
-          renderItem,
-          direction,
-          Spacer,
-          ItemWrapper: Box,
-        }),
-      [children, direction, divider, gap, renderItem],
-    );
+export const Group = memo(function Group({
+  ref: forwardedRef,
+  children,
+  direction = 'vertical',
+  divider,
+  gap,
+  renderItem,
+  ...boxProps
+}: GroupProps & {
+  ref?: React.Ref<View>;
+}) {
+  const contents = useMemo(
+    () =>
+      flattenAndJoinNodes({
+        children,
+        gap,
+        divider,
+        renderItem,
+        direction,
+        Spacer,
+        ItemWrapper: Box,
+      }),
+    [children, direction, divider, gap, renderItem],
+  );
 
-    return (
-      <Box
-        ref={forwardedRef}
-        alignItems="stretch"
-        flexDirection={direction === 'horizontal' ? 'row' : 'column'}
-        flexWrap="nowrap"
-        {...boxProps}
-      >
-        {contents}
-      </Box>
-    );
-  }),
-);
+  return (
+    <Box
+      ref={forwardedRef}
+      alignItems="stretch"
+      flexDirection={direction === 'horizontal' ? 'row' : 'column'}
+      flexWrap="nowrap"
+      {...boxProps}
+    >
+      {contents}
+    </Box>
+  );
+});
 
 Group.displayName = 'Group';

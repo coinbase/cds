@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { type SharedProps } from '@coinbase/cds-common';
 
@@ -71,7 +71,12 @@ const styles = StyleSheet.create({
 });
 
 export const Numpad = memo(
-  forwardRef((_props: NumpadProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: NumpadProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Numpad', _props);
     const {
       separator = '.',
@@ -144,7 +149,7 @@ export const Numpad = memo(
         {action}
       </VStack>
     );
-  }),
+  },
 );
 
 const NumpadButton = memo(function NumpadButton({

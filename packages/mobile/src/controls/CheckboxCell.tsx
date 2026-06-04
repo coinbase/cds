@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import {
   Animated,
   type GestureResponderEvent,
@@ -47,10 +47,12 @@ export type CheckboxCellProps<CheckboxValue extends string> =
     };
   };
 
-const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue extends string>(
-  _props: CheckboxCellProps<CheckboxValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const CheckboxCellWithRef = function CheckboxCell<CheckboxValue extends string>({
+  ref,
+  ..._props
+}: CheckboxCellProps<CheckboxValue> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('CheckboxCell', _props);
   const {
     title,
@@ -252,9 +254,7 @@ const CheckboxCellWithRef = forwardRef(function CheckboxCell<CheckboxValue exten
       {pressed && <Animated.View style={mergedFocusRingStyle} />}
     </Box>
   );
-}) as <CheckboxValue extends string>(
-  props: CheckboxCellProps<CheckboxValue> & { ref?: React.ForwardedRef<View> },
-) => React.ReactElement;
+};
 
 export const CheckboxCell = memo(CheckboxCellWithRef) as typeof CheckboxCellWithRef &
   React.MemoExoticComponent<typeof CheckboxCellWithRef>;

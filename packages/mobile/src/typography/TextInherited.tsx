@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { Text as NativeText } from 'react-native';
 
 import { Text, type TextBaseProps, type TextProps } from './Text';
@@ -20,7 +20,11 @@ export type TextInheritedProps = TextProps;
  * @deprecationExpectedRemoval v10
  */
 export const TextInherited = memo(
-  forwardRef<NativeText, TextInheritedProps>(({ font = 'inherit', ...props }, ref) => (
-    <Text ref={ref} font={font} {...props} />
-  )),
+  ({
+    ref,
+    font = 'inherit',
+    ...props
+  }: TextInheritedProps & {
+    ref?: React.Ref<NativeText>;
+  }) => <Text ref={ref} font={font} {...props} />,
 );

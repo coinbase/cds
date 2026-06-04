@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
@@ -66,7 +66,12 @@ export type TagProps = TagBaseProps &
   Omit<BoxProps, 'color' | 'background' | 'children' | 'maxWidth'>;
 
 export const Tag = memo(
-  forwardRef((_props: TagProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: TagProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Tag', _props);
     const {
       children,
@@ -141,5 +146,5 @@ export const Tag = memo(
         ) : null}
       </Box>
     );
-  }),
+  },
 );
