@@ -115,6 +115,14 @@ describe('getAffectedPackages', () => {
       expect(result).not.toHaveProperty('web');
     });
 
+    it('ignores .d.ts declaration files', async () => {
+      getPublishableProjects.mockResolvedValue(makeProjects(['web', 'packages/web']));
+      const result = await getAffectedPackages({
+        changedFiles: ['packages/web/src/figma-code-connect.d.ts'],
+      });
+      expect(result).not.toHaveProperty('web');
+    });
+
     it('ignores .snap files', async () => {
       getPublishableProjects.mockResolvedValue(makeProjects(['web', 'packages/web']));
       const result = await getAffectedPackages({

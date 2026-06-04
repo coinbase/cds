@@ -10,7 +10,9 @@ const BUMP_REGEX =
 const IGNORE_CHANGED_FILES_REGEX =
   /^((CHANGELOG|README|MIGRATION|CONTRIBUTING)(\.md)?|[^/]+\.yml|OWNERS|project\.json|[^/]+\.[dD]ockerfile|tsconfig\.json|jest\.config\.js|\.?eslint.*)$/;
 
-const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$|__stories__)/;
+// `.d.ts` declaration files are dev-only ambient types (e.g. figma Code Connect,
+// jest globals). They never emit runtime code, so they should not drive version bumps.
+const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$|__stories__|\.d\.ts$)/;
 
 export async function getAffectedPackages(options = {}) {
   if (getCurrentCIBranch() === 'master') {

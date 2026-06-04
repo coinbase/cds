@@ -46,5 +46,8 @@ module.exports = {
         '**/*.test.*',
         '**/*.spec.*',
         '**/*.figma.*',
+        // Declaration-only files (e.g. figma Code Connect ambient types, jest globals)
+        // emit no runtime code; skip them so empty `*.d.js` files aren't published.
+        '**/*.d.ts',
       ],
 };
