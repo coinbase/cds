@@ -5,11 +5,8 @@ import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { RollingNumber } from '../RollingNumber/RollingNumber';
 
 const getSrOnlyText = (live: 'polite' | 'assertive') => {
-  const candidates = screen.UNSAFE_queryAllByProps({
-    accessibilityLiveRegion: live,
-    importantForAccessibility: 'yes',
-  });
-  return candidates[0] ?? null;
+  const candidates = screen.queryAllByText(/.+/);
+  return candidates.find((c) => c.props.accessibilityLiveRegion === live) ?? null;
 };
 
 const normalize = (s: unknown) => String(s).replace(/\s+/g, ' ').trim();
