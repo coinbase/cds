@@ -38,5 +38,5 @@ export default {
 />`,
   imports: ['import { ProgressBar } from "@coinbase/cds-web/visualizations"'],
   id: 'progress-bar',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };

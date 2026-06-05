@@ -41,5 +41,5 @@ export default {
 />`,
   imports: ['import { SegmentedTabs } from "@coinbase/cds-web/tabs"'],
   id: 'segmented-tabs',
-  metadata: { nestable: true },
+  metadata: { nestable: false },
 };

@@ -26,5 +26,5 @@ export default {
 />`,
   imports: ['import { SearchInput } from "@coinbase/cds-web/controls"'],
   id: 'search-input-desktop',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };

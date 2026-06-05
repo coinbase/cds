@@ -23,5 +23,5 @@ export default {
 />`,
   imports: ['import { TileButton } from "@coinbase/cds-web/buttons"'],
   id: 'tile-button',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };

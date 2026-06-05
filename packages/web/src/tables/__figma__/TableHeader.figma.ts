@@ -44,5 +44,5 @@ export default {
 </TableHeader>`,
   imports: ['import { TableHeader, TableRow, TableCell } from "@coinbase/cds-web/tables"'],
   id: 'table-header',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };

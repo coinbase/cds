@@ -62,5 +62,5 @@ export default {
 />`,
   imports: ['import { SectionHeader } from "@coinbase/cds-mobile/section-header"'],
   id: 'section-header-mobile',
-  metadata: { nestable: true },
+  metadata: { nestable: false },
 };

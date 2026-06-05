@@ -76,5 +76,5 @@ export default {
 />`,
   imports: ['import { ListCell } from "@coinbase/cds-web/cells"'],
   id: 'list-cell',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };
