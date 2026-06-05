@@ -485,6 +485,14 @@ export default tseslint.config(
       'jest/expect-expect': 'off',
     },
   },
+  // Reassure perf benchmarks use `measurePerformance` as their assertion; they intentionally
+  // have no `expect()` calls, so jest/expect-expect does not apply.
+  {
+    files: ['**/*.perf-test.{ts,tsx}'],
+    rules: {
+      'jest/expect-expect': 'off',
+    },
+  },
   {
     files: ['packages/migrator/src/transforms/**/*.ts'],
     ignores: ['packages/migrator/src/transforms/**/__tests__/**'],

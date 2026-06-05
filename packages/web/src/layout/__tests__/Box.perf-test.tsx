@@ -1,4 +1,4 @@
-/* eslint-disable jest/expect-expect */
+ 
 import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import { measurePerformance } from 'reassure';
 

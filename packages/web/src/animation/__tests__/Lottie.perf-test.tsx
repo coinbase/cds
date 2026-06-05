@@ -1,4 +1,4 @@
-/* eslint-disable jest/expect-expect */
+ 
 import { nux } from '@coinbase/cds-lottie-files/nux';
 import { measurePerformance } from 'reassure';
 

@@ -1,4 +1,4 @@
-/* eslint-disable jest/expect-expect */
+ 
 import { fireEvent, screen } from '@testing-library/react';
 import { measurePerformance } from 'reassure';
 

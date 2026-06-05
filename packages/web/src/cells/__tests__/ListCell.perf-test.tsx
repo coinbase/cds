@@ -1,4 +1,4 @@
-/* eslint-disable jest/expect-expect */
+ 
 import { measurePerformance } from 'reassure';
 
 import { CellMedia } from '../CellMedia';
