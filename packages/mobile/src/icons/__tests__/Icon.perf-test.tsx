@@ -1,4 +1,3 @@
- 
 import { measurePerformance } from 'reassure';
 
 import { Icon } from '../Icon';

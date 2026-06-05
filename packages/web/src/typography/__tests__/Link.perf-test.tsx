@@ -1,4 +1,3 @@
- 
 import { measurePerformance } from 'reassure';
 
 import { Link } from '../Link';

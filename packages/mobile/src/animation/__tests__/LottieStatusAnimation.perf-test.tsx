@@ -1,4 +1,3 @@
- 
 import { measurePerformance } from 'reassure';
 
 import { LottieStatusAnimation } from '../LottieStatusAnimation';

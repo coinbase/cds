@@ -1,4 +1,3 @@
- 
 import { measurePerformance } from 'reassure';
 
 import { CellMedia } from '../CellMedia';

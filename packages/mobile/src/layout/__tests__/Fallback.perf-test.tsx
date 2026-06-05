@@ -1,4 +1,3 @@
- 
 import { measurePerformance } from 'reassure';
 
 import { Fallback } from '../Fallback';

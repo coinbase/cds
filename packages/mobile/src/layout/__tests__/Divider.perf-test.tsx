@@ -1,4 +1,3 @@
- 
 import { measurePerformance } from 'reassure';
 
 import { Divider } from '../Divider';

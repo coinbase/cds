@@ -1,4 +1,3 @@
- 
 import { useCallback, useState } from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { measurePerformance } from 'reassure';

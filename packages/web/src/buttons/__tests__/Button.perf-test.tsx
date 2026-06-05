@@ -1,4 +1,3 @@
- 
 import { fireEvent, screen } from '@testing-library/react';
 import { measurePerformance } from 'reassure';
 
