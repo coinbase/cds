@@ -157,7 +157,10 @@ export const ProgressBar = memo(
           flexShrink={0}
           height="100%"
           justifyContent="center"
-          style={progressStyle}
+          style={[
+            { backgroundColor: !disabled ? theme.color[color] : theme.color.bgLineHeavy },
+            progressStyle,
+          ]}
           testID="cds-progress-bar"
           width="100%"
         />

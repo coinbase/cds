@@ -1,11 +1,12 @@
-import { memo } from 'react';
-import { animated, to } from '@react-spring/native';
+import { memo, useCallback, useEffect } from 'react';
+import type { LayoutChangeEvent } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { Box } from '../layout/Box';
 
 import type { StepperProgressComponent } from './Stepper';
 
-const AnimatedBox = animated(Box);
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
   function DefaultStepperProgressHorizontal({
@@ -19,7 +20,7 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
     progress,
     complete,
     isDescendentActive,
-    progressSpringConfig,
+    progressTimingConfig,
     animate,
     disableAnimateOnMount,
     style,
@@ -33,6 +34,24 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
     height = 4,
     ...props
   }) {
+    const containerWidth = useSharedValue(0);
+    const animatedProgress = useSharedValue(progress);
+
+    const handleLayout = useCallback(
+      (event: LayoutChangeEvent) => {
+        containerWidth.value = event.nativeEvent.layout.width;
+      },
+      [containerWidth],
+    );
+
+    useEffect(() => {
+      animatedProgress.value = withTiming(progress, progressTimingConfig);
+    }, [progress, progressTimingConfig, animatedProgress]);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      width: animatedProgress.value * containerWidth.value,
+    }));
+
     return (
       <Box
         accessibilityElementsHidden
@@ -40,6 +59,7 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
         borderRadius={borderRadius}
         flexGrow={1}
         height={height}
+        onLayout={handleLayout}
         style={style}
         {...props}
       >
@@ -57,7 +77,7 @@ export const DefaultStepperProgressHorizontal: StepperProgressComponent = memo(
           }
           borderRadius={borderRadius}
           height="100%"
-          width={to([progress], (width) => `${width * 100}%`)}
+          style={animatedStyle}
         />
       </Box>
     );

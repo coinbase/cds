@@ -1,3 +1,4 @@
+import pictogramSvgEsmMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/svgEsmMap';
 import pictogramVersionMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/versionMap';
 
 import {
@@ -7,7 +8,7 @@ import {
   type IllustrationDimensionsMap,
 } from './createIllustration';
 
-export const Pictogram = createIllustration('pictogram', pictogramVersionMap);
+export const Pictogram = createIllustration('pictogram', pictogramVersionMap, pictogramSvgEsmMap);
 
 export type PictogramBaseProps = IllustrationBaseProps<'pictogram'> &
   IllustrationA11yProps & {

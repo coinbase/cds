@@ -1,5 +1,5 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState } from 'react';
-import type { View } from 'react-native';
+import type { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { variants } from '@coinbase/cds-common/tokens/banner';
 import type {
@@ -16,7 +16,7 @@ import { Icon } from '../icons';
 import type { HStackProps } from '../layout';
 import { Box, HStack, VStack } from '../layout';
 import { Pressable } from '../system/Pressable';
-import { Link } from '../typography';
+import { Link, type LinkProps } from '../typography';
 import { Text } from '../typography/Text';
 
 export type BannerBaseProps = SharedProps & {
@@ -69,10 +69,52 @@ export type BannerBaseProps = SharedProps & {
   borderRadius?: ThemeVars.BorderRadius;
 };
 
-export type MobileBannerProps = BannerBaseProps & Omit<HStackProps, 'children'>;
+/**
+ * Canonical props type for Banner.
+ *
+ * Note: docs docgen expects a `${ComponentName}Props` export (for Banner -> BannerProps)
+ * to generate styles selector metadata used by the docs Styles tab.
+ */
+export type BannerProps = BannerBaseProps &
+  Omit<HStackProps, 'children'> & {
+    /** Slot-level styles for Banner. */
+    styles?: {
+      /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
+      root?: StyleProp<ViewStyle>;
+      /** Main content container (`HStack`) for banner body. */
+      content?: StyleProp<ViewStyle>;
+      /** Start icon wrapper. */
+      start?: StyleProp<ViewStyle>;
+      /** Right-side body wrapper containing middle content and actions. */
+      body?: StyleProp<ViewStyle>;
+      /** Middle content wrapper containing title/message/label region. */
+      middle?: StyleProp<ViewStyle>;
+      /**
+       * Label text style.
+       * Applies only when `label` is a string rendered by Banner.
+       * If `label` is a custom node, style that node directly.
+       */
+      label?: StyleProp<TextStyle>;
+      /**
+       * Actions row style.
+       * Applies only when at least one action (`primaryAction` or `secondaryAction`) is rendered.
+       */
+      actions?: StyleProp<ViewStyle>;
+      /**
+       * Dismiss button wrapper style.
+       * Applies only when `showDismiss` is true.
+       */
+      dismiss?: StyleProp<ViewStyle>;
+    };
+  };
+/**
+ * @deprecated Use `BannerProps` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
+export type MobileBannerProps = BannerProps;
 
 export const Banner = memo(
-  forwardRef(function Banner(_props: MobileBannerProps, forwardedRef: React.ForwardedRef<View>) {
+  forwardRef(function Banner(_props: BannerProps, forwardedRef: React.ForwardedRef<View>) {
     const mergedProps = useComponentConfig('Banner', _props);
     const {
       variant,
@@ -99,6 +141,7 @@ export const Banner = memo(
       marginEnd,
       marginBottom,
       marginStart,
+      styles,
       ...props
     } = mergedProps;
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -129,12 +172,12 @@ export const Banner = memo(
           font: 'label1',
           color: primaryActionColor,
           testID: `${testID}-action--primary`,
-          ...primaryAction.props,
+          ...(primaryAction.props as LinkProps),
         });
       } else {
         return React.cloneElement(primaryAction, {
           testID: `${testID}-action--primary`,
-          ...primaryAction.props,
+          ...(primaryAction.props as any), // we don't know the type of element this ReactNode is
         });
       }
     }, [primaryAction, primaryActionColor, testID]);
@@ -147,12 +190,12 @@ export const Banner = memo(
           font: 'label1',
           color: secondaryActionColor,
           testID: `${testID}-action--secondary`,
-          ...secondaryAction.props,
+          ...(secondaryAction.props as LinkProps),
         });
       } else {
         return React.cloneElement(secondaryAction, {
           testID: `${testID}-action--secondary`,
-          ...secondaryAction.props,
+          ...(secondaryAction.props as any), // we don't know the type of element this ReactNode is
         });
       }
     }, [secondaryAction, secondaryActionColor, testID]);
@@ -171,109 +214,110 @@ export const Banner = memo(
     );
 
     const borderBox = (
-      <Box dangerouslySetBackground={theme.color[borderColor]} pin="left" width={4} />
+      <Box pin="left" style={{ backgroundColor: theme.color[borderColor] }} width={4} />
     );
 
     const content = (
-      <Box {...(showDismiss ? {} : marginStyles)}>
-        <HStack
-          ref={forwardedRef}
-          background={background}
-          borderRadius={borderRadius}
-          gap={1}
-          paddingX={styleVariant === 'contextual' ? 2 : 3}
-          paddingY={2}
-          style={style}
-          testID={testID}
-          {...props}
+      <HStack
+        ref={forwardedRef}
+        background={background}
+        borderRadius={borderRadius}
+        gap={1}
+        paddingX={styleVariant === 'contextual' ? 2 : 3}
+        paddingY={2}
+        style={[style, styles?.content]}
+        testID={testID}
+        {...props}
+      >
+        {/** Start */}
+        <Box
+          accessibilityLabel={startIconAccessibilityLabel}
+          accessibilityRole="image"
+          accessible={!!startIconAccessibilityLabel}
+          style={styles?.start}
         >
-          {/** Start */}
-          <Box
-            accessibilityLabel={startIconAccessibilityLabel}
-            accessibilityRole="image"
-            accessible={!!startIconAccessibilityLabel}
-          >
-            <Icon
-              active={startIconActive}
-              color={iconColor}
-              name={startIcon}
-              paddingX={0.5}
-              paddingY={0.25}
-              size="s"
-              testID={`${testID}-icon`}
-            />
-          </Box>
-          <VStack
-            flexGrow={1}
-            flexShrink={1}
-            gap={2}
-            justifyContent="space-between"
-            testID={`${testID}-inner-end-box`}
-          >
-            {/** Middle */}
-            <VStack gap={2} testID={`${testID}-content-box`}>
-              <VStack gap={0.5}>
-                {typeof title === 'string' ? (
-                  <Text color={textColor} font="label1" numberOfLines={2}>
-                    {title}
-                  </Text>
-                ) : (
-                  title
-                )}
-                {typeof children === 'string' ? (
-                  <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
-                    {children}
-                  </Text>
-                ) : (
-                  children
-                )}
-              </VStack>
-              {typeof label === 'string' ? (
-                <Text color="fgMuted" font="legal" numberOfLines={1}>
-                  {label}
+          <Icon
+            active={startIconActive}
+            color={iconColor}
+            name={startIcon}
+            paddingX={0.5}
+            paddingY={0.25}
+            size="s"
+            testID={`${testID}-icon`}
+          />
+        </Box>
+        <VStack
+          flexGrow={1}
+          flexShrink={1}
+          gap={2}
+          justifyContent="space-between"
+          style={styles?.body}
+          testID={`${testID}-inner-end-box`}
+        >
+          {/** Middle */}
+          <VStack gap={2} style={styles?.middle} testID={`${testID}-content-box`}>
+            <VStack gap={0.5}>
+              {typeof title === 'string' ? (
+                <Text color={textColor} font="label1" numberOfLines={2}>
+                  {title}
                 </Text>
               ) : (
-                label
+                title
+              )}
+              {typeof children === 'string' ? (
+                <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
+                  {children}
+                </Text>
+              ) : (
+                children
               )}
             </VStack>
-            {/** Actions */}
-            {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-              <HStack alignItems="center" gap={2} testID={`${testID}-action`}>
-                {clonedPrimaryAction}
-                {clonedSecondaryAction}
-              </HStack>
+            {typeof label === 'string' ? (
+              <Text color="fgMuted" font="legal" numberOfLines={1} style={styles?.label}>
+                {label}
+              </Text>
+            ) : (
+              label
             )}
           </VStack>
-          {/** Dismissable action */}
-          {showDismiss && (
-            <Box alignItems="flex-start" padding={0.5}>
-              <Pressable
-                accessibilityLabel={closeAccessibilityLabel}
-                accessibilityRole="button"
-                background="transparent"
-                borderRadius={1000}
-                hitSlop={{ top: 15, left: 15, bottom: 15, right: 15 }}
-                onPress={handleOnDismiss}
-                testID={`${testID}-dismiss-btn`}
-              >
-                <Icon color={iconButtonColor} name="close" size="s" />
-              </Pressable>
-            </Box>
+          {/** Actions */}
+          {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
+            <HStack alignItems="center" gap={2} style={styles?.actions} testID={`${testID}-action`}>
+              {clonedPrimaryAction}
+              {clonedSecondaryAction}
+            </HStack>
           )}
-        </HStack>
-        {styleVariant === 'global' && !showDismiss && borderBox}
-      </Box>
+        </VStack>
+        {/** Dismissable action */}
+        {showDismiss && (
+          <Box alignItems="flex-start" padding={0.5} style={styles?.dismiss}>
+            <Pressable
+              accessibilityLabel={closeAccessibilityLabel}
+              accessibilityRole="button"
+              background="transparent"
+              borderRadius={1000}
+              hitSlop={{ top: 15, left: 15, bottom: 15, right: 15 }}
+              onPress={handleOnDismiss}
+              testID={`${testID}-dismiss-btn`}
+            >
+              <Icon color={iconButtonColor} name="close" size="s" />
+            </Pressable>
+          </Box>
+        )}
+      </HStack>
     );
 
-    return showDismiss ? (
-      <Box {...marginStyles}>
-        <Collapsible collapsed={isCollapsed} testID={`${testID}-collapsible`}>
-          {content}
-        </Collapsible>
+    return (
+      <Box {...marginStyles} style={styles?.root}>
+        {showDismiss ? (
+          <Collapsible collapsed={isCollapsed} testID={`${testID}-collapsible`}>
+            {content}
+          </Collapsible>
+        ) : (
+          content
+        )}
         {styleVariant === 'global' && borderBox}
       </Box>
-    ) : (
-      content
     );
   }),
 );

@@ -58,10 +58,12 @@ describe('NativeInput', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId(TEST_ID)).toHaveAttribute(
-      'style',
-      'text-align: start; color-scheme: dark;',
-    );
+    const el = screen.getByTestId(TEST_ID);
+    expect(el).toHaveStyle({
+      textAlign: 'start',
+      colorScheme: 'dark',
+      caretColor: 'var(--color-fgPrimary)',
+    });
   });
 
   it('changes align style if override passed as align prop', () => {
@@ -71,10 +73,35 @@ describe('NativeInput', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId(TEST_ID)).toHaveAttribute(
-      'style',
-      'text-align: center; color-scheme: light;',
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      textAlign: 'center',
+      colorScheme: 'light',
+      caretColor: 'var(--color-fgPrimary)',
+    });
+  });
+
+  it('uses fgPrimary token for caret color', () => {
+    render(
+      <DefaultThemeProvider>
+        <NativeInput testID={TEST_ID} />
+      </DefaultThemeProvider>,
     );
+
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      caretColor: 'var(--color-fgPrimary)',
+    });
+  });
+
+  it('allows caret color override via style prop', () => {
+    render(
+      <DefaultThemeProvider>
+        <NativeInput style={{ caretColor: 'rgb(255, 0, 0)' }} testID={TEST_ID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      caretColor: 'rgb(255, 0, 0)',
+    });
   });
 });
 

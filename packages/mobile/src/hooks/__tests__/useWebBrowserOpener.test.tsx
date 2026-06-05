@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
 import * as openWebBrowser from '../../utils/openWebBrowser';
@@ -13,6 +13,7 @@ const DEFAULT_OPEN_WEB_BROWSER_OPTIONS = {
     activeColorScheme: 'light' as const,
     color: defaultTheme.lightColor,
     spectrum: defaultTheme.lightSpectrum,
+    illustrationColor: defaultTheme.lightIllustrationColor,
   },
 };
 

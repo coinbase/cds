@@ -1,5 +1,4 @@
 import type { ComponentConfig } from '../../../core/componentConfig';
-import { Text } from '../../../typography/Text';
 
 export const customComponentConfig: ComponentConfig = {
   Banner: {
@@ -8,18 +7,23 @@ export const customComponentConfig: ComponentConfig = {
 
   Button: (props) => ({
     borderRadius: 200,
-    height: props.compact ? 24 : 32,
+    paddingX: props.compact ? 2 : 4,
+    paddingY: props.compact ? 1 : 2,
     font: props.compact ? 'label1' : 'headline',
-    progressCircleSize: props.compact ? 12 : 16,
-    paddingY: 0,
+    ...(props.variant === 'tertiary'
+      ? {
+          background: 'bgAlternate',
+          color: 'fg',
+          borderColor: 'bgAlternate',
+        }
+      : {}),
   }),
 
   IconButton: (props) => {
     const isCompact = props.compact ?? true;
     return {
       borderRadius: 200,
-      height: isCompact ? 24 : 32,
-      width: isCompact ? 24 : 32,
+      padding: isCompact ? 1.5 : 2,
       ...(props.variant === 'tertiary'
         ? {
             background: 'bgAlternate',
@@ -30,15 +34,11 @@ export const customComponentConfig: ComponentConfig = {
     };
   },
 
-  TextInput: ({ label, labelNode, ...props }) => ({
-    labelNode:
-      (labelNode ?? label) ? (
-        <Text color="fgMuted" font="label2">
-          {label}
-        </Text>
-      ) : undefined,
+  TextInput: ({ label, labelNode, readOnly, ...props }) => ({
+    labelColor: 'fgMuted',
+    labelFont: 'label2',
     bordered: false,
-    inputBackground: 'bgAlternate',
+    inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
     font: props.compact ? 'label2' : 'body',
     variant: 'foregroundMuted',
     focusedBorderWidth: 100,
@@ -55,7 +55,7 @@ export const customComponentConfig: ComponentConfig = {
 
   Radio: (props) => ({
     background: 'bg',
-    borderWidth: props.checked ? 200 : 100,
+    borderWidth: 200,
     borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
     controlColor: 'bgPrimary',
     dotSize: 20 / 3,
@@ -124,4 +124,31 @@ export const customComponentConfig: ComponentConfig = {
     labelColor: 'fgMuted',
     labelFont: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
   }),
+
+  ListCell: (props) => {
+    const spacingVariant = props.spacingVariant ?? (props.compact ? 'compact' : 'normal');
+    return {
+      ...(spacingVariant === 'normal' ? { minHeight: 36 } : {}),
+    };
+  },
+
+  Tabs: {
+    activeColor: 'fg',
+    color: 'fgMuted',
+    activeBackground: 'fg',
+  },
+
+  Tag: {
+    paddingY: 0.5,
+    paddingX: 1,
+    font: 'caption',
+    emphasis: 'low',
+  },
+
+  DotCount: {
+    height: 16,
+    // Design is 1.5 but this causes the badge to be too wide for some single-digit counts
+    paddingX: 1,
+    paddingY: 0,
+  },
 };

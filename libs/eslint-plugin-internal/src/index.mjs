@@ -7,6 +7,7 @@ import noDeprecatedJsdocRule from './no-deprecated-jsdoc/index.mjs';
 import noObjectRestSpreadInWorkletRule from './no-object-rest-spread-in-worklet/index.mjs';
 import { processor as noTypescriptInJsxCodeblockProcessor } from './no-typescript-in-jsx-codeblock/index.mjs';
 import safelySpreadPropsRule from './safely-spread-props/index.mjs';
+import spreadPropsLastRule from './spread-props-last/index.mjs';
 
 const plugin = {
   name: '@coinbase/eslint-plugin-internal',
@@ -19,6 +20,7 @@ const plugin = {
     'no-object-rest-spread-in-worklet': noObjectRestSpreadInWorkletRule,
     'figma-connect-imports-required': figmaConnectImportsRequiredRule,
     'figma-connect-imports-package-match': figmaConnectImportsPackageMatchRule,
+    'spread-props-last': spreadPropsLastRule,
   },
   processors: {
     mdx: noTypescriptInJsxCodeblockProcessor,

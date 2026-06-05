@@ -1,6 +1,5 @@
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { BaseTooltipPlacement, ElevationProps, SharedProps } from '@coinbase/cds-common/types';
-import type { PositionStyles } from '@coinbase/cds-common/types/BoxBaseProps';
 
 import type { PopoverProps } from '../popover/PopoverProps';
 
@@ -55,7 +54,7 @@ export type TooltipBaseProps = SharedProps &
      * Typically only used when disablePortal is set to true to adjust zIndex of tooltip. When using portal this value should remain as default.
      * @default 4
      * */
-    zIndex?: PositionStyles['zIndex'];
+    zIndex?: React.CSSProperties['zIndex'];
     /**
      * A unique ID used to ensure tooltips are accessible
      */

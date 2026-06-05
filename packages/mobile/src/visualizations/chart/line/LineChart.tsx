@@ -1,0 +1,242 @@
+import { forwardRef, memo, useMemo } from 'react';
+import type { View } from 'react-native';
+
+import { XAxis, type XAxisProps } from '../axis/XAxis';
+import { YAxis, type YAxisProps } from '../axis/YAxis';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
+import { type CartesianAxisConfigProps, type Series } from '../utils';
+
+import { Line, type LineProps } from './Line';
+
+const getDefaultScrubberAccessibilityStep = (
+  dataLength: number,
+  sampleCount: number = 10,
+): number => {
+  if (dataLength <= 0) return 1;
+  return Math.max(1, Math.ceil(dataLength / sampleCount));
+};
+
+export type LineSeries = Series &
+  Partial<
+    Pick<
+      LineProps,
+      | 'curve'
+      | 'showArea'
+      | 'areaType'
+      | 'areaBaseline'
+      | 'type'
+      | 'LineComponent'
+      | 'AreaComponent'
+      | 'stroke'
+      | 'strokeWidth'
+      | 'strokeOpacity'
+      | 'opacity'
+      | 'points'
+      | 'connectNulls'
+      | 'transition'
+      | 'transitions'
+    >
+  >;
+
+export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
+  Pick<
+    LineProps,
+    | 'showArea'
+    | 'areaType'
+    | 'type'
+    | 'LineComponent'
+    | 'AreaComponent'
+    | 'curve'
+    | 'points'
+    | 'strokeWidth'
+    | 'strokeOpacity'
+    | 'connectNulls'
+    | 'transition'
+    | 'transitions'
+    | 'opacity'
+  > & {
+    /**
+     * Configuration objects that define how to visualize the data.
+     * Each series supports Line component props for individual customization.
+     */
+    series?: Array<LineSeries>;
+    /**
+     * Whether to show the X axis.
+     */
+    showXAxis?: boolean;
+    /**
+     * Whether to show the Y axis.
+     */
+    showYAxis?: boolean;
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
+  };
+
+export type LineChartProps = LineChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series' | 'scrubberAccessibilityLabelStep'> & {
+    /**
+     * Number of data points to move between screen-reader samples.
+     * @default Computed from data length (targeting 10 samples)
+     */
+    scrubberAccessibilityLabelStep?: number;
+  };
+
+export const LineChart = memo(
+  forwardRef<View, LineChartProps>(
+    (
+      {
+        series,
+        showArea,
+        areaType,
+        type,
+        LineComponent,
+        AreaComponent,
+        curve,
+        points,
+        strokeWidth,
+        strokeOpacity,
+        connectNulls,
+        transition,
+        transitions,
+        opacity,
+        showXAxis,
+        showYAxis,
+        xAxis,
+        yAxis,
+        inset,
+        scrubberAccessibilityLabelStep,
+        layout = 'vertical',
+        children,
+        ...chartProps
+      },
+      ref,
+    ) => {
+      // Convert LineSeries to Series for Chart context
+      const chartSeries = useMemo(() => {
+        return series?.map(
+          (s): Series => ({
+            id: s.id,
+            data: s.data,
+            label: s.label,
+            color: s.color,
+            xAxisId: s.xAxisId,
+            yAxisId: s.yAxisId,
+            stackId: s.stackId,
+            gradient: s.gradient,
+            legendShape: s.legendShape,
+          }),
+        );
+      }, [series]);
+
+      // Split axis props into config props for Chart and visual props for axis components
+      const {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+        baseline: xBaseline,
+        id: xAxisId,
+        ...xAxisVisualProps
+      } = xAxis || {};
+      const {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: yDomain,
+        domainLimit: yDomainLimit,
+        range: yRange,
+        baseline: yBaseline,
+        id: yAxisId,
+        ...yAxisVisualProps
+      } = yAxis || {};
+
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+        baseline: xBaseline,
+      };
+
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: yDomain,
+        domainLimit: yDomainLimit,
+        range: yRange,
+        baseline: yBaseline,
+      };
+
+      const categoryAxisData = layout === 'horizontal' ? yData : xData;
+      const lineChartDataLength = useMemo(() => {
+        if (categoryAxisData && categoryAxisData.length > 0) return categoryAxisData.length;
+        if (!series || series.length === 0) return 0;
+        return series.reduce((max, s) => Math.max(max, s.data?.length ?? 0), 0);
+      }, [categoryAxisData, series]);
+
+      const resolvedScrubberAccessibilityLabelStep = useMemo(
+        () =>
+          scrubberAccessibilityLabelStep ??
+          getDefaultScrubberAccessibilityStep(lineChartDataLength),
+        [scrubberAccessibilityLabelStep, lineChartDataLength],
+      );
+
+      return (
+        <CartesianChart
+          ref={ref}
+          inset={inset}
+          layout={layout}
+          scrubberAccessibilityLabelStep={resolvedScrubberAccessibilityLabelStep}
+          series={chartSeries}
+          xAxis={xAxisConfig}
+          yAxis={yAxisConfig}
+          {...chartProps}
+        >
+          {/* Render axes first for grid lines to appear behind everything else */}
+          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
+          {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
+          {series?.map(({ id, data, label, color, xAxisId, yAxisId, ...linePropsFromSeries }) => (
+            <Line
+              key={id}
+              AreaComponent={AreaComponent}
+              LineComponent={LineComponent}
+              areaType={areaType}
+              connectNulls={connectNulls}
+              curve={curve}
+              opacity={opacity}
+              points={points}
+              seriesId={id}
+              showArea={showArea}
+              strokeOpacity={strokeOpacity}
+              strokeWidth={strokeWidth}
+              transition={transition}
+              transitions={transitions}
+              type={type}
+              {...linePropsFromSeries}
+            />
+          ))}
+          {children}
+        </CartesianChart>
+      );
+    },
+  ),
+);

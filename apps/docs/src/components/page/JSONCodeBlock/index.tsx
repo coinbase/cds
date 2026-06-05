@@ -5,8 +5,11 @@ import styles from './styles.module.css';
 
 export const JSONCodeBlock = ({ json }: { json: Serializable }) => {
   return (
-    <CodeBlock className={styles.jsonCodeBlock} language="json">
-      {JSON.stringify(json, null, 2)}
-    </CodeBlock>
+    <>
+      <CodeBlock className={styles.jsonCodeBlock} language="json">
+        {JSON.stringify(json, null, 2)}
+      </CodeBlock>
+      <br />
+    </>
   );
 };

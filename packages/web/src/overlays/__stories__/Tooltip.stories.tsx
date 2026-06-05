@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
-import type {
-  ComponentMeta,
-  ComponentStory,
-} from '@storybook/react/dist/ts3.9/client/preview/types-6-3';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
@@ -16,13 +13,15 @@ import { PortalProvider } from '../PortalProvider';
 import { Tooltip } from '../tooltip/Tooltip';
 import type { TooltipProps } from '../tooltip/TooltipProps';
 
-export default {
+const meta: Meta = {
   title: 'Components/Tooltip/Tooltip',
   component: Tooltip,
   parameters: {
     layout: 'padded',
   },
-} as ComponentMeta<typeof Tooltip>;
+};
+
+export default meta;
 
 type BasicTooltipProps = {
   content: TooltipProps['content'];
@@ -195,23 +194,23 @@ const BasicTooltip = ({ content, openDelay, closeDelay }: BasicTooltipProps) => 
   );
 };
 
-const Template: ComponentStory<typeof BasicTooltip> = (args: BasicTooltipProps) => (
-  <BasicTooltip {...args} />
-);
-
-export const Default = Template.bind({});
-
-Default.args = {
-  content: 'This is the tooltip Content',
-};
-
-export const TooltipLongContent = Template.bind({});
+type Story = StoryObj<BasicTooltipProps>;
 
 const longContent =
   'This is the tooltip Content. This is just really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really Long.';
 
-TooltipLongContent.args = {
-  content: longContent,
+export const Default: Story = {
+  render: (args) => <BasicTooltip {...args} />,
+  args: {
+    content: 'This is the tooltip Content',
+  },
+};
+
+export const TooltipLongContent: Story = {
+  render: (args) => <BasicTooltip {...args} />,
+  args: {
+    content: longContent,
+  },
 };
 
 export const DelayedVisibility = ({

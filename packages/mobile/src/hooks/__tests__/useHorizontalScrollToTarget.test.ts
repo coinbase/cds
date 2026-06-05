@@ -5,25 +5,26 @@ import type {
   ScrollView,
   View,
 } from 'react-native';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-native';
 import throttle from 'lodash/throttle';
 
 import { useHorizontalScrollToTarget } from '../useHorizontalScrollToTarget';
 
 jest.mock('lodash/throttle');
 
+type ThrottledMock = jest.Mock & { cancel: jest.Mock };
+
 describe('useHorizontalScrollToTarget', () => {
   let mockScrollView: ScrollView;
   let mockActiveTarget: View;
-  let throttledFn: jest.Mock;
+  let throttledFn: ThrottledMock;
 
   beforeEach(() => {
     jest.clearAllMocks();
     jest.useFakeTimers();
 
     // Mock throttle to return the function immediately
-    throttledFn = jest.fn();
-    // @ts-expect-error - Testing internal ref assignment
+    throttledFn = jest.fn() as ThrottledMock;
     throttledFn.cancel = jest.fn();
     (throttle as jest.Mock).mockImplementation((fn) => {
       throttledFn.mockImplementation(fn);
@@ -78,7 +79,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -93,7 +93,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(400);
         result.current.handleScrollContainerLayout({
@@ -108,7 +107,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -125,7 +123,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -142,7 +139,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -159,7 +155,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -176,7 +171,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 10 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -207,7 +201,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -228,7 +221,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -243,7 +235,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -260,7 +251,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContainerLayout({
           nativeEvent: { layout: { width: 500 } },
@@ -275,7 +265,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContainerLayout({
           nativeEvent: { layout: { width: 500 } },
@@ -289,13 +278,14 @@ describe('useHorizontalScrollToTarget', () => {
 
   describe('active target scrolling', () => {
     it('should scroll to active target when offscreen left', () => {
-      const { result, rerender } = renderHook(
-        ({ activeTarget }) => useHorizontalScrollToTarget({ activeTarget }),
-        { initialProps: { activeTarget: null } },
-      );
+      const { result, rerender } = renderHook<
+        ReturnType<typeof useHorizontalScrollToTarget>,
+        { activeTarget: View | null }
+      >(({ activeTarget }) => useHorizontalScrollToTarget({ activeTarget }), {
+        initialProps: { activeTarget: null },
+      });
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -307,7 +297,6 @@ describe('useHorizontalScrollToTarget', () => {
         });
       });
 
-      // @ts-expect-error - Type inference issue with renderHook
       rerender({ activeTarget: mockActiveTarget });
 
       expect(mockActiveTarget.measureLayout).toHaveBeenCalled();
@@ -319,13 +308,14 @@ describe('useHorizontalScrollToTarget', () => {
     });
 
     it('should scroll to active target when offscreen right', () => {
-      const { result, rerender } = renderHook(
-        ({ activeTarget }) => useHorizontalScrollToTarget({ activeTarget }),
-        { initialProps: { activeTarget: null } },
-      );
+      const { result, rerender } = renderHook<
+        ReturnType<typeof useHorizontalScrollToTarget>,
+        { activeTarget: View | null }
+      >(({ activeTarget }) => useHorizontalScrollToTarget({ activeTarget }), {
+        initialProps: { activeTarget: null },
+      });
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -337,7 +327,6 @@ describe('useHorizontalScrollToTarget', () => {
         });
       });
 
-      // @ts-expect-error - Type inference issue with renderHook
       rerender({ activeTarget: mockActiveTarget });
 
       expect(mockActiveTarget.measureLayout).toHaveBeenCalled();
@@ -349,13 +338,14 @@ describe('useHorizontalScrollToTarget', () => {
     });
 
     it('should not scroll when target is visible', () => {
-      const { result, rerender } = renderHook(
-        ({ activeTarget }) => useHorizontalScrollToTarget({ activeTarget }),
-        { initialProps: { activeTarget: null } },
-      );
+      const { result, rerender } = renderHook<
+        ReturnType<typeof useHorizontalScrollToTarget>,
+        { activeTarget: View | null }
+      >(({ activeTarget }) => useHorizontalScrollToTarget({ activeTarget }), {
+        initialProps: { activeTarget: null },
+      });
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -367,7 +357,6 @@ describe('useHorizontalScrollToTarget', () => {
         });
       });
 
-      // @ts-expect-error - Type inference issue with renderHook
       rerender({ activeTarget: mockActiveTarget });
 
       expect(mockActiveTarget.measureLayout).toHaveBeenCalled();
@@ -375,14 +364,16 @@ describe('useHorizontalScrollToTarget', () => {
     });
 
     it('should use autoScrollOffset when scrolling', () => {
-      const { result, rerender } = renderHook(
+      const { result, rerender } = renderHook<
+        ReturnType<typeof useHorizontalScrollToTarget>,
+        { activeTarget: View | null; autoScrollOffset: number }
+      >(
         ({ activeTarget, autoScrollOffset }) =>
           useHorizontalScrollToTarget({ activeTarget, autoScrollOffset }),
         { initialProps: { activeTarget: null, autoScrollOffset: 0 } },
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({
@@ -394,7 +385,6 @@ describe('useHorizontalScrollToTarget', () => {
         });
       });
 
-      // @ts-expect-error - Type inference issue with renderHook
       rerender({ activeTarget: mockActiveTarget, autoScrollOffset: 20 });
 
       expect(mockScrollView.scrollTo).toHaveBeenCalledWith({
@@ -408,7 +398,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ activeTarget: null }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
       });
 
@@ -421,7 +410,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = null;
       });
 
@@ -435,7 +423,6 @@ describe('useHorizontalScrollToTarget', () => {
 
       unmount();
 
-      // @ts-expect-error - Testing internal ref assignment
       expect(throttledFn.cancel).toHaveBeenCalled();
     });
   });
@@ -445,7 +432,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(500);
         result.current.handleScrollContainerLayout({
@@ -463,7 +449,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(300);
         result.current.handleScrollContainerLayout({
@@ -481,7 +466,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 1 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollView;
         result.current.handleScrollContentSizeChange(1000);
         result.current.handleScrollContainerLayout({

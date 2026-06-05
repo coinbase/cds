@@ -112,7 +112,10 @@ export type TextBaseProps = Polymorphic.ExtendableProps<
      * @link [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow)
      */
     overflow?: 'truncate' | 'clip' | 'wrap' | 'break';
-    /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+    /**
+     * @deprecated Use `style`, `className`, or the `color` prop to set custom text colors. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     dangerouslySetColor?: string;
     /**
      * @deprecated Do not use this prop, it is a migration escape hatch. This will be removed in a future major release.

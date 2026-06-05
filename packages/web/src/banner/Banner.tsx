@@ -19,11 +19,13 @@ import type {
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';
+import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
 import { Pressable } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import type { LinkDefaultElement, LinkProps } from '../typography/Link';
 import { Link } from '../typography/Link';
 import { Text } from '../typography/Text';
@@ -36,6 +38,29 @@ export const contentResponsiveConfig: ResponsiveProps<StaticStyleProps>['flexDir
   phone: 'column',
   tablet: 'row',
   desktop: 'row',
+} as const;
+
+/**
+ * Static class names for Banner component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const bannerClassNames = {
+  /** Persistent outer wrapper around both dismissible and non-dismissible variants. */
+  root: 'cds-Banner',
+  /** Main content container (`HStack`) for banner body. */
+  content: 'cds-Banner-content',
+  /** Start icon wrapper. */
+  start: 'cds-Banner-start',
+  /** Right-side body wrapper containing middle content and actions. */
+  body: 'cds-Banner-body',
+  /** Middle content wrapper containing title/message/label region. */
+  middle: 'cds-Banner-middle',
+  /** Label text element. */
+  label: 'cds-Banner-label',
+  /** Actions row element. */
+  actions: 'cds-Banner-actions',
+  /** Dismiss button wrapper element. */
+  dismiss: 'cds-Banner-dismiss',
 } as const;
 
 export type BannerBaseProps = SharedProps & {
@@ -88,6 +113,7 @@ export type BannerBaseProps = SharedProps & {
 };
 
 export type BannerProps = BannerBaseProps &
+  StylesAndClassNames<typeof bannerClassNames> &
   Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
 
 export const Banner = memo(
@@ -120,6 +146,8 @@ export const Banner = memo(
       marginStart,
       marginEnd,
       width = '100%',
+      classNames,
+      styles,
       ...props
     } = mergedProps;
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -199,117 +227,143 @@ export const Banner = memo(
     );
 
     const content = (
-      <Box
-        position="relative"
-        width={width}
-        {...(!showDismiss && marginStyles)}
-        height="fit-content"
+      <HStack
+        ref={ref}
+        background={background}
+        borderRadius={borderRadius}
+        className={cx(bannerClassNames.content, className, classNames?.content)}
+        flexGrow={1}
+        gap={1}
+        minWidth={bannerMinWidth}
+        paddingX={styleVariant === 'contextual' ? 2 : 3}
+        paddingY={2}
+        style={{ ...style, ...styles?.content }}
+        testID={testID}
+        {...props}
       >
-        <HStack
-          ref={ref}
-          background={background}
-          borderRadius={borderRadius}
-          className={className}
-          flexGrow={1}
-          gap={1}
-          minWidth={bannerMinWidth}
-          paddingX={styleVariant === 'contextual' ? 2 : 3}
-          paddingY={2}
-          style={style}
-          testID={testID}
-          {...props}
+        {/** Start */}
+        <Box
+          className={cx(bannerClassNames.start, classNames?.start)}
+          paddingX={0.5}
+          paddingY={0.25}
+          style={styles?.start}
         >
-          {/** Start */}
-          <Box paddingX={0.5} paddingY={0.25}>
-            <Icon
-              accessibilityLabel={startIconAccessibilityLabel}
-              active={startIconActive}
-              color={iconColor}
-              name={startIcon}
-              size="s"
-              testID={`${testID}-icon`}
-            />
-          </Box>
+          <Icon
+            accessibilityLabel={startIconAccessibilityLabel}
+            active={startIconActive}
+            color={iconColor}
+            name={startIcon}
+            size="s"
+            testID={`${testID}-icon`}
+          />
+        </Box>
+        <VStack
+          className={cx(bannerClassNames.body, classNames?.body)}
+          flexDirection={contentResponsiveConfig}
+          flexGrow={1}
+          gap={2}
+          justifyContent="space-between"
+          style={styles?.body}
+          testID={`${testID}-inner-end-box`}
+        >
+          {/** Middle */}
           <VStack
-            flexDirection={contentResponsiveConfig}
-            flexGrow={1}
+            className={cx(bannerClassNames.middle, classNames?.middle)}
             gap={2}
-            justifyContent="space-between"
-            testID={`${testID}-inner-end-box`}
+            style={styles?.middle}
+            testID={`${testID}-content-box`}
           >
-            {/** Middle */}
-            <VStack gap={2} testID={`${testID}-content-box`}>
-              <VStack gap={0.5}>
-                {typeof title === 'string' ? (
-                  <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
-                    {title}
-                  </Text>
-                ) : (
-                  title
-                )}
-                {typeof children === 'string' ? (
-                  <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
-                    {children}
-                  </Text>
-                ) : (
-                  children
-                )}
-              </VStack>
-              {typeof label === 'string' ? (
-                <Text color="fgMuted" font="legal" numberOfLines={2}>
-                  {label}
+            <VStack gap={0.5}>
+              {typeof title === 'string' ? (
+                <Text color={textColor} font="label1" id={titleId} numberOfLines={2}>
+                  {title}
                 </Text>
               ) : (
-                label
+                title
+              )}
+              {typeof children === 'string' ? (
+                <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
+                  {children}
+                </Text>
+              ) : (
+                children
               )}
             </VStack>
-            {/** Actions */}
-            {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-              <HStack
-                alignItems="center"
-                className={actionContainerCss}
-                gap={2}
-                testID={`${testID}-action`}
+            {typeof label === 'string' ? (
+              <Text
+                className={cx(bannerClassNames.label, classNames?.label)}
+                color="fgMuted"
+                font="legal"
+                numberOfLines={2}
+                style={styles?.label}
               >
-                {clonedPrimaryAction}
-                {clonedSecondaryAction}
-              </HStack>
+                {label}
+              </Text>
+            ) : (
+              label
             )}
           </VStack>
-          {/** Dismissable action */}
-          {showDismiss && (
-            <Box alignItems="flex-start" padding={0.5}>
-              <Pressable
-                accessibilityLabel={closeAccessibilityLabel}
-                background="transparent"
-                borderRadius={1000}
-                onClick={handleOnDismiss}
-                role="button"
-                testID={`${testID}-dismiss-btn`}
-              >
-                <Icon color={iconButtonColor} name="close" size="s" />
-              </Pressable>
-            </Box>
+          {/** Actions */}
+          {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
+            <HStack
+              alignItems="center"
+              className={cx(actionContainerCss, bannerClassNames.actions, classNames?.actions)}
+              gap={2}
+              style={styles?.actions}
+              testID={`${testID}-action`}
+            >
+              {clonedPrimaryAction}
+              {clonedSecondaryAction}
+            </HStack>
           )}
-        </HStack>
-        {styleVariant === 'global' && !showDismiss && borderBox}
-      </Box>
+        </VStack>
+        {/** Dismissable action */}
+        {showDismiss && (
+          <Box
+            alignItems="flex-start"
+            className={cx(bannerClassNames.dismiss, classNames?.dismiss)}
+            padding={0.5}
+            style={styles?.dismiss}
+          >
+            <Pressable
+              accessibilityLabel={closeAccessibilityLabel}
+              background="transparent"
+              borderRadius={1000}
+              onClick={handleOnDismiss}
+              role="button"
+              testID={`${testID}-dismiss-btn`}
+            >
+              <Icon color={iconButtonColor} name="close" size="s" />
+            </Pressable>
+          </Box>
+        )}
+      </HStack>
     );
 
-    return showDismiss ? (
-      <Box display="block" height="fit-content" position="relative" width={width} {...marginStyles}>
-        <Collapsible
-          accessibilityLabelledBy={accessibilityLabelledBy}
-          collapsed={isCollapsed}
-          id={`${titleId}--controller`}
-          testID={`${testID}-collapsible`}
-        >
-          {content}
-        </Collapsible>
+    return (
+      <Box
+        className={cx(bannerClassNames.root, classNames?.root)}
+        display="block"
+        height="fit-content"
+        position="relative"
+        {...marginStyles}
+        style={styles?.root}
+        width={width}
+      >
+        {showDismiss ? (
+          <Collapsible
+            accessibilityLabelledBy={accessibilityLabelledBy}
+            collapsed={isCollapsed}
+            id={`${titleId}--controller`}
+            testID={`${testID}-collapsible`}
+          >
+            {content}
+          </Collapsible>
+        ) : (
+          content
+        )}
         {styleVariant === 'global' && borderBox}
       </Box>
-    ) : (
-      content
     );
   }),
 );

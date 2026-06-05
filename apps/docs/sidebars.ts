@@ -850,6 +850,11 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'doc',
+          id: 'guides/v9-migration-guide',
+          label: 'v9 Upgrade Guide',
+        },
+        {
+          type: 'doc',
           id: 'guides/v8-migration-guide',
           label: 'v8 Migration Guide',
         },
@@ -928,26 +933,6 @@ const sidebars: SidebarsConfig = {
           type: 'link',
           href: 'https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md',
           label: '@coinbase/cds-illustrations',
-          customProps: {
-            kbar: {
-              keywords: 'changelog',
-            },
-          },
-        },
-        {
-          type: 'link',
-          href: 'https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/CHANGELOG.md',
-          label: '@coinbase/cds-mobile-visualization',
-          customProps: {
-            kbar: {
-              keywords: 'changelog',
-            },
-          },
-        },
-        {
-          type: 'link',
-          href: 'https://github.com/coinbase/cds/blob/master/packages/web-visualization/CHANGELOG.md',
-          label: '@coinbase/cds-web-visualization',
           customProps: {
             kbar: {
               keywords: 'changelog',

@@ -54,7 +54,7 @@ const preview: Preview = {
   decorators: [StoryContainer],
   parameters: {
     layout: 'fullscreen',
-    backgrounds: { disable: true },
+    backgrounds: { disabled: true },
     globalStyles: `${globalStyles} ${defaultFontStyles}`,
     controls: {
       matchers: {

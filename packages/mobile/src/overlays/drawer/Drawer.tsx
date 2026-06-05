@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Keyboard, Modal, Platform, useWindowDimensions } from 'react-native';
+import { Animated, Keyboard, Modal, Platform, StatusBar, useWindowDimensions } from 'react-native';
 import type { ModalProps, PressableProps, StyleProp, ViewStyle } from 'react-native';
 import {
   drawerAnimationDefaultDuration,
@@ -29,6 +29,7 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { useHasNotch } from '../../hooks/useHasNotch';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { HandleBar, type HandleBarProps } from '../handlebar/HandleBar';
@@ -40,7 +41,7 @@ import { useDrawerAnimation } from './useDrawerAnimation';
 import { useDrawerPanResponder } from './useDrawerPanResponder';
 import { useDrawerSpacing } from './useDrawerSpacing';
 
-export type DrawerRenderChildren = React.FC<{ handleClose: () => void }>;
+export type DrawerRenderChildren = (args: { handleClose: () => void }) => React.ReactNode;
 
 export type DrawerRefBaseProps = {
   /** ref callback that animates out the drawer */
@@ -310,6 +311,12 @@ export const Drawer = memo(
       ],
     );
 
+    // this outdated logic needs to be removed
+    // rather than hiding on the presence of a "notch" (all modern phones based on how we determine), we should hide the status bar when any overlay is visible
+    // see: https://linear.app/coinbase/issue/CDS-1557/temporarily-hide-status-bar-in-all-overlay-components
+    const hasNotch = useHasNotch();
+    const hideStatusBar = hasNotch && ['left', 'right', 'top'].includes(pin);
+
     return (
       <Modal
         hardwareAccelerated
@@ -322,7 +329,11 @@ export const Drawer = memo(
         {...props}
       >
         <OverlayContentContext.Provider value={overlayContentContextValue}>
-          <DrawerStatusBar visible pin={pin} />
+          {/* for some reason we are hiding on iOS only (see linked issue above) */}
+          {Platform.select({
+            ios: hideStatusBar ? <StatusBar animated hidden /> : null,
+            default: null,
+          })}
           <Overlay
             onTouchStart={handleOverlayPress}
             opacity={opacityAnimation}

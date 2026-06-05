@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import type { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+import type { BlurEvent, FocusEvent } from 'react-native';
 
 import { SearchInput, type SearchInputProps } from '../controls/SearchInput';
 
@@ -29,7 +29,7 @@ export const BrowserBarSearchInput = memo(
     const { setHideStart, setHideEnd } = useBrowserBarContext();
 
     const handleFocus = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: FocusEvent) => {
         if (expandOnFocus) {
           setHideStart(true);
           setHideEnd(true);
@@ -40,7 +40,7 @@ export const BrowserBarSearchInput = memo(
     );
 
     const handleBlur = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: BlurEvent) => {
         setHideEnd(false);
         setHideStart(false);
         onBlur?.(e);

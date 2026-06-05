@@ -250,6 +250,7 @@ const DefaultSelectDropdownComponent = memo(
           ref={ref}
           disableCapturePanGestureToDismiss={true}
           footer={footer}
+          handleBarVariant="inside"
           header={header}
           onCloseComplete={() => setOpen(false)}
           onDismiss={() => setOpen(false)}

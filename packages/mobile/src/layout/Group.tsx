@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { forwardRef, memo, type ReactElement, useMemo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
@@ -33,11 +33,11 @@ export type GroupBaseProps<BoxProps> = BoxProps & {
    */
   renderItem?: (info: {
     Wrapper: React.ComponentType<React.PropsWithChildren<BoxProps>>;
-    item: React.ReactChild;
+    item: ReactElement | string | number;
     index: number;
     isFirst: boolean;
     isLast: boolean;
-  }) => React.ReactChild;
+  }) => ReactElement | string | number;
 };
 
 export type RenderGroupItem = GroupBaseProps<BoxProps>['renderItem'];

@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.0.0 (5/20/2026 PST)
+
+- **DEPRECATED** This package has been deprecated. Please import all visualization/chat components from the cds-web package.
+
+#### 💥 Breaking
+
+- Visualization/chart components have been migrated to cds-web and re-exported for backwards compatibility. As a result, deep import paths will not resolve correctly on this version. Please import from the barrel file modules instead or migrate to the same components in cds-web.
+
+## 3.8.0 (5/8/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support active color on Tabs. [[#669](https://github.com/coinbase/cds/pull/669)]
+
 ## 3.7.0 (4/20/2026 PST)
 
 #### 🚀 Updates

@@ -87,7 +87,7 @@ describe('Combobox', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityState?.disabled).toBe(true);
+      expect(button).toBeDisabled();
     });
   });
 
@@ -406,7 +406,7 @@ describe('Combobox', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityState?.disabled).toBe(false);
+      expect(button).toBeEnabled();
     });
 
     it('uses custom SelectControlComponent when provided', () => {

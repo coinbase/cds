@@ -14,8 +14,8 @@ export const MediaFallback = memo(function MediaFallback({
   ...fallbackProps
 }: MediaFallbackProps) {
   if (type === 'image') {
-    return <Fallback {...fallbackProps} height={imageSize} shape="squircle" width={imageSize} />;
+    return <Fallback height={imageSize} shape="squircle" width={imageSize} {...fallbackProps} />;
   }
 
-  return <Fallback {...fallbackProps} height={mediaSize} shape="circle" width={mediaSize} />;
+  return <Fallback height={mediaSize} shape="circle" width={mediaSize} {...fallbackProps} />;
 });

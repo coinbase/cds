@@ -207,7 +207,24 @@ export const Cell: CellComponent = memo(
         accessory,
         accessoryNode,
         alignItems = 'center',
+        bordered,
+        borderedBottom,
+        borderedEnd,
+        borderedHorizontal,
+        borderedStart,
+        borderedTop,
+        borderedVertical,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
+        borderBottomWidth,
+        borderColor,
+        borderEndWidth,
         borderRadius = 200,
+        borderStartWidth,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderTopWidth,
+        borderWidth,
         children,
         style,
         styles,
@@ -262,11 +279,56 @@ export const Cell: CellComponent = memo(
       const isButton = Boolean(onClick ?? onKeyDown ?? onKeyUp);
       const linkable = isAnchor || isButton;
       const contentTruncationStyle = cx(baseCss, shouldTruncate && truncationCss);
+      // Border props must be applied to the internal Pressable wrapper for correct visual rendering.
+      // The outer Box was only meant to create padding outside the Pressable area; this behavior
+      // will be removed in https://linear.app/coinbase/issue/CDS-1512/remove-legacy-normal-spacing-variant-from-listcell.
+      const borderProps = useMemo(
+        () => ({
+          bordered,
+          borderedBottom,
+          borderedEnd,
+          borderedHorizontal,
+          borderedStart,
+          borderedTop,
+          borderedVertical,
+          borderBottomLeftRadius,
+          borderBottomRightRadius,
+          borderBottomWidth,
+          borderColor,
+          borderEndWidth,
+          borderRadius,
+          borderStartWidth,
+          borderTopLeftRadius,
+          borderTopRightRadius,
+          borderTopWidth,
+          borderWidth,
+        }),
+        [
+          bordered,
+          borderedBottom,
+          borderedEnd,
+          borderedHorizontal,
+          borderedStart,
+          borderedTop,
+          borderedVertical,
+          borderBottomLeftRadius,
+          borderBottomRightRadius,
+          borderBottomWidth,
+          borderColor,
+          borderEndWidth,
+          borderRadius,
+          borderStartWidth,
+          borderTopLeftRadius,
+          borderTopRightRadius,
+          borderTopWidth,
+          borderWidth,
+        ],
+      );
       const content = useMemo(() => {
         // props for the entire inner container that wraps the top content
         // (media, children, intermediary, detail, accessory) and the bottom content
         const contentContainerProps = {
-          borderRadius,
+          ...borderProps,
           className: cx(contentClassName, classNames?.contentContainer),
           testID,
           ...(selected ? { background } : {}),
@@ -368,7 +430,7 @@ export const Cell: CellComponent = memo(
           </VStack>
         );
       }, [
-        borderRadius,
+        borderProps,
         contentClassName,
         classNames?.contentContainer,
         classNames?.topContent,
@@ -417,7 +479,7 @@ export const Cell: CellComponent = memo(
           accessibilityLabel,
           accessibilityLabelledBy,
           background: 'bg' as const,
-          borderRadius,
+          ...borderProps,
           className: cx(pressCss, insetFocusRingCss, classNames?.pressable),
           disabled,
           marginX: innerSpacingMarginX,
@@ -447,7 +509,7 @@ export const Cell: CellComponent = memo(
         accessibilityHint,
         accessibilityLabel,
         accessibilityLabelledBy,
-        borderRadius,
+        borderProps,
         classNames?.pressable,
         disabled,
         innerSpacingMarginX,

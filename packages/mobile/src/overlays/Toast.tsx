@@ -1,4 +1,5 @@
 import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type {
   ToastBaseProps as CommonToastBaseProps,
   ToastRefHandle,
@@ -8,7 +9,6 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { Button } from '../buttons';
 import { useA11y } from '../hooks/useA11y';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps, HStack } from '../layout';
 import { ColorSurge } from '../motion/ColorSurge';
 import { Text } from '../typography/Text';
@@ -32,7 +32,7 @@ export const Toast = memo(
       accessibilityLabel,
       ...props
     } = mergedProps;
-    const theme = useTheme();
+    const { bottom: safeAreaBottom } = useSafeAreaInsets();
     const [{ opacity, bottom }, animateIn, animateOut] = useToastAnimation();
     const { announceForA11y } = useA11y();
     const defaultA11yLabel = text + (action ? action.label : '');
@@ -79,8 +79,9 @@ export const Toast = memo(
 
     return (
       <Box
+        accessibilityRole="alert"
         alignSelf="center"
-        bottom={bottomOffset ?? theme.space[2]}
+        bottom={(bottomOffset as number) ?? safeAreaBottom}
         maxWidth="100%"
         padding={2}
         position="absolute"
@@ -90,7 +91,6 @@ export const Toast = memo(
         }}
         zIndex={zIndex.portal}
         {...props}
-        accessibilityRole="alert"
       >
         <HStack
           animated

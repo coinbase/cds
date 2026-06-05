@@ -1,0 +1,26 @@
+{
+  "preset": "v8-to-v9-mobile",
+  "description": "Upgrade from CDS v8 to v9 (mobile)",
+  "transforms": [
+    {
+      "name": "button-variant-values",
+      "description": "Remap Button/IconButton variant values: tertiary -> inverse, foregroundMuted -> secondary",
+      "file": "v9/button-variant-values"
+    },
+    {
+      "name": "migrate-use-merge-refs-import",
+      "description": "Migrate useMergeRefs: @coinbase/cds-common/hooks/useMergeRefs → utils/mergeRefs, rename binding to mergeRefs, merge duplicate imports",
+      "file": "v9/migrate-use-merge-refs"
+    },
+    {
+      "name": "migrate-layout-types-mobile",
+      "description": "Migrate layout types from @coinbase/cds-common to @coinbase/cds-mobile",
+      "file": "v9/migrate-layout-types-mobile"
+    },
+    {
+      "name": "migrate-visualization-imports",
+      "description": "Migrate @coinbase/cds-mobile-visualization imports to @coinbase/cds-mobile/visualizations sub-paths",
+      "file": "v9/migrate-visualization-imports"
+    }
+  ]
+}

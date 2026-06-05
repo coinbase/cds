@@ -1,10 +1,15 @@
-import type { TextStyle, ViewStyle } from 'react-native';
-import type { DimensionValue, Position } from '@coinbase/cds-common';
+import type { DimensionValue, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import type { TypeOrNumber } from '@coinbase/cds-common/types/TypeOrNumber';
 
 import type { Theme } from '../core/theme';
+
+/** Position-related style props using React Native types. Use this instead of common's PositionStyles for mobile. */
+export type PositionStyles = Pick<
+  ViewStyle,
+  'position' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex'
+>;
 
 type NegativeSpace = TypeOrNumber<'0' | `-${Exclude<ThemeVars.Space, 0>}`>;
 
@@ -42,8 +47,8 @@ export type StyleProps = {
   alignSelf?: ViewStyle['alignSelf'];
   flexDirection?: ViewStyle['flexDirection'];
   flexWrap?: ViewStyle['flexWrap'];
-  position?: Position;
-  // position?: ViewStyle['position'];
+  // position?: Position;
+  position?: ViewStyle['position'];
   zIndex?: ViewStyle['zIndex'];
   padding?: ThemeVars.Space;
   paddingX?: ThemeVars.Space;
@@ -67,12 +72,6 @@ export type StyleProps = {
   minHeight?: DimensionValue;
   maxWidth?: DimensionValue;
   maxHeight?: DimensionValue;
-  // width?: ViewStyle['width'];
-  // height?: ViewStyle['height'];
-  // minWidth?: ViewStyle['minWidth'];
-  // minHeight?: ViewStyle['minHeight'];
-  // maxWidth?: ViewStyle['maxWidth'];
-  // maxHeight?: ViewStyle['maxHeight'];
   aspectRatio?: ViewStyle['aspectRatio'];
   top?: DimensionValue;
   bottom?: DimensionValue;
@@ -142,7 +141,7 @@ export const getStyles = (styleProps: StyleProps, theme: Theme) => {
 
   for (const styleProp in styleProps) {
     const value = styleProps[styleProp as keyof StyleProps];
-    if (typeof value === 'undefined') continue;
+    if (value === undefined) continue;
 
     // If there are no stylePropAliases for this styleProp...
     if (typeof stylePropAliases[styleProp as keyof typeof stylePropAliases] === 'undefined') {
@@ -151,10 +150,10 @@ export const getStyles = (styleProps: StyleProps, theme: Theme) => {
         style[styleProp as keyof typeof style] = value as any;
       }
       // If it is themed and it is margin* prop
-      else if (styleProp.startsWith('margin')) {
+      else if (styleProp.startsWith('margin') && value !== null) {
         style[styleProp as keyof typeof style] = -(
           theme[themedStyleProps[styleProp as keyof typeof themedStyleProps]] as any
-        )[-value as any] as any;
+        )[-(value as any)] as any;
       }
       // If it is themed...
       else {
@@ -169,10 +168,10 @@ export const getStyles = (styleProps: StyleProps, theme: Theme) => {
           style[propAlias as keyof typeof style] = value as any;
         }
         // If it is themed and it is margin* prop
-        else if (styleProp.startsWith('margin')) {
+        else if (styleProp.startsWith('margin') && value !== null) {
           style[propAlias as keyof typeof style] = -(
             theme[themedStyleProps[styleProp as keyof typeof themedStyleProps]] as any
-          )[-value as any] as any;
+          )[-(value as number)] as any;
         }
         // If it is themed...
         else {

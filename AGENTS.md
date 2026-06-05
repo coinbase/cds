@@ -55,11 +55,9 @@ Runtime: NodeJS (see .nvmrc for version)
 - **`packages/common/`** - Shared functionality and types (`@coinbase/cds-common`)
 - **`packages/icons/`** - Icon definitions and data (`@coinbase/cds-icons`)
 - **`packages/illustrations/`** - Illustration assets (`@coinbase/illustrations`)
-- **`packages/web-visualization/`** - Web visualization components built with D3 (`@coinbase/cds-web-visualization`)
-- **`packages/mobile-visualization/`** - Mobile visualization components built with D3 and react-native-skia (`@coinbase/cds-mobile-visualization`)
 - **`apps/docs/`** - Public documentation website (Docusaurus)
 - **`apps/storybook/`** - Component development and testing environment for cds-web
-- **`apps/mobile-app/`** - Sample React Native app for testing components from cds-mobile
+- **`apps/expo-app/`** - Expo app for testing and visual regression of CDS mobile components
 
 ## Standards & Best Practices
 

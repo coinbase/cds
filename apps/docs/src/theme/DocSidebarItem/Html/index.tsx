@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import type { Props } from '@theme/DocSidebarItem/Html';

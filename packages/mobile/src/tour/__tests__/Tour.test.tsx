@@ -3,9 +3,15 @@ import { Button, Text, View } from 'react-native';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
+import { useDimensions } from '../../hooks/useDimensions';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Tour, type TourProps } from '../Tour';
 import { TourStep } from '../TourStep';
+
+jest.mock('../../hooks/useDimensions');
+const mockUseDimensions = (mocks: ReturnType<typeof useDimensions>) => {
+  (useDimensions as jest.Mock).mockReturnValue(mocks);
+};
 
 const StepOne = () => {
   const { goNextTourStep } = useTourContext();
@@ -52,6 +58,14 @@ const exampleProps: TourProps = {
 };
 
 describe('Tour', () => {
+  beforeEach(() => {
+    mockUseDimensions({
+      screenHeight: 844,
+      screenWidth: 390,
+      statusBarHeight: 47,
+    });
+  });
+
   it('passes accessibility', async () => {
     render(
       <DefaultThemeProvider>

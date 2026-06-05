@@ -155,7 +155,6 @@ export const Carousel = memo(
 
       return (
         <Animated.ScrollView
-          {...otherProps}
           ref={scrollRef}
           horizontal
           contentContainerStyle={styles.scrollViewContainer}
@@ -165,6 +164,7 @@ export const Carousel = memo(
           snapToOffsets={snapPoints}
           style={styles.carousel}
           testID={testID}
+          {...otherProps}
         >
           {content}
         </Animated.ScrollView>

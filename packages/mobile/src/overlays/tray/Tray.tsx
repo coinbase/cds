@@ -25,7 +25,7 @@ import {
   type DrawerRefBaseProps,
 } from '../drawer/Drawer';
 
-export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
+export type TrayRenderChildren = (args: { handleClose: () => void }) => React.ReactNode;
 
 export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
   /** Component to render as the Tray content */

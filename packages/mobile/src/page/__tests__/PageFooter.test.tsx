@@ -53,4 +53,13 @@ describe('PageFooter', () => {
     );
     expect(screen.getByTestId(defaultProps.testID)).toBeTruthy();
   });
+
+  it('renders legalText below the action', () => {
+    render(
+      <DefaultThemeProvider>
+        <PageFooter action={<Text font="body">Action</Text>} legalText="Legal text" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByText('Legal text')).toBeTruthy();
+  });
 });

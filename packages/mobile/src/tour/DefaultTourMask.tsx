@@ -1,7 +1,9 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
+import { Platform } from 'react-native';
 import { Defs, Mask, Rect as NativeRect, Svg } from 'react-native-svg';
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 
+import { useDimensions } from '../hooks/useDimensions';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
 
@@ -11,6 +13,7 @@ export const DefaultTourMask = memo(
   ({ activeTourStepTarget, padding, borderRadius = 12 }: TourMaskComponentProps) => {
     const [rect, setRect] = useState<Rect>(defaultRect);
     const theme = useTheme();
+    const { statusBarHeight } = useDimensions();
     const overlayFillRgba = theme.color.bgOverlay;
     const defaultPadding = theme.space[2];
 
@@ -27,10 +30,19 @@ export const DefaultTourMask = memo(
     );
 
     useEffect(() => {
-      activeTourStepTarget?.measureInWindow((x, y, width, height) =>
-        setRect({ x, y, width, height }),
-      );
-    }, [activeTourStepTarget]);
+      activeTourStepTarget?.measureInWindow((x, y, width, height) => {
+        // On Android, measureInWindow returns coordinates relative to the app's visible area.
+        // The Modal's coordinate system starts from the screen top (y=0 at very top of display).
+        // In edge-to-edge mode (statusBarHeight > 0), the app extends behind the status bar,
+        // and measureInWindow returns y relative to below the status bar. We need to ADD
+        // statusBarHeight to convert to screen coordinates for the Modal.
+        // In non-edge-to-edge mode (statusBarHeight === 0), measureInWindow returns y from
+        // screen top, but the Modal still starts from screen top, so no adjustment is needed.
+        const adjustedY = Platform.OS === 'ios' ? y : y + statusBarHeight;
+
+        setRect({ x, y: adjustedY, width, height });
+      });
+    }, [activeTourStepTarget, statusBarHeight]);
 
     return (
       <Box height="100%" width="100%">

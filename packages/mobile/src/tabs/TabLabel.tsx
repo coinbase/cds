@@ -80,12 +80,12 @@ export const TabLabel = memo(
       <HStack alignItems="center">
         {shouldMeasureElement ? (
           <View>
-            <TextElement {...props} color={color} style={dynamicStyles} />
+            <TextElement color={color} style={dynamicStyles} {...props} />
             {/* This element is used to ensure the element width doesn't change when we change font-weight */}
-            <Text {...props} aria-hidden font="title3" style={styles.hiddenElement} />
+            <Text aria-hidden font="title3" style={styles.hiddenElement} {...props} />
           </View>
         ) : (
-          <TextElement {...props} color={color} style={dynamicStyles} />
+          <TextElement color={color} style={dynamicStyles} {...props} />
         )}
         <Animated.View style={dotStyles.container}>
           <Animated.View style={dotStyles.inner}>

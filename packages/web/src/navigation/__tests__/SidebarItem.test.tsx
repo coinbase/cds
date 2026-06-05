@@ -86,4 +86,34 @@ describe('SidebarItem', () => {
     // super brittle way to test that a linaria class was applied for borderRadius style prop value of 0
     expect(screen.getAllByTestId('sidebar-item')[0].className).toContain('_0-');
   });
+
+  it('applies classNames to root and slots', () => {
+    render(
+      <DefaultThemeProvider>
+        <Sidebar>
+          <SidebarItem
+            classNames={{
+              content: 'test-sidebar-content',
+              icon: 'test-sidebar-icon',
+              root: 'test-sidebar-root',
+              title: 'test-sidebar-title',
+            }}
+            icon="chartPie"
+            testID="sidebar-item-with-classnames"
+            title="Assets"
+          />
+          <SidebarItem icon="trading" title="Trade" />
+        </Sidebar>
+      </DefaultThemeProvider>,
+    );
+
+    expect(
+      screen.getByTestId('sidebar-item-with-classnames').closest('.test-sidebar-root'),
+    ).toBeTruthy();
+    expect(
+      screen.getByTestId('sidebar-item-with-classnames').closest('.cds-SidebarItem'),
+    ).toBeTruthy();
+    expect(screen.getByText('Assets').className).toContain('test-sidebar-title');
+    expect(screen.getByText('Assets').className).toContain('cds-SidebarItem-title');
+  });
 });

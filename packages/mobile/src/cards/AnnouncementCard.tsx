@@ -1,14 +1,10 @@
 import React, { memo } from 'react';
 
 import { Card, type CardBaseProps } from './Card';
-import { CardBody, type CardBodyBaseProps, type CardBodyProps } from './CardBody';
+import { CardBody, type CardBodyBaseProps } from './CardBody';
 
-export type AnnouncementCardBaseProps = CardBaseProps & CardBodyBaseProps;
-/**
- * @deprecated Use MessagingCard instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v6
- */
-export type AnnouncementCardProps = AnnouncementCardBaseProps;
+type AnnouncementCardBaseProps = CardBaseProps & CardBodyBaseProps;
+type AnnouncementCardProps = AnnouncementCardBaseProps;
 
 /**
  * @deprecated Use MessagingCard instead. This will be removed in a future major release.

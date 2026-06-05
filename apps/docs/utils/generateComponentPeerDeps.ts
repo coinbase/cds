@@ -13,11 +13,6 @@ type PackageConfig = {
 const PACKAGES: PackageConfig[] = [
   { packageName: '@coinbase/cds-web', packageDir: 'packages/web' },
   { packageName: '@coinbase/cds-mobile', packageDir: 'packages/mobile' },
-  { packageName: '@coinbase/cds-web-visualization', packageDir: 'packages/web-visualization' },
-  {
-    packageName: '@coinbase/cds-mobile-visualization',
-    packageDir: 'packages/mobile-visualization',
-  },
 ];
 
 /**

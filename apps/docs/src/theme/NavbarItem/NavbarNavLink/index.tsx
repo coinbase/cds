@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { Box } from '@coinbase/cds-web/layout';
 import { Pressable } from '@coinbase/cds-web/system/Pressable';

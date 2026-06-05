@@ -10,7 +10,7 @@ import { useWindowSizeWithBreakpointOverride } from '../../../utils/useWindowSiz
 
 import styles from './styles.module.css';
 
-function NavbarBackdrop(props: ComponentProps<'div'>) {
+function NavbarBackdrop({ className, ...props }: ComponentProps<'div'>) {
   const mobileSidebar = useNavbarMobileSidebar();
   const windowSize = useWindowSizeWithBreakpointOverride();
   if (mobileSidebar.disabled || windowSize !== 'mobile') {
@@ -18,10 +18,10 @@ function NavbarBackdrop(props: ComponentProps<'div'>) {
   }
   return (
     <div
-      {...props}
-      className={clsx('navbar-sidebar__backdrop', props.className)}
+      className={clsx('navbar-sidebar__backdrop', className)}
       onClick={mobileSidebar.toggle}
       role="presentation"
+      {...props}
     />
   );
 }

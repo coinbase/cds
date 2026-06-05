@@ -5,6 +5,11 @@ import { noop } from '@coinbase/cds-utils';
 import { Link } from '../Link';
 import { Text } from '../Text';
 
+// React 19 type compatibility: react-router's published types can be out of sync with our React types during upgrades.
+// These stories only need runtime behavior, so we intentionally loosen the types here.
+const RouterAny = Router as unknown as React.FC<React.PropsWithChildren>;
+const RRLinkAny = RRLink as unknown as React.ElementType;
+
 export const Default = () => (
   <div>
     <Link href="https://www.google.com/">Default</Link>
@@ -139,21 +144,21 @@ export const OnClick = () => (
 
 export const RenderContainer = () => (
   <div>
-    <Router>
-      <Link as={RRLink} color="fgPrimary" font="body" onClick={noop} to="/invoices">
+    <RouterAny>
+      <Link as={RRLinkAny} color="fgPrimary" font="body" onClick={noop} to="/invoices">
         Test renderContainer
       </Link>
-    </Router>
+    </RouterAny>
   </div>
 );
 
 export const RenderContainerColor = () => (
   <div>
-    <Router>
-      <Link as={RRLink} color="fgNegative" font="label1" onClick={noop} to="/invoices">
+    <RouterAny>
+      <Link as={RRLinkAny} color="fgNegative" font="label1" onClick={noop} to="/invoices">
         Test renderContainer
       </Link>
-    </Router>
+    </RouterAny>
   </div>
 );
 

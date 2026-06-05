@@ -135,7 +135,7 @@ const TrayWithStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" paddingX={3}>
+            <StickyFooter background="bgElevation2">
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -242,7 +242,7 @@ const TrayWithListCellsStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -408,7 +408,7 @@ const IllustrationTrayWithStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" paddingX={3}>
+            <StickyFooter background="bgElevation2">
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -459,7 +459,7 @@ const IllustrationTrayWithListCellsStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -662,7 +662,7 @@ const FullBleedImageTrayWithStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" paddingX={3}>
+            <StickyFooter background="bgElevation2">
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -732,7 +732,7 @@ const FullBleedImageTrayWithListCellsStickyFooter = () => {
         <Tray
           ref={trayRef}
           footer={({ handleClose }) => (
-            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0} paddingX={3}>
+            <StickyFooter background="bgElevation2" elevation={isScrolled ? 2 : 0}>
               <Button block onPress={handleClose}>
                 Close
               </Button>
@@ -1073,7 +1073,7 @@ function ResponsiveTray({ footer, footerLabel, children, ...props }: ResponsiveT
     footer ??
     (footerLabel
       ? ({ handleClose }: { handleClose: () => void }) => (
-          <StickyFooter background="bgElevation2" paddingX={3}>
+          <StickyFooter background="bgElevation2">
             <Button block onPress={handleClose}>
               {footerLabel}
             </Button>

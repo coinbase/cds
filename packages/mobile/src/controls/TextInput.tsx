@@ -11,9 +11,8 @@ import React, {
 import { Pressable } from 'react-native';
 import type { ForwardedRef } from 'react';
 import type {
-  NativeSyntheticEvent,
+  DimensionValue,
   TextInput as RNTextInput,
-  TextInputFocusEventData,
   TextInputProps as RNTextInputProps,
   ViewStyle,
 } from 'react-native';
@@ -26,7 +25,6 @@ import type {
   SharedProps,
   TextAlignProps,
 } from '@coinbase/cds-common/types';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -108,7 +106,7 @@ export type TextInputBaseProps = SharedProps &
   };
 
 export type TextInputProps = TextInputBaseProps &
-  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign'> & {
+  Omit<RNTextInputProps, 'value' | 'onChange' | 'onChangeText' | 'textAlign' | 'selectionColor'> & {
     value?: RNTextInputProps['value'];
     onChange?: RNTextInputProps['onChange'];
     onChangeText?: RNTextInputProps['onChangeText'];
@@ -138,6 +136,8 @@ export const TextInput = memo(
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
+      labelFont = 'label1',
+      labelColor = 'fg',
       helperText = '',
       variant = 'foregroundMuted',
       testID,
@@ -175,13 +175,13 @@ export const TextInput = memo(
       focusedBorderWidth,
     );
 
-    const editableInputAddonProps = {
+    const editableInputAddonProps: TextInputProps = {
       ...editableInputProps,
-      onFocus: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      onFocus: (e) => {
         editableInputProps?.onFocus?.(e);
         setFocused(true);
       },
-      onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      onBlur: (e) => {
         editableInputProps?.onBlur?.(e);
         setFocused(false);
       },
@@ -202,7 +202,7 @@ export const TextInput = memo(
         ...(labelVariant === 'inside' &&
           hasLabel &&
           !compact && {
-            paddingBottom: 0,
+            paddingBottom: theme.space[1],
             paddingTop: 0,
           }),
       }),
@@ -222,7 +222,8 @@ export const TextInput = memo(
     const inaccessibleStart = useMemo(() => {
       if (isValidElement(start) && start.type === InputIconButton) {
         return cloneElement(start, {
-          ...start.props,
+          // ReactElement default props is unknown, so we need to cast to the correct type
+          ...(start.props as InputIconButtonProps),
           accessibilityLabel: undefined,
           accessibilityHint: undefined,
           accessibilityElementsHidden: true,
@@ -303,6 +304,7 @@ export const TextInput = memo(
             containerSpacing={containerSpacing}
             disabled={disabled}
             font={font}
+            selectionColor={variantColorMap[focusedVariant]}
             testID={testID}
             {...editableInputAddonProps}
           />
@@ -313,27 +315,31 @@ export const TextInput = memo(
             ? labelNode
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  <Box
-                    {...(labelVariant === 'inside' && {
-                      paddingStart: start ? 0.5 : 2,
-                      paddingEnd: 2,
-                      background: readOnlyInputBackground,
-                    })}
-                  >
-                    {labelNode ? (
-                      labelNode
-                    ) : (
-                      <InputLabel
-                        testID={testIDMap?.label ?? ''}
-                        {...(labelVariant === 'inside' && {
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                        })}
-                      >
-                        {label}
-                      </InputLabel>
-                    )}
-                  </Box>
+                  {labelVariant === 'inside' && labelNode ? (
+                    <Box
+                      background={readOnlyInputBackground}
+                      paddingEnd={2}
+                      paddingStart={start ? 0.5 : 2}
+                    >
+                      {labelNode}
+                    </Box>
+                  ) : labelVariant === 'inside' ? (
+                    <InputLabel
+                      background={readOnlyInputBackground}
+                      color={labelColor}
+                      font={labelFont}
+                      paddingEnd={2}
+                      paddingStart={start ? 0.5 : 2}
+                      paddingY={0}
+                      testID={testIDMap?.label ?? ''}
+                    >
+                      {label}
+                    </InputLabel>
+                  ) : (
+                    <InputLabel color={labelColor} font={labelFont} testID={testIDMap?.label ?? ''}>
+                      {label}
+                    </InputLabel>
+                  )}
                 </Pressable>
               ))
         }
@@ -356,7 +362,14 @@ export const TextInput = memo(
                 onPress={handleNodePress}
               >
                 <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
-                  {compact && (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
+                  {compact &&
+                    (labelNode
+                      ? labelNode
+                      : !!label && (
+                          <InputLabel color={labelColor} font={labelFont}>
+                            {label}
+                          </InputLabel>
+                        ))}
                   {!!start && (
                     <TextInputFocusVariantContext.Provider value={focusedVariant}>
                       {inaccessibleStart}

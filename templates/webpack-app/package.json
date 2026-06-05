@@ -14,11 +14,10 @@
   "dependencies": {
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
-    "@coinbase/cds-web": "^8",
-    "@coinbase/cds-web-visualization": "^3",
+    "@coinbase/cds-web": "^9",
     "framer-motion": "^10",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
@@ -26,15 +25,15 @@
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@types/node": "^22",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
-    "html-webpack-plugin": "^5.6.3",
-    "mini-css-extract-plugin": "^2.9.3",
+    "html-webpack-plugin": "^5.6.5",
+    "mini-css-extract-plugin": "^2.9.4",
     "typescript": "~5.9.2",
     "webpack": "^5.101.0",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "webpack-dev-server": "^5.2.3"
   }
 }

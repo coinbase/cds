@@ -69,7 +69,7 @@ const animationConfig: Transition = {
   mass: 4,
 };
 
-export type CarouselItemRenderChildren = React.FC<{ isVisible: boolean }>;
+export type CarouselItemRenderChildren = (args: { isVisible: boolean }) => React.ReactNode;
 
 export type CarouselItemBaseProps = Omit<BoxBaseProps, 'children'> & {
   /**
@@ -163,10 +163,10 @@ export type CarouselPaginationComponentBaseProps = {
   paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
   /**
    * Visual variant for the pagination indicators.
-   * - 'pill': All indicators are pill-shaped (default)
-   * - 'dot': Inactive indicators are small dots, active indicator expands to a pill
-   * @default 'pill'
-   * @note 'pill' variant is deprecated, use 'dot' instead
+   * When omitted, the default pagination component renders the current dot-style design.
+   * @default 'dot'
+   * @deprecated `pill` is deprecated. Prefer the default dot pagination or provide a custom `PaginationComponent`. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   variant?: 'pill' | 'dot';
 };
@@ -235,6 +235,11 @@ export type CarouselBaseProps = SharedProps &
      * Hides the pagination indicators (dots/bars showing current page).
      */
     hidePagination?: boolean;
+    /**
+     * @deprecated Use the default dot pagination, or provide a custom `PaginationComponent` if you need custom visuals. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
     /**
      * Custom component to render navigation arrows.
      * @default DefaultCarouselNavigation
@@ -312,14 +317,6 @@ export type CarouselBaseProps = SharedProps &
      * @default 3000 (3 seconds)
      */
     autoplayInterval?: number;
-    /**
-     * Visual variant for the pagination indicators.
-     * - 'pill': All indicators are pill-shaped (default)
-     * - 'dot': Inactive indicators are small dots, active indicator expands to a pill
-     * @default 'pill'
-     * @note 'pill' variant is deprecated, use 'dot' instead
-     */
-    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
   };
 
 export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
@@ -717,6 +714,7 @@ export const Carousel = memo(
         title,
         hideNavigation,
         hidePagination,
+        paginationVariant,
         drag = 'snap',
         snapMode = 'page',
         NavigationComponent = DefaultCarouselNavigation,
@@ -737,7 +735,6 @@ export const Carousel = memo(
         loop,
         autoplay,
         autoplayInterval = 3000,
-        paginationVariant,
         ...props
       } = mergedProps;
       const animationApi = useAnimation();
@@ -1323,7 +1320,12 @@ export const Carousel = memo(
                 {(title || !hideNavigation) && (
                   <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
                     {typeof title === 'string' ? (
-                      <Text className={classNames?.title} font="title3" style={styles?.title}>
+                      <Text
+                        className={classNames?.title}
+                        font="title3"
+                        numberOfLines={1}
+                        style={styles?.title}
+                      >
                         {title}
                       </Text>
                     ) : (
@@ -1379,32 +1381,35 @@ export const Carousel = memo(
                         {pageChangeAccessibilityLabel(activePageIndex, totalPages)}
                       </div>
                     )}
+                    {/* // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
                     <m.div
-                      _dragX={carouselScrollX}
-                      animate={animationApi}
-                      className={cx(classNames?.carousel, defaultCarouselCss)}
-                      drag={isDragEnabled ? 'x' : false}
-                      dragConstraints={
-                        shouldLoop ? undefined : { left: -maxScrollOffset, right: 0 }
-                      }
-                      dragControls={dragControls}
-                      dragTransition={{
-                        // How much inertia affects the target
-                        power: drag === 'free' ? 0.5 : 0.125,
-                        timeConstant: drag !== 'free' ? 125 : undefined,
-                        modifyTarget: handleDragTransition,
-                      }}
-                      initial={false}
-                      onDragEnd={handleDragEnd}
-                      style={{
-                        display: 'flex',
-                        position: 'relative',
-                        x: shouldLoop ? wrappedX : carouselScrollX,
-                        ...styles?.carousel,
-                      }}
-                      whileDrag={{
-                        pointerEvents: 'none',
-                      }}
+                      {...({
+                        _dragX: carouselScrollX,
+                        animate: animationApi,
+                        className: cx(classNames?.carousel, defaultCarouselCss),
+                        drag: isDragEnabled ? 'x' : false,
+                        dragConstraints: shouldLoop
+                          ? undefined
+                          : { left: -maxScrollOffset, right: 0 },
+                        dragControls: dragControls,
+                        dragTransition: {
+                          // How much inertia affects the target
+                          power: drag === 'free' ? 0.5 : 0.125,
+                          timeConstant: drag !== 'free' ? 125 : undefined,
+                          modifyTarget: handleDragTransition,
+                        },
+                        initial: false,
+                        onDragEnd: handleDragEnd,
+                        style: {
+                          display: 'flex',
+                          position: 'relative',
+                          x: shouldLoop ? wrappedX : carouselScrollX,
+                          ...styles?.carousel,
+                        },
+                        whileDrag: {
+                          pointerEvents: 'none',
+                        },
+                      } as React.ComponentProps<typeof m.div>)}
                     >
                       {childrenWithClones}
                     </m.div>

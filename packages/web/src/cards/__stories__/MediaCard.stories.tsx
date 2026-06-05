@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import React, { type JSX, useRef } from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 
 import { Carousel } from '../../carousel/Carousel';
 import { CarouselItem } from '../../carousel/CarouselItem';
 import { VStack } from '../../layout/VStack';
 import { RemoteImage } from '../../media/RemoteImage';
-import { TextHeadline, TextLabel2, TextTitle3 } from '../../typography';
+import { Text } from '../../typography';
 import { MediaCard } from '../MediaCard';
 
 const exampleProps = {
@@ -123,14 +123,22 @@ export const TextContent = (): JSX.Element => {
       />
       <MediaCard
         description={
-          <TextLabel2 as="p">
+          <Text as="p" font="label2">
             Custom description with <strong>bold text</strong> and <em>italic text</em>
-          </TextLabel2>
+          </Text>
         }
         media={exampleMedia}
-        subtitle={<TextHeadline as="p">Custom Subtitle</TextHeadline>}
+        subtitle={
+          <Text as="p" font="headline">
+            Custom Subtitle
+          </Text>
+        }
         thumbnail={exampleThumbnail}
-        title={<TextTitle3 as="p">Custom Title</TextTitle3>}
+        title={
+          <Text as="p" font="title3">
+            Custom Title
+          </Text>
+        }
         width={320}
       />
     </VStack>

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView } from 'react-native';
 import {
   interpolateColor,
@@ -240,7 +240,6 @@ const SegmentedTabsScreen = () => (
       padding={3}
       tabs={basicSegments}
       title="With Padding"
-      width="fit-content"
     />
     <SegmentedTabsExample
       borderRadius={300}
@@ -250,6 +249,14 @@ const SegmentedTabsScreen = () => (
     />
     <CustomStylesExample />
     <IconLabelsExample />
+    <SegmentedTabsExample
+      activeBackground="bgPositiveWash"
+      activeColor="bgPositive"
+      color="fgMuted"
+      defaultActiveTab={basicSegments[0]}
+      tabs={basicSegments}
+      title="Label Colors"
+    />
   </ExampleScreen>
 );
 
@@ -282,7 +289,6 @@ const IconLabelsExample = () => {
       }}
       tabs={iconSegments}
       title="Icon Labels"
-      width="fit-content"
     />
   );
 };

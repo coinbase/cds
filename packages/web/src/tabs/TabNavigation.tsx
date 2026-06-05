@@ -166,19 +166,13 @@ export type TabNavigationProps<TabId extends string | undefined = string> =
   TabNavigationBaseProps<TabId>;
 
 type LayoutProps = { width: number; x: number };
-type TabRefs = Ref<{ id: string; ref: React.RefObject<HTMLButtonElement> }[]>;
+type TabRefs = Ref<{ id: string; ref: React.RefObject<HTMLButtonElement | null> }[]>;
 const fallbackLayout: LayoutProps = { width: 0, x: 0 };
 
 type TabNavigationFC = <TabId extends string | undefined = string>(
   props: TabNavigationProps<TabId> & { ref?: ForwardedRef<HTMLElement | null> },
 ) => React.ReactElement;
 
-/**
- * TabNavigation renders a horizontal, tab-based navigation bar.
- * This component has a opinionated default style, but allows for customization through custom Component props.
- * @deprecated Use Tabs instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
 const TabNavigationComponent = memo(
   forwardRef(
     <TabId extends string>(
@@ -297,7 +291,7 @@ const TabNavigationComponent = memo(
         };
       }, []);
 
-      const getScrollIntoViewHandler = useCallback((ref: React.RefObject<HTMLElement>) => {
+      const getScrollIntoViewHandler = useCallback((ref: React.RefObject<HTMLElement | null>) => {
         return function handleFocus() {
           // Container
           const container = scrollRef.current;
@@ -442,7 +436,7 @@ const TabNavigationComponent = memo(
             onScroll={handleOnScroll}
             position="relative"
           >
-            <VStack testID={testID} {...props} padding={0}>
+            <VStack padding={0} testID={testID} {...props}>
               <HStack
                 accessibilityLabel={accessibilityLabel}
                 accessibilityLabelledBy={accessibilityLabelledBy}
@@ -477,4 +471,10 @@ const TabNavigationComponent = memo(
 
 TabNavigationComponent.displayName = 'TabNavigation';
 
+/**
+ * TabNavigation renders a horizontal, tab-based navigation bar.
+ * This component has a opinionated default style, but allows for customization through custom Component props.
+ * @deprecated Use Tabs instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v8
+ */
 export const TabNavigation = TabNavigationComponent as TabNavigationFC;

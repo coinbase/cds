@@ -34,6 +34,7 @@ export const DefaultComboboxControl = <
   searchInputRef,
   hideSearchInput,
   accessibilityLabel,
+  styles,
   ...props
 }: ComboboxControlProps<Type, SelectOptionValue>) => {
   const theme = useTheme();
@@ -57,16 +58,10 @@ export const DefaultComboboxControl = <
     <SelectControlComponent
       accessibilityLabel={computedAccessibilityLabel}
       align={align}
-      disabled={disabled}
-      font={font}
-      open={open}
-      options={options}
-      setOpen={setOpen}
-      value={value}
-      {...props}
       contentNode={
         shouldRenderSearchInput ? (
-          <HStack flexWrap="wrap">
+          // set gap between input and values with top padding
+          <HStack flexWrap="wrap" paddingTop={hasValue ? 1 : 0}>
             <NativeInput
               ref={searchInputRef}
               disabled={disabled || !open}
@@ -75,15 +70,14 @@ export const DefaultComboboxControl = <
               onPress={() => !disabled && setOpen(true)}
               placeholder={typeof placeholder === 'string' ? placeholder : undefined}
               style={{
-                flex: 0,
                 flexGrow: 1,
                 flexShrink: 1,
                 minWidth: 0,
-                padding: 0,
-                height: !hasValue ? 48 : undefined,
-                marginTop: hasValue ? 0 : -24,
-                marginBottom: hasValue ? -12 : -24,
-                paddingTop: hasValue ? 8 : 0,
+                // Zero out padding - let DefaultSelectControl handle spacing via InputStack
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
                 // This is constrained by the parent container's width. The width is 100%
                 // to ensure it grows to fill the control
                 width: open ? '100%' : undefined,
@@ -102,17 +96,23 @@ export const DefaultComboboxControl = <
           </>
         )
       }
+      disabled={disabled}
+      font={font}
+      open={open}
+      options={options}
+      setOpen={setOpen}
       styles={{
-        ...props.styles,
+        ...styles,
         controlEndNode: {
-          ...StyleSheet.flatten(props.styles?.controlEndNode),
+          ...StyleSheet.flatten(styles?.controlEndNode),
           alignItems: hasValue && shouldRenderSearchInput ? 'flex-end' : 'center',
         },
         controlValueNode: {
-          ...StyleSheet.flatten(props.styles?.controlValueNode),
-          paddingBottom: hasValue && shouldRenderSearchInput ? theme.space[1.5] : 0,
+          ...StyleSheet.flatten(styles?.controlValueNode),
         },
       }}
+      value={value}
+      {...props}
     />
   );
 };

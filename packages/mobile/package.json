@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-mobile",
-  "version": "8.66.0",
+  "version": "9.1.3",
   "description": "Coinbase Design System - Mobile",
   "repository": {
     "type": "git",
@@ -165,6 +165,14 @@
       "types": "./dts/typography/index.d.ts",
       "default": "./esm/typography/index.js"
     },
+    "./visualizations/chart": {
+      "types": "./dts/visualizations/chart/index.d.ts",
+      "default": "./esm/visualizations/chart/index.js"
+    },
+    "./visualizations/sparkline": {
+      "types": "./dts/visualizations/sparkline/index.d.ts",
+      "default": "./esm/visualizations/sparkline/index.js"
+    },
     "./visualizations": {
       "types": "./dts/visualizations/index.d.ts",
       "default": "./esm/visualizations/index.js"
@@ -181,20 +189,17 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "@react-navigation/native": "^6.1.6",
-    "@react-navigation/native-stack": "^6.9.26",
-    "@react-navigation/stack": "^6.3.16",
-    "lottie-react-native": "^6.7.0",
-    "react": "^18.3.1",
-    "react-native": "^0.74.5",
-    "react-native-gesture-handler": "^2.16.2",
+    "@shopify/react-native-skia": "2.2.12",
+    "lottie-react-native": "7.3.1",
+    "react": "~19.1.2",
+    "react-native": "~0.81.5",
+    "react-native-gesture-handler": "2.28.0",
     "react-native-inappbrowser-reborn": "^3.7.0",
-    "react-native-linear-gradient": "^2.8.3",
     "react-native-navigation-bar-color": "^2.0.2",
-    "react-native-reanimated": "^3.14.0",
-    "react-native-safe-area-context": "^4.10.5",
-    "react-native-screens": "^3.32.0",
-    "react-native-svg": "^14.1.0"
+    "react-native-reanimated": "4.1.1",
+    "react-native-safe-area-context": "5.6.0",
+    "react-native-svg": "15.12.1",
+    "react-native-worklets": "0.5.2"
   },
   "dependencies": {
     "@coinbase/cds-common": "workspace:^",
@@ -203,7 +208,8 @@
     "@coinbase/cds-lottie-files": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
     "@floating-ui/react-native": "^0.10.5",
-    "@react-spring/native": "^9.7.4",
+    "@react-spring/native": "^10.0.3",
+    "d3-interpolate-path": "^2.3.0",
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "type-fest": "^2.19.0",
@@ -212,25 +218,23 @@
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.27.1",
     "@react-native-community/netinfo": "^7.1.7",
-    "@react-navigation/native-stack": "^6.9.26",
-    "@testing-library/react-native": "^11.3.0",
+    "@shopify/react-native-skia": "2.2.12",
+    "@testing-library/react-native": "^13.3.3",
     "@types/d3-color": "^3.1.3",
-    "@types/react": "^18.3.12",
-    "@types/react-test-renderer": "^18.3.0",
-    "eslint-plugin-reanimated": "^2.0.1",
-    "lottie-react-native": "6.7.0",
-    "react-native-accessibility-engine": "^3.2.0",
-    "react-native-gesture-handler": "2.16.2",
+    "@types/react": "19.1.2",
+    "lottie-react-native": "7.3.1",
+    "react": "19.1.2",
+    "react-native": "0.81.5",
+    "react-native-gesture-handler": "2.28.0",
     "react-native-inappbrowser-reborn": "3.7.0",
-    "react-native-linear-gradient": "2.8.3",
     "react-native-navigation-bar-color": "2.0.2",
-    "react-native-reanimated": "3.14.0",
-    "react-native-safe-area-context": "4.10.5",
-    "react-native-screens": "3.32.0",
-    "react-native-svg": "14.1.0",
-    "react-test-renderer": "^18.3.1"
+    "react-native-reanimated": "4.1.1",
+    "react-native-safe-area-context": "5.6.0",
+    "react-native-svg": "15.12.1",
+    "react-native-worklets": "0.5.2",
+    "react-test-renderer": "19.1.2"
   }
 }

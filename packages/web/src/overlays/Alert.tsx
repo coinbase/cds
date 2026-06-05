@@ -2,7 +2,6 @@ import { forwardRef, memo, useCallback, useMemo } from 'react';
 import type {
   ButtonVariant,
   IllustrationPictogramNames,
-  PositionStyles,
   SharedProps,
   ValidateProps,
 } from '@coinbase/cds-common/types';
@@ -12,6 +11,7 @@ import { useA11yLabels } from '../hooks/useA11yLabels';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Pictogram } from '../illustrations';
 import { Box } from '../layout/Box';
+import type { PositionStyles } from '../styles/styleProps';
 import { Text } from '../typography/Text';
 
 import { Modal, type ModalBaseProps, type ModalRefBaseProps } from './modal/Modal';
@@ -190,9 +190,9 @@ export const Alert = memo(
           </Box>
           <Box
             flexDirection={actionLayout === 'vertical' ? 'column-reverse' : 'row'}
-            gap={2}
-            paddingX={2}
-            paddingY={3}
+            gap={1}
+            paddingX={3}
+            paddingY={2}
             testID={testID && `${testID}-actions`}
           >
             {dismissAction}

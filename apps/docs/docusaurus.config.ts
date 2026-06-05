@@ -6,9 +6,7 @@ import commonPackageJson from '../../packages/common/package.json';
 import iconsPackageJson from '../../packages/icons/package.json';
 import illustrationsPackageJson from '../../packages/illustrations/package.json';
 import mobilePackageJson from '../../packages/mobile/package.json';
-import mobileVisualizationPackageJson from '../../packages/mobile-visualization/package.json';
 import webPackageJson from '../../packages/web/package.json';
-import webVisualizationPackageJson from '../../packages/web-visualization/package.json';
 
 import docgenConfig from './docgen.config';
 
@@ -50,15 +48,7 @@ const webpackPlugin = () => {
                 ),
                 '@coinbase/cds-utils': path.resolve(__dirname, '../../packages/utils/src'),
                 '@coinbase/cds-mobile': path.resolve(__dirname, '../../packages/mobile/src'),
-                '@coinbase/cds-mobile-visualization': path.resolve(
-                  __dirname,
-                  '../../packages/mobile-visualization/src',
-                ),
                 '@coinbase/cds-web': path.resolve(__dirname, '../../packages/web/src'),
-                '@coinbase/cds-web-visualization': path.resolve(
-                  __dirname,
-                  '../../packages/web-visualization/src',
-                ),
               }),
         },
       },
@@ -115,8 +105,6 @@ const config: Config = {
     cdsCommonVersion: commonPackageJson.version,
     cdsIconsVersion: iconsPackageJson.version,
     cdsIllustrationsVersion: illustrationsPackageJson.version,
-    cdsMobileVisualizationVersion: mobileVisualizationPackageJson.version,
-    cdsWebVisualizationVersion: webVisualizationPackageJson.version,
   },
 
   // Even if you don't use internationalization, you can use this field to set

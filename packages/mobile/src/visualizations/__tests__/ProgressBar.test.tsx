@@ -1,5 +1,4 @@
 import React, { act } from 'react';
-import type { ReactTestInstance } from 'react-test-renderer';
 import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -16,7 +15,7 @@ jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
   useCounter: ({ endNum }: UseCounterParams) => endNum,
 }));
 
-function fireTextEvent(floatLabel: ReactTestInstance) {
+function fireTextEvent(floatLabel: Parameters<typeof fireEvent>[0]) {
   fireEvent(floatLabel, 'layout', {
     nativeEvent: {
       layout: {
@@ -31,7 +30,7 @@ function fireTextEvent(floatLabel: ReactTestInstance) {
   });
 }
 
-function fireTextContainerEvent(floatLabelContainer: ReactTestInstance) {
+function fireTextContainerEvent(floatLabelContainer: Parameters<typeof fireEvent>[0]) {
   fireEvent(floatLabelContainer, 'layout', {
     nativeEvent: {
       layout: {
@@ -54,7 +53,7 @@ describe('ProgressBar test', () => {
   it('places bar label in correct position if it flows off the left container and passes a11y', async () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFloatLabel label={0} progress={0} testID="mock-progress-bar">
             <ProgressBar progress={0} />
           </ProgressBarWithFloatLabel>
@@ -78,7 +77,7 @@ describe('ProgressBar test', () => {
   it('places bar label in correct position in middle', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFloatLabel label={50} progress={0.5} testID="mock-progress-bar">
             <ProgressBar progress={0.5} />
           </ProgressBarWithFloatLabel>
@@ -104,7 +103,7 @@ describe('ProgressBar test', () => {
   it('renders fixed labels in correct position', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFixedLabels
             endLabel={50}
             labelPlacement="above"
@@ -126,7 +125,7 @@ describe('ProgressBar test', () => {
   it('has correct bar width', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar color="bgPositive" progress={0.77} testID="mock-progress-bar" />
         </Box>
       </DefaultThemeProvider>,
@@ -146,7 +145,7 @@ describe('ProgressBar test', () => {
   it('has correct bar height', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar progress={0.77} testID="mock-progress-bar" weight="heavy" />
         </Box>
       </DefaultThemeProvider>,
@@ -164,7 +163,7 @@ describe('ProgressBar test', () => {
   it('handles disabled state for just ProgressBar correctly & passes a11y', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar disabled progress={0.77} testID="mock-progress-bar" />
         </Box>
       </DefaultThemeProvider>,
@@ -185,7 +184,7 @@ describe('ProgressBar test', () => {
   it('handles disabled state correctly for fixed labels', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFixedLabels
             disabled
             endLabel={77}
@@ -212,7 +211,7 @@ describe('ProgressBar test', () => {
 
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar
             onAnimationEnd={onAnimationEnd}
             onAnimationStart={onAnimationStart}
@@ -243,7 +242,7 @@ describe('ProgressBar test', () => {
 
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar
             onAnimationEnd={onAnimationEnd}
             onAnimationStart={onAnimationStart}
@@ -271,7 +270,7 @@ describe('ProgressBar test', () => {
   it('applies custom styles correctly', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar
             progress={0.5}
             style={{ padding: 10 }}
@@ -300,7 +299,7 @@ describe('ProgressBar test', () => {
   it('applies custom styles to ProgressBarWithFixedLabels', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFixedLabels
             endLabel={100}
             labelPlacement="above"
@@ -329,7 +328,7 @@ describe('ProgressBar test', () => {
   it('applies custom styles to ProgressBarWithFloatLabel', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFloatLabel
             label={50}
             labelPlacement="above"
@@ -359,7 +358,7 @@ describe('ProgressBar test', () => {
   it('rounds accessibilityValue.now to the nearest integer', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar progress={0.777} testID="mock-progress-bar" />
         </Box>
       </DefaultThemeProvider>,
@@ -378,7 +377,7 @@ describe('ProgressBar test', () => {
   it('skips mount animation when disableAnimateOnMount is true for ProgressBar', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar disableAnimateOnMount progress={0.5} testID="mock-progress-bar" />
         </Box>
       </DefaultThemeProvider>,
@@ -397,7 +396,7 @@ describe('ProgressBar test', () => {
   it('starts at animation start position when disableAnimateOnMount is not set', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBar progress={0.5} testID="mock-progress-bar" />
         </Box>
       </DefaultThemeProvider>,
@@ -416,7 +415,7 @@ describe('ProgressBar test', () => {
   it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFixedLabels', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFixedLabels
             disableAnimateOnMount
             endLabel={50}
@@ -438,7 +437,7 @@ describe('ProgressBar test', () => {
   it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFloatLabel', () => {
     render(
       <DefaultThemeProvider>
-        <Box width="200">
+        <Box width={200}>
           <ProgressBarWithFloatLabel
             disableAnimateOnMount
             label={50}

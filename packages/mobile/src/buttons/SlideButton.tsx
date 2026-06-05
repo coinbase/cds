@@ -1,20 +1,26 @@
-import React, { forwardRef, memo, useCallback, useId, useMemo } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { type AccessibilityActionEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { ForwardedRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import type { ButtonVariant } from '@coinbase/cds-common/types';
-import type { SpringValue } from '@react-spring/native';
-import { animated, to, useSpring } from '@react-spring/native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import type { PressableProps } from '../system/Pressable';
 
 import { DefaultSlideButtonBackground } from './DefaultSlideButtonBackground';
-import { animationConfig, DefaultSlideButtonHandle } from './DefaultSlideButtonHandle';
+import { DefaultSlideButtonHandle, slideButtonSpringConfig } from './DefaultSlideButtonHandle';
 
 export const slideButtonTestID = 'slide-button';
+
+export const DEFAULT_COMPACT_HEIGHT = 40;
+export const DEFAULT_REGULAR_HEIGHT = 56;
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
@@ -29,7 +35,7 @@ export type SlideButtonBackgroundProps = Pick<
   | 'uncheckedLabel'
   | 'variant'
 > & {
-  progress: SpringValue<number>;
+  progress: SharedValue<number>;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -44,7 +50,7 @@ export type SlideButtonHandleProps = PressableProps &
     | 'endCheckedNode'
     | 'variant'
   > & {
-    progress: SpringValue<number>;
+    progress: SharedValue<number>;
     style?: StyleProp<ViewStyle>;
   };
 
@@ -103,6 +109,8 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
    * Height of the entire button component (background and handle).
    * If you pass a custom SlideButtonBackgroundComponent or SlideButtonHandleComponent,
    * this property will be applied to both.
+   *
+   * @default 40px for compact variant, 56px for regular variant
    */
   height?: number;
   /**
@@ -173,7 +181,7 @@ export const SlideButton = memo(
       onSlideComplete,
       onChange,
       disabled,
-      height,
+      height = compact ? DEFAULT_COMPACT_HEIGHT : DEFAULT_REGULAR_HEIGHT,
       checkThreshold = 0.7,
       SlideButtonHandleComponent = DefaultSlideButtonHandle,
       SlideButtonBackgroundComponent = DefaultSlideButtonBackground,
@@ -188,13 +196,16 @@ export const SlideButton = memo(
     const labelId = useId();
     const [containerSize, onLayout] = useLayout();
 
-    const { progress } = useSpring({ progress: checked ? 1 : 0, config: animationConfig });
+    const progress = useSharedValue(checked ? 1 : 0);
 
-    const buttonMinHeight = interactableHeight[compact ? 'compact' : 'regular'];
-    const buttonMinWidth = buttonMinHeight;
+    useEffect(() => {
+      progress.value = withSpring(checked ? 1 : 0, slideButtonSpringConfig);
+    }, [checked, progress]);
+
+    const buttonMinWidth = height;
 
     const handleComplete = useCallback(() => {
-      void progress.start(1);
+      progress.value = withSpring(1, slideButtonSpringConfig);
       onChange?.(true);
       onSlideComplete?.();
       onSlideEnd?.();
@@ -240,7 +251,7 @@ export const SlideButton = memo(
             const progressValue = autoCompleteSlideOnThresholdMet
               ? newWidth
               : Math.min(1, newWidth);
-            void progress.set(progressValue);
+            progress.value = progressValue;
           })
           .onEnd(({ translationX }) => {
             if (checked || disabled) return;
@@ -252,7 +263,7 @@ export const SlideButton = memo(
               return;
             }
 
-            void progress.start(0);
+            progress.value = withSpring(0, slideButtonSpringConfig);
             onSlideCancel?.();
             onSlideEnd?.();
           })
@@ -275,22 +286,24 @@ export const SlideButton = memo(
     );
 
     const containerStyle = useMemo(
-      () => [
-        { height: height ?? buttonMinHeight, width: '100%', position: 'relative' } as const,
-        styles?.container,
-      ],
-      [height, buttonMinHeight, styles?.container],
+      () => [{ height, width: '100%', position: 'relative' } as const, styles?.container],
+      [height, styles?.container],
     );
 
-    const animatedStyle = useMemo(
-      () =>
-        ({
-          position: 'absolute',
-          height: height ?? buttonMinHeight,
-          minWidth: buttonMinWidth,
-          width: to(progress, (value) => `${value * 100}%`),
-        }) as const,
-      [height, buttonMinHeight, buttonMinWidth, progress],
+    const animatedWidthStyle = useAnimatedStyle(
+      () => ({
+        width: `${progress.value * 100}%`,
+      }),
+      [progress],
+    );
+
+    const staticHandleStyle = useMemo(
+      () => ({
+        position: 'absolute' as const,
+        height,
+        minWidth: buttonMinWidth,
+      }),
+      [height, buttonMinWidth],
     );
 
     return (
@@ -310,7 +323,7 @@ export const SlideButton = memo(
           variant={variant}
         />
         <GestureDetector gesture={panGesture}>
-          <animated.View style={animatedStyle}>
+          <Animated.View style={[staticHandleStyle, animatedWidthStyle]}>
             <SlideButtonHandleComponent
               accessible
               accessibilityActions={accessibilityActions}
@@ -335,7 +348,7 @@ export const SlideButton = memo(
               variant={variant}
               {...props}
             />
-          </animated.View>
+          </Animated.View>
         </GestureDetector>
       </View>
     );

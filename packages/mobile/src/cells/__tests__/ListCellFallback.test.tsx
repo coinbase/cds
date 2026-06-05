@@ -20,7 +20,9 @@ describe('ListCellFallback', () => {
         <ListCellFallback description />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('list-cell-fallback-description')).toBeTruthy();
+    expect(
+      screen.getByTestId('list-cell-fallback-description', { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it('renders a Fallback component if detail is passed', () => {
@@ -29,7 +31,9 @@ describe('ListCellFallback', () => {
         <ListCellFallback detail />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('list-cell-fallback-detail')).toBeTruthy();
+    expect(
+      screen.getByTestId('list-cell-fallback-detail', { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it('renders a Fallback component if subdetail is passed', () => {
@@ -38,7 +42,9 @@ describe('ListCellFallback', () => {
         <ListCellFallback subdetail />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('list-cell-fallback-subdetail')).toBeTruthy();
+    expect(
+      screen.getByTestId('list-cell-fallback-subdetail', { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it('renders a Fallback component if title is passed', () => {
@@ -47,7 +53,9 @@ describe('ListCellFallback', () => {
         <ListCellFallback title />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('list-cell-fallback-title')).toBeTruthy();
+    expect(
+      screen.getByTestId('list-cell-fallback-title', { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it('renders a MediaFallback component if media is passed', () => {
@@ -56,7 +64,9 @@ describe('ListCellFallback', () => {
         <ListCellFallback media="asset" />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('list-cell-fallback-media')).toBeTruthy();
+    expect(
+      screen.getByTestId('list-cell-fallback-media', { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it('renders a Fallback component if helperText is passed', () => {
@@ -65,7 +75,9 @@ describe('ListCellFallback', () => {
         <ListCellFallback helperText />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('list-cell-fallback-helper-text')).toBeTruthy();
+    expect(
+      screen.getByTestId('list-cell-fallback-helper-text', { includeHiddenElements: true }),
+    ).toBeTruthy();
   });
 
   it('renders ListCellFallback component with innerSpacing and outerSpacing', () => {

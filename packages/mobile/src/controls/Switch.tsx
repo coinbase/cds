@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { StyleSheet, type View } from 'react-native';
+import { type StyleProp, StyleSheet, type View, type ViewStyle } from 'react-native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -10,10 +10,30 @@ import { Control, type ControlBaseProps, type ControlIconProps } from './Control
 
 export type SwitchBaseProps<SwitchValue extends string> = Omit<
   ControlBaseProps<SwitchValue>,
-  'style' | 'controlSize' | 'dotSize'
+  'controlSize' | 'dotSize'
 >;
 
-export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValue>;
+export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValue> & {
+  /**
+   * Label content rendered next to the switch control.
+   *
+   * @example
+   * ```tsx
+   * <Switch onChange={handleChange}>Dark mode</Switch>
+   * ```
+   */
+  children?: React.ReactNode;
+  /** Slot-level styles for Switch. */
+  styles?: {
+    /** Persistent outer wrapper across all variants. */
+    root?: StyleProp<ViewStyle>;
+    /**
+     * Control wrapper style.
+     * Applied to the underlying `Control` element (same element that receives `style`).
+     */
+    control?: StyleProp<ViewStyle>;
+  };
+};
 
 const SwitchIcon = ({
   pressed,
@@ -100,29 +120,37 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends stri
   ref: React.ForwardedRef<View>,
 ) {
   const mergedProps = useComponentConfig('Switch', _props);
-  const { children, ...props } = mergedProps;
+  const { children, style, styles, ...props } = mergedProps;
   const theme = useTheme();
   const { switchHeight } = theme.controlSize;
+  const controlStyles = useMemo(
+    () => StyleSheet.flatten([style, styles?.control]),
+    [style, styles?.control],
+  );
 
   const switchNode = (
     <Control
-      {...props}
       ref={ref}
       accessible
       shouldUseSwitchTransition
       accessibilityRole="switch"
       label={children}
+      style={controlStyles}
+      {...props}
     >
       {SwitchIcon}
     </Control>
   );
 
-  return children ? (
-    <Box alignItems="center" flexDirection="row" minHeight={switchHeight}>
+  return (
+    <Box
+      alignItems={children ? 'center' : undefined}
+      flexDirection={children ? 'row' : undefined}
+      minHeight={children ? switchHeight : undefined}
+      style={styles?.root}
+    >
       {switchNode}
     </Box>
-  ) : (
-    switchNode
   );
 });
 

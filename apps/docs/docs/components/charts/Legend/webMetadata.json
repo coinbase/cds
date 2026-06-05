@@ -1,6 +1,6 @@
 {
-  "import": "import { Legend } from '@coinbase/cds-web-visualization'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/legend/Legend.tsx",
+  "import": "import { Legend } from '@coinbase/cds-web/visualizations/chart'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/visualizations/chart/legend/Legend.tsx",
   "description": "A legend component for displaying series information in charts. Supports customizable shapes, layouts, and custom item components.",
   "relatedComponents": [
     {

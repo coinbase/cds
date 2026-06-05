@@ -8,8 +8,16 @@ export const textHeadlineDefaultElement = 'span';
 
 export type TextHeadlineDefaultElement = typeof textHeadlineDefaultElement;
 
+/**
+ * @deprecated Use `Text` with `font="headline"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextHeadlineBaseProps = TextBaseProps;
 
+/**
+ * @deprecated Use `Text` with `font="headline"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextHeadlineProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextHeadlineBaseProps
@@ -20,6 +28,10 @@ type TextHeadlineComponent = (<AsComponent extends React.ElementType = TextHeadl
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/**
+ * @deprecated Use `Text` with `font="headline"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const TextHeadline: TextHeadlineComponent = forwardRef<
   React.ReactElement<TextHeadlineBaseProps>,
   TextHeadlineBaseProps

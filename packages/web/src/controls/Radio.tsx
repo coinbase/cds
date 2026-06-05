@@ -18,11 +18,11 @@ import { Control, type ControlBaseProps } from './Control';
 
 const DotSvg = ({
   color = 'black',
-  width = 20,
+  width,
   dotSize = (2 * width) / 3,
 }: {
   color?: React.CSSProperties['color'];
-  width?: number;
+  width: number;
   dotSize?: number;
 }) => {
   return (
@@ -46,9 +46,9 @@ const baseCss = css`
   }
   &:focus-visible {
     outline-style: solid;
-    outline-width: 2px;
+    outline-width: var(--borderWidth-200);
     outline-color: var(--color-bgPrimary);
-    outline-offset: 2px;
+    outline-offset: var(--borderWidth-200);
   }
 `;
 

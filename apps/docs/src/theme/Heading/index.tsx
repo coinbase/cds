@@ -15,7 +15,7 @@ export default function Heading({ as: As, id, ...props }: Props): ReactNode {
   } = useThemeConfig();
   // H1 headings do not need an id because they don't appear in the TOC.
   if (As === 'h1' || !id) {
-    return <As {...props} id={undefined} />;
+    return <As id={undefined} {...props} />;
   }
 
   brokenLinks.collectAnchor(id);
@@ -33,13 +33,13 @@ export default function Heading({ as: As, id, ...props }: Props): ReactNode {
 
   return (
     <As
-      {...props}
       className={clsx(
         'anchor',
         hideOnScroll ? styles.anchorWithHideOnScrollNavbar : styles.anchorWithStickyNavbar,
         props.className,
       )}
       id={id}
+      {...props}
     >
       {props.children}
       <Link aria-label={anchorTitle} className="hash-link" title={anchorTitle} to={`#${id}`}>

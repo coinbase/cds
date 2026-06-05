@@ -25,6 +25,10 @@ type ButtonSpacingValue = {
   marginStart?: NegativeSpace;
 };
 
+/**
+ * @deprecated This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const getButtonSpacingProps = ({
   compact,
   flush,
@@ -32,6 +36,7 @@ export const getButtonSpacingProps = ({
   if (flush)
     return {
       paddingX: buttonPaddingX.flush,
+      paddingY: compact ? buttonPaddingY.compact : buttonPaddingY.default,
       marginEnd: flush === 'end' ? (-buttonPaddingX.flush as NegativeSpace) : undefined,
       marginStart: flush === 'start' ? (-buttonPaddingX.flush as NegativeSpace) : undefined,
     };

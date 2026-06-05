@@ -13,12 +13,12 @@ type UseStickyOptions = {
    * Optional ref to a container element. If provided, the sticky behavior will be relative
    * to this container instead of the viewport.
    */
-  containerRef?: RefObject<HTMLElement>;
+  containerRef?: RefObject<HTMLElement | null>;
 };
 
 type UseStickyResult = {
   /** Ref to attach to the element that should become sticky */
-  elementRef: RefObject<HTMLDivElement>;
+  elementRef: RefObject<HTMLDivElement | null>;
   /** Whether the element is currently in "sticky" state */
   isSticky: boolean;
 };
@@ -38,7 +38,7 @@ type UseStickyResult = {
 
 export function useIsSticky(options: UseStickyOptions = {}): UseStickyResult {
   const { top = 0, containerRef } = options;
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {

@@ -6,10 +6,13 @@ on:
     branches:
       - master
       - 'cds-v[0-9]*'
+      - 'release-[0-9]+.x'
   pull_request:
     branches:
       - master
-      - 'cds-v[0-9]*'
+      - 'cds-v[0-9]+' # preferred branch names for CDS feature branches
+      - 'cds-v9-master' # one off feature branch for CDS 9 after mistake in cds-v9 branch
+      - 'release-[0-9]+.x' # preferred branch names for LTS version branches
 
 concurrency:
   group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -38,13 +41,13 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Validate Lockfile
-        run: yarn tsx ./tools/ci/validators/validateLockfile.ts
+        run: node ./tools/ci/validators/validateLockfile.mjs
       - name: Validate Patches
-        run: yarn tsx ./tools/ci/validators/validatePatches.ts
+        run: node ./tools/ci/validators/validatePatches.mjs
       - name: Validate Versioned
-        run: yarn tsx ./tools/ci/validators/validateVersioned.ts
+        run: node ./tools/ci/validators/validateVersioned.mjs
       - name: Validate CDS Versions
-        run: yarn tsx ./tools/validateCDSVersions.ts
+        run: node ./tools/validateCDSVersions.mjs
       - name: Validate Constraints
         run: yarn constraints || exit 1
 
@@ -141,7 +144,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Build
-        run: yarn nx affected --exclude=mobile-app --target=build --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=expo-app --target=build --base=$NX_BASE --head=$NX_HEAD
 
   depcheck:
     name: Depcheck

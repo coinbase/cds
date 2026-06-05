@@ -2,6 +2,7 @@ import type React from 'react';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 
 import type { CellBaseProps } from '../../cells/Cell';
+import type { CellAccessoryProps } from '../../cells/CellAccessory';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
@@ -142,7 +143,7 @@ export type SelectOptionGroupProps<
   /** Accessibility role for options */
   accessibilityRole?: string;
   /** Accessory element to display with options */
-  accessory?: React.ReactElement;
+  accessory?: React.ReactElement<CellAccessoryProps>;
   /** Media element to display with options */
   media?: React.ReactElement;
   /** End element to display with options */
@@ -282,6 +283,10 @@ export type SelectDropdownProps<
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
     /** Label displayed above the dropdown */
     label?: React.ReactNode;
+    /** Maximum height of the dropdown container
+     * @default 252
+     */
+    maxHeight?: number;
     /** Whether the dropdown is disabled */
     disabled?: boolean;
     /** Label for the "Select All" option in multi-select mode */

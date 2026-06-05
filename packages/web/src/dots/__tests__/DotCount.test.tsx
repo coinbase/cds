@@ -4,11 +4,11 @@ import { render, screen } from '@testing-library/react';
 import { Icon } from '../../icons/Icon';
 import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
-import { DotCount, type DotCountBaseProps } from '../DotCount';
+import { DotCount, type DotCountProps } from '../DotCount';
 
 const DOTCOUNT_TESTID = 'dot-count-test';
 
-const MockDotCountWithTheme = (props: DotCountBaseProps) => {
+const MockDotCountWithTheme = (props: DotCountProps) => {
   return (
     <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
       <DotCount {...props} />

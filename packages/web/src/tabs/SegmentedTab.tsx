@@ -1,19 +1,15 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { forwardRef, memo, useCallback } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
-import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
+import type { ResponsiveProp } from '../styles/styleProps';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
-
-import { tabsTransitionConfig } from './Tabs';
-
-const MotionBox = motion(Box);
 
 const insetFocusRingCss = css`
   &:focus {
@@ -45,15 +41,15 @@ const buttonDisabledCss = css`
 export type SegmentedTabBaseProps<TabId extends string = string> = PressableBaseProps &
   TabValue<TabId> & {
     /**
-     * Text color when the SegmentedTab is active.
-     * @default negativeForeground
+     * Text color when active.
+     * @default fgInverse
      */
-    activeColor?: ThemeVars.Color;
+    activeColor?: ResponsiveProp<ThemeVars.Color>;
     /**
-     * Text color when the SegmentedTab is inactive.
-     * @default foreground
+     * Text color when inactive.
+     * @default fg
      */
-    color?: ThemeVars.Color;
+    color?: ResponsiveProp<ThemeVars.Color>;
   };
 
 export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {
@@ -106,15 +102,6 @@ const SegmentedTabComponent = memo(
         [id, updateActiveTab, onClick],
       );
 
-      const motionProps = useMemo(
-        () => ({
-          animate: { color: `var(--color-${isActive ? activeColor : color})` },
-          transition: tabsTransitionConfig,
-          initial: false,
-        }),
-        [activeColor, color, isActive],
-      );
-
       return (
         <Pressable
           ref={ref}
@@ -141,7 +128,13 @@ const SegmentedTabComponent = memo(
           type="button"
           {...props}
         >
-          <MotionBox as="span" justifyContent="center" paddingX={2} paddingY={1} {...motionProps}>
+          <Box
+            as="span"
+            color={isActive ? activeColor : color}
+            justifyContent="center"
+            paddingX={2}
+            paddingY={1}
+          >
             {typeof label === 'string' ? (
               <Text
                 color="currentColor"
@@ -158,7 +151,7 @@ const SegmentedTabComponent = memo(
             ) : (
               label
             )}
-          </MotionBox>
+          </Box>
         </Pressable>
       );
     },

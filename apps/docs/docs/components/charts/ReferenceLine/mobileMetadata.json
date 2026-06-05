@@ -1,6 +1,6 @@
 {
-  "import": "import { ReferenceLine } from '@coinbase/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/line/ReferenceLine.tsx",
+  "import": "import { ReferenceLine } from '@coinbase/cds-mobile/visualizations/chart'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/chart/line/ReferenceLine.tsx",
   "description": "A horizontal or vertical reference line to mark important values on a chart, such as targets, thresholds, or baseline values.",
   "relatedComponents": [
     {
@@ -11,11 +11,11 @@
   "dependencies": [
     {
       "name": "@shopify/react-native-skia",
-      "version": "^1.12.4 || ^2.0.0"
+      "version": "2.2.12"
     },
     {
       "name": "react-native-reanimated",
-      "version": "^3.14.0"
+      "version": "4.1.1"
     }
   ]
 }

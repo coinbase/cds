@@ -35,7 +35,9 @@ type TabContainerProps = {
 
 const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
-    (ref: View | null) => ref && registerRef(id, ref),
+    (ref: View | null) => {
+      if (ref) registerRef(id, ref);
+    },
     [id, registerRef],
   );
   return <View ref={refCallback} {...props} />;
@@ -57,6 +59,14 @@ export type TabComponentProps<
   TTab extends TabValue<TabId> = TabValue<TabId>,
 > = Omit<TTab, 'Component' | 'id'> & {
   id: TabId;
+  /**
+   * Color when a tab is inactive.
+   */
+  color?: ThemeVars.Color;
+  /**
+   * Color when a tab is active.
+   */
+  activeColor?: ThemeVars.Color;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -71,7 +81,8 @@ export type TabsBaseProps<
   TabId extends string = string,
   TTab extends TabValue<TabId> = TabValue<TabId>,
 > = Omit<BoxBaseProps, 'onChange'> &
-  Omit<TabsOptions<TabId, TTab>, 'tabs'> & {
+  Omit<TabsOptions<TabId, TTab>, 'tabs'> &
+  Pick<TabComponentProps<TabId, TTab>, 'color' | 'activeColor'> & {
     /** The array of tabs data. Each tab may optionally define a custom Component to render. */
     tabs: (TTab & { Component?: TabComponent<TabId, TTab> })[];
     /** The default Component to render each tab. */
@@ -116,6 +127,8 @@ const TabsComponent = memo(
         TabComponent = DefaultTab,
         TabsActiveIndicatorComponent = DefaultTabsActiveIndicator,
         activeBackground,
+        color,
+        activeColor,
         activeTab,
         disabled,
         onChange,
@@ -175,6 +188,7 @@ const TabsComponent = memo(
           borderRadius={borderRadius}
           borderTopLeftRadius={borderTopLeftRadius}
           borderTopRightRadius={borderTopRightRadius}
+          color={color}
           onLayout={updateActiveTabRect}
           opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
           position={position}
@@ -195,11 +209,19 @@ const TabsComponent = memo(
               style={styles?.activeIndicator}
               testID={testID ? `${testID}-active-indicator` : undefined}
             />
-            {tabs.map(({ id, Component: CustomTabComponent, ...props }) => {
+            {tabs.map((tabProps) => {
+              const { id, Component: CustomTabComponent, ...tabRest } = tabProps;
               const RenderedTab = CustomTabComponent ?? TabComponent;
+              const renderedTabProps = {
+                activeColor,
+                color,
+                id,
+                style: styles?.tab,
+                ...tabRest,
+              };
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab id={id} style={styles?.tab} {...props} />
+                  <RenderedTab {...renderedTabProps} />
                 </TabContainer>
               );
             })}
@@ -229,6 +251,7 @@ export const TabsActiveIndicator = ({
 
   if (previousActiveTabRect.current !== activeTabRect) {
     previousActiveTabRect.current = activeTabRect;
+    // TODO: writing to shared value during render causes a reanimated warning which we have to suppress in jest setup
     animatedTabRect.value = isFirstRenderWithWidth
       ? newActiveTabRect
       : withSpring(newActiveTabRect, tabsSpringConfig);

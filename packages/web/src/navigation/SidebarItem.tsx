@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { css } from '@linaria/core';
 
+import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon, type IconProps } from '../icons';
 import { Box } from '../layout';
@@ -13,6 +14,7 @@ import {
   type PressableDefaultElement,
   type PressableProps,
 } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import { Text } from '../typography';
 
 import { useSidebarContext } from './SidebarContext';
@@ -34,6 +36,21 @@ type ManagedPressableProps = Pick<
   PressableProps<PressableDefaultElement>,
   'background' | 'width' | 'transparentWhileInactive' | 'className' | 'borderWidth'
 >;
+
+/**
+ * Static class names for SidebarItem component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const sidebarItemClassNames = {
+  /** Persistent outer wrapper across tooltip/non-tooltip variants. */
+  root: 'cds-SidebarItem',
+  /** Default content wrapper element. */
+  content: 'cds-SidebarItem-content',
+  /** Icon wrapper element. */
+  icon: 'cds-SidebarItem-icon',
+  /** Title text element. */
+  title: 'cds-SidebarItem-title',
+} as const;
 
 export type SidebarItemBaseProps = Pick<TooltipBaseProps, 'disablePortal'> &
   Omit<PressableBaseProps, keyof ManagedPressableProps> & {
@@ -69,7 +86,11 @@ export type SidebarItemBaseProps = Pick<TooltipBaseProps, 'disablePortal'> &
   };
 
 export type SidebarItemProps = SidebarItemBaseProps &
-  Omit<PressableProps<PressableDefaultElement>, keyof ManagedPressableProps>;
+  StylesAndClassNames<typeof sidebarItemClassNames> &
+  Omit<PressableProps<PressableDefaultElement>, keyof ManagedPressableProps> & {
+    className?: string;
+    style?: React.CSSProperties;
+  };
 
 export const SidebarItem = memo(
   forwardRef((_props: SidebarItemProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
@@ -84,6 +105,10 @@ export const SidebarItem = memo(
       borderRadius,
       accessibilityLabel = title,
       Component,
+      className,
+      style,
+      classNames,
+      styles,
       ...pressableProps
     } = mergedProps;
     const color: ThemeVars.Color = active ? 'fgPrimary' : 'fg';
@@ -94,20 +119,31 @@ export const SidebarItem = memo(
       () => (
         <Box
           alignItems="center"
+          className={cx(sidebarItemClassNames.content, classNames?.content)}
           flexDirection={isDefaultVariant ? 'row' : 'column'}
           gap={isDefaultVariant ? 2 : 0.5}
           paddingX={isDefaultVariant ? 2 : 0.5}
           paddingY={isDefaultVariant ? 2 : 1}
+          style={styles?.content}
           testID={`sidebar-item-${variant}`}
         >
-          <Icon active={active} color={color} name={icon} size="m" />
+          <Icon
+            active={active}
+            className={cx(sidebarItemClassNames.icon, classNames?.icon)}
+            color={color}
+            name={icon}
+            size="m"
+            style={styles?.icon}
+          />
           {(variant === 'condensed' || !isCollapsed) && (
             <Text
+              className={cx(sidebarItemClassNames.title, classNames?.title)}
               color={color}
               font={isDefaultVariant ? 'headline' : 'label1'}
               fontSize={isDefaultVariant ? 'inherit' : 'legal'}
               numberOfLines={isDefaultVariant ? undefined : 1}
               overflow={isDefaultVariant ? undefined : 'break'}
+              style={styles?.title}
               textAlign={isDefaultVariant ? 'start' : 'center'}
             >
               {title}
@@ -115,22 +151,36 @@ export const SidebarItem = memo(
           )}
         </Box>
       ),
-      [active, color, icon, isCollapsed, isDefaultVariant, title, variant],
+      [
+        active,
+        color,
+        icon,
+        isCollapsed,
+        isDefaultVariant,
+        title,
+        variant,
+        classNames?.content,
+        classNames?.icon,
+        classNames?.title,
+        styles?.content,
+        styles?.icon,
+        styles?.title,
+      ],
     );
 
     const content = useMemo(
       () => (
         <Pressable
           ref={ref}
-          className={pressableCss}
-          {...pressableProps}
           accessibilityLabel={isCollapsed ? accessibilityLabel : undefined}
           aria-current={active ? 'page' : undefined}
           background="bgPrimaryWash"
           borderRadius={borderRadius ?? (isDefaultVariant ? 1000 : 400)}
           borderWidth={isDefaultVariant ? undefined : 0}
+          className={pressableCss}
           transparentWhileInactive={!active}
           width="100%"
+          {...pressableProps}
         >
           {Component ? (
             <Component
@@ -161,12 +211,20 @@ export const SidebarItem = memo(
       ],
     );
 
-    return tooltipContent && isCollapsed ? (
-      <Tooltip content={tooltipContent} disablePortal={disablePortal} placement="right">
-        {content}
-      </Tooltip>
-    ) : (
-      content
+    return (
+      <Box
+        className={cx(sidebarItemClassNames.root, className, classNames?.root)}
+        style={{ ...style, ...styles?.root }}
+        width="100%"
+      >
+        {tooltipContent && isCollapsed ? (
+          <Tooltip content={tooltipContent} disablePortal={disablePortal} placement="right">
+            {content}
+          </Tooltip>
+        ) : (
+          content
+        )}
+      </Box>
     );
   }),
 );

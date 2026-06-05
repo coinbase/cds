@@ -7,7 +7,6 @@ import { Carousel } from '../../carousel/Carousel';
 import { CarouselItem } from '../../carousel/CarouselItem';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { RemoteImage } from '../../media/RemoteImage';
-import { TextHeadline, TextLabel2, TextTitle3 } from '../../typography';
 import { Text } from '../../typography/Text';
 import type { MediaCardProps } from '../MediaCard';
 import { MediaCard } from '../MediaCard';
@@ -85,15 +84,19 @@ const MediaCardScreen = () => {
       <Example title="Custom Content">
         <MediaCard
           description={
-            <TextLabel2>
+            <Text font="label2">
               Custom description with <Text font="headline">bold text</Text> and{' '}
               <Text font="label1">italic text</Text>
-            </TextLabel2>
+            </Text>
           }
           media={exampleMedia}
-          subtitle={<TextHeadline color="fgPositive">Custom Subtitle</TextHeadline>}
+          subtitle={
+            <Text color="fgPositive" font="headline">
+              Custom Subtitle
+            </Text>
+          }
           thumbnail={exampleThumbnail}
-          title={<TextTitle3>Custom Title</TextTitle3>}
+          title={<Text font="title3">Custom Title</Text>}
         />
       </Example>
 

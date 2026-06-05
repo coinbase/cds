@@ -51,9 +51,13 @@ local.properties
 .nx
 .next
 cjs/
+!packages/illustrations/src/__generated__/**/svgJs/cjs/
+!packages/illustrations/src/__generated__/**/svgJs/cjs/**
 dts/
 lib/
 esm/
+!packages/illustrations/src/__generated__/**/svgJs/esm/
+!packages/illustrations/src/__generated__/**/svgJs/esm/**
 mjs/
 *.tsbuildinfo
 /.cache-loader
@@ -148,13 +152,15 @@ web-build/
 ios
 android
 
-# failed detox test screenshots
-apps/mobile-app/artifacts
-apps/mobile-app/prebuilds/android-*
-!apps/mobile-app/prebuilds/android-release-*.zip
-!apps/mobile-app/credentials/android-release-*.keystore
-# temporary build directory for native compilation
-apps/mobile-app/build/
+# expo-app generated artifacts
+apps/expo-app/artifacts
+apps/expo-app/build/
+# we expect developers to generate their own debug builds for local development
+apps/expo-app/prebuilds/ios-debug/
+apps/expo-app/prebuilds/android-debug/
+# android release builds are too large to be committed at this time
+# committed prebuilds are especially important for running visreg in CI so we will need to figure out a solution when we turn android tests back on
+apps/expo-app/prebuilds/android-release/
 
 #reassure
 **/.reassure/*

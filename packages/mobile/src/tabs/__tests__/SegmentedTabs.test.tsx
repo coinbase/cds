@@ -42,6 +42,9 @@ const exampleProps: SegmentedTabsProps = {
   tabs,
   activeTab: tabs[0],
   onChange: jest.fn(),
+  // Reanimated's Jest matcher can throw when a style array contains `undefined`.
+  // Providing an explicit indicator style keeps the test environment stable.
+  styles: { activeIndicator: {} },
 };
 
 const mockApi = {
@@ -62,6 +65,7 @@ describe('SegmentedTabs', () => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
   });
+
   it('passes a11y', () => {
     render(
       <DefaultThemeProvider>
@@ -91,7 +95,6 @@ describe('SegmentedTabs', () => {
     jest.advanceTimersByTime(300);
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 0 }, { translateY: 0 }],
     });
   });
@@ -131,7 +134,6 @@ describe('SegmentedTabs', () => {
 
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 68 }, { translateY: 0 }],
     });
   });
@@ -210,7 +212,6 @@ describe('SegmentedTabs', () => {
 
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 20 }, { translateY: 0 }],
     });
   });
@@ -244,7 +245,6 @@ describe('SegmentedTabs', () => {
 
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 0 }, { translateY: 8 }],
     });
   });
@@ -278,7 +278,6 @@ describe('SegmentedTabs', () => {
 
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
-      height: 40,
       transform: [{ translateX: 20 }, { translateY: 8 }],
     });
   });

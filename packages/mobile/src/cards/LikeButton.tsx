@@ -7,12 +7,12 @@ import {
   scaleInConfig,
   scaleOutConfig,
 } from '@coinbase/cds-common/animation/likeButton';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
 import { TextIcon } from '../icons/TextIcon';
 import { HStack } from '../layout/HStack';
 import type { PressableProps } from '../system/Pressable';
@@ -26,7 +26,7 @@ export type LikeButtonBaseProps = Pick<
   SharedProps & {
     liked?: boolean;
     count?: number;
-    /** Reduce the inner padding within the button itself. */
+    /** Use the compact variant. */
     compact?: boolean;
     /** Ensure the button aligns flush on the left or right.
      * This prop will translate the entire button left/right,
@@ -45,6 +45,7 @@ export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
   const {
     count = 0,
     compact = true,
+    padding = compact ? 1.5 : 2, // mirror IconButton's padding
     flush,
     liked = false,
     onPress,
@@ -55,7 +56,7 @@ export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
   } = mergedProps;
   const iconScale = useRef(new Animated.Value(1));
   const iconSize = compact ? 's' : 'm';
-  const size = interactableHeight[compact ? 'compact' : 'regular'];
+  const theme = useTheme();
 
   const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
 
@@ -82,6 +83,12 @@ export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
     [],
   );
 
+  // override default line height to match the height of the sibling icon
+  const countTextStyle = useMemo(
+    () => ({ lineHeight: theme.iconSize[iconSize] }),
+    [theme.iconSize, iconSize],
+  );
+
   return (
     <Pressable
       accessibilityHint={accessibilityHint}
@@ -100,8 +107,6 @@ export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
         flexWrap="nowrap"
         gap={1}
         justifyContent="flex-start"
-        minHeight={size}
-        minWidth={size}
       >
         <TextIcon
           animated
@@ -112,7 +117,7 @@ export const LikeButton = memo(function LikeButton(_props: LikeButtonProps) {
           style={iconStyles}
         />
         {count > 0 ? (
-          <Text mono font="label1">
+          <Text mono font="label1" style={countTextStyle}>
             {count}
           </Text>
         ) : null}

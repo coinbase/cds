@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider';
 import { defaultFontStyles } from '@coinbase/cds-web/styles/defaultFont';

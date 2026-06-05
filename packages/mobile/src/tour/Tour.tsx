@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { Modal, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import { Modal, Platform, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
@@ -26,6 +26,7 @@ import {
 import { animated, config as springConfig, useSpring } from '@react-spring/native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useDimensions } from '../hooks/useDimensions';
 import { useTheme } from '../hooks/useTheme';
 
 import { DefaultTourMask } from './DefaultTourMask';
@@ -146,6 +147,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     testID,
   } = mergedProps;
   const theme = useTheme();
+  const { statusBarHeight } = useDimensions();
   const defaultTourStepOffset = theme.space[3];
   const defaultTourStepShiftPadding = theme.space[4];
 
@@ -200,7 +202,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     [animationApi, onChange],
   );
 
-  const api = useTour<TourStepId>({ steps, activeTourStep, onChange: handleChange });
+  const api = useTour<TourStepId, View>({ steps, activeTourStep, onChange: handleChange });
   const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
@@ -220,9 +222,18 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
   const handleActiveTourStepTargetChange = useCallback(
     (target: View | null) => {
       target?.measureInWindow((x, y, width, height) => {
+        // On Android, measureInWindow returns coordinates relative to the app's visible area.
+        // The Modal's coordinate system starts from the screen top (y=0 at very top of display).
+        // In edge-to-edge mode (statusBarHeight > 0), the app extends behind the status bar,
+        // and measureInWindow returns y relative to below the status bar. We need to ADD
+        // statusBarHeight to convert to screen coordinates for the Modal.
+        // In non-edge-to-edge mode (statusBarHeight === 0), measureInWindow returns y from
+        // screen top, but the Modal still starts from screen top, so no adjustment is needed.
+        const adjustedY = Platform.OS === 'ios' ? y : y + statusBarHeight;
+
         refs.setReference({
           measure: (callback: (x: number, y: number, width: number, height: number) => void) => {
-            callback(x, y, width, height);
+            callback(x, adjustedY, width, height);
             void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
           },
         });
@@ -230,7 +241,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
 
       setActiveTourStepTarget(target);
     },
-    [animationApi, refs, setActiveTourStepTarget],
+    [animationApi, refs, setActiveTourStepTarget, statusBarHeight],
   );
 
   return (
@@ -255,7 +266,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
               <animated.View style={maskStyles} testID="tour-mask">
                 <TourMaskComponent
-                  activeTourStepTarget={activeTourStepTarget as View}
+                  activeTourStepTarget={activeTourStepTarget}
                   borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                   padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                 />

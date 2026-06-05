@@ -1,5 +1,4 @@
 import React, { forwardRef, useMemo } from 'react';
-import { type DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 
 import type { Polymorphic } from '../core/polymorphism';
 
@@ -34,7 +33,7 @@ export type GridBaseProps = Polymorphic.ExtendableProps<
      * Grid can take a minimum column dimension that will clamp it to be no less than the value
      * @note `columnMin` cannot be used in conjunction with `columns` or `templateColumns`
      */
-    columnMin?: DimensionValue;
+    columnMin?: React.CSSProperties['minWidth'];
     /**
      * if neither `columns` or `templateColumns` are declared, Grid will implicitly lay out grid lines based on available space
      * You can cap the maximum width of each column by passing `columnMax`
@@ -44,7 +43,7 @@ export type GridBaseProps = Polymorphic.ExtendableProps<
      * @default 1fr
      * @note `columnMax` cannot be used in conjunction with `columns` or `templateColumns`
      */
-    columnMax?: DimensionValue;
+    columnMax?: React.CSSProperties['maxWidth'];
   }
 >;
 

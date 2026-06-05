@@ -47,11 +47,11 @@ export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
 const DotSvg = ({
   color = 'black',
-  width = 20,
+  width,
   dotSize = (2 * width) / 3,
 }: {
   color?: ColorValue;
-  width?: number;
+  width: number;
   dotSize?: number;
 }) => {
   return (
@@ -121,13 +121,13 @@ const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
       : accessibilityLabel;
   return (
     <Control<RadioValue>
-      {...props}
       ref={ref}
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabelValue}
       accessibilityRole="radio"
       hitSlop={5}
       label={children}
+      {...props}
     >
       {RadioIcon}
     </Control>

@@ -1,6 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
+import { ClipPath, Defs, Path, Rect, Svg } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { hexagonShapePath } from '@coinbase/cds-common/svg/shape';
 import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
 import type {
   AvatarFallbackColor,
@@ -22,6 +24,7 @@ import { shapeStyles } from './RemoteImageGroup';
 const smallAvatarSize = 44;
 
 export const coloredFallbackTestID = 'cds-avatar-colored-fallback';
+const avatarHexagonClipPathId = 'cds-avatar-hexagon-fallback-clip-path';
 
 export const fallbackImageSrc =
   'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gOTAK/9sAQwADAgIDAgIDAwMDBAMDBAUIBQUEBAUKBwcGCAwKDAwLCgsLDQ4SEA0OEQ4LCxAWEBETFBUVFQwPFxgWFBgSFBUU/9sAQwEDBAQFBAUJBQUJFA0LDRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU/8AAEQgAOAA4AwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A+t80Zo4o4oAM0ZrsPBvw7m8Sxi7uZDa2GcKwHzyeu30HvXdf8Kp0Dytnlz7v+ennHP8Ah+lAHiuaM12XjL4dTeG4jd2sjXViDhiR88f1x1HvXG8UAGaKOKKADI9Kkt4vtFxFEOC7Bc/U4qPJ9KVXZGDLwwOQaAPpS0tY7G1ht4VCRRKEVcdABipc1meG9eh8RaRBeRMNzACRB1R+4/z2rU/OgCK5t47y3lgmUPFKpR1I6gjBr5uu4fst1NCefLdkz64OK+g/EWuQ+HtJnvJmHyjCIerv2Ar55klaWRnblmJJPqaAG5HpRRk+lFABzVnTtOutWvY7W0iMs8hwqj+Z9BVbB9a9o+GXhlNI0VL2VR9rvFD5PVY/4R+PX8vSgCfwX4EXwsDNJdSTXTrh1RisQ/Dv9T+QrrP89aT8qPyoA5Txr4FHilRNHdSQ3Ua4RHYtEfw7fUfrXjOo6dc6Tey2t3EYp4zgqf5j1FfSP5VxvxN8Mpq+jPfRKPtlmpfI6tH/ABD8Ov5+tAHi/NFGDRQBY060+3aja22f9dKsf5kD+tfSKIsaKigKqjAAHAFFFAC/j+lL+P6UUUAH4/pTXRZEZGG5WGCCOooooA+btRtPsOoXVtn/AFMrR/kSKKKKAP/Z';
@@ -107,8 +110,8 @@ export const Avatar = memo((_props: AvatarProps) => {
       return (
         <Text
           align="center"
-          dangerouslySetColor={fallbackTextColor}
           font="title2"
+          style={{ color: fallbackTextColor }}
           textTransform="uppercase"
         >
           {placeholderLetter}
@@ -119,8 +122,8 @@ export const Avatar = memo((_props: AvatarProps) => {
       return (
         <Text
           align="center"
-          dangerouslySetColor={fallbackTextColor}
           font="caption"
+          style={{ color: fallbackTextColor }}
           textTransform="uppercase"
         >
           {placeholderLetter}
@@ -131,8 +134,8 @@ export const Avatar = memo((_props: AvatarProps) => {
     return (
       <Text
         align="center"
-        dangerouslySetColor={fallbackTextColor}
         font="body"
+        style={{ color: fallbackTextColor }}
         textTransform="uppercase"
       >
         {placeholderLetter}
@@ -151,10 +154,9 @@ export const Avatar = memo((_props: AvatarProps) => {
     () => (
       <Box
         alignItems="center"
-        dangerouslySetBackground={colorSchemeRgb}
         height="100%"
         justifyContent="center"
-        style={shapeStyle}
+        style={[shapeStyle, { backgroundColor: colorSchemeRgb }]}
         testID={coloredFallbackTestID}
         width="100%"
       >
@@ -164,11 +166,40 @@ export const Avatar = memo((_props: AvatarProps) => {
     [avatarText, shapeStyle, colorSchemeRgb],
   );
 
+  const hexagonColoredFallback = useMemo(
+    () => (
+      <Box
+        alignItems="center"
+        height="100%"
+        justifyContent="center"
+        testID={coloredFallbackTestID}
+        width="100%"
+      >
+        <Svg height="100%" viewBox="0 0 16 16" width="100%">
+          <Defs>
+            <ClipPath id={avatarHexagonClipPathId}>
+              <Path d={hexagonShapePath} />
+            </ClipPath>
+          </Defs>
+          <Rect
+            clipPath={`url(#${avatarHexagonClipPathId})`}
+            fill={colorSchemeRgb}
+            height={16}
+            width={16}
+            x={0}
+            y={0}
+          />
+        </Svg>
+        <Box style={styles.hexagonFallbackLabel}>{avatarText}</Box>
+      </Box>
+    ),
+    [avatarText, colorSchemeRgb],
+  );
+
   return (
     <Box
       accessibilityLabel={accessibilityLabel}
       borderColor={borderColor}
-      dangerouslySetBackground={imgSrc}
       flexGrow={0}
       flexShrink={0}
       height={computedSize}
@@ -190,6 +221,8 @@ export const Avatar = memo((_props: AvatarProps) => {
             testID={`${testID ?? ''}-image`}
             width={computedSize}
           />
+        ) : shape === 'hexagon' ? (
+          hexagonColoredFallback
         ) : (
           coloredFallback
         )}
@@ -208,6 +241,15 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  hexagonFallbackLabel: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },

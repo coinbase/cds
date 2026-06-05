@@ -43,7 +43,7 @@ const CustomTab = ({ id, label }: TabValue) => {
 };
 
 const CustomTabsActiveIndicator = (props: TabsActiveIndicatorProps) => {
-  return <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />;
+  return <TabsActiveIndicator background="bgPrimary" bottom={0} height={2} {...props} />;
 };
 
 export const HookTabsContainer: React.FC<HookTabsContainerProps> = ({

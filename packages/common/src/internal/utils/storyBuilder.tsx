@@ -112,7 +112,7 @@ export const baseConfig = {
   },
   argTypes: {
     isDarkMode: {
-      control: 'boolean',
+      control: 'boolean' as const,
       description: 'Enable dark mode',
     },
   },

@@ -131,11 +131,14 @@ export const Toast = memo(
 
     return (
       <Portal containerId={toastContainerId} disablePortal={disablePortal}>
+        {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
         <motion.div
-          {...motionProps}
-          className={baseCss}
-          data-testid={`${testID}-motion`}
-          onAnimationComplete={handleAnimationComplete}
+          {...({
+            ...motionProps,
+            className: baseCss,
+            'data-testid': `${testID}-motion`,
+            onAnimationComplete: handleAnimationComplete,
+          } as React.ComponentProps<typeof motion.div>)}
         >
           <Box
             justifyContent="center"
@@ -184,7 +187,7 @@ export const Toast = memo(
                     name="close"
                     onClick={handleClose}
                     testID={`${testID}-close-button`}
-                    variant="foregroundMuted"
+                    variant="secondary"
                     {...closeButtonAccessibilityProps}
                   />
                 )}

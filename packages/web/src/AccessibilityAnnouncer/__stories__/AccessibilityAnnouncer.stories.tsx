@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import type { ComponentStoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from '../../buttons';
 import { VStack } from '../../layout/VStack';
@@ -35,18 +35,18 @@ const MockAppScreen = ({ message, ...rest }: AccessibilityAnnouncerProps) => {
   );
 };
 
-export default {
+const meta = {
   title: 'Components/AccessibilityAnnouncer',
   component: MockAppScreen,
   args: { message: DEFAULT_MESSAGE },
-};
+} satisfies Meta<typeof MockAppScreen>;
 
-export const Default: ComponentStoryObj<typeof MockAppScreen> = {
-  ...MockAppScreen,
-};
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Assertive: ComponentStoryObj<typeof MockAppScreen> = {
-  ...MockAppScreen,
+export const Default: Story = {};
+
+export const Assertive: Story = {
   args: {
     politeness: 'assertive',
     message:

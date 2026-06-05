@@ -1,0 +1,47 @@
+{
+  "name": "@coinbase/cds-migrator",
+  "version": "1.0.0",
+  "description": "Coinbase Design System - Code Migration Tools",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/migrator"
+  },
+  "type": "commonjs",
+  "main": "./cjs/index.js",
+  "types": "./dts/index.d.ts",
+  "bin": {
+    "cds-migrate": "./cjs/cli.js"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./cjs/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./cjs/*.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dts",
+    "cjs",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+    "commander": "^11.1.0",
+    "fast-glob": "^3.2.11",
+    "inquirer": "^12.1.0",
+    "jscodeshift": "^0.15.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/inquirer": "^9.0.7",
+    "@types/jscodeshift": "^0.11.10"
+  }
+}

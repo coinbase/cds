@@ -1,15 +1,6 @@
-import { createElement } from 'react';
-
-import flattenNodes, { hasProps } from '../flattenNodes';
+import flattenNodes from '../flattenNodes';
 
 describe('flattenNodes', () => {
-  it('checks if child has props', () => {
-    const element = createElement('div');
-
-    expect(hasProps(element)).toBe(true);
-    expect(hasProps('test')).toBe(false);
-  });
-
   it('flatten nodes', () => {
     const flattenedNodes1 = flattenNodes([
       <>

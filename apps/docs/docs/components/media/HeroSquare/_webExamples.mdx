@@ -21,3 +21,43 @@ If `dimension` and `scaleMultiplier` are both provided the component will scale 
 ```jsx live
 <HeroSquare name="accessToAdvancedCharts" dimension="200x200" scaleMultiplier={1.5} />
 ```
+
+## Theming
+
+Use the `applyTheme` prop to enable dynamic theming. When set, the illustration is inlined into the page and colored by the active `ThemeProvider`'s illustration palette instead of loading a static image from the CDN.
+
+This allows the illustration to update automatically when the active color scheme changes, and to reflect a custom brand palette when a non-default theme is provided.
+
+```jsx live
+<HeroSquare applyTheme name="accessToAdvancedCharts" />
+```
+
+To apply a custom brand palette, set `lightIllustrationColor` and `darkIllustrationColor` on your theme and wrap the illustration in a `ThemeProvider`:
+
+```jsx live
+function ThemedHeroSquare() {
+  const customTheme = {
+    ...defaultTheme,
+    lightIllustrationColor: {
+      ...defaultTheme.lightIllustrationColor,
+      primary: 'rgb(220, 38, 38)',
+      accent1: 'rgb(124, 58, 237)',
+      accent2: 'rgb(16, 185, 129)',
+    },
+    darkIllustrationColor: {
+      ...defaultTheme.darkIllustrationColor,
+      primary: 'rgb(248, 113, 113)',
+      accent1: 'rgb(167, 139, 250)',
+      accent2: 'rgb(52, 211, 153)',
+    },
+  };
+
+  return (
+    <ThemeProvider activeColorScheme="light" theme={customTheme}>
+      <HeroSquare applyTheme name="accessToAdvancedCharts" />
+    </ThemeProvider>
+  );
+}
+```
+
+When `applyTheme` is not set (the default), the illustration loads as a standard `<img>` from the CDN with hardcoded colors — no performance overhead.

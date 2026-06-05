@@ -21,30 +21,18 @@ import { m as motion } from 'framer-motion';
 import { NewAnimatePresence } from '../animation/NewAnimatePresence';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { useTheme } from '../hooks/useTheme';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { useMotionProps } from '../motion/useMotionProps';
 import { Text } from '../typography/Text';
 
 import { getTransform } from './dotStyles';
 
+const MotionBox = motion<BoxProps<BoxDefaultElement>>(Box);
+
 const baseCss = css`
   width: fit-content;
   height: fit-content;
   position: relative;
-`;
-
-const dotCountContentCss = css`
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  border-width: 1px;
-  min-width: ${dotCountSize}px;
-  height: ${dotCountSize}px;
-  border-radius: 16px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-inline-start: 6px;
-  padding-inline-end: 6px;
 `;
 
 const variantColorMap: Record<DotCountVariants, ThemeVars.Color> = {
@@ -55,7 +43,8 @@ export type DotCountBaseProps = SharedProps &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
-  > & {
+  > &
+  Omit<BoxBaseProps, 'children' | 'color' | 'background' | 'pin' | 'height'> & {
     /**
      * The number value to be shown in the dot. If count is <= 0, dot will not show up.
      *  */
@@ -76,11 +65,18 @@ export type DotCountBaseProps = SharedProps &
     children?: React.ReactNode;
     /** Indicates what shape Dot is overlapping */
     overlap?: DotOverlap;
+    /**
+     * Fixed height of the DotCount badge container. Width grows based on content length.
+     * @default 24
+     */
+    height?: BoxBaseProps['height'];
   };
 
 export type DotCountProps = DotCountBaseProps & {
+  /** Class name for the root element */
   className?: string;
-  style?: React.CSSProperties;
+  /** Color token for the count label */
+  color?: BoxBaseProps['color'];
   /** Custom class names for individual elements of the DotCount component */
   classNames?: {
     /** Root element */
@@ -109,27 +105,39 @@ export const DotCount = memo((_props: DotCountProps) => {
     variant = 'negative',
     count,
     max,
-    testID,
+    height = dotCountSize,
+    width,
+    testID = 'dot-count',
     accessibilityLabel,
     overlap,
     className,
     classNames,
     style,
     styles,
+    alignItems = 'center',
+    justifyContent = 'center',
+    display = 'flex',
+    paddingX = 0.75,
+    borderWidth = 100,
+    borderRadius = 400,
+    borderColor = 'bgSecondary',
+    font = 'caption',
+    color = 'fgInverse',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
     ...props
   } = mergedProps;
-  const { color } = useTheme();
   const pinStyles = getTransform(pin, overlap);
 
-  const containerStyles = useMemo(() => {
-    const variantColor = variantColorMap[variant];
-    return {
-      backgroundColor: color[variantColor],
-      borderColor: color.bgSecondary,
+  const containerStyle = useMemo(
+    () => ({
       ...pinStyles,
       ...styles?.container,
-    };
-  }, [color, pinStyles, styles?.container, variant]);
+    }),
+    [pinStyles, styles?.container],
+  );
 
   const motionProps = useMotionProps({
     enterConfigs: [dotOpacityEnterConfig, dotScaleEnterConfig],
@@ -145,35 +153,55 @@ export const DotCount = memo((_props: DotCountProps) => {
     [styles?.root, style],
   );
 
+  const displayCount = useMemo(() => parseDotCountMaxOverflow(count, max), [count, max]);
+
   return (
     <div
       aria-label={accessibilityLabel}
       className={cx(baseCss, className, classNames?.root)}
       data-testid={testID}
       style={rootStyles}
-      {...props}
     >
       {children}
       <NewAnimatePresence>
         {count > 0 && (
-          <motion.div
-            {...motionProps}
-            className={cx(dotCountContentCss, classNames?.container)}
-            data-testid="dotcount-container"
-            style={containerStyles}
+          // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
+          <MotionBox
+            {...({
+              ...motionProps,
+              alignItems,
+              background: variantColorMap[variant],
+              borderColor,
+              borderRadius,
+              borderWidth,
+              className: classNames?.container,
+              'data-testid': 'dotcount-container',
+              display,
+              height,
+              justifyContent,
+              minWidth: height,
+              paddingX,
+              style: containerStyle,
+              width,
+              ...props,
+            } as React.ComponentProps<typeof MotionBox>)}
           >
             <Text
               as="p"
               className={classNames?.text}
-              color="fgInverse"
+              color={color}
               display="block"
-              font="caption"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
               style={styles?.text}
               textAlign="center"
             >
-              {parseDotCountMaxOverflow(count, max)}
+              {displayCount}
             </Text>
-          </motion.div>
+          </MotionBox>
         )}
       </NewAnimatePresence>
     </div>

@@ -1,6 +1,6 @@
 const nxPreset = require('@nx/jest/preset');
 
-const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
+const isCI = process.env.CI === 'true';
 
 const config = {
   ...nxPreset,

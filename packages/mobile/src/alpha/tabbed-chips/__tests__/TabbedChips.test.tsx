@@ -35,15 +35,11 @@ describe('TabbedChips(Alpha)', () => {
     const firstTestId = tabs[0].testID ?? tabs[0].id;
     const secondTestId = tabs[1].testID ?? tabs[1].id;
 
-    expect(screen.getByTestId(firstTestId)).toHaveAccessibilityState({ selected: true });
+    expect(screen.getByTestId(firstTestId)).toBeSelected();
 
     fireEvent.press(screen.getByTestId(secondTestId));
 
-    await waitFor(() =>
-      expect(screen.getByTestId(secondTestId)).toHaveAccessibilityState({ selected: true }),
-    );
-    await waitFor(() =>
-      expect(screen.getByTestId(firstTestId)).toHaveAccessibilityState({ selected: false }),
-    );
+    await waitFor(() => expect(screen.getByTestId(secondTestId)).toBeSelected());
+    await waitFor(() => expect(screen.getByTestId(firstTestId)).not.toBeSelected());
   });
 });

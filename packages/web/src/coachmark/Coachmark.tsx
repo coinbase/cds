@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { type DimensionValue, type SharedProps } from '@coinbase/cds-common';
+import { type SharedProps } from '@coinbase/cds-common';
 
 import { IconButton } from '../buttons/IconButton';
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -43,7 +43,7 @@ export type CoachmarkBaseProps = SharedProps &
     /**
      * Desired width of the Coachmark with respect to max width of windowWidth - spacing2 * 2
      */
-    width?: DimensionValue;
+    width?: React.CSSProperties['width'];
     /**
      * a11y label of the close button
      */
@@ -71,7 +71,6 @@ export const Coachmark = memo(
     return (
       <InvertedThemeProvider>
         <VStack
-          {...props}
           ref={ref}
           borderRadius={400}
           maxWidth={400}
@@ -79,6 +78,7 @@ export const Coachmark = memo(
           position="relative"
           testID={testID}
           width={width}
+          {...props}
         >
           {media}
           {!!onClose && (

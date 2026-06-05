@@ -106,8 +106,8 @@ export const DotSymbol = memo((_props: DotSymbolProps) => {
       aria-label={accessibilityLabel}
       className={cx(baseCss, className)}
       data-testid={testID}
-      {...props}
       style={style}
+      {...props}
     >
       {children}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { TabsContext, type TabsContextValue, useTabsContext } from '../TabsContext';
 
@@ -25,7 +25,6 @@ describe('useTabsContext', () => {
   });
 
   it('throw an error if not wrapped inside the provider', () => {
-    const { result } = renderHook(() => useTabsContext());
-    expect(result.error).toEqual(HOOK_ERROR);
+    expect(() => renderHook(() => useTabsContext())).toThrow(HOOK_ERROR);
   });
 });

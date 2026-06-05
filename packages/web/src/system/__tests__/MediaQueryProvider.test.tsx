@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { act, render, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, render, renderHook, screen } from '@testing-library/react';
 
 // Mock the listener utilities
 import * as MediaQueryListenerUtils from '../../utils/mediaQueryListener';
@@ -141,9 +140,7 @@ describe('createMediaQueryStore client-side logic', () => {
 
     useEffect(() => {
       const callback = () => {
-        act(() => {
-          setMatches(store.getSnapshot(query));
-        });
+        setMatches(store.getSnapshot(query));
       };
       const unsubscribe = store.subscribe(query, callback);
       callback();

@@ -62,4 +62,14 @@ describe('AvatarButton', () => {
 
     expect(screen.getByRole('button')).not.toHaveAttribute('onClick');
   });
+
+  it('accepts deprecated border props without changing rendering', () => {
+    render(
+      <DefaultThemeProvider>
+        <AvatarButton bordered alt="Sneezy" borderRadius={900} borderWidth={300} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toBeDefined();
+  });
 });

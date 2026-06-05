@@ -6,7 +6,6 @@ import {
   animateDropdownTransformOutConfig,
 } from '@coinbase/cds-common/animation/dropdown';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { DimensionValue } from '@coinbase/cds-common/types';
 import { m as motion } from 'framer-motion';
 
 import { VStack } from '../layout/VStack';
@@ -22,7 +21,7 @@ const dropdownStaticClassName = 'cds-dropdown';
  * @deprecationExpectedRemoval v10
  */
 export type DropdownContentProps = {
-  height?: DimensionValue;
+  height?: React.CSSProperties['height'];
   placement?: Placement;
 } & Pick<DropdownProps, 'width' | 'maxHeight' | 'maxWidth' | 'minWidth' | 'children'>;
 

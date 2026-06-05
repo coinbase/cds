@@ -77,7 +77,7 @@ const LoremIpsum = ({ title, concise, repeat }: LoremIpsumProps) => {
 };
 
 type MockModalProps = {
-  triggerRef?: React.RefObject<HTMLButtonElement>;
+  triggerRef?: React.RefObject<HTMLButtonElement | null>;
   focusTrigger?: () => void;
   onBackButtonClick?: () => void;
 };
@@ -207,8 +207,8 @@ describe('Modal', () => {
     const modal = screen.getByRole('dialog');
 
     expect(modal).toHaveAttribute('aria-modal', 'true');
-    expect(modal).toHaveAttribute('aria-labelledby', expect.stringMatching(/:r[0-9].*/));
-    expect(screen.getByText(TITLE)).toHaveAttribute('id', expect.stringMatching(/:r[0-9].*/));
+    expect(modal).toHaveAttribute('aria-labelledby', expect.stringMatching(/«r[0-9]+»/));
+    expect(screen.getByText(TITLE)).toHaveAttribute('id', expect.stringMatching(/«r[0-9]+»/));
     expect(modal).not.toHaveAttribute('aria-label');
   });
 

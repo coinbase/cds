@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "declarationDir": "dts",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/*/__testfixtures__/**"
+  ],
+  "references": []
+}

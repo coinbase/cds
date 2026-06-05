@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { VStack } from '@coinbase/cds-web/layout';
 import type { Props } from '@theme/Navbar/MobileSidebar/Layout';
 

@@ -10,7 +10,7 @@ export type UseCounterParams = {
 export const useCounter = ({ startNum, endNum, durationInMillis }: UseCounterParams) => {
   const skipAnimation = isStorybook();
   const [count, setCount] = useState(skipAnimation ? endNum : startNum);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     const clearTimeoutRef = () => {

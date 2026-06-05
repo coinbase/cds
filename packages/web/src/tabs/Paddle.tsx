@@ -124,7 +124,13 @@ export const Paddle = ({
           color={background}
           data-testid={`${testID}--container`}
         >
-          <motion.span className={buttonCss} {...buttonMotionProps}>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
+          <motion.span
+            {...({
+              className: buttonCss,
+              ...buttonMotionProps,
+            } as React.ComponentProps<typeof motion.span>)}
+          >
             <IconButton
               accessibilityLabel={accessibilityLabel}
               name={direction === 'left' ? 'caretLeft' : 'caretRight'}
@@ -134,9 +140,12 @@ export const Paddle = ({
               variant="secondary"
             />
           </motion.span>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
           <motion.span
-            className={cx(gradientCss, direction === 'left' ? gradientLeftCss : gradientRightCss)}
-            {...gradientMotionProps}
+            {...({
+              className: cx(gradientCss, direction === 'left' ? gradientLeftCss : gradientRightCss),
+              ...gradientMotionProps,
+            } as React.ComponentProps<typeof motion.span>)}
           />
         </Box>
       )}

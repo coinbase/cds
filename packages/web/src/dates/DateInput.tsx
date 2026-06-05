@@ -104,7 +104,6 @@ export const DateInput = memo(
       <VStack className={className} minWidth={164} style={style} width="100%">
         <TextInput
           ref={ref}
-          {...props}
           end={end}
           helperText={helperText || error?.message || intlDateFormat.dateStringFormat}
           onBlur={handleBlur}
@@ -115,6 +114,7 @@ export const DateInput = memo(
           testIDMap={testIDMap}
           value={inputValue}
           variant={variant || (error ? 'negative' : undefined)}
+          {...props}
         />
       </VStack>
     );

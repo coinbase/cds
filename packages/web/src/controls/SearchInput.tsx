@@ -9,10 +9,14 @@ import { InputIcon } from './InputIcon';
 import { InputIconButton } from './InputIconButton';
 import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
 
+/**
+ * @deprecated Use local constants or the `compact` prop instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const scales = {
   regular: 56,
   compact: 40,
-};
+} as const;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -27,6 +31,8 @@ export type SearchInputBaseProps = Pick<
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
   | 'font'
+  | 'labelFont'
+  | 'labelColor'
   | 'placeholder'
   | 'testID'
   | 'testIDMap'

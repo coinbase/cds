@@ -887,48 +887,93 @@ const WithHelperText = () => (
   </VStack>
 );
 
-const SpacingVariant = () => (
-  <VStack>
-    {/* Preferred (new design) */}
-    <ListCell
-      accessory="arrow"
-      description="New design"
-      detail="$12,345.00"
-      intermediary={<Icon name="chartLine" />}
-      media={<Avatar src={assets.eth.imageUrl} />}
-      onClick={onClickConsole}
-      spacingVariant="condensed"
-      subdetail="+1.23%"
-      title="Condensed"
-      variant="positive"
-    />
+const BorderCustomization = () => {
+  const [isCondensed, setIsCondensed] = useState(true);
+  const spacingVariant = isCondensed ? 'condensed' : 'normal';
 
-    {/* Deprecated options kept for backward compatibility */}
-    <ListCell
-      accessory="arrow"
-      description="Deprecated (use condensed)"
-      detail="$12,345.00"
-      intermediary={<Icon name="chartLine" />}
-      media={<Avatar src={assets.eth.imageUrl} />}
-      onClick={onClickConsole}
-      spacingVariant="compact"
-      subdetail="+1.23%"
-      title="Compact"
-      variant="positive"
-    />
-    <ListCell
-      accessory="arrow"
-      detail="$12,345.00"
-      intermediary={<Icon name="chartLine" />}
-      media={<Avatar src={assets.eth.imageUrl} />}
-      onClick={onClickConsole}
-      spacingVariant="normal"
-      subdetail="+1.23%"
-      title="Normal"
-      variant="positive"
-    />
-  </VStack>
-);
+  return (
+    <VStack gap={2} padding={2} width="360px">
+      <Switch
+        checked={isCondensed}
+        onChange={(event) => setIsCondensed(event.currentTarget.checked)}
+      >
+        Spacing variant: {spacingVariant}
+      </Switch>
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        description="Bordered on all sides"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="bordered"
+      />
+      <ListCell
+        borderedTop
+        borderColor="bgLine"
+        description="Border on top side only"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedTop"
+      />
+      <ListCell
+        borderedHorizontal
+        borderColor="bgLine"
+        description="Borders on leading and trailing sides"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderedHorizontal"
+      />
+      <ListCell
+        bordered
+        borderColor={{
+          phone: 'fgPositive',
+          tablet: 'fgNegative',
+          desktop: 'accentBoldPurple',
+        }}
+        description="Custom border color"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderColor"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderWidth={200}
+        description="Uniform border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderWidth"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderTopWidth={300}
+        description="Top border width"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopWidth"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderRadius={300}
+        description="Uniform corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderRadius"
+      />
+      <ListCell
+        bordered
+        borderColor="bgLine"
+        borderTopLeftRadius={400}
+        description="Top-left corner radius"
+        onClick={onClickConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopLeftRadius"
+      />
+    </VStack>
+  );
+};
 
 const CondensedListCell = () => {
   return (
@@ -1238,7 +1283,236 @@ const UseCaseShowcase = () => {
   );
 };
 
+/**
+ * This story shows all 3 spacing variants side by side for easy comparison.
+ * Each column represents a different variant, and each row shows the same content configuration.
+ *
+ * This is useful for:
+ * - Comparing visual differences between variants
+ * - Understanding the impact of removing fixed min-height values
+ * - Testing before/after changes to spacing or height behavior
+ *
+ * Current min-height values:
+ * - normal: 80px
+ * - compact (deprecated): 40px
+ * - condensed: undefined (no min-height)
+ */
+const SpacingVariantsComparison = () => {
+  const spacingVariants = ['normal', 'compact', 'condensed'] as const;
+
+  const renderCell = (
+    spacingVariant: 'normal' | 'compact' | 'condensed',
+    props: Partial<React.ComponentProps<typeof ListCell>>,
+  ) => (
+    <ListCell
+      {...props}
+      spacingVariant={spacingVariant}
+      style={{ border: '1px dashed var(--color-bgLine)', ...props.style }}
+    />
+  );
+
+  return (
+    <VStack gap={6} padding={4}>
+      {/* Header row */}
+      <HStack gap={4}>
+        {spacingVariants.map((variant) => (
+          <VStack key={variant} alignItems="center" gap={1} width="320px">
+            <Text font="title3">{variant}</Text>
+            <Text color="fgMuted" font="label2">
+              {variant === 'normal'
+                ? 'min-height: 80px'
+                : variant === 'compact'
+                  ? 'min-height: 40px'
+                  : 'min-height: none'}
+            </Text>
+          </VStack>
+        ))}
+      </HStack>
+
+      {/* Row 1: Title only - shows min-height impact most clearly */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Title only (min-height impact most visible)
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, { title: 'Title' })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 2: Title + Detail */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Title + Detail
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'Title',
+                detail: '$12,345.00',
+                subdetail: '+1.23%',
+                variant: 'positive',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 3: Title + Description */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Title + Description
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'Title',
+                description: 'Description text here',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 4: Full content - Title + Description + Detail + Subdetail */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Full content (Title + Description + Detail + Subdetail)
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'Title',
+                description: 'Description',
+                detail: '$12,345.00',
+                subdetail: '+1.23%',
+                variant: 'positive',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 5: With Media */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          With Media (Avatar)
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'Title',
+                description: 'Description',
+                detail: '$12,345.00',
+                subdetail: '+1.23%',
+                media: <Avatar src={assets.eth.imageUrl} />,
+                variant: 'positive',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 6: With Media + Accessory */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          With Media + Accessory
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'Title',
+                description: 'Description',
+                detail: '$12,345.00',
+                subdetail: '+1.23%',
+                media: <Avatar src={assets.eth.imageUrl} />,
+                accessory: 'arrow',
+                variant: 'positive',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 7: Pressable */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Pressable (onClick)
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'Title',
+                description: 'Description',
+                detail: '$12,345.00',
+                subdetail: '+1.23%',
+                media: <Avatar src={assets.eth.imageUrl} />,
+                accessory: 'arrow',
+                onClick: onClickConsole,
+                variant: 'positive',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 8: Long title - tests text wrapping at different heights */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Long title (tests numberOfLines behavior)
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, {
+                title: 'This is a very long title that should wrap to multiple lines',
+                detail: '$12,345.00',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+
+      {/* Row 9: Mixed list simulation - shows how lists look with varying content */}
+      <VStack gap={2}>
+        <Text color="fgMuted" font="headline">
+          Mixed content list (shows height inconsistency without min-height)
+        </Text>
+        <HStack alignItems="flex-start" gap={4}>
+          {spacingVariants.map((variant) => (
+            <VStack key={variant} width="320px">
+              {renderCell(variant, { title: 'Short' })}
+              {renderCell(variant, {
+                title: 'With description',
+                description: 'Has more content',
+              })}
+              {renderCell(variant, { title: 'Short again' })}
+              {renderCell(variant, {
+                title: 'Full content',
+                description: 'Description here',
+                detail: '$100.00',
+                subdetail: '+5%',
+                variant: 'positive',
+              })}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+    </VStack>
+  );
+};
+
 export {
+  BorderCustomization,
   CompactContentDeprecated,
   CompactPressableContentDeprecated,
   CondensedListCell,
@@ -1248,7 +1522,7 @@ export {
   LongContent,
   PressableContent,
   PriorityContent,
-  SpacingVariant,
+  SpacingVariantsComparison,
   UseCaseShowcase,
   WithAccessory,
   WithActions,

@@ -31,7 +31,7 @@ export type ProgressCircleBaseProps = ProgressBaseProps & {
    */
   hideContent?: boolean;
   /**
-   * @deprecated Use hideContent instead. This will be removed in a future major release.
+   * @deprecated Use `hideContent` instead. This will be removed in a future major release.
    * @deprecationExpectedRemoval v8
    * Toggle used to hide the text rendered inside the circle.
    */

@@ -40,7 +40,10 @@ export type IconBaseProps = SharedProps &
      * @default false
      */
     active?: boolean;
-    /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+    /**
+     * @deprecated Use `style`, `styles.root`, `className`, `classNames.root`, or the `color` prop to customize icon color. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     dangerouslySetColor?: string;
   };
 

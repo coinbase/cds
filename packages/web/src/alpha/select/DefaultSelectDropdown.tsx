@@ -16,6 +16,10 @@ import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
 import type { SelectDropdownProps, SelectOption, SelectOptionCustomUI, SelectType } from './Select';
 import { defaultAccessibilityRoles, isSelectOptionGroup } from './Select';
 
+// intentional design decision to set max height to this value
+// will cut off an option midway to afford scrolling action
+const DEFAULT_SELECT_DROPDOWN_MAX_HEIGHT = 252;
+
 const initialStyle = { opacity: 0, y: 0 };
 const animateStyle = { opacity: 1, y: 4 };
 
@@ -59,6 +63,7 @@ const DefaultSelectDropdownComponent = memo(
         SelectOptionGroupComponent = DefaultSelectOptionGroup,
         accessibilityLabel = 'Select dropdown',
         accessibilityRoles = defaultAccessibilityRoles,
+        maxHeight = DEFAULT_SELECT_DROPDOWN_MAX_HEIGHT,
         ...props
       }: SelectDropdownProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLDivElement>,
@@ -264,7 +269,7 @@ const DefaultSelectDropdownComponent = memo(
       useEffect(() => {
         if (!controlRef.current) return;
         const resizeObserver = new ResizeObserver((entries) => {
-          setContainerWidth(entries[0].contentRect.width);
+          setContainerWidth(entries[0].target.getBoundingClientRect().width);
         });
         resizeObserver.observe(controlRef.current);
         return () => resizeObserver.disconnect();
@@ -304,7 +309,7 @@ const DefaultSelectDropdownComponent = memo(
                     borderRadius={400}
                     elevation={2}
                     flexDirection="column"
-                    maxHeight={252}
+                    maxHeight={maxHeight}
                     overflow="auto"
                   >
                     {shouldShowSelectAll && (

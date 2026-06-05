@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@linaria/core';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Accordion, AccordionItem } from '../../accordion';
 import { LoremIpsum } from '../../layout/__stories__/LoremIpsum';
@@ -11,10 +11,13 @@ import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '..';
 
-export default {
+const meta: Meta = {
   title: 'Components/Table/TableCell',
   component: TableCell,
-} as Meta;
+};
+
+export default meta;
+type Story = StoryObj;
 
 const handleClick = console.log;
 
@@ -28,8 +31,8 @@ const spacingConfig = {
   huge: { padding: 7 },
 } as const;
 
-export const CellSpacing: Story = () => {
-  return (
+export const CellSpacing: Story = {
+  render: () => (
     <Table bordered cellSpacing={spacingConfig.flush} variant="ruled">
       <TableHeader>
         <TableRow backgroundColor="bgAlternate">
@@ -42,15 +45,15 @@ export const CellSpacing: Story = () => {
         </TableRow>
       </TableBody>
     </Table>
-  );
+  ),
 };
 
 const flexCss = css`
   display: flex;
 `;
 
-export const VerticallyAlignedTableCell: Story = () => {
-  return (
+export const VerticallyAlignedTableCell: Story = {
+  render: () => (
     <Table bordered cellSpacing={spacingConfig.flush} variant="ruled">
       <TableBody>
         <TableRow>
@@ -72,11 +75,11 @@ export const VerticallyAlignedTableCell: Story = () => {
         </TableRow>
       </TableBody>
     </Table>
-  );
+  ),
 };
 
-export const ComplexSpacingOverride: Story = () => {
-  return (
+export const ComplexSpacingOverride: Story = {
+  render: () => (
     <VStack gap={2}>
       <Text as="p" display="block" font="body">
         This story is complex on purpose - it is intended to provide visgreg testing to ensure crazy
@@ -157,11 +160,11 @@ export const ComplexSpacingOverride: Story = () => {
         </TableBody>
       </Table>
     </VStack>
-  );
+  ),
 };
 
-export const SampleCells: Story = () => {
-  return (
+export const SampleCells: Story = {
+  render: () => (
     <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
       <Table bordered variant="ruled">
         <TableHeader>
@@ -209,11 +212,11 @@ export const SampleCells: Story = () => {
         </TableFooter>
       </Table>
     </ThemeProvider>
-  );
+  ),
 };
 
-export const SampleFixedLayout: Story = () => {
-  return (
+export const SampleFixedLayout: Story = {
+  render: () => (
     <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
       <Table bordered tableLayout="fixed" variant="ruled">
         <TableHeader>
@@ -261,5 +264,5 @@ export const SampleFixedLayout: Story = () => {
         </TableFooter>
       </Table>
     </ThemeProvider>
-  );
+  ),
 };

@@ -1,9 +1,5 @@
-import { type StyleProp, type ViewStyle } from 'react-native';
-import {
-  type DimensionValue,
-  type SharedAccessibilityProps,
-  type SharedProps,
-} from '@coinbase/cds-common/types';
+import { type DimensionValue, type StyleProp, type ViewStyle } from 'react-native';
+import { type SharedAccessibilityProps, type SharedProps } from '@coinbase/cds-common/types';
 
 import type { PressableProps } from '../system';
 

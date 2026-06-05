@@ -795,6 +795,77 @@ const WithHelperText = () => (
   </>
 );
 
+const BorderCustomization = () => {
+  const [isCondensed, setIsCondensed] = useState(true);
+  const spacingVariant = isCondensed ? 'condensed' : 'normal';
+
+  return (
+    <VStack gap={2} padding={2}>
+      <Switch
+        checked={isCondensed}
+        onChange={(_, nextChecked) => setIsCondensed(Boolean(nextChecked))}
+      >
+        Spacing variant: {spacingVariant}
+      </Switch>
+      <ListCell
+        bordered
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="bordered"
+      />
+      <ListCell
+        borderedTop
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedTop"
+      />
+      <ListCell
+        borderedHorizontal
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderedHorizontal"
+      />
+      <ListCell
+        bordered
+        borderColor="accentBoldPurple"
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderColor"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopWidth={200}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopWidth"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderRadius={200}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderRadius"
+      />
+      <ListCell
+        borderColor="bgLine"
+        borderTopLeftRadius={300}
+        borderWidth={100}
+        onPress={onPressConsole}
+        spacingVariant={spacingVariant}
+        title="borderTopLeftRadius"
+      />
+    </VStack>
+  );
+};
+
 const CustomSpacing = () => (
   <>
     <ListCell
@@ -824,7 +895,7 @@ const CustomSpacing = () => (
 const CondensedListCell = () => {
   const theme = useTheme();
   return (
-    <VStack width="360px">
+    <VStack>
       <ListCell
         accessory="more"
         description="Description"
@@ -1060,7 +1131,7 @@ const UseCaseShowcase = () => {
   }, []);
 
   return (
-    <VStack width="360px">
+    <VStack>
       <ListCell
         accessibilityLabel={`BTC, value ${currency.format(btcPrice)}, amount ${btcAmt.toLocaleString()} BTC`}
         // If you need to pass non-string values to the detail or subdetail,
@@ -1213,6 +1284,9 @@ const ListCellScreen = () => {
       </Example>
       <Example inline title="WithHelperText" titlePadding={titlePadding}>
         <WithHelperText />
+      </Example>
+      <Example inline title="BorderCustomization" titlePadding={titlePadding}>
+        <BorderCustomization />
       </Example>
       <Example inline title="CustomSpacing" titlePadding={titlePadding}>
         <CustomSpacing />

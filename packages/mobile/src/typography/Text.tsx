@@ -60,9 +60,15 @@ export type TextBaseProps = StyleProps & {
    * @default false
    */
   noWrap?: boolean;
-  /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+  /**
+   * @deprecated Use `style` or the `color` style prop to set custom text colors. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
   dangerouslySetColor?: TextStyle['color'];
-  /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+  /**
+   * @deprecated Use `style` or the `background` style prop to set custom text background colors. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
   dangerouslySetBackground?: TextStyle['backgroundColor'];
   /**
    * @deprecated Do not use this prop, it is a migration escape hatch. This will be removed in a future major release.
@@ -89,6 +95,8 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
   },
 });
+
+const HEADER_FONTS = new Set(['display1', 'display2', 'display3', 'title1', 'title2']);
 
 export const Text = memo(
   forwardRef<NativeText, TextProps>(
@@ -176,6 +184,7 @@ export const Text = memo(
         flexGrow,
         opacity,
         renderEmptyNode = true,
+        accessibilityRole = HEADER_FONTS.has(font) ? 'header' : undefined,
         ...props
       },
       ref,
@@ -372,9 +381,11 @@ export const Text = memo(
       return (
         <Component
           ref={ref}
+          accessibilityRole={accessibilityRole}
           ellipsizeMode={ellipsize}
           numberOfLines={computedNumberOfLines}
-          style={memoizedStyles}
+          // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+          style={memoizedStyles as StyleProp<TextStyle>}
           testID={testID}
           {...props}
         >

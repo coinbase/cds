@@ -385,9 +385,9 @@ function RenderEndExample() {
       <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
         <Icon name="questionCircle" />
         {!isCollapsed && (
-          <TextHeadline as="span" color="foreground">
+          <Text as="span" font="headline" color="foreground">
             Help & Support
-          </TextHeadline>
+          </Text>
         )}
       </HStack>
     </Pressable>
@@ -448,7 +448,9 @@ function CustomStyles() {
           >
             <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
               <Icon name="questionCircle" />
-              <TextHeadline as="span">Help</TextHeadline>
+              <Text as="span" font="headline">
+                Help
+              </Text>
             </HStack>
           </Pressable>
         )}
@@ -568,7 +570,11 @@ function ApplicationShell() {
             >
               <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
                 <Icon name="cog" />
-                {!isCollapsed && <TextHeadline as="span">Settings</TextHeadline>}
+                {!isCollapsed && (
+                  <Text as="span" font="headline">
+                    Settings
+                  </Text>
+                )}
               </HStack>
             </Pressable>
             <Pressable
@@ -580,7 +586,11 @@ function ApplicationShell() {
             >
               <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
                 <Avatar size="s" />
-                {!isCollapsed && <TextHeadline as="span">Profile</TextHeadline>}
+                {!isCollapsed && (
+                  <Text as="span" font="headline">
+                    Profile
+                  </Text>
+                )}
               </HStack>
             </Pressable>
           </VStack>

@@ -2,10 +2,10 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 // Timer for single execution
 export const useTimer = () => {
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const startTimeRef = useRef<number>(0);
   const remainingTimeRef = useRef<number>(0);
-  const callbackRef = useRef<() => void>();
+  const callbackRef = useRef<() => void>(undefined);
   const isPausedRef = useRef<boolean>(false);
 
   const clear = useCallback(() => {

@@ -7,7 +7,6 @@ export const ETHStakingCard = () => {
   return (
     <UpsellCard
       action="Start earning"
-      dangerouslySetBackground="rgb(var(--purple70))"
       description={
         <Text as="p" color="fgInverse" font="label2" numberOfLines={3}>
           Earn staking rewards on ETH by holding it on Coinbase
@@ -18,6 +17,7 @@ export const ETHStakingCard = () => {
           <RemoteImage height={174} source="/staking.png" />
         </Box>
       }
+      style={{ backgroundColor: 'rgb(var(--purple70))' }}
       title={
         <Text as="h3" color="fgInverse" font="headline">
           Up to 3.29% APR on ETHs

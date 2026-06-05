@@ -1,15 +1,46 @@
 # Codegen
 
-We have a number of disparate codegen scripts in our repo. This doc page serves as the jump off doc for understanding their functionality.
+A collection of code generation scripts for the CDS monorepo.
 
-# Codegen Scripts in this Package
+## Nx Targets
 
-- Adoption Tracker
-- Icons
-- Illustrations
-- Playground route generation
-- cds-web/cds-mobile/cds-common token generator scripts
+### `yarn nx run codegen:mobile-routes`
 
-## EJS Templates
+Scans all mobile story files (`packages/**/mobile/src/**/__stories__/*.stories.tsx`) and generates the route table for `apps/expo-app/src/routes.ts`.
 
-Codegen needs to be run before using CDS or running the storybook. It uses [ejs](https://ejs.co/) templates to generate source code. The ejs templates live in [`templates/`](./templates). The folder structure in `templates/` should mimic the source file structure that the codegen output should be. The only exception is codegen a component. The component's folder can be skipped by having `shouldCreateFolder` option set to `true` in the codegen script. Rather than creating `templates/components/Button/Button.ejs`, `templates/components/Button.ejs` will suffice.
+Run this when adding or removing mobile component stories.
+
+**Source:** `src/playground/prepareRoutes.ts`
+
+---
+
+### `yarn nx run codegen:icon-svg-map`
+
+Reads every SVG file from `packages/icons/src/svgs/` and generates a static map at `apps/expo-app/src/__generated__/iconSvgMap.ts`. The map keys are `iconName-size-state` (e.g. `account-24-active`) and each value holds the raw SVG string, used by expo-app to render icons directly via `react-native-svg`.
+
+Run this when icons are added, removed, or updated in `packages/icons`.
+
+**Source:** `src/icons/generateIconSvgMap.ts`
+
+---
+
+### `yarn nx run codegen:update-packages-generic-bump`
+
+Syncs the version numbers of `web`, `mobile`, `common`, and `mcp-server` packages to the highest version among them, and inserts a corresponding entry into each out-of-date `CHANGELOG.md`. Used during the release process to keep versions in lockstep.
+
+**Source:** `src/release/updatePkgsForGenericBump.ts`
+
+---
+
+## Utilities
+
+Shared helpers used internally by codegen scripts (`src/utils/`):
+
+- `getSourcePath` — resolves an absolute path from the monorepo root, using `PROJECT_CWD` or `NX_MONOREPO_ROOT` env vars
+- `writeFile` — renders an EJS template (or raw string) and writes the output, optionally running Prettier
+- `buildTemplates` — batch wrapper around `writeFile` for running multiple template renders
+- `writePrettyFile` — writes a file and formats it with Prettier
+- `getHeaderCommentForFileType` — returns the appropriate "DO NOT MODIFY" header comment for a given file extension
+- `getPrettierParser` — returns the Prettier parser for a given file extension
+- `sortAlphabetically` — sorts an array of strings alphabetically
+- `logError` — standardized error logging

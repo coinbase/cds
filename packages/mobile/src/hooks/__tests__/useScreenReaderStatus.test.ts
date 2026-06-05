@@ -1,5 +1,5 @@
 import { AccessibilityInfo } from 'react-native';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { useScreenReaderStatus } from '../useScreenReaderStatus';
 
@@ -15,9 +15,10 @@ describe('useScreenReaderStatus', () => {
 
   it('should return true when screen reader is enabled', async () => {
     (AccessibilityInfo.isScreenReaderEnabled as jest.Mock).mockResolvedValueOnce(true);
-    const { result, waitForNextUpdate } = renderHook(() => useScreenReaderStatus());
-    await waitForNextUpdate();
-    expect(result.current).toBe(true);
+    const { result } = renderHook(() => useScreenReaderStatus());
+    await waitFor(() => {
+      expect(result.current).toBe(true);
+    });
   });
 
   it('should return false when screen reader is disabled', () => {

@@ -8,8 +8,16 @@ export const textDisplay2DefaultElement = 'span';
 
 export type TextDisplay2DefaultElement = typeof textDisplay2DefaultElement;
 
+/**
+ * @deprecated Use `Text` with `font="display2"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextDisplay2BaseProps = TextBaseProps;
 
+/**
+ * @deprecated Use `Text` with `font="display2"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextDisplay2Props<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextDisplay2BaseProps
@@ -20,6 +28,10 @@ type TextDisplay2Component = (<AsComponent extends React.ElementType = TextDispl
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/**
+ * @deprecated Use `Text` with `font="display2"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const TextDisplay2: TextDisplay2Component = forwardRef<
   React.ReactElement<TextDisplay2BaseProps>,
   TextDisplay2BaseProps

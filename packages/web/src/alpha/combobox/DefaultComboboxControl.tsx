@@ -99,8 +99,11 @@ export const DefaultComboboxControl = memo(
                 }}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                 style={{
-                  padding: 0,
-                  height: !hasValue ? (compact ? 40 : 48) : undefined,
+                  // unset default padding to let DefaultSelectControl handle layout/spacing
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  paddingTop: 0,
+                  paddingBottom: 0,
                   minWidth: 0,
                   flexGrow: 1,
                   width: '100%',
@@ -139,8 +142,6 @@ export const DefaultComboboxControl = memo(
           },
           controlValueNode: {
             ...props.styles?.controlValueNode,
-            paddingTop: hasValue ? (compact ? 'var(--space-1)' : 'var(--space-1_5)') : 0,
-            paddingBottom: hasValue ? (compact ? 'var(--space-1)' : 'var(--space-1_5)') : 0,
           },
         }}
         tabIndex={shouldShowSearchInput ? -1 : 0}

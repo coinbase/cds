@@ -1,17 +1,20 @@
-import { memo, useEffect, useMemo } from 'react';
-import { animated, useSpring } from '@react-spring/native';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { durations } from '@coinbase/cds-common/motion/tokens';
 
 import { HStack } from '../layout/HStack';
+import { mobileCurves } from '../motion/convertMotionConfig';
 import { Text } from '../typography/Text';
 
 import type { StepperHeaderComponent } from './Stepper';
 
-const AnimatedHStack = animated(HStack);
+const AnimatedHStack = Animated.createAnimatedComponent(HStack);
 
 export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
   function DefaultStepperHeaderHorizontal({
     activeStep,
     complete,
+    disableAnimateOnMount,
     flatStepIds,
     style,
     paddingBottom = 1.5,
@@ -20,27 +23,41 @@ export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
     fontFamily = font,
     ...props
   }) {
-    const [spring, springApi] = useSpring(
-      {
-        from: { opacity: 0 },
-        to: { opacity: 1 },
-        reset: true,
-      },
-      [],
-    );
+    const opacity = useSharedValue(disableAnimateOnMount ? 1 : 0);
+    const disableAnimateOnMountRef = useRef(disableAnimateOnMount);
+    const isInitialRender = useRef(true);
 
-    // TO DO: resetting the spring doesn't work like it does in react-spring on web
-    // need to look into this deeper and understand why there is a difference in behavior
+    const [displayedStep, setDisplayedStep] = useState(activeStep);
+    const [displayedComplete, setDisplayedComplete] = useState(complete);
+
     useEffect(() => {
-      springApi.start({
-        from: { opacity: 0 },
-        to: { opacity: 1 },
-        reset: true,
-      });
-    }, [springApi, activeStep]);
+      if (isInitialRender.current) {
+        isInitialRender.current = false;
+        setDisplayedStep(activeStep);
+        setDisplayedComplete(complete);
+        if (disableAnimateOnMountRef.current) return;
+        opacity.value = withTiming(1, { duration: durations.fast1, easing: mobileCurves.linear });
+        return;
+      }
 
-    const styles = useMemo(() => [style, spring] as any, [style, spring]);
-    const flatStepIndex = activeStep ? flatStepIds.indexOf(activeStep.id) : -1;
+      // Fade out with old text, then swap text and fade in
+      opacity.value = withTiming(0, { duration: durations.fast1, easing: mobileCurves.linear });
+
+      const timeout = setTimeout(() => {
+        setDisplayedStep(activeStep);
+        setDisplayedComplete(complete);
+        opacity.value = withTiming(1, { duration: durations.fast1, easing: mobileCurves.linear });
+      }, durations.fast1 + durations.fast1);
+
+      return () => clearTimeout(timeout);
+    }, [activeStep, complete, opacity]);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      opacity: opacity.value,
+    }));
+
+    const styles = useMemo(() => [style, animatedStyle], [style, animatedStyle]);
+    const flatStepIndex = displayedStep ? flatStepIds.indexOf(displayedStep.id) : -1;
     const emptyText = ' '; // Simple space for React Native
 
     return (
@@ -52,7 +69,7 @@ export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
         {...props}
       >
         <Text alignItems="center" display="flex" font="caption" fontFamily={fontFamily}>
-          {!activeStep || complete ? (
+          {!displayedStep || displayedComplete ? (
             emptyText
           ) : (
             <HStack gap={1}>
@@ -65,12 +82,12 @@ export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
               >
                 {flatStepIndex + 1}/{flatStepIds.length}
               </Text>
-              {activeStep.label && typeof activeStep.label === 'string' ? (
+              {displayedStep.label && typeof displayedStep.label === 'string' ? (
                 <Text font={font} fontFamily={fontFamily} numberOfLines={1}>
-                  {activeStep.label}
+                  {displayedStep.label}
                 </Text>
               ) : (
-                activeStep.label
+                displayedStep.label
               )}
             </HStack>
           )}

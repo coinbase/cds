@@ -1,24 +1,52 @@
 import { useCallback, useMemo, useState } from 'react';
 import type React from 'react';
-import type { View } from 'react-native';
-import { type Coords, type Placement } from '@floating-ui/react-dom';
+
+// TODO: move all props irrelevant to useTour core logic to web and mobile packages. eg TourStepArrowComponent, TourStepComponent, TourScrollOptions, etc.
+
+/**
+ * Placement for the tour step arrow. Matches the placement values used by positioning libraries
+ * (e.g. @floating-ui) so web/mobile can pass through their placement directly.
+ */
+export type TourStepArrowPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end';
+
+/**
+ * Arrow coordinates and offsets for the tour step arrow. Matches the shape provided by arrow
+ * middleware (e.g. @floating-ui) so web/mobile can pass through their arrow data directly.
+ */
+export type TourStepArrowData = {
+  x?: number;
+  y?: number;
+  centerOffset?: number;
+  alignmentOffset?: number;
+};
 
 /**
  * @deprecated Import from `@coinbase/cds-web` or `@coinbase/cds-mobile` instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export type TourStepArrowComponentProps = {
-  /* The `@floating-ui` `arrow` coordinates and offsets https://floating-ui.com/docs/arrow#data */
-  arrow?: Partial<Coords> & {
-    centerOffset: number;
-    alignmentOffset?: number;
-  };
-  /* The `@floating-ui` `arrow` placement https://floating-ui.com/docs/arrow#placement */
-  placement: Placement;
+  /** Arrow coordinates and offsets for positioning the arrow element. */
+  arrow?: TourStepArrowData;
+  /** Placement of the arrow relative to the floating element. */
+  placement: TourStepArrowPlacement;
   style?: Record<string, string | number>;
 };
 
 /**
+ * The TourStepArrowComponent forwards a ref to the underlying element.
+ * This is required for the positioning library to work correctly.
  * @deprecated Import from `@coinbase/cds-web` or `@coinbase/cds-mobile` instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
@@ -104,14 +132,19 @@ export type TourOptions<TourStepId extends string = string> = {
   onChange: (tourStep: TourStepValue<TourStepId> | null) => void;
 };
 
-export type TourApi<TourStepId extends string = string> = Omit<
+/**
+ * API returned by useTour and provided via TourContext.
+ * @template TourStepId - Step id string literal type.
+ * @template TTarget - Type of the active step's target element (e.g. HTMLElement for web, View for react-native). Defaults to unknown.
+ */
+export type TourApi<TourStepId extends string = string, TTarget = unknown> = Omit<
   TourOptions<TourStepId>,
   'onChange'
 > & {
-  /* The target element of the currently active tour step. */
-  activeTourStepTarget: HTMLElement | View | null;
-  /* Set the target element of the currently active tour step. */
-  setActiveTourStepTarget: (target: HTMLElement | View | null) => void;
+  /** The target element of the currently active tour step. */
+  activeTourStepTarget: TTarget | null;
+  /** Set the target element of the currently active tour step. */
+  setActiveTourStepTarget: (target: TTarget | null) => void;
   /* Jumps to a specified step of the tour. */
   setActiveTourStep: (tourStepId: TourStepId | null) => void;
   /* Starts the tour; can optionally start at a specified step ID. */
@@ -128,12 +161,12 @@ export type TourApi<TourStepId extends string = string> = Omit<
  * A controlled hook for managing tour state, such as the currently active tour step.
  * @see {@link https://linear.app/coinbase/issue/CDS-1878 CDS-1878} for planned refactor to make this API platform agnostic.
  */
-export const useTour = <TourStepId extends string = string>({
+export const useTour = <TourStepId extends string = string, TTarget = unknown>({
   steps,
   activeTourStep,
   onChange,
-}: TourOptions<TourStepId>): TourApi<TourStepId> => {
-  const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | View | null>(null);
+}: TourOptions<TourStepId>): TourApi<TourStepId, TTarget> => {
+  const [activeTourStepTarget, setActiveTourStepTarget] = useState<TTarget | null>(null);
   const startTour = useCallback(
     async (tourStepId?: TourStepId | null) => {
       if (typeof tourStepId === 'undefined') return onChange(steps[0]);
@@ -200,17 +233,18 @@ export const useTour = <TourStepId extends string = string>({
   }, [activeTourStep, steps, onChange]);
 
   const api = useMemo(
-    () => ({
-      steps,
-      activeTourStep,
-      setActiveTourStep,
-      activeTourStepTarget,
-      setActiveTourStepTarget,
-      startTour,
-      stopTour,
-      goNextTourStep,
-      goPreviousTourStep,
-    }),
+    () =>
+      ({
+        steps,
+        activeTourStep,
+        setActiveTourStep,
+        activeTourStepTarget,
+        setActiveTourStepTarget,
+        startTour,
+        stopTour,
+        goNextTourStep,
+        goPreviousTourStep,
+      }) as TourApi<TourStepId, TTarget>,
     [
       steps,
       activeTourStep,

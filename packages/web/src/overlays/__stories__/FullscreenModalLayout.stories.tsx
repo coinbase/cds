@@ -282,7 +282,7 @@ export const Example = () => {
       description="Amp is an Ethereum token that can be used as collateral to provide instant settlement assurance any time value is transferred."
       headerAction={{
         name: 'more',
-        variant: 'foregroundMuted',
+        variant: 'secondary',
       }}
       image="https://images.ctfassets.net/q5ulk4bp65r7/3rv8jr1B1Z1dZ2EhHqo7dp/e74ddbf1cd4836b83d34fe5cec351d78/Alt-Coin.png?w=768&fm=png"
       mediaPlacement="above"

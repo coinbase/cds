@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import type React from 'react';
 import type { RectReadOnly } from 'react-use-measure';
-import type { DimensionValue } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useIsoEffect } from '../hooks/useIsoEffect';
@@ -34,7 +34,9 @@ export function useResponsiveHeight({
   const bottomGutter = space[BOTTOM_GUTTER_SPACE];
   const calculatedGap = space[gap ?? 0];
 
-  const [dropdownHeight, setDropdownHeight] = useState<DimensionValue | undefined>(maxHeight);
+  const [dropdownHeight, setDropdownHeight] = useState<
+    React.CSSProperties['maxHeight'] | undefined
+  >(maxHeight);
 
   // the following calculates the window height on resize changes and stores it in state
   const [windowHeight, setWindowHeight] = useState<number | undefined>(

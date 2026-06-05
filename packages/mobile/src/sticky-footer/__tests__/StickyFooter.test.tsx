@@ -29,4 +29,34 @@ describe('StickyFooter', () => {
     );
     expect(screen.getByText('Action')).toBeTruthy();
   });
+
+  it('applies default padding values', () => {
+    render(
+      <DefaultThemeProvider>
+        <StickyFooter />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('sticky-footer')).toHaveStyle({
+      paddingTop: 24,
+      paddingStart: 24,
+      paddingEnd: 24,
+    });
+    expect(screen.getByTestId('sticky-footer')).not.toHaveStyle({ paddingBottom: 16 });
+  });
+
+  it('applies compact top padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <StickyFooter compact />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('sticky-footer')).toHaveStyle({
+      paddingTop: 16,
+      paddingStart: 24,
+      paddingEnd: 24,
+    });
+    expect(screen.getByTestId('sticky-footer')).not.toHaveStyle({ paddingBottom: 16 });
+  });
 });

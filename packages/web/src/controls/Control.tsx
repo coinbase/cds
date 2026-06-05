@@ -10,11 +10,24 @@ import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Interactable, type InteractableBaseProps } from '../system/Interactable';
-import type { FilteredHTMLAttributes } from '../types';
+import type { FilteredHTMLAttributes, StylesAndClassNames } from '../types';
 import { Text } from '../typography/Text';
 import { isRtl } from '../utils/isRtl';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-Control';
+/**
+ * Static class names for Control component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const controlClassNames = {
+  /** Persistent outer wrapper across labeled and unlabeled variants. */
+  root: 'cds-Control',
+  /** Native `<label>` wrapper element. */
+  label: 'cds-Control-label',
+  /** Interactable icon wrapper element. */
+  icon: 'cds-Control-icon',
+  /** Native input element. */
+  input: 'cds-Control-input',
+} as const;
 
 const pointerCss = css`
   &:not(:disabled),
@@ -63,7 +76,14 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
   Partial<
     Pick<
       InteractableBaseProps,
-      'background' | 'borderColor' | 'borderRadius' | 'borderWidth' | 'color' | 'elevation'
+      | 'background'
+      | 'borderColor'
+      | 'borderRadius'
+      | 'borderWidth'
+      | 'color'
+      | 'elevation'
+      | 'className'
+      | 'style'
     >
   > & {
     /** Label for the control option. */
@@ -86,10 +106,11 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
     labelStyle?: React.CSSProperties;
   };
 
-export type ControlProps<ControlValue extends string> = ControlBaseProps<ControlValue> & {
-  label?: React.ReactNode;
-  children: React.ReactNode;
-};
+export type ControlProps<ControlValue extends string> = ControlBaseProps<ControlValue> &
+  StylesAndClassNames<typeof controlClassNames> & {
+    label?: React.ReactNode;
+    children: React.ReactNode;
+  };
 
 const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
   _props: ControlProps<ControlValue>,
@@ -116,6 +137,10 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     testID,
     iconStyle,
     labelStyle,
+    className,
+    style,
+    classNames,
+    styles,
     ...htmlProps
   } = mergedProps;
   if (isDevelopment() && !children && !ariaLabelledby) {
@@ -128,7 +153,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
   const labelId = ariaLabelledby ?? id1;
   const inputId = htmlProps.id ?? id2;
 
-  const internalInputRef = useRef<HTMLInputElement>();
+  const internalInputRef = useRef<HTMLInputElement>(undefined);
   const inputRef = useMergeRefs(ref, internalInputRef);
 
   const iconElement = useMemo(
@@ -140,10 +165,10 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         borderColor={borderColor}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
-        className={interactableCss}
+        className={cx(interactableCss, controlClassNames.icon, classNames?.icon)}
         disabled={disabled || readOnly}
         elevation={elevation}
-        style={iconStyle}
+        style={{ ...iconStyle, ...styles?.icon }}
         testID={testID ? `${testID}-parent` : undefined}
       >
         {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
@@ -153,12 +178,13 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
           aria-labelledby={labelId}
           aria-required={type !== 'checkbox' ? required : undefined}
           checked={checked}
-          className={cx(inputBaseCss, pointerCss)}
+          className={cx(inputBaseCss, pointerCss, controlClassNames.input, classNames?.input)}
           data-testid={testID}
           disabled={disabled}
           id={inputId}
           readOnly={readOnly}
           required={required}
+          style={styles?.input}
           type={type}
           value={value}
           {...htmlProps}
@@ -171,6 +197,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       borderColor,
       borderRadius,
       borderWidth,
+      classNames?.icon,
+      classNames?.input,
       checked,
       children,
       disabled,
@@ -182,6 +210,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       labelId,
       readOnly,
       required,
+      styles?.icon,
+      styles?.input,
       testID,
       type,
       value,
@@ -198,9 +228,9 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     if (!label) return iconElement;
     return (
       <label
-        className={cx(COMPONENT_STATIC_CLASSNAME, pointerCss)}
+        className={cx(pointerCss, controlClassNames.label, classNames?.label)}
         htmlFor={inputId}
-        style={labelStyle}
+        style={{ ...labelStyle, ...styles?.label }}
       >
         <Box alignItems="flex-start" flexDirection={isRtl() ? 'row-reverse' : 'row'} gap={1}>
           <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
@@ -212,10 +242,29 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         </Box>
       </label>
     );
-  }, [label, iconElement, inputId, labelStyle, color, disabled, readOnly, labelId]);
+  }, [
+    label,
+    iconElement,
+    inputId,
+    labelStyle,
+    color,
+    disabled,
+    readOnly,
+    labelId,
+    classNames?.label,
+    styles?.label,
+  ]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.
-  return controlElement;
+  return (
+    <Box
+      className={cx(controlClassNames.root, className, classNames?.root)}
+      style={{ ...style, ...styles?.root }}
+      width="fit-content"
+    >
+      {controlElement}
+    </Box>
+  );
 }) as <ControlValue extends string>(
   props: ControlProps<ControlValue> & { ref?: React.Ref<HTMLInputElement> },
 ) => React.ReactElement;

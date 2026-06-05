@@ -13,6 +13,7 @@ import type {
 import { IconButton } from '../buttons';
 import { Pictogram } from '../illustrations/Pictogram';
 import { Box, HStack, VStack } from '../layout';
+import type { StyleProps } from '../styles/styleProps';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
@@ -104,7 +105,11 @@ export const NudgeCard = memo(
     background = 'bgAlternate',
     onPress,
     maxWidth,
-    ...props
+    maxHeight,
+    minHeight,
+    minWidth,
+    height,
+    aspectRatio,
   }: NudgeCardProps) => {
     const hasMedia = pictogram || media;
     const paddingBottom = action ? 1 : 2;
@@ -135,11 +140,11 @@ export const NudgeCard = memo(
         background={background}
         borderColor="transparent"
         borderRadius={500}
-        maxWidth={maxWidth}
+        maxWidth={maxWidth as StyleProps['maxWidth']}
         paddingEnd={onDismissPress ? 3 : 0}
         position="relative"
         testID={testID}
-        width={width}
+        width={width as StyleProps['width']}
       >
         {onDismissPress ? (
           // zIndex is required otherwise CardBody sits on top of it
@@ -159,14 +164,24 @@ export const NudgeCard = memo(
         {/* ported over from CardBody */}
         <HStack
           alignItems="center"
+          aspectRatio={aspectRatio as StyleProps['aspectRatio']}
           flexGrow={1}
           gap={2}
+          height={height as StyleProps['height']}
           justifyContent={mediaPosition === 'right' ? 'space-between' : 'flex-start'}
+          maxHeight={maxHeight as StyleProps['maxHeight']}
+          minHeight={minHeight as StyleProps['minHeight']}
+          minWidth={minWidth as StyleProps['minWidth']}
           {...spacingProps}
-          {...props}
         >
           {hasMedia && mediaPosition === 'left' ? renderMedia : null}
-          <VStack alignItems="flex-start" flexGrow={1} flexShrink={1} gap={2} maxWidth={maxWidth}>
+          <VStack
+            alignItems="flex-start"
+            flexGrow={1}
+            flexShrink={1}
+            gap={2}
+            maxWidth={maxWidth as StyleProps['maxWidth']}
+          >
             <VStack gap={0.5} maxWidth="100%" paddingTop={hasMedia ? 0 : 2}>
               {typeof title === 'string' ? (
                 <Text

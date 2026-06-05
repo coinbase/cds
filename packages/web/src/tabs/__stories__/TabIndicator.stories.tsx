@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from '../../buttons/Button';
 import { VStack } from '../../layout/VStack';
@@ -7,12 +7,15 @@ import { TabIndicator } from '../TabIndicator';
 
 const getRandomNumber = () => Math.random() * 100 + 100;
 
-export default {
+const meta: Meta = {
   title: 'Components/Tabs/TabIndicator',
   component: TabIndicator,
-} as Meta;
+};
 
-export const Default: Story = () => {
+export default meta;
+type Story = StoryObj;
+
+const DefaultRender = () => {
   const [width, setWidth] = useState(120);
   const [x, setX] = useState(120);
 
@@ -29,4 +32,8 @@ export const Default: Story = () => {
       <TabIndicator width={width} x={x} />
     </VStack>
   );
+};
+
+export const Default: Story = {
+  render: () => <DefaultRender />,
 };

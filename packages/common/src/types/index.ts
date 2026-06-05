@@ -49,7 +49,6 @@ export * from './SharedProps';
 export * from './SpacingProps';
 export * from './SparklineInteractiveHeaderBaseProps';
 export * from './SpreadPropsSafely';
-export * from './StickyFooterProps';
 export * from './TagBaseProps';
 export * from './TextBaseProps';
 export * from './TooltipBaseProps';

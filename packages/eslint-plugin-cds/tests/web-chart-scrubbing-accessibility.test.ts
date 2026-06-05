@@ -18,6 +18,19 @@ const ruleTester = new RuleTester({
 ruleTester.run('web-chart-scrubbing-accessibility', rule, {
   valid: [
     normalizeIndent`
+      import { LineChart } from '@coinbase/cds-web/visualizations/chart';
+      const getScrubberAccessibilityLabel = (index) => String(index);
+      const Component = () => {
+        return (
+          <LineChart
+            enableScrubbing
+            accessibilityLabel="Price chart"
+            getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+          />
+        );
+      }
+    `,
+    normalizeIndent`
       import { LineChart } from '@coinbase/cds-web-visualization';
       const getScrubberAccessibilityLabel = (index) => String(index);
       const Component = () => {

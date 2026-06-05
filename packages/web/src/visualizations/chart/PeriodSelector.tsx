@@ -1,0 +1,183 @@
+import React, { forwardRef, memo, useMemo } from 'react';
+import { css } from '@linaria/core';
+import { m as motion } from 'framer-motion';
+
+import type { Polymorphic } from '../../core/polymorphism';
+import { cx } from '../../index';
+import { Box } from '../../layout';
+import {
+  SegmentedTabs,
+  type SegmentedTabsProps,
+  type TabComponent,
+  type TabsActiveIndicatorProps,
+  tabsTransitionConfig,
+} from '../../tabs';
+import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
+import { Text, type TextBaseProps } from '../../typography';
+
+const MotionBox = motion(Box);
+
+// Animated active indicator to support smooth transition of background color
+export const PeriodSelectorActiveIndicator = memo(
+  ({
+    activeTabRect,
+    background = 'bgPrimaryWash',
+    position = 'absolute',
+    borderRadius = 1000,
+    style,
+    ...props
+  }: TabsActiveIndicatorProps) => {
+    const { width, height, x } = activeTabRect;
+    const activeAnimation = useMemo(() => ({ width, x }), [width, x]);
+
+    if (!width) return null;
+
+    return (
+      <MotionBox
+        animate={activeAnimation}
+        borderRadius={borderRadius}
+        data-testid="period-selector-active-indicator"
+        height={height}
+        initial={false}
+        left={0}
+        position={position}
+        role="none"
+        style={{
+          backgroundColor: `var(--color-${background})`,
+          transition: 'background-color 0.2s ease',
+          ...style,
+        }}
+        transition={tabsTransitionConfig}
+        {...props}
+      />
+    );
+  },
+);
+
+export const liveTabLabelDefaultElement = 'span';
+
+export type LiveTabLabelDefaultElement = typeof liveTabLabelDefaultElement;
+
+export type LiveTabLabelBaseProps = TextBaseProps & {
+  /**
+   * The label to display.
+   * @default 'LIVE'
+   */
+  label?: string;
+  /**
+   * Whether to hide the dot.
+   */
+  hideDot?: boolean;
+};
+
+export type LiveTabLabelProps<AsComponent extends React.ElementType> = Polymorphic.Props<
+  AsComponent,
+  LiveTabLabelBaseProps
+>;
+
+// is this bad to use var(--space-1) for height and width?
+const dotBaseCss = css`
+  display: inline-flex;
+  width: var(--space-1);
+  height: var(--space-1);
+  background: currentColor;
+  border-radius: 1000px;
+  margin-inline-end: var(--space-0_75);
+`;
+
+type LiveTabLabelComponent = (<AsComponent extends React.ElementType = LiveTabLabelDefaultElement>(
+  props: LiveTabLabelProps<AsComponent>,
+) => Polymorphic.ReactReturn) &
+  Polymorphic.ReactNamed;
+
+export const LiveTabLabel: LiveTabLabelComponent = memo(
+  forwardRef<React.ReactElement<LiveTabLabelBaseProps>, LiveTabLabelBaseProps>(
+    <AsComponent extends React.ElementType>(
+      {
+        as,
+        color = 'fgNegative',
+        label = 'LIVE',
+        display = 'inline-flex',
+        alignItems = 'center',
+        font = 'label1',
+        hideDot,
+        ...props
+      }: LiveTabLabelProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const Component = (as ?? liveTabLabelDefaultElement) satisfies React.ElementType;
+
+      return (
+        <Text
+          ref={ref}
+          alignItems={alignItems}
+          as={Component}
+          color={color}
+          display={display}
+          font={font}
+          {...props}
+        >
+          {!hideDot && <span className={dotBaseCss} />}
+          {label}
+        </Text>
+      );
+    },
+  ),
+);
+
+// Set font
+const PeriodSelectorTab: TabComponent = memo(
+  forwardRef((props: SegmentedTabProps, ref: React.ForwardedRef<HTMLButtonElement>) => (
+    <SegmentedTab ref={ref} font="label1" {...props} />
+  )),
+);
+
+export type PeriodSelectorProps = SegmentedTabsProps;
+
+/**
+ * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.
+ * It provides transparent background, primary wash active state, and full-width layout by default.
+ */
+export const PeriodSelector = memo(
+  forwardRef(
+    (
+      {
+        background = 'transparent',
+        activeBackground = 'bgPrimaryWash',
+        activeColor = 'fgPrimary',
+        width = '100%',
+        justifyContent = 'space-between',
+        TabComponent = PeriodSelectorTab,
+        TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+        className,
+        classNames,
+        style,
+        styles,
+        ...props
+      }: PeriodSelectorProps,
+      ref: React.ForwardedRef<HTMLElement>,
+    ) => (
+      <SegmentedTabs
+        ref={ref}
+        TabComponent={TabComponent}
+        TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
+        activeBackground={activeBackground}
+        activeColor={activeColor}
+        background={background}
+        className={cx(className, classNames?.root)}
+        classNames={{
+          tab: classNames?.tab,
+          activeIndicator: classNames?.activeIndicator,
+        }}
+        justifyContent={justifyContent}
+        style={styles?.root ? { ...style, ...styles.root } : style}
+        styles={{
+          tab: styles?.tab,
+          activeIndicator: styles?.activeIndicator,
+        }}
+        width={width}
+        {...props}
+      />
+    ),
+  ),
+);

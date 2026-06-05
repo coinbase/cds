@@ -8,9 +8,10 @@ import React, {
   useState,
 } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
 import type { InputVariant, SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import { mergeReactElementRef, mergeRefs } from '@coinbase/cds-common/utils/mergeRefs';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
@@ -68,7 +69,7 @@ const insideLabelCssStartCss = css`
   padding-inline-start: var(--space-0_5);
 `;
 
-export type TextInputBaseProps = NativeInputBaseProps &
+export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
   SharedInputProps &
   Pick<
     InputStackBaseProps,
@@ -82,12 +83,15 @@ export type TextInputBaseProps = NativeInputBaseProps &
     | 'inputBackground'
   > & {
     /**
-     * Customize the element which the input area will be rendered as. Adds ability to render the input area
-     * as a `<textarea />`, `<input />` etc...
-     * By default, the input area will be rendered as an `<input />`.
+     * Customize the element which the input area will be rendered as.
+     * Adds ability to render the input area as a `<textarea />`, `<input />` etc...
+     * By default, TextInput renders an `<input />`.
      * @danger Use this at your own risk, and don't use unless ABSOLUTELY NECESSARY. You may see weird UI when focusing etc..
      * Our default input handles all of the UI/Accessibility needs for your out of the box, but inputNode will not include
      * those.
+     *
+     * If you need a ref to the underlying input element, prefer using `ref` on the `TextInput` component.
+     * Supplying a `ref` on the `inputNode` element is redundant; if present, it will be merged with the component's ref.
      * */
     inputNode?: React.ReactElement;
     /**
@@ -130,14 +134,7 @@ export type TextInputBaseProps = NativeInputBaseProps &
     labelNode?: React.ReactNode;
   };
 
-export type TextInputProps = TextInputBaseProps & NativeInputProps;
-
-const useInputVariant = (focused: boolean, variant: InputVariant) => {
-  return useMemo(
-    () => (focused && variant !== 'positive' && variant !== 'negative' ? 'primary' : variant),
-    [focused, variant],
-  );
-};
+export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor'>;
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
@@ -153,6 +150,8 @@ export const TextInput = memo(
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
+      labelFont = 'label1',
+      labelColor = 'fg',
       accessibilityLabel,
       helperText = '',
       variant = 'foregroundMuted',
@@ -182,8 +181,8 @@ export const TextInput = memo(
     } = mergedProps;
     const [focused, setFocused] = useState(false);
     const focusedVariant = useInputVariant(focused, variant);
-    const internalRef = useRef<HTMLInputElement>();
-    const refs = useMergeRefs(ref, internalRef);
+    const internalRef = useRef<HTMLInputElement | null>(null);
+    const refs = useMemo(() => mergeRefs(ref, internalRef), [ref]);
 
     // Only generate a helperTextId if helperText is defined, otherwise
     // set it to undefined
@@ -236,15 +235,21 @@ export const TextInput = memo(
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
       if (inputNode) {
-        const clonedElm = cloneElement(inputNode, {
-          onFocus: handleOnFocus,
-          onBlur: handleOnBlur,
-          ref: refs,
-          'aria-describedby': shouldSetHelperTextId && helperTextId,
-          'aria-invalid': variant === 'negative',
-          id: shouldSetLabelId ? labelId : undefined,
-          disabled,
-        });
+        const clonedElm = cloneElement(
+          inputNode as React.ReactElement<
+            React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>
+          >,
+
+          {
+            onFocus: handleOnFocus,
+            onBlur: handleOnBlur,
+            ref: mergeReactElementRef<HTMLInputElement>(inputNode, refs),
+            'aria-describedby': shouldSetHelperTextId ? helperTextId : undefined,
+            'aria-invalid': variant === 'negative',
+            id: shouldSetLabelId ? labelId : undefined,
+            disabled,
+          },
+        );
 
         return clonedElm;
       }
@@ -257,6 +262,7 @@ export const TextInput = memo(
           accessibilityLabel={accessibilityLabel ?? label}
           align={align}
           aria-invalid={variant === 'negative'}
+          caretColor={variantColorMap[focusedVariant]}
           compact={compact}
           containerSpacing={nativeInputContainerCss}
           data-compact={compact}
@@ -278,14 +284,15 @@ export const TextInput = memo(
       helperTextId,
       accessibilityLabel,
       label,
-      hasLabel,
       align,
-      font,
       variant,
+      focusedVariant,
       compact,
+      hasLabel,
       labelVariant,
       start,
       disabled,
+      font,
       shouldSetLabelId,
       labelId,
       handleOnBlur,
@@ -367,6 +374,8 @@ export const TextInput = memo(
                     labelVariant === 'inside' && insideLabelCss,
                     labelVariant === 'inside' && !!start && insideLabelCssStartCss,
                   )}
+                  color={labelColor}
+                  font={labelFont}
                   htmlFor={shouldSetLabelId ? labelId : undefined}
                   testID={testIDMap?.label ?? ''}
                 >
@@ -391,7 +400,11 @@ export const TextInput = memo(
                   (labelNode
                     ? labelNode
                     : !!label && (
-                        <InputLabel htmlFor={shouldSetLabelId ? labelId : undefined}>
+                        <InputLabel
+                          color={labelColor}
+                          font={labelFont}
+                          htmlFor={shouldSetLabelId ? labelId : undefined}
+                        >
                           {label}
                         </InputLabel>
                       ))}

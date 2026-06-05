@@ -30,9 +30,6 @@
       "path": "../../packages/web"
     },
     {
-      "path": "../../packages/web-visualization"
-    },
-    {
       "path": "../../libs/docusaurus-plugin-kbar"
     },
     {

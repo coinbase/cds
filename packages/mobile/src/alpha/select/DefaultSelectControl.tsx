@@ -1,5 +1,5 @@
 import { forwardRef, memo, useMemo } from 'react';
-import { Pressable, TouchableOpacity } from 'react-native';
+import { Pressable, type StyleProp, TouchableOpacity, type ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 
@@ -8,6 +8,7 @@ import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { useInputBorderStyle } from '../../hooks/useInputBorderStyle';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
@@ -15,12 +16,6 @@ import { Text } from '../../typography/Text';
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
-
-// The height is smaller for the inside label variant since the label takes
-// up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 24;
-const COMPACT_HEIGHT = 40;
-const DEFAULT_HEIGHT = 56;
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -35,7 +30,9 @@ type DefaultSelectControlComponent = <
   Type extends SelectType,
   SelectOptionValue extends string = string,
 >(
-  props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<TouchableOpacity> },
+  props: SelectControlProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<React.ComponentRef<typeof TouchableOpacity>>;
+  },
 ) => React.ReactElement;
 
 export const DefaultSelectControlComponent = memo(
@@ -53,7 +50,7 @@ export const DefaultSelectControlComponent = memo(
         variant,
         helperText,
         label,
-        labelVariant,
+        labelVariant: labelVariantProp,
         contentNode,
         startNode,
         endNode: customEndNode,
@@ -69,15 +66,22 @@ export const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel = 'Remove',
         style,
         styles,
+        onBlur,
+        onFocus,
         ...props
       }: SelectControlProps<Type, SelectOptionValue>,
-      ref: React.Ref<TouchableOpacity>,
+      ref: React.ForwardedRef<React.ComponentRef<typeof TouchableOpacity>>,
     ) => {
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
+
+      const theme = useTheme();
+      // When compact, labelVariant is ignored
+      const labelVariant = compact ? undefined : labelVariantProp;
       const isMultiSelect = type === 'multi';
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
+      const shouldShowInsideLabel = labelVariant === 'inside' && !compact && label;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       // Map of options to their values
@@ -184,28 +188,33 @@ export const DefaultSelectControlComponent = memo(
         [helperText, variant, styles?.controlHelperTextNode],
       );
 
-      const labelNode = useMemo(
-        () =>
-          typeof label === 'string' ? (
-            <Pressable
-              disabled={disabled}
-              onPress={() => setOpen((s) => !s)}
-              style={styles?.controlLabelNode}
-            >
-              <InputLabel
-                color="fg"
-                paddingEnd={0}
-                paddingStart={labelVariant === 'inside' ? 2 : 0}
-                paddingY={labelVariant === 'inside' || compact ? 0 : 0.5}
-              >
-                {label}
-              </InputLabel>
-            </Pressable>
-          ) : (
-            label
-          ),
-        [compact, disabled, label, labelVariant, setOpen, styles?.controlLabelNode],
-      );
+      const labelNode = useMemo(() => {
+        if (shouldShowInsideLabel || shouldShowCompactLabel) return null;
+
+        if (typeof label === 'string') {
+          return (
+            <InputLabel color="fg" paddingY={0.5} style={styles?.controlLabelNode}>
+              {label}
+            </InputLabel>
+          );
+        }
+
+        return label;
+      }, [shouldShowInsideLabel, shouldShowCompactLabel, label, styles?.controlLabelNode]);
+
+      const inlineLabelNode = useMemo(() => {
+        if (!shouldShowInsideLabel && !shouldShowCompactLabel) return null;
+
+        if (typeof label === 'string') {
+          return (
+            <InputLabel color="fg" paddingY={0} style={styles?.controlLabelNode}>
+              {label}
+            </InputLabel>
+          );
+        }
+
+        return label;
+      }, [shouldShowInsideLabel, shouldShowCompactLabel, label, styles?.controlLabelNode]);
 
       const valueAlignment = useMemo(
         () => (align === 'end' ? 'flex-end' : align === 'center' ? 'center' : 'flex-start'),
@@ -287,6 +296,8 @@ export const DefaultSelectControlComponent = memo(
         onChange,
       ]);
 
+      // onBlur/onFocus on ViewProps allow null returns but TouchableOpacity's onBlur/onFocus props do not.
+      // This appears like a type inconsistency in react-native's type definitions.
       const inputNode = useMemo(
         () => (
           <TouchableOpacity
@@ -294,6 +305,8 @@ export const DefaultSelectControlComponent = memo(
             accessibilityLabel={computedControlAccessibilityLabel}
             accessibilityRole="button"
             disabled={disabled}
+            onBlur={onBlur ?? undefined}
+            onFocus={onFocus ?? undefined}
             onPress={() => setOpen((s) => !s)}
             style={[{ flexGrow: 1 }, styles?.controlInputNode]}
             {...props}
@@ -303,15 +316,6 @@ export const DefaultSelectControlComponent = memo(
               flexShrink={1}
               justifyContent="space-between"
               maxWidth="100%"
-              minHeight={
-                labelVariant === 'inside'
-                  ? LABEL_VARIANT_INSIDE_HEIGHT
-                  : compact
-                    ? COMPACT_HEIGHT
-                    : DEFAULT_HEIGHT
-              }
-              paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
             >
               <HStack
                 alignItems="center"
@@ -322,25 +326,41 @@ export const DefaultSelectControlComponent = memo(
                 minWidth={0}
               >
                 {!!startNode && (
-                  <HStack alignItems="center" paddingX={2} style={styles?.controlStartNode}>
+                  <HStack alignItems="center" paddingEnd={2} style={styles?.controlStartNode}>
                     {startNode}
                   </HStack>
                 )}
                 {shouldShowCompactLabel ? (
                   <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
-                    {labelNode}
+                    {inlineLabelNode}
                   </HStack>
                 ) : null}
-                <VStack
-                  alignItems={valueAlignment}
-                  flexGrow={1}
-                  flexShrink={1}
-                  minWidth={0}
-                  style={styles?.controlValueNode}
-                >
-                  {valueNode}
-                  {contentNode}
-                </VStack>
+                {shouldShowInsideLabel ? (
+                  <VStack flexGrow={1} minWidth={0} width="100%">
+                    {inlineLabelNode}
+                    <VStack
+                      alignItems={valueAlignment}
+                      flexGrow={1}
+                      flexShrink={1}
+                      minWidth={0}
+                      style={styles?.controlValueNode}
+                    >
+                      {valueNode}
+                      {contentNode}
+                    </VStack>
+                  </VStack>
+                ) : (
+                  <VStack
+                    alignItems={valueAlignment}
+                    flexGrow={1}
+                    flexShrink={1}
+                    minWidth={0}
+                    style={styles?.controlValueNode}
+                  >
+                    {valueNode}
+                    {contentNode}
+                  </VStack>
+                )}
               </HStack>
             </HStack>
           </TouchableOpacity>
@@ -349,15 +369,16 @@ export const DefaultSelectControlComponent = memo(
           ref,
           computedControlAccessibilityLabel,
           disabled,
+          onBlur,
+          onFocus,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
           props,
-          labelVariant,
-          compact,
           startNode,
           shouldShowCompactLabel,
-          labelNode,
+          shouldShowInsideLabel,
+          inlineLabelNode,
           valueAlignment,
           valueNode,
           contentNode,
@@ -375,8 +396,7 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               flexGrow={1}
-              paddingX={2}
-              paddingY={compact ? 1 : 1.5}
+              paddingStart={2}
               style={styles?.controlEndNode}
             >
               {customEndNode ? (
@@ -390,7 +410,17 @@ export const DefaultSelectControlComponent = memo(
             </HStack>
           </Pressable>
         ),
-        [compact, styles?.controlEndNode, disabled, customEndNode, open, variant, setOpen],
+        [styles?.controlEndNode, disabled, customEndNode, open, variant, setOpen],
+      );
+
+      const inputStackStyles: StyleProp<ViewStyle> = useMemo(
+        () => ({
+          paddingTop: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
+          paddingBottom: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
+          paddingLeft: theme.space[2],
+          paddingRight: theme.space[2],
+        }),
+        [compact, labelVariant, theme.space],
       );
 
       return (
@@ -404,8 +434,11 @@ export const DefaultSelectControlComponent = memo(
           focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
-          labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelNode={labelNode}
           labelVariant={labelVariant}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          styles={{ input: inputStackStyles }}
           variant={variant}
           {...props}
         />

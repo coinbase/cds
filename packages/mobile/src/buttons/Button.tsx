@@ -1,19 +1,13 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo } from 'react';
-import {
-  ActivityIndicator,
-  type PressableStateCallbackType,
-  StyleSheet,
-  type View,
-} from 'react-native';
+import { type PressableStateCallbackType, StyleSheet, type View } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
   ButtonVariant,
   IconName,
+  NegativeSpace,
   SharedAccessibilityProps,
   SharedProps,
 } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -28,7 +22,6 @@ const defaultProgressCircleSize = 24;
 export const styles = StyleSheet.create({
   inline: {
     width: 'auto',
-    minWidth: 64,
   },
   block: {
     width: '100%',
@@ -127,9 +120,8 @@ export const Button = memo(
       wrapperStyles,
       feedback = compact ? 'light' : 'normal',
       borderColor,
-      borderWidth = 100,
+      borderWidth = 0, // remove Pressable's default transparent border
       borderRadius = compact ? 700 : 900,
-      height = interactableHeight[compact ? 'compact' : 'regular'],
       accessibilityLabel,
       accessibilityHint,
       padding,
@@ -137,8 +129,8 @@ export const Button = memo(
       paddingEnd,
       paddingTop,
       paddingBottom,
-      paddingX: paddingXProp,
-      paddingY: paddingYProp,
+      paddingX = compact ? 2 : 4,
+      paddingY = compact ? 1 : 2,
       ...props
     } = mergedProps;
     const theme = useTheme();
@@ -156,10 +148,7 @@ export const Button = memo(
     const sizingStyle = block ? styles.block : styles.inline;
     const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
 
-    const { paddingX, paddingY, marginStart, marginEnd } = getButtonSpacingProps({
-      compact,
-      flush,
-    });
+    const flushMargin = flush ? (-paddingX as NegativeSpace) : undefined;
 
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => [
@@ -171,8 +160,8 @@ export const Button = memo(
 
     const childrenNode = useMemo(
       () =>
-        isValidElement<{ children?: React.ReactNode }>(children) &&
-        Boolean(children.props.children) ? (
+        isValidElement(children) &&
+        Boolean((children.props as Record<string, unknown>).children) ? (
           children
         ) : (
           <Text
@@ -205,10 +194,9 @@ export const Button = memo(
         borderRadius={borderRadius}
         borderWidth={borderWidth}
         feedback={feedback}
-        height={height}
         loading={loading}
-        marginEnd={marginEnd}
-        marginStart={marginStart}
+        marginEnd={flush === 'end' ? flushMargin : undefined}
+        marginStart={flush === 'start' ? flushMargin : undefined}
         noScaleOnPress={noScaleOnPress}
         style={pressableStyle}
         transparentWhileInactive={transparent}
@@ -219,14 +207,13 @@ export const Button = memo(
           alignItems="center"
           flexWrap="nowrap"
           justifyContent={justifyContent}
-          minHeight={height}
           padding={padding}
           paddingBottom={paddingBottom}
           paddingEnd={paddingEnd}
           paddingStart={paddingStart}
           paddingTop={paddingTop}
-          paddingX={paddingXProp ?? paddingX}
-          paddingY={paddingYProp ?? paddingY}
+          paddingX={paddingX}
+          paddingY={paddingY}
           style={sizingStyle}
         >
           {loading ? (

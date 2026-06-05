@@ -47,7 +47,10 @@ export type IconBaseProps = SharedProps &
      * @default primary
      */
     color?: ThemeVars.Color;
-    /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+    /**
+     * @deprecated Use `style`, `styles.icon`, or the `color` prop to customize icon color. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     dangerouslySetColor?: string | Animated.AnimatedInterpolation<string>;
     animated?: boolean;
     style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
@@ -161,7 +164,8 @@ export const Icon = memo((_props: IconProps) => {
         accessibilityRole="image"
         accessible={!!accessibilityLabel}
         allowFontScaling={false}
-        style={iconStyle}
+        // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+        style={iconStyle as StyleProp<TextStyle>}
       >
         {glyph}
       </TextComponent>

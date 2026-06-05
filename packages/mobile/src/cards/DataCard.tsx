@@ -40,9 +40,7 @@ import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { HStack } from '../layout/HStack';
-import { TextBody } from '../typography/TextBody';
-import { TextHeadline } from '../typography/TextHeadline';
-import { TextLabel2 } from '../typography/TextLabel2';
+import { Text } from '../typography/Text';
 import { ProgressBar } from '../visualizations/ProgressBar';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
@@ -80,16 +78,18 @@ export const DataCard = memo(function DataCard({
   ...cardProps
 }: DataCardProps) {
   const content = useMemo(() => {
-    const TextEndLabel = progressVariant === 'bar' ? TextLabel2 : TextBody;
+    const endLabelFont = progressVariant === 'bar' ? 'label2' : 'body';
     return (
       <HStack justifyContent="space-between">
         {!!startLabelProp && (
-          <TextHeadline testID={`${testID}-start-label`}>{startLabelProp}</TextHeadline>
+          <Text font="headline" testID={`${testID}-start-label`}>
+            {startLabelProp}
+          </Text>
         )}
         {!!endLabelProp && (
-          <TextEndLabel color="fgMuted" testID={`${testID}-end-label`}>
+          <Text color="fgMuted" font={endLabelFont} testID={`${testID}-end-label`}>
             {endLabelProp}
-          </TextEndLabel>
+          </Text>
         )}
       </HStack>
     );

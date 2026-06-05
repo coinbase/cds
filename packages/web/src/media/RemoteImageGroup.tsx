@@ -110,7 +110,9 @@ export const RemoteImageGroup = (_props: RemoteImageGroupProps) => {
           return null;
         }
 
-        const childShape: RemoteImageProps['shape'] = child.props.shape;
+        const childShape: RemoteImageProps['shape'] = (
+          child as React.ReactElement<RemoteImageProps>
+        ).props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement(child as React.ReactElement<RemoteImageProps>, {

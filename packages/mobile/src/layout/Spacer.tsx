@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
@@ -42,16 +42,14 @@ export const Spacer = memo(function Spacer({
   minHorizontal,
   minVertical,
   animated,
+  style,
   ...viewProps
 }: SpacerProps) {
   const theme = useTheme();
   const Component = animated ? Animated.View : View;
-
-  return (
-    <Component
-      {...viewProps}
-      accessibilityRole="none"
-      style={
+  const styles = useMemo(
+    () =>
+      [
         getSpacerStyle({
           flexGrow,
           flexShrink,
@@ -63,8 +61,23 @@ export const Spacer = memo(function Spacer({
           minHorizontal,
           minVertical,
           spacingScaleValues: theme.space,
-        }) as ViewStyle
-      }
-    />
+        }) as ViewStyle,
+        style,
+      ] as StyleProp<ViewStyle>,
+    [
+      flexGrow,
+      flexShrink,
+      flexBasis,
+      horizontal,
+      vertical,
+      maxHorizontal,
+      maxVertical,
+      minHorizontal,
+      minVertical,
+      theme.space,
+      style,
+    ],
   );
+
+  return <Component accessibilityRole="none" style={styles} {...viewProps} />;
 });

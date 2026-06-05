@@ -131,7 +131,7 @@ export const NavigationBar = memo((_props: NavigationBarProps) => {
       zIndex={zIndex.navigation}
       {...props}
     >
-      <HStack alignItems="center" gap={columnGap ?? { base: 2, phone: 1 }} overflow="auto">
+      <HStack alignItems="center" overflow="auto">
         <Collapsible
           collapsed={!start}
           dangerouslyDisableOverflowHidden={dangerouslyDisableOverflowHidden}
@@ -146,16 +146,18 @@ export const NavigationBar = memo((_props: NavigationBarProps) => {
             {startNode}
           </HStack>
         </Collapsible>
-        <HStack
-          alignItems="center"
-          className={cx(navigationBarClassNames.content, classNames?.content)}
-          flexGrow={1}
-          gap={1}
-          style={styles?.content}
-        >
-          {children}
+        <HStack alignItems="center" flexGrow={1} gap={columnGap ?? { base: 2, phone: 1 }}>
+          <HStack
+            alignItems="center"
+            className={cx(navigationBarClassNames.content, classNames?.content)}
+            flexGrow={1}
+            gap={1}
+            style={styles?.content}
+          >
+            {children}
+          </HStack>
+          {end}
         </HStack>
-        {end}
       </HStack>
       {bottom}
     </VStack>

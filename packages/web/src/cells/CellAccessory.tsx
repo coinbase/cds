@@ -51,7 +51,7 @@ export const CellAccessory = memo(
     }
 
     return (
-      <Box {...props} ref={ref} testID={cellAccessoryTestId}>
+      <Box ref={ref} testID={cellAccessoryTestId} {...props}>
         {icon}
       </Box>
     );

@@ -1,0 +1,82 @@
+{
+  "skill_name": "cds-code",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a profile card for our home page that shows the user's avatar, display name, and email address in muted font. Give the container subtle rounded corners. Below it, show three settings-style menu rows for 'Account settings', 'Notifications', and 'Sign out' — each with a right-side arrow.",
+      "expected_output": "A React component composing Avatar, VStack/HStack for layout, and ListCell with accessory=\"arrow\" for each settings row. All spacing and colors use CDS tokens — no raw pixel values or hex colors. Import paths are valid CDS exports.",
+      "files": [],
+      "expectations": [
+        "Uses Avatar for the user photo",
+        "Uses ListCell with accessory=\"arrow\" for the three settings rows",
+        "Uses fgMuted (not foregroundMuted or bespoke color) for the email address text",
+        "Uses the generic Text component with the font prop, not derivitive Text components (e.g. TextHeadline, TextLabel1, etc.)",
+        "Uses the borderRadius prop for the rounded container cornders and uses a design token for the value (no pixels/percentages)",
+        "No hardcoded hex, rgb, or raw color values anywhere in the output code",
+        "No raw pixel values used for spacing or border radius (e.g., no '16px', '8px' as literal strings)",
+        "Uses VStack or HStack for layout composition",
+        "All CDS import paths are valid subpath exports (no invented deep paths like /layout/Box)",
+        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need a 'Create team' modal with a text input for the team name, a dropdown to pick the team size (Small / Medium / Large), and Save / Cancel buttons in the footer.",
+      "expected_output": "A React component using Modal, ModalHeader, ModalBody, ModalFooter, TextInput, Select (from alpha subpath), and Button. The footer has a primary Save button and a secondary Cancel button. No style={{ ... }} used for properties that have CDS prop equivalents. Import paths are valid.",
+      "files": [],
+      "expectations": [
+        "Uses Modal, ModalHeader, ModalBody, and ModalFooter to compose the dialog",
+        "Uses TextInput for the team name field",
+        "Uses Select (from the alpha subpath) for the team size dropdown with Small/Medium/Large options",
+        "ModalFooter receives a primary Button (Save) and a secondary variant Button (Cancel)",
+        "No style prop used for padding, color, gap, or other values that have CDS style prop equivalents",
+        "Select is imported from the correct alpha subpath (e.g., @coinbase/cds-web/alpha/select or equivalent)",
+        "No raw pixel values or hex/rgb colors in the output",
+        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Build a banner that shows a warning message 'You have unsaved changes' with a 'Save now' link action. Below it, in a container with 2 units of horizontal padding, show a progress bar at 60% completion and a spinner for a secondary loading operation.",
+      "expected_output": "A React component using Banner with variant=\"warning\", ProgressBar at progress={0.6} or progress={60}, and ProgressCircle with indeterminate. Visualization components are imported from the visualization package. No hex/rgb colors anywhere.",
+      "files": [],
+      "expectations": [
+        "Uses Banner with variant=\"warning\" for the unsaved changes message",
+        "Renders a container below the banner with padding applied via the paddingX, paddingStart or paddingEnd props (e.g. paddingX={2})",
+        "Uses ProgressBar with a progress value representing 60% for the determinate progress indicator",
+        "Uses ProgressCircle with the indeterminate prop for the spinner",
+        "ProgressBar and ProgressCircle are imported from @coinbase/cds-web/visualizations (the correct subpath), not from a generic top-level import or the separate @coinbase/cds-web-visualization package",
+        "No hardcoded hex, rgb, or raw color values in the output",
+        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Create a left sidebar nav with 3 items: Home, Activity, Settings. Home is currently selected.",
+      "expected_output": "A React component that uses Icon names home/activity/settings, sets active state only on Home, and uses token-based selected vs unselected color treatment.",
+      "files": [],
+      "expectations": [
+        "Before writing code, the agent identifies Icon (and layout primitives) as planned CDS components",
+        "Uses the exact icon names home, activity, and settings for the three nav items",
+        "Applies active state specifically to Home and keeps Activity/Settings inactive",
+        "Uses navigation-appropriate icon sizing",
+        "Pairs selected state with token-based color treatment (no bespoke hex/rgb values)",
+        "No raw pixel or hex/rgb values are used"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Create a security empty state with a title, supporting text, and an illustration. Show compact and roomy versions of the same visual.",
+      "expected_output": "A React component that uses SpotIcon name=\"2fa\" with compact 24x24 and roomy 32x32 dimensions plus CDS text/layout primitives.",
+      "files": [],
+      "expectations": [
+        "Uses SpotIcon specifically",
+        "Uses SpotIcon name 2fa",
+        "Uses exact SpotIcon dimensions 24x24 and 32x32",
+        "Uses CDS layout and generic Text primitives",
+        "Does not use or suggest scaleMultiplier",
+        "No raw pixel or hex/rgb values are used"
+      ]
+    }
+  ]
+}

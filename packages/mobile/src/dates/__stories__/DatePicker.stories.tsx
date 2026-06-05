@@ -100,22 +100,22 @@ export const FullExample = () => {
           openCalendarAccessibilityLabel="Birthdate calendar"
         />
       </Example>
-      <Example title="DatePicker fit-content width">
+      <Example title="DatePicker width=null">
         <HStack flexWrap="wrap" gap={2}>
           <ExampleDatePicker
             label="Example Date"
             openCalendarAccessibilityLabel="Example calendar"
-            width="fit-content"
+            width={null}
           />
           <ExampleDatePicker
             label="Example Date 2"
             openCalendarAccessibilityLabel="Example calendar 2"
-            width="fit-content"
+            width={null}
           />
           <ExampleDatePicker
             label="Example Date 3"
             openCalendarAccessibilityLabel="Example calendar 3"
-            width="fit-content"
+            width={null}
           />
         </HStack>
       </Example>

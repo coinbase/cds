@@ -8,6 +8,7 @@ import {
 import { Button } from '../../buttons';
 import { ListCell } from '../../cells';
 import { Collapsible } from '../../collapsible';
+import { Switch } from '../../controls/Switch';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons/Icon';
 import { Box, HStack, VStack } from '../../layout';
@@ -245,6 +246,36 @@ const InitialActiveStep = () => {
     },
   ];
   return <Stepper activeStepId={steps[1].id} direction="vertical" steps={steps} />;
+};
+
+// ------------------------------------------------------------
+// Disable Animate on Mount
+// ------------------------------------------------------------
+const disableAnimateOnMountSteps: StepperValue[] = [
+  { id: 'first-step', label: 'First step' },
+  { id: 'second-step', label: 'Second step' },
+  { id: 'third-step', label: 'Third step' },
+  { id: 'final-step', label: 'Final step' },
+];
+
+const DisableAnimateOnMount = () => {
+  const [disableAnimateOnMount, setDisableAnimateOnMount] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Switch
+        checked={disableAnimateOnMount}
+        onChange={() => setDisableAnimateOnMount((prev) => !prev)}
+      >
+        disableAnimateOnMount
+      </Switch>
+      <StepperVerticalExample
+        defaultActiveStepId={disableAnimateOnMountSteps[2].id}
+        disableAnimateOnMount={disableAnimateOnMount}
+        steps={disableAnimateOnMountSteps}
+      />
+    </VStack>
+  );
 };
 
 // ------------------------------------------------------------
@@ -731,6 +762,10 @@ const StepperVerticalScreen = () => {
 
       <Example title="Initial Active Step">
         <InitialActiveStep />
+      </Example>
+
+      <Example title="Disable Animate on Mount">
+        <DisableAnimateOnMount />
       </Example>
 
       <Example title="Nested Steps">

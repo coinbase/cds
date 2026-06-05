@@ -165,7 +165,7 @@ const SquareAssetCard = ({
 const BasicExamples = () => (
   <VStack gap={4}>
     <NegativeMargin>
-      <Carousel paginationVariant="dot" styles={overflowStyles} title="Snap Page">
+      <Carousel styles={overflowStyles} title="Snap Page">
         {sampleItems.map((item, index) => (
           <CarouselItem
             key={`spaced-${index}`}
@@ -178,13 +178,7 @@ const BasicExamples = () => (
       </Carousel>
     </NegativeMargin>
     <NegativeMargin>
-      <Carousel
-        drag="snap"
-        paginationVariant="dot"
-        snapMode="item"
-        styles={overflowStyles}
-        title="Snap Item"
-      >
+      <Carousel drag="snap" snapMode="item" styles={overflowStyles} title="Snap Item">
         {sampleItems.map((item, index) => (
           <CarouselItem
             key={`snap-${index}`}
@@ -201,7 +195,6 @@ const BasicExamples = () => (
         loop
         NavigationComponent={SeeAllComponent}
         drag="free"
-        paginationVariant="dot"
         snapMode="item"
         styles={overflowStyles}
         title="Square Items Carousel"
@@ -222,7 +215,6 @@ const BasicExamples = () => (
     </NegativeMargin>
     <Carousel
       drag="snap"
-      paginationVariant="dot"
       snapMode="page"
       styles={gapOnlyStyles}
       title={
@@ -247,12 +239,7 @@ const BasicExamples = () => (
         {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
       </CarouselItem>
     </Carousel>
-    <Carousel
-      drag="none"
-      paginationVariant="dot"
-      styles={gapOnlyStyles}
-      title="Navigation Only (No Drag)"
-    >
+    <Carousel drag="none" styles={gapOnlyStyles} title="Navigation Only (No Drag)">
       {sampleItems.slice(0, 4).map((item, index) => (
         <CarouselItem key={`nav-only-${index}`} id={`nav-only-${index}`} width="100%">
           {item}
@@ -300,14 +287,14 @@ const CustomComponentsExample = () => {
             disabled={!canGoPrevious}
             name="caretLeft"
             onClick={onPrevious}
-            variant="foregroundMuted"
+            variant="secondary"
           />
           <IconButton
             accessibilityLabel="Next"
             disabled={!canGoNext}
             name="caretRight"
             onClick={onNext}
-            variant="foregroundMuted"
+            variant="secondary"
           />
         </HStack>
         <HStack alignItems="center" gap={1}>
@@ -437,7 +424,7 @@ const CustomStylesExample = () => {
                 zIndex: 1,
               },
             }}
-            variant="foregroundMuted"
+            variant="secondary"
           />
         )}
         styles={{
@@ -582,13 +569,7 @@ const AnimatedPaginationExample = () => {
 
 const AutoplayExample = () => (
   <NegativeMargin>
-    <Carousel
-      autoplay
-      loop
-      paginationVariant="dot"
-      styles={overflowStyles}
-      title="Autoplay Carousel"
-    >
+    <Carousel autoplay loop styles={overflowStyles} title="Autoplay Carousel">
       {Object.values(assets).map((asset) => (
         <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
           {({ isVisible }) => (
@@ -608,13 +589,7 @@ const AutoplayExample = () => (
 const LoopingExamples = () => (
   <VStack gap={4}>
     <NegativeMargin>
-      <Carousel
-        loop
-        paginationVariant="dot"
-        snapMode="page"
-        styles={overflowStyles}
-        title="Looping - Snap Page"
-      >
+      <Carousel loop snapMode="page" styles={overflowStyles} title="Looping - Snap Page">
         {sampleItems.map((item, index) => (
           <CarouselItem
             key={`loop-page-${index}`}
@@ -631,7 +606,6 @@ const LoopingExamples = () => (
         autoplay
         loop
         drag="snap"
-        paginationVariant="dot"
         snapMode="item"
         styles={overflowStyles}
         title="Looping with Autoplay - Snap Item"
@@ -651,7 +625,6 @@ const LoopingExamples = () => (
       <Carousel
         loop
         drag="free"
-        paginationVariant="dot"
         snapMode="item"
         styles={overflowStyles}
         title="Looping - Free Drag"

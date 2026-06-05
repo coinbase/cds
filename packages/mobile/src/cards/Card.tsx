@@ -24,6 +24,10 @@ export type CardBaseProps = Pick<
     pressableProps?: Omit<PressableProps, 'onPress'>;
   };
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardProps = CardBaseProps & BoxProps;
 
 const getBorderRadiusPinStyle = (borderRadius: number) => ({

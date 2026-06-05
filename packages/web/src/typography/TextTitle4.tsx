@@ -8,8 +8,16 @@ export const textTitle4DefaultElement = 'span';
 
 export type TextTitle4DefaultElement = typeof textTitle4DefaultElement;
 
+/**
+ * @deprecated Use `Text` with `font="title4"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextTitle4BaseProps = TextBaseProps;
 
+/**
+ * @deprecated Use `Text` with `font="title4"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextTitle4Props<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextTitle4BaseProps
@@ -20,6 +28,10 @@ type TextTitle4Component = (<AsComponent extends React.ElementType = TextTitle4D
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/**
+ * @deprecated Use `Text` with `font="title4"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const TextTitle4: TextTitle4Component = forwardRef<
   React.ReactElement<TextTitle4BaseProps>,
   TextTitle4BaseProps

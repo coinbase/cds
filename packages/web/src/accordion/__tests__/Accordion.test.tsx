@@ -132,7 +132,7 @@ describe('Accordion', () => {
       render(<MockAccordionWithTheme defaultActiveKey="2" />);
 
       expect(screen.getByTestId('mock-accordion-item1-panel')).toBeInTheDocument();
-      expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('visibility: hidden');
+      expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('display: none');
       expect(screen.getByTestId('mock-accordion-item2-panel')).toBeInTheDocument();
       expect(screen.getByTestId('mock-accordion-item2-panel')).toHaveStyle('visibility: visible');
     });
@@ -234,12 +234,12 @@ describe('Accordion', () => {
       );
 
       expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('visibility: visible');
-      expect(screen.getByTestId('mock-accordion-item2-panel')).toHaveStyle('visibility: hidden');
+      expect(screen.getByTestId('mock-accordion-item2-panel')).toHaveStyle('display: none');
 
       rerender(<MockAccordionWithTheme activeKey="2" setActiveKey={setActiveKey} />);
 
       await waitFor(() => {
-        expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('visibility: hidden');
+        expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('display: none');
       });
       await waitFor(() => {
         expect(screen.getByTestId('mock-accordion-item2-panel')).toHaveStyle('visibility: visible');
@@ -257,7 +257,7 @@ describe('Accordion', () => {
       expect(onChange).toHaveBeenCalledWith('2');
 
       expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('visibility: visible');
-      expect(screen.getByTestId('mock-accordion-item2-panel')).toHaveStyle('visibility: hidden');
+      expect(screen.getByTestId('mock-accordion-item2-panel')).toHaveStyle('display: none');
     });
 
     it('closes panel when clicking active item in controlled mode', async () => {
@@ -276,7 +276,7 @@ describe('Accordion', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('visibility: hidden');
+        expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('display: none');
       });
     });
   });

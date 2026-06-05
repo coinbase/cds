@@ -6,14 +6,27 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import type { StylesAndClassNames } from '../types';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
+/**
+ * Static class names for IconButton component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const iconButtonClassNames = {
+  /** Root button element */
+  root: 'cds-IconButton',
+  /** Inner icon glyph element */
+  icon: 'cds-IconButton-icon',
+  /** Loading progress circle element */
+  progressCircle: 'cds-IconButton-progressCircle',
+} as const;
 
 export const iconButtonDefaultElement = 'button';
 
@@ -42,25 +55,17 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
 export type IconButtonProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   IconButtonBaseProps
->;
+> &
+  StylesAndClassNames<typeof iconButtonClassNames>;
 
 type IconButtonComponent = (<AsComponent extends React.ElementType = IconButtonDefaultElement>(
   props: IconButtonProps<AsComponent>,
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
-const flushSpaceCss = css`
-  min-width: unset;
-  padding-inline-start: var(--space-2);
-  padding-inline-end: var(--space-2);
-`;
-
-const flushStartCss = css`
-  margin-inline-start: calc(var(--space-2) * -1);
-`;
-
-const flushEndCss = css`
-  margin-inline-end: calc(var(--space-2) * -1);
+const baseCss = css`
+  width: fit-content;
+  height: fit-content;
 `;
 
 export const IconButton: IconButtonComponent = memo(
@@ -79,13 +84,12 @@ export const IconButton: IconButtonComponent = memo(
         color,
         borderColor,
         borderRadius = 1000,
-        borderWidth = 100,
+        borderWidth = 0, // remove Pressable's default transparent border
         alignItems = 'center',
         justifyContent = 'center',
-        // TO DO: fix this when removing interactableHeight
-        height = compact ? 40 : 56,
-        width = compact ? 40 : 56,
         className,
+        style,
+        padding = compact ? 1.5 : 2,
         name,
         iconSize = compact ? 's' : 'm',
         active,
@@ -94,12 +98,28 @@ export const IconButton: IconButtonComponent = memo(
         progressCircleSize,
         accessibilityLabel,
         accessibilityHint,
+        styles,
+        classNames,
         ...props
       } = mergedProps;
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
       const theme = useTheme();
 
       const iconSizeValue = theme.iconSize[iconSize];
+      const spinnerSize = iconSizeValue / 10;
+
+      const resolvedPadding = useResolveResponsiveProp(padding);
+
+      const pressableStyle = useMemo(() => {
+        if (!flush || !resolvedPadding) return style;
+        const negativeMargin = -theme.space[resolvedPadding];
+        return {
+          ...style,
+          ...(flush === 'start'
+            ? { marginInlineStart: negativeMargin }
+            : { marginInlineEnd: negativeMargin }),
+        };
+      }, [flush, resolvedPadding, theme.space, style]);
 
       const variantMap = transparent ? transparentVariants : variants;
       const variantStyle = variantMap[variant];
@@ -119,36 +139,39 @@ export const IconButton: IconButtonComponent = memo(
           borderColor={borderColorValue}
           borderRadius={borderRadius}
           borderWidth={borderWidth}
-          className={cx(
-            COMPONENT_STATIC_CLASSNAME,
-            flush && flushSpaceCss,
-            flush === 'start' && flushStartCss,
-            flush === 'end' && flushEndCss,
-            className,
-          )}
+          className={cx(iconButtonClassNames.root, baseCss, classNames?.root, className)}
           color={colorValue}
           data-compact={compact}
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
-          height={height}
           justifyContent={justifyContent}
           loading={loading}
+          padding={padding}
+          style={pressableStyle}
           transparentWhileInactive={transparent}
-          width={width}
           {...props}
         >
           {loading ? (
             <ProgressCircle
               indeterminate
               accessibilityLabel="Loading"
+              className={cx(iconButtonClassNames.progressCircle, classNames?.progressCircle)}
               color="currentColor"
               size={progressCircleSize ?? iconSizeValue}
+              style={styles?.progressCircle}
               testID={props.testID ? `${props.testID}-progress-circle` : undefined}
               weight="thin"
             />
           ) : (
-            <Icon active={active} color="currentColor" name={name} size={iconSize} />
+            <Icon
+              active={active}
+              classNames={{ icon: cx(iconButtonClassNames.icon, classNames?.icon) }}
+              color="currentColor"
+              name={name}
+              size={iconSize}
+              styles={{ icon: styles?.icon }}
+            />
           )}
         </Pressable>
       );

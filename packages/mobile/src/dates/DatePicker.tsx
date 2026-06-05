@@ -232,7 +232,6 @@ export const DatePicker = memo(
       <Box ref={ref} width={width}>
         <DateInput
           ref={dateInputRef}
-          {...props}
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
           accessibilityLabelledBy={accessibilityLabelledBy}
@@ -255,12 +254,13 @@ export const DatePicker = memo(
           requiredError={requiredError}
           style={[dateInputStyle, styles?.dateInput]}
           variant={variant}
+          {...props}
         />
         {showPicker && (
           <Tray
             accessibilityRole="none"
             footer={({ handleClose }) => (
-              <StickyFooter paddingTop={3} paddingX={3} role="none">
+              <StickyFooter role="none">
                 <Button
                   block
                   compact

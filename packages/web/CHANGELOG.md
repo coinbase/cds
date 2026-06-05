@@ -8,6 +8,156 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.1.3 ((5/28/2026, 09:35 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.2 (5/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Add data attribute to popover container. [[#717](https://github.com/coinbase/cds/pull/717)]
+
+## 9.1.1 (5/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support inside label variant on select. [[#726](https://github.com/coinbase/cds/pull/726)]
+
+## 9.1.0 (5/26/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support DotCount theming. [[#723](https://github.com/coinbase/cds/pull/723)]
+
+## 9.0.2 (5/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: improve button text alignment by using flexbox. [[#720](https://github.com/coinbase/cds/pull/720)]
+
+## 9.0.1 ((5/22/2026, 09:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.0 (5/20/2026 PST)
+
+CDS 9 is here!!
+
+For more details and to help upgrading from CDS 8 using our automated migration tool, see our official [upgrade guide](https://cds.coinbase.com/guides/v9-upgrade-guide)!
+
+#### 💥 Breaking
+
+- Nested ThemeProviders will not inject the full set of CSS variables by default. You can opt in to the old behavior by setting the `isolated` prop to `false`.
+- Removed remaining instances of fixed height/width values across all components which may cause subtle layout shifts in your app.
+- Some component props’ types have narrowed in response to React 19 upgrade.
+- Read our upgrade guilde for more details!
+
+#### 🚀 Updates
+
+- React 19 support! React 18 is still supported for backwards compatibility.
+- Migrated full set of components from web-visualization package to new `visualizations/chart` and `visualizations/sparkline` sub-paths.
+- Read our upgrade guilde for more details!
+
+## 8.75.2 (5/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: unstable svg sizing caused by flexbox. [[#696](https://github.com/coinbase/cds/pull/696)]
+
+## 8.75.1 (5/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: android web tray footer cut off. [[#694](https://github.com/coinbase/cds/pull/694)]
+
+## 8.75.0 (5/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support selectionColor on Inputs. [[#688](https://github.com/coinbase/cds/pull/688)]
+
+## 8.74.3 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: prevent flickering when illustration palette changes on web. [[#685](https://github.com/coinbase/cds/pull/685)]
+
+## 8.74.2 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: unreliable version check. [[#684](https://github.com/coinbase/cds/pull/684)]
+
+## 8.74.1 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust tabs default tab label padding. [[#682](https://github.com/coinbase/cds/pull/682)]
+
+## 8.74.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add illustration theming via applyTheme prop. [[#672](https://github.com/coinbase/cds/pull/672)]
+
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
+## 8.72.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support key Tag props in component configs. [[#671](https://github.com/coinbase/cds/pull/671)]
+
+## 8.71.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add icon glyph and progress circle styles to IconButton. [[#606](https://github.com/coinbase/cds/pull/606)]
+
+## 8.70.0 (5/8/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support active color on Tabs. [[#669](https://github.com/coinbase/cds/pull/669)]
+
+## 8.69.1 ((5/6/2026, 10:08 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.69.0 (5/5/2026 PST)
+
+#### 🚀 Updates
+
+- Fix: NavigationBar no longer reserves space for absent start content. [[#664](https://github.com/coinbase/cds/pull/664)]
+- Add collapsedStyle prop to Collapsible.[[#664](https://github.com/coinbase/cds/pull/664)]
+
+## 8.68.0 (5/1/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update bgWarning to orange60. [[#659](https://github.com/coinbase/cds/pull/659)]
+
+## 8.67.0 (5/1/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Add legalText prop to PageFooter component. [[#661](https://github.com/coinbase/cds/pull/661)]
+
+## 8.66.2 (4/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix SegmentedTab color not applied during Suspense transition. [[#650](https://github.com/coinbase/cds/pull/650)]
+
+## 8.66.1 ((4/27/2026, 12:59 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.66.0 (4/16/2026 PST)
 
 #### 🚀 Updates

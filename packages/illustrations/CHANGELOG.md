@@ -8,6 +8,36 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
+## 4.40.1 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: add width/height="100%" to themed ESM SVG files. [[#683](https://github.com/coinbase/cds/pull/683)]
+
+## 4.40.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: refactor illustrations package. [[#675](https://github.com/coinbase/cds/pull/675)]
+
+## 4.39.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-05-12. [[#673](https://github.com/coinbase/cds/pull/673)]
+
+##### ⭐️ Added (1)
+
+###### HeroSquare (1)
+
+- genniusLaunch
+
 ## 4.38.0 (4/16/2026 PST)
 
 #### 🚀 Updates

@@ -77,6 +77,7 @@ const AvatarScreen = () => {
                 accessibilityLabel=""
                 alt=""
                 borderColor="bgPositive"
+                borderWidth={0}
                 size={size}
                 src={image}
               />

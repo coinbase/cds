@@ -9,6 +9,10 @@ type DrawerStatusBarProps = {
   visible: boolean;
 };
 
+/**
+ * @deprecated If you need to hide the status bar and you're not using Drawer already, use the StatusBar component from react-native directly. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const DrawerStatusBar = memo(function DrawerStatusBar({
   pin,
   visible,

@@ -20,7 +20,7 @@ export type FallbackBaseProps = {
    * @default rectangle
    */
   shape?: Shape;
-  width: number | string;
+  width: DimensionValue;
   /** Disables randomization of rectangle shape width. */
   disableRandomRectWidth?: boolean;
   /**
@@ -51,7 +51,11 @@ export const Fallback = memo((_props: FallbackProps) => {
     [disableRandomRectWidth, rectWidthVariant],
   );
 
-  const { width, borderRadius } = useFallbackShape(shape, baseWidth, fallbackShapeOptions);
+  const { width, borderRadius } = useFallbackShape<DimensionValue>(
+    shape,
+    baseWidth,
+    fallbackShapeOptions,
+  );
 
   const { activeColorScheme } = useTheme();
   const shimmerColor = fallbackShimmer[activeColorScheme];

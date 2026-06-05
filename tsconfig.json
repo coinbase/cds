@@ -7,10 +7,10 @@
       "path": "apps/docs"
     },
     {
-      "path": "apps/mobile-app"
+      "path": "apps/storybook"
     },
     {
-      "path": "apps/storybook"
+      "path": "apps/expo-app"
     },
     {
       "path": "apps/vite-app"
@@ -23,6 +23,9 @@
     },
     {
       "path": "libs/docusaurus-plugin-kbar"
+    },
+    {
+      "path": "libs/type-analyzer"
     },
     {
       "path": "libs/web-utils"
@@ -56,9 +59,6 @@
     },
     {
       "path": "packages/mobile-visualization"
-    },
-    {
-      "path": "packages/ui-mobile-playground"
     },
     {
       "path": "packages/utils"

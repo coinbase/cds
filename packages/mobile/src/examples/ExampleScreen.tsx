@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef } from 'react';
+import React, { createContext, type JSX, useCallback, useContext, useMemo, useRef } from 'react';
 import { ScrollView } from 'react-native';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import type { PaddingProps } from '@coinbase/cds-common/types';
@@ -34,7 +34,7 @@ export const Example = ({
   const { registerExample } = useContext(ExampleContext);
 
   // Register exactly once during first render
-  const exampleNumberRef = useRef<number>();
+  const exampleNumberRef = useRef<number>(undefined);
   if (exampleNumberRef.current === undefined) {
     exampleNumberRef.current = registerExample();
   }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { type JSX, useCallback, useEffect, useMemo } from 'react';
 import type { IconName } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { Collapsible } from '@coinbase/cds-web/collapsible';

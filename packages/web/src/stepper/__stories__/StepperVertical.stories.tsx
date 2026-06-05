@@ -553,6 +553,240 @@ export const CustomComponents = () => {
 };
 
 // ------------------------------------------------------------
+// Disable animate on mount
+// ------------------------------------------------------------
+export const DisableAnimateOnMount = () => {
+  const steps: StepperValue[] = [
+    {
+      id: 'first-step',
+      label: 'First step',
+    },
+    {
+      id: 'second-step',
+      label: 'Second step',
+    },
+    {
+      id: 'third-step',
+      label: 'Third step',
+    },
+    {
+      id: 'final-step',
+      label: 'Final step',
+    },
+  ];
+
+  const oneLevelSteps: StepperValue[] = [
+    {
+      id: 'first-step',
+      label: 'First step',
+    },
+    {
+      id: 'second-step',
+      label: 'Second step',
+      subSteps: [
+        { id: 'second-step-substep-one', label: 'Substep one' },
+        { id: 'second-step-substep-two', label: 'Substep two' },
+        { id: 'second-step-substep-three', label: 'Substep three' },
+      ],
+    },
+    {
+      id: 'final-step',
+      label: 'Final step',
+    },
+  ];
+
+  const twoLevelSteps: StepperValue[] = [
+    {
+      id: 'first-step',
+      label: 'First step',
+    },
+    {
+      id: 'second-step',
+      label: 'Second step',
+      subSteps: [
+        { id: 'second-step-substep-one', label: 'Substep one' },
+        {
+          id: 'second-step-substep-two',
+          label: 'Substep two',
+          subSteps: [
+            { id: 'deeply-nested-step-1', label: 'Deeply nested step 1' },
+            { id: 'deeply-nested-step-2', label: 'Deeply nested step 2' },
+          ],
+        },
+        { id: 'second-step-substep-three', label: 'Substep three' },
+      ],
+    },
+    {
+      id: 'final-step',
+      label: 'Final step',
+    },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <StepperVerticalExample
+        disableAnimateOnMount
+        defaultActiveStepId={steps[0].id}
+        steps={steps}
+        title="Default active step (first) – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        defaultActiveStepId={steps[2].id}
+        steps={steps}
+        title="Default active step (third) – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        initialComplete
+        defaultActiveStepId={steps[0].id}
+        steps={steps}
+        title="Initial complete – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        accessibilityLabel="Stepper with substeps"
+        defaultActiveStepId={oneLevelSteps[0].id}
+        steps={oneLevelSteps}
+        title="Nested steps (one level) – first step active – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        accessibilityLabel="Stepper with substeps"
+        defaultActiveStepId="second-step-substep-one"
+        steps={oneLevelSteps}
+        title="Nested steps (one level) – substep active – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        initialComplete
+        accessibilityLabel="Stepper with substeps"
+        defaultActiveStepId={oneLevelSteps[0].id}
+        steps={oneLevelSteps}
+        title="Nested steps (one level) – initial complete – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        skipParentSteps
+        accessibilityLabel="Stepper with substeps"
+        defaultActiveStepId={twoLevelSteps[0].id}
+        steps={twoLevelSteps}
+        title="Nested steps (two levels, skipParentSteps) – first step active – no progress animation on mount"
+      />
+      <StepperVerticalExample
+        disableAnimateOnMount
+        skipParentSteps
+        accessibilityLabel="Stepper with substeps"
+        defaultActiveStepId="deeply-nested-step-1"
+        steps={twoLevelSteps}
+        title="Nested steps (two levels, skipParentSteps) – deeply nested step active – no progress animation on mount"
+      />
+    </VStack>
+  );
+};
+
+// ------------------------------------------------------------
+// Animate false
+// ------------------------------------------------------------
+export const AnimateFalse = () => {
+  const steps: StepperValue[] = [
+    { id: 'first-step', label: 'First step' },
+    { id: 'second-step', label: 'Second step' },
+    { id: 'third-step', label: 'Third step' },
+    { id: 'final-step', label: 'Final step' },
+  ];
+
+  const oneLevelSteps: StepperValue[] = [
+    { id: 'first-step', label: 'First step' },
+    {
+      id: 'second-step',
+      label: 'Second step',
+      subSteps: [
+        { id: 'second-step-substep-one', label: 'Substep one' },
+        { id: 'second-step-substep-two', label: 'Substep two' },
+        { id: 'second-step-substep-three', label: 'Substep three' },
+      ],
+    },
+    { id: 'final-step', label: 'Final step' },
+  ];
+
+  const twoLevelSteps: StepperValue[] = [
+    { id: 'first-step', label: 'First step' },
+    {
+      id: 'second-step',
+      label: 'Second step',
+      subSteps: [
+        { id: 'second-step-substep-one', label: 'Substep one' },
+        {
+          id: 'second-step-substep-two',
+          label: 'Substep two',
+          subSteps: [
+            { id: 'deeply-nested-step-1', label: 'Deeply nested step 1' },
+            { id: 'deeply-nested-step-2', label: 'Deeply nested step 2' },
+          ],
+        },
+        { id: 'second-step-substep-three', label: 'Substep three' },
+      ],
+    },
+    { id: 'final-step', label: 'Final step' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <StepperVerticalExample
+        animate={false}
+        defaultActiveStepId={steps[0].id}
+        steps={steps}
+        title="Default active step (first) – no animations"
+      />
+      <StepperVerticalExample
+        animate={false}
+        defaultActiveStepId={steps[2].id}
+        steps={steps}
+        title="Default active step (third) – no animations"
+      />
+      <StepperVerticalExample
+        initialComplete
+        animate={false}
+        defaultActiveStepId={steps[0].id}
+        steps={steps}
+        title="Initial complete – no animations"
+      />
+      <StepperVerticalExample
+        accessibilityLabel="Stepper with substeps"
+        animate={false}
+        defaultActiveStepId={oneLevelSteps[0].id}
+        steps={oneLevelSteps}
+        title="Nested steps (one level) – first step active – no animations"
+      />
+      <StepperVerticalExample
+        accessibilityLabel="Stepper with substeps"
+        animate={false}
+        defaultActiveStepId="second-step-substep-one"
+        steps={oneLevelSteps}
+        title="Nested steps (one level) – substep active – no animations"
+      />
+      <StepperVerticalExample
+        skipParentSteps
+        accessibilityLabel="Stepper with substeps"
+        animate={false}
+        defaultActiveStepId={twoLevelSteps[0].id}
+        steps={twoLevelSteps}
+        title="Nested steps (two levels, skipParentSteps) – first step active – no animations"
+      />
+      <StepperVerticalExample
+        skipParentSteps
+        accessibilityLabel="Stepper with substeps"
+        animate={false}
+        defaultActiveStepId="deeply-nested-step-1"
+        steps={twoLevelSteps}
+        title="Nested steps (two levels, skipParentSteps) – deeply nested step active – no animations"
+      />
+    </VStack>
+  );
+};
+
+// ------------------------------------------------------------
 // Null Components
 // ------------------------------------------------------------
 export const NullComponents = () => {

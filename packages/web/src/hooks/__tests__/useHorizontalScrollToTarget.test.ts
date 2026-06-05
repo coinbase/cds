@@ -1,4 +1,5 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act } from 'react';
+import { renderHook } from '@testing-library/react';
 import throttle from 'lodash/throttle';
 
 import { useHorizontalScrollToTarget } from '../useHorizontalScrollToTarget';
@@ -96,7 +97,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 5 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 10;
         throttledFn();
@@ -110,7 +110,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 5 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 490; // Near max scroll (maxScroll = 500, so 490 < 495 = true)
         throttledFn();
@@ -124,7 +123,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 5 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 0;
         throttledFn();
@@ -138,7 +136,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 5 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 500; // Max scroll
         throttledFn();
@@ -152,7 +149,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ overflowThreshold: 10 }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 5; // Below threshold
         throttledFn();
@@ -165,7 +161,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = null;
         throttledFn();
       });
@@ -208,7 +203,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         result.current.handleScroll();
       });
@@ -226,7 +220,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 100;
         Object.defineProperty(mockActiveTarget, 'offsetLeft', { value: 50, writable: true }); // Offscreen left
@@ -249,7 +242,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 0;
         Object.defineProperty(mockActiveTarget, 'offsetLeft', { value: 600, writable: true }); // Offscreen right
@@ -272,7 +264,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 100;
         Object.defineProperty(mockActiveTarget, 'offsetLeft', { value: 200, writable: true }); // Visible
@@ -297,7 +288,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 100;
         Object.defineProperty(mockActiveTarget, 'offsetLeft', { value: 50, writable: true });
@@ -325,7 +315,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         mockScrollElement.scrollLeft = 100;
         Object.defineProperty(mockActiveTarget, 'offsetLeft', { value: 10, writable: true });
@@ -344,7 +333,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget({ activeTarget: null }));
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
       });
 
@@ -357,7 +345,6 @@ describe('useHorizontalScrollToTarget', () => {
       );
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = null;
       });
 
@@ -370,7 +357,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         Object.defineProperty(mockScrollElement, 'scrollWidth', { value: 500 });
         Object.defineProperty(mockScrollElement, 'clientWidth', { value: 500 });
@@ -386,7 +372,6 @@ describe('useHorizontalScrollToTarget', () => {
       const { result } = renderHook(() => useHorizontalScrollToTarget());
 
       act(() => {
-        // @ts-expect-error - Testing internal ref assignment
         result.current.scrollRef.current = mockScrollElement;
         Object.defineProperty(mockScrollElement, 'scrollWidth', { value: 300 });
         Object.defineProperty(mockScrollElement, 'clientWidth', { value: 500 });

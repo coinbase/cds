@@ -25,7 +25,7 @@ export default {
 };
 
 type ModalA11yProps = {
-  triggerRef?: React.RefObject<HTMLButtonElement>;
+  triggerRef?: React.RefObject<HTMLButtonElement | null>;
   enableBackButton?: boolean;
   visible?: boolean;
 };

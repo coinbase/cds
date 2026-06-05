@@ -8,7 +8,113 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 9.1.3 ((5/28/2026, 09:35 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.2 ((5/28/2026, 06:59 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.1 ((5/27/2026, 10:46 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.0 ((5/26/2026, 01:55 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.2 ((5/22/2026, 09:54 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.1 ((5/22/2026, 09:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.0 (5/20/2026 PST)
+
+CDS 9 is here!!
+
+For more details and to help upgrading from CDS 8 using our automated migration tool, see our official [upgrade guide](https://cds.coinbase.com/guides/v9-upgrade-guide)!
+
+#### 💥 Breaking
+
+- Dropped various deprecated variables and utilities.
+- Read our upgrade guilde for more details!
+-
+
+## 8.75.2 ((5/19/2026, 01:13 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.1 ((5/19/2026, 07:30 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.0 ((5/15/2026, 01:46 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.3 ((5/14/2026, 05:35 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.2 ((5/14/2026, 10:50 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.1 ((5/14/2026, 07:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.0 ((5/13/2026, 01:19 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
+## 8.72.0 ((5/12/2026, 02:00 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.71.0 ((5/12/2026, 11:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.70.0 ((5/8/2026, 02:16 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.69.1 ((5/6/2026, 10:08 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.69.0 ((5/5/2026, 02:27 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.68.0 ((5/1/2026, 02:11 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.67.0 ((5/1/2026, 09:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.66.2 (4/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: React 19 compatibility issue with useMergeRefs. [[#650](https://github.com/coinbase/cds/pull/650)]
+
+## 8.66.1 ((4/27/2026, 12:59 PM PST))
+
+This is an artificial version bump with no new change.
 
 #### 📘 Misc
 

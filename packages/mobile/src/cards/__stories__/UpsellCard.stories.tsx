@@ -64,17 +64,17 @@ const UpsellCardScreen = () => {
   return (
     <ExampleScreen>
       <Example title="Upsell Card">
-        <UpsellCard {...exampleProps} dangerouslySetBackground={defaultBackground} />
+        <UpsellCard {...exampleProps} style={{ backgroundColor: defaultBackground }} />
       </Example>
       <Example title="Upsell Card Compact">
-        <UpsellCard {...compactProps} dangerouslySetBackground={defaultBackground} />
+        <UpsellCard {...compactProps} style={{ backgroundColor: defaultBackground }} />
       </Example>
       <Example title="Long action button text">
         <UpsellCard
           {...exampleProps}
           action="This is a very long action button text that will get truncated"
-          dangerouslySetBackground={defaultBackground}
           description="This is a very long description text that will get truncated"
+          style={{ backgroundColor: defaultBackground }}
           title="This is a very long title text that will get truncated"
         />
       </Example>
@@ -86,14 +86,14 @@ const UpsellCardScreen = () => {
               Sign up
             </Button>
           }
-          dangerouslySetBackground={customTextNodeBackgroundColor}
           description={
-            <Text dangerouslySetColor={customTextNodeColor} font="label2">
+            <Text font="label2" style={{ color: customTextNodeColor }}>
               Start your free 30 day trial of Coinbase One
             </Text>
           }
+          style={{ backgroundColor: customTextNodeBackgroundColor }}
           title={
-            <Text dangerouslySetColor={customTextNodeColor} font="headline">
+            <Text font="headline" style={{ color: customTextNodeColor }}>
               Coinbase One
             </Text>
           }
@@ -102,21 +102,21 @@ const UpsellCardScreen = () => {
       <Example title="Custom Background color">
         <UpsellCard
           {...exampleProps}
-          dangerouslySetBackground={customBackgroundColor}
           description={
-            <Text dangerouslySetColor={customTextNodeColor} font="label2">
+            <Text font="label2" style={{ color: customTextNodeColor }}>
               Start your free 30 day trial of Coinbase One
             </Text>
           }
+          style={{ backgroundColor: customBackgroundColor }}
           title={
-            <Text dangerouslySetColor={customTextNodeColor} font="headline">
+            <Text font="headline" style={{ color: customTextNodeColor }}>
               Coinbase One
             </Text>
           }
         />
       </Example>
       <Example title="Custom Width">
-        <UpsellCard {...exampleProps} dangerouslySetBackground={defaultBackground} width="100%" />
+        <UpsellCard {...exampleProps} style={{ backgroundColor: defaultBackground }} width="100%" />
       </Example>
       <VStack gap={2} padding={3}>
         <Text font="title3">Carousel</Text>
@@ -126,19 +126,19 @@ const UpsellCardScreen = () => {
             <UpsellCard
               key="carouselItem1"
               {...exampleProps}
-              dangerouslySetBackground={defaultBackground}
+              style={{ backgroundColor: defaultBackground }}
               width={carouselCardWidth}
             />,
             <UpsellCard
               key="carouselItem2"
               {...exampleProps}
-              dangerouslySetBackground={defaultBackground}
+              style={{ backgroundColor: defaultBackground }}
               width={carouselCardWidth}
             />,
             <UpsellCard
               key="carouselItem3"
               {...exampleProps}
-              dangerouslySetBackground={defaultBackground}
+              style={{ backgroundColor: defaultBackground }}
               width={carouselCardWidth}
             />,
           ]}

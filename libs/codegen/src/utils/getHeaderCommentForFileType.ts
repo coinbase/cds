@@ -10,7 +10,7 @@ export const getHeaderCommentForFileType = (ext: string) => {
       return `
 /**
  * DO NOT MODIFY
- * Generated from scripts/codegen/main.ts
+ * Generated from libs/codegen
  */
 `;
   }

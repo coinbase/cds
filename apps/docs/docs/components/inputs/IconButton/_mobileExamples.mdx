@@ -38,12 +38,6 @@ Use variants to denote intent and importance. The `active` prop fills the icon w
     variant="tertiary"
     onPress={console.log}
   />
-  <IconButton
-    name="checkmark"
-    accessibilityLabel="Approve transaction"
-    variant="foregroundMuted"
-    onPress={console.log}
-  />
 </HStack>
 ```
 
@@ -73,13 +67,6 @@ Use the `transparent` prop to remove the background until the user interacts wit
     name="phone"
     accessibilityLabel="Call support"
     variant="tertiary"
-    transparent
-    onPress={console.log}
-  />
-  <IconButton
-    name="checkmark"
-    accessibilityLabel="Verify your identity"
-    variant="foregroundMuted"
     transparent
     onPress={console.log}
   />
@@ -135,13 +122,6 @@ Use the `disabled` prop to prevent interaction and show a disabled visual state.
     disabled
     onPress={console.log}
   />
-  <IconButton
-    name="checkmark"
-    accessibilityLabel="Approve transaction"
-    variant="foregroundMuted"
-    disabled
-    onPress={console.log}
-  />
 </HStack>
 ```
 
@@ -191,7 +171,7 @@ A toggleable icon button with an adjacent label. Uses `accessibilityLabelledBy` 
 ```jsx
 function ClaimDropExample() {
   const [active, setActive] = useState(false);
-  const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
+  const variant = useMemo(() => (active ? 'primary' : 'secondary'), [active]);
   const label = useMemo(() => (active ? 'Reject drop' : 'Claim drop'), [active]);
 
   return (

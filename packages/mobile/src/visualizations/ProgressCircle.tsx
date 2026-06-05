@@ -4,7 +4,7 @@ import type { CircleProps } from 'react-native-svg';
 import { Circle, G, Svg } from 'react-native-svg';
 import type { SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
+import { getCenter, getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
 import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
 import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { isTest } from '@coinbase/cds-utils';

@@ -15,15 +15,20 @@ describe('Radio', () => {
     );
     expect(screen.getByTestId('mock-radio')).toBeAccessible();
   });
-  it('renders a Pressable', () => {
+
+  it('renders and responds to press', () => {
+    const onChange = jest.fn();
     render(
       <DefaultThemeProvider>
-        <Radio>Radio</Radio>
+        <Radio onChange={onChange}>Radio</Radio>
       </DefaultThemeProvider>,
     );
 
-    expect(screen.UNSAFE_queryAllByType(Pressable)).toHaveLength(1);
-    expect(screen.getByText('Radio')).toBeTruthy();
+    const radioText = screen.getByText('Radio');
+    expect(radioText).toBeTruthy();
+
+    fireEvent.press(radioText);
+    expect(onChange).toHaveBeenCalled();
   });
 
   it('renders a dot icon when checked', () => {
@@ -65,7 +70,7 @@ describe('Radio', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryAllByA11yState({ checked: true })).toHaveLength(1);
+    expect(screen.getByRole('radio')).toBeChecked();
   });
 
   it('has accessibility state disabled when disabled', () => {
@@ -75,7 +80,7 @@ describe('Radio', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.queryAllByA11yState({ disabled: true })).toHaveLength(1);
+    expect(screen.getByRole('radio')).toBeDisabled();
   });
 
   it('Can set custom accessibility label and hints', () => {

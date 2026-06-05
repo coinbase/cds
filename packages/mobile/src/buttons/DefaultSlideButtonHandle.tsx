@@ -1,26 +1,37 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { forwardRef, memo, useEffect, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  type WithSpringConfig,
+} from 'react-native-reanimated';
 import { variants } from '@coinbase/cds-common/tokens/button';
-import {
-  animated,
-  type SpringConfig,
-  useChain,
-  useSpring,
-  useSpringRef,
-} from '@react-spring/native';
+import type { SpringConfig } from '@react-spring/core';
 
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 import { Pressable } from '../system/Pressable';
-import { TextHeadline } from '../typography/TextHeadline';
+import { Text } from '../typography/Text';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
-export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
+export const slideButtonSpringConfig = {
+  stiffness: 300,
+  damping: 26,
+  mass: 1,
+  overshootClamping: true,
+} as const satisfies WithSpringConfig;
 
-const progressCircleSize = 24;
+/**
+ * @deprecated SlideButton no longer uses react-spring; this value no longer used by {@link DefaultSlideButtonHandle} but retained for migration only. Use {@link slideButtonSpringConfig} with Reanimated `withSpring` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
+export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
 
 export type SlideButtonHandleCheckedProps = Pick<SlideButtonBaseProps, 'variant' | 'compact'> & {
   label?: React.ReactNode;
@@ -61,25 +72,28 @@ export const styles = StyleSheet.create({
 
 export const SlideButtonHandleChecked = memo(
   ({ label, end, compact }: SlideButtonHandleCheckedProps) => {
-    const handleWidth = compact ? 40 : 56;
+    const theme = useTheme();
+    const iconSize = compact ? 's' : 'm';
+    const iconSizeValue = theme.iconSize[iconSize];
 
     return (
       <Box alignItems="center" height="100%" justifyContent="center" width="100%">
-        {typeof label !== 'string' ? label : <TextHeadline color="fgInverse">{label}</TextHeadline>}
+        {typeof label !== 'string' ? (
+          label
+        ) : (
+          <Text color="fgInverse" font="headline">
+            {label}
+          </Text>
+        )}
         <Box
           alignItems="center"
           height="100%"
           justifyContent="center"
+          padding={compact ? 1.5 : 2}
           pin="right"
-          width={handleWidth}
         >
           {end ?? (
-            <ProgressCircle
-              indeterminate
-              color="fgInverse"
-              size={progressCircleSize}
-              weight="thin"
-            />
+            <ProgressCircle indeterminate color="fgInverse" size={iconSizeValue} weight="thin" />
           )}
         </Box>
       </Box>
@@ -90,15 +104,14 @@ export const SlideButtonHandleChecked = memo(
 export const SlideButtonHandleUnchecked = memo(
   ({ start, compact }: SlideButtonHandleUncheckedProps) => {
     const iconSize = compact ? 's' : 'm';
-    const handleWidth = compact ? 40 : 56;
 
     return (
       <Box
         alignItems="center"
         height="100%"
         justifyContent="center"
+        padding={compact ? 1.5 : 2}
         pin="right"
-        width={handleWidth}
       >
         {start ?? <Icon color="fgInverse" name="forwardArrow" size={iconSize} />}
       </Box>
@@ -129,32 +142,27 @@ export const DefaultSlideButtonHandle = memo(
     ) => {
       const backgroundColor = variants[variant].background;
 
-      const checkedSpringRef = useSpringRef();
-      const uncheckedSpringRef = useSpringRef();
-      const checkedSpring = useSpring({
-        opacity: checked ? 1 : 0,
-        ref: checkedSpringRef,
-        config: animationConfig,
-        immediate: !checked,
-      });
-      const uncheckedSpring = useSpring({
-        opacity: checked ? 0 : 1,
-        ref: uncheckedSpringRef,
-        config: animationConfig,
-      });
-      useChain(
-        checked ? [uncheckedSpringRef, checkedSpringRef] : [checkedSpringRef, uncheckedSpringRef],
-        [0, 0.1],
-      );
+      const checkedOpacity = useSharedValue(checked ? 1 : 0);
+      const uncheckedOpacity = useSharedValue(checked ? 0 : 1);
+
+      useEffect(() => {
+        if (checked) {
+          uncheckedOpacity.value = withSpring(0, slideButtonSpringConfig);
+          checkedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
+        } else {
+          checkedOpacity.value = 0;
+          uncheckedOpacity.value = withDelay(100, withSpring(1, slideButtonSpringConfig));
+        }
+      }, [checked, checkedOpacity, uncheckedOpacity]);
 
       const containerStyle = useMemo(() => [styles.base, style], [style]);
-      const animatedCheckedStyle = useMemo(
-        () => [styles.absoluteContainer, { opacity: checkedSpring.opacity }],
-        [checkedSpring],
+      const animatedCheckedStyle = useAnimatedStyle(
+        () => ({ opacity: checkedOpacity.value }),
+        [checkedOpacity],
       );
-      const animatedUncheckedStyle = useMemo(
-        () => [styles.absoluteContainer, { opacity: uncheckedSpring.opacity }],
-        [uncheckedSpring],
+      const animatedUncheckedStyle = useAnimatedStyle(
+        () => ({ opacity: uncheckedOpacity.value }),
+        [uncheckedOpacity],
       );
 
       return (
@@ -172,7 +180,7 @@ export const DefaultSlideButtonHandle = memo(
           loading={checked}
           {...props}
         >
-          <animated.View style={animatedCheckedStyle}>
+          <Animated.View style={[styles.absoluteContainer, animatedCheckedStyle]}>
             <SlideButtonHandleChecked
               compact={compact}
               disabled={disabled}
@@ -180,15 +188,15 @@ export const DefaultSlideButtonHandle = memo(
               label={checkedLabel}
               variant={variant}
             />
-          </animated.View>
-          <animated.View style={animatedUncheckedStyle}>
+          </Animated.View>
+          <Animated.View style={[styles.absoluteContainer, animatedUncheckedStyle]}>
             <SlideButtonHandleUnchecked
               compact={compact}
               disabled={disabled}
               start={startUncheckedNode}
               variant={variant}
             />
-          </animated.View>
+          </Animated.View>
         </Pressable>
       );
     },

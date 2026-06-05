@@ -118,7 +118,12 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByRole('textbox')).toHaveStyle({ padding: '0px' });
+      expect(screen.getByRole('textbox')).toHaveStyle({
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+      });
     });
 
     it('filters options based on search text', async () => {

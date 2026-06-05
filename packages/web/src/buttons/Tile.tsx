@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { type JSX, memo, useCallback, useMemo, useState } from 'react';
 import { css } from '@linaria/core';
 
 import { DotCount } from '../dots/DotCount';

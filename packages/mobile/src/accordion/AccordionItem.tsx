@@ -11,8 +11,8 @@ import { AccordionPanel, type AccordionPanelBaseProps } from './AccordionPanel';
 export type AccordionItemBaseProps = Pick<ViewProps, 'style'> &
   Omit<AccordionHeaderBaseProps, 'collapsed'> &
   Omit<AccordionPanelBaseProps, 'collapsed'> & {
-    headerRef?: React.RefObject<View>;
-    panelRef?: React.RefObject<View>;
+    headerRef?: React.RefObject<View | null>;
+    panelRef?: React.RefObject<View | null>;
   };
 
 export type AccordionItemProps = AccordionItemBaseProps;

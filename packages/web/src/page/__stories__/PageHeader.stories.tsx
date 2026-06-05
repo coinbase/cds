@@ -1,6 +1,6 @@
 import React from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
-import type { Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button, ButtonGroup, IconButton } from '../../buttons';
 import { useBreakpoints } from '../../hooks/useBreakpoints';
@@ -73,7 +73,7 @@ const exampleProps = {
     </Text>
   ),
   intermediary2: (
-    <Box dangerouslySetBackground="red">
+    <Box style={{ backgroundColor: 'red' }}>
       <Text as="sub" font="body">
         Hello there. This is a rather long text sentence since I do not have lorem ipsum handy.
         Hello there. This is a rather long text sentence since I do not have lorem ipsum handy.
@@ -166,19 +166,20 @@ const exampleProps = {
   ),
 };
 
-const Template: Story<PageHeaderProps> = (args) => <PageHeader {...args} />;
+type Story = StoryObj<PageHeaderProps>;
 
-export const InteractiveHeader = Template.bind({});
-
-InteractiveHeader.args = {
-  background: 'bg',
-  start: 'logoMark2',
-  title: 'title1',
-  end: 'end2',
+export const InteractiveHeader: Story = {
+  render: (args) => <PageHeader {...args} />,
+  args: {
+    background: 'bg',
+    start: 'logoMark2',
+    title: 'title1',
+    end: 'end2',
+  },
 };
 
-export const Examples = () => {
-  return (
+export const Examples: Story = {
+  render: () => (
     <VStack gap={2} left={0} position="absolute" top={0} width="100%">
       <PageHeader
         background="bgPrimaryWash"
@@ -263,26 +264,25 @@ export const Examples = () => {
         title={exampleProps.intermediary2}
       />
     </VStack>
-  );
-};
-
-Examples.parameters = {
-  a11y: {
-    config: {
-      /**
-       * It is expected to include multiple PageHeaders with same landmark in this story
-       * @link https://dequeuniversity.com/rules/axe/4.6/landmark-no-duplicate-banner?application=axeAPI
-       */
-      rules: [
-        { id: 'landmark-no-duplicate-banner', enabled: false },
-        { id: 'landmark-unique', enabled: false },
-      ],
+  ),
+  parameters: {
+    a11y: {
+      config: {
+        /**
+         * It is expected to include multiple PageHeaders with same landmark in this story
+         * @link https://dequeuniversity.com/rules/axe/4.6/landmark-no-duplicate-banner?application=axeAPI
+         */
+        rules: [
+          { id: 'landmark-no-duplicate-banner', enabled: false },
+          { id: 'landmark-unique', enabled: false },
+        ],
+      },
     },
   },
 };
 
-export const PageHeaderInErrorEmptyState = () => {
-  return (
+export const PageHeaderInErrorEmptyState: Story = {
+  render: () => (
     <VStack gap={0} left={0} position="absolute" top={0} width="100%">
       <PageHeader background="bg" position="sticky" start={exampleProps.logoMark2} top="0" />
       <Box background="bgPrimaryWash">
@@ -305,10 +305,10 @@ export const PageHeaderInErrorEmptyState = () => {
         </VStack>
       </Box>
     </VStack>
-  );
+  ),
 };
 
-export const PageHeaderInPage = () => {
+const PageHeaderInPageRender = () => {
   const { isPhone } = useBreakpoints();
   const setEndButtonMobile = isPhone ? exampleProps.endButtonsBlock3 : exampleProps.endButtons3;
 
@@ -340,25 +340,29 @@ export const PageHeaderInPage = () => {
       <VStack
         alignContent="center"
         alignItems="center"
-        dangerouslySetBackground="#FADADD"
         flexGrow={1}
         flexShrink={1}
         height="400px"
         justifyContent="center"
         padding={3}
+        style={{ backgroundColor: '#FADADD' }}
       >
         <Text as="h3" display="block" font="title1">
           Primary Content
         </Text>
       </VStack>
-      <Box dangerouslySetBackground="gray" height="500px" />
-      <Box dangerouslySetBackground="orange" height="500px" />
+      <Box height="500px" style={{ backgroundColor: 'gray' }} />
+      <Box height="500px" style={{ backgroundColor: 'orange' }} />
       <PageFooter action={setEndButtonMobile} />
     </VStack>
   );
 };
 
-export default {
+export const PageHeaderInPage: Story = {
+  render: () => <PageHeaderInPageRender />,
+};
+
+const meta: Meta<PageHeaderProps> = {
   title: 'Components/PageHeader',
   component: PageHeader,
   argTypes: {
@@ -433,3 +437,5 @@ export default {
     },
   },
 };
+
+export default meta;

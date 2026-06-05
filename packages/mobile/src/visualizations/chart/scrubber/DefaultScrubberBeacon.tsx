@@ -1,0 +1,252 @@
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
+import {
+  cancelAnimation,
+  Easing,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import { Circle, Group } from '@shopify/react-native-skia';
+
+import { useTheme } from '../../../index';
+import { useCartesianChartContext } from '../ChartProvider';
+import { unwrapAnimatedValue } from '../utils';
+import { projectPointWithSerializableScale } from '../utils/point';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
+
+import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
+
+const defaultRadius = 5;
+const defaultStrokeWidth = 2;
+
+const pulseOpacityStart = 0.5;
+const pulseOpacityEnd = 0;
+const pulseRadiusStartMultiplier = 2;
+const pulseRadiusEndMultiplier = 3;
+
+const defaultPulseTransition: Transition = {
+  type: 'timing',
+  duration: 1600,
+  easing: Easing.bezier(0.0, 0.0, 0.0, 1.0),
+};
+
+const defaultPulseRepeatDelay = 400;
+
+export type DefaultScrubberBeaconProps = ScrubberBeaconProps & {
+  /**
+   * Radius of the beacon circle.
+   * @default 5
+   */
+  radius?: number;
+  /**
+   * Stroke width of the beacon circle.
+   * @default 2
+   */
+  strokeWidth?: number;
+};
+
+export const DefaultScrubberBeacon = memo(
+  forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
+    (
+      {
+        seriesId,
+        color: colorProp,
+        dataX,
+        dataY,
+        isIdle,
+        idlePulse,
+        animate = true,
+        transitions,
+        opacity: opacityProp = 1,
+        radius = defaultRadius,
+        stroke,
+        strokeWidth = defaultStrokeWidth,
+      },
+      ref,
+    ) => {
+      const theme = useTheme();
+      const { getSeries, getXSerializableScale, getYSerializableScale, drawingArea } =
+        useCartesianChartContext();
+
+      const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+      const xScale = useMemo(
+        () => getXSerializableScale(targetSeries?.xAxisId),
+        [getXSerializableScale, targetSeries?.xAxisId],
+      );
+      const yScale = useMemo(
+        () => getYSerializableScale(targetSeries?.yAxisId),
+        [getYSerializableScale, targetSeries?.yAxisId],
+      );
+
+      const color = useMemo(
+        () => colorProp ?? targetSeries?.color ?? theme.color.fgPrimary,
+        [colorProp, targetSeries?.color, theme.color.fgPrimary],
+      );
+
+      const updateTransition = useMemo(
+        () => getTransition(transitions?.update, animate, defaultTransition),
+        [transitions?.update, animate],
+      );
+      const pulseTransition = useMemo(
+        () => transitions?.pulse ?? defaultPulseTransition,
+        [transitions?.pulse],
+      );
+      const pulseRepeatDelay = useMemo(
+        () => transitions?.pulseRepeatDelay ?? defaultPulseRepeatDelay,
+        [transitions?.pulseRepeatDelay],
+      );
+
+      const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
+      const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
+
+      const pulseOpacity = useSharedValue(0);
+      const pulseRadius = useSharedValue(pulseRadiusStart);
+
+      // Convert idlePulse prop to SharedValue so useAnimatedReaction can detect changes.
+      // In the new React Native architecture, regular JS props are captured by value in worklets
+      // and won't update when the prop changes.
+      const idlePulseShared = useSharedValue(idlePulse ?? false);
+      useEffect(() => {
+        idlePulseShared.value = idlePulse ?? false;
+      }, [idlePulse, idlePulseShared]);
+
+      const animatedX = useSharedValue<number | null>(null);
+      const animatedY = useSharedValue<number | null>(null);
+
+      // Calculate the target point position - project data to pixels
+      const targetPoint = useDerivedValue(() => {
+        if (!xScale || !yScale) return { x: 0, y: 0 };
+        return projectPointWithSerializableScale({
+          x: unwrapAnimatedValue(dataX),
+          y: unwrapAnimatedValue(dataY),
+          xScale,
+          yScale,
+        });
+      }, [dataX, dataY, xScale, yScale]);
+
+      useAnimatedReaction(
+        () => {
+          return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
+        },
+        (current, previous) => {
+          // When animation is disabled, on initial render, or when we are starting,
+          // continuing, or finishing scrubbing we should immediately transition
+          if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
+            animatedX.value = current.point.x;
+            animatedY.value = current.point.y;
+            return;
+          }
+
+          animatedX.value = buildTransition(current.point.x, updateTransition);
+          animatedY.value = buildTransition(current.point.y, updateTransition);
+        },
+        [animate, updateTransition],
+      );
+
+      // Create animated point using the animated values
+      const animatedPoint = useDerivedValue(() => {
+        // If the animated values have not been set yet, return the target point
+        if (animatedX.value === null || animatedY.value === null) return targetPoint.value;
+        return { x: animatedX.value, y: animatedY.value };
+      }, [targetPoint, animatedX, animatedY]);
+
+      useImperativeHandle(
+        ref,
+        () => ({
+          pulse: () => {
+            // Only trigger manual pulse when idlePulse is not enabled
+            if (!idlePulseShared.value) {
+              cancelAnimation(pulseOpacity);
+              cancelAnimation(pulseRadius);
+
+              // Manual pulse without delay
+              pulseOpacity.value = pulseOpacityStart;
+              pulseRadius.value = pulseRadiusStart;
+              pulseOpacity.value = buildTransition(pulseOpacityEnd, pulseTransition);
+              pulseRadius.value = buildTransition(pulseRadiusEnd, pulseTransition);
+            }
+          },
+        }),
+        [
+          idlePulseShared,
+          pulseOpacity,
+          pulseRadius,
+          pulseTransition,
+          pulseRadiusStart,
+          pulseRadiusEnd,
+        ],
+      );
+
+      // Watch idlePulse changes and control continuous pulse
+      useAnimatedReaction(
+        () => idlePulseShared.value,
+        (current) => {
+          if (current) {
+            // Start continuous pulse when idlePulse is enabled
+            pulseOpacity.value = pulseOpacityStart;
+            pulseRadius.value = pulseRadiusStart;
+
+            pulseOpacity.value = withRepeat(
+              withSequence(
+                buildTransition(pulseOpacityEnd, pulseTransition),
+                withDelay(pulseRepeatDelay, withTiming(pulseOpacityStart, { duration: 0 })),
+              ),
+              -1, // infinite loop
+              false,
+            );
+
+            pulseRadius.value = withRepeat(
+              withSequence(
+                buildTransition(pulseRadiusEnd, pulseTransition),
+                withDelay(pulseRepeatDelay, withTiming(pulseRadiusStart, { duration: 0 })),
+              ),
+              -1, // infinite loop
+              false,
+            );
+          } else {
+            // Stop pulse when idlePulse is disabled
+            cancelAnimation(pulseOpacity);
+            cancelAnimation(pulseRadius);
+            pulseOpacity.value = pulseOpacityEnd;
+            pulseRadius.value = pulseRadiusStart;
+          }
+        },
+        [pulseTransition, pulseRepeatDelay, pulseRadiusStart, pulseRadiusEnd],
+      );
+
+      const pulseVisibility = useDerivedValue(() => {
+        // Never pulse when scrubbing
+        if (!unwrapAnimatedValue(isIdle)) return 0;
+        return pulseOpacity.value;
+      }, [isIdle, pulseOpacity]);
+
+      const beaconOpacity = useDerivedValue(() => {
+        const point = targetPoint.value;
+        const isWithinDrawingArea =
+          point.x >= drawingArea.x &&
+          point.x <= drawingArea.x + drawingArea.width &&
+          point.y >= drawingArea.y &&
+          point.y <= drawingArea.y + drawingArea.height;
+        const userOpacity = unwrapAnimatedValue(opacityProp);
+        return isWithinDrawingArea ? userOpacity : 0;
+      }, [targetPoint, drawingArea, opacityProp]);
+
+      return (
+        <Group opacity={beaconOpacity}>
+          <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
+          <Circle c={animatedPoint} color={stroke ?? theme.color.bg} r={radius + strokeWidth / 2} />
+          <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
+        </Group>
+      );
+    },
+  ),
+);

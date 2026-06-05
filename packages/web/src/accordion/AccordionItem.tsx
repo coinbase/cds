@@ -9,8 +9,8 @@ import { AccordionPanel, type AccordionPanelBaseProps } from './AccordionPanel';
 
 export type AccordionItemBaseProps = Omit<AccordionHeaderBaseProps, 'collapsed'> &
   Pick<AccordionPanelBaseProps, 'maxHeight' | 'children'> & {
-    headerRef?: React.RefObject<HTMLButtonElement>;
-    panelRef?: React.RefObject<HTMLDivElement>;
+    headerRef?: React.RefObject<HTMLButtonElement | null>;
+    panelRef?: React.RefObject<HTMLDivElement | null>;
     style?: React.CSSProperties;
   };
 

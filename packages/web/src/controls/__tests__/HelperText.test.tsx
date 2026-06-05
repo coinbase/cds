@@ -23,8 +23,8 @@ describe('HelperText.test', () => {
     expect(screen.getByTestId('error-icon').className).toContain('fgNegative');
   });
 
-  it('renders custom color via dangerouslySetColor', () => {
-    render(<HelperText dangerouslySetColor="#FF0000">Test text</HelperText>);
+  it('renders custom color via style', () => {
+    render(<HelperText style={{ color: '#FF0000' }}>Test text</HelperText>);
 
     expect(screen.getByText('Test text')).toHaveStyle({
       color: '#FF0000',
@@ -46,6 +46,30 @@ describe('HelperText.test', () => {
     expect(screen.getByTestId('error-icon')).toHaveStyle({
       color: '#FF0000',
     });
+  });
+
+  it('renders custom root and icon slots with styles and classNames', () => {
+    render(
+      <DefaultThemeProvider>
+        <HelperText
+          classNames={{ root: 'helper-root', icon: 'helper-icon' }}
+          color="fgNegative"
+          errorIconTestID="error-icon"
+          styles={{ root: { color: '#00FF00' }, icon: { color: '#0000FF' } }}
+        >
+          Test text
+        </HelperText>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('Test text')).toHaveStyle({
+      color: '#00FF00',
+    });
+    expect(screen.getByText('Test text').className).toContain('helper-root');
+    expect(screen.getByTestId('error-icon')).toHaveStyle({
+      color: '#0000FF',
+    });
+    expect(screen.getByTestId('error-icon').className).toContain('helper-icon');
   });
 
   it('renders custom padding', () => {

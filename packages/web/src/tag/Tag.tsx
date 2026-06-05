@@ -19,7 +19,7 @@ import { css } from '@linaria/core';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 const nodeCss = css`
@@ -30,7 +30,8 @@ const nodeCss = css`
 export const tagStaticClassName = 'cds-tag';
 
 export type TagBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Omit<BoxBaseProps, 'children' | 'color' | 'background'> & {
     /** Children to render within the Tag. */
     children: React.ReactNode;
     /**
@@ -91,7 +92,13 @@ export const Tag = memo(
       alignItems = 'center',
       gap = 0.5,
       justifyContent = 'center',
+      paddingX,
       paddingY = 0.25,
+      font,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
       testID = tagStaticClassName,
       ...props
     } = mergedProps;
@@ -116,7 +123,7 @@ export const Tag = memo(
         display={display}
         gap={gap}
         justifyContent={justifyContent}
-        paddingX={tagHorizontalSpacing[intent]}
+        paddingX={paddingX ?? tagHorizontalSpacing[intent]}
         paddingY={paddingY}
         style={boxStyles}
         testID={testID}
@@ -133,7 +140,11 @@ export const Tag = memo(
         <Text
           color="currentColor"
           display="inline"
-          font={tagFontMap[intent]}
+          font={font ?? tagFontMap[intent]}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          lineHeight={lineHeight}
           overflow="truncate"
           testID={`${testID}--text`}
         >

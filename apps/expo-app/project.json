@@ -1,0 +1,115 @@
+{
+  "name": "expo-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/expo-app",
+  "tags": [],
+  "targets": {
+    "start": {
+      "command": "npx expo start",
+      "options": {
+        "cwd": "apps/expo-app"
+      }
+    },
+    "ios": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "debug",
+      "configurations": {
+        "debug": {
+          "cwd": "apps/expo-app",
+          "command": "node ./scripts/run.mjs --platform ios --profile debug"
+        },
+        "release": {
+          "cwd": "apps/expo-app",
+          "command": "node ./scripts/run.mjs --platform ios --profile release"
+        }
+      }
+    },
+    "android": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "debug",
+      "configurations": {
+        "debug": {
+          "cwd": "apps/expo-app",
+          "command": "node ./scripts/run.mjs --platform android --profile debug"
+        },
+        "release": {
+          "cwd": "apps/expo-app",
+          "command": "node ./scripts/run.mjs --platform android --profile release"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    },
+    "validate": {
+      "command": "npx expo install --check",
+      "options": {
+        "cwd": "apps/expo-app"
+      }
+    },
+    "launch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/expo-app",
+        "command": "node ./scripts/launch.mjs"
+      },
+      "configurations": {
+        "ios-debug": {
+          "args": "--platform ios --profile debug"
+        },
+        "ios-release": {
+          "args": "--platform ios --profile release"
+        },
+        "android-debug": {
+          "args": "--platform android --profile debug"
+        },
+        "android-release": {
+          "args": "--platform android --profile release"
+        }
+      }
+    },
+    "patch-bundle-ios": {
+      "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release",
+      "options": {
+        "cwd": "apps/expo-app"
+      }
+    },
+    "patch-bundle-android": {
+      "command": "node ./scripts/patch-bundle.mjs --platform android --profile release",
+      "options": {
+        "cwd": "apps/expo-app"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/expo-app",
+        "command": "node ./scripts/build.mjs"
+      },
+      "configurations": {
+        "ios-debug": {
+          "args": "--platform ios --profile debug --target simulator"
+        },
+        "ios-release": {
+          "args": "--platform ios --profile release --target simulator"
+        },
+        "ios-debug-device": {
+          "args": "--platform ios --profile debug --target device"
+        },
+        "ios-release-device": {
+          "args": "--platform ios --profile release --target device"
+        },
+        "android-debug": {
+          "args": "--platform android --profile debug --target simulator"
+        },
+        "android-release": {
+          "args": "--platform android --profile release --target simulator"
+        }
+      }
+    }
+  }
+}

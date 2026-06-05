@@ -19,11 +19,24 @@ export const avatarDotSizeMap: Record<AvatarSize, DotSize> = {
   s: 'xs',
 } as const;
 
+/**
+ * The fixed height of the DotCount component.
+ * Width grows based on content length.
+ **/
 export const dotCountSize = 24;
 
-// This works for the purposes of TabNavigation, but it's not stable
-// TODO Update this with more stable values
-export const dotSizeTokens = { s: 28, m: 36, l: 42 } as const;
+/**
+ * @deprecated Use local sizing logic instead. This export is temporarily supported for
+ * compatibility. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
+export const dotSizeTokens = { s: 28, m: 36, l: 48 } as const;
+
+/**
+ * @deprecated Use local sizing logic instead. This export is temporarily supported for
+ * compatibility. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const getDotSize = (count?: number) => {
   if (!count || count < 10) return dotSizeTokens.s;
   if (count >= 10 && count < 100) return dotSizeTokens.m;

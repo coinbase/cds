@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -10,7 +10,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { Grid, type GridDefaultElement, type GridProps } from '../layout/Grid';
 import { media } from '../styles/media';
-import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
+import type { PositionStyles, ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
 import { Text } from '../typography/Text';
 
 const gridStylesMobileTitleCss = css`

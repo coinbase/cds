@@ -56,7 +56,9 @@ export const Tooltip = memo((_props: TooltipProps) => {
     // Use aria-describedby to associate the tooltip (role="tooltip") with the trigger.
     // This preserves the trigger's own accessible name (e.g. button text) while the tooltip
     // provides supplemental description, per the ARIA tooltip pattern.
-    return cloneElement(children, { 'aria-describedby': tooltipId });
+    return cloneElement(children as React.ReactElement<React.HTMLAttributes<HTMLElement>>, {
+      'aria-describedby': tooltipId,
+    });
   }, [children, tooltipId]);
 
   const contentPosition = useMemo(

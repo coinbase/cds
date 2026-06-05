@@ -1,8 +1,8 @@
 import depcheck from 'depcheck';
+import { diffLines } from 'diff';
 import { globSync } from 'glob';
 import fs from 'node:fs';
 import path from 'node:path';
-import { diffLines } from 'diff';
 
 // See the depcheck docs for info about ignoring files and deps https://www.npmjs.com/package/depcheck
 const ignorePatterns = [];
@@ -88,11 +88,7 @@ const baselineResultsMessage = isDiffReport
 
 const resultsMessageDiff = diffLines(baselineResultsMessage, message);
 
-const BUILDKITE_EXPAND_PREFIX = '+++';
-
-console.log(
-  `${process.env.CI === 'true' ? `${BUILDKITE_EXPAND_PREFIX} ` : '\n'}🦍 Depcheck results:\n`,
-);
+console.log('\n🦍 Depcheck results:\n');
 
 resultsMessageDiff.forEach(({ value, added, removed }, index) => {
   const nextDiff = resultsMessageDiff[index + 1];

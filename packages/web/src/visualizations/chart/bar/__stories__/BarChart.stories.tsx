@@ -1,0 +1,1157 @@
+import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
+import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { m as motion, type Transition } from 'framer-motion';
+
+import { HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
+import { CartesianChart } from '../..';
+import { XAxis, YAxis } from '../../axis';
+import { useCartesianChartContext } from '../../ChartProvider';
+import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { PeriodSelector } from '../../PeriodSelector';
+import { Scrubber } from '../../scrubber';
+import { isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
+import { BarChart } from '../BarChart';
+import { BarPlot } from '../BarPlot';
+import { type BarStackComponentProps } from '../BarStack';
+import { DefaultBarStack } from '../DefaultBarStack';
+import { Bar, type BarComponentProps } from '..';
+
+export default {
+  title: 'Components/Chart/BarChart',
+  component: BarChart,
+  parameters: {
+    a11y: {
+      test: 'todo',
+    },
+  },
+};
+
+const Example: React.FC<
+  React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
+> = ({ children, title, description }) => {
+  return (
+    <VStack gap={2}>
+      <Text as="h2" display="block" font="title3">
+        {title}
+      </Text>
+      {description}
+      {children}
+    </VStack>
+  );
+};
+
+const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
+  (value) => value + 50,
+);
+
+const PositiveAndNegativeCashFlow = () => {
+  const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
+  const gains = [
+    5, 0, 6, 18, 0, 5, 12, 0, 12, 22, 28, 18, 0, 12, 6, 0, 0, 24, 0, 0, 4, 0, 18, 0, 0, 14, 10, 16,
+    0, 0, 0,
+  ];
+
+  const losses = [
+    -4, 0, -8, -12, -6, 0, 0, 0, -18, 0, -12, 0, -9, -6, 0, 0, 0, 0, -22, -8, 0, 0, -10, -14, 0, 0,
+    0, 0, 0, -12, -10,
+  ];
+  const series = [
+    { id: 'gains', data: gains, color: 'var(--color-fgPositive)', stackId: 'bars' },
+    { id: 'losses', data: losses, color: 'var(--color-fgNegative)', stackId: 'bars' },
+  ];
+
+  return (
+    <CartesianChart
+      height={420}
+      inset={32}
+      series={series}
+      xAxis={{ data: categories, scaleType: 'band' }}
+    >
+      <XAxis />
+      <YAxis
+        showGrid
+        GridLineComponent={ThinSolidLine}
+        tickLabelFormatter={(value) => `$${value}M`}
+      />
+      <BarPlot />
+      <ReferenceLine LineComponent={SolidLine} dataY={0} />
+    </CartesianChart>
+  );
+};
+
+const FiatAndStablecoinBalance = () => {
+  const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
+
+  const usd = [
+    20, 20, 20, 20, 20, 40, 60, 60, 80, 120, 200, 240, 240, 240, 240, 240, 240, 240, 240, 60, 30,
+    20, 25, 5, 0, 0, 0, 0, 80, 120, 150,
+  ];
+  const usdc = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 260, 260, 240, 220, 180, 160, 200, 240, 220, 0, 0, 0, 0, 0, 0,
+    250, 250, 250, 250, 250, 250,
+  ];
+  const brl = [
+    0, 0, 0, 0, 0, 0, 0, 20, 40, 100, 60, 60, 60, 0, 0, 0, 0, 0, 0, 160, 40, 80, 140, 180, 120, 0,
+    0, 0, 30, 30, 40,
+  ];
+
+  const series = [
+    { id: 'BRL', data: brl, color: 'var(--color-accentBoldGreen)' },
+    { id: 'USDC', data: usdc, color: 'var(--color-accentBoldBlue)' },
+    { id: 'USD', data: usd, color: 'var(--color-accentBoldIndigo, #5b6cff)' },
+  ];
+
+  return (
+    <BarChart
+      showXAxis
+      stacked
+      barMinSize={8}
+      height={420}
+      inset={32}
+      series={series}
+      stackGap={2}
+      stackMinSize={16}
+      xAxis={{ data: categories }}
+    />
+  );
+};
+
+const MonthlyRewards = () => {
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  const currentMonth = 7;
+  const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
+  const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
+  const cyan = [null, 7, 10, 12, 11, 10, 8, 11, null, null, null, null];
+  const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
+
+  const series = [
+    { id: 'purple', data: purple, color: 'rgb(var(--purple30))' },
+    { id: 'blue', data: blue, color: 'rgb(var(--blue30))' },
+    { id: 'cyan', data: cyan, color: 'rgb(var(--teal30))' },
+    { id: 'green', data: green, color: 'rgb(var(--green30))' },
+  ];
+
+  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
+    if (props.height === 0) {
+      const diameter = props.width;
+      return (
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          fill="var(--color-bgTertiary)"
+          height={diameter}
+          width={diameter}
+          x={props.x}
+          y={props.y - diameter}
+        />
+      );
+    }
+
+    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      showXAxis
+      stacked
+      BarStackComponent={CustomBarStackComponent}
+      borderRadius={1000}
+      height={300}
+      inset={0}
+      series={series}
+      showYAxis={false}
+      stackMinSize={24}
+      width={384}
+      xAxis={{
+        tickLabelFormatter: (index) => {
+          if (index == currentMonth) {
+            return <tspan style={{ fontWeight: 'bold' }}>{months[index]}</tspan>;
+          }
+          return months[index];
+        },
+        categoryPadding: 0.25,
+      }}
+    />
+  );
+};
+
+type TimePeriod = 'week' | 'month' | 'year';
+type TimePeriodTab = { id: TimePeriod; label: string };
+
+const tabs: TimePeriodTab[] = [
+  { id: 'week', label: '1W' },
+  { id: 'month', label: '1M' },
+  { id: 'year', label: '1Y' },
+];
+
+const ScrubberRect = memo(() => {
+  const { getXScale, getYScale } = useCartesianChartContext();
+  const { scrubberPosition } = React.useContext(ScrubberContext) ?? {};
+  const xScale = getXScale();
+  const yScale = getYScale();
+
+  if (!xScale || !yScale || scrubberPosition === undefined || !isCategoricalScale(xScale))
+    return null;
+
+  const yScaleDomain = yScale.range();
+  const [yMax, yMin] = yScaleDomain;
+
+  const barWidth = xScale.bandwidth();
+
+  return (
+    <rect
+      fill="var(--color-bgLine)"
+      height={yMax - yMin}
+      width={barWidth}
+      x={xScale(scrubberPosition)}
+      y={yMin}
+    />
+  );
+});
+
+const BandGridPositionExample = ({
+  position,
+}: {
+  position: 'start' | 'middle' | 'end' | 'edges';
+}) => (
+  <CartesianChart
+    height={200}
+    inset={4}
+    series={[{ id: 'data', data: [30, 50, 40, 60, 35] }]}
+    width={250}
+    xAxis={{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }}
+    yAxis={{ domain: { min: 0 } }}
+  >
+    <XAxis showGrid showLine bandGridLinePlacement={position} label={position} />
+    <BarPlot />
+  </CartesianChart>
+);
+
+const Candlesticks = () => {
+  const staggerDelay = 0.25;
+
+  const infoTextRef = React.useRef<HTMLSpanElement>(null);
+  const selectedIndexRef = React.useRef<number | undefined>(undefined);
+  const [timePeriod, setTimePeriod] = React.useState<TimePeriodTab>(tabs[0]);
+  const stockData = btcCandles
+    .slice(0, timePeriod.id === 'week' ? 7 : timePeriod.id === 'month' ? 30 : btcCandles.length)
+    .reverse();
+  const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
+
+  // Custom line component that renders a rect to highlight the entire bandwidth
+  const BandwidthHighlight = memo<LineComponentProps>(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = getXScale();
+
+    if (!xScale || scrubberPosition === undefined) return null;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return null;
+
+    // Type guard to check if scale has bandwidth (band scale)
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={bandwidth}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
+  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
+    number,
+    number,
+  ][];
+
+  const CandlestickBarComponent = memo<BarComponentProps>(({ x, y, width, height, dataX }) => {
+    const { getYScale, drawingArea } = useCartesianChartContext();
+    const yScale = getYScale();
+
+    const normalizedX = useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const transition: Transition = useMemo(
+      () => ({
+        type: 'tween',
+        duration: 0.325,
+        delay: normalizedX * staggerDelay,
+      }),
+      [normalizedX],
+    );
+
+    const wickX = x + width / 2;
+
+    const timePeriodValue = stockData[dataX as number];
+
+    const open = parseFloat(timePeriodValue.open);
+    const close = parseFloat(timePeriodValue.close);
+
+    const bullish = open < close;
+    const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+    const openY = yScale?.(open) ?? 0;
+    const closeY = yScale?.(close) ?? 0;
+
+    const bodyHeight = Math.abs(openY - closeY);
+    const bodyY = openY < closeY ? openY : closeY;
+
+    return (
+      <motion.g
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 12 }}
+        transition={transition}
+      >
+        <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+        <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+      </motion.g>
+    );
+  });
+
+  const formatPrice = React.useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }, []);
+
+  const formatVolume = React.useCallback((volume: string) => {
+    const volumeInThousands = parseFloat(volume) / 1000;
+    return (
+      new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(volumeInThousands) + 'k'
+    );
+  }, []);
+
+  const formatTime = React.useCallback(
+    (index: number | null) => {
+      if (index === null || index >= stockData.length) return '';
+      const ts = parseInt(stockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    },
+    [stockData],
+  );
+
+  // Memoize the update function to avoid recreation on each render
+  const updateInfoText = React.useCallback(
+    (index: number | undefined) => {
+      if (!infoTextRef.current) return;
+
+      const text =
+        index !== undefined
+          ? `Open: ${formatPrice(parseFloat(stockData[index].open))}, Close: ${formatPrice(
+              parseFloat(stockData[index].close),
+            )}, Volume: ${formatVolume(stockData[index].volume)}`
+          : formatPrice(parseFloat(stockData[stockData.length - 1].close));
+
+      // Direct DOM manipulation - no React re-render
+      infoTextRef.current.textContent = text;
+      selectedIndexRef.current = index;
+    },
+    [stockData, formatPrice, formatVolume],
+  );
+
+  // Initial value for the info text
+  const initialInfo = formatPrice(parseFloat(stockData[stockData.length - 1].close));
+
+  // Update text when stockData changes (on timePeriod change)
+  React.useEffect(() => {
+    updateInfoText(selectedIndexRef.current);
+  }, [stockData, updateInfoText]);
+
+  const infoTextId = useId();
+
+  return (
+    <VStack gap={2}>
+      <Text aria-live="polite" font="headline" id={infoTextId}>
+        <span ref={infoTextRef}>{initialInfo}</span>
+      </Text>
+      <BarChart
+        enableScrubbing
+        showXAxis
+        showYAxis
+        BarComponent={CandlestickBarComponent}
+        BarStackComponent={({ children, origin, ...props }) => <g {...props}>{children}</g>}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        height={400}
+        onScrubberPositionChange={updateInfoText}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          tickLabelFormatter: formatTime,
+        }}
+        yAxis={{
+          domain: { min },
+          tickLabelFormatter: formatPrice,
+          width: 80,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+        }}
+      >
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke="var(--color-fgMuted)"
+          seriesIds={[]}
+        />
+      </BarChart>
+      <PeriodSelector
+        activeTab={timePeriod}
+        justifyContent="flex-start"
+        onChange={(tab) => {
+          if (tab === null) return;
+          setTimePeriod(tab as TimePeriodTab);
+        }}
+        tabs={tabs}
+        width="fit-content"
+      />
+    </VStack>
+  );
+};
+
+type SunlightChartData = Array<{ label: string; value: number }>;
+
+const sunlightData: SunlightChartData = [
+  { label: 'Jan', value: 598 },
+  { label: 'Feb', value: 635 },
+  { label: 'Mar', value: 688 },
+  { label: 'Apr', value: 753 },
+  { label: 'May', value: 812 },
+  { label: 'Jun', value: 855 },
+  { label: 'Jul', value: 861 },
+  { label: 'Aug', value: 828 },
+  { label: 'Sep', value: 772 },
+  { label: 'Oct', value: 710 },
+  { label: 'Nov', value: 648 },
+  { label: 'Dec', value: 605 },
+];
+
+const dayLength = 1440;
+
+const MonthlySunlight = () => {
+  return (
+    <CartesianChart
+      height={300}
+      series={[
+        {
+          id: 'sunlight',
+          data: sunlightData.map(({ value }) => value),
+          yAxisId: 'sunlight',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'day',
+          data: sunlightData.map(() => dayLength),
+          yAxisId: 'day',
+          color: 'rgb(var(--blue100))',
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: sunlightData.map(({ label }) => label),
+      }}
+      yAxis={[
+        {
+          id: 'day',
+          domain: { min: 0, max: dayLength },
+          domainLimit: 'strict',
+        },
+        {
+          id: 'sunlight',
+          domain: { min: 0, max: dayLength },
+          domainLimit: 'strict',
+        },
+      ]}
+    >
+      <YAxis showGrid showLine axisId="day" label="Minutes of sunlight" position="left" />
+      <XAxis showLine />
+      <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+      <BarPlot
+        borderRadius={0}
+        seriesIds={['sunlight']}
+        transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+      />
+    </CartesianChart>
+  );
+};
+
+const PriceRange = () => {
+  const candles = btcCandles.slice(0, 180).reverse();
+  const data: [number, number][] = candles.map((candle) => [
+    parseFloat(candle.low),
+    parseFloat(candle.high),
+  ]);
+
+  const min = Math.min(...data.map(([low]) => low));
+  const max = Math.max(...data.map(([, high]) => high));
+
+  const tickFormatter = React.useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      showYAxis
+      height={250}
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+    />
+  );
+};
+
+const PopulationPyramid = () => {
+  const ageGroups = [
+    '100+ yrs',
+    '95-99 yrs',
+    '90-94 yrs',
+    '85-89 yrs',
+    '80-84 yrs',
+    '75-79 yrs',
+    '70-74 yrs',
+    '65-69 yrs',
+    '60-64 yrs',
+    '55-59 yrs',
+    '50-54 yrs',
+    '45-49 yrs',
+    '40-44 yrs',
+    '35-39 yrs',
+    '30-34 yrs',
+    '25-29 yrs',
+    '20-24 yrs',
+    '15-19 yrs',
+    '10-14 yrs',
+    '5-9 yrs',
+    '0-4 yrs',
+  ];
+
+  const malePopulation = [
+    14587, 48604, 83560, 128957, 184152, 248505, 498683, 706420, 852333, 939629, 1002195, 1001264,
+    960282, 1161371, 1105023, 1061755, 1019343, 1023264, 1026330, 984773, 944071,
+  ];
+
+  const femalePopulation = [
+    14122, 46974, 80768, 124663, 178043, 240293, 482271, 683270, 824525, 909115, 969807, 969070,
+    929571, 1122380, 1068050, 1026356, 985483, 989404, 992505, 952453, 913222,
+  ];
+
+  const numberWithSuffixFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+      }),
+    [],
+  );
+
+  const tickLabelFormatter = useCallback(
+    (value: number) => numberWithSuffixFormatter.format(Math.abs(value)),
+    [numberWithSuffixFormatter],
+  );
+
+  const domainSymmetric = useCallback((bounds: { min: number; max: number }) => {
+    const extremum = Math.max(-bounds.min, bounds.max);
+    const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
+    return { min: -roundedExtremum, max: roundedExtremum };
+  }, []);
+
+  const series = [
+    {
+      id: 'male',
+      label: 'Male',
+      data: malePopulation.map((population) => -population),
+      color: 'rgb(var(--blue40))',
+      stackId: 'population',
+    },
+    {
+      id: 'female',
+      label: 'Female',
+      data: femalePopulation,
+      color: 'rgb(var(--pink40))',
+      stackId: 'population',
+    },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showXAxis
+        showYAxis
+        stacked
+        borderRadius={2}
+        height={550}
+        layout="horizontal"
+        series={series}
+        xAxis={{
+          tickLabelFormatter,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+          domain: domainSymmetric,
+          showLine: true,
+          showTickMarks: true,
+        }}
+        yAxis={{
+          position: 'left',
+          data: ageGroups,
+          showLine: true,
+          showTickMarks: true,
+          bandTickMarkPlacement: 'edges',
+          width: 80,
+        }}
+      >
+        <ReferenceLine LineComponent={SolidLine} dataX={0} />
+      </BarChart>
+    </VStack>
+  );
+};
+
+export const All = () => {
+  return (
+    <React.StrictMode>
+      <VStack gap={2}>
+        <Example title="Basic">
+          <BarChart
+            showXAxis
+            showYAxis
+            height={400}
+            series={[
+              {
+                id: 'weekly-data',
+                data: [45, 52, 38, 45, 19, 23, 32],
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              showTickMarks: true,
+              showLine: true,
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              tickLabelFormatter: (value) => `$${value}k`,
+              showGrid: true,
+              showTickMarks: true,
+              showLine: true,
+              tickMarkSize: 12,
+              domain: { max: 50 },
+            }}
+          />
+        </Example>
+        <Example title="Right Y-Axis with Labels">
+          <CartesianChart
+            height={400}
+            series={[
+              {
+                id: 'revenue',
+                data: [45, 52, 38, 45, 19, 23, 32],
+                color: 'var(--color-accentBoldBlue)',
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              scaleType: 'band',
+            }}
+          >
+            <XAxis showLine showTickMarks label="Day of Week" />
+            <YAxis
+              showGrid
+              showLine
+              showTickMarks
+              label="Revenue"
+              position="right"
+              requestedTickCount={5}
+              tickLabelFormatter={(value) => `$${value}k`}
+            />
+            <BarPlot />
+          </CartesianChart>
+        </Example>
+        <Example title="Negative Values with Top Axis">
+          <CartesianChart
+            height={400}
+            series={[
+              {
+                id: 'losses',
+                data: [-45, -52, -38, -45, -19, -23, -32],
+                color: 'var(--color-fgNegative)',
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              scaleType: 'band',
+            }}
+          >
+            <XAxis showLine showTickMarks label="Day of Week" position="top" />
+            <YAxis
+              showGrid
+              showLine
+              showTickMarks
+              label="Loss"
+              requestedTickCount={5}
+              tickLabelFormatter={(value) => `$${value}k`}
+            />
+            <BarPlot />
+          </CartesianChart>
+        </Example>
+        <Example title="Positive and Negative Cash Flow">
+          <PositiveAndNegativeCashFlow />
+        </Example>
+        <Example title="Fiat & Stablecoin Balance">
+          <FiatAndStablecoinBalance />
+        </Example>
+        <Example title="Monthly Rewards">
+          <MonthlyRewards />
+        </Example>
+        <Example title="Multiple Y Axes">
+          <CartesianChart
+            height={400}
+            series={[
+              {
+                id: 'revenue',
+                data: [455, 520, 380, 455, 190, 235],
+                yAxisId: 'revenue',
+                color: 'var(--color-accentBoldYellow)',
+              },
+              {
+                id: 'profit',
+                data: [23, 15, 30, 56, 4, 12],
+                yAxisId: 'profit',
+                color: 'var(--color-fgPositive)',
+              },
+            ]}
+            xAxis={{
+              data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+              scaleType: 'band',
+            }}
+            yAxis={[
+              {
+                id: 'revenue',
+              },
+              {
+                id: 'profit',
+              },
+            ]}
+          >
+            <XAxis showLine showTickMarks label="Month" />
+            <YAxis
+              showGrid
+              showLine
+              showTickMarks
+              axisId="revenue"
+              label="Revenue"
+              position="left"
+              requestedTickCount={5}
+              tickLabelFormatter={(value) => `$${value}k`}
+              width={80}
+            />
+            <YAxis
+              showLine
+              showTickMarks
+              axisId="profit"
+              label="Profit"
+              position="right"
+              requestedTickCount={5}
+              tickLabelFormatter={(value) => `$${value}k`}
+              width={70}
+            />
+            <BarPlot />
+          </CartesianChart>
+        </Example>
+        <Example title="Candlestick Chart">
+          <Candlesticks />
+        </Example>
+        <Example
+          description={
+            <Text color="fgMuted" font="body">
+              Simple gain/loss chart. Bars below zero are red (negative), bars at or above zero are
+              green (positive). Uses hard transition at 0.
+            </Text>
+          }
+          title="Gradient - Gain/Loss"
+        >
+          <BarChart
+            showXAxis
+            showYAxis
+            height={300}
+            series={[
+              {
+                id: 'profit',
+                data: [-40, -28, 15, -5, 48, -12, 22, -8, 35, -18, 42, -3],
+                gradient: {
+                  axis: 'y',
+                  stops: [
+                    { offset: -50, color: 'var(--color-fgNegative)' },
+                    { offset: 0, color: 'var(--color-fgNegative)' },
+                    { offset: 0, color: 'var(--color-fgPositive)' },
+                    { offset: 50, color: 'var(--color-fgPositive)' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              data: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+              ],
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              tickLabelFormatter: (value) => `$${value}k`,
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example
+          description={
+            <Text color="fgMuted" font="body">
+              Continuous gradient applied to bars. Each bar&apos;s color is determined by its value,
+              transitioning smoothly from green (low) to yellow (mid) to red (high).
+            </Text>
+          }
+          title="Gradient - Continuous (Y-Axis)"
+        >
+          <BarChart
+            showXAxis
+            showYAxis
+            height={300}
+            series={[
+              {
+                id: 'temperature',
+                data: [12, 25, 38, 52, 45, 30, 18],
+                gradient: {
+                  axis: 'y',
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: 'var(--color-accentBoldGreen)' },
+                    { offset: (min + max) / 2, color: 'var(--color-accentBoldYellow)' },
+                    { offset: max, color: 'var(--color-accentBoldRed)' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              tickLabelFormatter: (value) => `${value}°C`,
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example
+          description={
+            <Text color="fgMuted" font="body">
+              Hard transitions at 30 and 45. Bars below 30 are green (cool), 30-45 are yellow
+              (warm), and above 45 are red (hot).
+            </Text>
+          }
+          title="Gradient - Hard Transitions (Y-Axis)"
+        >
+          <BarChart
+            showXAxis
+            showYAxis
+            height={300}
+            series={[
+              {
+                id: 'temperature',
+                data: [25, 32, 48, 52, 29, 38, 22],
+                gradient: {
+                  axis: 'y',
+                  stops: [
+                    { offset: 0, color: 'var(--color-accentBoldGreen)' },
+                    { offset: 30, color: 'var(--color-accentBoldGreen)' },
+                    { offset: 30, color: 'var(--color-accentBoldYellow)' },
+                    { offset: 45, color: 'var(--color-accentBoldYellow)' },
+                    { offset: 45, color: 'var(--color-accentBoldRed)' },
+                    { offset: 60, color: 'var(--color-accentBoldRed)' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              tickLabelFormatter: (value) => `${value}°C`,
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example
+          description={
+            <Text color="fgMuted" font="body">
+              Gradient applied on X-axis (category index). Each bar gets a color based on its
+              position in the chart, creating a rainbow effect.
+            </Text>
+          }
+          title="Gradient - Continuous (X-Axis)"
+        >
+          <BarChart
+            showXAxis
+            showYAxis
+            height={300}
+            series={[
+              {
+                id: 'sales',
+                data: [50, 65, 45, 70, 55, 60, 52],
+                gradient: {
+                  axis: 'x',
+                  stops: [
+                    { offset: 0, color: '#ef4444' },
+                    { offset: 1.5, color: '#f59e0b' },
+                    { offset: 3, color: '#10b981' },
+                    { offset: 4.5, color: '#3b82f6' },
+                    { offset: 6, color: '#8b5cf6' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example
+          description={
+            <Text color="fgMuted" font="body">
+              Stacked bars with gradient. Each series can have its own gradient configuration,
+              allowing for complex color compositions.
+            </Text>
+          }
+          title="Gradient - Stacked Bars"
+        >
+          <BarChart
+            showXAxis
+            showYAxis
+            stacked
+            height={300}
+            series={[
+              {
+                id: 'category-a',
+                data: [20, 30, 25, 35, 28, 32, 27],
+                gradient: {
+                  axis: 'y',
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: '#3b82f6' },
+                    { offset: max, color: '#8b5cf6' },
+                  ],
+                },
+              },
+              {
+                id: 'category-b',
+                data: [15, 25, 20, 30, 22, 28, 23],
+                gradient: {
+                  axis: 'y',
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: '#10b981' },
+                    { offset: max, color: '#059669' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example title="Band Grid Position">
+          <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+            <BandGridPositionExample position="edges" />
+            <BandGridPositionExample position="start" />
+            <BandGridPositionExample position="middle" />
+            <BandGridPositionExample position="end" />
+          </HStack>
+        </Example>
+        <Example title="Monthly Sunlight">
+          <MonthlySunlight />
+        </Example>
+        <Example title="Price Range">
+          <PriceRange />
+        </Example>
+        <Example title="Basic">
+          <BarChart
+            showXAxis
+            showYAxis
+            height={400}
+            layout="horizontal"
+            series={[
+              {
+                id: 'weekly-data',
+                data: [45, 52, 38, 45, 19, 23, 32],
+              },
+            ]}
+            xAxis={{
+              requestedTickCount: 5,
+              tickLabelFormatter: (value) => `$${value}k`,
+              showGrid: true,
+              showTickMarks: true,
+              showLine: true,
+              tickMarkSize: 12,
+              domain: { max: 50 },
+            }}
+            yAxis={{
+              position: 'left',
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              showTickMarks: true,
+              showLine: true,
+            }}
+          />
+        </Example>
+        <Example title="Population Pyramid">
+          <PopulationPyramid />
+        </Example>
+        <Example title="Horizontal stacked">
+          <BarChart
+            showXAxis
+            showYAxis
+            stacked
+            height={300}
+            layout="horizontal"
+            series={[
+              {
+                id: 'category-a',
+                data: [20, 30, 25, 35, 28, 32, 27],
+                gradient: {
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: '#3b82f6' },
+                    { offset: max, color: '#8b5cf6' },
+                  ],
+                },
+              },
+              {
+                id: 'category-b',
+                data: [15, 25, 20, 30, 22, 28, 23],
+                gradient: {
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: '#10b981' },
+                    { offset: max, color: '#059669' },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              requestedTickCount: 5,
+              showGrid: true,
+            }}
+            yAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+          />
+        </Example>
+        <Example title="Axis Baseline">
+          <BarChart
+            showXAxis
+            showYAxis
+            height={260}
+            series={[
+              {
+                id: 'net-flow',
+                data: [112, 97, 121, 103, 129, 118, 94],
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              baseline: 100,
+              domain: { min: 80, max: 140 },
+              showGrid: true,
+            }}
+          />
+        </Example>
+        <Example title="Axis Baseline Threshold">
+          <VStack gap={2}>
+            <BarChart
+              showYAxis
+              height={200}
+              inset={0}
+              series={[
+                {
+                  id: 'axis-baseline-threshold-vertical',
+                  data: baselineThresholdData,
+                  gradient: {
+                    stops: [
+                      { offset: 30, color: 'var(--color-fgNegative)' },
+                      { offset: 30, color: 'var(--color-fgPositive)' },
+                    ],
+                  },
+                },
+              ]}
+              yAxis={{
+                showGrid: true,
+                baseline: 30,
+              }}
+            />
+            <BarChart
+              showXAxis
+              height={200}
+              inset={0}
+              layout="horizontal"
+              series={[
+                {
+                  id: 'axis-baseline-threshold-horizontal',
+                  data: baselineThresholdData,
+                  gradient: {
+                    stops: [
+                      { offset: 30, color: 'var(--color-fgNegative)' },
+                      { offset: 30, color: 'var(--color-fgPositive)' },
+                    ],
+                  },
+                },
+              ]}
+              xAxis={{
+                showGrid: true,
+                baseline: 30,
+              }}
+            />
+          </VStack>
+        </Example>
+      </VStack>
+    </React.StrictMode>
+  );
+};

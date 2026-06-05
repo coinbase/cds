@@ -104,7 +104,6 @@ const TabsWithPanelsExample = () => {
         </Text>
         <Tabs
           TabComponent={DefaultTab}
-          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
           accessibilityLabel="Content sections"
           activeBackground="bg"
           activeTab={activeTab}

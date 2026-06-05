@@ -1,5 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import React, { forwardRef, memo } from 'react';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -12,11 +11,100 @@ import type { ButtonBaseProps } from './Button';
 
 export const avatarButtonDefaultElement = 'button';
 
+type DeprecatedAvatarButtonBorderProps = {
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderBottomLeftRadius?: PressableBaseProps['borderBottomLeftRadius'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderBottomRightRadius?: PressableBaseProps['borderBottomRightRadius'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderTopLeftRadius?: PressableBaseProps['borderTopLeftRadius'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderTopRightRadius?: PressableBaseProps['borderTopRightRadius'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderRadius?: PressableBaseProps['borderRadius'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderWidth?: PressableBaseProps['borderWidth'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderTopWidth?: PressableBaseProps['borderTopWidth'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderEndWidth?: PressableBaseProps['borderEndWidth'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderBottomWidth?: PressableBaseProps['borderBottomWidth'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderStartWidth?: PressableBaseProps['borderStartWidth'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  bordered?: PressableBaseProps['bordered'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderedBottom?: PressableBaseProps['borderedBottom'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderedEnd?: PressableBaseProps['borderedEnd'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderedHorizontal?: PressableBaseProps['borderedHorizontal'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderedStart?: PressableBaseProps['borderedStart'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderedTop?: PressableBaseProps['borderedTop'];
+  /**
+   * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  borderedVertical?: PressableBaseProps['borderedVertical'];
+};
+
 export type AvatarButtonDefaultElement = typeof avatarButtonDefaultElement;
 
 export type AvatarButtonBaseProps = Polymorphic.ExtendableProps<
   Omit<PressableBaseProps, 'children'>,
-  Pick<ButtonBaseProps, 'compact'> &
+  DeprecatedAvatarButtonBorderProps &
+    Pick<ButtonBaseProps, 'compact'> &
     Pick<
       AvatarBaseProps,
       'alt' | 'src' | 'colorScheme' | 'shape' | 'borderColor' | 'name' | 'selected'
@@ -37,8 +125,6 @@ const baseCss = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--interactable-height);
-  height: var(--interactable-height);
   min-width: unset;
 `;
 
@@ -58,17 +144,12 @@ export const AvatarButton: AvatarButtonComponent = memo(
         compact,
         colorScheme,
         shape,
+        borderColor,
         selected,
         name,
         ...props
       } = mergedProps;
       const Component = (as ?? avatarButtonDefaultElement) satisfies React.ElementType;
-
-      const height = compact ? interactableHeight.compact : interactableHeight.regular;
-      const styles = useMemo(
-        () => ({ '--interactable-height': `${height}px` }) as React.CSSProperties,
-        [height],
-      );
 
       return (
         <Pressable
@@ -76,17 +157,18 @@ export const AvatarButton: AvatarButtonComponent = memo(
           aria-label={accessibilityLabel}
           as={Component}
           background="transparent"
+          borderWidth={0} // remove Pressable's default transparent border
           className={cx(baseCss, className)}
-          style={styles}
           {...props}
         >
           <Avatar
             alt={alt}
+            borderColor={borderColor}
             colorScheme={colorScheme}
-            dangerouslySetSize={height}
             name={name}
             selected={selected}
             shape={shape}
+            size={compact ? 'xl' : 'xxxl'}
             src={src}
           />
         </Pressable>

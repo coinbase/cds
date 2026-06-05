@@ -460,8 +460,8 @@ function DynamicLabel() {
       return (
         <HStack gap={1} style={{ alignItems: 'center' }}>
           <DefaultLegendShape color={color} shape={shape} />
-          <TextLabel2>{label}</TextLabel2>
-          <TextLabel1>{formattedValue}</TextLabel1>
+          <Text font="label2">{label}</Text>
+          <Text font="label1">{formattedValue}</Text>
         </HStack>
       );
     },
@@ -568,7 +568,9 @@ function InteractiveLegend() {
       >
         <HStack gap={1} style={{ alignItems: 'center' }}>
           <DefaultLegendShape color={`rgb(${color50})`} />
-          <TextLabel2 color={isEmphasized ? 'bg' : 'fg'}>{label}</TextLabel2>
+          <Text font="label2" color={isEmphasized ? 'bg' : 'fg'}>
+            {label}
+          </Text>
         </HStack>
       </Chip>
     );

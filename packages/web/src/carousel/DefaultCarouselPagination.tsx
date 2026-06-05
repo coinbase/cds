@@ -76,6 +76,7 @@ type PaginationIndicatorProps = PressableProps<'button'> & {
 
 const PaginationPill = memo(function PaginationPill({
   isActive,
+  className,
   ...props
 }: PaginationIndicatorProps) {
   return (
@@ -83,6 +84,8 @@ const PaginationPill = memo(function PaginationPill({
       aria-current={isActive ? 'true' : undefined}
       background={isActive ? 'bgPrimary' : 'bgLine'}
       borderColor="transparent"
+      borderWidth={0}
+      className={cx(pillCss, className)}
       data-active={isActive}
       {...props}
     />
@@ -180,7 +183,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   style,
   styles,
   testID = 'carousel-pagination',
-  variant = 'pill',
+  variant = 'dot',
 }: DefaultCarouselPaginationProps) {
   const isDot = variant === 'dot';
 
@@ -195,9 +198,11 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   return (
     <HStack
       className={cx(defaultPaginationCss, className, classNames?.root)}
+      data-variant={variant}
       gap={0.5}
       justifyContent="center"
       style={{ ...style, ...styles?.root }}
+      testID={testID}
     >
       {totalPages > 0 ? (
         Array.from({ length: totalPages }, (_, index) =>
@@ -215,7 +220,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
             <PaginationPill
               key={index}
               accessibilityLabel={getAccessibilityLabel(index)}
-              className={cx(pillCss, classNames?.dot)}
+              className={classNames?.dot}
               isActive={index === activePageIndex}
               onClick={() => onClickPage?.(index)}
               style={styles?.dot}
@@ -229,6 +234,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
           aria-hidden="true"
           background="bgLine"
           borderColor="transparent"
+          borderWidth={0}
           className={cx(isDot ? dotCss : pillCss, classNames?.dot)}
           style={{
             opacity: 0,

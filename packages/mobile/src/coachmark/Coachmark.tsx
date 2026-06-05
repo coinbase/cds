@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { useWindowDimensions } from 'react-native';
-import type { View } from 'react-native';
-import { type DimensionValue, type SharedProps } from '@coinbase/cds-common';
+import type { DimensionValue, View } from 'react-native';
+import { type SharedProps } from '@coinbase/cds-common';
 
 import { IconButton } from '../buttons';
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -70,13 +70,13 @@ export const Coachmark = memo(
     return (
       <InvertedThemeProvider>
         <VStack
-          {...props}
           ref={ref}
           borderRadius={400}
           maxWidth={windowWidth - paddingX * 2}
           overflow="hidden"
           testID={testID}
           width={width}
+          {...props}
         >
           {media}
           <VStack background="bg" padding={2}>

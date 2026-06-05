@@ -42,12 +42,6 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton name={iconName} variant="foregroundMuted" {...props} />
-    ),
-    title: <Text font="body">ForegroundMuted</Text>,
-  },
-  {
-    component: (props?: Partial<IconButtonProps>) => (
       <IconButton
         name={iconName}
         style={{ padding: 10, borderRadius: 15, transform: 'scale(0.5)' }}
@@ -58,9 +52,15 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
     ),
-    title: <Text font="body">ForegroundMuted transparent</Text>,
+    title: 'Primary flush start',
+  },
+  {
+    component: (props?: Partial<IconButtonProps>) => (
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush end',
   },
 ];
 
@@ -127,6 +127,41 @@ const IconButtonScreen = () => {
             />
           </HStack>
         </Box>
+      </Example>
+
+      <Example inline title="Icon Glyph Styles">
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Custom color via styles.icon"
+              name={iconName}
+              styles={{ icon: { color: 'dodgerblue' } }}
+            />
+            <Text font="body">Custom color via styles.icon</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Rotated icon via styles.icon"
+              name={iconName}
+              styles={{ icon: { transform: [{ rotate: '45deg' }] } }}
+            />
+            <Text font="body">Rotated icon via styles.icon</Text>
+          </Box>
+        </VStack>
+      </Example>
+
+      <Example inline title="Progress Circle Styles">
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              loading
+              accessibilityLabel="Reduced opacity progress circle"
+              name={iconName}
+              styles={{ progressCircle: { opacity: 0.3 } }}
+            />
+            <Text font="body">Reduced opacity</Text>
+          </Box>
+        </VStack>
       </Example>
 
       <Example inline title="Loading">
@@ -199,11 +234,6 @@ const IconButtonScreen = () => {
             <HStack key={`icon-wrapper-${name}`} flexWrap="wrap" gap={2}>
               <IconButton accessibilityLabel={accessibilityLabel} name={name} variant="primary" />
               <IconButton accessibilityLabel={accessibilityLabel} name={name} variant="secondary" />
-              <IconButton
-                accessibilityLabel={accessibilityLabel}
-                name={name}
-                variant="foregroundMuted"
-              />
               <IconButton accessibilityLabel={accessibilityLabel} name={name} />
             </HStack>
           );

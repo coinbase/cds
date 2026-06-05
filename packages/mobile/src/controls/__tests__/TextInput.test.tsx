@@ -106,6 +106,26 @@ describe('TextInput', () => {
     expect(screen.getByTestId(testID)).toHaveTextContent(labelText);
   });
 
+  it('passes labelFont and labelColor to the outside label', () => {
+    const labelTestID = 'label-font-color-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          label="Fees"
+          labelColor="fgMuted"
+          labelFont="caption"
+          testIDMap={{ label: labelTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+    const flat = StyleSheet.flatten(screen.getByTestId(labelTestID).props.style);
+    expect(flat.color).toBe(defaultTheme.lightColor.fgMuted);
+    expect(flat.fontSize).toBe(defaultTheme.fontSize.caption);
+    expect(flat.fontWeight).toBe(defaultTheme.fontWeight.caption);
+  });
+
   it('renders label in start node when compact', () => {
     const testID = 'start-testid';
     const labelText = 'Example label';
@@ -390,11 +410,11 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const startNode = screen.getByTestId(startTestID);
+    const startNode = screen.getByTestId(startTestID, { includeHiddenElements: true });
     expect(startNode).toBeTruthy();
     expect(startNode).toHaveTextContent('Compact Label');
 
-    expect(screen.getByText('Compact Label')).toBeTruthy();
+    expect(screen.getByText('Compact Label', { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('renders labelNode without compact', () => {
@@ -452,8 +472,8 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const startNode = screen.getByTestId(startTestID);
-    const customLabel = screen.getByTestId(labelTestID);
+    const startNode = screen.getByTestId(startTestID, { includeHiddenElements: true });
+    const customLabel = screen.getByTestId(labelTestID, { includeHiddenElements: true });
     expect(startNode).toBeTruthy();
     expect(customLabel).toBeTruthy();
     expect(customLabel).toHaveTextContent('Custom Label Node');
@@ -515,8 +535,8 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const customLabel = screen.getByTestId(labelTestID);
-    const startContent = screen.getByTestId(startTestID);
+    const customLabel = screen.getByTestId(labelTestID, { includeHiddenElements: true });
+    const startContent = screen.getByTestId(startTestID, { includeHiddenElements: true });
     expect(customLabel).toBeTruthy();
     expect(startContent).toBeTruthy();
   });
@@ -539,12 +559,12 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const startNode = screen.getByTestId(startTestID);
-    const customLabel = screen.getByTestId(labelTestID);
+    const startNode = screen.getByTestId(startTestID, { includeHiddenElements: true });
+    const customLabel = screen.getByTestId(labelTestID, { includeHiddenElements: true });
     expect(startNode).toBeTruthy();
     expect(customLabel).toBeTruthy();
     expect(customLabel).toHaveTextContent('Custom Label Node');
-    expect(screen.queryByText('Regular Label')).toBeFalsy();
+    expect(screen.queryByText('Regular Label', { includeHiddenElements: true })).toBeFalsy();
   });
 
   it('positions label correctly with inside variant and start content', () => {
@@ -561,8 +581,8 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const label = screen.getByTestId('label-test');
-    const startContent = screen.getByTestId('start-content');
+    const label = screen.getByTestId('label-test', { includeHiddenElements: true });
+    const startContent = screen.getByTestId('start-content', { includeHiddenElements: true });
 
     expect(label).toBeTruthy();
     expect(startContent).toBeTruthy();

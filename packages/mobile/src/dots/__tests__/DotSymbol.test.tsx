@@ -40,7 +40,9 @@ describe('DotSymbol', () => {
       nativeEvent: { layout: { height: 12, width: 12 } },
     });
 
-    expect(screen.getByTestId('dotsymbol-remote-image').props.source).toEqual({ uri: src });
+    expect(
+      screen.getByTestId('dotsymbol-remote-image', { includeHiddenElements: true }).props.source,
+    ).toEqual({ uri: src });
   });
 
   it('renders an image when source is a string', () => {
@@ -55,7 +57,9 @@ describe('DotSymbol', () => {
       nativeEvent: { layout: { height: 12, width: 12 } },
     });
 
-    expect(screen.getByTestId('dotsymbol-remote-image').props.source).toEqual({ uri: src });
+    expect(
+      screen.getByTestId('dotsymbol-remote-image', { includeHiddenElements: true }).props.source,
+    ).toEqual({ uri: src });
   });
 
   it('passes a11y for DotSymbol that have a children', () => {

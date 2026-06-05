@@ -1,14 +1,13 @@
-import { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type PressableStateCallbackType, type View, type ViewStyle } from 'react-native';
+import { forwardRef, memo } from 'react';
+import { type StyleProp, type TextStyle, type View, type ViewStyle } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
   IconButtonVariant,
   IconName,
   IconSize,
+  NegativeSpace,
   SharedProps,
 } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -39,6 +38,15 @@ export type IconButtonBaseProps = SharedProps &
      * @default primary
      */
     variant?: IconButtonVariant;
+    /** Custom styles for individual elements of the IconButton component */
+    styles?: {
+      /** Root Pressable element */
+      root?: StyleProp<ViewStyle>;
+      /** Inner icon glyph Text element */
+      icon?: StyleProp<TextStyle>;
+      /** Loading progress circle element */
+      progressCircle?: StyleProp<ViewStyle>;
+    };
   };
 
 export type IconButtonProps = IconButtonBaseProps;
@@ -50,21 +58,22 @@ export const IconButton = memo(
       name,
       active,
       variant = 'secondary',
+      alignSelf = 'flex-start', // prevents stretching when placed in a flex container
       transparent,
       compact = true,
       background,
       color,
       borderColor,
       iconSize = compact ? 's' : 'm',
-      borderWidth = 100,
+      borderWidth = 0, // remove Pressable's default transparent border
       borderRadius = 1000,
-      height = interactableHeight[compact ? 'compact' : 'regular'],
-      width = interactableHeight[compact ? 'compact' : 'regular'],
       feedback = compact ? 'light' : 'normal',
       flush,
+      padding = compact ? 1.5 : 2,
       loading,
       progressCircleSize,
       style,
+      styles,
       accessibilityHint,
       accessibilityLabel,
       ...props
@@ -78,54 +87,39 @@ export const IconButton = memo(
     const backgroundValue = background ?? variantStyle.background;
     const borderColorValue = borderColor ?? variantStyle.borderColor;
 
-    const { marginStart, marginEnd } = getButtonSpacingProps({ compact, flush });
-
-    const sizingStyle = useMemo<ViewStyle>(
-      () => ({
-        height: height as ViewStyle['height'],
-        width: width as ViewStyle['width'],
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }),
-      [height, width],
-    );
-
-    const pressableStyle = useCallback(
-      (state: PressableStateCallbackType) => [
-        sizingStyle,
-        typeof style === 'function' ? style(state) : style,
-      ],
-      [sizingStyle, style],
-    );
+    const flushMargin = flush ? (-padding as NegativeSpace) : undefined;
 
     return (
       <Pressable
         ref={ref}
         accessibilityHint={accessibilityHint}
         accessibilityLabel={loading ? `${accessibilityLabel ?? ''}, loading` : accessibilityLabel}
+        alignItems="center"
+        alignSelf={alignSelf}
         background={backgroundValue}
         borderColor={borderColorValue}
         borderRadius={borderRadius}
         borderWidth={borderWidth}
         feedback={feedback}
+        flexDirection="column"
+        justifyContent="center"
         loading={loading}
-        marginEnd={marginEnd}
-        marginStart={marginStart}
-        style={pressableStyle}
+        marginEnd={flush === 'end' ? flushMargin : undefined}
+        marginStart={flush === 'start' ? flushMargin : undefined}
+        padding={padding}
+        style={styles?.root}
         transparentWhileInactive={transparent}
         {...props}
       >
         {loading ? (
-          <Box alignItems="center" height={height} justifyContent="center" width={width}>
-            <ProgressCircle
-              indeterminate
-              color={colorValue}
-              size={progressCircleSize ?? iconSizeValue}
-              testID={props.testID ? `${props.testID}-progress-circle` : undefined}
-              weight="thin"
-            />
-          </Box>
+          <ProgressCircle
+            indeterminate
+            color={colorValue}
+            size={progressCircleSize ?? iconSizeValue}
+            style={styles?.progressCircle}
+            testID={props.testID ? `${props.testID}-progress-circle` : undefined}
+            weight="thin"
+          />
         ) : (
           /* TO DO: test using currentColor like web does on Icon here */
           <Icon
@@ -133,7 +127,7 @@ export const IconButton = memo(
             color={colorValue}
             name={name}
             size={iconSize}
-            style={sizingStyle}
+            styles={{ icon: styles?.icon }}
           />
         )}
       </Pressable>

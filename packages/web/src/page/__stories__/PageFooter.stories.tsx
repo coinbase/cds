@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button, ButtonGroup, IconButton } from '../../buttons';
 import { useBreakpoints } from '../../hooks/useBreakpoints';
@@ -70,16 +70,17 @@ const exampleProps = {
   ),
 };
 
-const Template: Story<PageFooterProps> = (args) => <PageFooter {...args} />;
+type Story = StoryObj<PageFooterProps>;
 
-export const InteractiveFooter = Template.bind({});
-
-InteractiveFooter.args = {
-  background: 'bg',
-  action: 'endButtons',
+export const InteractiveFooter: Story = {
+  render: (args) => <PageFooter {...args} />,
+  args: {
+    background: 'bg',
+    action: 'endButtons',
+  },
 };
 
-export const Examples = () => {
+const ExamplesRender = () => {
   const { isPhone } = useBreakpoints();
   const setEndButtonMobile = isPhone ? exampleProps.endButtonsBlock2 : exampleProps.endButtons2;
 
@@ -95,22 +96,25 @@ export const Examples = () => {
   );
 };
 
-Examples.parameters = {
-  a11y: {
-    config: {
-      /**
-       * It is expected to include multiple PageFooter with same landmark in this story
-       * @link https://dequeuniversity.com/rules/axe/4.6/landmark-no-duplicate-contentinfo?application=axeAPI
-       */
-      rules: [
-        { id: 'landmark-no-duplicate-contentinfo', enabled: false },
-        { id: 'landmark-unique', enabled: false },
-      ],
+export const Examples: Story = {
+  render: () => <ExamplesRender />,
+  parameters: {
+    a11y: {
+      config: {
+        /**
+         * It is expected to include multiple PageFooter with same landmark in this story
+         * @link https://dequeuniversity.com/rules/axe/4.6/landmark-no-duplicate-contentinfo?application=axeAPI
+         */
+        rules: [
+          { id: 'landmark-no-duplicate-contentinfo', enabled: false },
+          { id: 'landmark-unique', enabled: false },
+        ],
+      },
     },
   },
 };
 
-export const PageFooterInPage = () => {
+const PageFooterInPageRender = () => {
   const { isPhone } = useBreakpoints();
   const setEndButtonMobile = isPhone ? exampleProps.endButtonsBlock2 : exampleProps.endButtons2;
 
@@ -119,24 +123,28 @@ export const PageFooterInPage = () => {
       <VStack
         alignContent="center"
         alignItems="center"
-        dangerouslySetBackground="#FADADD"
         flexGrow={1}
         flexShrink={1}
         height="400px"
         justifyContent="center"
+        style={{ backgroundColor: '#FADADD' }}
       >
         <Text as="h3" display="block" font="title1">
           Primary Content
         </Text>
       </VStack>
-      <Box dangerouslySetBackground="gray" height="500px" />
-      <Box dangerouslySetBackground="orange" height="500px" />
+      <Box height="500px" style={{ backgroundColor: 'gray' }} />
+      <Box height="500px" style={{ backgroundColor: 'orange' }} />
       <PageFooter action={setEndButtonMobile} bottom="0" />
     </VStack>
   );
 };
 
-export default {
+export const PageFooterInPage: Story = {
+  render: () => <PageFooterInPageRender />,
+};
+
+const meta: Meta<PageFooterProps> = {
   title: 'Components/PageFooter',
   component: PageFooter,
   argTypes: {
@@ -182,3 +190,5 @@ export default {
     },
   },
 };
+
+export default meta;

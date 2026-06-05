@@ -28,7 +28,7 @@ type ShouldUpdate = {
 type Breakpoints = Record<string, number>;
 
 export type Options<T> = {
-  ref?: RefObject<T> | null;
+  ref?: RefObject<T | null> | null;
   useBorderBoxSize?: boolean;
   breakpoints?: Breakpoints;
   updateOnBreakpointChange?: boolean;
@@ -38,7 +38,7 @@ export type Options<T> = {
   polyfill?: any;
 };
 type Return<T> = {
-  ref: RefObject<T>;
+  ref: RefObject<T | null>;
   entry?: ResizeObserverEntry;
 } & Omit<Event<T>, 'entry'>;
 
@@ -105,7 +105,7 @@ export const useDimensions = <T extends HTMLElement>({
     x?: number;
     y?: number;
   }>({});
-  const prevBreakpointRef = useRef<string>();
+  const prevBreakpointRef = useRef<string>(undefined);
   const observerRef = useRef<ResizeObserver | null>(null);
   const onResizeRef = useRef<OnResize<T> | null>(null);
   const shouldUpdateRef = useRef<ShouldUpdate | null>(null);

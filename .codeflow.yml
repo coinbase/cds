@@ -1,14 +1,24 @@
 secure:
   required_reviews: 1
   codeowners_enabled: true
+  # NOTE: Codeflow does not support glob patterns; long-lived support branches
+  # must be enumerated explicitly. When cutting a new LTS (`release-N.x`) or pre-release branch add it here
   branches:
     - master
+    - release-8.x
   auto_assign_reviewers: true
+  # Marks
   upstream_repository: coinbase/cds
 build:
   engines:
     # Apps
+    # Deployed from internal mirror repo (cds-public)
+    # Sync GHA automatically runs every 1-2 hours
     - BaldurECR:
+        # production docsite
+        # build/deploy managed by Codeflow (see "AWS Config" tab for bucket name)
+        # for bucket config see aws-resources: projects/frontend/cds-public.gps.yml
+        # for DNS mapping see entry-gateway: config/public.production.aws.use1/cds.coinbase.com.yml
         name: cds-next-docs
         path: ./apps/docs/production.Dockerfile
         autobuild: true
@@ -17,6 +27,10 @@ build:
         path: ./apps/docs/development.Dockerfile
         autobuild: false
     - BaldurECR:
+        # production storybook
+        # build/deploy managed by Codeflow (see "AWS Config" tab for bucket name)
+        # for bucket config see aws-resources: projects/frontend/cds-public.gps.yml
+        # for DNS mapping see entry-gateway: config/public.production.aws.use1/cds-storybook.coinbase.com.yml
         name: cds-storybook
         path: ./apps/storybook/production.Dockerfile
         autobuild: true
@@ -24,112 +38,9 @@ build:
         name: cds-storybook-dev
         path: ./apps/storybook/development.Dockerfile
         autobuild: false
-    # Packages
-    - BaldurNode:
-        name: package-common
-        path: ./packages/common/publish.Dockerfile
-        autobuild_files:
-          - packages/common/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-eslint-plugin-cds
-        path: ./packages/eslint-plugin-cds/publish.Dockerfile
-        autobuild_files:
-          - packages/eslint-plugin-cds/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-icons
-        path: ./packages/icons/publish.Dockerfile
-        autobuild_files:
-          - packages/icons/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-illustrations
-        path: ./packages/illustrations/publish.Dockerfile
-        autobuild_files:
-          - packages/illustrations/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-lottie-files
-        path: ./packages/lottie-files/publish.Dockerfile
-        autobuild_files:
-          - packages/lottie-files/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-mcp-server
-        path: ./packages/mcp-server/publish.Dockerfile
-        autobuild_files:
-          - packages/mcp-server/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-mobile
-        path: ./packages/mobile/publish.Dockerfile
-        autobuild_files:
-          - packages/mobile/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-mobile-visualization
-        path: ./packages/mobile-visualization/publish.Dockerfile
-        autobuild_files:
-          - packages/mobile-visualization/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-ui-mobile-playground
-        path: ./packages/ui-mobile-playground/publish.Dockerfile
-        autobuild_files:
-          - packages/ui-mobile-playground/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-ui-scorecard
-        path: ./packages/ui-scorecard/publish.Dockerfile
-        autobuild_files:
-          - packages/ui-scorecard/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-utils
-        path: ./packages/utils/publish.Dockerfile
-        autobuild_files:
-          - packages/utils/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-web
-        path: ./packages/web/publish.Dockerfile
-        autobuild_files:
-          - packages/web/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
-    - BaldurNode:
-        name: package-web-visualization
-        path: ./packages/web-visualization/publish.Dockerfile
-        autobuild_files:
-          - packages/web-visualization/package.json
-        expire_keep_tags_after_days: 1
-        expire_tmp_tags_after_days: 1
-        expire_all_after_days: 2
     # Static assets
+    # Deployed from internal mirror repo (cds-public)
+    # Sync GHA automatically runs every 1-2 hours
     - BaldurECR:
         name: static-assets
         path: ./libs/static-assets/static-assets.Dockerfile

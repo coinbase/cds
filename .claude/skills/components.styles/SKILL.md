@@ -15,8 +15,6 @@ Find the component source file:
 ```bash
 packages/web/src/[source-category]/[ComponentName].tsx              # for web
 packages/mobile/src/[source-category]/[ComponentName].tsx           # for mobile
-packages/web-visualization/src/[source-category]/[ComponentName].tsx    # for web visualization
-packages/mobile-visualization/src/[source-category]/[ComponentName].tsx # for mobile visualization
 ```
 
 ## Step 2: Evaluate Component Structure

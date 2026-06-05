@@ -17,6 +17,10 @@ export type CardBaseProps = Pick<SharedAccessibilityProps, 'id'> &
     onClick?: MouseEventHandler;
   };
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardProps = CardBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
@@ -69,7 +73,6 @@ export const Card = memo<CardProps>(function Card({
     ),
     [background, borderRadius, children, elevation, height, linkable, pin, props, testID, width],
   );
-
   if (isAnchor) {
     return (
       <Pressable

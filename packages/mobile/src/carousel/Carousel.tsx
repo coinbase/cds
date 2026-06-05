@@ -45,7 +45,7 @@ const wrap = (min: number, max: number, value: number): number => {
   return min + ((((value - min) % range) + range) % range);
 };
 
-export type CarouselItemRenderChildren = React.FC<{ isVisible: boolean }>;
+export type CarouselItemRenderChildren = (args: { isVisible: boolean }) => React.ReactNode;
 
 export type CarouselItemBaseProps = Omit<BoxBaseProps, 'children'> &
   SharedAccessibilityProps & {
@@ -130,10 +130,10 @@ export type CarouselPaginationComponentBaseProps = {
   paginationAccessibilityLabel?: string | ((pageIndex: number) => string);
   /**
    * Visual variant for the pagination indicators.
-   * - 'pill': All indicators are pill-shaped (default)
-   * - 'dot': Inactive indicators are small dots, active indicator expands to a pill
-   * @default 'pill'
-   * @note 'pill' variant is deprecated, use 'dot' instead
+   * When omitted, the default pagination component renders the current dot-style design.
+   * @default 'dot'
+   * @deprecated Prefer the default dot pagination or provide a custom `PaginationComponent`. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   variant?: 'pill' | 'dot';
 };
@@ -195,6 +195,11 @@ export type CarouselBaseProps = SharedProps &
      * Hides the pagination indicators (dots/bars showing current page).
      */
     hidePagination?: boolean;
+    /**
+     * @deprecated Use the default dot pagination, or provide a custom `PaginationComponent` if you need custom visuals. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
     /**
      * Custom component to render navigation arrows.
      * @default DefaultCarouselNavigation
@@ -264,14 +269,6 @@ export type CarouselBaseProps = SharedProps &
      * @default 3000 (3 seconds)
      */
     autoplayInterval?: number;
-    /**
-     * Visual variant for the pagination indicators.
-     * - 'pill': All indicators are pill-shaped (default)
-     * - 'dot': Inactive indicators are small dots, active indicator expands to a pill
-     * @default 'pill'
-     * @note 'pill' variant is deprecated, use 'dot' instead
-     */
-    paginationVariant?: CarouselPaginationComponentBaseProps['variant'];
   };
 
 export type CarouselProps = CarouselBaseProps & {
@@ -558,6 +555,7 @@ export const Carousel = memo(
         title,
         hideNavigation,
         hidePagination,
+        paginationVariant,
         drag = 'snap',
         snapMode = 'page',
         NavigationComponent = DefaultCarouselNavigation,
@@ -575,7 +573,6 @@ export const Carousel = memo(
         loop,
         autoplay,
         autoplayInterval = 3000,
-        paginationVariant,
         ...props
       } = mergedProps;
       const carouselScrollX = useRef(0);
@@ -1165,7 +1162,7 @@ export const Carousel = memo(
               {(title || !hideNavigation) && (
                 <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
                   {typeof title === 'string' ? (
-                    <Text font="title3" style={styles?.title}>
+                    <Text flexShrink={1} font="title3" numberOfLines={1} style={styles?.title}>
                       {title}
                     </Text>
                   ) : (

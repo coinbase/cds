@@ -444,6 +444,7 @@ const versionMap: Record<HeroSquareName, number> = {
   instoEnableBiometrics: 0,
   flipStable: 0,
   cbmega: 0,
+  genniusLaunch: 0,
 };
 
 export default versionMap;

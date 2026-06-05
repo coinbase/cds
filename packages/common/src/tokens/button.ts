@@ -21,9 +21,9 @@ export const variants = {
     borderColor: 'bgSecondary',
   },
   tertiary: {
-    color: 'fgInverse',
-    background: 'bgInverse',
-    borderColor: 'bgInverse',
+    color: 'fg',
+    background: 'bgTertiary',
+    borderColor: 'bgTertiary',
   },
   foregroundMuted: {
     color: 'fgMuted',
@@ -39,6 +39,11 @@ export const variants = {
     color: 'fgInverse',
     background: 'bgNegative',
     borderColor: 'bgNegative',
+  },
+  inverse: {
+    color: 'fgInverse',
+    background: 'bgInverse',
+    borderColor: 'bgInverse',
   },
 } as const satisfies ButtonVariantConfig;
 
@@ -70,6 +75,11 @@ export const transparentVariants = {
   },
   negative: {
     color: 'fgNegative',
+    background: 'bg',
+    borderColor: 'transparent',
+  },
+  inverse: {
+    color: 'fg',
     background: 'bg',
     borderColor: 'transparent',
   },

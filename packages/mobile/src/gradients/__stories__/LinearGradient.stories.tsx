@@ -24,12 +24,6 @@ const LinearGradientScreen = () => {
           <Text font="body">Horizontal angle example</Text>
         </LinearGradient>
       </Example>
-      <Example inline title="As overlay with isBelowChildren set to false">
-        <LinearGradient colors={[transparent, bg]} isBelowChildren={false}>
-          <Text font="body">{loremIpsum}...</Text>
-        </LinearGradient>
-        <Text font="label1">More</Text>
-      </Example>
       <Example inline title="As overlay with elevated prop">
         <LinearGradient elevated colors={[transparent, bg]}>
           <Text font="body">{loremIpsum}...</Text>

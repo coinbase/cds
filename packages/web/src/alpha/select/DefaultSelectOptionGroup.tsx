@@ -2,11 +2,10 @@ import { memo, useCallback, useId, useMemo } from 'react';
 
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
-import { cx } from '../../cx';
 import { VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 
-import type { SelectOptionGroupProps, SelectOptionProps, SelectType } from './Select';
+import type { SelectOptionGroupProps, SelectType } from './Select';
 
 const DefaultSelectOptionGroupComponent = memo(
   <Type extends SelectType = 'single', SelectOptionValue extends string = string>({

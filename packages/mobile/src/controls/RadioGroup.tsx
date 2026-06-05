@@ -12,24 +12,7 @@ import { Radio, type RadioBaseProps, type RadioProps } from './Radio';
 
 export { Radio, type RadioBaseProps, type RadioProps };
 
-/**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- *
- * @example
- * // Instead of:
- * <RadioGroup options={{ value1: 'Label 1' }} value={value} onChange={onChange} />
- *
- * // Use:
- * <ControlGroup
- *   accessibilityRole="radiogroup"
- *   ControlComponent={Radio}
- *   options={[{ value: 'value1', children: 'Label 1' }]}
- *   value={value}
- *   onChange={(value) => onChange(value)}
- * />
- */
-export type RadioGroupBaseProps<RadioValue extends string> = Omit<
+type RadioGroupBaseProps<RadioValue extends string> = Omit<
   AccessibilityProps,
   'accessibilityLabelledBy'
 > &
@@ -54,11 +37,7 @@ export type RadioGroupBaseProps<RadioValue extends string> = Omit<
     radioAccessibilityLabel?: string;
   };
 
-/**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
-export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
+type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
 const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
   {

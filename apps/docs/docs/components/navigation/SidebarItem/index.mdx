@@ -14,14 +14,17 @@ import webPropsToc from ':docgen/web/navigation/SidebarItem/toc-props';
 
 import WebPropsTable from './_webPropsTable.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
 import webMetadata from './webMetadata.json';
 
 <VStack gap={5}>
   <ComponentHeader title="SidebarItem" webMetadata={webMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
     webExamples={<WebExamples />}
     webExamplesToc={webExamplesToc}
     webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
   />
 </VStack>

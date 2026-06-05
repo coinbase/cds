@@ -1,16 +1,24 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 
-import { SelectChip } from '../../../../chips/SelectChip';
-import { SelectOption } from '../../../../controls/SelectOption';
+import { SelectChip } from '../../../../alpha/select-chip/SelectChip';
+
+const selectChipOptions = [
+  { value: 'USD', label: 'USD' },
+  { value: 'CAD', label: 'CAD' },
+  { value: 'GBP', label: 'GBP' },
+  { value: 'JPY', label: 'JPY' },
+];
 
 export const SelectChipExample = memo(() => {
-  const [value, setValue] = useState<string | undefined>('Balance');
+  const [value, setValue] = useState<string | null>(null);
 
   return (
-    <SelectChip onChange={setValue} placeholder="Sort" value={value}>
-      <SelectOption title="Balance" value="Balance" />
-      <SelectOption title="Name" value="Name" />
-      <SelectOption title="Asset Value" value="Asset Value" />
-    </SelectChip>
+    <SelectChip
+      accessibilityLabel="Select a currency"
+      onChange={setValue}
+      options={selectChipOptions}
+      placeholder="Currency"
+      value={value}
+    />
   );
 });

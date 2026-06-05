@@ -4,7 +4,6 @@ const RELEVANT_ROOTS = [
   'apps/storybook',
   'packages/common',
   'packages/web',
-  'packages/web-visualization',
   'packages/icons',
   'packages/illustrations',
 ];

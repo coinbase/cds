@@ -8,6 +8,63 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.18.0 (5/29/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-05-29. [[#738](https://github.com/coinbase/cds/pull/738)]
+
+##### ⭐️ Added (1)
+
+- ipoChart
+
+#### 📘 Misc
+
+- Added dev dependencies and internal documentation. [[#713](https://github.com/coinbase/cds/pull/713)]
+
+## 5.17.0 (5/22/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-05-22. [[#715](https://github.com/coinbase/cds/pull/715)]
+
+##### ⭐️ Added (4)
+
+- addModuleUI
+- openBook
+- parlaysAdd
+- parlaysEmpty
+
+##### ⭐️ Updated (12)
+
+- upload
+- metaverse
+- baseTransact
+- singleCoin
+- unfollowPeople
+- baseWallet
+- rocket
+- music
+- exclamationMark
+- gif
+- noWifi
+- twitterLogo
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
+## 5.16.0 (4/27/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-04-27. [[#645](https://github.com/coinbase/cds/pull/645)]
+
+##### ⭐️ Added (2)
+
+- caretExpand
+- caretCollapse
+
 ## 5.15.0 (4/16/2026 PST)
 
 #### 🚀 Updates

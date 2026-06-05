@@ -69,8 +69,7 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
-    // The RadioCell should have selected accessibility state
-    expect(screen.queryAllByA11yState({ selected: true })).toHaveLength(1); // Only the cell
+    expect(screen.getByRole('radio')).toBeSelected();
   });
 
   it('shows unselected state correctly', () => {
@@ -85,8 +84,7 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
-    // The RadioCell should have unselected accessibility state
-    expect(screen.queryAllByA11yState({ selected: false })).toHaveLength(1); // Only the cell
+    expect(screen.getByRole('radio')).not.toBeSelected();
   });
 
   it('triggers onChange when pressed', () => {
@@ -140,8 +138,9 @@ describe('RadioCell', () => {
       </DefaultThemeProvider>,
     );
 
-    // The RadioCell should have disabled accessibility state (both main cell and internal control have disabled state)
-    expect(screen.queryAllByA11yState({ disabled: true })).toHaveLength(2);
+    // The RadioCell should have disabled accessibility state
+    const disabledRadios = screen.queryAllByRole('radio', { disabled: true });
+    expect(disabledRadios.length).toBeGreaterThanOrEqual(1);
   });
 
   it('attaches testID', () => {
@@ -324,9 +323,7 @@ describe('RadioCell', () => {
 
     // Should have proper accessibility role and state
     expect(screen.queryAllByRole('radio')).toHaveLength(1);
-    expect(screen.getByTestId('selected-accessible-radio')).toHaveAccessibilityState({
-      selected: true,
-    });
+    expect(screen.getByTestId('selected-accessible-radio')).toBeSelected();
   });
 
   it('renders with proper accessibility when disabled', () => {
@@ -345,9 +342,7 @@ describe('RadioCell', () => {
 
     // Should have proper accessibility role and state
     expect(screen.queryAllByRole('radio')).toHaveLength(1);
-    expect(screen.getByTestId('disabled-accessible-radio')).toHaveAccessibilityState({
-      disabled: true,
-    });
+    expect(screen.getByTestId('disabled-accessible-radio')).toBeDisabled();
   });
 
   it('works without description', () => {

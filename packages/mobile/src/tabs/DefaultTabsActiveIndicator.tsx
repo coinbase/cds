@@ -6,8 +6,7 @@ import { Box } from '../layout';
 import { type TabsActiveIndicatorProps, tabsSpringConfig } from './Tabs';
 
 /**
- * Default underline-style indicator for mobile `Tabs`. Pass as
- * `TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}` with `TabComponent={DefaultTab}`.
+ * Default underline-style indicator for mobile `Tabs`.
  */
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 

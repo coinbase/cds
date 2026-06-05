@@ -166,7 +166,7 @@ export const TopNavBar = memo((_props: NavigationBarProps) => {
         paddingBottom={paddingBottom}
         paddingTop={paddingTop}
         paddingX={paddingX}
-        position="sticky"
+        position="absolute"
         right={0}
         top={0}
         width="100%"

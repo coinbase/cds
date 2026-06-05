@@ -100,6 +100,16 @@ We have encountered situations where developers accidentally forgot to destructu
 
 At this time this rule is intended to only be used within this repo in the cds-web and cds-mobile packages. However, after a trial period we may consider opening it up to a wider audience.
 
+## spread-props-last
+
+Requires JSX spread props that come from a component's own `props` parameter to appear after all explicit JSX props in an element.
+
+This helps avoid accidental prop overrides and keeps prop ordering predictable:
+
+- Good: `<Button variant="primary" disabled {...props} />`
+- Bad: `<Button {...props} variant="primary" disabled />`
+- Supports autofix by moving the relevant spread props to the end of the JSX attributes.
+
 ## example-screen-default
 
 Ensures every Storybook file default-exports a component whose rendered output is rooted in `ExampleScreen`. This keeps documentation consistent and aligns with the patterns showcased in the mobile package.

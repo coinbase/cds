@@ -185,11 +185,21 @@ export const useDrawerPanResponder = ({
     [isTryingToDismiss, parseGestureState, isFlingToDismiss, isSwipeToDismiss],
   );
 
+  const initializeDragAnimation = useCallback(() => {
+    // On iOS, setOffset during pan move does not flush to native; capture the current
+    // position as offset via extractOffset() so setValue in onPanResponderMove updates the UI.
+    drawerAnimation.stopAnimation();
+    opacityAnimation.stopAnimation();
+    drawerAnimation.extractOffset();
+    opacityAnimation.extractOffset();
+  }, [drawerAnimation, opacityAnimation]);
+
   const panGestureHandlers = useMemo(() => {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: shouldCaptureGestures,
       onMoveShouldSetPanResponderCapture: shouldCaptureGestures,
+      onPanResponderGrant: initializeDragAnimation,
       onPanResponderMove: (_, gestureState) => {
         const { isDragging, distance, isOverDrag } = parseGestureState(gestureState);
         const isInvertedPin = pin === 'bottom' || pin === 'right';
@@ -203,7 +213,7 @@ export const useDrawerPanResponder = ({
               outputRange: [0, 0.1],
               clamp: true,
             });
-            drawerAnimation.setOffset(calculateDragOffset(normalizedDistance));
+            drawerAnimation.setValue(calculateDragOffset(normalizedDistance));
           } else {
             const normalizedDrawerTransition = modulate(distance, {
               inputRange: [
@@ -213,7 +223,7 @@ export const useDrawerPanResponder = ({
               outputRange: [0, normalizeDrawerPanDistanceMultiplier],
               clamp: false,
             });
-            drawerAnimation.setOffset(normalizedDrawerTransition);
+            drawerAnimation.setValue(normalizedDrawerTransition);
             const normalizedOpacityTransition = modulate(distance, {
               inputRange: [
                 0,
@@ -222,7 +232,7 @@ export const useDrawerPanResponder = ({
               outputRange: [0, 1],
               clamp: false,
             });
-            opacityAnimation.setOffset(normalizedOpacityTransition);
+            opacityAnimation.setValue(normalizedOpacityTransition);
           }
         }
       },
@@ -240,6 +250,7 @@ export const useDrawerPanResponder = ({
   }, [
     drawerAnimation,
     animateSnapBack,
+    initializeDragAnimation,
     parseGestureState,
     shouldCaptureGestures,
     shouldDismiss,

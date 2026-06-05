@@ -1,9 +1,9 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import { animated, to } from '@react-spring/native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import { Box } from '../layout/Box';
-import { TextHeadline } from '../typography/TextHeadline';
+import { Text } from '../typography/Text';
 
 import type { SlideButtonBackgroundProps } from './SlideButton';
 
@@ -26,8 +26,8 @@ export const DefaultSlideButtonBackground = memo(
     ) => {
       const horizontalPadding = compact ? 7 : 9;
 
-      const animatedStyle = useMemo(
-        () => ({ opacity: disabled ? 0.5 : to(progress, (value) => 1 - value) }),
+      const animatedStyle = useAnimatedStyle(
+        () => ({ opacity: disabled ? 0.5 : 1 - progress.value }),
         [progress, disabled],
       );
 
@@ -47,19 +47,20 @@ export const DefaultSlideButtonBackground = memo(
           style={style}
           width="100%"
         >
-          <animated.View style={animatedStyle}>
+          <Animated.View style={animatedStyle}>
             {typeof uncheckedLabel !== 'string' ? (
               uncheckedLabel
             ) : (
-              <TextHeadline
+              <Text
+                font="headline"
                 numberOfLines={1}
                 paddingEnd={horizontalPadding}
                 paddingStart={horizontalPadding}
               >
                 {uncheckedLabel}
-              </TextHeadline>
+              </Text>
             )}
-          </animated.View>
+          </Animated.View>
         </Box>
       );
     },

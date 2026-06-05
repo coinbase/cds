@@ -27,7 +27,7 @@ describe('LottieStatusAnimation', () => {
   it('renders a LottieStatusAnimation', () => {
     render(
       <DefaultThemeProvider>
-        <LottieStatusAnimation height="100" testID="lottie-status-animation-test" />
+        <LottieStatusAnimation height={100} testID="lottie-status-animation-test" />
       </DefaultThemeProvider>,
     );
 
@@ -41,7 +41,7 @@ describe('LottieStatusAnimation', () => {
     render(
       <DefaultThemeProvider>
         <LottieStatusAnimation
-          height="100"
+          height={100}
           onFinish={mockOnFinish}
           testID="lottie-status-animation-test"
         />
@@ -59,7 +59,7 @@ describe('LottieStatusAnimation', () => {
       const props: LottieStatusAnimationProps = {
         status,
         testID: `lottie-status-animation-${status}`,
-        height: '100',
+        height: 100,
       };
 
       render(
@@ -75,7 +75,7 @@ describe('LottieStatusAnimation', () => {
     it('renders with cardSuccess status', () => {
       render(
         <DefaultThemeProvider>
-          <LottieStatusAnimation height="100" status="cardSuccess" testID="lottie-card-success" />
+          <LottieStatusAnimation height={100} status="cardSuccess" testID="lottie-card-success" />
         </DefaultThemeProvider>,
       );
       expect(screen.getByTestId('lottie-card-success')).toBeTruthy();
@@ -86,7 +86,7 @@ describe('LottieStatusAnimation', () => {
       render(
         <DefaultThemeProvider>
           <LottieStatusAnimation
-            height="100"
+            height={100}
             onFinish={mockOnFinish}
             status="cardSuccess"
             testID="lottie-card-success-finish"
@@ -103,14 +103,14 @@ describe('LottieStatusAnimation', () => {
     it('transitions from pending to success', async () => {
       const { rerender } = render(
         <DefaultThemeProvider>
-          <LottieStatusAnimation height="100" status="pending" testID="lottie-transition" />
+          <LottieStatusAnimation height={100} status="pending" testID="lottie-transition" />
         </DefaultThemeProvider>,
       );
       expect(screen.getByTestId('lottie-transition')).toBeTruthy();
 
       rerender(
         <DefaultThemeProvider>
-          <LottieStatusAnimation height="100" status="success" testID="lottie-transition" />
+          <LottieStatusAnimation height={100} status="success" testID="lottie-transition" />
         </DefaultThemeProvider>,
       );
       expect(screen.getByTestId('lottie-transition')).toBeTruthy();
@@ -119,14 +119,14 @@ describe('LottieStatusAnimation', () => {
     it('transitions from pending to failure', async () => {
       const { rerender } = render(
         <DefaultThemeProvider>
-          <LottieStatusAnimation height="100" status="pending" testID="lottie-transition-fail" />
+          <LottieStatusAnimation height={100} status="pending" testID="lottie-transition-fail" />
         </DefaultThemeProvider>,
       );
       expect(screen.getByTestId('lottie-transition-fail')).toBeTruthy();
 
       rerender(
         <DefaultThemeProvider>
-          <LottieStatusAnimation height="100" status="failure" testID="lottie-transition-fail" />
+          <LottieStatusAnimation height={100} status="failure" testID="lottie-transition-fail" />
         </DefaultThemeProvider>,
       );
       expect(screen.getByTestId('lottie-transition-fail')).toBeTruthy();
@@ -137,7 +137,7 @@ describe('LottieStatusAnimation', () => {
       const { rerender } = render(
         <DefaultThemeProvider>
           <LottieStatusAnimation
-            height="100"
+            height={100}
             onFinish={mockOnFinish}
             status="loading"
             testID="lottie-loading-success"
@@ -149,7 +149,7 @@ describe('LottieStatusAnimation', () => {
       rerender(
         <DefaultThemeProvider>
           <LottieStatusAnimation
-            height="100"
+            height={100}
             onFinish={mockOnFinish}
             status="success"
             testID="lottie-loading-success"

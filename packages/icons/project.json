@@ -37,6 +37,28 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "sync-icons": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": [
+            "figma-api"
+          ],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "command": "tsx ./scripts/sync-icons/index.ts",
+        "cwd": "packages/icons"
+      }
+    },
+    "sync-icon-code-connect": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx ./scripts/sync-icon-code-connect/index.ts",
+        "cwd": "packages/icons"
+      }
     }
   }
 }

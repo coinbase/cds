@@ -23,6 +23,7 @@ import type {
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useTheme } from '../hooks/useTheme';
+import { convertThemedSvgToHex } from '../utils/convertThemedSvgToHex';
 
 export type IllustrationNamesMap = {
   heroSquare: HeroSquareName;
@@ -58,9 +59,14 @@ export type IllustrationBaseProps<T extends keyof IllustrationNamesMap> = Shared
    * @default null
    * */
   fallback?: null | React.ReactElement;
+  /** Apply the theme to the illustration */
+  applyTheme?: boolean;
 };
 
-type IllustrationConfigShape = Record<string, { light: () => string; dark: () => string }>;
+type IllustrationConfigShape = Record<
+  string,
+  { light: () => string; dark: () => string; themeable?: () => string }
+>;
 
 export type IllustrationA11yProps = Pick<
   AccessibilityProps,
@@ -86,11 +92,9 @@ export function createIllustration<
     testID,
     accessibilityHint,
     accessibilityLabel,
+    applyTheme,
   }: IllustrationProps) {
-    const { activeColorScheme } = useTheme();
-    const requireFn = config[name]?.[activeColorScheme];
-
-    const xml = useMemo(() => requireFn?.(), [requireFn]);
+    const { activeColorScheme, illustrationColor } = useTheme();
 
     const style = useMemo(() => {
       let size = defaultSize;
@@ -102,6 +106,34 @@ export function createIllustration<
       }
       return size;
     }, [dimension, scaleMultiplier]);
+
+    const themedXml = useMemo(() => {
+      if (!applyTheme || illustrationColor === undefined) return null;
+      const raw = config[name]?.['themeable']?.();
+      return raw ? convertThemedSvgToHex(raw, illustrationColor) : null;
+    }, [name, applyTheme, illustrationColor]);
+
+    if (applyTheme) {
+      if (themedXml) {
+        return (
+          <SvgXml
+            accessibilityHint={accessibilityHint}
+            accessibilityLabel={accessibilityLabel}
+            accessibilityRole="image"
+            accessible={!!accessibilityLabel}
+            style={style}
+            testID={testID}
+            xml={themedXml}
+          />
+        );
+      }
+
+      // No themed variant available or no palette — return fallback.
+      return fallback;
+    }
+
+    // Default light/dark path.
+    const xml = config[name]?.[activeColorScheme === 'dark' ? 'dark' : 'light']?.();
 
     if (!xml) {
       if (isDevelopment()) {

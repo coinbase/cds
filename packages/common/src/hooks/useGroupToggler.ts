@@ -36,7 +36,7 @@ export const useGroupToggler = <T extends string>(
   // and just throwing it away immediately.
   const initialStateSet = useMemo(() => new Set<T>(initialState), [initialState]);
   const [state, setState] = useState<Set<T>>(initialStateSet);
-  const lastMixedStateRef = useRef<Set<T> | undefined>();
+  const lastMixedStateRef = useRef<Set<T> | undefined>(undefined);
 
   useEffect(() => {
     const isStateMixed = state.size !== 0 && state.size !== values.length;

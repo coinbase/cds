@@ -23,7 +23,7 @@ const descriptionMap: Record<string, string[]> = {
   '404': ['emptyStateNft404Page', 'errorWeb404', 'errorWeb404Mobile'],
   '500': ['errorApp500', 'errorWeb500'],
   coin: [
-    'cbmega',
+    'genniusLaunch',
     'futures',
     'emptyStateNft404Page',
     'congratulationsOnEarningCrypto',
@@ -81,10 +81,20 @@ const descriptionMap: Record<string, string[]> = {
     'instoGovernance',
     'instoEarnGlobe',
     'flipStable',
-  ],
-  conversion: ['cbmega', 'cbbtc', 'cbxrp', 'cbltc', 'cbdoge', 'cbada', 'flipStable'],
-  convert: [
     'cbmega',
+  ],
+  conversion: [
+    'genniusLaunch',
+    'cbbtc',
+    'cbxrp',
+    'cbltc',
+    'cbdoge',
+    'cbada',
+    'flipStable',
+    'cbmega',
+  ],
+  convert: [
+    'genniusLaunch',
     'usdtToUSDC',
     'realToUSDC',
     'cbbtc',
@@ -93,9 +103,10 @@ const descriptionMap: Record<string, string[]> = {
     'cbdoge',
     'cbada',
     'flipStable',
+    'cbmega',
   ],
   yellow: [
-    'cbmega',
+    'genniusLaunch',
     'blockchain',
     'congratulationsOnEarningCrypto',
     'cryptoForBeginners',
@@ -162,9 +173,10 @@ const descriptionMap: Record<string, string[]> = {
     'cryptoPortfolioUsdc',
     'instoStaking',
     'flipStable',
+    'cbmega',
   ],
   blue: [
-    'cbmega',
+    'genniusLaunch',
     'blockchain',
     'congratulationsOnEarningCrypto',
     'cryptoForBeginners',
@@ -249,9 +261,10 @@ const descriptionMap: Record<string, string[]> = {
     'instoWalletSecurity',
     'instoStaking',
     'flipStable',
+    'cbmega',
   ],
-  mega: ['cbmega'],
-  cbmega: ['cbmega'],
+  mega: ['genniusLaunch', 'cbmega'],
+  gennius: ['genniusLaunch'],
   leverage: [
     'leverage',
     'liquidationBufferRed',
@@ -3047,6 +3060,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoWallet',
     'instoKeyGenerationComplete',
   ],
+  cbmega: ['cbmega'],
 };
 
 export default descriptionMap;

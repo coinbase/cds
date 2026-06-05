@@ -83,7 +83,6 @@ const DefaultSelectOptionComponent = <
       background={background}
       borderRadius={0}
       disabled={disabled}
-      minHeight={compact ? 40 : 56}
       onPress={handlePress}
       priority="end"
       selected={selected}

@@ -14,7 +14,8 @@ Use variants to communicate the importance and intent of an action.
 
 - **Primary** — High emphasis for main actions like "Save" or "Confirm". Limit to one per screen.
 - **Secondary** — Medium emphasis for multiple actions of equal weight.
-- **Tertiary** — High contrast with inverted background.
+- **Tertiary** — Low emphasis with a muted background.
+- **Inverse** — High contrast with inverted background.
 - **Negative** — Destructive actions that can't be undone. Use sparingly.
 
 ```jsx live
@@ -27,6 +28,9 @@ Use variants to communicate the importance and intent of an action.
   </Button>
   <Button onClick={console.log} variant="tertiary">
     Tertiary
+  </Button>
+  <Button onClick={console.log} variant="inverse">
+    Inverse
   </Button>
   <Button onClick={console.log} variant="negative">
     Negative
@@ -48,6 +52,9 @@ Use transparent buttons for supplementary actions with lower prominence. The con
   </Button>
   <Button onClick={console.log} variant="tertiary" transparent>
     Tertiary
+  </Button>
+  <Button onClick={console.log} variant="inverse" transparent>
+    Inverse
   </Button>
   <Button onClick={console.log} variant="negative" transparent>
     Negative

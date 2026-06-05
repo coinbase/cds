@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-web",
-  "version": "8.66.0",
+  "version": "9.1.3",
   "description": "Coinbase Design System - Web",
   "repository": {
     "type": "git",
@@ -180,6 +180,14 @@
       "types": "./dts/typography/index.d.ts",
       "default": "./esm/typography/index.js"
     },
+    "./visualizations/chart": {
+      "types": "./dts/visualizations/chart/index.d.ts",
+      "default": "./esm/visualizations/chart/index.js"
+    },
+    "./visualizations/sparkline": {
+      "types": "./dts/visualizations/sparkline/index.d.ts",
+      "default": "./esm/visualizations/sparkline/index.js"
+    },
     "./visualizations": {
       "types": "./dts/visualizations/index.d.ts",
       "default": "./esm/visualizations/index.js"
@@ -203,8 +211,8 @@
   ],
   "peerDependencies": {
     "framer-motion": "^10.18.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^18.0.0 || ~19.1.2",
+    "react-dom": "^18.0.0 || ~19.1.2"
   },
   "dependencies": {
     "@coinbase/cds-common": "workspace:^",
@@ -215,35 +223,40 @@
     "@floating-ui/react-dom": "^2.1.1",
     "@popperjs/core": "^2.9.0",
     "@react-spring/web": "^9.7.4",
+    "d3-color": "^3.1.0",
     "d3-interpolate": "^3.0.1",
     "d3-interpolate-path": "^2.3.0",
     "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
     "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
     "react-popper": "^2.2.4",
-    "react-use-measure": "^2",
+    "react-use-measure": "^2.1.7",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.27.1",
     "@coinbase/cds-web-utils": "workspace:^",
     "@linaria/core": "^3.0.0-beta.22",
     "@linaria/shaker": "^3.0.0-beta.22",
     "@storybook/jest": "^0.2.3",
-    "@storybook/react": "^6.5.17-alpha.0",
+    "@storybook/react": "^9.1.2",
     "@storybook/testing-library": "^0.2.2",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.0.4",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
     "csstype": "^3.1.3",
     "framer-motion": "^10.18.0",
     "glob": "^10.3.10",
+    "react": "19.1.2",
+    "react-dom": "19.1.2",
     "storybook-addon-performance": "^0.16.1",
     "typescript": "~5.9.2",
-    "vite": "^7.1.2",
     "zx": "^8.1.9"
   }
 }

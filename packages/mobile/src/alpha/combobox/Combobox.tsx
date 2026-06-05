@@ -14,6 +14,7 @@ import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 import { Box } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
@@ -73,7 +74,7 @@ export type ComboboxControlProps<
     /** Search text change handler */
     onSearch: (searchText: string) => void;
     /** Reference to the search input */
-    searchInputRef: React.RefObject<TextInput>;
+    searchInputRef: React.RefObject<TextInput | null>;
     /** Reference to the combobox control for positioning */
     controlRef: React.RefObject<ComboboxRef | null>;
     /** Custom SelectControlComponent to wrap */
@@ -251,6 +252,7 @@ const ComboboxBase = memo(
       );
 
       const searchInputRef = useRef<TextInput | null>(null);
+      const safeBottomPadding = useSafeBottomPadding();
       const handleTrayVisibilityChange = useCallback((visibility: 'visible' | 'hidden') => {
         if (visibility === 'visible') {
           searchInputRef.current?.focus();
@@ -282,7 +284,7 @@ const ComboboxBase = memo(
             footer={({ handleClose }) => (
               <KeyboardAvoidingView
                 behavior="padding"
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 86 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 106 : 0}
               >
                 <View
                   style={
@@ -292,7 +294,9 @@ const ComboboxBase = memo(
                   <StickyFooter
                     background="bgElevation2"
                     elevation={2}
-                    style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
+                    style={{
+                      paddingBottom: safeBottomPadding,
+                    }}
                   >
                     <Button compact onPress={handleClose}>
                       {closeButtonLabel}
@@ -331,6 +335,7 @@ const ComboboxBase = memo(
           handleTrayVisibilityChange,
           label,
           placeholder,
+          safeBottomPadding,
           startNode,
           variant,
         ],

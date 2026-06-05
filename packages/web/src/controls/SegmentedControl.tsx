@@ -1,6 +1,5 @@
-import React, { forwardRef, Fragment, memo, useCallback, useId, useState } from 'react';
+import React, { forwardRef, Fragment, memo, useCallback, useId, useMemo, useState } from 'react';
 import type { ChangeEvent, ForwardedRef } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
 import type {
   IconName,
   IconSize,
@@ -42,7 +41,6 @@ const containerCss = css`
 `;
 
 const labelCss = css`
-  height: ${interactableHeight.regular}px;
   padding-inline-start: ${checkmarkSize}px;
   padding-inline-end: ${checkmarkSize}px;
 
@@ -229,6 +227,7 @@ function SegmentedControlInternal(
             <Interactable
               as="label"
               background="bgAlternate"
+              borderWidth={0} // remove Interactable's default transparent border
               className={labelCss}
               disabled={disabled}
               htmlFor={`${name}-${value}`}

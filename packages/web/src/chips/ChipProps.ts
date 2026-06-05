@@ -1,8 +1,4 @@
-import type {
-  DimensionValue,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 
 import type {
   PressableBaseProps,
