@@ -2,9 +2,9 @@ import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 import { measurePerformance } from 'reassure';
 
-import type { ComponentConfig } from '../../core/componentConfig';
-import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { ComponentConfigProvider } from '../../system/ComponentConfigProvider';
+import type { ComponentConfig } from '../../../core/componentConfig';
+import { useComponentConfig } from '../../../hooks/useComponentConfig';
+import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
 
 const consumerCount = 1000;
 const updateIterations = 50;

@@ -1,9 +1,8 @@
-import React from 'react';
 import { measurePerformance } from 'reassure';
 
-import { Button } from '../../buttons/Button';
-import { ComponentConfigProvider } from '../../system/ComponentConfigProvider';
-import { DefaultThemeProvider } from '../../utils/test';
+import { Button } from '../../../buttons/Button';
+import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
+import { DefaultThemeProvider } from '../../../utils/testHelpers';
 
 const buttonCount = 1000;
 
@@ -17,26 +16,24 @@ const ButtonList = () => {
   );
 };
 
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <DefaultThemeProvider>{children}</DefaultThemeProvider>
-);
+describe('Button component-config performance (mobile)', () => {
+  jest.setTimeout(20000);
 
-describe('Button component-config performance (web)', () => {
   it('no provider', async () => {
     await measurePerformance(
-      <Wrapper>
+      <DefaultThemeProvider>
         <ButtonList />
-      </Wrapper>,
+      </DefaultThemeProvider>,
     );
   });
 
   it('provider customization', async () => {
     await measurePerformance(
-      <Wrapper>
+      <DefaultThemeProvider>
         <ComponentConfigProvider value={{ Button: { compact: true } }}>
           <ButtonList />
         </ComponentConfigProvider>
-      </Wrapper>,
+      </DefaultThemeProvider>,
     );
   });
 });

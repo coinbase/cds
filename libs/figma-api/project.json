@@ -5,7 +5,7 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+      "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx"
     },
     "lint": {
       "executor": "@nx/eslint:lint"
