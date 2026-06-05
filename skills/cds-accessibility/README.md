@@ -15,14 +15,12 @@ Teaches your AI agent to use **Coinbase Design System (CDS)** components in an *
 
 ## Dependencies
 
-
-| Dependency         | Required    | Purpose                                                                                                                                 |
-| ------------------ | ----------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Dependency         | Required    | Purpose                                                                                                                                                                                                                                                      |
+| ------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **cds-docs**       | Yes         | [cds-docs](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs): how to load official CDS **.txt** (index first, then pages)—**MCP** (`list-cds-routes`, `get-cds-doc`) when available, else **`curl -fsSL`** to `https://cds.coinbase.com/llms/...`. |
-| **CDS MCP server** | Optional    | **Preferred** first step in cds-docs when the environment has CDS MCP; not required if you use the **curl** path from cds-docs.        |
-| **cds.cbhq.net**   | Recommended | Browsing and shared links; same content family as the **`llms`** / MCP **.txt** sources.                                                |
-| **cds-code skill** | Recommended | Session setup, package discovery, and CDS-first UI build flow when you are not doing a read-only a11y review.                           |
-
+| **CDS MCP server** | Optional    | **Preferred** first step in cds-docs when the environment has CDS MCP; not required if you use the **curl** path from cds-docs.                                                                                                                              |
+| **cds.cbhq.net**   | Recommended | Browsing and shared links; same content family as the **`llms`** / MCP **.txt** sources.                                                                                                                                                                     |
+| **cds-code skill** | Recommended | Session setup, package discovery, and CDS-first UI build flow when you are not doing a read-only a11y review.                                                                                                                                                |
 
 ### Documentation access (cds-docs, not MCP-only)
 
