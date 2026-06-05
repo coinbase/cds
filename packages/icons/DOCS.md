@@ -37,7 +37,7 @@ yarn install
 yarn nx run icons:sync-icons
 ```
 
-> As part of the sync, `sync-icons` also regenerates the Figma Code Connect mappings by calling `sync-icon-code-connect`. This writes one parser-less template file per icon (`<iconName>.figma.ts`) into `packages/web/src/icons/__figma__/` and `packages/mobile/src/icons/__figma__/`, replacing any previously generated templates. It can also be run on its own:
+> As part of the sync, `sync-icons` also regenerates the Figma Code Connect mappings by calling `sync-icon-code-connect`. This writes a single [Code Connect batch integration](https://developers.figma.com/docs/code-connect/batch-files/) per package — a shared `icons.figma.batch.ts` template plus an `icons.figma.batch.json` listing every icon — into `packages/web/src/icons/__figma__/` and `packages/mobile/src/icons/__figma__/`, replacing any previously generated files. It can also be run on its own:
 >
 > ```sh
 > yarn nx run icons:sync-icon-code-connect
