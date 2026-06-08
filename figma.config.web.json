@@ -1,9 +1,10 @@
 {
   "codeConnect": {
-    "parser": "react",
-    "label": "React",
+    "label": "CDS Web",
+    "language": "jsx",
     "include": [
-      "packages/web/src/**/*.tsx"
+      "packages/web/src/**/*.figma.ts",
+      "packages/web/src/**/*.figma.batch.json"
     ],
     "exclude": [
       "**/__tests__/**",

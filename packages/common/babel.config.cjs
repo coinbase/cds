@@ -18,5 +18,8 @@ module.exports = {
         '**/*.stories.*',
         '**/*.test.*',
         '**/*.spec.*',
+        // Declaration-only files (e.g. ambient types) emit no runtime code;
+        // skip them so empty `*.d.js` files aren't published.
+        '**/*.d.ts',
       ],
 };

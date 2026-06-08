@@ -1,0 +1,3047 @@
+{
+  "templateFile": "./icons.figma.batch.ts",
+  "components": [
+    {
+      "name": "account",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16799",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "activity",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14768",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "add",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16578",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "addModuleUI",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=82755-4",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "addPeople",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16786",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "advancedMarketSelector",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13078",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "advancedTradeProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15849",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "affiliates",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14326",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "airdrop",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13533",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "airdropAlt",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-397",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "airdropCoins",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-370",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "airdropParachute",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-384",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "alien",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-722",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "allTimeHigh",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12818",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "annotation",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14313",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "api",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13520",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "apiPlug",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13689",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "apothecary",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-800",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "apple",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-956",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "appleLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56214-24",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "application",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13169",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "appSwitcher",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13936",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowDown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12805",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowLeft",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12792",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowRight",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12779",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowsHorizontal",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12766",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowsUpDown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-93",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowsVertical",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12753",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "arrowUp",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12740",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "artwork",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15106",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "assetHubProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15836",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "assetManagementProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15823",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "astronautHelmet",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15327",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "atomScience",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-670",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "atSign",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1178",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "avatar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16565",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "average",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13884",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "backArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12727",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ballot",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-969",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ballotbox",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1230",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bandage",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-761",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bank",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11882",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "barChartWindow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14625",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "base",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15810",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseApps",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56816-29",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseball",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-110",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseFeed",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56816-81",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseNotification",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56816-144",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseQuickBuy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=65584-1373",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseSquare",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56816-14",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseTransact",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56816-42",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "baseWallet",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56816-55",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "basketball",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-123",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "beaker",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=57839-24",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "beginningArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=77025-15",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bell",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16773",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bellCheck",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15093",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bellPlus",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15080",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "block",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=57839-38",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "blockchain",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13507",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "blog",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13065",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "book",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13052",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bookmark",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16526",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "borrowProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15796",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "boxing",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-162",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bridging",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13494",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "briefcase",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15067",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "browser",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16760",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "bug",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-774",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "building",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-618",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calculator",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11869",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calendar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16500",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calendarBlank",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-28",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calendarDates",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1113",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calendarHeart",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1073",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calendarMoney",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1086",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "calendarStar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1099",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "camera",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15054",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "candlesticks",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14612",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "card",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11856",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "caret",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12883",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "caretDown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12714",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "caretLeft",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12701",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "caretRight",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12688",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "caretUp",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12675",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cash",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11843",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashAustralianDollar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12220",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashBrazilianReal",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12194",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashBrazillianReal",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12207",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashCanadianDollar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12181",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashCoins",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12168",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashEUR",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12155",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashGBP",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12142",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashIndonesianRupiah",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12129",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashJPY",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12116",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashPhilippinePeso",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12103",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashPolishZloty",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12090",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashRupee",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12077",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashSingaporeDollar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12064",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashSwissFranc",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12051",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashThaiBaht",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12038",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashTurkishLira",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12025",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashUaeDirham",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12012",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashUSD",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11999",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cashVietnameseDong",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11986",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chainLink",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16487",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chartBar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14599",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chartCandles",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14742",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chartLine",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14573",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chartPie",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14560",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chartPieCircle",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14547",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chartVolume",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14534",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chatBotAgent",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14300",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chatBubble",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14287",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chatRequests",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=54347-25",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "checkboxChecked",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16474",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "checkboxEmpty",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16461",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "checkmark",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16448",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "chess",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-71",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "circleCheckmark",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16435",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "circleCross",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16422",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "circulatingSupply",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14521",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "city",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-657",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "clipboard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13039",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "clock",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16409",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "clockOutline",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16396",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "close",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16383",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "closeCaption",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13871",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cloud",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15314",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cloudPartial",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-527",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cloudProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15783",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cluster",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13676",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinbase",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15770",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinbaseCardProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15757",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinbaseOne",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15340",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinbaseOneCard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=42385-44010",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinbaseOneLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15744",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinbaseRewards",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=42385-43970",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "coinsCrypto",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-2",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "collapse",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12662",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "collectibles",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13481",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "collection",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13663",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "comment",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14274",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "commentPlus",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56404-11",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "commerceProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15731",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "compass",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15301",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "complianceProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15718",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "compose",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=54347-80",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "computerChip",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-709",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "concierge",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=74076-4",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "continuous",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14508",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "convert",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12649",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "copy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13026",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "corporation",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-631",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "creatorCoin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=59433-10",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cricket",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-19",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "crossTrade",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14495",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "crypto",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16929",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "cryptobasics",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13468",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "crystalBall",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15288",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "crystalBallInsight",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-67",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "currencies",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11973",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "custodyProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15705",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "dashboard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16734",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "dataMarketplaceProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15692",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "dataStack",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=57839-11",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "defi",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13650",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "delegateProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15679",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "deposit",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12636",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "derivatives",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13637",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "derivativesProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15666",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "derivativesProductNew",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=33183-8983",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "developerAPIProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15653",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "developerPlatformProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15640",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "dex",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13442",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "diagonalDownArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12623",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "diagonalRightArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12610",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "diagonalUpArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12597",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "diamond",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13624",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "directDeposit",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11947",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "directDepositIcon",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11830",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "discordLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14248",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "document",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13013",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "documentation",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13156",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "dot",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16370",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "doubleChevronRight",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12584",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "downArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12571",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "download",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12558",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "drag",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13858",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "drops",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13611",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "earn",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15627",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "earnProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15614",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "earnRewards",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56855-1831",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "earthquake",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-540",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "educationBook",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-943",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "educationPencil",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-930",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "email",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16357",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "endArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=77025-2",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "entertainment",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-344",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "error",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16344",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ethereum",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13377",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "eventContracts",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12870",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "exchangeProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15601",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "exclamationMark",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13845",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "expand",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12545",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "expandAddress",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12532",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "expandAll",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12519",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "externalLink",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12506",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "eye",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16721",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "faces",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14365",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "faceScan",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13000",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "factory",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-644",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "faucet",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13598",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "fib",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13832",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "filmStrip",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-240",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "filter",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16331",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "filterLineStack",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=77025-644",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "fingerprint",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12987",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "flame",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14235",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "folder",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13143",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "folderArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13130",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "folderOpen",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13117",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "football",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-149",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "fork",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12493",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "forwardArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12480",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "fscsProtection",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56404-1568",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gab",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12857",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "games",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15041",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gaming",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-292",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gasFees",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13585",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gauge",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14482",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gaugeEmpty",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14716",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gaugeHigh",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14703",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gaugeLow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14690",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gaugeMedium",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14443",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gavel",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15028",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gear",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16318",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "generalCharacter",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13819",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ghost",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14352",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gif",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14170",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "giftBox",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15015",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "giftCard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11804",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "gitHubLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13962",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "globe",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16305",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "golf",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-136",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "googleLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13975",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "greenEnergy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-592",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "grid",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=57767-11",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "group",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16877",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hamburger",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16851",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hammer",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16812",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "heart",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14339",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "helpCenterProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16903",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "helpCenterQuestionMark",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16708",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hiddenEye",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16695",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hockey",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-84",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "home",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16682",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "horizontalLine",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14430",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hospital",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-826",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hospitalCross",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-787",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "hurricane",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-436",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ideal",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14131",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "identityCard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12974",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "image",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14118",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "info",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16278",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "initiator",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12467",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "instagramLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=64951-67534",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "institute",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15002",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "institutionalProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15588",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "interest",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11934",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "invoice",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13104",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ipoChart",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=82917-4",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "key",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15249",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "keyboard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14989",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "laptop",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14976",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "leadChart",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56413-10",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "leadCoin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56413-23",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "learningRewardsProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15575",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "light",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15236",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "lightbulb",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14963",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "lightning",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-488",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "lightningBolt",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14950",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "lineChartCrypto",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14417",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "list",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16252",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "lock",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16239",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "login",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12454",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "logout",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12441",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "loop",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-41",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "magnifyingGlass",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16669",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "marketCap",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14404",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "medal",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1165",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "megaphone",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14937",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "menu",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16656",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "metaverse",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13338",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "microphone",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16226",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "microphoneCordless",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-201",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "microscope",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-696",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "mint",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=30735-15",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "minus",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16213",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "mma",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-97",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "moneyCardCoin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-80",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "moon",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15223",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "more",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13806",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "moreVertical",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13923",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "motorsport",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-58",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "music",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16200",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "musicArticles",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-214",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "needle",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-839",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "newsFeed",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14092",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "newsletter",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12961",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "nft",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13325",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "nftBuy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13299",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "nftOffer",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13273",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "nftProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15562",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "nftSale",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13247",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "nodeProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15549",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "noWifi",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16187",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "oil",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-579",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "openBook",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=82755-43",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "options",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14664",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "orderBook",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13091",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "orderHistory",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12935",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "outline",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16174",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "overPredictions",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=80181-17",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "paperAirplane",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16161",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "paperclip",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16148",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "parlaysAdd",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=82755-17",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "parlaysEmpty",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=82755-30",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "participate",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15536",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "participateProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15523",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "passKey",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56411-1587",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "passport",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12922",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pause",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16135",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pay",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11921",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "paymentCard",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11908",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "payouts",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11778",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "paypal",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14079",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "payProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15510",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pencil",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16122",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "peopleGroup",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16864",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "peopleStar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56411-1552",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "percentage",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11765",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "perpetualSwap",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13572",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pFPS",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12909",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "phone",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14924",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pieChartData",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-15",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pieChartWithArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=76831-2",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pillBottle",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-852",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pillCapsule",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-813",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16109",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "planet",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16942",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "play",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16096",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "playbutton",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-266",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "plusMinus",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=54391-10",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "podiumStar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-904",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "politicsBuilding",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1008",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "politicsCandidate",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1034",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "politicsFlag",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1021",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "politicsGavel",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1047",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "politicsPodium",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-982",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "politicsStar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-995",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "priceAlerts",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15210",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "priceAlertsCheck",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15197",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "primePoduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15497",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "privateClientProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15484",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "profile",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16083",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "proProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15471",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "protection",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16070",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pulse",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14391",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "pyramid",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14911",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "qrCode",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13793",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "qrCodeAlt",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13780",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "queryTransact",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15458",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "questionMark",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16057",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "quotation",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1191",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rain",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-449",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ratingsCheck",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-878",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ratingsChecks",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-891",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ratingsStar",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-917",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "reCenter",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12428",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rectangle",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13767",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "recurring",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12415",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "refresh",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12402",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "regulated",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14898",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "regulatedFutures",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14651",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "report",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14872",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rewardsProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15445",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ribbon",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1152",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "robot",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=67848-38",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rocket",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16044",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rocketShip",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16617",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rollingSpot",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12844",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rosettaProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15432",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "rottenTomato",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-305",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "royalty",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15184",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "safe",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11752",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "save",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16031",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "savingsBank",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56404-1555",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "scanQrCode",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13897",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "scienceAtom",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-748",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "scienceBeaker",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-683",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "scienceMoon",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-735",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "search",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16018",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "securityKey",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15171",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "securityShield",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15158",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "seen",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14066",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sendReceive",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12831",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "setPinCode",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13754",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "settings",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16604",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "share",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12389",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "shield",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16005",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "shieldOutline",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15992",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "shoe",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-318",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "shoppingCart",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16591",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "signinProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15418",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "singlecloud",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-423",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "singleCoin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=66093-54",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "singleNote",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-227",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "smartContract",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12896",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "snow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-410",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "soccer",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-45",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "socialChat",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=30735-2",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "socialReshare",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=30735-92",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "socialShare",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=30735-66",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sofort",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14053",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sortDoubleArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12376",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sortDown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12363",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sortDownCenter",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12350",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sortUp",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12324",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sortUpCenter",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12311",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "soundOff",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15979",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "soundOn",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15966",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sparkle",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14833",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "speaker",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15953",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "speechBubble",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1217",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "stableCoin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1060",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "stablecoinStack",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-357",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "staggeredList",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13741",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "stake",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13208",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "staking",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13559",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "star",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14820",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "starAward",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1126",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "starBubble",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1204",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "starTrophy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-1139",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "statusDot",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13728",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step0",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11687",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step1",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11674",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step2",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11661",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step3",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11648",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step4",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11635",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step5",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11622",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step6",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11609",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step7",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11596",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step8",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11583",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "step9",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11570",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "strategy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-6",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "sun",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15145",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "support",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16916",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tag",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15132",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "taxes",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11895",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "taxesReceipt",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11739",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "telephone",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14794",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tennis",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-32",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "thermometer",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-501",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "thumbsDown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14040",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "thumbsDownOutline",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14027",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "thumbsUp",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14014",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "thumbsUpOutline",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14001",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tokenLaunchCoin",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-188",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tokenLaunchRocket",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-175",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tokenSales",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=62581-10",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tornado",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-514",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "trading",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14638",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "transactions",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11713",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "trashCan",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15940",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "trophy",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-14781",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "trophyCup",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15119",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tshirt",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-331",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tv",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-253",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "tvStand",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-279",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "twitterLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13988",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "ultility",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13195",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "umbrella",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-462",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "underPredictions",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=80181-4",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "undo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12285",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "unfollowPeople",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=64511-16",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "unknown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13715",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "unlock",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15927",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "upArrow",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12272",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "upload",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12259",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "venturesProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15405",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "verifiedBadge",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13949",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "verifiedPools",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15392",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "verticalLine",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13702",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "virus",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-865",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "visible",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15888",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "waasProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15379",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "wallet",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-11700",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "walletProduct",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15353",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "warning",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15875",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "webhooks",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=73630-4",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "wifi",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-15862",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "wind",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=69679-475",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "wireTransfer",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12246",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "withdraw",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-12233",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "wrapToken",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-13182",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "xLogo",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=56214-37",
+      "source": "packages/mobile/src/icons/Icon.tsx",
+      "component": "Icon"
+    }
+  ]
+}
