@@ -238,13 +238,7 @@ export type SelectControlProps<
   Omit<BoxProps, 'borderWidth' | 'onChange' | 'font'> &
   Pick<
     InputStackBaseProps,
-    | 'disabled'
-    | 'startNode'
-    | 'variant'
-    | 'labelVariant'
-    | 'testID'
-    | 'endNode'
-    | 'borderRadius'
+    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode' | 'borderRadius'
   > &
   Pick<TextInputBaseProps, 'font'> &
   Pick<SharedInputProps, 'labelColor' | 'labelFont' | 'readOnly'> &
