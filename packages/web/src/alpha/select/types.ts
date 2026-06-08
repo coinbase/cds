@@ -400,7 +400,6 @@ export type SelectControlProps<
     | 'labelVariant'
     | 'testID'
     | 'endNode'
-    | 'inputBackground'
     | 'borderRadius'
   > &
   Pick<SharedInputProps, 'labelColor' | 'labelFont' | 'readOnly'> &
@@ -423,9 +422,14 @@ export type SelectControlProps<
     borderWidth?: InputStackBaseProps['borderWidth'];
     /**
      * Additional border width when focused.
-     * @default 200 when bordered is false, undefined otherwise
+     * @default 200 when bordered is false, otherwise equals borderWidth
      */
     focusedBorderWidth?: InputStackBaseProps['focusedBorderWidth'];
+    /**
+     * Background of the input.
+     * @default 'bgSecondary' when readOnly and not disabled, 'bg' otherwise
+     */
+    inputBackground?: InputStackBaseProps['inputBackground'];
     /** Array of options to display in the select dropdown. Can be individual options or groups with `label` and `options` */
     options: SelectOptionList<Type, SelectOptionValue>;
     /** Label displayed above the control */
