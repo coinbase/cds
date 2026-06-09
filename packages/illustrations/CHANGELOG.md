@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 4.41.0 (6/9/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-09.
 
 ##### ⭐️ Added (10)
 
