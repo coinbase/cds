@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.2.1 (6/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: add tabbed-chips to exports in web/mobile packages.
+
 ## 9.2.0 (5/28/2026 PST)
 
 #### 🚀 Updates
