@@ -37,6 +37,10 @@
       "types": "./dts/alpha/select-chip/index.d.ts",
       "default": "./esm/alpha/select-chip/index.js"
     },
+    "./alpha/tabbed-chips": {
+      "types": "./dts/alpha/tabbed-chips/index.d.ts",
+      "default": "./esm/alpha/tabbed-chips/index.js"
+    },
     "./animation": {
       "types": "./dts/animation/index.d.ts",
       "default": "./esm/animation/index.js"
