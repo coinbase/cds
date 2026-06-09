@@ -12,6 +12,7 @@ import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { AppRefreshExplorationScreen } from './AppRefreshExplorationScreen';
 import { ExamplesListScreen } from './ExamplesListScreen';
 import {
   ExamplesSearchProvider,
@@ -244,6 +245,11 @@ const PlaygroundContent = memo(
           component={IconSheetScreen}
           name="DebugIconSheet"
           options={{ title: 'Icon Sheet' }}
+        />
+        <Stack.Screen
+          component={AppRefreshExplorationScreen}
+          name="DebugAppRefreshExploration"
+          options={{ title: 'App Refresh Exploration' }}
         />
         {exampleScreens}
       </Stack.Navigator>

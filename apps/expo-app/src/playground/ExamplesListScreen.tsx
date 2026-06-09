@@ -13,6 +13,7 @@ import type { ExamplesListScreenProps } from './types';
 
 const initialRouteKey = 'Examples';
 const searchRouteKey = 'Search';
+const pinnedRouteKeys = ['AppRefreshExploration'];
 
 const innerSpacingConfig: CellSpacing = { paddingX: 1 };
 
@@ -42,15 +43,22 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
     [navigate],
   );
 
-  const data = [...routeKeys, 'IconSheet']
+  const filterBySearch = (key: string) => {
+    if (searchFilter !== '') {
+      return key.toLowerCase().includes(searchFilter.toLowerCase());
+    }
+    return true;
+  };
+
+  const pinnedData = pinnedRouteKeys.filter(filterBySearch);
+
+  const sortedData = [...routeKeys, 'IconSheet']
     .sort()
     .filter((key) => key !== initialRouteKey && key !== searchRouteKey)
-    .filter((key) => {
-      if (searchFilter !== '') {
-        return key.toLowerCase().includes(searchFilter.toLowerCase());
-      }
-      return true;
-    });
+    .filter((key) => !pinnedRouteKeys.includes(key))
+    .filter(filterBySearch);
+
+  const data = [...pinnedData, ...sortedData];
 
   return (
     <Box background="bg" flexGrow={1} testID="mobile-playground-home-screen">
