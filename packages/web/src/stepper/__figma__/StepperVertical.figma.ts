@@ -28,5 +28,5 @@ export default {
 />`,
   imports: ['import { Stepper } from "@coinbase/cds-web/stepper"'],
   id: 'stepper-vertical',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };
