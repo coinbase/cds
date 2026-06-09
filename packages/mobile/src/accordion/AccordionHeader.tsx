@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback } from 'react';
-import type { View } from 'react-native';
+import type { StyleProp, View, ViewStyle } from 'react-native';
 import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
 import {
   accordionIconHiddenRotate,
@@ -47,6 +47,8 @@ export type AccordionHeaderBaseProps = SharedProps &
      * unless you want multiple items to be controlled at the same time.
      */
     itemKey: string;
+    /** Custom style for the header pressable element */
+    style?: StyleProp<ViewStyle>;
   };
 
 export type AccordionMediaProps = AccordionMediaBaseProps;
@@ -87,7 +89,7 @@ export type AccordionHeaderProps = AccordionHeaderBaseProps;
 export const AccordionHeader = memo(
   forwardRef(
     (
-      { itemKey, title, subtitle, onPress, media, collapsed, testID }: AccordionHeaderProps,
+      { itemKey, title, subtitle, onPress, media, collapsed, testID, style }: AccordionHeaderProps,
       forwardedRef: React.ForwardedRef<View>,
     ) => {
       const { setActiveKey, activeKey } = useAccordionContext();
@@ -109,6 +111,7 @@ export const AccordionHeader = memo(
           accessibilityState={{ expanded: !collapsed }}
           background="bg"
           onPress={handlePress}
+          style={style}
           testID={testID}
         >
           <HStack

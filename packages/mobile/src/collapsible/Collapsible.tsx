@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import type { ScrollViewProps } from 'react-native';
+import type { ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
@@ -51,6 +51,10 @@ export type CollapsibleBaseProps = SharedProps &
      * Max width of the content. Overflow content will be scrollable.
      */
     maxWidth?: number;
+    /**
+     * Custom style applied to the root animated container element.
+     */
+    style?: StyleProp<ViewStyle>;
   };
 
 export type CollapsibleProps = CollapsibleBaseProps;
@@ -73,6 +77,7 @@ export const Collapsible = memo(
       paddingBottom,
       paddingStart,
       scrollViewProps,
+      style,
     } = mergedProps;
     const theme = useTheme();
     // TO DO: Remove this after refactoring useContentSize to default values to null on initial render
@@ -181,11 +186,16 @@ export const Collapsible = memo(
 
     const containerStyles = isUnmountedExpanded ? styles.container : animatedContainerStyles;
 
+    const mergedContainerStyles = useMemo(
+      () => (style ? [containerStyles, style] : containerStyles),
+      [containerStyles, style],
+    );
+
     return (
       <ReanimatedView
         ref={forwardedRef}
         aria-expanded={!collapsed}
-        style={containerStyles}
+        style={mergedContainerStyles}
         testID={testID}
       >
         <ScrollView

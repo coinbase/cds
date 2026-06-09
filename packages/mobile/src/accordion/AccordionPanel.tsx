@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { View } from 'react-native';
+import type { StyleProp, View, ViewStyle } from 'react-native';
 import { accordionVisibleMaxHeight } from '@coinbase/cds-common/animation/accordion';
 import { accordionSpacing } from '@coinbase/cds-common/tokens/accordion';
 import type { SharedProps } from '@coinbase/cds-common/types';
@@ -14,6 +14,8 @@ export type AccordionPanelBaseProps = SharedProps &
      * unless you want multiple items to be controlled at the same time.
      */
     itemKey: string;
+    /** Custom style applied to the collapsible panel container */
+    style?: StyleProp<ViewStyle>;
   };
 
 export type AccordionPanelProps = AccordionPanelBaseProps;
@@ -25,7 +27,7 @@ export type AccordionPanelProps = AccordionPanelBaseProps;
 export const AccordionPanel = memo(
   forwardRef(
     (
-      { children, collapsed = true, testID }: AccordionPanelProps,
+      { children, collapsed = true, testID, style }: AccordionPanelProps,
       forwardedRef: React.ForwardedRef<View>,
     ) => {
       return (
@@ -33,6 +35,7 @@ export const AccordionPanel = memo(
           ref={forwardedRef}
           collapsed={collapsed}
           maxHeight={accordionVisibleMaxHeight}
+          style={style}
           testID={testID}
           {...accordionSpacing}
         >

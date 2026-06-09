@@ -163,6 +163,71 @@ describe('Accordion', () => {
       expect(screen.getByTestId('mock-accordion')).toHaveStyle('padding: 20');
       expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('padding: 30');
     });
+
+    it('applies styles prop to AccordionItem elements', () => {
+      const rootStyle = { borderWidth: 2 };
+      const headerStyle = { opacity: 0.5 };
+
+      render(
+        <DefaultThemeProvider>
+          <Accordion testID="mock-accordion">
+            <AccordionItem
+              itemKey="1"
+              styles={{ root: rootStyle, header: headerStyle }}
+              testID="mock-accordion-item1"
+              title="Accordion #1"
+            >
+              <Text font="body">Accordion Content1</Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('borderWidth: 2');
+      expect(screen.getByTestId('mock-accordion-item1-header')).toHaveStyle('opacity: 0.5');
+    });
+
+    it('applies styles.panel to the collapsible panel element', () => {
+      const panelStyle = { borderWidth: 3 };
+
+      render(
+        <DefaultThemeProvider>
+          <Accordion defaultActiveKey="1" testID="mock-accordion">
+            <AccordionItem
+              itemKey="1"
+              styles={{ panel: panelStyle }}
+              testID="mock-accordion-item1"
+              title="Accordion #1"
+            >
+              <Text font="body">Accordion Content1</Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1-panel')).toHaveStyle('borderWidth: 3');
+    });
+
+    it('merges style and styles.root on AccordionItem root element', () => {
+      render(
+        <DefaultThemeProvider>
+          <Accordion testID="mock-accordion">
+            <AccordionItem
+              itemKey="1"
+              style={{ borderWidth: 1 }}
+              styles={{ root: { padding: 8 } }}
+              testID="mock-accordion-item1"
+              title="Accordion #1"
+            >
+              <Text font="body">Accordion Content1</Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('borderWidth: 1');
+      expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('padding: 8');
+    });
   });
 
   describe('controlled', () => {
