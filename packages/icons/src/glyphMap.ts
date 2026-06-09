@@ -3278,5 +3278,11 @@ export const glyphMap = {
   'ipoChart-16-active': '󰳉',
   'ipoChart-16-inactive': '󰳊',
   'ipoChart-24-active': '󰳋',
-  'ipoChart-24-inactive': '󰳌'
+  'ipoChart-24-inactive': '󰳌',
+  'learningCenter-12-active': '󰳍',
+  'learningCenter-12-inactive': '󰳎',
+  'learningCenter-16-active': '󰳏',
+  'learningCenter-16-inactive': '󰳐',
+  'learningCenter-24-active': '󰳑',
+  'learningCenter-24-inactive': '󰳒'
 };

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-05-29T15:16:01.472Z",
-  "lastUnicode": 986316,
+  "lastUpdated": "2026-06-09T16:27:10.648Z",
+  "lastUnicode": 986322,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25661,6 +25661,53 @@
           "active": true,
           "size": 12,
           "unicode": 986311
+        }
+      ]
+    },
+    {
+      "nodeId": "7753:23",
+      "name": "learningCenter",
+      "description": "",
+      "assetsHash": "3nchEt1qGZ0nJkKOTqqu8XmQIxCZ5cxrwU7PJTnUnDs=",
+      "nameHash": "02gvhN987aXoNT7BOlL6Ddao5KRzKpPoB61biqVqvF4=",
+      "createdAt": "2026-06-05T16:39:36.750Z",
+      "lastUpdated": "2026-06-05T16:39:36.750Z",
+      "svgs": [
+        {
+          "name": "learningCenter-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986322
+        },
+        {
+          "name": "learningCenter-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986321
+        },
+        {
+          "name": "learningCenter-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986320
+        },
+        {
+          "name": "learningCenter-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986319
+        },
+        {
+          "name": "learningCenter-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986318
+        },
+        {
+          "name": "learningCenter-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986317
         }
       ]
     }

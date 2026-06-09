@@ -1024,7 +1024,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'autoCar',
     'column',
     'caretExpand',
-    'caretCollapse'
+    'caretCollapse',
+    'learningCenter'
   ],
   'profile': [
     'account',
