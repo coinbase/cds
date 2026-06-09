@@ -170,6 +170,7 @@ export type SpotSquareName =
   | 'instoEthStakingRewards'
   | 'instoPixDeposits'
   | 'instoPrimeStaking'
+  | 'instoProgressCircle'
   | 'instoSecurityKey'
   | 'instoSideChainSide'
   | 'instoStaking'

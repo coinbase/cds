@@ -340,6 +340,7 @@ export type PictogramName =
   | 'instoAuthenticatorProgress'
   | 'instoBorrowCoins'
   | 'instoBorrowingLending'
+  | 'instoBrowserMultiPlatform'
   | 'instoCoinbaseOneShield'
   | 'instoCoinFocus'
   | 'instoCrypto101'

@@ -2,7 +2,7 @@ import type { HeroSquareName } from '../types/HeroSquareName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:backfill-themed-svgjs
+ * Generated from yarn nx run illustration-tasks:sync-illustrations
  */
 
 const svgEsmMap = {
@@ -210,7 +210,7 @@ const svgEsmMap = {
   },
   borrowCoinsBtc: {
     themeable: () =>
-      import('../svgJs/esm/themeable/borrowCoinsBtc-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/borrowCoinsBtc-1.js').then((m) => m.default as string),
   },
   borrowWallet: {
     themeable: () =>
@@ -535,7 +535,7 @@ const svgEsmMap = {
   },
   cryptoPortfolioUsdc: {
     themeable: () =>
-      import('../svgJs/esm/themeable/cryptoPortfolioUsdc-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/cryptoPortfolioUsdc-1.js').then((m) => m.default as string),
   },
   cryptoWallet: {
     themeable: () =>
@@ -737,7 +737,7 @@ const svgEsmMap = {
   },
   ensProfilePic: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ensProfilePic-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/ensProfilePic-3.js').then((m) => m.default as string),
   },
   error400: {
     themeable: () =>
@@ -830,6 +830,9 @@ const svgEsmMap = {
         (m) => m.default as string,
       ),
   },
+  filter: {
+    themeable: () => import('../svgJs/esm/themeable/filter-0.js').then((m) => m.default as string),
+  },
   flipStable: {
     themeable: () =>
       import('../svgJs/esm/themeable/flipStable-0.js').then((m) => m.default as string),
@@ -891,6 +894,10 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/governanceMallet-1.js').then((m) => m.default as string),
   },
+  graduationCap: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/graduationCap-0.js').then((m) => m.default as string),
+  },
   graphChartTrading: {
     themeable: () =>
       import('../svgJs/esm/themeable/graphChartTrading-0.js').then((m) => m.default as string),
@@ -950,11 +957,11 @@ const svgEsmMap = {
   },
   instoAdd2Fa: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAdd2Fa-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoAdd2Fa-1.js').then((m) => m.default as string),
   },
   instoAddBankAccount: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAddBankAccount-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoAddBankAccount-1.js').then((m) => m.default as string),
   },
   instoCoinbaseOneProtectedCrypto: {
     themeable: () =>
@@ -964,89 +971,93 @@ const svgEsmMap = {
   },
   instoDocumentSuccess: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoDocumentSuccess-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoDocumentSuccess-2.js').then((m) => m.default as string),
   },
   instoEarnGlobe: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEarnGlobe-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEarnGlobe-1.js').then((m) => m.default as string),
   },
   instoEnableBiometrics: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEnableBiometrics-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEnableBiometrics-1.js').then((m) => m.default as string),
   },
   instoEthStakingRewards: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEthStakingRewards-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEthStakingRewards-1.js').then((m) => m.default as string),
   },
   instoEthStakingUpsell: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEthStakingUpsell-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEthStakingUpsell-1.js').then((m) => m.default as string),
   },
   instoGovernance: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoGovernance-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoGovernance-1.js').then((m) => m.default as string),
   },
   instoKeyGenerationComplete: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoKeyGenerationComplete-1.js').then(
+      import('../svgJs/esm/themeable/instoKeyGenerationComplete-2.js').then(
         (m) => m.default as string,
       ),
   },
   instoKeyGenerationPending: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoKeyGenerationPending-0.js').then(
+      import('../svgJs/esm/themeable/instoKeyGenerationPending-1.js').then(
         (m) => m.default as string,
       ),
   },
   instoOnChain: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoOnChain-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoOnChain-3.js').then((m) => m.default as string),
   },
   instoOpenEmail: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoOpenEmail-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoOpenEmail-2.js').then((m) => m.default as string),
   },
   instoPhoneUnknown: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPhoneUnknown-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPhoneUnknown-1.js').then((m) => m.default as string),
   },
   instoPrimeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrimeStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrimeStaking-1.js').then((m) => m.default as string),
   },
   instoPrivateKey: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrivateKey-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrivateKey-2.js').then((m) => m.default as string),
   },
   instoRequestSent: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoRequestSent-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoRequestSent-2.js').then((m) => m.default as string),
+  },
+  instoSecurityKey: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/instoSecurityKey-0.js').then((m) => m.default as string),
   },
   instoSecurityKeyAuth: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoSecurityKeyAuth-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoSecurityKeyAuth-1.js').then((m) => m.default as string),
   },
   instoStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoStaking-1.js').then((m) => m.default as string),
   },
   instoStakingMissedReturns: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoStakingMissedReturns-1.js').then(
+      import('../svgJs/esm/themeable/instoStakingMissedReturns-2.js').then(
         (m) => m.default as string,
       ),
   },
   instoWallet: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoWallet-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoWallet-1.js').then((m) => m.default as string),
   },
   instoWalletSecurity: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoWalletSecurity-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoWalletSecurity-1.js').then((m) => m.default as string),
   },
   instoWeb3MobileSetupStart: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoWeb3MobileSetupStart-0.js').then(
+      import('../svgJs/esm/themeable/instoWeb3MobileSetupStart-1.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1163,6 +1174,9 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/marginWarning-4.js').then((m) => m.default as string),
   },
+  mcLoad: {
+    themeable: () => import('../svgJs/esm/themeable/mcLoad-0.js').then((m) => m.default as string),
+  },
   mic: {
     themeable: () => import('../svgJs/esm/themeable/mic-4.js').then((m) => m.default as string),
   },
@@ -1198,7 +1212,7 @@ const svgEsmMap = {
   },
   multiplePortfolios: {
     themeable: () =>
-      import('../svgJs/esm/themeable/multiplePortfolios-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/multiplePortfolios-2.js').then((m) => m.default as string),
   },
   myNameIsSatoshi: {
     themeable: () =>
@@ -1259,7 +1273,7 @@ const svgEsmMap = {
       ),
   },
   options: {
-    themeable: () => import('../svgJs/esm/themeable/options-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/options-1.js').then((m) => m.default as string),
   },
   oracle: {
     themeable: () => import('../svgJs/esm/themeable/oracle-1.js').then((m) => m.default as string),
@@ -1323,7 +1337,7 @@ const svgEsmMap = {
   },
   predictionsMarkets: {
     themeable: () =>
-      import('../svgJs/esm/themeable/predictionsMarkets-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/predictionsMarkets-1.js').then((m) => m.default as string),
   },
   primeDeFi: {
     themeable: () =>
@@ -1510,6 +1524,9 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/shareOnSocialMedia-4.js').then((m) => m.default as string),
   },
+  ship: {
+    themeable: () => import('../svgJs/esm/themeable/ship-0.js').then((m) => m.default as string),
+  },
   sidechain: {
     themeable: () =>
       import('../svgJs/esm/themeable/sidechain-3.js').then((m) => m.default as string),
@@ -1619,7 +1636,7 @@ const svgEsmMap = {
   },
   tradingPerpetualsUsdc: {
     themeable: () =>
-      import('../svgJs/esm/themeable/tradingPerpetualsUsdc-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/tradingPerpetualsUsdc-1.js').then((m) => m.default as string),
   },
   tradingWithLeverage: {
     themeable: () =>
