@@ -1,7 +1,11 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
 import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Button } from '@coinbase/cds-mobile/buttons';
+import { MessagingCard } from '@coinbase/cds-mobile/cards';
 import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
+import { Pictogram } from '@coinbase/cds-mobile/illustrations';
 import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Pressable } from '@coinbase/cds-mobile/system';
 import { ComponentConfigProvider } from '@coinbase/cds-mobile/system/ComponentConfigProvider';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 import {
@@ -79,7 +83,22 @@ function PriceChart() {
 }
 
 export const AppRefreshExplorationScreen = memo(() => {
-  const config: ComponentConfig = useMemo(() => ({}), []);
+  const config: ComponentConfig = useMemo(
+    () => ({
+      MessagingCard: (props) => {
+        if (props.type === 'nudge') {
+          return {
+            background: 'bg',
+            borderColor: 'bgLine',
+            borderWidth: 100,
+          };
+        }
+
+        return {};
+      },
+    }),
+    [],
+  );
 
   return (
     <ComponentConfigProvider value={config}>
@@ -114,6 +133,32 @@ export const AppRefreshExplorationScreen = memo(() => {
         </ComponentExploration>
         <ComponentExploration componentName="Line Chart">
           <PriceChart />
+        </ComponentExploration>
+        <ComponentExploration componentName="Messaging Card">
+          <MessagingCard
+            action={
+              <Pressable>
+                <Text color="fg" font="headline">
+                  Get started
+                </Text>
+              </Pressable>
+            }
+            description={
+              <Text color="fgMuted" font="body">
+                Get a USDC loan by using your Bitcoin as collateral
+              </Text>
+            }
+            media={
+              <Pictogram accessibilityLabel="Add to watchlist" dimension="48x48" name="usdcLoan" />
+            }
+            mediaPlacement="end"
+            title={
+              <Text color="fg" font="body">
+                Borrow USDC
+              </Text>
+            }
+            type="nudge"
+          />
         </ComponentExploration>
       </VStack>
     </ComponentConfigProvider>
