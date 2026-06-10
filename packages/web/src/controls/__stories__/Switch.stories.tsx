@@ -5,6 +5,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Switch } from '../Switch';
 
 const darkModeWrapperCss = css`
@@ -65,6 +66,37 @@ export const DarkNormal = () => {
         Normal
       </Switch>
     </DarkModeWrapper>
+  );
+};
+
+/**
+ * Reproduces the app-refresh prototype theme override where the thumb is smaller
+ * relative to the track (thumb = height - 4) instead of the built-in themes'
+ * thumb = height - 2. Use this to verify the thumb stays vertically/horizontally
+ * centered within the track regardless of the configured control sizes.
+ */
+const appRefreshTheme = {
+  ...defaultTheme,
+  controlSize: {
+    ...defaultTheme.controlSize,
+    switchHeight: 24,
+    switchThumbSize: 20,
+    switchWidth: 44,
+  },
+};
+
+export const CustomTheme = () => {
+  const [checked, setChecked] = useState(false);
+  return (
+    <ThemeProvider activeColorScheme="light" theme={appRefreshTheme}>
+      <VStack gap={2}>
+        <Switch checked={checked} onChange={() => setChecked((prevChecked) => !prevChecked)}>
+          Interactive
+        </Switch>
+        <Switch checked={false}>Off</Switch>
+        <Switch checked>On</Switch>
+      </VStack>
+    </ThemeProvider>
   );
 };
 
