@@ -2,6 +2,7 @@
   "name": "@coinbase/cds-mcp-server",
   "version": "9.4.1",
   "description": "Coinbase Design System - MCP Server",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
