@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { VStack } from '../../layout';
+import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Switch } from '../Switch';
 
 const SwitchScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [isChecked2, setIsChecked2] = useState(true);
   const [isChecked3, setIsChecked3] = useState(false);
+  const [isChecked4, setIsChecked4] = useState(false);
 
   return (
     <ExampleScreen>
@@ -55,6 +58,32 @@ const SwitchScreen = () => {
                 Style props
               </Switch>
             </VStack>
+          );
+        }}
+      </Example>
+      <Example inline title="Custom Theme">
+        {() => {
+          const toggleChecked = () => setIsChecked4((prevChecked) => !prevChecked);
+          const customTheme = {
+            ...defaultTheme,
+            controlSize: {
+              ...defaultTheme.controlSize,
+              switchHeight: 24,
+              switchThumbSize: 20,
+              switchWidth: 44,
+            },
+          };
+
+          return (
+            <ThemeProvider activeColorScheme="light" theme={customTheme}>
+              <VStack gap={2}>
+                <Switch checked={isChecked4} onChange={toggleChecked}>
+                  Interactive
+                </Switch>
+                <Switch checked={false}>Off</Switch>
+                <Switch checked>On</Switch>
+              </VStack>
+            </ThemeProvider>
           );
         }}
       </Example>

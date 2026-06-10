@@ -34,8 +34,10 @@ const thumbCss = css`
   border: 0.5px solid var(--color-bgLine);
 
   position: absolute;
-  top: 1px;
-  left: 1px;
+  /* Inset that keeps the thumb centered within the track regardless of the
+   * configured track/thumb sizes (CDS default themes resolve this to 1px). */
+  top: calc((var(--controlSize-switchHeight) - var(--controlSize-switchThumbSize)) / 2);
+  left: calc((var(--controlSize-switchHeight) - var(--controlSize-switchThumbSize)) / 2);
 `;
 
 export type SwitchBaseProps = ControlBaseProps<string> & {
@@ -51,7 +53,9 @@ const MotionBox = motion(Box);
 
 const thumbMotionVariants = {
   checked: {
-    x: `calc(var(--controlSize-switchWidth) - var(--controlSize-switchThumbSize) - 2px)`,
+    // Travel = trackWidth - 2*inset - thumbSize, which simplifies to
+    // trackWidth - trackHeight when the thumb is centered with equal insets.
+    x: `calc(var(--controlSize-switchWidth) - var(--controlSize-switchHeight))`,
   },
   unchecked: {
     x: 0,

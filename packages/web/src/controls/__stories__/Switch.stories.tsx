@@ -5,6 +5,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Switch } from '../Switch';
 
 const darkModeWrapperCss = css`
@@ -65,6 +66,32 @@ export const DarkNormal = () => {
         Normal
       </Switch>
     </DarkModeWrapper>
+  );
+};
+
+export const CustomTheme = () => {
+  const [checked, setChecked] = useState(false);
+
+  const customTheme = {
+    ...defaultTheme,
+    controlSize: {
+      ...defaultTheme.controlSize,
+      switchHeight: 24,
+      switchThumbSize: 20,
+      switchWidth: 44,
+    },
+  };
+
+  return (
+    <ThemeProvider activeColorScheme="light" theme={customTheme}>
+      <VStack gap={2}>
+        <Switch checked={checked} onChange={() => setChecked((prevChecked) => !prevChecked)}>
+          Interactive
+        </Switch>
+        <Switch checked={false}>Off</Switch>
+        <Switch checked>On</Switch>
+      </VStack>
+    </ThemeProvider>
   );
 };
 
