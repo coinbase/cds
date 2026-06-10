@@ -1,7 +1,7 @@
 ---
 name: git.backport
 description: Back-port a specific commit from master to a release branch via cherry-pick. Creates a dedicated backport branch, attempts the cherry-pick, pushes it, and opens a PR by default. Returns to the original branch when done (success or failure). If there are merge conflicts, diagnoses the root cause without attempting an autonomous resolution. Use when asked to "backport", "cherry-pick to release", or "port a fix to a release branch".
-allowed-tools: Bash(git log:*), Bash(git show:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git cherry-pick:*), Bash(git checkout:*), Bash(git branch:*), Bash(git status:*), Bash(git fetch:*), Bash(git merge-base:*), Bash(git push:*), Bash(git remote:*), Bash(gh pr create:*), Bash(gh pr view:*), Bash(gh api:*), Read, Grep, Glob
+allowed-tools: Bash(git log:*), Bash(git show:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git apply:*), Bash(git add:*), Bash(git commit:*), Bash(git checkout:*), Bash(git branch:*), Bash(git status:*), Bash(git fetch:*), Bash(git merge-base:*), Bash(git push:*), Bash(git remote:*), Bash(git reset:*), Bash(gh pr create:*), Bash(gh pr view:*), Bash(gh api:*), Read, Grep, Glob
 argument-hint: <commit-sha> <target-branch>
 model: opus
 ---
@@ -107,39 +107,87 @@ Tell the user the branch name.
 
 ---
 
-## Step 5 — Attempt the cherry-pick
+## Step 5 — Apply the patch (source files only)
 
-Run:
-
-```
-git cherry-pick <COMMIT_SHA>
-```
-
-Capture the exit code and stdout/stderr.
-
-### If the cherry-pick succeeds (exit code 0) — proceed to Step 6
-
-### If the cherry-pick fails (exit code non-zero) — CONFLICT PATH
-
-Immediately abort the cherry-pick:
+### 5a — Classify changed files
 
 ```
-git cherry-pick --abort
+git show --name-only <COMMIT_SHA>
 ```
 
-Then proceed to **Step 7** (conflict diagnosis). Return to `ORIGINAL_BRANCH` after reporting.
+Separate all changed files into two buckets:
+
+- **Versioning files** (always exclude): any path matching `**/package.json` or `**/CHANGELOG.md`
+- **Source files** (apply these): everything else
+
+If the commit only touches versioning files, stop and tell the user — there is nothing meaningful to backport. Return to `ORIGINAL_BRANCH` before stopping.
+
+### 5b — Apply source-file patch
+
+Extract and apply only the source-file diffs as a patch against the current `TARGET_BRANCH` state:
+
+```
+git show <COMMIT_SHA> -- <source-file1> <source-file2> ... | git apply --index
+```
+
+**CRITICAL: Never use `git checkout <COMMIT_SHA> -- <file>`.** That replaces the entire file with the master version, bringing in all unrelated changes that have accumulated between the two branches. Always use `git show | git apply --index` so only the diff lines from the commit are applied.
+
+### 5c — If `git apply` succeeds — commit and proceed to Step 6
+
+`git apply --index` stages the changes automatically. Commit:
+
+```
+git commit -m "<original commit subject> (backport to <TARGET_BRANCH>)
+
+Backport of <commit-link> from master[, originally merged via <pr-link>].
+
+Code-only backport — versioning and changelog applied separately.
+
+Generated with Claude Code
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+Then proceed to **Step 6** (versioning reminder).
+
+### 5d — If `git apply` fails — CONFLICT PATH
+
+The source-file patch does not apply cleanly. This usually means one of:
+
+- `TARGET_BRANCH` has a structurally different version of the code that the patch's context lines no longer match
+- The fix depends on a refactor or API change that exists in `master` but not in `TARGET_BRANCH` — making the backport potentially impossible without additional work
+
+Do NOT attempt to modify files or force the patch. Return to `ORIGINAL_BRANCH` and report (see **Step 7**).
 
 ---
 
-## Step 6 — Push and open a PR (default on success)
+## Step 6 — Versioning reminder, then push and open PR
 
-### 6a — Push the backport branch
+### 6a — Pause for versioning
+
+**Before pushing or opening a PR**, tell the user:
+
+> The code changes have been committed. You'll need to add the version bump and changelog entry yourself before I open the PR, since the versioning files (`package.json`, `CHANGELOG.md`) are intentionally excluded from the backport.
+>
+> Run the changelog script with the release branch as the base so it detects your changes correctly:
+>
+> ```
+> GITHUB_BASE_REF=origin/<TARGET_BRANCH> yarn changelog
+> ```
+>
+> Let me know when you're done and I'll push the branch and open the PR.
+
+Then **stop and wait** for the user to confirm versioning is complete before continuing.
+
+### 6b — Push the backport branch
+
+Once the user confirms:
 
 ```
 git push -u origin backport/<SHORT_SHA>-to-<TARGET_BRANCH>
 ```
 
-### 6b — Build the PR body
+### 6c — Build the PR body
 
 ```markdown
 ## Summary
@@ -157,7 +205,7 @@ Backport of commit [`<SHORT_SHA>`](commit-link) from `master`[, originally merge
 
 Omit the "originally merged via" clause if the original PR number could not be determined.
 
-### 6c — Open the PR
+### 6d — Open the PR
 
 ```
 gh pr create \
@@ -173,7 +221,7 @@ If `gh pr create` fails due to missing authentication:
 - Print the URL that `git push` echoed (looks like `https://github.com/org/repo/pull/new/<branch>`) so they can open the PR manually
 - Print the suggested PR title and body so they can paste them in
 
-### 6d — Return to original branch
+### 6e — Return to original branch
 
 ```
 git checkout <ORIGINAL_BRANCH>
@@ -187,9 +235,9 @@ Then report to the user:
 
 ---
 
-## Step 7 — Diagnose the conflict (do NOT resolve it)
+## Step 7 — Diagnose the patch failure (do NOT resolve it)
 
-Your goal here is to explain _why_ the conflict happened so the user can resolve it themselves. Do NOT attempt to modify any files or re-run the cherry-pick. Use remote refs for all file inspection — never check out anything locally.
+Your goal here is to explain _why_ the patch didn't apply so the user can resolve it themselves. Do NOT attempt to modify any files or retry the apply. Use remote refs for all file inspection — never check out anything locally.
 
 ### 7a — Identify what the commit changed
 
@@ -255,10 +303,10 @@ git checkout <ORIGINAL_BRANCH>
 Then write the conflict report:
 
 ```
-## Backport conflict detected
+## Backport patch failed
 
-Cherry-pick of <COMMIT_SHA> onto <TARGET_BRANCH> produced conflicts.
-The cherry-pick has been aborted and you are back on `<ORIGINAL_BRANCH>`.
+Patch from <COMMIT_SHA> did not apply cleanly onto <TARGET_BRANCH>.
+You are back on `<ORIGINAL_BRANCH>`.
 
 ### Conflicting files
 <list each file>
@@ -279,9 +327,9 @@ Be specific. Quote relevant line ranges or symbol names. Give the user enough co
 ## Important rules
 
 - **Record `ORIGINAL_BRANCH` at the very start** and always return to it at the end — success, failure, or early stop (except when stopping due to a dirty working tree, since you haven't moved).
-- **Never resolve conflicts autonomously.** In the conflict path, diagnose and explain only.
-- **Always abort a failed cherry-pick** before reporting.
-- **Always push and open a PR on success** — this is the default, not optional.
+- **Never use `git checkout <sha> -- <file>`** to apply changes from a commit. This replaces the whole file with the master version and brings in unrelated changes. Always use `git show <sha> -- <files> | git apply --index`.
+- **Never apply `package.json` or `CHANGELOG.md` changes.** Always exclude versioning files from the patch. Remind the user to run `GITHUB_BASE_REF=origin/<TARGET_BRANCH> yarn changelog` and wait for them to confirm before pushing or opening the PR.
+- **Never resolve patch conflicts autonomously.** If `git apply` fails, diagnose and explain only.
+- **Always push and open a PR** after the user confirms versioning — this is the default, not optional.
 - **Never check out the source commit or the target branch locally.** Use `origin/<TARGET_BRANCH>` and inspect commits via `git show` / `git diff`. The only local branches you should create or switch to are the backport branch and the return to `ORIGINAL_BRANCH`.
 - If the backport branch already exists, stop and return to `ORIGINAL_BRANCH` rather than overwriting.
-- Do not amend or force-push any branch.
