@@ -69,26 +69,21 @@ export const DarkNormal = () => {
   );
 };
 
-/**
- * Reproduces the app-refresh prototype theme override where the thumb is smaller
- * relative to the track (thumb = height - 4) instead of the built-in themes'
- * thumb = height - 2. Use this to verify the thumb stays vertically/horizontally
- * centered within the track regardless of the configured control sizes.
- */
-const appRefreshTheme = {
-  ...defaultTheme,
-  controlSize: {
-    ...defaultTheme.controlSize,
-    switchHeight: 24,
-    switchThumbSize: 20,
-    switchWidth: 44,
-  },
-};
-
 export const CustomTheme = () => {
   const [checked, setChecked] = useState(false);
+
+  const customTheme = {
+    ...defaultTheme,
+    controlSize: {
+      ...defaultTheme.controlSize,
+      switchHeight: 24,
+      switchThumbSize: 20,
+      switchWidth: 44,
+    },
+  };
+
   return (
-    <ThemeProvider activeColorScheme="light" theme={appRefreshTheme}>
+    <ThemeProvider activeColorScheme="light" theme={customTheme}>
       <VStack gap={2}>
         <Switch checked={checked} onChange={() => setChecked((prevChecked) => !prevChecked)}>
           Interactive
