@@ -346,6 +346,7 @@ const names: PictogramName[] = [
   'instoAuthenticatorProgress',
   'instoBorrowCoins',
   'instoBorrowingLending',
+  'instoBrowserMultiPlatform',
   'instoCoinFocus',
   'instoCoinbaseOneShield',
   'instoCrypto101',

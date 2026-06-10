@@ -88,6 +88,7 @@ const names: SpotIconName[] = [
   'instoFast',
   'instoHelpCenterProduct',
   'instoIdVerification',
+  'instoInstantAccess',
   'instoLayeredNetworks',
   'instoLearningRewardsProduct',
   'instoMultiCoin',

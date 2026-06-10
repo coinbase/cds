@@ -8,7 +8,119 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 4.41.0 (6/9/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-09.
+
+##### ⭐️ Added (10)
+
+###### Pictogram (3)
+
+- instoBrowserMultiPlatform
+- instoDecentralizedExchange
+- futures
+
+###### HeroSquare (5)
+
+- ship
+- filter
+- graduationCap
+- mcLoad
+- instoSecurityKey
+
+###### SpotIcon (1)
+
+- instoInstantAccess
+
+###### SpotSquare (1)
+
+- instoProgressCircle
+
+##### ⭐️ Updated (67)
+
+###### Pictogram (19)
+
+- browserMultiPlatform
+- instoDecentralizedWeb3
+- instoTrading
+- instoApyInterest
+- instoGlobalConnections
+- instoCrypto101
+- instoCoinFocus
+- instoEthRewards
+- instoWalletWarning
+- instoBorrowCoins
+- instoRiskStaking
+- instoNftLibrary
+- instoStakingGraph
+- instoFiat
+- instoEthStakingChart
+- instoDecentralizationEverything
+- instoEarnCoins
+- instoMonitoringPerformance
+- instoRestaking
+
+###### HeroSquare (29)
+
+- options
+- predictionsMarkets
+- borrowCoinsBtc
+- cryptoPortfolioUsdc
+- tradingPerpetualsUsdc
+- instoWeb3MobileSetupStart
+- multiplePortfolios
+- instoEthStakingUpsell
+- instoPhoneUnknown
+- instoWalletSecurity
+- instoEnableBiometrics
+- instoAddBankAccount
+- instoRequestSent
+- instoKeyGenerationComplete
+- instoAdd2Fa
+- instoStakingMissedReturns
+- instoGovernance
+- instoPrivateKey
+- instoEarnGlobe
+- instoPrimeStaking
+- instoEthStakingRewards
+- instoDocumentSuccess
+- instoSecurityKeyAuth
+- instoOnChain
+- instoKeyGenerationPending
+- instoOpenEmail
+- instoStaking
+- instoWallet
+- ensProfilePic
+
+###### SpotIcon (1)
+
+- instoStakingProduct
+
+###### SpotRectangle (12)
+
+- instoGetStartedInMinutes
+- instoEthStakingMovement
+- instoCurrency
+- instoMargin
+- instoPrimeStaking
+- instoStaking
+- insto
+- instoEmptyTrading
+- instoSetupComplete
+- instoCryptoAndMore
+- instoSemiCustodial
+- sendCryptoFaster
+
+###### SpotSquare (6)
+
+- defiEarnAnnouncement
+- holdCrypto
+- instoStaking
+- instoEthStaking
+- instoPixDeposits
+- instoPrimeStaking
 
 #### 📘 Misc
 

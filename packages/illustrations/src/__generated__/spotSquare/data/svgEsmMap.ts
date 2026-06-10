@@ -2,7 +2,7 @@ import type { SpotSquareName } from '../types/SpotSquareName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:backfill-themed-svgjs
+ * Generated from yarn nx run illustration-tasks:sync-illustrations
  */
 
 const svgEsmMap = {
@@ -493,7 +493,7 @@ const svgEsmMap = {
   },
   defiEarnAnnouncement: {
     themeable: () =>
-      import('../svgJs/esm/themeable/defiEarnAnnouncement-6.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/defiEarnAnnouncement-7.js').then((m) => m.default as string),
   },
   defiHow: {
     themeable: () => import('../svgJs/esm/themeable/defiHow-3.js').then((m) => m.default as string),
@@ -654,7 +654,7 @@ const svgEsmMap = {
   },
   holdCrypto: {
     themeable: () =>
-      import('../svgJs/esm/themeable/holdCrypto-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/holdCrypto-4.js').then((m) => m.default as string),
   },
   holdingCrypto: {
     themeable: () =>
@@ -683,7 +683,7 @@ const svgEsmMap = {
   },
   instoEthStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEthStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEthStaking-1.js').then((m) => m.default as string),
   },
   instoEthStakingRewards: {
     themeable: () =>
@@ -691,11 +691,15 @@ const svgEsmMap = {
   },
   instoPixDeposits: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPixDeposits-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPixDeposits-1.js').then((m) => m.default as string),
   },
   instoPrimeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrimeStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrimeStaking-1.js').then((m) => m.default as string),
+  },
+  instoProgressCircle: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/instoProgressCircle-0.js').then((m) => m.default as string),
   },
   instoSecurityKey: {
     themeable: () =>
@@ -707,7 +711,7 @@ const svgEsmMap = {
   },
   instoStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoStaking-1.js').then((m) => m.default as string),
   },
   instoUbiKey: {
     themeable: () =>

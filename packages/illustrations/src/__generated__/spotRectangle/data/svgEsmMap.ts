@@ -2,7 +2,7 @@ import type { SpotRectangleName } from '../types/SpotRectangleName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:backfill-themed-svgjs
+ * Generated from yarn nx run illustration-tasks:sync-illustrations
  */
 
 const svgEsmMap = {
@@ -462,7 +462,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/holdingCrypto-3.js').then((m) => m.default as string),
   },
   insto: {
-    themeable: () => import('../svgJs/esm/themeable/insto-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/insto-1.js').then((m) => m.default as string),
   },
   instoAboutOnchain: {
     themeable: () =>
@@ -480,11 +480,11 @@ const svgEsmMap = {
   },
   instoCryptoAndMore: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoCryptoAndMore-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoCryptoAndMore-3.js').then((m) => m.default as string),
   },
   instoCurrency: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoCurrency-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoCurrency-1.js').then((m) => m.default as string),
   },
   instoDesignateSigner: {
     themeable: () =>
@@ -492,17 +492,17 @@ const svgEsmMap = {
   },
   instoEmptyTrading: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEmptyTrading-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEmptyTrading-2.js').then((m) => m.default as string),
   },
   instoEthStakingMovement: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEthStakingMovement-1.js').then(
+      import('../svgJs/esm/themeable/instoEthStakingMovement-2.js').then(
         (m) => m.default as string,
       ),
   },
   instoGetStartedInMinutes: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoGetStartedInMinutes-0.js').then(
+      import('../svgJs/esm/themeable/instoGetStartedInMinutes-1.js').then(
         (m) => m.default as string,
       ),
   },
@@ -512,7 +512,7 @@ const svgEsmMap = {
   },
   instoMargin: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoMargin-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoMargin-1.js').then((m) => m.default as string),
   },
   instoOnchainSetupInProgress: {
     themeable: () =>
@@ -522,7 +522,7 @@ const svgEsmMap = {
   },
   instoPrimeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrimeStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrimeStaking-1.js').then((m) => m.default as string),
   },
   instoQRCode: {
     themeable: () =>
@@ -534,11 +534,11 @@ const svgEsmMap = {
   },
   instoSemiCustodial: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoSemiCustodial-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoSemiCustodial-1.js').then((m) => m.default as string),
   },
   instoSetupComplete: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoSetupComplete-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoSetupComplete-1.js').then((m) => m.default as string),
   },
   instoSetupOnchain: {
     themeable: () =>
@@ -546,7 +546,7 @@ const svgEsmMap = {
   },
   instoStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoStaking-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoStaking-1.js').then((m) => m.default as string),
   },
   insuranceProtection: {
     themeable: () =>
@@ -812,7 +812,7 @@ const svgEsmMap = {
   },
   sendCryptoFaster: {
     themeable: () =>
-      import('../svgJs/esm/themeable/sendCryptoFaster-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/sendCryptoFaster-5.js').then((m) => m.default as string),
   },
   sendingCrypto: {
     themeable: () =>

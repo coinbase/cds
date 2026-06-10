@@ -310,6 +310,7 @@ export type IconName =
  | 'laptop'
  | 'leadChart'
  | 'leadCoin'
+ | 'learningCenter'
  | 'learningRewardsProduct'
  | 'light'
  | 'lightbulb'
