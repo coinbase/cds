@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.2.2 (6/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: custom Switch sizes now center in the background track correctly. [[#750](https://github.com/coinbase/cds/pull/750)]
+
 ## 9.2.1 (6/9/2026 PST)
 
 #### 🐞 Fixes
