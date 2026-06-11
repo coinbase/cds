@@ -63,6 +63,98 @@ The rule catches deprecation markers on the same node types as `no-deprecated-js
 - Class declarations (including members)
 - Export declarations
 
+## no-cds-barrel-imports
+
+Disallows importing from any barrel (`index.*`) file within CDS package source. A barrel re-exports from many modules in one shot, which forces bundlers to load and tree-shake the entire group even when the consumer only needs one export — slowing downstream builds.
+
+The rule catches two distinct patterns:
+
+**Relative barrel imports** (primary case — inside CDS packages): a relative specifier that resolves on disk to an `index.*` file.
+
+```ts
+// packages/mobile/src/overlays/Toast.tsx
+import { Button } from '../buttons'; // resolves to ../buttons/index.ts — flagged
+import { Box } from '../layout'; // resolves to ../layout/index.ts  — flagged
+```
+
+**External package barrel imports**: an import from a `@coinbase/cds-*` package entry point that the consuming workspace's `package.json` declares as a dependency and that resolves to a barrel.
+
+```ts
+import { useTheme } from '@coinbase/cds-common'; // root barrel — flagged
+import { AvatarShape } from '@coinbase/cds-common/types'; // subpath barrel — flagged
+```
+
+Both patterns are covered for all import/export syntaxes:
+
+- `import` / `import type` declarations
+- Side-effect `import '...'`
+- Dynamic `import('...')`
+- `require('...')`
+- `export { ... } from '...'` / `export * from '...'`
+
+### Autofix
+
+The rule is **auto-fixable** for named and default `import` / `export { … } from` statements that target an **external package barrel** (`@coinbase/cds-*`). When applied, the rule resolves each imported name to the leaf module that actually declares it and rewrites the statement to import directly from that subpath. Because one barrel import can pull names from many leaf modules, it is split into as many import statements as there are distinct destination modules:
+
+```ts
+// Before
+import { getWidthInEm, join, useToggler } from '@coinbase/cds-common';
+
+// After (yarn nx run <project>:lint --fix)
+import { getWidthInEm } from '@coinbase/cds-common/utils/getWidthInEm';
+import { join } from '@coinbase/cds-common/utils/join';
+import { useToggler } from '@coinbase/cds-common/hooks/useToggler';
+```
+
+Aliases (`a as b`), whole-statement `import type`, and per-specifier `type` modifiers are all preserved. Resolution is **all-or-nothing per statement**: if any imported name can't be traced to a leaf module (e.g. a name from another package, a namespace import, or an unknown export), the statement is flagged but left unfixed so the autofix never produces a broken import. Side-effect imports, `export *`, dynamic `import()`, and `require()` are flagged but not auto-fixable.
+
+**Relative barrel imports are not auto-fixable** — the correct replacement depends on which specific export from the barrel a file needs, and that intent can't be recovered mechanically. Fix these by hand by changing the specifier to point directly at the leaf file (e.g. `'../buttons/Button'` instead of `'../buttons'`).
+
+To trace names to leaves, the rule resolves the barrel via the package's `exports` map and follows its `export … from` / `export *` graph down to the declaring file. Source files (`src/`) are always preferred over compiled output (`esm/`, `dts/`) so that TypeScript `type`-only exports — which are erased from compiled JS — remain traceable.
+
+### Discovery
+
+**Relative barrels** are detected by resolving the specifier on disk at lint time: if the resolved path matches `index.*`, it's a barrel.
+
+**External package barrels** are detected dynamically. For each file being linted, the rule walks up to the nearest `package.json`, collects all `@coinbase/cds-*` dependencies, and reads each package's `exports` map to find barrel entries.
+
+A package is subject to the external-barrel check only if it declares at least one **subpath** barrel in `exports` (e.g. `"./buttons"` → `./esm/buttons/index.js`). Packages that expose only a root `.` barrel — such as `@coinbase/cds-icons` — are **not** subject to the rule. Wildcard `./*` exports are not themselves barrels and are not blocked, so leaf-module imports like `@coinbase/cds-web/buttons/Button` remain valid.
+
+All resolved data is cached per ESLint process so repeated lint invocations across a workspace do not redo file I/O.
+
+### Scope
+
+In `eslint.config.mjs` the rule is scoped to the **published source** of the three platform packages: `packages/web/src`, `packages/mobile/src`, and `packages/common/src`. Files that aren't shipped in the package build are excluded: stories (`*.stories.*`, `__stories__/`), Figma Code Connect (`*.figma.*`, `__figma__/`), tests (`*.test.*`, `*.spec.*`, `__tests__/`), mocks, and fixtures.
+
+**Invalid:**
+
+```ts
+// Relative barrel (resolves to ../buttons/index.ts)
+import { Button } from '../buttons';
+
+// External root barrel
+import { useTheme } from '@coinbase/cds-common';
+
+// External subpath barrel (declared in @coinbase/cds-common/package.json#exports as "./types")
+import { AvatarShape } from '@coinbase/cds-common/types';
+
+// Re-export from a barrel
+export * from '@coinbase/cds-common/types';
+```
+
+**Valid:**
+
+```ts
+// Relative import that resolves directly to a leaf file
+import { Button } from '../buttons/Button';
+
+// External deep subpath that doesn't match any declared barrel export
+import { ThemeProvider } from '@coinbase/cds-common/theme/ThemeProvider';
+
+// CDS packages without subpath barrels are not subject to the external check
+import { someIcon } from '@coinbase/cds-icons';
+```
+
 ## no-deprecated-jsdoc
 
 Detects JSDoc comments containing `@deprecated` tags. This rule helps identify deprecated code that should be migrated or removed in later, breaking version releases.

@@ -11,6 +11,10 @@
     "build": "rm -rf esm lib dts && tsc && rollup -c"
   },
   "main": "./lib/index.js",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./lib/index.js"
+  },
   "type": "commonjs",
   "files": [
     "dts",
