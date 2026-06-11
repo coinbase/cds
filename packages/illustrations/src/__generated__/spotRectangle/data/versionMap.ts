@@ -240,7 +240,7 @@ const versionMap: Record<SpotRectangleName, number> = {
   instoMargin: 1,
   instoSetupComplete: 1,
   instoApiKey: 1,
-  instoRefreshKey: 0,
+  instoRefreshKey: 1,
   instoConsensusWaitingForApprovals: 0,
   instoKey: 0,
   instoDesignateSigner: 0,

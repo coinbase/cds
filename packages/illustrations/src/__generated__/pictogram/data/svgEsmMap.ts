@@ -1327,7 +1327,7 @@ const svgEsmMap = {
   },
   instoAccount: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAccount-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoAccount-1.js').then((m) => m.default as string),
   },
   instoAddressBook: {
     themeable: () =>
@@ -1335,7 +1335,7 @@ const svgEsmMap = {
   },
   instoAdvancedTradingRebates: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAdvancedTradingRebates-0.js').then(
+      import('../svgJs/esm/themeable/instoAdvancedTradingRebates-1.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1345,7 +1345,7 @@ const svgEsmMap = {
   },
   instoAuthenticatorProgress: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAuthenticatorProgress-0.js').then(
+      import('../svgJs/esm/themeable/instoAuthenticatorProgress-1.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1355,7 +1355,7 @@ const svgEsmMap = {
   },
   instoBorrowingLending: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoBorrowingLending-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoBorrowingLending-1.js').then((m) => m.default as string),
   },
   instoBrowserMultiPlatform: {
     themeable: () =>
@@ -1383,7 +1383,7 @@ const svgEsmMap = {
   },
   instoDecentralizedExchange: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoDecentralizedExchange-1.js').then(
+      import('../svgJs/esm/themeable/instoDecentralizedExchange-2.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1401,11 +1401,11 @@ const svgEsmMap = {
   },
   instoEarnGraph: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEarnGraph-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEarnGraph-1.js').then((m) => m.default as string),
   },
   instoEasyToUse: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEasyToUse-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEasyToUse-1.js').then((m) => m.default as string),
   },
   instoEth: {
     themeable: () =>
@@ -1425,7 +1425,7 @@ const svgEsmMap = {
   },
   instoGem: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoGem-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoGem-1.js').then((m) => m.default as string),
   },
   instoGlobalConnections: {
     themeable: () =>
@@ -1447,7 +1447,7 @@ const svgEsmMap = {
   },
   instoPasswordWalletLocked: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPasswordWalletLocked-0.js').then(
+      import('../svgJs/esm/themeable/instoPasswordWalletLocked-1.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1465,7 +1465,7 @@ const svgEsmMap = {
   },
   instoSecuredAssets: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoSecuredAssets-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoSecuredAssets-1.js').then((m) => m.default as string),
   },
   instoSelfCustodyWallet: {
     themeable: () =>

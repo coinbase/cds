@@ -8,6 +8,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Updated (15)
+
+###### Pictogram (10)
+
+- instoEarnGraph
+- instoAuthenticatorProgress
+- instoBorrowingLending
+- instoAccount
+- instoEasyToUse
+- instoDecentralizedExchange
+- instoAdvancedTradingRebates
+- instoSecuredAssets
+- instoPasswordWalletLocked
+- instoGem
+
+###### SpotRectangle (1)
+
+- instoRefreshKey
+
+###### SpotSquare (4)
+
+- instoEthStakingRewards
+- instoWaiting
+- instoProgressCircle
+- instoAuthenticatorProgress
+
 ## 4.41.0 (6/9/2026 PST)
 
 #### 🚀 Updates
