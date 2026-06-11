@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.3.0 (6/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support tooltip theming. [[#753](https://github.com/coinbase/cds/pull/753)]
+
 ## 9.2.2 (6/10/2026 PST)
 
 #### 🐞 Fixes

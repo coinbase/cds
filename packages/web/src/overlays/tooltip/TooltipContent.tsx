@@ -34,7 +34,7 @@ const textCss = css`
 `;
 
 export type TooltipContentBaseProps = PopperTooltipProps &
-  Pick<BoxBaseProps, 'background' | 'borderRadius' | 'maxWidth' | 'paddingX' | 'paddingY'>;
+  Omit<BoxBaseProps, 'children' | 'gap' | 'pin'>;
 
 export type TooltipContentProps = TooltipContentBaseProps;
 
@@ -54,6 +54,13 @@ export const TooltipContent = memo(
         maxWidth = tooltipMaxWidth,
         paddingX = tooltipPaddingX,
         paddingY = tooltipPaddingY,
+        color = 'fg',
+        font = 'label2',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        ...props
       }: TooltipContentProps,
       ref: React.ForwardedRef<HTMLDivElement>,
     ) => {
@@ -88,9 +95,18 @@ export const TooltipContent = memo(
             paddingX={paddingX}
             paddingY={paddingY}
             role="tooltip"
+            {...props}
           >
             {typeof content === 'string' ? (
-              <Text className={textCss} color="fg" font="label2">
+              <Text
+                className={textCss}
+                color={color}
+                font={font}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                fontWeight={fontWeight}
+                lineHeight={lineHeight}
+              >
                 {content}
               </Text>
             ) : (

@@ -1,5 +1,10 @@
 import React, { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type AccessibilityState, Modal as RNModal, TouchableOpacity, View } from 'react-native';
+import {
+  tooltipMaxWidth,
+  tooltipPaddingX,
+  tooltipPaddingY,
+} from '@coinbase/cds-common/tokens/tooltip';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { InvertedThemeProvider } from '../../system/ThemeProvider';
@@ -38,6 +43,18 @@ export const Tooltip = memo((_props: TooltipProps) => {
     elevation,
     openDelay,
     closeDelay,
+    background = 'bg',
+    borderRadius = 200,
+    maxWidth = tooltipMaxWidth,
+    paddingX = tooltipPaddingX,
+    paddingY = tooltipPaddingY,
+    color = 'fg',
+    font = 'label2',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    ...props
   } = mergedProps;
   const subjectRef = useRef<View | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -176,15 +193,27 @@ export const Tooltip = memo((_props: TooltipProps) => {
         <WrapperComponent>
           <InternalTooltip
             animateIn={animateIn}
+            background={background}
+            borderRadius={borderRadius}
+            color={color}
             content={content}
             elevation={elevation}
+            font={font}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
             gap={gap}
+            lineHeight={lineHeight}
+            maxWidth={maxWidth}
             opacity={opacity}
+            paddingX={paddingX}
+            paddingY={paddingY}
             placement={placement}
             subjectLayout={subjectLayout}
             testID={testID}
             translateY={translateY}
             yShiftByStatusBarHeight={yShiftByStatusBarHeight}
+            {...props}
             {...accessibilityPropsForContent}
           />
         </WrapperComponent>

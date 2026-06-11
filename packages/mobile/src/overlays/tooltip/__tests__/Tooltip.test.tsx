@@ -2,6 +2,8 @@ import { act, fireEvent, render, renderHook, screen } from '@testing-library/rea
 
 import { Button } from '../../../buttons';
 import { useDimensions } from '../../../hooks/useDimensions';
+import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
+import { defaultTheme } from '../../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { Tooltip } from '../Tooltip';
 import type { TooltipPlacement, TooltipProps, UseTooltipPositionParams } from '../TooltipProps';
@@ -35,6 +37,7 @@ const createHookInstance = (options: UseTooltipPositionParams) => {
 
 const contentText = 'Test content';
 const subjectText = 'Open Tooltip';
+const tooltipTestID = 'tooltip-test';
 
 const MockTooltip = ({ children, ...props }: Omit<TooltipProps, 'content'>) => (
   <DefaultThemeProvider>
@@ -125,5 +128,70 @@ describe('Tooltip', () => {
     expect(await screen.findByText(contentText)).toBeTruthy();
 
     jest.useRealTimers();
+  });
+
+  it('applies Tooltip defaults from ComponentConfigProvider', async () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Tooltip: {
+              background: 'bgSecondary',
+              font: 'body',
+              invertColorScheme: false,
+            },
+          }}
+        >
+          <Tooltip
+            accessibilityHint="configured-tooltip"
+            accessibilityLabel="configured-tooltip"
+            content={contentText}
+            testID={tooltipTestID}
+          >
+            <Button>{subjectText}</Button>
+          </Tooltip>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.press(screen.getByAccessibilityHint('configured-tooltip'));
+
+    expect(await screen.findByTestId(tooltipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgSecondary,
+    });
+  });
+
+  it('keeps local Tooltip props higher precedence than provider defaults', async () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Tooltip: {
+              background: 'bgSecondary',
+              font: 'body',
+              invertColorScheme: false,
+            },
+          }}
+        >
+          <Tooltip
+            accessibilityHint="override-tooltip"
+            accessibilityLabel="override-tooltip"
+            background="bgPrimary"
+            content={contentText}
+            font="label2"
+            invertColorScheme={false}
+            testID={tooltipTestID}
+          >
+            <Button>{subjectText}</Button>
+          </Tooltip>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.press(screen.getByAccessibilityHint('override-tooltip'));
+
+    expect(await screen.findByTestId(tooltipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPrimary,
+    });
   });
 });

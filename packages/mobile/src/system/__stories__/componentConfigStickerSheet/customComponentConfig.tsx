@@ -50,6 +50,8 @@ export const customComponentConfig: ComponentConfig = {
   }),
 
   Tooltip: {
+    background: 'bgSecondary',
+    font: 'body',
     invertColorScheme: false,
   },
 
