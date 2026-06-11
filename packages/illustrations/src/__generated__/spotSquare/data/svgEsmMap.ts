@@ -673,7 +673,7 @@ const svgEsmMap = {
   },
   instoAuthenticatorProgress: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAuthenticatorProgress-2.js').then(
+      import('../svgJs/esm/themeable/instoAuthenticatorProgress-3.js').then(
         (m) => m.default as string,
       ),
   },
@@ -687,7 +687,7 @@ const svgEsmMap = {
   },
   instoEthStakingRewards: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEthStakingRewards-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEthStakingRewards-1.js').then((m) => m.default as string),
   },
   instoPixDeposits: {
     themeable: () =>
@@ -699,7 +699,7 @@ const svgEsmMap = {
   },
   instoProgressCircle: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoProgressCircle-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoProgressCircle-1.js').then((m) => m.default as string),
   },
   instoSecurityKey: {
     themeable: () =>
@@ -719,7 +719,7 @@ const svgEsmMap = {
   },
   instoWaiting: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoWaiting-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoWaiting-3.js').then((m) => m.default as string),
   },
   insuranceProtection: {
     themeable: () =>

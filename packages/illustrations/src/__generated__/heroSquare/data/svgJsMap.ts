@@ -1010,9 +1010,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/fileYourCryptoTaxesCheck-6.js').content,
   },
   filter: {
-    light: () => require('../svgJs/cjs/light/filter-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/filter-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/filter-0.js').content,
+    light: () => require('../svgJs/cjs/light/filter-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/filter-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/filter-1.js').content,
   },
   flipStable: {
     light: () => require('../svgJs/cjs/light/flipStable-0.js').content,
@@ -1095,9 +1095,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/governanceMallet-1.js').content,
   },
   graduationCap: {
-    light: () => require('../svgJs/cjs/light/graduationCap-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/graduationCap-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/graduationCap-0.js').content,
+    light: () => require('../svgJs/cjs/light/graduationCap-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/graduationCap-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/graduationCap-1.js').content,
   },
   graphChartTrading: {
     light: () => require('../svgJs/cjs/light/graphChartTrading-0.js').content,
@@ -1431,9 +1431,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/marginWarning-4.js').content,
   },
   mcLoad: {
-    light: () => require('../svgJs/cjs/light/mcLoad-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/mcLoad-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/mcLoad-0.js').content,
+    light: () => require('../svgJs/cjs/light/mcLoad-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/mcLoad-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/mcLoad-1.js').content,
   },
   mic: {
     light: () => require('../svgJs/cjs/light/mic-4.js').content,
@@ -1878,9 +1878,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/shareOnSocialMedia-4.js').content,
   },
   ship: {
-    light: () => require('../svgJs/cjs/light/ship-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/ship-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/ship-0.js').content,
+    light: () => require('../svgJs/cjs/light/ship-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/ship-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/ship-1.js').content,
   },
   sidechain: {
     light: () => require('../svgJs/cjs/light/sidechain-3.js').content,

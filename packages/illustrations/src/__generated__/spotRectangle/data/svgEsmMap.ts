@@ -530,7 +530,7 @@ const svgEsmMap = {
   },
   instoRefreshKey: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoRefreshKey-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoRefreshKey-1.js').then((m) => m.default as string),
   },
   instoSemiCustodial: {
     themeable: () =>

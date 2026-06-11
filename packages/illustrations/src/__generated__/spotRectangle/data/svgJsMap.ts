@@ -636,9 +636,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/instoQRCode-0.js').content,
   },
   instoRefreshKey: {
-    light: () => require('../svgJs/cjs/light/instoRefreshKey-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/instoRefreshKey-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/instoRefreshKey-0.js').content,
+    light: () => require('../svgJs/cjs/light/instoRefreshKey-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/instoRefreshKey-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/instoRefreshKey-1.js').content,
   },
   instoSemiCustodial: {
     light: () => require('../svgJs/cjs/light/instoSemiCustodial-1.js').content,

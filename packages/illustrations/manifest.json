@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-06-09T20:41:40.125Z",
+  "lastUpdated": "2026-06-11T22:05:04.912Z",
   "colors": {
     "light": [
       {
@@ -8,130 +8,16 @@
         "name": "gray-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DC"
-        },
+        "paint": { "type": "solid", "value": "#CED2DC" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
-      },
-      {
-        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
-        "name": "positive",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#3CC28A"
-        },
-        "cssVarSetter": "--illustration-positive",
-        "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
-        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
-        "name": "primary",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FF"
-        },
-        "cssVarSetter": "--illustration-primary",
-        "cssVarGetter": "var(--illustration-primary)"
-      },
-      {
-        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
-        "name": "black",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-black",
-        "cssVarGetter": "var(--illustration-black)"
-      },
-      {
-        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
-        "name": "accent-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
-        "cssVarSetter": "--illustration-accent-2",
-        "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0F"
-        },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
-      },
-      {
-        "key": "fce273f0c64220566930049a74153f19612ecb11",
-        "name": "Dot-Tertiary",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#C8CBD2"
-        },
-        "cssVarSetter": "--illustration-Dot-Tertiary",
-        "cssVarGetter": "var(--illustration-Dot-Tertiary)"
-      },
-      {
-        "key": "e3bebd3c2ca6956662a491ec9745ef66b7f8869b",
-        "name": "Dot-Secondary",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B0CAFF"
-        },
-        "cssVarSetter": "--illustration-Dot-Secondary",
-        "cssVarGetter": "var(--illustration-Dot-Secondary)"
-      },
-      {
-        "key": "d17e6e5a34419ddc9b6bc1606373286a3d53b311",
-        "name": "Dot-Primary",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FE"
-        },
-        "cssVarSetter": "--illustration-Dot-Primary",
-        "cssVarGetter": "var(--illustration-Dot-Primary)"
       },
       {
         "key": "2712067c08bfd1c738125b79013b576ed4193c24",
         "name": "invert",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0E"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0E" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -140,10 +26,7 @@
         "name": "gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DB"
-        },
+        "paint": { "type": "solid", "value": "#CED2DB" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -152,10 +35,7 @@
         "name": "accent-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ED702F"
-        },
+        "paint": { "type": "solid", "value": "#ED702F" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -164,10 +44,7 @@
         "name": "white",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -176,22 +53,25 @@
         "name": "base-gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B1B7C3"
-        },
+        "paint": { "type": "solid", "value": "#B1B7C3" },
         "cssVarSetter": "--illustration-base-gray",
         "cssVarGetter": "var(--illustration-base-gray)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#3CC28A" },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
       },
       {
         "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
         "name": "negative",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
+        "paint": { "type": "solid", "value": "#E13947" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -200,10 +80,7 @@
         "name": "accent-4",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#73A2FF"
-        },
+        "paint": { "type": "solid", "value": "#73A2FF" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -212,12 +89,63 @@
         "name": "accent-1",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFD200"
-        },
+        "paint": { "type": "solid", "value": "#FFD200" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "name": "gray-4",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#C8CBD2" },
+        "cssVarSetter": "--illustration-gray-4",
+        "cssVarGetter": "var(--illustration-gray-4)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#FFFFFE" },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0052FF" },
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0A0B0D" },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
+      },
+      {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#5DE2F8" },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0A0B0F" },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
       }
     ],
     "dark": [
@@ -226,130 +154,16 @@
         "name": "gray-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
-      },
-      {
-        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
-        "name": "positive",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#44C28D"
-        },
-        "cssVarSetter": "--illustration-positive",
-        "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
-        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
-        "name": "primary",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#578BFA"
-        },
-        "cssVarSetter": "--illustration-primary",
-        "cssVarGetter": "var(--illustration-primary)"
-      },
-      {
-        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
-        "name": "black",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-black",
-        "cssVarGetter": "var(--illustration-black)"
-      },
-      {
-        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
-        "name": "accent-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
-        "cssVarSetter": "--illustration-accent-2",
-        "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
-        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
-        "name": "gray-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
-        "cssVarSetter": "--illustration-gray-2",
-        "cssVarGetter": "var(--illustration-gray-2)"
-      },
-      {
-        "key": "fce273f0c64220566930049a74153f19612ecb11",
-        "name": "Dot-Tertiary",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-Dot-Tertiary",
-        "cssVarGetter": "var(--illustration-Dot-Tertiary)"
-      },
-      {
-        "key": "e3bebd3c2ca6956662a491ec9745ef66b7f8869b",
-        "name": "Dot-Secondary",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B0CAFF"
-        },
-        "cssVarSetter": "--illustration-Dot-Secondary",
-        "cssVarGetter": "var(--illustration-Dot-Secondary)"
-      },
-      {
-        "key": "d17e6e5a34419ddc9b6bc1606373286a3d53b311",
-        "name": "Dot-Primary",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FE"
-        },
-        "cssVarSetter": "--illustration-Dot-Primary",
-        "cssVarGetter": "var(--illustration-Dot-Primary)"
       },
       {
         "key": "2712067c08bfd1c738125b79013b576ed4193c24",
         "name": "invert",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -358,10 +172,7 @@
         "name": "gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -370,10 +181,7 @@
         "name": "accent-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F07836"
-        },
+        "paint": { "type": "solid", "value": "#F07836" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -382,10 +190,7 @@
         "name": "white",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -394,22 +199,25 @@
         "name": "base-gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#727886"
-        },
+        "paint": { "type": "solid", "value": "#727886" },
         "cssVarSetter": "--illustration-base-gray",
         "cssVarGetter": "var(--illustration-base-gray)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#44C28D" },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
       },
       {
         "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
         "name": "negative",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
+        "paint": { "type": "solid", "value": "#F0616D" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -418,10 +226,7 @@
         "name": "accent-4",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#84AAFD"
-        },
+        "paint": { "type": "solid", "value": "#84AAFD" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -430,12 +235,63 @@
         "name": "accent-1",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ECD069"
-        },
+        "paint": { "type": "solid", "value": "#ECD069" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "name": "gray-4",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#FFFFFF" },
+        "cssVarSetter": "--illustration-gray-4",
+        "cssVarGetter": "var(--illustration-gray-4)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0A0B0D" },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#578BFA" },
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
+      },
+      {
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "name": "black",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0A0B0D" },
+        "cssVarSetter": "--illustration-black",
+        "cssVarGetter": "var(--illustration-black)"
+      },
+      {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#45D9F5" },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
+      },
+      {
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "name": "gray-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#464B55" },
+        "cssVarSetter": "--illustration-gray-2",
+        "cssVarGetter": "var(--illustration-gray-2)"
       }
     ]
   },
@@ -31628,23 +31484,23 @@
     "28806:69": {
       "type": "spotSquare",
       "name": "instoEthStakingRewards",
-      "hash": "3botCxHzI9t0G2in4itb9fyEtvj2bKmpbQm/Io2P+6Y=",
+      "hash": "DSphHktLuL4lIVzWeecQq0sv3ul1DkoVcVOWgY0OZyo=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, trade, coins, stars, eth2, stacks of coins, graph",
       "createdAt": "2026-03-16T14:55:20.638Z",
-      "lastUpdated": "2026-06-09T20:31:54.251Z",
+      "lastUpdated": "2026-06-11T19:38:49.390Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoEthStakingRewards-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoEthStakingRewards-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoEthStakingRewards-0.js",
-        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoEthStakingRewards-0.js",
-        "pngLight": "./spotSquare/png/light/instoEthStakingRewards-0.png",
-        "pngDark": "./spotSquare/png/dark/instoEthStakingRewards-0.png",
-        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoEthStakingRewards-0.js",
-        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoEthStakingRewards-0.js"
+        "svgLight": "./spotSquare/svg/light/instoEthStakingRewards-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoEthStakingRewards-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoEthStakingRewards-1.js",
+        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoEthStakingRewards-1.js",
+        "pngLight": "./spotSquare/png/light/instoEthStakingRewards-1.png",
+        "pngDark": "./spotSquare/png/dark/instoEthStakingRewards-1.png",
+        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoEthStakingRewards-1.js",
+        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoEthStakingRewards-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:70": {
       "type": "spotSquare",
@@ -31691,23 +31547,23 @@
     "28806:72": {
       "type": "spotSquare",
       "name": "instoWaiting",
-      "hash": "k1OxbtDV4KOtKrSPLlyQmRY8qvxfINN5UNxq7O7HZxE=",
+      "hash": "ac/Y3i3InAS+8HpgVuhF9CjYzdwxNIzwcKCaMKXZDmg=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.072Z",
-      "lastUpdated": "2026-06-09T20:31:53.972Z",
+      "lastUpdated": "2026-06-11T19:38:49.278Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoWaiting-2.svg",
-        "svgDark": "./spotSquare/svg/dark/instoWaiting-2.svg",
-        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoWaiting-2.js",
-        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoWaiting-2.js",
-        "pngLight": "./spotSquare/png/light/instoWaiting-2.png",
-        "pngDark": "./spotSquare/png/dark/instoWaiting-2.png",
-        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoWaiting-2.js",
-        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoWaiting-2.js"
+        "svgLight": "./spotSquare/svg/light/instoWaiting-3.svg",
+        "svgDark": "./spotSquare/svg/dark/instoWaiting-3.svg",
+        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoWaiting-3.js",
+        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoWaiting-3.js",
+        "pngLight": "./spotSquare/png/light/instoWaiting-3.png",
+        "pngDark": "./spotSquare/png/dark/instoWaiting-3.png",
+        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoWaiting-3.js",
+        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoWaiting-3.js"
       },
-      "version": 2
+      "version": 3
     },
     "28806:73": {
       "type": "spotSquare",
@@ -31775,86 +31631,86 @@
     "28806:76": {
       "type": "spotSquare",
       "name": "instoAuthenticatorProgress",
-      "hash": "mU+JmsJXCnNrjE6Vxh45tOQeC++BFgBXGZ2uX57zTxM=",
+      "hash": "i7vB6gQbZ6p30kmCyp5UkWJkXtqyPwzELVe2+4Vu5N8=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.778Z",
-      "lastUpdated": "2026-06-09T20:31:54.115Z",
+      "lastUpdated": "2026-06-11T19:38:49.335Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoAuthenticatorProgress-2.svg",
-        "svgDark": "./spotSquare/svg/dark/instoAuthenticatorProgress-2.svg",
-        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoAuthenticatorProgress-2.js",
-        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoAuthenticatorProgress-2.js",
-        "pngLight": "./spotSquare/png/light/instoAuthenticatorProgress-2.png",
-        "pngDark": "./spotSquare/png/dark/instoAuthenticatorProgress-2.png",
-        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoAuthenticatorProgress-2.js",
-        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoAuthenticatorProgress-2.js"
+        "svgLight": "./spotSquare/svg/light/instoAuthenticatorProgress-3.svg",
+        "svgDark": "./spotSquare/svg/dark/instoAuthenticatorProgress-3.svg",
+        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoAuthenticatorProgress-3.js",
+        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoAuthenticatorProgress-3.js",
+        "pngLight": "./spotSquare/png/light/instoAuthenticatorProgress-3.png",
+        "pngDark": "./spotSquare/png/dark/instoAuthenticatorProgress-3.png",
+        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoAuthenticatorProgress-3.js",
+        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoAuthenticatorProgress-3.js"
       },
-      "version": 2
+      "version": 3
     },
     "28806:77": {
       "type": "pictogram",
       "name": "instoAuthenticatorProgress",
-      "hash": "e3oITDv0bk99hCMmGmv1U0ghU6cW6FtrU/x+dQFTDI8=",
+      "hash": "izC6Mbc1mr4OnwNRbVeQEJ4Gk6he91hOxi7Q9zofynM=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, trust, true, genuine, actual, verification",
       "createdAt": "2026-03-16T14:55:20.974Z",
-      "lastUpdated": "2026-06-09T20:31:54.069Z",
+      "lastUpdated": "2026-06-11T19:38:49.304Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoAuthenticatorProgress-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoAuthenticatorProgress-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoAuthenticatorProgress-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoAuthenticatorProgress-0.js",
-        "pngLight": "./pictogram/png/light/instoAuthenticatorProgress-0.png",
-        "pngDark": "./pictogram/png/dark/instoAuthenticatorProgress-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoAuthenticatorProgress-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoAuthenticatorProgress-0.js"
+        "svgLight": "./pictogram/svg/light/instoAuthenticatorProgress-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoAuthenticatorProgress-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoAuthenticatorProgress-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoAuthenticatorProgress-1.js",
+        "pngLight": "./pictogram/png/light/instoAuthenticatorProgress-1.png",
+        "pngDark": "./pictogram/png/dark/instoAuthenticatorProgress-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoAuthenticatorProgress-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoAuthenticatorProgress-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:78": {
       "type": "pictogram",
       "name": "instoEarnGraph",
-      "hash": "JOTJEHPntynQibmCos3DPdogbQE0JUn0jCqPLRCPlTk=",
+      "hash": "kldbHiEBeJsCrAnRsZsMah9gqaldN0ev2XjVq5CPfC0=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.698Z",
-      "lastUpdated": "2026-06-09T20:31:54.224Z",
+      "lastUpdated": "2026-06-11T19:38:49.373Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoEarnGraph-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoEarnGraph-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoEarnGraph-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoEarnGraph-0.js",
-        "pngLight": "./pictogram/png/light/instoEarnGraph-0.png",
-        "pngDark": "./pictogram/png/dark/instoEarnGraph-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoEarnGraph-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoEarnGraph-0.js"
+        "svgLight": "./pictogram/svg/light/instoEarnGraph-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoEarnGraph-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoEarnGraph-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoEarnGraph-1.js",
+        "pngLight": "./pictogram/png/light/instoEarnGraph-1.png",
+        "pngDark": "./pictogram/png/dark/instoEarnGraph-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoEarnGraph-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoEarnGraph-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:79": {
       "type": "pictogram",
       "name": "instoPasswordWalletLocked",
-      "hash": "trIAMAeOpji4noji4wXm+r6N5wy8n0Ni1uMgbj9A7t0=",
+      "hash": "PyBqUCX2EbEmBcNOoJnmwscookZmqRMy87I5FYhFMRY=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, circle, square, blue",
       "createdAt": "2026-03-16T14:55:20.841Z",
-      "lastUpdated": "2026-06-09T20:31:54.229Z",
+      "lastUpdated": "2026-06-11T19:38:49.379Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoPasswordWalletLocked-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoPasswordWalletLocked-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoPasswordWalletLocked-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoPasswordWalletLocked-0.js",
-        "pngLight": "./pictogram/png/light/instoPasswordWalletLocked-0.png",
-        "pngDark": "./pictogram/png/dark/instoPasswordWalletLocked-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoPasswordWalletLocked-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoPasswordWalletLocked-0.js"
+        "svgLight": "./pictogram/svg/light/instoPasswordWalletLocked-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoPasswordWalletLocked-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoPasswordWalletLocked-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoPasswordWalletLocked-1.js",
+        "pngLight": "./pictogram/png/light/instoPasswordWalletLocked-1.png",
+        "pngDark": "./pictogram/png/dark/instoPasswordWalletLocked-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoPasswordWalletLocked-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoPasswordWalletLocked-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:80": {
       "type": "pictogram",
@@ -31964,44 +31820,44 @@
     "28806:85": {
       "type": "pictogram",
       "name": "instoBorrowingLending",
-      "hash": "MiuI220vc0n0tUYnEZAzANewq6MIBmzMTISYrJIMZ/c=",
+      "hash": "n+xaXrtVeAD/hBU+i4LoG58ZrtMlY509trMxJk0Ji3g=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.691Z",
-      "lastUpdated": "2026-06-09T20:31:54.221Z",
+      "lastUpdated": "2026-06-11T19:38:49.368Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoBorrowingLending-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoBorrowingLending-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoBorrowingLending-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoBorrowingLending-0.js",
-        "pngLight": "./pictogram/png/light/instoBorrowingLending-0.png",
-        "pngDark": "./pictogram/png/dark/instoBorrowingLending-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoBorrowingLending-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoBorrowingLending-0.js"
+        "svgLight": "./pictogram/svg/light/instoBorrowingLending-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoBorrowingLending-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoBorrowingLending-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoBorrowingLending-1.js",
+        "pngLight": "./pictogram/png/light/instoBorrowingLending-1.png",
+        "pngDark": "./pictogram/png/dark/instoBorrowingLending-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoBorrowingLending-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoBorrowingLending-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:86": {
       "type": "pictogram",
       "name": "instoAdvancedTradingRebates",
-      "hash": "6dpKbde9GVMGsxt1gyvzHd90xFXvK4ioxKtUF9p0oBU=",
+      "hash": "EjLaU+89YRgAvuCZ5g5SwzDS6igfiIWTLYlVeynXGpw=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, return, exchange, rebate, crypto",
       "createdAt": "2026-03-16T14:55:20.542Z",
-      "lastUpdated": "2026-06-09T20:31:54.003Z",
+      "lastUpdated": "2026-06-11T19:38:49.291Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoAdvancedTradingRebates-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoAdvancedTradingRebates-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoAdvancedTradingRebates-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoAdvancedTradingRebates-0.js",
-        "pngLight": "./pictogram/png/light/instoAdvancedTradingRebates-0.png",
-        "pngDark": "./pictogram/png/dark/instoAdvancedTradingRebates-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoAdvancedTradingRebates-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoAdvancedTradingRebates-0.js"
+        "svgLight": "./pictogram/svg/light/instoAdvancedTradingRebates-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoAdvancedTradingRebates-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoAdvancedTradingRebates-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoAdvancedTradingRebates-1.js",
+        "pngLight": "./pictogram/png/light/instoAdvancedTradingRebates-1.png",
+        "pngDark": "./pictogram/png/dark/instoAdvancedTradingRebates-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoAdvancedTradingRebates-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoAdvancedTradingRebates-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:87": {
       "type": "pictogram",
@@ -32069,23 +31925,23 @@
     "28806:90": {
       "type": "pictogram",
       "name": "instoGem",
-      "hash": "Fsnay78eBYjlv15x+nrA3tixMHUr94fvsDBmu+wY09I=",
+      "hash": "H2m+7d3b1D8rugQOk6srkNRERcy6RbOlM6tBiWl0Ubc=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, diamond, reward, sparkle, earn, crystal, 💎, 💍, ✨, ❇️",
       "createdAt": "2026-03-16T14:55:20.579Z",
-      "lastUpdated": "2026-06-09T20:31:54.247Z",
+      "lastUpdated": "2026-06-11T19:38:49.384Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoGem-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoGem-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoGem-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoGem-0.js",
-        "pngLight": "./pictogram/png/light/instoGem-0.png",
-        "pngDark": "./pictogram/png/dark/instoGem-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoGem-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoGem-0.js"
+        "svgLight": "./pictogram/svg/light/instoGem-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoGem-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoGem-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoGem-1.js",
+        "pngLight": "./pictogram/png/light/instoGem-1.png",
+        "pngDark": "./pictogram/png/dark/instoGem-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoGem-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoGem-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:91": {
       "type": "pictogram",
@@ -32153,23 +32009,23 @@
     "28806:94": {
       "type": "pictogram",
       "name": "instoAccount",
-      "hash": "J9sFS+GPrHdgQ0zcKovhbyaia0WO7N6V42YFdvvkcEw=",
+      "hash": "Xx/OWOyafzjKKJbgiDUOK975cAzc94URu8y0bfzoVYs=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.607Z",
-      "lastUpdated": "2026-06-09T20:31:54.140Z",
+      "lastUpdated": "2026-06-11T19:38:49.350Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoAccount-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoAccount-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoAccount-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoAccount-0.js",
-        "pngLight": "./pictogram/png/light/instoAccount-0.png",
-        "pngDark": "./pictogram/png/dark/instoAccount-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoAccount-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoAccount-0.js"
+        "svgLight": "./pictogram/svg/light/instoAccount-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoAccount-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoAccount-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoAccount-1.js",
+        "pngLight": "./pictogram/png/light/instoAccount-1.png",
+        "pngDark": "./pictogram/png/dark/instoAccount-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoAccount-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoAccount-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28806:95": {
       "type": "pictogram",
@@ -32426,23 +32282,23 @@
     "28897:135": {
       "type": "pictogram",
       "name": "instoSecuredAssets",
-      "hash": "EYSVx2WR7xVeb2tLuCJdroF9HUsRVjz3OT/Ys/zNDqw=",
+      "hash": "O3P78imY5JhZleSZw7IlnuK306lczIKKEOwdZ8z5JiY=",
       "width": 48,
       "height": 48,
       "description": "circle, yellow, blue, coin, secure, storage",
       "createdAt": "2026-03-18T17:25:34.687Z",
-      "lastUpdated": "2026-06-09T20:31:54.215Z",
+      "lastUpdated": "2026-06-11T19:38:49.362Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoSecuredAssets-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoSecuredAssets-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoSecuredAssets-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoSecuredAssets-0.js",
-        "pngLight": "./pictogram/png/light/instoSecuredAssets-0.png",
-        "pngDark": "./pictogram/png/dark/instoSecuredAssets-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoSecuredAssets-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoSecuredAssets-0.js"
+        "svgLight": "./pictogram/svg/light/instoSecuredAssets-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoSecuredAssets-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoSecuredAssets-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoSecuredAssets-1.js",
+        "pngLight": "./pictogram/png/light/instoSecuredAssets-1.png",
+        "pngDark": "./pictogram/png/dark/instoSecuredAssets-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoSecuredAssets-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoSecuredAssets-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28897:153": {
       "type": "pictogram",
@@ -32468,44 +32324,44 @@
     "28897:159": {
       "type": "pictogram",
       "name": "instoEasyToUse",
-      "hash": "6KwoD0pi1wrigmj/XcvU2aBbSV7Ok2KDIjMeAYz1bFc=",
+      "hash": "bTwE1vnOSIRYViuVCWfIgCs/2+RwgBWWwJkX7OR0364=",
       "width": 48,
       "height": 48,
       "description": "diamond, reward, sparkle, earn, crystal, 💎, 💍, ✨,  ❇️",
       "createdAt": "2026-03-18T17:25:34.682Z",
-      "lastUpdated": "2026-06-09T20:31:54.254Z",
+      "lastUpdated": "2026-06-11T19:38:49.396Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoEasyToUse-0.svg",
-        "svgDark": "./pictogram/svg/dark/instoEasyToUse-0.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoEasyToUse-0.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoEasyToUse-0.js",
-        "pngLight": "./pictogram/png/light/instoEasyToUse-0.png",
-        "pngDark": "./pictogram/png/dark/instoEasyToUse-0.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoEasyToUse-0.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoEasyToUse-0.js"
+        "svgLight": "./pictogram/svg/light/instoEasyToUse-1.svg",
+        "svgDark": "./pictogram/svg/dark/instoEasyToUse-1.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoEasyToUse-1.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoEasyToUse-1.js",
+        "pngLight": "./pictogram/png/light/instoEasyToUse-1.png",
+        "pngDark": "./pictogram/png/dark/instoEasyToUse-1.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoEasyToUse-1.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoEasyToUse-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28897:172": {
       "type": "spotSquare",
       "name": "instoProgressCircle",
-      "hash": "f/lRRsR85ZYInXIf91zqyxt7uyBnB58L51g+I/VHHUA=",
+      "hash": "OZIIgmBxQnSUvVUxkEdLyLmNPOkJRTvyKCBw5/E7cV0=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-18T17:25:34.676Z",
-      "lastUpdated": "2026-06-09T20:32:10.227Z",
+      "lastUpdated": "2026-06-11T19:38:49.263Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/instoProgressCircle-0.svg",
-        "svgDark": "./spotSquare/svg/dark/instoProgressCircle-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoProgressCircle-0.js",
-        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoProgressCircle-0.js",
-        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoProgressCircle-0.js",
-        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoProgressCircle-0.js",
-        "pngLight": "./spotSquare/png/light/instoProgressCircle-0.png",
-        "pngDark": "./spotSquare/png/dark/instoProgressCircle-0.png"
+        "svgLight": "./spotSquare/svg/light/instoProgressCircle-1.svg",
+        "svgDark": "./spotSquare/svg/dark/instoProgressCircle-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/cjs/light/instoProgressCircle-1.js",
+        "svgJsDark": "./spotSquare/svgJs/cjs/dark/instoProgressCircle-1.js",
+        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/instoProgressCircle-1.js",
+        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/instoProgressCircle-1.js",
+        "pngLight": "./spotSquare/png/light/instoProgressCircle-1.png",
+        "pngDark": "./spotSquare/png/dark/instoProgressCircle-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "28897:183": {
       "type": "pictogram",
@@ -32573,23 +32429,23 @@
     "28897:213": {
       "type": "pictogram",
       "name": "instoDecentralizedExchange",
-      "hash": "j8q+ChwIfvT5KEwY6oYWkmJwWD0npCKFeAE0zqLX1rk=",
+      "hash": "C8aE1wfQnElV5RcJkpNNUlo+nTrqgO6K5yUXffDKCJI=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.615Z",
-      "lastUpdated": "2026-06-09T20:31:53.871Z",
+      "lastUpdated": "2026-06-11T19:38:49.272Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instoDecentralizedExchange-1.svg",
-        "svgDark": "./pictogram/svg/dark/instoDecentralizedExchange-1.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/instoDecentralizedExchange-1.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoDecentralizedExchange-1.js",
-        "pngLight": "./pictogram/png/light/instoDecentralizedExchange-1.png",
-        "pngDark": "./pictogram/png/dark/instoDecentralizedExchange-1.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoDecentralizedExchange-1.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoDecentralizedExchange-1.js"
+        "svgLight": "./pictogram/svg/light/instoDecentralizedExchange-2.svg",
+        "svgDark": "./pictogram/svg/dark/instoDecentralizedExchange-2.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/instoDecentralizedExchange-2.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/instoDecentralizedExchange-2.js",
+        "pngLight": "./pictogram/png/light/instoDecentralizedExchange-2.png",
+        "pngDark": "./pictogram/png/dark/instoDecentralizedExchange-2.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/instoDecentralizedExchange-2.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/instoDecentralizedExchange-2.js"
       },
-      "version": 1
+      "version": 2
     },
     "28932:405": {
       "type": "spotIcon",
@@ -33292,7 +33148,7 @@
       "height": 120,
       "description": "API, key, access, account, connect, unlock, gain, trust",
       "createdAt": "2026-03-20T17:10:13.588Z",
-      "lastUpdated": "2026-06-09T20:31:53.822Z",
+      "lastUpdated": "2026-06-11T19:38:49.254Z",
       "outputs": {
         "svgLight": "./spotRectangle/svg/light/instoApiKey-1.svg",
         "svgDark": "./spotRectangle/svg/dark/instoApiKey-1.svg",
@@ -33308,23 +33164,23 @@
     "28956:112": {
       "type": "spotRectangle",
       "name": "instoRefreshKey",
-      "hash": "4mQkdXQASFAqdwOek6T0YMDneh6uKy08a2RxtT+lgu4=",
+      "hash": "Ttlf5kzhqaXdaEePGZnSQ2Sngc/zGO4HXL+RiXjq8nc=",
       "width": 240,
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.592Z",
-      "lastUpdated": "2026-06-09T20:31:54.035Z",
+      "lastUpdated": "2026-06-11T19:38:49.297Z",
       "outputs": {
-        "svgLight": "./spotRectangle/svg/light/instoRefreshKey-0.svg",
-        "svgDark": "./spotRectangle/svg/dark/instoRefreshKey-0.svg",
-        "svgJsLight": "./spotRectangle/svgJs/cjs/light/instoRefreshKey-0.js",
-        "svgJsDark": "./spotRectangle/svgJs/cjs/dark/instoRefreshKey-0.js",
-        "pngLight": "./spotRectangle/png/light/instoRefreshKey-0.png",
-        "pngDark": "./spotRectangle/png/dark/instoRefreshKey-0.png",
-        "svgJsThemed": "./spotRectangle/svgJs/cjs/themeable/instoRefreshKey-0.js",
-        "svgEsmThemed": "./spotRectangle/svgJs/esm/themeable/instoRefreshKey-0.js"
+        "svgLight": "./spotRectangle/svg/light/instoRefreshKey-1.svg",
+        "svgDark": "./spotRectangle/svg/dark/instoRefreshKey-1.svg",
+        "svgJsLight": "./spotRectangle/svgJs/cjs/light/instoRefreshKey-1.js",
+        "svgJsDark": "./spotRectangle/svgJs/cjs/dark/instoRefreshKey-1.js",
+        "pngLight": "./spotRectangle/png/light/instoRefreshKey-1.png",
+        "pngDark": "./spotRectangle/png/dark/instoRefreshKey-1.png",
+        "svgJsThemed": "./spotRectangle/svgJs/cjs/themeable/instoRefreshKey-1.js",
+        "svgEsmThemed": "./spotRectangle/svgJs/esm/themeable/instoRefreshKey-1.js"
       },
-      "version": 0
+      "version": 1
     },
     "28956:134": {
       "type": "spotRectangle",
@@ -33602,86 +33458,86 @@
     "30611:11214": {
       "type": "heroSquare",
       "name": "filter",
-      "hash": "v9VgClJr3Y8Cyb5ir4sax+6/2ksEicQTB6wKJBmpGYA=",
+      "hash": "SguVU6itV2/c2mpDN6htioQESYinIS5r53a6zMOxrZA=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:04.269Z",
-      "lastUpdated": "2026-06-08T19:45:04.269Z",
+      "lastUpdated": "2026-06-11T21:55:20.977Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/filter-0.svg",
-        "svgDark": "./heroSquare/svg/dark/filter-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/cjs/light/filter-0.js",
-        "svgJsDark": "./heroSquare/svgJs/cjs/dark/filter-0.js",
-        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/filter-0.js",
-        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/filter-0.js",
-        "pngLight": "./heroSquare/png/light/filter-0.png",
-        "pngDark": "./heroSquare/png/dark/filter-0.png"
+        "svgLight": "./heroSquare/svg/light/filter-1.svg",
+        "svgDark": "./heroSquare/svg/dark/filter-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/filter-1.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/filter-1.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/filter-1.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/filter-1.js",
+        "pngLight": "./heroSquare/png/light/filter-1.png",
+        "pngDark": "./heroSquare/png/dark/filter-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "30611:11215": {
       "type": "heroSquare",
       "name": "graduationCap",
-      "hash": "7nYe1Lad0dI7h+XKIhUcnnX3IuN9WZGZWgdRWQcAc08=",
+      "hash": "DepduFVN3V2O5NHvrry9g9dlMUpgCmVNCvXUX4ovK1k=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:04.263Z",
-      "lastUpdated": "2026-06-08T19:45:04.263Z",
+      "lastUpdated": "2026-06-11T21:55:20.956Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/graduationCap-0.svg",
-        "svgDark": "./heroSquare/svg/dark/graduationCap-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/cjs/light/graduationCap-0.js",
-        "svgJsDark": "./heroSquare/svgJs/cjs/dark/graduationCap-0.js",
-        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/graduationCap-0.js",
-        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/graduationCap-0.js",
-        "pngLight": "./heroSquare/png/light/graduationCap-0.png",
-        "pngDark": "./heroSquare/png/dark/graduationCap-0.png"
+        "svgLight": "./heroSquare/svg/light/graduationCap-1.svg",
+        "svgDark": "./heroSquare/svg/dark/graduationCap-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/graduationCap-1.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/graduationCap-1.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/graduationCap-1.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/graduationCap-1.js",
+        "pngLight": "./heroSquare/png/light/graduationCap-1.png",
+        "pngDark": "./heroSquare/png/dark/graduationCap-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "30611:11216": {
       "type": "heroSquare",
       "name": "ship",
-      "hash": "wTHZLHyD2uHSiUoIO0sg8ZM3gAO4V02rqyMUFdOOAog=",
+      "hash": "gGDWr2HSqtWEUFigmvduQDmlwEHKy+sXWF16N7spwqQ=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:04.256Z",
-      "lastUpdated": "2026-06-08T19:45:04.256Z",
+      "lastUpdated": "2026-06-11T21:55:20.965Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/ship-0.svg",
-        "svgDark": "./heroSquare/svg/dark/ship-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/cjs/light/ship-0.js",
-        "svgJsDark": "./heroSquare/svgJs/cjs/dark/ship-0.js",
-        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/ship-0.js",
-        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/ship-0.js",
-        "pngLight": "./heroSquare/png/light/ship-0.png",
-        "pngDark": "./heroSquare/png/dark/ship-0.png"
+        "svgLight": "./heroSquare/svg/light/ship-1.svg",
+        "svgDark": "./heroSquare/svg/dark/ship-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/ship-1.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/ship-1.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/ship-1.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/ship-1.js",
+        "pngLight": "./heroSquare/png/light/ship-1.png",
+        "pngDark": "./heroSquare/png/dark/ship-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "30611:11217": {
       "type": "heroSquare",
       "name": "mcLoad",
-      "hash": "z3Dpr0VVbaetZVVymyuLIgobefW/x0Pj7KUysDln/QQ=",
+      "hash": "VHMGeOlBuArgTSUiAJuI02nZ2fzs5MhSayx7apyVzCw=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:49.186Z",
-      "lastUpdated": "2026-06-08T19:45:49.186Z",
+      "lastUpdated": "2026-06-11T21:55:20.971Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/mcLoad-0.svg",
-        "svgDark": "./heroSquare/svg/dark/mcLoad-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/cjs/light/mcLoad-0.js",
-        "svgJsDark": "./heroSquare/svgJs/cjs/dark/mcLoad-0.js",
-        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/mcLoad-0.js",
-        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/mcLoad-0.js",
-        "pngLight": "./heroSquare/png/light/mcLoad-0.png",
-        "pngDark": "./heroSquare/png/dark/mcLoad-0.png"
+        "svgLight": "./heroSquare/svg/light/mcLoad-1.svg",
+        "svgDark": "./heroSquare/svg/dark/mcLoad-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/mcLoad-1.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/mcLoad-1.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/mcLoad-1.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/mcLoad-1.js",
+        "pngLight": "./heroSquare/png/light/mcLoad-1.png",
+        "pngDark": "./heroSquare/png/dark/mcLoad-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "30639:87": {
       "type": "spotIcon",

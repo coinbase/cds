@@ -446,10 +446,10 @@ const versionMap: Record<HeroSquareName, number> = {
   flipStable: 0,
   cbmega: 0,
   genniusLaunch: 0,
-  ship: 0,
-  graduationCap: 0,
-  filter: 0,
-  mcLoad: 0,
+  ship: 1,
+  graduationCap: 1,
+  filter: 1,
+  mcLoad: 1,
 };
 
 export default versionMap;

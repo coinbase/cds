@@ -831,7 +831,7 @@ const svgEsmMap = {
       ),
   },
   filter: {
-    themeable: () => import('../svgJs/esm/themeable/filter-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/filter-1.js').then((m) => m.default as string),
   },
   flipStable: {
     themeable: () =>
@@ -896,7 +896,7 @@ const svgEsmMap = {
   },
   graduationCap: {
     themeable: () =>
-      import('../svgJs/esm/themeable/graduationCap-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/graduationCap-1.js').then((m) => m.default as string),
   },
   graphChartTrading: {
     themeable: () =>
@@ -1175,7 +1175,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/marginWarning-4.js').then((m) => m.default as string),
   },
   mcLoad: {
-    themeable: () => import('../svgJs/esm/themeable/mcLoad-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/mcLoad-1.js').then((m) => m.default as string),
   },
   mic: {
     themeable: () => import('../svgJs/esm/themeable/mic-4.js').then((m) => m.default as string),
@@ -1525,7 +1525,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/shareOnSocialMedia-4.js').then((m) => m.default as string),
   },
   ship: {
-    themeable: () => import('../svgJs/esm/themeable/ship-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/ship-1.js').then((m) => m.default as string),
   },
   sidechain: {
     themeable: () =>
