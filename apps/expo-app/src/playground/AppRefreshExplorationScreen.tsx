@@ -13,6 +13,7 @@ import { ComponentConfigProvider } from '@coinbase/cds-mobile/system/ComponentCo
 import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
+import { AssetExploration } from './appRefresh/AssetExploration';
 import { GradientBorderButton } from './appRefresh/GradientBorderButton';
 import { MatchCarousel } from './appRefresh/MatchCarousel';
 import { PriceChart } from './appRefresh/PriceChart';
@@ -155,6 +156,9 @@ export const AppRefreshExplorationScreen = memo(() => {
               <Switch checked={checked} onChange={() => setChecked(!checked)}>
                 Testing switch
               </Switch>
+            </ComponentExploration>
+            <ComponentExploration componentName="Box/Containers">
+              <AssetExploration />
             </ComponentExploration>
           </VStack>
         </ScrollView>
