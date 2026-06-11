@@ -2,6 +2,7 @@ import React, { memo, useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Accordion, AccordionItem } from '@coinbase/cds-mobile/accordion';
+import { Button } from '@coinbase/cds-mobile/buttons';
 import { MessagingCard } from '@coinbase/cds-mobile/cards';
 import { Switch } from '@coinbase/cds-mobile/controls/Switch';
 import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
@@ -55,6 +56,12 @@ export const AppRefreshExplorationScreen = memo(() => {
         const { activeColorScheme } = useTheme();
         return {
           shape: activeColorScheme === 'light' ? 'square' : 'circle',
+        };
+      },
+      Button: (props) => {
+        return {
+          paddingY: props.compact ? 0.5 : 1,
+          fontSize: 'label2',
         };
       },
       Switch: (props) => {
@@ -159,6 +166,12 @@ export const AppRefreshExplorationScreen = memo(() => {
             </ComponentExploration>
             <ComponentExploration componentName="Box/Containers">
               <AssetExploration />
+            </ComponentExploration>
+            <ComponentExploration componentName="Button">
+              <Button variant="primary">Button</Button>
+              <Button compact variant="primary">
+                Compact Button
+              </Button>
             </ComponentExploration>
           </VStack>
         </ScrollView>
