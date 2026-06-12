@@ -27,6 +27,17 @@ export const InternalTooltip = memo(function InternalTooltip({
   onAccessibilityEscape,
   onAccessibilityTap,
   elevation,
+  background = 'bg',
+  borderRadius = 200,
+  maxWidth = tooltipMaxWidth,
+  paddingX = tooltipPaddingX,
+  paddingY = tooltipPaddingY,
+  color = 'fg',
+  font = 'label2',
+  fontFamily,
+  fontSize,
+  fontWeight,
+  lineHeight,
   ...props
 }: InternalTooltipProps) {
   const theme = useTheme();
@@ -70,13 +81,13 @@ export const InternalTooltip = memo(function InternalTooltip({
     >
       <Box
         animated
-        background="bg"
-        borderRadius={200}
+        background={background}
+        borderRadius={borderRadius}
         elevation={elevation}
-        maxWidth={tooltipMaxWidth}
+        maxWidth={maxWidth}
         opacity={opacity}
-        paddingX={tooltipPaddingX}
-        paddingY={tooltipPaddingY}
+        paddingX={paddingX}
+        paddingY={paddingY}
         style={{
           transform: [
             {
@@ -88,7 +99,14 @@ export const InternalTooltip = memo(function InternalTooltip({
         {...props}
       >
         {typeof content === 'string' ? (
-          <Text color="fg" font="label2">
+          <Text
+            color={color}
+            font={font}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
+            lineHeight={lineHeight}
+          >
             {content}
           </Text>
         ) : (

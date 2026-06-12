@@ -39,6 +39,7 @@ import { TableExample } from './examples/TableExample';
 import { TabsExample } from './examples/Tabs';
 import { TextInputExample } from './examples/TextInput';
 import { ToastExample } from './examples/ToastExample';
+import { TooltipExample } from './examples/TooltipExample';
 import { Container } from './Container';
 import { bannerVariants, buttonVariants, tagColorSchemes } from './themeVars';
 
@@ -155,11 +156,12 @@ export const StickerSheet = memo(() => {
             />
           </Container>
 
-          <Container title="Dropdown / Modal / Alert / Toast">
+          <Container title="Dropdown / Modal / Alert / Toast / Tooltip">
             <DropdownExample />
             <ModalExample />
             <AlertExample />
             <ToastExample />
+            <TooltipExample />
           </Container>
 
           <Container title="TableHeader / TableCell">

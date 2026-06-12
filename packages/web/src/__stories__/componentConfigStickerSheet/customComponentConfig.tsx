@@ -1,5 +1,3 @@
-import { Text } from '@coinbase/cds-web/typography/Text';
-
 import type { ComponentConfig } from '../../core/componentConfig';
 
 export const customComponentConfig: ComponentConfig = {
@@ -53,6 +51,8 @@ export const customComponentConfig: ComponentConfig = {
   }),
 
   Tooltip: {
+    background: 'bgSecondary',
+    font: 'body',
     invertColorScheme: false,
   },
 
