@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Animated, Modal as RNModal } from 'react-native';
+import { Animated, Modal as RNModal, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
@@ -384,5 +384,24 @@ describe('Modal', () => {
 
     expect(screen.getByLabelText('Back')).toBeTruthy();
     expect(screen.getByHintText('Back button hint')).toBeTruthy();
+  });
+
+  it('forwards the dialog styles slot to the modal surface', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Modal styles={{ dialog: { borderTopWidth: 7 } }} visible onRequestClose={jest.fn()}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const hasForwardedStyle = screen.UNSAFE_getAllByType(Animated.View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return flattened?.borderTopWidth === 7;
+    });
+
+    expect(hasForwardedStyle).toBe(true);
   });
 });

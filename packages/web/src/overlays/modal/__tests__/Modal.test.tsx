@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { Button } from '../../../buttons';
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider } from '../../../utils/test';
-import { Modal, type ModalProps } from '../Modal';
+import { Modal, modalClassNames, type ModalProps } from '../Modal';
 import { ModalBody } from '../ModalBody';
 import { ModalFooter } from '../ModalFooter';
 import { ModalHeader, type ModalHeaderProps } from '../ModalHeader';
@@ -498,5 +498,48 @@ describe('Modal', () => {
     fireEvent.click(screen.getByRole('button'));
 
     expect(screen.getByLabelText('Back')).toHaveAccessibleDescription('Back button hint');
+  });
+});
+
+describe('Modal styles API', () => {
+  const renderStyledModal = (props: Partial<Pick<ModalProps, 'styles' | 'classNames'>> = {}) =>
+    render(
+      <DefaultThemeProvider>
+        <Modal disablePortal visible onRequestClose={jest.fn()} {...props}>
+          <ModalHeader title="Styled" />
+        </Modal>
+      </DefaultThemeProvider>,
+    );
+
+  it('applies static class names to root and dialog', () => {
+    renderStyledModal();
+
+    const root = screen.getByRole('dialog');
+    expect(root).toHaveClass(modalClassNames.root);
+    expect(root.querySelector(`.${modalClassNames.dialog}`)).toBeInTheDocument();
+  });
+
+  it('applies the classNames slot to root and dialog', () => {
+    renderStyledModal({ classNames: { root: 'custom-root', dialog: 'custom-dialog' } });
+
+    const root = screen.getByRole('dialog');
+    expect(root).toHaveClass('custom-root');
+    expect(root.querySelector('.custom-dialog')).toBeInTheDocument();
+  });
+
+  it('applies the styles slot to root and dialog', () => {
+    renderStyledModal({ styles: { root: { outlineWidth: 3 }, dialog: { borderRadius: 16 } } });
+
+    const root = screen.getByRole('dialog');
+    expect(root).toHaveStyle({ outlineWidth: '3px' });
+    expect(root.querySelector(`.${modalClassNames.dialog}`)).toHaveStyle({ borderRadius: '16px' });
+  });
+
+  it('applies appearance styles to the dialog card, not the root container', () => {
+    renderStyledModal({ styles: { dialog: { borderRadius: 24 } } });
+
+    const root = screen.getByRole('dialog');
+    expect(root).not.toHaveStyle({ borderRadius: '24px' });
+    expect(root.querySelector(`.${modalClassNames.dialog}`)).toHaveStyle({ borderRadius: '24px' });
   });
 });
