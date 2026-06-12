@@ -14,6 +14,7 @@ import type { CardBaseProps } from '../cards/Card';
 import type { CardBodyBaseProps } from '../cards/CardBody';
 import type { CardFooterBaseProps } from '../cards/CardFooter';
 import type { LikeButtonBaseProps } from '../cards/LikeButton';
+import type { MediaCardBaseProps } from '../cards/MediaCard';
 import type { MessagingCardBaseProps } from '../cards/MessagingCard';
 import type { CarouselBaseProps } from '../carousel/Carousel';
 import type { CellBaseProps } from '../cells/Cell';
@@ -128,6 +129,7 @@ export type ComponentConfig = {
   Link?: ConfigResolver<LinkBaseProps>;
   ListCell?: ConfigResolver<ListCellBaseProps>;
   ListCellFallback?: ConfigResolver<ListCellFallbackBaseProps>;
+  MediaCard?: ConfigResolver<MediaCardBaseProps>;
   MediaChip?: ConfigResolver<MediaChipBaseProps>;
   MessagingCard?: ConfigResolver<MessagingCardBaseProps>;
   Modal?: ConfigResolver<ModalBaseProps>;
