@@ -18,6 +18,7 @@ import { AssetExploration } from './appRefresh/AssetExploration';
 import { GradientBorderButton } from './appRefresh/GradientBorderButton';
 import { MatchCarousel } from './appRefresh/MatchCarousel';
 import { PriceChart } from './appRefresh/PriceChart';
+import { TabbedChips } from './appRefresh/TabbedChips';
 
 function ComponentExploration({
   componentName,
@@ -172,6 +173,9 @@ export const AppRefreshExplorationScreen = memo(() => {
               <Button compact variant="primary">
                 Compact Button
               </Button>
+            </ComponentExploration>
+            <ComponentExploration componentName="TabbedChips">
+              <TabbedChips />
             </ComponentExploration>
           </VStack>
         </ScrollView>
