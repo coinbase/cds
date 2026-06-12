@@ -1,10 +1,10 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import { Group, Skia, usePathInterpolation } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getStackGroups } from '../utils';
+import { getStackGroups } from '../utils/bar';
 import { buildTransition, instantTransition } from '../utils/transition';
 
 import type { BarSeries } from './BarStack';

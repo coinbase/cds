@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import type { Placement } from '@coinbase/cds-common/types';
+import type { Placement } from '@coinbase/cds-common/types/Placement';
 import { isStorybook } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 import type { MotionStyle } from 'framer-motion';

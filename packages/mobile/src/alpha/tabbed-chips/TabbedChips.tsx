@@ -1,15 +1,18 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { ScrollView, type StyleProp, type View, type ViewStyle } from 'react-native';
-import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { Box, type BoxProps, OverflowGradient } from '../../layout';
-import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs';
+import { Box, type BoxProps } from '../../layout/Box';
+import { OverflowGradient } from '../../layout/OverflowGradient';
+import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs/Tabs';
 
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',

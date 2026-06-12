@@ -1,11 +1,13 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { type SharedProps } from '@coinbase/cds-common';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Icon } from '../icons';
-import { type BoxBaseProps, HStack, VStack, type VStackProps } from '../layout';
+import { Icon } from '../icons/Icon';
+import { type BoxBaseProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack, type VStackProps } from '../layout/VStack';
 import { type HapticFeedbackType, Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 

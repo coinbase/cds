@@ -1,11 +1,15 @@
 import React, { memo, useCallback, useMemo, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
-import type { ChartDataPoint, ChartFormatAmount, ChartXFunction } from '@coinbase/cds-common/types';
+import type {
+  ChartDataPoint,
+  ChartFormatAmount,
+  ChartXFunction,
+} from '@coinbase/cds-common/types/Chart';
 
 import { useLayout } from '../../../hooks/useLayout';
 import { useTheme } from '../../../hooks/useTheme';
-import { Text } from '../../../typography';
+import { Text } from '../../../typography/Text';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useMinMaxTransform } from './useMinMaxTransform';

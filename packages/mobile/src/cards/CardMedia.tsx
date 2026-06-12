@@ -8,9 +8,10 @@ import type {
   CardMediaImageSizeObject,
   CardMediaPlacement,
   CardMediaProps as CommonCardMediaProps,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/CardMediaProps';
 
-import { Pictogram, SpotSquare } from '../illustrations';
+import { Pictogram } from '../illustrations/Pictogram';
+import { SpotSquare } from '../illustrations/SpotSquare';
 import { getSource, RemoteImage } from '../media/RemoteImage';
 
 /**

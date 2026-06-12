@@ -3,9 +3,9 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Gradient } from '../gradient';
+import { Gradient } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
-import { createGradient, getBaseline } from '../utils';
+import { createGradient, getBaseline } from '../utils/gradient';
 import { getDottedAreaPath } from '../utils/path';
 import { defaultTransition, usePathTransition } from '../utils/transition';
 

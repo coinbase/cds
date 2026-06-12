@@ -1,10 +1,11 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { type BoxBaseProps, Group, type GroupBaseProps, type GroupProps } from '../layout';
+import { type BoxBaseProps } from '../layout/Box';
+import { Group, type GroupBaseProps, type GroupProps } from '../layout/Group';
 
 export type ControlGroupOption<ControlComponentProps> = Omit<
   ControlComponentProps,

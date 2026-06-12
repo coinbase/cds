@@ -1,10 +1,11 @@
 import type React from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { Transition } from 'framer-motion';
 
-import { type LineComponent } from '../line';
+import { type LineComponent } from '../line/Line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { accessoryFadeTransitionDuration, type AxisBandPlacement } from '../utils';
+import { type AxisBandPlacement } from '../utils/axis';
+import { accessoryFadeTransitionDuration } from '../utils/transition';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);

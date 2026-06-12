@@ -1,15 +1,15 @@
 import React, { forwardRef, memo, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type {
-  SharedProps,
   SparklineInteractiveHeaderSignVariant,
   SparklineInteractiveHeaderVariant,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/SparklineInteractiveHeaderBaseProps';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 
 import { AccessibilityAnnouncer } from '../../../AccessibilityAnnouncer/AccessibilityAnnouncer';
-import { VStack } from '../../../layout';
+import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 
 export * from '@coinbase/cds-common/types/SparklineInteractiveHeaderBaseProps';

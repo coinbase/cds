@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 export const animateInputBorderInConfig: Omit<MotionBaseSpec, 'property' | 'useNativeDriver'> = {
   toValue: 1,

@@ -1,14 +1,17 @@
 import React, { forwardRef, memo } from 'react';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedAccessibilityProps, SharedProps, Weight } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { Weight } from '@coinbase/cds-common/types/Weight';
 import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, HStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
 import type { HintMotionBaseProps } from '../motion/types';
 import { useMotionProps } from '../motion/useMotionProps';
 import { isRtl } from '../utils/isRtl';

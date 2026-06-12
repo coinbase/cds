@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { HStack, type HStackProps } from '../../../layout';
+import { HStack, type HStackProps } from '../../../layout/HStack';
 import { Text } from '../../../typography/Text';
 
 import { DefaultLegendShape } from './DefaultLegendShape';

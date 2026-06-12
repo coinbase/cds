@@ -1,14 +1,14 @@
 import React, { memo, useCallback, useId, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
-import { Collapsible } from '../collapsible';
+import { Collapsible } from '../collapsible/Collapsible';
 import { DotCount } from '../dots/DotCount';
 import { useDimensions } from '../hooks/useDimensions';
 import { useIsoEffect } from '../hooks/useIsoEffect';
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 import { Text, type TextProps } from '../typography/Text';
 
 import type { TabIndicatorProps } from './TabIndicator';

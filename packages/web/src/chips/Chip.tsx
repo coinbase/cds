@@ -5,10 +5,12 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import type { HStackProps } from '../layout';
-import { Box, HStack } from '../layout';
-import type { PressableProps } from '../system';
-import { InvertedThemeProvider, Pressable } from '../system';
+import { Box } from '../layout/Box';
+import type { HStackProps } from '../layout/HStack';
+import { HStack } from '../layout/HStack';
+import type { PressableProps } from '../system/Pressable';
+import { Pressable } from '../system/Pressable';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
 import type { ChipProps } from './ChipProps';

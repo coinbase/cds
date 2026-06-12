@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 export const activeScale = 1.2;
 export const inactiveScale = 1;

@@ -1,8 +1,10 @@
 import { memo, useContext, useEffect } from 'react';
-import type { IconName, IconSize, SharedProps } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { ButtonBaseProps } from '../buttons/Button';
-import { Icon } from '../icons';
+import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import { BrowserBarContext } from './BrowserBar';

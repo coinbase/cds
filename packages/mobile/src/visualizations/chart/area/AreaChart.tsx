@@ -1,19 +1,16 @@
 import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
-import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
+import { XAxis, type XAxisProps } from '../axis/XAxis';
+import { YAxis, type YAxisProps } from '../axis/YAxis';
 import {
   CartesianChart,
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
-import {
-  type CartesianAxisConfigProps,
-  defaultStackId,
-  type Series,
-  withBaselineDomain,
-} from '../utils';
+import { type CartesianAxisConfigProps, withBaselineDomain } from '../utils/axis';
+import { defaultStackId, type Series } from '../utils/chart';
 
 import { Area, type AreaProps } from './Area';
 

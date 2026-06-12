@@ -2,14 +2,14 @@ import React, { isValidElement, memo } from 'react';
 import type { DimensionValue, PressableProps } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { upsellCardDefaultWidth, upsellCardMinHeight } from '@coinbase/cds-common/tokens/card';
-import type {
-  DimensionStyles,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DimensionStyles } from '@coinbase/cds-common/types/DimensionStyles';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button, IconButton } from '../buttons';
-import { HStack, type HStackProps, VStack } from '../layout';
+import { Button } from '../buttons/Button';
+import { IconButton } from '../buttons/IconButton';
+import { HStack, type HStackProps } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 

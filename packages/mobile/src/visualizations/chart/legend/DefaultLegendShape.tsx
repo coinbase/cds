@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { useTheme } from '../../../index';
-import { Box, type BoxProps } from '../../../layout';
+import { useTheme } from '../../../hooks/useTheme';
+import { Box, type BoxProps } from '../../../layout/Box';
 import type { LegendShape, LegendShapeVariant } from '../utils/chart';
 
 import type { LegendShapeProps } from './Legend';

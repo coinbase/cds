@@ -1,12 +1,13 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { Rect } from '@coinbase/cds-common';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type BarTransition, getBarPath } from '../utils';
+import { type BarTransition } from '../utils/bar';
+import { getBarPath } from '../utils/path';
 
-import { DefaultBar } from './';
+import { DefaultBar } from './DefaultBar';
 
 export type BarBaseProps = Rect & {
   /**

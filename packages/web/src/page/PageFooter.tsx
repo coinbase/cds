@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { useComponentConfig } from '../hooks/useComponentConfig';

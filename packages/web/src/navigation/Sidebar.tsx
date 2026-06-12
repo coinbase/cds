@@ -5,7 +5,8 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useDimensions } from '../hooks/useDimensions';
-import { Box, type BoxBaseProps, type BoxProps, VStack } from '../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 import { breakpoints } from '../styles/media';
 
 import { SidebarProvider } from './SidebarContext';

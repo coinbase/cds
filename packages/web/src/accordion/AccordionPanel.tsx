@@ -1,9 +1,9 @@
 import React, { forwardRef, memo } from 'react';
 import { accordionVisibleMaxHeight } from '@coinbase/cds-common/animation/accordion';
 import { accordionSpacing } from '@coinbase/cds-common/tokens/accordion';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Collapsible, type CollapsibleBaseProps } from '../collapsible';
+import { Collapsible, type CollapsibleBaseProps } from '../collapsible/Collapsible';
 
 import { getAccordionHeaderId, getAccordionPanelId } from './utils';
 

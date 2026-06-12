@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Defs, LinearGradient as Lg, Rect, Stop, Svg } from 'react-native-svg';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 function getAlpha(color: string) {
   const match = color.includes('rgba') && color.match(/,\s?([\d.]*)\)$/);

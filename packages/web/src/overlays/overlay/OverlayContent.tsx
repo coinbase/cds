@@ -5,7 +5,7 @@ import {
 } from '@coinbase/cds-common/animation/overlay';
 import { m as motion } from 'framer-motion';
 
-import type { BoxBaseProps } from '../../layout';
+import type { BoxBaseProps } from '../../layout/Box';
 import { VStack, type VStackDefaultElement, type VStackProps } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 

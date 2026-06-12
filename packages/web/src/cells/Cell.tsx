@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { CellPriority } from '@coinbase/cds-common/types';
+import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
 import { css } from '@linaria/core';
 

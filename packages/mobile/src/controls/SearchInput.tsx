@@ -7,7 +7,7 @@ import type {
   TextInput as RNTextInput,
 } from 'react-native';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';

@@ -5,7 +5,7 @@ import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 
 import { useDimensions } from '../hooks/useDimensions';
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 import { type TourMaskComponentProps } from './Tour';
 

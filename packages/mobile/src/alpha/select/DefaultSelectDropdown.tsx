@@ -1,7 +1,7 @@
 import { forwardRef, memo, useCallback, useMemo } from 'react';
 import { type GestureResponderEvent, ScrollView } from 'react-native';
 
-import { Button } from '../../buttons';
+import { Button } from '../../buttons/Button';
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
 import { VStack } from '../../layout/VStack';

@@ -1,4 +1,4 @@
-import type { MotionBaseSpec, MotionDuration, MotionEffect } from '../types';
+import type { MotionBaseSpec, MotionDuration, MotionEffect } from '../types/Motion';
 
 import { generateAnimToken } from './utils';
 

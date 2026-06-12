@@ -3,7 +3,9 @@ import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import { isProduction } from '@coinbase/cds-utils';
 
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
 import { Cell, type CellProps } from './Cell';

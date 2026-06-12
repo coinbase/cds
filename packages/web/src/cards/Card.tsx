@@ -1,6 +1,6 @@
 import React, { type HTMLAttributes, memo, type MouseEventHandler, useMemo } from 'react';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';

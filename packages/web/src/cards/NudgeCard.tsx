@@ -1,7 +1,7 @@
 import React from 'react';
 import { opacityHovered, opacityPressed } from '@coinbase/cds-common/tokens/interactable';
-import type { ValidateProps } from '@coinbase/cds-common/types';
 import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
 import { css } from '@linaria/core';
 
 import { IconButton } from '../buttons/IconButton';
@@ -11,7 +11,7 @@ import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { type StyleProps } from '../styles/styleProps';
-import { Pressable } from '../system';
+import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 const pressCss = css`

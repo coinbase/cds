@@ -18,7 +18,7 @@ import {
   ToastContext,
   type ToastRefHandle,
 } from '@coinbase/cds-common/overlays/ToastProvider';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

@@ -4,10 +4,11 @@ import { selectCellMobileSpacingConfig } from '@coinbase/cds-common/tokens/selec
 import { Cell } from '../cells/Cell';
 import { CellAccessory } from '../cells/CellAccessory';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon } from '../icons';
+import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
-import { type DrawerRefBaseProps, Tray } from '../overlays';
-import { Pressable } from '../system';
+import { type DrawerRefBaseProps } from '../overlays/drawer/Drawer';
+import { Tray } from '../overlays/tray/Tray';
+import { Pressable } from '../system/Pressable';
 import { Text, type TextBaseProps, type TextProps } from '../typography/Text';
 
 export type NavigationTitleSelectBaseProps = Omit<TextBaseProps, 'onChange'> & {

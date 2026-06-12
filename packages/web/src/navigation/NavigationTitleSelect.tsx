@@ -6,8 +6,8 @@ import { Dropdown } from '../dropdown/Dropdown';
 import type { DropdownRef } from '../dropdown/DropdownProps';
 import { useA11yControlledVisibility } from '../hooks/useA11yControlledVisibility';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon } from '../icons';
-import { Pressable } from '../system';
+import { Icon } from '../icons/Icon';
+import { Pressable } from '../system/Pressable';
 import { Text, type TextBaseProps, type TextProps } from '../typography/Text';
 
 import { navigationTitleDefaultElement } from './NavigationTitle';

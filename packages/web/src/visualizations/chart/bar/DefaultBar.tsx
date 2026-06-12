@@ -5,12 +5,11 @@ import { Path } from '../Path';
 import {
   defaultBarEnterOpacityTransition,
   defaultBarEnterTransition,
-  defaultTransition,
-  getBarPath,
-  getTransition,
   withStaggerDelayTransition,
-} from '../utils';
+} from '../utils/bar';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
+import { getBarPath } from '../utils/path';
+import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 

@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { css } from '@linaria/core';
 
-import { cx } from '../../../index';
-import { Box, type BoxProps } from '../../../layout';
+import { cx } from '../../../cx';
+import { Box, type BoxProps } from '../../../layout/Box';
 import type { LegendShape, LegendShapeVariant } from '../utils/chart';
 
 import type { LegendShapeProps } from './Legend';

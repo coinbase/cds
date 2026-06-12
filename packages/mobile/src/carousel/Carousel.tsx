@@ -11,7 +11,9 @@ import React, {
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useCarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
-import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { animated, useSpring } from '@react-spring/native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';

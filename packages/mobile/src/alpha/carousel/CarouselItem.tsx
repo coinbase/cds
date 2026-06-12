@@ -1,9 +1,9 @@
 import React, { createContext, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Animated } from 'react-native';
 import type { View } from 'react-native';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { animateOpacityConfig, animateSizeConfig } from '@coinbase/cds-common/animation/carousel';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 import { IconButton } from '../../buttons/IconButton';

@@ -2,14 +2,10 @@ import React, { memo, useMemo } from 'react';
 import { View } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type {
-  DotOverlap,
-  DotSize,
-  DotVariant,
-  PinPlacement,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DotOverlap, DotSize, DotVariant } from '@coinbase/cds-common/types/DotBaseProps';
+import type { PinPlacement } from '@coinbase/cds-common/types/Placement';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';

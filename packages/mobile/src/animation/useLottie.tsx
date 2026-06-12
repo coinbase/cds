@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import type { LottieSource } from '@coinbase/cds-common';
+import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 
 import { createLottie } from './createLottie';
 

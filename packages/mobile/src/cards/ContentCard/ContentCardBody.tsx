@@ -1,9 +1,10 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import { type SharedProps } from '@coinbase/cds-common/types';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { VStackProps } from '../../layout';
-import { Box, VStack } from '../../layout';
+import { Box } from '../../layout/Box';
+import type { VStackProps } from '../../layout/VStack';
+import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 
 const mapMediaPositionToMediaPlacement: Record<

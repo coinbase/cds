@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 export const overlayHiddenOpacity = 0;
 export const overlayVisibleOpacity = 1;

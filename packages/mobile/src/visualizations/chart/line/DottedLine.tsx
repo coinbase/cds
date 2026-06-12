@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { DashPathEffect } from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../hooks/useTheme';
-import { Gradient } from '../gradient';
+import { Gradient } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';

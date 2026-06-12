@@ -1,17 +1,12 @@
 import React, { forwardRef, memo } from 'react';
-import { type SharedProps } from '@coinbase/cds-common';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { IconButton } from '../buttons/IconButton';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import {
-  Box,
-  type BoxBaseProps,
-  type BoxDefaultElement,
-  type BoxProps,
-  HStack,
-  VStack,
-} from '../layout';
-import { InvertedThemeProvider } from '../system';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
 export type CoachmarkBaseProps = SharedProps &

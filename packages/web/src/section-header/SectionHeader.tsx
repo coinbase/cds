@@ -3,7 +3,7 @@ import type { IconName } from '@coinbase/cds-icons';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon } from '../icons';
+import { Icon } from '../icons/Icon';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';

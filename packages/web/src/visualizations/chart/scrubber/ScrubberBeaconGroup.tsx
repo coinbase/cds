@@ -1,15 +1,11 @@
 import { forwardRef, memo, useCallback, useImperativeHandle, useMemo } from 'react';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import {
-  type ChartScaleFunction,
-  evaluateGradientAtValue,
-  getGradientAxis,
-  getGradientConfig,
-  useScrubberContext,
-} from '../utils';
+import { useScrubberContext } from '../utils/context';
+import { evaluateGradientAtValue, getGradientAxis, getGradientConfig } from '../utils/gradient';
+import { type ChartScaleFunction } from '../utils/scale';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import type { ScrubberBeaconComponent, ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';

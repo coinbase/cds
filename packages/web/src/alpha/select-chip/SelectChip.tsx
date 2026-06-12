@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
-import type { ChipBaseProps } from '../../chips';
+import type { ChipBaseProps } from '../../chips/ChipProps';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import type { PressableBaseProps } from '../../system/Pressable';
 import { Select, type SelectRef } from '../select/Select';

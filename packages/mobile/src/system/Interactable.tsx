@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { type Animated, type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native';
-import type { ElevationLevels, ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';

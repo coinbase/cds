@@ -1,18 +1,17 @@
 import React, { memo, type SVGProps, useMemo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion, type Transition } from 'framer-motion';
 
-import { cx } from '../../../index';
+import { cx } from '../../../cx';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { type PointLabelPosition, projectPoint } from '../utils/point';
 import {
   defaultAccessoryEnterTransition,
   defaultTransition,
   getTransition,
-  type PointLabelPosition,
-  projectPoint,
-} from '../utils';
+} from '../utils/transition';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 

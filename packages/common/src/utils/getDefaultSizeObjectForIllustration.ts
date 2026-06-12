@@ -1,5 +1,5 @@
 import { illustrationDimensionDefaults } from '../tokens/illustrations';
-import type { IllustrationVariant } from '../types';
+import type { IllustrationVariant } from '../types/IllustrationNames';
 
 import { convertDimensionToSize } from './convertDimensionToSize';
 

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 
 import type { StepperSubstepContainerComponent } from './Stepper';
 import { horizontalStepGap } from './Stepper';

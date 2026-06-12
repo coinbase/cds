@@ -1,7 +1,9 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import type { ChipProps } from '../../chips/ChipProps';
@@ -9,14 +11,14 @@ import { MediaChip } from '../../chips/MediaChip';
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout/HStack';
+import { Paddle } from '../../tabs/Paddle';
 import {
-  Paddle,
   Tabs,
   type TabsActiveIndicatorComponent,
   type TabsBaseProps,
   type TabsProps,
-} from '../../tabs';
+} from '../../tabs/Tabs';
 
 const containerCss = css`
   isolation: isolate;

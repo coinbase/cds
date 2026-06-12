@@ -1,12 +1,13 @@
 import { memo, useMemo } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
-import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
+import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 import { css } from '@linaria/core';
 
-import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
+import { VStack } from '../layout/VStack';
 
 const visuallyHiddenCss = css`
   position: absolute;

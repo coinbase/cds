@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { selectCellMobileSpacingConfig } from '@coinbase/cds-common/tokens/select';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import { Cell, type CellBaseProps } from '../cells/Cell';
 import { CellAccessory } from '../cells/CellAccessory';

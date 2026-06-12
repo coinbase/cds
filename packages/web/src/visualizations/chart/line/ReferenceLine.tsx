@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { cx } from '../../../index';
+import { cx } from '../../../cx';
 import { useCartesianChartContext } from '../ChartProvider';
 import type {
   ChartTextChildren,
@@ -9,8 +9,8 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
-import type { ChartInset } from '../utils';
-import { getPointOnScale } from '../utils';
+import type { ChartInset } from '../utils/chart';
+import { getPointOnScale } from '../utils/point';
 
 import { DefaultReferenceLineLabel } from './DefaultReferenceLineLabel';
 import { DottedLine } from './DottedLine';

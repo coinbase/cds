@@ -11,10 +11,10 @@ import { Animated } from 'react-native';
 import type { ForwardedRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@coinbase/cds-common/motion/hint';
-import type { MotionBaseSpec } from '@coinbase/cds-common/types';
+import type { MotionBaseSpec } from '@coinbase/cds-common/types/Motion';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 import type { HintMotionBaseProps } from './types';
 

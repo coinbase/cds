@@ -2,13 +2,14 @@ import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef } fro
 import { TextInput, View } from 'react-native';
 import type { FunctionComponent, ReactNode } from 'react';
 import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type {
-  SharedProps,
   SparklineInteractiveHeaderSignVariant,
   SparklineInteractiveHeaderVariant,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/SparklineInteractiveHeaderBaseProps';
 
-import { HStack, VStack } from '../../../layout';
+import { HStack } from '../../../layout/HStack';
+import { VStack } from '../../../layout/VStack';
 
 import { useSparklineInteractiveHeaderStyles } from './useSparklineInteractiveHeaderStyles';
 

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { Animated } from 'react-native';
 import type { View } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';

@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { PaddingProps } from '@coinbase/cds-common/types';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';

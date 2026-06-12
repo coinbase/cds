@@ -1,14 +1,15 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
-import type { DotCountBaseProps } from '../dots';
+import type { DotCountBaseProps } from '../dots/DotCount';
 import { useHorizontallyScrollingPressables } from '../hooks/useHorizontallyScrollingPressables';
-import { OverflowGradient } from '../layout';
 import { Box, type BoxBaseProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
+import { OverflowGradient } from '../layout/OverflowGradient';
 import { VStack } from '../layout/VStack';
 import { Pressable } from '../system/Pressable';
 

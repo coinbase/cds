@@ -4,7 +4,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { NativeInput } from '../../controls/NativeInput';
 import { useTheme } from '../../hooks/useTheme';
-import { HStack } from '../../layout';
+import { HStack } from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type { SelectType } from '../select/Select';

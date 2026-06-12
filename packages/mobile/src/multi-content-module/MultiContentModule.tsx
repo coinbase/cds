@@ -1,12 +1,13 @@
 import React, { forwardRef, isValidElement, memo } from 'react';
 import type { View } from 'react-native';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
 
-import { Button } from '../buttons';
-import { Pictogram } from '../illustrations';
-import type { VStackProps } from '../layout';
-import { Box, VStack } from '../layout';
-import { type PressableProps } from '../system';
+import { Button } from '../buttons/Button';
+import { Pictogram } from '../illustrations/Pictogram';
+import { Box } from '../layout/Box';
+import type { VStackProps } from '../layout/VStack';
+import { VStack } from '../layout/VStack';
+import { type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type MultiContentModuleBaseProps = {

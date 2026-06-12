@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { VStack } from '../layout';
+import { VStack } from '../layout/VStack';
 
 import type { StepperSubstepContainerComponent } from './Stepper';
 

@@ -1,13 +1,11 @@
 import { forwardRef, memo } from 'react';
 import { type StyleProp, type TextStyle, type View, type ViewStyle } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import type {
-  IconButtonVariant,
-  IconName,
-  IconSize,
-  NegativeSpace,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';

@@ -2,7 +2,6 @@ import { memo, useMemo } from 'react';
 import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getBarPath } from '../utils';
 import {
   type BarTransition,
   defaultBarEnterTransition,
@@ -10,6 +9,7 @@ import {
   getStackInitialClipRect,
   withStaggerDelayTransition,
 } from '../utils/bar';
+import { getBarPath } from '../utils/path';
 import { defaultTransition, getTransition, usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';

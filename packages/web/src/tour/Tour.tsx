@@ -10,8 +10,9 @@ import type {
   TourStepValue,
 } from '@coinbase/cds-common/tour/useTour';
 import { useTour } from '@coinbase/cds-common/tour/useTour';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import {
   arrow as arrowMiddleware,
   autoPlacement,

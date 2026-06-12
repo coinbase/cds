@@ -7,7 +7,7 @@ import {
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useTheme } from '../../hooks/useTheme';
-import type { BoxBaseProps } from '../../layout';
+import type { BoxBaseProps } from '../../layout/Box';
 import type { VStackProps } from '../../layout/VStack';
 import { VStack } from '../../layout/VStack';
 

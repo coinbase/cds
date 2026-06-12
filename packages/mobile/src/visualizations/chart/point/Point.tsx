@@ -6,7 +6,7 @@ import { Circle, type Color, Group, interpolateColors } from '@shopify/react-nat
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { type PointLabelPosition, projectPoint } from '../utils';
+import { type PointLabelPosition, projectPoint } from '../utils/point';
 import {
   buildTransition,
   defaultAccessoryEnterTransition,

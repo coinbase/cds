@@ -37,7 +37,7 @@ import { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { defaultMediaSize } from '@coinbase/cds-common/tokens/card';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';

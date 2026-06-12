@@ -8,15 +8,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { PinningDirection, SharedAccessibilityProps, ThemeVars } from '@coinbase/cds-common';
 import {
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
 } from '@coinbase/cds-common/animation/drawer';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { css } from '@linaria/core';
 import {
   domMax,
@@ -27,13 +29,14 @@ import {
   useDragControls,
 } from 'framer-motion';
 
-import { IconButton } from '../../buttons';
+import { IconButton } from '../../buttons/IconButton';
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useDimensions } from '../../hooks/useDimensions';
 import { useScrollBlocker } from '../../hooks/useScrollBlocker';
 import { useTheme } from '../../hooks/useTheme';
-import { Box, HStack } from '../../layout';
+import { Box } from '../../layout/Box';
+import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import type { ResponsiveProp } from '../../styles/styleProps';
 import type { StylesAndClassNames } from '../../types';

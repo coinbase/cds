@@ -10,7 +10,7 @@ import { Box } from '../../../layout/Box';
 import { HStack } from '../../../layout/HStack';
 import { OverflowGradient } from '../../../layout/OverflowGradient';
 import { Pressable } from '../../../system/Pressable';
-import { Text } from '../../../typography';
+import { Text } from '../../../typography/Text';
 import { Haptics } from '../../../utils/haptics';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';

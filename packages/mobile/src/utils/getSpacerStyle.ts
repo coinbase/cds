@@ -1,6 +1,6 @@
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
-import type { SpacerBaseProps } from '../layout';
+import type { SpacerBaseProps } from '../layout/Spacer';
 
 export const getSpacerStyle = ({
   flexGrow,

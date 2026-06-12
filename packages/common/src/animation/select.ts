@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 const baseConfig: Pick<MotionBaseSpec, 'property' | 'easing' | 'duration'> = {
   property: 'transform',

@@ -7,7 +7,7 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxBaseProps, type BoxProps } from '../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 
 const baseCss = css`
   min-width: 0;

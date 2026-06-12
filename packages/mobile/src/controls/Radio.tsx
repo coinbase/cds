@@ -1,11 +1,11 @@
 import React, { forwardRef, memo } from 'react';
 import { Animated, type ColorValue, StyleSheet, type View } from 'react-native';
 import { Circle, Svg } from 'react-native-svg';
-import type { ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';

@@ -8,14 +8,11 @@ import {
   type ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type {
-  IconName,
-  IconSize,
-  IconSourcePixelSize,
-  PaddingProps,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize, IconSourcePixelSize } from '@coinbase/cds-common/types/IconSize';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 import { glyphMap } from '@coinbase/cds-icons/glyphMap';
 import { isDevelopment } from '@coinbase/cds-utils';
 

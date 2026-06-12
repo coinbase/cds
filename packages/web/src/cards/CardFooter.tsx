@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
-import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout';
+import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 
 export type CardFooterBaseProps = Pick<SharedAccessibilityProps, 'id'> &

@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 
 import { useScreenReaderStatus } from '../../../hooks/useScreenReaderStatus';
 import { useCartesianChartContext } from '../ChartProvider';
-import { useScrubberContext } from '../utils';
 import type { AxisConfig } from '../utils/axis';
+import { useScrubberContext } from '../utils/context';
 import { getPointOnSerializableScale } from '../utils/point';
 import type { SerializableBandScale, SerializableScale } from '../utils/scale';
 

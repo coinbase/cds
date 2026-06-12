@@ -11,7 +11,9 @@ import React, {
 import { useCarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import { RefMapContext } from '@coinbase/cds-common/system/RefMapContext';
-import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import {
   animate,
@@ -30,7 +32,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
-import { Text } from '../typography';
+import { Text } from '../typography/Text';
 
 import {
   CarouselAutoplayContext,

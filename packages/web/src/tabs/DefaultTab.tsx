@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useCallback } from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { DotCount, type DotCountBaseProps } from '../dots/DotCount';
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 

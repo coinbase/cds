@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { hexagonShapePath } from '@coinbase/cds-common/svg/shape';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

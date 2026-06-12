@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { G, Path, Svg } from 'react-native-svg';
 import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
-import type { ChartDataPoint, ChartTimeseries } from '@coinbase/cds-common/types';
+import type { ChartDataPoint, ChartTimeseries } from '@coinbase/cds-common/types/Chart';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
 import { useTimeseriesPaths } from '@coinbase/cds-common/visualizations/useTimeseriesPaths';

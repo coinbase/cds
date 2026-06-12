@@ -1,11 +1,12 @@
 import React, { forwardRef, memo } from 'react';
 import { css } from '@linaria/core';
 
-import { IconButton } from '../../buttons';
+import { IconButton } from '../../buttons/IconButton';
 import type { Polymorphic } from '../../core/polymorphism';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { LogoMark } from '../../icons/LogoMark';
-import { Box, HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
+import { Box } from '../../layout/Box';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout/HStack';
 import { breakpoints } from '../../styles/media';
 import { Text } from '../../typography/Text';
 

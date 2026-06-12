@@ -1,13 +1,15 @@
 import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
-import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
+import { XAxis, type XAxisProps } from '../axis/XAxis';
+import { YAxis, type YAxisProps } from '../axis/YAxis';
 import {
   CartesianChart,
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type CartesianAxisConfigProps, defaultStackId, withBaselineDomain } from '../utils';
+import { type CartesianAxisConfigProps, withBaselineDomain } from '../utils/axis';
+import { defaultStackId } from '../utils/chart';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';

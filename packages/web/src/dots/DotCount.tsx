@@ -7,13 +7,13 @@ import {
   dotScaleExitConfig,
 } from '@coinbase/cds-common/motion/dot';
 import { dotCountSize } from '@coinbase/cds-common/tokens/dot';
+import type { DotOverlap } from '@coinbase/cds-common/types/DotBaseProps';
 import type {
   DotCountPinPlacement,
   DotCountVariants,
-  DotOverlap,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/DotCountBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { parseDotCountMaxOverflow } from '@coinbase/cds-common/utils/parseDotCountMaxOverflow';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';

@@ -4,8 +4,10 @@ import { useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-nati
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextChildren, ChartTextProps } from '../text';
-import { applySerializableScale, unwrapAnimatedValue, useScrubberContext } from '../utils';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { unwrapAnimatedValue } from '../utils/chart';
+import { useScrubberContext } from '../utils/context';
+import { applySerializableScale } from '../utils/scale';
 import {
   calculateLabelYPositions,
   getLabelPosition,

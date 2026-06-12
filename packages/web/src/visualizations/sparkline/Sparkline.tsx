@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useId, useMemo, useRef } from 'react';
 import { getAccessibleForegroundGradient } from '@coinbase/cds-common/color/getAccessibleForegroundGradient';
-import type { ElementChildren, SharedProps } from '@coinbase/cds-common/types';
+import type { ElementChildren } from '@coinbase/cds-common/types/React';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { getSparklineRange } from '@coinbase/cds-common/visualizations/getSparklineRange';
 import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';

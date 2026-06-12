@@ -3,15 +3,11 @@ import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { useTheme } from '../../hooks/useTheme';
-import {
-  SegmentedTabs,
-  type SegmentedTabsProps,
-  type TabComponent,
-  type TabsActiveIndicatorProps,
-} from '../../tabs';
 import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
+import { SegmentedTabs, type SegmentedTabsProps } from '../../tabs/SegmentedTabs';
+import { type TabComponent, type TabsActiveIndicatorProps } from '../../tabs/Tabs';
 import { tabsSpringConfig } from '../../tabs/Tabs';
-import { Text, type TextBaseProps } from '../../typography';
+import { Text, type TextBaseProps } from '../../typography/Text';
 
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({

@@ -15,7 +15,7 @@ import Fuse from 'fuse.js';
 import { Button } from '../../buttons/Button';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
-import { Box } from '../../layout';
+import { Box } from '../../layout/Box';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import { DefaultSelectDropdown } from '../select/DefaultSelectDropdown';

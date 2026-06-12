@@ -2,7 +2,9 @@ import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { FixedValue, FlexStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { FlexStyles } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { FixedValue } from '@coinbase/cds-common/types/DimensionStyles';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useTheme } from '../hooks/useTheme';
 import { getSpacerStyle } from '../utils/getSpacerStyle';

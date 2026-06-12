@@ -1,10 +1,12 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
-import { type BoxBaseProps, HStack, VStack } from '../../layout';
-import { Avatar } from '../../media';
+import { type BoxBaseProps } from '../../layout/Box';
+import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
+import { Avatar } from '../../media/Avatar';
 import { Text } from '../../typography/Text';
 
 export const contentCardHeaderDefaultElement = 'header';

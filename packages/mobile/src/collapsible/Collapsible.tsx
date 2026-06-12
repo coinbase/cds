@@ -13,7 +13,9 @@ import {
   animateOutOpacityConfig,
 } from '@coinbase/cds-common/animation/collapsible';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
+import type { CollapsibleDirection } from '@coinbase/cds-common/types/CollapsibleBaseProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useContentSize } from '../hooks/useContentSize';

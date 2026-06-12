@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Avatar, type AvatarBaseProps } from '../media';
+import { Avatar, type AvatarBaseProps } from '../media/Avatar';
 import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
