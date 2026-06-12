@@ -7,10 +7,13 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
+import type { BoxBaseProps } from '../../layout/Box';
+
 export type TooltipPlacement = Extract<BaseTooltipPlacement, 'bottom' | 'top'>;
 
 export type TooltipBaseProps = SharedProps &
-  ElevationProps & {
+  ElevationProps &
+  Omit<BoxBaseProps, 'children' | 'gap' | 'opacity' | 'pin'> & {
     /** Position of tooltip in relation to the subject. */
     placement?: TooltipPlacement;
     children: React.ReactElement;
@@ -96,7 +99,8 @@ export type InternalTooltipProps = SharedAccessibilityProps &
     | 'yShiftByStatusBarHeight'
     | 'invertColorScheme'
     | 'elevation'
-  > & {
+  > &
+  Omit<BoxBaseProps, 'children' | 'gap' | 'opacity' | 'pin'> & {
     subjectLayout: SubjectLayout | undefined;
     opacity: Animated.Value;
     animateIn: Animated.CompositeAnimation;

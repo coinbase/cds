@@ -100,4 +100,24 @@ describe('InternalTooltip.test', () => {
       backgroundColor: defaultTheme.lightColor.bg,
     });
   });
+
+  it('renders custom background from box props', () => {
+    renderWithProviders(
+      <InternalTooltip
+        animateIn={mockAnimateIn as unknown as Animated.CompositeAnimation}
+        background="bgSecondary"
+        content={<Text>test content</Text>}
+        elevation={2}
+        opacity={new Animated.Value(1)}
+        placement="top"
+        subjectLayout={{ width: 20, height: 30, pageOffsetX: 15, pageOffsetY: 25 }}
+        testID={TEST_ID}
+        translateY={new Animated.Value(5)}
+      />,
+    );
+
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgSecondary,
+    });
+  });
 });
