@@ -18,6 +18,7 @@ import { AssetExploration } from './appRefresh/AssetExploration';
 import { GradientBorderButton } from './appRefresh/GradientBorderButton';
 import { MatchCarousel } from './appRefresh/MatchCarousel';
 import { PriceChart } from './appRefresh/PriceChart';
+import { SegmentedTabsExploration } from './appRefresh/SegmentedTabsExploration';
 import { TabbedChips } from './appRefresh/TabbedChips';
 
 function ComponentExploration({
@@ -176,6 +177,9 @@ export const AppRefreshExplorationScreen = memo(() => {
             </ComponentExploration>
             <ComponentExploration componentName="TabbedChips">
               <TabbedChips />
+            </ComponentExploration>
+            <ComponentExploration componentName="SegmentedTabs">
+              <SegmentedTabsExploration />
             </ComponentExploration>
           </VStack>
         </ScrollView>

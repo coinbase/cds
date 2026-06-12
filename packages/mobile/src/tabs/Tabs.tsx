@@ -31,16 +31,17 @@ type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: View) => void;
   children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
-const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
+const TabContainer = ({ id, registerRef, style, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
     (ref: View | null) => {
       if (ref) registerRef(id, ref);
     },
     [id, registerRef],
   );
-  return <View ref={refCallback} {...props} />;
+  return <View ref={refCallback} style={style} {...props} />;
 };
 
 export const tabsSpringConfig = {
@@ -104,6 +105,8 @@ export type TabsProps<
     styles?: {
       /** Root container element */
       root?: StyleProp<ViewStyle>;
+      /** Wrapper View around each tab — use `{ flex: 1 }` for equal-width distribution */
+      tabContainer?: StyleProp<ViewStyle>;
       /** Tab element */
       tab?: StyleProp<ViewStyle>;
       /** Active indicator element */
@@ -220,7 +223,12 @@ const TabsComponent = memo(
                 ...tabRest,
               };
               return (
-                <TabContainer key={id} id={id} registerRef={registerRef}>
+                <TabContainer
+                  key={id}
+                  id={id}
+                  registerRef={registerRef}
+                  style={styles?.tabContainer}
+                >
                   <RenderedTab {...renderedTabProps} />
                 </TabContainer>
               );
