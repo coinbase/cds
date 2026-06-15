@@ -269,13 +269,6 @@ export const Modal = memo(
             >
               <VStack
                 background={background}
-                bordered={bordered}
-                borderedBottom={borderedBottom}
-                borderedEnd={borderedEnd}
-                borderedHorizontal={borderedHorizontal}
-                borderedStart={borderedStart}
-                borderedTop={borderedTop}
-                borderedVertical={borderedVertical}
                 borderBottomLeftRadius={borderBottomLeftRadius}
                 borderBottomRightRadius={borderBottomRightRadius}
                 borderBottomWidth={borderBottomWidth}
@@ -287,6 +280,13 @@ export const Modal = memo(
                 borderTopRightRadius={borderTopRightRadius}
                 borderTopWidth={borderTopWidth}
                 borderWidth={borderWidth}
+                bordered={bordered}
+                borderedBottom={borderedBottom}
+                borderedEnd={borderedEnd}
+                borderedHorizontal={borderedHorizontal}
+                borderedStart={borderedStart}
+                borderedTop={borderedTop}
+                borderedVertical={borderedVertical}
                 className={cx(
                   !dangerouslyDisableResponsiveness && modalDialogResponsiveCss,
                   modalClassNames.dialog,

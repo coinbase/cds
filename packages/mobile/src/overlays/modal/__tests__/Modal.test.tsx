@@ -390,7 +390,7 @@ describe('Modal', () => {
     render(
       <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
         <DefaultThemeProvider>
-          <Modal styles={{ dialog: { borderTopWidth: 7 } }} visible onRequestClose={jest.fn()}>
+          <Modal visible onRequestClose={jest.fn()} styles={{ dialog: { borderTopWidth: 7 } }}>
             <Text testID="modal-content">Content</Text>
           </Modal>
         </DefaultThemeProvider>
