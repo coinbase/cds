@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.4.1 (6/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Modal appearance props now apply to the dialog card. [[#758](https://github.com/coinbase/cds/pull/758)]
+
 ## 9.4.0 (6/15/2026 PST)
 
 #### 🚀 Updates
