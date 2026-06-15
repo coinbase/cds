@@ -45,49 +45,51 @@ Review the component's JSX to identify elements that should be targetable via st
 
 ### Approved Selectors (alphabetical)
 
-| Selector              | Description                                             |
-| --------------------- | ------------------------------------------------------- |
-| `accessory`           | Accessory element (e.g., chevron, icon at end)          |
-| `activeIndicator`     | Active indicator element (e.g., in tabs)                |
-| `bottomContent`       | Bottom section content                                  |
-| `carousel`            | Main carousel track element                             |
-| `carouselContainer`   | Outer carousel container                                |
-| `childrenContainer`   | Container wrapping children                             |
-| `content`             | Main content area                                       |
-| `contentContainer`    | Container wrapping content                              |
-| `description`         | Description text element                                |
-| `day`                 | Date cell in a calendar grid                            |
-| `end`                 | End slot content (e.g., actions, icons)                 |
-| `fill`                | Fill/progress indicator within a track                  |
-| `header`              | Header section                                          |
-| `helperText`          | Helper/assistive text below content                     |
-| `icon`                | Icon element                                            |
-| `intermediary`        | Middle/intermediary element between sections            |
-| `label`               | Label text element                                      |
-| `labels`              | Container for multiple labels                           |
-| `logo`                | Logo element                                            |
-| `mainContent`         | Primary content area                                    |
-| `media`               | Media element (image, avatar, icon)                     |
-| `navigation`          | Navigation controls (e.g., prev/next buttons)           |
-| `pagination`          | Pagination indicators                                   |
-| `pressable`           | Pressable/interactive wrapper                           |
-| `progress`            | Progress indicator element                              |
-| `progressBar`         | ProgressBar sub-component within a composed component   |
-| `root`                | Root/outermost container element                        |
-| `start`               | Start slot content (e.g., back button)                  |
-| `step`                | Individual step element (in steppers)                   |
-| `substepContainer`    | Container for nested sub-steps                          |
-| `subtitle`            | Subtitle text element                                   |
-| `surface`             | Visible elevated surface/card element (e.g., in modals) |
-| `tab`                 | Tab element (in tabs)                                   |
-| `tabs`                | Tabs container element                                  |
-| `thumb`               | Draggable thumb element (in sliders)                    |
-| `title`               | Title text element                                      |
-| `titleStack`          | Stack containing title/subtitle/description             |
-| `titleStackContainer` | Container wrapping titleStack                           |
-| `topContent`          | Top section content                                     |
-| `track`               | Track/rail element (in progress bars, sliders)          |
-| `trigger`             | Trigger element that opens a dropdown/popover           |
+| Selector              | Description                                           |
+| --------------------- | ----------------------------------------------------- |
+| `accessory`           | Accessory element (e.g., chevron, icon at end)        |
+| `activeIndicator`     | Active indicator element (e.g., in tabs)              |
+| `bottomContent`       | Bottom section content                                |
+| `carousel`            | Main carousel track element                           |
+| `carouselContainer`   | Outer carousel container                              |
+| `childrenContainer`   | Container wrapping children                           |
+| `content`             | Main content area                                     |
+| `contentContainer`    | Container wrapping content                            |
+| `description`         | Description text element                              |
+| `day`                 | Date cell in a calendar grid                          |
+| `end`                 | End slot content (e.g., actions, icons)               |
+| `fill`                | Fill/progress indicator within a track                |
+| `header`              | Header section                                        |
+| `helperText`          | Helper/assistive text below content                   |
+| `icon`                | Icon element                                          |
+| `intermediary`        | Middle/intermediary element between sections          |
+| `label`               | Label text element                                    |
+| `labels`              | Container for multiple labels                         |
+| `logo`                | Logo element                                          |
+| `mainContent`         | Primary content area                                  |
+| `media`               | Media element (image, avatar, icon)                   |
+| `modal`               | Visible modal card element                            |
+| `navigation`          | Navigation controls (e.g., prev/next buttons)         |
+| `overlay`             | Full-viewport overlay/backdrop element                |
+| `pagination`          | Pagination indicators                                 |
+| `pressable`           | Pressable/interactive wrapper                         |
+| `progress`            | Progress indicator element                            |
+| `progressBar`         | ProgressBar sub-component within a composed component |
+| `root`                | Root/outermost container element                      |
+| `safeArea`            | Safe area region wrapping content                     |
+| `start`               | Start slot content (e.g., back button)                |
+| `step`                | Individual step element (in steppers)                 |
+| `substepContainer`    | Container for nested sub-steps                        |
+| `subtitle`            | Subtitle text element                                 |
+| `tab`                 | Tab element (in tabs)                                 |
+| `tabs`                | Tabs container element                                |
+| `thumb`               | Draggable thumb element (in sliders)                  |
+| `title`               | Title text element                                    |
+| `titleStack`          | Stack containing title/subtitle/description           |
+| `titleStackContainer` | Container wrapping titleStack                         |
+| `topContent`          | Top section content                                   |
+| `track`               | Track/rail element (in progress bars, sliders)        |
+| `trigger`             | Trigger element that opens a dropdown/popover         |
 
 ## JSDoc Convention for Selector Descriptions
 

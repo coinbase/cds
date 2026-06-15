@@ -76,10 +76,10 @@ const MotionBox = motion(Box);
  * Use these selectors to target specific elements with CSS.
  */
 export const modalClassNames = {
-  /** Backdrop container element that positions the modal within the viewport */
-  root: 'cds-Modal',
-  /** Visible modal surface element */
-  surface: 'cds-Modal-surface',
+  /** Full-viewport overlay/backdrop element that positions the modal within the viewport */
+  overlay: 'cds-Modal',
+  /** Visible modal card element */
+  modal: 'cds-Modal-modal',
 } as const;
 
 const overlayContentContextValue: OverlayContentContextValue = {
@@ -230,9 +230,9 @@ export const Modal = memo(
       [dangerouslySetPosition],
     );
 
-    const rootStyle = useMemo<React.CSSProperties | undefined>(
-      () => (style || styles?.root ? { ...style, ...styles?.root } : undefined),
-      [style, styles?.root],
+    const overlayStyle = useMemo<React.CSSProperties | undefined>(
+      () => (style || styles?.overlay ? { ...style, ...styles?.overlay } : undefined),
+      [style, styles?.overlay],
     );
 
     return (
@@ -240,12 +240,12 @@ export const Modal = memo(
         <ModalWrapper
           accessibilityLabel={label}
           accessibilityLabelledBy={labelledBy}
-          className={cx(modalClassNames.root, className, classNames?.root)}
+          className={cx(modalClassNames.overlay, className, classNames?.overlay)}
           dangerouslyDisableResponsiveness={dangerouslyDisableResponsiveness}
           disableOverlayPress={disableOverlayPress}
           disablePortal={disablePortal}
           onOverlayPress={handleClose}
-          style={rootStyle}
+          style={overlayStyle}
           visible={visible}
           {...props}
         >
@@ -289,8 +289,8 @@ export const Modal = memo(
                 borderedVertical={borderedVertical}
                 className={cx(
                   !dangerouslyDisableResponsiveness && modalDialogResponsiveCss,
-                  modalClassNames.surface,
-                  classNames?.surface,
+                  modalClassNames.modal,
+                  classNames?.modal,
                 )}
                 color={color}
                 elevation={elevation}
@@ -302,7 +302,7 @@ export const Modal = memo(
                 paddingTop={paddingTop}
                 paddingX={paddingX}
                 paddingY={paddingY}
-                style={styles?.surface}
+                style={styles?.modal}
                 width="100%"
               >
                 <ModalContext.Provider value={modalData}>

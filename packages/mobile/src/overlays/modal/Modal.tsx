@@ -83,10 +83,10 @@ export type ModalBaseProps = SharedProps &
     zIndex?: ViewStyle['zIndex'];
     /** Custom styles for individual elements of the Modal */
     styles?: {
-      /** Visible modal surface element */
-      surface?: StyleProp<ViewStyle>;
-      /** Safe area content region wrapping the modal children */
-      content?: StyleProp<ViewStyle>;
+      /** Visible modal card element */
+      modal?: StyleProp<ViewStyle>;
+      /** Safe area region wrapping the modal children */
+      safeArea?: StyleProp<ViewStyle>;
     };
   };
 
@@ -237,9 +237,9 @@ export const Modal = memo(
             paddingX={paddingX}
             paddingY={paddingY}
             pin="all"
-            style={[{ transform: [{ scale }], opacity }, customStyles?.surface]}
+            style={[{ transform: [{ scale }], opacity }, customStyles?.modal]}
           >
-            <SafeAreaView style={[styles.safeAreaContainer, customStyles?.content]}>
+            <SafeAreaView style={[styles.safeAreaContainer, customStyles?.safeArea]}>
               <ModalContext.Provider value={modalData}>
                 {typeof children === 'function' ? children(renderChildrenProps) : children}
               </ModalContext.Provider>

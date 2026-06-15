@@ -511,35 +511,39 @@ describe('Modal styles API', () => {
       </DefaultThemeProvider>,
     );
 
-  it('applies static class names to root and surface', () => {
+  it('applies static class names to overlay and modal', () => {
     renderStyledModal();
 
-    const root = screen.getByRole('dialog');
-    expect(root).toHaveClass(modalClassNames.root);
-    expect(root.querySelector(`.${modalClassNames.surface}`)).toBeInTheDocument();
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).toHaveClass(modalClassNames.overlay);
+    expect(overlay.querySelector(`.${modalClassNames.modal}`)).toBeInTheDocument();
   });
 
-  it('applies the classNames slot to root and surface', () => {
-    renderStyledModal({ classNames: { root: 'custom-root', surface: 'custom-surface' } });
+  it('applies the classNames slot to overlay and modal', () => {
+    renderStyledModal({ classNames: { overlay: 'custom-overlay', modal: 'custom-modal' } });
 
-    const root = screen.getByRole('dialog');
-    expect(root).toHaveClass('custom-root');
-    expect(root.querySelector('.custom-surface')).toBeInTheDocument();
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).toHaveClass('custom-overlay');
+    expect(overlay.querySelector('.custom-modal')).toBeInTheDocument();
   });
 
-  it('applies the styles slot to root and surface', () => {
-    renderStyledModal({ styles: { root: { outlineWidth: 3 }, surface: { borderRadius: 16 } } });
+  it('applies the styles slot to overlay and modal', () => {
+    renderStyledModal({ styles: { overlay: { outlineWidth: 3 }, modal: { borderRadius: 16 } } });
 
-    const root = screen.getByRole('dialog');
-    expect(root).toHaveStyle({ outlineWidth: '3px' });
-    expect(root.querySelector(`.${modalClassNames.surface}`)).toHaveStyle({ borderRadius: '16px' });
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).toHaveStyle({ outlineWidth: '3px' });
+    expect(overlay.querySelector(`.${modalClassNames.modal}`)).toHaveStyle({
+      borderRadius: '16px',
+    });
   });
 
-  it('applies appearance styles to the modal surface, not the root container', () => {
-    renderStyledModal({ styles: { surface: { borderRadius: 24 } } });
+  it('applies appearance styles to the modal card, not the overlay container', () => {
+    renderStyledModal({ styles: { modal: { borderRadius: 24 } } });
 
-    const root = screen.getByRole('dialog');
-    expect(root).not.toHaveStyle({ borderRadius: '24px' });
-    expect(root.querySelector(`.${modalClassNames.surface}`)).toHaveStyle({ borderRadius: '24px' });
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).not.toHaveStyle({ borderRadius: '24px' });
+    expect(overlay.querySelector(`.${modalClassNames.modal}`)).toHaveStyle({
+      borderRadius: '24px',
+    });
   });
 });
