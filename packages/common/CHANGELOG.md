@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.4.0 (6/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add gray4 illustration color token. [[#746](https://github.com/coinbase/cds/pull/746)]
+
 ## 9.3.1 (6/12/2026 PST)
 
 #### 🐞 Fixes
