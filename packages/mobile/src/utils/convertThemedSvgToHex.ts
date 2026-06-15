@@ -3,7 +3,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 export const convertThemedSvgToHex = (
   xml: string,
-  illustrationPalette: { [key in ThemeVars.IllustrationColor]: string },
+  illustrationPalette: Partial<{ [key in ThemeVars.IllustrationColor]: string }>,
 ) => {
   const cssVarPattern = /var\(--illustration-([a-z0-9-]+)\)/gi;
   const normalizeToken = (token: string) => token.replace(/-/g, '');
