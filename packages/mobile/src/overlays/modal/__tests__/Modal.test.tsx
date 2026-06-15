@@ -386,11 +386,11 @@ describe('Modal', () => {
     expect(screen.getByHintText('Back button hint')).toBeTruthy();
   });
 
-  it('forwards the dialog styles slot to the modal surface', () => {
+  it('forwards the surface styles slot to the modal surface', () => {
     render(
       <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
         <DefaultThemeProvider>
-          <Modal visible onRequestClose={jest.fn()} styles={{ dialog: { borderTopWidth: 7 } }}>
+          <Modal visible onRequestClose={jest.fn()} styles={{ surface: { borderTopWidth: 7 } }}>
             <Text testID="modal-content">Content</Text>
           </Modal>
         </DefaultThemeProvider>

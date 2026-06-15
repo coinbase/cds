@@ -78,6 +78,7 @@ Review the component's JSX to identify elements that should be targetable via st
 | `step`                | Individual step element (in steppers)                 |
 | `substepContainer`    | Container for nested sub-steps                        |
 | `subtitle`            | Subtitle text element                                 |
+| `surface`             | Visible elevated surface/card element (e.g., in modals) |
 | `tab`                 | Tab element (in tabs)                                 |
 | `tabs`                | Tabs container element                                |
 | `thumb`               | Draggable thumb element (in sliders)                  |

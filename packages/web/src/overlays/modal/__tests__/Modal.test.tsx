@@ -511,35 +511,35 @@ describe('Modal styles API', () => {
       </DefaultThemeProvider>,
     );
 
-  it('applies static class names to root and dialog', () => {
+  it('applies static class names to root and surface', () => {
     renderStyledModal();
 
     const root = screen.getByRole('dialog');
     expect(root).toHaveClass(modalClassNames.root);
-    expect(root.querySelector(`.${modalClassNames.dialog}`)).toBeInTheDocument();
+    expect(root.querySelector(`.${modalClassNames.surface}`)).toBeInTheDocument();
   });
 
-  it('applies the classNames slot to root and dialog', () => {
-    renderStyledModal({ classNames: { root: 'custom-root', dialog: 'custom-dialog' } });
+  it('applies the classNames slot to root and surface', () => {
+    renderStyledModal({ classNames: { root: 'custom-root', surface: 'custom-surface' } });
 
     const root = screen.getByRole('dialog');
     expect(root).toHaveClass('custom-root');
-    expect(root.querySelector('.custom-dialog')).toBeInTheDocument();
+    expect(root.querySelector('.custom-surface')).toBeInTheDocument();
   });
 
-  it('applies the styles slot to root and dialog', () => {
-    renderStyledModal({ styles: { root: { outlineWidth: 3 }, dialog: { borderRadius: 16 } } });
+  it('applies the styles slot to root and surface', () => {
+    renderStyledModal({ styles: { root: { outlineWidth: 3 }, surface: { borderRadius: 16 } } });
 
     const root = screen.getByRole('dialog');
     expect(root).toHaveStyle({ outlineWidth: '3px' });
-    expect(root.querySelector(`.${modalClassNames.dialog}`)).toHaveStyle({ borderRadius: '16px' });
+    expect(root.querySelector(`.${modalClassNames.surface}`)).toHaveStyle({ borderRadius: '16px' });
   });
 
-  it('applies appearance styles to the dialog card, not the root container', () => {
-    renderStyledModal({ styles: { dialog: { borderRadius: 24 } } });
+  it('applies appearance styles to the modal surface, not the root container', () => {
+    renderStyledModal({ styles: { surface: { borderRadius: 24 } } });
 
     const root = screen.getByRole('dialog');
     expect(root).not.toHaveStyle({ borderRadius: '24px' });
-    expect(root.querySelector(`.${modalClassNames.dialog}`)).toHaveStyle({ borderRadius: '24px' });
+    expect(root.querySelector(`.${modalClassNames.surface}`)).toHaveStyle({ borderRadius: '24px' });
   });
 });

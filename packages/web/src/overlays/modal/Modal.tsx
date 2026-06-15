@@ -76,10 +76,10 @@ const MotionBox = motion(Box);
  * Use these selectors to target specific elements with CSS.
  */
 export const modalClassNames = {
-  /** Backdrop container element that positions the dialog within the viewport */
+  /** Backdrop container element that positions the modal within the viewport */
   root: 'cds-Modal',
-  /** Visible dialog card element */
-  dialog: 'cds-Modal-dialog',
+  /** Visible modal surface element */
+  surface: 'cds-Modal-surface',
 } as const;
 
 const overlayContentContextValue: OverlayContentContextValue = {
@@ -289,8 +289,8 @@ export const Modal = memo(
                 borderedVertical={borderedVertical}
                 className={cx(
                   !dangerouslyDisableResponsiveness && modalDialogResponsiveCss,
-                  modalClassNames.dialog,
-                  classNames?.dialog,
+                  modalClassNames.surface,
+                  classNames?.surface,
                 )}
                 color={color}
                 elevation={elevation}
@@ -302,7 +302,7 @@ export const Modal = memo(
                 paddingTop={paddingTop}
                 paddingX={paddingX}
                 paddingY={paddingY}
-                style={styles?.dialog}
+                style={styles?.surface}
                 width="100%"
               >
                 <ModalContext.Provider value={modalData}>
