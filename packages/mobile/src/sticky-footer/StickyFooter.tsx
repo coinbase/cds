@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { View } from 'react-native';
 
-import { Box, type BoxProps } from '../layout';
+import { Box, type BoxProps } from '../layout/Box';
 
 export type StickyFooterProps = BoxProps & {
   /**

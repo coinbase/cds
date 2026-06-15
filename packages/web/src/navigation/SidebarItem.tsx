@@ -4,8 +4,8 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon, type IconProps } from '../icons';
-import { Box } from '../layout';
+import { Icon, type IconProps } from '../icons/Icon';
+import { Box } from '../layout/Box';
 import { Tooltip } from '../overlays/tooltip/Tooltip';
 import type { TooltipBaseProps, TooltipProps } from '../overlays/tooltip/TooltipProps';
 import {
@@ -15,7 +15,7 @@ import {
   type PressableProps,
 } from '../system/Pressable';
 import type { StylesAndClassNames } from '../types';
-import { Text } from '../typography';
+import { Text } from '../typography/Text';
 
 import { useSidebarContext } from './SidebarContext';
 

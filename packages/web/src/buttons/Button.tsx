@@ -1,11 +1,9 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import type {
-  ButtonVariant,
-  IconName,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -16,7 +14,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
-import { ProgressCircle } from '../visualizations';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 

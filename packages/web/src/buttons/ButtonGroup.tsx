@@ -1,14 +1,13 @@
 import React, { Children, cloneElement, memo } from 'react';
-import type {
-  ElementChildren,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { ElementChildren } from '@coinbase/cds-common/types/React';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, type GroupDirection } from '../layout';
+import { Box } from '../layout/Box';
+import { type GroupDirection } from '../layout/Group';
 
 import type { ButtonBaseProps } from './Button';
 

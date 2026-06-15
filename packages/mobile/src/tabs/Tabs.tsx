@@ -19,8 +19,10 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import type { BoxBaseProps, BoxProps, HStackProps } from '../layout';
-import { Box, HStack } from '../layout';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
+import { Box } from '../layout/Box';
+import type { HStackProps } from '../layout/HStack';
+import { HStack } from '../layout/HStack';
 
 import { DefaultTab } from './DefaultTab';
 import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';

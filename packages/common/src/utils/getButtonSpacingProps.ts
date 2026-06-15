@@ -1,5 +1,5 @@
 import type { ThemeVars } from '../core/theme';
-import type { NegativeSpace } from '../types';
+import type { NegativeSpace } from '../types/SpacingProps';
 
 const buttonPaddingX = {
   default: 4,

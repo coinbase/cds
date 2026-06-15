@@ -20,24 +20,23 @@ import {
   type SkParagraph,
 } from '@shopify/react-native-skia';
 
-import { useTheme } from '../../../index';
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import {
   ReferenceLine,
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
-} from '../line';
-import type { ChartTextChildren, ChartTextProps } from '../text';
-import {
-  type ChartInset,
-  defaultAccessoryEnterTransition,
-  getPointOnSerializableScale,
-  getTransition,
-  type Series,
-  useScrubberContext,
-} from '../utils';
+} from '../line/ReferenceLine';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { type ChartInset, type Series } from '../utils/chart';
+import { useScrubberContext } from '../utils/context';
+import { getPointOnSerializableScale } from '../utils/point';
 import type { Transition } from '../utils/transition';
-import { buildTransition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultAccessoryEnterTransition,
+  getTransition,
+} from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import { DefaultScrubberLabel } from './DefaultScrubberLabel';

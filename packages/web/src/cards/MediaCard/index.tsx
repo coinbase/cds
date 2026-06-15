@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';

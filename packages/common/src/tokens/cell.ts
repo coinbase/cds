@@ -1,4 +1,5 @@
-import type { IconName, ThemeVars } from '..';
+import type { ThemeVars } from '../core/theme';
+import type { IconName } from '../types/IconName';
 
 import { gutter } from './sizing';
 

@@ -1,10 +1,10 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { DotCount } from '../dots/DotCount';
 import { useTheme } from '../hooks/useTheme';
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 import type { TextProps } from '../typography/Text';
 import { Text } from '../typography/Text';
 

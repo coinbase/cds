@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { css } from '@linaria/core';
 
-import { cx } from '../../../index';
+import { cx } from '../../../cx';
 import { Text } from '../../../typography/Text';
 
 import { useSparklineInteractiveScrubContext } from './SparklineInteractiveScrubProvider';

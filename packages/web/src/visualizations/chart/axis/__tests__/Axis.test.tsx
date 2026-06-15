@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { DefaultThemeProvider } from '../../../../utils/test';
 import { CartesianChart } from '../../CartesianChart';
 import { Line } from '../../line/Line';
-import { getAxisTicksData } from '../../utils';
+import { getAxisTicksData } from '../../utils/axis';
 import { XAxis, YAxis } from '..';
 
-jest.mock('../../utils', () => {
-  const actual = jest.requireActual('../../utils');
+jest.mock('../../utils/axis', () => {
+  const actual = jest.requireActual('../../utils/axis');
   return {
     ...actual,
     getAxisTicksData: jest.fn(actual.getAxisTicksData),

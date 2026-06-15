@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { type StyleProp, type TextStyle } from 'react-native';
-import type { MotionDuration } from '@coinbase/cds-common';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
 import { durations } from '@coinbase/cds-common/motion/tokens';
+import type { MotionDuration } from '@coinbase/cds-common/types/Motion';
 
 import { Text } from '../typography/Text';
 

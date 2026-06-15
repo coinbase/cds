@@ -1,11 +1,11 @@
 import { useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import type { MotionDuration } from '@coinbase/cds-common';
 import {
   animateInOpacityConfig,
   animateOutOpacityConfig,
   overlayHiddenOpacity,
 } from '@coinbase/cds-common/animation/overlay';
+import type { MotionDuration } from '@coinbase/cds-common/types/Motion';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 

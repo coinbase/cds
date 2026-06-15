@@ -4,13 +4,10 @@ import { ClipPath, Defs, Path, Rect, Svg } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { hexagonShapePath } from '@coinbase/cds-common/svg/shape';
 import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
-import type {
-  AvatarFallbackColor,
-  AvatarShape,
-  AvatarSize,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { AvatarFallbackColor, AvatarShape } from '@coinbase/cds-common/types/AvatarBaseProps';
+import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';

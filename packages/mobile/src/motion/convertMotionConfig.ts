@@ -1,6 +1,6 @@
 import { Easing } from 'react-native-reanimated';
-import type { MotionBaseSpec } from '@coinbase/cds-common';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
+import type { MotionBaseSpec } from '@coinbase/cds-common/types/Motion';
 
 export const mobileCurves = {
   global: Easing.bezier(...curves.global),

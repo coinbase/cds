@@ -1,6 +1,7 @@
 import React from 'react';
 import { opacityHovered, opacityPressed } from '@coinbase/cds-common/tokens/interactable';
-import type { SharedProps, ValidateProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

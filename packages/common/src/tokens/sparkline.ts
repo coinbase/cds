@@ -1,5 +1,5 @@
 import { durations } from '../motion/tokens';
-import type { SparklineInteractiveHeaderSignVariant } from '../types';
+import type { SparklineInteractiveHeaderSignVariant } from '../types/SparklineInteractiveHeaderBaseProps';
 
 export const chartHeight = 320;
 export const chartCompactHeight = 120;

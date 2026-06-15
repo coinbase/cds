@@ -1,4 +1,5 @@
-import type { CellSpacingConfig, InputVariant } from '../types';
+import type { CellSpacingConfig } from '../types/CellBaseProps';
+import type { InputVariant } from '../types/InputBaseProps';
 
 import { gutter } from './sizing';
 

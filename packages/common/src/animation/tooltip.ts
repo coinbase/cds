@@ -1,4 +1,5 @@
-import type { BaseTooltipPlacement, MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
+import type { BaseTooltipPlacement } from '../types/TooltipBaseProps';
 
 export const tooltipHiddenOpacity = 0;
 export const tooltipVisibleOpacity = 1;

@@ -1,12 +1,13 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { m as motion } from 'framer-motion';
 
-import { cx } from '../../../index';
-import { Box, type BoxProps } from '../../../layout';
-import { Text } from '../../../typography';
+import { cx } from '../../../cx';
+import { Box, type BoxProps } from '../../../layout/Box';
+import { Text } from '../../../typography/Text';
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartInset, getChartInset } from '../utils';
+import { type ChartInset, getChartInset } from '../utils/chart';
 import { accessoryFadeTransitionDuration } from '../utils/transition';
 
 type ValidChartTextChildElements =

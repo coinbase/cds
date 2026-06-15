@@ -1,4 +1,4 @@
-import type { PaddingProps } from '../types';
+import type { PaddingProps } from '../types/SpacingProps';
 
 export const getCardBodySpacingProps = ({
   padding,

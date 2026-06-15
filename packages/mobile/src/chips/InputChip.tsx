@@ -2,7 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon } from '../icons';
+import { Icon } from '../icons/Icon';
 
 import type { InputChipProps } from './ChipProps';
 import { MediaChip } from './MediaChip';

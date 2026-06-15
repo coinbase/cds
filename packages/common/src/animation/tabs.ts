@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 type TabIndicatorMotionBaseSpec = Pick<MotionBaseSpec, 'easing' | 'duration' | 'property'>;
 

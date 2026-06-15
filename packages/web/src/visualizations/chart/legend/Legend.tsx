@@ -1,8 +1,8 @@
 import { forwardRef, memo, useMemo } from 'react';
 
-import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../../layout';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../../layout/Box';
 import { useCartesianChartContext } from '../ChartProvider';
-import type { LegendShape } from '../utils';
+import type { LegendShape } from '../utils/chart';
 
 import { DefaultLegendEntry } from './DefaultLegendEntry';
 import { DefaultLegendShape } from './DefaultLegendShape';

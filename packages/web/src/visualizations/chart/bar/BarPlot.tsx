@@ -2,7 +2,8 @@ import { memo, useId, useMemo } from 'react';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getStackGroups, instantTransition } from '../utils';
+import { getStackGroups } from '../utils/bar';
+import { instantTransition } from '../utils/transition';
 
 import type { BarSeries } from './BarStack';
 import type { BarStackGroupProps } from './BarStackGroup';

@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.3.1 (6/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: replace barrel file imports with targeted imports to specific modules. [[#757](https://github.com/coinbase/cds/pull/757)]
+
 ## 9.3.0 (6/11/2026 PST)
 
 #### 🚀 Updates

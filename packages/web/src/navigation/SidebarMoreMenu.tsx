@@ -1,9 +1,9 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { sidebarMenuMaxWidth, sidebarMenuMinWidth } from '@coinbase/cds-common/tokens/menu';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { DropdownBaseProps, DropdownProps } from '../dropdown';
-import { Dropdown } from '../dropdown';
+import { Dropdown } from '../dropdown/Dropdown';
+import type { DropdownBaseProps, DropdownProps } from '../dropdown/DropdownProps';
 import { useA11yControlledVisibility } from '../hooks/useA11yControlledVisibility';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { PopoverContentPositionConfig } from '../overlays/popover/PopoverProps';

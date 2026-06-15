@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import type { ChartFormatDate, ChartGetMarker } from '../types';
+import type { ChartFormatDate, ChartGetMarker } from '../types/Chart';
 
 export type GetFormattedDateParams<Period extends string> = {
   getMarker: ChartGetMarker;

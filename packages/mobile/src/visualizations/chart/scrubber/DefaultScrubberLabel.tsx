@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { DefaultReferenceLineLabel } from '../line';
+import { DefaultReferenceLineLabel } from '../line/DefaultReferenceLineLabel';
 
 import type { ScrubberLabelProps } from './Scrubber';
 

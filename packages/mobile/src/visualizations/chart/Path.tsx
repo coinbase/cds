@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo } from 'react';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import {
   type AnimatedProp,
   Group,
@@ -10,6 +10,7 @@ import {
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
+import { unwrapAnimatedValue } from './utils/chart';
 import { defaultPathEnterTransition } from './utils/path';
 import {
   buildTransition,
@@ -19,7 +20,6 @@ import {
   usePathTransition,
 } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
-import { unwrapAnimatedValue } from './utils';
 
 /**
  * Duration in milliseconds for path enter transition.

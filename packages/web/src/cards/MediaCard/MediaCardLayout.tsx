@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 
-import { Box } from '../../layout';
+import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';

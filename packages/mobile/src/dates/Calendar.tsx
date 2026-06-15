@@ -19,7 +19,7 @@ import { getMidnightDate } from '@coinbase/cds-common/dates/getMidnightDate';
 import { getTimesFromDatesAndRanges } from '@coinbase/cds-common/dates/getTimesFromDatesAndRanges';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useA11y } from '../hooks/useA11y';
 import { useComponentConfig } from '../hooks/useComponentConfig';

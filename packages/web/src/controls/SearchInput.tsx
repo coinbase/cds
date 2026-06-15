@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';

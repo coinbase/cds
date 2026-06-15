@@ -1,15 +1,13 @@
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { Modal as RNModal, type ViewStyle } from 'react-native';
-import type {
-  ButtonVariant,
-  IllustrationPictogramNames,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Pictogram } from '../illustrations';
-import { Box } from '../layout';
+import { Pictogram } from '../illustrations/Pictogram';
+import { Box } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 import type { ModalBaseProps, ModalRefBaseProps } from './modal/Modal';

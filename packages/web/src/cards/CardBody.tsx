@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { defaultMediaSize } from '@coinbase/cds-common/tokens/card';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { PictogramName, SpotSquareName } from '@coinbase/cds-illustrations';
 
 import { Button } from '../buttons/Button';

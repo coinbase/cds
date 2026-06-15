@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 
-import { ChartText, type ChartTextProps } from '../text';
+import { ChartText, type ChartTextProps } from '../text/ChartText';
 import { getAlignmentFromPosition, getLabelCoordinates } from '../utils/point';
 
 import type { PointLabelProps } from './Point';

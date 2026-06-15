@@ -1,6 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { m as motion } from 'framer-motion';
 
 import { Box } from '../layout/Box';

@@ -10,9 +10,9 @@ import React, {
 } from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import type { ScrollView, ScrollViewProps } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
 import { animateOpacityConfig, animateSizeConfig } from '@coinbase/cds-common/animation/carousel';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 import type { ScrollToParams } from '../../hooks/useScrollTo';

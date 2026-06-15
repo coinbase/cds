@@ -6,7 +6,7 @@ import React, {
   memo,
   useMemo,
 } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 

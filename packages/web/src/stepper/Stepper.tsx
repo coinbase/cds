@@ -2,7 +2,7 @@ import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useSt
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { containsStep, flattenSteps, isStepVisited } from '@coinbase/cds-common/stepper/utils';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 import type { SpringConfig } from '@react-spring/core';
 import type { Transition } from 'framer-motion';
 

@@ -1,6 +1,6 @@
 import { hsl, type HSLColor } from 'd3-color';
 
-import type { AvatarFallbackColor } from '../types';
+import type { AvatarFallbackColor } from '../types/AvatarBaseProps';
 
 const hashFromString = (s: string): number =>
   s.split('').reduce((a, b) => {

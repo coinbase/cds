@@ -1,6 +1,6 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
-import type { SelectBaseProps } from '../alpha';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
+import type { SelectBaseProps } from '../alpha/select/types';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '../alpha/tabbed-chips/TabbedChips';
 import type { BannerBaseProps } from '../banner/Banner';

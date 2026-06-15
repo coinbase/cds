@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import type { SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import type { CartesianAxisConfig } from './axis';

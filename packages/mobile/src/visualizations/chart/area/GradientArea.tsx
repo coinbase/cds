@@ -2,9 +2,9 @@ import { memo, useMemo } from 'react';
 
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Gradient } from '../gradient';
+import { Gradient } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
-import { createGradient, getBaseline } from '../utils';
+import { createGradient, getBaseline } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 

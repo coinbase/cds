@@ -1,5 +1,5 @@
 import type { ThemeVars } from '../core/theme';
-import type { ButtonVariant } from '../types';
+import type { ButtonVariant } from '../types/ButtonBaseProps';
 
 type ButtonVariantStyles = {
   background: ThemeVars.Color;

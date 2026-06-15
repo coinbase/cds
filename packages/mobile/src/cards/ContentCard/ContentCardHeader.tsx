@@ -1,10 +1,11 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { HStackProps } from '../../layout';
-import { HStack, VStack } from '../../layout';
-import { Avatar } from '../../media';
+import type { HStackProps } from '../../layout/HStack';
+import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
+import { Avatar } from '../../media/Avatar';
 import { Text } from '../../typography/Text';
 
 export type ContentCardHeaderBaseProps = SharedProps & {

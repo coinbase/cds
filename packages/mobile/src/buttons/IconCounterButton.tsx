@@ -1,15 +1,16 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { PressableStateCallbackType, StyleProp, TextStyle, View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { IconSize, ValidateProps } from '@coinbase/cds-common/types';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
 import { formatCount } from '@coinbase/cds-common/utils/formatCount';
 import type { IconName } from '@coinbase/cds-icons';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon } from '../icons';
-import { HStack } from '../layout';
-import type { PressableProps } from '../system';
-import { Pressable } from '../system';
+import { Icon } from '../icons/Icon';
+import { HStack } from '../layout/HStack';
+import type { PressableProps } from '../system/Pressable';
+import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type IconCounterButtonBaseProps = {

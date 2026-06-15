@@ -1,8 +1,8 @@
 import { memo, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
-import { type ChartInset, getChartInset } from '../utils';
+import { ChartText } from '../text/ChartText';
+import { type ChartInset, getChartInset } from '../utils/chart';
 
 import type { ReferenceLineLabelComponentProps } from './ReferenceLine';
 

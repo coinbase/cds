@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import type { LottieSource } from '@coinbase/cds-common';
 import { colorToHex } from '@coinbase/cds-common/color/colorToHex';
+import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 
 import { useTheme } from '../hooks/useTheme';
 

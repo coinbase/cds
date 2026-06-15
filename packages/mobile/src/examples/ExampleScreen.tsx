@@ -1,7 +1,7 @@
 import React, { createContext, type JSX, useCallback, useContext, useMemo, useRef } from 'react';
 import { ScrollView } from 'react-native';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import type { PaddingProps } from '@coinbase/cds-common/types';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useTheme } from '../hooks/useTheme';
 import type { BoxBaseProps, BoxProps } from '../layout/Box';

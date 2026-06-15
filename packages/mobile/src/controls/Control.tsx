@@ -7,17 +7,18 @@ import type {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import type { ElevationLevels, SharedProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   accessibleOpacityDisabled,
   opacityPressed,
 } from '@coinbase/cds-common/tokens/interactable';
+import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import type { InteractableBaseProps } from '../system';
+import type { InteractableBaseProps } from '../system/Interactable';
 import type { TextProps } from '../typography/Text';
 import { Text } from '../typography/Text';
 import { Haptics } from '../utils/haptics';

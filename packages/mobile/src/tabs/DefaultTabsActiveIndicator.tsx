@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 import { type TabsActiveIndicatorProps, tabsSpringConfig } from './Tabs';
 

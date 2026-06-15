@@ -431,6 +431,31 @@ export default tseslint.config(
       ...react19CompatibilityRules,
     },
   },
+  // Scope no-cds-barrel-imports to the published source of the three platform
+  // packages. Non-shipped files (stories, Figma Code Connect, tests, mocks,
+  // fixtures) are excluded since they aren't part of the package's build output
+  // and so don't affect downstream consumers' bundles.
+  {
+    files: [
+      'packages/web/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+      'packages/mobile/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+      'packages/common/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+    ],
+    ignores: [
+      '**/__stories__/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/__fixtures__/**',
+      '**/__figma__/**',
+      '**/*.stories.*',
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/*.figma.*',
+    ],
+    rules: {
+      'internal/no-cds-barrel-imports': 'warn',
+    },
+  },
   {
     files: ['**/*.stories.{js,jsx,ts,tsx}', '**/__stories__/**'],
     rules: {

@@ -3,13 +3,18 @@ import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import { LinearGradient } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { buildTransition, defaultTransition, instantTransition, type Transition } from '../utils';
 import {
   getColorWithOpacity,
   getGradientAxis,
   getGradientConfig,
   type GradientDefinition,
 } from '../utils/gradient';
+import {
+  buildTransition,
+  defaultTransition,
+  instantTransition,
+  type Transition,
+} from '../utils/transition';
 
 export type GradientBaseProps = {
   /**

@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useContext } from 'react';
 import type { View } from 'react-native';
-import type { IconButtonVariant, InputVariant } from '@coinbase/cds-common/types';
+import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
+import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 
 import { IconButton, type IconButtonProps } from '../buttons/IconButton';
 import { Box } from '../layout/Box';

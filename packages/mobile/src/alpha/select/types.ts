@@ -1,14 +1,15 @@
 import type React from 'react';
 import type { AccessibilityRole, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { CellAccessoryProps } from '../../cells/CellAccessory';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { TextInputBaseProps } from '../../controls/TextInput';
-import type { BoxProps } from '../../layout';
-import type { DrawerRefBaseProps, TrayProps } from '../../overlays';
+import type { BoxProps } from '../../layout/Box';
+import type { DrawerRefBaseProps } from '../../overlays/drawer/Drawer';
+import type { TrayProps } from '../../overlays/tray/Tray';
 import type { InteractableBlendStyles } from '../../system/Interactable';
 import type { PressableProps } from '../../system/Pressable';
 

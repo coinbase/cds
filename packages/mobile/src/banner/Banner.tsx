@@ -2,21 +2,20 @@ import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState
 import type { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { variants } from '@coinbase/cds-common/tokens/banner';
-import type {
-  BannerStyleVariant,
-  BannerVariant,
-  IconName,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { BannerStyleVariant, BannerVariant } from '@coinbase/cds-common/types/BannerBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Icon } from '../icons';
-import type { HStackProps } from '../layout';
-import { Box, HStack, VStack } from '../layout';
+import { Icon } from '../icons/Icon';
+import { Box } from '../layout/Box';
+import type { HStackProps } from '../layout/HStack';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Pressable } from '../system/Pressable';
-import { Link, type LinkProps } from '../typography';
+import { Link, type LinkProps } from '../typography/Link';
 import { Text } from '../typography/Text';
 
 export type BannerBaseProps = SharedProps & {

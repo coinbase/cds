@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { ChartText } from '../text';
+import { ChartText } from '../text/ChartText';
 
 import type { AxisTickLabelComponentProps } from './Axis';
 

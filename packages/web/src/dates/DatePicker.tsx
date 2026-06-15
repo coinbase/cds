@@ -13,7 +13,8 @@ import { type AnimationProps, m as motion } from 'framer-motion';
 import { InputIconButton } from '../controls/InputIconButton';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 import { getMotionProps } from '../motion/useMotionProps';
 import { Popover } from '../overlays/popover/Popover';
 import {

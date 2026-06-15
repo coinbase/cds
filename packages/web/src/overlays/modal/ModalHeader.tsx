@@ -1,6 +1,6 @@
 import React from 'react';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import { IconButton } from '../../buttons/IconButton';
 import { useComponentConfig } from '../../hooks/useComponentConfig';

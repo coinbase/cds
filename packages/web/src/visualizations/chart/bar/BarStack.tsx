@@ -1,11 +1,12 @@
 import React, { memo, useMemo } from 'react';
-import type { Rect } from '@coinbase/cds-common';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, Series } from '../utils';
 import { EPSILON, getBars, getBaselinePx, getStackOrigin } from '../utils/bar';
+import type { Series } from '../utils/chart';
 import { getGradientAxis, getGradientConfig } from '../utils/gradient';
+import type { ChartScaleFunction } from '../utils/scale';
 
 import { Bar, type BarBaseProps, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';

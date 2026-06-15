@@ -16,10 +16,10 @@ import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { VStack } from '../../layout';
+import { VStack } from '../../layout/VStack';
 
 import { useModalAnimation } from './useModalAnimation';
 

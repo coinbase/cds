@@ -2,9 +2,9 @@ import React, { forwardRef, memo } from 'react';
 import { Animated } from 'react-native';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 import { useTabIndicatorStyles } from './hooks/useTabIndicatorStyles';
 

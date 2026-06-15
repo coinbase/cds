@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -7,17 +7,13 @@ import {
   ReferenceLine,
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
-} from '../line';
-import type { ChartTextChildren, ChartTextProps } from '../text';
-import {
-  type ChartInset,
-  type ChartScaleFunction,
-  defaultAccessoryEnterTransition,
-  getPointOnScale,
-  getTransition,
-  type Series,
-  useScrubberContext,
-} from '../utils';
+} from '../line/ReferenceLine';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { type ChartInset, type Series } from '../utils/chart';
+import { useScrubberContext } from '../utils/context';
+import { getPointOnScale } from '../utils/point';
+import { type ChartScaleFunction } from '../utils/scale';
+import { defaultAccessoryEnterTransition, getTransition } from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import { DefaultScrubberLabel } from './DefaultScrubberLabel';

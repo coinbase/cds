@@ -3,17 +3,16 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import type { Polymorphic } from '../../core/polymorphism';
-import { cx } from '../../index';
-import { Box } from '../../layout';
+import { cx } from '../../cx';
+import { Box } from '../../layout/Box';
+import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
+import { SegmentedTabs, type SegmentedTabsProps } from '../../tabs/SegmentedTabs';
 import {
-  SegmentedTabs,
-  type SegmentedTabsProps,
   type TabComponent,
   type TabsActiveIndicatorProps,
   tabsTransitionConfig,
-} from '../../tabs';
-import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
-import { Text, type TextBaseProps } from '../../typography';
+} from '../../tabs/Tabs';
+import { Text, type TextBaseProps } from '../../typography/Text';
 
 const MotionBox = motion(Box);
 

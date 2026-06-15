@@ -3,7 +3,7 @@ import {
   useFallbackShape,
   type UseFallbackShapeOptions,
 } from '@coinbase/cds-common/hooks/useFallbackShape';
-import type { Shape } from '@coinbase/cds-common/types';
+import type { Shape } from '@coinbase/cds-common/types/Shape';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

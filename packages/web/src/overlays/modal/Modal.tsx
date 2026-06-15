@@ -11,14 +11,14 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../../cx';
 import { useA11yLabels } from '../../hooks/useA11yLabels';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { Box } from '../../layout';
+import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { media } from '../../styles/media';

@@ -6,10 +6,11 @@ import type {
 } from '@coinbase/cds-common/overlays/ToastProvider';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import { useA11y } from '../hooks/useA11y';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, type BoxProps, HStack } from '../layout';
+import { Box, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
 import { ColorSurge } from '../motion/ColorSurge';
 import { Text } from '../typography/Text';
 

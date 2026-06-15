@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useId } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, type BoxBaseProps, type BoxProps } from '../layout';
-import { Text } from '../typography';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
+import { Text } from '../typography/Text';
 
 // Styles for container reset
 const containerCss = css`

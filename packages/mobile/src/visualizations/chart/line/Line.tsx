@@ -1,18 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
-import { useTheme } from '../../../index';
+import { useTheme } from '../../../hooks/useTheme';
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
-import { Point, type PointBaseProps, type PointProps } from '../point';
-import {
-  type ChartPathCurveType,
-  getLineData,
-  getLinePath,
-  type GradientDefinition,
-} from '../utils';
+import { Point, type PointBaseProps, type PointProps } from '../point/Point';
+import { getLineData } from '../utils/chart';
+import { type GradientDefinition } from '../utils/gradient';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
+import { type ChartPathCurveType, getLinePath } from '../utils/path';
 import { convertToSerializableScale } from '../utils/scale';
 
 import { DottedLine } from './DottedLine';

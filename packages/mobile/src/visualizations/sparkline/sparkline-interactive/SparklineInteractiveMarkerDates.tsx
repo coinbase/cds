@@ -7,7 +7,7 @@ import times from 'lodash/times';
 
 import { useLayout } from '../../../hooks/useLayout';
 import { useTheme } from '../../../hooks/useTheme';
-import { Text } from '../../../typography';
+import { Text } from '../../../typography/Text';
 
 import type { ChartFormatDate, ChartGetMarker } from './SparklineInteractive';
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';

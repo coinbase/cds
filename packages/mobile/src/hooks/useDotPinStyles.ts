@@ -1,5 +1,5 @@
 import type { LayoutRectangle } from 'react-native';
-import type { DotOverlap } from '@coinbase/cds-common';
+import type { DotOverlap } from '@coinbase/cds-common/types/DotBaseProps';
 
 /** Valid keys for accessing pin position offsets. */
 export type DotPinStylesKey = 'end' | 'start' | 'bottom' | 'top';

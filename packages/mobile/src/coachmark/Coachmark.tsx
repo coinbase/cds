@@ -1,13 +1,15 @@
 import React, { forwardRef, memo } from 'react';
 import { useWindowDimensions } from 'react-native';
 import type { DimensionValue, View } from 'react-native';
-import { type SharedProps } from '@coinbase/cds-common';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { IconButton } from '../buttons';
+import { IconButton } from '../buttons/IconButton';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxBaseProps, type BoxProps, HStack, VStack } from '../layout';
-import { InvertedThemeProvider } from '../system';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
 export type CoachmarkBaseProps = SharedProps &

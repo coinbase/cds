@@ -2,20 +2,16 @@ import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
-import { cx } from '../../../index';
+import { cx } from '../../../cx';
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
-import {
-  type CategoricalScale,
-  getAxisTicksData,
-  getPointOnScale,
-  isCategoricalScale,
-  lineToPath,
-  toPointAnchor,
-} from '../utils';
+import { getAxisTicksData, toPointAnchor } from '../utils/axis';
+import { lineToPath } from '../utils/path';
+import { getPointOnScale } from '../utils/point';
+import { type CategoricalScale, isCategoricalScale } from '../utils/scale';
 
 import {
   type AxisBaseProps,

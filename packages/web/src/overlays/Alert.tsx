@@ -1,15 +1,13 @@
 import { forwardRef, memo, useCallback, useMemo } from 'react';
-import type {
-  ButtonVariant,
-  IllustrationPictogramNames,
-  SharedProps,
-  ValidateProps,
-} from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import { useA11yLabels } from '../hooks/useA11yLabels';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Pictogram } from '../illustrations';
+import { Pictogram } from '../illustrations/Pictogram';
 import { Box } from '../layout/Box';
 import type { PositionStyles } from '../styles/styleProps';
 import { Text } from '../typography/Text';

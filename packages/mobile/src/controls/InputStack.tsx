@@ -10,7 +10,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useTheme } from '../hooks/useTheme';
-import type { BoxBaseProps, BoxProps } from '../layout';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { ColorSurge } from '../motion/ColorSurge';

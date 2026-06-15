@@ -3,7 +3,7 @@ import type { Key } from 'react';
 import type { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { HStack } from '../../layout';
+import { HStack } from '../../layout/HStack';
 import { Text } from '../../typography/Text';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';

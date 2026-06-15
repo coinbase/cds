@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { Placement } from '@coinbase/cds-common/types';
 import type {
   ChartData,
   ChartDataPoint,
@@ -11,18 +10,20 @@ import type {
   ChartScrubParams,
   ChartTimeseries,
 } from '@coinbase/cds-common/types/Chart';
+import type { Placement } from '@coinbase/cds-common/types/Placement';
 import { minMax } from '@coinbase/cds-common/utils/chart';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- cds-lottie-files subpaths are the deepest available exports
 import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
 import { emptyArray, noop } from '@coinbase/cds-utils';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
-import { Lottie } from '../../../animation';
+import { Lottie } from '../../../animation/Lottie';
 import { useScreenReaderStatus } from '../../../hooks/useScreenReaderStatus';
 import { useTheme } from '../../../hooks/useTheme';
-import { Box } from '../../../layout';
+import { Box } from '../../../layout/Box';
 
 import { SparklineAccessibleView } from './SparklineAccessibleView';
 import { SparklineInteractiveHoverDate } from './SparklineInteractiveHoverDate';

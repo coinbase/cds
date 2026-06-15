@@ -1,14 +1,14 @@
 import type React from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { CellAccessoryProps } from '../../cells/CellAccessory';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
-import type { PressableDefaultElement, PressableProps } from '../../system';
 import type { InteractableBlendStyles } from '../../system/Interactable';
+import type { PressableDefaultElement, PressableProps } from '../../system/Pressable';
 
 export type SelectType = 'single' | 'multi';
 

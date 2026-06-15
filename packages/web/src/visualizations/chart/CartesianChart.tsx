@@ -1,34 +1,35 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import { css } from '@linaria/core';
 
+import { cx } from '../../cx';
 import { useDimensions } from '../../hooks/useDimensions';
-import { cx } from '../../index';
-import { Box, type BoxBaseProps, type BoxProps } from '../../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../../layout/Box';
 
+import { Legend } from './legend/Legend';
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { CartesianChartProvider } from './ChartProvider';
-import { Legend } from './legend';
 import {
   type CartesianAxisConfig,
   type CartesianAxisConfigProps,
-  type CartesianChartContextValue,
-  type CartesianChartLayout,
-  type ChartInset,
-  type ChartScaleFunction,
   defaultAxisId,
-  defaultHorizontalLayoutChartInset,
-  defaultVerticalLayoutChartInset,
   getAxisConfig,
   getAxisRange,
   getCartesianAxisDomain,
   getCartesianAxisScale,
+  useTotalAxisPadding,
+} from './utils/axis';
+import {
+  type ChartInset,
+  defaultHorizontalLayoutChartInset,
+  defaultVerticalLayoutChartInset,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
   type LegendPosition,
   type Series,
-  useTotalAxisPadding,
-} from './utils';
+} from './utils/chart';
+import { type CartesianChartContextValue, type CartesianChartLayout } from './utils/context';
+import { type ChartScaleFunction } from './utils/scale';
+import { CartesianChartProvider } from './ChartProvider';
 
 const focusStylesCss = css`
   &:focus {

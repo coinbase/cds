@@ -1,11 +1,9 @@
 import React, { forwardRef, Fragment, memo, useCallback, useId, useMemo, useState } from 'react';
 import type { ChangeEvent, ForwardedRef } from 'react';
-import type {
-  IconName,
-  IconSize,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

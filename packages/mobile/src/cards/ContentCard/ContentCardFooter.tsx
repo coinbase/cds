@@ -1,9 +1,9 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { HStackProps } from '../../layout';
-import { HStack } from '../../layout';
+import type { HStackProps } from '../../layout/HStack';
+import { HStack } from '../../layout/HStack';
 
 export type ContentCardFooterBaseProps = SharedProps & {
   children?: React.ReactNode;

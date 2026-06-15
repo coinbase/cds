@@ -8,10 +8,10 @@ import type { SelectBaseProps } from '../controls/Select';
 import { SelectProvider } from '../controls/SelectContext';
 import { useSelect } from '../controls/useSelect';
 import { useA11y } from '../hooks/useA11y';
-import { Icon } from '../icons';
-import { Tray } from '../overlays';
+import { Icon } from '../icons/Icon';
 import type { DrawerRefBaseProps } from '../overlays/drawer/Drawer';
 import type { TrayBaseProps } from '../overlays/tray/Tray';
+import { Tray } from '../overlays/tray/Tray';
 
 import type { ChipProps } from './ChipProps';
 import { MediaChip } from './MediaChip';

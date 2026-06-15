@@ -4,6 +4,7 @@ import { lottieStatusToAccessibilityLabel } from '@coinbase/cds-common/lottie/st
 import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusAnimationPoller';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
 import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
 import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 

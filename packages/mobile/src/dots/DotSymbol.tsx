@@ -6,14 +6,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import type {
-  DotOverlap,
-  DotSize,
-  IconName,
-  PinPlacement,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DotOverlap, DotSize } from '@coinbase/cds-common/types/DotBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { PinPlacement } from '@coinbase/cds-common/types/Placement';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';

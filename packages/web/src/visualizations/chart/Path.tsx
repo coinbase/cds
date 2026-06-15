@@ -1,6 +1,7 @@
 import { memo, useId, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { defaultPathEnterTransition } from './utils/path';

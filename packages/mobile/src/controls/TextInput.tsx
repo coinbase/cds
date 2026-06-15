@@ -19,13 +19,10 @@ import type {
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type {
-  SharedAccessibilityProps,
-  SharedInputProps,
-  SharedProps,
-  TextAlignProps,
-} from '@coinbase/cds-common/types';
-import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
+import type { InputVariant, SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useInputBorderStyle } from '../hooks/useInputBorderStyle';

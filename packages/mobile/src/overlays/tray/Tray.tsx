@@ -11,12 +11,13 @@ import React, {
 import { useWindowDimensions } from 'react-native';
 import type { ReactNode } from 'react';
 import type { LayoutChangeEvent, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { ElevationLevels } from '@coinbase/cds-common';
 import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
 import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@coinbase/cds-common/tokens/drawer';
+import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { Box, VStack } from '../../layout';
+import { Box } from '../../layout/Box';
+import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 import {
   Drawer,

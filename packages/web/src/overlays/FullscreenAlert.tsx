@@ -1,11 +1,12 @@
 import { memo, useMemo } from 'react';
-import type { ButtonVariant, IllustrationHeroSquareNames } from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IllustrationHeroSquareNames } from '@coinbase/cds-common/types/IllustrationNames';
 import { css } from '@linaria/core';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import { useA11yLabels } from '../hooks/useA11yLabels';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { HeroSquare } from '../illustrations';
+import { HeroSquare } from '../illustrations/HeroSquare';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { breakpoints } from '../styles/media';

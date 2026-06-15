@@ -1,9 +1,9 @@
 import React from 'react';
 import { type GestureResponderEvent } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
-import { IconButton } from '../../buttons';
+import { IconButton } from '../../buttons/IconButton';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box, type BoxBaseProps } from '../../layout/Box';
 import { HStack, type HStackProps } from '../../layout/HStack';

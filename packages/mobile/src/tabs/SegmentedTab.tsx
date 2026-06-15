@@ -13,7 +13,7 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 import { Text, type TextBaseProps } from '../typography/Text';
 

@@ -1,20 +1,19 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
-import { Point, type PointBaseProps, type PointProps } from '../point';
+import { Point, type PointBaseProps, type PointProps } from '../point/Point';
+import { getLineData } from '../utils/chart';
 import {
-  type ChartPathCurveType,
   evaluateGradientAtValue,
   getGradientAxis,
   getGradientConfig,
-  getLineData,
-  getLinePath,
   type GradientDefinition,
-} from '../utils';
+} from '../utils/gradient';
+import { type ChartPathCurveType, getLinePath } from '../utils/path';
 
 import { DottedLine } from './DottedLine';
 import { SolidLine } from './SolidLine';

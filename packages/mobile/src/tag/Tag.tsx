@@ -7,14 +7,14 @@ import {
   tagFontMap,
   tagHorizontalSpacing,
 } from '@coinbase/cds-common/tokens/tags';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type {
-  IconName,
-  SharedAccessibilityProps,
-  SharedProps,
   TagColorScheme,
   TagEmphasis,
   TagIntent,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/TagBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';

@@ -2,7 +2,7 @@ import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'rea
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
-import { Button } from '../../buttons';
+import { Button } from '../../buttons/Button';
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
 import { cx } from '../../cx';

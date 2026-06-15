@@ -7,14 +7,10 @@ import { DottedLine } from '../line/DottedLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
-import {
-  type CategoricalScale,
-  getAxisTicksData,
-  getPointOnScale,
-  isCategoricalScale,
-  lineToPath,
-  toPointAnchor,
-} from '../utils';
+import { getAxisTicksData, toPointAnchor } from '../utils/axis';
+import { lineToPath } from '../utils/path';
+import { getPointOnScale } from '../utils/point';
+import { type CategoricalScale, isCategoricalScale } from '../utils/scale';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';

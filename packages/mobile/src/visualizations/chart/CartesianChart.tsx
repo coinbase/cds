@@ -1,40 +1,44 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type LayoutChangeEvent, type StyleProp, type View, type ViewStyle } from 'react-native';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
-import type { BoxBaseProps, BoxProps } from '../../layout';
-import { Box } from '../../layout';
+import type { BoxBaseProps, BoxProps } from '../../layout/Box';
+import { Box } from '../../layout/Box';
 
+import { Legend } from './legend/Legend';
 import {
   ScrubberAccessibilityView,
   type ScrubberAccessibilityViewProps,
 } from './scrubber/ScrubberAccessibilityView';
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { convertToSerializableScale, type SerializableScale } from './utils/scale';
-import { useChartContextBridge } from './ChartContextBridge';
-import { CartesianChartProvider } from './ChartProvider';
-import { Legend } from './legend';
 import {
   type CartesianAxisConfig,
   type CartesianAxisConfigProps,
-  type CartesianChartContextValue,
-  type CartesianChartLayout,
-  type ChartInset,
-  type ChartScaleFunction,
   defaultAxisId,
-  defaultHorizontalLayoutChartInset,
-  defaultVerticalLayoutChartInset,
   getAxisConfig,
   getAxisRange,
   getCartesianAxisDomain,
   getCartesianAxisScale,
+  useTotalAxisPadding,
+} from './utils/axis';
+import {
+  type ChartInset,
+  defaultHorizontalLayoutChartInset,
+  defaultVerticalLayoutChartInset,
   getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
   type LegendPosition,
   type Series,
-  useTotalAxisPadding,
-} from './utils';
+} from './utils/chart';
+import { type CartesianChartContextValue, type CartesianChartLayout } from './utils/context';
+import {
+  type ChartScaleFunction,
+  convertToSerializableScale,
+  type SerializableScale,
+} from './utils/scale';
+import { useChartContextBridge } from './ChartContextBridge';
+import { CartesianChartProvider } from './ChartProvider';
 
 type ChartCanvasProps = Pick<
   CartesianChartProps,

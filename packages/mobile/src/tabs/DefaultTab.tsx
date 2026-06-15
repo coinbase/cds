@@ -7,14 +7,14 @@ import {
   type View,
   type ViewStyle,
 } from 'react-native';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import { DotCount, type DotCountBaseProps } from '../dots/DotCount';
 import { useTheme } from '../hooks/useTheme';
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';
 
 import type { TabComponentProps } from './Tabs';

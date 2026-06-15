@@ -1,10 +1,11 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { SectionHeaderProps } from '@coinbase/cds-common';
+import type { SectionHeaderProps } from '@coinbase/cds-common/types/SectionHeaderProps';
 import type { IconName } from '@coinbase/cds-icons';
 
-import { Icon } from '../icons';
-import { HStack, VStack } from '../layout';
+import { Icon } from '../icons/Icon';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
 export const SectionHeader = memo(

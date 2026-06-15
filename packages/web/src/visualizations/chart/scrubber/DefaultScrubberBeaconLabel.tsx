@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { m as motion } from 'framer-motion';
 
-import { ChartText, type ChartTextProps } from '../text';
+import { ChartText, type ChartTextProps } from '../text/ChartText';
 
 import type { ScrubberBeaconLabelProps } from './Scrubber';
 
