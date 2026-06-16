@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (1)
+
+###### HeroSquare (1)
+
+- usdl
+
 ## 4.42.0 (6/11/2026 PST)
 
 #### 🚀 Updates
