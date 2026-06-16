@@ -6,7 +6,7 @@ description: |
   `figma.com/design/...?...node-id=...` while working in a frontend application context.
 license: Apache-2.0
 metadata:
-  version: '1.0.1'
+  version: '1.1.0'
 ---
 
 # CDS Design To Code
@@ -18,69 +18,49 @@ The goal is not to copy the Figma output literally. The goal is to use Figma MCP
 ## When to use
 
 - Use when the user shares a Figma URL like `figma.com/design/...?node-id=...` and wants it implemented.
-- Use when translating a Figma design into CDS-first React or React Native code.
+- Use when translating a Figma design into CDS React or React Native code.
 - Use when the user asks to "implement this design" or "build this from Figma."
 - Do not use when there is no Figma design to reference -- use the `cds-code` skill instead for general CDS UI work.
 - Do not use for design feedback or critique without an implementation request.
 
 ## Prerequisites
 
-- **`cds-code` skill** -- this skill depends on `cds-code` for component selection, styling rules, doc lookup workflow, and code quality standards. If `cds-code` is not installed, tell the user to install it first.
-- **Figma MCP server** must be connected and accessible. Verify by checking whether `get_design_context` is available as an MCP tool.
-- **CDS MCP server** must be connected for doc lookups via `list-cds-routes` and `get-cds-doc`.
+This skill is a thin bridge that leans on `cds-code` for all CDS component selection, styling, doc lookup, and code quality standards. Verify the following before starting.
+
+- **Figma MCP server (required)** -- must be connected and accessible. Verify by checking whether `get_design_context` is available as an MCP tool.
+
+  **Early exit:** if the Figma MCP server is missing or `get_design_context` is not available, **stop immediately**. Tell the user that this workflow depends on the Figma MCP server and its `get_design_context` tool, suggest they configure a Figma MCP server in their project (e.g. via `.cursor/mcp.json` or their agent's MCP settings), then run this workflow again.
+
+- **`cds-code` skill (strongly recommended)** -- provides component selection, styling rules, doc lookup workflow, and code quality standards.
+
+  If the `cds-code` skill is not available, do not exit. Instead, ask the user whether they want to proceed using only the Figma MCP server, explaining that the `cds-code` skill significantly improves the quality of the CDS code written (correct component selection, style props over inline styles, valid import paths). It is still possible to produce decent CDS code from Figma without it -- the skill only makes the output better. Proceed only if the user confirms; otherwise wait for them to install/enable `cds-code`.
+
+- **`cds-docs` skill (recommended)** -- provides CDS component documentation (routes, props, examples) used by the `cds-code` skill. If it is not available you may continue, but documentation greatly improves accuracy.
+
 - User must provide a Figma URL in the format: `https://figma.com/design/:fileKey/:fileName?node-id=1-2`
-
-If the Figma MCP server is missing or the `get_design_context` tool is not available:
-
-1. Tell the user that this workflow depends on the Figma MCP server and its `get_design_context` tool.
-2. Suggest they configure a Figma MCP server in their project (e.g. via `.cursor/mcp.json` or their agent's MCP settings).
-3. Continue only if you still have enough reliable design context from the prompt, screenshot, or pasted reference code.
-4. If the design source is too incomplete to implement safely, stop and explain the blocker clearly.
 
 ## Required Workflow
 
 **Follow these steps in order. Do not skip steps.**
 
-### Step 1: Parse the Figma URL
+### Step 1: Optionally enable the `cds-code` skill
 
-When the user provides a Figma URL, extract the file key and node ID.
+Start by grounding yourself in the current repo by enabling the `cds-code` skill.
 
-**URL format:** `https://figma.com/design/:fileKey/:fileName?node-id=1-2`
+Upon activation, the skill should provde you with information about which CDS NPM packages are installed.
+Use this to determine if you are working with `cds-web` or `cds-mobile` (a React or React Native project respectively).
 
-**Extract:**
+If the `cds-code` skill is not available, and the user has opted out of enabling it, try your best to determine which CDS package is used by inspecting the project's source.
 
-- **File key:** `:fileKey` (the segment after `/design/`)
-- **Node ID:** `1-2` (the value of the `node-id` query parameter)
+Do not infer the platform from the Figma designs alone -- the repo is the source of truth. If both web and mobile exist and the target is genuinely ambiguous, ask one concise clarifying question.
 
-**Branch URLs:** `figma.com/design/:fileKey/branch/:branchKey/:fileName` -- use `branchKey` as the file key.
+### Step 2: Fetch Figma Design Context
 
-**Example:**
+Use Figma MCP's `get_design_context` tool with the extracted file key and node ID parameters.
+**IMPORTANT:** Set the `clientFrameworks` parameter to request the correct CDS code connect mappings. Many components in Figma maintain 2 mappings, one for `cds-web` and one for `cds-mobile`.
 
-- URL: `https://figma.com/design/kL9xQn2VwM8pYrTb4ZcHjF/DesignSystem?node-id=42-15`
-- File key: `kL9xQn2VwM8pYrTb4ZcHjF`
-- Node ID: `42-15`
-
-Convert `node-id=123-456` into `nodeId: "123:456"` when the tool requires colon-separated format.
-
-Prefer the exact node the user shared. Do not widen the request to a larger parent frame unless you have a concrete reason.
-
-### Step 2: Fetch Design Context
-
-Call `get_design_context` with the extracted file key and node ID.
-
-```
-get_design_context(fileKey=":fileKey", nodeId="1-2")
-```
-
-Use these defaults unless the user explicitly asks otherwise:
-
-- `disableCodeConnect: false` -- Code Connect is the highest-value signal from Figma MCP
-- Keep screenshots enabled
-
-Pass accurate client context when you know it:
-
-- `clientFrameworks`: `react` for web React apps, `react-native` for React Native apps
-- `clientLanguages`: `typescript`, `javascript`, or the known project languages
+Never set `disableCodeConnect` to true.
+Always keey screenhots enabled.
 
 **If the response is too large or truncated:**
 
@@ -96,41 +76,31 @@ Do not treat `get_metadata` as a replacement for `get_design_context`. It is onl
 
 ### Step 3: Capture Visual Reference
 
-Run `get_screenshot` with the same file key and node ID.
+Use Figma MCP's `get_screenshot` tool with the same file key and node ID.
 
-```
-get_screenshot(fileKey=":fileKey", nodeId="1-2")
-```
+Save this screenshot to a temporary, accessible location in the project and title it `figma-visual-reference` with whatever file extension the screenshot's format supports.
 
 This screenshot is the visual source of truth throughout implementation. Keep it accessible for comparison during the visual verification step.
 
 ### Step 4: Download Required Assets
 
-Download any assets (images, icons, SVGs) returned by the Figma MCP server.
+Download any assets (images, icons, SVGs) returned by the Figma MCP server and save them to a temporary, accessible location in the project.
 
 - If the Figma MCP server returns a `localhost` source for an image or SVG, use that source directly.
 - Do not import or add new icon packages -- all assets should come from the Figma payload.
 - Do not create placeholders if a `localhost` source is provided.
 
-### Step 5: Ground the Target Platform
+### Step 5: Write CDS Code
 
-Before translating the design into CDS code, ground yourself in the target app.
+This is the core code generation step. Your goal is to take all of the information provided by Figma MCP and begin iterating towards a working solution in code that matches the visual design.
 
-1. Identify whether the user is targeting `web` or `mobile`.
-2. Confirm that choice from repo context when the project is available.
-3. Only then decide which CDS platform docs to read.
+Understanding the requirements of the design and potentially even what CDS component should be used (thanks to Figma Code Connect mappings) follow the workflow outlined in `cds-code` to complete this step.
 
-Do not guess the platform from the Figma design alone when the repo tells you more.
+#### Interpretting `get_design_context` response
 
-If both web and mobile exist and the target is genuinely ambiguous, ask one concise clarifying question.
+Note that the `get_design_context` response is a mixed-confidence input -- treat each part accordingly the matrix below.
 
-**Read the CDS coding standards:** Before writing any CDS code, read the `cds-code` skill for the full set of CDS-first coding standards including layout defaults, styling defaults, component selection guidance, package mapping, and theme usage. That skill is the canonical reference for how to write CDS code -- this skill focuses on the Figma-to-CDS bridge.
-
-### Step 6: Translate to CDS Components
-
-This is the core translation step. The Figma MCP response is a mixed-confidence input -- treat each part accordingly.
-
-**Confidence hierarchy:**
+Not every element in a design may have a Code Connect mapping. These elements will fall back to raw HTML or Tailwind classes.
 
 | Source                          | Confidence | How to use                                                                                                                                                                           |
 | ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -138,9 +108,7 @@ This is the core translation step. The Figma MCP response is a mixed-confidence 
 | Screenshot                      | High       | Use for layout hierarchy, spacing rhythm, and visual intent verification.                                                                                                            |
 | Default HTML / Tailwind classes | Lower      | Structural hints that must be adapted into CDS components. Never ship raw Figma HTML in a CDS app.                                                                                   |
 
-**CDS doc lookup:** Follow the `cds-code` skill's setup and component selection steps to discover and read CDS docs before choosing imports, props, or composition patterns.
-
-**Translating fallback HTML and Tailwind classes:**
+#### Translating fallback HTML and Tailwind classes
 
 When parts of the Figma response fall back to raw HTML or Tailwind-like classes, use them as evidence, not as the final implementation. Look for clues:
 
@@ -162,13 +130,9 @@ Do not guess the final component tree from CSS alone when CDS docs can confirm t
 
 **Props before `style`:**
 
-When translating Figma values to CDS code, always check the target component's prop table before reaching for `style`. Figma MCP output often includes raw CSS values for font size, weight, color, alignment, and transforms. Do not copy those values into a `style` prop when the CDS component already has a dedicated prop.
+Figma MCP output often includes raw CSS values for font size, weight, color, alignment, and transforms. Do not copy these into a `style` prop when the CDS component has a dedicated style prop -- map them to the matching CDS prop and token (e.g. `font-size: 10px; font-weight: 500` becomes `font="caption"`, `color: var(--palette/foregroundmuted)` becomes `color="fgMuted"`, `text-transform: uppercase` becomes `textTransform="uppercase"`). Follow the `cds-code` skill's styling rules for the full mapping of CSS values to CDS props and tokens.
 
-For example, Figma may output a label with `font-size: 10px`, `font-weight: 500`, `text-transform: uppercase`, `color: var(--palette/foregroundmuted)`. The correct translation is to find the matching CDS `font` token (e.g. `font="caption"`), then use `color="fgMuted"` and `textTransform="uppercase"` as props -- not to dump everything into `style`. Using `style` for these values bypasses the CDS font family and theme wiring, causing the text to render in the wrong typeface.
-
-Only use `style` for values that have no CDS prop equivalent (e.g. `cursor`, `transform`, `letterSpacing`, exact pixel dimensions). See the "Avoid unnecessary `style` overrides" section in the `cds-code` skill for the full rule and examples.
-
-### Step 7: Achieve Visual Parity
+### Step 6: Achieve Visual Parity
 
 Strive for high visual fidelity with the Figma design. Do not stop after the first implementation pass when you have tooling to inspect the result.
 
@@ -193,9 +157,9 @@ Pay special attention to:
 
 Prefer a short corrective loop: implement, visually compare, correct the largest differences, re-check once more.
 
-Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design. See the `Step 4: Verify visually` in the `cds-code` skill for the full workflow.
+Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design.
 
-### Step 8: Validate Against Figma
+### Step 7: Validate Against Figma
 
 Before marking complete, validate the implementation against the Figma screenshot.
 
