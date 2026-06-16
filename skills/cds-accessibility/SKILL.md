@@ -8,7 +8,7 @@ description: |
   control requirements after the code has been written.
 license: Apache-2.0
 metadata:
-  version: '1.0.3'
+  version: '2.0.0'
 ---
 
 # cds-accessibility
@@ -53,11 +53,11 @@ For a given change, **this review is complete** when all three dimensions below 
 - The implementation is explainable in terms of **specific** doc material—prop table, examples, a11y or platform notes—not only “it looks right” visually.
 - If the doc or your team’s process requires a **device or manual** check (e.g. VoiceOver, TalkBack), that expectation is **acknowledged** as satisfied, or **explicitly** still pending with a clear reason.
 
-| Dimension     | The review is complete when                                                                                                                                                                                                         |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Props**     | In-scope components use **doc-correct** CDS a11y props and patterns for the platform. **Focus-managed** components (Step 5) match **doc** for focus when applicable.                                                                  |
-| **Selection** | Component choices match **documented** a11y behavior; composites are used when the doc prescribes them for the interaction, not guessed primitives.                                                                                  |
-| **Docs**      | Relevant **CDS** doc content (loaded via **cds-docs**) and cross-links are **read and reflected** in the code; any verification gap is stated. **Text**/typography semantics align with the **Text** doc when `Text` is in scope.    |
+| Dimension     | The review is complete when                                                                                                                                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Props**     | In-scope components use **doc-correct** CDS a11y props and patterns for the platform. **Focus-managed** components (Step 5) match **doc** for focus when applicable.                                                              |
+| **Selection** | Component choices match **documented** a11y behavior; composites are used when the doc prescribes them for the interaction, not guessed primitives.                                                                               |
+| **Docs**      | Relevant **CDS** doc content (loaded via **cds-docs**) and cross-links are **read and reflected** in the code; any verification gap is stated. **Text**/typography semantics align with the **Text** doc when `Text` is in scope. |
 
 ---
 
@@ -199,13 +199,13 @@ These patterns are **not** a substitute for reading each component’s doc. They
 
 ### Common props: mental map (read the doc, do not hardcode from memory)
 
-| Concern            | React Native (see mobile doc)                             | Web (see web doc)                                                                                                       |
-| ------------------ | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Exposed name       | Often `accessibilityLabel`, sometimes with visible `Text` | `accessibilityLabel` (when the web doc lists it for name), then `aria-label`, `aria-labelledby`, or **label** / slot props on the field |
+| Concern            | React Native (see mobile doc)                             | Web (see web doc)                                                                                                                                                |
+| ------------------ | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Exposed name       | Often `accessibilityLabel`, sometimes with visible `Text` | `accessibilityLabel` (when the web doc lists it for name), then `aria-label`, `aria-labelledby`, or **label** / slot props on the field                          |
 | Hint / description | `accessibilityHint` where doc allows                      | `aria-describedby` or description slots per **official** **CDS** **web** doc (loaded via [cds-docs](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs)) |
-| State              | `accessibilityState` + component state props              | `aria-*` state per component table (`aria-expanded`, `aria-selected`, etc.)                                             |
-| Role / semantics   | `accessibilityRole` and CDS structural components         | `as`, `role`, semantic elements in **doc examples**                                                                     |
-| Form errors        | Follow CDS form doc                                       | Follow CDS form doc                                                                                                     |
+| State              | `accessibilityState` + component state props              | `aria-*` state per component table (`aria-expanded`, `aria-selected`, etc.)                                                                                      |
+| Role / semantics   | `accessibilityRole` and CDS structural components         | `as`, `role`, semantic elements in **doc examples**                                                                                                              |
+| Form errors        | Follow CDS form doc                                       | Follow CDS form doc                                                                                                                                              |
 
 **Always** fill this table from the **current** **CDS** component doc (loaded via [cds-docs](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs)) for the **specific** component version you use. The table is a **search checklist**, not a spec.
 
