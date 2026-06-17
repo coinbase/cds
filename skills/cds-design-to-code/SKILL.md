@@ -1,12 +1,13 @@
 ---
 name: cds-design-to-code
 description: |
-  Turns frontend designs from Figma into CDS-first React or React Native code.
-  Use this skill whenever the user shares a Figma URL such as
-  `figma.com/design/...?...node-id=...` while working in a frontend application context.
+  Turn Figma designs into CDS React (cds-web) or React Native (cds-mobile)
+  code. Use when the user shares a Figma design URL (e.g. `figma.com/design/...?node-id=...`) or
+  asks to "implement this design" or "build this from Figma" in a frontend project that is using Coinbase Design System (CDS).
+  Do not use for general CDS UI work with no Figma reference (use `cds-code`), or for design critique without an implementation request.
 license: Apache-2.0
 metadata:
-  version: '1.3.0'
+  version: '2.0.0'
 ---
 
 # CDS Design To Code
@@ -160,15 +161,37 @@ Before rendering anything, confirm the code compiles and passes the project's qu
 
 #### Phase 2: Verify visual parity
 
-Strive for high visual fidelity with the Figma design. Do not stop after the first implementation pass when you have tooling to inspect the result.
+Strive for high visual fidelity with the Figma design. Automated visual verification is **opt-in** -- it can require setting up tooling (e.g. a browser driver) and starting a dev server, so confirm with the user before proceeding. Run Phase 2 through the following sequence of operations in order.
 
-After writing or updating the code:
+**1. Detect the environment and choose a verification strategy.**
+
+Inspect the project before deciding how to verify. Determine what visual verification tooling is already available rather than assuming a fixed approach:
+
+- Check `package.json` (dependencies, devDependencies, and scripts) and lockfiles for an already-installed browser-automation tool (e.g. Playwright, Cypress, Puppeteer).
+- Check whether such a tool is available globally or as a CLI on the system.
+- Consider lighter-weight options that need no install, such as native OS screen capture of the rendered app.
+
+Pick the strategy that requires the least new setup. Examples, roughly in order of preference: an automation tool the project already depends on, a tool already installed globally, native screen capture, or installing a new tool only as a last resort.
+
+**2. Ask the user whether to perform automated visual validation.**
+
+Before doing any rendering or setup, ask the user if they would like you to perform automated visual validation. State the strategy you intend to use and what it involves (e.g. starting the dev server, capturing screenshots with the detected tool). Proceed with the automated flow only if the user agrees.
+
+**3. Ask permission before installing anything.**
+
+If the chosen strategy requires installing or setting up a tool that is not already present (for example, installing Playwright and its browsers), you **must** ask the user for explicit permission first, naming the tool and that it will be added to the project. Do not install tools without confirmation. If the user declines the install, fall back to a no-install strategy (native screen capture) or to the user-shared screenshot path below.
+
+**4. Run the verification loop.**
+
+Once a strategy is agreed upon:
 
 1. Render the target UI locally when possible.
 2. Use the Figma screenshot from Step 3 as the visual source of truth.
-3. Inspect the rendered implementation visually in the browser tooling.
+3. Inspect the rendered implementation visually with the chosen tooling.
 4. Compare at a matching viewport as closely as possible.
 5. Fix the most obvious visual mismatches before finishing.
+
+**Fallback:** If the user opts out of automated visual validation, declines a required install, or no inspection tooling is available, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design.
 
 Pay special attention to:
 
@@ -183,28 +206,20 @@ Pay special attention to:
 
 Prefer a short corrective loop: implement, visually compare, correct the largest differences, re-check once more.
 
-Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design.
+Do not claim visual fidelity based only on reading code or DOM structure. Use the verification strategy the user agreed to, and fall back to the user-shared screenshot when automated inspection is unavailable or declined.
 
 #### Final validation checklist
 
 - [ ] Type check passes against the correct project tsconfig
 - [ ] Lint and format pass on the changed files
-- [ ] Layout matches (spacing, alignment, sizing)
-- [ ] Typography matches (font, size, weight, line height)
-- [ ] Colors match design tokens
-- [ ] CDS components used wherever one exists
-- [ ] Code Connect mappings preserved from Figma MCP response
-- [ ] No raw Tailwind classes left in the final output (unless the target project uses them)
-- [ ] Interactive states work as designed (hover, active, disabled)
-- [ ] Responsive behavior follows Figma constraints
-- [ ] Assets render correctly
-- [ ] Imports and props match CDS docs
-- [ ] No `style` overrides for values that have a CDS prop (font, color, textAlign, padding, gap, etc.)
-- [ ] Accessibility standards met
-
-## Implementation Rules
-
-Follow the `cds-code` skill for all component selection, styling, and code quality rules. When a Code Connect snippet already uses CDS components cleanly, preserve that mapping rather than re-deriving it.
+- [ ] (automated visual validation) Layout matches captured Figma screenshot (spacing, alignment, sizing)
+- [ ] (automated visual validation) Typography matches captured Figma screenshot (font, size, weight, line height)
+- [ ] (automated visual validation) Assets/images render correctly (no browser placeholder images)
+- [ ] No magic numbers/raw values - design tokens are used for spacing, color, radius, etc.
+- [ ] Majority (preferably most) of JSX written is CDS components
+- [ ] No raw HTML or Tailwind classes left in the final output
+- [ ] No inline `style` overrides for values that have a CDS style prop (font, color, textAlign, padding, gap, etc.)
+- [ ] Typical accessibility standards met
 
 ## Common Issues and Solutions
 
