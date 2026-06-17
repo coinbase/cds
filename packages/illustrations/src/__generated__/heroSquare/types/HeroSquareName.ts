@@ -411,6 +411,7 @@ export type HeroSquareName =
   | 'twoIdVerify'
   | 'unlockKey'
   | 'usdAndUsdc'
+  | 'usdl'
   | 'usdtToUSDC'
   | 'verifyBankTransactions'
   | 'verifyCardTransactions'

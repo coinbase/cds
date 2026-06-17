@@ -417,6 +417,7 @@ const names: HeroSquareName[] = [
   'twoIdVerify',
   'unlockKey',
   'usdAndUsdc',
+  'usdl',
   'usdtToUSDC',
   'verifyBankTransactions',
   'verifyCardTransactions',

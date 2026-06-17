@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-06-11T22:05:04.912Z",
+  "lastUpdated": "2026-06-16T18:18:46.632Z",
   "colors": {
     "light": [
       {
@@ -14,6 +14,42 @@
         },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "name": "gray-4",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#C8CBD2"
+        },
+        "cssVarSetter": "--illustration-gray-4",
+        "cssVarGetter": "var(--illustration-gray-4)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFE"
+        },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0052FF"
+        },
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
       },
       {
         "key": "2712067c08bfd1c738125b79013b576ed4193c24",
@@ -124,42 +160,6 @@
         "cssVarGetter": "var(--illustration-accent-1)"
       },
       {
-        "key": "fce273f0c64220566930049a74153f19612ecb11",
-        "name": "gray-4",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#C8CBD2"
-        },
-        "cssVarSetter": "--illustration-gray-4",
-        "cssVarGetter": "var(--illustration-gray-4)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
-        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
-        "name": "primary",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FF"
-        },
-        "cssVarSetter": "--illustration-primary",
-        "cssVarGetter": "var(--illustration-primary)"
-      },
-      {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
         "name": "black",
         "type": "light",
@@ -208,6 +208,42 @@
         },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "name": "gray-4",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#FFFFFF"
+        },
+        "cssVarSetter": "--illustration-gray-4",
+        "cssVarGetter": "var(--illustration-gray-4)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#0A0B0D"
+        },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "name": "primary",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#578BFA"
+        },
+        "cssVarSetter": "--illustration-primary",
+        "cssVarGetter": "var(--illustration-primary)"
       },
       {
         "key": "2712067c08bfd1c738125b79013b576ed4193c24",
@@ -316,42 +352,6 @@
         },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
-      },
-      {
-        "key": "fce273f0c64220566930049a74153f19612ecb11",
-        "name": "gray-4",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-gray-4",
-        "cssVarGetter": "var(--illustration-gray-4)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
-        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
-        "name": "primary",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#578BFA"
-        },
-        "cssVarSetter": "--illustration-primary",
-        "cssVarGetter": "var(--illustration-primary)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
@@ -33653,6 +33653,27 @@
         "svgEsmThemed": "./spotIcon/svgJs/esm/themeable/instoInstantAccess-0.js",
         "pngLight": "./spotIcon/png/light/instoInstantAccess-0.png",
         "pngDark": "./spotIcon/png/dark/instoInstantAccess-0.png"
+      },
+      "version": 0
+    },
+    "30722:98": {
+      "type": "heroSquare",
+      "name": "usdl",
+      "hash": "YTa2HoZ/TdjzAze+VjtnFuZzQ7oGXVce/gPJgw4sPXI=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, usdsl, stable, stablecoin, usd, slash, finance",
+      "createdAt": "2026-06-16T18:04:32.462Z",
+      "lastUpdated": "2026-06-16T18:04:32.462Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/usdl-0.svg",
+        "svgDark": "./heroSquare/svg/dark/usdl-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/usdl-0.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/usdl-0.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/usdl-0.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/usdl-0.js",
+        "pngLight": "./heroSquare/png/light/usdl-0.png",
+        "pngDark": "./heroSquare/png/dark/usdl-0.png"
       },
       "version": 0
     }

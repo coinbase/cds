@@ -450,6 +450,7 @@ const versionMap: Record<HeroSquareName, number> = {
   graduationCap: 1,
   filter: 1,
   mcLoad: 1,
+  usdl: 0,
 };
 
 export default versionMap;
