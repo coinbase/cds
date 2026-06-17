@@ -6,7 +6,7 @@ description: |
   `figma.com/design/...?...node-id=...` while working in a frontend application context.
 license: Apache-2.0
 metadata:
-  version: '1.2.0'
+  version: '1.3.0'
 ---
 
 # CDS Design To Code
@@ -140,7 +140,25 @@ Do not guess the final component tree from CSS alone when CDS docs can confirm t
 
 Figma MCP output often includes raw CSS values for font size, weight, color, alignment, and transforms. Do not copy these into a `style` prop when the CDS component has a dedicated style prop -- map them to the matching CDS prop and token (e.g. `font-size: 10px; font-weight: 500` becomes `font="caption"`, `color: var(--palette/foregroundmuted)` becomes `color="fgMuted"`, `text-transform: uppercase` becomes `textTransform="uppercase"`). Follow the `cds-code` skill's styling rules for the full mapping of CSS values to CDS props and tokens.
 
-### Step 6: Achieve Visual Parity
+### Step 6: Validate the Implementation
+
+Validation happens in two phases. First confirm the code compiles and passes the project's own quality gates (Phase 1), then verify visual parity against the Figma design (Phase 2).
+
+**Do not skip Phase 1.** Type errors almost always produce a blank or broken render, which makes visual verification useless and misleading. Catching an error at compile time is far cheaper than diagnosing a white page through browser tooling. Do not start the dev server or take screenshots until Phase 1 is clean.
+
+#### Phase 1: Validate code quality and correctness
+
+Before rendering anything, confirm the code compiles and passes the project's quality gates. Discover the project's commands rather than assuming a fixed toolchain -- different projects have different setups (a Vite app uses a different tsconfig than a Next.js monorepo; a project may use Biome instead of ESLint), and hardcoding a single command like `tsc --noEmit` is fragile.
+
+1. **Detect the project's validation commands.** Inspect `package.json` scripts for `typecheck`, `check`, `lint`, `build`, and `format` to learn what the project actually uses. Note which tools are present (`eslint`, `prettier`, `biome`, etc.) to know which linters and formatters apply.
+2. **Find the correct tsconfig.** Prefer project-specific tsconfig files (e.g. `tsconfig.app.json`, `tsconfig.web.json`) over the root. For composite projects -- a root `tsconfig.json` with only `"references"` and `"files": []` -- always target the app-specific tsconfig directly. A root `tsc --noEmit` resolves references from cached `.tsbuildinfo` and can exit 0 while real source errors go undetected.
+3. **Run validation in order:**
+   - Type check: prefer a project script like `yarn typecheck` or `npm run check`; fall back to `tsc -p tsconfig.app.json --noEmit` using the project-specific tsconfig you found.
+   - Lint and format: if eslint, biome, prettier, or similar is present, run it on the changed files.
+4. **Fix ALL errors before proceeding.** Do not move on to Phase 2 with outstanding type, lint, or format errors.
+5. **Do not start the dev server or take screenshots until this phase is clean.**
+
+#### Phase 2: Verify visual parity
 
 Strive for high visual fidelity with the Figma design. Do not stop after the first implementation pass when you have tooling to inspect the result.
 
@@ -167,12 +185,10 @@ Prefer a short corrective loop: implement, visually compare, correct the largest
 
 Do not claim visual fidelity based only on reading code or DOM structure. If browser inspection is available, use it. If inspection tooling is unavailable, ask the user to take a screenshot of the rendered UI and share it with you so you can compare against the Figma design.
 
-### Step 7: Validate Against Figma
+#### Final validation checklist
 
-Before marking complete, validate the implementation against the Figma screenshot.
-
-**Validation checklist:**
-
+- [ ] Type check passes against the correct project tsconfig
+- [ ] Lint and format pass on the changed files
 - [ ] Layout matches (spacing, alignment, sizing)
 - [ ] Typography matches (font, size, weight, line height)
 - [ ] Colors match design tokens
@@ -198,7 +214,7 @@ The design is too complex for a single response. Use `get_metadata` to get the n
 
 ### Issue: Design doesn't match after implementation
 
-Compare side-by-side with the screenshot from Step 3. Check spacing, colors, and typography values in the design context data. Run the corrective loop from Step 7.
+Compare side-by-side with the screenshot from Step 3. Check spacing, colors, and typography values in the design context data. Run the corrective loop from Phase 2 of Step 6.
 
 ### Issue: Assets not loading
 

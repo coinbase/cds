@@ -10,7 +10,8 @@ This skill provides a structured workflow for translating Figma designs into rea
 2. **Capture a screenshot** as the visual source of truth.
 3. **Download assets** (images, icons, SVGs) from the Figma payload.
 4. **Translate the design** into CDS components, leveraging Code Connect mappings as the highest-confidence signal and converting fallback HTML/Tailwind output into proper CDS primitives.
-5. **Verify visual parity** by comparing the rendered implementation against the Figma screenshot, running a corrective loop until the UI matches.
+5. **Validate code quality and correctness** by detecting the project's own typecheck, lint, and format commands and fixing all errors before rendering anything.
+6. **Verify visual parity** by comparing the rendered implementation against the Figma screenshot, running a corrective loop until the UI matches.
 
 ## Dependencies
 
