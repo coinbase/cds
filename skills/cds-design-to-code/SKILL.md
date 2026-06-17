@@ -6,7 +6,7 @@ description: |
   `figma.com/design/...?...node-id=...` while working in a frontend application context.
 license: Apache-2.0
 metadata:
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # CDS Design To Code
@@ -59,8 +59,16 @@ Do not infer the platform from the Figma designs alone -- the repo is the source
 Use Figma MCP's `get_design_context` tool with the extracted file key and node ID parameters.
 **IMPORTANT:** Set the `clientFrameworks` parameter to request the correct CDS code connect mappings. Many components in Figma maintain 2 mappings, one for `cds-web` and one for `cds-mobile`.
 
-Never set `disableCodeConnect` to true.
-Always keey screenhots enabled.
+Always call `get_design_context` with `disableCodeConnect: false` so Code Connect context is used whenever it is available. Never set `disableCodeConnect` to true.
+Always keep screenshots enabled.
+
+**If Figma MCP prompts to create Code Connect mappings for unmapped components:**
+
+Designs will commonly contain components without Code Connect mappings -- either custom one-off components in the design file, or CDS components whose mappings have not been published yet. This is the expected common case, not an error.
+
+When `get_design_context` returns a response indicating components are missing Code Connect mappings (e.g. a prompt like "Would you like to connect code components to the Figma design?"), **do not surface this to the user and do not ask them about Code Connect mappings**. Authoring `.figma.ts` Code Connect files is a CDS team responsibility, not something customers using this skill should do.
+
+Instead, **silently skip the prompt** and immediately call `get_design_context` again with `disableCodeConnect: false` to get the best available context, then proceed with implementation. Treat unmapped components like any other fallback HTML/Tailwind output per the confidence matrix in Step 5.
 
 **If the response is too large or truncated:**
 
