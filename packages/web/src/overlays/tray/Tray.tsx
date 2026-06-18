@@ -288,6 +288,7 @@ export const Tray = memo(
     const trayRef = useRef<HTMLDivElement>(null);
     const { observe: observeTraySize, height: trayHeight } = useDimensions<HTMLDivElement>();
     const contentRef = useRef<HTMLDivElement>(null);
+    const overlayRef = useRef<HTMLDivElement>(null);
     const hasCalledOnOpenComplete = useRef(false);
     const [scope, animate] = useAnimate();
     const dragControls = useDragControls();
@@ -320,6 +321,9 @@ export const Tray = memo(
           ? { x: pin === 'right' ? '100%' : '-100%' }
           : { y: pin === 'bottom' ? '100%' : '-100%' };
       }
+      if (overlayRef.current) {
+        animate(overlayRef.current, { opacity: 0 }, animationConfig.slideOut.transition);
+      }
       animate(scope.current, finalAnimationValue, animationConfig.slideOut.transition).then(() => {
         setIsOpen(false);
         onClose?.();
@@ -329,6 +333,9 @@ export const Tray = memo(
 
     const handleSwipeClose = useCallback(() => {
       if (!scope.current) return;
+      if (overlayRef.current) {
+        animate(overlayRef.current, { opacity: 0 }, { duration: 0.15, ease: 'easeOut' });
+      }
       animate(scope.current, { y: '100%' }, { duration: 0.15, ease: 'easeOut' }).then(() => {
         setIsOpen(false);
         onBlur?.();
@@ -454,6 +461,8 @@ export const Tray = memo(
             zIndex={zIndex}
           >
             <Overlay
+              ref={overlayRef}
+              animated
               className={cx(trayClassNames.overlay, classNames?.overlay)}
               onClick={handleOverlayClick}
               style={styles?.overlay}

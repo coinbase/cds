@@ -460,4 +460,18 @@ describe('Tray', () => {
       expect(root?.querySelector(`.${trayClassNames.handleBarHandle}`)).toBeInTheDocument();
     });
   });
+
+  describe('overlay animation', () => {
+    it('wraps the overlay in a motion container so the backdrop fades', () => {
+      const onCloseCompleteSpy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+            {loremIpsum}
+          </Tray>
+        </DefaultThemeProvider>,
+      );
+      expect(screen.getByTestId('tray-overlay-motion')).toBeInTheDocument();
+    });
+  });
 });
