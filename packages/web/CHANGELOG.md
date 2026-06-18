@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.4.2 (6/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Tray overlay backdrop now fades out on close. [[#736](https://github.com/coinbase/cds/pull/736)]
+
 ## 9.4.1 (6/15/2026 PST)
 
 #### 🐞 Fixes
