@@ -30,3 +30,62 @@ function Example() {
   );
 }
 ```
+
+### Using with react-navigation
+
+When a screen is presented as a modal via react-navigation (`presentation: "fullScreenModal"`),
+the navigator owns the overlay, transition animation, and swipe-to-dismiss gesture. Use
+`ModalContext` to wire up `ModalHeader`, `ModalBody`, and `ModalFooter` directly inside
+your screen component — no `Modal` wrapper needed.
+
+Use `useSafeAreaInsets` to read the top inset and apply it as `paddingTop` on the root view
+so the header is pushed below the status bar and Dynamic Island.
+
+**Imports**
+
+```jsx
+import { ModalHeader, ModalBody, ModalFooter } from '@coinbase/cds-mobile';
+import { ModalContext } from '@coinbase/cds-common/overlays/ModalContext';
+import { VStack } from '@coinbase/cds-mobile/layout';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+```
+
+**Navigator configuration**
+
+```jsx
+// Stack navigator configuration:
+<Stack.Screen
+  name="Settings"
+  component={SettingsScreen}
+  options={{ presentation: 'fullScreenModal' }}
+/>
+```
+
+**Screen component**
+
+```jsx
+function SettingsScreen({ navigation }) {
+  const handleClose = useCallback(() => navigation.goBack(), [navigation]);
+  const { top } = useSafeAreaInsets();
+
+  const modalContext = useMemo(
+    () => ({
+      visible: true,
+      onRequestClose: handleClose,
+    }),
+    [handleClose],
+  );
+
+  const rootStyle = useMemo(() => ({ paddingTop: top }), [top]);
+
+  return (
+    <ModalContext.Provider value={modalContext}>
+      <VStack flexGrow={1} style={rootStyle}>
+        <ModalHeader closeAccessibilityLabel="Close" title="Settings" />
+        <ModalBody>{/* screen content */}</ModalBody>
+        <ModalFooter primaryAction={<Button onPress={handleClose}>Save</Button>} />
+      </VStack>
+    </ModalContext.Provider>
+  );
+}
+```

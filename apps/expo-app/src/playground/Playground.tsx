@@ -211,7 +211,7 @@ const PlaygroundContent = memo(
     const exampleScreens = useMemo(
       () =>
         [...routes].map((route) => {
-          const { key, getComponent } = route;
+          const { key, getComponent, options: routeOptions } = route;
           const name = keyToRouteName(key);
           const title = titleOverrides[key] ?? key;
           return (
@@ -219,7 +219,7 @@ const PlaygroundContent = memo(
               key={key}
               component={getComponent() as React.ComponentType<object>}
               name={name}
-              options={{ title }}
+              options={{ title, ...routeOptions }}
             />
           );
         }),
