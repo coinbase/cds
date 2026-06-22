@@ -277,4 +277,20 @@ describe('SegmentedTabs', () => {
     expect(style).toContain('transform: translateX(24px) translateZ(0)');
     expect(style).toContain('left: 0');
   });
+
+  it('applies equalWidth layout when equalWidth=true', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    // Each tab button should have width: 100% from styles.tab (applied as inline style)
+    tabs.forEach((tab) => {
+      const tabEl = screen.getByTestId(tab.testID);
+      expect(tabEl).toHaveStyle({ width: '100%' });
+    });
+  });
 });

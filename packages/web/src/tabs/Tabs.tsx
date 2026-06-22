@@ -29,6 +29,8 @@ type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: HTMLElement) => void;
   children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
@@ -108,6 +110,8 @@ export type TabsProps<
     styles?: {
       /** Root element */
       root?: React.CSSProperties;
+      /** Tab container element */
+      tabContainer?: React.CSSProperties;
       /** Tab element */
       tab?: React.CSSProperties;
       /** Active indicator element */
@@ -117,6 +121,8 @@ export type TabsProps<
     classNames?: {
       /** Root element */
       root?: string;
+      /** Tab container element */
+      tabContainer?: string;
       /** Tab element */
       tab?: string;
       /** Active indicator element */
@@ -293,7 +299,13 @@ const TabsComponent = memo(
                 tabIndex: activeTab?.id === props.id || !activeTab ? 0 : -1,
               };
               return (
-                <TabContainer key={props.id} id={props.id} registerRef={registerRef}>
+                <TabContainer
+                  key={props.id}
+                  className={classNames?.tabContainer}
+                  id={props.id}
+                  registerRef={registerRef}
+                  style={styles?.tabContainer}
+                >
                   <RenderedTab {...renderedTabProps} />
                 </TabContainer>
               );

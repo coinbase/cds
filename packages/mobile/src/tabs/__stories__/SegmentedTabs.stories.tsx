@@ -257,6 +257,7 @@ const SegmentedTabsScreen = () => (
       tabs={basicSegments}
       title="Label Colors"
     />
+    <EqualWidthExample />
   </ExampleScreen>
 );
 
@@ -293,21 +294,22 @@ const IconLabelsExample = () => {
   );
 };
 
-
-// Bug repro: SegmentedTabs has no built-in way to distribute tabs equally across full width.
-// Workarounds (e.g. setting width/minWidth on tabs, or justifyContent="space-evenly") both
-// misalign the active indicator because the TabContainer View has no flex growth.
-// This example shows the broken behavior — the indicator does not align with the active tab.
-const BrokenEqualWidthExample = () => (
-  <Example title="Broken Equal Width (workaround misaligns indicator)">
+const EqualWidthExample = () => (
+  <Example title="Equal Width">
     <Box width={350}>
-      {/* justifyContent prop is not directly available, but forcing width workaround is broken */}
       <SegmentedTabsExample
+        equalWidth
         defaultActiveTab={basicSegments[0]}
-        style={{ width: 350 }}
-        styles={{ tab: { flex: 1 } }}
         tabs={basicSegments}
-        title="Tab width:flex:1 workaround (indicator misaligns)"
+        title="Equal Width (3 tabs)"
+      />
+    </Box>
+    <Box width={350}>
+      <SegmentedTabsExample
+        equalWidth
+        defaultActiveTab={basicSegments[0]}
+        tabs={basicSegments.slice(0, 2)}
+        title="Equal Width (2 tabs)"
       />
     </Box>
   </Example>

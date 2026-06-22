@@ -33,6 +33,7 @@ type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: View) => void;
   children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
 const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
@@ -106,6 +107,8 @@ export type TabsProps<
     styles?: {
       /** Root container element */
       root?: StyleProp<ViewStyle>;
+      /** Tab container element */
+      tabContainer?: StyleProp<ViewStyle>;
       /** Tab element */
       tab?: StyleProp<ViewStyle>;
       /** Active indicator element */
@@ -222,7 +225,12 @@ const TabsComponent = memo(
                 ...tabRest,
               };
               return (
-                <TabContainer key={id} id={id} registerRef={registerRef}>
+                <TabContainer
+                  key={id}
+                  id={id}
+                  registerRef={registerRef}
+                  style={styles?.tabContainer}
+                >
                   <RenderedTab {...renderedTabProps} />
                 </TabContainer>
               );

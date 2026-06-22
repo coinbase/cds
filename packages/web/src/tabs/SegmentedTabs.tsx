@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -25,6 +25,8 @@ export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBas
     styles?: {
       /** Root element */
       root?: React.CSSProperties;
+      /** Tab container element */
+      tabContainer?: React.CSSProperties;
       /** Tab element */
       tab?: React.CSSProperties;
       /** Active indicator element */
@@ -34,12 +36,24 @@ export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBas
     classNames?: {
       /** Root element */
       root?: string;
+      /** Tab container element */
+      tabContainer?: string;
       /** Tab element */
       tab?: string;
       /** Active indicator element */
       activeIndicator?: string;
     };
+    /**
+     * When true, each tab container grows equally to fill the available width,
+     * distributing tabs with equal width across the full component.
+     */
+    equalWidth?: boolean;
   };
+
+/** Applied to each TabContainer div when equalWidth is true */
+const equalWidthTabContainerStyle: React.CSSProperties = { flex: 1 };
+/** Applied to the tab button when equalWidth is true so it fills its container */
+const equalWidthTabStyle: React.CSSProperties = { width: '100%' };
 
 type SegmentedTabsFC = <TabId extends string>(
   props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<HTMLElement> },
@@ -60,10 +74,31 @@ const SegmentedTabsComponent = memo(
         borderRadius = 700,
         className,
         classNames,
+        equalWidth,
         style,
         styles,
+        width,
         ...props
       } = mergedProps;
+
+      const resolvedStyles = useMemo(() => {
+        const baseStyles = {
+          tab: styles?.tab,
+          tabContainer: styles?.tabContainer,
+          activeIndicator: styles?.activeIndicator,
+        };
+        if (!equalWidth) return baseStyles;
+        return {
+          ...baseStyles,
+          tabContainer: styles?.tabContainer
+            ? { ...equalWidthTabContainerStyle, ...styles.tabContainer }
+            : equalWidthTabContainerStyle,
+          tab: styles?.tab ? { ...equalWidthTabStyle, ...styles.tab } : equalWidthTabStyle,
+        };
+      }, [equalWidth, styles]);
+
+      const resolvedWidth = width ?? (equalWidth ? '100%' : 'fit-content');
+
       return (
         <Tabs
           ref={ref}
@@ -75,14 +110,13 @@ const SegmentedTabsComponent = memo(
           className={cx(className, classNames?.root)}
           classNames={{
             tab: classNames?.tab,
+            tabContainer: classNames?.tabContainer,
             activeIndicator: classNames?.activeIndicator,
           }}
           role="tablist"
           style={styles?.root ? { ...style, ...styles.root } : style}
-          styles={{
-            tab: styles?.tab,
-            activeIndicator: styles?.activeIndicator,
-          }}
+          styles={resolvedStyles}
+          width={resolvedWidth}
           {...props}
         />
       );

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -22,12 +22,24 @@ export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBas
     styles?: {
       /** Root container element */
       root?: StyleProp<ViewStyle>;
+      /** Tab container element */
+      tabContainer?: StyleProp<ViewStyle>;
       /** Tab element */
       tab?: StyleProp<ViewStyle>;
       /** Active indicator element */
       activeIndicator?: StyleProp<ViewStyle>;
     };
+    /**
+     * When true, each tab container grows equally to fill the available width,
+     * distributing tabs with equal width across the full component.
+     */
+    equalWidth?: boolean;
   };
+
+/** Applied to each TabContainer View when equalWidth is true */
+const equalWidthTabContainerStyle: ViewStyle = { flex: 1 };
+/** Applied to the tab Pressable when equalWidth is true so it fills its container */
+const equalWidthTabStyle: ViewStyle = { alignSelf: 'stretch' };
 
 type SegmentedTabsFC = <TabId extends string = string>(
   props: SegmentedTabsProps<TabId> & { ref?: React.ForwardedRef<View> },
@@ -43,16 +55,35 @@ const SegmentedTabsComponent = memo(
         activeBackground = 'bgInverse',
         background = 'bgSecondary',
         borderRadius = 700,
+        equalWidth,
+        alignSelf,
+        styles,
         ...props
       } = mergedProps;
+
+      const resolvedStyles = useMemo(() => {
+        if (!equalWidth) return styles;
+        return {
+          ...styles,
+          tabContainer: styles?.tabContainer
+            ? [equalWidthTabContainerStyle, styles.tabContainer]
+            : equalWidthTabContainerStyle,
+          tab: styles?.tab ? [equalWidthTabStyle, styles.tab] : equalWidthTabStyle,
+        };
+      }, [equalWidth, styles]);
+
+      const resolvedAlignSelf = alignSelf ?? (equalWidth ? 'stretch' : undefined);
+
       return (
         <Tabs
           ref={ref}
           TabComponent={TabComponent}
           TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
           activeBackground={activeBackground}
+          alignSelf={resolvedAlignSelf}
           background={background}
           borderRadius={borderRadius}
+          styles={resolvedStyles}
           {...props}
         />
       );

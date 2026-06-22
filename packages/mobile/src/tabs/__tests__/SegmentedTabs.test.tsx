@@ -281,4 +281,24 @@ describe('SegmentedTabs', () => {
       transform: [{ translateX: 20 }, { translateY: 8 }],
     });
   });
+
+  it('applies equalWidth styles when equalWidth=true', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    // Root should default to alignSelf: stretch when equalWidth
+    const tabsContainer = screen.getByTestId(TEST_ID);
+    expect(tabsContainer).toHaveStyle({ alignSelf: 'stretch' });
+
+    // Each tab Pressable should have alignSelf: stretch from styles.tab
+    tabs.forEach((tab) => {
+      const tabEl = screen.getByTestId(tab.testID);
+      expect(tabEl).toHaveStyle({ alignSelf: 'stretch' });
+    });
+  });
 });

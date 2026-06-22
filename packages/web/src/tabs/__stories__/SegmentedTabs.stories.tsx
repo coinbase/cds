@@ -252,6 +252,14 @@ export const All = () => {
         tabs={basicSegments}
         title="Label Colors"
       />
+      <Box style={{ width: 400 }}>
+        <SegmentedTabsExample
+          equalWidth
+          defaultActiveTab={basicSegments[0]}
+          tabs={basicSegments}
+          title="Equal Width"
+        />
+      </Box>
     </VStack>
   );
 };
@@ -268,20 +276,22 @@ const disableA11yCheck = {
 
 All.parameters = disableA11yCheck;
 
-// Bug repro: SegmentedTabs has no built-in way to distribute tabs equally across full width.
-// Workarounds (e.g. width/minWidth on tab, or justifyContent="space-evenly" on the root) both
-// misalign the active indicator because the indicator measures the TabContainer element which
-// has no flex growth applied. This story demonstrates the broken behavior before the fix.
-export const BrokenEqualWidth = () => (
+export const EqualWidth = () => (
   <VStack gap={2}>
     <Box style={{ width: 400 }}>
-      {/* justifyContent="space-evenly" visually spaces tabs but the indicator is misaligned */}
       <SegmentedTabsExample
+        equalWidth
         defaultActiveTab={basicSegments[0]}
-        justifyContent="space-evenly"
         tabs={basicSegments}
-        title="space-evenly workaround (indicator misaligns on non-first tab)"
-        width="100%"
+        title="Equal Width (3 tabs)"
+      />
+    </Box>
+    <Box style={{ width: 400 }}>
+      <SegmentedTabsExample
+        equalWidth
+        defaultActiveTab={basicSegments[0]}
+        tabs={basicSegments.slice(0, 2)}
+        title="Equal Width (2 tabs)"
       />
     </Box>
   </VStack>
