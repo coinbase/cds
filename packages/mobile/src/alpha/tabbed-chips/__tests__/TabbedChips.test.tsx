@@ -4,7 +4,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
-import { TabbedChips } from '../TabbedChips';
+import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
 
 const testID = 'tabbed-chips';
 const tabs = sampleTabs.slice(0, 5);
@@ -14,6 +14,20 @@ const Demo = () => {
   return (
     <DefaultThemeProvider>
       <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} testID={testID} />
+    </DefaultThemeProvider>
+  );
+};
+
+const activeColorTabs: TabbedChipProps[] = tabs.map((tab) => ({
+  ...tab,
+  activeColor: 'positive' as TabbedChipProps['activeColor'],
+}));
+
+const ActiveColorDemo = () => {
+  const [value, setValue] = useState<TabValue | null>(activeColorTabs[0]);
+  return (
+    <DefaultThemeProvider>
+      <TabbedChips activeTab={value} onChange={setValue} tabs={activeColorTabs} testID={testID} />
     </DefaultThemeProvider>
   );
 };
@@ -41,5 +55,25 @@ describe('TabbedChips(Alpha)', () => {
 
     await waitFor(() => expect(screen.getByTestId(secondTestId)).toBeSelected());
     await waitFor(() => expect(screen.getByTestId(firstTestId)).not.toBeSelected());
+  });
+
+  describe('activeColor', () => {
+    it('renders without error when tabs have activeColor set', () => {
+      render(<ActiveColorDemo />);
+      expect(screen.getByTestId(testID)).toBeDefined();
+    });
+
+    it('active tab with activeColor remains selected', async () => {
+      render(<ActiveColorDemo />);
+      const firstTestId = activeColorTabs[0].testID ?? activeColorTabs[0].id;
+      const secondTestId = activeColorTabs[1].testID ?? activeColorTabs[1].id;
+
+      expect(screen.getByTestId(firstTestId)).toBeSelected();
+
+      fireEvent.press(screen.getByTestId(secondTestId));
+
+      await waitFor(() => expect(screen.getByTestId(secondTestId)).toBeSelected());
+      await waitFor(() => expect(screen.getByTestId(firstTestId)).not.toBeSelected());
+    });
   });
 });

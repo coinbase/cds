@@ -76,24 +76,35 @@ const EnumDemo = () => {
   return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={enumTabs} />;
 };
 
-// BUG REPRO: activeColor prop does not exist on web TabbedChipProps at all — the feature
-// is entirely absent. On web, DefaultTabComponent always applies invertColorScheme={isActive}
-// unconditionally with no way to customize the active chip background color.
-// This story documents the missing feature for parity with mobile intent.
-export const BugRepro = () => {
+const activeColorTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
+  ...tab,
+  activeColor: 'positive' as TabbedChipProps['activeColor'],
+}));
+
+export const ActiveColor = () => {
+  const [activeTab, setActiveTab] = useState<TabValue | null>(activeColorTabs[0]);
   return (
     <VStack gap={2}>
       <Text as="p" display="block" font="headline">
-        Bug repro - activeColor missing on web (active chip should show custom background)
+        With activeColor
       </Text>
-      {/* activeColor prop is absent from TabbedChipProps on web — this is the bug */}
-      <Demo tabs={defaultTabs} />
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={activeColorTabs} />
     </VStack>
   );
 };
 
-BugRepro.parameters = {
+ActiveColor.parameters = {
   percy: { enableJavaScript: true },
+  a11y: {
+    config: {
+      rules: [
+        { id: 'aria-valid-attr-value', enabled: false },
+        { id: 'duplicate-id-active', enabled: false },
+        { id: 'duplicate-id', enabled: false },
+        { id: 'duplicate-id-aria', enabled: false },
+      ],
+    },
+  },
 };
 
 export const Default = () => {
@@ -132,6 +143,10 @@ export const Default = () => {
         With auto scroll offset
       </Text>
       <Demo autoScrollOffset={100} tabs={sampleTabs} />
+      <Text as="p" display="block" font="headline">
+        With activeColor
+      </Text>
+      <Demo tabs={activeColorTabs} />
     </VStack>
   );
 };

@@ -34,6 +34,7 @@ const scrollContainerCss = css`
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
+  activeColor,
   ...tabProps
 }: TabbedChipProps<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
@@ -58,7 +59,8 @@ const DefaultTabComponent = <TabId extends string = string>({
     <MediaChip
       ref={chipRef}
       aria-selected={isActive}
-      invertColorScheme={isActive}
+      background={isActive && activeColor ? activeColor : undefined}
+      invertColorScheme={isActive && !activeColor}
       onClick={handleClick}
       role="tab"
       width="max-content"
@@ -79,6 +81,11 @@ export type TabbedChipProps<TabId extends string = string> = Omit<
 > &
   TabValue<TabId> & {
     Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<TabId>>;
+    /**
+     * Custom background color applied to the chip when it is the active tab.
+     * When set, takes precedence over the default `invertColorScheme` behavior.
+     */
+    activeColor?: ThemeVars.Color;
   };
 
 export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
