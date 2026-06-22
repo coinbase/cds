@@ -236,4 +236,18 @@ describe('Button', () => {
     expect(loadingButton).toHaveAttribute('data-variant', 'secondary');
     expect(readyButton).toHaveAttribute('data-variant', 'positive');
   });
+
+  it('applies height and width props as CSS custom properties', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button height="80px" width="300px">
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('style', expect.stringContaining('--height: 80px'));
+    expect(button).toHaveAttribute('style', expect.stringContaining('--width: 300px'));
+  });
 });
