@@ -76,6 +76,26 @@ const EnumDemo = () => {
   return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={enumTabs} />;
 };
 
+// BUG REPRO: activeColor prop does not exist on web TabbedChipProps at all — the feature
+// is entirely absent. On web, DefaultTabComponent always applies invertColorScheme={isActive}
+// unconditionally with no way to customize the active chip background color.
+// This story documents the missing feature for parity with mobile intent.
+export const BugRepro = () => {
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="headline">
+        Bug repro - activeColor missing on web (active chip should show custom background)
+      </Text>
+      {/* activeColor prop is absent from TabbedChipProps on web — this is the bug */}
+      <Demo tabs={defaultTabs} />
+    </VStack>
+  );
+};
+
+BugRepro.parameters = {
+  percy: { enableJavaScript: true },
+};
+
 export const Default = () => {
   return (
     <VStack gap={2}>
