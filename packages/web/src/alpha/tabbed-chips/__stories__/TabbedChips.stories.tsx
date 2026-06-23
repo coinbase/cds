@@ -81,32 +81,6 @@ const activeColorTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
   activeColor: 'positive' as TabbedChipProps['activeColor'],
 }));
 
-export const ActiveColor = () => {
-  const [activeTab, setActiveTab] = useState<TabValue | null>(activeColorTabs[0]);
-  return (
-    <VStack gap={2}>
-      <Text as="p" display="block" font="headline">
-        With activeColor
-      </Text>
-      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={activeColorTabs} />
-    </VStack>
-  );
-};
-
-ActiveColor.parameters = {
-  percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [
-        { id: 'aria-valid-attr-value', enabled: false },
-        { id: 'duplicate-id-active', enabled: false },
-        { id: 'duplicate-id', enabled: false },
-        { id: 'duplicate-id-aria', enabled: false },
-      ],
-    },
-  },
-};
-
 export const Default = () => {
   return (
     <VStack gap={2}>
