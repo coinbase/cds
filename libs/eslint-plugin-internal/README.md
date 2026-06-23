@@ -186,36 +186,38 @@ Recommended pattern inside worklets:
 
 ## no-style-prop-css-overrides
 
-Disallows setting, inside a Linaria `css` block, any CSS property that a cds-web **style prop** already owns (e.g. `height`, `width`, `padding-top`, `background-color`, `display`). Scoped to `packages/web/src` — cds-web is the only package with this styling architecture.
+Flags a JSX element that **both** wears a Linaria `css` class setting a CSS property at its top level **and** is passed the cds-web **style prop** that owns that property. Scoped to `packages/web/src` — cds-web is the only package with this styling architecture.
 
-cds-web style props compile to **single-class** Linaria rules (the value is injected as an inline CSS variable, but the declaration that consumes it lives in a class), which keeps them consumer-overridable. A component's own `css` block sets the same property at the **same specificity** but is emitted **later** in the stylesheet, so it wins the CSS source-order tiebreaker and silently overrides values passed via the style prop. This is the class of bug fixed in CDS-2118 (`Button` `height`/`width` props not applying).
+cds-web style props compile to **single-class** Linaria rules (the value is injected as an inline CSS variable, but the declaration that consumes it lives in a class), which keeps them consumer-overridable. A component's own `css` class sets the same property at the **same specificity** but is emitted **later** in the stylesheet, so it wins the CSS source-order tiebreaker and silently overrides the value passed via the style prop. This is the class of bug fixed in CDS-2118 (`Button` `height`/`width` props not applying).
 
-The rule only flags **top-level** declarations of owned properties; declarations nested inside selectors, pseudo-states, or at-rules (`&:hover`, `@media`, …) are allowed because they can't be expressed via static style props. Multi-value `padding`/`margin` shorthands and `css` imported from anywhere other than `@linaria/core` are also ignored.
+The rule keys off **co-location**: it only reports when the element carrying the `css` class is _also explicitly passed_ the matching style prop — the precise shape of a silent-override bug. Hard-coding a property a component never exposes as a prop on that element (e.g. `display: inline-flex` for layout) is allowed. It resolves `className` through `cx`/`cn`/`clsx`/`classnames`, inline `css`, and logical/conditional/array expressions, and compares `padding`/`margin` shorthands and longhands per physical side. Declarations nested in selectors/pseudo-states/at-rules and `css` not imported from `@linaria/core` are ignored.
 
-See [`src/no-style-prop-css-overrides/README.md`](./src/no-style-prop-css-overrides/README.md) for the full rationale, the cascade mechanics, and remediation guidance.
+See [`src/no-style-prop-css-overrides/README.md`](./src/no-style-prop-css-overrides/README.md) for the full rationale, the cascade mechanics, why it's AST-based rather than type-checker-based, and remediation guidance.
 
 **Invalid:**
 
-```ts
-import { css } from '@linaria/core';
+```tsx
+import { css, cx } from '@linaria/core';
 
-const buttonClass = css`
-  height: 40px; // owned by the `height` style prop — silently overrides it
-  background-color: var(--color-bgPrimary); // owned by the `background` style prop
+const baseCss = css`
+  height: fit-content;
 `;
+
+// `height` is set by the css class AND passed as a style prop to the same element
+const Button = ({ height }: ButtonProps) => <Pressable className={cx(baseCss)} height={height} />;
 ```
 
 **Valid:**
 
-```ts
-import { css } from '@linaria/core';
+```tsx
+import { css, cx } from '@linaria/core';
 
-const klass = css`
-  cursor: pointer; // not owned by any style prop
-  &:hover {
-    background-color: var(--color-bgPrimaryHover); // pseudo-state — not expressible via style props
-  }
+const baseCss = css`
+  display: inline-flex; // never exposed as a `display` prop on this element
 `;
+
+// no `display` prop passed here, so the css class isn't overriding anything
+const Button = (props: ButtonProps) => <Pressable className={cx(baseCss)} background="bgPrimary" />;
 ```
 
 ## safely-spread-props

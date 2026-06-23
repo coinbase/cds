@@ -11,137 +11,172 @@ const createRule = ESLintUtils.RuleCreator(() => null);
 const LINARIA_MODULE = '@linaria/core';
 
 /**
- * Maps a CSS property (as written inside a `css` block, lower-cased and
- * kebab-cased) to the cds-web style prop that already owns it. Derived from the
- * style maps in `packages/web/src/styles/responsive/base.ts` and the
- * `DynamicStyleProps` in `packages/web/src/styles/styleProps.ts`.
- *
- * Only properties that a consumer can set through a style prop are listed.
- * Shorthands that a single style prop cannot fully express (e.g. the
- * `background` / `border` / `font` shorthands) are intentionally omitted to
- * avoid false positives.
+ * Function names that compose classnames. Their arguments are traversed when
+ * resolving the `css` blocks referenced by an element's `className`.
  */
-const cssPropToStyleProp = {
-  // Dynamic style props (inline CSS variables consumed by a classname)
+const CLASSNAME_COMBINERS = new Set(['cx', 'cn', 'clsx', 'classnames', 'classNames']);
+
+/**
+ * cds-web style props that map 1:1 to a single CSS property. The value is the
+ * CSS property the style prop emits (see packages/web/src/styles/responsive/
+ * base.ts and DynamicStyleProps in styleProps.ts). Derived so the css-block
+ * side and the style-prop side share the exact same property strings.
+ */
+const stylePropToCssProperty = {
+  // Dynamic style props
   width: 'width',
   height: 'height',
-  'min-width': 'minWidth',
-  'min-height': 'minHeight',
-  'max-width': 'maxWidth',
-  'max-height': 'maxHeight',
-  'aspect-ratio': 'aspectRatio',
+  minWidth: 'min-width',
+  minHeight: 'min-height',
+  maxWidth: 'max-width',
+  maxHeight: 'max-height',
+  aspectRatio: 'aspect-ratio',
   top: 'top',
   bottom: 'bottom',
   left: 'left',
   right: 'right',
   transform: 'transform',
-  'flex-basis': 'flexBasis',
-  'flex-grow': 'flexGrow',
-  'flex-shrink': 'flexShrink',
-  'grid-template-columns': 'gridTemplateColumns',
-  'grid-template-rows': 'gridTemplateRows',
-  'grid-template-areas': 'gridTemplateAreas',
-  'grid-template': 'gridTemplate',
-  'grid-auto-columns': 'gridAutoColumns',
-  'grid-auto-rows': 'gridAutoRows',
-  'grid-auto-flow': 'gridAutoFlow',
+  flexBasis: 'flex-basis',
+  flexGrow: 'flex-grow',
+  flexShrink: 'flex-shrink',
+  gridTemplateColumns: 'grid-template-columns',
+  gridTemplateRows: 'grid-template-rows',
+  gridTemplateAreas: 'grid-template-areas',
+  gridTemplate: 'grid-template',
+  gridAutoColumns: 'grid-auto-columns',
+  gridAutoRows: 'grid-auto-rows',
+  gridAutoFlow: 'grid-auto-flow',
   grid: 'grid',
-  'grid-row-start': 'gridRowStart',
-  'grid-column-start': 'gridColumnStart',
-  'grid-row-end': 'gridRowEnd',
-  'grid-column-end': 'gridColumnEnd',
-  'grid-row': 'gridRow',
-  'grid-column': 'gridColumn',
-  'grid-area': 'gridArea',
+  gridRowStart: 'grid-row-start',
+  gridColumnStart: 'grid-column-start',
+  gridRowEnd: 'grid-row-end',
+  gridColumnEnd: 'grid-column-end',
+  gridRow: 'grid-row',
+  gridColumn: 'grid-column',
+  gridArea: 'grid-area',
   opacity: 'opacity',
-  'z-index': 'zIndex',
+  zIndex: 'z-index',
 
   // Static (themed) style props
   color: 'color',
-  'background-color': 'background',
-  'box-shadow': 'elevation',
-  'border-color': 'borderColor',
-  'border-width': 'borderWidth',
-  'border-top-width': 'borderTopWidth',
-  'border-bottom-width': 'borderBottomWidth',
-  'border-inline-start-width': 'borderStartWidth',
-  'border-inline-end-width': 'borderEndWidth',
-  'border-radius': 'borderRadius',
-  'border-top-left-radius': 'borderTopLeftRadius',
-  'border-top-right-radius': 'borderTopRightRadius',
-  'border-bottom-left-radius': 'borderBottomLeftRadius',
-  'border-bottom-right-radius': 'borderBottomRightRadius',
-  'font-family': 'fontFamily',
-  'font-size': 'fontSize',
-  'font-weight': 'fontWeight',
-  'line-height': 'lineHeight',
-  'text-decoration': 'textDecoration',
-  'text-transform': 'textTransform',
-  'text-align': 'textAlign',
-  'user-select': 'userSelect',
+  background: 'background-color',
+  elevation: 'box-shadow',
+  borderColor: 'border-color',
+  borderWidth: 'border-width',
+  borderTopWidth: 'border-top-width',
+  borderBottomWidth: 'border-bottom-width',
+  borderStartWidth: 'border-inline-start-width',
+  borderEndWidth: 'border-inline-end-width',
+  borderRadius: 'border-radius',
+  borderTopLeftRadius: 'border-top-left-radius',
+  borderTopRightRadius: 'border-top-right-radius',
+  borderBottomLeftRadius: 'border-bottom-left-radius',
+  borderBottomRightRadius: 'border-bottom-right-radius',
+  fontFamily: 'font-family',
+  fontSize: 'font-size',
+  fontWeight: 'font-weight',
+  lineHeight: 'line-height',
+  textDecoration: 'text-decoration',
+  textTransform: 'text-transform',
+  textAlign: 'text-align',
+  userSelect: 'user-select',
   display: 'display',
   overflow: 'overflow',
   visibility: 'visibility',
   position: 'position',
   gap: 'gap',
-  'column-gap': 'columnGap',
-  'row-gap': 'rowGap',
-  'justify-content': 'justifyContent',
-  'align-content': 'alignContent',
-  'align-items': 'alignItems',
-  'align-self': 'alignSelf',
-  'flex-direction': 'flexDirection',
-  'flex-wrap': 'flexWrap',
-  padding: 'padding',
-  'padding-top': 'paddingTop',
-  'padding-bottom': 'paddingBottom',
-  'padding-inline-start': 'paddingStart',
-  'padding-inline-end': 'paddingEnd',
-  margin: 'margin',
-  'margin-top': 'marginTop',
-  'margin-bottom': 'marginBottom',
-  'margin-inline-start': 'marginStart',
-  'margin-inline-end': 'marginEnd',
+  columnGap: 'column-gap',
+  rowGap: 'row-gap',
+  justifyContent: 'justify-content',
+  alignContent: 'align-content',
+  alignItems: 'align-items',
+  alignSelf: 'align-self',
+  flexDirection: 'flex-direction',
+  flexWrap: 'flex-wrap',
 };
 
 /**
- * Shorthand properties whose matching style prop only accepts a single space
- * token. When the CSS value lists multiple values (e.g. `padding: 4px 8px`) the
- * style prop cannot express it, so the declaration is left alone.
+ * Padding/margin style props and CSS properties don't map 1:1: the shorthand
+ * props expand to several physical sides, and the `padding`/`margin` style
+ * props emit four longhands. We compare them via shared "atom" tokens (one per
+ * physical side) so e.g. a css `padding-top` conflicts with a `padding`,
+ * `paddingY`, or `paddingTop` style prop.
  */
-const singleValueOnlyProps = new Set(['padding', 'margin']);
+const PADDING_ATOMS = {
+  top: 'padding:top',
+  bottom: 'padding:bottom',
+  start: 'padding:inline-start',
+  end: 'padding:inline-end',
+};
+const MARGIN_ATOMS = {
+  top: 'margin:top',
+  bottom: 'margin:bottom',
+  start: 'margin:inline-start',
+  end: 'margin:inline-end',
+};
+
+/** Maps a style prop name to the set of atoms it controls. */
+const stylePropToAtoms = (() => {
+  const map = {};
+  for (const [styleProp, cssProperty] of Object.entries(stylePropToCssProperty)) {
+    map[styleProp] = [cssProperty];
+  }
+  Object.assign(map, {
+    padding: [PADDING_ATOMS.top, PADDING_ATOMS.bottom, PADDING_ATOMS.start, PADDING_ATOMS.end],
+    paddingX: [PADDING_ATOMS.start, PADDING_ATOMS.end],
+    paddingY: [PADDING_ATOMS.top, PADDING_ATOMS.bottom],
+    paddingTop: [PADDING_ATOMS.top],
+    paddingBottom: [PADDING_ATOMS.bottom],
+    paddingStart: [PADDING_ATOMS.start],
+    paddingEnd: [PADDING_ATOMS.end],
+    margin: [MARGIN_ATOMS.top, MARGIN_ATOMS.bottom, MARGIN_ATOMS.start, MARGIN_ATOMS.end],
+    marginX: [MARGIN_ATOMS.start, MARGIN_ATOMS.end],
+    marginY: [MARGIN_ATOMS.top, MARGIN_ATOMS.bottom],
+    marginTop: [MARGIN_ATOMS.top],
+    marginBottom: [MARGIN_ATOMS.bottom],
+    marginStart: [MARGIN_ATOMS.start],
+    marginEnd: [MARGIN_ATOMS.end],
+  });
+  return map;
+})();
+
+/** Maps a CSS property (as written in a `css` block) to the atoms it controls. */
+const cssPropertyToAtoms = (() => {
+  const map = {};
+  for (const cssProperty of Object.values(stylePropToCssProperty)) {
+    map[cssProperty] = [cssProperty];
+  }
+  Object.assign(map, {
+    padding: [PADDING_ATOMS.top, PADDING_ATOMS.bottom, PADDING_ATOMS.start, PADDING_ATOMS.end],
+    'padding-top': [PADDING_ATOMS.top],
+    'padding-bottom': [PADDING_ATOMS.bottom],
+    'padding-inline-start': [PADDING_ATOMS.start],
+    'padding-inline-end': [PADDING_ATOMS.end],
+    margin: [MARGIN_ATOMS.top, MARGIN_ATOMS.bottom, MARGIN_ATOMS.start, MARGIN_ATOMS.end],
+    'margin-top': [MARGIN_ATOMS.top],
+    'margin-bottom': [MARGIN_ATOMS.bottom],
+    'margin-inline-start': [MARGIN_ATOMS.start],
+    'margin-inline-end': [MARGIN_ATOMS.end],
+  });
+  return map;
+})();
+
+const isOwnedCssProperty = (property) =>
+  Object.prototype.hasOwnProperty.call(cssPropertyToAtoms, property);
 
 const stripComments = (raw) => raw.replace(/\/\*[\s\S]*?\*\//g, ' ');
 
-const PLACEHOLDER = '\u0000';
-
 /**
- * Returns true when the declaration's property is a single space token, or when
- * the property is not one of the shorthand props that require it.
- */
-const valueIsExpressibleAsStyleProp = (property, value) => {
-  if (!singleValueOnlyProps.has(property)) {
-    return true;
-  }
-  const normalized = value.replace(/!important\s*$/i, '').trim();
-  const tokens = normalized.split(/\s+/).filter(Boolean);
-  return tokens.length <= 1;
-};
-
-/**
- * Scans the quasis (static chunks) of a `css` tagged template and collects the
- * names of CSS properties declared at the top level of the block — i.e. the
+ * Scans the quasis (static chunks) of a `css` tagged template and returns the
+ * set of owned CSS properties declared at the **top level** of the block — the
  * declarations that style the element the classname is applied to.
  *
  * Declarations nested inside selectors, pseudo-states, or at-rules (`&:hover`,
- * `@media`, descendant selectors, etc.) live at brace depth >= 1 and are
- * skipped, because those cannot be expressed via static style props anyway.
- *
- * Interpolations (`${...}`) are treated as opaque, brace-neutral tokens so that
- * dynamic values are still detected without their contents corrupting depth
- * tracking.
+ * `@media`, descendant selectors) live at brace depth >= 1 and are skipped:
+ * those cannot be expressed via static style props anyway. Interpolations
+ * (`${...}`) are treated as opaque, brace-neutral tokens.
  */
-const collectTopLevelProperties = (templateLiteral) => {
+const collectOwnedPropertiesFromTemplate = (templateLiteral) => {
   const properties = new Set();
   const quasis = templateLiteral.quasis;
 
@@ -149,30 +184,18 @@ const collectTopLevelProperties = (templateLiteral) => {
   let buffer = '';
   let stringQuote = null;
 
-  const flushDeclaration = () => {
-    const colonIndex = buffer.indexOf(':');
-    buffer = '';
-    return colonIndex;
-  };
-
   const recordDeclaration = (declaration) => {
     const colonIndex = declaration.indexOf(':');
     if (colonIndex === -1) {
       return;
     }
     const property = declaration.slice(0, colonIndex).trim().toLowerCase();
-    const value = declaration.slice(colonIndex + 1).trim();
-
     if (!property || property.startsWith('--') || !/^[a-z-]+$/.test(property)) {
       return;
     }
-    if (!Object.prototype.hasOwnProperty.call(cssPropToStyleProp, property)) {
-      return;
+    if (isOwnedCssProperty(property)) {
+      properties.add(property);
     }
-    if (!valueIsExpressibleAsStyleProp(property, value)) {
-      return;
-    }
-    properties.add(property);
   };
 
   for (let quasiIndex = 0; quasiIndex < quasis.length; quasiIndex += 1) {
@@ -196,7 +219,6 @@ const collectTopLevelProperties = (templateLiteral) => {
       }
 
       if (char === '{') {
-        // The buffer was a selector / at-rule prelude; descend into it.
         depth += 1;
         buffer = '';
       } else if (char === '}') {
@@ -214,15 +236,11 @@ const collectTopLevelProperties = (templateLiteral) => {
       }
     }
 
-    // Between two quasis sits an interpolation. Represent it as an opaque,
-    // brace-neutral token so a declaration value like `height: ${h}` is still
-    // captured and depth tracking is unaffected.
     if (quasiIndex < quasis.length - 1) {
-      buffer += PLACEHOLDER;
+      buffer += '\u0000';
     }
   }
 
-  // A final declaration may omit its trailing semicolon.
   if (depth === 0) {
     recordDeclaration(buffer);
   }
@@ -236,18 +254,85 @@ const rule = createRule({
     type: 'problem',
     docs: {
       description:
-        'Disallow setting CSS properties in a Linaria `css` block when a cds-web style prop already owns them, since the css class silently overrides consumer-provided style props',
+        'Disallow a Linaria `css` class from setting a CSS property that is also passed to the same element as a cds-web style prop, since the css class silently overrides the style prop',
       recommended: 'error',
     },
     schema: [],
     messages: {
-      cssOverridesStyleProp:
-        "Avoid setting `{{property}}` in a Linaria `css` block: it is owned by the `{{styleProp}}` style prop. Because the component's css class is emitted after the base style-prop classes at equal specificity, it wins the source-order tiebreaker and silently overrides values consumers pass via `{{styleProp}}`. Apply the default through the `{{styleProp}}` prop instead, or move this declaration into a nested selector/pseudo-state if it genuinely cannot be expressed as a style prop.",
+      stylePropOverriddenByCss:
+        'The `{{styleProp}}` style prop on this element is silently overridden by `{{property}}`, which is set in a Linaria `css` class applied to the same element via `className`. The css class is emitted after the style-prop class at equal specificity, so it wins the CSS source-order tiebreaker. Remove `{{property}}` from the css block (let the `{{styleProp}}` prop control it, defaulting it on the component if needed), or stop passing the `{{styleProp}}` style prop to this element.',
     },
   },
   defaultOptions: [],
   create(context) {
+    /** Local identifiers that the `css` tag is imported as from @linaria/core. */
     const cssLocalNames = new Set();
+    /** Map of `const NAME = css\`...\`` variable name -> owned CSS properties. */
+    const cssBlockProperties = new Map();
+
+    const collectClassNameCssProperties = (expression, out) => {
+      if (!expression) {
+        return;
+      }
+      switch (expression.type) {
+        case 'Identifier': {
+          const blockProps = cssBlockProperties.get(expression.name);
+          if (blockProps) {
+            for (const property of blockProps) {
+              out.add(property);
+            }
+          }
+          break;
+        }
+        case 'TaggedTemplateExpression': {
+          if (expression.tag.type === 'Identifier' && cssLocalNames.has(expression.tag.name)) {
+            for (const property of collectOwnedPropertiesFromTemplate(expression.quasi)) {
+              out.add(property);
+            }
+          }
+          break;
+        }
+        case 'CallExpression': {
+          const { callee } = expression;
+          const calleeName =
+            callee.type === 'Identifier'
+              ? callee.name
+              : callee.type === 'MemberExpression' && callee.property.type === 'Identifier'
+                ? callee.property.name
+                : null;
+          if (calleeName && CLASSNAME_COMBINERS.has(calleeName)) {
+            for (const argument of expression.arguments) {
+              collectClassNameCssProperties(argument, out);
+            }
+          }
+          break;
+        }
+        case 'LogicalExpression': {
+          collectClassNameCssProperties(expression.left, out);
+          collectClassNameCssProperties(expression.right, out);
+          break;
+        }
+        case 'ConditionalExpression': {
+          collectClassNameCssProperties(expression.consequent, out);
+          collectClassNameCssProperties(expression.alternate, out);
+          break;
+        }
+        case 'ArrayExpression': {
+          for (const element of expression.elements) {
+            collectClassNameCssProperties(element, out);
+          }
+          break;
+        }
+        case 'TemplateLiteral': {
+          for (const subExpression of expression.expressions) {
+            collectClassNameCssProperties(subExpression, out);
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    };
 
     return {
       ImportDeclaration(node) {
@@ -264,22 +349,76 @@ const rule = createRule({
           }
         }
       },
-      TaggedTemplateExpression(node) {
-        if (node.tag.type !== 'Identifier' || !cssLocalNames.has(node.tag.name)) {
+      VariableDeclarator(node) {
+        if (
+          node.id?.type === 'Identifier' &&
+          node.init?.type === 'TaggedTemplateExpression' &&
+          node.init.tag.type === 'Identifier' &&
+          cssLocalNames.has(node.init.tag.name)
+        ) {
+          cssBlockProperties.set(node.id.name, collectOwnedPropertiesFromTemplate(node.init.quasi));
+        }
+      },
+      JSXOpeningElement(node) {
+        let classNameExpression = null;
+        const styleAttributes = new Map();
+
+        for (const attribute of node.attributes) {
+          if (attribute.type !== 'JSXAttribute' || attribute.name?.type !== 'JSXIdentifier') {
+            continue;
+          }
+          const attributeName = attribute.name.name;
+          if (attributeName === 'className') {
+            if (attribute.value?.type === 'JSXExpressionContainer') {
+              classNameExpression = attribute.value.expression;
+            }
+          } else if (Object.prototype.hasOwnProperty.call(stylePropToAtoms, attributeName)) {
+            styleAttributes.set(attributeName, attribute);
+          }
+        }
+
+        if (!classNameExpression || styleAttributes.size === 0) {
           return;
         }
 
-        const offendingProperties = collectTopLevelProperties(node.quasi);
+        const cssProperties = new Set();
+        collectClassNameCssProperties(classNameExpression, cssProperties);
+        if (cssProperties.size === 0) {
+          return;
+        }
 
-        for (const property of offendingProperties) {
-          context.report({
-            node,
-            messageId: 'cssOverridesStyleProp',
-            data: {
-              property,
-              styleProp: cssPropToStyleProp[property],
-            },
-          });
+        // Index the css block's properties by atom so a style prop can be
+        // matched back to the specific property/properties it conflicts with.
+        const atomToCssProperties = new Map();
+        for (const property of cssProperties) {
+          for (const atom of cssPropertyToAtoms[property]) {
+            if (!atomToCssProperties.has(atom)) {
+              atomToCssProperties.set(atom, new Set());
+            }
+            atomToCssProperties.get(atom).add(property);
+          }
+        }
+
+        for (const [styleProp, attribute] of styleAttributes) {
+          const conflictingProperties = new Set();
+          for (const atom of stylePropToAtoms[styleProp]) {
+            const matches = atomToCssProperties.get(atom);
+            if (matches) {
+              for (const property of matches) {
+                conflictingProperties.add(property);
+              }
+            }
+          }
+          if (conflictingProperties.size > 0) {
+            context.report({
+              node: attribute,
+              messageId: 'stylePropOverriddenByCss',
+              data: {
+                styleProp,
+                property: [...conflictingProperties].sort().join(', '),
+              },
+            });
+          }
         }
       },
     };
