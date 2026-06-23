@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.4.2 (6/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Button CSS was preventing height prop from working due to CSS specificity issue. [[#764](https://github.com/coinbase/cds/pull/764)]
+
 ## 9.4.1 (6/15/2026 PST)
 
 #### 🐞 Fixes
