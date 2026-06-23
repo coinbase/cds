@@ -194,6 +194,7 @@ export const Button: ButtonComponent = memo(
         fontFamily,
         fontSize,
         fontWeight,
+        height = 'fit-content',
         lineHeight,
         background,
         color,
@@ -266,6 +267,7 @@ export const Button: ButtonComponent = memo(
           noScaleOnPress={noScaleOnPress}
           padding={padding}
           paddingX={paddingX}
+          height={height}
           paddingY={paddingY}
           style={pressableStyle}
           transparentWhileInactive={transparent}
