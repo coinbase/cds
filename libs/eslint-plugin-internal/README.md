@@ -186,13 +186,13 @@ Recommended pattern inside worklets:
 
 ## no-style-prop-css-overrides
 
-Flags a JSX element that **both** wears a Linaria `css` class setting a CSS property at its top level **and** is passed the cds-web **style prop** that owns that property. Scoped to `packages/web/src` — cds-web is the only package with this styling architecture.
+Flags a JSX element that **both** wears a Linaria `css` class setting a CSS property at its top level **and** can be given the cds-web **style prop** that owns that property — as an explicit attribute or forwarded through a `{...spread}`. Scoped to `packages/web/src` — cds-web is the only package with this styling architecture.
 
 cds-web style props compile to **single-class** Linaria rules (the value is injected as an inline CSS variable, but the declaration that consumes it lives in a class), which keeps them consumer-overridable. A component's own `css` class sets the same property at the **same specificity** but is emitted **later** in the stylesheet, so it wins the CSS source-order tiebreaker and silently overrides the value passed via the style prop. This is the class of bug fixed in CDS-2118 (`Button` `height`/`width` props not applying).
 
-The rule keys off **co-location**: it only reports when the element carrying the `css` class is _also explicitly passed_ the matching style prop — the precise shape of a silent-override bug. Hard-coding a property a component never exposes as a prop on that element (e.g. `display: inline-flex` for layout) is allowed. It resolves `className` through `cx`/`cn`/`clsx`/`classnames`, inline `css`, and logical/conditional/array expressions, and compares `padding`/`margin` shorthands and longhands per physical side. Declarations nested in selectors/pseudo-states/at-rules and `css` not imported from `@linaria/core` are ignored.
+The rule keys off **co-location**: it only reports when the element carrying the `css` class can also be given the matching style prop — the precise shape of a silent-override bug. A style prop reaches an element either as an explicit attribute (pure AST) or via a `{...spread}` whose **type** carries it (type-aware). Hard-coding a property a component never exposes or forwards is allowed. It resolves `className` through `cx`/`cn`/`clsx`/`classnames`, inline `css`, and logical/conditional/array expressions, and compares `padding`/`margin` shorthands and longhands per physical side. Declarations nested in selectors/pseudo-states/at-rules and `css` not imported from `@linaria/core` are ignored. Because of the spread analysis the rule is type-aware and its config block enables `projectService`.
 
-See [`src/no-style-prop-css-overrides/README.md`](./src/no-style-prop-css-overrides/README.md) for the full rationale, the cascade mechanics, why it's AST-based rather than type-checker-based, and remediation guidance.
+See [`src/no-style-prop-css-overrides/README.md`](./src/no-style-prop-css-overrides/README.md) for the full rationale, the cascade mechanics, the spread analysis, and remediation guidance.
 
 **Invalid:**
 

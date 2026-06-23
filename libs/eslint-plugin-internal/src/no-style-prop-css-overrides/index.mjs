@@ -261,10 +261,17 @@ const rule = createRule({
     messages: {
       stylePropOverriddenByCss:
         'The `{{styleProp}}` style prop on this element is silently overridden by `{{property}}`, which is set in a Linaria `css` class applied to the same element via `className`. The css class is emitted after the style-prop class at equal specificity, so it wins the CSS source-order tiebreaker. Remove `{{property}}` from the css block (let the `{{styleProp}}` prop control it, defaulting it on the component if needed), or stop passing the `{{styleProp}}` style prop to this element.',
+      stylePropOverriddenByCssViaSpread:
+        'The `{{styleProp}}` style prop can reach this element through `{...{{spread}}}`, but `{{property}}` is set in a Linaria `css` class applied to the same element via `className` and silently overrides it. The css class is emitted after the style-prop class at equal specificity, so it wins the CSS source-order tiebreaker. Remove `{{property}}` from the css block (let the `{{styleProp}}` prop control it, defaulting it on the component if needed), or destructure `{{styleProp}}` out of the spread so it no longer reaches this element.',
     },
   },
   defaultOptions: [],
   create(context) {
+    // This rule is type-aware: it resolves the type of `{...spread}` arguments
+    // to discover which style props can reach an element without being written
+    // as explicit attributes. Requires type information to be configured.
+    const services = ESLintUtils.getParserServices(context);
+
     /** Local identifiers that the `css` tag is imported as from @linaria/core. */
     const cssLocalNames = new Set();
     /** Map of `const NAME = css\`...\`` variable name -> owned CSS properties. */
@@ -361,9 +368,14 @@ const rule = createRule({
       },
       JSXOpeningElement(node) {
         let classNameExpression = null;
-        const styleAttributes = new Map();
+        const explicitStyleProps = new Map();
+        const spreadAttributes = [];
 
         for (const attribute of node.attributes) {
+          if (attribute.type === 'JSXSpreadAttribute') {
+            spreadAttributes.push(attribute);
+            continue;
+          }
           if (attribute.type !== 'JSXAttribute' || attribute.name?.type !== 'JSXIdentifier') {
             continue;
           }
@@ -373,17 +385,51 @@ const rule = createRule({
               classNameExpression = attribute.value.expression;
             }
           } else if (Object.prototype.hasOwnProperty.call(stylePropToAtoms, attributeName)) {
-            styleAttributes.set(attributeName, attribute);
+            explicitStyleProps.set(attributeName, attribute);
           }
         }
 
-        if (!classNameExpression || styleAttributes.size === 0) {
+        if (!classNameExpression) {
           return;
         }
 
         const cssProperties = new Set();
         collectClassNameCssProperties(classNameExpression, cssProperties);
         if (cssProperties.size === 0) {
+          return;
+        }
+
+        // Resolve which style props can land on this element, and how. Explicit
+        // attributes take precedence over spreads (an explicit attribute is the
+        // more actionable place to point the consumer). For each `{...spread}`,
+        // the spread argument's type is inspected: any property whose name is a
+        // style prop can reach the element through that spread.
+        const landableStyleProps = new Map();
+        for (const [styleProp, attribute] of explicitStyleProps) {
+          landableStyleProps.set(styleProp, { node: attribute, viaSpread: false });
+        }
+        for (const spreadAttribute of spreadAttributes) {
+          const spreadType = services.getTypeAtLocation(spreadAttribute.argument);
+          const spreadLabel =
+            spreadAttribute.argument.type === 'Identifier'
+              ? spreadAttribute.argument.name
+              : context.sourceCode.getText(spreadAttribute.argument);
+          for (const symbol of spreadType.getProperties()) {
+            const styleProp = symbol.getName();
+            if (
+              Object.prototype.hasOwnProperty.call(stylePropToAtoms, styleProp) &&
+              !landableStyleProps.has(styleProp)
+            ) {
+              landableStyleProps.set(styleProp, {
+                node: spreadAttribute,
+                viaSpread: true,
+                spreadLabel,
+              });
+            }
+          }
+        }
+
+        if (landableStyleProps.size === 0) {
           return;
         }
 
@@ -399,7 +445,7 @@ const rule = createRule({
           }
         }
 
-        for (const [styleProp, attribute] of styleAttributes) {
+        for (const [styleProp, info] of landableStyleProps) {
           const conflictingProperties = new Set();
           for (const atom of stylePropToAtoms[styleProp]) {
             const matches = atomToCssProperties.get(atom);
@@ -409,14 +455,21 @@ const rule = createRule({
               }
             }
           }
-          if (conflictingProperties.size > 0) {
+          if (conflictingProperties.size === 0) {
+            continue;
+          }
+          const property = [...conflictingProperties].sort().join(', ');
+          if (info.viaSpread) {
             context.report({
-              node: attribute,
+              node: info.node,
+              messageId: 'stylePropOverriddenByCssViaSpread',
+              data: { styleProp, property, spread: info.spreadLabel },
+            });
+          } else {
+            context.report({
+              node: info.node,
               messageId: 'stylePropOverriddenByCss',
-              data: {
-                styleProp,
-                property: [...conflictingProperties].sort().join(', '),
-              },
+              data: { styleProp, property },
             });
           }
         }

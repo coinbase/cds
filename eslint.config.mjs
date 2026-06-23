@@ -461,8 +461,12 @@ export default tseslint.config(
   // win the CSS source-order tiebreaker over a consumer-provided style prop
   // (see CDS-2118). Scope the rule to published web source and exclude the
   // style system itself, which legitimately implements these CSS properties.
+  //
+  // The rule is type-aware (it resolves the type of `{...spread}` props to find
+  // style props that reach an element without an explicit attribute), so this
+  // block enables `projectService` for the in-scope TS/TSX files.
   {
-    files: ['packages/web/src/**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    files: ['packages/web/src/**/*.{ts,tsx}'],
     ignores: [
       'packages/web/src/styles/**',
       '**/__stories__/**',
@@ -475,6 +479,12 @@ export default tseslint.config(
       '**/*.spec.*',
       '**/*.figma.*',
     ],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
       'internal/no-style-prop-css-overrides': 'warn',
     },
