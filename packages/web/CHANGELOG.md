@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.4.3 (6/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: ensure activeColor prop is applied in TabbedChips. [[#766](https://github.com/coinbase/cds/pull/766)]
+
 ## 9.4.2 (6/23/2026 PST)
 
 #### 🐞 Fixes
