@@ -7,7 +7,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/Shared
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { ChipProps } from '../../chips/ChipProps';
-import { MediaChip } from '../../chips/MediaChip';
+import { MediaChip, type MediaChipBaseProps } from '../../chips/MediaChip';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
 import { Box, type BoxProps } from '../../layout/Box';
@@ -50,7 +50,7 @@ export type TabbedChipProps<TabId extends string = string> = Omit<
      * Custom background color applied to the chip when it is the active tab.
      * When set, takes precedence over the default `invertColorScheme` behavior.
      */
-    activeColor?: BoxProps['background'];
+    activeColor?: MediaChipBaseProps['background'];
   };
 
 export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
