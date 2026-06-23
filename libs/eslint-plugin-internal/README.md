@@ -184,6 +184,40 @@ Recommended pattern inside worklets:
 - Read fields directly (for example, `const delayMs = transition.delay`)
 - Pass existing objects directly when safe, rather than reconstructing with spread
 
+## no-style-prop-css-overrides
+
+Disallows setting, inside a Linaria `css` block, any CSS property that a cds-web **style prop** already owns (e.g. `height`, `width`, `padding-top`, `background-color`, `display`). Scoped to `packages/web/src` — cds-web is the only package with this styling architecture.
+
+cds-web style props compile to **single-class** Linaria rules (the value is injected as an inline CSS variable, but the declaration that consumes it lives in a class), which keeps them consumer-overridable. A component's own `css` block sets the same property at the **same specificity** but is emitted **later** in the stylesheet, so it wins the CSS source-order tiebreaker and silently overrides values passed via the style prop. This is the class of bug fixed in CDS-2118 (`Button` `height`/`width` props not applying).
+
+The rule only flags **top-level** declarations of owned properties; declarations nested inside selectors, pseudo-states, or at-rules (`&:hover`, `@media`, …) are allowed because they can't be expressed via static style props. Multi-value `padding`/`margin` shorthands and `css` imported from anywhere other than `@linaria/core` are also ignored.
+
+See [`src/no-style-prop-css-overrides/README.md`](./src/no-style-prop-css-overrides/README.md) for the full rationale, the cascade mechanics, and remediation guidance.
+
+**Invalid:**
+
+```ts
+import { css } from '@linaria/core';
+
+const buttonClass = css`
+  height: 40px; // owned by the `height` style prop — silently overrides it
+  background-color: var(--color-bgPrimary); // owned by the `background` style prop
+`;
+```
+
+**Valid:**
+
+```ts
+import { css } from '@linaria/core';
+
+const klass = css`
+  cursor: pointer; // not owned by any style prop
+  &:hover {
+    background-color: var(--color-bgPrimaryHover); // pseudo-state — not expressible via style props
+  }
+`;
+```
+
 ## safely-spread-props
 
 This rule checks that React component `...spread` props do not contain properties that the receiving component does not expect.
