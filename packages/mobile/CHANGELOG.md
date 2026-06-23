@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Fix: ensure activeColor prop is applied in TabbedChips. [[#766](https://github.com/coinbase/cds/pull/766)]
+- Fix (alpha): Add `activeBackground` and `activeColor` props to alpha `TabbedChips`. `activeBackground` sets a custom chip background color when active (replacing the default `invertColorScheme` behavior); `activeColor` sets a custom chip label text color when active. Also fixes the pre-existing bug where `invertColorScheme` was applied unconditionally regardless of any custom props. [[#766](https://github.com/coinbase/cds/pull/766)]
 
 ## 9.4.2 ((6/23/2026, 07:32 AM PST))
 
