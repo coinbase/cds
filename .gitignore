@@ -194,5 +194,7 @@ tarballs/
 # LLM and MCP docs
 mcp-docs/
 
-# Claude Code artifacts
+# Claude Code
 .claude/research/
+.worktrees/
+.claude/worktrees/
