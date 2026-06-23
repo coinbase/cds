@@ -17,7 +17,9 @@ import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs/Tabs';
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
+  activeBackground,
   activeColor,
+  color,
   ...tabProps
 }: TabbedChipProps<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
@@ -26,8 +28,9 @@ const DefaultTabComponent = <TabId extends string = string>({
   return (
     <MediaChip
       accessibilityState={{ selected: isActive }}
-      background={isActive && activeColor ? activeColor : undefined}
-      invertColorScheme={isActive && !activeColor}
+      background={isActive && activeBackground ? activeBackground : undefined}
+      color={isActive && activeColor ? activeColor : color}
+      invertColorScheme={isActive && !activeBackground}
       onPress={handlePress}
       {...tabProps}
     >
@@ -50,7 +53,11 @@ export type TabbedChipProps<TabId extends string = string> = Omit<
      * Custom background color applied to the chip when it is the active tab.
      * When set, takes precedence over the default `invertColorScheme` behavior.
      */
-    activeColor?: MediaChipBaseProps['background'];
+    activeBackground?: MediaChipBaseProps['background'];
+    /**
+     * Custom foreground color applied to the chip label when it is the active tab.
+     */
+    activeColor?: MediaChipBaseProps['color'];
   };
 
 export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
@@ -60,6 +67,7 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
   | 'tabs'
   | 'onActiveTabElementChange'
   | 'activeBackground'
+  | 'activeColor'
 > & {
   tabs: TabbedChipProps<TabId>[];
   TabComponent?: React.FC<TabbedChipProps<TabId>>;

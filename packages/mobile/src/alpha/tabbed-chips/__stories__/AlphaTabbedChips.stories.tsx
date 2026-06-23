@@ -71,9 +71,14 @@ const compactTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
   start: <RemoteImage {...compactAssetIconProps} />,
 }));
 
+const activeBackgroundTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
+  ...tab,
+  activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
+}));
+
 const activeColorTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
   ...tab,
-  activeColor: 'positive' as BoxProps['background'],
+  activeColor: 'fgPositive' as TabbedChipProps['activeColor'],
 }));
 
 const TabbedChipsScreen = () => {
@@ -102,6 +107,9 @@ const TabbedChipsScreen = () => {
       </Example>
       <Example title="With auto scroll offset">
         <Demo autoScrollOffset={100} tabs={sampleTabs} />
+      </Example>
+      <Example title="With activeBackground">
+        <Demo tabs={activeBackgroundTabs} />
       </Example>
       <Example title="With activeColor">
         <Demo tabs={activeColorTabs} />

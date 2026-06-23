@@ -28,10 +28,29 @@ const Demo = () => {
   );
 };
 
+const activeBackgroundTabs: TabbedChipProps[] = tabs.map((tab) => ({
+  ...tab,
+  activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
+}));
+
 const activeColorTabs: TabbedChipProps[] = tabs.map((tab) => ({
   ...tab,
-  activeColor: 'positive' as TabbedChipProps['activeColor'],
+  activeColor: 'fgPositive' as TabbedChipProps['activeColor'],
 }));
+
+const ActiveBackgroundDemo = () => {
+  const [value, setValue] = useState<TabbedChipsProps['activeTab']>(activeBackgroundTabs[0]);
+  return (
+    <DefaultThemeProvider>
+      <TabbedChips
+        activeTab={value}
+        onChange={setValue}
+        tabs={activeBackgroundTabs}
+        testID={testID}
+      />
+    </DefaultThemeProvider>
+  );
+};
 
 const ActiveColorDemo = () => {
   const [value, setValue] = useState<TabbedChipsProps['activeTab']>(activeColorTabs[0]);
@@ -71,6 +90,30 @@ describe('TabbedChips(Alpha) - web', () => {
     await waitFor(() =>
       expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
     );
+  });
+
+  describe('activeBackground', () => {
+    it('renders without error when tabs have activeBackground set', () => {
+      render(<ActiveBackgroundDemo />);
+      expect(screen.getByTestId(testID)).toBeDefined();
+    });
+
+    it('active tab with activeBackground still carries aria-selected', async () => {
+      render(<ActiveBackgroundDemo />);
+      const firstTestId = activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id;
+      const secondTestId = activeBackgroundTabs[1].testID ?? activeBackgroundTabs[1].id;
+
+      expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'true');
+
+      fireEvent.click(screen.getByTestId(secondTestId));
+
+      await waitFor(() =>
+        expect(screen.getByTestId(secondTestId)).toHaveAttribute('aria-selected', 'true'),
+      );
+      await waitFor(() =>
+        expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
+      );
+    });
   });
 
   describe('activeColor', () => {

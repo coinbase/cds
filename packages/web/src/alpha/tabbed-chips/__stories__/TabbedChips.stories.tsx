@@ -76,9 +76,14 @@ const EnumDemo = () => {
   return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={enumTabs} />;
 };
 
+const activeBackgroundTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
+  ...tab,
+  activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
+}));
+
 const activeColorTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
   ...tab,
-  activeColor: 'positive' as TabbedChipProps['activeColor'],
+  activeColor: 'fgPositive' as TabbedChipProps['activeColor'],
 }));
 
 export const Default = () => {
@@ -117,6 +122,10 @@ export const Default = () => {
         With auto scroll offset
       </Text>
       <Demo autoScrollOffset={100} tabs={sampleTabs} />
+      <Text as="p" display="block" font="headline">
+        With activeBackground
+      </Text>
+      <Demo tabs={activeBackgroundTabs} />
       <Text as="p" display="block" font="headline">
         With activeColor
       </Text>
