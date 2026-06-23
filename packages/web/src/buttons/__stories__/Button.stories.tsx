@@ -104,24 +104,3 @@ export const FlushProps = () => (
     </Button>
   </VStack>
 );
-
-/**
- * BUG REPRO (CDS-2118): height and width props not applying.
- *
- * Before the fix, `height: fit-content` was hardcoded in baseCss, overriding
- * any height prop value passed by the user. The buttons below should display
- * with their explicit height/width values applied -- but without the fix they
- * all render at their natural content height instead.
- */
-export const HeightAndWidthProps = () => (
-  <VStack alignItems="flex-start" gap={4} padding={2}>
-    <Button height="80px">height=80px</Button>
-    <Button width="300px">width=300px</Button>
-    <Button height="64px" width="200px">
-      height=64px width=200px
-    </Button>
-    <Button compact height="48px">
-      compact height=48px
-    </Button>
-  </VStack>
-);
