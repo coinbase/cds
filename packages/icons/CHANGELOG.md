@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (5)
+
+- waveForm
+- record
+- stop
+- desktop
+- liveEvents
+
 ## 5.19.0 (6/9/2026 PST)
 
 #### 🚀 Updates

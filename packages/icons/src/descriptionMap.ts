@@ -1401,7 +1401,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'musicArticles',
     'microphoneCordless',
     'microphoneCordless',
-    'tvStand'
+    'tvStand',
+    'waveForm'
   ],
   'photos': [
     'crystalBall',
@@ -3259,7 +3260,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'auto',
     'gaming',
     'playbutton',
-    'tvStand'
+    'tvStand',
+    'record',
+    'stop'
   ],
   'continue': [
     'play'
@@ -3279,7 +3282,10 @@ export const descriptionMap: Record<string, IconName[]> = {
     'tv',
     'filmStrip',
     'playbutton',
-    'tvStand'
+    'tvStand',
+    'waveForm',
+    'record',
+    'stop'
   ],
   '▶️': [
     'play'
@@ -3574,7 +3580,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'list'
   ],
   'computer': [
-    'laptop'
+    'laptop',
+    'desktop'
   ],
   'screen': [
     'laptop',
@@ -4005,7 +4012,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'clockOutline',
     'clock',
     'allTimeHigh',
-    'camera'
+    'camera',
+    'record'
   ],
   'form': [
     'document'
@@ -5936,7 +5944,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'motorsport',
     'golf',
     'basketball',
-    'boxing'
+    'boxing',
+    'liveEvents'
   ],
   'Hokey': [
     'hockey'
@@ -6436,7 +6445,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'tv'
   ],
   'broadcast': [
-    'tv'
+    'tv',
+    'liveEvents'
   ],
   'film': [
     'filmStrip',
@@ -6459,7 +6469,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'gaming'
   ],
   'start': [
-    'playbutton'
+    'playbutton',
+    'record'
   ],
   'atom': [
     'scienceAtom',
@@ -6556,7 +6567,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'webhooks'
   ],
   'web': [
-    'webhooks'
+    'webhooks',
+    'desktop'
   ],
   'hooks': [
     'webhooks'
@@ -6647,5 +6659,55 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'bar': [
     'ipoChart'
+  ],
+  'waveform': [
+    'waveForm'
+  ],
+  'playback': [
+    'waveForm',
+    'record',
+    'stop'
+  ],
+  'controls': [
+    'waveForm',
+    'record',
+    'stop'
+  ],
+  'youTube': [
+    'record'
+  ],
+  'stop': [
+    'record',
+    'stop'
+  ],
+  'YouTube': [
+    'stop'
+  ],
+  'desktop': [
+    'desktop'
+  ],
+  'monitor': [
+    'desktop'
+  ],
+  'browser': [
+    'desktop'
+  ],
+  'widescreen': [
+    'desktop'
+  ],
+  'live': [
+    'liveEvents'
+  ],
+  'events': [
+    'liveEvents'
+  ],
+  'other': [
+    'liveEvents'
+  ],
+  'current': [
+    'liveEvents'
+  ],
+  'watch': [
+    'liveEvents'
   ]
 };
