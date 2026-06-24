@@ -1,7 +1,7 @@
 import { type ComponentType, memo, useEffect, useMemo } from 'react';
 import { cancelAnimation, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
+import { type AnimatedProp, Circle, Group, interpolateColors } from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
@@ -30,7 +30,7 @@ export type PointBaseProps = {
    * The fill color of the point.
    * @default theme.color.fgPrimary
    */
-  fill?: string;
+  fill?: AnimatedProp<string>;
   /**
    * Optional Y-axis id to specify which axis to plot along.
    * @default first y-axis defined in chart props.
@@ -56,7 +56,7 @@ export type PointBaseProps = {
    * Color of the outer stroke around the point.
    * @default theme.color.bg
    */
-  stroke?: string;
+  stroke?: AnimatedProp<string>;
   /**
    * Outer stroke width of the point.
    * Set to  0 to remove the stroke.
@@ -111,7 +111,7 @@ export type PointLabelProps = {
   /**
    * Fill color for the point.
    */
-  fill: string;
+  fill: AnimatedProp<string>;
   /**
    * Position of the label relative to the point.
    * @default 'center'
@@ -285,10 +285,11 @@ export const Point = memo<PointProps>(
 
     // Interpolate between previous and current fill color
     const animatedFillColor = useDerivedValue(() => {
-      if (!previousFill || previousFill === fill) {
-        return fill;
+      if (typeof fill !== 'string') return fill.value;
+      if (typeof previousFill === 'string' && previousFill && previousFill !== fill) {
+        return interpolateColors(colorProgress.value, [0, 1], [previousFill, fill]);
       }
-      return interpolateColors(colorProgress.value, [0, 1], [previousFill, fill]);
+      return fill;
     }, [colorProgress, previousFill, fill]);
 
     const isWithinDrawingArea = useMemo(() => {
@@ -327,14 +328,14 @@ export const Point = memo<PointProps>(
             {strokeWidth > 0 && (
               <Circle
                 c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-                color={stroke as Color}
+                color={stroke}
                 r={radius + strokeWidth / 2}
               />
             )}
             {/* Inner fill circle */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-              color={fill as Color}
+              color={fill}
               r={radius - strokeWidth / 2}
             />
           </Group>
@@ -359,7 +360,7 @@ export const Point = memo<PointProps>(
     return (
       <Group opacity={effectiveOpacity}>
         {strokeWidth > 0 && (
-          <Circle c={animatedPoint} color={stroke as Color} r={radius + strokeWidth / 2} />
+          <Circle c={animatedPoint} color={stroke} r={radius + strokeWidth / 2} />
         )}
         <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
         {label && (

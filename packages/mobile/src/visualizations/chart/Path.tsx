@@ -42,7 +42,7 @@ export type PathBaseProps = {
    * When provided, will render a fill with the given color.
    * If not provided, will not render a fill.
    */
-  fill?: string;
+  fill?: AnimatedProp<string>;
   /**
    * Opacity for the path fill.
    */
