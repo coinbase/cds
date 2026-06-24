@@ -410,10 +410,21 @@ const rule = createRule({
         }
         for (const spreadAttribute of spreadAttributes) {
           const spreadType = services.getTypeAtLocation(spreadAttribute.argument);
+          // Unwrap `as`/`satisfies`/`!` so the label reads as the underlying
+          // value (e.g. `props` rather than `props satisfies ValidateProps<…>`),
+          // and collapse whitespace so a multiline argument stays on one line.
+          let labelNode = spreadAttribute.argument;
+          while (
+            labelNode.type === 'TSAsExpression' ||
+            labelNode.type === 'TSSatisfiesExpression' ||
+            labelNode.type === 'TSNonNullExpression'
+          ) {
+            labelNode = labelNode.expression;
+          }
           const spreadLabel =
-            spreadAttribute.argument.type === 'Identifier'
-              ? spreadAttribute.argument.name
-              : context.sourceCode.getText(spreadAttribute.argument);
+            labelNode.type === 'Identifier'
+              ? labelNode.name
+              : context.sourceCode.getText(labelNode).replace(/\s+/g, ' ');
           for (const symbol of spreadType.getProperties()) {
             const styleProp = symbol.getName();
             if (
