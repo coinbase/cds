@@ -4,7 +4,7 @@ import { renderA11y } from '@coinbase/cds-web-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../../utils/test';
-import { TabbedChips, type TabbedChipsProps } from '../TabbedChips';
+import { type TabbedChipProps, TabbedChips, type TabbedChipsProps } from '../TabbedChips';
 
 // Mock ResizeObserver for scrolling hook
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -24,6 +24,39 @@ const Demo = () => {
   return (
     <DefaultThemeProvider>
       <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} testID={testID} />
+    </DefaultThemeProvider>
+  );
+};
+
+const activeBackgroundTabs: TabbedChipProps[] = tabs.map((tab) => ({
+  ...tab,
+  activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
+}));
+
+const activeColorTabs: TabbedChipProps[] = tabs.map((tab) => ({
+  ...tab,
+  activeColor: 'fgPositive' as TabbedChipProps['activeColor'],
+}));
+
+const ActiveBackgroundDemo = () => {
+  const [value, setValue] = useState<TabbedChipsProps['activeTab']>(activeBackgroundTabs[0]);
+  return (
+    <DefaultThemeProvider>
+      <TabbedChips
+        activeTab={value}
+        onChange={setValue}
+        tabs={activeBackgroundTabs}
+        testID={testID}
+      />
+    </DefaultThemeProvider>
+  );
+};
+
+const ActiveColorDemo = () => {
+  const [value, setValue] = useState<TabbedChipsProps['activeTab']>(activeColorTabs[0]);
+  return (
+    <DefaultThemeProvider>
+      <TabbedChips activeTab={value} onChange={setValue} tabs={activeColorTabs} testID={testID} />
     </DefaultThemeProvider>
   );
 };
@@ -57,5 +90,53 @@ describe('TabbedChips(Alpha) - web', () => {
     await waitFor(() =>
       expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
     );
+  });
+
+  describe('activeBackground', () => {
+    it('renders without error when tabs have activeBackground set', () => {
+      render(<ActiveBackgroundDemo />);
+      expect(screen.getByTestId(testID)).toBeDefined();
+    });
+
+    it('active tab with activeBackground still carries aria-selected', async () => {
+      render(<ActiveBackgroundDemo />);
+      const firstTestId = activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id;
+      const secondTestId = activeBackgroundTabs[1].testID ?? activeBackgroundTabs[1].id;
+
+      expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'true');
+
+      fireEvent.click(screen.getByTestId(secondTestId));
+
+      await waitFor(() =>
+        expect(screen.getByTestId(secondTestId)).toHaveAttribute('aria-selected', 'true'),
+      );
+      await waitFor(() =>
+        expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
+      );
+    });
+  });
+
+  describe('activeColor', () => {
+    it('renders without error when tabs have activeColor set', () => {
+      render(<ActiveColorDemo />);
+      expect(screen.getByTestId(testID)).toBeDefined();
+    });
+
+    it('active tab with activeColor still carries aria-selected', async () => {
+      render(<ActiveColorDemo />);
+      const firstTestId = activeColorTabs[0].testID ?? activeColorTabs[0].id;
+      const secondTestId = activeColorTabs[1].testID ?? activeColorTabs[1].id;
+
+      expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'true');
+
+      fireEvent.click(screen.getByTestId(secondTestId));
+
+      await waitFor(() =>
+        expect(screen.getByTestId(secondTestId)).toHaveAttribute('aria-selected', 'true'),
+      );
+      await waitFor(() =>
+        expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
+      );
+    });
   });
 });
