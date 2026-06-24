@@ -12,6 +12,7 @@ import {
 } from '@coinbase/cds-common/tabs/useTabs';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
+import { css } from '@linaria/core';
 import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
 import { cx } from '../cx';
@@ -25,20 +26,29 @@ import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
 
 const MotionBox = motion<BoxProps<BoxDefaultElement>>(Box);
 
+// The container is a column flex box so the rendered tab stretches to its width,
+// mirroring React Native's default `View` behavior for cross-platform parity.
+const tabContainerCss = css`
+  display: flex;
+  flex-direction: column;
+`;
+
 type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: HTMLElement) => void;
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
 };
 
-const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
+const TabContainer = ({ id, registerRef, className, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
     (ref: HTMLElement | null) => {
       if (ref) registerRef(id, ref);
     },
     [id, registerRef],
   );
-  return <div ref={refCallback} {...props} />;
+  return <div ref={refCallback} className={cx(tabContainerCss, className)} {...props} />;
 };
 
 export const tabsTransitionConfig = {
@@ -108,6 +118,8 @@ export type TabsProps<
     styles?: {
       /** Root element */
       root?: React.CSSProperties;
+      /** Container element wrapping each tab */
+      tabContainer?: React.CSSProperties;
       /** Tab element */
       tab?: React.CSSProperties;
       /** Active indicator element */
@@ -117,6 +129,8 @@ export type TabsProps<
     classNames?: {
       /** Root element */
       root?: string;
+      /** Container element wrapping each tab */
+      tabContainer?: string;
       /** Tab element */
       tab?: string;
       /** Active indicator element */
@@ -293,7 +307,13 @@ const TabsComponent = memo(
                 tabIndex: activeTab?.id === props.id || !activeTab ? 0 : -1,
               };
               return (
-                <TabContainer key={props.id} id={props.id} registerRef={registerRef}>
+                <TabContainer
+                  key={props.id}
+                  className={classNames?.tabContainer}
+                  id={props.id}
+                  registerRef={registerRef}
+                  style={styles?.tabContainer}
+                >
                   <RenderedTab {...renderedTabProps} />
                 </TabContainer>
               );
