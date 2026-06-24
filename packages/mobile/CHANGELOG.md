@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.5.0 (6/24/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: allow animated stroke and text background. [[#771](https://github.com/coinbase/cds/pull/771)]
+
 ## 9.4.3 (6/23/2026 PST)
 
 #### 🐞 Fixes
