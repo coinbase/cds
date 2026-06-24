@@ -109,7 +109,7 @@ export type ReferenceLineBaseProps = {
    * The color of the line.
    * @default theme.color.bgLine
    */
-  stroke?: string;
+  stroke?: AnimatedProp<string>;
   /**
    * Opacity applied to both the line and label.
    * @default 1

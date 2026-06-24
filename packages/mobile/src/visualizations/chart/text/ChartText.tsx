@@ -4,7 +4,6 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect } from '@coinbase/cds-common/types/Rect';
 import {
   type AnimatedProp,
-  type Color,
   FontSlant,
   FontWeight,
   Group,
@@ -73,7 +72,7 @@ export type ChartTextBaseProps = {
    * The background color of the text's background rectangle.
    * @default theme.color.bgElevation1 if elevated, otherwise 'transparent'
    */
-  background?: string;
+  background?: AnimatedProp<string>;
   /**
    * Whether the text's background should have an elevated appearance with a shadow.
    */
@@ -487,7 +486,7 @@ export const ChartText = memo<ChartTextProps>(
       <Group layer={<Paint opacity={groupOpacity} />}>
         {background !== 'transparent' && (
           <RoundedRect
-            color={background as Color}
+            color={background}
             height={backgroundRectHeight}
             r={borderRadius}
             width={backgroundRectWidth}
