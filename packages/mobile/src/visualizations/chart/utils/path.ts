@@ -359,6 +359,18 @@ export const getBarPath = (
  * @deprecated Prefer a shader for dotted areas instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
+// Perf: LRU-1 memo + array-join build (was: `path += ...` per dot which
+// allocated thousands of intermediate strings per call and dominated
+// stringPrototypeConcat / young-gen GC on chart-heavy screens).
+//
+// On a real-world prediction-markets odds chart (~320x200, patternSize 4),
+// this function was previously invoked ~1k times per scenario because the
+// `drawingArea` ref churns each chart render even when bounds are equal by
+// value. Returning the same string instance for identical bounds lets the
+// downstream `<Path d={dottedPath}/>` short-circuit on the Skia side too
+// (Skia skips re-parsing when the `d` string identity is unchanged).
+let _dottedAreaPathCacheKey = '';
+let _dottedAreaPathCacheValue = '';
 export const getDottedAreaPath = (
   bounds: { x: number; y: number; width: number; height: number },
   patternSize: number,
@@ -368,31 +380,39 @@ export const getDottedAreaPath = (
     return '';
   }
 
-  let path = '';
+  const key = `${bounds.x}|${bounds.y}|${bounds.width}|${bounds.height}|${patternSize}|${dotSize}`;
+  if (key === _dottedAreaPathCacheKey) {
+    return _dottedAreaPathCacheValue;
+  }
 
-  // Calculate the number of dots that fit in each dimension
-  const dotsX = Math.ceil(bounds.width / patternSize);
-  const dotsY = Math.ceil(bounds.height / patternSize);
+  // Calculate the number of dots that fit in each dimension. Clamp here so
+  // the inner loop doesn't need a per-iteration
+  // `centerX/Y <= bounds.{x+w,y+h}` check: dotsX/dotsY are computed so that
+  // every generated center is in-bounds by construction.
+  const halfPattern = patternSize / 2;
+  const dotsX = Math.max(0, Math.floor((bounds.width - halfPattern) / patternSize) + 1);
+  const dotsY = Math.max(0, Math.floor((bounds.height - halfPattern) / patternSize) + 1);
 
-  // Generate circles in a grid pattern
+  const parts: string[] = new Array(dotsX * dotsY);
+  let idx = 0;
+  const twoDot = dotSize * 2;
+  const negTwoDot = -twoDot;
+
   for (let row = 0; row < dotsY; row++) {
+    const centerY = bounds.y + row * patternSize + halfPattern;
+    const topY = centerY - dotSize;
     for (let col = 0; col < dotsX; col++) {
-      const centerX = bounds.x + col * patternSize + patternSize / 2;
-      const centerY = bounds.y + row * patternSize + patternSize / 2;
-
-      // Only draw dots that are within the bounds
-      if (
-        centerX >= bounds.x &&
-        centerX <= bounds.x + bounds.width &&
-        centerY >= bounds.y &&
-        centerY <= bounds.y + bounds.height
-      ) {
-        // Create circle using SVG arc commands
-        // M cx,cy-r a r,r 0 1,0 0,2r a r,r 0 1,0 0,-2r
-        path += `M ${centerX},${centerY - dotSize} a ${dotSize},${dotSize} 0 1,0 0,${dotSize * 2} a ${dotSize},${dotSize} 0 1,0 0,${-dotSize * 2} `;
-      }
+      const centerX = bounds.x + col * patternSize + halfPattern;
+      // Create circle using SVG arc commands:
+      //   M cx,cy-r a r,r 0 1,0 0,2r a r,r 0 1,0 0,-2r
+      parts[idx++] =
+        `M ${centerX},${topY} a ${dotSize},${dotSize} 0 1,0 0,${twoDot} a ${dotSize},${dotSize} 0 1,0 0,${negTwoDot} `;
     }
   }
 
-  return path.trim();
+  // Single string allocation for the joined result; trim once.
+  const result = (parts.length === idx ? parts : parts.slice(0, idx)).join('').trim();
+  _dottedAreaPathCacheKey = key;
+  _dottedAreaPathCacheValue = result;
+  return result;
 };

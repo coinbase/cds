@@ -2,6 +2,7 @@ import {
   type ChartPathCurveType,
   getAreaPath,
   getBarPath,
+  getDottedAreaPath,
   getLinePath,
   getPathCurveFunction,
 } from '../path';
@@ -414,5 +415,61 @@ describe('getBarPath', () => {
     expect(result).toBe(
       'M 10 20 L 35 20 A 5 5 0 0 1 40 25 L 40 55 A 5 5 0 0 1 35 60 L 10 60 A 0 0 0 0 1 10 60 L 10 20 A 0 0 0 0 1 10 20 Z',
     );
+  });
+});
+
+describe('getDottedAreaPath', () => {
+  const bounds = { x: 0, y: 0, width: 20, height: 12 };
+
+  it('returns empty string for non-positive dimensions or sizes', () => {
+    expect(getDottedAreaPath({ x: 0, y: 0, width: 0, height: 10 }, 4, 1)).toBe('');
+    expect(getDottedAreaPath({ x: 0, y: 0, width: 10, height: 0 }, 4, 1)).toBe('');
+    expect(getDottedAreaPath({ x: 0, y: 0, width: 10, height: 10 }, 0, 1)).toBe('');
+    expect(getDottedAreaPath({ x: 0, y: 0, width: 10, height: 10 }, 4, 0)).toBe('');
+  });
+
+  it('emits one circle subpath per dot that fits inside the bounds', () => {
+    // bounds 20x12, patternSize 4 -> 5x3 = 15 dots; each subpath starts with `M`.
+    const result = getDottedAreaPath(bounds, 4, 1);
+    const moveCount = (result.match(/M /g) ?? []).length;
+    expect(moveCount).toBe(15);
+  });
+
+  it('only emits dots whose center is inside the bounds', () => {
+    // bounds 9x4, patternSize 4 -> ceil(9/4)=3 columns but the center of
+    // column 2 is 10 (outside), so only 2 columns x 1 row = 2 dots.
+    const result = getDottedAreaPath({ x: 0, y: 0, width: 9, height: 4 }, 4, 1);
+    const moveCount = (result.match(/M /g) ?? []).length;
+    expect(moveCount).toBe(2);
+  });
+
+  it('honors the bounds offset', () => {
+    const a = getDottedAreaPath({ x: 0, y: 0, width: 8, height: 8 }, 4, 1);
+    const b = getDottedAreaPath({ x: 100, y: 50, width: 8, height: 8 }, 4, 1);
+    // Same shape, shifted: same number of dots, different coordinates.
+    expect((a.match(/M /g) ?? []).length).toBe((b.match(/M /g) ?? []).length);
+    expect(a).not.toBe(b);
+    expect(b).toContain('M 102,');
+  });
+
+  it('returns the same string instance for identical bounds (LRU-1 memo)', () => {
+    const first = getDottedAreaPath(bounds, 4, 1);
+    const second = getDottedAreaPath({ ...bounds }, 4, 1);
+    // Reference equality, not just structural equality: this is what lets
+    // downstream `<Path d={...}/>` consumers short-circuit.
+    expect(second).toBe(first);
+  });
+
+  it('returns a different result when bounds / sizes change the visual output', () => {
+    const base = getDottedAreaPath(bounds, 4, 1);
+    expect(getDottedAreaPath({ ...bounds, x: 1 }, 4, 1)).not.toBe(base);
+    expect(getDottedAreaPath({ ...bounds, y: 1 }, 4, 1)).not.toBe(base);
+    // Width/height must cross a dot threshold to change the visual output;
+    // sub-pattern increments correctly hit the cache and may return an equal
+    // string. Use full-pattern jumps here.
+    expect(getDottedAreaPath({ ...bounds, width: bounds.width + 4 }, 4, 1)).not.toBe(base);
+    expect(getDottedAreaPath({ ...bounds, height: bounds.height + 4 }, 4, 1)).not.toBe(base);
+    expect(getDottedAreaPath(bounds, 5, 1)).not.toBe(base);
+    expect(getDottedAreaPath(bounds, 4, 2)).not.toBe(base);
   });
 });
