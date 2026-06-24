@@ -82,7 +82,7 @@ export type LineBaseProps = {
    * The color of the line.
    * @default color of the series or theme.color.fgPrimary
    */
-  stroke?: string;
+  stroke?: AnimatedProp<string>;
   /**
    * Opacity of the line
    * @note when combined with gradient, both will be applied
