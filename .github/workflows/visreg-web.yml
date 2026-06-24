@@ -35,11 +35,14 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Set branch name for Percy
         id: set_branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "PERCY_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+            echo "PERCY_BRANCH=$HEAD_REF" >> "$GITHUB_ENV"
           else
-            echo "PERCY_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
+            echo "PERCY_BRANCH=$REF_NAME" >> "$GITHUB_ENV"
           fi
       - name: Evaluate Visreg Web Should Run
         id: visreg-should-run
