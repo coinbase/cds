@@ -6,6 +6,7 @@ import figmaConnectImportsRequiredRule from './figma-connect-imports-required/in
 import noCdsBarrelImportsRule from './no-cds-barrel-imports/index.mjs';
 import noDeprecatedJsdocRule from './no-deprecated-jsdoc/index.mjs';
 import noObjectRestSpreadInWorkletRule from './no-object-rest-spread-in-worklet/index.mjs';
+import noStylePropCssOverridesRule from './no-style-prop-css-overrides/index.mjs';
 import { processor as noTypescriptInJsxCodeblockProcessor } from './no-typescript-in-jsx-codeblock/index.mjs';
 import safelySpreadPropsRule from './safely-spread-props/index.mjs';
 import spreadPropsLastRule from './spread-props-last/index.mjs';
@@ -19,6 +20,7 @@ const plugin = {
     'deprecated-jsdoc-has-removal-version': deprecatedJsdocHasRemovalVersionRule,
     'no-deprecated-jsdoc': noDeprecatedJsdocRule,
     'no-object-rest-spread-in-worklet': noObjectRestSpreadInWorkletRule,
+    'no-style-prop-css-overrides': noStylePropCssOverridesRule,
     'figma-connect-imports-required': figmaConnectImportsRequiredRule,
     'figma-connect-imports-package-match': figmaConnectImportsPackageMatchRule,
     'no-cds-barrel-imports': noCdsBarrelImportsRule,

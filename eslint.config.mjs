@@ -456,6 +456,39 @@ export default tseslint.config(
       'internal/no-cds-barrel-imports': 'warn',
     },
   },
+  // cds-web is the only package whose style props compile to overridable
+  // single-class Linaria rules, so a component's own `css` block can silently
+  // win the CSS source-order tiebreaker over a consumer-provided style prop
+  // (see CDS-2118). Scope the rule to published web source and exclude the
+  // style system itself, which legitimately implements these CSS properties.
+  //
+  // The rule is type-aware (it resolves the type of `{...spread}` props to find
+  // style props that reach an element without an explicit attribute), so this
+  // block enables `projectService` for the in-scope TS/TSX files.
+  {
+    files: ['packages/web/src/**/*.{ts,tsx}'],
+    ignores: [
+      'packages/web/src/styles/**',
+      '**/__stories__/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/__fixtures__/**',
+      '**/__figma__/**',
+      '**/*.stories.*',
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/*.figma.*',
+    ],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      'internal/no-style-prop-css-overrides': 'warn',
+    },
+  },
   {
     files: ['**/*.stories.{js,jsx,ts,tsx}', '**/__stories__/**'],
     rules: {

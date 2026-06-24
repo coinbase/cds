@@ -184,6 +184,42 @@ Recommended pattern inside worklets:
 - Read fields directly (for example, `const delayMs = transition.delay`)
 - Pass existing objects directly when safe, rather than reconstructing with spread
 
+## no-style-prop-css-overrides
+
+Flags a JSX element that **both** wears a Linaria `css` class setting a CSS property at its top level **and** can be given the cds-web **style prop** that owns that property — as an explicit attribute or forwarded through a `{...spread}`. Scoped to `packages/web/src` — cds-web is the only package with this styling architecture.
+
+cds-web style props compile to **single-class** Linaria rules (the value is injected as an inline CSS variable, but the declaration that consumes it lives in a class), which keeps them consumer-overridable. A component's own `css` class sets the same property at the **same specificity** but is emitted **later** in the stylesheet, so it wins the CSS source-order tiebreaker and silently overrides the value passed via the style prop. This is the class of bug fixed in CDS-2118 (`Button` `height`/`width` props not applying).
+
+The rule keys off **co-location**: it only reports when the element carrying the `css` class can also be given the matching style prop — the precise shape of a silent-override bug. A style prop reaches an element either as an explicit attribute (pure AST) or via a `{...spread}` whose **type** carries it (type-aware). Hard-coding a property a component never exposes or forwards is allowed. It resolves `className` through `cx`/`cn`/`clsx`/`classnames`, inline `css`, and logical/conditional/array expressions, and compares `padding`/`margin` shorthands and longhands per physical side. Declarations nested in selectors/pseudo-states/at-rules and `css` not imported from `@linaria/core` are ignored. Because of the spread analysis the rule is type-aware and its config block enables `projectService`.
+
+See [`src/no-style-prop-css-overrides/README.md`](./src/no-style-prop-css-overrides/README.md) for the full rationale, the cascade mechanics, the spread analysis, and remediation guidance.
+
+**Invalid:**
+
+```tsx
+import { css, cx } from '@linaria/core';
+
+const baseCss = css`
+  height: fit-content;
+`;
+
+// `height` is set by the css class AND passed as a style prop to the same element
+const Button = ({ height }: ButtonProps) => <Pressable className={cx(baseCss)} height={height} />;
+```
+
+**Valid:**
+
+```tsx
+import { css, cx } from '@linaria/core';
+
+const baseCss = css`
+  display: inline-flex; // never exposed as a `display` prop on this element
+`;
+
+// no `display` prop passed here, so the css class isn't overriding anything
+const Button = (props: ButtonProps) => <Pressable className={cx(baseCss)} background="bgPrimary" />;
+```
+
 ## safely-spread-props
 
 This rule checks that React component `...spread` props do not contain properties that the receiving component does not expect.
