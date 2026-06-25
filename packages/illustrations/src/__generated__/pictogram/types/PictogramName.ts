@@ -407,6 +407,7 @@ export type PictogramName =
   | 'multipleAssets'
   | 'musicAndSounds'
   | 'myNumberCard'
+  | 'newTradeError'
   | 'newUserChecklistBuyCrypto'
   | 'newUserChecklistCompleteAccount'
   | 'newUserChecklistVerifyId'

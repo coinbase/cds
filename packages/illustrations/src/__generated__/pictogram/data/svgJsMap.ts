@@ -2021,6 +2021,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/myNumberCard-4.js').content,
     themeable: () => require('../svgJs/cjs/themeable/myNumberCard-4.js').content,
   },
+  newTradeError: {
+    light: () => require('../svgJs/cjs/light/newTradeError-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/newTradeError-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/newTradeError-0.js').content,
+  },
   newUserChecklistBuyCrypto: {
     light: () => require('../svgJs/cjs/light/newUserChecklistBuyCrypto-3.js').content,
     dark: () => require('../svgJs/cjs/dark/newUserChecklistBuyCrypto-3.js').content,

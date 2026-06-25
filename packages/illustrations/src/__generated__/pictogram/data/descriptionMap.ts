@@ -10,6 +10,7 @@
  */
 const descriptionMap: Record<string, string[]> = {
   '': [
+    'newTradeError',
     'derivativesNavigation',
     'coinbaseLogoNavigation',
     'walletLogoNavigation',

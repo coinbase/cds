@@ -551,5 +551,10 @@ export const names: IconName[] = [
   'parlaysAdd',
   'addModuleUI',
   'ipoChart',
-  'learningCenter'
+  'learningCenter',
+  'waveForm',
+  'record',
+  'stop',
+  'desktop',
+  'liveEvents'
 ];
