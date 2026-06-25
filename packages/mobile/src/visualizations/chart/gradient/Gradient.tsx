@@ -113,6 +113,17 @@ export const Gradient = memo<GradientProps>(
 
     const hasRendered = useRef(false);
 
+    // Mirror the array we last wrote into `toPositions` / `fromPositions` so
+    // the effect below never has to read `toPositions.value` from the JS
+    // thread. In Reanimated 4 each JS-side read of `sharedValue.value` is a
+    // synchronous `runOnUISync` round-trip (~29ms per call in production
+    // Android traces, ~1.6s / 28% of CPU on chart-heavy screens). This
+    // component is the sole writer of `toPositions.value` -- every effect
+    // run writes `[...targetPositions]` -- so a JS-side ref is always in
+    // sync with the UI runtime and lets us compare lengths and copy the
+    // previous array without going over the bridge.
+    const lastWrittenPositionsRef = useRef(targetPositions);
+
     useEffect(() => {
       if (!shouldRender) {
         hasRendered.current = false;
@@ -131,6 +142,7 @@ export const Gradient = memo<GradientProps>(
         fromPositions.value = [...targetPositions];
         toPositions.value = [...targetPositions];
         positionsProgress.value = 1;
+        lastWrittenPositionsRef.current = targetPositions;
         return;
       }
 
@@ -139,10 +151,11 @@ export const Gradient = memo<GradientProps>(
       endX.value = buildTransition(targetEnd.x, transition);
       endY.value = buildTransition(targetEnd.y, transition);
 
-      const canAnimatePositions = toPositions.value.length === targetPositions.length;
+      const previousPositions = lastWrittenPositionsRef.current;
+      const canAnimatePositions = previousPositions.length === targetPositions.length;
       if (canAnimatePositions) {
         currentColors.value = targetColors;
-        fromPositions.value = [...toPositions.value];
+        fromPositions.value = [...previousPositions];
         toPositions.value = [...targetPositions];
         positionsProgress.value = 0;
         positionsProgress.value = buildTransition(1, transition);
@@ -152,6 +165,7 @@ export const Gradient = memo<GradientProps>(
         toPositions.value = [...targetPositions];
         positionsProgress.value = 1;
       }
+      lastWrittenPositionsRef.current = targetPositions;
     }, [
       transition,
       targetStart.x,
