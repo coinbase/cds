@@ -1633,6 +1633,10 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/myNumberCard-4.js').then((m) => m.default as string),
   },
+  newTradeError: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/newTradeError-0.js').then((m) => m.default as string),
+  },
   newUserChecklistBuyCrypto: {
     themeable: () =>
       import('../svgJs/esm/themeable/newUserChecklistBuyCrypto-3.js').then(

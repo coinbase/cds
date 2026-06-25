@@ -8,11 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 9.4.4 (6/24/2026 PST)
+## 9.5.0 (6/25/2026 PST)
 
-#### 🐞 Fixes
+#### 🚀 Updates
 
-- Perf: rewrite `getDottedAreaPath` with array-join + LRU-1 memo, eliminating ~21s of string-concat + GC churn on chart-heavy mobile screens. [[#770](https://github.com/coinbase/cds/pull/770)]
+- Chore: add styled element for Tab's TabContainer component to support equal width tabs. [[#772](https://github.com/coinbase/cds/pull/772)]
 
 ## 9.4.3 (6/23/2026 PST)
 

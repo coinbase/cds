@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-06-09T16:27:10.648Z",
-  "lastUnicode": 986322,
+  "lastUpdated": "2026-06-24T16:55:23.127Z",
+  "lastUnicode": 986352,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25708,6 +25708,241 @@
           "active": true,
           "size": 12,
           "unicode": 986317
+        }
+      ]
+    },
+    {
+      "nodeId": "7784:95",
+      "name": "waveForm",
+      "description": "audio, waveform, video, playback, controls",
+      "assetsHash": "OTjcJwtFMjJKoj4VgQkQ68umuf40I2/sTWY2RnoYgwg=",
+      "nameHash": "YlWKM/h6R4hQxnJ9u1/nSEI8hoBAji5HYEpndDll0YY=",
+      "createdAt": "2026-06-24T16:26:57.596Z",
+      "lastUpdated": "2026-06-24T16:26:57.596Z",
+      "svgs": [
+        {
+          "name": "waveForm-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986352
+        },
+        {
+          "name": "waveForm-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986351
+        },
+        {
+          "name": "waveForm-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986350
+        },
+        {
+          "name": "waveForm-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986349
+        },
+        {
+          "name": "waveForm-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986348
+        },
+        {
+          "name": "waveForm-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986347
+        }
+      ]
+    },
+    {
+      "nodeId": "7784:88",
+      "name": "record",
+      "description": "record, play, playback, video, youTube, start, stop, controls",
+      "assetsHash": "oWcPH0wVQF7wDfko0w4nRJcJ566TgdLgfZ8NuuXCQJo=",
+      "nameHash": "zCXRkgeZM0BETOdBA9XLJVzFpy3h8KSWZrG4ii0hsvk=",
+      "createdAt": "2026-06-24T16:26:57.602Z",
+      "lastUpdated": "2026-06-24T16:26:57.602Z",
+      "svgs": [
+        {
+          "name": "record-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986340
+        },
+        {
+          "name": "record-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986339
+        },
+        {
+          "name": "record-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986338
+        },
+        {
+          "name": "record-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986337
+        },
+        {
+          "name": "record-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986336
+        },
+        {
+          "name": "record-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986335
+        }
+      ]
+    },
+    {
+      "nodeId": "7784:81",
+      "name": "stop",
+      "description": "stop, play, playback, video, YouTube, controls",
+      "assetsHash": "8hzhaAMeJUoQayib+tcQY0WlnibB3V0t6+2dmlfiPNs=",
+      "nameHash": "mfTa5jRVS1pjSrfbtQfqqauhwV8yMbi8W3C4HyJ+iLY=",
+      "createdAt": "2026-06-24T16:26:57.606Z",
+      "lastUpdated": "2026-06-24T16:26:57.606Z",
+      "svgs": [
+        {
+          "name": "stop-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986346
+        },
+        {
+          "name": "stop-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986345
+        },
+        {
+          "name": "stop-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986344
+        },
+        {
+          "name": "stop-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986343
+        },
+        {
+          "name": "stop-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986342
+        },
+        {
+          "name": "stop-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986341
+        }
+      ]
+    },
+    {
+      "nodeId": "7784:109",
+      "name": "desktop",
+      "description": "desktop, computer, monitor, browser, widescreen, web",
+      "assetsHash": "JPc9QKri3N+rQEc5OqyIVH4XRSscGXKs4coak+WZ2pQ=",
+      "nameHash": "AqNjGyEj1gqcR0u7t3Nitcjro3MWV/Yd8ZirmbC2aaQ=",
+      "createdAt": "2026-06-24T16:26:57.610Z",
+      "lastUpdated": "2026-06-24T16:26:57.610Z",
+      "svgs": [
+        {
+          "name": "desktop-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986328
+        },
+        {
+          "name": "desktop-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986327
+        },
+        {
+          "name": "desktop-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986326
+        },
+        {
+          "name": "desktop-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986325
+        },
+        {
+          "name": "desktop-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986324
+        },
+        {
+          "name": "desktop-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986323
+        }
+      ]
+    },
+    {
+      "nodeId": "7784:102",
+      "name": "liveEvents",
+      "description": "live, sports, events, other, broadcast, current, watch",
+      "assetsHash": "XdTzWL2QdwFx/0TWZoPVTtW45DbU0snPcYa7Fl7jDkU=",
+      "nameHash": "29W9OOx6uemZvK8lWgUxO0V5PBsQvWzEo3MHIpkacF4=",
+      "createdAt": "2026-06-24T16:26:57.613Z",
+      "lastUpdated": "2026-06-24T16:26:57.613Z",
+      "svgs": [
+        {
+          "name": "liveEvents-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986334
+        },
+        {
+          "name": "liveEvents-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986333
+        },
+        {
+          "name": "liveEvents-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986332
+        },
+        {
+          "name": "liveEvents-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986331
+        },
+        {
+          "name": "liveEvents-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986330
+        },
+        {
+          "name": "liveEvents-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986329
         }
       ]
     }

@@ -451,6 +451,7 @@ const versionMap: Record<HeroSquareName, number> = {
   filter: 1,
   mcLoad: 1,
   usdl: 0,
+  usdr: 0,
 };
 
 export default versionMap;

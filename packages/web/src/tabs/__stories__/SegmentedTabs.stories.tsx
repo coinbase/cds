@@ -252,6 +252,20 @@ export const All = () => {
         tabs={basicSegments}
         title="Label Colors"
       />
+      <SegmentedTabsExample
+        activeBackground="bgPositiveWash"
+        activeColor="fg"
+        background="bgPositive"
+        color="fgInverse"
+        defaultActiveTab={basicSegments[0]}
+        padding={0.5}
+        styles={{
+          tabContainer: { flexGrow: 1, flexBasis: 0 },
+        }}
+        tabs={basicSegments}
+        title="Equal Width"
+        width="100%"
+      />
     </VStack>
   );
 };
