@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (2)
+
+###### Pictogram (1)
+
+- newTradeError
+
+###### HeroSquare (1)
+
+- usdr
+
 ## 4.43.0 (6/16/2026 PST)
 
 #### 🚀 Updates

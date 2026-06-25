@@ -412,6 +412,7 @@ export type HeroSquareName =
   | 'unlockKey'
   | 'usdAndUsdc'
   | 'usdl'
+  | 'usdr'
   | 'usdtToUSDC'
   | 'verifyBankTransactions'
   | 'verifyCardTransactions'

@@ -413,6 +413,7 @@ const names: PictogramName[] = [
   'multipleAssets',
   'musicAndSounds',
   'myNumberCard',
+  'newTradeError',
   'newUserChecklistBuyCrypto',
   'newUserChecklistCompleteAccount',
   'newUserChecklistVerifyId',
