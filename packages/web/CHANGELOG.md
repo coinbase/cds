@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.5.0 (6/25/2026 PST)
+
+#### 🚀 Updates
+
+- Chore: add styled element for Tab's TabContainer component to support equal width tabs. [[#772](https://github.com/coinbase/cds/pull/772)]
+
 ## 9.4.3 (6/23/2026 PST)
 
 #### 🐞 Fixes
