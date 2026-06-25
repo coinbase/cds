@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.5.1 (6/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Perf: avoid JS-thread reads of `toPositions.value` in the chart `Gradient` effect — Reanimated 4 routes shared-value `.value` reads through synchronous runOnUISync (~29ms each, ~1.6s / 28% of CPU on chart-heavy mobile screens); mirror the last-written array in a useRef instead. [[#774](https://github.com/coinbase/cds/pull/774)]
+
 ## 9.5.0 (6/25/2026 PST)
 
 #### 🚀 Updates
