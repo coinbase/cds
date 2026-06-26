@@ -2053,6 +2053,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/usdl-0.js').content,
     themeable: () => require('../svgJs/cjs/themeable/usdl-0.js').content,
   },
+  usdr: {
+    light: () => require('../svgJs/cjs/light/usdr-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/usdr-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/usdr-0.js').content,
+  },
   usdtToUSDC: {
     light: () => require('../svgJs/cjs/light/usdtToUSDC-2.js').content,
     dark: () => require('../svgJs/cjs/dark/usdtToUSDC-2.js').content,

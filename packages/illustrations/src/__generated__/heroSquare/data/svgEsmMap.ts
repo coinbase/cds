@@ -1665,6 +1665,9 @@ const svgEsmMap = {
   usdl: {
     themeable: () => import('../svgJs/esm/themeable/usdl-0.js').then((m) => m.default as string),
   },
+  usdr: {
+    themeable: () => import('../svgJs/esm/themeable/usdr-0.js').then((m) => m.default as string),
+  },
   usdtToUSDC: {
     themeable: () =>
       import('../svgJs/esm/themeable/usdtToUSDC-2.js').then((m) => m.default as string),

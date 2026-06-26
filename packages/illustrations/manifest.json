@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-06-16T18:18:46.632Z",
+  "lastUpdated": "2026-06-25T18:21:24.624Z",
   "colors": {
     "light": [
       {
@@ -33674,6 +33674,48 @@
         "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/usdl-0.js",
         "pngLight": "./heroSquare/png/light/usdl-0.png",
         "pngDark": "./heroSquare/png/dark/usdl-0.png"
+      },
+      "version": 0
+    },
+    "30725:15": {
+      "type": "pictogram",
+      "name": "newTradeError",
+      "hash": "ojBTvVwXTkcLY1M5QBoucDqmBH9mQ8e2eZF6Zqv24YQ=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-06-16T21:19:21.482Z",
+      "lastUpdated": "2026-06-16T21:19:21.482Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/newTradeError-0.svg",
+        "svgDark": "./pictogram/svg/dark/newTradeError-0.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/newTradeError-0.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/newTradeError-0.js",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/newTradeError-0.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/newTradeError-0.js",
+        "pngLight": "./pictogram/png/light/newTradeError-0.png",
+        "pngDark": "./pictogram/png/dark/newTradeError-0.png"
+      },
+      "version": 0
+    },
+    "30775:111": {
+      "type": "heroSquare",
+      "name": "usdr",
+      "hash": "k3tBZRtVG/wnJ+FGTUKIsE0JMvHo/YEJt0HFkWz5Nsc=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, usdr, stable, stablecoin, usd, rain",
+      "createdAt": "2026-06-24T16:37:03.704Z",
+      "lastUpdated": "2026-06-24T16:37:03.704Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/usdr-0.svg",
+        "svgDark": "./heroSquare/svg/dark/usdr-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/usdr-0.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/usdr-0.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/usdr-0.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/usdr-0.js",
+        "pngLight": "./heroSquare/png/light/usdr-0.png",
+        "pngDark": "./heroSquare/png/dark/usdr-0.png"
       },
       "version": 0
     }

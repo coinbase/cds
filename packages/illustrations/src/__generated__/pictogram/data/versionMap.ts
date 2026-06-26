@@ -547,6 +547,7 @@ const versionMap: Record<PictogramName, number> = {
   instoSecuredAssets: 1,
   instoBorrowCoins: 1,
   inrTrade: 0,
+  newTradeError: 0,
 };
 
 export default versionMap;
