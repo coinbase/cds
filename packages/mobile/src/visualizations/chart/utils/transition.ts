@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type ExtrapolationType,
   type SharedValue,
@@ -265,8 +265,21 @@ export const usePathTransition = ({
   const interpolatorRef = useRef<((t: number) => string) | null>(null);
   const progress = useSharedValue(0);
 
-  const initialSkiaPath =
-    Skia.Path.MakeFromSVGString(initialPath ?? currentPath) ?? Skia.Path.Make();
+  // Parse the SVG path exactly once per hook instance via `useState`'s lazy
+  // initializer. `initialSkiaPath` is only consumed as the initial value for
+  // the `useSharedValue` calls below, and `useSharedValue` ignores its
+  // argument on every render after the first. Recomputing the parse on every
+  // render is therefore pure waste — in an Android prod CPU trace this hot
+  // path accounted for ~64% of all `Skia.Path.MakeFromSVGString` self-time
+  // (~350ms over 1:03) across `AnimatedPath` / `DottedArea` chart renders.
+  //
+  // `useState` (not `useMemo`) is intentional: `useMemo` is documented as a
+  // performance hint that React may discard, and any realistic dependency
+  // array would either lint-fail (`[]`) or re-parse on every `currentPath`
+  // change while the shared-value initializers still ignore the new result.
+  const [initialSkiaPath] = useState(
+    () => Skia.Path.MakeFromSVGString(initialPath ?? currentPath) ?? Skia.Path.Make(),
+  );
   const normalizedStartShared = useSharedValue(initialSkiaPath);
   const normalizedEndShared = useSharedValue(initialSkiaPath);
   const fallbackPathShared = useSharedValue(initialSkiaPath);
