@@ -1,8 +1,14 @@
 # CDS component selection guide
 
-For full prop and type details, refer to the CDS component docs and TypeScript definitions; this guide is for _choosing_ components and patterns.
+This guide is for _choosing_ the right component or pattern for a given UI need. Use this guide to get the _names_ of CDS components that may be relevant to your task.
 
-When the user describes a UI need, reach for these first:
+For a component's full props and style details, refer to the component documentation.
+
+## Common needs
+
+You may not need to read beyond this section if the common use-cases below solve your problem.
+
+Use the detailed sections below the table only when you need further clarification; they intentionally avoid full prop API dumps and focus on **when/why** to pick a component plus key gotchas.
 
 | Need                            | Use                                                                |
 | ------------------------------- | ------------------------------------------------------------------ |
@@ -41,8 +47,6 @@ When the user describes a UI need, reach for these first:
 | Determinate linear progress     | `ProgressBar` with `progress`                                      |
 | Status pill / label             | `Tag`                                                              |
 | User photo                      | `Avatar`                                                           |
-
-Use the detailed sections below only when you need clarification; they intentionally avoid full prop API dumps and focus on **when/why** to pick a component plus key gotchas.
 
 ---
 
