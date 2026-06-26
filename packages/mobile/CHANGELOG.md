@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.5.1 (6/26/2026 PST)
+
+#### 🐞 Fixes
+
+- Perf: chart rendering — rewrite `getDottedAreaPath` with array-join + LRU-1 memo (eliminating ~21s of string-concat + GC churn on chart-heavy screens), and drop redundant `sharedValue.value` reads in chart `Gradient` effect (removing a ~1.62s/28% CPU `runOnUISync` hotspot on production Android traces). [[#776](https://github.com/coinbase/cds/pull/776)]
+
 ## 9.5.0 (6/25/2026 PST)
 
 #### 🚀 Updates
